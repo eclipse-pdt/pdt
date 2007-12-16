@@ -12,10 +12,13 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.text.MessageFormat;
 
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.IncludePathContainerInitializer;
@@ -26,6 +29,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
+import org.eclipse.php.internal.ui.util.PHPElementImageProvider;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbench;
@@ -39,6 +43,7 @@ public class IPListLabelProvider extends LabelProvider {
 	private ImageDescriptor fFolderImage, fProjectImage, fVariableImage, fContainerImage;
 
 	private ImageDescriptorRegistry fRegistry;
+	private PHPElementImageProvider imageProvider;
 
 	public IPListLabelProvider() {
 		fNewLabel = PHPUIMessages.getString("CPListLabelProvider_new");
@@ -48,7 +53,8 @@ public class IPListLabelProvider extends LabelProvider {
 
 		fZipIcon = PHPPluginImages.DESC_OBJS_ZIP;
 		fExtZipIcon = PHPPluginImages.DESC_OBJS_EXTZIP;
-		fFolderImage = PHPPluginImages.DESC_OBJS_PHP_FOLDER;
+		imageProvider = new PHPElementImageProvider();
+		fFolderImage = imageProvider.getWorkbenchImageDescriptor(((Workspace) ResourcesPlugin.getWorkspace()).newResource(new Path("/dummy/folder"), IResource.FOLDER), 0); //$NON-NLS-1$, flags)
 		fContainerImage = PHPPluginImages.DESC_OBJS_LIBRARY;
 		fVariableImage = PHPPluginImages.DESC_OBJS_ENV_VAR;
 
@@ -64,7 +70,7 @@ public class IPListLabelProvider extends LabelProvider {
 			IPListElementAttribute attribute = (IPListElementAttribute) element;
 			String text = getCPListElementAttributeText(attribute);
 			if (attribute.isInNonModifiableContainer()) {
-				return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_non_modifiable_attribute"), new String[]{text});
+				return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_non_modifiable_attribute"), new Object[] { text });
 			}
 			return text;
 		} else if (element instanceof IPUserLibraryElement) {
@@ -82,9 +88,7 @@ public class IPListLabelProvider extends LabelProvider {
 	}
 
 	public String getCPListElementAttributeText(IPListElementAttribute attrib) {
-		String notAvailable = PHPUIMessages.getString("CPListLabelProvider_none");
-		String key = attrib.getKey();
-		return notAvailable;
+		return PHPUIMessages.getString("CPListLabelProvider_none");
 	}
 
 	public String getCPListElementText(IPListElement cpentry) {
@@ -108,14 +112,14 @@ public class IPListLabelProvider extends LabelProvider {
 				} else if (ArchieveFileFilter.isZipPath(path)) {
 					return getPathString(path, resource == null);
 				}
-				// should not get here - BUT IT DOES! 
+				// should not get here - BUT IT DOES!
 				return getPathString(path, resource == null);
 			}
 			case IIncludePathEntry.IPE_VARIABLE: {
 				return getVariableString(path);
 			}
 			case IIncludePathEntry.IPE_PROJECT:
-				return path.lastSegment();
+				return path.toString().substring(1);
 			case IIncludePathEntry.IPE_CONTAINER:
 				IIncludePathContainer container = PHPProjectOptions.getIncludePathContainer(path, cpentry.getProject());
 				if (container != null) {
@@ -141,7 +145,7 @@ public class IPListLabelProvider extends LabelProvider {
 				return buf.toString();
 			}
 			default:
-		// pass
+				// pass
 		}
 		return PHPUIMessages.getString("CPListLabelProvider_unknown_element_label");
 	}
@@ -150,10 +154,9 @@ public class IPListLabelProvider extends LabelProvider {
 		if (ArchieveFileFilter.isZipPath(path)) {
 			IPath appendedPath = path.removeLastSegments(1);
 			String appended = isExternal ? appendedPath.toOSString() : appendedPath.makeRelative().toString();
-			return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_twopart"), new String[] { path.lastSegment(), appended });
-		} else {
-			return isExternal ? path.toOSString() : path.makeRelative().toString();
+			return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_twopart"), new Object[] { path.lastSegment(), appended });
 		}
+		return isExternal ? path.toOSString() : path.makeRelative().toString();
 	}
 
 	private String getVariableString(IPath path) {
@@ -161,36 +164,40 @@ public class IPListLabelProvider extends LabelProvider {
 		IPath entryPath = PHPProjectOptions.getIncludePathVariable(path.segment(0));
 		if (entryPath != null) {
 			String appended = entryPath.append(path.removeFirstSegments(1)).toOSString();
-			return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_twopart"), new String[] { name, appended });
-		} else {
-			return name;
+			return MessageFormat.format(PHPUIMessages.getString("CPListLabelProvider_twopart"), new Object[] { name, appended });
 		}
+		return name;
 	}
 
-	private ImageDescriptor getCPListElementBaseImage(IPListElement cpentry) {
-		switch (cpentry.getEntryKind()) {
+	private ImageDescriptor getCPListElementBaseImage(IPListElement entry) {
+		switch (entry.getEntryKind()) {
 			case IIncludePathEntry.IPE_SOURCE:
-				if (cpentry.getPath().segmentCount() == 1) {
+				if (entry.getPath().segmentCount() == 1) {
 					return fProjectImage;
-				} else {
-					return fFolderImage;
 				}
+				return fFolderImage;
 			case IIncludePathEntry.IPE_LIBRARY:
 			case IIncludePathEntry.IPE_JRE:
-				IResource res = cpentry.getResource();
+				IResource res = entry.getResource();
 				if (res == null) {
-					if(cpentry.getContentKind() == IIncludePathEntry.K_BINARY){
+					if (entry.getContentKind() == IIncludePathEntry.K_BINARY) {
 						return fExtZipIcon;
-					} else {
-						return fContainerImage;
 					}
+					return fContainerImage;
 				} else if (res instanceof IFile) {
 					return fZipIcon;
 				} else {
 					return fFolderImage;
 				}
 			case IIncludePathEntry.IPE_PROJECT:
-				return fProjectImage;
+				IResource container = entry.getResource();
+				if (container != null) {
+					if (imageProvider == null) {
+						imageProvider = new PHPElementImageProvider();
+					}
+					return imageProvider.getWorkbenchImageDescriptor(container, 0);
+				}
+				return null;
 			case IIncludePathEntry.IPE_VARIABLE:
 				return fVariableImage;
 			case IIncludePathEntry.IPE_CONTAINER:
@@ -211,8 +218,6 @@ public class IPListLabelProvider extends LabelProvider {
 				return fRegistry.get(imageDescriptor);
 			}
 		} else if (element instanceof IPListElementAttribute) {
-			String key = ((IPListElementAttribute) element).getKey();
-
 			return fRegistry.get(fVariableImage);
 		} else if (element instanceof IPUserLibraryElement) {
 			return fRegistry.get(PHPPluginImages.DESC_OBJS_LIBRARY);

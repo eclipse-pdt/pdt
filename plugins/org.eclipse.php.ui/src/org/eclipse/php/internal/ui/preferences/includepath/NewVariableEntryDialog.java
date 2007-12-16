@@ -125,8 +125,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	private void initializeElements() {
 		String[] entries = PHPProjectOptions.getIncludePathVariableNames();
 		ArrayList elements = new ArrayList(entries.length);
-		for (int i = 0; i < entries.length; i++) {
-			String name = entries[i];
+		for (String name : entries) {
 			IPath entryPath = PHPProjectOptions.getIncludePathVariable(name);
 			if (entryPath != null) {
 				elements.add(new IPVariableElement(name, entryPath, IncludePathVariableManager.instance().isReserved(name)));
@@ -204,6 +203,8 @@ public class NewVariableEntryDialog extends StatusDialog {
 			for (int i = 0; i < nSelected; i++) {
 				IPVariableElement curr = (IPVariableElement) selected.get(i);
 				fResultPaths[i] = new Path(curr.getName());
+				// Seva: this is not true - we only work with folders.
+				/*
 				if (!curr.getPath().toFile().exists()) {
 					status.setError(PHPUIMessages.getString("NewVariableEntryDialog_variable_non_existent_location")); //$NON-NLS-1$
 					isValidSelection = false;
@@ -212,6 +213,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 					status.setInfo(PHPUIMessages.getString("NewVariableEntryDialog_info_isfolder"));
 					canExtend = true;
 				}
+				*/
 			}
 		} else {
 			isValidSelection = false;

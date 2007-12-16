@@ -12,6 +12,9 @@ package org.eclipse.php.internal.ui.explorer;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -19,16 +22,16 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.OpenEvent;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.FolderFilteredUserModel;
+import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.workingset.ExplorerViewActionGroup;
@@ -70,19 +73,9 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		};
 
 		IWorkbenchPartSite site = fPart.getSite();
-		setGroups (new ActionGroup[] { 
-			new NewWizardsActionGroup(site), 
-			fNavigateActionGroup = new NavigateActionGroup(fPart), 
-			new PHPSearchActionGroup(), new CCPActionGroup(fPart), 
-			new ConfigureIncludePathActionGroup(fPart), 
-			fRefactorActionGroup = new RefactorActionGroup(fPart),
-			new ImportActionGroup(fPart), 
-			new BuildActionGroup(fPart), 
-			new ProjectActionGroup(fPart), 
-			fViewActionGroup = new ExplorerViewActionGroup(fPart.getRootMode(), workingSetListener, site), 
-			fCustomFiltersActionGroup = new CustomFiltersActionGroup(fPart, viewer),
-			new ConvertProjectActionGroup(fPart), 
-		});
+		setGroups(new ActionGroup[] { new NewWizardsActionGroup(site), fNavigateActionGroup = new NavigateActionGroup(fPart), new PHPSearchActionGroup(), new CCPActionGroup(fPart), new ConfigureIncludePathActionGroup(fPart), fRefactorActionGroup = new RefactorActionGroup(fPart),
+			new ImportActionGroup(fPart), new BuildActionGroup(fPart), new ProjectActionGroup(fPart), fViewActionGroup = new ExplorerViewActionGroup(fPart.getRootMode(), workingSetListener, site), fCustomFiltersActionGroup = new CustomFiltersActionGroup(fPart, viewer),
+			new ConvertProjectActionGroup(fPart), });
 		fViewActionGroup.fillFilters(viewer);
 
 		ExplorerFrameSource frameSource = new ExplorerFrameSource(fPart);
@@ -137,7 +130,7 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		menu.add(fToggleLinkingAction);
 
 		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS + "-end"));//$NON-NLS-1$		
+		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS + "-end"));//$NON-NLS-1$
 	}
 
 	//---- Context menu -------------------------------------------------------------------------
@@ -167,7 +160,15 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 	void handleDoubleClick(DoubleClickEvent event) {
 		TreeViewer viewer = fPart.getViewer();
 		Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
-		if (viewer.isExpandable(element))
+		if (element instanceof FolderFilteredUserModel) {
+			String modelId = ((IPhpModel) element).getID();
+			IPath modelPath = new Path(modelId);
+			IResource resource = PHPUiPlugin.getWorkspace().getRoot().findMember(modelPath);
+			if (resource != null) {
+				viewer.setSelection(new StructuredSelection(resource));
+			}
+		}
+		if (viewer.isExpandable(element)) {
 			if (doubleClickGoesInto()) {
 				// don't zoom into compilation units and class files
 				if (element instanceof PHPFileData)
@@ -180,6 +181,7 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 					return;
 				viewer.setExpandedState(element, !viewer.getExpandedState(element));
 			}
+		}
 	}
 
 	void handleOpen(OpenEvent event) {

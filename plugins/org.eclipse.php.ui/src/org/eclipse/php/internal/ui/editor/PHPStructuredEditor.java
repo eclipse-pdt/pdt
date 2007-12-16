@@ -1427,8 +1427,8 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 
 			if (storage instanceof ZipEntryStorage) {
 				resource = ((ZipEntryStorage) storage).getProject();
-			} else if (storage instanceof LocalFileStorage && ((LocalFileStorage) storage).getProject() != null) {
-				resource = ((LocalFileStorage) storage).getProject();
+			} else if (storage instanceof LocalFileStorage) {
+				// don't create external resource, it's wrong! Include paths should not have a resource.
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();

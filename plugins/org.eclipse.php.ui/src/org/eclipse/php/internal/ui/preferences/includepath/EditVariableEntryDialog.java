@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,11 +59,10 @@ public class EditVariableEntryDialog extends StatusDialog {
 	public EditVariableEntryDialog(Shell parent, IPath initialEntry, IPath[] existingEntries) {
 		super(parent);
 		setTitle(PHPUIMessages.getString("EditVariableEntryDialog_title"));
-
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 		fExistingEntries = new HashSet();
 		if (existingEntries != null) {
-			for (int i = 0; i < existingEntries.length; i++) {
-				IPath curr = existingEntries[i];
+			for (IPath curr : existingEntries) {
 				if (!curr.equals(initialEntry)) {
 					fExistingEntries.add(curr);
 				}
@@ -108,7 +106,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 		LayoutUtil.setHorizontalGrabbing(fFileNameField.getTextControl(null));
 
 		// label that shows the resolved path for variable zips
-		//DialogField.createEmptySpace(composite, 1);	
+		//DialogField.createEmptySpace(composite, 1);
 		fFullPathResolvedLabel = new CLabel(composite, SWT.LEFT);
 		fFullPathResolvedLabel.setText(getResolvedLabelString());
 		fFullPathResolvedLabel.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
@@ -243,12 +241,6 @@ public class EditVariableEntryDialog extends StatusDialog {
 
 			if (resolvedPath.isEmpty()) {
 				status.setWarning(PHPUIMessages.getString("EditVariableEntryDialog_filename_warning_varempty"));
-				return status;
-			}
-			File file = resolvedPath.toFile();
-			if (!file.isFile()) {
-				String message = MessageFormat.format(PHPUIMessages.getString("EditVariableEntryDialog_filename_error_filenotexists"), new String[] { resolvedPath.toOSString() });
-				status.setInfo(message);
 				return status;
 			}
 		}

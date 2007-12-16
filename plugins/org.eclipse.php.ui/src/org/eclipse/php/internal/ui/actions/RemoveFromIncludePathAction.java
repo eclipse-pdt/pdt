@@ -52,7 +52,7 @@ public class RemoveFromIncludePathAction extends SelectionDispatchAction {
 			return false;
 
 		Object obj = selection.getFirstElement();
-		if (obj instanceof PHPIncludePathModel) {
+		if (obj instanceof PHPIncludePathModel || obj instanceof FolderFilteredUserModel) {
 			return true;
 		}
 
@@ -64,9 +64,9 @@ public class RemoveFromIncludePathAction extends SelectionDispatchAction {
 	 */
 	public void run(IStructuredSelection selection) {
 		Object obj = selection.getFirstElement();
-		if (obj instanceof PHPIncludePathModel) {
+		if (obj instanceof PHPIncludePathModel || obj instanceof FolderFilteredUserModel) {
 			IProject project = null;
-			final PHPIncludePathModel includePathModel = (PHPIncludePathModel) obj;
+			final IPhpModel includePathModel = (IPhpModel) obj;
 			PHPProjectModel[] projectModels = PHPWorkspaceModelManager.getInstance().listModels();
 			for (int i = 0; project == null && i < projectModels.length; ++i) {
 				PHPIncludePathModelManager includePathModelManager = (PHPIncludePathModelManager) projectModels[i].getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
@@ -77,7 +77,7 @@ public class RemoveFromIncludePathAction extends SelectionDispatchAction {
 							project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModels[i]);
 						}
 					}
-				} 
+				}
 			}
 			if (project != null) {
 				final PHPProjectOptions options = PHPProjectOptions.forProject(project);

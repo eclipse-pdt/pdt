@@ -19,6 +19,8 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.FolderFilteredUserModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
@@ -31,13 +33,13 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.w3c.dom.Node;
 
 /**
- * Sorter for PHP elements. Ordered by element category, then by element name. 
+ * Sorter for PHP elements. Ordered by element category, then by element name.
  * Package fragment roots are sorted as ordered on the classpath.
- * 
+ *
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
+ *
  * @since 2.0
  */
 public class PHPElementSorter extends ViewerSorter {
@@ -84,7 +86,7 @@ public class PHPElementSorter extends ViewerSorter {
 	/**
 	 * @deprecated Bug 22518. Method never used: does not override ViewerSorter#isSorterProperty(Object, String).
 	 * Method could be removed, but kept for API compatibility.
-	 * 
+	 *
 	 * @param element the element
 	 * @param property the property
 	 * @return always <code>true</code>
@@ -152,7 +154,11 @@ public class PHPElementSorter extends ViewerSorter {
 			return OUTLINE_NODES;
 		}
 		if (element instanceof Node) {
-			return DOM_NODES; 
+			return DOM_NODES;
+		}
+
+		if (element instanceof FolderFilteredUserModel || element instanceof PHPIncludePathModel) {
+			return IMPORT_CONTAINER;
 		}
 		return OTHERS;
 	}
@@ -188,6 +194,11 @@ public class PHPElementSorter extends ViewerSorter {
 				return getCollator().compare(name1, name2);
 			}
 			return -1; // can't compare
+		}
+
+		if (cat1 == IMPORT_CONTAINER) {
+			// Seva: not sorting include paths
+			return -1;
 		}
 
 		// if it is an outline node (classes, functions, constants) sort by type

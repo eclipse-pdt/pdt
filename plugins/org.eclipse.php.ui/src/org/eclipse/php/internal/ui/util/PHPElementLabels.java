@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.phpModel.parser.FolderFilteredUserModel;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -270,6 +271,8 @@ public class PHPElementLabels {
 			buf.append("PHP Model"); //$NON-NLS-1$
 		} else if (element instanceof IResource) {
 			buf.append(((IResource) element).getName());
+		} else if (element instanceof FolderFilteredUserModel) {
+			buf.append(((IPhpModel)element).getID().substring(1));
 		} else if (element instanceof IPhpModel) {
 			buf.append(((IPhpModel)element).getID());
 		}

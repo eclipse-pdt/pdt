@@ -11,33 +11,127 @@
 package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.StatusDialog;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.util.ListContentProvider;
-import org.eclipse.php.internal.ui.util.PHPElementSorter;
 import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.wizards.fields.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class ProjectsWorkbookPage extends IncludePathBasePage {
 
-	private final int IDX_ADDPROJECT = 0;
+	class PHPContainerSelectionDialog extends StatusDialog {
+		private TreeViewer fViewer;
+		private Object[] selectedElements;
 
+		public PHPContainerSelectionDialog(Shell parent) {
+			super(parent);
+		}
+
+		public Object[] getSelectedElements() {
+			return selectedElements;
+		}
+
+		/** (non-Javadoc)
+		 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+		 */
+		@Override
+		protected void okPressed() {
+			selectedElements = ((IStructuredSelection) fViewer.getSelection()).toArray();
+			super.okPressed();
+		}
+
+		protected Control createDialogArea(Composite parent) {
+			parent = (Composite) super.createDialogArea(parent);
+			parent.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+			PixelConverter pixelConverter = new PixelConverter(parent);
+
+			fViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			GridData layoutData = new GridData(GridData.FILL_BOTH);
+			layoutData.widthHint = pixelConverter.convertWidthInCharsToPixels(70);
+			layoutData.heightHint = pixelConverter.convertHeightInCharsToPixels(20);
+			fViewer.getControl().setLayoutData(layoutData);
+
+			fViewer.setContentProvider(new ContentProvider());
+			fViewer.setLabelProvider(new PHPUILabelProvider());
+
+			fViewer.setInput(ResourcesPlugin.getWorkspace().getRoot());
+
+			return parent;
+		}
+
+		class ContentProvider implements ITreeContentProvider {
+
+			public Object[] getChildren(Object parentElement) {
+				try {
+					if (parentElement instanceof IContainer) {
+						List<Object> r = new LinkedList<Object>();
+						// Add all members:
+						IContainer container = (IContainer) parentElement;
+						IResource[] members = container.members();
+						for (IResource member : members) {
+							if (member instanceof IContainer) {
+								if (member.getType() == IResource.PROJECT && member.isAccessible() && !((IProject)member).hasNature(PHPNature.ID)) {
+									continue;
+								} else if (!member.isAccessible()) {
+									continue;
+								}
+								r.add(member);
+							}
+						}
+						return r.toArray();
+					}
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+				return new Object[0];
+			}
+
+			public Object getParent(Object element) {
+				if (element instanceof IResource) {
+					return ((IResource) element).getParent();
+				}
+				return null;
+			}
+
+			public boolean hasChildren(Object element) {
+				return getChildren(element).length > 0;
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return getChildren(inputElement);
+			}
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
+		}
+	}
+
+	private final int IDX_ADDPROJECT = 0;
 	private final int IDX_EDIT = 2;
 	private final int IDX_REMOVE = 3;
 
@@ -125,7 +219,7 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 		for (int i = 0; i < projelements.size(); i++) {
 			cpelements.add(projelements.get(i));
 		}
-		if (remove || (projelements.size() > 0)) {
+		if (remove || projelements.size() > 0) {
 			fIncludePathList.setElements(cpelements);
 		}
 	}
@@ -203,11 +297,8 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 		IPListElement[] entries = null;
 		switch (index) {
 			case IDX_ADDPROJECT: /* add project */
-				entries = openProjectDialog(null);
+				entries = openContainerDialog(null);
 				break;
-			case IDX_EDIT: /* edit */
-				editEntry();
-				return;
 			case IDX_REMOVE: /* remove */
 				removeEntry();
 				return;
@@ -293,24 +384,18 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 	 * Method editEntry.
 	 */
 	private void editEntry() {
-		List selElements = fProjectsList.getSelectedElements();
+		List<?> selElements = fProjectsList.getSelectedElements();
 		if (selElements.size() != 1) {
 			return;
 		}
 		Object elem = selElements.get(0);
 		if (fProjectsList.getIndexOfElement(elem) != -1) {
 			editElementEntry((IPListElement) elem);
-		} else if (elem instanceof IPListElementAttribute) {
-			editAttributeEntry((IPListElementAttribute) elem);
 		}
 	}
 
-	private void editAttributeEntry(IPListElementAttribute elem) {
-		String key = elem.getKey();
-	}
-
 	private void editElementEntry(IPListElement elem) {
-		IPListElement[] res = openProjectDialog(elem);
+		IPListElement[] res = openContainerDialog(elem);
 		if (res != null && res.length > 0) {
 			IPListElement curr = res[0];
 			curr.setExported(elem.isExported());
@@ -326,27 +411,16 @@ public class ProjectsWorkbookPage extends IncludePathBasePage {
 		return PHPUiPlugin.getActiveWorkbenchShell();
 	}
 
-	private IPListElement[] openProjectDialog(IPListElement elem) {
+	private IPListElement[] openContainerDialog(IPListElement elem) {
 
-		ArrayList selectable = new ArrayList();
-		selectable.addAll(Arrays.asList(PHPWorkspaceModelManager.getInstance().listProjects()));
-		selectable.remove(fCurrPHPProject);
-
-		List elements = fProjectsList.getElements();
-		for (int i = 0; i < elements.size(); i++) {
-			IPListElement curr = (IPListElement) elements.get(i);
-			selectable.remove(curr.getResource());
-		}
-		Object[] selectArr = selectable.toArray();
-		new PHPElementSorter().sort(null, selectArr);
-
-		ListSelectionDialog dialog = new ListSelectionDialog(getShell(), Arrays.asList(selectArr), new ListContentProvider(), new PHPUILabelProvider(), PHPUIMessages.getString("ProjectsWorkbookPage_chooseProjects_message"));
+		// Seva: allow multiple folders selection:
+		PHPContainerSelectionDialog dialog = new PHPContainerSelectionDialog(getShell());
 		dialog.setTitle(PHPUIMessages.getString("ProjectsWorkbookPage_chooseProjects_title"));
 		if (dialog.open() == Window.OK) {
-			Object[] result = dialog.getResult();
+			Object[] result = dialog.getSelectedElements();
 			IPListElement[] cpElements = new IPListElement[result.length];
 			for (int i = 0; i < result.length; i++) {
-				IProject curr = (IProject) result[i];
+				IContainer curr = (IContainer) result[i];
 				cpElements[i] = new IPListElement(fCurrPHPProject, IIncludePathEntry.IPE_PROJECT, IIncludePathEntry.K_SOURCE, curr.getFullPath(), curr);
 			}
 			return cpElements;

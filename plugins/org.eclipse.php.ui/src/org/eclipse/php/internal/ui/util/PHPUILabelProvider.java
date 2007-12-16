@@ -11,8 +11,10 @@
 package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.php.internal.core.phpModel.parser.FolderFilteredUserModel;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -108,7 +110,7 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 				result = treeProviders[i].getImage(element);
 			}
 		}
-		if (result == null && (element instanceof IStorage)) {
+		if (result == null && element instanceof IStorage) {
 			result = fStorageLabelProvider.getImage(element);
 		}
 
@@ -117,19 +119,22 @@ public class PHPUILabelProvider extends LabelProvider implements IColorProvider 
 
 	public String getText(Object element) {
 		String result = PHPElementLabels.getTextLabel(element, evaluateTextFlags(element));
+		if (result.length() != 0 && element instanceof FolderFilteredUserModel) {
+			result = new Path(result).makeRelative().toString();
+		}
+
 		if (result.length() == 0 && treeProviders != null) {
-			for (int i = 0; i < treeProviders.length; i++) {
-				result = treeProviders[i].getText(element);
+			for (IPHPTreeContentProvider provider : treeProviders) {
+				result = provider.getText(element);
 				if (result != null && result.length() > 0)
 					break;
 			}
 			if (result == null)
 				result = ""; //$NON-NLS-1$
 		}
-		if (result.length() == 0 && (element instanceof IStorage)) {
+		if (result.length() == 0 && element instanceof IStorage) {
 			result = fStorageLabelProvider.getText(element);
 		}
-
 		return result;
 	}
 

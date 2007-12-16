@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
  * A completion proposal wrapper which re-asks for proposal after document change
  * @author seva, 2007
  */
-class TemporaryCompletionProposal implements ICompletionProposal {
+public class TemporaryCompletionProposal implements ICompletionProposal {
 
 	private ICompletionProposal proposal;
 

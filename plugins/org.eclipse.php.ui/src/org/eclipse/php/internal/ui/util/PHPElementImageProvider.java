@@ -10,17 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.parser.PhpModelProxy;
+import org.eclipse.php.internal.core.phpModel.parser.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.functions.PHPFunctionsContentProvider;
@@ -108,15 +104,19 @@ public class PHPElementImageProvider {
 		} else if (element.equals(PHPFunctionsContentProvider.CONSTANTS_NODE_NAME)) {
 			return PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP;
 		} else if (element instanceof PHPIncludePathModel) {
-			PHPIncludePathModel model = (PHPIncludePathModel)element;
+			PHPIncludePathModel model = (PHPIncludePathModel) element;
 			switch (model.getType()) {
 				case VARIABLE:
 					return PHPPluginImages.DESC_OBJS_ENV_VAR;
 				default:
 					return PHPPluginImages.DESC_OBJS_LIBRARY;
 			}
-		} else if (element instanceof PhpModelProxy) {
-			return DESC_OBJ_PROJECT;
+		} else if (element instanceof FolderFilteredUserModel) {
+			String id = ((IPhpModel) element).getID();
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(id));
+			if (resource != null) {
+				return computeDescriptor(resource, flags);
+			}
 		}
 		switch (ProjectOutlineContentProvider.getNodeType(element)) {
 			case ProjectOutlineContentProvider.CLASSES:
@@ -229,7 +229,7 @@ public class PHPElementImageProvider {
 			return PHPPluginImages.DESC_OBJS_PHP_MODEL;
 
 		Assert.isTrue(false, "no image for this  Type: " + element); //$NON-NLS-1$
-		return null; //$NON-NLS-1$
+		return null;
 
 	}
 

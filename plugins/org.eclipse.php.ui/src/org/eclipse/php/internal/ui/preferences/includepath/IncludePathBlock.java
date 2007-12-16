@@ -48,7 +48,7 @@ public class IncludePathBlock {
 
 	private IWorkspaceRoot fWorkspaceRoot;
 
-	private ListDialogField fIncludePathList;
+	private ListDialogField<IPListElement> fIncludePathList;
 
 	private StatusInfo fIncludePathStatus;
 
@@ -67,10 +67,6 @@ public class IncludePathBlock {
 	private IncludePathBasePage fCurrPage;
 
 	private String fUserSettingsTimeStamp;
-	private long fFileTimeStamp;
-
-	private IRunnableContext fRunnableContext;
-	private boolean fUseNewPage;
 
 	private final IWorkbenchPreferenceContainer fPageContainer; // null when invoked from a non-property page context
 
@@ -78,20 +74,16 @@ public class IncludePathBlock {
 		fPageContainer = pageContainer;
 		fWorkspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		fContext = context;
-		fUseNewPage = useNewPage;
-
 		fPageIndex = pageToShow;
 
 		fLibrariesPage = null;
 		fProjectsPage = null;
 		fCurrPage = null;
-		fRunnableContext = runnableContext;
-
 		IncludePathAdapter adapter = new IncludePathAdapter();
 
 		String[] buttonLabels = new String[] { PHPUIMessages.getString("IncludePathsBlock_includepath_up_button"), PHPUIMessages.getString("IncludePathsBlock_includepath_down_button") };
 
-		fIncludePathList = new ListDialogField(null, buttonLabels, new IPListLabelProvider());
+		fIncludePathList = new ListDialogField<IPListElement>(null, buttonLabels, new IPListLabelProvider());
 		fIncludePathList.setDialogFieldListener(adapter);
 		fIncludePathList.setLabelText(PHPUIMessages.getString("IncludePathsBlock_includepath_label"));
 		fIncludePathList.setUpButtonIndex(0);
@@ -185,7 +177,7 @@ public class IncludePathBlock {
 	 * @param phpProject The  project to configure. Does not have to exist.
 	 * @param outputLocation The output location to be set in the page. If <code>null</code>
 	 * is passed, jdt default settings are used, or - if the project is an existing  project- the
-	 * output location of the existing project 
+	 * output location of the existing project
 	 * @param includepathEntries The includepath entries to be set in the page. If <code>null</code>
 	 * is passed, jdt default settings are used, or - if the project is an existing  project - the
 	 * includepath entries of the existing project
@@ -193,9 +185,8 @@ public class IncludePathBlock {
 	public void init(IProject phpProject, IIncludePathEntry[] includepathEntries) {
 		fCurrProject = phpProject;
 		phpOptions = PHPProjectOptions.forProject(fCurrProject);
-		List newIncludePath = null;
-		IProject project = fCurrProject.getProject();
-		if (project.exists()) {
+		List<IPListElement> newIncludePath = null;
+		if (fCurrProject.exists()) {
 			if (includepathEntries == null) {
 				includepathEntries = phpOptions.readRawIncludePath();
 			}
@@ -264,10 +255,9 @@ public class IncludePathBlock {
 		fUserSettingsTimeStamp = getEncodedSettings();
 	}
 
-	private ArrayList getExistingEntries(IIncludePathEntry[] includepathEntries) {
-		ArrayList newIncludePath = new ArrayList();
-		for (int i = 0; i < includepathEntries.length; i++) {
-			IIncludePathEntry curr = includepathEntries[i];
+	private List<IPListElement> getExistingEntries(IIncludePathEntry[] includepathEntries) {
+		List<IPListElement> newIncludePath = new ArrayList<IPListElement>();
+		for (IIncludePathEntry curr : includepathEntries) {
 			newIncludePath.add(IPListElement.createFromExisting(curr, fCurrProject));
 		}
 		return newIncludePath;
@@ -287,12 +277,12 @@ public class IncludePathBlock {
 	 *  @return Returns the current include path (raw). Note that the entries returned must not be valid.
 	 */
 	public IIncludePathEntry[] getRawIncludePath() {
-		List elements = fIncludePathList.getElements();
+		List<IPListElement> elements = fIncludePathList.getElements();
 		int nElements = elements.size();
 		IIncludePathEntry[] entries = new IIncludePathEntry[elements.size()];
 
 		for (int i = 0; i < nElements; i++) {
-			IPListElement currElement = (IPListElement) elements.get(i);
+			IPListElement currElement = elements.get(i);
 			entries[i] = currElement.getIncludePathEntry();
 		}
 		return entries;
@@ -304,8 +294,8 @@ public class IncludePathBlock {
 
 	// -------- evaluate default settings --------
 
-	private List getDefaultIncludePath(IProject jproj) {
-		List list = new ArrayList();
+	private List<IPListElement> getDefaultIncludePath(IProject jproj) {
+		List<IPListElement> list = new ArrayList<IPListElement>();
 		return list;
 	}
 
@@ -343,14 +333,14 @@ public class IncludePathBlock {
 	public void updateIncludePathStatus() {
 		fIncludePathStatus.setOK();
 
-		List elements = fIncludePathList.getElements();
+		List<IPListElement> elements = fIncludePathList.getElements();
 
 		IPListElement entryMissing = null;
 		int nEntriesMissing = 0;
 		IIncludePathEntry[] entries = new IIncludePathEntry[elements.size()];
 
 		for (int i = elements.size() - 1; i >= 0; i--) {
-			IPListElement currElement = (IPListElement) elements.get(i);
+			IPListElement currElement = elements.get(i);
 
 			/*
 			 boolean isChecked = fIncludePathList.isChecked(currElement);
@@ -449,11 +439,11 @@ public class IncludePathBlock {
 	}
 
 	public IIncludePathEntry[] getIncludepathEntries() {
-		List includePathEntries = fIncludePathList.getElements();
+		List<IPListElement> includePathEntries = fIncludePathList.getElements();
 		int nEntries = includePathEntries.size();
 		IIncludePathEntry[] includepath = new IIncludePathEntry[nEntries];
 		for (int i = 0; i < nEntries; i++) {
-			IPListElement entry = ((IPListElement) includePathEntries.get(i));
+			IPListElement entry = includePathEntries.get(i);
 			includepath[i] = entry.getIncludePathEntry();
 		}
 		return includepath;
@@ -463,7 +453,7 @@ public class IncludePathBlock {
 	 * Creates the PHP project and sets the configured include path and output location.
 	 * If the project already exists only include paths are updated.
 	 */
-	private void internalConfigurePHPProject(List includePathEntries, IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+	private void internalConfigurePHPProject(List<IPListElement> includePathEntries, IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		// 10 monitor steps to go
 
 		if (monitor.isCanceled()) {
@@ -476,9 +466,9 @@ public class IncludePathBlock {
 
 		// create and set the include path
 		for (int i = 0; i < nEntries; i++) {
-			IPListElement entry = ((IPListElement) includePathEntries.get(i));
+			IPListElement entry = includePathEntries.get(i);
 			IResource res = entry.getResource();
-			if ((res instanceof IFolder) && !res.exists()) {
+			if (res instanceof IFolder && !res.exists()) {
 				createFolder((IFolder) res, true, true, null);
 			}
 
@@ -505,13 +495,13 @@ public class IncludePathBlock {
 	}
 
 	public static boolean hasClassfiles(IResource resource) throws CoreException {
-		if (resource.isDerived()) { //$NON-NLS-1$
+		if (resource.isDerived()) {
 			return true;
 		}
 		if (resource instanceof IContainer) {
 			IResource[] members = ((IContainer) resource).members();
-			for (int i = 0; i < members.length; i++) {
-				if (hasClassfiles(members[i])) {
+			for (IResource element : members) {
+				if (hasClassfiles(element)) {
 					return true;
 				}
 			}
@@ -524,8 +514,8 @@ public class IncludePathBlock {
 			resource.delete(false, null);
 		} else if (resource instanceof IContainer) {
 			IResource[] members = ((IContainer) resource).members();
-			for (int i = 0; i < members.length; i++) {
-				removeOldClassfiles(members[i]);
+			for (IResource element : members) {
+				removeOldClassfiles(element);
 			}
 		}
 	}
@@ -586,7 +576,7 @@ public class IncludePathBlock {
 					}
 				}
 				IncludePathBasePage page = (IncludePathBasePage) fTabFolder.getItem(pageIndex).getData();
-				List selection = new ArrayList(1);
+				List<Object> selection = new ArrayList<Object>(1);
 				selection.add(elementToSelect);
 				page.setSelection(selection, true);
 			}

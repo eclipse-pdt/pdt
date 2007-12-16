@@ -37,6 +37,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.treecontent.IncludesNode;
 import org.eclipse.php.internal.ui.treecontent.TreeProvider;
 import org.eclipse.php.internal.ui.util.*;
 import org.eclipse.php.internal.ui.util.TreePath;
@@ -75,11 +76,11 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 	 * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
 	 */
 	public void focusGained(FocusEvent e) {
-		
-		// Why do we need refresh here? 
+
+		// Why do we need refresh here?
 		//fContentProvider.postRefresh(fViewer.getInput());
-		
-		// activate the org.eclipse.php.ui.contexts.window context 
+
+		// activate the org.eclipse.php.ui.contexts.window context
 		// only for this view the allow the F3 shortcut which conflict with JDT
 		IContextService service = (IContextService) PHPUiPlugin.getDefault().getWorkbench().getService(IContextService.class);
 		if (service != null) {
@@ -99,7 +100,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			service.deactivateContext(contextActivation);
 		}
 	}
-	
+
 	public void partActivated(IWorkbenchPartReference partRef) {
 	}
 
@@ -222,8 +223,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			TreeItem[] selection = tree.getSelection();
 			List result = new ArrayList(selection.length);
 			List treePaths = new ArrayList();
-			for (int i = 0; i < selection.length; i++) {
-				TreeItem item = selection[i];
+			for (TreeItem item : selection) {
 				Object element = getElement(item);
 				if (element == null)
 					continue;
@@ -236,6 +236,10 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		}
 
 		protected Object[] getSortedChildren(Object parent) {
+			if(parent instanceof IncludesNode) {
+				// Seva: don't sort include nodes, order matters!
+				return getFilteredChildren(parent);
+			}
 			IParentAwareSorter sorter = getSorter() instanceof IParentAwareSorter ? (IParentAwareSorter) getSorter() : null;
 			if (sorter != null)
 				sorter.setParent(parent);
@@ -253,9 +257,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		public boolean isExpandable(Object parent) {
 			ViewerFilter[] filters = fViewer.getFilters();
 			Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-			for (int i = 0; i < children.length; i++) {
-				Object object = children[i];
-
+			for (Object object : children) {
 				if (isEssential(object))
 					return true;
 
@@ -269,8 +271,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		// Sends the object through the given filters
 		private Object filter(Object object, Object parent, ViewerFilter[] filters) {
 			Object rv = null;
-			for (int i = 0; i < filters.length; i++) {
-				ViewerFilter filter = filters[i];
+			for (ViewerFilter filter : filters) {
 				if (filter.select(fViewer, parent, object))
 					rv = object;
 			}
@@ -291,8 +292,8 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 			for (int i = 0; i < elements.length; i++) {
 				boolean add = true;
 				if (!isEssential(elements[i])) {
-					for (int j = 0; j < filters.length; j++) {
-						add = filters[j].select(this, root, elements[i]);
+					for (ViewerFilter element : filters) {
+						add = element.select(this, root, elements[i]);
 						if (!add)
 							break;
 					}
@@ -738,7 +739,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 
 	void updateTitle() {
 		Object input = fViewer.getInput();
-		if (input == null || (input instanceof PHPWorkspaceModelManager)) {
+		if (input == null || input instanceof PHPWorkspaceModelManager) {
 			setContentDescription(""); //$NON-NLS-1$
 			setTitleToolTip(""); //$NON-NLS-1$
 		} else {
@@ -762,7 +763,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		}
 		ISelection selection = fViewer.getSelection();
 		Object input = fViewer.getInput();
-		boolean isRootInputChange = PHPWorkspaceModelManager.getInstance().equals(input) || (fWorkingSetModel != null && fWorkingSetModel.equals(input)) || input instanceof IWorkingSet;
+		boolean isRootInputChange = PHPWorkspaceModelManager.getInstance().equals(input) || fWorkingSetModel != null && fWorkingSetModel.equals(input) || input instanceof IWorkingSet;
 		try {
 			fViewer.getControl().setRedraw(false);
 			if (isRootInputChange) {
@@ -899,7 +900,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
         }
 		return super.getAdapter(adapter);
 	}
-	
+
 	/**
      * Returns the <code>IShowInSource</code> for this view.
      */
@@ -911,7 +912,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
             }
         };
     }
-   
+
     /**
      * Returns the <code>IShowInTarget</code> for this view.
      */

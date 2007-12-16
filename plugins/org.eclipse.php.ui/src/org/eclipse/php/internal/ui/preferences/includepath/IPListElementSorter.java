@@ -40,7 +40,7 @@ public class IPListElementSorter extends ViewerSorter {
 				case IIncludePathEntry.IPE_JRE:
 					return LIBRARY;
 				case IIncludePathEntry.IPE_PROJECT:
-					return PROJECT;
+					return CONTAINER;
 				case IIncludePathEntry.IPE_SOURCE:
 					return SOURCE;
 				case IIncludePathEntry.IPE_VARIABLE:

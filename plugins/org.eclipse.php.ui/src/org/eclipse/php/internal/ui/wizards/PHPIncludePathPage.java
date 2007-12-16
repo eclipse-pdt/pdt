@@ -36,7 +36,6 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 		setPageComplete(true);
 
 		createIncludePathsBlock();
-		
 	}
 
 	protected void createIncludePathsBlock() {
@@ -47,7 +46,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 	public IProject getDummyProject() {
 		return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
 	}
-	
+
 	protected void setSize(Composite composite) {
 		if (composite != null) {
 			Point minSize = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -65,7 +64,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
 	protected String[] getValidationPropertyNames() {
@@ -74,7 +73,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Composite createTopLevelComposite(Composite parent) {

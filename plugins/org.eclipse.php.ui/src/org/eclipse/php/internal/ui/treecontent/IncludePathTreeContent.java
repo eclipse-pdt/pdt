@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
@@ -45,7 +46,7 @@ import org.eclipse.swt.graphics.Image;
 public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspaceModelListener {
 
 	private static final String INCLUDE_PATHS_NODE_ID = "org.eclipse.php.ui.treecontent.IncludesNode"; //$NON-NLS-1$
-	private static final String INCLUDE_PATHS_NODE_NAME = "Include Paths"; //$NON-NLS-1$
+	private static final String INCLUDE_PATHS_NODE_NAME = PHPUIMessages.getString("IncludePathTreeContent_Node_Name"); //$NON-NLS-1$
 
 	static final IPath INCLUDE_PATHS_ROOT_PATH = new Path("\0IncludePaths"); //$NON-NLS-1$
 
@@ -91,7 +92,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 			return getProjectChildren((IProject) parentElement);
 		else if (parentElement instanceof PHPTreeNode && INCLUDE_PATHS_NODE_ID.equals(((PHPTreeNode) parentElement).getId()))
 			return getTreeNodeChildren((PHPTreeNode) parentElement);
-		else if (parentElement instanceof PHPIncludePathModel || parentElement instanceof PhpModelProxy)
+		else if (parentElement instanceof PHPIncludePathModel)
 			return getIncludeModelChildren((IPhpModel) parentElement);
 		else if (parentElement instanceof IFolder)
 			return getFolderChildren(((IFolder) parentElement));
@@ -145,9 +146,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 			return getNodeText((PHPTreeNode) element);
 		} else if (element instanceof PHPIncludePathModel) {
 			return getIncludeModelText((PHPIncludePathModel) element);
-		} else if (element instanceof PhpModelProxy) {
-			final PhpModelProxy proxy = (PhpModelProxy) element;
-			return getProjectModelText(proxy);
+		} else if (element instanceof FolderFilteredUserModel) {
+			final FolderFilteredUserModel model = (FolderFilteredUserModel) element;
+			return getContainerModelText(model);
 		} else if (element instanceof PHPFileData) {
 			return getFileText((PHPFileData) element);
 		}
@@ -436,7 +437,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 			return NO_CHILDREN;
 
 		final Object model = includePathTree.getElementData(modelPath);
-		if (!(model instanceof PHPIncludePathModel) && !(model instanceof PhpModelProxy))
+		if (!(model instanceof PHPIncludePathModel) && !(model instanceof FolderFilteredUserModel))
 			return NO_CHILDREN;
 
 		createIncludePathTree(modelPath, (IPhpModel) model);
@@ -454,8 +455,8 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 		return NO_CHILDREN;
 	}
 
-	private String getProjectModelText(final PhpModelProxy proxy) {
-		return proxy.getID();
+	private String getContainerModelText(final FolderFilteredUserModel model) {
+		return new Path(model.getID()).makeRelative().toString();
 	}
 
 	private String getNodeText(final PHPTreeNode treeNode) {

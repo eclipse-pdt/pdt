@@ -160,13 +160,15 @@ public class RenameResourceAction extends SelectionDispatchAction {
 				@Override
 				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 					synchronized (this) {
-						IFile oldFile = workspace.getRoot().getFile(resource.getFullPath());
-						if (oldFile.isAccessible()) { // in case the old file exists (fast undo-redo)
+						if (resource.isAccessible()) { // in case the old file exists (fast undo-redo)
 							return Status.CANCEL_STATUS;
 
 						}
-						IFile file = (IFile) workspace.getRoot().findMember(path);
+						IResource file = workspace.getRoot().findMember(path);
 						if (file == null) {
+							return Status.CANCEL_STATUS;
+						}
+						if (file.getType() != IResource.FILE) {
 							return Status.CANCEL_STATUS;
 						}
 						for (final Integer line : breakpoints.keySet()) {

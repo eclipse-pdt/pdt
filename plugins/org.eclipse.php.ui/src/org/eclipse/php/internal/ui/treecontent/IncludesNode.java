@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.ui.treecontent;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -36,13 +37,18 @@ public class IncludesNode extends PHPTreeNode implements IPhpProjectOptionChange
 
 		boolean hasChanges = false;
 
-		for (final IIncludePathEntry newEntry : newEntriesList)
-			if (!oldEntriesList.contains(newEntry))
-				hasChanges = true;
-
-		for (final IIncludePathEntry oldEntry : oldEntriesList)
-			if (!newEntriesList.contains(oldEntry))
-				hasChanges = true;
+		if (oldEntriesList.size() != newEntriesList.size()) {
+			hasChanges = true;
+		} else {
+			Iterator<IIncludePathEntry> oldEntriesIterator = oldEntriesList.iterator();
+			for (final IIncludePathEntry newEntry : newEntriesList) {
+				IIncludePathEntry oldEntry = oldEntriesIterator.next();
+				if (!newEntry.equals(oldEntry)) {
+					hasChanges = true;
+					break;
+				}
+			}
+		}
 
 		if (hasChanges) {
 			IncludePathTreeContent.includePathTree.getDataTree().empty();

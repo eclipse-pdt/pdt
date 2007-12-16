@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.wizards.operations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.php.internal.ui.wizards.WizardPageFactory;
@@ -89,8 +91,10 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 					options.setOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING, defaultEncodeing);
 					String context = model.getStringProperty(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
 					options.setOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT, context);
-					IIncludePathEntry[] includePath = (IIncludePathEntry[]) model.getProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
-					options.setRawIncludePath(includePath, new SubProgressMonitor(monitor, includePath.length));
+
+					// Seva: add the project itself as default include path:
+					initializeIncludePaths(project);
+
 					// options.saveChanges(monitor);
 
 					if (model.isPropertySet(Keys.PHP_VERSION)) {
@@ -102,6 +106,7 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 
 					return Status.OK_STATUS;
 				}
+
 			};
 			job.setRule(project.getWorkspace().getRuleFactory().modifyRule(project));
 			job.schedule();
@@ -113,6 +118,17 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 		return OK_STATUS;
+	}
+
+	protected void initializeIncludePaths(final IProject project) throws CoreException {
+		IIncludePathEntry[] includePaths = (IIncludePathEntry[]) model.getProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
+		List<IIncludePathEntry> updatedIncludePathEntries = new ArrayList<IIncludePathEntry>(Arrays.asList(includePaths));
+		updatedIncludePathEntries.add(IncludePathEntry.newProjectEntry(project.getFullPath(), project, false));
+		includePaths = updatedIncludePathEntries.toArray(includePaths);
+		model.setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePaths);
+		PHPNature nature = (PHPNature) project.getNature(PHPNature.ID);
+		PHPProjectOptions options = nature.getOptions();
+		options.setRawIncludePath(includePaths, null);
 	}
 
 	public boolean canUndo() {
