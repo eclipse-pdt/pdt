@@ -16,19 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.internal.resources.XMLWriter;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
@@ -39,6 +28,9 @@ import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.w3c.dom.Element;
 
 public class IncludePathEntry implements IIncludePathEntry {
+
+	private static final String SELF_PROJECT = "|S.E.L.F|"; //$NON-NLS-1$
+
 	public static final String TAG_INCLUDEPATH = "includepath"; //$NON-NLS-1$
 	public static final String TAG_INCLUDEPATHENTRY = "includepathentry"; //$NON-NLS-1$
 	public static final String TAG_ENTRY_KIND = "kind"; //$NON-NLS-1$
@@ -139,11 +131,15 @@ public class IncludePathEntry implements IIncludePathEntry {
 		String contentKindAttr = element.getAttribute(TAG_CONTENT_KIND);
 		String pathAttr = element.getAttribute(TAG_PATH);
 		String resourceAttr = element.getAttribute(TAG_RESOURCE);
+		IPath resourcePath = new Path(resourceAttr);
+		if (resourcePath.segmentCount() > 0 && resourcePath.segment(0).equals(SELF_PROJECT)) {
+			resourcePath = new Path("/" + projectPath.segment(0)).append(resourcePath.removeFirstSegments(1)); //$NON-NLS-1$
+		}
 
 		// exported flag (optional)
 		boolean isExported = element.getAttribute(TAG_EXPORTED).equals("true"); //$NON-NLS-1$
 
-		IIncludePathEntry entry = getEntry(pathAttr, entryKindAttr, contentKindAttr, resourceAttr, isExported, projectPath);
+		IIncludePathEntry entry = getEntry(pathAttr, entryKindAttr, contentKindAttr, resourcePath.toString(), isExported, projectPath);
 		return entry;
 	}
 
@@ -168,7 +164,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 
 			case IIncludePathEntry.IPE_PROJECT:
 				try {
-					resource = ResourcesPlugin.getWorkspace().getRoot().getProject(sResource);
+					resource = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(sResource));
 				} catch (Exception e) {
 					// Do nothing
 				}
@@ -255,7 +251,11 @@ public class IncludePathEntry implements IIncludePathEntry {
 		}
 		parameters.put(TAG_PATH, String.valueOf(xmlPath));
 		if (resource != null) {
-			parameters.put(TAG_RESOURCE, resource.getName());
+			IPath resourcePath = resource.getFullPath();
+			if (projectPath.isPrefixOf(resourcePath)) {
+				resourcePath = new Path(SELF_PROJECT).append(resourcePath.removeFirstSegments(1));
+			}
+			parameters.put(TAG_RESOURCE, resourcePath.toString());
 		}
 		if (this.isExported) {
 			parameters.put(TAG_EXPORTED, "true");//$NON-NLS-1$
@@ -273,20 +273,26 @@ public class IncludePathEntry implements IIncludePathEntry {
 	public static void updateProjectReferences(IIncludePathEntry[] newEntries, IIncludePathEntry[] oldEntries, final IProject project, SubProgressMonitor monitor) {
 		try {
 			boolean changedReferences = false;
+			if (!project.isAccessible()) {
+				return;
+			}
 			final IProjectDescription projectDescription = project.getDescription();
-			ArrayList referenced = new ArrayList();
-			ArrayList referencedNames = new ArrayList();
+			List<IProject> referenced = new ArrayList<IProject>();
+			List<String> referencedNames = new ArrayList<String>();
 			IProject[] referencedProjects = projectDescription.getReferencedProjects();
-			for (int i = 0; i < referencedProjects.length; i++) {
-				referenced.add(referencedProjects[i]);
-				referencedNames.add(referencedProjects[i].getName());
+			for (IProject element : referencedProjects) {
+				referenced.add(element);
+				referencedNames.add(element.getName());
 			}
 
-			for (int i = 0; i < oldEntries.length; i++) {
-				if (oldEntries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-					String projectName = oldEntries[i].getPath().lastSegment();
+			for (IIncludePathEntry element : oldEntries) {
+				if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+					String projectName = element.getPath().segment(0);
+					if (projectName.equals(project.getName())) {
+						continue;
+					}
 					if (!containsProject(newEntries, projectName)) {
-						if (((IncludePathEntry) oldEntries[i]).createdReference) {
+						if (((IncludePathEntry) element).createdReference) {
 							int index = referencedNames.indexOf(projectName);
 							if (index >= 0) {
 								changedReferences = true;
@@ -300,7 +306,10 @@ public class IncludePathEntry implements IIncludePathEntry {
 
 			for (int i = 0; i < newEntries.length; i++) {
 				if (newEntries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-					String projectName = newEntries[i].getPath().lastSegment();
+					String projectName = newEntries[i].getPath().segment(0);
+					if (projectName.equals(project.getName())) {
+						continue;
+					}
 					if (!containsProject(oldEntries, projectName)) {
 						if (!referencedNames.contains(projectName)) {
 							changedReferences = true;
@@ -312,7 +321,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 				}
 			}
 			if (changedReferences) {
-				IProject[] referenceProjects = (IProject[]) referenced.toArray(new IProject[referenced.size()]);
+				IProject[] referenceProjects = referenced.toArray(new IProject[referenced.size()]);
 				projectDescription.setReferencedProjects(referenceProjects);
 				WorkspaceJob job = new WorkspaceJob(CoreMessages.getString("IncludePathEntry_2")) {
 					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
@@ -330,9 +339,9 @@ public class IncludePathEntry implements IIncludePathEntry {
 	}
 
 	private static boolean containsProject(IIncludePathEntry[] entries, String projectName) {
-		for (int i = 0; i < entries.length; i++) {
-			if (entries[i].getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-				if (entries[i].getPath().lastSegment().equals(projectName))
+		for (IIncludePathEntry element : entries) {
+			if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+				if (element.getPath().segment(0).equals(projectName))
 					return true;
 			}
 		}
@@ -455,7 +464,7 @@ public class IncludePathEntry implements IIncludePathEntry {
 		int result = 1;
 		result = PRIME * result + contentKind;
 		result = PRIME * result + entryKind;
-		result = PRIME * result + ((path == null) ? 0 : path.hashCode());
+		result = PRIME * result + (path == null ? 0 : path.hashCode());
 		return result;
 	}
 

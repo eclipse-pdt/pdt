@@ -102,13 +102,17 @@ public class PHPProjectOptions {
 
 	public PHPProjectOptions(final IProject project) {
 		//		assert project != null;
+		initialize(project);
+
+		// backward compatible
+		loadOldConfiguration();
+	}
+
+	private void initialize(final IProject project) {
 		this.project = project;
 		ProjectScope projectScope = new ProjectScope(project);
 		preferences = projectScope.getNode(PREF_QUALIFIER);
 		loadIncludePath();
-
-		// backward compatible
-		loadOldConfiguration();
 	}
 
 	public void addOptionChangeListener(final String optionKey, final IPhpProjectOptionChangeListener optionChangeListener) {
@@ -191,30 +195,37 @@ public class PHPProjectOptions {
 		return includePathEntries;
 	}
 
-	public void removeResourceFromIncludePath(final IResource resource) {
+	public void removeContainerFromIncludePath(final IContainer container) {
 		if (includePathEntries.length == 0)
 			return;
 		List<IIncludePathEntry> newIncludePathEntries = new ArrayList<IIncludePathEntry>(includePathEntries.length);
 		for (int i = 0; i < includePathEntries.length; ++i) {
-			if (includePathEntries[i].getResource() == resource) {
+			IResource resource = includePathEntries[i].getResource();
+			if (resource == null) {
+				continue;
+			}
+			if (resource.equals(container)) {
 				continue;
 			}
 			newIncludePathEntries.add(includePathEntries[i]);
 		}
 		try {
 			setRawIncludePath(newIncludePathEntries.toArray(new IIncludePathEntry[newIncludePathEntries.size()]), null);
-			return;
 		} catch (final Exception e) {
 			PHPCorePlugin.log(e);
 		}
 	}
 
-	public void renameResourceAtIncludePath(final IResource from, final IResource to) {
+	public void renameContainerAtIncludePath(final IContainer from, final IContainer to) {
 		if (includePathEntries.length == 0)
 			return;
 		List<IIncludePathEntry> newIncludePathEntries = new ArrayList<IIncludePathEntry>(includePathEntries.length);
 		for (int i = 0; i < includePathEntries.length; ++i) {
-			if (includePathEntries[i].getResource() == from) {
+			IResource resource = includePathEntries[i].getResource();
+			if (resource == null) {
+				continue;
+			}
+			if (resource.equals(from)) {
 				IIncludePathEntry newSourceEntry = IncludePathEntry.newProjectEntry(to.getFullPath(), to, false);
 				newIncludePathEntries.add(newSourceEntry);
 			} else {
@@ -232,8 +243,15 @@ public class PHPProjectOptions {
 		final IIncludePathEntry[] oldValue = includePathEntries;
 		includePathEntries = newIncludePathEntries;
 		IncludePathEntry.updateProjectReferences(includePathEntries, oldValue, project, subProgressMonitor);
-
-		saveIncludePath();
+		WorkspaceJob save = new WorkspaceJob("Saving include paths") {
+			public IStatus runInWorkspace(IProgressMonitor monitor) {
+				if (project.isAccessible()) {
+					saveIncludePath();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		save.schedule();
 		notifyOptionChangeListeners(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, oldValue, newIncludePathEntries);
 	}
 

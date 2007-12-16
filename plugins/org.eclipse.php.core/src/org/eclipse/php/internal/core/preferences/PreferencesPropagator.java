@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.preferences;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
@@ -28,7 +30,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 /**
  * PreferencesPropagator for propagation of preferences events that arrive as a result from changes
  * in the workspace preferences store and in the project-specific preferences nodes.
- * 
+ *
  * @author shalom
  */
 public class PreferencesPropagator extends AbstractPreferencesPropagator {
@@ -52,8 +54,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/**
-	 * Adds an IPreferencesPropagatorListener with a preferences key to listen to. 
-	 *  
+	 * Adds an IPreferencesPropagatorListener with a preferences key to listen to.
+	 *
 	 * @param listener			An IPreferencesPropagatorListener.
 	 * @param preferencesKey	The preferences key that will screen the relevant changes.
 	 */
@@ -69,7 +71,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 
 	/**
 	 * Removes an IPreferencesPropagatorListener that was assigned to listen to the given preferences key.
-	 * 
+	 *
 	 * @param listener			An IPreferencesPropagatorListener.
 	 * @param preferencesKey	The preferences key that is the screening key for the IPreferencesPropagatorListener.
 	 */
@@ -84,9 +86,9 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	/**
 	 * Sets a list of listeners for the given preferences key.
 	 * This list will replace any previous list of listeners for the key.
-	 * 
+	 *
 	 * @param listeners			A List of listeners that contains IPreferencesPropagatorListeners.
-	 * @param preferencesKey	The preferences key that will screen the relevant changes. 
+	 * @param preferencesKey	The preferences key that will screen the relevant changes.
 	 */
 	public void setPropagatorListeners(List listeners, String preferencesKey) {
 		super.setPropagatorListeners(listeners, preferencesKey);
@@ -142,7 +144,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * Add the listener to a ProjectPreferencesPropagator. 
+	 * Add the listener to a ProjectPreferencesPropagator.
 	 * Create a new propagator if needed.
 	 */
 	private void addToProjectPropagator(IPreferencesPropagatorListener listener, String preferencesKey) {
@@ -170,7 +172,11 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	 */
 	private boolean isProjectSpecific(IProject project, String preferencesKey) {
 		ProjectScope projectScope = getProjectScope(project);
-		return projectScope.getNode(nodeQualifier).get(preferencesKey, null) != null;
+		IPath location = projectScope.getLocation();
+		if (location != null && new File(location.toOSString()).exists()) {
+			return projectScope.getNode(nodeQualifier).get(preferencesKey, null) != null;
+		}
+		return false;
 	}
 
 	/*
@@ -222,8 +228,8 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 					return;
 				IPreferencesPropagatorListener[] listeners = new IPreferencesPropagatorListener[list.size()];
 				list.toArray(listeners);
-				for (int i = 0; i < listeners.length; i++) {
-					listeners[i].preferencesEventOccured(event);
+				for (IPreferencesPropagatorListener element : listeners) {
+					element.preferencesEventOccured(event);
 				}
 			}
 		}
@@ -321,8 +327,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 			listeners = new IPreferencesPropagatorListener[list.size()];
 			list.toArray(listeners);
 		}
-		for (int i = 0; i < listeners.length; i++) {
-			IPreferencesPropagatorListener listener = listeners[i];
+		for (IPreferencesPropagatorListener listener : listeners) {
 			if (project.equals(listener.getProject())) {
 				// Move the listener from this propagator to the project specific preferences propagator
 				super.removePropagatorListener(listener, key);
@@ -351,7 +356,7 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	}
 
 	/*
-	 * An inner IPropertyChangeListener that listens to the workspace changes and notify all the 
+	 * An inner IPropertyChangeListener that listens to the workspace changes and notify all the
 	 * registered listeners.
 	 */
 	private class InnerPropertyChangeListener implements IPropertyChangeListener {

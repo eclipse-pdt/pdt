@@ -505,7 +505,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	}
 
-	private void copyUserModelListeners(PHPUserModel newUserModel, List modelListenerList) {
+	private void copyUserModelListeners(IPHPUserModel newUserModel, List modelListenerList) {
 		for (Iterator modelListenerIterator = modelListenerList.iterator(); modelListenerIterator.hasNext();) {
 			ModelListener modelListener = (ModelListener) modelListenerIterator.next();
 			newUserModel.addModelListener(modelListener);

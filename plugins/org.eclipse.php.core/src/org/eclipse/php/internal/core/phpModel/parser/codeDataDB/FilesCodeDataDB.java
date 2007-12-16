@@ -12,23 +12,22 @@ package org.eclipse.php.internal.core.phpModel.parser.codeDataDB;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 
 public class FilesCodeDataDB implements CodeDataDB {
 
-	private Map files;
-	private List sortedFiles;
+	private Map<String, CodeData> files;
+	private List<CodeData> sortedFiles;
 	private boolean needsResort;
-	private Comparator comparator;
+	private Comparator<CodeData> comparator;
 
 	public FilesCodeDataDB() {
-		files = new Hashtable(1000);
-		sortedFiles = new ArrayList(1000);
-		comparator = new Comparator() {
-			public int compare(Object o, Object o1) {
-				String name1 = new Path(((CodeData) o).getName()).lastSegment();
-				String name2 = new Path(((CodeData) o1).getName()).lastSegment();
+		files = new HashMap<String, CodeData>(1000);
+		sortedFiles = new ArrayList<CodeData>(1000);
+		comparator = new Comparator<CodeData>() {
+			public int compare(CodeData o1, CodeData o2) {
+				String name1 = o1.getName();
+				String name2 = o2.getName();
 				return name1.compareToIgnoreCase(name2);
 			}
 		};
@@ -40,7 +39,7 @@ public class FilesCodeDataDB implements CodeDataDB {
 		needsResort = false;
 	}
 
-	public synchronized Collection getCodeData(String name) {
+	public synchronized Collection<CodeData> getCodeData(String name) {
 		return null;
 	}
 
@@ -48,7 +47,7 @@ public class FilesCodeDataDB implements CodeDataDB {
 		if (name == null) {
 			return null;
 		}
-		return (CodeData) files.get(name);
+		return files.get(name);
 	}
 
 	public synchronized void addCodeData(CodeData codeData) {
@@ -64,7 +63,7 @@ public class FilesCodeDataDB implements CodeDataDB {
 		sortedFiles.remove(codeData);
 	}
 
-	public synchronized List asList() {
+	public synchronized List<CodeData> asList() {
 		if (needsResort) {
 			Collections.sort(sortedFiles, comparator);
 			needsResort = false;

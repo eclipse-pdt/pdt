@@ -16,42 +16,42 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 
 public class GlobalVariablesCodeDataDB implements CodeDataDB {
 
-	private Hashtable hashtable;
-	private TreeSet sortedData;
-	private ArrayList cacheList;
+	private Map<String, Integer> codeDatas;
+	private Set<CodeData> sortedData;
+	private List<CodeData> cacheList;
 
 	public GlobalVariablesCodeDataDB() {
-		hashtable = new Hashtable(1000);
-		sortedData = new TreeSet();
+		codeDatas = new HashMap<String, Integer>(1000);
+		sortedData = new TreeSet<CodeData>();
 	}
 
 	public synchronized void clear() {
 		cacheList = null;
-		hashtable.clear();
+		codeDatas.clear();
 		sortedData.clear();
 	}
 
-	public synchronized Collection getCodeData(String name) {
+	public synchronized Collection<CodeData> getCodeData(String name) {
 		return null;
 	}
 
 	public synchronized void addCodeData(CodeData codeData) {
 		cacheList = null;
 		String name = codeData.getName().trim().toLowerCase();
-		Integer count = (Integer) hashtable.get(name);
+		Integer count = codeDatas.get(name);
 		if (count == null) {
 			count = new Integer(1);
 			sortedData.add(codeData);
 		} else {
 			count = new Integer(count.intValue() + 1);
 		}
-		hashtable.put(name, count);
+		codeDatas.put(name, count);
 	}
 
 	public synchronized void removeCodeData(CodeData codeData) {
 		cacheList = null;
 		String name = codeData.getName().trim().toLowerCase();
-		Integer count = (Integer) hashtable.get(name);
+		Integer count = codeDatas.get(name);
 		if (count == null) {
 			sortedData.remove(codeData);
 			return;
@@ -59,15 +59,15 @@ public class GlobalVariablesCodeDataDB implements CodeDataDB {
 		int intCount = count.intValue() - 1;
 		if (intCount <= 0) {
 			sortedData.remove(codeData);
-			hashtable.remove(name);
+			codeDatas.remove(name);
 		} else {
-			hashtable.put(name, new Integer(intCount));
+			codeDatas.put(name, new Integer(intCount));
 		}
 	}
 
-	public synchronized List asList() {
+	public synchronized List<CodeData> asList() {
 		if (cacheList == null) {
-			cacheList = new ArrayList(sortedData);
+			cacheList = new ArrayList<CodeData>(sortedData);
 		}
 		return cacheList;
 	}

@@ -7,17 +7,17 @@ import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 public class IncludePathEntryDescriptor implements IXMLPreferencesStorable {
-	
+
 	private String entryKind = ""; //$NON-NLS-1$
 	private String contentKind = ""; //$NON-NLS-1$
 	private String path = ""; //$NON-NLS-1$
 	private String resourceName = ""; //$NON-NLS-1$
 	private boolean isExported = false;
 	private boolean createdReference = false;
-	
+
 	public IncludePathEntryDescriptor(){
 	}
-	
+
 	public String getContentKind() {
 		return contentKind;
 	}
@@ -72,11 +72,11 @@ public class IncludePathEntryDescriptor implements IXMLPreferencesStorable {
 		this.contentKind = IncludePathEntry.contentKindToString(entry.contentKind);
 		//path = entry.path.toOSString();
 		if (entry.resource != null) {
-			this.resourceName = entry.resource.getName();
+			this.resourceName = entry.resource.getFullPath().toString();
 		}
 		this.isExported = entry.isExported;
 		this.createdReference = false;
-		
+
 		IPath entryPath = entry.path;
 		if (entry.entryKind != IIncludePathEntry.IPE_VARIABLE && entry.entryKind != IIncludePathEntry.IPE_CONTAINER) {
 			// translate to project relative from absolute (unless a device path)
@@ -88,19 +88,19 @@ public class IncludePathEntryDescriptor implements IXMLPreferencesStorable {
 					entryPath = entryPath.makeAbsolute();
 				}
 			}
-		}		
-		this.path = String.valueOf(entryPath);	
+		}
+		this.path = String.valueOf(entryPath);
 	}
 
 	public void restoreFromMap(HashMap map) {
 		HashMap entry = (HashMap) map.get("javabridge_entry"); //$NON-NLS-1$
-		if (entry != null) {		
+		if (entry != null) {
 			entryKind = (String) entry.get("entryKind"); //$NON-NLS-1$
 			contentKind = (String) entry.get("contentKind"); //$NON-NLS-1$
 			path = (String) entry.get("path"); //$NON-NLS-1$
 			resourceName = (String) entry.get("resourceName"); //$NON-NLS-1$
-			isExported = (Boolean.valueOf( (String) entry.get("isExported")) ).booleanValue(); //$NON-NLS-1$
-			createdReference = (Boolean.valueOf( (String) entry.get("referenceWasCreated")) ).booleanValue(); //$NON-NLS-1$
+			isExported = Boolean.valueOf( (String) entry.get("isExported")).booleanValue(); //$NON-NLS-1$
+			createdReference = Boolean.valueOf( (String) entry.get("referenceWasCreated")).booleanValue(); //$NON-NLS-1$
 		}
 	}
 
@@ -112,14 +112,14 @@ public class IncludePathEntryDescriptor implements IXMLPreferencesStorable {
 		map.put("resourceName", resourceName); //$NON-NLS-1$
 		map.put("isExported", new Boolean(isExported)); //$NON-NLS-1$
 		map.put("referenceWasCreated", new Boolean(createdReference)); //$NON-NLS-1$
-		
+
 		HashMap entry = new HashMap(1);
 		entry.put("javabridge_entry", map); //$NON-NLS-1$
-	
+
 		return entry;
 	}
-	
-	
-	
+
+
+
 
 }

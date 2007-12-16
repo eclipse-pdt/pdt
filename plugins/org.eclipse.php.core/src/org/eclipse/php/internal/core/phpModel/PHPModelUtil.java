@@ -500,9 +500,9 @@ public class PHPModelUtil {
 		if (includeManager == null)
 			return null;
 		IPhpModel[] includeModels = includeManager.listModels();
-		for (int j = 0; j < includeModels.length; ++j) {
-			if (includeModels[j].getFileData(fileData.getName()) == fileData) {
-				return includeModels[j];
+		for (IPhpModel includeModel : includeModels) {
+			if (includeModel.getFileData(fileData.getName()) == fileData) {
+				return includeModel;
 			}
 		}
 		return null;
@@ -640,31 +640,41 @@ public class PHPModelUtil {
 		if (fileData != null) {
 			// deterministic
 			IResource resource = getResource(fileData);
+			// Seva: now include paths gathered higher priority.
+			if (model instanceof PHPProjectModel) { // file is in an include file
+				IPhpModel includeModel = getIncludeModelForFile((PHPProjectModel) model, fileData);
+				if (includeModel != null) {
+					IPath path = getIncludeModelLocation(includeModel);
+					if (includeModel.getFileData(location) == fileData) {
+						return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString(); //$NON-NLS-1$
+					}
+				}
+			}
 			if (resource != null && resource.exists()) { // file is in a project
+				// Seva: if the file is just on project, it means it's not accessible
+				// TODO: we should add worning in this case
 				IProject fileProject = resource.getProject();
 				if (fileProject.isAccessible()) {
 					return new Path(location).removeFirstSegments(1).toString();
-				}
-			} else if (model instanceof PHPProjectModel) { // file is in an include file
-				IPhpModel includeModel = getIncludeModelForFile((PHPProjectModel) model, fileData);
-				IPath path = getIncludeModelLocation(includeModel);
-				if (includeModel.getFileData(location) == fileData) {
-					return new Path(location).setDevice("").removeFirstSegments(path.segmentCount()).toString(); //$NON-NLS-1$
 				}
 			}
 		} else {
 			// heuristic
 			IPath pathLocation = new Path(location);
 			if (model instanceof PHPProjectModel) {
-				String projectName = pathLocation.segment(0);
-				if (projectName.equals(((PHPProjectModel) model).getProject().getName()))
-					return pathLocation.removeFirstSegments(1).makeRelative().toString();
 				PHPIncludePathModelManager includeManager = (PHPIncludePathModelManager) ((PHPProjectModel) model).getModel(PHPIncludePathModelManager.COMPOSITE_INCLUDE_PATH_MODEL_ID);
-				if (includeManager.getModel(projectName) != null)
-					return pathLocation.removeFirstSegments(1).makeRelative().toString();
+				for (IPhpModel includeModel : includeManager.listModels()) {
+					IPath path = getIncludeModelLocation(includeModel);
+					if (path.isPrefixOf(pathLocation)) {
+						return pathLocation.removeFirstSegments(path.segmentCount()).toString();
+					}
+				}
+				// Seva: this is done latest, since project is not automatically on include path:
+				String projectName = pathLocation.segment(0);
 				if (ResourcesPlugin.getWorkspace().getRoot().getProject(projectName) != null)
 					return pathLocation.removeFirstSegments(1).makeRelative().toString();
-				// TODO include variables/directories
+				if (projectName.equals(((PHPProjectModel) model).getProject().getName()))
+					return pathLocation.removeFirstSegments(1).makeRelative().toString();
 			}
 		}
 		return location;

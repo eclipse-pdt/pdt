@@ -23,7 +23,7 @@ public class ModelSupport {
 	/**
 	 *
 	 */
-	private static final CodeData[] EMPTY_DATA = new CodeData[0];
+	public static final CodeData[] EMPTY_DATA = new CodeData[0];
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	public static final CodeDataFilter STATIC_VARIABLES_FILTER = new StaticVariablesFilter(true);
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
@@ -96,16 +96,8 @@ public class ModelSupport {
 		return getCodeDataStartingWith(sortedArray, startsWith, false, false);
 	}
 
-	public static CodeData[] getFileDataStartingWith(CodeData[] sortedArray, String startsWith) {
-		return getCodeDataStartingWith(sortedArray, startsWith, true, false);
-	}
-
 	public static CodeData[] getCodeDataStartingWithCS(CodeData[] sortedArray, String startsWith) {
 		return getCodeDataStartingWith(sortedArray, startsWith, false, true);
-	}
-
-	public static CodeData[] getFileDataStartingWithCS(CodeData[] sortedArray, String startsWith) {
-		return getCodeDataStartingWith(sortedArray, startsWith, true, true);
 	}
 
 	private static CodeData[] getCodeDataStartingWith(CodeData[] sortedArray, String startsWith, boolean useComparableName, boolean caseSensitive) {

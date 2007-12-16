@@ -14,12 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -47,9 +42,9 @@ public class IncludeCacheManager {
 	}
 
 	/**
-	 * Update the include-paths XML with a new list of paths for the given project. 
+	 * Update the include-paths XML with a new list of paths for the given project.
 	 * This method also check for any un-used cache files and remove them from the disk.
-	 * 
+	 *
 	 * @param project The modified IProject.
 	 * @param includePaths The new list of include-paths (a list of string paths).
 	 * @return The cached Map of IProject name to List of cache files names
@@ -70,9 +65,9 @@ public class IncludeCacheManager {
 	}
 
 	/**
-	 * Update the include-paths XML when a project is removed. 
+	 * Update the include-paths XML when a project is removed.
 	 * This method also check for any un-used cache files and remove them from the disk.
-	 * 
+	 *
 	 * @param project The IProject that was removed.
 	 * @return The cached Map of IProject name to List of cache files names
 	 */
@@ -94,11 +89,11 @@ public class IncludeCacheManager {
 	/**
 	 * Update the include-paths XML when a project PHP version is changed.
 	 * Note: This method assumes that any cache file ends-up with the PHP version string.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param project
 	 * @param oldVersion
-	 * @param newVersion 
+	 * @param newVersion
 	 * @return The cached Map of IProject name to List of cache files names; Null if the old or the new phpVersion
 	 * are null.
 	 */
@@ -110,12 +105,12 @@ public class IncludeCacheManager {
 		synchronized (lock) {
 			String key = project.getName();
 			cachedMap = getCachedMap();
-			List oldPaths = (List)cachedMap.get(key);
+			List oldPaths = (List) cachedMap.get(key);
 			if (oldPaths != null) {
 				// Go over the names and change each on of them to end with the new PHP version.
 				List newNames = new ArrayList(oldPaths.size());
 				for (int i = 0; i < oldPaths.size(); i++) {
-					newNames.add(((String)oldPaths.get(i)).replaceAll(oldVersion, newVersion));
+					newNames.add(((String) oldPaths.get(i)).replaceAll(oldVersion, newVersion));
 				}
 				cachedMap.put(key, newNames);
 				checkPaths(oldPaths, cachedMap);
@@ -125,18 +120,18 @@ public class IncludeCacheManager {
 		}
 		return cachedMap;
 	}
-	
+
 	/**
 	 * Check that all the projects in the map actually exists in the workspace.
-	 * If a project is missing (probably as a result of a renaming) remove it from the map and check 
+	 * If a project is missing (probably as a result of a renaming) remove it from the map and check
 	 * if any of its cache files can also be removed.
 	 */
 	public void checkCache() {
 		Map cachedMap = getCachedMap();
 		IProject[] projects = PHPWorkspaceModelManager.getInstance().listProjects();
 		HashMap projectsMap = new HashMap();
-		for (int i = 0; i < projects.length; i++) {
-			projectsMap.put(projects[i].getName(), projects[i]);
+		for (IProject element : projects) {
+			projectsMap.put(element.getName(), element);
 		}
 		List pathsToRemove = new ArrayList();
 		Set keysSet = cachedMap.keySet();
@@ -144,7 +139,7 @@ public class IncludeCacheManager {
 		keysSet.toArray(keys);
 		for (int i = 0; i < keys.length; i++) {
 			if (!projectsMap.containsKey(keys[i])) {
-				List list = (List)cachedMap.remove(keys[i]);
+				List list = (List) cachedMap.remove(keys[i]);
 				pathsToRemove.addAll(list);
 			}
 		}
@@ -152,7 +147,7 @@ public class IncludeCacheManager {
 		checkPaths(pathsToRemove, cachedMap);
 		deletePaths(pathsToRemove);
 	}
-	
+
 	/*
 	 * Deletes a list of files from the disk.
 	 * The given List contains the cached file names.

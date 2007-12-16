@@ -11,11 +11,10 @@
 package org.eclipse.php.internal.core.util;
 
 import java.io.File;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
@@ -88,9 +87,9 @@ public class PHPSearchEngine {
 						return new IncludedFileResult(entry, file);
 					}
 				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-					IProject project = (IProject) entry.getResource();
-					if (project.isAccessible()) {
-						IResource resource = project.findMember(path);
+					IContainer container = (IContainer) entry.getResource();
+					if (container.isAccessible()) {
+						IResource resource = container.findMember(path);
 						if (resource instanceof IFile) {
 							return new ResourceResult((IFile) resource);
 						}
@@ -140,7 +139,8 @@ public class PHPSearchEngine {
 	 * @return array of include path objects (it can be one of: IContainer, IncludePathEntry)
 	 */
 	public static Object[] buildIncludePath(IProject project) {
-		Set<Object> results = new HashSet<Object>();
+		// Seva: The results set should be ordered upon include paths order
+		Set<Object> results = new LinkedHashSet<Object>();
 		buildIncludePath(project, results);
 		return results.toArray();
 	}
@@ -158,26 +158,33 @@ public class PHPSearchEngine {
 		if (!project.isAccessible() || !project.isOpen()) {
 			return;
 		}
+
 		// Collect include paths:
 		PHPProjectOptions projectOptions = PHPProjectOptions.forProject(project);
 		if (projectOptions != null) {
 			IIncludePathEntry[] includePath = projectOptions.readRawIncludePath();
 			for (IIncludePathEntry entry : includePath) {
-				if (entry.getEntryKind() != IIncludePathEntry.IPE_PROJECT) { // we add this project later as a referenced project
-					results.add(entry);
+				// if (entry.getEntryKind() != IIncludePathEntry.IPE_PROJECT) { // we add this project later as a referenced project
+				// FIXME recursion seems less reasonable now.
+				results.add(entry);
+				// }
+			}
+		}
+		// Seva: This is not correct any more:
+		/*
+				// Collect referenced projects and their include paths:
+				try {
+					IProject[] referencedProjects = project.getReferencedProjects();
+					for (IProject referencedProject : referencedProjects) {
+						if (referencedProject != project) {
+							buildIncludePath(referencedProject, results);
+						}
+					}
+				} catch (CoreException e) {
 				}
-			}
-		}
-		// Collect referenced projects and their include paths:
-		try {
-			IProject[] referencedProjects = project.getReferencedProjects();
-			for (IProject referencedProject : referencedProjects) {
-				buildIncludePath(referencedProject, results);
-			}
-		} catch (CoreException e) {
-		}
-		// Add current project:
-		results.add(project);
+				// Add current project:
+				results.add(project);
+		*/
 	}
 
 	/**

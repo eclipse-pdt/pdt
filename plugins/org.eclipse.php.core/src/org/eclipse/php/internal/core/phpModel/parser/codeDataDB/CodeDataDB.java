@@ -19,12 +19,12 @@ public interface CodeDataDB {
 
 	public void clear();
 
-	public Collection getCodeData(String name);
+	public Collection<CodeData> getCodeData(String name);
 
 	public void addCodeData(CodeData codeData);
 
 	public void removeCodeData(CodeData codeData);
 
-	public List asList();
+	public List<CodeData> asList();
 
 }
