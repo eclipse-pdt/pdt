@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Group;
  * This dialog appears only when the launch is a NEW lauch. In cases where we already identified that
  * there is a launch configuration on the selected resource (file) we use the configuration without
  * asking.
- * 
+ *
  * @author shalom
  */
 public class PHPWebPageURLLaunchDialog extends MessageDialog {
@@ -49,7 +49,7 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 
 	/**
 	 * Constructs a new ServerURLLaunchDialog.
-	 * 
+	 *
 	 * @param launchConfiguration The launch configuration the we are using for the current launch.
 	 * @param parentShell
 	 * @param dialogTitle
@@ -60,16 +60,10 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 	 * @param defaultIndex
 	 */
 	public PHPWebPageURLLaunchDialog(ILaunchConfigurationWorkingCopy launchConfiguration, Server server, String title) {
-		super(PHPDebugUIPlugin.getActiveWorkbenchShell(), title, null, "", server.canPublish() ? WARNING : INFORMATION, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+		super(PHPDebugUIPlugin.getActiveWorkbenchShell(), title, null, "", INFORMATION, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.launchConfiguration = launchConfiguration;
 		this.server = server;
-		if (server.canPublish()) {
-			// Place a notification on where does the files are going to be published to.
-			message = "According to the projects' default server settings, all the project files will be published to '" + server.getDocumentRoot() + '\'';
-		} else {
-			// Place an information that no files are going to be published.
-			message = "Note that no files will be published to the server.\nTo change this default behavior, set the servers' publish directory.";
-		}
+		message = "Note that no files will be published to the server.";
 	}
 
 	/**
@@ -85,8 +79,8 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 		data.widthHint = convertWidthInCharsToPixels(80);
 		combo.setLayoutData(data);
 		Object[] urls = previousURLs.toArray();
-		for (int i = 0; i < urls.length; i++) {
-			combo.add(urls[i].toString());
+		for (Object element : urls) {
+			combo.add(element.toString());
 		}
 		try {
 			String selectedURL = launchConfiguration.getAttribute(Server.BASE_URL, "");
@@ -125,7 +119,6 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 				launchConfiguration.setAttribute(ServerLaunchConfigurationTab.AUTO_GENERATED_URL, false);
 			}
 			launchConfiguration.setAttribute(Server.BASE_URL, url);
-			launchConfiguration.setAttribute(Server.CONTEXT_ROOT, PHPWebPageLaunchShortcut.computeContextRoot(url, fileName, server));
 		}
 		super.buttonPressed(buttonId);
 	}
