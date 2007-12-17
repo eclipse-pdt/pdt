@@ -16,23 +16,23 @@ import org.eclipse.core.runtime.IPath;
  */
 public class IncludeStringHack {
 
-	private static final Pattern DOUBLE_DOT_WITH_SLASH = Pattern.compile("\\.{2}([\\/])");
-	private static final String DOUBLE_PIPE_WITH_SLASH_REPLACEMENT = "||$1";
-	private static final Pattern DOUBLE_DOT_AT_END = Pattern.compile("\\.{2}$");
-	private static final String DOUBLE_PIPE_AT_END_REPLACEMENT = "||";
-	private static final Pattern SINGLE_DOT_WITH_SLASH = Pattern.compile("\\.{1}([\\/])");
-	private static final String SINGLE_PIPE_WITH_SLASH_REPLACEMENT = "|$1";
-	private static final Pattern SINGLE_DOT_AT_END = Pattern.compile("\\.{1}$");
-	private static final String SINGLE_PIPE_AT_END_REPLACEMENT = "|";
+	private static final Pattern DOUBLE_DOT_WITH_SLASH = Pattern.compile("\\.{2}([\\/])"); //$NON-NLS-1$
+	private static final String DOUBLE_PIPE_WITH_SLASH_REPLACEMENT = "||$1"; //$NON-NLS-1$
+	private static final Pattern DOUBLE_DOT_AT_END = Pattern.compile("\\.{2}$"); //$NON-NLS-1$
+	private static final String DOUBLE_PIPE_AT_END_REPLACEMENT = "||"; //$NON-NLS-1$
+	private static final Pattern SINGLE_DOT_WITH_SLASH = Pattern.compile("\\.{1}([\\/])"); //$NON-NLS-1$
+	private static final String SINGLE_PIPE_WITH_SLASH_REPLACEMENT = "|$1"; //$NON-NLS-1$
+	private static final Pattern SINGLE_DOT_AT_END = Pattern.compile("\\.{1}$"); //$NON-NLS-1$
+	private static final String SINGLE_PIPE_AT_END_REPLACEMENT = "|"; //$NON-NLS-1$
 
-	private static final Pattern DOUBLE_PIPE_WITH_SLASH = Pattern.compile("\\|{2}([\\/])");
-	private static final String DOUBLE_DOT_WITH_SLASH_REPLACEMENT = "..$1";
-	private static final Pattern DOUBLE_PIPE_AT_END = Pattern.compile("\\|{2}$");
-	private static final String DOUBLE_DOT_AT_END_REPLACEMENT = "..";
-	private static final Pattern SINGLE_PIPE_WITH_SLASH = Pattern.compile("\\|{1}([\\/])");
-	private static final String SINGLE_DOT_WITH_SLASH_REPLACEMENT = ".$1";
-	private static final Pattern SINGLE_PIPE_AT_END = Pattern.compile("\\|{1}$");
-	private static final String SINGLE_DOT_AT_END_REPLACEMENT = ".";
+	private static final Pattern DOUBLE_PIPE_WITH_SLASH = Pattern.compile("\\|{2}([\\/])"); //$NON-NLS-1$
+	private static final String DOUBLE_DOT_WITH_SLASH_REPLACEMENT = "..$1"; //$NON-NLS-1$
+	private static final Pattern DOUBLE_PIPE_AT_END = Pattern.compile("\\|{2}$"); //$NON-NLS-1$
+	private static final String DOUBLE_DOT_AT_END_REPLACEMENT = ".."; //$NON-NLS-1$
+	private static final Pattern SINGLE_PIPE_WITH_SLASH = Pattern.compile("\\|{1}([\\/])"); //$NON-NLS-1$
+	private static final String SINGLE_DOT_WITH_SLASH_REPLACEMENT = ".$1"; //$NON-NLS-1$
+	private static final Pattern SINGLE_PIPE_AT_END = Pattern.compile("\\|{1}$"); //$NON-NLS-1$
+	private static final String SINGLE_DOT_AT_END_REPLACEMENT = "."; //$NON-NLS-1$
 
 	public static String hack(String includeString) {
 		includeString = DOUBLE_DOT_WITH_SLASH.matcher(includeString).replaceAll(DOUBLE_PIPE_WITH_SLASH_REPLACEMENT);
