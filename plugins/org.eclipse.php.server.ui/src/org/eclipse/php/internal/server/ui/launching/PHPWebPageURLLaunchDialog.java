@@ -63,7 +63,7 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 		super(PHPDebugUIPlugin.getActiveWorkbenchShell(), title, null, "", INFORMATION, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.launchConfiguration = launchConfiguration;
 		this.server = server;
-		message = "Note that no files will be published to the server.\nTo change this default behavior, set the servers' publish directory.";
+		message = "Note that no files will be published to the server.";
 	}
 
 	/**
