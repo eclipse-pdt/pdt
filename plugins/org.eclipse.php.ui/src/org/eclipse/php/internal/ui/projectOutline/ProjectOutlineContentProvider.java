@@ -52,7 +52,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 
 	/**
 	 * Retunrs the node type or -1 if the given object is not an OutlineNode.
-	 * 
+	 *
 	 * @param outlineNode
 	 * @return One of the types: CLASSES, CONSTANTS or FUNCTIONS
 	 * @see #CLASSES
@@ -207,18 +207,17 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
 				Object[] toUpdate;
-				for (int i = 0; i < groupNodes.length; i++) {
-					outlineNode = groupNodes[i];
+				for (OutlineNode element : groupNodes) {
+					outlineNode = element;
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
 					toUpdate = outlineNode.addChildren(fileData);
 					fViewer.add(outlineNode, toUpdate);
 				}
-				for (int i = 0; i < treeProviders.length; i++) {
-					IPHPTreeContentProvider provider = treeProviders[i];
+				for (IPHPTreeContentProvider provider : treeProviders) {
 					Object[] children = provider.getChildren(fStoredProject);
-					for (int j = 0; j < children.length; j++) {
-						fViewer.refresh(children[j], true);
+					for (Object element : children) {
+						fViewer.refresh(element, true);
 					}
 				}
 			}
@@ -249,18 +248,17 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				PHPProjectModel model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
 				OutlineNode outlineNode;
 				Object[] toUpdate;
-				for (int i = 0; i < groupNodes.length; i++) {
-					outlineNode = groupNodes[i];
+				for (OutlineNode element : groupNodes) {
+					outlineNode = element;
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
 					toUpdate = outlineNode.removeChildren(fileData);
 					fViewer.remove(outlineNode, toUpdate);
 				}
-				for (int i = 0; i < treeProviders.length; i++) {
-					IPHPTreeContentProvider provider = treeProviders[i];
+				for (IPHPTreeContentProvider provider : treeProviders) {
 					Object[] children = provider.getChildren(fStoredProject);
-					for (int j = 0; j < children.length; j++) {
-						fViewer.refresh(children[j], true);
+					for (Object element : children) {
+						fViewer.refresh(element, true);
 					}
 				}
 			}
@@ -289,21 +287,20 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				}
 				PHPProjectModel model = null;
 				model = PHPWorkspaceModelManager.getInstance().getModelForProject(res.getProject());
-				OutlineNode outlineNode;
-				for (int i = 0; i < groupNodes.length; i++) {
-					outlineNode = groupNodes[i];
+				for (OutlineNode outlineNode : groupNodes) {
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
 					outlineNode.loadChildren();
-					fViewer.refresh(outlineNode, true);
+					if (!fViewer.getControl().isDisposed()) {
+						fViewer.refresh(outlineNode, true);
+					}
 				}
-				for (int i = 0; i < treeProviders.length; i++) {
-					IPHPTreeContentProvider provider = treeProviders[i];
+				for (IPHPTreeContentProvider provider : treeProviders) {
 					Object[] children = provider.getChildren(fStoredProject);
 					if (children == null)
 						continue;
-					for (int j = 0; j < children.length; j++) {
-						fViewer.refresh(children[j], true);
+					for (Object element : children) {
+						fViewer.refresh(element, true);
 					}
 				}
 				ISelection currentSelection = fViewer.getSelection();
