@@ -291,9 +291,7 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 					if (model != outlineNode.getModel())
 						outlineNode.setModel(model);
 					outlineNode.loadChildren();
-					if (!fViewer.getControl().isDisposed()) {
-						fViewer.refresh(outlineNode, true);
-					}
+					fViewer.refresh(outlineNode, true);
 				}
 				for (IPHPTreeContentProvider provider : treeProviders) {
 					Object[] children = provider.getChildren(fStoredProject);
