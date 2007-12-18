@@ -278,6 +278,12 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 				if (control == null || control.isDisposed() || !control.isVisible()) {
 					return;
 				}
+				/*
+				 * XXX Sometimes refresh is called in the same time with the disposition.
+				 * It means the previous check of disposition fulfills, but the refresh operations
+				 * are not possible. We should think of a way of synchronization upon viewer's control
+				 * to avoid such situations.
+				 */
 				IResource res = PHPModelUtil.getResource(root);
 				if (res == null) {
 					return;
