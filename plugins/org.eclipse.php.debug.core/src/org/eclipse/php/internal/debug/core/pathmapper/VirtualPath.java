@@ -96,6 +96,10 @@ public class VirtualPath implements Cloneable {
 		return segments.size();
 	}
 
+	public String removeFirstSegment() {
+		return segments.removeFirst();
+	}
+
 	public String removeLastSegment() {
 		return segments.removeLast();
 	}
