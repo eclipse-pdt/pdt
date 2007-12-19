@@ -94,6 +94,9 @@ class ProjectParsingManager implements IProjectModelListener {
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e);
 			return;
+		} catch (RuntimeException e) {
+			PHPCorePlugin.log(e);
+			return;
 		} catch (UnsupportedEncodingException e) {
 			PHPCorePlugin.log(e);
 			return;
