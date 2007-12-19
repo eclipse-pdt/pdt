@@ -45,6 +45,14 @@ public class PathMapper implements IXMLPreferencesStorable {
 			return;
 		}
 
+		// if paths are the same - enter this entry
+		if (remotePath.equals(localPath)) {
+			remoteToLocalMap.put(remotePath, localPath);
+			localToRemoteMap.put(localPath, remotePath);
+			localToPathEntryType.put(localPath, entry.getType());
+			return;
+		}
+
 		while (remotePath.getSegmentsCount() > 0 && localPath.getSegmentsCount() > 1) { // local path is limited to have at least one segment
 			if (!remotePath.getLastSegment().equalsIgnoreCase(localPath.getLastSegment())) {
 				break;
