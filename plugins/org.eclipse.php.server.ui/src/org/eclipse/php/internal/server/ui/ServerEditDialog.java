@@ -67,7 +67,10 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
+
 		getShell().setText(PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
+		getShell().setImage(ServersPluginImages.get(ServersPluginImages.IMG_SERVER));
+
 		tabsListener = new TabsSelectionListener();
 		tabs.addSelectionListener(tabsListener);
 		return tabs;
