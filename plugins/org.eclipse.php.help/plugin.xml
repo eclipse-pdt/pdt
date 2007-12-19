@@ -12,4 +12,10 @@
             primary="true">
       </toc>
    </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="helpContexts.xml">
+      </contexts>
+   </extension>
    </plugin>
