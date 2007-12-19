@@ -38,6 +38,7 @@ public class PHPDebugUIImages {
 	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT = "IMG_OBJS_CONDITIONAL_BREAKPOINT"; //$NON-NLS-1$
 	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED = "IMG_OBJS_CONDITIONAL_BREAKPOINT_DISABLED"; //$NON-NLS-1$
 	public static final String IMG_WIZBAN_PHPEXE = "IMG_WIZBAN_PHPEXE"; //$NON-NLS-1$
+	public static final String IMG_OBJ_PATH_MAPPING = "IMG_OBJ_PATH_MAPPING"; //$NON-NLS-1$
 
 	/**
 	 * Returns the image managed under the given key in this registry.
@@ -76,6 +77,7 @@ public class PHPDebugUIImages {
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT, T_OVR + "conditional_ovr.gif"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED, T_OVR + "conditional_ovr_disabled.gif"); //$NON-NLS-1$
 		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "phpexe_wiz.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.gif"); //$NON-NLS-1$
 	}
 
 	/**

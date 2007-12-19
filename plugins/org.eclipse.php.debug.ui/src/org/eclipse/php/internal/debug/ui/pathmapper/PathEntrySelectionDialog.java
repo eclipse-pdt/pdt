@@ -10,50 +10,76 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
-import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TrayDialog;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.debug.core.pathmapper.BestMatchPathComparator;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.debug.ui.IHelpContextId;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IMemento;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.FilteredItemsSelectionDialog;
-import org.eclipse.ui.dialogs.SearchPattern;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 
-public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
+public class PathEntrySelectionDialog extends TrayDialog {
 
-	private static final String DIALOG_SETTINGS = "org.eclipse.php.internal.debug.core.pathmapper.PathEntrySelectionDialogSettings"; //$NON-NLS-1$
+	private static final Object[] EMPTY = new Object[0];
+	private static final Object EXTERNAL_CONTAINER = new Object();
+
+	private VirtualPath path;
 	private PathEntry[] pathEntries;
-	private Comparator<PathEntry> comparator;
-	private ILabelProvider detailsLabelProvider;
+	private PathEntry result;
+	private VirtualPath ignorePathResult;
+	private Font boldFont;
+	protected Button selectMappingBtn;
+	private TreeViewer entriesViewer;
+	protected Button ignoreMappingBtn;
+	private Text ignorePathText;
+	private Button configurePathBtn;
 
 	/**
-	 * Constructor
-	 * @param shell
+	 * Constructs new path entry selection dialog
+	 *
+	 * @param shell Window shell
 	 * @param path Abstract path of the file to match
 	 * @param files Files to choose
 	 */
@@ -61,175 +87,479 @@ public class PathEntrySelectionDialog extends FilteredItemsSelectionDialog {
 		super(shell);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 
+		this.path = path;
 		this.pathEntries = pathEntries;
-		this.comparator = Collections.reverseOrder(new BestMatchPathComparator(path));
+	}
 
-		// Set dummy selection history to avoid null pointer exception
-		setSelectionHistory(new SelectionHistory() {
-			protected Object restoreItemFromMemento(IMemento memento) {
-				return null;
-			}
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
 
-			protected void storeItemToMemento(Object item, IMemento memento) {
+		newShell.setText("Path Mapping - Select Local Resource");
+		newShell.setImage(PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
+
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IHelpContextId.PATH_MAPPING);
+	}
+
+	protected Control createDialogArea(Composite parent) {
+		parent = (Composite) super.createDialogArea(parent);
+		GridLayout layout = (GridLayout) parent.getLayout();
+		layout.numColumns = 2;
+
+		initializeDialogUnits(parent);
+
+		FontData[] fontData = parent.getFont().getFontData();
+		for (FontData d : fontData) {
+			d.setStyle(SWT.BOLD);
+		}
+		boldFont = new Font(parent.getFont().getDevice(), fontData);
+
+		selectMappingBtn = new Button(parent, SWT.RADIO);
+		selectMappingBtn.setSelection(true);
+		selectMappingBtn.setText("Select the local resource that matches the following server path:");
+		GridData layoutData = new GridData();
+		layoutData.horizontalSpan = 2;
+		selectMappingBtn.setLayoutData(layoutData);
+		selectMappingBtn.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				boolean enabled = selectMappingBtn.getSelection();
+				entriesViewer.getControl().setEnabled(enabled);
+				ignorePathText.setEnabled(!enabled);
+				configurePathBtn.setEnabled(!enabled);
+				validate();
 			}
 		});
 
-		setTitle("Select local resource that matches remote file");
-		setMessage(NLS.bind("Select local resource that matches remote file ''{0}''\n\nUse pattern to filter results (? = any character, * = any string):", path.toString()));
-		setListLabelProvider(createListLabelProvider());
-		setDetailsLabelProvider(createDetailsLabelProvider());
+		Label label = new Label(parent, SWT.NONE);
+		layoutData = new GridData();
+		layoutData.horizontalSpan = 2;
+		layoutData.horizontalIndent = convertWidthInCharsToPixels(4);
+		layoutData.verticalAlignment = SWT.BEGINNING;
+		label.setLayoutData(layoutData);
+
+		label.setFont(boldFont);
+		label.setText(path.toString());
+
+		entriesViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		layoutData = new GridData(GridData.FILL_BOTH);
+		layoutData.horizontalSpan = 2;
+		layoutData.verticalIndent = convertHeightInCharsToPixels(1);
+		layoutData.horizontalIndent = convertWidthInCharsToPixels(2);
+		layoutData.heightHint = convertHeightInCharsToPixels(20);
+		layoutData.widthHint = convertWidthInCharsToPixels(70);
+		entriesViewer.getControl().setLayoutData(layoutData);
+		entriesViewer.setContentProvider(new ContentProvider());
+		entriesViewer.setLabelProvider(new LabelProvider());
+		entriesViewer.setSorter(new Sorter());
+		entriesViewer.setInput(this);
+		entriesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				validate();
+			}
+		});
+		entriesViewer.expandAll();
+
+		ignoreMappingBtn = new Button(parent, SWT.RADIO);
+		ignoreMappingBtn.setText("Do not map the following server path to a local resource:");
+		layoutData = new GridData();
+		layoutData.horizontalSpan = 2;
+		ignoreMappingBtn.setLayoutData(layoutData);
+		ignoreMappingBtn.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				boolean enabled = ignoreMappingBtn.getSelection();
+				entriesViewer.getControl().setEnabled(!enabled);
+				ignorePathText.setEnabled(enabled);
+				configurePathBtn.setEnabled(enabled);
+				validate();
+			}
+		});
+
+		ignorePathText = new Text(parent, SWT.BORDER | SWT.READ_ONLY);
+		ignorePathText.setEnabled(false);
+		layoutData = new GridData(GridData.FILL_HORIZONTAL);
+		layoutData.horizontalIndent = convertWidthInCharsToPixels(2);
+		layoutData.widthHint = convertWidthInCharsToPixels(70);
+		ignorePathText.setLayoutData(layoutData);
+		ignorePathResult = path.clone();
+		ignorePathText.setText(getIgnorePathString(ignorePathResult));
+
+		configurePathBtn = new Button(parent, SWT.PUSH);
+		configurePathBtn.setEnabled(false);
+		configurePathBtn.setText("&Configure...");
+		configurePathBtn.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ConfigurePathDialog dialog = new ConfigurePathDialog(ignorePathResult);
+				if (dialog.open() == Window.OK) {
+					ignorePathResult = dialog.getResult();
+					ignorePathText.setText(getIgnorePathString(ignorePathResult));
+					validate();
+				}
+			}
+		});
+
+		return parent;
 	}
 
-	/**
-	 * Override this method for providing another list label provider
-	 */
-	protected ILabelProvider createListLabelProvider() {
-		return new LabelProvider();
+	protected void createButtonsForButtonBar(Composite parent) {
+		Button okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		okButton.setEnabled(false);
+
+		createButton(parent, IDialogConstants.CANCEL_ID, "&Stop Debugger", false);
 	}
 
-	/**
-	 * Override this method for providing another details label provider
-	 */
-	protected ILabelProvider createDetailsLabelProvider() {
-		if (detailsLabelProvider == null) {
-			detailsLabelProvider = new DetailsLabelProvider();
+	private String getIgnorePathString(VirtualPath path) {
+		if (path.getSegmentsCount() == PathEntrySelectionDialog.this.path.getSegmentsCount()) {
+			return path.toString();
 		}
-		return detailsLabelProvider;
+		return new StringBuilder(path.toString()).append(path.getSeparatorChar()).append('*').toString();
 	}
 
-	protected Control createExtendedContentArea(Composite parent) {
-		return null;
+	/**
+	 * Returns selected path entry
+	 * @return path entry
+	 */
+	public PathEntry getResult() {
+		return result;
 	}
 
-	public class EntriesFilter extends ItemsFilter {
-		public EntriesFilter() {
-			super(new SearchPattern() {
-				public void setPattern(String stringPattern) {
-					if (!stringPattern.startsWith("*")) {
-						stringPattern = "*" + stringPattern;
+	/**
+	 * Returns ignored path result
+	 */
+	public VirtualPath getIgnoreResult() {
+		return ignorePathResult;
+	}
+
+	protected void validate() {
+
+		Button okButton = getButton(IDialogConstants.OK_ID);
+		okButton.setEnabled(false);
+		result = null;
+
+		if (selectMappingBtn.getSelection()) {
+
+			Object selectedElement = ((IStructuredSelection) entriesViewer.getSelection()).getFirstElement();
+			if (selectedElement instanceof PathEntry) {
+				okButton.setEnabled(true);
+				result = (PathEntry) selectedElement;
+			}
+		} else {
+			okButton.setEnabled(true);
+		}
+	}
+
+	/**
+	 * Ignored paths configuration dialog
+	 */
+	class ConfigurePathDialog extends Dialog {
+
+		private VirtualPath result;
+		private Text pathText;
+
+		protected ConfigurePathDialog(VirtualPath path) {
+
+			super(PathEntrySelectionDialog.this.getShell());
+
+			setShellStyle(getShellStyle() | SWT.RESIZE);
+
+			this.result = path;
+		}
+
+		public VirtualPath getResult() {
+			return result;
+		}
+
+		protected Control createDialogArea(Composite parent) {
+			parent = (Composite) super.createDialogArea(parent);
+
+			initializeDialogUnits(parent);
+
+			getShell().setText("Select the Path");
+			getShell().setImage(PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
+
+			TreeViewer treeViewer = new TreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+			GridData layoutData = new GridData(GridData.FILL_BOTH);
+			layoutData.heightHint = convertHeightInCharsToPixels(15);
+			layoutData.widthHint = convertWidthInCharsToPixels(60);
+			treeViewer.getControl().setLayoutData(layoutData);
+
+			treeViewer.setContentProvider(new ContentProvider());
+			treeViewer.setLabelProvider(new LabelProvider());
+			treeViewer.setInput(Integer.valueOf(0));
+			treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					Integer segmentNum = (Integer) ((IStructuredSelection) event.getSelection()).getFirstElement();
+					if (segmentNum != null) {
+						result = path.clone();
+						for (int i = path.getSegmentsCount(); i > segmentNum; --i) {
+							result.removeLastSegment();
+						}
+						pathText.setText(getIgnorePathString(result));
 					}
-					super.setPattern(stringPattern);
 				}
 			});
+
+			pathText = new Text(parent, SWT.BORDER | SWT.READ_ONLY);
+			layoutData = new GridData(GridData.FILL_HORIZONTAL);
+			pathText.setLayoutData(layoutData);
+
+			treeViewer.setSelection(new StructuredSelection(result.getSegmentsCount()));
+
+			treeViewer.expandAll();
+
+			return parent;
 		}
 
-		public boolean isConsistentItem(Object item) {
-			return true;
-		}
+		class ContentProvider implements ITreeContentProvider {
 
-		public boolean matchItem(Object item) {
-			if (item instanceof PathEntry) {
-				return matches(((PathEntry) item).getAbstractPath().toString());
+			public Object[] getChildren(Object parentElement) {
+				Integer segmentNum = (Integer) parentElement;
+				if (segmentNum < path.getSegmentsCount()) {
+					return new Object[] { segmentNum + 1 };
+				}
+				return EMPTY;
 			}
-			return true;
-		}
-	}
 
-	protected ItemsFilter createFilter() {
-		return new EntriesFilter();
-	}
-
-	protected void fillContentProvider(AbstractContentProvider contentProvider, ItemsFilter itemsFilter, IProgressMonitor progressMonitor) throws CoreException {
-		for (int i = 0; i < pathEntries.length; ++i) {
-			contentProvider.add(pathEntries[i], itemsFilter);
-		}
-		if (progressMonitor != null) {
-			progressMonitor.done();
-		}
-	}
-
-	protected IDialogSettings getDialogSettings() {
-		IDialogSettings settings = IDEWorkbenchPlugin.getDefault().getDialogSettings().getSection(DIALOG_SETTINGS);
-		if (settings == null) {
-			settings = IDEWorkbenchPlugin.getDefault().getDialogSettings().addNewSection(DIALOG_SETTINGS);
-		}
-		return settings;
-	}
-
-	public String getElementName(Object item) {
-		if (item instanceof PathEntry) {
-			return ((PathEntry) item).getAbstractPath().getLastSegment();
-		}
-		return null;
-	}
-
-	protected Comparator<?> getItemsComparator() {
-		return comparator;
-	}
-
-	protected IStatus validateItem(Object item) {
-		return Status.OK_STATUS;
-	}
-
-	protected class LabelProvider extends org.eclipse.jface.viewers.LabelProvider {
-		public Image getImage(Object element) {
-			if (!(element instanceof PathEntry)) {
-				return super.getImage(element);
+			public Object getParent(Object element) {
+				Integer segmentNum = (Integer) element;
+				if (segmentNum > 0) {
+					return segmentNum - 1;
+				}
+				return null;
 			}
-			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT);
+
+			public boolean hasChildren(Object element) {
+				Integer segmentNum = (Integer) element;
+				return (segmentNum < path.getSegmentsCount());
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return getChildren(inputElement);
+			}
+
+			public void dispose() {
+			}
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			}
 		}
 
-		public String getText(Object element) {
-			if (!(element instanceof PathEntry)) {
-				return super.getText(element);
-			}
-			PathEntry pathEntry = (PathEntry) element;
-			return NLS.bind("{0} - {1}", pathEntry.getAbstractPath().getLastSegment(), createDetailsLabelProvider().getText(element));
-		}
-	}
+		class LabelProvider extends org.eclipse.jface.viewers.LabelProvider {
 
-	protected class DetailsLabelProvider extends org.eclipse.jface.viewers.LabelProvider {
-		private PHPUILabelProvider phpLabelProvider = new PHPUILabelProvider();
+			private Map<String, Image> images = new HashMap<String, Image>();
 
-		public Image getImage(Object element) {
-			if (!(element instanceof PathEntry)) {
-				return super.getImage(element);
-			}
-			PathEntry pathEntry = (PathEntry) element;
-			if (pathEntry.getType() == Type.EXTERNAL) {
-				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
-			}
-			if (pathEntry.getType() == Type.INCLUDE_VAR) {
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
-			}
-			if (pathEntry.getType() == Type.INCLUDE_FOLDER) {
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
-			}
-			return phpLabelProvider.getImage(pathEntry.getContainer());
-		}
-
-		public String getText(Object element) {
-			if (!(element instanceof PathEntry)) {
-				return super.getText(element);
-			}
-			PathEntry pathEntry = (PathEntry) element;
-			if (pathEntry.getType() == Type.EXTERNAL) {
-				return ((File) pathEntry.getContainer()).getPath();
-			}
-			if (pathEntry.getContainer() instanceof IncludePathEntry) {
-				String parentFolder = new File(pathEntry.getPath()).getParentFile().getAbsolutePath();
-				IncludePathEntry entry = (IncludePathEntry) pathEntry.getContainer();
-				if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-					IPath resolvedVar = IncludePathVariableManager.instance().getIncludePathVariable(entry.getPath().toString());
-					String varPath = resolvedVar.toFile().getAbsolutePath();
-					if (parentFolder.startsWith(varPath)) {
-						String suffix = parentFolder.substring(varPath.length());
-						if (suffix.startsWith("/")) {
-							suffix = suffix.substring(1);
+			public Image getImage(Object element) {
+				Integer segmentNum = (Integer) element;
+				if (segmentNum < path.getSegmentsCount()) {
+					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+				}
+				String lastSegment = path.getLastSegment();
+				int idx = lastSegment.lastIndexOf('.');
+				if (idx != -1) {
+					String extension = lastSegment.substring(idx);
+					if (images.containsKey(extension)) {
+						return images.get(extension);
+					}
+					Program p = Program.findProgram(extension);
+					if (p != null) {
+						ImageData data = p.getImageData();
+						if (data != null) {
+							Image image = new Image(Display.getDefault(), data);
+							images.put(extension, image);
+							return image;
 						}
-						return entry.getPath().toString() + '/' + suffix;
 					}
 				}
-				return parentFolder;
+				return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 			}
-			if (pathEntry.getContainer() instanceof IResource) {
-				String path = ((IResource) pathEntry.getContainer()).getFullPath().toPortableString();
+
+			public String getText(Object element) {
+				Integer segmentNum = (Integer) element;
+				return path.getSegments()[segmentNum - 1];
+			}
+
+			public void dispose() {
+				Iterator<Image> i = images.values().iterator();
+				while (i.hasNext()) {
+					i.next().dispose();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Sorter for path entries by relevancy
+	 */
+	class Sorter extends ViewerSorter {
+
+		private BestMatchPathComparator comparator;
+
+		public Sorter() {
+			comparator = new BestMatchPathComparator(path);
+		}
+
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (e1 instanceof PathEntry && e2 instanceof PathEntry) {
+				return comparator.compare((PathEntry) e1, (PathEntry) e2);
+			}
+			if (e1 == EXTERNAL_CONTAINER) {
+				return 1;
+			}
+			if (e1 instanceof IResource) {
+				return -1;
+			}
+			return 0;
+		}
+	}
+
+	/**
+	 * Path entries label provider
+	 */
+	class LabelProvider extends PHPUILabelProvider {
+
+		public Image getImage(Object element) {
+
+			if (element instanceof IIncludePathEntry) {
+				IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
+				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
+				} else {
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+				}
+			}
+
+			if (element instanceof PathEntry) {
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT);
+			}
+
+			return super.getImage(element);
+		}
+
+		public String getText(Object element) {
+			if (element == EXTERNAL_CONTAINER) {
+				return "External Files";
+			}
+
+			if (element instanceof IIncludePathEntry) {
+				IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
+				return includePathEntry.getPath().toOSString();
+			}
+
+			if (!(element instanceof PathEntry)) {
+				return super.getText(element);
+			}
+
+			PathEntry entry = (PathEntry) element;
+			String path = entry.getResolvedPath();
+
+			if (entry.getType() == Type.WORKSPACE) {
+				VirtualPath tmpPath = entry.getAbstractPath().clone();
+				tmpPath.removeFirstSegment();
+				path = tmpPath.toString();
 				if (path.startsWith("/")) {
 					path = path.substring(1);
 				}
-				return path;
 			}
-			return phpLabelProvider.getText(pathEntry.getContainer());
+			if (entry.getType() == Type.INCLUDE_FOLDER || entry.getType() == Type.INCLUDE_VAR) {
+				IIncludePathEntry includePathEntry = (IIncludePathEntry) entry.getContainer();
+				String includePath = includePathEntry.getPath().toString();
+				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					IPath p = IncludePathVariableManager.instance().resolveVariablePath(includePath);
+					includePath = p.toOSString();
+				}
+				if (path.startsWith(includePath)) {
+					path = path.substring(includePath.length());
+				}
+				if (path.startsWith("/")) {
+					path = path.substring(1);
+				}
+			}
+			return path;
+		}
+	}
+
+	/**
+	 * Path entries content provider
+	 */
+	class ContentProvider implements ITreeContentProvider {
+
+		public Object[] getChildren(Object parentElement) {
+
+			if (parentElement == PathEntrySelectionDialog.this) {
+				Set<Object> containers = new HashSet<Object>();
+				for (PathEntry entry : pathEntries) {
+					if (entry.getType() == Type.EXTERNAL) {
+						containers.add(EXTERNAL_CONTAINER);
+					} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) {
+						containers.add(entry.getContainer());
+					} else if (entry.getType() == Type.WORKSPACE) {
+						containers.add(((IResource) entry.getContainer()).getProject());
+					}
+				}
+				return containers.toArray();
+			}
+
+			if (parentElement instanceof PathEntry) {
+				return EMPTY;
+			}
+
+			Set<PathEntry> entries = new HashSet<PathEntry>();
+			for (PathEntry entry : pathEntries) {
+				if (entry.getType() == Type.EXTERNAL && parentElement == EXTERNAL_CONTAINER) {
+					entries.add(entry);
+				} else if ((entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) && entry.getContainer() == parentElement) {
+					entries.add(entry);
+				} else if (entry.getType() == Type.WORKSPACE && ((IResource) entry.getContainer()).getProject() == parentElement) {
+					entries.add(entry);
+				}
+			}
+			return entries.toArray();
+		}
+
+		public Object getParent(Object element) {
+
+			if (element == PathEntrySelectionDialog.this) {
+				return null;
+			}
+
+			if (element instanceof PathEntry) {
+				PathEntry entry = (PathEntry) element;
+
+				if (entry.getType() == Type.EXTERNAL) {
+					return EXTERNAL_CONTAINER;
+				} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER) {
+					return entry.getContainer();
+				} else if (entry.getType() == Type.WORKSPACE) {
+					return ((IResource) entry.getContainer()).getProject();
+				}
+			}
+
+			for (PathEntry entry : pathEntries) {
+				if (entry.getType() == Type.EXTERNAL && element == EXTERNAL_CONTAINER) {
+					return entry;
+				} else if (entry.getType() == Type.INCLUDE_VAR || entry.getType() == Type.INCLUDE_FOLDER && entry.getContainer() == element) {
+					return entry;
+				} else if (entry.getType() == Type.WORKSPACE && ((IResource) entry.getContainer()).getProject() == element) {
+					return entry;
+				}
+			}
+
+			return null;
+		}
+
+		public boolean hasChildren(Object element) {
+			if (element instanceof PathEntry) {
+				return false;
+			}
+			return true;
+		}
+
+		public Object[] getElements(Object inputElement) {
+			return getChildren(inputElement);
+		}
+
+		public void dispose() {
+		}
+
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}
 }
