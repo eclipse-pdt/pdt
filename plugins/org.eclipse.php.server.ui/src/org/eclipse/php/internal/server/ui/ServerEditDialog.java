@@ -43,12 +43,14 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 	/**
 	 * Instantiate a new server edit dialog.
-	 * 
+	 *
 	 * @param parentShell the parent SWT shell
 	 * @param server An assigned IServer
 	 */
 	public ServerEditDialog(Shell parentShell, Server server) {
 		super(parentShell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
+
 		this.server = server;
 		runtimeComposites = new ArrayList(3);
 	}
@@ -57,15 +59,18 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 		// Create a tabbed container that will hold all the fragments
 		CTabFolder tabs = SWTUtil.createTabFolder(parent);
 		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
-		for (int i = 0; i < factories.length; i++) {
+		for (ICompositeFragmentFactory element : factories) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
-			CompositeFragment fragment = factories[i].createComposite(tabs, this);
+			CompositeFragment fragment = element.createComposite(tabs, this);
 			fragment.setData(server);
 			tabItem.setText(fragment.getDisplayName());
 			tabItem.setControl(fragment);
 			runtimeComposites.add(fragment);
 		}
+
 		getShell().setText(PHPServerUIMessages.getString("ServerEditDialog.editServer")); //$NON-NLS-1$
+		getShell().setImage(ServersPluginImages.get(ServersPluginImages.IMG_SERVER));
+
 		tabsListener = new TabsSelectionListener();
 		tabs.addSelectionListener(tabsListener);
 		return tabs;
@@ -132,7 +137,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String, int)
 	 */
 	public void setMessage(String newMessage, int newType) {
-		// Override the WARNING with an INFORMATION. 
+		// Override the WARNING with an INFORMATION.
 		// We have a bug that cause the warning to be displayed in all the tabs and not
 		// only in the selected one. (TODO - Fix this)
 		if (newType == IMessageProvider.WARNING) {
@@ -156,7 +161,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	public void setServer(Server server) {
 		this.server = server;
 	}
-	
+
 	private class TabsSelectionListener implements SelectionListener {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -169,6 +174,6 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			setTitle(fragment.getTitle());
 			setDescription(fragment.getDescription());
 		}
-		
+
 	}
 }
