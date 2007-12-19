@@ -67,7 +67,7 @@ class ProjectParsingManager implements IProjectModelListener {
 
 		// check if it is an external file
 		if (!file.exists()) {
-			final File ioFile = new File(file.getFullPath().toString());
+			final File ioFile = new File(file.getFullPath().toOSString());
 			// if it is an external file that doesn't exist - out
 			if (!ioFile.exists()) {
 				return;
@@ -84,7 +84,7 @@ class ProjectParsingManager implements IProjectModelListener {
 			InputStream is = null;
 			if (!file.exists()) {
 				try {
-					is = new FileInputStream(file.getFullPath().toString());
+					is = new FileInputStream(file.getFullPath().toOSString());
 				} catch (IOException ioe) {
 				}
 			} else {
@@ -94,14 +94,21 @@ class ProjectParsingManager implements IProjectModelListener {
 		} catch (CoreException e) {
 			PHPCorePlugin.log(e);
 			return;
+		} catch (RuntimeException e) {
+			PHPCorePlugin.log(e);
+			return;
 		} catch (UnsupportedEncodingException e) {
 			PHPCorePlugin.log(e);
 			return;
 		}
 
 		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(file.getProject());
+		String fileNameToParse = file.getFullPath().toString();
+		if (new File(fileNameToParse).exists()){
+			fileNameToParse = file.getFullPath().toOSString();
+		}
 		try {
-			parserManager.parseNow(inputStreamReader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
+			parserManager.parseNow(inputStreamReader, fileNameToParse, file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 			return;
@@ -142,8 +149,16 @@ class ProjectParsingManager implements IProjectModelListener {
 			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
 				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
 			}
+			if (project == null) { // XXX very quick change on a real resource (undo-redo-undo-redo)!
+				return;
+			}
 			Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPatternsForProject(project);
-			parserManager.parseNow(reader, file.getFullPath().toString(), file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
+			String fileToParseName = file.getFullPath().toString();
+			if (new File(fileToParseName).exists()){
+				fileToParseName = file.getFullPath().toOSString();
+			}
+
+			parserManager.parseNow(reader, fileToParseName, file.getModificationStamp(), parserClient, tasksPatterns, UseAspTagsHandler.useAspTagsAsPhp(project));
 		} catch (Exception e) {
 			PHPCorePlugin.log(e);
 			return;
