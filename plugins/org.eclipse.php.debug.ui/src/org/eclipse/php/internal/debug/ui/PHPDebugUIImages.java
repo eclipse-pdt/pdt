@@ -22,7 +22,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * Bundle of most images used by the PHP debug UI plug-in.
- * 
+ *
  * @author shalom
  */
 public class PHPDebugUIImages {
@@ -33,13 +33,16 @@ public class PHPDebugUIImages {
 	// Set of predefined Image Descriptors.
 	private static final String T_OBJ = ICONS_PATH + "obj16/"; //$NON-NLS-1$
 	private static final String T_OVR = ICONS_PATH + "ovr16/"; //$NON-NLS-1$
+	private static final String T_WIZBAN = ICONS_PATH + "wizban/"; //$NON-NLS-1$
 
 	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT = "IMG_OBJS_CONDITIONAL_BREAKPOINT"; //$NON-NLS-1$
 	public static final String IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED = "IMG_OBJS_CONDITIONAL_BREAKPOINT_DISABLED"; //$NON-NLS-1$
+	public static final String IMG_WIZBAN_PHPEXE = "IMG_WIZBAN_PHPEXE"; //$NON-NLS-1$
+	public static final String IMG_OBJ_PATH_MAPPING = "IMG_OBJ_PATH_MAPPING"; //$NON-NLS-1$
 
 	/**
 	 * Returns the image managed under the given key in this registry.
-	 * 
+	 *
 	 * @param key the image's key
 	 * @return the image managed under the given key
 	 */
@@ -73,6 +76,8 @@ public class PHPDebugUIImages {
 	private static void declareImages() {
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT, T_OVR + "conditional_ovr.gif"); //$NON-NLS-1$
 		declareRegistryImage(IMG_OVR_CONDITIONAL_BREAKPOINT_DISABLED, T_OVR + "conditional_ovr_disabled.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_WIZBAN_PHPEXE, T_WIZBAN + "phpexe_wiz.gif"); //$NON-NLS-1$
+		declareRegistryImage(IMG_OBJ_PATH_MAPPING, T_OBJ + "path_mapping.gif"); //$NON-NLS-1$
 	}
 
 	/**
