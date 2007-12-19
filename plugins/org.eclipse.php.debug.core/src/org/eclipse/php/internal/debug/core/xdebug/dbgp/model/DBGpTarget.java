@@ -1209,7 +1209,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		
 		if (mappedFileName == null) {
 			DBGpLogger.debug("outbound File '" + internalFile + "' Not remapped");
-			mappedFileName = internalFile;			
+			mappedFileName = bp.getFileName();	// use the fully qualified location of the file		
 		} else {
 			if (DBGpLogger.debugBP()) {
 				String mapMsg = "remapped eclipse file: '" + internalFile + "' to '" + mappedFileName + "'";
