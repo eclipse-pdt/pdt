@@ -749,6 +749,14 @@ public class PHPModelUtil {
 					}
 				}
 			}
+			
+			else {//add existing methods to exclude list
+				for (int i = 0; i < numOfFunctions; i++) {
+					if (!overridenMethodsNamesList.contains(functions[i].getName())) {
+						overridenMethodsNamesList.add(functions[i].getName());
+					}
+				}
+			}
 
 			//this class has a superclass
 			if (classData.getSuperClassData() != null && classData.getSuperClassData().getName() != null) {
