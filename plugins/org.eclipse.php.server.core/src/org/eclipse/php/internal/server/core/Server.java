@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeListener;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -271,5 +273,24 @@ public class Server implements IXMLPreferencesStorable {
 		HashMap serverMap = new HashMap(1);
 		serverMap.put(SERVER_ELEMENT, properties);
 		return serverMap;
+	}
+
+	/**
+	 * Checks whether this server is local machine
+	 * @return
+	 */
+	public boolean isLocal() {
+		try {
+			String host = getHost();
+			if (host != null) {
+				InetAddress addr = InetAddress.getByName(host);
+				if (addr != null) {
+					NetworkInterface intf = NetworkInterface.getByInetAddress(addr);
+					return intf != null;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return false;
 	}
 }
