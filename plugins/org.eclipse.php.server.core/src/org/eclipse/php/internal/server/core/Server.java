@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeListener;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,12 +34,9 @@ public class Server implements IXMLPreferencesStorable {
 	public static final String NAME = "name";
 	public static final String BASE_URL = "base_url";
 	public static final String DOCUMENT_ROOT = "document_root";
-	public static final String PUBLISH = "publish";
-	public static final String PUBLISH_TO = "publish_to";
 	public static final String PORT = "port";
 	public static final String HOSTNAME = "hostname";
 	public static final String FILE_NAME = "file_name";
-	public static final String CONTEXT_ROOT = "context_root";
 
 	private static final int DEFAULT_HTTP_PORT = 80;
 
@@ -52,20 +51,19 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Constructs a new Server.
-	 * 
+	 *
 	 * @param name
 	 * @param hostName
 	 * @param baseURL
 	 * @param documentRoot
 	 * @param publish
 	 */
-	public Server(String name, String host, String baseURL, String documentRoot, boolean publish) {
+	public Server(String name, String host, String baseURL, String documentRoot) {
 		this();
 		setName(name);
 		setHost(host);
 		setBaseURL(baseURL);
 		setDocumentRoot(documentRoot);
-		setPublish(publish);
 	}
 
 	/**
@@ -88,7 +86,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Sets an arbitrary attribute to this Server.
-	 * 
+	 *
 	 * @param attributeName The attribute name
 	 * @param value The String value of this attribute.
 	 */
@@ -98,7 +96,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Returns an arbitrary attribute from this Server according to a given attribute name.
-	 * 
+	 *
 	 * @param attributeName The attribute name
 	 * @param defaultValue A default value to use if the attribute was not found
 	 * @return The String value of this attribute
@@ -109,13 +107,13 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Removed an attribute.
-	 * 
+	 *
 	 * @param attributeName The attribute name.
 	 */
 	public void removeAttribute(String attributeName) {
 		helper.removeAttribute(attributeName);
 	}
-	
+
 	public String getContextRoot(IProject project) {
 		PHPProjectOptions options = PHPProjectOptions.forProject(project);
 		String contextRoot = (String) options.getOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
@@ -159,17 +157,9 @@ public class Server implements IXMLPreferencesStorable {
 		return getAttribute(Server.DOCUMENT_ROOT, "");
 	}
 
-	public boolean canPublish() {
-		return Boolean.valueOf(getAttribute(Server.PUBLISH, "false")).booleanValue();
-	}
-
-	public void setPublish(boolean publish) {
-		setAttribute(Server.PUBLISH, Boolean.toString(publish));
-	}
-
 	/**
 	 * Return the root URL of this server.
-	 * 
+	 *
 	 * @return java.net.URL
 	 */
 	public URL getRootURL() {
@@ -231,6 +221,27 @@ public class Server implements IXMLPreferencesStorable {
 		}
 	}
 
+	public int hashCode() {
+		if (getName() != null) {
+			return getName().hashCode();
+		}
+		return 1;
+	}
+
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Server)) {
+			return false;
+		}
+		String name = getName();
+		String otherName = ((Server) obj).getName();
+		if (name == null) {
+			if (otherName != null) {
+				return false;
+			}
+		}
+		return name.equals(otherName);
+	}
+
 	/**
 	 * Return a string representation of this Server.
 	 * @return java.lang.String
@@ -262,5 +273,24 @@ public class Server implements IXMLPreferencesStorable {
 		HashMap serverMap = new HashMap(1);
 		serverMap.put(SERVER_ELEMENT, properties);
 		return serverMap;
+	}
+
+	/**
+	 * Checks whether this server is local machine
+	 * @return
+	 */
+	public boolean isLocal() {
+		try {
+			String host = getHost();
+			if (host != null) {
+				InetAddress addr = InetAddress.getByName(host);
+				if (addr != null) {
+					NetworkInterface intf = NetworkInterface.getByInetAddress(addr);
+					return intf != null;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return false;
 	}
 }
