@@ -25,6 +25,8 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IURIEditorInput;
@@ -257,6 +259,22 @@ public class DebugSearchEngine {
 	}
 
 	private static PathEntry filterItems(VirtualPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
+
+		// if there's an entry with exact path, and the server is local - return it without filtering
+		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
+		try {
+			String serverName = launchConfiguration.getAttribute(Server.NAME, (String) null);
+			Server server = ServersManager.getServer(serverName);
+			if (server != null && server.isLocal()) {
+				for (PathEntry entry : entries) {
+					if (remotePath.equals(entry.getAbstractPath())) {
+						return entry;
+					}
+				}
+			}
+		} catch (CoreException e) {
+		}
+
 		IPathEntryFilter[] filters = initializePathEntryFilters();
 		for (int i = 0; i < filters.length; ++i) {
 			entries = filters[i].filter(entries, remotePath, debugTarget);
