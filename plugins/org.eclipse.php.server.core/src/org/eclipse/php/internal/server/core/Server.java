@@ -12,7 +12,6 @@ package org.eclipse.php.internal.server.core;
 
 import java.beans.PropertyChangeListener;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -284,10 +283,7 @@ public class Server implements IXMLPreferencesStorable {
 			String host = getHost();
 			if (host != null) {
 				InetAddress addr = InetAddress.getByName(host);
-				if (addr != null) {
-					NetworkInterface intf = NetworkInterface.getByInetAddress(addr);
-					return intf != null;
-				}
+				return addr.isLoopbackAddress() || addr.isSiteLocalAddress();
 			}
 		} catch (Exception e) {
 		}
