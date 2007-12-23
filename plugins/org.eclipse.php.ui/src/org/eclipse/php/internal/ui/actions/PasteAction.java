@@ -152,14 +152,48 @@ public class PasteAction extends SelectionDispatchAction {
 		}
 
 		public void paste(Object[] phpElements, IResource[] resources, TransferData[] availableTypes) throws CoreException {
-			IContainer container = getAsContainer(getTarget(phpElements, resources));
-			if (container == null)
-				return;
 
-			// fixed bug 154866 
-			// copy resources instead of files 
-			CopyFilesAndFoldersOperation copyFilesAndFoldersOperation = new CopyFilesAndFoldersOperation(getShell());
-			copyFilesAndFoldersOperation.copyResources(resources, container);
+			// try a resource transfer
+			ResourceTransfer resTransfer = ResourceTransfer.getInstance();
+			IResource[] resourceData = getClipboardResources(availableTypes);
+
+			if (resourceData != null && resourceData.length > 0) {
+				if (resourceData[0].getType() == IResource.PROJECT) {
+					// enablement checks for all projects
+					for (int i = 0; i < resourceData.length; i++) {
+						CopyProjectOperation operation = new CopyProjectOperation(getShell());
+						operation.copyProject((IProject) resourceData[i]);
+					}
+				} else {
+					// enablement should ensure that we always have access to a container
+					IContainer container = getAsContainer(getTarget(phpElements, resources));
+
+					CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(getShell());
+					operation.copyResources(resourceData, container);
+				}
+				return;
+			}
+
+			// try a file transfer
+			FileTransfer fileTransfer = FileTransfer.getInstance();
+			String[] fileData = getClipboardFiles(availableTypes);
+
+			if (fileData != null) {
+				// enablement should ensure that we always have access to a container
+				IContainer container = getAsContainer(getTarget(phpElements, resources));
+
+				CopyFilesAndFoldersOperation operation = new CopyFilesAndFoldersOperation(getShell());
+				operation.copyFiles(fileData, container);
+			}
+
+		}
+
+		private String[] getClipboardFiles(TransferData[] availableDataTypes) {
+			Transfer transfer = FileTransfer.getInstance();
+			if (isAvailable(transfer, availableDataTypes)) {
+				return (String[]) getContents(getClipboard(), transfer, getShell());
+			}
+			return null;
 		}
 
 		private Object getTarget(Object[] phpElements, IResource[] resources) {
