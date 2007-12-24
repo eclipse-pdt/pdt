@@ -193,8 +193,10 @@ public class DebugSearchEngine {
 							}
 						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 							entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-							File entryDir = entryPath.toFile();
-							find(entryDir, abstractPath, entry, results);
+							if (entryPath != null) {
+								File entryDir = entryPath.toFile();
+								find(entryDir, abstractPath, entry, results);
+							}
 						}
 					}
 				}
