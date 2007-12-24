@@ -28,9 +28,6 @@ public abstract class Expression extends ASTNode {
 	 * static statement and class constant declaration
 	 * @return true if the expression is static scalar, false otherwise
 	 */
-	/**
-	 * see {@link Expression#isStaticScalar()
-	 */
 	public boolean isStaticScalar() {
 		final int type = getType();
 		if (type != ASTNode.SCALAR && type != ASTNode.UNARY_OPERATION && type != ARRAY_CREATION) {
