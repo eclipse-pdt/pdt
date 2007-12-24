@@ -81,10 +81,12 @@ public class PHPSearchEngine {
 					}
 				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-					File entryDir = entryPath.toFile();
-					file = new File(entryDir, path);
-					if (file.exists()) {
-						return new IncludedFileResult(entry, file);
+					if (entryPath != null) {
+						File entryDir = entryPath.toFile();
+						file = new File(entryDir, path);
+						if (file.exists()) {
+							return new IncludedFileResult(entry, file);
+						}
 					}
 				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 					IContainer container = (IContainer) entry.getResource();
