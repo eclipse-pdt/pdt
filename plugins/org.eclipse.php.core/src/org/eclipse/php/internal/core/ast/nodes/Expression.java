@@ -18,4 +18,67 @@ public abstract class Expression extends ASTNode {
 	public Expression(int start, int end) {
 		super(start, end);
 	}
+	
+	/**
+	 * A static scalar expression is a "compile-time evaluated scalar" 
+	 * i.e. expression that can be evaluated before execution time.
+	 * 
+	 * In PHP static scalars can be scalars, unary operations or array creations nodes 
+	 * it can be used in declare statement, formal parameter list, 
+	 * static statement and class constant declaration
+	 * @return true if the expression is static scalar, false otherwise
+	 */
+	/**
+	 * see {@link Expression#isStaticScalar()
+	 */
+	public boolean isStaticScalar() {
+		final int type = getType();
+		if (type != ASTNode.SCALAR && type != ASTNode.UNARY_OPERATION && type != ARRAY_CREATION) {
+			return false;
+		}
+
+		// check the context of the expression
+		final ASTNode parent = getParent();
+		if (parent == null) {
+			return false;
+		}
+		final int parentType = parent.getType();
+
+		// check - formal parameter and declare statement 
+		if (parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.DECLARE_STATEMENT || parentType == ASTNode.CLASS_CONSTANT_DECLARATION) {
+			return true;
+		}
+		// check - static statement
+		if (parentType == ASTNode.ASSIGNMENT) {
+			final ASTNode grandpa = parent.getParent();
+			if (grandpa == null) {
+				return false;
+			}
+			
+			if (grandpa.getType() == ASTNode.STATIC_STATEMENT) {
+				return true;
+			}
+			return false;
+		}
+
+		// array elements nodes are static scalars only if their parent array creation 
+		// are static scalars. like static $a = array( '5' => 4 ) 
+		if (parentType == ASTNode.ARRAY_ELEMENT) {
+			final ASTNode grandpa = parent.getParent();
+			if (grandpa == null || grandpa.getType() != ASTNode.ARRAY_CREATION) {
+				return false;
+			}
+			
+			Expression grandpaExpression = (Expression) grandpa;
+			return grandpaExpression.isStaticScalar();
+		}
+		
+		// check recursively for static scalars 
+		if (parentType == ASTNode.SCALAR || parentType == ASTNode.UNARY_OPERATION || parentType == ARRAY_CREATION) {
+			final Expression parentExpression = (Expression) parent;
+			return parentExpression.isStaticScalar(); 
+		}
+		
+		return false;
+	}
 }
