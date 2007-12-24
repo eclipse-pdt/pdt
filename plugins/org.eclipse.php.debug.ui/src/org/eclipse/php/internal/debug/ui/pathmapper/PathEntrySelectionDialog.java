@@ -463,9 +463,11 @@ public class PathEntrySelectionDialog extends TrayDialog {
 				String includePath = includePathEntry.getPath().toString();
 				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 					IPath p = IncludePathVariableManager.instance().resolveVariablePath(includePath);
-					includePath = p.toOSString();
+					if (p != null) {
+						includePath = p.toOSString();
+					}
 				}
-				if (path.startsWith(includePath)) {
+				if (includePath != null && path.startsWith(includePath)) {
 					path = path.substring(includePath.length());
 				}
 				if (path.startsWith("/")) {
