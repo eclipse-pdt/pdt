@@ -155,8 +155,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 	private void addProjectPreferenceSubsection(Composite composite) {
 
-		Group defultPrefsGroup = new Group(composite, SWT.BORDER);
-		defultPrefsGroup.setText("Default Settings");
+		Group defultPrefsGroup = new Group(composite, SWT.NONE);
+		defultPrefsGroup.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_0);
 		defultPrefsGroup.setFont(composite.getFont());
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 3;
@@ -166,7 +166,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 		addLabelControl(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_phpDebugger, PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID);
 		fDefaultDebugger = addCombo(defultPrefsGroup, 2);
-		addLink(defultPrefsGroup, "<a>Configure...</a>", DEBUGGERS_PAGE_ID);
+		addLink(defultPrefsGroup, PHPDebugUIMessages.PHPDebugPreferencesBlock_1, DEBUGGERS_PAGE_ID);
 
 		addLabelControl(defultPrefsGroup, PHPDebugUIMessages.PhpDebugPreferencePage_9, ServersManager.DEFAULT_SERVER_PREFERENCES_KEY);
 		fDefaultServer = addCombo(defultPrefsGroup, 2);
@@ -178,8 +178,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 		new Label(composite, SWT.NONE); // dummy label
 
-		Group encodingGroup = new Group(composite, SWT.BORDER);
-		encodingGroup.setText("Encoding Settings");
+		Group encodingGroup = new Group(composite, SWT.NONE);
+		encodingGroup.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_2);
 		encodingGroup.setLayout(new GridLayout());
 		encodingGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 

@@ -91,8 +91,8 @@ public class WorkbenchOptionsBlock extends AbstractPHPPreferencePageBlock {
 
 		fSwitchPerspField = new RadioGroupFieldEditor(PreferenceConstants.SWITCH_BACK_TO_PHP_PERSPECTIVE, PHPDebugUIMessages.PHPLaunchingPreferencePage_switchToPHPMessage, 3, new String[][] { { PHPDebugUIMessages.PHPLaunchingPreferencePage_Always, MessageDialogWithToggle.ALWAYS }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Never, MessageDialogWithToggle.NEVER }, { PHPDebugUIMessages.PHPLaunchingPreferencePage_Prompt, MessageDialogWithToggle.PROMPT } }, composite, true);
 
-		Group group = new Group(composite, SWT.BORDER);
-		group.setText("Workbench Options");
+		Group group = new Group(composite, SWT.NONE);
+		group.setText(PHPDebugUIMessages.WorkbenchOptionsBlock_workbench_options);
 		group.setLayout(new GridLayout());
 		group.setLayoutData(new GridData(GridData.FILL_BOTH));
 		fOpenInBrowser = addCheckBox(group, PHPDebugUIMessages.PhpDebugPreferencePage_11, PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, 0);

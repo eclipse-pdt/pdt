@@ -100,6 +100,12 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugPreferencesAddon_debugOutputEncoding;
 	public static String PHPDebugPreferencesAddon_debugTransferEncoding;
 	public static String PHPDebugPreferencesAddon_selectedEncoding;
+
+	public static String PHPDebugPreferencesBlock_0;
+
+	public static String PHPDebugPreferencesBlock_1;
+
+	public static String PHPDebugPreferencesBlock_2;
 	public static String PHPexe_Run_With_Debug_Info;
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
 	public static String PHPexesComboBlock_3;
@@ -127,6 +133,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String ShowView_errorTitle;
 	public static String SourceNotFoundEditorInput_Source_Not_Found_1;
 	public static String SourceNotFoundEditorInput_Source_not_found_for__0__2;
+
+	public static String WorkbenchOptionsBlock_workbench_options;
 	public static String WorkingDirectory;
 
 	static {
