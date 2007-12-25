@@ -161,6 +161,7 @@ public class DebugSearchEngine {
 					Set<Object> s = new HashSet<Object>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
+						s.add(project);
 						PHPSearchEngine.buildIncludePath(project, s);
 					}
 					includePaths = s.toArray();
