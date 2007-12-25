@@ -158,7 +158,7 @@ public class DebugSearchEngine {
 					includePaths = PHPSearchEngine.buildIncludePath(currentProject);
 				} else {
 					// Search in the whole workspace:
-					Set<Object> s = new HashSet<Object>();
+					Set<Object> s = new LinkedHashSet<Object>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
 						s.add(project);
