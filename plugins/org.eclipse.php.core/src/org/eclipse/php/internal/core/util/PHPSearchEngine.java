@@ -154,9 +154,6 @@ public class PHPSearchEngine {
 	 * @param results Array of include path objects (it can be one of: IContainer, IncludePathEntry)
 	 */
 	public static void buildIncludePath(IProject project, Set<Object> results) {
-		if (results.contains(project)) {
-			return;
-		}
 		if (!project.isAccessible() || !project.isOpen()) {
 			return;
 		}
@@ -166,27 +163,9 @@ public class PHPSearchEngine {
 		if (projectOptions != null) {
 			IIncludePathEntry[] includePath = projectOptions.readRawIncludePath();
 			for (IIncludePathEntry entry : includePath) {
-				// if (entry.getEntryKind() != IIncludePathEntry.IPE_PROJECT) { // we add this project later as a referenced project
-				// FIXME recursion seems less reasonable now.
 				results.add(entry);
-				// }
 			}
 		}
-		// Seva: This is not correct any more:
-		/*
-				// Collect referenced projects and their include paths:
-				try {
-					IProject[] referencedProjects = project.getReferencedProjects();
-					for (IProject referencedProject : referencedProjects) {
-						if (referencedProject != project) {
-							buildIncludePath(referencedProject, results);
-						}
-					}
-				} catch (CoreException e) {
-				}
-				// Add current project:
-				results.add(project);
-		*/
 	}
 
 	/**
