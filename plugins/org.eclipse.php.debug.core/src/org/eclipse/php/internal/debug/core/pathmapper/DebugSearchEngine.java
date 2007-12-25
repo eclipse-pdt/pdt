@@ -158,7 +158,7 @@ public class DebugSearchEngine {
 					includePaths = PHPSearchEngine.buildIncludePath(currentProject);
 				} else {
 					// Search in the whole workspace:
-					Set<Object> s = new HashSet<Object>();
+					Set<Object> s = new LinkedHashSet<Object>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
 						PHPSearchEngine.buildIncludePath(project, s);
@@ -193,8 +193,10 @@ public class DebugSearchEngine {
 							}
 						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 							entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-							File entryDir = entryPath.toFile();
-							find(entryDir, abstractPath, entry, results);
+							if (entryPath != null) {
+								File entryDir = entryPath.toFile();
+								find(entryDir, abstractPath, entry, results);
+							}
 						}
 					}
 				}
