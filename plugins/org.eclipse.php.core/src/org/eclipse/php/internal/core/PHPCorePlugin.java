@@ -41,7 +41,7 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		PHPWorkspaceModelManager.getInstance().startup();
 		IncludePathVariableManager.instance().startUp();
 	}
@@ -87,9 +87,9 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 	public static void setIncludePathVariable(String name, IPath path, IProgressMonitor monitor) {
 		IncludePathVariableManager.instance().putVariable(name, path);
 	}
-    
-    public static String getPluginId() {
-        return ID;
-    }
+
+	public static String getPluginId() {
+		return ID;
+	}
 
 }

@@ -51,7 +51,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	protected final static HashMap models = new HashMap();
-	protected static PHPProjectModel defaultModel;
+	protected static PHPProjectModel defaultModel = new PHPProjectModel();
 
 	/**
 	 * Model listeners
@@ -66,9 +66,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public void startup() {
 		initGlobalModelListeners();
 
-		runBuild();
-
 		attachProjectOpenObserver();
+
+		instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
+
+		runBuild();
 	}
 
 	private void initGlobalModelListeners() {
@@ -212,10 +214,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public final static PHPProjectModel getDefaultPHPProjectModel() {
-		if (defaultModel == null) {
-			defaultModel = new PHPProjectModel();
-			PHPWorkspaceModelManager.getInstance().putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
-		}
 		return defaultModel;
 	}
 
@@ -308,16 +306,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		return fileData;
 	}
 
-	private synchronized PHPFileData getModelForExternalFile(IFile externalFile) {
+	private PHPFileData getModelForExternalFile(IFile externalFile) {
 		if (!PHPModelUtil.isPhpFile(externalFile)) {
 			return null;
 		}
 		PHPFileData fileData = null;
 		PHPProjectModel externalProjectModel = getDefaultPHPProjectModel();
-		// initialize for first time
-		if (externalProjectModel.getPHPUserModel() == null) {
-			externalProjectModel.addFileToModel(externalFile);
-		}
 
 		// use full path to distinguish between files with the same name (same project model...)
 		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toOSString());
