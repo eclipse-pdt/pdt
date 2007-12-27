@@ -14,12 +14,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
@@ -45,8 +40,8 @@ public class PHPSearchEngine {
 	 * Searches for the given path using internal PHP mechanism
 	 *
 	 * @param path File path to resolve
-	 * @param currentWorkingDir local Current working directory (usually: CWD of PHP process)
-	 * @param currentScriptDir Directory of current script (which is interpreted by the PHP at this time)
+	 * @param currentWorkingDir Current working directory (usually: CWD of PHP process), absolute (workspace of file system)
+	 * @param currentScriptDir Absolute (workspace of file system) directory of current script (which is interpreted by the PHP at this time)
 	 * @param currentProject Current project to which current script belongs
 	 * @return resolved path, or <code>null</code> in case of failure
 	 */
@@ -59,58 +54,80 @@ public class PHPSearchEngine {
 		File file = new File(path);
 		if (file.isAbsolute()) {
 			return searchExternalOrWorkspaceFile(file);
-		} else if (path.matches("\\.\\.?[/\\\\].*")) { // check whether the path starts with ./ or ../
-			file = new File(currentWorkingDir, path);
-			return searchExternalOrWorkspaceFile(file);
-		} else {
-			Object[] includePaths = buildIncludePath(currentProject);
-			for (Object includePath : includePaths) {
-				if (includePath instanceof IContainer) {
-					IContainer container = (IContainer) includePath;
-					IResource resource = container.findMember(path);
-					if (resource instanceof IFile) {
-						return new ResourceResult((IFile) resource);
-					}
-				} else if (includePath instanceof IIncludePathEntry) {
-					IIncludePathEntry entry = (IIncludePathEntry) includePath;
-					IPath entryPath = entry.getPath();
-					if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-						if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
-							File entryDir = entryPath.toFile();
-							file = new File(entryDir, path);
-							if (file.exists()) {
-								return new IncludedFileResult(entry, file);
-							}
-						}
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IProject project = (IProject) entry.getResource();
-						if (project.isAccessible()) {
-							IResource resource = project.findMember(path);
-							if (resource != null) {
-								return new IncludedFileResult(entry, file);
-							}
-						}
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-						entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+		}
+		if (path.matches("\\.\\.?[/\\\\].*")) { // check whether the path starts with ./ or ../
+			return searchExternalOrWorkspaceFile(currentWorkingDir, path);
+		}
+
+		// look into include path:
+		Object[] includePaths = buildIncludePath(currentProject);
+		for (Object includePath : includePaths) {
+			if (includePath instanceof IContainer) {
+				IContainer container = (IContainer) includePath;
+				IResource resource = container.findMember(path);
+				if (resource instanceof IFile) {
+					return new ResourceResult((IFile) resource);
+				}
+			} else if (includePath instanceof IIncludePathEntry) {
+				IIncludePathEntry entry = (IIncludePathEntry) includePath;
+				IPath entryPath = entry.getPath();
+				if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+					if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
 						File entryDir = entryPath.toFile();
 						file = new File(entryDir, path);
 						if (file.exists()) {
 							return new IncludedFileResult(entry, file);
 						}
 					}
+				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+					File entryDir = entryPath.toFile();
+					file = new File(entryDir, path);
+					if (file.exists()) {
+						return new IncludedFileResult(entry, file);
+					}
+				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
+					IProject project = (IProject) entry.getResource();
+					if (project.isAccessible()) {
+						IResource resource = project.findMember(path);
+						if (resource instanceof IFile) {
+							return new ResourceResult((IFile) resource);
+						}
+					}
 				}
 			}
+		}
+
+		// look at current script directory:
+		return searchExternalOrWorkspaceFile(currentScriptDir, path);
+	}
+
+	private static Result<?, ?> searchExternalOrWorkspaceFile(String directory, String relativeFile) {
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(directory);
+		if (resource instanceof IContainer) {
+			IContainer container = (IContainer) resource;
+			IResource file = container.findMember(relativeFile);
+
+			if (file instanceof IFile) {
+				return new ResourceResult((IFile) file);
+			}
+		}
+		File dir = new File(directory);
+		if (dir.isDirectory()) {
+			return searchExternalOrWorkspaceFile(new File(dir, relativeFile));
 		}
 		return null;
 	}
 
 	private static Result<?, ?> searchExternalOrWorkspaceFile(File file) {
-		IFile res = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(Path.fromOSString(file.getAbsolutePath()));
-		if (res != null) {
-			return new ResourceResult(res);
-		}
 		if (file.exists()) {
-			return new ExternalFileResult(file);
+			IFile res = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(Path.fromOSString(file.getAbsolutePath()));
+			if (res != null) {
+				return new ResourceResult(res);
+			}
+			if (file.exists()) {
+				return new ExternalFileResult(file);
+			}
 		}
 		return null;
 	}
@@ -137,7 +154,7 @@ public class PHPSearchEngine {
 		if (results.contains(project)) {
 			return;
 		}
-		if (!project.isAccessible()) {
+		if (!project.isAccessible() || !project.isOpen()) {
 			return;
 		}
 		// Collect include paths:
@@ -147,14 +164,6 @@ public class PHPSearchEngine {
 			for (IIncludePathEntry entry : includePath) {
 				results.add(entry);
 			}
-		}
-		// Collect referenced projects and their include paths:
-		try {
-			IProject[] referencedProjects = project.getReferencedProjects();
-			for (IProject referencedProject : referencedProjects) {
-				buildIncludePath(referencedProject, results);
-			}
-		} catch (CoreException e) {
 		}
 		// Add current project:
 		results.add(project);
@@ -186,7 +195,7 @@ public class PHPSearchEngine {
 	 */
 	public static class ResourceResult extends Result<Object, IFile> {
 		public ResourceResult(IFile file) {
-			super(null, file);
+			super(file.getParent(), file);
 		}
 	}
 
@@ -204,7 +213,7 @@ public class PHPSearchEngine {
 	 */
 	public static class ExternalFileResult extends Result<Object, File> {
 		public ExternalFileResult(File file) {
-			super(null, file);
+			super(file.getParentFile(), file);
 		}
 	}
 }
