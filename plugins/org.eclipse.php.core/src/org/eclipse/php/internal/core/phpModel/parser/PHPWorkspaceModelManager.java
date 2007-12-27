@@ -51,7 +51,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	protected final static HashMap models = new HashMap();
-	protected static PHPProjectModel defaultModel;
+	protected static PHPProjectModel defaultModel = new PHPProjectModel();
 
 	/**
 	 * Model listeners
@@ -66,15 +66,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public void startup() {
 		initGlobalModelListeners();
 
-		runBuild();
-
 		attachProjectOpenObserver();
 
-		initLanguageModels();
-	}
+		instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
 
-	private void initLanguageModels() {
-		PHPLanguageManagerProvider.instance();
+		runBuild();
 	}
 
 	private void initGlobalModelListeners() {
@@ -99,10 +95,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		public IWorkspaceModelListener getListener() {
 			if (listener == null) {
 				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener") { //$NON-NLS-1$
-					public void run() throws Exception {
-						listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
-					}
-				});
+						public void run() throws Exception {
+							listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
+						}
+					});
 			}
 			return listener;
 		}
@@ -150,34 +146,41 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+		cleanJob.setPriority(Job.BUILD);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
 
 	private void runBuild() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		final ArrayList<IProject> phpProjects = new ArrayList<IProject>();
+		for (IProject project : projects) {
+			if (!project.isOpen()) {
+				continue;
+			}
+			try {
+				if (project.hasNature(PHPNature.ID)) {
+					phpProjects.add(project);
+				}
+			} catch (CoreException e) {
+				PHPCorePlugin.log(e);
+			}
+		}
+		if (phpProjects.isEmpty()) {
+			return;
+		}
 		WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.getString("PHPWorkspaceModelManager_5")) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-					monitor.beginTask(CoreMessages.getString("PHPWorkspaceModelManager_5"), projects.length);
+					monitor.beginTask(CoreMessages.getString("PHPWorkspaceModelManager_5"), phpProjects.size());
 
-					for (IProject project : projects) {
-						if (!project.isOpen()) {
-							continue;
-						}
-						boolean hasNature;
-						try {
-							hasNature = project.hasNature(PHPNature.ID);
-						} catch (CoreException e) {
-							PHPCorePlugin.log(e);
-							return null;
-						}
-						if (hasNature) {
+					for (IProject project : phpProjects) {
+						if (project.isOpen()) {
 							PHPWorkspaceModelManager.getInstance().getModelForProject(project, true);
-						}
-						if (monitor.isCanceled()) {
-							break;
+							if (monitor.isCanceled()) {
+								break;
+							}
 						}
 						monitor.worked(1);
 					}
@@ -188,6 +191,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+		cleanJob.setPriority(Job.BUILD);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
@@ -210,10 +214,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public final static PHPProjectModel getDefaultPHPProjectModel() {
-		if (defaultModel == null) {
-			defaultModel = new PHPProjectModel();
-			PHPWorkspaceModelManager.getInstance().putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
-		}
 		return defaultModel;
 	}
 
@@ -276,13 +276,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				if (model != null) {
 					String projectPath = "";
 					IPath location = projects[i].getLocation();
-					if (location == null){
+					if (location == null) {
 						projectPath = projects[i].getLocationURI().toString();
-					}
-					else {
+					} else {
 						projectPath = projects[i].getLocation().toOSString();
 					}
-					
+
 					String modelFilename;
 					if (filenameOS.startsWith(projectPath)) {
 						modelFilename = new Path(StringUtils.replace(filenameOS, projectPath, "")).toPortableString(); //$NON-NLS-1$
@@ -307,19 +306,18 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		return fileData;
 	}
 
-	private synchronized PHPFileData getModelForExternalFile(IFile externalFile) {
+	private PHPFileData getModelForExternalFile(IFile externalFile) {
+		if (!PHPModelUtil.isPhpFile(externalFile)) {
+			return null;
+		}
 		PHPFileData fileData = null;
 		PHPProjectModel externalProjectModel = getDefaultPHPProjectModel();
-		// initialize for first time
-		if (externalProjectModel.getPHPUserModel() == null) {
-			externalProjectModel.addFileToModel(externalFile);
-		}
 
 		// use full path to distinguish between files with the same name (same project model...)
-		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toString());
+		fileData = externalProjectModel.getFileData(externalFile.getFullPath().toOSString());
 		if (fileData == null) {
 			externalProjectModel.addFileToModel(externalFile);
-			fileData = externalProjectModel.getFileData(externalFile.getFullPath().toString());
+			fileData = externalProjectModel.getFileData(externalFile.getFullPath().toOSString());
 		}
 		return fileData;
 	}
@@ -327,7 +325,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(IFile file, boolean forceCreation) {
 		PHPProjectModel projModel = getModelForProject(file.getProject(), forceCreation);
 		if (projModel == null) {
-			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file)) {
+			if (file instanceof ExternalFileWrapper && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
 				return getModelForExternalFile(file);
 			}
 			return null;
@@ -345,10 +343,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	public PHPFileData getModelForFile(String filename) {
 		IPath path = Path.fromOSString(filename);
 		IFile file;
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-			file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+			file = ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
 		} else {
-			file = ExternalFileWrapper.createFile(path.toString());
+			file = ExternalFileWrapper.createFile(path.toOSString());
 		}
 		PHPFileData result = null;
 		result = getModelForFile(filename, false);
@@ -460,10 +458,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			this.copyUserModelListeners(projectModel.getPHPUserModel(), oldPhpProjectModel.getPHPUserModel().getModelListenerList());
 		}
 		fireProjectModelAdded(project);
-		if(projectModel.isBuildNeeded()){
-			//checking if we are currently at a job with build scheduling rule 
+		if (projectModel.isBuildNeeded()) {
+			//checking if we are currently at a job with build scheduling rule
 			//because the build must run in such a job
-			boolean newJobNeeded = (Job.getJobManager().currentJob().getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
+			Job currentJob = Job.getJobManager().currentJob();
+			boolean newJobNeeded = currentJob == null || currentJob.getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
 			if (newJobNeeded) {
 				WorkspaceJob buildJob = new WorkspaceJob(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName())) {
 					@Override
@@ -481,12 +480,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				buildModel(monitor, project);
 			}
 		} else {
-			if(project.exists()){//the event should not be lunched if we're dealing with the defaultPHPProjectModel
+			if (project.exists()) {//the event should not be lunched if we're dealing with the defaultPHPProjectModel
 				fireProjectModelChanged(project);
 			}
 		}
-		
+
 	}
+
 	private void buildModel(IProgressMonitor monitor, IProject project) {
 		try {
 			project.accept(new FullPhpProjectBuildVisitor(monitor));
@@ -592,7 +592,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		if (projectModel == null && !file.exists()) {
 			projectModel = getDefaultPHPProjectModel();
 			// distinguish between include path and external files:
-			if (projectModel.getFileData(file.getFullPath().toString()) == null) {
+			if (projectModel.getFileData(file.getFullPath().toOSString()) == null) {
 				return;
 			}
 		}
