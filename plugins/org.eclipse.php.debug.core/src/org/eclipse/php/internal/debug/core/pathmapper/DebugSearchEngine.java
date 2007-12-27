@@ -269,7 +269,13 @@ public class DebugSearchEngine {
 			Server server = ServersManager.getServer(serverName);
 			if (server != null && server.isLocal()) {
 				for (PathEntry entry : entries) {
-					if (remotePath.equals(entry.getAbstractPath())) {
+					if (entry.getType() == Type.WORKSPACE) {
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entry.getPath());
+						if (resource != null && resource.getLocation() != null && remotePath.equals(new VirtualPath(resource.getLocation().toOSString()))) {
+							return entry;
+						}
+					}
+					else if (remotePath.equals(entry.getAbstractPath())) {
 						return entry;
 					}
 				}
