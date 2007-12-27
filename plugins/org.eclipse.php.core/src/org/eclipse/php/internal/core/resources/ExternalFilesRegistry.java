@@ -2,7 +2,6 @@ package org.eclipse.php.internal.core.resources;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -50,7 +49,15 @@ public class ExternalFilesRegistry {
 	 * @return null if does not exist in the registry
 	 */
 	public IFile getFileEntry(String localPath) {
-		return (IFile) externalFilesRegistry.get(localPath);
+		IFile file = externalFilesRegistry.get(localPath);
+		Collection<IFile> coll = externalFilesRegistry.values();
+		for (IFile iFile : coll) {
+			if (iFile.getFullPath().equals(new Path(localPath))) {
+				file = iFile;
+				break;
+			}
+		}
+		return file;
 	}
 
 	/**
@@ -66,11 +73,11 @@ public class ExternalFilesRegistry {
 	// Notify addition or removal events.
 	private void notifyEntryChange(String localPath, boolean isAddition) {
 		Object[] listenersList = listeners.getListeners();
-		for (int i = 0; i < listenersList.length; i++) {
+		for (Object element : listenersList) {
 			if (isAddition) {
-				((ExternalFilesRegistryListener) listenersList[i]).externalFileAdded(localPath);
+				((ExternalFilesRegistryListener) element).externalFileAdded(localPath);
 			} else {
-				((ExternalFilesRegistryListener) listenersList[i]).externalFileRemoved(localPath);
+				((ExternalFilesRegistryListener) element).externalFileRemoved(localPath);
 			}
 		}
 	}
@@ -86,8 +93,7 @@ public class ExternalFilesRegistry {
 			return true;
 		}
 		Collection<IFile> coll = externalFilesRegistry.values();
-		for (Iterator<IFile> iterator = coll.iterator(); iterator.hasNext();) {
-			IFile iFile = iterator.next();
+		for (IFile iFile : coll) {
 			if (iFile.getFullPath().equals(new Path(localPath))) {
 				return true;
 			}
@@ -101,10 +107,12 @@ public class ExternalFilesRegistry {
 	 * @return true/false
 	 */
 	public boolean isEntryExist(IFile file) {
+		if(file == null){
+			return false;
+		}
 		Collection<IFile> coll = externalFilesRegistry.values();
-		for (Iterator<IFile> iterator = coll.iterator(); iterator.hasNext();) {
-			IFile iFile = iterator.next();
-			if (iFile.getFullPath().equals(file.getFullPath())) {
+		for (IFile iFile : coll) {
+			if (iFile.getFullPath().toOSString().equals(file.getFullPath().toOSString())) {
 				return true;
 			}
 		}
@@ -113,7 +121,7 @@ public class ExternalFilesRegistry {
 
 	/**
 	 * Adds a listener that will be notified on changes made to this {@link ExternalFilesRegistry}.
-	 * 
+	 *
 	 * @param listener An {@link ExternalFilesRegistryListener} to add.
 	 */
 	public void addListener(ExternalFilesRegistryListener listener) {
@@ -122,7 +130,7 @@ public class ExternalFilesRegistry {
 
 	/**
 	 * Removes a listener for this {@link ExternalFilesRegistry}.
-	 * 
+	 *
 	 * @param listener An {@link ExternalFilesRegistryListener} to remove.
 	 */
 	public void removeListener(ExternalFilesRegistryListener listener) {
@@ -132,12 +140,12 @@ public class ExternalFilesRegistry {
 	/**
 	 * Returns an array of IFiles that represents all the registered paths in this registry.
 	 * A zero sized array will be return if the registry does not hold any record.
-	 * @return 
-	 * 
+	 * @return
+	 *
 	 * @return An {@link IFile} array of {@link ExternalFileWrapper}s.
 	 */
 	public IFile[] getAllAsIFiles() {
-		Collection coll = externalFilesRegistry.values();
+		Collection<IFile> coll = externalFilesRegistry.values();
 		IFile[] result = new ExternalFileWrapper[coll.size()];
 		coll.toArray(result);
 		return result;
