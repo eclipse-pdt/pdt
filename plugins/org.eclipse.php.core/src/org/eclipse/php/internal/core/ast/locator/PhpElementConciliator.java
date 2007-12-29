@@ -17,7 +17,7 @@ import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 /**
  * Conciles the php element from a given path
- * NOTE: use the {@link #concile(LinkedList)} method, to identifiy the path element   
+ * NOTE: use the {@link #concile(LinkedList)} method, to identifiy the path element
  * @author Roy, 2007
  */
 public class PhpElementConciliator {
@@ -30,7 +30,7 @@ public class PhpElementConciliator {
 	public static final int CONCILIATOR_LOCAL_VARIABLE = 3;
 	public static final int CONCILIATOR_CLASSNAME = 4;
 	public static final int CONCILIATOR_CONSTANT = 5;
-	public static final int CONCILIATOR_CLASS_PROPERTY = 6;
+	public static final int CONCILIATOR_CLASS_MEMBER = 6;
 	public static final int CONCILIATOR_PROGRAM = 7;
 
 	public static int concile(ASTNode locateNode) {
@@ -47,13 +47,13 @@ public class PhpElementConciliator {
 		} else if (isLocalVariable(locateNode)) {
 			return CONCILIATOR_LOCAL_VARIABLE;
 		} else if (isDispatch(locateNode)) {
-			return CONCILIATOR_CLASS_PROPERTY;
+			return CONCILIATOR_CLASS_MEMBER;
 		}
 		return CONCILIATOR_UNKNOWN;
 	}
 
 	/**
-	 * Identifies a dispatch usage 
+	 * Identifies a dispatch usage
 	 * @param locateNode
 	 */
 	private static boolean isDispatch(ASTNode node) {
@@ -83,16 +83,16 @@ public class PhpElementConciliator {
 			// check for $this variable
 			final Identifier id = (Identifier) node;
 			final Variable variable = (Variable) parent;
-			
+
 			if (id.getName().equals(THIS) && variable.isDollared()) {
 				return false;
 			}
-			
+
 			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION) {
 				return true;
 			}
 		}
-		
+
 		if(parent.getType() == ASTNode.CLASS_CONSTANT_DECLARATION)
 			return true;
 
@@ -107,7 +107,7 @@ public class PhpElementConciliator {
 	}
 
 	/**
-	 * Identifies a constant use 
+	 * Identifies a constant use
 	 * @param locateNode
 	 * @return
 	 */
@@ -188,10 +188,16 @@ public class PhpElementConciliator {
 
 		Variable parent = (Variable) targetIdentifier.getParent();
 
-		// check for not variables / or $this / or field declaration 
+		// check for not variables / or $this / or field declaration
 		if (!parent.isDollared() || targetIdentifier.getName().equals(THIS) || parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
+		
+		// check for static variables
+		if (parent.isDollared() && parent.getParent() != null && parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
+			return false;
+		}
+		
 
 		ASTNode node = parent;
 		while (node != null) {
@@ -237,7 +243,7 @@ public class PhpElementConciliator {
 		// ignore static memeber call
 		if (parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
 			final StaticFieldAccess staticFieldAccess = (StaticFieldAccess) parent.getParent();
-			if (staticFieldAccess.getProperty() == variable) {
+			if (staticFieldAccess.getMember() == variable) {
 				return false;
 			}
 		}
@@ -312,13 +318,11 @@ public class PhpElementConciliator {
 	 * @param variable
 	 * @param isGlobal
 	 * @param globalStatement
-	 * @return true is the 
+	 * @return true is the
 	 */
 	private static boolean checkGlobal(Identifier targetIdentifier, final GlobalStatement globalStatement) {
 		final Variable[] variables = globalStatement.getVariables();
-		for (int j = 0; j < variables.length; j++) {
-			final Variable current = variables[j];
-
+		for (final Variable current : variables) {
 			assert current.getVariableName().getType() == ASTNode.IDENTIFIER;
 			Identifier id = (Identifier) current.getVariableName();
 
@@ -383,10 +387,10 @@ public class PhpElementConciliator {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param program
 	 * @param name
-	 * @return true - if the program has this constant already 
+	 * @return true - if the program has this constant already
 	 */
 	public static boolean constantAlreadyExists(Program program, final String name) {
 		assert program != null && name != null;
@@ -398,10 +402,10 @@ public class PhpElementConciliator {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param program
 	 * @param name
-	 * @return true - if the program has a class name already 
+	 * @return true - if the program has a class name already
 	 */
 	public static boolean classNameAlreadyExists(Program program, final String name) {
 		assert program != null && name != null;
@@ -651,8 +655,7 @@ public class PhpElementConciliator {
 			} else if (node.getType() == ASTNode.GLOBAL_STATEMENT) {
 				GlobalStatement globalStatement = (GlobalStatement) node;
 				final Variable[] variables = globalStatement.getVariables();
-				for (int i = 0; i < variables.length; i++) {
-					final Variable variable = variables[i];
+				for (final Variable variable : variables) {
 					final Expression variableName = variable.getVariableName();
 					if (variable.isDollared() && variableName.getType() == ASTNode.IDENTIFIER) {
 						Identifier identifier = (Identifier) variableName;
