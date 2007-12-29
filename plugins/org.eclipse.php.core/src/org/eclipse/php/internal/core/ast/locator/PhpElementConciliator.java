@@ -192,6 +192,12 @@ public class PhpElementConciliator {
 		if (!parent.isDollared() || targetIdentifier.getName().equals(THIS) || parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
+		
+		// check for static variables
+		if (parent.isDollared() && parent.getParent() != null && parent.getParent().getType() == ASTNode.STATIC_FIELD_ACCESS) {
+			return false;
+		}
+		
 
 		ASTNode node = parent;
 		while (node != null) {
