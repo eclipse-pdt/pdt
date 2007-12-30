@@ -159,10 +159,7 @@ public class DebugSearchEngine {
 					Set<Object> s = new LinkedHashSet<Object>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
-						if (project.isOpen() && project.isAccessible()) {
-							s.add(project);
-							PHPSearchEngine.buildIncludePath(project, s);
-						}
+						PHPSearchEngine.buildIncludePath(project, s);
 					}
 					includePaths = s.toArray();
 				}
@@ -177,6 +174,8 @@ public class DebugSearchEngine {
 								IContainer container = (IContainer)includePath;
 								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
 									localFile[0] = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, file.getParent());
+									pathMapper.addEntry(remoteFile, localFile[0]);
+									PathMapperRegistry.storeToPreferences();
 									return Status.OK_STATUS;
 								}
 							}
@@ -199,6 +198,8 @@ public class DebugSearchEngine {
 							if (entryPath != null && entryPath.isPrefixOf(Path.fromOSString(remoteFile))) {
 								Type type = (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 								localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
+								pathMapper.addEntry(remoteFile, localFile[0]);
+								PathMapperRegistry.storeToPreferences();
 								return Status.OK_STATUS;
 							}
 						}
