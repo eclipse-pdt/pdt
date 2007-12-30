@@ -25,8 +25,6 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
-import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IURIEditorInput;
@@ -161,9 +159,50 @@ public class DebugSearchEngine {
 					Set<Object> s = new LinkedHashSet<Object>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
-						PHPSearchEngine.buildIncludePath(project, s);
+						if (project.isOpen() && project.isAccessible()) {
+							s.add(project);
+							PHPSearchEngine.buildIncludePath(project, s);
+						}
 					}
 					includePaths = s.toArray();
+				}
+
+				// Try to find this file in the Workspace:
+				try {
+					IPath path = Path.fromOSString(remoteFile);
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
+					if (file.exists()) {
+						for (Object includePath : includePaths) {
+							if (includePath instanceof IContainer) {
+								IContainer container = (IContainer)includePath;
+								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
+									localFile[0] = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, file.getParent());
+									return Status.OK_STATUS;
+								}
+							}
+						}
+					}
+				} catch (Exception e) {
+					// no need to catch - this may be due to IPath creation failure
+				}
+
+				// Try to find this file in the Include Path:
+				File file = new File(remoteFile);
+				if (file.exists()) {
+					for (Object includePath : includePaths) {
+						if (includePath instanceof IIncludePathEntry) {
+							IIncludePathEntry entry = (IIncludePathEntry) includePath;
+							IPath entryPath = entry.getPath();
+							if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+								entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+							}
+							if (entryPath != null && entryPath.isPrefixOf(Path.fromOSString(remoteFile))) {
+								Type type = (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+								localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
+								return Status.OK_STATUS;
+							}
+						}
+					}
 				}
 
 				// Iterate over all include path, and search for a requested file
@@ -261,27 +300,6 @@ public class DebugSearchEngine {
 	}
 
 	private static PathEntry filterItems(VirtualPath remotePath, PathEntry[] entries, IDebugTarget debugTarget) {
-
-		// if there's an entry with exact path, and the server is local - return it without filtering
-		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
-		try {
-			String serverName = launchConfiguration.getAttribute(Server.NAME, (String) null);
-			Server server = ServersManager.getServer(serverName);
-			if (server != null && server.isLocal()) {
-				for (PathEntry entry : entries) {
-					if (entry.getType() == Type.WORKSPACE) {
-						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entry.getPath());
-						if (resource != null && resource.getLocation() != null && remotePath.equals(new VirtualPath(resource.getLocation().toOSString()))) {
-							return entry;
-						}
-					}
-					else if (remotePath.equals(entry.getAbstractPath())) {
-						return entry;
-					}
-				}
-			}
-		} catch (CoreException e) {
-		}
 
 		IPathEntryFilter[] filters = initializePathEntryFilters();
 		for (int i = 0; i < filters.length; ++i) {
