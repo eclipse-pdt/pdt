@@ -29,7 +29,6 @@ public class ContextManager {
 	private IStackFrame[] fPreviousFrames = null;
 	private Map<String, Expression[]> fStackVariables;
 	private Map<String, String> fResolvedStackLayersMap;
-	private ResolveBlackList fResolveBlackList;
 
 	private int fSuspendCount;
 	private IVariable[] fVariables;
@@ -41,7 +40,6 @@ public class ContextManager {
 		fDebugger = debugger;
 		fStackVariables = new HashMap<String, Expression[]>();
 		fResolvedStackLayersMap = new HashMap<String, String>();
-		fResolveBlackList = new ResolveBlackList();
 	}
 
 	/**
@@ -68,11 +66,11 @@ public class ContextManager {
 	}
 
 	public void addToResolveBlacklist(VirtualPath path, Type type) {
-		fResolveBlackList.add(path, type);
+		ResolveBlackList.getInstance().add(fDebugger.getDebugHandler().getDebugTarget().getLaunch(), path, type);
 	}
 
 	public boolean isResolveBlacklisted(String remoteFile) {
-		return fResolveBlackList.containsEntry(remoteFile);
+		return ResolveBlackList.getInstance().containsEntry(fDebugger.getDebugHandler().getDebugTarget().getLaunch(), remoteFile);
 	}
 
 	public IStackFrame[] getStackFrames() throws DebugException {

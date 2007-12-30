@@ -245,28 +245,27 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return remoteFile;
 		}
 
+		// If we are running local debugger, check if "remote" file exists and return it if it does
+		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
+			if (wsFile != null) {
+				return wsFile.getFullPath().toString();
+			} else {
+				return remoteFile;
+			}
+		}
+
 		String resolvedFileKey = new StringBuilder(remoteFile).append(cwd).append(currentScript).toString();
 		if (!resolvedFiles.containsKey(resolvedFileKey)) {
-			String resolvedFile = null;
-			// If we are running local debugger, check if "remote" file exists and return it if it does
-			if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
-				IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
-				if (wsFile != null) {
-					resolvedFile = wsFile.getFullPath().toString();
-				} else {
-					resolvedFile = remoteFile;
-				}
+			String currentScriptDir = null;
+			if (currentScript != null) {
+				currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
 			}
-			if (resolvedFile == null) {
-				String currentScriptDir = null;
-				if (currentScript != null) {
-					currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
-				}
 
-				PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
-				if (pathEntry != null) {
-					resolvedFile = pathEntry.getResolvedPath();
-				}
+			String resolvedFile = null;
+			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
+			if (pathEntry != null) {
+				resolvedFile = pathEntry.getResolvedPath();
 			}
 			resolvedFiles.put(resolvedFileKey, resolvedFile);
 		}
@@ -678,9 +677,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (!MessageDialogWithToggle.ALWAYS.equals(dontShowWarning)) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialogWithToggle.openInformation(
-						Display.getDefault().getActiveShell(), "Old Zend Debugger Protocol ID", "The Zend Debugger protocol ID is older than the one you are using.\n\nSome debugging features may not work properly!",
-							"Don't show this message", false, preferenceStore, "DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+					MessageDialogWithToggle.openInformation(Display.getDefault().getActiveShell(), "Old Zend Debugger Protocol ID", "The Zend Debugger protocol ID is older than the one you are using.\n\nSome debugging features may not work properly!",
+						"Don't show this message", false, preferenceStore, "DontShowOlderDebuggerWarning"); //$NON-NLS-1$
 				}
 			});
 		}

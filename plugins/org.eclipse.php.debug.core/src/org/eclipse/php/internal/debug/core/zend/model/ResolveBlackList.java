@@ -3,9 +3,12 @@ package org.eclipse.php.internal.debug.core.zend.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchesListener;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 
-public class ResolveBlackList {
+public class ResolveBlackList implements ILaunchesListener {
 
 	public enum Type {
 		FILE,
@@ -13,23 +16,38 @@ public class ResolveBlackList {
 		RECURSIVE,
 	}
 
-	private Map<VirtualPath, Type> list;
+	private static Map<ILaunch, Map<VirtualPath, Type>> blackListMap;
+	private static ResolveBlackList instance = new ResolveBlackList();
 
-	public ResolveBlackList() {
-		list = new HashMap<VirtualPath, Type>();
+	private ResolveBlackList() {
+		blackListMap = new HashMap<ILaunch, Map<VirtualPath,Type>>();
+
+		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(this);
 	}
 
-	public void add(VirtualPath path, Type type) {
-		list.put(path, type);
+	public static ResolveBlackList getInstance() {
+		return instance;
 	}
 
-	public boolean containsEntry(String file) {
+	private static Map<VirtualPath, Type> getByLaunch(ILaunch launch) {
+		if (!blackListMap.containsKey(launch)) {
+			blackListMap.put(launch, new HashMap<VirtualPath, Type>());
+		}
+		return blackListMap.get(launch);
+	}
+
+	public void add(ILaunch launch, VirtualPath path, Type type) {
+		getByLaunch(launch).put(path, type);
+	}
+
+	public boolean containsEntry(ILaunch launch, String file) {
 		if (!VirtualPath.isAbsolute(file)) {
 			return false;
 		}
-		for (VirtualPath path: list.keySet()) {
+		Map<VirtualPath, Type> map = getByLaunch(launch);
+		for (VirtualPath path: map.keySet()) {
 			VirtualPath tmp = new VirtualPath(file);
-			Type type = list.get(path);
+			Type type = map.get(path);
 			if (type == Type.FILE) {
 				if (path.equals(tmp)) {
 					return true;
@@ -48,5 +66,17 @@ public class ResolveBlackList {
 			}
 		}
 		return false;
+	}
+
+	public void launchesAdded(ILaunch[] launches) {
+	}
+
+	public void launchesChanged(ILaunch[] launches) {
+	}
+
+	public void launchesRemoved(ILaunch[] launches) {
+		for (ILaunch l : launches) {
+			blackListMap.remove(l);
+		}
 	}
 }
