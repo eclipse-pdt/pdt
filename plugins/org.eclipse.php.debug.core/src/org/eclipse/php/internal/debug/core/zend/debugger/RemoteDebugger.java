@@ -12,31 +12,93 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-
+import java.util.HashMap;
+import java.util.Map;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
+import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
+import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
+import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.AssignValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartProcessFileNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverResponse;
+import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.swt.widgets.Display;
 
 /**
- * An IRemoteDebugger implementation. 
+ * An IRemoteDebugger implementation.
  */
 public class RemoteDebugger implements IRemoteDebugger {
 
-	public static final int PROTOCOL_ID = 2006040701;
+	/**
+	 * Original PDT protocol ID from 04/2006
+	 */
+	public static final int PROTOCOL_ID_2006040701 = 2006040701;
+
+	/**
+	 * Improved protocol ID from 06/2007 which provides new message type ({@link StartProcessFileNotification})
+	 * that allows to control debug state when debugger is preparing processing new file. We use this state
+	 * for doing on-demand path mapping, and for sending breakpoints for the next file.
+	 */
+	public static final int PROTOCOL_ID_2006040703 = 2006040703;
+
+	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
 	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
-	protected boolean protocolSet;
 	private DebugConnectionThread connection;
 	private IDebugHandler debugHandler;
+	private Map<String, String> resolvedFiles;
+	private int currentProtocolId = 0;
 
 	/**
 	 * Creates new RemoteDebugSession
@@ -47,6 +109,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		this.debugHandler = debugHandler;
 		connection.setCommunicationAdministrator(this);
 		connection.setCommunicationClient(this);
+		resolvedFiles = new HashMap<String, String>();
 	}
 
 	public IDebugHandler getDebugHandler() {
@@ -59,7 +122,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void closeConnection() {
 		connection.closeConnection();
-		protocolSet = false;
 	}
 
 	public void setPeerResponseTimeout(int timeout) {
@@ -72,64 +134,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void connectionClosed() {
 		debugHandler.connectionClosed();
-		protocolSet = false;
-	}
-
-	public void handleNotification(Object msg) {
-		if (msg instanceof OutputNotification) {
-			String output = ((OutputNotification) msg).getOutput();
-			debugHandler.newOutput(output);
-		} else if (msg instanceof ReadyNotification) {
-			ReadyNotification readyNotification = (ReadyNotification) msg;
-			String currentFile = readyNotification.getFileName();
-			int currentLine = readyNotification.getLineNumber();
-			debugHandler.ready(convertToSystemDependentFileName(currentFile), currentLine);
-		} else if (msg instanceof DebugSessionStartedNotification) {
-			DebugSessionStartedNotification debugSessionStartedNotification = (DebugSessionStartedNotification) msg;
-			String fileName = debugSessionStartedNotification.getFileName();
-			String uri = debugSessionStartedNotification.getUri();
-			String query = debugSessionStartedNotification.getQuery();
-			String options = debugSessionStartedNotification.getOptions();
-			debugHandler.sessionStarted(fileName, uri, query, options);
-		} else if (msg instanceof HeaderOutputNotification) {
-			debugHandler.newHeaderOutput(((HeaderOutputNotification) msg).getOutput());
-		} else if (msg instanceof ParsingErrorNotification) {
-			ParsingErrorNotification parseError = (ParsingErrorNotification) msg;
-			String errorText = parseError.getErrorText();
-			String fileName = "";
-			Path errorFilePath = new Path(parseError.getFileName());
-			if ((errorFilePath.segmentCount() > 1) && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
-				fileName = errorFilePath.lastSegment();
-			} else {
-				fileName = convertToSystemDependentFileName(parseError.getFileName());
-			}
-
-			int lineNumber = parseError.getLineNumber();
-			int errorLevel = parseError.getErrorLevel();
-
-			DebugError debugError = new DebugError(errorLevel, convertToSystemDependentFileName(parseError.getFileName()), lineNumber, errorText);
-			debugHandler.parsingErrorOccured(debugError);
-		} else if (msg instanceof DebuggerErrorNotification) {
-			DebuggerErrorNotification parseError = (DebuggerErrorNotification) msg;
-			int errorLevel = parseError.getErrorLevel();
-			DebugError debugError = new DebugError();
-			String errorText = parseError.getErrorText();
-			if (errorText != null && !errorText.equals("")) {
-				debugError.setErrorText(errorText);
-			}
-
-			debugError.setCode(errorLevel);
-			debugHandler.debuggerErrorOccured(debugError);
-		} else if (msg instanceof DebugScriptEndedNotification) {
-			debugHandler.handleScriptEnded(); // 2 options: close message or // XXX - uncomment
-			// start profile
-		}
 	}
 
 	public void closeDebugSession() {
 		if (connection.isConnected()) {
 			connection.sendNotification(new DebugSessionClosedNotification());
-			protocolSet = false;
 		}
 	}
 
@@ -141,46 +150,158 @@ public class RemoteDebugger implements IRemoteDebugger {
 		debugHandler.connectionTimedout();
 	}
 
-	/**
-	 * Converts the given file name to a system independent file name. 
-	 * The convertion is platform independent and is similar to calling the convertToSystemIndependentFileName(fileName, true)
-	 * @param fileName
-	 * @return
-	 */
-	public static String convertToSystemIndependentFileName(String fileName) {
-		return convertToSystemIndependentFileName(fileName, true);
+	public String sendCWDRequest() {
+		try {
+			EvalRequest request = new EvalRequest();
+			request.setCommand("getcwd()"); //$NON-NLS-1$
+			IDebugResponseMessage response = sendCustomRequest(request);
+			if (response != null && response instanceof EvalResponse) {
+				String result = ((EvalResponse) response).getResult();
+				if (!EVAL_ERROR.equals(result)) {
+					return result;
+				}
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return null;
 	}
 
 	/**
-	 * Converts the given file name to a system independent file name. If the ignoreSystemType is false, the
-	 * convertion will occure only if the current system is Microsoft Windows.
-	 * @param fileName
-	 * @return
+	 * Returns local path corresponding to the current working directory of the PHP script,
+	 * which is currently running.
+	 *
+	 * @return current working directory
 	 */
-	public static String convertToSystemIndependentFileName(String fileName, boolean ignoreSystemType) {
-		if (fileName == null)
-			return null;
-		if (ignoreSystemType || File.separatorChar == '\\') {
-			fileName = fileName.replace('\\', '/');
+	public String getCurrentWorkingDirectory() {
+		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
+		String cwd = sendCWDRequest();
+		if (cwd != null) {
+			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
+			if (pathMapper != null) {
+				PathEntry cwdEntry = pathMapper.getLocalFile(cwd);
+				if (cwdEntry != null) {
+					cwd = cwdEntry.getResolvedPath();
+				}
+			}
 		}
-		return fileName;
+		return cwd;
 	}
 
-	public static final String convertToSystemDependentFileName(String fileName) {
-		if (fileName == null)
-			return null;
-		if (File.separatorChar == '\\') {
-			fileName = fileName.replace('/', File.separatorChar);
-			fileName = fileName.replace('\\', File.separatorChar);
+	/**
+	 * Sets current working directory on the debugger side
+	 *
+	 * @param cwd Current working directory to set
+	 * @return <code>true</code> if success, <code>false</code> - otherwise
+	 */
+	public boolean setCurrentWorkingDirectory(String cwd) {
+		try {
+			EvalRequest request = new EvalRequest();
+			request.setCommand(String.format("chdir('%1$s')", cwd));
+			IDebugResponseMessage response = sendCustomRequest(request);
+			if (response != null && response instanceof EvalResponse) {
+				String result = ((EvalResponse) response).getResult();
+				if (!EVAL_ERROR.equals(result)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
 		}
-		return fileName;
+		return false;
+	}
+
+	/**
+	 *  Returns local file name corresponding to the given remote path.
+	 *  This method asks debugger for the current working directory before resolving.
+	 *
+	 * @param remoteFile File to resolve
+	 * @return local file, or <code>null</code> in case of resolving failure
+	 */
+	public String convertToLocalFilename(String remoteFile) {
+		String currentScript = null;
+		PHPstack callStack = getCallStack();
+		if (callStack.getSize() > 0) {
+			currentScript = callStack.getLayer(callStack.getSize() - 1).getResolvedCalledFileName();
+		}
+		return convertToLocalFilename(remoteFile, getCurrentWorkingDirectory(), currentScript);
+	}
+
+	/**
+	 * Returns local file name corresponding to the given remote path
+	 * @param remoteFile File to resolve
+	 * @param cwd Current working directory received from the debugger
+	 * @param currentScript Script that is on the top of the debug stack currently
+	 * @return local file, or <code>null</code> in case of resolving failure
+	 */
+	public String convertToLocalFilename(String remoteFile, String cwd, String currentScript) {
+		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
+		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
+			return remoteFile;
+		}
+
+		// check if this file is already local
+		if (ResourcesPlugin.getWorkspace().getRoot().findMember(remoteFile) != null) {
+			return remoteFile;
+		}
+
+		// If we are running local debugger, check if "remote" file exists and return it if it does
+		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
+			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
+			if (wsFile != null) {
+				return wsFile.getFullPath().toString();
+			} else {
+				return remoteFile;
+			}
+		}
+
+		String resolvedFileKey = new StringBuilder(remoteFile).append(cwd).append(currentScript).toString();
+		if (!resolvedFiles.containsKey(resolvedFileKey)) {
+			String currentScriptDir = null;
+			if (currentScript != null) {
+				currentScriptDir = new Path(currentScript).removeLastSegments(1).toString();
+			}
+
+			String resolvedFile = null;
+			PathEntry pathEntry = DebugSearchEngine.find(remoteFile, debugTarget, cwd, currentScriptDir);
+			if (pathEntry != null) {
+				resolvedFile = pathEntry.getResolvedPath();
+			}
+			resolvedFiles.put(resolvedFileKey, resolvedFile);
+		}
+		return resolvedFiles.get(resolvedFileKey);
+	}
+
+	/**
+	 * Returns remote file name corresponding to the given local path
+	 * @param localFile
+	 * @return remote file path, or localFile in case it couldn't be resolved
+	 */
+	public static String convertToRemoteFilename(String localFile, PHPDebugTarget debugTarget) {
+		IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(localFile));
+		if (debugTarget.isPHPCGI() && wsFile.exists() && wsFile.getLocation() != null) {
+			File fsFile = wsFile.getLocation().toFile();
+			if (fsFile.exists()) {
+				return fsFile.getAbsolutePath();
+			}
+		}
+		if (VirtualPath.isAbsolute(localFile)) {
+			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
+			if (pathMapper != null) {
+				String remoteFile = pathMapper.getRemoteFile(localFile);
+				if (remoteFile != null) {
+					return remoteFile;
+				}
+			}
+		}
+		return localFile;
 	}
 
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Sends the request through the communication connection and returns response 
-	 * 
+	 * Sends the request through the communication connection and returns response
+	 *
 	 * @param message request that will be sent to the debugger
 	 * @return message response recieved from the debugger
 	 */
@@ -207,7 +328,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	/**
 	 * Sends custom notification through the communication connection
-	 * 
+	 *
 	 * @param message notification that will be delivered to the debugger
 	 * @return <code>true</code> if succeeded sending the message, <code>false</code> - otherwise
 	 */
@@ -224,7 +345,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic addBreakpoint Returns true if successed sending the request,
+	 * Asynchronic addBreakpoint Returns true if succeeded sending the request,
 	 * false otherwise.
 	 */
 	public boolean addBreakpoint(Breakpoint bp, BreakpointAddedResponseHandler responseHandler) {
@@ -234,7 +355,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) bp.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
+			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
@@ -246,7 +367,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic addBreakpoint Returns true if successed adding the
+	 * Synchronic addBreakpoint Returns true if succeeded adding the
 	 * Breakpoint.
 	 */
 	public void addBreakpoint(Breakpoint breakpoint) {
@@ -256,7 +377,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 		try {
 			AddBreakpointRequest request = new AddBreakpointRequest();
 			Breakpoint tmpBreakpoint = (Breakpoint) breakpoint.clone();
-			String fileName = convertToSystemIndependentFileName(tmpBreakpoint.getFileName(), false);
+			String fileName = tmpBreakpoint.getFileName();
 			tmpBreakpoint.setFileName(fileName);
 			request.setBreakpoint(tmpBreakpoint);
 			AddBreakpointResponse response = (AddBreakpointResponse) connection.sendRequest(request);
@@ -270,7 +391,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if successed sending the
+	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
 	public boolean removeBreakpoint(int id, BreakpointRemovedResponseHandler responseHandler) {
@@ -284,7 +405,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Ssynchronic removeBreakpoint Returns true if successed removing the
+	 * Ssynchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
 	public boolean removeBreakpoint(int id) {
@@ -303,7 +424,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeBreakpoint Returns true if successed sending the
+	 * Asynchronic removeBreakpoint Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
 	public boolean removeBreakpoint(Breakpoint breakpoint, BreakpointRemovedResponseHandler responseHandler) {
@@ -311,7 +432,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic removeBreakpoint Returns true if successed removing the
+	 * Synchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
 	public boolean removeBreakpoint(Breakpoint breakpoint) {
@@ -319,7 +440,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic removeAllBreakpoints Returns true if successed sending the
+	 * Asynchronic removeAllBreakpoints Returns true if succeeded sending the
 	 * request, false otherwise.
 	 */
 	public boolean removeAllBreakpoints(AllBreakpointRemovedResponseHandler responseHandler) {
@@ -332,7 +453,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic removeAllBreakpoints Returns true if successed removing all
+	 * Synchronic removeAllBreakpoints Returns true if succeeded removing all
 	 * the Breakpoint.
 	 */
 	public boolean removeAllBreakpoints() {
@@ -350,7 +471,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic stepInto Returns true if successed sending the request, false
+	 * Asynchronic stepInto Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean stepInto(StepIntoResponseHandler responseHandler) {
@@ -363,7 +484,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic stepInto Returns true if successed stepInto.
+	 * Synchronic stepInto Returns true if succeeded stepInto.
 	 */
 	public boolean stepInto() {
 		if (!this.isActive()) {
@@ -380,7 +501,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic stepOver Returns true if successed sending the request, false
+	 * Asynchronic stepOver Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean stepOver(StepOverResponseHandler responseHandler) {
@@ -398,7 +519,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic stepOver Returns true if successed stepOver.
+	 * Synchronic stepOver Returns true if succeeded stepOver.
 	 */
 	public boolean stepOver() {
 		if (!this.isActive()) {
@@ -415,7 +536,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic stepOut Returns true if successed sending the request, false
+	 * Asynchronic stepOut Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean stepOut(StepOutResponseHandler responseHandler) {
@@ -433,7 +554,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic stepOut Returns true if successed stepOut.
+	 * Synchronic stepOut Returns true if succeeded stepOut.
 	 */
 	public boolean stepOut() {
 		if (!this.isActive()) {
@@ -450,7 +571,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic go Returns true if successed sending the request, false
+	 * Asynchronic go Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean go(GoResponseHandler responseHandler) {
@@ -468,7 +589,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic go Returns true if successed go.
+	 * Synchronic go Returns true if succeeded go.
 	 */
 	public boolean go() {
 		if (!this.isActive()) {
@@ -485,16 +606,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic start Returns true if successed sending the request, false
-	 * otherwise.
+	 * Asynchronic start Returns true if succeeded sending the request, false otherwise.
 	 */
 	public boolean start(StartResponseHandler responseHandler) {
 		if (!this.isActive()) {
 			return false;
 		}
-		if (!setProtocol(getProtocolID())) {
+
+		if (!detectProtocolID()) {
 			return false;
 		}
+
 		debugHandler.getDebugTarget().installDeferredBreakpoints();
 		StartRequest request = new StartRequest();
 		try {
@@ -507,15 +629,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic start Returns true if successed start.
+	 * Synchronic start Returns true if succeeded start.
 	 */
 	public boolean start() {
 		if (!this.isActive()) {
 			return false;
 		}
-		if (!setProtocol(getProtocolID())) {
+
+		if (!detectProtocolID()) {
 			return false;
 		}
+
 		StartRequest request = new StartRequest();
 		try {
 			StartResponse response = (StartResponse) connection.sendRequest(request);
@@ -527,46 +651,59 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Returns true if the protocol was successfully set by this debugger.
-	 * 
-	 * @return True, if the protocol was set; False, otherwise.
+	 * This method is used for detecting protocol version of Debugger
+	 * @return <code>true</code> if succeeded to detect, otherwise <code>false</code>
 	 */
-	public boolean isProtocolSet() {
-		return protocolSet;
+	protected boolean detectProtocolID() {
+		// check whether debugger is using the latest protocol ID:
+		if (setProtocol(PROTOCOL_ID_2006040703)) {
+			return true;
+		}
+		// check whether debugger is using one of older protocol ID:
+		if (setProtocol(PROTOCOL_ID_2006040701)) {
+
+			// warn user that he is using an old debugger
+			warnOlderDebugVersion();
+			return true;
+		}
+		// user is using an incompatible version of debugger:
+		getDebugHandler().wrongDebugServer();
+		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.debug.core.debugger.Debugger#setProtocol(int)
-	 */
+	public static void warnOlderDebugVersion() {
+		final IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
+		String dontShowWarning = preferenceStore.getString("DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+		if (!MessageDialogWithToggle.ALWAYS.equals(dontShowWarning)) {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					MessageDialogWithToggle.openInformation(Display.getDefault().getActiveShell(), "Old Zend Debugger Protocol ID", "The Zend Debugger protocol ID is older than the one you are using.\n\nSome debugging features may not work properly!",
+						"Don't show this message", false, preferenceStore, "DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+				}
+			});
+		}
+	}
+
 	public boolean setProtocol(int protocolID) {
 		SetProtocolRequest request = new SetProtocolRequest();
 		request.setProtocolID(protocolID);
 		IDebugResponseMessage response = sendCustomRequest(request);
 		if (response != null && response instanceof SetProtocolResponse) {
 			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
-			if (responceProtocolID != protocolID) {
-				getDebugHandler().wrongDebugServer();
-				protocolSet = false;
-			} else {
-				protocolSet = true;
+			if (responceProtocolID == protocolID) {
+				currentProtocolId = protocolID;
+				return true;
 			}
-		} else {
-			protocolSet = false;
 		}
-		return protocolSet;
+		return false;
+	}
+
+	public int getCurrentProtocolID() {
+		return currentProtocolId;
 	}
 
 	/**
-	 * Returns the protocol ID that should be used by this debugger.
-	 * @return
-	 */
-	protected int getProtocolID() {
-		return PROTOCOL_ID;
-	}
-
-	/**
-	 * Asynchronic pause Returns true if successed sending the request, false
+	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean pause(PauseResponseHandler responseHandler) {
@@ -584,7 +721,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic pause Returns true if successed pause.
+	 * Synchronic pause Returns true if succeeded pause.
 	 */
 	public boolean pause() {
 		if (!this.isActive()) {
@@ -601,7 +738,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Asynchronic pause Returns true if successed sending the request, false
+	 * Asynchronic pause Returns true if succeeded sending the request, false
 	 * otherwise.
 	 */
 	public boolean eval(String commandString, EvalResponseHandler responseHandler) {
@@ -642,9 +779,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Returns the transfer encoding for the current project.
 	 */
 	private String getTransferEncoding() {
-		String projectName = debugHandler.getDebugTarget().getProjectName();
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		return PHPProjectPreferences.getTransferEncoding(project);
+		IProject project = debugHandler.getDebugTarget().getProject();
+		return project == null ? null : PHPProjectPreferences.getTransferEncoding(project);
 	}
 
 	/**
@@ -670,7 +806,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic pause Returns true if successed pause.
+	 * Synchronic pause Returns true if succeeded pause.
 	 */
 	public String eval(String commandString) {
 		if (!this.isActive()) {
@@ -700,7 +836,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public void finish() {
 		connection.closeConnection();
-		protocolSet = false;
 	}
 
 	/**
@@ -785,17 +920,44 @@ public class RemoteDebugger implements IRemoteDebugger {
 		return remoteStack;
 	}
 
-	private static void convertToSystem(PHPstack remoteStack) {
+	private void convertToSystem(PHPstack remoteStack) {
 		if (remoteStack != null) {
+			String currentWorkingDir = getCurrentWorkingDirectory();
+
 			for (int i = 0; i < remoteStack.getSize(); i++) {
 				StackLayer layer = remoteStack.getLayer(i);
 				layer.setCallerLineNumber(layer.getCallerLineNumber() - 1);
 				layer.setCalledLineNumber(layer.getCalledLineNumber() - 1);
 
-				layer.setCallerFileName(convertToSystemDependentFileName(layer.getCallerFileName()));
-				layer.setCalledFileName(convertToSystemDependentFileName(layer.getCalledFileName()));
-			}
+				layer.setResolvedCalledFileName(layer.getCalledFileName());
+				if (i > 0) {
+					String previousScript = remoteStack.getLayer(i - 1).getResolvedCalledFileName();
+					String previousScriptDir = ".";
+					int idx = Math.max(previousScript.lastIndexOf('/'), previousScript.lastIndexOf('\\'));
+					if (idx != -1) {
+						previousScriptDir = previousScript.substring(0, idx);
+					}
 
+					IProject project = null;
+					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(previousScript);
+					if (resource != null) {
+						project = resource.getProject();
+					} else {
+						project = debugHandler.getDebugTarget().getProject();
+					}
+
+					if (layer.getCalledFileName() != null && currentWorkingDir != null && project != null) {
+						Result<?, ?> result = PHPSearchEngine.find(layer.getCalledFileName(), currentWorkingDir, previousScriptDir, project);
+						if (result instanceof ResourceResult) {
+							layer.setResolvedCalledFileName(((ResourceResult) result).getFile().getFullPath().toString());
+						} else if (result instanceof IncludedFileResult) {
+							layer.setResolvedCalledFileName(((IncludedFileResult) result).getFile().getAbsolutePath());
+						} else if (result instanceof ExternalFileResult) {
+							layer.setResolvedCalledFileName(((ExternalFileResult) result).getFile().getAbsolutePath());
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -845,7 +1007,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	// ---------------------------------------------------------------------------
 	// ---------------------------------------------------------------------------
 
-	private static class ThisHandleResponse implements ResponseHandler {
+	private class ThisHandleResponse implements ResponseHandler {
 		Object responseHandler;
 
 		public ThisHandleResponse(Object responseHandler) {
@@ -858,7 +1020,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 			if (request instanceof AddBreakpointRequest) {
 				AddBreakpointRequest addBreakpointRequest = (AddBreakpointRequest) request;
 				Breakpoint bp = addBreakpointRequest.getBreakpoint();
-				String fileName = convertToSystemDependentFileName(bp.getFileName());
+				String fileName = bp.getFileName();
 				int lineNumber = bp.getLineNumber();
 				int id = -1;
 				if (response != null) {
@@ -876,7 +1038,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 				((StartResponseHandler) responseHandler).started(success);
 
 			} else if (request instanceof EvalRequest) {
-				((EvalResponseHandler) responseHandler).evaled(((EvalRequest) request).getCommand(), (success) ? ((EvalResponse) response).getResult() : null, success);
+				((EvalResponseHandler) responseHandler).evaled(((EvalRequest) request).getCommand(), success ? ((EvalResponse) response).getResult() : null, success);
 
 			} else if (request instanceof StepIntoRequest) {
 				((StepIntoResponseHandler) responseHandler).stepInto(success);

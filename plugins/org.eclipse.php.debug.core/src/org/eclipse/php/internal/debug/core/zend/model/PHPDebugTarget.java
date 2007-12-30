@@ -1058,6 +1058,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * @return mapped path entry or <code>null</code> in case of error
 	 */
 	public PathEntry mapFirstDebugFile(String remoteFile) {
+
+		if (getContextManager().isResolveBlacklisted(remoteFile)) {
+			return null;
+		}
+
 		try {
 			ILaunchConfiguration launchConfiguration = getLaunch().getLaunchConfiguration();
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
