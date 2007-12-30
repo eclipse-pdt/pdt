@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.parser.ASTParser;
 
 /**
  * Sample visitor which get the AST and convert it to PHP code
@@ -15,42 +14,15 @@ import org.eclipse.php.internal.core.ast.parser.ASTParser;
  */
 public class CodeBuilder implements Visitor {
 
-	final static StringBuffer buffer = new StringBuffer();
-
-	public static void main(String[] args) {
-		try {
-			CodeBuilder codeBuilder = new CodeBuilder();
-			String inputDir = args[0];
-			String outputDir = args[1];
-			File dir = new File(inputDir);
-			String[] files = dir.list();
-			for (int i = 0; i < files.length; i++) {
-				String filename = files[i];
-				codeBuilder.str = readFile(inputDir + "/" + filename); //$NON-NLS-1$
-
-				StringReader reader = new StringReader(codeBuilder.str);
-				Program program = ASTParser.parse(reader);
-				System.out.println(program);
-				program.accept(codeBuilder);
-
-				System.out.println(buffer.toString());
-
-				printOutputfile(outputDir + "/" + filename); //$NON-NLS-1$
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public StringBuffer buffer = new StringBuffer();
+	
+	public void printOutputfile(String filename) throws IOException {
+		Writer outFile = new FileWriter(filename, false);
+		outFile.write(buffer.toString());
+		outFile.close();
 	}
 
-	private static void printOutputfile(String filename) throws FileNotFoundException {
-		File outputFile = new File(filename);
-		PrintStream printStream = new PrintStream(new FileOutputStream(outputFile));
-		printStream.print(buffer.toString());
-		printStream.close();
-	}
-
-	private static String readFile(String filename) throws FileNotFoundException, IOException {
+	public static String readFile(String filename) throws FileNotFoundException, IOException {
 		StringBuffer inputBuffer = new StringBuffer();
 		FileInputStream fileInputStream = new FileInputStream(new File(filename));
 		int read = fileInputStream.read();
@@ -131,7 +103,7 @@ public class CodeBuilder implements Visitor {
 		} else {
 			buffer.append(":\n"); //$NON-NLS-1$
 		}
-
+		
 		Statement[] statements = block.getStatements();
 		for (int i = 0; i < statements.length; i++) {
 			statements[i].accept(this);
@@ -371,6 +343,7 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(FunctionDeclaration functionDeclaration) {
+		buffer.append(" function ");
 		functionDeclaration.getFunctionName().accept(this);
 		buffer.append("("); //$NON-NLS-1$
 		FormalParameter[] formalParameters = functionDeclaration.getFormalParameters();
@@ -380,8 +353,9 @@ public class CodeBuilder implements Visitor {
 				buffer.append(","); //$NON-NLS-1$
 				formalParameters[i].accept(this);
 			}
-			buffer.append(")"); //$NON-NLS-1$
+			
 		}
+		buffer.append(")"); //$NON-NLS-1$
 		if (functionDeclaration.getBody() != null) {
 			functionDeclaration.getBody().accept(this);
 		}
@@ -493,6 +467,7 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(MethodDeclaration methodDeclaration) {
+		buffer.append(methodDeclaration.getModifierString());
 		methodDeclaration.getFunction().accept(this);
 	}
 
@@ -675,6 +650,7 @@ public class CodeBuilder implements Visitor {
 	}
 
 	public void visit(Variable variable) {
+		buffer.append("$");
 		variable.getVariableName().accept(this);
 	}
 
