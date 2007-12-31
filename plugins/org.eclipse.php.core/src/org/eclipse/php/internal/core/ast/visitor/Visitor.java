@@ -36,7 +36,7 @@ public interface Visitor {
 	
 	public boolean visit(Assignment assignment);
 	
-	public void endVisitor(Assignment assignment);
+	public void endVisit(Assignment assignment);
 
 	public boolean visit(ASTError astError);
 	

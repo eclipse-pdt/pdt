@@ -461,7 +461,7 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(WhileStatement whileStatement) {
 	}
 
-	public void endVisitor(Assignment assignment) {
+	public void endVisit(Assignment assignment) {
 	}
 
 	public void endVisit(ASTNode node) {
