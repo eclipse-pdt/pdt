@@ -63,14 +63,15 @@ public class TypeResolver extends AbstractVisitor {
 		throw new UnsupportedOperationException("cannot resolve: " + node.getStart() + ", type: " + node.getType()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	public void visit(ArrayAccess indexedVariable) {
+	public boolean visit(ArrayAccess indexedVariable) {
 		scope.lookup(indexedVariable);
+		return false;
 	}
 
 	/**
 	 * Returns an array attribute
 	 */
-	public void visit(ArrayCreation arrayExpressionon) {
+	public boolean visit(ArrayCreation arrayExpressionon) {
 		final ArrayAttribute attribute = new ArrayAttribute();
 		ArrayElement[] elements = arrayExpressionon.getElements();
 		for (int i = 0; i < elements.length; i++) {
@@ -79,81 +80,96 @@ public class TypeResolver extends AbstractVisitor {
 			attribute.addAttribute(evaluatedAttribute);
 		}
 		evaluatedAttribute = attribute;
+		return false;
 	}
 
-	public void visit(ArrayElement arrayElement) {
+	public boolean visit(ArrayElement arrayElement) {
 		throwException(arrayElement);
+		return false;
 	}
 
 	/**
 	 * Gets the value attribute
 	 */
-	public void visit(Assignment assignment) {
+	public boolean visit(Assignment assignment) {
 		assignment.getValue().accept(this);
+		return false;
 	}
 
-	public void visit(ASTError astError) {
+	public boolean visit(ASTError astError) {
 		evaluatedAttribute = Attribute.NULL_ATTRIBUTE;
+		return false;
 	}
 
-	public void visit(BackTickExpression expression) {
+	public boolean visit(BackTickExpression expression) {
 		// TODO Auto-generated method stub
-
+		return true;
 	}
 
-	public void visit(Block blockStatement) {
+	public boolean visit(Block blockStatement) {
 		throwException(blockStatement);
+		return false;
 	}
 
-	public void visit(BreakStatement breakStatement) {
+	public boolean visit(BreakStatement breakStatement) {
 		throwException(breakStatement);
+		return false;
 	}
 
-	public void visit(CastExpression castExpression) {
+	public boolean visit(CastExpression castExpression) {
 		castExpression.getExpr().accept(this);
+		return false;
 	}
 
-	public void visit(CatchClause catchStatement) {
+	public boolean visit(CatchClause catchStatement) {
 		throwException(catchStatement);
+		return false;
 	}
 
-	public void visit(StaticConstantAccess classConstant) {
+	public boolean visit(StaticConstantAccess classConstant) {
 		evaluatedAttribute = scope.programScope.lookup(classConstant);
+		return false;
 	}
 
-	public void visit(ClassConstantDeclaration classConstantDeclaratio) {
+	public boolean visit(ClassConstantDeclaration classConstantDeclaratio) {
 		throwException(classConstantDeclaratio);
+		return false;
 	}
 
-	public void visit(ClassDeclaration classDeclaration) {
+	public boolean visit(ClassDeclaration classDeclaration) {
 		throwException(classDeclaration);
+		return false;
 	}
 
 	/**
 	 * Returns the class name declaration
 	 */
-	public void visit(ClassInstanceCreation classInstanceCreation) {
+	public boolean visit(ClassInstanceCreation classInstanceCreation) {
 		classInstanceCreation.getClassName().accept(this);
+		return false;
 	}
 
-	public void visit(ClassName className) {
+	public boolean visit(ClassName className) {
 		if (className.getClassName().getType() == ASTNode.IDENTIFIER) {
 			Identifier id = (Identifier) className.getClassName();
 			evaluatedAttribute = new ClassAttribute(id.getName());
 		} else {
 			evaluatedAttribute = Attribute.NULL_ATTRIBUTE;
 		}
+		return false;
 	}
 
-	public void visit(CloneExpression cloneExpression) {
+	public boolean visit(CloneExpression cloneExpression) {
 		cloneExpression.getExpr().accept(this);
+		return false;
 	}
 
-	public void visit(Comment comment) {
+	public boolean visit(Comment comment) {
 		throwException(comment);
+		return false;
 	}
 
-	public void visit(ConditionalExpression conditionalExpression) {
+	public boolean visit(ConditionalExpression conditionalExpression) {
 		conditionalExpression.getIfFalse().accept(this);
 		Attribute falseExpression = evaluatedAttribute;
 		conditionalExpression.getIfTrue().accept(this);
@@ -164,86 +180,106 @@ public class TypeResolver extends AbstractVisitor {
 			compositeAttribute.addAttribute(trueExpression);
 			evaluatedAttribute = compositeAttribute;
 		} // else - it is the same attribute, so return the attribute itself
+		return false;
 	}
 
-	public void visit(ContinueStatement continueStatement) {
+	public boolean visit(ContinueStatement continueStatement) {
 		throwException(continueStatement);
+		return false;
 	}
 
-	public void visit(DeclareStatement declareStatement) {
+	public boolean visit(DeclareStatement declareStatement) {
 		throwException(declareStatement);
+		return false;
 	}
 
-	public void visit(Dispatch dispatch) {
+	public boolean visit(Dispatch dispatch) {
 		evaluatedAttribute = scope.lookup(dispatch);
+		return false;
 	}
 
-	public void visit(DoStatement doStatement) {
+	public boolean visit(DoStatement doStatement) {
 		throwException(doStatement);
+		return false;
 	}
 
-	public void visit(EchoStatement echoStatement) {
+	public boolean visit(EchoStatement echoStatement) {
 		throwException(echoStatement);
+		return false;
 	}
 
-	public void visit(EmptyStatement emptyStatement) {
+	public boolean visit(EmptyStatement emptyStatement) {
 		throwException(emptyStatement);
+		return false;
 	}
 
-	public void visit(ExpressionStatement expressionStatement) {
+	public boolean visit(ExpressionStatement expressionStatement) {
 		throwException(expressionStatement);
+		return false;
 	}
 
-	public void visit(FieldsDeclaration classVariableDeclaratio) {
+	public boolean visit(FieldsDeclaration classVariableDeclaratio) {
 		throwException(classVariableDeclaratio);
+		return false;
 	}
 
-	public void visit(ForEachStatement forEachStatement) {
+	public boolean visit(ForEachStatement forEachStatement) {
 		throwException(forEachStatement);
+		return false;
 	}
 
-	public void visit(FormalParameter formalParameter) {
+	public boolean visit(FormalParameter formalParameter) {
 		throwException(formalParameter);
+		return false;
 	}
 
-	public void visit(ForStatement forStatement) {
+	public boolean visit(ForStatement forStatement) {
 		throwException(forStatement);
+		return false;
 	}
 
-	public void visit(FunctionDeclaration functionDeclaration) {
+	public boolean visit(FunctionDeclaration functionDeclaration) {
 		throwException(functionDeclaration);
+		return false;
 	}
 
-	public void visit(FunctionInvocation functionInvocation) {
+	public boolean visit(FunctionInvocation functionInvocation) {
 		scope.lookup(functionInvocation);
+		return false;
 	}
 
-	public void visit(FunctionName functionName) {
+	public boolean visit(FunctionName functionName) {
 		throwException(functionName);
+		return false;
 	}
 
-	public void visit(GlobalStatement globalStatement) {
+	public boolean visit(GlobalStatement globalStatement) {
 		throwException(globalStatement);
+		return false;
 	}
 
-	public void visit(Identifier identifier) {
+	public boolean visit(Identifier identifier) {
 		scope.lookup(identifier.getName());
+		return false;
 	}
 
-	public void visit(IfStatement ifStatement) {
+	public boolean visit(IfStatement ifStatement) {
 		throwException(ifStatement);
+		return false;
 	}
 
-	public void visit(IgnoreError ignoreError) {
+	public boolean visit(IgnoreError ignoreError) {
 		// returns the expression attribute
-		super.visit(ignoreError);
+		ignoreError.getExpr().accept(this);
+		return false;
 	}
 
-	public void visit(Include include) {
+	public boolean visit(Include include) {
 		evaluatedAttribute = Attribute.NULL_ATTRIBUTE;
+		return false;
 	}
 
-	public void visit(InfixExpression infixExpression) {
+	public boolean visit(InfixExpression infixExpression) {
 		Attribute leftAttr = null;
 		Attribute rightAttr = null;
 		switch (infixExpression.getOperator()) {
@@ -327,59 +363,72 @@ public class TypeResolver extends AbstractVisitor {
 			default:
 				throw new IllegalArgumentException();
 		}
+		return false;
 	}
 
-	public void visit(InLineHtml inLineHtml) {
+	public boolean visit(InLineHtml inLineHtml) {
 		throwException(inLineHtml);
+		return false;
 	}
 
-	public void visit(InstanceOfExpression instanceOfExpression) {
+	public boolean visit(InstanceOfExpression instanceOfExpression) {
 		evaluatedAttribute = Attribute.BOOL_ATTRIBUTE;
+		return false;
 	}
 
-	public void visit(InterfaceDeclaration interfaceDeclaration) {
+	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		throwException(interfaceDeclaration);
+		return false;
 	}
 
-	public void visit(ListVariable listVariable) {
+	public boolean visit(ListVariable listVariable) {
 		scope.lookup(listVariable);
+		return false;
 	}
 
-	public void visit(MethodDeclaration classMethodDeclaration) {
+	public boolean visit(MethodDeclaration classMethodDeclaration) {
 		throwException(classMethodDeclaration);
+		return false;
 	}
 
-	public void visit(PostfixExpression postfixExpressions) {
-		super.visit(postfixExpressions);
+	public boolean visit(PostfixExpression postfixExpressions) {
+		postfixExpressions.getVariable().accept(this);
 		resolveFixOperations();
+		return false;
 	}
 
-	public void visit(PrefixExpression prefixExpression) {
-		super.visit(prefixExpression);
+	public boolean visit(PrefixExpression prefixExpression) {
+		prefixExpression.getVariable().accept(this);
 		resolveFixOperations();
+		return false;
 	}
 
-	public void visit(Program program) {
+	public boolean visit(Program program) {
 		throwException(program);
+		return false;
 	}
 
-	public void visit(Quote quote) {
+	public boolean visit(Quote quote) {
 		evaluatedAttribute = Attribute.STRING_ATTRIBUTE;
+		return false;
 	}
 
-	public void visit(Reference reference) {
+	public boolean visit(Reference reference) {
 		reference.getExpression().accept(this);
+		return false;
 	}
 
-	public void visit(ReflectionVariable reflectionVariable) {
+	public boolean visit(ReflectionVariable reflectionVariable) {
 		scope.lookup(reflectionVariable);
+		return false;
 	}
 
-	public void visit(ReturnStatement returnStatement) {
+	public boolean visit(ReturnStatement returnStatement) {
 		throwException(returnStatement);
+		return false;
 	}
 
-	public void visit(Scalar scalar) {
+	public boolean visit(Scalar scalar) {
 		switch (scalar.getScalarType()) {
 			case Scalar.TYPE_INT:
 				this.evaluatedAttribute = Attribute.INT_ATTRIBUTE;
@@ -404,39 +453,43 @@ public class TypeResolver extends AbstractVisitor {
 			default:
 				assert false;
 		}
+		return false;
 	}
 
-	public void visit(StaticFieldAccess staticMember) {
+	public boolean visit(StaticFieldAccess staticMember) {
 		scope.lookup(staticMember);
+		return false;
 	}
 
-	public void visit(StaticMethodInvocation staticMethodInvocation) {
+	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
 		// TODO Auto-generated method stub
-
+		return false;
 	}
 
-	public void visit(StaticStatement staticStatement) {
+	public boolean visit(StaticStatement staticStatement) {
 		throwException(staticStatement);
+		return false;
 	}
 
-	public void visit(SwitchCase caseStatement) {
+	public boolean visit(SwitchCase caseStatement) {
 		throwException(caseStatement);
+		return false;
 	}
 
-	public void visit(SwitchStatement switchStatement) {
+	public boolean visit(SwitchStatement switchStatement) {
 		throwException(switchStatement);
-	}
+		return false;}
 
-	public void visit(ThrowStatement throwStatement) {
+	public boolean visit(ThrowStatement throwStatement) {
 		throwException(throwStatement);
-	}
+		return false;	}
 
-	public void visit(TryStatement tryStatement) {
+	public boolean visit(TryStatement tryStatement) {
 		throwException(tryStatement);
-	}
+		return false;}
 
-	public void visit(UnaryOperation unaryOperation) {
-		super.visit(unaryOperation);
+	public boolean visit(UnaryOperation unaryOperation) {
+		unaryOperation.getExpr().accept(this);
 		switch (unaryOperation.getOperator()) {
 			case UnaryOperation.OP_MINUS:
 			case UnaryOperation.OP_PLUS:
@@ -456,13 +509,16 @@ public class TypeResolver extends AbstractVisitor {
 			default:
 				throwException(unaryOperation);
 		}
+		return false;
 	}
 
-	public void visit(Variable variable) {
+	public boolean visit(Variable variable) {
 		scope.lookup(variable);
+		return false;
 	}
 
-	public void visit(WhileStatement whileStatement) {
+	public boolean visit(WhileStatement whileStatement) {
 		throwException(whileStatement);
+		return false;
 	}
 }

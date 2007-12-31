@@ -93,10 +93,6 @@ public class Assignment extends Expression {
 		}
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
 	public void childrenAccept(Visitor visitor) {
 		variable.accept(visitor);
 		value.accept(visitor);
@@ -125,6 +121,14 @@ public class Assignment extends Expression {
 		buffer.append(tab).append("</Assignment>"); //$NON-NLS-1$
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	@Override
 	public int getType() {
 		return ASTNode.ASSIGNMENT;

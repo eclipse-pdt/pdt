@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+
 /**
  * Abstract superclass of all Abstract Syntax Tree (AST) node types. <p>
  * An AST node represents a PHP source code construct, such
@@ -106,7 +107,7 @@ public abstract class ASTNode implements Visitable {
 	public int getEnd() {
 		return start + length;
 	}
-
+	
 	public abstract int getType();
 
 	public String toString() {
@@ -142,5 +143,20 @@ public abstract class ASTNode implements Visitable {
 
 	public void setParent(ASTNode parent) {
 		this.parent = parent;
+	}
+	
+	/** 
+	 * @return the Program's root for a given ASTNode
+	 */
+	public Program getProgramRoot(){
+		ASTNode node = this;
+
+		while(node != null) {
+			if (node.getType() == ASTNode.PROGRAM) {
+				return (Program) node;
+			}
+		}
+		
+		return null;
 	}
 }

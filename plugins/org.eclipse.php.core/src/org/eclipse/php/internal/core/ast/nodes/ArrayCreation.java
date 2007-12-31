@@ -40,10 +40,6 @@ public class ArrayCreation extends Expression {
 		this(start, end, elements == null ? null : (ArrayElement[]) elements.toArray(new ArrayElement[elements.size()]));
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
 	public void childrenAccept(Visitor visitor) {
 		for (int i = 0; i < elements.length; i++) {
 			elements[i].accept(visitor);
@@ -75,6 +71,14 @@ public class ArrayCreation extends Expression {
 		buffer.append(tab).append("</ArrayCreation>"); //$NON-NLS-1$
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	public int getType() {
 		return ASTNode.ARRAY_CREATION;
 	}

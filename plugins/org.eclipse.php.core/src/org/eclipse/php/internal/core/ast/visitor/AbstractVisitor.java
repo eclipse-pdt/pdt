@@ -19,255 +19,451 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  */
 public abstract class AbstractVisitor implements Visitor {
 
-	public void visit(ArrayAccess arrayAccess) {
-		arrayAccess.childrenAccept(this);
+	public boolean visit(ASTNode node) {
+		return true;
+	}
+	
+	public boolean visit(ArrayAccess arrayAccess) {
+		return true;
 	}
 
-	public void visit(ArrayCreation arrayCreation) {
-		arrayCreation.childrenAccept(this);
+	public boolean visit(ArrayCreation arrayCreation) {
+		return true;
 	}
 
-	public void visit(ArrayElement arrayElement) {
-		arrayElement.childrenAccept(this);
+	public boolean visit(ArrayElement arrayElement) {
+		return true;
 	}
 
-	public void visit(Assignment assignment) {
-		assignment.childrenAccept(this);
+	public boolean visit(Assignment assignment) {
+		return true;
 	}
 
-	public void visit(ASTError astError) {
-		astError.childrenAccept(this);
+	public boolean visit(ASTError astError) {
+		return true;
 	}
 
-	public void visit(BackTickExpression backTickExpression) {
-		backTickExpression.childrenAccept(this);
+	public boolean visit(BackTickExpression backTickExpression) {
+		return true;
 	}
 
-	public void visit(Block block) {
-		block.childrenAccept(this);
+	public boolean visit(Block block) {
+		return true;
 	}
 
-	public void visit(BreakStatement breakStatement) {
-		breakStatement.childrenAccept(this);
+	public boolean visit(BreakStatement breakStatement) {
+		return true;
 	}
 
-	public void visit(CastExpression castExpression) {
-		castExpression.childrenAccept(this);
+	public boolean visit(CastExpression castExpression) {
+		return true;
 	}
 
-	public void visit(CatchClause catchClause) {
-		catchClause.childrenAccept(this);
+	public boolean visit(CatchClause catchClause) {
+		return true;
 	}
 
-	public void visit(ClassConstantDeclaration classConstantDeclaration) {
-		classConstantDeclaration.childrenAccept(this);
+	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
+		return true;
 	}
 
-	public void visit(ClassDeclaration classDeclaration) {
-		classDeclaration.childrenAccept(this);
+	public boolean visit(ClassDeclaration classDeclaration) {
+		return true;
 	}
 
-	public void visit(ClassInstanceCreation classInstanceCreation) {
-		classInstanceCreation.childrenAccept(this);
+	public boolean visit(ClassInstanceCreation classInstanceCreation) {
+		return true;
 	}
 
-	public void visit(ClassName className) {
-		className.childrenAccept(this);
+	public boolean visit(ClassName className) {
+		return true;
 	}
 
-	public void visit(CloneExpression cloneExpression) {
-		cloneExpression.childrenAccept(this);
+	public boolean visit(CloneExpression cloneExpression) {
+		return true;
 	}
 
-	public void visit(Comment comment) {
-		comment.childrenAccept(this);
+	public boolean visit(Comment comment) {
+		return true;
 	}
 
-	public void visit(ConditionalExpression conditionalExpression) {
-		conditionalExpression.childrenAccept(this);
+	public boolean visit(ConditionalExpression conditionalExpression) {
+		return true;
 	}
 
-	public void visit(ContinueStatement continueStatement) {
-		continueStatement.childrenAccept(this);
+	public boolean visit(ContinueStatement continueStatement) {
+		return true;
 	}
 
-	public void visit(DeclareStatement declareStatement) {
-		declareStatement.childrenAccept(this);
+	public boolean visit(DeclareStatement declareStatement) {
+		return true;
 	}
 
-	public void visit(DoStatement doStatement) {
-		doStatement.childrenAccept(this);
+	public boolean visit(DoStatement doStatement) {
+		return true;
 	}
 
-	public void visit(EchoStatement echoStatement) {
-		echoStatement.childrenAccept(this);
+	public boolean visit(EchoStatement echoStatement) {
+		return true;
 	}
 
-	public void visit(EmptyStatement emptyStatement) {
-		emptyStatement.childrenAccept(this);
+	public boolean visit(EmptyStatement emptyStatement) {
+		return true;
 	}
 
-	public void visit(ExpressionStatement expressionStatement) {
-		expressionStatement.childrenAccept(this);
+	public boolean visit(ExpressionStatement expressionStatement) {
+		return true;
 	}
 
-	public void visit(FieldAccess fieldAccess) {
-		fieldAccess.childrenAccept(this);
+	public boolean visit(FieldAccess fieldAccess) {
+		return true;
 	}
 
-	public void visit(FieldsDeclaration fieldsDeclaration) {
-		fieldsDeclaration.childrenAccept(this);
+	public boolean visit(FieldsDeclaration fieldsDeclaration) {
+		return true;
 	}
 
-	public void visit(ForEachStatement forEachStatement) {
-		forEachStatement.childrenAccept(this);
+	public boolean visit(ForEachStatement forEachStatement) {
+		return true;
 	}
 
-	public void visit(FormalParameter formalParameter) {
-		formalParameter.childrenAccept(this);
+	public boolean visit(FormalParameter formalParameter) {
+		return true;
 	}
 
-	public void visit(ForStatement forStatement) {
-		forStatement.childrenAccept(this);
+	public boolean visit(ForStatement forStatement) {
+		return true;
 	}
 
-	public void visit(FunctionDeclaration functionDeclaration) {
-		functionDeclaration.childrenAccept(this);
+	public boolean visit(FunctionDeclaration functionDeclaration) {
+		return true;
 	}
 
-	public void visit(FunctionInvocation functionInvocation) {
-		functionInvocation.childrenAccept(this);
+	public boolean visit(FunctionInvocation functionInvocation) {
+		return true;
 	}
 
-	public void visit(FunctionName functionName) {
-		functionName.childrenAccept(this);
+	public boolean visit(FunctionName functionName) {
+		return true;
 	}
 
-	public void visit(GlobalStatement globalStatement) {
-		globalStatement.childrenAccept(this);
+	public boolean visit(GlobalStatement globalStatement) {
+		return true;
 	}
 
-	public void visit(Identifier identifier) {
-		identifier.childrenAccept(this);
+	public boolean visit(Identifier identifier) {
+		return true;
 	}
 
-	public void visit(IfStatement ifStatement) {
-		ifStatement.childrenAccept(this);
+	public boolean visit(IfStatement ifStatement) {
+		return true;
 	}
 
-	public void visit(IgnoreError ignoreError) {
-		ignoreError.childrenAccept(this);
+	public boolean visit(IgnoreError ignoreError) {
+		return true;
 	}
 
-	public void visit(Include include) {
-		include.childrenAccept(this);
+	public boolean visit(Include include) {
+		return true;
 	}
 
-	public void visit(InfixExpression infixExpression) {
-		infixExpression.childrenAccept(this);
+	public boolean visit(InfixExpression infixExpression) {
+		return true;
 	}
 
-	public void visit(InLineHtml inLineHtml) {
-		inLineHtml.childrenAccept(this);
+	public boolean visit(InLineHtml inLineHtml) {
+		return true;
 	}
 
-	public void visit(InstanceOfExpression instanceOfExpression) {
-		instanceOfExpression.childrenAccept(this);
+	public boolean visit(InstanceOfExpression instanceOfExpression) {
+		return true;
 	}
 
-	public void visit(InterfaceDeclaration interfaceDeclaration) {
-		interfaceDeclaration.childrenAccept(this);
+	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+		return true;
 	}
 
-	public void visit(ListVariable listVariable) {
-		listVariable.childrenAccept(this);
+	public boolean visit(ListVariable listVariable) {
+		return true;
 	}
 
-	public void visit(MethodDeclaration methodDeclaration) {
-		methodDeclaration.childrenAccept(this);
+	public boolean visit(MethodDeclaration methodDeclaration) {
+		return true;
 	}
 
-	public void visit(MethodInvocation methodInvocation) {
-		methodInvocation.childrenAccept(this);
+	public boolean visit(MethodInvocation methodInvocation) {
+		return true;
 	}
 
-	public void visit(ParenthesisExpression parenthesisExpression) {
-		parenthesisExpression.childrenAccept(this);		
+	public boolean visit(ParenthesisExpression parenthesisExpression) {
+		return true;
 	}
 
-	public void visit(PostfixExpression postfixExpression) {
-		postfixExpression.childrenAccept(this);
+	public boolean visit(PostfixExpression postfixExpression) {
+		return true;
 	}
 
-	public void visit(PrefixExpression prefixExpression) {
-		prefixExpression.childrenAccept(this);
+	public boolean visit(PrefixExpression prefixExpression) {
+		return true;
 	}
 
-	public void visit(Program program) {
-		program.childrenAccept(this);
+	public boolean visit(Program program) {
+		return true;
 	}
 
-	public void visit(Quote quote) {
-		quote.childrenAccept(this);
+	public boolean visit(Quote quote) {
+		return true;
 	}
 
-	public void visit(Reference reference) {
-		reference.childrenAccept(this);
+	public boolean visit(Reference reference) {
+		return true;
 	}
 
-	public void visit(ReflectionVariable reflectionVariable) {
-		reflectionVariable.childrenAccept(this);
+	public boolean visit(ReflectionVariable reflectionVariable) {
+		return true;
 	}
 
-	public void visit(ReturnStatement returnStatement) {
-		returnStatement.childrenAccept(this);
+	public boolean visit(ReturnStatement returnStatement) {
+		return true;
 	}
 
-	public void visit(Scalar scalar) {
-		scalar.childrenAccept(this);
+	public boolean visit(Scalar scalar) {
+		return true;
 	}
 
-	public void visit(StaticConstantAccess classConstantAccess) {
-		classConstantAccess.childrenAccept(this);
+	public boolean visit(StaticConstantAccess classConstantAccess) {
+		return true;
 	}
 
-	public void visit(StaticFieldAccess staticFieldAccess) {
-		staticFieldAccess.childrenAccept(this);
+	public boolean visit(StaticFieldAccess staticFieldAccess) {
+		return true;
 	}
 
-	public void visit(StaticMethodInvocation staticMethodInvocation) {
-		staticMethodInvocation.childrenAccept(this);
+	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
+		return true;
 	}
 
-	public void visit(StaticStatement staticStatement) {
-		staticStatement.childrenAccept(this);
+	public boolean visit(StaticStatement staticStatement) {
+		return true;
 	}
 
-	public void visit(SwitchCase switchCase) {
-		switchCase.childrenAccept(this);
+	public boolean visit(SwitchCase switchCase) {
+		return true;
 	}
 
-	public void visit(SwitchStatement switchStatement) {
-		switchStatement.childrenAccept(this);
+	public boolean visit(SwitchStatement switchStatement) {
+		return true;
 	}
 
-	public void visit(ThrowStatement throwStatement) {
-		throwStatement.childrenAccept(this);
+	public boolean visit(ThrowStatement throwStatement) {
+		return true;
 	}
 
-	public void visit(TryStatement tryStatement) {
-		tryStatement.childrenAccept(this);
+	public boolean visit(TryStatement tryStatement) {
+		return true;
 	}
 
-	public void visit(UnaryOperation unaryOperation) {
-		unaryOperation.childrenAccept(this);
+	public boolean visit(UnaryOperation unaryOperation) {
+		return true;
 	}
 
-	public void visit(Variable variable) {
-		variable.childrenAccept(this);
+	public boolean visit(Variable variable) {
+		return true;
 	}
 
-	public void visit(WhileStatement whileStatement) {
-		whileStatement.childrenAccept(this);
+	public boolean visit(WhileStatement whileStatement) {
+		return true;
+	}
+
+	public void endVisit(ArrayAccess arrayAccess) {
+	}
+
+	public void endVisit(ArrayCreation arrayCreation) {
+	}
+
+	public void endVisit(ArrayElement arrayElement) {
+	}
+
+	public void endVisit(ASTError astError) {
+	}
+
+	public void endVisit(BackTickExpression backTickExpression) {
+	}
+
+	public void endVisit(Block block) {
+	}
+
+	public void endVisit(BreakStatement breakStatement) {
+	}
+
+	public void endVisit(CastExpression castExpression) {
+	}
+
+	public void endVisit(CatchClause catchClause) {
+	}
+
+	public void endVisit(ClassConstantDeclaration classConstantDeclaration) {
+	}
+
+	public void endVisit(ClassDeclaration classDeclaration) {
+	}
+
+	public void endVisit(ClassInstanceCreation classInstanceCreation) {
+	}
+
+	public void endVisit(ClassName className) {
+	}
+
+	public void endVisit(CloneExpression cloneExpression) {
+	}
+
+	public void endVisit(Comment comment) {
+	}
+
+	public void endVisit(ConditionalExpression conditionalExpression) {
+	}
+
+	public void endVisit(ContinueStatement continueStatement) {
+	}
+
+	public void endVisit(DeclareStatement declareStatement) {
+	}
+
+	public void endVisit(DoStatement doStatement) {
+	}
+
+	public void endVisit(EchoStatement echoStatement) {
+	}
+
+	public void endVisit(EmptyStatement emptyStatement) {
+	}
+
+	public void endVisit(ExpressionStatement expressionStatement) {
+	}
+
+	public void endVisit(FieldAccess fieldAccess) {
+	}
+
+	public void endVisit(FieldsDeclaration fieldsDeclaration) {
+	}
+
+	public void endVisit(ForEachStatement forEachStatement) {
+	}
+
+	public void endVisit(FormalParameter formalParameter) {
+	}
+
+	public void endVisit(ForStatement forStatement) {
+	}
+
+	public void endVisit(FunctionDeclaration functionDeclaration) {
+	}
+
+	public void endVisit(FunctionInvocation functionInvocation) {
+	}
+
+	public void endVisit(FunctionName functionName) {
+	}
+
+	public void endVisit(GlobalStatement globalStatement) {
+	}
+
+	public void endVisit(Identifier identifier) {
+	}
+
+	public void endVisit(IfStatement ifStatement) {
+	}
+
+	public void endVisit(IgnoreError ignoreError) {
+	}
+
+	public void endVisit(Include include) {
+	}
+
+	public void endVisit(InfixExpression infixExpression) {
+	}
+
+	public void endVisit(InLineHtml inLineHtml) {
+	}
+
+	public void endVisit(InstanceOfExpression instanceOfExpression) {
+	}
+
+	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
+	}
+
+	public void endVisit(ListVariable listVariable) {
+	}
+
+	public void endVisit(MethodDeclaration methodDeclaration) {
+	}
+
+	public void endVisit(MethodInvocation methodInvocation) {
+	}
+
+	public void endVisit(ParenthesisExpression parenthesisExpression) {
+	}
+
+	public void endVisit(PostfixExpression postfixExpression) {
+	}
+
+	public void endVisit(PrefixExpression prefixExpression) {
+	}
+
+	public void endVisit(Program program) {
+	}
+
+	public void endVisit(Quote quote) {
+	}
+
+	public void endVisit(Reference reference) {
+	}
+
+	public void endVisit(ReflectionVariable reflectionVariable) {
+	}
+
+	public void endVisit(ReturnStatement returnStatement) {
+	}
+
+	public void endVisit(Scalar scalar) {
+	}
+
+	public void endVisit(StaticConstantAccess staticConstantAccess) {
+	}
+
+	public void endVisit(StaticFieldAccess staticFieldAccess) {
+	}
+
+	public void endVisit(StaticMethodInvocation staticMethodInvocation) {
+	}
+
+	public void endVisit(StaticStatement staticStatement) {
+	}
+
+	public void endVisit(SwitchCase switchCase) {
+	}
+
+	public void endVisit(SwitchStatement switchStatement) {
+	}
+
+	public void endVisit(ThrowStatement throwStatement) {
+	}
+
+	public void endVisit(TryStatement tryStatement) {
+	}
+
+	public void endVisit(UnaryOperation unaryOperation) {
+	}
+
+	public void endVisit(Variable variable) {
+	}
+
+	public void endVisit(WhileStatement whileStatement) {
+	}
+
+	public void endVisitor(Assignment assignment) {
+	}
+
+	public void endVisit(ASTNode node) {
 	}
 }

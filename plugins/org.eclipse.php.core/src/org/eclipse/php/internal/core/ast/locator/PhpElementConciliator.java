@@ -257,9 +257,9 @@ public class PhpElementConciliator {
 				class GlobalSeacher extends ApplyAll {
 					public int offset = end;
 
-					public void apply(ASTNode node) {
+					public boolean apply(ASTNode node) {
 						if (offset != end) {
-							return;
+							return false;
 						}
 
 						if (node.getType() == ASTNode.GLOBAL_STATEMENT) {
@@ -269,7 +269,7 @@ public class PhpElementConciliator {
 							}
 						}
 
-						node.childrenAccept(this);
+						return true;
 					}
 				}
 				GlobalSeacher searchGlobal = new GlobalSeacher();
@@ -467,17 +467,17 @@ public class PhpElementConciliator {
 			this.name = name;
 		}
 
-		public void apply(ASTNode node) {
+		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
-				return;
+				return false;
 
 			if (node.getType() == ASTNode.SCALAR) {
 				final Scalar scalar = (Scalar) node;
 
 				final String stringValue = scalar.getStringValue();
 				if (scalar.getScalarType() != Scalar.TYPE_STRING || stringValue == null) {
-					return;
+					return false;
 				}
 
 				final int length = stringValue.length() - 1;
@@ -488,29 +488,28 @@ public class PhpElementConciliator {
 				FunctionInvocation functionInvocation = (FunctionInvocation) node;
 				final Expression functionName = functionInvocation.getFunctionName().getFunctionName();
 				if (functionName.getType() != ASTNode.IDENTIFIER) {
-					return;
+					return false;
 				}
 
 				final Identifier identifier = (Identifier) functionName;
 				final Expression[] parameters = functionInvocation.getParameters();
 				if (!"define".equalsIgnoreCase(identifier.getName()) || parameters == null || parameters.length == 0) { //$NON-NLS-1$
-					return;
+					return false;
 				}
 
 				final Expression expression = parameters[0];
 				if (expression.getType() != ASTNode.SCALAR) {
-					return;
+					return false;
 				}
 
 				Scalar scalar = (Scalar) expression;
 				final String stringValue = scalar.getStringValue();
 				if (stringValue.length() < 2 || stringValue.charAt(0) != '"') {
-					return;
+					return false;
 				}
 				exists = name.equals(stringValue.substring(1, stringValue.length() - 1));
-			} else {
-				node.childrenAccept(this);
-			}
+			} 
+			return true;
 		}
 
 		public boolean constantAlreadyExists() {
@@ -530,10 +529,10 @@ public class PhpElementConciliator {
 			this.name = name;
 		}
 
-		public void apply(ASTNode node) {
+		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
-				return;
+				return false;
 
 			if (node.getType() == ASTNode.VARIABLE) {
 				Variable variable = (Variable) node;
@@ -544,9 +543,8 @@ public class PhpElementConciliator {
 						exists = true;
 					}
 				}
-			} else {
-				node.childrenAccept(this);
-			}
+			} 
+			return true;
 		}
 
 		public boolean localVariableAlreadyExists() {
@@ -566,19 +564,19 @@ public class PhpElementConciliator {
 			this.name = name;
 		}
 
-		public void apply(ASTNode node) {
+		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
-				return;
+				return false;
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.INTERFACE_DECLARATION) {
 				TypeDeclaration typeDeclaration = (TypeDeclaration) node;
 				if (typeDeclaration.getName().getName().equals(name)) {
 					exists = true;
 				}
-			} else {
-				node.childrenAccept(this);
-			}
+			} 
+
+			return true;
 		}
 
 		public boolean classNameAlreadyExists() {
@@ -598,10 +596,10 @@ public class PhpElementConciliator {
 			this.name = name;
 		}
 
-		public void apply(ASTNode node) {
+		public boolean apply(ASTNode node) {
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
-				return;
+				return false;
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION) {
 				// do nothing never catch method names
@@ -611,9 +609,9 @@ public class PhpElementConciliator {
 				if (identifier.getName().equalsIgnoreCase(name)) {
 					exists = true;
 				}
-			} else {
-				node.childrenAccept(this);
-			}
+			} 
+
+			return true;
 		}
 
 		public boolean functionAlreadyExists() {
@@ -634,11 +632,11 @@ public class PhpElementConciliator {
 			this.name = name;
 		}
 
-		public void apply(ASTNode node) {
+		public boolean apply(ASTNode node) {
 
 			// stops when found - that's the reason to use ApplyAll
 			if (exists)
-				return;
+				return false;
 
 			if (node.getType() == ASTNode.CLASS_DECLARATION || node.getType() == ASTNode.FUNCTION_DECLARATION) {
 				isGlobalScope = false;
@@ -664,9 +662,9 @@ public class PhpElementConciliator {
 						}
 					}
 				}
-			} else {
-				node.childrenAccept(this);
-			}
+			} 
+
+			return true;
 		}
 
 		public boolean globalVariableAlreadyExists() {

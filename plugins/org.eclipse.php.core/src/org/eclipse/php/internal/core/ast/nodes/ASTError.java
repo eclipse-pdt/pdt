@@ -23,10 +23,6 @@ public class ASTError extends Statement {
 		super(start, end);
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
 	public void childrenAccept(Visitor visitor) {
 	}
 
@@ -42,6 +38,14 @@ public class ASTError extends Statement {
 		buffer.append("/>"); //$NON-NLS-1$
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	public int getType() {
 		return ASTNode.AST_ERROR;
 	}

@@ -23,10 +23,6 @@ public class ReflectionVariable extends Variable {
 		super(start, end, variable);
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ReflectionVariable"); //$NON-NLS-1$
 		appendInterval(buffer);

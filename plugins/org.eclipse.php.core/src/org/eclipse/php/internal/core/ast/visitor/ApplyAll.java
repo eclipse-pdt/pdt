@@ -16,244 +16,243 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  * Abstract visitor to apply a single method over all AST nodes
  * In order to continue the traverse, one should call node.childrenAccept();
  */
-public class ApplyAll extends AbstractVisitor {
+public abstract class ApplyAll extends AbstractVisitor {
 
 	/**
 	 * Performs the apply method over each node
 	 * @param node
 	 */
-	public void apply(ASTNode node) {
-	};
+	protected abstract boolean apply(ASTNode node);
 
-	public void visit(ArrayElement arrayElement) {
-		apply(arrayElement);
+	public boolean visit(ArrayElement arrayElement) {
+		return apply(arrayElement);
 	}
 
-	public void visit(ArrayCreation arrayExpression) {
-		apply(arrayExpression);
+	public boolean visit(ArrayCreation arrayExpression) {
+		return apply(arrayExpression);
 	}
 
-	public void visit(Assignment assignment) {
-		apply(assignment);
+	public boolean visit(Assignment assignment) {
+		return apply(assignment);
 	}
 
-	public void visit(ASTError astError) {
-		apply(astError);
+	public boolean visit(ASTError astError) {
+		return apply(astError);
 	}
 
-	public void visit(InfixExpression binaryOperation) {
-		apply(binaryOperation);
+	public boolean visit(InfixExpression binaryOperation) {
+		return apply(binaryOperation);
 	}
 
-	public void visit(Block blockStatement) {
-		apply(blockStatement);
+	public boolean visit(Block blockStatement) {
+		return apply(blockStatement);
 	}
 
-	public void visit(BreakStatement breakStatement) {
-		apply(breakStatement);
+	public boolean visit(BreakStatement breakStatement) {
+		return apply(breakStatement);
 	}
 
-	public void visit(SwitchCase caseStatement) {
-		apply(caseStatement);
+	public boolean visit(SwitchCase caseStatement) {
+		return apply(caseStatement);
 	}
 
-	public void visit(CastExpression castExpression) {
-		apply(castExpression);
+	public boolean visit(CastExpression castExpression) {
+		return apply(castExpression);
 	}
 
-	public void visit(CatchClause catchStatement) {
-		apply(catchStatement);
+	public boolean visit(CatchClause catchStatement) {
+		return apply(catchStatement);
 	}
 
-	public void visit(StaticConstantAccess classConstant) {
-		apply(classConstant);
+	public boolean visit(StaticConstantAccess classConstant) {
+		return apply(classConstant);
 	}
 
-	public void visit(ClassConstantDeclaration classConstantDeclaratio) {
-		apply(classConstantDeclaratio);
+	public boolean visit(ClassConstantDeclaration classConstantDeclaratio) {
+		return apply(classConstantDeclaratio);
 	}
 
-	public void visit(ClassDeclaration classDeclaration) {
-		apply(classDeclaration);
+	public boolean visit(ClassDeclaration classDeclaration) {
+		return apply(classDeclaration);
 	}
 
-	public void visit(ClassInstanceCreation classInstanciation) {
-		apply(classInstanciation);
+	public boolean visit(ClassInstanceCreation classInstanciation) {
+		return apply(classInstanciation);
 	}
 
-	public void visit(MethodDeclaration classMethodDeclaration) {
-		apply(classMethodDeclaration);
+	public boolean visit(MethodDeclaration classMethodDeclaration) {
+		return apply(classMethodDeclaration);
 	}
 
-	public void visit(ClassName className) {
-		apply(className);
+	public boolean visit(ClassName className) {
+		return apply(className);
 	}
 
-	public void visit(FieldsDeclaration classVariableDeclaratio) {
-		apply(classVariableDeclaratio);
+	public boolean visit(FieldsDeclaration classVariableDeclaratio) {
+		return apply(classVariableDeclaratio);
 	}
 
-	public void visit(CloneExpression cloneExpression) {
-		apply(cloneExpression);
+	public boolean visit(CloneExpression cloneExpression) {
+		return apply(cloneExpression);
 	}
 
-	public void visit(Comment comment) {
-		apply(comment);
+	public boolean visit(Comment comment) {
+		return apply(comment);
 	}
 
-	public void visit(ConditionalExpression conditionalExpression) {
-		apply(conditionalExpression);
+	public boolean visit(ConditionalExpression conditionalExpression) {
+		return apply(conditionalExpression);
 	}
 
-	public void visit(ContinueStatement continueStatement) {
-		apply(continueStatement);
+	public boolean visit(ContinueStatement continueStatement) {
+		return apply(continueStatement);
 	}
 
-	public void visit(DeclareStatement declareStatement) {
-		apply(declareStatement);
+	public boolean visit(DeclareStatement declareStatement) {
+		return apply(declareStatement);
 	}
 
-	public void visit(Dispatch dispatch) {
-		apply(dispatch);
+	public boolean visit(Dispatch dispatch) {
+		return apply(dispatch);
 	}
 
-	public void visit(DoStatement doStatement) {
-		apply(doStatement);
+	public boolean visit(DoStatement doStatement) {
+		return apply(doStatement);
 	}
 
-	public void visit(EchoStatement echoStatement) {
-		apply(echoStatement);
+	public boolean visit(EchoStatement echoStatement) {
+		return apply(echoStatement);
 	}
 
-	public void visit(EmptyStatement evalStatement) {
-		apply(evalStatement);
+	public boolean visit(EmptyStatement evalStatement) {
+		return apply(evalStatement);
 	}
 
-	public void visit(ForEachStatement forEachStatement) {
-		apply(forEachStatement);
+	public boolean visit(ForEachStatement forEachStatement) {
+		return apply(forEachStatement);
 	}
 
-	public void visit(FormalParameter formalParameter) {
-		apply(formalParameter);
+	public boolean visit(FormalParameter formalParameter) {
+		return apply(formalParameter);
 	}
 
-	public void visit(ForStatement forStatement) {
-		apply(forStatement);
+	public boolean visit(ForStatement forStatement) {
+		return apply(forStatement);
 	}
 
-	public void visit(FunctionDeclaration functionDeclaration) {
-		apply(functionDeclaration);
+	public boolean visit(FunctionDeclaration functionDeclaration) {
+		return apply(functionDeclaration);
 	}
 
-	public void visit(FunctionInvocation functionInvocation) {
-		apply(functionInvocation);
+	public boolean visit(FunctionInvocation functionInvocation) {
+		return apply(functionInvocation);
 	}
 
-	public void visit(FunctionName functionName) {
-		apply(functionName);
+	public boolean visit(FunctionName functionName) {
+		return apply(functionName);
 	}
 
-	public void visit(GlobalStatement globalStatement) {
-		apply(globalStatement);
+	public boolean visit(GlobalStatement globalStatement) {
+		return apply(globalStatement);
 	}
 
-	public void visit(Identifier identifier) {
-		apply(identifier);
+	public boolean visit(Identifier identifier) {
+		return apply(identifier);
 	}
 
-	public void visit(IfStatement ifStatement) {
-		apply(ifStatement);
+	public boolean visit(IfStatement ifStatement) {
+		return apply(ifStatement);
 	}
 
-	public void visit(IgnoreError ignoreError) {
-		apply(ignoreError);
+	public boolean visit(IgnoreError ignoreError) {
+		return apply(ignoreError);
 	}
 
-	public void visit(Include include) {
-		apply(include);
+	public boolean visit(Include include) {
+		return apply(include);
 	}
 
-	public void visit(ArrayAccess indexedVariable) {
-		apply(indexedVariable);
+	public boolean visit(ArrayAccess indexedVariable) {
+		return apply(indexedVariable);
 	}
 
-	public void visit(InLineHtml inLineHtml) {
-		apply(inLineHtml);
+	public boolean visit(InLineHtml inLineHtml) {
+		return apply(inLineHtml);
 	}
 
-	public void visit(InstanceOfExpression instanceOfExpression) {
-		apply(instanceOfExpression);
+	public boolean visit(InstanceOfExpression instanceOfExpression) {
+		return apply(instanceOfExpression);
 	}
 
-	public void visit(InterfaceDeclaration interfaceDeclaration) {
-		apply(interfaceDeclaration);
+	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+		return apply(interfaceDeclaration);
 	}
 
-	public void visit(ListVariable listVariable) {
-		apply(listVariable);
+	public boolean visit(ListVariable listVariable) {
+		return apply(listVariable);
 	}
 
-	public void visit(PostfixExpression postfixExpressions) {
-		apply(postfixExpressions);
+	public boolean visit(PostfixExpression postfixExpressions) {
+		return apply(postfixExpressions);
 	}
 
-	public void visit(PrefixExpression prefixExpression) {
-		apply(prefixExpression);
+	public boolean visit(PrefixExpression prefixExpression) {
+		return apply(prefixExpression);
 	}
 
-	public void visit(Program program) {
-		apply(program);
+	public boolean visit(Program program) {
+		return apply(program);
 	}
 
-	public void visit(Quote quote) {
-		apply(quote);
+	public boolean visit(Quote quote) {
+		return apply(quote);
 	}
 
-	public void visit(Reference reference) {
-		apply(reference);
+	public boolean visit(Reference reference) {
+		return apply(reference);
 	}
 
-	public void visit(ReflectionVariable reflectionVariable) {
-		apply(reflectionVariable);
+	public boolean visit(ReflectionVariable reflectionVariable) {
+		return apply(reflectionVariable);
 	}
 
-	public void visit(ReturnStatement returnStatement) {
-		apply(returnStatement);
+	public boolean visit(ReturnStatement returnStatement) {
+		return apply(returnStatement);
 	}
 
-	public void visit(Scalar scalar) {
-		apply(scalar);
+	public boolean visit(Scalar scalar) {
+		return apply(scalar);
 	}
 
-	public void visit(StaticFieldAccess staticMember) {
-		apply(staticMember);
+	public boolean visit(StaticFieldAccess staticMember) {
+		return apply(staticMember);
 	}
 
-	public void visit(StaticStatement staticStatement) {
-		apply(staticStatement);
+	public boolean visit(StaticStatement staticStatement) {
+		return apply(staticStatement);
 	}
 
-	public void visit(SwitchStatement switchStatement) {
-		apply(switchStatement);
+	public boolean visit(SwitchStatement switchStatement) {
+		return apply(switchStatement);
 	}
 
-	public void visit(ThrowStatement throwStatement) {
-		apply(throwStatement);
+	public boolean visit(ThrowStatement throwStatement) {
+		return apply(throwStatement);
 	}
 
-	public void visit(TryStatement tryStatement) {
-		apply(tryStatement);
+	public boolean visit(TryStatement tryStatement) {
+		return apply(tryStatement);
 	}
 
-	public void visit(UnaryOperation unaryOperation) {
-		apply(unaryOperation);
+	public boolean visit(UnaryOperation unaryOperation) {
+		return apply(unaryOperation);
 	}
 
-	public void visit(Variable variable) {
-		apply(variable);
+	public boolean visit(Variable variable) {
+		return apply(variable);
 	}
 
-	public void visit(WhileStatement whileStatement) {
-		apply(whileStatement);
+	public boolean visit(WhileStatement whileStatement) {
+		return apply(whileStatement);
 	}
 }

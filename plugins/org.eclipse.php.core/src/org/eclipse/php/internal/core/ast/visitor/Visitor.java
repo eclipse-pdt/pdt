@@ -22,129 +22,259 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  */
 public interface Visitor {
 
-	public void visit(ArrayAccess arrayAccess);
+	public boolean visit(ArrayAccess arrayAccess);
 
-	public void visit(ArrayCreation arrayCreation);
+	public void endVisit(ArrayAccess arrayAccess);
+	
+	public boolean visit(ArrayCreation arrayCreation);
 
-	public void visit(ArrayElement arrayElement);
+	public void endVisit(ArrayCreation arrayCreation);
+	
+	public boolean visit(ArrayElement arrayElement);
 
-	public void visit(Assignment assignment);
+	public void endVisit(ArrayElement arrayElement);
+	
+	public boolean visit(Assignment assignment);
+	
+	public void endVisitor(Assignment assignment);
 
-	public void visit(ASTError astError);
+	public boolean visit(ASTError astError);
+	
+	public void endVisit(ASTError astError);
 
-	public void visit(BackTickExpression backTickExpression);
+	public boolean visit(BackTickExpression backTickExpression);
+	
+	public void endVisit(BackTickExpression backTickExpression);
 
-	public void visit(Block block);
+	public boolean visit(Block block);
+	
+	public void endVisit(Block block);
 
-	public void visit(BreakStatement breakStatement);
+	public boolean visit(BreakStatement breakStatement);
+	
+	public void endVisit(BreakStatement breakStatement);
 
-	public void visit(CastExpression castExpression);
+	public boolean visit(CastExpression castExpression);
+	
+	public void endVisit(CastExpression castExpression);
 
-	public void visit(CatchClause catchClause);
+	public boolean visit(CatchClause catchClause);
 
-	public void visit(ClassConstantDeclaration classConstantDeclaration);
+	public void endVisit(CatchClause catchClause);
+	
+	public boolean visit(ClassConstantDeclaration classConstantDeclaration);
 
-	public void visit(ClassDeclaration classDeclaration);
+	public void endVisit(ClassConstantDeclaration classConstantDeclaration);
+	
+	public boolean visit(ClassDeclaration classDeclaration);
+	
+	public void endVisit(ClassDeclaration classDeclaration);
 
-	public void visit(ClassInstanceCreation classInstanceCreation);
+	public boolean visit(ClassInstanceCreation classInstanceCreation);
 
-	public void visit(ClassName className);
+	public void endVisit(ClassInstanceCreation classInstanceCreation);
+	
+	public boolean visit(ClassName className);
 
-	public void visit(CloneExpression cloneExpression);
+	public void endVisit(ClassName className);
+	
+	public boolean visit(CloneExpression cloneExpression);
 
-	public void visit(Comment comment);
+	public void endVisit(CloneExpression cloneExpression);
+	
+	public boolean visit(Comment comment);
 
-	public void visit(ConditionalExpression conditionalExpression);
+	public void endVisit(Comment comment);
+	
+	public boolean visit(ConditionalExpression conditionalExpression);
 
-	public void visit(ContinueStatement continueStatement);
+	public void endVisit(ConditionalExpression conditionalExpression);
+	
+	public boolean visit(ContinueStatement continueStatement);
+	
+	public void endVisit(ContinueStatement continueStatement);
 
-	public void visit(DeclareStatement declareStatement);
+	public boolean visit(DeclareStatement declareStatement);
 
-	public void visit(DoStatement doStatement);
+	public void endVisit(DeclareStatement declareStatement);
+	
+	public boolean visit(DoStatement doStatement);
+	
+	public void endVisit(DoStatement doStatement);
 
-	public void visit(EchoStatement echoStatement);
+	public boolean visit(EchoStatement echoStatement);
 
-	public void visit(EmptyStatement emptyStatement);
+	public void endVisit(EchoStatement echoStatement);
+	
+	public boolean visit(EmptyStatement emptyStatement);
 
-	public void visit(ExpressionStatement expressionStatement);
+	public void endVisit(EmptyStatement emptyStatement);
+	
+	public boolean visit(ExpressionStatement expressionStatement);
 
-	public void visit(FieldAccess fieldAccess);
+	public void endVisit(ExpressionStatement expressionStatement);
+	
+	public boolean visit(FieldAccess fieldAccess);
 
-	public void visit(FieldsDeclaration fieldsDeclaration);
+	public void endVisit(FieldAccess fieldAccess);
+	
+	public boolean visit(FieldsDeclaration fieldsDeclaration);
 
-	public void visit(ForEachStatement forEachStatement);
+	public void endVisit(FieldsDeclaration fieldsDeclaration);
+		
+	public boolean visit(ForEachStatement forEachStatement);
+	
+	public void endVisit(ForEachStatement forEachStatement);
 
-	public void visit(FormalParameter formalParameter);
+	public boolean visit(FormalParameter formalParameter);
 
-	public void visit(ForStatement forStatement);
+	public void endVisit(FormalParameter formalParameter);
+	
+	public boolean visit(ForStatement forStatement);
+	
+	public void endVisit(ForStatement forStatement);
 
-	public void visit(FunctionDeclaration functionDeclaration);
+	public boolean visit(FunctionDeclaration functionDeclaration);
 
-	public void visit(FunctionInvocation functionInvocation);
+	public void endVisit(FunctionDeclaration functionDeclaration);
+	
+	public boolean visit(FunctionInvocation functionInvocation);
+	
+	public void endVisit(FunctionInvocation functionInvocation);
 
-	public void visit(FunctionName functionName);
+	public boolean visit(FunctionName functionName);
+	
+	public void endVisit(FunctionName functionName);
 
-	public void visit(GlobalStatement globalStatement);
+	public boolean visit(GlobalStatement globalStatement);
 
-	public void visit(Identifier identifier);
+	public void endVisit(GlobalStatement globalStatement);
+	
+	public boolean visit(Identifier identifier);
+	
+	public void endVisit(Identifier identifier);
 
-	public void visit(IfStatement ifStatement);
+	public boolean visit(IfStatement ifStatement);
+	
+	public void endVisit(IfStatement ifStatement);
 
-	public void visit(IgnoreError ignoreError);
+	public boolean visit(IgnoreError ignoreError);
+	
+	public void endVisit(IgnoreError ignoreError);
 
-	public void visit(Include include);
+	public boolean visit(Include include);
 
-	public void visit(InfixExpression infixExpression);
+	public void endVisit(Include include);
+	
+	public boolean visit(InfixExpression infixExpression);
 
-	public void visit(InLineHtml inLineHtml);
+	public void endVisit(InfixExpression infixExpression);
+	
+	public boolean visit(InLineHtml inLineHtml);
 
-	public void visit(InstanceOfExpression instanceOfExpression);
+	public void endVisit(InLineHtml inLineHtml);
+	
+	public boolean visit(InstanceOfExpression instanceOfExpression);
 
-	public void visit(InterfaceDeclaration interfaceDeclaration);
+	public void endVisit(InstanceOfExpression instanceOfExpression);
+	
+	public boolean visit(InterfaceDeclaration interfaceDeclaration);
 
-	public void visit(ListVariable listVariable);
+	public void endVisit(InterfaceDeclaration interfaceDeclaration);
+	
+	public boolean visit(ListVariable listVariable);
+	
+	public void endVisit(ListVariable listVariable);
 
-	public void visit(MethodDeclaration methodDeclaration);
+	public boolean visit(MethodDeclaration methodDeclaration);
 
-	public void visit(MethodInvocation methodInvocation);
+	public void endVisit(MethodDeclaration methodDeclaration);
+	
+	public boolean visit(MethodInvocation methodInvocation);
+	
+	public void endVisit(MethodInvocation methodInvocation);
 
-	public void visit(ParenthesisExpression parenthesisExpression);
+	public boolean visit(ParenthesisExpression parenthesisExpression);
 
-	public void visit(PostfixExpression postfixExpression);
+	public void endVisit(ParenthesisExpression parenthesisExpression);
+	
+	public boolean visit(PostfixExpression postfixExpression);
 
-	public void visit(PrefixExpression prefixExpression);
+	public void endVisit(PostfixExpression postfixExpression);
+	
+	public boolean visit(PrefixExpression prefixExpression);
 
-	public void visit(Program program);
+	public void endVisit(PrefixExpression prefixExpression);
+	
+	public boolean visit(Program program);
+	
+	public void endVisit(Program program);
 
-	public void visit(Quote quote);
+	public boolean visit(Quote quote);
 
-	public void visit(Reference reference);
+	public void endVisit(Quote quote);
+	
+	public boolean visit(Reference reference);
 
-	public void visit(ReflectionVariable reflectionVariable);
+	public void endVisit(Reference reference);
+	
+	public boolean visit(ReflectionVariable reflectionVariable);
 
-	public void visit(ReturnStatement returnStatement);
+	public void endVisit(ReflectionVariable reflectionVariable);
+	
+	public boolean visit(ReturnStatement returnStatement);
 
-	public void visit(Scalar scalar);
+	public void endVisit(ReturnStatement returnStatement);
+	
+	public boolean visit(Scalar scalar);
+	
+	public void endVisit(Scalar scalar);
 
-	public void visit(StaticConstantAccess classConstantAccess);
+	public boolean visit(StaticConstantAccess classConstantAccess);
+	
+	public void endVisit(StaticConstantAccess staticConstantAccess);
 
-	public void visit(StaticFieldAccess staticFieldAccess);
+	public boolean visit(StaticFieldAccess staticFieldAccess);
+	
+	public void endVisit(StaticFieldAccess staticFieldAccess);
+	
+	public boolean visit(StaticMethodInvocation staticMethodInvocation);
 
-	public void visit(StaticMethodInvocation staticMethodInvocation);
+	public void endVisit(StaticMethodInvocation staticMethodInvocation);
+	
+	public boolean visit(StaticStatement staticStatement);
 
-	public void visit(StaticStatement staticStatement);
+	public void endVisit(StaticStatement staticStatement);
+	
+	public boolean visit(SwitchCase switchCase);
 
-	public void visit(SwitchCase switchCase);
+	public void endVisit(SwitchCase switchCase);
+	
+	public boolean visit(SwitchStatement switchStatement);
 
-	public void visit(SwitchStatement switchStatement);
+	public void endVisit(SwitchStatement switchStatement);
+	
+	public boolean visit(ThrowStatement throwStatement);
+	
+	public void endVisit(ThrowStatement throwStatement);
 
-	public void visit(ThrowStatement throwStatement);
+	public boolean visit(TryStatement tryStatement);
 
-	public void visit(TryStatement tryStatement);
+	public void endVisit(TryStatement tryStatement);
+	
+	public boolean visit(UnaryOperation unaryOperation);
 
-	public void visit(UnaryOperation unaryOperation);
+	public void endVisit(UnaryOperation unaryOperation);
+	
+	public boolean visit(Variable variable);
+	
+	public void endVisit(Variable variable);
 
-	public void visit(Variable variable);
+	public boolean visit(WhileStatement whileStatement);
+	
+	public void endVisit(WhileStatement whileStatement);
 
-	public void visit(WhileStatement whileStatement);
+	public boolean visit(ASTNode node);
+	
+	public void endVisit(ASTNode node);
 }

@@ -41,12 +41,16 @@ public class ClassInstanceCreation extends Expression {
 		}
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+
 	public ClassInstanceCreation(int start, int end, ClassName className, List ctorParams) {
 		this(start, end, className, ctorParams == null ? null : (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]));
-	}
-
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
 	}
 
 	public void childrenAccept(Visitor visitor) {

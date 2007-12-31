@@ -30,9 +30,13 @@ public class FieldAccess extends Dispatch {
 	}
 
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	public void childrenAccept(Visitor visitor) {
 		getDispatcher().accept(visitor);
 		field.accept(visitor);

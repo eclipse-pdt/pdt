@@ -39,10 +39,6 @@ public class BackTickExpression extends Expression {
 		this(start, end, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
 
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
 	public void childrenAccept(Visitor visitor) {
 		for (int i = 0; i < expressions.length; i++) {
 			expressions[i].accept(visitor);
@@ -63,6 +59,14 @@ public class BackTickExpression extends Expression {
 		accept(visitor);
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<BackTickExpression"); //$NON-NLS-1$
 		appendInterval(buffer);

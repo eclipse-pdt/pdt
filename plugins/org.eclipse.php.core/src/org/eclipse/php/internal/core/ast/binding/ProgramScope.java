@@ -207,22 +207,21 @@ public class ProgramScope extends AbstractVisitor implements Scope {
 		currentGlobalScope.insertIdentifier(identifier, attribute);
 	}
 
-	public void visit(Assignment assignment) {
+	public boolean visit(Assignment assignment) {
 		Attribute attribute = resolveAttribute(assignment.getValue());
 		attachVariableBase(assignment.getStart(), assignment.getVariable(), attribute);
+		return false;
 	}
 
-	public void visit(BackTickExpression expression) {
-		// TODO Auto-generated method stub
-
+	public boolean visit(BackTickExpression expression) {
+		return super.visit(expression);
 	}
 
-	public void visit(Program program) {
-		super.visit(program);
+	public boolean visit(Program program) {
+		return super.visit(program);
 	}
 
-	public void visit(StaticMethodInvocation invocation) {
-		// TODO Auto-generated method stub
-
+	public boolean visit(StaticMethodInvocation invocation) {
+		return super.visit(invocation);
 	}
 }

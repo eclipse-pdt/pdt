@@ -53,9 +53,13 @@ public class Block extends Statement {
 	}
 
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
-
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	public void childrenAccept(Visitor visitor) {
 		for (int i = 0; i < statements.length; i++) {
 			statements[i].accept(visitor);

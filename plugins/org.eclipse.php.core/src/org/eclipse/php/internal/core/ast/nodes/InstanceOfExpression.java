@@ -35,8 +35,12 @@ public class InstanceOfExpression extends Expression {
 	}
 
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
 
 	public void childrenAccept(Visitor visitor) {
 		expr.accept(visitor);

@@ -48,8 +48,12 @@ public class FieldsDeclaration extends BodyDeclaration {
 	}
 
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
 
 	public void childrenAccept(Visitor visitor) {
 		for (int i = 0; i < variableNames.length; i++) {

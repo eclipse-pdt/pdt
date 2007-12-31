@@ -37,10 +37,14 @@ public class EchoStatement extends Statement {
 	public EchoStatement(int start, int end, List expressions) {
 		this(start, end, (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
-
+	
 	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
 
 	public void childrenAccept(Visitor visitor) {
 		for (int i = 0; i < expressions.length; i++) {

@@ -86,15 +86,17 @@ public class Locator extends ApplyAll {
 	/**
 	 * @param ASTNode the node
 	 * Checks if the node is in the offset if true then assign 
-	 * the node to the childrens' nodes 
+	 * the node to the children' nodes 
 	 */
-	public void apply(ASTNode node) {
+	public boolean apply(ASTNode node) {
 		assert node != null;
 
 		if (inNode(node, offset)) {
 			this.currentNode = node;
-			node.childrenAccept(this);
+			return true;
 		}
+		
+		return false;
 	}
 
 }

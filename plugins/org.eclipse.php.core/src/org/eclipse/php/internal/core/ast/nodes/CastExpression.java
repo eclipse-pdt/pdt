@@ -47,6 +47,13 @@ public class CastExpression extends Expression {
 		expr.setParent(this);
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
 	public static String getCastType(int type) {
 		switch (type) {
 			case TYPE_INT:
@@ -66,10 +73,6 @@ public class CastExpression extends Expression {
 			default:
 				throw new IllegalArgumentException();
 		}
-	}
-
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
 	}
 
 	public void childrenAccept(Visitor visitor) {
