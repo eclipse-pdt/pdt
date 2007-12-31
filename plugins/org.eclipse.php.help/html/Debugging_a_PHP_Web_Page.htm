@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <title>Debugging a PHP Web Page</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -18,31 +16,31 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
-col.whs2 { width:7.093%; }
-col.whs3 { width:92.907%; }
-tr.whs4 { x-cell-content-align:top; }
-td.whs5 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
-p.whs6 { font-size:6pt; }
-td.whs7 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
-p.whs8 { font-weight:bold; }
-td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs10 { border:none; width:28px; height:33px; float:none; border-style:none; }
-td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-ol.whs12 { list-style:decimal; }
-img_whs13 { border:none; width:39px; height:25px; float:none; border-style:none; }
-img_whs14 { border:none; width:543px; height:401px; float:none; border-style:none; }
-img_whs15 { border:none; width:424px; height:216px; float:none; }
-ul.whs16 { list-style:decimal; }
+div.whs1 { float:none; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+img_whs14 { border:none; width:39px; height:25px; float:none; border-style:none; }
+img_whs15 { border:none; width:543px; height:401px; float:none; border-style:none; }
+img_whs16 { border:none; width:424px; height:216px; float:none; border-style:none; }
 td.whs17 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-p.whs18 { x-condition:Online; }
-table.whs19 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-td.whs20 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-td.whs21 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-img_whs22 { border:none; width:28px; height:18px; float:none; border-style:none; }
+table.whs18 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs19 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs21 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs22 { x-condition:Online; }
 div.whs23 { width:100%; }
 p.whs24 { text-align:right; x-condition:Online; }
-p.whs25 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs25 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -67,6 +65,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -74,18 +73,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nTasks\nUsing the Debugger\nDebugging a PHP Web Page");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nTasks\nUsing the Debugger\nDebugging a PHP Web Page");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; <a href=\"Debugging.htm\">Using the Debugger</a> &gt; Debugging a PHP Web Page</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -105,185 +110,161 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;">Debugging 
- a PHP Web Page</p>
-
+<p class=PDThelp style="x-condition: PDT;">Debugging a PHP Web Page</p>
 <p>This procedure describes how to debug whole applications, projects, 
  files or collections of files that are already on the server. </p>
-
-<p class=Note>Note:</p>
-
-<p class=NoteText>Your server must be running the Zend Debugger in order 
- for remote debugging capabilities to function.<br>
+<div class="whs1">
+ <p class=Note>Note:</p>
+ <p class=NoteText>Your server must be running the Zend Debugger<span style="x-condition: PDT;"> 
+ or XDebug</span> in order for remote debugging capabilities to function.<br>
 The Zend Debugger comes bundled with Zend Core and Zend Platform, but can 
- also be downloaded as a separate component from <a href="http://downloads.zend.com/pdt/server-debugger/">http://downloads.zend.com/pdt/server-debugger</a>.</p>
-
-<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
-<col class="whs2">
+ also be downloaded as a separate component from <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
+</div>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
+<col class="whs4">
 
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs5">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs7">
-<p class="whs8">&nbsp;</td></tr>
-
-<tr valign="top" class="whs4">
-<td width="7.093%" class="whs9">
-<p class="whs6"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs10"></td>
-<td width="92.907%" class="whs11">
-<p class="whs8">To debug a PHP Web Page:</p>
-<ol type="1" class="whs12">
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Set breakpoints at the relevant places in the 
- file that you would like to debug and save the file.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Save the file.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Click the arrow next to the debug button <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs13"> on the toolbar and select Open Debug Dialog –or- select Run 
- | Open Debug Dialog.<br>
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To debug a PHP Web Page:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Set breakpoints at the relevant 
+ places in the file that you would like to debug and save the file.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Save the file.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click the arrow next to 
+ the debug button <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs14"> on the toolbar and select Open Debug Dialog -or- select 
+ Run | Open Debug Dialog.<br>
 	A Debug dialog will open.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Double-click the PHP Web Page option to create 
- a new debug configuration.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Double-click the PHP Web 
+ Page option to create a new debug configuration.</p></li>
 </ol>
-<p class=picture>&nbsp;<img src="debug_new_phpwebpage_config.png" x-maintain-ratio="TRUE" width="543px" height="401px" border="0" class="img_whs14"></p>
-<ol start="5" type="1" class="whs12">
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Enter a name for the new configuration.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Select the Server Debugger to be used. <span style="x-condition: PDT;">PDT 
- supports both the Zend Debugger and XDebug.</span></p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Select your server from the list.<br>
+<p class=picture>&nbsp;<img src="debug_new_phpwebpage_config.png" x-maintain-ratio="TRUE" width="543px" height="401px" border="0" class="img_whs15"></p>
+<ol start="5" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Enter a name for the new 
+ configuration.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Select the Server Debugger 
+ to be used. <span style="x-condition: PDT;">PDT supports both 
+ the Zend Debugger and XDebug.</span></p></li>
+	<li style="margin-left: -20px;" class=p><p>Select your server from 
+ the list.<br>
 	If you have not yet configured your server, click the underlined 'PHP 
  Servers' shortcut. The PHP Servers preferences page will open. Configure 
  your server by following the instructions on '<a href="PHP_Servers.htm#Adding_servers">adding 
  a new server</a>' under the PHP Servers Preferences page topic.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Under PHP File, click Browse and select your 'debug 
- target' file (the file from which the debugging process will start.)</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Select whether the Debugger should stop at the 
- First Line by marking/unmarking the 'Break at First Line' checkbox.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>The URL to be debugged will have been automatically 
- created based on the file name and your server address. If the URL does 
- not point to your debug target's location, unmark the Auto Generate checkbox 
- and modify the URL.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>For further Debug options, select the Advanced 
- tab, which has the following options:</p></li>
+	<li style="margin-left: -20px;" class=p><p>Under PHP File, click Browse 
+ and select your 'debug target' file (the file from which the debugging 
+ process will start.)</p></li>
+	<li style="margin-left: -20px;" class=p><p>Select whether the Debugger 
+ should stop at the first line of code by marking/unmarking the 'Break 
+ at First Line' checkbox.</p></li>
+	<li style="margin-left: -20px;" class=p><p>The URL to be debugged will 
+ have been automatically created based on the file name and your server 
+ address. If the URL does not point to your debug target's location, unmark 
+ the Auto Generate checkbox and modify the URL.</p></li>
+	<li style="margin-left: -20px;" class=p><p>For further Debug options, 
+ select the Advanced tab, which has the following options:</p></li>
 </ol>
-<p class=picture
-	style="x-condition: PDT;"><img src="debug_new_phpwebpage_advanced_config_pdt.png" x-maintain-ratio="TRUE" width="424px" height="216px" border="0" class="img_whs15"></p>
-<ul start="10" type="1" class="whs16">
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p-CListBullet2><p class=ListBullet2>Open in Browser 
- - Mark if you would like the application to be displayed in <span style="x-condition: PDT;">PDT's</span> 
- internal browser while it is run.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p-CListBullet2><p class=ListBullet2>Choose whether 
- to:</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Debug All Pages 
- - The specified page and all the pages linked to it are debugged. The 
- browser waits for the debug of each page before displaying it.</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Debug First Page 
- Only - Only the first page is debugged.</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Start Debug from 
- - Select the URL from which you would like the Debugging process to start.</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Continue Debug 
- from this Page - Selecting this option will result in all <span style="text-align: left;">the 
+<p class=picture style="x-condition: PDT;"><img src="debug_new_phpwebpage_advanced_config_pdt.png" x-maintain-ratio="TRUE" width="424px" height="216px" border="0" class="img_whs16"></p>
+<ol start="10" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Open 
+ in Browser - Mark if you would like the application to be displayed in 
+ <span 
+ style="x-condition: PDT;">PDT's</span> internal browser while it is run.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Choose 
+ whether to:</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Debug All Pages - The 
+ specified page and all the pages linked to it are debugged. The browser 
+ waits for the debug of each page before displaying it.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Debug First Page Only 
+ - Only the first page is debugged.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Start Debug from - Select 
+ the URL from which you would like the Debugging process to start.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Continue Debug from this 
+ Page - Selecting this option will result in all <span style="text-align: left;">the 
  pages linked to the URL being debugged.</span></p></li>
-	
-	</ul>
-<ol start="12" type="1" class="whs12">
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Click Apply and then Debug.</p></li>
-	
-	<li style="margin-left: -20px;"
-		class=kadov-p><p>Click Yes if asked whether to open the PHP Debug 
- Perspective.</p></li>
+	</ol>
+<ol start="12" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click Apply and then Debug.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Yes if asked whether 
+ to open the PHP Debug Perspective.</p></li>
 </ol></td></tr>
-
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td rowspan="1" colspan="2" width="100%" class="whs17">
-<p class="whs18"><a href="Analyzing_Debugger_Results.htm"
-									style="x-condition: Online;">Click 
- here</a> for more on Running and Analyzing the debugging process.</p>
-</td>
+<p>See the &quot;<a href="Analyzing_Debugger_Results.htm">Running and Analyzing 
+ Debugger results</a>&quot; topic for more information on the outcome of 
+ a debugging process.</td>
 </tr>
 </table>
-
-<table x-use-null-cells cellspacing="0" width="100%" class="whs19">
-<col class="whs2">
+<div class="whs1">
+ <p class=Note>Note:</p>
+ <p class=NoteText>If the file contains 'include' or 'require' calls to 
+ files which are not contained within the project, you must <a href="Adding_Elements_to_a_Project_s_Include_Path.htm">add 
+ them to the project's Include Path</a> in order to simulate your production 
+ environment.<br>
+In addition, if a file defined with an absolute path to a server location 
+ (See '<a href="Include_Paths.htm">Include Paths</a>' for more on absolute 
+ file locations) is called, a Path Mapping dialog will appear. See <a HREF="Path_Mapping.htm">Path 
+ Mapping</a> for more information.</p>
+</div>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs18">
 <col class="whs3">
+<col class="whs4">
 
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs20">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs21">
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs19">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs20">
 <p>&nbsp;</td></tr>
-
-<tr valign="top" class="whs4">
-<td width="7.093%" class="whs9">
-<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
-<td width="92.907%" class="whs11">
-<p class="whs8">Related Links:</p>
-<p class="whs18"><a href="Working_with_the_Debugger.htm"><span 
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs21"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">Related Links:</p>
+<p class="whs22"><a href="Working_with_the_Debugger.htm"><span 
  style="x-condition: Online;">Working with the Debugger</span></a></p>
-<p class="whs18"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
-<p class="whs18"><span 
- style="x-condition: Online;">Debugging a PHP Script</span></p>
-<p class="whs18"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
+<p class="whs22"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
+<p class="whs22"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
  Preferences</span></a></p>
-<p class="whs18"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
+<p class="whs22"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
  style="x-condition: Online;">Locally Debugging a PHP Script</span></a></p>
-<p class="whs18"><a href="Analyzing_Debugger_Results.htm"><span 
+<p class="whs22"><a href="Analyzing_Debugger_Results.htm"><span 
  style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></p>
-<p class="whs18"><a href="Run.htm"
-									style="x-condition: Online;">Run Menu</a></td></tr>
-
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs9">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs11">
+<p class="whs22"><a href="Run.htm" style="x-condition: Online;">Run 
+ Menu</a></td></tr>
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs10">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs12">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs23">
- <p align="right" class="whs24"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs25">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs24"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs25">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; <a href=\"Debugging.htm\">Using the Debugger</a> &gt; Debugging a PHP Web Page</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D0218000000446562756767696E672061205048502057656220506167651102120000005573696E6720746865204465627567676572120218000000446562756767696E672061205048502057656220506167651302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

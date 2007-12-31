@@ -1,0 +1,242 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>PHP Functions View</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style>
+<!--
+body { border-left-style:None; border-right-style:None; border-bottom-style:None; background-color:Transparent; border-top-style:None; }
+-->
+</style><style type="text/css">
+<!--
+img_whs1 { border:none; width:283px; height:284px; float:none; border-style:none; }
+img_whs2 { border:none; width:488px; height:228px; float:none; border-style:none; }
+table.whs3 { x-cell-content-align:top; border-spacing:0px; width:90.902%; }
+col.whs4 { width:7.762%; }
+col.whs5 { width:11.423%; }
+col.whs6 { width:67.843%; }
+tr.whs7 { x-cell-content-align:top; height:59px; }
+td.whs8 { width:7.762%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+img_whs9 { border:none; width:83px; height:26px; float:none; border-style:none; }
+td.whs10 { width:11.423%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs11 { width:67.843%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+img_whs12 { border:none; width:17px; height:16px; float:none; border-style:none; }
+table.whs13 { x-cell-content-align:top; width:90.419%; border-spacing:0px; }
+col.whs14 { width:14.371%; }
+col.whs15 { width:24.559%; }
+col.whs16 { width:59.547%; }
+tr.whs17 { x-cell-content-align:top; }
+td.whs18 { width:14.371%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; }
+img_whs19 { border:none; width:71px; height:40px; float:none; border-style:none; }
+td.whs20 { width:24.559%; padding-right:10px; padding-left:10px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; border-top-width:1px; border-top-color:#000000; border-top-style:Solid; }
+td.whs21 { width:59.547%; padding-right:10px; padding-left:10px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; border-top-width:1px; border-top-color:#000000; border-top-style:Solid; }
+table.whs22 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs23 { width:7.093%; }
+col.whs24 { width:92.907%; }
+tr.whs25 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs26 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs27 { font-size:6pt; }
+td.whs28 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs29 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs30 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs31 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs32 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs33 { font-weight:bold; }
+p.whs34 { font-weight:normal; }
+tr.whs35 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs36 { width:100%; }
+p.whs37 { text-align:right; x-condition:Online; }
+p.whs38 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addTocInfo("PDT User Guide\nReference\nPHP Perspectives and Views\nPHP Perspective\nPHP Functions View");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
+
+	}
+
+
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"PHP_Perspectives_and_Views.htm\">PHP Perspectives and Views</a> &gt; <a href=\"PHP_Perspective_Views.htm\">PHP Perspective</a> &gt; PHP Functions View</p>");
+
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<p class=PDThelp style="x-condition: PDT;">PHP Functions View</p>
+<p>The PHP Functions view lists most commonly used PHP Classes, Constants 
+ and Iterators. &nbsp;The PHP Functions view can be used 
+ in order to easily add functions into your scripts. To add a function 
+ to your code, simply place the cursor in the required position in the 
+ Editor and double-click the required element from the list.</p>
+<p>&nbsp;</p>
+<p class=picture><img src="view_php_functions.png" x-maintain-ratio="TRUE" width="283px" height="284px" border="0" class="img_whs1"></p>
+<p>&nbsp;</p>
+<p>You can open a PHP manual site with an explanation about most of the 
+ functions on the list by right-clicking a function in PHP Functions view 
+ and selecting Open Manual.</p>
+<p>A new browser window will open with an explanation of the function from 
+ the PHP Manual site.</p>
+<p class=picture><img src="phpmanual_integration.png" x-maintain-ratio="TRUE" width="488px" height="228px" border="0" class="img_whs2"></p>
+<p class=Note>Note:</p>
+<p class=NoteText>Some functions will not have a description assigned to 
+ them in the PHP Manual site. In this case, a browser will open with a 
+ 'Cannot find server' error message.</p>
+<p>PHP Manual sites can be added and edited from the <a href="PHP_Manual.htm">PHP 
+ Manual Preferences</a> page.</p>
+<p>&nbsp;</p>
+<p class=Strong>PHP Functions view Toolbar commands</p>
+<table x-use-null-cells cellspacing="0" width="90.902%" class="whs3">
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='90.902%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
+//--></script>
+<col class="whs4">
+<col class="whs5">
+<col class="whs6">
+
+<tr valign="top" class="whs7">
+<td width="7.762%" class="whs8">
+<p><img src="filter_text_box.png" x-maintain-ratio="TRUE" width="83px" height="26px" border="0" class="img_whs9"></td>
+<td width="11.423%" class="whs10">
+<p>Filter Text box</td>
+<td width="67.843%" class="whs11">
+<p>Allows you to find a particular function. Start typing the function 
+ name. Relevant results will be displayed below it.</td></tr>
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
+//--></script>
+</table>
+<p class=Strong>&nbsp;</p>
+<p class=Strong>PHP Functions view Menu Commands</p>
+<p>The view's menu can be accessed through the view menu icon <img src="menu_icon.png" x-maintain-ratio="TRUE" width="17px" height="16px" border="0" class="img_whs12">.</p>
+<p>&nbsp;</p>
+<table x-use-null-cells cellspacing="0" width="90.419%" class="whs13">
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='90.419%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
+//--></script>
+<col class="whs14">
+<col class="whs15">
+<col class="whs16">
+
+<tr valign="top" class="whs17">
+<td width="14.371%" class="whs18">
+<p><img src="menu_icon_functions_view.png" x-maintain-ratio="TRUE" width="71px" height="40px" border="0" class="img_whs19"></td>
+<td width="24.559%" class="whs20">
+<p>PHP Version selection</td>
+<td width="59.547%" class="whs21">
+<p>Allows you to choose between PHP4 and PHP5 functions.</p>
+<p>&nbsp;</td></tr>
+<script language='JavaScript'><!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
+//--></script>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs22">
+<col class="whs23">
+<col class="whs24">
+
+<tr valign="top" class="whs25"><td colspan="1" rowspan="1" width="7.093%" class="whs26">
+<p class="whs27">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs28">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs29"><td width="7.093%" class="whs30">
+<p class="whs27"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs31"></td>
+<td width="92.907%" class="whs32">
+<p class="whs33">Related Links:</p>
+<p class="whs34"><a href="PHP_Perspective_Views.htm"><span 
+ style="font-weight: normal; x-condition: Online;">PHP Perspective</span></a><a 
+ href="PHP_Explorer_view.htm"><br>
+PHP Explorer view</a></p>
+<p class="whs34"><a href="Project_Outline_view.htm">PHP 
+ Project Outline View</a></p>
+<p class="whs34"><a href="PHP_Outline_VIew.htm">Outline 
+ View</a></p>
+</td></tr>
+<tr valign="top" class="whs35"><td colspan="1" rowspan="1" width="7.093%" class="whs30">
+<p class="whs27">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs32">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs36">
+ <p align="right" class="whs37"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs38">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"PHP_Perspectives_and_Views.htm\">PHP Perspectives and Views</a> &gt; <a href=\"PHP_Perspective_Views.htm\">PHP Perspective</a> &gt; PHP Functions View</p>");
+
+}
+//-->
+</script>
+</body>
+</html>

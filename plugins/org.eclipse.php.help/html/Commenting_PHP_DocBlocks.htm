@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
-<title>Commenting PHP DocBlocks</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Adding PHP DocBlock Comments</title>
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -41,7 +39,7 @@ td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 p.whs21 { x-condition:Online; }
 div.whs22 { width:100%; }
 p.whs23 { text-align:right; x-condition:Online; }
-p.whs24 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs24 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -66,6 +64,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -73,18 +72,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nTasks\nCommenting PHP Code\nCommenting PHP DocBlocks");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nTasks\nAdding Comments\nAdding PHP DocBlock Comments");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; <a href=\"How_to_Comment_and_Uncomment_PHP_Code.htm\">Adding Comments</a> &gt; Adding PHP DocBlock Comments</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -104,14 +109,9 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;">Commenting 
- PHP DocBlocks</p>
-
+<p class=PDThelp style="x-condition: PDT;">Adding PHP DocBlock Comments</p>
 <p>This procedure describes how to add PHPDoc Comments to PHP elements.</p>
-
 <p>&nbsp;</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
 <col class="whs3">
@@ -125,16 +125,13 @@ if (window.writeIntopicBar)
  /** and press Enter.<br>
 -Or- Right-click the relevant element in the Outline View and select Source 
  | Add PHPDoc.</td></tr>
-
 <tr valign="top" class="whs10">
 <td rowspan="1" colspan="2" width="100%" class="whs11">
-<p class=picture
-	style="text-align: left;"
-	align=left>A PHPDoc Comment will be created with several parameters 
- to be edited with the relevant information.</td>
+<p class=picture style="text-align: left;" align=left>A PHPDoc Comment 
+ will be created with several parameters to be edited with the relevant 
+ information.</td>
 </tr>
 </table>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
 <col class="whs3">
@@ -145,31 +142,23 @@ if (window.writeIntopicBar)
 <td width="92.907%" class="whs15">
 <p class="whs9">Example:</p>
 <p>When creating a PHPDoc Comment for the following function:</p>
-<p class=code>public function add ($a, $b) {</p>
-<p class=code>&nbsp;&nbsp;&nbsp;&nbsp;return 
- $a + $b;</p>
+<p class=code>function add ($a, $b) {</p>
+<p class=code>&nbsp;&nbsp;&nbsp;&nbsp;return $a + $b;</p>
 <p class=code>}</p>
-<p>&nbsp;the following 
- comment will be created:</p>
+<p>&nbsp;the following comment will be created:</p>
 <p class=code>/**</p>
-<p class=code>&nbsp;* 
- Enter description here...</p>
+<p class=code>&nbsp;* Enter description here...</p>
 <p class=code>&nbsp;*</p>
-<p class=code>&nbsp;* 
- @param unknown_type $a</p>
-<p class=code>&nbsp;* 
- @param unknown_type $b</p>
-<p class=code>&nbsp;* 
- @return unknown</p>
+<p class=code>&nbsp;* @param unknown_type $a</p>
+<p class=code>&nbsp;* @param unknown_type $b</p>
+<p class=code>&nbsp;* @return unknown</p>
 <p class=code>&nbsp;*/</td></tr>
-
 <tr valign="top" class="whs12">
 <td rowspan="1" colspan="2" width="100%" class="whs11">
 <p>The comments should now be edited with the relevant description and 
  parameters.</td>
 </tr>
 </table>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs16">
 <col class="whs2">
 <col class="whs3">
@@ -179,7 +168,6 @@ if (window.writeIntopicBar)
 <p class="whs6">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs15">
 <p>&nbsp;</td></tr>
-
 <tr valign="top" class="whs12">
 <td width="7.093%" class="whs18">
 <p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs19"></td>
@@ -189,32 +177,36 @@ if (window.writeIntopicBar)
  Code</span></a></p>
 <p class="whs21"><a href="How_to_Comment_and_Uncomment_PHP_Code.htm"><span 
  style="x-condition: Online;">Commenting PHP Code</span></a></p>
-<p class="whs21"><a href="phpDoc_Comments.htm"
-									style="x-condition: Online;">phpDoc 
+<p class="whs21"><a href="phpDoc_Comments.htm" style="x-condition: Online;">phpDoc 
  Comments</a></p>
 </td></tr>
-
 <tr valign="top" class="whs12">
 <td colspan="1" rowspan="1" width="7.093%" class="whs18">
 <p class="whs6">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs20">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs22">
- <p align="right" class="whs23"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs24">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs23"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs24">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; <a href=\"How_to_Comment_and_Uncomment_PHP_Code.htm\">Adding Comments</a> &gt; Adding PHP DocBlock Comments</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D0218000000436F6D6D656E74696E672050485020446F63426C6F636B73110213000000436F6D6D656E74696E672050485020436F6465120218000000436F6D6D656E74696E672050485020446F63426C6F636B731302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

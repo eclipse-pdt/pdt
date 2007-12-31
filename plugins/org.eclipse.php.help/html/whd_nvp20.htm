@@ -1,8 +1,8 @@
-<html>
+﻿<html>
 <head>
 <title>navigation pane</title>
 
-<meta name="generator" content="RoboHelp by eHelp Corporation   www.ehelp.com">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <meta name="description" content="WebHelp 5.50">
 <script language="javascript" src="whver.js"></script>
 <script language="javascript1.2" src="whmsg.js"></script>
@@ -135,7 +135,7 @@ function CheckLoadingPhase2()
 				setTimeout("CheckLoadingPhase2()", 1000);
 			else {
 				if (gnVerMinor != 4.60) {
-					alert("Unable to load applet. If you are using an old version of Netscape, the prefs.js file needs to be edited.");
+					alert("Unable to load applet. If you are using an old version of Netscape, the prefs.js file needs to be edited. Open the file in a text editor (such as Notepad) and add the following line\n:'user_pref(\"security.lower_java_network_security_by_trusting_proxies\", true);'\nMake sure Netscape is no longer running or in memory before editing this file.");
 				}
 			}	
 		}

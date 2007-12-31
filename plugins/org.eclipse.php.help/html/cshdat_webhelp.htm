@@ -1,9 +1,10 @@
-<html>
+﻿<html>
 <head>
 <title>IDE Help</title>
 
-<meta name="generator" content="RoboHelp by eHelp Corporation   www.ehelp.com">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <meta name="description" content="WebHelp 5.50">
+<script language="javascript1.2" src="whutils.js"></script>
 </head>
 <body>
 <script language="JavaScript">
@@ -82,7 +83,8 @@ function GetTopicNumberOnly(strTopicString)
 		} else if (strTopicString.toLowerCase().indexOf("topicid") == 0) {
 			return GetTopicNumberById(strValue);
 		} else if (strTopicString.toLowerCase().indexOf("remoteurl") == 0) {
-			gstrURL = strValue;
+			if(IsInternal(strValue))
+				gstrURL = strValue;
 			return -1;
 		}
 

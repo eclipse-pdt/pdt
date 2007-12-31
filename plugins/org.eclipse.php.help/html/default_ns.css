@@ -1,4 +1,4 @@
-BODY { 
+﻿BODY { 
       font-family:Arial; 
       background-color:#ffffff;  }
 H1 { 
@@ -6,8 +6,7 @@ H1 {
     letter-spacing:0.1pt; 
     font-weight:bold; 
     line-height:150%; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-    x-text-underline:Off; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     font-size:16pt; 
     margin-top:1pt; 
     margin-bottom:5pt; 
@@ -16,144 +15,136 @@ H1 {
     background-color:#ffffff; 
     color:#47c333; 
     text-decoration:none;  }
-LI.kadov-H1 { 
-             letter-spacing:0.1pt; 
-             font-weight:bold; 
-             line-height:150%; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-             x-text-underline:Off; 
-             font-size:16pt; 
-             font-style:normal; 
-             color:#47c333; 
-             text-decoration:none;  }
+LI.H1 { 
+       letter-spacing:0.1pt; 
+       font-weight:bold; 
+       line-height:150%; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       font-size:16pt; 
+       font-style:normal; 
+       color:#47c333; 
+       text-decoration:none;  }
 H2 { 
     font-weight:bold; 
     font-size:11pt; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     margin-top:7pt; 
     margin-bottom:7pt; 
     color:#000000;  }
-LI.kadov-H2 { 
-             font-weight:bold; 
-             font-size:11pt; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-             color:#000000;  }
+LI.H2 { 
+       font-weight:bold; 
+       font-size:11pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       color:#000000;  }
 H3 { 
     font-weight:bold; 
     font-size:10pt; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     background-color:Transparent; 
     color:#666666; 
     margin-bottom:5pt; 
     margin-top:9.5pt;  }
-LI.kadov-H3 { 
-             font-weight:bold; 
-             font-size:10pt; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-             color:#666666;  }
+LI.H3 { 
+       font-weight:bold; 
+       font-size:10pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       color:#666666;  }
 H4 { 
     font-weight:bold; 
     font-size:10pt; 
     color:#848484; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif;  }
-LI.kadov-H4 { 
-             font-weight:bold; 
-             font-size:10pt; 
-             color:#848484; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif;  }
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif;  }
+LI.H4 { 
+       font-weight:bold; 
+       font-size:10pt; 
+       color:#848484; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif;  }
 H5 { 
     font-weight:bold; 
     font-size:10.0pt; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     margin-top:6pt; 
     margin-bottom:6pt; 
     line-height:150%; 
     color:#848484;  }
-LI.kadov-H5 { 
-             font-weight:bold; 
-             font-size:10.0pt; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-             line-height:150%; 
-             color:#848484;  }
+LI.H5 { 
+       font-weight:bold; 
+       font-size:10.0pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       line-height:150%; 
+       color:#848484;  }
 H6 { 
     font-weight:bold; 
     font-size:8.0pt; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     margin-bottom:1pt; 
     color:#848484; 
     margin-top:6pt; 
     line-height:150%;  }
-LI.kadov-H6 { 
-             font-weight:bold; 
-             font-size:8.0pt; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-             color:#848484; 
-             line-height:150%;  }
+LI.H6 { 
+       font-weight:bold; 
+       font-size:8.0pt; 
+       font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+       color:#848484; 
+       line-height:150%;  }
 P { 
    margin-top:1pt; 
    margin-bottom:1pt; 
-   font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+   font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
    color:#323232; 
    font-size:8pt; 
-   line-height:150%;  }
-LI.kadov-P { 
-            font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-            color:#323232; 
-            font-size:8pt; 
-            line-height:150%;  }
+   line-height:150%; 
+   x-next-class:TableText; 
+   x-next-type:P;  }
+LI.P { 
+      font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+      color:#323232; 
+      font-size:8pt; 
+      line-height:150%;  }
 A.expandspot { 
               cursor:hand; 
               font-style:italic; 
-              x-text-underline:off; 
-              x-text-overline:off; 
-              x-text-line-through:off; 
               font-size:10pt; 
-              font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+              font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
               color:#ff8e00; 
-              text-decoration:none none none;  }
+              text-decoration:none;  }
 SPAN.expandtext { 
                  font-style:italic; 
                  font-weight:normal; 
                  font-size:10pt; 
-                 font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+                 font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
                  color:#ffffff;  }
 A.dropspot { 
             cursor:hand; 
             font-style:italic; 
-            x-text-underline:off; 
-            x-text-overline:off; 
-            x-text-line-through:off; 
             font-size:10pt; 
-            font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+            font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
             color:#ff8e00; 
-            text-decoration:none none none;  }
+            text-decoration:none;  }
 A.glossterm { 
              cursor:hand; 
              font-style:italic; 
-             x-text-underline:off; 
-             x-text-overline:off; 
-             x-text-line-through:off; 
              font-size:10pt; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+             font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
              color:#848484; 
-             text-decoration:none none none;  }
+             text-decoration:none;  }
 SPAN.glosstext { 
                 font-style:italic; 
                 font-weight:normal; 
                 font-size:10pt; 
-                font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+                font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
                 color:#848484;  }
 OL { 
     margin-top:0px; 
     margin-bottom:0px; 
     font-size:10pt; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     color:#323232;  }
 UL { 
     margin-top:0px; 
     margin-bottom:0px; 
     font-size:10pt; 
-    font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+    font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
     color:#323232;  }
 P.Note { 
         font-weight:bold; 
@@ -167,193 +158,188 @@ P.Note {
         border-top-width:4px; 
         border-bottom-width:4px; 
         border-top-color:#828282; 
-        border-bottom-color:#828282;  }
-LI.kadov-P-CNote { 
-                  font-weight:bold; 
-                  font-style:normal; 
-                  color:#ffffff; 
-                  line-height:Normal;  }
+        border-bottom-color:#828282; 
+        x-next-class:NoteText; 
+        x-next-type:P;  }
+LI.P-Note { 
+           font-weight:bold; 
+           font-style:normal; 
+           color:#ffffff; 
+           line-height:Normal;  }
 P.NoteText { 
             margin-top:1pt; 
             margin-bottom:7.5pt; 
             line-height:150%; 
             background-color:#e4e4e4;  }
-LI.kadov-P-CNoteText { 
-                      line-height:150%;  }
+LI.P-NoteText { 
+               line-height:150%;  }
 P.footertext { 
               font-size:8pt; 
               text-align:Center; 
               border-top-style:Solid; 
               border-top-width:4px; 
               border-top-color:#93b7e2;  }
-LI.kadov-P-Cfootertext { 
-                        font-size:8pt; 
-                        text-align:Center;  }
+LI.P-footertext { 
+                 font-size:8pt; 
+                 text-align:Center;  }
 P.ListBullet1 { 
                list-style:square; 
                margin-top:4.5pt; 
                margin-bottom:4.5pt;  }
-LI.kadov-P-CListBullet1 { 
-                         list-style:square;  }
+LI.P-ListBullet1 { 
+                  list-style:square;  }
 P.ListBullet2 { 
                list-style:disc; 
                margin-left:12pt;  }
-LI.kadov-P-CListBullet2 { 
-                         list-style:disc;  }
+LI.P-ListBullet2 { 
+                  list-style:disc;  }
 P.Hyperlinkintopic { 
                     color:#ff8e00; 
                     text-align:Right; 
-                    x-text-underline:Off; 
                     margin-top:4.5pt; 
                     text-decoration:none;  }
-LI.kadov-P-CHyperlinkintopic { 
-                              color:#ff8e00; 
-                              text-align:Right; 
-                              x-text-underline:Off; 
-                              text-decoration:none;  }
+LI.P-Hyperlinkintopic { 
+                       color:#ff8e00; 
+                       text-align:Right; 
+                       text-decoration:none;  }
 A:active { 
-          font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+          font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
           font-size:8pt; 
           color:#0000ff; 
-          x-text-underline:Normal; 
           text-decoration:underline;  }
 A:hover { 
-         font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+         font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
          background-color:Transparent; 
-         x-text-underline:Normal; 
          color:#800080; 
          font-size:8pt; 
          text-decoration:underline;  }
 A:link { 
-        font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+        font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
         background-color:Transparent; 
         font-size:8pt; 
         color:#0000ff; 
-        x-text-underline:Normal; 
         text-decoration:underline;  }
 A:visited { 
-           font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+           font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
            background-color:Transparent; 
            font-size:8pt; 
            color:#0000ff; 
-           x-text-underline:Normal; 
            text-decoration:underline;  }
 A.popupspot { 
              font-size:10pt; 
              font-weight:bold; 
              font-style:normal; 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+             font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
              color:#5b9beb; 
-             x-text-underline:Off; 
              text-decoration:none;  }
 P.ContactInfo {  }
-LI.kadov-P-CContactInfo {  }
+LI.P-ContactInfo {  }
 P.InsideChapter { 
                  font-weight:bold; 
                  font-style:normal; 
-                 font-family:"Trebuchet MS"    , sans-serif; 
+                 font-family:"Trebuchet MS"  , sans-serif; 
                  background-color:Transparent; 
                  text-transform:uppercase;  }
-LI.kadov-P-CInsideChapter { 
-                           font-weight:bold; 
-                           font-style:normal; 
-                           font-family:"Trebuchet MS"    , sans-serif; 
-                           text-transform:uppercase;  }
+LI.P-InsideChapter { 
+                    font-weight:bold; 
+                    font-style:normal; 
+                    font-family:"Trebuchet MS"  , sans-serif; 
+                    text-transform:uppercase;  }
 P.InsideChapterCont { 
-                     font-family:"Trebuchet MS"    , sans-serif; 
+                     font-family:"Trebuchet MS"  , sans-serif; 
                      background-color:Transparent; 
                      text-transform:uppercase;  }
-LI.kadov-P-CInsideChapterCont { 
-                               font-family:"Trebuchet MS"    , sans-serif; 
-                               text-transform:uppercase;  }
+LI.P-InsideChapterCont { 
+                        font-family:"Trebuchet MS"  , sans-serif; 
+                        text-transform:uppercase;  }
 P.InsideChapterLast { 
-                     font-family:"Trebuchet MS"    , sans-serif; 
+                     font-family:"Trebuchet MS"  , sans-serif; 
                      background-color:Transparent; 
                      text-transform:uppercase; 
                      border-bottom-style:Solid; 
                      border-bottom-width:1px; 
                      border-bottom-color:#323232;  }
-LI.kadov-P-CInsideChapterLast { 
-                               font-family:"Trebuchet MS"    , sans-serif; 
-                               text-transform:uppercase;  }
+LI.P-InsideChapterLast { 
+                        font-family:"Trebuchet MS"  , sans-serif; 
+                        text-transform:uppercase;  }
 P.FIgureCaption { 
                  text-align:Center; 
                  font-size:8pt; 
                  x-next-type:P;  }
-LI.kadov-P-CFIgureCaption { 
-                           text-align:Center; 
-                           font-size:8pt;  }
+LI.P-FIgureCaption { 
+                    text-align:Center; 
+                    font-size:8pt;  }
 P.picture { 
            text-align:Center; 
            margin-top:9pt; 
            margin-bottom:9pt; 
            x-next-class:FIgureCaption; 
            x-next-type:P;  }
-LI.kadov-P-Cpicture { 
-                     text-align:Center;  }
+LI.P-picture { 
+              text-align:Center;  }
 P.TableText { 
-             font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
+             font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
              font-size:8pt;  }
-LI.kadov-P-CTableText { 
-                       font-family:Verdana, Arial, "Lucida Sans Unicode"    , sans-serif; 
-                       font-size:8pt;  }
+LI.P-TableText { 
+                font-family:Verdana, Arial, "Lucida Sans Unicode"  , sans-serif; 
+                font-size:8pt;  }
 P.Title { 
          font-size:11pt; 
          font-weight:bold; 
          font-style:normal; 
          color:#3491c7; 
          margin-bottom:4.5pt;  }
-LI.kadov-P-CTitle { 
-                   font-size:11pt; 
-                   font-weight:bold; 
-                   font-style:normal; 
-                   color:#3491c7;  }
+LI.P-Title { 
+            font-size:11pt; 
+            font-weight:bold; 
+            font-style:normal; 
+            color:#3491c7;  }
 P.code { 
-        font-family:"Courier New"    , monospace; 
+        font-family:"Courier New"  , monospace; 
         background-color:#eeeeee; 
         margin-bottom:1pt; 
         margin-top:1pt;  }
-LI.kadov-P-Ccode { 
-                  font-family:"Courier New"    , monospace;  }
+LI.P-code { 
+           font-family:"Courier New"  , monospace;  }
 P.ListBullet3 { 
                list-style:circle; 
                margin-left:36pt;  }
-LI.kadov-P-CListBullet3 { 
-                         list-style:circle;  }
+LI.P-ListBullet3 { 
+                  list-style:circle;  }
 P.Strong { 
           font-weight:bold; 
           font-style:normal; 
           color:#848484; 
           margin-top:4.5pt; 
           margin-bottom:4.5pt;  }
-LI.kadov-P-CStrong { 
-                    font-weight:bold; 
-                    font-style:normal; 
-                    color:#848484;  }
+LI.P-Strong { 
+             font-weight:bold; 
+             font-style:normal; 
+             color:#848484;  }
 P.footnote { 
             font-size:6pt;  }
-LI.kadov-P-Cfootnote { 
-                      font-size:6pt;  }
+LI.P-footnote { 
+               font-size:6pt;  }
 P.PartTitle { 
              font-size:14pt; 
              font-weight:bold; 
              font-style:normal; 
              color:#848484; 
              text-transform:uppercase;  }
-LI.kadov-P-CPartTitle { 
-                       font-size:14pt; 
-                       font-weight:bold; 
-                       font-style:normal; 
-                       color:#848484; 
-                       text-transform:uppercase;  }
+LI.P-PartTitle { 
+                font-size:14pt; 
+                font-weight:bold; 
+                font-style:normal; 
+                color:#848484; 
+                text-transform:uppercase;  }
 P.PDThelp { 
            font-weight:bold; 
            font-style:normal; 
            font-size:16pt;  }
-LI.kadov-P-CPDThelp { 
-                     font-weight:bold; 
-                     font-style:normal; 
-                     font-size:16pt;  }
+LI.P-PDThelp { 
+              font-weight:bold; 
+              font-style:normal; 
+              font-size:16pt;  }
 ol ol { 
        margin-top:1px;  }
 ol ul { 

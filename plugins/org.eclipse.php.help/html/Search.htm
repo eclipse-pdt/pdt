@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <title>Search</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -52,7 +50,7 @@ p.whs35 { font-weight:normal; x-condition:Online; }
 tr.whs36 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs37 { width:100%; }
 p.whs38 { text-align:right; x-condition:Online; }
-p.whs39 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs39 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -77,6 +75,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -84,18 +83,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nReference\nMenus\nSearch");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nReference\nPHP Perspective Menus\nSearch");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Search</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -115,16 +120,11 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;"><span style="x-condition: PDT;">Search</span></p>
-
+<p class=PDThelp style="x-condition: PDT;"><span style="x-condition: PDT;">Search</span></p>
 <p>Allows you to Search for text or PHP elements in your workspace.</p>
-
 <p class="whs1">&nbsp;</p>
-
 <p class="whs1">The options available from the Search menu 
  are:</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
@@ -140,7 +140,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs1">Shortcut</td>
 <td width="77.098%" class="whs9">
 <p class="whs1">Description</td></tr>
-
 <tr valign="top" class="whs10">
 <td colspan="1" rowspan="1" width="9.736%" class="whs11">
 <p class="whs1">Search</td>
@@ -150,10 +149,8 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Opens the PHP Search dialog.</p>
 <p>PHP Search enables you to locate declarations of PHP Classes, Functions 
  and Constants.</p>
-<p class=ListBullet2
-	style="margin-left: 0px;">For more, see &quot;<a href="Searching_for_PHP_Elements.htm">Searching 
+<p class=ListBullet2 style="margin-left: 0px;">For more, see &quot;<a href="Searching_for_PHP_Elements.htm">Searching 
  for PHP Elements</a>&quot;.</td></tr>
-
 <tr valign="top" class="whs14">
 <td colspan="1" rowspan="1" width="9.736%" class="whs11">
 <p class="whs1">File</td>
@@ -164,33 +161,24 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>File Search enables you to locate text in all files in your workspace.</p>
 <p>To run a File Search or Replace:</p>
 <ol type="1" class="whs15">
-	
-	<li class=kadov-p><p>Enter the required text to be searched for.</p></li>
-	
-	<li class=kadov-p><p>Select the types of files to search in. Click 
- 'Choose' for a full list of file type extensions.</p></li>
-	
-	<li class=kadov-p><p>Select whether to search in:</p></li>
+	<li class=p><p>Enter the required text to be searched for.</p></li>
+	<li class=p><p>Select the types of files to search in. Click 'Choose' 
+ for a full list of file type extensions.</p></li>
+	<li class=p><p>Select whether to search in:</p></li>
 </ol>
 <ul type="square" class="whs16">
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Workspace - the 
- entire workspace</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Selected resources 
- - Select these in PHP Explorer view before opening the Source dialog</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Enclosing projects 
- - The projects which the selected resources are in.</p></li>
-	
-	<li class=kadov-p-CListBullet2><p class=ListBullet2>Working Set - Click 
- 'Choose' to select the required Working Set.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Workspace - the entire 
+ workspace</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Selected resources - Select 
+ these in PHP Explorer view before opening the Source dialog</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Enclosing projects - The 
+ projects which the selected resources are in.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Working Set - Click 'Choose' 
+ to select the required Working Set.</p></li>
 </ul>
 <ol start="4" type="1" class="whs15">
-	
-	<li class=kadov-p><p><span style="margin-left: 24px;">To Search for 
- the string, click Search. Search results will be displayed in the Search 
- view.<br>
+	<li class=p><p><span style="margin-left: 24px;">To Search for the string, 
+ click Search. Search results will be displayed in the Search view.<br>
 	To replace the string, click Replace. The Replace dialog will open.</span></p></li>
 </ol>
 <p class=Note><span style="font-weight: bold;"><B>Note</B></span>:</p>
@@ -198,7 +186,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  the File Search dialog. To make the PHP Search dialog unavailable, click 
  Customize within the File Search dialog and unmark the PHP Search dialog 
  option. </td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="9.736%" class="whs18">
 <p class="whs1">Text</td>
@@ -207,7 +194,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td colspan="1" rowspan="1" width="77.098%" class="whs20">
 <p class="whs1">Workspace - <span style="font-weight: normal;">Searches 
  the Workspace for text selected in the editor. </span></td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="9.736%" class="whs21">
 <p class="whs1">&nbsp;</td>
@@ -216,7 +202,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td colspan="1" rowspan="1" width="77.098%" class="whs22">
 <p><span style="font-weight: bold;"><B>Project</B></span> - Searches the current 
  active project for text selected in the editor.</td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="9.736%" class="whs18">
 <p class="whs1">&nbsp;</td>
@@ -225,7 +210,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td colspan="1" rowspan="1" width="77.098%" class="whs20">
 <p><span style="font-weight: bold;"><B>File</B></span> - Searches the current 
  active file for text selected in the editor.</td></tr>
-
 <tr valign="top" class="whs23">
 <td colspan="1" rowspan="1" width="9.736%" class="whs21">
 <p class="whs1">&nbsp;</td>
@@ -238,24 +222,20 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
 //--></script>
 </table>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs24">
 <col class="whs25">
 <col class="whs26">
 
-<tr valign="top" class="whs27">
-<td colspan="1" rowspan="1" width="7.093%" class="whs28">
+<tr valign="top" class="whs27"><td colspan="1" rowspan="1" width="7.093%" class="whs28">
 <p class="whs29">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs30">
 <p>&nbsp;</td></tr>
-
-<tr valign="top" class="whs31">
-<td width="7.093%" class="whs32">
+<tr valign="top" class="whs31"><td width="7.093%" class="whs32">
 <p class="whs29"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs33"></td>
 <td width="92.907%" class="whs34">
 <p class="whs1">Related Links:</p>
-<p class="whs35"><a href="Menus.htm"
-														style="font-weight: normal; x-condition: Online;">Menus</a></p>
+<p class="whs35"><a href="Menus.htm" 
+ style="font-weight: normal; x-condition: Online;">Menus</a></p>
 <p><a href="File.htm">File</a></p>
 <p><a href="Edit.htm">Edit</a></p>
 <p><a href="Source.htm">Source</a></p>
@@ -265,28 +245,32 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p><a href="Run.htm">Run</a></p>
 <p><a href="Window.htm">Window</a></p>
 <p><a href="Help.htm">Help</a></td></tr>
-
-<tr valign="top" class="whs36">
-<td colspan="1" rowspan="1" width="7.093%" class="whs32">
+<tr valign="top" class="whs36"><td colspan="1" rowspan="1" width="7.093%" class="whs32">
 <p class="whs29">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs34">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs37">
- <p align="right" class="whs38"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs39">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs38"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs39">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Search</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D02060000005365617263681102050000004D656E75731202060000005365617263681302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <title>Help</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -45,7 +43,7 @@ p.whs24 { font-weight:normal; x-condition:Online; }
 tr.whs25 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs26 { width:100%; }
 p.whs27 { text-align:right; x-condition:Online; }
-p.whs28 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs28 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -70,6 +68,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -77,18 +76,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nReference\nMenus\nHelp");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nReference\nPHP Perspective Menus\nHelp");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Help</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -108,20 +113,15 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;"><span style="x-condition: PDT;">Help</span></p>
-
+<p class=PDThelp style="x-condition: PDT;"><span style="x-condition: PDT;">Help</span></p>
 <p>The Help menu allows access to the most updated information on all aspects 
  of <span 
  style="x-condition: PDT;">PDT</span>, as well as allowing access to software 
  updates and registration locations so that you can get the most out of 
  the product.</p>
-
 <p class="whs1">&nbsp;</p>
-
 <p class="whs1">The options available from the Help menu 
  are:</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
@@ -137,7 +137,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs1">Shortcut</td>
 <td width="70.158%" class="whs9">
 <p class="whs1">Description</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Welcome</td>
@@ -145,7 +144,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="70.158%" class="whs12">
 <p>Opens the welcome page.</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Help Contents</td>
@@ -153,7 +151,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="70.158%" class="whs12">
 <p>Opens the Online Help page.</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Search</td>
@@ -161,7 +158,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="70.158%" class="whs12">
 <p>Opens a Search view for searching the Online Help manual.</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Dynamic Help</td>
@@ -169,7 +165,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="70.158%" class="whs12">
 <p>Opens Help Topics relevant to the current action in the workspace.</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Key Assist...</td>
@@ -177,7 +172,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Ctrl+Shift+L</td>
 <td width="70.158%" class="whs12">
 <p>Opens a list of all shortcut keys for PDT functionality.</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Tips and Tricks...</td>
@@ -186,7 +180,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td width="70.158%" class="whs12">
 <p>Opens the Tips and Tricks Help page for the Eclipse Platform and Eclipse 
  Plug-In Development Environment</td></tr>
-
 <tr valign="top" class="whs6">
 <td colspan="1" rowspan="1" width="18.808%" class="whs10">
 <p class="whs1">Cheat Sheets...</td>
@@ -194,12 +187,10 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="70.158%" class="whs12">
 <p>Allows you to open a cheat sheet with quick explanations on how to carry 
- out a variety of &nbsp;functions.<a 
- href="../../PLUGINS_ROOT/org.eclipse.pde.doc.user/guide/tools/file_wizards/new_cheat_sheet.htm"
-	style="x-condition: Online, PDT;"><br>
+ out a variety of &nbsp;functions.<a href="../../PLUGINS_ROOT/org.eclipse.pde.doc.user/guide/tools/file_wizards/new_cheat_sheet.htm" 
+ style="x-condition: Online, PDT;"><br>
 Click here</a><span style="x-condition: Online, PDT;"> for more on cheat 
  sheets.</span></td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">Software Updates</td>
@@ -210,7 +201,6 @@ Click here</a><span style="x-condition: Online, PDT;"> for more on cheat
  for available software updates.</p>
 <p><span style="font-weight: bold;"><B>Manage Configuration</B></span> - Opens 
  a dialog allowing you to manage PDT's configurations.</td></tr>
-
 <tr valign="top" class="whs6">
 <td colspan="1" rowspan="1" width="18.808%" class="whs10">
 <p class="whs1">Polarion</td>
@@ -219,7 +209,6 @@ Click here</a><span style="x-condition: Online, PDT;"> for more on cheat
 <td colspan="1" rowspan="1" width="70.158%" class="whs12">
 <p class="whs1">Send Tip for Improvement</p>
 <p class="whs1">Send Problem Report</td></tr>
-
 <tr valign="top" class="whs6">
 <td width="18.808%" class="whs10">
 <p class="whs1">About Eclipse SDK</td>
@@ -232,26 +221,21 @@ Click here</a><span style="x-condition: Online, PDT;"> for more on cheat
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
 //--></script>
 </table>
-
 <p>&nbsp;</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs13">
 <col class="whs14">
 <col class="whs15">
 
-<tr valign="top" class="whs16">
-<td colspan="1" rowspan="1" width="7.093%" class="whs17">
+<tr valign="top" class="whs16"><td colspan="1" rowspan="1" width="7.093%" class="whs17">
 <p class="whs18">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs19">
 <p>&nbsp;</td></tr>
-
-<tr valign="top" class="whs20">
-<td width="7.093%" class="whs21">
+<tr valign="top" class="whs20"><td width="7.093%" class="whs21">
 <p class="whs18"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
 <td width="92.907%" class="whs23">
 <p class="whs1">Related Links:</p>
-<p class="whs24"><a href="Menus.htm"
-														style="font-weight: normal; x-condition: Online;">Menus</a></p>
+<p class="whs24"><a href="Menus.htm" 
+ style="font-weight: normal; x-condition: Online;">Menus</a></p>
 <p><a href="File.htm">File</a></p>
 <p><a href="Edit.htm">Edit</a></p>
 <p><a href="Source.htm">Source</a></p>
@@ -261,28 +245,32 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p><a href="Project.htm">Project</a></p>
 <p><a href="Run.htm">Run</a></p>
 <p><a href="Window.htm">Window</a></td></tr>
-
-<tr valign="top" class="whs25">
-<td colspan="1" rowspan="1" width="7.093%" class="whs21">
+<tr valign="top" class="whs25"><td colspan="1" rowspan="1" width="7.093%" class="whs21">
 <p class="whs18">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs23">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs26">
- <p align="right" class="whs27"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs28">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs27"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs28">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Help</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D020400000048656C701102050000004D656E757312020400000048656C701302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

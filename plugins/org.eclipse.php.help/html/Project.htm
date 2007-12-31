@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <title>Project</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -50,7 +48,7 @@ p.whs29 { font-weight:normal; x-condition:Online; }
 tr.whs30 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs31 { width:100%; }
 p.whs32 { text-align:right; x-condition:Online; }
-p.whs33 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs33 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -75,6 +73,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -82,18 +81,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nReference\nMenus\nProject");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nReference\nPHP Perspective Menus\nProject");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Project</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -113,18 +118,13 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;"><span style="x-condition: PDT;">Project</span></p>
-
+<p class=PDThelp style="x-condition: PDT;"><span style="x-condition: PDT;">Project</span></p>
 <p class="whs1">The Project menu allows you to carry out 
  different functions on your projects, including open, close, build and 
  encode.</p>
-
 <p class="whs1">&nbsp;</p>
-
 <p class="whs2">The options available from the Refactor menu 
  are:</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
@@ -140,7 +140,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs2">Shortcut</td>
 <td width="66.573%" class="whs10">
 <p class="whs2">Description</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Open Project</td>
@@ -148,7 +147,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="66.573%" class="whs13">
 <p>Opens the previously closed currently selected project.</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Close Project</td>
@@ -158,10 +156,10 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Closes the currently selected project.</p>
 <p>Closing a project does not cause it to be deleted from the file system. 
  A closed project will still be displayed in PHP Explorer view, with a 
- <img src="closed_project_icon.png" x-maintain-ratio="TRUE" width="25px" height="17px" border="0" class="img_whs14">closed project icon, but its resources are no longer accessible 
- from within the Workbench.</p>
+ <img src="closed_project_icon.png" x-maintain-ratio="TRUE" width="25px" height="17px" border="0" class="img_whs14">closed 
+ project icon, but its resources are no longer accessible from within the 
+ Workbench.</p>
 <p>Closing projects takes up less memory and speeds up the build process.</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Build All</td>
@@ -171,12 +169,11 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>This command manually invokes an incremental build on all projects in 
  the Workbench. </p>
 <p>This is only available if automatic build is not selected (see below).</p>
-<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm"
-	style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
+<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm" 
+ style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
  Guide. </p>
 <p>Note: The build function can be configured by selecting General | Workspace 
  from the preferences dialog (Windows | Preferences).</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Build Project</td>
@@ -187,12 +184,11 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  in the currently selected project that have been affected since the last 
  build.</p>
 <p>This is only available if automatic build is not selected (see below).</p>
-<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm"
-	style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
+<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm" 
+ style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
  Guide. </p>
 <p>Note: The build function can be configured by selecting General | Workspace 
  from the preferences dialog (Windows | Preferences).</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Build Working Set</td>
@@ -202,12 +198,11 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>This command manually invokes an incremental build on any resources 
  in a working set that have been affected since the last build.</p>
 <p>This is only available if automatic build is not selected (see below).</p>
-<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm"
-	style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
+<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm" 
+ style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
  Guide. </p>
 <p>Note: The build function can be configured by selecting General | Workspace 
  from the preferences dialog (Windows | Preferences).</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Clean...</td>
@@ -215,12 +210,11 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="66.573%" class="whs13">
 <p>Invokes a clean build. This will discard all previous build results.</p>
-<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm"
-	style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
+<p class="whs15">For more information, see the &quot;<a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-22.htm" 
+ style="x-condition: PDT;">Builds</a>&quot; topic in the Workspace User 
  Guide. </p>
 <p>Note: The build function can be configured by selecting General | Workspace 
  from the preferences dialog (Windows | Preferences).</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Build Automatically</td>
@@ -231,7 +225,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  this option will disable all other manual build options. </p>
 <p>Note: The build function can be configured by selecting General | Workspace 
  from the preferences dialog (Windows | Preferences).</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Convert to a Dynamic Web project...</td>
@@ -239,7 +232,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="66.573%" class="whs13">
 <p>Converts the Web project from a static project to a dynamic project.</td></tr>
-
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs16">
 <p class="whs2">Properties</td>
@@ -255,24 +247,20 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
 //--></script>
 </table>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs18">
 <col class="whs19">
 <col class="whs20">
 
-<tr valign="top" class="whs21">
-<td colspan="1" rowspan="1" width="7.093%" class="whs22">
+<tr valign="top" class="whs21"><td colspan="1" rowspan="1" width="7.093%" class="whs22">
 <p class="whs23">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs24">
 <p>&nbsp;</td></tr>
-
-<tr valign="top" class="whs25">
-<td width="7.093%" class="whs26">
+<tr valign="top" class="whs25"><td width="7.093%" class="whs26">
 <p class="whs23"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs27"></td>
 <td width="92.907%" class="whs28">
 <p class="whs2">Related Links:</p>
-<p class="whs29"><a href="Menus.htm"
-														style="font-weight: normal; x-condition: Online;">Menus</a></p>
+<p class="whs29"><a href="Menus.htm" 
+ style="font-weight: normal; x-condition: Online;">Menus</a></p>
 <p><a href="File.htm">File</a></p>
 <p><a href="Edit.htm">Edit</a></p>
 <p><a href="Source.htm">Source</a></p>
@@ -282,28 +270,32 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p><a href="Run.htm">Run</a></p>
 <p><a href="Window.htm">Window</a></p>
 <p><a href="Help.htm">Help</a></td></tr>
-
-<tr valign="top" class="whs30">
-<td colspan="1" rowspan="1" width="7.093%" class="whs26">
+<tr valign="top" class="whs30"><td colspan="1" rowspan="1" width="7.093%" class="whs26">
 <p class="whs23">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs28">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs31">
- <p align="right" class="whs32"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs33">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs32"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs33">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Project</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D020700000050726F6A6563741102050000004D656E757312020700000050726F6A6563741302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

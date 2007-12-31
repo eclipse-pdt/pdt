@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <title>Syntax Coloring</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -18,7 +16,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; x-condition:Online; }
+table.whs1 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs2 { width:7.093%; }
 col.whs3 { width:92.907%; }
 tr.whs4 { x-cell-content-align:top; }
@@ -32,7 +30,7 @@ p.whs11 { font-weight:bold; }
 p.whs12 { x-condition:Online; }
 div.whs13 { width:100%; }
 p.whs14 { text-align:right; x-condition:Online; }
-p.whs15 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs15 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -57,6 +55,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -64,18 +63,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nConcepts\nSyntax Coloring");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nConcepts\nSyntax Coloring");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Syntax Coloring</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -95,60 +100,37 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;">Syntax Coloring</p>
-
-<p><span style="x-condition: PDT;">PDT</span> 
- can automatically apply different colors and font attributes to different 
- PHP syntax elements in order for your scripts to be more easily navigable 
- and to help you find relevant sections quickly and easily.</p>
-
+<p class=PDThelp style="x-condition: PDT;">Syntax Coloring</p>
+<p><span 
+ style="x-condition: PDT;">PDT</span> can automatically apply different 
+ colors and font attributes to different PHP syntax elements in order for 
+ your scripts to be more easily navigable and to help you find relevant 
+ sections quickly and easily.</p>
 <p>Completing the relevant element will cause the required color and font 
  settings to be applied to it.</p>
-
 <p>&nbsp;</p>
-
 <p>The default color and font settings for PHP elements are:</p>
-
-<ul>
-	
-	<li style="/*begin!kadov{{*/ color: #ff0000; /*}}end!kadov*/ "
-		class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #ff0000;"><font color=red >Boundry 
+<ul><li class=p-ListBullet1><p class=ListBullet1><span style="color: #ff0000;"><font color=red >Boundry 
  Maker</font></span></p></li>
-	
-	<li style="/*begin!kadov{{*/ color: #808080; /*}}end!kadov*/ "
-		class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #808080;"><font color=gray >Comment</font></span></p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #007f7f;"><font color=#007f7f >HereDoc</font></span> 
+	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #808080;"><font color=gray >Comment</font></span></p></li>
+	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #007f7f;"><font color=#007f7f >HereDoc</font></span> 
  </p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #0000ff;"><font color=blue >Keyword</font></span> 
+	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #0000ff;"><font color=blue >Keyword</font></span> 
  </p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1>Normal </p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #ff0000;"><font color=red >Number</font></span> 
+	<li class=p-ListBullet1><p class=ListBullet1>Normal </p></li>
+	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #ff0000;"><font color=red >Number</font></span> 
  </p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #808080;"><font color=gray >PHPDoc</font></span> 
+	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #808080;"><font color=gray >PHPDoc</font></span> 
  </p></li>
-	
-	<li style="/*begin!kadov{{*/ color: #215b35; /*}}end!kadov*/ "
-		class=kadov-p-CListBullet1><p class=ListBullet1
-										style="color: #215b35;">String</p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1>Task Tag</p></li>
-	
-	<li class=kadov-p-CListBullet1><p class=ListBullet1><span style="color: #800000;"><font color=maroon >Variable</font></span> 
+	<li class=p-ListBullet1><p class=ListBullet1 style="color: #215b35;">String</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Task Tag</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #800000;"><font color=maroon >Variable</font></span> 
  </p></li>
 </ul>
-
 <p>&nbsp;</p>
-
 <p>The color and font settings can be configured from the <a href="Syntax_Coloring.htm">Syntax 
  Coloring preferences</a> page, accessed from Window | Preferences | PHP 
  | Editor | Syntax Coloring.</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
 <col class="whs3">
@@ -158,37 +140,40 @@ if (window.writeIntopicBar)
 <p class="whs6">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs7">
 <p>&nbsp;</td></tr>
-
 <tr valign="top" class="whs4">
 <td width="7.093%" class="whs8">
 <p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs9"></td>
 <td width="92.907%" class="whs10">
 <p class="whs11">Related Links:</p>
-<p class="whs12"><a href="Syntax_Coloring.htm"
-									style="x-condition: Online;">Syntax 
+<p class="whs12"><a href="Syntax_Coloring.htm" style="x-condition: Online;">Syntax 
  Coloring preferences</a> </td></tr>
-
 <tr valign="top" class="whs4">
 <td colspan="1" rowspan="1" width="7.093%" class="whs8">
 <p class="whs6">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs10">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs13">
- <p align="right" class="whs14"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs15">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs14"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs15">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Syntax Coloring</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D020F00000053796E74617820436F6C6F72696E67110208000000436F6E636570747312020F00000053796E74617820436F6C6F72696E671302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

@@ -1,8 +1,8 @@
-<html>
+﻿<html>
 <head>
 <title>Search Form</title>
 
-<meta name="generator" content="RoboHelp by eHelp Corporation   www.ehelp.com">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <meta name="description" content="WebHelp 5.50">
 </head>
 <style>
@@ -65,6 +65,8 @@ function window_unload()
 	UnRegisterListener2(this, WH_MSG_SHOWGLO);
 	UnRegisterListener2(this, WH_MSG_SEARCHTHIS);
 	UnRegisterListener2(this, WH_MSG_BACKUPSEARCH);
+	UnRegisterListener2(this, WH_MSG_HILITESEARCH);
+	UnRegisterListener2(this, WH_MSG_GETSEARCHSTR);
 }
 
 function onSendMessage(oMsg)
@@ -96,6 +98,22 @@ function onSendMessage(oMsg)
 			return false;
 		}
 	}
+	else if (oMsg.nMessageId == WH_MSG_HILITESEARCH)
+	{
+		var bHiLite = (document.FtsInputForm.HiLite.checked == true);
+		if (bHiLite == 1)
+			oMsg.oParam = true; 
+		else
+			oMsg.oParam = false;
+	}
+	else if (oMsg.nMessageId == WH_MSG_GETSEARCHSTR)
+	{
+		oMsg.oParam = "";
+		if (oMsg.oParam != "- Search -")
+		{
+			oMsg.oParam = document.FtsInputForm.keywordField.value;
+		}	}
+
 	return true;
 }
 
@@ -107,11 +125,15 @@ if (window.gbWhForm)
 	RegisterListener2(this, WH_MSG_SHOWGLO);
 	RegisterListener2(this, WH_MSG_SEARCHTHIS);
 	RegisterListener2(this, WH_MSG_BACKUPSEARCH);
+	RegisterListener2(this, WH_MSG_HILITESEARCH);
+	RegisterListener2(this, WH_MSG_GETSEARCHSTR);
 	gfunLookUp = ftsLookup;
 	gfunInit = null;
 	gstrFormName = "FtsInputForm"
 	gsTitle = "Type in the word(s) to search for:";
 	gsTitle = "Type in the word(s) to search for:";
+	gsHiliteSearchTitle = "Highlight search results";
+	gsHiliteSearchTitle = "Highlight search results";
 	setGoImage1("");
 	
 	
@@ -123,6 +145,11 @@ if (window.gbWhForm)
 	setFont("Title", "Arial","9pt","#000000","normal","normal","none");
 	
 	
+	var strHiliteSearchSetting = "enable,yellow,black";
+	strHiliteSearchSetting = "enable,#b2b4bf,black";
+	var searchSetting = strHiliteSearchSetting.match("^(.+),(.+),(.*)$");
+	if(searchSetting != null && searchSetting[1] == "enable")
+		setHighlightSearch(true);
 	document.write(getFormHTML());
 	writeFormStyle();
 	window.onload = beforeInit;

@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <script language="javascript1.2" src="whutils.js"></script>
 <script language="javascript1.2">
 <!--
@@ -9,11 +9,15 @@ if (location.hash.length > 1)
 	var nPos = location.hash.indexOf(">>");
 	if (nPos>1)
 	{
-		gsTopic = location.hash.substring(1, nPos);
+		if(IsInternal(location.hash.substring(1, nPos)))
+			gsTopic = location.hash.substring(1, nPos);
 		parseParam(location.hash.substring(nPos+2));
 	}
 	else
-		gsTopic = location.hash.substring(1);
+	{
+		if(IsInternal(location.hash.substring(1)))
+			gsTopic = location.hash.substring(1);
+	}
 }
 
 

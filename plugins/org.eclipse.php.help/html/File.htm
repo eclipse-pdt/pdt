@@ -1,11 +1,9 @@
 <!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
-
 <html>
-
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
 <title>File</title>
-<meta http-equiv="content-type" content="text/html; charset=windows-1252">
-<meta name="generator" content="RoboHelp by eHelp Corporation www.ehelp.com">
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -56,7 +54,7 @@ td.whs35 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 tr.whs36 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs37 { width:100%; }
 p.whs38 { text-align:right; x-condition:Online; }
-p.whs39 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs39 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript">
 <!--
@@ -92,6 +90,7 @@ p.WebHelpNavBar { text-align:right; }
 <script type="text/javascript" language="javascript" src="whver.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
 <script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -99,18 +98,24 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nReference\nMenus\nFile");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
-addButton("websearch",BTN_IMG,"WebSearch","","","","",0,0,"whd_wbsh0.gif","whd_wbsh2.gif","whd_wbsh1.gif");
+	addTocInfo("PDT User Guide\nReference\nPHP Perspective Menus\nFile");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
+	if(1)
+	{
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; File</p>");
+
+	}
+
 	if (window.setRelStartPage)
 	{
 	setRelStartPage("IDE_Help.htm");
-addSearchFormHref("javascript:document.ehelpform.submit()");
 
 		autoSync(1);
 		sendSyncInfo();
@@ -130,18 +135,13 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp
-	style="x-condition: PDT;">File</p>
-
+<p class=PDThelp style="x-condition: PDT;">File</p>
 <p class="whs1">The File Menu allows you to carry out various 
  functions on active files and folders, as well as organizing current files 
  and creating new items.</p>
-
 <p class="whs1">&nbsp;</p>
-
 <p class="whs2">The options available from the File menu 
  are:</p>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
@@ -157,7 +157,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs2">Shortcut</td>
 <td width="73.853%" class="whs10">
 <p class="whs2">Description</td></tr>
-
 <tr valign="top" class="whs11">
 <td width="13.536%" class="whs12">
 <p class="whs2"><a HREF="New.htm">New</a></td>
@@ -171,7 +170,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs15">Note: The options available in the New 
  Menu for the current perspective can be configured through the <a href="Window.htm#Customize_Perspectives">Customize 
  Perspectives</a> option in the Window Menu.</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Open File</td>
@@ -181,7 +179,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Opens a previously created file in an editor view. If the file is stored 
  in active projects in your workspace they will be displayed in PHP Explorer 
  / Navigator views.</td></tr>
-
 <tr valign="top" class="whs16">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Close</td>
@@ -193,7 +190,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs15"><span style="font-weight: normal;">If there 
  are unsaved changes in the file, you will be prompted to save the file 
  before closing.</span></td></tr>
-
 <tr valign="top" class="whs16">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Close All</td>
@@ -204,7 +200,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  all open editor windows.</span></p>
 <p class="whs15">If there are unsaved changes in the file, 
  you will be prompted to save them before closing.</td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Save</td>
@@ -212,7 +207,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Ctrl+S</td>
 <td colspan="1" rowspan="1" width="73.853%" class="whs14">
 <p>Saves changes made to the active file.</td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Save As</td>
@@ -220,7 +214,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="73.853%" class="whs14">
 <p>Allows you to specify the file name when saving the active file.</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Save All</td>
@@ -229,7 +222,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td colspan="1" rowspan="1" width="73.853%" class="whs14">
 <p class="whs2"><span><B><span style="font-weight: normal;">Saves 
  all open files.</span></B></span></td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Revert</td>
@@ -237,7 +229,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="73.853%" class="whs14">
 <p>Reverts the state of the active file back to its last saved version.</td></tr>
-
 <tr valign="top" class="whs18">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Move</td>
@@ -257,7 +248,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs15"><span style="font-weight: normal;">For 
  more on moving files using the refactoring feature, see &quot;Moving 
  Files&quot;.</span></td></tr>
-
 <tr valign="top" class="whs18">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Rename</td>
@@ -275,7 +265,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs15">For more on renaming files using the rename 
  feature, see &quot;Renaming a 
  file&quot;.</td></tr>
-
 <tr valign="top" class="whs17">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs19">Refresh</td>
@@ -284,7 +273,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td colspan="1" rowspan="1" width="73.853%" class="whs14">
 <p class="whs21">Refreshes the Navigator 
  views when external changes have been made.</td></tr>
-
 <tr valign="top" class="whs22">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs23">Convert Line 
@@ -295,7 +283,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs2"><span><B><span style="font-weight: normal;">Selects 
  the preferred line ending style. Choices of Windows, Unix and Mac styles.</span></B></span></p>
 <p>&nbsp;</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Print</td>
@@ -304,7 +291,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td colspan="1" rowspan="1" width="73.853%" class="whs14">
 <p>Prints the active file.</p>
 <p>&nbsp;</td></tr>
-
 <tr valign="top" class="whs24">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Switch Workspace</td>
@@ -318,7 +304,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs2"><span style="font-weight: normal;">This is 
  useful if you want to open files and projects situated in a different 
  location or if you want to save files and projects to a different location.</span></td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2"><a HREF="Import.htm">Import</a></td>
@@ -329,7 +314,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  various types of items into your workspace.</span></p>
 <p class="whs15">For a list of the different types of items 
  you can import, divided into categories, see &quot;<a href="Import.htm">Import</a>&quot;.</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2"><a HREF="Export.htm">Export</a></td>
@@ -341,7 +325,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  locations.</span></p>
 <p class="whs15">For a list of the different items you can 
  export from your workspace, divided into categories, see &quot;<a href="Export.htm">Export</a>&quot;.</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Properties</td>
@@ -352,7 +335,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
  active file, including it's path, type, location, size and when it was 
  last modified. From here the text file encoding type can also be configured, 
  and whether the file is read-only, archive or derived can be set.</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Last viewed files</p>
@@ -363,7 +345,6 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs15"><span style="font-weight: normal;">Lists 
  the last viewed files for easy access.</span></p>
 <p>&nbsp;</td></tr>
-
 <tr valign="top" class="whs11">
 <td colspan="1" rowspan="1" width="13.536%" class="whs12">
 <p class="whs2">Exit </td>
@@ -377,24 +358,19 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
 //--></script>
 </table>
-
 <table x-use-null-cells cellspacing="0" width="100%" class="whs25">
 <col class="whs26">
 <col class="whs27">
 
-<tr valign="top" class="whs28">
-<td colspan="1" rowspan="1" width="7.093%" class="whs29">
+<tr valign="top" class="whs28"><td colspan="1" rowspan="1" width="7.093%" class="whs29">
 <p class="whs30">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs31">
 <p>&nbsp;</td></tr>
-
-<tr valign="top" class="whs32">
-<td width="7.093%" class="whs33">
+<tr valign="top" class="whs32"><td width="7.093%" class="whs33">
 <p class="whs30"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs34"></td>
 <td width="92.907%" class="whs35">
 <p class="whs2">Related Links:</p>
-<p><a HREF="Menus.htm"
-		style="font-weight: normal;">Menus</a><a HREF="New.htm"><br>
+<p><a HREF="Menus.htm" style="font-weight: normal;">Menus</a><a HREF="New.htm"><br>
 New</a></p>
 <p><a HREF="Import.htm">Import</a></p>
 <p><a HREF="Export.htm">Export</a></p>
@@ -407,28 +383,32 @@ New</a></p>
 <p><a HREF="Run.htm">Run</a></p>
 <p><a HREF="Window.htm">Window</a></p>
 <p><a HREF="Help.htm">Help</a></td></tr>
-
-<tr valign="top" class="whs36">
-<td colspan="1" rowspan="1" width="7.093%" class="whs33">
+<tr valign="top" class="whs36"><td colspan="1" rowspan="1" width="7.093%" class="whs33">
 <p class="whs30">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs35">
 <p>&nbsp;</td></tr>
 </table>
-
 <div placeholder id="footer" class="whs37">
- <p align="right" class="whs38"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs39">PHP Development Tool</p>
-</div>
+ <p align="right" class="whs38"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs39">PHP Development 
+ Tool</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
+highlightSearch();
 if (window.writeIntopicBar)
 	writeIntopicBar(0);
+if(0)
+{
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; File</p>");
+
+}
 //-->
 </script>
-<form method="POST" action="http://www.helpcommunity.com/ehelpapi.asp?cmd=WebSave" name="ehelpform" target="_top" style="display:'none';">
-<input type="hidden" name="data" value="2A0D020400000046696C651102050000004D656E757312020400000046696C651302080000004944452048656C7015020C0000004944455F48656C702E68746D1703740100003C3F786D6C2076657273696F6E3D22312E30223F3E0D0A3C21444F43545950452053595354454D20226568656C706F70742E647464223E0D0A3C46494C452D4F5054494F4E532046494C452D56455253494F4E3D2232222046494C452D4B45593D2233383733616238385F633161395F343337395F383037645F636237303636363263613734223E0D0A3C2F46494C452D4F5054494F4E533E0D0A3C4548454C502D4F5054494F4E5320464F524D41542D56455253494F4E3D22312E30223E0D0A203C4F5054494F4E5320454E41424C45443D225945532220454D4245444445443D2259455322204D41494E2D57494E444F572D4F4E4C593D224E4F2220434F4D4D554E4954592D4E4F544946593D224E4F222046495253542D504147453D224E4F542D534554223E0D0A203C2F4F5054494F4E533E0D0A203C425554544F4E2D4C4142454C3E5765625365617263680D0A203C2F425554544F4E2D4C4142454C3E0D0A3C2F4548454C502D4F5054494F4E533E18010400000002000000702A">
-</form>
 </body>
 </html>

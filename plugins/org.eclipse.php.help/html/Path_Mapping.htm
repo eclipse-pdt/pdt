@@ -34,7 +34,7 @@ p.whs15 { x-condition:PDT; }
 ol.whs16 { list-style:decimal; }
 p.whs17 { margin-left:12px; }
 ul.whs18 { list-style:disc; }
-img_whs19 { border:none; border-style:none; width:288px; height:227px; float:none; }
+img_whs19 { border:none; width:288px; height:227px; float:none; border-style:none; }
 p.whs20 { x-condition:PDT; margin-left:12px; }
 table.whs21 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs22 { x-cell-content-align:top; height:16px; x-condition:Online; }
@@ -48,7 +48,7 @@ td.whs29 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 tr.whs30 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs31 { width:100%; }
 p.whs32 { text-align:right; x-condition:Online; }
-p.whs33 { text-align:center; x-text-underline:normal; x-condition:PDT; text-decoration:underline; }
+p.whs33 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -81,18 +81,18 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("Welcome to the Online Help\nConcepts\nPath Mapping");
-addButton("show",BTN_IMG,"Show","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
-addButton("hide",BTN_IMG,"Hide","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
+	addTocInfo("PDT User Guide\nConcepts\nPath Mapping");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
 
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", ">", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">Welcome to the Online Help</a> > <a href=\"Concepts.htm\">Concepts</a> > Path Mapping</p>");
+	document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Path Mapping</p>");
 
 	}
 
@@ -156,7 +156,6 @@ if (window.writeIntopicBar)
  copy.</td>
 </tr>
 </table>
-<p>&nbsp;</p>
 <p class=Note>Note:</p>
 <p class=NoteText>Server Path Maps can be viewed and defined in the Path 
  Mapping tab of the <a href="PHP_Servers.htm">PHP Servers Preferences page.</a> 
@@ -193,7 +192,8 @@ if (window.writeIntopicBar)
  in projects that are in the Include Paths of the project from which the 
  file was called.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1 style="margin-left: 12px;">Files 
- that are open in a Zend Studio for Eclipse editor.</p></li>
+ that are open in a <span 
+ style="x-condition: PDT;">PDT</span> editor.</p></li>
 </ul>
 <p class=FIgureCaption style="x-condition: PDT;"><img src="path_mapping_options_pdt.png" x-maintain-ratio="TRUE" width="288px" height="227px" border="0" class="img_whs19"></p>
 <p class=FIgureCaption>&nbsp;</p>
@@ -237,12 +237,12 @@ Include Paths</a></p>
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs31">
- <p align="right" class="whs32"><span><span style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
-&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0"
-	style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
-
- <p align="center" class="whs33">PHP Development Tool</p>
-
+ <p align="right" class="whs32"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs33">PHP Development 
+ Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
@@ -251,9 +251,9 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:right\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", ">", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">Welcome to the Online Help</a> > <a href=\"Concepts.htm\">Concepts</a> > Path Mapping</p>");
+document.write("<p style=\"text-align:left\"> ");
+AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
+document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Path Mapping</p>");
 
 }
 //-->
