@@ -41,6 +41,9 @@ public class SourceActionFilterNotInEFS implements IActionFilterContributor {
 			fileName = (codeData).getUserData().getFileName();
 		}
 		// construct a path
+		if (fileName == null) {
+			return false;
+		}
 		Path fileNamePath = new Path(fileName);
 		// if it has only one segment 'getFile' throws an exception so return false anyway
 		if (fileNamePath.segmentCount() <= 1) {
