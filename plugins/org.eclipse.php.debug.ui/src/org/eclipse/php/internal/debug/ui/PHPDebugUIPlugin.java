@@ -85,9 +85,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		firstSelectionDebugLaunchListener = new FirstSelectionDebugLaunchListener();
 		DebugPlugin.getDefault().getLaunchManager().addLaunchListener(firstSelectionDebugLaunchListener);
 
-		// Register the PHPDebugElementAdapterFactory. 
+		// Register the PHPDebugElementAdapterFactory.
 		// To make sure we are the first adapter factory for the IVariable class, we insert the
-		// factory before any other factory. 
+		// factory before any other factory.
 		AdapterManager manager = (AdapterManager) Platform.getAdapterManager();
 		List list = (List) manager.getFactories().get(IVariable.class.getName());
 		PHPDebugElementAdapterFactory propertiesFactory = new PHPDebugElementAdapterFactory();
@@ -160,7 +160,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the active workbench window
-	 * 
+	 *
 	 * @return the active workbench window
 	 */
 	public static IWorkbenchWindow getActiveWorkbenchWindow() {
@@ -177,7 +177,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the active workbench shell or <code>null</code> if none
-	 * 
+	 *
 	 * @return the active workbench shell or <code>null</code> if none
 	 */
 	public static Shell getActiveWorkbenchShell() {
@@ -208,7 +208,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 						try {
 							page.showView(viewID);
 						} catch (PartInitException e) {
-							ErrorDialog.openError(window.getShell(), PHPDebugUIMessages.ShowView_errorTitle, //$NON-NLS-1$
+							ErrorDialog.openError(window.getShell(), PHPDebugUIMessages.ShowView_errorTitle,
 								e.getMessage(), e.getStatus());
 						}
 					} else {
@@ -231,9 +231,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] projects = workspaceRoot.getProjects();
 		IProject project = null;
-		for (int i = 0; i < projects.length; i++) {
-			if (projects[i].getName().equals(projectName)) {
-				project = projects[i];
+		for (IProject element : projects) {
+			if (element.getName().equals(projectName)) {
+				project = element;
 				break;
 			}
 		}
@@ -245,7 +245,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			if (events != null) {
 				int size = events.length;
 				for (int i = 0; i < size; i++) {
-					DebugEvent event = (DebugEvent) events[i];
+					DebugEvent event = events[i];
 					if (event.getKind() == DebugEvent.CREATE) {
 						Object obj = events[i].getSource();
 
@@ -288,7 +288,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	};
 
 	/*
-	 * A class that is responsible of asking the user to return to the PHP perspective 
+	 * A class that is responsible of asking the user to return to the PHP perspective
 	 * when all the debug sessions where terminated.
 	 */
 	private static class TerminateDebugLaunchListener implements ILaunchesListener2 {
@@ -335,7 +335,11 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						// get the LaunchView
-						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+						IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						if (activeWorkbenchWindow == null) {
+							return;
+						}
+						IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
 						if (page == null)
 							return;
 						LaunchView view = (LaunchView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
@@ -343,7 +347,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 							return;
 						try {
 							// build the tree path LaunchManager->Launch->DebugTarget->PHPThread->PHPStackFrame
-							IDebugTarget target = (IDebugTarget) currentLaunches[0].getDebugTarget();
+							IDebugTarget target = currentLaunches[0].getDebugTarget();
 							if (target == null)
 								return;
 							if (target.getThreads() == null || target.getThreads().length == 0)
@@ -446,12 +450,12 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			try {
 				IMarker[] allMarkers = workspace.getRoot().findMarkers(null, true, IResource.DEPTH_INFINITE);
-				for (int i = 0; i < allMarkers.length; i++) {
-					String storageType = allMarkers[i].getAttribute(IPHPConstants.STORAGE_TYPE, "");
+				for (IMarker element : allMarkers) {
+					String storageType = element.getAttribute(IPHPConstants.STORAGE_TYPE, "");
 					if (storageType.equals(IPHPConstants.STORAGE_TYPE_EXTERNAL) || storageType.equals(IPHPConstants.STORAGE_TYPE_REMOTE)) {
-						String fileName = allMarkers[i].getAttribute(IPHPConstants.STORAGE_FILE, "");
+						String fileName = element.getAttribute(IPHPConstants.STORAGE_FILE, "");
 						if (localPath.equals(fileName)) {
-							allMarkers[i].delete();
+							element.delete();
 						}
 					}
 				}
