@@ -157,5 +157,6 @@ public class Selection {
 	
 	public String toString() {
 		return "<start == " + fStart + ", length == " + fLength + "/>";  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-	}	
+	}
+
 }

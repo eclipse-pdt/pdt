@@ -85,7 +85,7 @@ public class SelectionAnalyzer extends ApplyAll {
 	
 	//--- node management ---------------------------------------------------------
 	
-	protected boolean visitNode(ASTNode node) {
+	protected boolean apply(ASTNode node) {
 		// The selection lies behind the node.
 		if (fSelection.liesOutside(node)) {
 			return false;
