@@ -114,7 +114,8 @@ public class DBGpResponse {
 	//init attributes
 	private String idekey;
 	private String session;
-	private String engineVersion;
+	private String engineVersion = "";
+	private EngineTypes engineType = EngineTypes.other;	
 	private String fileUri;
 
 	// Response attributes
@@ -256,6 +257,18 @@ public class DBGpResponse {
 			Node node = nodes.item(i);
 			if (node.getNodeName().equals("engine")) {
 				engineVersion = getAttribute(node, "version");
+				NodeList moreNodes = node.getChildNodes();
+				if (moreNodes != null && moreNodes.getLength() > 0) {
+					String engineTypeStr = moreNodes.item(0).getNodeValue();
+					if (engineTypeStr != null) {
+						try {
+							engineType = EngineTypes.valueOf(engineTypeStr);
+						} catch (IllegalArgumentException e) {
+							engineType = EngineTypes.other;
+						}
+					}
+					
+				}
 				i = nodes.getLength();
 			}
 		}
@@ -378,5 +391,9 @@ public class DBGpResponse {
 
 	public byte[] getRawXML() {
 		return rawXML;
+	}
+
+	public EngineTypes getEngineType() {
+		return engineType;
 	}
 }

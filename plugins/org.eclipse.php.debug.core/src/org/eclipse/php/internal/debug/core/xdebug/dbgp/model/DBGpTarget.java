@@ -13,6 +13,8 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
@@ -22,9 +24,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -38,9 +46,12 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.w3c.dom.Node;
@@ -133,7 +144,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	private int maxChildren = 0;
 
 	private PathMapper pathMapper = null;
-
+	
 	/**
 	 * Base constructor
 	 * 
@@ -190,7 +201,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		// session ID.
 		this.stopDebugURL = stopDebugURL;
 		this.browser = browser;
-		this.process = null; // no process indicates a web launch
+		this.process = null;
 	}
 
 	/**
@@ -541,7 +552,11 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			}
 			terminateDebugTarget(true);
 		} else {
-
+			
+			//need to save the suspended state as state is changed in the 
+			//next section of code.
+			boolean savedSuspended = isSuspended();
+			
 			// we were not terminating and the session ended. If we are a web
 			// launch, then we need to wait for the next session. Otherwise we
 			// terminate the debug target.
@@ -559,6 +574,21 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			} else {
 				terminateDebugTarget(true);
 			}
+			if (savedSuspended) {
+				// we were suspended at the time and not terminating so we have
+				// received an unexpected termination from the server side
+				final String errorMessage = "Unexpected termination of script, debugging ended.";
+				Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
+				DebugPlugin.log(status);
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
+					}
+				});
+				
+			}
+			
+			
 		}
 	}
 
@@ -588,6 +618,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 						// ignore any exceptions here
 					}
 				} else {
+					//TODO: This code may be redundant
 					if (session != null) {
 						session.endSession();
 					}
@@ -781,22 +812,102 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			// makes no difference, we should stop it
 			setState(STATE_DISCONNECTED);
 			if (session != null) {
-				if (process != null) {
-					// can only detach a process, detaching on a web server
-					// stops xdebug
-					// from establishing any more sessions.
+				if (!webLaunch) {
+					// not a web launch, we can just detach.
 					session.sendAsyncCmd(DBGpCommand.detach);
 					terminateDebugTarget(false);
 				} else {
-					// try this first
-					session.sendSyncCmd(DBGpCommand.stop);
+					// detaching xdebug on apache prior to version 2.0.2
+					// causes debug to stop working on the server.
+					if (session.getEngineType() == EngineTypes.Xdebug && 
+						versionCheckLT(session.getEngineVersion(), "2.0.2")) {
+					
+						// we have to do a stop if xdebug and < 2.0.2
+						session.sendSyncCmd(DBGpCommand.stop);
+					}
+					else {
+						session.sendAsyncCmd(DBGpCommand.detach);						
+					}
 					stepping = false;
 					langThread.setBreakpoints(null);
 					setState(STATE_STARTED_SESSION_WAIT);
 					resumed(DebugEvent.RESUME);
+					
+					
 				}
 			}
 		}
+	}
+
+	private boolean versionCheckLT(String engineVersion, String requiredVersion) {
+		boolean isLessThan = true;
+		boolean isEqual = true;
+		StringTokenizer stEngine = new StringTokenizer(engineVersion, ".");
+		StringTokenizer stCheck = new StringTokenizer(requiredVersion, ".");
+		while (stEngine.hasMoreTokens()) {
+			String engineValStr = stEngine.nextToken();
+			if (stCheck.hasMoreTokens()) {
+				String checkValStr = stCheck.nextToken();
+				try {
+					int engineVal = Integer.parseInt(engineValStr);
+					try {
+						int checkVal = Integer.parseInt(checkValStr);
+						if (engineVal > checkVal) {
+							isLessThan = false;
+							isEqual = false;
+						}
+						if (engineVal != checkVal) {
+							isEqual = false;
+						}
+					}
+					catch (NumberFormatException nfe) {
+						// we are comparing a number to a number followed by characters
+						// NOT REQUIRED TO BE SUPPORTED
+					}
+					
+				}
+				catch (NumberFormatException nfe) {
+					// we are comparing a number followed by characters with a number
+					int engineVal = getNumber(engineValStr);
+					isEqual = false;
+					try {
+						int checkVal = Integer.parseInt(checkValStr);
+						if (engineVal > checkVal) {
+							isLessThan = false;
+							isEqual = false;
+						}
+					}
+					catch (NumberFormatException nfe2) {
+						// we are comparing a number to a number followed by characters
+						// NOT REQUIRED TO BE SUPPORTED
+					}	
+				}			
+			}
+		}
+		if (stCheck.hasMoreTokens()) {
+			// check has more tokens so if equal so far then 2.0 2.0.(anything) means 
+			// we must be less than
+			isEqual = false;
+		}
+		
+		return isLessThan && !isEqual;
+	}
+
+	/**
+	 * this will only work if there are non digits in there.
+	 * @param engineValStr
+	 * @return
+	 */
+	private int getNumber(String engineValStr) {
+		int x = -1;
+		for (int i = 0; i < engineValStr.length(); i++) {
+			char ch = engineValStr.charAt(i);
+			if (!Character.isDigit(ch) && i > 0) {
+				x = Integer.parseInt(engineValStr.substring(0, i));
+				break;
+			}
+		}
+		return x;
 	}
 
 	/*
