@@ -78,4 +78,28 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	protected Control createProjectContents(Composite parent) {
 		return createCommonContents(parent);
 	}
+
+	@Override
+	public void performApply() {
+		// TODO Auto-generated method stub
+		super.performApply();
+		debugPreferencesBlock.performApply(isElementSettingsEnabled());
+	}
+
+	@Override
+	public void performDefaults() {
+		// TODO Auto-generated method stub
+		super.performDefaults();
+		debugPreferencesBlock.performDefaults();
+	}
+
+	@Override
+	public boolean performOk() {
+		// TODO Auto-generated method stub
+		boolean res = super.performOk();
+		boolean res2 = debugPreferencesBlock.performOK(isElementSettingsEnabled());
+		return res && res2;
+	}
+	
+	
 }
