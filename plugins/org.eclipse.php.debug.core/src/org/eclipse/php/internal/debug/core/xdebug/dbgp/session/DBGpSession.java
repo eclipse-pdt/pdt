@@ -28,6 +28,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
 import org.w3c.dom.Node;
 
 public class DBGpSession {
@@ -44,6 +45,8 @@ public class DBGpSession {
 	private String ideKey;
 	private String sessionId;
 	private String initialScript;
+	private EngineTypes engineType;
+	private String engineVersion;
 	private long creationTime;
 
 	private String sessionEncoding;
@@ -76,6 +79,8 @@ public class DBGpSession {
 					ideKey = parsedResponse.getIdekey();
 					sessionId = parsedResponse.getSession();
 					initialScript = DBGpUtils.getFilenameFromURIString(parsedResponse.getFileUri());
+					engineVersion = parsedResponse.getEngineVersion();
+					engineType = parsedResponse.getEngineType();
 					isGood = true;
 				}
 				else {
@@ -560,5 +565,13 @@ public class DBGpSession {
 	 */
 	public void setSessionEncoding(String sessionEncoding) {
 		this.sessionEncoding = sessionEncoding;
+	}
+
+	public EngineTypes getEngineType() {
+		return engineType;
+	}
+
+	public String getEngineVersion() {
+		return engineVersion;
 	}
 }
