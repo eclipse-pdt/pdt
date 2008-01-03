@@ -16,13 +16,13 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  * Abstract visitor to apply a single method over all AST nodes
  * In order to continue the traverse, one should call node.childrenAccept();
  */
-public abstract class ApplyAll extends AbstractVisitor {
+public class ApplyAll extends AbstractVisitor {
 
 	/**
 	 * Performs the apply method over each node
 	 * @param node
 	 */
-	protected abstract boolean apply(ASTNode node);
+	protected boolean apply(ASTNode node) {  return true; };
 
 	public boolean visit(ArrayElement arrayElement) {
 		return apply(arrayElement);
@@ -119,7 +119,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(DoStatement doStatement) {
 		return apply(doStatement);
 	}
-
+	
 	public boolean visit(EchoStatement echoStatement) {
 		return apply(echoStatement);
 	}
@@ -127,6 +127,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(EmptyStatement evalStatement) {
 		return apply(evalStatement);
 	}
+	
+	public boolean visit(ExpressionStatement expressionStatement) {
+		return apply(expressionStatement);
+	}	
 
 	public boolean visit(ForEachStatement forEachStatement) {
 		return apply(forEachStatement);
