@@ -47,19 +47,46 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  * </p>
  */
 public class HierarchicalVisitor extends AbstractVisitor {
-
-	public boolean visit(Expression expression) {
-		return true;
-	}
 	
-	public boolean visit(Statement statement) {
-		return true;
-	}
-
+	/**
+	 * Abstract Nodes that we added to the abstract visitor 
+	 */
 	public boolean visit(ASTNode node) {
 		return true;
 	}
 
+	public boolean visit(Statement statement) {
+		return true;
+	}
+	
+	public boolean visit(Expression expression) {
+		return true;
+	}
+
+	public boolean visit(TypeDeclaration typeDeclaration) {
+		return visit((Statement) typeDeclaration);
+	}
+
+	public boolean visit(VariableBase variableBase) {
+		return visit((Expression) variableBase);
+	}
+	
+	public boolean visit(Dispatch dispatch) {
+		return visit((VariableBase) dispatch);
+	}
+	
+	public boolean visit(StaticDispatch staticDispatch) {
+		return visit((VariableBase) staticDispatch);
+	}
+	
+	public boolean visit(BodyDeclaration bodyDeclaration) {
+		return visit((Statement) bodyDeclaration);
+	}
+	
+	/**
+	 * Redirect to the hierarchical node
+	 */
+	
 	public boolean visit(ArrayAccess arrayAccess) {
 		return visit((Variable) arrayAccess);
 	}
@@ -238,11 +265,11 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	}
 
 	public boolean visit(PostfixExpression postfixExpression) {
-		return visit((PostfixExpression) postfixExpression);
+		return visit((Expression) postfixExpression);
 	}
 
 	public boolean visit(PrefixExpression prefixExpression) {
-		return visit((PrefixExpression) prefixExpression);
+		return visit((Expression) prefixExpression);
 	}
 
 	public boolean visit(Program program) {
