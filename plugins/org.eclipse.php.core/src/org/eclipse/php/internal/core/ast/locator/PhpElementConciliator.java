@@ -642,6 +642,7 @@ public class PhpElementConciliator {
 				isGlobalScope = false;
 				node.childrenAccept(this);
 				isGlobalScope = true;
+				return false;
 			} else if (node.getType() == ASTNode.IDENTIFIER) {
 				Identifier identifier = (Identifier) node;
 				if (identifier.getParent().getType() == ASTNode.VARIABLE) {
