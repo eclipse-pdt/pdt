@@ -11,14 +11,13 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.ui.AbstractDebugView;
@@ -44,6 +43,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
@@ -395,7 +395,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		// This is needed since the migration to 3.3 (Europa)
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				if (activeWorkbenchWindow == null) {
+					return;
+				}
+				IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
 				if (page == null)
 					return;
 				AbstractDebugView view = (AbstractDebugView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
