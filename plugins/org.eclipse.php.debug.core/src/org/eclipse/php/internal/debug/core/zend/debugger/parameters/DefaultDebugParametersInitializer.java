@@ -17,7 +17,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
@@ -61,14 +61,14 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		if (launchConfiguration != null) {
 			try {
-				String sessionSetting = launchConfiguration.getAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
-				if (IPHPConstants.DEBUGGING_ALL_PAGES.equals(sessionSetting)) {
+				String sessionSetting = launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+				if (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(sessionSetting)) {
 					parameters.put(DEBUG_ALL_PAGES, "1");
-				} else if (IPHPConstants.DEBUGGING_FIRST_PAGE.equals(sessionSetting)) {
+				} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE.equals(sessionSetting)) {
 					parameters.put(DEBUG_FIRST_PAGE, "1");
-				} else if (IPHPConstants.DEBUGGING_START_FROM.equals(sessionSetting)) {
-					parameters.put(DEBUG_START_URL, launchConfiguration.getAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, ""));
-					if (launchConfiguration.getAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, false)) {
+				} else if (IPHPDebugConstants.DEBUGGING_START_FROM.equals(sessionSetting)) {
+					parameters.put(DEBUG_START_URL, launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, ""));
+					if (launchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, false)) {
 						parameters.put(DEBUG_CONTINUE, "1");
 					}
 				}
