@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRootSourceContainer;
 
@@ -29,7 +29,7 @@ public class PHPSourcePathComputerDelegate implements ISourcePathComputerDelegat
 
     public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
         ISourceContainer sourceContainer;
-        String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+        String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
         if (projectName != null) {
         	IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
         	// Search in specific project only
