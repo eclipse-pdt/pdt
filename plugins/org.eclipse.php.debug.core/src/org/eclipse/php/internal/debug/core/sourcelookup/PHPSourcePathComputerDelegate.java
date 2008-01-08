@@ -17,9 +17,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate;
-import org.eclipse.debug.core.sourcelookup.containers.WorkspaceSourceContainer;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
+import org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRootSourceContainer;
 
 /**
  * Computes the default source lookup path for a PHP launch configuration. For
@@ -27,21 +27,16 @@ import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeS
  */
 public class PHPSourcePathComputerDelegate implements ISourcePathComputerDelegate {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.debug.internal.core.sourcelookup.ISourcePathComputerDelegate#computeSourceContainers(org.eclipse.debug.core.ILaunchConfiguration,
-     *      org.eclipse.core.runtime.IProgressMonitor)
-     */
     public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
-        ISourceContainer sourceContainer = null;
-        String project = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
-        IProject resource = ResourcesPlugin.getWorkspace().getRoot().getProject(project);
-        if (resource != null) {
-            sourceContainer = new PHPCompositeSourceContainer(resource, configuration);
-        }
-        if (sourceContainer == null) {
-            sourceContainer = new WorkspaceSourceContainer();
+        ISourceContainer sourceContainer;
+        String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
+        if (projectName != null) {
+        	IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        	// Search in specific project only
+        	sourceContainer = new PHPCompositeSourceContainer(project, configuration);
+        } else {
+        	// Search in the Workspace Root
+            sourceContainer = new WorkspaceRootSourceContainer();
         }
         return new ISourceContainer[] { sourceContainer };
     }
