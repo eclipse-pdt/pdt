@@ -26,7 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionValue;
 import org.eclipse.php.internal.debug.core.zend.debugger.ExpressionsManager;
@@ -210,7 +210,7 @@ public class PHPStackView extends AbstractDebugView implements ISelectionListene
         if (adaptable != null) {
             element = (IDebugElement) adaptable.getAdapter(IDebugElement.class);
             if (element != null) {
-                if (element.getModelIdentifier().equals(IPHPConstants.ID_PHP_DEBUG_CORE)) {
+                if (element.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
                     fTarget = (PHPDebugTarget) element.getDebugTarget();
                 }
             }
