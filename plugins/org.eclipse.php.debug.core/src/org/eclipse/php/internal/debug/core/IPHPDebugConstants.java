@@ -16,7 +16,7 @@ import org.eclipse.ui.IURIEditorInput;
 /**
  * Constants for the PHP debugger.
  */
-public interface IPHPConstants {
+public interface IPHPDebugConstants {
 
 	/**
 	 * Unique identifier for the PHP debug model (value 
@@ -85,4 +85,6 @@ public interface IPHPConstants {
 	public static final String DEBUGGING_START_FROM = "debugFrom"; //$NON-NLS-1$
 	public static final String DEBUGGING_SHOULD_CONTINUE = "debugFromURL"; //$NON-NLS-1$
 	public static final String DEBUGGING_START_FROM_URL = "debugContinue"; //$NON-NLS-1$
+	
+	public static final String PREF_STEP_FILTERS_LIST = ID_PHP_DEBUG_CORE + ".pref_step_filters_list"; //$NON-NLS-1$
 }
