@@ -18,7 +18,7 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
@@ -76,7 +76,7 @@ public class DebugViewHelper {
 	    private PHPDebugTarget getDebugTarget (IDebugElement element){
 	    	PHPDebugTarget target = null;
 	    	if (element != null) {
-	            if (element.getModelIdentifier().equals(IPHPConstants.ID_PHP_DEBUG_CORE)) {
+	            if (element.getModelIdentifier().equals(IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
 	                target = (PHPDebugTarget) element.getDebugTarget();
 	            }     	
 	        }
