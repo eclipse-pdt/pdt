@@ -202,7 +202,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
 
 		// Display a dialog for selecting the URL.
-		String title = ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : "Run PHP Web Page";
+		String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : (ILaunchManager.PROFILE_MODE.equals(mode) ? "Profile PHP Web Page" : "Run PHP Web Page"));
 		PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(wc, server, title);
 		launchDialog.setBlockOnOpen(true);
 		if (launchDialog.open() == PHPWebPageURLLaunchDialog.OK) {
