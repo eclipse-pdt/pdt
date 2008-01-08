@@ -17,10 +17,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.debug.core.*;
-import org.eclipse.debug.core.model.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IBreakpointManager;
+import org.eclipse.debug.core.IBreakpointManagerListener;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IMemoryBlock;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
@@ -28,19 +51,31 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitialize
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.debug.core.IPHPConsoleEventListener;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
-import org.eclipse.php.internal.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.model.BreakpointSet;
+import org.eclipse.php.internal.debug.core.model.DebugOutput;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
+import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
+import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
-import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugHandlersRegistry;
+import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
+import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
+import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
+import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
+import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -50,7 +85,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 /**
  * PHP Debug Target
  */
-public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBreakpointManagerListener {
+public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget,
+		IBreakpointManagerListener {
 
 	private ContextManager fContextManager;
 
@@ -93,7 +129,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	protected org.eclipse.php.internal.debug.core.zend.debugger.Debugger.PauseResponseHandler fPauseResponseHandler;
 	protected DefaultExpressionsManager expressionsManager;
 
-	//	private IVariable[] fVariables;
+	// private IVariable[] fVariables;
 	protected String fWorkspacePath = "";
 	protected IProject fProject;
 	protected int fSuspendCount;
@@ -108,51 +144,82 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
 	 * Debugger on a Apache Server.
-	 *
-	 * @param connectionThread 	The debug connection thread for the communication read and write processes.
-	 * @param launch 			containing launch
-	 * @param URL   			URL of the debugger
-	 * @param requestPort		port to send requests to the bebugger *
-	 * @exception CoreException if unable to connect to host
+	 * 
+	 * @param connectionThread
+	 *            The debug connection thread for the communication read and
+	 *            write processes.
+	 * @param launch
+	 *            containing launch
+	 * @param URL
+	 *            URL of the debugger
+	 * @param requestPort
+	 *            port to send requests to the bebugger *
+	 * @exception CoreException
+	 *                if unable to connect to host
 	 */
-	public PHPDebugTarget(DebugConnectionThread connectionThread, ILaunch launch, String URL, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+	public PHPDebugTarget(DebugConnectionThread connectionThread,
+			ILaunch launch, String URL, int requestPort, IProcess process,
+			boolean runAsDebug, boolean stopAtFirstLine, IProject project)
+			throws CoreException {
 		super(null);
 		fConnectionThread = connectionThread;
 		fURL = URL;
 		fIsPHPCGI = false;
 
-		initDebugTarget(launch, requestPort, process, runAsDebug, stopAtFirstLine, project);
+		initDebugTarget(launch, requestPort, process, runAsDebug,
+				stopAtFirstLine, project);
 	}
 
 	/**
 	 * Constructs a new debug target in the given launch for the associated PHP
 	 * Debugger using PHP exe.
-	 *
-	 * @param connectionThread 	The debug connection thread for the communication read and write processes.
-	 * @param launch 			containing launch
-	 * @param String 			full path to the PHP executable
-	 * @param requestPort 		port to send requests to the bebugger *
-	 * @exception CoreException	if unable to connect to host
+	 * 
+	 * @param connectionThread
+	 *            The debug connection thread for the communication read and
+	 *            write processes.
+	 * @param launch
+	 *            containing launch
+	 * @param String
+	 *            full path to the PHP executable
+	 * @param requestPort
+	 *            port to send requests to the bebugger *
+	 * @exception CoreException
+	 *                if unable to connect to host
 	 */
-	public PHPDebugTarget(DebugConnectionThread connectionThread, ILaunch launch, String phpExe, IFile fileToDebug, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
-		this(connectionThread, launch, phpExe, fileToDebug.getName(), PHPDebugTarget.getWorkspaceRootPath(fileToDebug.getWorkspace()), requestPort, process, runAsDebug, stopAtFirstLine, project);
+	public PHPDebugTarget(DebugConnectionThread connectionThread,
+			ILaunch launch, String phpExe, IFile fileToDebug, int requestPort,
+			IProcess process, boolean runAsDebug, boolean stopAtFirstLine,
+			IProject project) throws CoreException {
+		this(
+				connectionThread,
+				launch,
+				phpExe,
+				fileToDebug.getName(),
+				PHPDebugTarget.getWorkspaceRootPath(fileToDebug.getWorkspace()),
+				requestPort, process, runAsDebug, stopAtFirstLine, project);
 	}
 
 	public static String getWorkspaceRootPath(IWorkspace ws) {
 		return ws.getRoot().getRawLocation().toOSString() + "/";
 	}
 
-	public PHPDebugTarget(DebugConnectionThread connectionThread, ILaunch launch, String phpExe, String fileToDebug, String workspacePath, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+	public PHPDebugTarget(DebugConnectionThread connectionThread,
+			ILaunch launch, String phpExe, String fileToDebug,
+			String workspacePath, int requestPort, IProcess process,
+			boolean runAsDebug, boolean stopAtFirstLine, IProject project)
+			throws CoreException {
 		super(null);
 		fConnectionThread = connectionThread;
 		fName = fileToDebug;
 		fWorkspacePath = workspacePath;
 		fIsPHPCGI = true;
-		initDebugTarget(launch, requestPort, process, runAsDebug, stopAtFirstLine, project);
+		initDebugTarget(launch, requestPort, process, runAsDebug,
+				stopAtFirstLine, project);
 	}
 
 	/**
 	 * Returns the DebugConnectionThread for this PHPDebugTarget.
+	 * 
 	 * @return The DebugConnectionThread.
 	 */
 	public DebugConnectionThread getConnectionThread() {
@@ -160,45 +227,48 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	}
 
 	/*
-	 * Initialize the debug target.
-	 * @param launch
-	 * @param requestPort
-	 * @param process
-	 * @param runAsDebug
-	 * @param stopAtFirstLine
-	 * @param project
-	 * @throws CoreException
+	 * Initialize the debug target. @param launch @param requestPort @param
+	 * process @param runAsDebug @param stopAtFirstLine @param project @throws
+	 * CoreException
 	 */
-	private void initDebugTarget(ILaunch launch, int requestPort, IProcess process, boolean runAsDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+	private void initDebugTarget(ILaunch launch, int requestPort,
+			IProcess process, boolean runAsDebug, boolean stopAtFirstLine,
+			IProject project) throws CoreException {
 		fLaunch = launch;
 		fProcess = process;
 		fIsRunAsDebug = runAsDebug;
 		fProject = project;
-		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE, IPHPConstants.PHPProcessType);
+		fProcess.setAttribute(IProcess.ATTR_PROCESS_TYPE,
+				IPHPDebugConstants.PHPProcessType);
 		((PHPProcess) fProcess).setDebugTarget(this);
 		fRequestPort = requestPort;
 
-		//		synchronized (fUsedPorts) {
-		//			if (fUsedPorts.containsKey(String.valueOf(requestPort))) {
-		//				Logger.debugMSG("PHPDebugTarget: Debug Port already in use");
-		//				String errorMessage = PHPDebugCoreMessages.DebuggerDebugPortInUse_1;
-		//				completeTerminated();
-		//				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null));
-		//			} else {
-		//				fUsedPorts.put(String.valueOf(requestPort), new Integer(requestPort));
-		//				fRequestPort = requestPort;
-		//			}
-		//		}
+		// synchronized (fUsedPorts) {
+		// if (fUsedPorts.containsKey(String.valueOf(requestPort))) {
+		// Logger.debugMSG("PHPDebugTarget: Debug Port already in use");
+		// String errorMessage = PHPDebugCoreMessages.DebuggerDebugPortInUse_1;
+		// completeTerminated();
+		// throw new DebugException(new Status(IStatus.ERROR,
+		// PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR,
+		// errorMessage, null));
+		// } else {
+		// fUsedPorts.put(String.valueOf(requestPort), new
+		// Integer(requestPort));
+		// fRequestPort = requestPort;
+		// }
+		// }
 
 		fBreakpointSet = new BreakpointSet(project, fIsPHPCGI);
 
 		IDebugHandler debugHandler = null;
-		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry.getBestMatchDebugParametersInitializer(launch);
+		IDebugParametersInitializer parametersInitializer = DebugParametersInitializersRegistry
+				.getBestMatchDebugParametersInitializer(launch);
 		if (parametersInitializer != null) {
 			String debugHandlerID = parametersInitializer.getDebugHandler();
 			if (debugHandlerID != null) {
 				try {
-					debugHandler = DebugHandlersRegistry.getHandler(debugHandlerID);
+					debugHandler = DebugHandlersRegistry
+							.getHandler(debugHandlerID);
 				} catch (Exception e) {
 					PHPDebugPlugin.log(e);
 				}
@@ -244,7 +314,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getThreads()
 	 */
 	public IThread[] getThreads() throws DebugException {
@@ -253,7 +323,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#hasThreads()
 	 */
 	public boolean hasThreads() throws DebugException {
@@ -262,7 +332,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getName()
 	 */
 	public String getName() throws DebugException {
@@ -290,11 +360,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#supportsBreakpoint(org.eclipse.debug.core.model.IBreakpoint)
 	 */
 	public boolean supportsBreakpoint(IBreakpoint breakpoint) {
-		if (breakpoint.getModelIdentifier().equals(IPHPConstants.ID_PHP_DEBUG_CORE)) {
+		if (breakpoint.getModelIdentifier().equals(
+				IPHPDebugConstants.ID_PHP_DEBUG_CORE)) {
 			boolean support = fBreakpointSet.supportsBreakpoint(breakpoint);
 			return support;
 		}
@@ -303,7 +374,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getDebugTarget()
 	 */
 	public IDebugTarget getDebugTarget() {
@@ -312,7 +383,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDebugElement#getLaunch()
 	 */
 	public ILaunch getLaunch() {
@@ -321,7 +392,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#canTerminate()
 	 */
 	public boolean canTerminate() {
@@ -330,7 +401,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#isTerminated()
 	 */
 	public boolean isTerminated() {
@@ -339,7 +410,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ITerminate#terminate()
 	 */
 	public void terminate() throws DebugException {
@@ -355,7 +426,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		fTerminated = true;
 		fSuspended = false;
 		fLastcmd = "terminate";
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling closeDebugSession()");
+		Logger.debugMSG("[" + this
+				+ "] PHPDebugTarget: Calling closeDebugSession()");
 		debugger.closeDebugSession();
 
 		terminated();
@@ -368,12 +440,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	public void terminated() {
 		fTerminated = true;
 		fSuspended = false;
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling debugger.closeConnection();");
+		Logger.debugMSG("[" + this
+				+ "] PHPDebugTarget: Calling debugger.closeConnection();");
 		if (!fTermainateCalled) {
 			debugger.closeConnection();
 		}
 		completeTerminated();
-		PHPSessionLaunchMapper.updateSystemProperty(DebugPlugin.getDefault().getLaunchManager().getLaunches());
+		PHPSessionLaunchMapper.updateSystemProperty(DebugPlugin.getDefault()
+				.getLaunchManager().getLaunches());
 	}
 
 	private void completeTerminated() {
@@ -385,20 +459,26 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		} catch (DebugException e) {
 			// PHPprocess doesn't throw this exception
 		}
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling removeBreakpointListener(this);");
-		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(this);
-		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointManagerListener(this);
+		Logger.debugMSG("[" + this
+				+ "] PHPDebugTarget: Calling removeBreakpointListener(this);");
+		DebugPlugin.getDefault().getBreakpointManager()
+				.removeBreakpointListener(this);
+		DebugPlugin.getDefault().getBreakpointManager()
+				.removeBreakpointManagerListener(this);
 		Logger.debugMSG("[" + this + "] PHPDebugTarget: Firing terminate");
 		fireTerminateEvent();
 
-		// Refresh the launch-viewer to display the debug elements in their real terminated state.
+		// Refresh the launch-viewer to display the debug elements in their real
+		// terminated state.
 		// This is needed since the migration to 3.3 (Europa)
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
 				if (page == null)
 					return;
-				AbstractDebugView view = (AbstractDebugView) page.findView(IDebugUIConstants.ID_DEBUG_VIEW);
+				AbstractDebugView view = (AbstractDebugView) page
+						.findView(IDebugUIConstants.ID_DEBUG_VIEW);
 				if (view == null)
 					return;
 				view.getViewer().refresh();
@@ -408,7 +488,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canResume()
 	 */
 	public boolean canResume() {
@@ -417,7 +497,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#canSuspend()
 	 */
 	public boolean canSuspend() {
@@ -426,7 +506,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#isSuspended()
 	 */
 	public boolean isSuspended() {
@@ -435,7 +515,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#resume()
 	 */
 	public void resume() throws DebugException {
@@ -443,7 +523,9 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		((PHPThread) getThreads()[0]).setStepping(false);
 		fStatus = debugger.go(fGoResponseHandler);
 		if (!fStatus) {
-			Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.go return false");
+			Logger
+					.log(Logger.ERROR,
+							"PHPDebugTarget: debugger.go return false");
 		}
 		int detail = DebugEvent.CLIENT_REQUEST;
 		resumed(detail);
@@ -452,7 +534,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Notification the target has resumed for the given reason
-	 *
+	 * 
 	 * @param detail
 	 *            reason for the resume
 	 */
@@ -463,7 +545,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Notification the target has suspended for the given reason
-	 *
+	 * 
 	 * @param detail
 	 *            reason for the suspend
 	 */
@@ -481,7 +563,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.ISuspendResume#suspend()
 	 */
 	public void suspend() throws DebugException {
@@ -489,7 +571,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		((PHPThread) getThreads()[0]).setStepping(false);
 		fStatus = debugger.pause(fPauseResponseHandler);
 		if (!fStatus) {
-			Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.pause return false");
+			Logger.log(Logger.ERROR,
+					"PHPDebugTarget: debugger.pause return false");
 		}
 		int detail = DebugEvent.CLIENT_REQUEST;
 		suspended(detail);
@@ -497,35 +580,42 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Creates a breakpoint
-	 *
+	 * 
 	 * @param resource
 	 *            File resource to add breakpoint
 	 * @param lineNumber
 	 *            Line Number to add breakpoint
-	 *
+	 * 
 	 */
-	public static IBreakpoint createBreakpoint(IResource resource, int lineNumber) throws CoreException {
+	public static IBreakpoint createBreakpoint(IResource resource,
+			int lineNumber) throws CoreException {
 
-		return createBreakpoint(resource, lineNumber, new HashMap<String, String>(10));
+		return createBreakpoint(resource, lineNumber,
+				new HashMap<String, String>(10));
 	}
 
 	/**
 	 * Creates a breakpoint
-	 *
+	 * 
 	 * @param resource
 	 *            File resource to add breakpoint
 	 * @param lineNumber
 	 *            Line Number to add breakpoint
 	 * @param attributes
 	 *            java.util.Map of attributes to add to breakpoint
-	 *
+	 * 
 	 */
-	public static IBreakpoint createBreakpoint(IResource resource, int lineNumber, Map<String, String> attributes) throws CoreException {
+	public static IBreakpoint createBreakpoint(IResource resource,
+			int lineNumber, Map<String, String> attributes)
+			throws CoreException {
 		IBreakpoint point = null;
 		try {
-			point = new PHPConditionalBreakpoint(resource, lineNumber, attributes);
+			point = new PHPConditionalBreakpoint(resource, lineNumber,
+					attributes);
 		} catch (CoreException e1) {
-			Logger.logException("PHPDebugTarget: error creating breakpoint", e1);
+			Logger
+					.logException("PHPDebugTarget: error creating breakpoint",
+							e1);
 			throw e1;
 		}
 		return point;
@@ -533,7 +623,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse.debug.core.model.IBreakpoint)
 	 */
 	public void breakpointAdded(IBreakpoint breakpoint) {
@@ -551,7 +641,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 						resource = rtl.getSourceFile();
 					} else {
 						resource = marker.getResource();
-						lineNumber = marker.getAttribute(IMarker.LINE_NUMBER, 0);
+						lineNumber = marker
+								.getAttribute(IMarker.LINE_NUMBER, 0);
 						runtimeBreakpoint.setLineNumber(lineNumber);
 					}
 					String fileName;
@@ -559,28 +650,51 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 						if (resource instanceof ExternalFileWrapper) {
 							fileName = resource.getFullPath().toOSString();
 						} else if (resource instanceof IWorkspaceRoot) {
-							if (IPHPConstants.STORAGE_TYPE_REMOTE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
-								fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
-								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
+							if (IPHPDebugConstants.STORAGE_TYPE_REMOTE
+									.equals(marker
+											.getAttribute(IPHPDebugConstants.STORAGE_TYPE))) {
+								fileName = (String) marker
+										.getAttribute(IPHPDebugConstants.STORAGE_FILE);
+								fileName = marker
+										.getAttribute(
+												StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+												fileName);
 							} else {
-								String includeFile = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
-								if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
-									includeFile = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, includeFile);
+								String includeFile = (String) marker
+										.getAttribute(IPHPDebugConstants.STORAGE_FILE);
+								if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE
+										.equals(marker
+												.getAttribute(IPHPDebugConstants.STORAGE_TYPE))) {
+									includeFile = marker
+											.getAttribute(
+													StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+													includeFile);
 								}
-								fileName = RemoteDebugger.convertToRemoteFilename(includeFile, this);
+								fileName = RemoteDebugger
+										.convertToRemoteFilename(includeFile,
+												this);
 							}
 						} else {
-							fileName = RemoteDebugger.convertToRemoteFilename(resource.getFullPath().toString(), this);
+							fileName = RemoteDebugger.convertToRemoteFilename(
+									resource.getFullPath().toString(), this);
 						}
 					} else {
 						if (resource instanceof ExternalFileWrapper) {
 							fileName = resource.getFullPath().toOSString();
 						} else if (resource instanceof IWorkspaceRoot) {
-							// If the breakpoint was set on a non-workspace file, make sure that the file name for the breakpoint
+							// If the breakpoint was set on a non-workspace
+							// file, make sure that the file name for the
+							// breakpoint
 							// is taken correctly.
-							fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
-							if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(marker.getAttribute(IPHPConstants.STORAGE_TYPE))) {
-								fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName);
+							fileName = (String) marker
+									.getAttribute(IPHPDebugConstants.STORAGE_FILE);
+							if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE
+									.equals(marker
+											.getAttribute(IPHPDebugConstants.STORAGE_TYPE))) {
+								fileName = marker
+										.getAttribute(
+												StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY,
+												fileName);
 							}
 						} else {
 							IPath location = resource.getRawLocation();
@@ -593,18 +707,22 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					}
 
 					runtimeBreakpoint.setFileName(fileName);
-					Logger.debugMSG("[" + this + "] PHPDebugTarget: Setting Breakpoint - File " + fileName + " Line Number " + lineNumber);
-					debugger.addBreakpoint(bp.getRuntimeBreakpoint(), fBreakpointAddedResponseHandler);
+					Logger.debugMSG("[" + this
+							+ "] PHPDebugTarget: Setting Breakpoint - File "
+							+ fileName + " Line Number " + lineNumber);
+					debugger.addBreakpoint(bp.getRuntimeBreakpoint(),
+							fBreakpointAddedResponseHandler);
 				}
 			} catch (CoreException e1) {
-				Logger.logException("PHPDebugTarget: Exception Adding Breakpoint", e1);
+				Logger.logException(
+						"PHPDebugTarget: Exception Adding Breakpoint", e1);
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointRemoved(org.eclipse.debug.core.model.IBreakpoint,
 	 *      org.eclipse.core.resources.IMarkerDelta)
 	 */
@@ -615,17 +733,23 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 			fLastcmd = "breakpointRemoved";
 			PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
 			Breakpoint runtimeBreakpoint = bp.getRuntimeBreakpoint();
-			Logger.debugMSG("[" + this + "] PHPDebugTarget: Removing Breakpoint - File " + runtimeBreakpoint.getFileName() + " Line Number " + runtimeBreakpoint.getLineNumber());
-			fStatus = debugger.removeBreakpoint(runtimeBreakpoint, fBreakpointRemovedResponseHandler);
+			Logger.debugMSG("[" + this
+					+ "] PHPDebugTarget: Removing Breakpoint - File "
+					+ runtimeBreakpoint.getFileName() + " Line Number "
+					+ runtimeBreakpoint.getLineNumber());
+			fStatus = debugger.removeBreakpoint(runtimeBreakpoint,
+					fBreakpointRemovedResponseHandler);
 			if (!fStatus && debugger.isActive()) {
-				Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.removeBreakpoint return false");
+				Logger
+						.log(Logger.ERROR,
+								"PHPDebugTarget: debugger.removeBreakpoint return false");
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointChanged(org.eclipse.debug.core.model.IBreakpoint,
 	 *      org.eclipse.core.resources.IMarkerDelta)
 	 */
@@ -658,14 +782,15 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 					breakpointRemoved(breakpoint, null);
 				}
 			} catch (CoreException e) {
-				Logger.logException("PHPDebugTarget: Exception Changing Breakpoint", e);
+				Logger.logException(
+						"PHPDebugTarget: Exception Changing Breakpoint", e);
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#canDisconnect()
 	 */
 	public boolean canDisconnect() {
@@ -674,7 +799,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#disconnect()
 	 */
 	public void disconnect() throws DebugException {
@@ -682,7 +807,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IDisconnect#isDisconnected()
 	 */
 	public boolean isDisconnected() {
@@ -691,7 +816,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#supportsStorageRetrieval()
 	 */
 	public boolean supportsStorageRetrieval() {
@@ -700,11 +825,12 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.debug.core.model.IMemoryBlockRetrieval#getMemoryBlock(long,
 	 *      long)
 	 */
-	public IMemoryBlock getMemoryBlock(long startAddress, long length) throws DebugException {
+	public IMemoryBlock getMemoryBlock(long startAddress, long length)
+			throws DebugException {
 		return null;
 	}
 
@@ -718,8 +844,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Install breakpoints that are already registered with the breakpoint
-	 * manager.
-	 * In case {@link #isRunWithDebug()} returns true, nothing will happen.
+	 * manager. In case {@link #isRunWithDebug()} returns true, nothing will
+	 * happen.
 	 */
 	public void installDeferredBreakpoints() {
 		if (fIsRunAsDebug) {
@@ -727,7 +853,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		}
 		if (!fBreakpointManager.isEnabled())
 			return;
-		IBreakpoint[] breakpoints = fBreakpointManager.getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);
+		IBreakpoint[] breakpoints = fBreakpointManager
+				.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		for (IBreakpoint element : breakpoints) {
 			((PHPLineBreakpoint) element).setConditionChanged(false);
 			breakpointAdded(element);
@@ -736,7 +863,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Returns the current stack frames in the target.
-	 *
+	 * 
 	 * @return the current stack frames in the target
 	 * @throws DebugException
 	 *             if unable to perform the request
@@ -747,7 +874,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Returns the Expression Manager for the Debug Target.
-	 *
+	 * 
 	 * @return the current Expression Manager target
 	 */
 	public DefaultExpressionsManager getExpressionManager() {
@@ -760,7 +887,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Returns the Parameter Stack for the Debug Target.
-	 *
+	 * 
 	 * @return the Parameter Stack for the target
 	 */
 	public Expression[] getStackVariables(PHPStackFrame stack) {
@@ -769,7 +896,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Step Return the debugger.
-	 *
+	 * 
 	 * @throws DebugException
 	 *             if the request fails
 	 */
@@ -782,13 +909,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		resumed(detail);
 		fStatus = debugger.stepOut(fStepOutResponseHandler);
 		if (!fStatus) {
-			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepOut return false");
+			Logger.log(Logger.ERROR_DEBUG,
+					"PHPDebugTarget: debugger.stepOut return false");
 		}
 	}
 
 	/**
 	 * Step Over the debugger.
-	 *
+	 * 
 	 * @throws DebugException
 	 *             if the request fails
 	 */
@@ -801,13 +929,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		resumed(detail);
 		fStatus = debugger.stepOver(fStepOverResponseHandler);
 		if (!fStatus) {
-			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepOver return false");
+			Logger.log(Logger.ERROR_DEBUG,
+					"PHPDebugTarget: debugger.stepOver return false");
 		}
 	}
 
 	/**
 	 * Step Into the debugger.
-	 *
+	 * 
 	 * @throws DebugException
 	 *             if the request fails
 	 */
@@ -820,13 +949,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		resumed(detail);
 		fStatus = debugger.stepInto(fStepIntoResponseHandler);
 		if (!fStatus) {
-			Logger.log(Logger.ERROR_DEBUG, "PHPDebugTarget: debugger.stepInto return false");
+			Logger.log(Logger.ERROR_DEBUG,
+					"PHPDebugTarget: debugger.stepInto return false");
 		}
 	}
 
 	/**
 	 * Returns the Local Variabales for the Debug Target.
-	 *
+	 * 
 	 * @return the Local Variabales for the target
 	 */
 	public IVariable[] getVariables() {
@@ -836,7 +966,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	/**
 	 * Notification a breakpoint was encountered. Determine which breakpoint was
 	 * hit and fire a suspend event.
-	 *
+	 * 
 	 * @param event
 	 *            debug event
 	 */
@@ -854,17 +984,19 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Finds the breakpoint hit
-	 *
+	 * 
 	 * @param fileName
 	 *            Filename containing the breakpoint
 	 * @param lineNumber
 	 *            Linenumber of breakpoint
 	 * @return the Local Variabales for the target
-	 *
+	 * 
 	 */
 	protected IBreakpoint findBreakpoint(String fileName, int lineNumber) {
 		// determine which breakpoint was hit, and set the thread's breakpoint
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+				.getBreakpointManager().getBreakpoints(
+						IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		for (IBreakpoint breakpoint : breakpoints) {
 			if (supportsBreakpoint(breakpoint)) {
 				if (breakpoint instanceof PHPLineBreakpoint) {
@@ -883,13 +1015,14 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Finds the breakpoint hit
-	 *
+	 * 
 	 * @param enabled
 	 *            Enabled or Disable breakpoints.
-	 *
+	 * 
 	 */
 	public void breakpointManagerEnablementChanged(boolean enabled) {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(getModelIdentifier());
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault()
+				.getBreakpointManager().getBreakpoints(getModelIdentifier());
 		for (IBreakpoint element : breakpoints) {
 			if (supportsBreakpoint(element)) {
 				if (enabled) {
@@ -906,8 +1039,9 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * Registers the given event listener. The listener will be notified of
 	 * events in the program being interpretted. Has no effect if the listener
 	 * is already registered.
-	 *
-	 * @param listener event listener
+	 * 
+	 * @param listener
+	 *            event listener
 	 */
 	public void addConsoleEventListener(IPHPConsoleEventListener listener) {
 		if (!fConsoleEventListeners.contains(listener)) {
@@ -928,8 +1062,9 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	/**
 	 * Deregisters the given event listener. Has no effect if the listener is
 	 * not currently registered.
-	 *
-	 * @param listener event listener
+	 * 
+	 * @param listener
+	 *            event listener
 	 */
 	public void removeConsoleEventListener(IPHPConsoleEventListener listener) {
 		fConsoleEventListeners.remove(listener);
@@ -941,7 +1076,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Returns the Output buffer for the Debug Target.
-	 *
+	 * 
 	 * @return the Output buffer for the target
 	 */
 	public DebugOutput getOutputBufffer() {
@@ -950,7 +1085,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Returns whether running with debug info.
-	 *
+	 * 
 	 * @return boolean - whether running with debug info
 	 */
 	public boolean isRunWithDebug() {
@@ -959,10 +1094,11 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 *
+	 * 
 	 */
 	public void fireError(String errorMessage, Exception e1) {
-		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1);
+		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(),
+				IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e1);
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
 		event.setData(status);
 		fireEvent(event);
@@ -970,7 +1106,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 *
+	 * 
 	 */
 	public void fireError(IStatus status) {
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
@@ -1054,7 +1190,9 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 
 	/**
 	 * Maps first debug file in the path mapper
-	 * @param remoteFile Server file path
+	 * 
+	 * @param remoteFile
+	 *            Server file path
 	 * @return mapped path entry or <code>null</code> in case of error
 	 */
 	public PathEntry mapFirstDebugFile(String remoteFile) {
@@ -1064,8 +1202,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 		}
 
 		try {
-			ILaunchConfiguration launchConfiguration = getLaunch().getLaunchConfiguration();
-			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(launchConfiguration);
+			ILaunchConfiguration launchConfiguration = getLaunch()
+					.getLaunchConfiguration();
+			PathMapper pathMapper = PathMapperRegistry
+					.getByLaunchConfiguration(launchConfiguration);
 
 			if (pathMapper != null) {
 				PathEntry pathEntry = pathMapper.getLocalFile(remoteFile);
@@ -1073,16 +1213,22 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 				// If such file doesn't exist in path mapper yet, add it:
 				if (pathEntry == null) {
 					// Try to find a map point:
-					String debugFileName = launchConfiguration.getAttribute(Server.FILE_NAME, (String) null);
+					String debugFileName = launchConfiguration.getAttribute(
+							Server.FILE_NAME, (String) null);
 					if (debugFileName == null) {
-						debugFileName = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+						debugFileName = launchConfiguration.getAttribute(
+								PHPCoreConstants.ATTR_FILE, (String) null);
 					}
 					if (debugFileName != null) {
-						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(debugFileName);
+						IResource resource = ResourcesPlugin.getWorkspace()
+								.getRoot().findMember(debugFileName);
 						if (resource instanceof IFile) {
-							pathEntry = new PathEntry(debugFileName, Type.WORKSPACE, resource.getParent());
+							pathEntry = new PathEntry(debugFileName,
+									Type.WORKSPACE, resource.getParent());
 						} else if (new File(debugFileName).exists()) {
-							pathEntry = new PathEntry(debugFileName, Type.EXTERNAL, new File(debugFileName).getParentFile());
+							pathEntry = new PathEntry(debugFileName,
+									Type.EXTERNAL, new File(debugFileName)
+											.getParentFile());
 						}
 					}
 					if (pathEntry != null) {
@@ -1096,13 +1242,17 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 				}
 
 				// Assign this project to Debug Target:
-				if (getProject() == null && pathEntry != null && pathEntry.getType() == Type.WORKSPACE) {
-					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(pathEntry.getPath());
+				if (getProject() == null && pathEntry != null
+						&& pathEntry.getType() == Type.WORKSPACE) {
+					IResource resource = ResourcesPlugin.getWorkspace()
+							.getRoot().findMember(pathEntry.getPath());
 					IProject project = resource.getProject();
 					setProject(project);
 					try {
-						ILaunchConfigurationWorkingCopy wc = launchConfiguration.getWorkingCopy();
-						wc.getAttribute(IPHPConstants.PHP_Project, project.getName());
+						ILaunchConfigurationWorkingCopy wc = launchConfiguration
+								.getWorkingCopy();
+						wc.getAttribute(IPHPDebugConstants.PHP_Project, project
+								.getName());
 						wc.doSave();
 					} catch (CoreException e) {
 						PHPDebugPlugin.log(e);
