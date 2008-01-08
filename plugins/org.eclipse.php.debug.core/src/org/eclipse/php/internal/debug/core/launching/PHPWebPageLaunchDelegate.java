@@ -28,7 +28,7 @@ import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -108,7 +108,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
-		wc.setAttribute(IPHPConstants.PHP_Project, project);
+		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);
 
 		// Set transfer encoding:
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
@@ -222,7 +222,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	 *
 	 */
 	public void fireError(String errorMessage, Exception e) {
-		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e);
+		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e);
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
 		event.setData(status);
 		fireEvent(event);

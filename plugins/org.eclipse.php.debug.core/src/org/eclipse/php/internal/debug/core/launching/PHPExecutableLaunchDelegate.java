@@ -42,7 +42,7 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitialize
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -91,7 +91,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		} catch (java.io.IOException e1) {
 			Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e1);
 			String errorMessage = PHPDebugCoreMessages.DebuggerFileNotFound_1;
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e1));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e1));
 		}
 	}
 
@@ -119,7 +119,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
 		String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 		String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebugInfo = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 
 		if (monitor.isCanceled()) {
 			return;
@@ -202,7 +202,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			} else {
 				wc = configuration.getWorkingCopy();
 			}
-			wc.setAttribute(IPHPConstants.PHP_Project, projectString);
+			wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
 
 			// Set transfer encoding:
 			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));

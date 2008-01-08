@@ -35,7 +35,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
@@ -97,7 +97,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		} else {
 			wc = configuration.getWorkingCopy();
 		}
-		wc.setAttribute(IPHPConstants.PHP_Project, projectString);
+		wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);

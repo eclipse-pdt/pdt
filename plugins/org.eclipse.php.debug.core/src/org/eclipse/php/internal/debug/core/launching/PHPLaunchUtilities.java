@@ -38,7 +38,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -264,7 +264,7 @@ public class PHPLaunchUtilities {
 		}
 		// Make sure we set the attributes on the ILaunch since the ILaunchConfiguration reference never changes, while the
 		// ILaunch is created for each launch.
-		newLaunch.setAttribute(IPHPConstants.DEBUGGING_PAGES, newLaunchConfiguration.getAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES));
+		newLaunch.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, newLaunchConfiguration.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES));
 		checkAutoRemoveLaunches();
 		ILaunch[] launches = DebugPlugin.getDefault().getLaunchManager().getLaunches();
 		boolean hasContiniousLaunch = false;
@@ -344,8 +344,8 @@ public class PHPLaunchUtilities {
 	 * @throws CoreException
 	 */
 	public static boolean isDebugAllPages(ILaunch launch) throws CoreException {
-		String attribute = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
-		return attribute != null && attribute.equals(IPHPConstants.DEBUGGING_ALL_PAGES);
+		String attribute = launch.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
+		return attribute != null && attribute.equals(IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 	}
 
 	/**
@@ -356,8 +356,8 @@ public class PHPLaunchUtilities {
 	 * @throws CoreException
 	 */
 	public static boolean isStartDebugFrom(ILaunch launch) throws CoreException {
-		String attribute = launch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
-		return attribute != null && attribute.equals(IPHPConstants.DEBUGGING_START_FROM);
+		String attribute = launch.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
+		return attribute != null && attribute.equals(IPHPDebugConstants.DEBUGGING_START_FROM);
 	}
 
 	// terminate and remove all the existing launches accept for the given new launch.
