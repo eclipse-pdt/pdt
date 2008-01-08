@@ -31,7 +31,7 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistryListener;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -391,7 +391,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		 * Contructs a new ExternalFilesLaunchesListener.
 		 */
 		public ExternalFilesLaunchesListener() {
-			configType = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
+			configType = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 		}
 
 		/*
@@ -451,9 +451,9 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			try {
 				IMarker[] allMarkers = workspace.getRoot().findMarkers(null, true, IResource.DEPTH_INFINITE);
 				for (IMarker element : allMarkers) {
-					String storageType = element.getAttribute(IPHPConstants.STORAGE_TYPE, "");
-					if (storageType.equals(IPHPConstants.STORAGE_TYPE_EXTERNAL) || storageType.equals(IPHPConstants.STORAGE_TYPE_REMOTE)) {
-						String fileName = element.getAttribute(IPHPConstants.STORAGE_FILE, "");
+					String storageType = element.getAttribute(IPHPDebugConstants.STORAGE_TYPE, "");
+					if (storageType.equals(IPHPDebugConstants.STORAGE_TYPE_EXTERNAL) || storageType.equals(IPHPDebugConstants.STORAGE_TYPE_REMOTE)) {
+						String fileName = element.getAttribute(IPHPDebugConstants.STORAGE_FILE, "");
 						if (localPath.equals(fileName)) {
 							element.delete();
 						}
