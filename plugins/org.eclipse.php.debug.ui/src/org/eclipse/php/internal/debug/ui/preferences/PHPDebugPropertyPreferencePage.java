@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences;
 
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPropertyPreferencePage;
@@ -43,7 +43,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	}
 
 	protected String getPreferencePageID() {
-		return IPHPConstants.PREFERENCE_PAGE_ID;
+		return IPHPDebugConstants.PREFERENCE_PAGE_ID;
 	}
 
 	protected String getProjectSettingsKey() {
@@ -51,7 +51,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 	}
 
 	protected String getPropertyPageID() {
-		return IPHPConstants.PROJECT_PAGE_ID;
+		return IPHPDebugConstants.PROJECT_PAGE_ID;
 	}
 
 	public void init(IWorkbench workbench) {
