@@ -14,7 +14,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
@@ -99,7 +99,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 	protected IBreakpoint[] findBreakpoints (String localPath, PHPDebugTarget debugTarget) {
 		IBreakpointManager breakpointManager = debugTarget.getBreakpointManager();
-		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);
+		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> l = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(localPath);
