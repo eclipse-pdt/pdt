@@ -13,25 +13,15 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
@@ -42,15 +32,10 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
@@ -144,7 +129,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	private int maxChildren = 0;
 
 	private PathMapper pathMapper = null;
-	
+
 	/**
 	 * Base constructor
 	 * 
@@ -189,8 +174,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 * @param sessionID
 	 * @param stopAtStart
 	 */
-	public DBGpTarget(ILaunch launch, String workspaceRelativeScript, String stopDebugURL, String ideKey, boolean stopAtStart,
-			IWebBrowser browser) {
+	public DBGpTarget(ILaunch launch, String workspaceRelativeScript, String stopDebugURL, String ideKey, boolean stopAtStart, IWebBrowser browser) {
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
@@ -235,7 +219,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 					allThreads = new IThread[] { langThread };
 					langThread.fireCreationEvent();
 					DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
-					
+
 					//Determine something about the initial script and path mapping
 					testInitialScriptLocating();
 					initiateSession();
@@ -271,7 +255,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			if (file == null) {
 				// ok initial script is not in the workspace
 				// we could do a search or do an automatic path mapping
-				if (pathMapper != null ) {
+				if (pathMapper != null) {
 					if (pathMapper.getLocalFile(initScript) == null) {
 						VirtualPath vpScr = new VirtualPath(scriptName);
 						VirtualPath vpInit = new VirtualPath(initScript);
@@ -279,8 +263,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 						if (vpScr.getLastSegment().equals(vpInit.getLastSegment())) {
 							PathEntry pe = new PathEntry(scriptName, PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace().getRoot());
 							pathMapper.addEntry(initScript, pe);
-						}
-						else {
+						} else {
 							// ok, the initial script doesn't match what was passed into
 							// the launch, need to locate the required script.
 							// it may be possible to determine it from the project name
@@ -296,7 +279,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 					}
 				}
 			}
-			
+
 		}
 	}
 
@@ -330,7 +313,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 					// set state before issuing a run otherwise a timing window occurs where
 					// a run could suspend, the thread sets state to suspend but then this
 					// thread sets it to running.
-					setState(STATE_STARTED_RUNNING); 				
+					setState(STATE_STARTED_RUNNING);
 					session.sendAsyncCmd(DBGpCommand.run);
 				}
 
@@ -461,8 +444,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 * @return
 	 */
 	public boolean hasStarted() {
-		boolean started = (STATE_STARTED_RUNNING == targetState) || (STATE_STARTED_SESSION_WAIT == targetState)
-				|| (STATE_STARTED_SUSPENDED == targetState);
+		boolean started = (STATE_STARTED_RUNNING == targetState) || (STATE_STARTED_SESSION_WAIT == targetState) || (STATE_STARTED_SUSPENDED == targetState);
 		return started;
 	}
 
@@ -552,11 +534,11 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			}
 			terminateDebugTarget(true);
 		} else {
-			
+
 			//need to save the suspended state as state is changed in the 
 			//next section of code.
 			boolean savedSuspended = isSuspended();
-			
+
 			// we were not terminating and the session ended. If we are a web
 			// launch, then we need to wait for the next session. Otherwise we
 			// terminate the debug target.
@@ -568,9 +550,9 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 					fireResumeEvent(DebugEvent.RESUME);
 					langThread.fireResumeEvent(DebugEvent.RESUME);
 				}
-				stepping = false;				
+				stepping = false;
 				setState(STATE_STARTED_SESSION_WAIT);
-				langThread.setBreakpoints(null);								
+				langThread.setBreakpoints(null);
 			} else {
 				terminateDebugTarget(true);
 			}
@@ -578,17 +560,16 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				// we were suspended at the time and not terminating so we have
 				// received an unexpected termination from the server side
 				final String errorMessage = "Unexpected termination of script, debugging ended.";
-				Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
+				Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
 				DebugPlugin.log(status);
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
 						MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
 					}
 				});
-				
+
 			}
-			
-			
+
 		}
 	}
 
@@ -819,21 +800,18 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				} else {
 					// detaching xdebug on apache prior to version 2.0.2
 					// causes debug to stop working on the server.
-					if (session.getEngineType() == EngineTypes.Xdebug && 
-						versionCheckLT(session.getEngineVersion(), "2.0.2")) {
-					
+					if (session.getEngineType() == EngineTypes.Xdebug && versionCheckLT(session.getEngineVersion(), "2.0.2")) {
+
 						// we have to do a stop if xdebug and < 2.0.2
 						session.sendSyncCmd(DBGpCommand.stop);
-					}
-					else {
-						session.sendAsyncCmd(DBGpCommand.detach);						
+					} else {
+						session.sendAsyncCmd(DBGpCommand.detach);
 					}
 					stepping = false;
 					langThread.setBreakpoints(null);
 					setState(STATE_STARTED_SESSION_WAIT);
 					resumed(DebugEvent.RESUME);
-					
-					
+
 				}
 			}
 		}
@@ -859,14 +837,12 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 						if (engineVal != checkVal) {
 							isEqual = false;
 						}
-					}
-					catch (NumberFormatException nfe) {
+					} catch (NumberFormatException nfe) {
 						// we are comparing a number to a number followed by characters
 						// NOT REQUIRED TO BE SUPPORTED
 					}
-					
-				}
-				catch (NumberFormatException nfe) {
+
+				} catch (NumberFormatException nfe) {
 					// we are comparing a number followed by characters with a number
 					int engineVal = getNumber(engineValStr);
 					isEqual = false;
@@ -876,12 +852,11 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 							isLessThan = false;
 							isEqual = false;
 						}
-					}
-					catch (NumberFormatException nfe2) {
+					} catch (NumberFormatException nfe2) {
 						// we are comparing a number to a number followed by characters
 						// NOT REQUIRED TO BE SUPPORTED
-					}	
-				}			
+					}
+				}
 			}
 		}
 		if (stCheck.hasMoreTokens()) {
@@ -889,7 +864,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			// we must be less than
 			isEqual = false;
 		}
-		
+
 		return isLessThan && !isEqual;
 	}
 
@@ -1239,30 +1214,30 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		if (DBGpLogger.debugState()) {
 			String newStateStr = "";
 			switch (newState) {
-			case STATE_CREATE:
-				newStateStr = "STATE_CREATE";
-				break;
-			case STATE_DISCONNECTED:
-				newStateStr = "STATE_DISCONNECTED";
-				break;
-			case STATE_INIT_SESSION_WAIT:
-				newStateStr = "INIT_SESSION_WAIT";
-				break;
-			case STATE_STARTED_RUNNING:
-				newStateStr = "STATE_STARTED_RUNNING";
-				break;
-			case STATE_STARTED_SESSION_WAIT:
-				newStateStr = "STATE_STARTED_SESSION_WAIT";
-				break;
-			case STATE_STARTED_SUSPENDED:
-				newStateStr = "STATE_STARTED_SUSPENDED";
-				break;
-			case STATE_TERMINATED:
-				newStateStr = "STATE_TERMINATED";
-				break;
-			case STATE_TERMINATING:
-				newStateStr = "STATE_TERMINATING";
-				break;
+				case STATE_CREATE:
+					newStateStr = "STATE_CREATE";
+					break;
+				case STATE_DISCONNECTED:
+					newStateStr = "STATE_DISCONNECTED";
+					break;
+				case STATE_INIT_SESSION_WAIT:
+					newStateStr = "INIT_SESSION_WAIT";
+					break;
+				case STATE_STARTED_RUNNING:
+					newStateStr = "STATE_STARTED_RUNNING";
+					break;
+				case STATE_STARTED_SESSION_WAIT:
+					newStateStr = "STATE_STARTED_SESSION_WAIT";
+					break;
+				case STATE_STARTED_SUSPENDED:
+					newStateStr = "STATE_STARTED_SUSPENDED";
+					break;
+				case STATE_TERMINATED:
+					newStateStr = "STATE_TERMINATED";
+					break;
+				case STATE_TERMINATING:
+					newStateStr = "STATE_TERMINATING";
+					break;
 
 			}
 			DBGpLogger.debug("State Change: " + newStateStr);
@@ -1304,7 +1279,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 */
 	private String mapToExternalFileIfRequired(DBGpBreakpoint bp) {
 		String internalFile = "";
-		
+
 		if (bp.getIFile() == null) {
 			// file is not part of the workspace, so get fully qualified file
 			internalFile = bp.getFileName();
@@ -1312,20 +1287,20 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			// get file relative to the workspace.
 			internalFile = bp.getIFile().getFullPath().toString();
 		}
-		
+
 		String mappedFileName = null;
 		if (pathMapper != null) {
 			mappedFileName = pathMapper.getRemoteFile(internalFile);
 		}
-		
+
 		if (mappedFileName == null) {
 			DBGpLogger.debug("outbound File '" + internalFile + "' Not remapped");
-			mappedFileName = bp.getFileName();	// use the fully qualified location of the file		
+			mappedFileName = bp.getFileName(); // use the fully qualified location of the file		
 		} else {
 			if (DBGpLogger.debugBP()) {
 				String mapMsg = "remapped eclipse file: '" + internalFile + "' to '" + mappedFileName + "'";
 				DBGpLogger.debug(mapMsg);
-			}			
+			}
 		}
 
 		return mappedFileName;
@@ -1729,8 +1704,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				for (int i = DBGpCmdQueue.size() - 1; i >= 0 && !foundAdd; i--) {
 					DBGpBreakpointCmd entry = (DBGpBreakpointCmd) DBGpCmdQueue.get(i);
 					if (entry.getCmd().equals(DBGpCommand.breakPointSet)) {
-						if (bpCmd.getBp().getFileName().equals(entry.getBp().getFileName())
-								&& bpCmd.getBp().getLineNumber() == entry.getBp().getLineNumber()) {
+						if (bpCmd.getBp().getFileName().equals(entry.getBp().getFileName()) && bpCmd.getBp().getLineNumber() == entry.getBp().getLineNumber()) {
 
 							// ok we have an entry that is an Add, the filename
 							// and lineNumber are
