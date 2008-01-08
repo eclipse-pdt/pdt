@@ -15,10 +15,31 @@ import org.w3c.dom.Node;
 
 public class DBGpStringValue extends DBGpValue {
 
-	public DBGpStringValue(DBGpVariable owningVariable, Node property) {
+	private boolean complete = false;
+	private int requiredBytes; 
+	
+	/**
+	 * 
+	 * @param owningVariable
+	 * @param property
+	 * @param strByteLen if set to -1, always states we don't have the complete string
+	 */
+	public DBGpStringValue(DBGpVariable owningVariable, Node property, int strByteLen) {
 		super(owningVariable);
 		setModifiable(true);
 		simpleParseNode(property);
+		int actualLength = 0;
+		DBGpTarget target = (DBGpTarget)getDebugTarget();
+		String valueString = "";
+		try {
+			valueString = getValueString();
+			actualLength = valueString.getBytes(target.getSessionEncoding()).length;
+		}
+		catch(Exception re) {
+			actualLength = valueString.length();
+		}
+		complete = actualLength >= strByteLen;
+		requiredBytes = strByteLen;
 	}
 
 	/*
@@ -59,4 +80,14 @@ public class DBGpStringValue extends DBGpValue {
 		// any string is ok
 		return true;
 	}
+
+	public boolean isComplete() {
+		return complete;
+	}
+
+	public int getRequiredBytes() {
+		return requiredBytes;
+	}
+
+
 }
