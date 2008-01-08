@@ -27,7 +27,7 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
@@ -98,7 +98,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// save the project name for source lookup
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
-		wc.setAttribute(IPHPConstants.PHP_Project, project);
+		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);
 		wc.doSave();
 
 		// determine stop at first line (first calc the default and then try to extract the configuration attribute).

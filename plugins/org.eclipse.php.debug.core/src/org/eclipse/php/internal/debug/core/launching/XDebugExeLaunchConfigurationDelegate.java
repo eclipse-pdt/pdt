@@ -35,7 +35,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
@@ -97,7 +97,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		} else {
 			wc = configuration.getWorkingCopy();
 		}
-		wc.setAttribute(IPHPConstants.PHP_Project, projectString);
+		wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -210,7 +210,6 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		else {
 			// script is relative to the working directory.
 			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.lastSegment(), args);
-			
 		}
 
 		// Launch the process
@@ -272,12 +271,12 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	}
 
 	/**
-	 * 
-	 * @param exePath
-	 * @return
+	 * create the LD_LIBRARY_PATH information
+	 * @param exePath the path to put into LD_LIBRARY_PATH
+	 * @return environment string
 	 */
 	private String getLibraryPath(IPath exePath) {
-		//TODO: Should also append here
+		//TODO: Should append if already present
 		StringBuffer buf = new StringBuffer();
 		buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
 		buf.append('=');

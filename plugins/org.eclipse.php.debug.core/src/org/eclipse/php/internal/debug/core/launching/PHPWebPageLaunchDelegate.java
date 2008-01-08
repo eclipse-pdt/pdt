@@ -5,13 +5,30 @@ import java.text.MessageFormat;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.*;
-import org.eclipse.debug.core.model.*;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventSetListener;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.debug.core.model.IMemoryBlock;
+import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -21,16 +38,13 @@ import org.eclipse.php.internal.debug.core.zend.debugger.IDebuggerInitializer;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPWebServerDebuggerInitializer;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
-import org.eclipse.php.internal.server.core.PHPServerCoreMessages;
 import org.eclipse.php.internal.server.core.Server;
-import org.eclipse.php.internal.server.core.deploy.DeployFilter;
-import org.eclipse.php.internal.server.core.deploy.FileUtil;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * A launch configuration delegate class for launching a PHP web page script.
- * 
+ *
  * @author shalom
  *
  */
@@ -45,7 +59,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/**
-	 * Override the extended getLaunch to create a PHPLaunch. 
+	 * Override the extended getLaunch to create a PHPLaunch.
 	 */
 	public ILaunch getLaunch(ILaunchConfiguration configuration, String mode) throws CoreException {
 		return new PHPLaunch(configuration, mode, null);
@@ -91,27 +105,15 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 		} catch (Throwable t) {
 		}
-		if (proj == null) {
-			Logger.log(Logger.ERROR, "Could not execute the debug (Project is null).");
-			return;
-		}
 
-		boolean publish = configuration.getAttribute(Server.PUBLISH, false);
-		if (publish) {
-			if (!FileUtil.publish(server, proj, configuration, DeployFilter.getFilterMap(), monitor)) {
-				// Return if the publish failed.
-				displayErrorMessage(PHPServerCoreMessages.getString("FileUtil.serverPublishError"));
-				terminated();
-				return;
-			}
-		}
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
-		wc.setAttribute(IPHPConstants.PHP_Project, project);
+		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);
 
 		// Set transfer encoding:
 		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
 		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.PHP_DEBUG_TYPE, IDebugParametersKeys.PHP_WEB_PAGE_DEBUG);
 		wc.doSave();
 
 		String URL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
@@ -124,7 +126,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 		// Generate a session id for this launch and put it in the map
 		int sessionID = DebugSessionIdGenerator.generateSessionID();
-		PHPSessionLaunchMapper.put(sessionID, new PHPServerLaunchDecorator(launch, proj));
+		PHPSessionLaunchMapper.put(sessionID, launch);
 
 		// Fill all rest of the attributes:
 		launch.setAttribute(IDebugParametersKeys.PORT, Integer.toString(requestPort));
@@ -138,9 +140,9 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	/*
-	 * Override the super preLaunchCheck to make sure that the server we are using is still valid. 
+	 * Override the super preLaunchCheck to make sure that the server we are using is still valid.
 	 * If not, notify the user that a change should be made and open the launch configuration page to do so.
-	 * 
+	 *
 	 * @see org.eclipse.debug.core.model.LaunchConfigurationDelegate#preLaunchCheck(org.eclipse.debug.core.ILaunchConfiguration, java.lang.String, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public boolean preLaunchCheck(final ILaunchConfiguration configuration, final String mode, IProgressMonitor monitor) throws CoreException {
@@ -162,7 +164,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Initiate a debug session.
-	 * 
+	 *
 	 * @param launch
 	 */
 	protected void initiateDebug(ILaunch launch) {
@@ -185,7 +187,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Create an {@link IDebuggerInitializer}.
-	 * 
+	 *
 	 * @return An {@link IDebuggerInitializer} instance.
 	 */
 	protected IDebuggerInitializer createDebuggerInitilizer() {
@@ -194,7 +196,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Displays a dialod with an error message.
-	 * 
+	 *
 	 * @param message The error to display.
 	 */
 	protected void displayErrorMessage(final String message) {
@@ -207,7 +209,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 * 
+	 *
 	 */
 	public void fireError(IStatus status) {
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
@@ -217,17 +219,17 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Throws a IStatus in a Debug Event
-	 * 
+	 *
 	 */
 	public void fireError(String errorMessage, Exception e) {
-		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e);
+		Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e);
 		DebugEvent event = new DebugEvent(this, DebugEvent.MODEL_SPECIFIC);
 		event.setData(status);
 		fireEvent(event);
 	}
 
 	/**
-	 * Called when the debug session was terminated. 
+	 * Called when the debug session was terminated.
 	 */
 	public void terminated() {
 		DebugEvent event = null;
@@ -248,7 +250,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 
 	/**
 	 * Fires a debug event
-	 * 
+	 *
 	 * @param event 	The event to be fired
 	 */
 	public void fireEvent(DebugEvent event) {
