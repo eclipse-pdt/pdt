@@ -89,6 +89,9 @@ public class DBGpCommand {
 	// property_get -i id -n property_long_name
 	public static final String propGet = "property_get";
 
+	// property_value -i id -n property_long_name
+	public static final String propValue = "property_value";	
+	
 	// context_get -i id -d depth
 	public static final String contextGet = "context_get";
 

@@ -1185,6 +1185,43 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		// which we cannot get the results from.
 		return null;
 	}
+	
+	/**
+	 * get a variable at a particular stack level and page number
+	 * 
+	 * @param fullName
+	 * @param stackLevel
+	 * @param page
+	 * @return
+	 */
+	public Node getCompleteString(String fullName, String stackLevel, int length) {
+		if (fullName != null && fullName.trim().length() != 0) {
+			String args = "-n " + fullName + " -d " + stackLevel;
+			if (stackLevel.equals("-1")) {
+				// the following line should work but doesn't in 2.0.0rc1 of
+				// XDebug
+				// args = "-n " + fullName + " -c 1 -p " + page;
+				// but the following works for both rc1 and beyond so will keep
+				// it
+				// like this for now.
+				args = "-n " + fullName + " -d " + getCurrentStackLevel();
+			}
+			// I don't believe the -m option is required for getValue as the 
+			// spec says you should use getValue to retrieve the entire data
+			// but xdebug won't work without it.
+			args += " -m " + length;
+			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.propValue, args);
+			if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
+				return resp.getParentNode();
+			}
+		}
+
+		// either a bad response or we have a temporary variable from the watch
+		// expression
+		// which we cannot get the results from.
+		return null;
+	}	
+	
 
 	/**
 	 * perform an eval request

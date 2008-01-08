@@ -67,8 +67,13 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 		} else if (type.equals(PHP_FLOAT)) {
 			value = new DBGpNumValue(this, property, PHP_FLOAT);
 		} else if (type.equals(PHP_STRING)) {
-			// TODO: strings support a size attribute which could be used in future
-			value = new DBGpStringValue(this, property);
+			String size = type = DBGpResponse.getAttribute(property, "size");
+			int strByteLen = -1;
+			try {
+				strByteLen = Integer.parseInt(size);
+			} catch (NumberFormatException e) {
+			}
+			value = new DBGpStringValue(this, property, strByteLen);
 		} else if (type.equals(PHP_RESOURCE)) {
 			value = new DBGpResourceValue(this, property);
 		} else if (type.equals(PHP_NULL)) {
