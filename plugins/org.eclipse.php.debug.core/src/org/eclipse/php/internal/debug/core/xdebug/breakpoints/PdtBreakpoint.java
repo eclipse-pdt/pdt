@@ -14,7 +14,7 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -59,7 +59,7 @@ public class PdtBreakpoint implements DBGpBreakpoint {
 				// IPHPConstants.Include_Storage_RFile - doubt if this one is ever used in current PHP IDE.
 				//
 				// Include_Storage_Project contains the project it is found in.
-				fileName = (String) marker.getAttribute(IPHPConstants.STORAGE_TYPE_INCLUDE);
+				fileName = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE_INCLUDE);
 				fileName = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, fileName); // gets the full path.
 
 				// adding bps to these include files has strange affects. If one fails to add the first time it is because it removes one

@@ -23,7 +23,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -44,7 +44,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 	}
 
 	public String getBreakpointModelID() {
-		return IPHPConstants.ID_PHP_DEBUG_CORE;
+		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
 
 	public Object sourceNotFound(Object debugElement) {
