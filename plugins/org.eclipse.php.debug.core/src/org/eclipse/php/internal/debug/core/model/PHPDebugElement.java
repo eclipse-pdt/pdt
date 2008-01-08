@@ -12,7 +12,7 @@ package org.eclipse.php.internal.debug.core.model;
 
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.model.DebugElement;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 
 /**
@@ -36,7 +36,7 @@ public abstract class PHPDebugElement extends DebugElement {
      * @see org.eclipse.debug.core.model.IDebugElement#getModelIdentifier()
      */
     public String getModelIdentifier() {
-        return IPHPConstants.ID_PHP_DEBUG_CORE;
+        return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
     }
 
     /*
