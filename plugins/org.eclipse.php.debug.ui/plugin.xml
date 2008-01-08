@@ -555,7 +555,7 @@
        	point="org.eclipse.debug.ui.variableValueEditors">
     	<variableValueEditor
           modelId="org.eclipse.php.xdebug.core.dbgp.model"
-          class="org.eclipse.php.xdebug.ui.actions.XDebugVariableValueEditor"/>
+          class="org.eclipse.php.internal.debug.ui.actions.XDebugVariableValueEditor"/>
  	</extension>   
   
 <extension
