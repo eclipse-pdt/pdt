@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.util.FileUtils;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -63,7 +63,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 	private ILaunchConfigurationType getPHPServerLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm.getLaunchConfigurationType(IPHPConstants.PHPServerLaunchType);
+		return lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
 	}
 
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
@@ -197,8 +197,8 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
 		wc.setAttribute(Server.BASE_URL, URL);
-		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
-		wc.setAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
 
 		// Display a dialog for selecting the URL.

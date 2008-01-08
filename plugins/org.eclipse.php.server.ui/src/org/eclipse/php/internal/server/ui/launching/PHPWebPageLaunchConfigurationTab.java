@@ -12,7 +12,7 @@ package org.eclipse.php.internal.server.ui.launching;
 
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.ui.launching.LaunchUtil;
@@ -34,7 +34,7 @@ public class PHPWebPageLaunchConfigurationTab extends ServerLaunchConfigurationT
 	}
 
 	protected void applyExtension(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true); // Always run with debug info
+		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true); // Always run with debug info
 	}
 
 	protected boolean isValidExtension(ILaunchConfiguration launchConfig) {

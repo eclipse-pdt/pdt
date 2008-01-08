@@ -27,7 +27,7 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
@@ -615,7 +615,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	private void selectDefaultServer(ILaunchConfiguration configuration) throws CoreException {
 		if (serverCombo != null && serverCombo.getItemCount() > 0) {
 			// Select the default server
-			String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+			String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 			IProject project = null;
 			if (projectName != null) {
 				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
@@ -636,7 +636,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 	 */
 	private void selectDefaultDebugger(ILaunchConfiguration configuration) throws CoreException {
 		if (fDebuggersCombo != null && fDebuggersCombo.getItemCount() > 0) {
-			String projectName = configuration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+			String projectName = configuration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 			IProject project = null;
 			if (projectName != null) {
 				project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);

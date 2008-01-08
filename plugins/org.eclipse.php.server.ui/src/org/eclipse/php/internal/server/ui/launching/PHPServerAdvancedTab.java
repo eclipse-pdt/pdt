@@ -19,7 +19,7 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -203,25 +203,25 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		launchConfiguration = configuration;
 		try {
-			isOpenInBrowser = configuration.getAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+			isOpenInBrowser = configuration.getAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 			openBrowser.setSelection(isOpenInBrowser);
-			String debugSetting = configuration.getAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
-			if (IPHPConstants.DEBUGGING_ALL_PAGES.equals(debugSetting)) {
+			String debugSetting = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
+			if (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
 				debugAllPagesBt.setSelection(true);
 				debugStartFromBt.setSelection(false);
-			} else if (IPHPConstants.DEBUGGING_FIRST_PAGE.equals(debugSetting)) {
+			} else if (IPHPDebugConstants.DEBUGGING_FIRST_PAGE.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(true);
 				debugAllPagesBt.setSelection(false);
 				debugStartFromBt.setSelection(false);
-			} else if (IPHPConstants.DEBUGGING_START_FROM.equals(debugSetting)) {
+			} else if (IPHPDebugConstants.DEBUGGING_START_FROM.equals(debugSetting)) {
 				debugFirstPageBt.setSelection(false);
 				debugAllPagesBt.setSelection(false);
 				debugStartFromBt.setSelection(true);
-				boolean shouldContinue = configuration.getAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, false);
+				boolean shouldContinue = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, false);
 				debugContinueBt.setSelection(shouldContinue);
 			}
-			String startFromURL = configuration.getAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, "");
+			String startFromURL = configuration.getAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, "");
 			debugFromTxt.setText(startFromURL);
 			updateDebugFrom();
 
@@ -237,20 +237,20 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		launchConfiguration = configuration;
-		configuration.setAttribute(IPHPConstants.OPEN_IN_BROWSER, isOpenInBrowser);
+		configuration.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, isOpenInBrowser);
 		if (isOpenInBrowser) {
 			if (debugAllPagesBt.getSelection()) {
-				configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 			} else if (debugFirstPageBt.getSelection()) {
-				configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 			} else {
-				configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_START_FROM);
-				configuration.setAttribute(IPHPConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
-				configuration.setAttribute(IPHPConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_START_FROM);
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_START_FROM_URL, debugFromTxt.getText());
+				configuration.setAttribute(IPHPDebugConstants.DEBUGGING_SHOULD_CONTINUE, debugContinueBt.getSelection());
 			}
 		} else {
 			// Allow only debug-first-page
-			configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_FIRST_PAGE);
+			configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_FIRST_PAGE);
 		}
 		applyExtension(configuration);
 	}
@@ -271,7 +271,7 @@ public class PHPServerAdvancedTab extends AbstractLaunchConfigurationTab {
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		launchConfiguration = configuration;
 		setErrorMessage(null);
-		configuration.setAttribute(IPHPConstants.DEBUGGING_PAGES, IPHPConstants.DEBUGGING_ALL_PAGES);
+		configuration.setAttribute(IPHPDebugConstants.DEBUGGING_PAGES, IPHPDebugConstants.DEBUGGING_ALL_PAGES);
 	}
 
 	/*
