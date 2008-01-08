@@ -30,7 +30,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.FileUtils;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.debugger.IDebuggerConfiguration;
@@ -439,7 +439,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, debugFileTextField.getData().toString());
 		}
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo != null && runWithDebugInfo.getSelection() : true;
-		configuration.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, debugInfo);
+		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, debugInfo);
 		if (breakOnFirstLine != null)
 			configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakOnFirstLine.getSelection());
 		applyLaunchDelegateConfiguration(configuration);
@@ -560,7 +560,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 		boolean runOption = PHPDebugPlugin.getDebugInfoOption();
 		try {
-			runOption = configuration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, runOption);
+			runOption = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, runOption);
 		} catch (final CoreException e) {
 			Logger.log(Logger.ERROR, "Error reading configuration", e); //$NON-NLS-1$
 		}

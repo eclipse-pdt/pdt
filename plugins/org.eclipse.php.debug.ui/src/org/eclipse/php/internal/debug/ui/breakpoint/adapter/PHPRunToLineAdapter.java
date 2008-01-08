@@ -22,7 +22,7 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpElement;
@@ -113,7 +113,7 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 				}
 			}
 		}
-		throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null));
+		throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
 	}
 
 	/*

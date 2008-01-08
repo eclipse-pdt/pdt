@@ -37,7 +37,7 @@ import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -99,12 +99,12 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				}
 				if (res instanceof IWorkspaceRoot) {
 					// We are dealing with remote
-					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_REMOTE);
+					attributes.put(IPHPDebugConstants.STORAGE_TYPE, IPHPDebugConstants.STORAGE_TYPE_REMOTE);
 				} else {
 					// We are dealing with storage
-					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_EXTERNAL);
+					attributes.put(IPHPDebugConstants.STORAGE_TYPE, IPHPDebugConstants.STORAGE_TYPE_EXTERNAL);
 				}
-				attributes.put(IPHPConstants.STORAGE_FILE, pathName);
+				attributes.put(IPHPDebugConstants.STORAGE_FILE, pathName);
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, pathName);
 
 				try {
@@ -129,7 +129,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, secondaryId);
 
 				if (storage instanceof LocalFileStorage) {
-					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_INCLUDE);
+					attributes.put(IPHPDebugConstants.STORAGE_TYPE, IPHPDebugConstants.STORAGE_TYPE_INCLUDE);
 
 					fileName =((LocalFileStorage) storage).getName();
 					String incDir = ((LocalFileStorage) storage).getIncBaseDirName();
@@ -137,14 +137,14 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 						fileName = secondaryId.substring(incDir.length() + 1);
 					}
 					IProject project = ((LocalFileStorage) storage).getProject();
-					attributes.put(IPHPConstants.STORAGE_PROJECT, project != null ? project.getName() : "");
-					attributes.put(IPHPConstants.STORAGE_INC_BASEDIR, incDir != null ? incDir : "");
+					attributes.put(IPHPDebugConstants.STORAGE_PROJECT, project != null ? project.getName() : "");
+					attributes.put(IPHPDebugConstants.STORAGE_INC_BASEDIR, incDir != null ? incDir : "");
 				} else {
-					attributes.put(IPHPConstants.STORAGE_TYPE, IPHPConstants.STORAGE_TYPE_REMOTE);
+					attributes.put(IPHPDebugConstants.STORAGE_TYPE, IPHPDebugConstants.STORAGE_TYPE_REMOTE);
 					fileName = storage.getName();
 				}
 
-				attributes.put(IPHPConstants.STORAGE_FILE, fileName);
+				attributes.put(IPHPDebugConstants.STORAGE_FILE, fileName);
 				point = PHPDebugTarget.createBreakpoint(res, editorLineNumber, attributes);
 			}
 		}

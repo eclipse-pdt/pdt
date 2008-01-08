@@ -39,7 +39,7 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
@@ -137,7 +137,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 	//reteive all the line numbers of breakpoints that exist within the file in the given path 
 	private int[] getBreakpointLines(IPath path) throws CoreException {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < breakpoints.length; i++) {
 			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
@@ -155,7 +155,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm.getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
+		return lm.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 	}
 
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
@@ -317,7 +317,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getExecutable().getAbsolutePath().toString());
 		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
 		wc.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
-		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 
 		config = wc.doSave();
