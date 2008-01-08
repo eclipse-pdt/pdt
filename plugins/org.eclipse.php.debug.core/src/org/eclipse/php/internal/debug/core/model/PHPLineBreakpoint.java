@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.LineBreakpoint;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
 /**
@@ -79,14 +79,14 @@ public class PHPLineBreakpoint extends LineBreakpoint {
      * @see org.eclipse.debug.core.model.IBreakpoint#getModelIdentifier()
      */
     public String getModelIdentifier() {
-        return IPHPConstants.ID_PHP_DEBUG_CORE;
+        return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
     }
 
     protected void createRuntimeBreakpoint(IMarker marker) throws CoreException {       
         IResource resource = marker.getResource();       
         String fileName = "";
         if (resource instanceof IWorkspaceRoot) {
-            fileName = (String)marker.getAttribute(IPHPConstants.STORAGE_FILE); 
+            fileName = (String)marker.getAttribute(IPHPDebugConstants.STORAGE_FILE); 
         }else {
             IFile file = (IFile) resource;
             IPath path = file.getFullPath();

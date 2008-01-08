@@ -19,7 +19,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 
 public class BreakpointSet {
 
@@ -81,10 +81,10 @@ public class BreakpointSet {
 		}
 
 		if (resource instanceof IWorkspaceRoot) {
-			String storageType = marker.getAttribute(IPHPConstants.STORAGE_TYPE, "");
+			String storageType = marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE, "");
 
-			if (storageType.equals(IPHPConstants.STORAGE_TYPE_INCLUDE)) {
-				String includeBasedir = marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
+			if (storageType.equals(IPHPDebugConstants.STORAGE_TYPE_INCLUDE)) {
+				String includeBasedir = marker.getAttribute(IPHPDebugConstants.STORAGE_INC_BASEDIR, "");
 				if (!"".equals(includeBasedir)) {
 					Object[] dirs = fDirectories.toArray();
 					for (Object element : dirs) {
