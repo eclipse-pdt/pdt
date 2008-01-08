@@ -40,7 +40,7 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.BlockingQueue;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -505,8 +505,8 @@ public class DebugConnectionThread implements Runnable {
 			// Try to take the first launch that is terminated and has a 'Debug all Pages' attribute.
 			ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager().getLaunches();
 			for (ILaunch aLaunch : launchs) {
-				String debugType = aLaunch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
-				if (aLaunch.isTerminated() && (IPHPConstants.DEBUGGING_ALL_PAGES.equals(debugType) || IPHPConstants.DEBUGGING_START_FROM.equals(debugType))) {
+				String debugType = aLaunch.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
+				if (aLaunch.isTerminated() && (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(debugType) || IPHPDebugConstants.DEBUGGING_START_FROM.equals(debugType))) {
 					launch = aLaunch;
 					break;
 				}
@@ -566,7 +566,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	protected void hookServerDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+		String projectName = launchConfiguration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 
 		IProject project = null;
 		if (projectName != null) {
@@ -579,7 +579,7 @@ public class DebugConnectionThread implements Runnable {
 
 		boolean stopAtFirstLine = project == null ? true : PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
-		boolean runWithDebug = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebug = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
 		}
@@ -631,7 +631,7 @@ public class DebugConnectionThread implements Runnable {
 		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
 		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		String projectString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
@@ -1073,7 +1073,7 @@ public class DebugConnectionThread implements Runnable {
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
 							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new Object[] { String.valueOf(RemoteDebugger.PROTOCOL_ID_2006040703) });
-							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
+							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
