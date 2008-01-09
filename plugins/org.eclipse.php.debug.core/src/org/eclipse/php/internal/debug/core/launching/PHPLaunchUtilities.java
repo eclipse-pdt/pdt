@@ -722,7 +722,7 @@ public class PHPLaunchUtilities {
 	 * @return True, if ASP tags are supported, false otherwise.
 	 */
 	public static boolean isUsingASPTags(IProject project) {
-		PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.getPluginId(), PHPCorePlugin.getDefault().getPreferenceStore());
+		PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.getPluginId(), PHPCorePlugin.getDefault().getPluginPreferences());
 		String value = preferencesSupport.getPreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS, null, project);
 		if (value == null) {
 			value = preferencesSupport.getWorkspacePreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);

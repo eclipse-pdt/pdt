@@ -16,14 +16,14 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
-import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
-import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.IServersManagerListener;
 import org.eclipse.php.internal.server.core.manager.ServerManagerEvent;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.preferences.util.XMLPreferencesReaderUI;
+import org.eclipse.php.internal.ui.preferences.util.XMLPreferencesWriterUI;
 
 public class PathMapperRegistry implements IXMLPreferencesStorable, IServersManagerListener, IPHPExesListener {
 
@@ -103,14 +103,14 @@ public class PathMapperRegistry implements IXMLPreferencesStorable, IServersMana
 
 	@SuppressWarnings("unchecked")
 	public void loadFromPreferences() {
-		HashMap[] elements = XMLPreferencesReader.read(PHPProjectPreferences.getModelPreferences(), PATH_MAPPER_PREF_KEY);
+		HashMap[] elements = XMLPreferencesReaderUI.read(PHPProjectPreferences.getModelPreferences(), PATH_MAPPER_PREF_KEY);
 		if (elements.length == 1) {
 			restoreFromMap(elements[0]);
 		}
 	}
 
 	public static void storeToPreferences() {
-		XMLPreferencesWriter.write(PHPProjectPreferences.getModelPreferences(), PATH_MAPPER_PREF_KEY, getInstance());
+		XMLPreferencesWriterUI.write(PHPProjectPreferences.getModelPreferences(), PATH_MAPPER_PREF_KEY, getInstance());
 	}
 
 	@SuppressWarnings("unchecked")
