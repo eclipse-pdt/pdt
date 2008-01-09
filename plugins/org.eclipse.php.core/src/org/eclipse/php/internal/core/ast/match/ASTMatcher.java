@@ -1,0 +1,764 @@
+package org.eclipse.php.internal.core.ast.match;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.php.internal.core.ast.nodes.*;
+
+/**
+ * Concrete superclass and default implementation of an AST subtree matcher.
+ * <p>
+ * For example, to compute whether two ASTs subtrees are structurally 
+ * isomorphic, use <code>n1.subtreeMatch(new ASTMatcher(), n2)</code> where 
+ * <code>n1</code> and <code>n2</code> are the AST root nodes of the subtrees.
+ * </p>
+ * <p>
+ * For each different concrete AST node type <i>T</i> there is a
+ * <code>public boolean match(<i>T</i> node, Object other)</code> method
+ * that matches the given node against another object (typically another
+ * AST node, although this is not essential). The default implementations
+ * provided by this class tests whether the other object is a node of the
+ * same type with structurally isomorphic child subtrees. For nodes with 
+ * list-valued properties, the child nodes within the list are compared in
+ * order. For nodes with multiple properties, the child nodes are compared
+ * in the order that most closely corresponds to the lexical reading order
+ * of the source program. For instance, for a type declaration node, the 
+ * child ordering is: name, superclass, superinterfaces, and body 
+ * declarations.
+ * </p>
+ * <p>
+ * Subclasses may override (extend or reimplement) some or all of the 
+ * <code>match</code> methods in order to define more specialized subtree
+ * matchers.
+ * </p>
+ * 
+ * @see ASTNode#subtreeMatch(ASTMatcher, Object)
+ * @since 2.0
+ */
+public class ASTMatcher {
+	
+	/**
+	 * Indicates whether doc tags should be matched.
+	 * @since 3.0
+	 */
+	private boolean matchDocTags;
+	
+	/**
+	 * Creates a new AST matcher instance.
+	 * <p>
+	 * For backwards compatibility, the matcher ignores tag
+	 * elements below doc comments by default. Use 
+	 * {@link #ASTMatcher(boolean) ASTMatcher(true)}
+	 * for a matcher that compares doc tags by default.
+	 * </p>
+	 */
+	public ASTMatcher() {
+		this(false);
+	}
+
+	/**
+	 * Creates a new AST matcher instance.
+	 * 
+	 * @param matchDocTags <code>true</code> if doc comment tags are
+	 * to be compared by default, and <code>false</code> otherwise
+	 * @see #match(Javadoc,Object)
+	 * @since 3.0
+	 */
+	public ASTMatcher(boolean matchDocTags) {
+		this.matchDocTags = matchDocTags;
+	}
+
+	/**
+	 * Returns whether the given lists of AST nodes match pair wise according
+	 * to <code>ASTNode.subtreeMatch</code>.
+	 * <p>
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
+	 * </p>
+	 * 
+	 * @param list1 the first list of AST nodes
+	 *    (element type: <code>ASTNode</code>)
+	 * @param list2 the second list of AST nodes
+	 *    (element type: <code>ASTNode</code>)
+	 * @return <code>true</code> if the lists have the same number of elements
+	 *    and match pair-wise according to <code>ASTNode.subtreeMatch</code> 
+	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
+	 */
+	public final boolean safeSubtreeListMatch(List list1, List list2) {
+		int size1 = list1.size();
+		int size2 = list2.size();
+		if (size1 != size2) {
+			return false;
+		}
+		for (Iterator it1 = list1.iterator(), it2 = list2.iterator(); it1.hasNext();) {
+			ASTNode n1 = (ASTNode) it1.next();
+			ASTNode n2 = (ASTNode) it2.next();
+			if (!n1.subtreeMatch(this, n2)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns whether the given lists of AST nodes match pair wise according
+	 * to <code>ASTNode.subtreeMatch</code>.
+	 * <p>
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
+	 * </p>
+	 * 
+	 * @param list1 the first list of AST nodes
+	 *    (element type: <code>ASTNode</code>)
+	 * @param list2 the second list of AST nodes
+	 *    (element type: <code>ASTNode</code>)
+	 * @return <code>true</code> if the lists have the same number of elements
+	 *    and match pair-wise according to <code>ASTNode.subtreeMatch</code> 
+	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
+	 */
+	public final boolean safeSubtreeListMatch(Expression[] list1, Expression[] list2) {
+		return safeSubtreeListMatch(Arrays.asList(list1), Arrays.asList(list2));
+	}
+
+
+	/**
+	 * Returns whether the given nodes match according to
+	 * <code>AST.subtreeMatch</code>. Returns <code>false</code> if one or
+	 * the other of the nodes are <code>null</code>. Returns <code>true</code>
+	 * if both nodes are <code>null</code>.
+	 * <p>
+	 * Note that this is a convenience method, useful for writing recursive
+	 * subtree matchers.
+	 * </p>
+	 * 
+	 * @param node1 the first AST node, or <code>null</code>; must be an
+	 *    instance of <code>ASTNode</code>
+	 * @param node2 the second AST node, or <code>null</code>; must be an
+	 *    instance of <code>ASTNode</code>
+	 * @return <code>true</code> if the nodes match according
+	 *    to <code>AST.subtreeMatch</code> or both are <code>null</code>, and 
+	 *    <code>false</code> otherwise
+	 * @see ASTNode#subtreeMatch(ASTMatcher, Object)
+	 */
+	public final boolean safeSubtreeMatch(Object node1, Object node2) {
+		if (node1 == null && node2 == null) {
+			return true;
+		}
+		if (node1 == null || node2 == null) {
+			return false;
+		}
+		// N.B. call subtreeMatch even node1==node2!=null
+		return ((ASTNode) node1).subtreeMatch(this, node2);
+	}
+
+	/**
+	 * Returns whether the given objects are equal according to
+	 * <code>equals</code>. Returns <code>false</code> if either
+	 * node is <code>null</code>.
+	 * 
+	 * @param o1 the first object, or <code>null</code>
+	 * @param o2 the second object, or <code>null</code>
+	 * @return <code>true</code> if the nodes are equal according to
+	 *    <code>equals</code> or both <code>null</code>, and 
+	 *    <code>false</code> otherwise
+	 */
+	public static boolean safeEquals(Object o1, Object o2) {
+		if (o1 == o2) {
+			return true;
+		}
+		if (o1 == null || o2 == null) {
+			return false;
+		}
+		return o1.equals(o2);
+	}
+
+	/**
+	 * Returns whether the given node and the other object match.
+	 * <p>
+	 * The default implementation provided by this class tests whether the
+	 * other object is a node of the same type with structurally isomorphic
+	 * child subtrees. Subclasses may override this method as needed.
+	 * </p>
+	 * 
+	 * @param node the node
+	 * @param other the other object, or <code>null</code>
+	 * @return <code>true</code> if the subtree matches, or 
+	 *   <code>false</code> if they do not match or the other object has a
+	 *   different node type or is <code>null</code>
+	 * @since 3.1
+	 */
+	
+	public boolean match(ArrayAccess node, Object other) {
+		if (!(other instanceof ArrayAccess)) {
+			return false;
+		}
+		ArrayAccess o = (ArrayAccess) other;
+
+		return (safeSubtreeMatch(node.getVariableName(), o.getVariableName()) && safeSubtreeMatch(node.getIndex(), o.getIndex()) && safeEquals(node.getArrayType(), o.getArrayType()));
+	}
+	
+	public boolean match(ArrayCreation node, Object other) {
+		if (!(other instanceof ArrayCreation)) {
+			return false;
+		}
+		ArrayCreation o = (ArrayCreation) other;
+
+		return false;
+	}
+	
+	public boolean match(ArrayElement node, Object other) {
+		if (!(other instanceof ArrayElement)) {
+			return false;
+		}
+		ArrayElement o = (ArrayElement) other;
+
+		return false;
+	}
+	
+	public boolean match(Assignment node, Object other) {
+		if (!(other instanceof Assignment)) {
+			return false;
+		}
+		Assignment o = (Assignment) other;
+
+		return ( safeEquals(node.getOperator(), o.getOperator()) && safeSubtreeMatch(node.getValue(), o.getValue()) && safeSubtreeMatch(node.getVariable(), o.getVariable()));
+	}
+	
+	public boolean match(ASTError node, Object other) {
+		if (!(other instanceof ASTError)) {
+			return false;
+		}
+		ASTError o = (ASTError) other;
+
+		return false;
+	}
+	
+	public boolean match(BackTickExpression node, Object other) {
+		if (!(other instanceof BackTickExpression)) {
+			return false;
+		}
+		BackTickExpression o = (BackTickExpression) other;
+
+		return false;
+	}
+	
+	public boolean match(Block node, Object other) {
+		if (!(other instanceof Block)) {
+			return false;
+		}
+		Block o = (Block) other;
+
+		return false;
+	}
+	
+	public boolean match(BreakStatement node, Object other) {
+		if (!(other instanceof BreakStatement)) {
+			return false;
+		}
+		BreakStatement o = (BreakStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(CastExpression node, Object other) {
+		if (!(other instanceof CastExpression)) {
+			return false;
+		}
+		CastExpression o = (CastExpression) other;
+
+		return false;
+	}
+	
+	public boolean match(CatchClause node, Object other) {
+		if (!(other instanceof CatchClause)) {
+			return false;
+		}
+		CatchClause o = (CatchClause) other;
+
+		return false;
+	}
+	
+	public boolean match(ClassConstantDeclaration node, Object other) {
+		if (!(other instanceof ClassConstantDeclaration)) {
+			return false;
+		}
+		ClassConstantDeclaration o = (ClassConstantDeclaration) other;
+
+		return false;
+	}
+	
+	public boolean match(ClassDeclaration node, Object other) {
+		if (!(other instanceof ClassDeclaration)) {
+			return false;
+		}
+		ClassDeclaration o = (ClassDeclaration) other;
+
+		return false;
+	}
+	
+	public boolean match(ClassInstanceCreation node, Object other) {
+		if (!(other instanceof ClassInstanceCreation)) {
+			return false;
+		}
+		ClassInstanceCreation o = (ClassInstanceCreation) other;
+
+		return false;
+	}
+	
+	public boolean match(ClassName node, Object other) {
+		if (!(other instanceof ClassName)) {
+			return false;
+		}
+		ClassName o = (ClassName) other;
+
+		return safeSubtreeMatch(node.getClassName(), o.getClassName());
+	}
+	
+	public boolean match(CloneExpression node, Object other) {
+		if (!(other instanceof CloneExpression)) {
+			return false;
+		}
+		CloneExpression o = (CloneExpression) other;
+
+		return false;
+	}
+	
+	public boolean match(Comment node, Object other) {
+		if (!(other instanceof Comment)) {
+			return false;
+		}
+		Comment o = (Comment) other;
+
+		return false;
+	}
+	
+	public boolean match(ConditionalExpression node, Object other) {
+		if (!(other instanceof ConditionalExpression)) {
+			return false;
+		}
+		ConditionalExpression o = (ConditionalExpression) other;
+
+		return false;
+	}
+	
+	public boolean match(ContinueStatement node, Object other) {
+		if (!(other instanceof ContinueStatement)) {
+			return false;
+		}
+		ContinueStatement o = (ContinueStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(DeclareStatement node, Object other) {
+		if (!(other instanceof DeclareStatement)) {
+			return false;
+		}
+		DeclareStatement o = (DeclareStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(DoStatement node, Object other) {
+		if (!(other instanceof DoStatement)) {
+			return false;
+		}
+		DoStatement o = (DoStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(EchoStatement node, Object other) {
+		if (!(other instanceof EchoStatement)) {
+			return false;
+		}
+		EchoStatement o = (EchoStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(EmptyStatement node, Object other) {
+		if (!(other instanceof EmptyStatement)) {
+			return false;
+		}
+		EmptyStatement o = (EmptyStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(ExpressionStatement node, Object other) {
+		if (!(other instanceof ExpressionStatement)) {
+			return false;
+		}
+		ExpressionStatement o = (ExpressionStatement) other;
+		
+		return safeSubtreeMatch(node.getExpr(), o.getExpr());
+
+	}
+	
+	public boolean match(FieldAccess node, Object other) {
+		if (!(other instanceof FieldAccess)) {
+			return false;
+		}
+		FieldAccess o = (FieldAccess) other;
+
+		return (safeSubtreeMatch(node.getDispatcher(), o.getDispatcher()) && safeSubtreeMatch(node.getField(), o.getField()));
+	}
+	
+	public boolean match(FieldsDeclaration node, Object other) {
+		if (!(other instanceof FieldsDeclaration)) {
+			return false;
+		}
+		FieldsDeclaration o = (FieldsDeclaration) other;
+
+		return false;
+	}
+	
+	public boolean match(ForEachStatement node, Object other) {
+		if (!(other instanceof ForEachStatement)) {
+			return false;
+		}
+		ForEachStatement o = (ForEachStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(FormalParameter node, Object other) {
+		if (!(other instanceof FormalParameter)) {
+			return false;
+		}
+		FormalParameter o = (FormalParameter) other;
+
+		return false;
+	}
+	
+	public boolean match(ForStatement node, Object other) {
+		if (!(other instanceof ForStatement)) {
+			return false;
+		}
+		ForStatement o = (ForStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(FunctionDeclaration node, Object other) {
+		if (!(other instanceof FunctionDeclaration)) {
+			return false;
+		}
+		FunctionDeclaration o = (FunctionDeclaration) other;
+
+		return false;
+	}
+	
+	public boolean match(FunctionInvocation node, Object other) {
+		if (!(other instanceof FunctionInvocation)) {
+			return false;
+		}
+		FunctionInvocation o = (FunctionInvocation) other;
+		
+		return (safeSubtreeMatch(node.getFunctionName(), o.getFunctionName()) && safeSubtreeListMatch(node.getParameters(), o.getParameters()));
+	}
+	
+	public boolean match(FunctionName node, Object other) {
+		if (!(other instanceof FunctionName)) {
+			return false;
+		}
+		FunctionName o = (FunctionName) other;
+
+		return safeSubtreeMatch(node.getFunctionName(), o.getFunctionName());
+	}
+	
+	public boolean match(GlobalStatement node, Object other) {
+		if (!(other instanceof GlobalStatement)) {
+			return false;
+		}
+		GlobalStatement o = (GlobalStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(Identifier node, Object other) {
+		if (!(other instanceof Identifier)) {
+			return false;
+		}
+		Identifier o = (Identifier) other;
+
+		return safeEquals(node.getName(), o.getName());
+	}
+	
+	public boolean match(IfStatement node, Object other) {
+		if (!(other instanceof IfStatement)) {
+			return false;
+		}
+		IfStatement o = (IfStatement) other;
+
+		return false;
+	}
+
+	public boolean match(IgnoreError node, Object other) {
+		if (!(other instanceof IgnoreError)) {
+			return false;
+		}
+		IgnoreError o = (IgnoreError) other;
+
+		return false;
+	}
+	
+	public boolean match(Include node, Object other) {
+		if (!(other instanceof IgnoreError)) {
+			return false;
+		}
+		Include o = (Include) other;
+
+		return false;
+	}	
+	
+	public boolean match(InfixExpression node, Object other) {
+		if (!(other instanceof InfixExpression)) {
+			return false;
+		}
+		InfixExpression o = (InfixExpression) other;
+
+		return false;
+	}		
+		
+	public boolean match(InLineHtml node, Object other) {
+		if (!(other instanceof InLineHtml)) {
+			return false;
+		}
+		InLineHtml o = (InLineHtml) other;
+
+		return false;
+	}	
+	
+	public boolean match(InstanceOfExpression node, Object other) {
+		if (!(other instanceof InstanceOfExpression)) {
+			return false;
+		}
+		InstanceOfExpression o = (InstanceOfExpression) other;
+
+		return false;
+	}	
+	
+	public boolean match(InterfaceDeclaration node, Object other) {
+		if (!(other instanceof InterfaceDeclaration)) {
+			return false;
+		}
+		InterfaceDeclaration o = (InterfaceDeclaration) other;
+
+		return false;
+	}	
+	
+	public boolean match(ListVariable node, Object other) {
+		if (!(other instanceof ListVariable)) {
+			return false;
+		}
+		ListVariable o = (ListVariable) other;
+
+		return safeSubtreeListMatch(node.getVariables(), o.getVariables());
+	}	
+	
+	public boolean match(MethodDeclaration node, Object other) {
+		if (!(other instanceof MethodDeclaration)) {
+			return false;
+		}
+		MethodDeclaration o = (MethodDeclaration) other;
+
+		return false;
+	}	
+	
+	public boolean match(MethodInvocation node, Object other) {
+		if (!(other instanceof MethodInvocation)) {
+			return false;
+		}
+		MethodInvocation o = (MethodInvocation) other;
+
+		return false;
+	}	
+	
+	public boolean match(ParenthesisExpression node, Object other) {
+		if (!(other instanceof ParenthesisExpression)) {
+			return false;
+		}
+		ParenthesisExpression o = (ParenthesisExpression) other;
+
+		return false;
+	}	
+	
+	public boolean match(PostfixExpression node, Object other) {
+		if (!(other instanceof PostfixExpression)) {
+			return false;
+		}
+		PostfixExpression o = (PostfixExpression) other;
+
+		return false;
+	}	
+	
+	public boolean match(PrefixExpression node, Object other) {
+		if (!(other instanceof PrefixExpression)) {
+			return false;
+		}
+		PrefixExpression o = (PrefixExpression) other;
+
+		return false;
+	}	
+	
+	public boolean match(Program node, Object other) {
+		if (!(other instanceof Program)) {
+			return false;
+		}
+		Program o = (Program) other;
+
+		return false;
+	}
+	
+	
+	public boolean match(Quote node, Object other) {
+		if (!(other instanceof Quote)) {
+			return false;
+		}
+		Quote o = (Quote) other;
+
+		return false;
+	}	
+		
+	public boolean match(Reference node, Object other) {
+		if (!(other instanceof Reference)) {
+			return false;
+		}
+		Reference o = (Reference) other;
+
+		return false;
+	}	
+	
+	// TODO - do we need to implement it? fallback is variable
+//	public boolean match(ReflectionVariable node, Object other) {
+//		if (!(other instanceof ReflectionVariable)) {
+//			return false;
+//		}
+//		ReflectionVariable o = (ReflectionVariable) other;
+//
+//		return false;
+//	}	
+	
+	public boolean match(ReturnStatement node, Object other) {
+		if (!(other instanceof ReturnStatement)) {
+			return false;
+		}
+		ReturnStatement o = (ReturnStatement) other;
+
+		return false;
+	}	
+	
+	public boolean match(Scalar node, Object other) {
+		if (!(other instanceof Scalar)) {
+			return false;
+		}
+		Scalar o = (Scalar) other;
+		
+		return (safeEquals(node.getStringValue(), o.getStringValue()) && safeEquals(node.getScalarType(), o.getScalarType()));
+	}
+	
+	public boolean match(StaticConstantAccess node, Object other) {
+		if (!(other instanceof StaticConstantAccess)) {
+			return false;
+		}
+		StaticConstantAccess o = (StaticConstantAccess) other;
+
+		return false;
+	}
+	
+	public boolean match(StaticFieldAccess node, Object other) {
+
+		if (!(other instanceof StaticFieldAccess)) {
+			return false;
+		}
+		StaticFieldAccess o = (StaticFieldAccess) other;
+		
+		return (safeSubtreeMatch(node.getClassName(), o.getClassName()) && safeSubtreeMatch(node.getField(), o.getField()));
+
+	}
+	
+	public boolean match(StaticMethodInvocation node, Object other) {
+		if (!(other instanceof StaticMethodInvocation)) {
+			return false;
+		}
+		StaticMethodInvocation o = (StaticMethodInvocation) other;
+
+		return (safeSubtreeMatch(node.getClassName(), o.getClassName()) && safeSubtreeMatch(node.getMethod(), o.getMethod()));
+	}
+	
+	public boolean match(StaticStatement node, Object other) {
+		if (!(other instanceof StaticStatement)) {
+			return false;
+		}
+		StaticStatement o = (StaticStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(SwitchCase node, Object other) {
+		if (!(other instanceof SwitchCase)) {
+			return false;
+		}
+		SwitchCase o = (SwitchCase) other;
+
+		return false;
+	}
+	
+	public boolean match(SwitchStatement node, Object other) {
+		if (!(other instanceof SwitchStatement)) {
+			return false;
+		}
+		SwitchStatement o = (SwitchStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(ThrowStatement node, Object other) {
+		if (!(other instanceof ThrowStatement)) {
+			return false;
+		}
+		ThrowStatement o = (ThrowStatement) other;
+
+		return false;
+	}
+	
+	public boolean match(TryStatement node, Object other) {
+		if (!(other instanceof TryStatement)) {
+			return false;
+		}
+		TryStatement o = (TryStatement) other;
+
+		return false;
+	}
+		
+	public boolean match(UnaryOperation node, Object other) {
+		if (!(other instanceof UnaryOperation)) {
+			return false;
+		}
+		UnaryOperation o = (UnaryOperation) other;
+
+		return false;
+	}
+	
+	public boolean match(Variable node, Object other) {
+		if (!(other instanceof Variable)) {
+			return false;
+		}
+		Variable o = (Variable) other;
+		
+		return ( safeSubtreeMatch(node.getVariableName(), o.getVariableName()) && safeEquals(node.isDollared(), o.isDollared()));
+	}
+	
+	public boolean match(WhileStatement node, Object other) {
+		if (!(other instanceof WhileStatement)) {
+			return false;
+		}
+		WhileStatement o = (WhileStatement) other;
+
+		return false;
+	}		
+}

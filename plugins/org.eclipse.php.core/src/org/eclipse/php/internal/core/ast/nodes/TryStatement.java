@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.List;
 
+import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
@@ -101,5 +102,13 @@ public class TryStatement extends Statement {
 
 	public Block getTryStatement() {
 		return tryStatement;
+	}
+	
+	/* 
+	 * Method declared on ASTNode.
+	 */
+	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
+		// dispatch to correct overloaded match method
+		return matcher.match(this, other);
 	}
 }

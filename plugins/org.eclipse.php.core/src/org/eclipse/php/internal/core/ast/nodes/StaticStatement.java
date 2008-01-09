@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
@@ -101,5 +102,13 @@ public class StaticStatement extends Statement {
 
 	public Expression[] getExpressions() {
 		return expressions;
+	}
+	
+	/* 
+	 * Method declared on ASTNode.
+	 */
+	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
+		// dispatch to correct overloaded match method
+		return matcher.match(this, other);
 	}
 }

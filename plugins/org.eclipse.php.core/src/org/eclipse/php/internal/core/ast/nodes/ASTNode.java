@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+
+
 
 /**
  * Abstract superclass of all Abstract Syntax Tree (AST) node types. <p>
@@ -159,4 +162,44 @@ public abstract class ASTNode implements Visitable {
 		
 		return null;
 	}
+	
+	/**
+	 * For a given node, returns the outer node that surrounds it
+	 * @return the enclosing node for this node
+	 */
+	public ASTNode getEnclosingBodyNode() {
+		ASTNode node = this;		
+		do {
+			switch (node.getType()) {
+				case ASTNode.FUNCTION_DECLARATION:
+					return node;
+					
+				case ASTNode.FIELD_DECLARATION:
+					return null;
+
+				case ASTNode.PROGRAM:
+					return node;
+		
+			}
+			node = node.getParent();
+		} while (node != null);
+		return null;
+	}
+	
+	/**
+	 * Returns whether the subtree rooted at the given node matches the
+	 * given other object as decided by the given matcher.
+	 * <p>
+	 * This internal method is implemented in each of the
+	 * concrete node subclasses.
+	 * </p>
+	 * 
+	 * @param matcher the matcher
+	 * @param other the other object, or <code>null</code>
+	 * @return <code>true</code> if the subtree matches, or 
+	 * <code>false</code> if they do not match
+	 */
+	public abstract boolean subtreeMatch(ASTMatcher matcher, Object other);
+	
+
 }

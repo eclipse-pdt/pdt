@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
@@ -33,5 +34,13 @@ public class ReflectionVariable extends Variable {
 
 	public int getType() {
 		return ASTNode.REFLECTION_VARIABLE;
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
+		// dispatch to correct overloaded match method
+		return matcher.match(this, other);
 	}
 }
