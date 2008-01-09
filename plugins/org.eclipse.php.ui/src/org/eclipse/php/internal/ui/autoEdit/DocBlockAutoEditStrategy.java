@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
@@ -45,7 +45,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 /**
- * 
+ *
  * @author guy.g
  *
  */
@@ -189,7 +189,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 					command.text = stub.substring(3);
 					if (lineContent == null) {
 						//this means that we added the default shortDescription to the docBlock
-						//now we want to make sure this description will be selected in the editor 
+						//now we want to make sure this description will be selected in the editor
 						//at the end of the command
 						IEditorPart editorPart = PHPUiPlugin.getActivePage().getActiveEditor();
 						ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
@@ -219,7 +219,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		return rvPosition;
 	}
 
-	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
 	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 
 	private PHPFileData updateFileData(IStructuredDocument document, int commentStart, int commentEnd, PHPFileData fileData) {
@@ -298,7 +298,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 	/**
 	 * finds the closest codeData to the offset
-	 * @param skippedAreaEndoffset 
+	 * @param skippedAreaEndoffset
 	 */
 	private PHPCodeData getClosestCodeData(IStructuredDocument document, PHPFileData fileData, int offset, int skippedAreaEndoffset) {
 
@@ -306,8 +306,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		int closestCodeDataOffset = document.getLength();
 		PHPClassData classes[] = fileData.getClasses();
 
-		for (int i = 0; i < classes.length; i++) {
-			PHPClassData classData = classes[i];
+		for (PHPClassData classData : classes) {
 			int startOffset = classData.getUserData().getStartPosition();
 			if (startOffset < offset) {
 				int endOffset = classData.getUserData().getEndPosition();
@@ -324,8 +323,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		PHPFunctionData functions[] = fileData.getFunctions();
 
-		for (int i = 0; i < functions.length; i++) {
-			PHPFunctionData functionData = functions[i];
+		for (PHPFunctionData functionData : functions) {
 			int startOffset = functionData.getUserData().getStartPosition();
 			if (startOffset < offset) {
 				int endOffset = functionData.getUserData().getEndPosition();
@@ -342,8 +340,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		PHPConstantData constants[] = fileData.getConstants();
 
-		for (int i = 0; i < constants.length; i++) {
-			PHPConstantData constant = constants[i];
+		for (PHPConstantData constant : constants) {
 			int startOffset = constant.getUserData().getStartPosition();
 			if (startOffset < offset) {
 				int endOffset = constant.getUserData().getEndPosition();
@@ -370,8 +367,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		PHPFunctionData functions[] = classData.getFunctions();
 
-		for (int i = 0; i < functions.length; i++) {
-			PHPFunctionData functionData = functions[i];
+		for (PHPFunctionData functionData : functions) {
 			int startOffset = functionData.getUserData().getStartPosition();
 			if (startOffset < offset) {
 				int endOffset = functionData.getUserData().getEndPosition();
@@ -387,8 +383,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		}
 		PHPClassConstData constants[] = classData.getConsts();
 
-		for (int i = 0; i < constants.length; i++) {
-			PHPClassConstData constant = constants[i];
+		for (PHPClassConstData constant : constants) {
 			int startOffset = constant.getUserData().getStartPosition();
 			if (startOffset < offset) {
 				int endOffset = constant.getUserData().getEndPosition();
@@ -405,8 +400,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		PHPClassVarData vars[] = classData.getVars();
 
-		for (int i = 0; i < vars.length; i++) {
-			PHPClassVarData var = vars[i];
+		for (PHPClassVarData var : vars) {
 			int startOffset = var.getUserData().getStartPosition();
 			if (startOffset < offset) {
 				int endOffset = var.getUserData().getEndPosition();
@@ -468,7 +462,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 	/**
 	 * the purpose of this class is to select text in the editor
-	 * 
+	 *
 	 *
 	 */
 	private class SelectText implements Runnable {
@@ -542,7 +536,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 				// the IDocument is likely using a GapTextStore, so we can't
 				// retrieve a char[] directly
 				if (readChars == null) {
-					//meaning it wasn't filled already 
+					//meaning it wasn't filled already
 					if (position + len > document.getLength())
 						readChars = document.get(position, document.getLength() - position).toCharArray();
 					else
@@ -558,7 +552,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.io.Reader#reset()
 		 */
 		public void reset() throws IOException {
@@ -567,7 +561,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.io.Reader#reset()
 		 */
 		public void reset(int pos) throws IOException {
@@ -576,7 +570,7 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see java.io.Reader#skip(long)
 		 */
 		public long skip(long n) throws IOException {
