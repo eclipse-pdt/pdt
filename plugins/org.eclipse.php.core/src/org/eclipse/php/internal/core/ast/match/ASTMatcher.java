@@ -110,11 +110,11 @@ public class ASTMatcher {
 	 * subtree matchers.
 	 * </p>
 	 * 
-	 * @param list1 the first list of AST nodes
+	 * @param list1 the first array of AST nodes
 	 *    (element type: <code>ASTNode</code>)
-	 * @param list2 the second list of AST nodes
+	 * @param list2 the second array of AST nodes
 	 *    (element type: <code>ASTNode</code>)
-	 * @return <code>true</code> if the lists have the same number of elements
+	 * @return <code>true</code> if the arrays have the same number of elements
 	 *    and match pair-wise according to <code>ASTNode.subtreeMatch</code> 
 	 * @see ASTNode#subtreeMatch(ASTMatcher matcher, Object other)
 	 */
@@ -268,7 +268,7 @@ public class ASTMatcher {
 		}
 		CastExpression o = (CastExpression) other;
 
-		return false;
+		return (safeEquals(node.getCastType(), o.getCastType()) && safeSubtreeMatch(node.getExpr(), o.getExpr()));
 	}
 	
 	public boolean match(CatchClause node, Object other) {
@@ -322,7 +322,7 @@ public class ASTMatcher {
 		}
 		CloneExpression o = (CloneExpression) other;
 
-		return false;
+		return safeSubtreeMatch(node.getExpr(), o.getExpr());
 	}
 	
 	public boolean match(Comment node, Object other) {
@@ -575,7 +575,7 @@ public class ASTMatcher {
 		}
 		MethodInvocation o = (MethodInvocation) other;
 
-		return false;
+		return (safeSubtreeMatch(node.getDispatcher(), o.getDispatcher()) && safeSubtreeMatch(node.getMethod(), o.getMethod()));
 	}	
 	
 	public boolean match(ParenthesisExpression node, Object other) {
@@ -593,7 +593,7 @@ public class ASTMatcher {
 		}
 		PostfixExpression o = (PostfixExpression) other;
 
-		return false;
+		return (safeEquals(node.getOperator(), o.getOperator()) && safeSubtreeMatch(node.getVariable(), o.getVariable()));
 	}	
 	
 	public boolean match(PrefixExpression node, Object other) {
@@ -602,7 +602,7 @@ public class ASTMatcher {
 		}
 		PrefixExpression o = (PrefixExpression) other;
 
-		return false;
+		return (safeEquals(node.getOperator(), o.getOperator()) && safeSubtreeMatch(node.getVariable(), o.getVariable()));
 	}	
 	
 	public boolean match(Program node, Object other) {
@@ -667,7 +667,7 @@ public class ASTMatcher {
 		}
 		StaticConstantAccess o = (StaticConstantAccess) other;
 
-		return false;
+		return (safeSubtreeMatch(node.getClassName(), o.getClassName()) && safeSubtreeMatch(node.getConstant(), o.getConstant()));
 	}
 	
 	public boolean match(StaticFieldAccess node, Object other) {
@@ -741,7 +741,7 @@ public class ASTMatcher {
 		}
 		UnaryOperation o = (UnaryOperation) other;
 
-		return false;
+		return (safeEquals(node.getOperator(), o.getOperator()) && safeSubtreeMatch(node.getExpr(), o.getExpr()));
 	}
 	
 	public boolean match(Variable node, Object other) {
