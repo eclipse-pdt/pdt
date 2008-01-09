@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.core.IIncludePathVariableInitializer;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -38,7 +38,7 @@ public class IncludePathVariableManager {
 		return instance;
 	}
 
-	IPreferenceStore preferenceStore = PHPCorePlugin.getDefault().getPreferenceStore();
+	Preferences preferenceStore = PHPCorePlugin.getDefault().getPluginPreferences();
 
 	HashMap variables = new HashMap();
 	HashMap reservedVariables = new HashMap();

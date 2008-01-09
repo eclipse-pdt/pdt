@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.format;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.preferences.*;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**
- * 
+ *
  * @author guy.g
  *
  */
@@ -42,7 +42,7 @@ public class FormatPreferencesSupport {
 	private PreferencesPropagator preferencesPropagator;
 
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
-	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
 
 	private FormatPreferencesSupport() {
 

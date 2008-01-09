@@ -15,7 +15,7 @@ import java.io.Reader;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.parser.*;
@@ -50,31 +50,31 @@ public final class PHPFileDataUtilities {
 		PHPClassData[] classes = fileData.getClasses();
 		PHPClassData classRv = null;
 		PHPFunctionData functionRv = null;
-		for (int i = 0; i < classes.length; i++) {
-			if (contains(classes[i].getUserData(), position)) {
+		for (PHPClassData element : classes) {
+			if (contains(element.getUserData(), position)) {
 				if (classRv == null) {
-					classRv = classes[i];
+					classRv = element;
 				} else {
 					// if the old class we found includes the new one then the
 					// new one is more relevant
-					if (contains(classRv.getUserData(), classes[i].getUserData().getStartPosition())) {
-						classRv = classes[i];
+					if (contains(classRv.getUserData(), element.getUserData().getStartPosition())) {
+						classRv = element;
 						functionRv = null;
 					} else {
 						continue;
 					}
 				}
 				// the position is in the class check if it is in one of its methods
-				PHPFunctionData[] functions = classes[i].getFunctions();
-				for (int j = 0; j < functions.length; j++) {
-					if (contains(functions[j].getUserData(), position)) {
+				PHPFunctionData[] functions = element.getFunctions();
+				for (PHPFunctionData element2 : functions) {
+					if (contains(element2.getUserData(), position)) {
 						if (functionRv == null) {
-							functionRv = functions[j];
+							functionRv = element2;
 						} else {
 							// if the old function we found includes the new one
 							// then the new one is more relevant
-							if (contains(functionRv.getUserData(), functions[j].getUserData().getStartPosition())) {
-								functionRv = functions[j];
+							if (contains(functionRv.getUserData(), element2.getUserData().getStartPosition())) {
+								functionRv = element2;
 							}
 						}
 					}
@@ -84,15 +84,15 @@ public final class PHPFileDataUtilities {
 
 		// check if the position is in one of the functions.
 		PHPFunctionData[] functions = fileData.getFunctions();
-		for (int j = 0; j < functions.length; j++) {
-			if (contains(functions[j].getUserData(), position)) {
+		for (PHPFunctionData element : functions) {
+			if (contains(element.getUserData(), position)) {
 				if (functionRv == null) {
-					functionRv = functions[j];
+					functionRv = element;
 				} else {
 					// if the old function we found includes the new one then
 					// the new one is more relevant
-					if (contains(functionRv.getUserData(), functions[j].getUserData().getStartPosition())) {
-						functionRv = functions[j];
+					if (contains(functionRv.getUserData(), element.getUserData().getStartPosition())) {
+						functionRv = element;
 					}
 				}
 			}
@@ -111,9 +111,9 @@ public final class PHPFileDataUtilities {
 			return null;
 		}
 		PHPClassData[] classes = fileData.getClasses();
-		for (int i = 0; i < classes.length; i++) {
-			if (contains(classes[i].getUserData(), position)) {
-				return classes[i];
+		for (PHPClassData element : classes) {
+			if (contains(element.getUserData(), position)) {
+				return element;
 			}
 		}
 		return null;
@@ -138,12 +138,12 @@ public final class PHPFileDataUtilities {
 
 	public final static String getVariableType(String fileName, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
 		final PHPFileData fileData = model.getFileData(fileName);
-		
+
 		// if it is the first time (that we build the model) there is no such model yet...
 		if (fileData == null) {
 			return null;
 		}
-		
+
 		return getVariableType(fileData, variableName, position, line, model, showObjectsFromOtherFiles);
 	}
 
@@ -164,13 +164,13 @@ public final class PHPFileDataUtilities {
 		return className;
 	}
 
-	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
 	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
-	
+
 	public static PHPFileData getFileData(Reader reader) {
 		return getFileData(reader, null);
 	}
-	
+
 	public static PHPFileData getFileData(Reader reader, IProject project) {
 		Pattern[] tasksPatterns = TaskPatternsProvider.getInstance().getPetternsForWorkspace();
 		boolean useAspTags = UseAspTagsHandler.useAspTagsAsPhp(project);

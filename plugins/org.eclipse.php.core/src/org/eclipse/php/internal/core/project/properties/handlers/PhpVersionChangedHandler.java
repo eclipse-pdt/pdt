@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -29,7 +29,7 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
-	private static final IPreferenceStore store = PHPCorePlugin.getDefault().getPreferenceStore();
+	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
 	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 
 	private PhpVersionChangedHandler() {
@@ -57,7 +57,7 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 		PreferencesPropagatorListener listener = (PreferencesPropagatorListener) preferencesPropagatorListeners.get(project);
 		preferencesPropagator.removePropagatorListener(listener, Keys.PHP_VERSION);
 		preferencesPropagatorListeners.remove(project);
-		
+
 		projectListeners.remove(project);
 		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(project.getName(), instance);
 	}
@@ -86,16 +86,16 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 			if (event.getNewValue() == null) {
 				// We take the workspace settings since there was a move from project-specific to workspace setings.
-				String newValue = PreferencesSupport.getWorkspacePreferencesValue((String) event.getKey(), PHPCorePlugin.getDefault().getPreferenceStore());
+				String newValue = PreferencesSupport.getWorkspacePreferencesValue((String) event.getKey(), store);
 				if (newValue == null || newValue.equals(event.getOldValue())) {
 					return; // No need to send a notification
 				}
 				event = new PreferencesPropagatorEvent(event.getSource(), event.getOldValue(), newValue, event.getKey());
 			} else if (event.getOldValue() == null) {
-				// In this case there was a move from the workspace setting to a project-specific setting. 
+				// In this case there was a move from the workspace setting to a project-specific setting.
 				// At this stage the new value of the project-specific will always be as the workspace, so there is
 				// no need to send a notification.
-				String preferencesValue = PreferencesSupport.getWorkspacePreferencesValue((String) event.getKey(), PHPCorePlugin.getDefault().getPreferenceStore());
+				String preferencesValue = PreferencesSupport.getWorkspacePreferencesValue((String) event.getKey(), store);
 				if (preferencesValue != null && preferencesValue.equals(event.getNewValue())) {
 					return; // No need to send a notification
 				}

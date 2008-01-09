@@ -63,7 +63,7 @@ public class DefaultCacheManager {
 		if (!sharedCacheDir.exists()) {
 			sharedCacheDir.mkdirs();
 		}
-		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPreferenceStore());
+		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPluginPreferences());
 		includeCacheManager = new IncludeCacheManager(this);
 	}
 

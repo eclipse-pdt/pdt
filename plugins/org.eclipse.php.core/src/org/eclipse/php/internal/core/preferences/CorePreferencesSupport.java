@@ -15,17 +15,17 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 public class CorePreferencesSupport extends PreferencesSupport {
 
 	private static CorePreferencesSupport corePreferencesSupport;
-	
+
 	private CorePreferencesSupport() {
-		super(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPreferenceStore());
+		super(PHPCorePlugin.ID, PHPCorePlugin.getDefault().getPluginPreferences());
 	}
-	
-	
+
+
 	public static CorePreferencesSupport getInstance() {
 		if (corePreferencesSupport == null) {
 			corePreferencesSupport = new CorePreferencesSupport();
 		}
-		
+
 		return corePreferencesSupport;
 	}
 }

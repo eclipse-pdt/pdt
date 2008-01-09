@@ -14,22 +14,22 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 public class PreferencesSupport {
 
 	private HashMap projectToScope;
 	private String nodeQualifier;
-	private IPreferenceStore preferenceStore;
+	private Preferences preferenceStore;
 
 	/**
 	 * Constructs a new PreferencesSupport.
-	 * 
+	 *
 	 * @param nodeQualifier	A string qualifier for the node (for example: PHPCorePlugin.ID)
 	 * @param preferenceStore The relevant preferences store.
 	 */
-	public PreferencesSupport(String nodeQualifier, IPreferenceStore preferenceStore) {
+	public PreferencesSupport(String nodeQualifier, Preferences preferenceStore) {
 		this.nodeQualifier = nodeQualifier;
 		this.preferenceStore = preferenceStore;
 		projectToScope = new HashMap();
@@ -37,7 +37,7 @@ public class PreferencesSupport {
 
 	/**
 	 * Returns the project-specific value, or null if there is no node for the project scope.
-	 * 
+	 *
 	 * @param key 		The preferences key
 	 * @param def		The default value to return.
 	 * @param project 	The IProject
@@ -58,9 +58,9 @@ public class PreferencesSupport {
 	}
 
 	/**
-	 * Returns the value for the key by first searching for it as a project-specific and if it is 
+	 * Returns the value for the key by first searching for it as a project-specific and if it is
 	 * undefined as such, search it as a workspace property.
-	 *  
+	 *
 	 * @param key		The preferences key.
 	 * @param def		The default value to return.
 	 * @param project	The IProject (may be null).
@@ -77,7 +77,7 @@ public class PreferencesSupport {
 		if (projectSpecificPreferencesValue == null) {
 			return getWorkspacePreferencesValue(key);
 		}
-		
+
 		return projectSpecificPreferencesValue;
 	}
 	/**
@@ -88,20 +88,20 @@ public class PreferencesSupport {
 	public String getWorkspacePreferencesValue(String key) {
 		return preferenceStore.getString(key);
 	}
-	
+
 	/**
 	 * Returns the value for the key, as found in the given preferences store.
 	 * @param key
 	 * @param preferenceStore
 	 * @return The String value
 	 */
-	public static String getWorkspacePreferencesValue(String key, IPreferenceStore preferenceStore) {
+	public static String getWorkspacePreferencesValue(String key, Preferences preferenceStore) {
 		return preferenceStore.getString(key);
 	}
-    
+
     /**
      * Returns the project-specific value, or null if there is no node for the project scope.
-     * 
+     *
      * @param key       The preferences key
      * @param value     The preference value.
      * @param project   The IProject

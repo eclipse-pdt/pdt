@@ -22,9 +22,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.core.util.preferences.Key;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
-import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.w3c.dom.Element;
 
 public class IncludePathEntry implements IIncludePathEntry {
@@ -58,29 +56,6 @@ public class IncludePathEntry implements IIncludePathEntry {
 		this.path = path;
 		this.resource = resource;
 		this.isExported = isExported;
-	}
-
-	/**
-	 * This method gets the include path entries for a given project
-	 * @param preferenceKey
-	 * @param project
-	 * @param projectScope
-	 * @param workingCopyManager
-	 * @return List of IIncludePathEntrys for a given project
-	 */
-	public static List getIncludePathEntriesFromPreferences(Key preferenceKey, IProject project, ProjectScope projectScope, IWorkingCopyManager workingCopyManager) {
-
-		final ArrayList entries = new ArrayList();
-
-		HashMap[] maps = XMLPreferencesReader.read(preferenceKey, projectScope, workingCopyManager);
-		if (maps.length > 0) {
-			for (int entryCount = 0; entryCount < maps.length; ++entryCount) {
-				IncludePathEntryDescriptor descriptor = new IncludePathEntryDescriptor();
-				descriptor.restoreFromMap(maps[entryCount]);
-				entries.add(IncludePathEntry.elementDecode(descriptor, project.getFullPath()));
-			}
-		}
-		return entries;
 	}
 
 	/**

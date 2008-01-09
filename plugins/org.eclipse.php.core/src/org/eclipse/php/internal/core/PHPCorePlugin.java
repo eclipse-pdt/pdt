@@ -13,13 +13,12 @@ package org.eclipse.php.internal.core;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class PHPCorePlugin extends AbstractUIPlugin {
+public class PHPCorePlugin extends Plugin {
 
 	public static final String ID = "org.eclipse.php.core"; //$NON-NLS-1$
 

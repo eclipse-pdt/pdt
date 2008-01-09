@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 /**
  * ProjectPreferencesPropagator for propagation of preferences events that arrive as a result from changes
  * in the the project-specific preferences nodes.
- * 
+ *
  * @author shalom
  */
 public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator {
@@ -34,7 +34,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 
 	/**
 	 * Constructs a new ProjectPreferencesPropagator.
-	 * 
+	 *
 	 * @param project The project to monitor.
 	 * @param nodeQualifier The plugin identifier
 	 */
@@ -78,7 +78,7 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 
 	/**
 	 * Removes and returns the list of listeners assigned to the preferences key, or null if non exists.
-	 * 
+	 *
 	 * @param preferencesKey	The key that the listeners listen to.
 	 * @return	The list of listeners assigned for the key, or null if non exists.
 	 */
@@ -119,24 +119,24 @@ public class ProjectPreferencesPropagator extends AbstractPreferencesPropagator 
 			// Notify
 			IPreferencesPropagatorListener[] allListeners = new IPreferencesPropagatorListener[listeners.size()];
 			listeners.toArray(allListeners);
-			for (int i = 0; i < allListeners.length; i++) {
-				allListeners[i].preferencesEventOccured(e);
+			for (IPreferencesPropagatorListener element : allListeners) {
+				element.preferencesEventOccured(e);
 			}
 		}
 	}
 
 	/*
 	 * Returns a property value defined under the PHPCorePlugin preferences store.
-	 * 
+	 *
 	 * @param id 	The property id.
 	 * @return The String value of the property.
 	 */
 	public String getWorkspaceProperty(String id) {
-		return PHPCorePlugin.getDefault().getPreferenceStore().getString(id);
+		return PHPCorePlugin.getDefault().getPluginPreferences().getString(id);
 	}
 
 	/*
-	 * Inner listener for the project scope preferences changes. 
+	 * Inner listener for the project scope preferences changes.
 	 */
 	private class InnerPreferenceChangeListener implements IPreferenceChangeListener {
 

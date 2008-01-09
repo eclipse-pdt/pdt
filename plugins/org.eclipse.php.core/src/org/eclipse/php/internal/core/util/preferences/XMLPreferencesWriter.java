@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.preferences.IWorkingCopyManager;
+import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * XML preferences writer for writing XML structures into the prefernces store.
@@ -25,7 +23,7 @@ public class XMLPreferencesWriter {
 		return result.toString();
 	}
 
-	private static void appendEscapedChar(StringBuffer buffer, char c) {
+	protected static void appendEscapedChar(StringBuffer buffer, char c) {
 		String replacement = getReplacement(c);
 		if (replacement != null) {
 			buffer.append('&');
@@ -36,7 +34,7 @@ public class XMLPreferencesWriter {
 		}
 	}
 
-	private static String getReplacement(char c) {
+	protected static String getReplacement(char c) {
 		// Encode special XML characters into the equivalent character references.
 		// These five are defined by default for all XML documents.
 		switch (c) {
@@ -54,7 +52,7 @@ public class XMLPreferencesWriter {
 		return null;
 	}
 
-	private static void write(StringBuffer sb, HashMap map) {
+	protected static void write(StringBuffer sb, HashMap map) {
 		Set keys = map.keySet();
 		for (Iterator i = keys.iterator(); i.hasNext();) {
 			String key = (String) i.next();
@@ -77,54 +75,11 @@ public class XMLPreferencesWriter {
 		}
 	}
 
-	
-	/**
-	 * Writes a group of IXMLPreferencesStorables to the given the project properties.
-	 * 
-	 * @param prefsKey The key to store by.
-	 * @param objects The IXMLPreferencesStorables to store.
-	 * @param projectScope The project Scope
-	 * @param workingCopyManager
-	 */
-	public static void write(Key prefsKey, IXMLPreferencesStorable[] objects, ProjectScope projectScope, IWorkingCopyManager workingCopyManager){
-		StringBuffer sb = new StringBuffer();
-		appendDelimitedString(sb, objects);
-		prefsKey.setStoredValue(projectScope, sb.toString(), workingCopyManager);
-		
-	}	
-	
-	
-	/**
-	 * Writes an IXMLPreferencesStorables to the given IPreferenceStore.
-	 * 
-	 * @param store An IPreferenceStore instance
-	 * @param prefsKey The key to store by.
-	 * @param object The IXMLPreferencesStorables to store.
-	 */
-	public static void write(IPreferenceStore store, String prefsKey, IXMLPreferencesStorable object) {
-		StringBuffer sb = new StringBuffer();
-		write(sb, object.storeToMap());
-		store.setValue(prefsKey, sb.toString());
-	}
-
-	/**
-	 * Writes a group of IXMLPreferencesStorables to the given IPreferenceStore.
-	 * 
-	 * @param store An IPreferenceStore instance
-	 * @param prefsKey The key to store by.
-	 * @param objects The IXMLPreferencesStorables to store.
-	 */
-	public static void write(IPreferenceStore store, String prefsKey, IXMLPreferencesStorable[] objects) {
-		StringBuffer sb = new StringBuffer();
-		appendDelimitedString(sb, objects);
-		store.setValue(prefsKey, sb.toString());
-	}
-
 	/**
 	 * Writes a group of IXMLPreferencesStorables to the given plugin preferences.
 	 * The caller to this method should also make sure that {@link Plugin#savePluginPreferences()} is called
 	 * in order to really store the changes.
-	 * 
+	 *
 	 * @param pluginPreferences A Preferences instance
 	 * @param prefsKey The key to store by.
 	 * @param objects The IXMLPreferencesStorables to store.
@@ -139,7 +94,7 @@ public class XMLPreferencesWriter {
 	 * Writes an IXMLPreferencesStorable to the given plugin preferences.
 	 * The caller to this method should also make sure that {@link Plugin#savePluginPreferences()} is called
 	 * in order to really store the changes.
-	 * 
+	 *
 	 * @param pluginPreferences A Preferences instance
 	 * @param prefsKey The key to store by.
 	 * @param object The IXMLPreferencesStorable to store.
@@ -151,7 +106,7 @@ public class XMLPreferencesWriter {
 	}
 
 	// Append the elements one by one into the given StringBuffer.
-	private static void appendDelimitedString(StringBuffer buffer, IXMLPreferencesStorable[] elements) {
+	protected static void appendDelimitedString(StringBuffer buffer, IXMLPreferencesStorable[] elements) {
 		if (elements != null){
 			for (int i = 0; i < elements.length; ++i) {
 				write(buffer, elements[i].storeToMap());
@@ -161,7 +116,7 @@ public class XMLPreferencesWriter {
 			}
 		}
 	}
-	
+
 	public static String storableElementsToString(IXMLPreferencesStorable[] elements){
 		StringBuffer sb = new StringBuffer();
 		appendDelimitedString(sb, elements);

@@ -18,14 +18,14 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
+import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.INodeChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.NodeChangeEvent;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 
 /**
  * PreferencesPropagator for propagation of preferences events that arrive as a result from changes
@@ -42,12 +42,12 @@ public class PreferencesPropagator extends AbstractPreferencesPropagator {
 	private String nodeQualifier;
 
 	private IPropertyChangeListener propertyChangeListener;
-	private IPreferenceStore preferenceStore;
+	private Preferences preferenceStore;
 
 	/**
 	 * Constructs a new PreferencesPropagator.
 	 */
-	protected PreferencesPropagator(String nodeQualifier, IPreferenceStore preferenceStore) {
+	protected PreferencesPropagator(String nodeQualifier, Preferences preferenceStore) {
 		this.nodeQualifier = nodeQualifier;
 		this.preferenceStore = preferenceStore;
 		install();

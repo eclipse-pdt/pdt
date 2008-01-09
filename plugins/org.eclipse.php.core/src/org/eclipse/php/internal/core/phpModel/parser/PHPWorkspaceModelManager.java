@@ -15,7 +15,6 @@ import java.util.*;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -94,9 +93,13 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 		public IWorkspaceModelListener getListener() {
 			if (listener == null) {
-				SafeRunner.run(new SafeRunnable("Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener") { //$NON-NLS-1$
+				SafeRunner.run(new ISafeRunnable() { 
 						public void run() throws Exception {
 							listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
+						}
+
+						public void handleException(Throwable exception) {
+							Logger.log(Logger.ERROR, "Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener");
 						}
 					});
 			}

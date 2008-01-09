@@ -662,7 +662,7 @@ public class PHPIncludePathModelManager extends PhpModelProxy implements Externa
 			if (oldVersion == null) {
 				// If we got an old version of null, then we moved from the worspace setting to the project-specific settings and
 				// we need to get an old valid value, which is the value of the workspace PHP version.
-				oldVersion = PreferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPCorePlugin.getDefault().getPreferenceStore());
+				oldVersion = PreferencesSupport.getWorkspacePreferencesValue(PHPCoreConstants.PHP_OPTIONS_PHP_VERSION, PHPCorePlugin.getDefault().getPluginPreferences());
 			}
 			updatePHPVersion(oldVersion, newVersion);
 		}

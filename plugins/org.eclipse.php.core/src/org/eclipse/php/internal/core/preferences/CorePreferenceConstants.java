@@ -12,7 +12,7 @@ package org.eclipse.php.internal.core.preferences;
 
 import java.util.Locale;
 
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 
@@ -23,8 +23,8 @@ public class CorePreferenceConstants {
 		public static final String EDITOR_USE_ASP_TAGS= "use_asp_tags_as_php"; //$NON-NLS-1$
 	}
 
-	public static IPreferenceStore getPreferenceStore() {
-		return PHPCorePlugin.getDefault().getPreferenceStore();
+	public static Preferences getPreferenceStore() {
+		return PHPCorePlugin.getDefault().getPluginPreferences();
 	}
 
 	/**
@@ -33,9 +33,9 @@ public class CorePreferenceConstants {
 	 * @param store the preference store to be initialized
 	 */
 	public static void initializeDefaultValues() {
-		IPreferenceStore store = getPreferenceStore();
+		Preferences store = getPreferenceStore();
 		store.setDefault(Keys.PHP_VERSION, PHPCoreConstants.PHP5);
-		
+
 		store.setDefault(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		store.setDefault(PHPCoreConstants.TASK_PRIORITIES, PHPCoreConstants.DEFAULT_TASK_PRIORITIES);
 		store.setDefault(PHPCoreConstants.TASK_CASE_SENSITIVE, PHPCoreConstants.ENABLED);
@@ -43,7 +43,7 @@ public class CorePreferenceConstants {
 
 		store.setDefault(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		store.setDefault(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
-		
+
 		if ((store.getString(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE)).equals("")) { //$NON-NLS-1$
 			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE,Locale.getDefault().toString());
 			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
