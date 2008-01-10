@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -88,6 +89,8 @@ class ProjectParsingManager implements IProjectModelListener {
 				} catch (IOException ioe) {
 				}
 			} else {
+				// Seva: refresh the file before reading
+				file.refreshLocal(IResource.DEPTH_ZERO, null);
 				is = file.getContents();
 			}
 			inputStreamReader = new InputStreamReader(is, file.getCharset());
