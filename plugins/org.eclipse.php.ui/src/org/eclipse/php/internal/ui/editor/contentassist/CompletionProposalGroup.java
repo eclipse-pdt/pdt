@@ -27,17 +27,13 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 public abstract class CompletionProposalGroup {
 
 	public static final String ELEMENT_NAME_SEPARATOR = "_"; //$NON-NLS-1$
-	/**
-	 *
-	 */
+
 	public static final String COLLAPSED_PREFIX = "..."; //$NON-NLS-1$
 
 	public static final String COLLAPSED_SUFFIX = "*"; //$NON-NLS-1$
 
 	public static final String PATH_SEPARATOR = Character.toString(IPath.SEPARATOR);
-	/**
-	 *
-	 */
+
 	private static final Path COMPLETION_TREE_ROOT = new Path("ROOT"); //$NON-NLS-1$
 	protected int offset;
 	protected CodeData[] codeDataProposals;
@@ -264,7 +260,7 @@ public abstract class CompletionProposalGroup {
 	}
 
 	static Path elementNameToPath(String elementName) {
-		return new Path(elementName.replaceAll(ELEMENT_NAME_SEPARATOR, PATH_SEPARATOR));
+		return new Path(elementName.replaceAll("([^_]{1})"+ELEMENT_NAME_SEPARATOR, "$1" + PATH_SEPARATOR));
 	}
 
 	private TemporaryCompletionProposal createGroupProposal(final IPath completionProposalPath, String replacement) {
