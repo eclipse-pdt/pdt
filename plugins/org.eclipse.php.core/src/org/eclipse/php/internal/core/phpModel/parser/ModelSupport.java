@@ -188,7 +188,7 @@ public class ModelSupport {
 				start = mid;
 				break;
 			}
-			if (compareResult < 0) {
+			if (compareResult != 0) {
 				start = mid + 1;
 			} else {
 				end = mid - 1;
