@@ -79,7 +79,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
      */
     public IStackFrame getTopStackFrame() throws DebugException {
         IStackFrame[] frames = getStackFrames();
-        if (frames.length > 0) {
+        if ((frames != null) && (frames.length > 0)) {
             return frames[0];
         }
         return null;

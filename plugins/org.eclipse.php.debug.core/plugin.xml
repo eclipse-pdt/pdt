@@ -10,6 +10,7 @@
    <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
    <extension-point id="phpDebuggers" name="PHP Debuggers" schema="schema/phpDebuggers.exsd"/>
    <extension-point id="pathEntryFilters" name="PHP Path Entry Filters" schema="schema/pathEntryFilters.exsd"/>
+   <extension-point id="phpDebugStepFilters" name="PHP Debug Step Filters" schema="schema/phpDebugStepFilters.exsd"/>
     
    <extension
          point="org.eclipse.debug.core.sourceLocators">
@@ -357,5 +358,13 @@
             id="org.eclipse.php.debug.core.xdebugDebugger"
             name="XDebug">
       </phpDebugger>
+   </extension>
+   <extension
+         point="org.eclipse.php.debug.core.phpDebugStepFilters">
+      <stepFilter
+            enabled="true"
+            path="/aaa/2.php"
+            type="PHP_PROJECT">
+      </stepFilter>
    </extension>
 </plugin>

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,8 @@ public class ContextManager {
 
 	private int fSuspendCount;
 	private IVariable[] fVariables;
+	
+	private final static String DUMMY_PHP_FILE = "dummy.php";
 
 	public ContextManager(PHPDebugTarget target, IRemoteDebugger debugger) {
 		super();
@@ -76,6 +79,9 @@ public class ContextManager {
 	public IStackFrame[] getStackFrames() throws DebugException {
 		// check to see if eclipse is getting the same stack frames again.
 		PHPstack stack = fDebugger.getCallStack();
+		if (stack == null) {
+			return new PHPStackFrame[0];
+		}
 		PHPThread thread = (PHPThread) fTarget.getThreads()[0];
 		StackLayer[] layers = stack.getLayers();
 		boolean main = false;
@@ -84,7 +90,7 @@ public class ContextManager {
 		}
 
 		if (fPreviousFrames == null) {
-			fPreviousFrames = createNewFrames(layers, thread);
+			fPreviousFrames = applyDebugFilters(createNewFrames(layers, thread));
 			fVariables = createVariables(main, false, true);
 			createStackVariables(layers);
 			fSuspendCount = fTarget.getSuspendCount();
@@ -110,12 +116,32 @@ public class ContextManager {
 			fPreviousFrames[0] = new PHPStackFrame(thread, fileName, (main) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, sourceFile);
 
 		} else {
-			fPreviousFrames = createNewFrames(layers, thread);
-			fVariables = createVariables(main, false, true);
+			if (layers.length == 1 && layers[0].getCalledFileName().endsWith(DUMMY_PHP_FILE)) {
+				fDebugger.finish();//reached dummy file --> finish debug !
+			} else {
+				fPreviousFrames = applyDebugFilters(createNewFrames(layers, thread));
+				fVariables = createVariables(main, false, true);
+			}
 		}
 
 		createStackVariables(layers);
 		return fPreviousFrames;
+	}
+
+	private IStackFrame[] applyDebugFilters(IStackFrame[] previousFrames) {
+		ArrayList<IStackFrame> tempStackFrames = new ArrayList<IStackFrame>();
+		for (int i = 0; i < previousFrames.length; i++) {
+			if (i == previousFrames.length-1) {
+				String stackFrameName = ((PHPStackFrame) previousFrames[i]).getAbsoluteFileName();
+				if (stackFrameName.endsWith(DUMMY_PHP_FILE)) {
+					continue;//do not add it to stack view, filter it out.
+				}
+			}
+			tempStackFrames.add(previousFrames[i]);
+		}
+		IStackFrame[] result = new IStackFrame[tempStackFrames.size()];
+		tempStackFrames.toArray(result);
+		return result;
 	}
 
 	public IVariable[] getVariables() {

@@ -1,43 +1,58 @@
 package org.eclipse.php.internal.debug.core.preferences.stepFilters;
 
+/**
+ * This file contains all the available types of the Debug Step Filters
+ * @author yaronm
+ *
+ */
 public interface IStepFilterTypes {
 	/**
 	 * A Filter Type representation of a filter by pattern
 	 */
-	public final static String PATH_PATTERN = "*php_pattern";
-	
+	public final static int PATH_PATTERN = 9001;
+
 	/**
 	 * A Filter Type representation of a PHP Project filter
 	 */
-	public final static String PHP_PROJECT = "*php_project";
-	
+	public final static int PHP_PROJECT = 9002;
+
 	/**
 	 * A Filter Type representation of a PHP Project File filter
 	 */
-	public final static String PHP_PROJECT_FILE = "*php_project_file";
-	
+	public final static int PHP_PROJECT_FILE = 9003;
+
 	/**
 	 * A Filter Type representation of a PHP Project Folder filter
 	 */
-	public final static String PHP_PROJECT_FOLDER = "*php_project_folder";
-	
+	public final static int PHP_PROJECT_FOLDER = 9004;
+
 	/**
 	 * A Filter Type representation of a PHP Include Path Variable Entry
 	 */
-	public final static String PHP_INCLUDE_PATH_VAR = "*php_include_path_var";
-	
+	public final static int PHP_INCLUDE_PATH_VAR = 9005;
+
+	/**
+	 * A Filter Type representation of a File within a PHP Include Path Variable Entry 
+	 */
+	public final static int PHP_INCLUDE_PATH_VAR_FILE = 9006;
+
+	/**
+	 * A Filter Type representation of a Folder within PHP Include Path Variable Entry
+	 */
+	public final static int PHP_INCLUDE_PATH_VAR_FOLDER = 9007;
+
 	/**
 	 * A Filter Type representation of a PHP Include Path Library Entry
 	 */
-	public final static String PHP_INCLUDE_PATH_LIBRARY = "*php_include_path_library";
-	
+	public final static int PHP_INCLUDE_PATH_LIBRARY = 9008;
+
 	/**
-	 * A Filter Type representation of a PHP Include Path File Entry
+	 * A Filter Type representation of a Folder within a PHP Include Path Library Entry
 	 */
-	public final static String PHP_INCLUDE_PATH_FILE = "*php_include_path_file";
-	
+	public final static int PHP_INCLUDE_PATH_LIBRARY_FOLDER = 9009;
+
 	/**
-	 * A Filter Type representation of a PHP Include Path Folder Entry
+	 * A Filter Type representation of a File PHP Include Path Library Entry
 	 */
-	public final static String PHP_INCLUDE_PATH_FOLDER = "*php_include_path_folder";
+	public final static int PHP_INCLUDE_PATH_LIBRARY_FILE = 9010;
 }
