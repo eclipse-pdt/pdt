@@ -413,6 +413,12 @@
             id="org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage">
          <keywordReference id="org.eclipse.php.debug.ui.phpExecutables"/>
       </page>
+      <page
+            category="org.eclipse.php.debug.ui.preferences.PhpDebugPreferencePage"
+            class="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
+            id="org.eclipse.php.internal.debug.ui.preferences.stepFilter.PHPDebugStepFilterPreferencePage"
+            name="Step Filtering">
+      </page>
     </extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
