@@ -114,4 +114,62 @@ public class FileUtils {
 				output.close();
 		}
 	}
+
+	/**
+	 * Checks if the first given path string is the container of the second given file's path
+	 * @param containerPathString
+	 * @param filePathString
+	 * @return
+	 */
+	public static boolean checkIfContainerOfFile(String containerPathString, String filePathString) {
+		Path containerFilterPath = new Path(containerPathString.toLowerCase());
+		Path filePath = new Path(filePathString.toLowerCase());
+		if (containerFilterPath.segmentCount() > filePath.segmentCount()) {
+			return false;//container has more segments than file itself
+		}
+
+		if (((containerFilterPath.getDevice() == null) && (filePath.getDevice() != null)) || ((containerFilterPath.getDevice() != null) && (filePath.getDevice() == null))) {
+			return false;
+		}
+
+		if ((containerFilterPath.getDevice() != null) && !containerFilterPath.getDevice().toLowerCase().equals(filePath.getDevice().toLowerCase())) {
+			return false;
+		}
+
+		for (int i = 0; i < containerFilterPath.segmentCount(); i++) {
+			if (!containerFilterPath.segment(i).equals(filePath.segment(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Checks the 2 given files paths are equal using device and segments comparison
+	 * @param filePathStr1
+	 * @param filePathStr2
+	 * @return
+	 */
+	public static boolean checkIfEqualFilePaths(String filePathStr1, String filePathStr2) {
+		Path filePath1 = new Path(filePathStr1.toLowerCase());
+		Path filePath2 = new Path(filePathStr2.toLowerCase());
+		if (filePath1.segmentCount() != filePath2.segmentCount()) {
+			return false;//container has more segments than file itself
+		}
+
+		if (((filePath1.getDevice() == null) && (filePath2.getDevice() != null)) || ((filePath1.getDevice() != null) && (filePath2.getDevice() == null))) {
+			return false;
+		}
+
+		if (!filePath1.getDevice().toLowerCase().equals(filePath2.getDevice().toLowerCase())) {
+			return false;
+		}
+
+		for (int i = 0; i < filePath1.segmentCount(); i++) {
+			if (!filePath1.segment(i).equals(filePath2.segment(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
