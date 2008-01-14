@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.corext.dom.fragments;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 
 class SimpleFragment extends ASTFragment {
@@ -21,27 +22,25 @@ class SimpleFragment extends ASTFragment {
 		fNode= node;
 	}
 
-	// TODO - implement matching mechanism
+	// TODO - check that it works after implementing matching
 	public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
-//		if (! JdtASTMatcher.doNodesMatch(getAssociatedNode(), node))
-//			return new IASTFragment[0];
-//
-//		IASTFragment match= ASTFragmentFactory.createFragmentForFullSubtree(node);
-//		Assert.isTrue(match.matches(this) || this.matches(match));
-//		return new IASTFragment[] { match };
-		return null;
+		if (! PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
+			return new IASTFragment[0];
+
+		IASTFragment match= ASTFragmentFactory.createFragmentForFullSubtree(node);
+		Assert.isTrue(match.matches(this) || this.matches(match));
+		return new IASTFragment[] { match };
 	}
 
-	// TODO implement
+	// TODO - check that it works after implementing matching
 	public boolean matches(IASTFragment other) {
-//		return other.getClass().equals(getClass()) && JdtASTMatcher.doNodesMatch(other.getAssociatedNode(), getAssociatedNode());
-		return false;
+		return other.getClass().equals(getClass()) && PHPASTMatcher.doNodesMatch(other.getAssociatedNode(), getAssociatedNode());
 	}
 
-	// TODO implement
+	// TODO - check that it works after implementing matching
 	public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch) {
-//		return ASTMatchingFragmentFinder.findMatchingFragments(getAssociatedNode(), (ASTFragment) toMatch);
-		return null;
+		return ASTMatchingFragmentFinder.findMatchingFragments(getAssociatedNode(), (ASTFragment) toMatch);
+
 	}
 
 	public int getStartPosition() {

@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
@@ -32,8 +33,8 @@ class AssociativeInfixExpressionFragment extends ASTFragment implements IExpress
 	public static IExpressionFragment createSubPartFragmentBySourceRange(InfixExpression node, SourceRange range, IDocument document) throws BadLocationException {
 		Assert.isNotNull(node);
 		Assert.isNotNull(range);
-		Assert.isTrue(!range.covers(node));
-		//Assert.isTrue(new SourceRange(node).covers(range));
+		Assert.isTrue(!range.covers(node));			
+		Assert.isTrue(new SourceRange(node).covers(range));
 
 		if (!isAssociativeInfix(node))
 			return null;
@@ -163,18 +164,19 @@ class AssociativeInfixExpressionFragment extends ASTFragment implements IExpress
 		return subsequences;
 	}
 
-	// TODO implement
+	// TODO - check that it works after implementing matching
 	private static boolean matchesAt(int index, List subject, List toMatch) {
-		//		if(index + toMatch.size() > subject.size())
-		//			return false;  
-		//		for(int i= 0; i < toMatch.size(); i++, index++) {
-		//			if(!JdtASTMatcher.doNodesMatch(
-		//			        (ASTNode) subject.get(index), (ASTNode) toMatch.get(i)
-		//			    )
-		//			)
-		//				return false;
-		//		}
+		if(index + toMatch.size() > subject.size())
+			return false;  
+		for(int i= 0; i < toMatch.size(); i++, index++) {
+			if(!PHPASTMatcher.doNodesMatch(
+			        (ASTNode) subject.get(index), (ASTNode) toMatch.get(i)
+			    )
+			)
+				return false;
+		}
 		return true;
+
 	}
 
 	private static boolean isAGroupRoot(ASTNode node) {
@@ -220,9 +222,10 @@ class AssociativeInfixExpressionFragment extends ASTFragment implements IExpress
 		while (myOperands.hasNext() && othersOperands.hasNext()) {
 			ASTNode myOperand = (ASTNode) myOperands.next();
 			ASTNode othersOperand = (ASTNode) othersOperands.next();
-
-			//			if (! JdtASTMatcher.doNodesMatch(myOperand, othersOperand))
-			//				return false;
+			
+			//TODO  - check that it works after implementing matching
+			if (! PHPASTMatcher.doNodesMatch(myOperand, othersOperand))
+				return false;
 		}
 
 		return true;
@@ -251,13 +254,13 @@ class AssociativeInfixExpressionFragment extends ASTFragment implements IExpress
 		return matches;
 	}
 
+	// TODO  - check that it works after implementing matching
 	private IASTFragment[] getSubFragmentsWithAnotherNodeMatching(IASTFragment toMatch) {
 		IASTFragment[] result = new IASTFragment[0];
-		// TODO implement
-		//		for (Iterator iter= getOperands().iterator(); iter.hasNext();) {
-		//			ASTNode operand= (ASTNode) iter.next();
-		//			result= union(result, ASTMatchingFragmentFinder.findMatchingFragments(operand, (ASTFragment)toMatch));
-		//		}
+		for (Iterator iter= getOperands().iterator(); iter.hasNext();) {
+			ASTNode operand= (ASTNode) iter.next();
+			result= union(result, ASTMatchingFragmentFinder.findMatchingFragments(operand, (ASTFragment)toMatch));
+		}
 		return result;
 	}
 
