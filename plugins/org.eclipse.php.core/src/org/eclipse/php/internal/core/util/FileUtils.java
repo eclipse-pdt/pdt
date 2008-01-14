@@ -161,7 +161,7 @@ public class FileUtils {
 			return false;
 		}
 
-		if (!filePath1.getDevice().toLowerCase().equals(filePath2.getDevice().toLowerCase())) {
+		if ((filePath1.getDevice() != null) && !filePath1.getDevice().toLowerCase().equals(filePath2.getDevice().toLowerCase())) {
 			return false;
 		}
 
