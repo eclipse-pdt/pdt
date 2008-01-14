@@ -56,11 +56,11 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	}
 
 	public boolean visit(Statement statement) {
-		return true;
+		return visit((ASTNode) statement);
 	}
 	
 	public boolean visit(Expression expression) {
-		return true;
+		return visit((ASTNode) expression);
 	}
 
 	public boolean visit(TypeDeclaration typeDeclaration) {
