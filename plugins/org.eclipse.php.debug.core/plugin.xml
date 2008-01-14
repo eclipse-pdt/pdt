@@ -359,12 +359,4 @@
             name="XDebug">
       </phpDebugger>
    </extension>
-   <extension
-         point="org.eclipse.php.debug.core.phpDebugStepFilters">
-      <stepFilter
-            enabled="true"
-            path="/aaa/2.php"
-            type="PHP_PROJECT">
-      </stepFilter>
-   </extension>
 </plugin>
