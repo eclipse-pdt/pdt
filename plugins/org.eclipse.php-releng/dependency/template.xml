@@ -58,18 +58,18 @@
             value="${@dependencyGroupId@file}">
             <not>
                 <or>
-                    <isset property="@dependencyGroupId@file.linux.gtk.x86" />
-                    <isset property="@dependencyGroupId@file.linux.gtk.ppc" />
-                    <isset property="@dependencyGroupId@file.win32.win32.x86" />
-                    <isset property="@dependencyGroupId@file.macosx.carbon.ppc" />
+                    <isset property="@dependencyGroupId@file.linux.-gtk-x86" />
+                    <isset property="@dependencyGroupId@file.linux.-gtk-ppc" />
+                    <isset property="@dependencyGroupId@file.win32-win32-x86" />
+                    <isset property="@dependencyGroupId@file.macosx-carbon-ppc" />
                 </or>
             </not>
         </condition>
         <condition
             property="dependency.file"
-            value="${@dependencyGroupId@file.win32.win32.x86}">
+            value="${@dependencyGroupId@file.win32-win32-x86}">
             <and>
-                <isset property="@dependencyGroupId@file.win32.win32.x86" />
+                <isset property="@dependencyGroupId@file.win32-win32-x86" />
                 <equals
                     arg1="win32"
                     arg2="${baseos}" />
@@ -83,9 +83,9 @@
         </condition>
         <condition
             property="dependency.file"
-            value="${@dependencyGroupId@file.linux.gtk.x86}">
+            value="${@dependencyGroupId@file.linux.-gtk-x86}">
             <and>
-                <isset property="@dependencyGroupId@file.linux.gtk.x86" />
+                <isset property="@dependencyGroupId@file.linux.-gtk-x86" />
                 <equals
                     arg1="linux"
                     arg2="${baseos}" />
@@ -99,9 +99,9 @@
         </condition>
         <condition
             property="dependency.file"
-            value="${@dependencyGroupId@file.linux.gtk.ppc}">
+            value="${@dependencyGroupId@file.linux.-gtk-ppc}">
             <and>
-                <isset property="@dependencyGroupId@file.linux.gtk.ppc" />
+                <isset property="@dependencyGroupId@file.linux.-gtk-ppc" />
                 <equals
                     arg1="linux"
                     arg2="${baseos}" />
@@ -115,9 +115,9 @@
         </condition>
         <condition
             property="dependency.file"
-            value="${@dependencyGroupId@file.macosx.carbon.ppc}">
+            value="${@dependencyGroupId@file.macosx-carbon-ppc}">
             <and>
-                <isset property="@dependencyGroupId@file.macosx.carbon.ppc" />
+                <isset property="@dependencyGroupId@file.macosx-carbon-ppc" />
                 <equals
                     arg1="macosx"
                     arg2="${baseos}" />
