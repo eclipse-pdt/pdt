@@ -3,17 +3,20 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import org.eclipse.dltk.ast.expressions.Expression;
 
 /**
- * base class for all the static access
+ * Represents a base class for method invocation and field access
+ * <pre>e.g.<pre> $a->$b,
+ * foo()->bar(),
+ * $myClass->foo()->bar(),
+ * A::$a->foo()
  */
-public abstract class StaticDispatch extends Expression {
+public abstract class Dispatch extends Expression {
 
 	private final Expression dispatcher;
 
-	public StaticDispatch(int start, int end, Expression dispatcher) {
+	public Dispatch(int start, int end, Expression dispatcher) {
 		super(start, end);
 
 		assert dispatcher != null;
-		assert !(dispatcher instanceof Expression);
 
 		this.dispatcher = dispatcher;
 	}

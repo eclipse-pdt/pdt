@@ -1,7 +1,7 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 
 /**
@@ -13,7 +13,7 @@ public class StaticFieldAccess extends StaticDispatch {
 
 	private final VariableReference field;
 
-	public StaticFieldAccess(int start, int end, SimpleReference dispatcher, VariableReference field) {
+	public StaticFieldAccess(int start, int end, Expression dispatcher, VariableReference field) {
 		super(start, end, dispatcher);
 
 		assert field != null;

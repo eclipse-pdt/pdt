@@ -1,8 +1,8 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
-import org.eclipse.dltk.ast.references.SimpleReference;
 
 /**
  * Represnts a constant class access
@@ -12,7 +12,7 @@ public class StaticConstantAccess extends StaticDispatch {
 
 	private final ConstantReference constant;
 
-	public StaticConstantAccess(int start, int end, SimpleReference dispatcher, ConstantReference constant) {
+	public StaticConstantAccess(int start, int end, Expression dispatcher, ConstantReference constant) {
 		super(start, end, dispatcher);
 
 		assert constant != null;
