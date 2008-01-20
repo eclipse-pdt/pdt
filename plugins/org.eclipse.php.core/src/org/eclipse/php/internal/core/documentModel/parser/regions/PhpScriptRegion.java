@@ -412,7 +412,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param start
 	 * @param length
 	 */
-	public class BlockDocumentReader extends Reader {
+	public static class BlockDocumentReader extends Reader {
 
 		private static final String BAD_LOCATION_ERROR = "Bad location error "; //$NON-NLS-1$
 
