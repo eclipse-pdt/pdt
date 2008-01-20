@@ -24,6 +24,14 @@ public abstract class ApplyAll extends AbstractVisitor {
 	 */
 	protected abstract boolean apply(ASTNode node);
 
+	/**
+	 * Performs the end visit method over each node
+	 * @param node
+	 */
+	public void endVisit(ASTNode node) {
+		return;
+	}
+
 	public boolean visit(ArrayElement arrayElement) {
 		return apply(arrayElement);
 	}
@@ -258,5 +266,257 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	public boolean visit(WhileStatement whileStatement) {
 		return apply(whileStatement);
+	}
+	
+	public void endVisit(ArrayAccess arrayAccess) {
+		endVisit((ASTNode) arrayAccess);
+	}
+
+	public void endVisit(ArrayCreation arrayCreation) {
+		endVisit((ASTNode) arrayCreation);
+	}
+
+	public void endVisit(ArrayElement arrayElement) {
+		endVisit((ASTNode) arrayElement);
+	}
+
+	public void endVisit(ASTError astError) {
+		endVisit((ASTNode) astError);
+	}
+
+	public void endVisit(BackTickExpression backTickExpression) {
+		endVisit((ASTNode) backTickExpression);
+	}
+
+	public void endVisit(Block block) {
+		endVisit((ASTNode) block);
+	}
+
+	public void endVisit(BreakStatement breakStatement) {
+		endVisit((ASTNode) breakStatement);
+	}
+
+	public void endVisit(CastExpression castExpression) {
+		endVisit((ASTNode) castExpression);
+	}
+
+	public void endVisit(CatchClause catchClause) {
+		endVisit((ASTNode) catchClause);
+	}
+
+	public void endVisit(ClassConstantDeclaration classConstantDeclaration) {
+		endVisit((ASTNode) classConstantDeclaration);
+	}
+
+	public void endVisit(ClassDeclaration classDeclaration) {
+		endVisit((ASTNode) classDeclaration);
+	}
+
+	public void endVisit(ClassInstanceCreation classInstanceCreation) {
+		endVisit((ASTNode) classInstanceCreation);
+	}
+
+	public void endVisit(ClassName className) {
+		endVisit((ASTNode) className);
+	}
+
+	public void endVisit(CloneExpression cloneExpression) {
+		endVisit((ASTNode) cloneExpression);
+	}
+
+	public void endVisit(Comment comment) {
+		endVisit((ASTNode) comment);
+	}
+
+	public void endVisit(ConditionalExpression conditionalExpression) {
+		endVisit((ASTNode) conditionalExpression);
+	}
+
+	public void endVisit(ContinueStatement continueStatement) {
+		endVisit((ASTNode) continueStatement);
+	}
+
+	public void endVisit(DeclareStatement declareStatement) {
+		endVisit((ASTNode) declareStatement);
+	}
+
+	public void endVisit(DoStatement doStatement) {
+		endVisit((ASTNode) doStatement);
+	}
+
+	public void endVisit(EchoStatement echoStatement) {
+		endVisit((ASTNode) echoStatement);		
+	}
+
+	public void endVisit(EmptyStatement emptyStatement) {
+		endVisit((ASTNode) emptyStatement);
+	}
+
+	public void endVisit(ExpressionStatement expressionStatement) {
+		endVisit((ASTNode) expressionStatement);
+	}
+
+	public void endVisit(FieldAccess fieldAccess) {
+		endVisit((ASTNode) fieldAccess);
+	}
+
+	public void endVisit(FieldsDeclaration fieldsDeclaration) {
+		endVisit((ASTNode) fieldsDeclaration);
+	}
+
+	public void endVisit(ForEachStatement forEachStatement) {
+		endVisit((ASTNode) forEachStatement);
+	}
+
+	public void endVisit(FormalParameter formalParameter) {
+		endVisit((ASTNode) formalParameter);
+	}
+
+	public void endVisit(ForStatement forStatement) {
+		endVisit((ASTNode) forStatement);
+	}
+
+	public void endVisit(FunctionDeclaration functionDeclaration) {
+		endVisit((ASTNode) functionDeclaration);
+	}
+
+	public void endVisit(FunctionInvocation functionInvocation) {
+		endVisit((ASTNode) functionInvocation);
+	}
+
+	public void endVisit(FunctionName functionName) {
+		endVisit((ASTNode) functionName);
+	}
+
+	public void endVisit(GlobalStatement globalStatement) {
+		endVisit((ASTNode) globalStatement);
+	}
+
+	public void endVisit(Identifier identifier) {
+		endVisit((ASTNode) identifier);
+	}
+
+	public void endVisit(IfStatement ifStatement) {
+		endVisit((ASTNode) ifStatement);
+	}
+
+	public void endVisit(IgnoreError ignoreError) {
+		endVisit((ASTNode) ignoreError);
+	}
+
+	public void endVisit(Include include) {
+		endVisit((ASTNode) include);
+	}
+
+	public void endVisit(InfixExpression infixExpression) {
+		endVisit((ASTNode) infixExpression);
+	}
+
+	public void endVisit(InLineHtml inLineHtml) {
+		endVisit((ASTNode) inLineHtml);
+	}
+
+	public void endVisit(InstanceOfExpression instanceOfExpression) {
+		endVisit((ASTNode) instanceOfExpression);
+	}
+
+	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
+		endVisit((ASTNode) interfaceDeclaration);
+	}
+
+	public void endVisit(ListVariable listVariable) {
+		endVisit((ASTNode) listVariable);
+	}
+
+	public void endVisit(MethodDeclaration methodDeclaration) {
+		endVisit((ASTNode) methodDeclaration);
+	}
+
+	public void endVisit(MethodInvocation methodInvocation) {
+		endVisit((ASTNode) methodInvocation);
+	}
+
+	public void endVisit(ParenthesisExpression parenthesisExpression) {
+		endVisit((ASTNode) parenthesisExpression);
+	}
+
+	public void endVisit(PostfixExpression postfixExpression) {
+		endVisit((ASTNode) postfixExpression);
+	}
+
+	public void endVisit(PrefixExpression prefixExpression) {
+		endVisit((ASTNode) prefixExpression);
+	}
+
+	public void endVisit(Program program) {
+		endVisit((ASTNode) program);
+	}
+
+	public void endVisit(Quote quote) {
+		endVisit((ASTNode) quote);
+	}
+
+	public void endVisit(Reference reference) {
+		endVisit((ASTNode) reference);
+	}
+
+	public void endVisit(ReflectionVariable reflectionVariable) {
+		endVisit((ASTNode) reflectionVariable);
+	}
+
+	public void endVisit(ReturnStatement returnStatement) {
+		endVisit((ASTNode) returnStatement);
+	}
+
+	public void endVisit(Scalar scalar) {
+		endVisit((ASTNode) scalar);
+	}
+
+	public void endVisit(StaticConstantAccess staticConstantAccess) {
+		endVisit((ASTNode) staticConstantAccess);
+	}
+
+	public void endVisit(StaticFieldAccess staticFieldAccess) {
+		endVisit((ASTNode) staticFieldAccess);
+	}
+
+	public void endVisit(StaticMethodInvocation staticMethodInvocation) {
+		endVisit((ASTNode) staticMethodInvocation);
+	}
+
+	public void endVisit(StaticStatement staticStatement) {
+		endVisit((ASTNode) staticStatement);
+	}
+
+	public void endVisit(SwitchCase switchCase) {
+		endVisit((ASTNode) switchCase);
+	}
+
+	public void endVisit(SwitchStatement switchStatement) {
+		endVisit((ASTNode) switchStatement);
+	}
+
+	public void endVisit(ThrowStatement throwStatement) {
+		endVisit((ASTNode) throwStatement);
+	}
+
+	public void endVisit(TryStatement tryStatement) {
+		endVisit((ASTNode) tryStatement);
+	}
+
+	public void endVisit(UnaryOperation unaryOperation) {
+		endVisit((ASTNode) unaryOperation);
+	}
+
+	public void endVisit(Variable variable) {
+		endVisit((ASTNode) variable);
+	}
+
+	public void endVisit(WhileStatement whileStatement) {
+		endVisit((ASTNode) whileStatement);
+	}
+
+	public void endVisit(Assignment assignment) {
+		endVisit((ASTNode) assignment);
 	}
 }
