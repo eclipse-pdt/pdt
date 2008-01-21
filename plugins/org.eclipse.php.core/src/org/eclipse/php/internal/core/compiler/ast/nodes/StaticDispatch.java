@@ -13,7 +13,6 @@ public abstract class StaticDispatch extends Expression {
 		super(start, end);
 
 		assert dispatcher != null;
-		assert !(dispatcher instanceof Expression);
 
 		this.dispatcher = dispatcher;
 	}

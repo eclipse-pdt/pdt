@@ -12,9 +12,9 @@ import org.eclipse.dltk.ast.expressions.Expression;
 public class InstanceOfExpression extends Expression {
 
 	private final Expression expr;
-	private final ClassName className;
+	private final Expression className;
 
-	public InstanceOfExpression(int start, int end, Expression expr, ClassName type) {
+	public InstanceOfExpression(int start, int end, Expression expr, Expression type) {
 		super(start, end);
 
 		assert expr != null && type != null;
@@ -35,7 +35,7 @@ public class InstanceOfExpression extends Expression {
 		return ASTNodeKinds.INSTANCE_OF_EXPRESSION;
 	}
 
-	public ClassName getClassName() {
+	public Expression getClassName() {
 		return className;
 	}
 

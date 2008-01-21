@@ -4,15 +4,14 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 
 /**
- * Represents a static field access.
- * <pre>e.g.<pre> MyClass::$a
- * MyClass::$$a[3]
+ * Represents a field access
+ * <pre>e.g.<pre> $a->$b
  */
-public class StaticFieldAccess extends StaticDispatch {
+public class FieldAccess extends Dispatch {
 
 	private final Expression field;
 
-	public StaticFieldAccess(int start, int end, Expression dispatcher, Expression field) {
+	public FieldAccess(int start, int end, Expression dispatcher, Expression field) {
 		super(start, end, dispatcher);
 
 		assert field != null;
@@ -29,7 +28,7 @@ public class StaticFieldAccess extends StaticDispatch {
 	}
 
 	public int getKind() {
-		return ASTNodeKinds.STATIC_FIELD_ACCESS;
+		return ASTNodeKinds.FIELD_ACCESS;
 	}
 
 	public Expression getField() {

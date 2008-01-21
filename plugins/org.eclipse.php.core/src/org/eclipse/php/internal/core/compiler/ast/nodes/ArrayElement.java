@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents a single element of array.
@@ -52,5 +53,17 @@ public class ArrayElement extends ASTNode {
 
 	public Expression getValue() {
 		return value;
+	}
+
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("ArrayElement" + this.getSourceRange().toString() + ":");
+		output.indent();
+		if (key != null) {
+			key.printNode(output);
+			output.formatPrint(" =>");
+		}
+		value.printNode(output);
+		output.formatPrint("");
+		output.dedent();
 	}
 }

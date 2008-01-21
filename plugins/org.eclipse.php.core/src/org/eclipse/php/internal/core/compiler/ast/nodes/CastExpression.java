@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents a type casting expression
@@ -74,5 +75,13 @@ public class CastExpression extends Expression {
 
 	public Expression getExpr() {
 		return expr;
+	}
+
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("CastExpression" + getSourceRange().toString() + "(" + getCastType(getCastType()) + "):");
+		output.indent();
+		expr.printNode(output);
+		output.formatPrint("");
+		output.dedent();
 	}
 }

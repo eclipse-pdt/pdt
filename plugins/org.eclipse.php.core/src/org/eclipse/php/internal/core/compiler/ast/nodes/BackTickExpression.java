@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents back tick expression
@@ -41,5 +42,17 @@ public class BackTickExpression extends Expression {
 
 	public Expression[] getExpressions() {
 		return expressions;
+	}
+
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("BackTickExpression:");
+		output.indent();
+
+		for (Expression expression : expressions){
+			expression.printNode(output);
+			output.formatPrint("");
+		}
+
+		output.dedent();
 	}
 }

@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents an assignment statement.
@@ -35,6 +36,8 @@ public class Assignment extends Expression {
 	public static final int OP_SL_EQUAL = 10;
 	// '>>='
 	public static final int OP_SR_EQUAL = 11;
+	// '=&'
+	public static final int OP_REF_EQUAL = 12;
 
 	private final Expression variable;
 	private final int operator;
@@ -85,6 +88,8 @@ public class Assignment extends Expression {
 				return "<<="; //$NON-NLS-1$
 			case OP_SR_EQUAL:
 				return ">>="; //$NON-NLS-1$
+			case OP_REF_EQUAL:
+				return "=&"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -104,5 +109,15 @@ public class Assignment extends Expression {
 
 	public Expression getVariable() {
 		return variable;
+	}
+
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("Assignment" + this.getSourceRange().toString() + "(" + getOperator() + "):");
+		output.indent();
+		variable.printNode(output);
+		output.formatPrint("");
+		value.printNode(output);
+		output.formatPrint("");
+		output.dedent();
 	}
 }

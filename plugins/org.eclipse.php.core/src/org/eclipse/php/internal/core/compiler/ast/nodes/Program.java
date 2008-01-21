@@ -16,7 +16,7 @@ public class Program extends ModuleDeclaration {
 
 	private CommentsStatement commentsStatement;
 
-	private Program(int start, int end, List<Statement> statements, final List<Comment> comments) {
+	public Program(int start, int end, List<Statement> statements, final List<Comment> comments) {
 		super(end - start);
 
 		setEnd(end);

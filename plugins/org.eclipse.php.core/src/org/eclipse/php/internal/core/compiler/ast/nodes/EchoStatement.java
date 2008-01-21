@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represent a echo statement.
@@ -43,4 +44,19 @@ public class EchoStatement extends Statement {
 	public Expression[] getExpressions() {
 		return expressions;
 	}
+
+	@Override
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("EchoStatement" + this.getSourceRange().toString() + ":");
+		output.indent();
+		for (Expression expression : expressions){
+			expression.printNode(output);
+			output.formatPrint("");
+		}
+
+		output.formatPrint("");
+		output.dedent();
+	}
+
+
 }

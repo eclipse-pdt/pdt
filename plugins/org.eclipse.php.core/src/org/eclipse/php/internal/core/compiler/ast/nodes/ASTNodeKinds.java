@@ -65,5 +65,9 @@ public interface ASTNodeKinds {
 	public static final int VARIABLE = 60;
 	public static final int WHILE_STATEMENT = 61;
 	public static final int PARENTHESIS_EXPRESSION = 62;
+	public static final int FORMAL_PARAMETER_BYREF = 63;
+	public static final int REFLECTION_CALL_EXPRESSION = 64;
+	public static final int REFLECTION_ARRAY_ACCESS = 65;
+	public static final int REFLECTION_STATIC_METHOD_INVOCATION = 66;
 
 }

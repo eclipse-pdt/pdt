@@ -4,27 +4,26 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.statements.Statement;
 
 /**
- * Represents a global statement
- * <pre>e.g.<pre> global $a
- * global $a, $b
- * global ${foo()->bar()},
- * global $$a
+ * Represents a list expression.
+ * The list contains variables and/or other lists.
+ *
+ * <pre>e.g.<pre> list($a,$b) = array (1,2),
+ * list($a, list($b, $c))
  */
-public class GlobalStatement extends Statement {
+public class ListVariable extends Expression {
 
 	private final Expression[] variables;
 
-	private GlobalStatement(int start, int end, Expression[] variables) {
+	private ListVariable(int start, int end, Expression[] variables) {
 		super(start, end);
 
 		assert variables != null;
 		this.variables = variables;
 	}
 
-	public GlobalStatement(int start, int end, List<? extends Expression> variables) {
+	public ListVariable(int start, int end, List<? extends Expression> variables) {
 		this(start, end, variables == null ? null : variables.toArray(new Expression[variables.size()]));
 	}
 
@@ -39,7 +38,7 @@ public class GlobalStatement extends Statement {
 	}
 
 	public int getKind() {
-		return ASTNodeKinds.GLOBAL_STATEMENT;
+		return ASTNodeKinds.LIST_VARIABLE;
 	}
 
 	public Expression[] getVariables() {

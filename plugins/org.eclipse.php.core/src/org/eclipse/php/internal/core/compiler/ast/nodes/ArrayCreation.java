@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents array creation
@@ -42,5 +43,15 @@ public class ArrayCreation extends Expression {
 
 	public ArrayElement[] getElements() {
 		return elements;
+	}
+
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("ArrayCreation" + this.getSourceRange().toString() + ":");
+		output.indent();
+		for (ArrayElement a : elements) {
+			a.printNode(output);
+			output.formatPrint("");
+		}
+		output.dedent();
 	}
 }

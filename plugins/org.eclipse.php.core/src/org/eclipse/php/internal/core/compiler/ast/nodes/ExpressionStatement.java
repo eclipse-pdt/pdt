@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * This class holds the expression that should be evaluated.
@@ -39,5 +40,13 @@ public class ExpressionStatement extends Statement {
 
 	public Expression getExpr() {
 		return expr;
+	}
+
+	public void printNode(CorePrinter output){
+		output.formatPrintLn("ExpressionStatement" + this.getSourceRange().toString() + ":");
+		output.indent();
+		expr.printNode(output);
+		output.formatPrint("");
+		output.dedent();
 	}
 }
