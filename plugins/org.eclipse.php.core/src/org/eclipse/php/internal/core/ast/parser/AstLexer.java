@@ -81,5 +81,10 @@ public interface AstLexer extends Scanner{
 	 * Returns the length of the matched text region.
 	 */
 	public int yylength();
+	
+	/**
+	 * Sets the lexer state to be php (i.e. start <?php state) 
+	 */
+	public void setInScriptingState();
 
 }

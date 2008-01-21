@@ -58,6 +58,10 @@ import java.util.*;
     private char yy_old_buffer[] = new char[YY_BUFFERSIZE];
     private int yy_old_pushbackPos;
     private int commentStartPosition;
+
+	public void setInScriptingState() {
+		yybegin(ST_IN_SCRIPTING);
+	}
 	
 	public void resetCommentList() {
 		commentList.clear();

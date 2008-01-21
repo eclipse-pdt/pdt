@@ -883,6 +883,10 @@ public class PhpAstLexer4 implements org.eclipse.php.internal.core.ast.parser.As
     private int yy_old_pushbackPos;
     private int commentStartPosition;
 
+	public void setInScriptingState() {
+		yybegin(ST_IN_SCRIPTING);
+	}
+
 	public void resetCommentList() {
 		commentList.clear();
 	}
