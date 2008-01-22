@@ -136,42 +136,42 @@ public class PHPCodeDataFactory {
 		List methods = new LinkedList();
 
 		methods.add(PHPCodeDataFactory.createPHPFuctionData("__get", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is called each time variable is referenced from the object", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
-			new BasicPHPDocTag(PHPDocTag.RETURN, "variable value") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null) }, "mixed"));
+			new BasicPHPDocTag(PHPDocTag.RETURN, "variable value") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null) }, "mixed"));
 
 		methods.add(PHPCodeDataFactory.createPHPFuctionData("__set", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is called each time variable is set in the object", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
-			new BasicPHPDocTag(PHPDocTag.PARAM, "mixed $value variable value"), new BasicPHPDocTag(PHPDocTag.RETURN, "void") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] {
+			new BasicPHPDocTag(PHPDocTag.PARAM, "mixed $value variable value"), new BasicPHPDocTag(PHPDocTag.RETURN, "void") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] {
 			new PHPFunctionParameterImp("name", null, false, false, "string", null), new PHPFunctionParameterImp("value", null, false, false, "string", null), }, "void"));
 
 		methods.add(PHPCodeDataFactory.createPHPFuctionData("__call", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time not existing method is called on the object", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name method name"),
-			new BasicPHPDocTag(PHPDocTag.PARAM, "array arguments method arguments"), new BasicPHPDocTag(PHPDocTag.RETURN, "Return value of non-existent method") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] {
+			new BasicPHPDocTag(PHPDocTag.PARAM, "array arguments method arguments"), new BasicPHPDocTag(PHPDocTag.RETURN, "Return value of non-existent method") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] {
 			new PHPFunctionParameterImp("name", null, false, false, "string", null), new PHPFunctionParameterImp("arguments", null, false, false, "array", null), }, "mixed"));
 
-		methods.add(PHPCodeDataFactory.createPHPFuctionData("__sleep", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is executed prior to any serialization of the object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(),
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__sleep", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is executed prior to any serialization of the object", null, EMPTY_PHP_DOC_TAG), classData.getUserData(),
 			EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, null));
 
-		methods.add(PHPCodeDataFactory.createPHPFuctionData("__wakeup", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is executed after the object is deserialized", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+		methods.add(PHPCodeDataFactory.createPHPFuctionData("__wakeup", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is executed after the object is deserialized", null, EMPTY_PHP_DOC_TAG), classData.getUserData(), EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
 			null));
 
 		if (isPHP5) {
 			methods
 				.add(PHPCodeDataFactory.createPHPFuctionData("__isset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time isset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
-					new BasicPHPDocTag(PHPDocTag.RETURN, "true if the object variable is set, otherwise false") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), },
+					new BasicPHPDocTag(PHPDocTag.RETURN, "true if the object variable is set, otherwise false") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), },
 					"boolean"));
 
 			methods.add(PHPCodeDataFactory.createPHPFuctionData("__unset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time unset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
-				new BasicPHPDocTag(PHPDocTag.RETURN, "unsets the object variable") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "void"));
+				new BasicPHPDocTag(PHPDocTag.RETURN, "unsets the object variable") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "void"));
 
 			methods.add(PHPCodeDataFactory.createPHPFuctionData("__toString", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is used for setting a string value for the object that will be used if the object is used as a string.", null, new PHPDocTag[] { new BasicPHPDocTag(
-				PHPDocTag.RETURN, "string representing the object") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[0], "string"));
+				PHPDocTag.RETURN, "string representing the object") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[0], "string"));
 
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__set_state", PHPModifier.PUBLIC, new PHPDocBlockImp("This static method is called for classes exported by var_export() since PHP 5.1.0", null, new PHPDocTag[0], PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(),
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__set_state", PHPModifier.PUBLIC, new PHPDocBlockImp("This static method is called for classes exported by var_export() since PHP 5.1.0", null, new PHPDocTag[0]), classData.getUserData(),
 				new PHPFunctionData.PHPFunctionParameter[0], "void"));
 
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__clone", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time clone is called on the object variable", null, new PHPDocTag[0], PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(),
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__clone", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time clone is called on the object variable", null, new PHPDocTag[0]), classData.getUserData(),
 				new PHPFunctionData.PHPFunctionParameter[0], "void"));
 
 			methods.add(PHPCodeDataFactory.createPHPFuctionData("__autoload", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked in case you are trying to use a class which hasn't been defined yet", null, new PHPDocTag[] {
-				new BasicPHPDocTag(PHPDocTag.PARAM, "string $name class name"), new BasicPHPDocTag(PHPDocTag.RETURN, "new class object") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false,
+				new BasicPHPDocTag(PHPDocTag.PARAM, "string $name class name"), new BasicPHPDocTag(PHPDocTag.RETURN, "new class object") }), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false,
 				"string", null), }, "mixed"));
 		}
 
@@ -184,13 +184,13 @@ public class PHPCodeDataFactory {
 	public static CodeData[] createConstructors(PHPClassData classData, boolean isPHP5) {
 		List constructors = new LinkedList();
 
-		constructors.add(PHPCodeDataFactory.createPHPFuctionData(classData.getName(), PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, classData
+		constructors.add(PHPCodeDataFactory.createPHPFuctionData(classData.getName(), PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY, classData
 			.getName()));
 
 		if (isPHP5) {
-			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
 				classData.getName()));
-			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Destructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Destructs this object", null, EMPTY_PHP_DOC_TAG), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
 				"void"));
 		}
 

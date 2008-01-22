@@ -156,7 +156,6 @@ public class SerializationUtil {
 			writeString(docBlock.getShortDescription(), output);
 			writeString(docBlock.getLongDescription(), output);
 			serialize(docBlock.getTagsAsArray(), output);
-			output.writeInt(docBlock.getType());
 			output.writeInt(docBlock.getStartPosition());
 			output.writeInt(docBlock.getEndPosition());
 		}
@@ -492,10 +491,9 @@ public class SerializationUtil {
 			String shortDescription = readString(inputStream);
 			String longDescription = readString(inputStream);
 			PHPDocTag[] tags = deserializePHPDocTagArray(inputStream);
-			int type = inputStream.readInt();
 			int startPosition = inputStream.readInt();
 			int endPosition = inputStream.readInt();
-			PHPDocBlockImp rv = new PHPDocBlockImp(shortDescription, longDescription, tags, type);
+			PHPDocBlockImp rv = new PHPDocBlockImp(shortDescription, longDescription, tags);
 			rv.setStartPosition(startPosition);
 			rv.setEndPosition(endPosition);
 			return rv;

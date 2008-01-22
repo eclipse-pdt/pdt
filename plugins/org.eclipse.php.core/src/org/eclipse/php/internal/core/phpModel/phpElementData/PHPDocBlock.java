@@ -15,17 +15,6 @@ import java.util.Iterator;
 
 public interface PHPDocBlock extends Serializable {
 
-	int FILE_DOCBLOCK = 0;
-	int CLASS_DOCBLOCK = 1;
-	int FUNCTION_DOCBLOCK = 2;
-	int VARIABLE_DOCBLOCK = 3;
-	int GLOBAL_VAR_DOCBLOCK = 4;
-	int DEFINE_DOCBLOCK = 5;
-	int STATIC_VAR_DOCBLOCK = 6;
-	int INCLUDE_FILE_DOCBLOCK = 7;
-	int CLASS_CONST_DOCBLOCK = 8;
-	int CLASS_VAR_DOCBLOCK = 9;
-
 	String getShortDescription();
 
 	String getLongDescription();
@@ -37,8 +26,6 @@ public interface PHPDocBlock extends Serializable {
 	Iterator<PHPDocTag> getTags(int id);
 
 	public boolean hasTagOf(int id);
-
-	int getType();
 
 	int getStartPosition();
 
