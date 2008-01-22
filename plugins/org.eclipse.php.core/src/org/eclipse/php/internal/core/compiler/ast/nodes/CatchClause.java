@@ -5,6 +5,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents a catch clause (as part of a try statement)
@@ -50,5 +51,17 @@ public class CatchClause extends Statement {
 
 	public VariableReference getVariable() {
 		return variable;
+	}
+
+	public void printNode(CorePrinter output) {
+		output.formatPrintLn("CatchClause" + getSourceRange().toString() + ":");
+		output.indent();
+		className.printNode(output);
+		output.formatPrint("");
+		variable.printNode(output);
+		output.formatPrint("");
+		statement.printNode(output);
+		output.formatPrint("");
+		output.dedent();
 	}
 }
