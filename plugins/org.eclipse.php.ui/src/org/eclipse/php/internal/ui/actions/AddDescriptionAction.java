@@ -174,7 +174,7 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 
 	private String insertDocBlock(CodeData codeData, IStructuredDocument document, int offset) {
 		PHPDocBlock docBlock = PHPDocTool.createPhpDoc(codeData);
-		String dockBlockText = PHPDocBlockSerialezer.instance().createDocBlockText(document, docBlock, offset, true);
+		String dockBlockText = PHPDocBlockSerialezer.instance().createDocBlockText(document, docBlock, offset, codeData instanceof PHPFileData, true);
 		try {
 			document.replace(offset, 0, dockBlockText);
 		} catch (BadLocationException e) {

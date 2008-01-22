@@ -85,51 +85,48 @@ public class PHPDocTool {
 		}
 		PHPDocTag[] tags = new PHPDocTag[tagList.size()];
 		tagList.toArray(tags);
-		return new PHPDocBlockImp(null, null, tags, PHPDocBlockImp.FUNCTION_DOCBLOCK);
+		return new PHPDocBlockImp(null, null, tags);
 	}
 
 	private static PHPDocBlock createClassDocBlock() {
-		return new PHPDocBlockImp(null, null, null, PHPDocBlockImp.CLASS_DOCBLOCK);
+		return new PHPDocBlockImp(null, null, null);
 	}
 
 	private static PHPDocBlock createFileDocBlock() {
 		PHPDocTag packageTag = new BasicPHPDocTag(PHPDocTag.PACKAGE, "defaultPackage"); //$NON-NLS-1$
 		PHPDocTag authorTag = new BasicPHPDocTag(PHPDocTag.AUTHOR, System.getProperty("user.name")); //$NON-NLS-1$
 		PHPDocTag[] tags = new PHPDocTag[] { authorTag, packageTag };
-		return new PHPDocBlockImp(null, null, tags, PHPDocBlockImp.FILE_DOCBLOCK);
+		return new PHPDocBlockImp(null, null, tags);
 	}
 
 	private static PHPDocBlock createClassVarDocBlock() {
-		int id = PHPDocBlock.CLASS_VAR_DOCBLOCK;
 		BasicPHPDocTag varTag = new BasicPHPDocTag(PHPDocTag.VAR, "unknown_type"); //$NON-NLS-1$
 		PHPDocTag[] tags = new PHPDocTag[] { varTag };
-		return new PHPDocBlockImp(null, null, tags, id);
+		return new PHPDocBlockImp(null, null, tags);
 	}
 
 	private static PHPDocBlock createVarDocBlock(PHPVariableData codeData) {
 		PHPDocTag globalTag = null;
-		int id = PHPDocBlock.VARIABLE_DOCBLOCK;
 		if (codeData.isGlobal()) {
 			globalTag = new BasicPHPDocTag(PHPDocTag.GLOBAL, codeData.getName());
-			id = PHPDocBlock.GLOBAL_VAR_DOCBLOCK;
 		}
 		PHPDocTag[] tags = null;
 		if (globalTag != null) {
 			tags = new PHPDocTag[] { globalTag };
 		}
-		return new PHPDocBlockImp(null, null, tags, id);
+		return new PHPDocBlockImp(null, null, tags);
 	}
 
 	private static PHPDocBlock createConstantDocBlock() {
-		return new PHPDocBlockImp(null, null, null, PHPDocBlockImp.DEFINE_DOCBLOCK);
+		return new PHPDocBlockImp(null, null, null);
 	}
 
 	private static PHPDocBlock createIncludeDocBlock() {
-		return new PHPDocBlockImp(null, null, null, PHPDocBlockImp.INCLUDE_FILE_DOCBLOCK);
+		return new PHPDocBlockImp(null, null, null);
 	}
 
 	private static PHPDocBlock createClassConstantDocBlock() {
-		return new PHPDocBlockImp(null, null, null, PHPDocBlockImp.DEFINE_DOCBLOCK);
+		return new PHPDocBlockImp(null, null, null);
 	}
 
 }

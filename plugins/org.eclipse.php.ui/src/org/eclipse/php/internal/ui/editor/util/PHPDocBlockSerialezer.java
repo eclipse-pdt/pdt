@@ -47,7 +47,7 @@ public class PHPDocBlockSerialezer {
 	private PHPDocBlockSerialezer() {
 	}
 
-	public String createDocBlockText(IStructuredDocument document, PHPDocBlock docBlock, int position, boolean addNewLine) {
+	public String createDocBlockText(IStructuredDocument document, PHPDocBlock docBlock, int position, boolean addNewLineBefore, boolean addNewLineAfter) {
 		if (!lineDelimiter.equals(document.getLineDelimiter())) {
 			lineDelimiter = document.getLineDelimiter();
 			pattern = Pattern.compile(lineDelimiter);
@@ -57,7 +57,7 @@ public class PHPDocBlockSerialezer {
 		String tagsText = createTagsText(docBlock, whiteSpaces);
 
 		StringBuffer rv = new StringBuffer();
-		if (docBlock.getType() == PHPDocBlock.FILE_DOCBLOCK) {
+		if (addNewLineBefore) {
 			rv.append(lineDelimiter);
 			rv.append(whiteSpaces);
 		}
@@ -85,7 +85,7 @@ public class PHPDocBlockSerialezer {
 		rv.append(tagsText);
 		rv.append(whiteSpaces);
 		rv.append(DOCBLOCK_END);
-		if(addNewLine){
+		if(addNewLineAfter){
 			rv.append(lineDelimiter);
 			rv.append(whiteSpaces);
 		}
