@@ -28,13 +28,4 @@ public interface IExpressionFragment extends IASTFragment {
 	 */
 	public Expression getAssociatedExpression();
 
-	/**
-	 * Creates a copy of this IExpressionFragment.
-	 * 
-	 * @param rewrite an ASTRewrite
-	 * @return a copy of this IExpressionFragment, ready for use in the given
-	 *         rewrite
-	 * @throws JavaModelException 
-	 */
-//	public Expression createCopyTarget(ASTRewrite rewrite) throws JavaModelException;
 }

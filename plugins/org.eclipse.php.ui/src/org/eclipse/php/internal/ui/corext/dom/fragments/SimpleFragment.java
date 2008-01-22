@@ -22,7 +22,6 @@ class SimpleFragment extends ASTFragment {
 		fNode= node;
 	}
 
-	// TODO - check that it works after implementing matching
 	public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
 		if (! PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
 			return new IASTFragment[0];
@@ -32,12 +31,10 @@ class SimpleFragment extends ASTFragment {
 		return new IASTFragment[] { match };
 	}
 
-	// TODO - check that it works after implementing matching
 	public boolean matches(IASTFragment other) {
 		return other.getClass().equals(getClass()) && PHPASTMatcher.doNodesMatch(other.getAssociatedNode(), getAssociatedNode());
 	}
 
-	// TODO - check that it works after implementing matching
 	public IASTFragment[] getSubFragmentsMatching(IASTFragment toMatch) {
 		return ASTMatchingFragmentFinder.findMatchingFragments(getAssociatedNode(), (ASTFragment) toMatch);
 
