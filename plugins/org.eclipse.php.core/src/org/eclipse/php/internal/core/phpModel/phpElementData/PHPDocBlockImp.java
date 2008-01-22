@@ -21,15 +21,13 @@ public class PHPDocBlockImp implements PHPDocBlock {
 	private String shortDescription;
 	private String longDescription;
 	private PHPDocTag[] tags;
-	private int type;
 	private int startPosition;
 	private int endPosition;
 
-	public PHPDocBlockImp(String shortDescription, String longDescription, PHPDocTag[] tags, int type) {
+	public PHPDocBlockImp(String shortDescription, String longDescription, PHPDocTag[] tags) {
 		this.shortDescription = shortDescription;
 		this.longDescription = longDescription;
 		this.tags = tags;
-		this.type = type;
 	}
 
 	public String getShortDescription() {
@@ -66,10 +64,6 @@ public class PHPDocBlockImp implements PHPDocBlock {
 			}
 		}
 		return rv.iterator();
-	}
-
-	public int getType() {
-		return type;
 	}
 
 	public void setStartPosition(int value) {

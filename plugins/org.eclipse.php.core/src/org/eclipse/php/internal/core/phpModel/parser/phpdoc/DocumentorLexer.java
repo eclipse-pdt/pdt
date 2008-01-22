@@ -346,7 +346,7 @@ public class DocumentorLexer {
         BasicPHPDocTag[] tags = new BasicPHPDocTag[tagList.size()];
         tagList.toArray(tags);
 
-        PHPDocBlockImp rv = new PHPDocBlockImp(shortDesc, longDesc, tags, 0);
+        PHPDocBlockImp rv = new PHPDocBlockImp(shortDesc, longDesc, tags);
 
         return rv;
 

@@ -35,7 +35,7 @@ public class DefaultCacheManager {
 	private static final String DATA_MODEL_FILE_NAME = ".dataModel";//$NON-NLS-1$
 	private static final String CACHE_DIR_NAME = ".cache";//$NON-NLS-1$
 	public static final int DEFAULT_CACHE_POLICY = 0;
-	public static final int VERSION_IDENTIFIER = 181107; //DDMMYY
+	public static final int VERSION_IDENTIFIER = 220108; //DDMMYY
 	private HashMap projectToCacheDir;
 	private File sharedCacheDir;
 	private PreferencesSupport preferencesSupport;
