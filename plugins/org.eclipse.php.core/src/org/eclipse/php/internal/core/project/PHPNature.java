@@ -25,11 +25,13 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.ScriptNature;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
-public class PHPNature implements IProjectNature {
+public class PHPNature extends ScriptNature {
+
 	public static final String ID = PHPCorePlugin.ID + ".PHPNature"; //$NON-NLS-1$
 
 	public static final String PROJECTTYPE_VALUE = "PHP"; //$NON-NLS-1$
@@ -89,7 +91,7 @@ public class PHPNature implements IProjectNature {
 	/**
 	 * Create a default file for the user given the name (directory relative to the project) and the
 	 * default contents for the file.
-	 * 
+	 *
 	 * @param newFilePath -
 	 *            IPath
 	 * @param newFileContents -
@@ -112,7 +114,7 @@ public class PHPNature implements IProjectNature {
 
 	/**
 	 * Removes this nature from the project.
-	 * 
+	 *
 	 * @see IProjectNature#deconfigure
 	 */
 	public void deconfigure() throws CoreException {
@@ -128,7 +130,7 @@ public class PHPNature implements IProjectNature {
 
 	/**
 	 * Insert the method's description here. Creation date: (11/1/2001 2:25:22 PM)
-	 * 
+	 *
 	 * @param builderID
 	 *            java.lang.String
 	 * @exception org.eclipse.core.runtime.CoreException
@@ -161,9 +163,9 @@ public class PHPNature implements IProjectNature {
 	 * Configures the project with this nature. This is called by <code>IProject.addNature</code>
 	 * and should not be called directly by clients. The nature extension id is added to the list of
 	 * natures on the project by <code>IProject.addNature</code>, and need not be added here.
-	 * 
+	 *
 	 * All subtypes must call super.
-	 * 
+	 *
 	 * @exception CoreException
 	 *                if this method fails.
 	 */
@@ -175,7 +177,7 @@ public class PHPNature implements IProjectNature {
 
 	/**
 	 * Returns the project to which this project nature applies.
-	 * 
+	 *
 	 * @return the project handle
 	 */
 	public org.eclipse.core.resources.IProject getProject() {
@@ -186,7 +188,7 @@ public class PHPNature implements IProjectNature {
 	 * Sets the project to which this nature applies. Used when instantiating this project nature
 	 * runtime. This is called by <code>IProject.addNature</code> and should not be called
 	 * directly by clients.
-	 * 
+	 *
 	 * @param project
 	 *            the project to which this nature applies
 	 */
@@ -197,7 +199,7 @@ public class PHPNature implements IProjectNature {
 
 	/**
 	 * Create a folder relative to the project based on aProjectRelativePathString.
-	 * 
+	 *
 	 * @exception com.ibm.itp.core.api.resources.CoreException
 	 *                The exception description.
 	 */
@@ -209,7 +211,7 @@ public class PHPNature implements IProjectNature {
 
 	/**
 	 * Create a folder relative to the project based on aProjectRelativePathString.
-	 * 
+	 *
 	 * @exception com.ibm.itp.core.api.resources.CoreException
 	 *                The exception description.
 	 */

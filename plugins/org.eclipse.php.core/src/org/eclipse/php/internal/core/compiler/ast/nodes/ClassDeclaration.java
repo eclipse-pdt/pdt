@@ -25,9 +25,13 @@ public class ClassDeclaration extends TypeDeclaration {
 		super(className, nameStart, nameEnd, start, end);
 
 		ASTListNode parentsList = new ASTListNode();
-		parentsList.addNode(superClass);
-		for (TypeReference intface: interfaces) {
-			parentsList.addNode(intface);
+		if (superClass != null) {
+			parentsList.addNode(superClass);
+		}
+		if (interfaces != null) {
+			for (TypeReference intface: interfaces) {
+				parentsList.addNode(intface);
+			}
 		}
 		setSuperClasses(parentsList);
 

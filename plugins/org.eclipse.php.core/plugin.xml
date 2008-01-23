@@ -116,5 +116,26 @@
     <attribute name="userEditable"/>
     <super type="org.eclipse.core.resources.textmarker"/>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.language">
+    <language
+          class="org.eclipse.php.internal.core.PHPLanguageToolkit"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </language>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.sourceParsers">
+    <parserContribution
+          natureId="org.eclipse.php.core.PHPNature">
+       <parser
+             class="org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory"
+             description="org.eclipse.php.core.parser2"
+             id="org.eclipse.php.core.parser2"
+             name="org.eclipse.php.core.parser2"
+             priority="0">
+       </parser>
+    </parserContribution>
+ </extension>
 
 </plugin>
