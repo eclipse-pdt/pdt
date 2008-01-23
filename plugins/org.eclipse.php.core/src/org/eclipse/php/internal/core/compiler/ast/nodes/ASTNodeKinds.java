@@ -69,5 +69,7 @@ public interface ASTNodeKinds {
 	public static final int REFLECTION_CALL_EXPRESSION = 64;
 	public static final int REFLECTION_ARRAY_ACCESS = 65;
 	public static final int REFLECTION_STATIC_METHOD_INVOCATION = 66;
+	public static final int PHP_DOC_BLOCK = 67;
+	public static final int PHP_DOC_TAG = 68;
 
 }
