@@ -1335,8 +1335,11 @@
      <viewer 
          id="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator" 
          class="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator" 
-         extensions="php" 
-    /> 
+    />
+     <contentTypeBinding
+           contentMergeViewerId="org.eclipse.php.internal.ui.compare.PhpMergeViewerCreator"
+           contentTypeId="org.eclipse.php.core.phpsource">
+     </contentTypeBinding> 
     </extension>
 	
 	
