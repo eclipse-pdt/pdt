@@ -18,6 +18,10 @@ public class Program extends ModuleDeclaration {
 
 	private CommentsStatement commentsStatement;
 
+	public Program(int length) {
+		super(length, false);
+	}
+
 	public Program(int start, int end, List<Statement> statements, final List<Comment> comments) {
 		super(end - start);
 

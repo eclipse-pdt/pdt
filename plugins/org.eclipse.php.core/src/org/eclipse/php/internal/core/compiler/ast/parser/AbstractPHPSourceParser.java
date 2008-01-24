@@ -8,6 +8,7 @@ import org.eclipse.dltk.ast.parser.AbstractSourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Program;
 
 public abstract class AbstractPHPSourceParser extends AbstractSourceParser implements ISourceParser {
 
@@ -19,9 +20,10 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser imple
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
-			throw new RuntimeException(e);
+			// XXX: add recovery
+			return new Program(source.length);
 		}
 	}
 
-	public abstract ModuleDeclaration parse(Reader in, IProblemReporter reporter);
+	public abstract ModuleDeclaration parse(Reader in, IProblemReporter reporter) throws Exception;
 }
