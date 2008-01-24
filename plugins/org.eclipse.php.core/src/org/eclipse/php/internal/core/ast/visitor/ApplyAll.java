@@ -88,10 +88,6 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(classInstanciation);
 	}
 
-	public boolean visit(MethodDeclaration classMethodDeclaration) {
-		return apply(classMethodDeclaration);
-	}
-
 	public boolean visit(ClassName className) {
 		return apply(className);
 	}
@@ -204,6 +200,14 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(listVariable);
 	}
 
+	public boolean visit(MethodDeclaration classMethodDeclaration) {
+		return apply(classMethodDeclaration);
+	}
+	
+	public boolean visit(MethodInvocation methodInvocation) {
+		return apply(methodInvocation);
+	}	
+	
 	public boolean visit(PostfixExpression postfixExpressions) {
 		return apply(postfixExpressions);
 	}
