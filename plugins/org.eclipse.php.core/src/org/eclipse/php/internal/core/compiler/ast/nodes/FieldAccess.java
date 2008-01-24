@@ -2,7 +2,6 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.utils.CorePrinter;
 
 /**
  * Represents a field access
@@ -34,19 +33,5 @@ public class FieldAccess extends Dispatch {
 
 	public Expression getField() {
 		return field;
-	}
-
-	public void printNode(CorePrinter output) {
-		output.formatPrintLn("FieldAccess" + getSourceRange() + ":");
-		output.indent();
-
-		getDispatcher().printNode(output);
-		output.formatPrint("");
-		output.formatPrintLn("->");
-
-		field.printNode(output);
-		output.formatPrint("");
-
-		output.dedent();
 	}
 }

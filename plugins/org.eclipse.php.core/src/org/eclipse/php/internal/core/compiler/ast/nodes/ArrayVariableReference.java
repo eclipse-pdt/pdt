@@ -6,6 +6,7 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableKind;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Holds a variable and an index that point to array or hashtable
@@ -76,13 +77,13 @@ public class ArrayVariableReference extends VariableReference {
 		return ASTNodeKinds.ARRAY_ACCESS;
 	}
 
-	public void printNode(CorePrinter output) {
-		output.formatPrintLn("ArrayVariableReference" + this.getSourceRange().toString() + "(" + getArrayType(getArrayType()) + "):");
-		output.indent();
-		if (index != null) {
-			index.printNode(output);
-			output.formatPrint("");
-		}
-		output.dedent();
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	public final void printNode(CorePrinter output) {
+	}
+
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
 	}
 }

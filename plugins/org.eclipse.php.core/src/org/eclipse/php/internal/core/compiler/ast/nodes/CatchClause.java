@@ -6,6 +6,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a catch clause (as part of a try statement)
@@ -53,15 +54,13 @@ public class CatchClause extends Statement {
 		return variable;
 	}
 
-	public void printNode(CorePrinter output) {
-		output.formatPrintLn("CatchClause" + getSourceRange().toString() + ":");
-		output.indent();
-		className.printNode(output);
-		output.formatPrint("");
-		variable.printNode(output);
-		output.formatPrint("");
-		statement.printNode(output);
-		output.formatPrint("");
-		output.dedent();
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	public final void printNode(CorePrinter output) {
+	}
+
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
 	}
 }

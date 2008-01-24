@@ -6,6 +6,8 @@ import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a class declaration
@@ -40,5 +42,15 @@ public class ClassDeclaration extends TypeDeclaration {
 
 	public int getKind() {
 		return ASTNodeKinds.CLASS_DECLARATION;
+	}
+
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	public final void printNode(CorePrinter output) {
+	}
+
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
 	}
 }

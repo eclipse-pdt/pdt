@@ -4,6 +4,7 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 public class ReflectionCallExpression extends Expression {
 
@@ -59,16 +60,13 @@ public class ReflectionCallExpression extends Expression {
 		setStart(receiver.sourceStart());
 	}
 
-	public void printNode(CorePrinter output) {
-		output.formatPrint("ReflectionCallExpression" + this.getSourceRange().toString() + ":");
-		if (this.receiver != null) {
-			this.receiver.printNode(output);
-			output.formatPrint("->");
-		}
-		output.formatPrint(this.getName() + "(");
-		if (getArguments() != null) {
-			getArguments().printNode(output);
-		}
-		output.formatPrintLn(")");
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	public final void printNode(CorePrinter output) {
+	}
+
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
 	}
 }

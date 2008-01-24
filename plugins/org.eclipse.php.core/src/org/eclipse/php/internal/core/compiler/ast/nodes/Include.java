@@ -3,6 +3,8 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.Reference;
+import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents include, include_once, require and require_once expressions
@@ -66,5 +68,15 @@ public class Include extends Reference {
 
 	public String getStringRepresentation() {
 		return getType();
+	}
+
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	public final void printNode(CorePrinter output) {
+	}
+
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
 	}
 }

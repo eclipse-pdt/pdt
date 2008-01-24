@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.utils.CorePrinter;
+import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents back tick expression
@@ -44,15 +45,13 @@ public class BackTickExpression extends Expression {
 		return expressions;
 	}
 
-	public void printNode(CorePrinter output) {
-		output.formatPrintLn("BackTickExpression:");
-		output.indent();
+	/**
+	 * We don't print anything - we use {@link ASTPrintVisitor} instead
+	 */
+	public final void printNode(CorePrinter output) {
+	}
 
-		for (Expression expression : expressions){
-			expression.printNode(output);
-			output.formatPrint("");
-		}
-
-		output.dedent();
+	public String toString() {
+		return ASTPrintVisitor.toXMLString(this);
 	}
 }

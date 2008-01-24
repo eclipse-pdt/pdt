@@ -14,8 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -28,9 +27,15 @@ public class XMLWriter extends PrintWriter {
 	protected static final String XML_VERSION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"; //$NON-NLS-1$
 
 	public XMLWriter(OutputStream output) throws UnsupportedEncodingException {
+		this(output, true);
+	}
+
+	public XMLWriter(OutputStream output, boolean printHeader) throws UnsupportedEncodingException {
 		super(new OutputStreamWriter(output, "UTF8")); //$NON-NLS-1$
 		tab = 0;
-		println(XML_VERSION);
+		if (printHeader) {
+			println(XML_VERSION);
+		}
 	}
 
 	public void endTag(String name) {
@@ -51,18 +56,18 @@ public class XMLWriter extends PrintWriter {
 			super.print('\t');
 	}
 
-	public void printTag(String name, HashMap parameters) {
+	public void printTag(String name, Map<String, ?> parameters) {
 		printTag(name, parameters, true, true);
 	}
 
-	public void printTag(String name, HashMap parameters, boolean shouldTab, boolean newLine) {
+	public void printTag(String name, Map<String, ?> parameters, boolean shouldTab, boolean newLine) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<"); //$NON-NLS-1$
 		sb.append(name);
 		if (parameters != null)
-			for (Iterator it = parameters.keySet().iterator(); it.hasNext();) {
+			for (Object element : parameters.keySet()) {
 				sb.append(" "); //$NON-NLS-1$
-				String key = (String) it.next();
+				String key = (String) element;
 				sb.append(key);
 				sb.append("=\""); //$NON-NLS-1$
 				sb.append(getEscaped(String.valueOf(parameters.get(key))));
@@ -77,11 +82,11 @@ public class XMLWriter extends PrintWriter {
 			print(sb.toString());
 	}
 
-	public void startTag(String name, HashMap parameters) {
+	public void startTag(String name, Map<String, ?> parameters) {
 		startTag(name, parameters, true);
 	}
 
-	public void startTag(String name, HashMap parameters, boolean newLine) {
+	public void startTag(String name, Map<String, ?> parameters, boolean newLine) {
 		printTag(name, parameters, true, newLine);
 		tab++;
 	}

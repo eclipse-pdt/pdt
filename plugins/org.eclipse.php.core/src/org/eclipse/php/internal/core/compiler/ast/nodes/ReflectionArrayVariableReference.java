@@ -54,5 +54,4 @@ public class ReflectionArrayVariableReference extends ReflectionVariableReferenc
 		}
 		visitor.endvisit(this);
 	}
-
 }
