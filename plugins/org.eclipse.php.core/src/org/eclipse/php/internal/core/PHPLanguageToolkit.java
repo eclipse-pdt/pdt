@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.core;
 
 import org.eclipse.dltk.core.AbstractLanguageToolkit;
+import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 
 public class PHPLanguageToolkit extends AbstractLanguageToolkit {
@@ -19,6 +20,10 @@ public class PHPLanguageToolkit extends AbstractLanguageToolkit {
 
 	public String getNatureId() {
 		return PHPNature.ID;
+	}
+
+	public String getLanguageContentType() {
+		return ContentTypeIdForPHP.ContentTypeID_PHP;
 	}
 
 }
