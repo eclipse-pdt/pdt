@@ -47,6 +47,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(ASTError astError) {
 		return apply(astError);
 	}
+	
+	public boolean visit(BackTickExpression backTickExpression) {
+		return apply(backTickExpression);
+	}
+	
 
 	public boolean visit(InfixExpression binaryOperation) {
 		return apply(binaryOperation);
@@ -135,6 +140,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(ExpressionStatement expressionStatement) {
 		return apply(expressionStatement);
 	}	
+	
+	public boolean visit(FieldAccess filedAccess) {
+		return apply(filedAccess);
+	}
 
 	public boolean visit(ForEachStatement forEachStatement) {
 		return apply(forEachStatement);
@@ -208,6 +217,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(methodInvocation);
 	}	
 	
+	public boolean visit(ParenthesisExpression parenthesisExpression) {
+		return apply(parenthesisExpression);
+	}	
+	
+	
 	public boolean visit(PostfixExpression postfixExpressions) {
 		return apply(postfixExpressions);
 	}
@@ -242,6 +256,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	public boolean visit(StaticFieldAccess staticMember) {
 		return apply(staticMember);
+	}
+	
+	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
+		return apply(staticMethodInvocation);
 	}
 
 	public boolean visit(StaticStatement staticStatement) {
