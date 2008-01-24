@@ -130,12 +130,20 @@
           natureId="org.eclipse.php.core.PHPNature">
        <parser
              class="org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory"
-             description="org.eclipse.php.core.parser2"
-             id="org.eclipse.php.core.parser2"
-             name="org.eclipse.php.core.parser2"
+             description="Creates PHP source parser"
+             id="org.eclipse.php.core.phpSourceParserFactory"
+             name="PHP source parser factory"
              priority="0">
        </parser>
     </parserContribution>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.sourceElementParsers">
+    <parser
+          class="org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceElementParser"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </parser>
  </extension>
 
 </plugin>
