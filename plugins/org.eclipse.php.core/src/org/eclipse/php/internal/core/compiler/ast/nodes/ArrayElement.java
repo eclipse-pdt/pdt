@@ -60,7 +60,7 @@ public class ArrayElement extends ASTNode {
 		output.indent();
 		if (key != null) {
 			key.printNode(output);
-			output.formatPrint(" =>");
+			output.formatPrint("=>");
 		}
 		value.printNode(output);
 		output.formatPrint("");
