@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -19,6 +20,19 @@ public class PHPCallExpression extends CallExpression {
 
 	public PHPCallExpression(ASTNode receiver, String name, CallArgumentsList args) {
 		super(receiver, name, args);
+	}
+
+	public void traverse(ASTVisitor pVisitor) throws Exception {
+		if( pVisitor.visit( this ) ) {
+			if( receiver != null ) {
+				receiver.traverse( pVisitor );
+			}
+			getCallName().traverse(pVisitor);
+			if(getArgs() != null ) {
+				getArgs().traverse( pVisitor );
+			}
+			pVisitor.endvisit( this );
+		}
 	}
 
 	public int getKind() {
