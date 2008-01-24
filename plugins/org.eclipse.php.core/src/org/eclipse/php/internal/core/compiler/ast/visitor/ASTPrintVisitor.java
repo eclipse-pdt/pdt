@@ -798,6 +798,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(SimpleReference s) throws Exception {
 		HashMap<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
 		xmlWriter.startTag("SimpleReference", parameters);
 		return true;
 	}
