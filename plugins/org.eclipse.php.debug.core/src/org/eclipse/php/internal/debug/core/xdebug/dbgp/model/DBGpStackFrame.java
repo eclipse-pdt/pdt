@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
@@ -63,10 +64,14 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		stackLevel = DBGpResponse.getAttribute(stackData, "level");
 		lineNo = Integer.parseInt(line);
 		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"));
-		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapInboundFileIfRequired(qualifiedFile);
+		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
 		// check to see if the file exists in the workspace
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(qualifiedFile));//             findFilesForLocation(new Path(fileName));
-		if (file != null) {
+		// the following line doesn't work for linked files.
+		//IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(qualifiedFile));//             findFilesForLocation(new Path(fileName));
+		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(qualifiedFile));
+		//if (file != null) {
+		if (fileFound.length > 0) {
+			IFile file = fileFound[0];
 
 			// file is in the workspace, need to locate it 
 
