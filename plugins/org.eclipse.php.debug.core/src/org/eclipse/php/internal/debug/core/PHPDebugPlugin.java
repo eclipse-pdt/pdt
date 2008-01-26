@@ -27,6 +27,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -93,6 +94,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		XDebugLaunchListener.shutdown();
+		DBGpProxyHandler.instance.unregister();
 		savePluginPreferences();
 
 		super.stop(context);

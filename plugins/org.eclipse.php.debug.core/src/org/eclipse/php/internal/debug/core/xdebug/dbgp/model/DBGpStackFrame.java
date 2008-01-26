@@ -65,15 +65,9 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"));
 		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
 		// check to see if the file exists in the workspace
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(qualifiedFile));//             findFilesForLocation(new Path(fileName));
-		if (file != null) {
-
-			// file is in the workspace, need to locate it 
-
-			//BUG 2: debugger doesn't distinguish between files of the same name in a different project
-			//       however, because we are returning info relative to a project, if another project has 
-			//       the same structure the lookup may go to the wrong one.
-			//fileName = file.getFullPath().toString();  // to have multiple project granularity, but doesn't work with PHP IDE 
+		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(qualifiedFile));
+		if (fileFound.length > 0) {
+			IFile file = fileFound[0];
 			fileName = file.getProjectRelativePath().toString();
 			name = fileName + "." + DBGpResponse.getAttribute(stackData, "where") + " : lineno " + lineNo;
 		} else {
