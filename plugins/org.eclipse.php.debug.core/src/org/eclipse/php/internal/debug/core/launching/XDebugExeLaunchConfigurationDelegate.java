@@ -46,6 +46,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
@@ -158,9 +159,19 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			// check the launch for stop at first line, if not there go to project specifics
 			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
 			stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
-			
 			String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
-			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
+			String ideKey = null;
+			if (DBGpProxyHandler.instance.useProxy()) {
+				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
+				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
+					displayErrorMessage("Unable to connect to proxy\n" + DBGpProxyHandler.instance.getErrorMsg());
+					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+					return;					
+				}
+			}
+			else {
+				ideKey = DBGpSessionHandler.getInstance().getIDEKey();
+			}			
 			target = new DBGpTarget(launch, phpFile.lastSegment(), ideKey, sessionID, stopAtFirstLine);
 			target.setPathMapper(PathMapperRegistry.getByLaunchConfiguration(configuration));
 			DBGpSessionHandler.getInstance().addSessionListener(target);

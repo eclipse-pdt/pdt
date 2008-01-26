@@ -17,7 +17,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
@@ -25,10 +27,12 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
@@ -36,6 +40,7 @@ import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
@@ -47,6 +52,7 @@ import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.internal.browser.WebBrowserPreference;
@@ -122,8 +128,19 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		IDBGpDebugTarget target = null;
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
-			String sessionId = DBGpSessionHandler.getInstance().generateSessionId();
+			String sessionId = DBGpSessionHandler.getInstance().generateSessionId();			
+			String ideKey = null;
+			if (DBGpProxyHandler.instance.useProxy()) {
+				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
+				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
+					displayErrorMessage("Unable to connect to proxy\n" + DBGpProxyHandler.instance.getErrorMsg());
+					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+					return;					
+				}
+			}
+			else {
+				ideKey = DBGpSessionHandler.getInstance().getIDEKey();
+			}			
 			startStopURLs = generateStartStopDebugURLs(baseURL, sessionId, ideKey);
 			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);
 
