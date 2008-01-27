@@ -33,7 +33,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	private static final String INCLUDE_SUFFIX = "@"; //$NON-NLS-1$
 	private static final String CONSTANT_SUFFIX = "#"; //$NON-NLS-1$
 
-	private ModuleDeclaration module;
+//	private ModuleDeclaration module;
 	private ISourceModule sourceModule;
 	private boolean moduleAvailable;
 	private IMixinRequestor requestor;
@@ -201,7 +201,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	 * @param requestor
 	 */
 	public PHPMixinBuildVisitor(ModuleDeclaration module, ISourceModule sourceModule, boolean moduleAvailable, IMixinRequestor requestor) {
-		this.module = module;
+//		this.module = module;
 		this.sourceModule = sourceModule;
 		this.moduleAvailable = moduleAvailable;
 		this.requestor = requestor;
@@ -241,6 +241,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean visit(CallExpression expr) throws Exception {
 		if ("define".equals(expr.getName())) { //$NON-NLS-1$
 			// report global constant:
@@ -282,7 +283,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		else if (left instanceof FieldAccess) { // class variable ($this->a)
 			FieldAccess fieldAccess = (FieldAccess)left;
 			Expression dispatcher = fieldAccess.getDispatcher();
-			if (dispatcher instanceof VariableReference && "$this".equals(((VariableReference)dispatcher).getName())) {
+			if (dispatcher instanceof VariableReference && "$this".equals(((VariableReference)dispatcher).getName())) { //$NON-NLS-1$
 				Expression field = fieldAccess.getField();
 				if (field instanceof VariableReference) {
 					reportVariableDeclaration((VariableReference)field);
