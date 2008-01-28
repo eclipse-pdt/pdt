@@ -57,17 +57,11 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		}
 
 		public abstract String reportMethod(String name, IMethod object);
-
 		public abstract String reportVariable(String name, IField object);
-
 		public abstract String reportConstant(String name, IConstant object);
-
 		public abstract String reportType(String name, IType object, boolean isInterface);
-
 		public abstract String reportInclude(String object);
-
 		public abstract String getClassKey();
-
 		public abstract String getKey();
 	}
 
@@ -350,7 +344,12 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 	public boolean visit(ModuleDeclaration s) throws Exception {
 		sourceModuleScope = new SourceModuleScope(s);
-		scopes.add(sourceModuleScope);
+		scopes.push(sourceModuleScope);
+		return true;
+	}
+
+	public boolean endvisit(ModuleDeclaration s) throws Exception {
+		scopes.pop();
 		return true;
 	}
 
@@ -369,6 +368,11 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return true;
 	}
 
+	public boolean endvisit(MethodDeclaration decl) throws Exception {
+		scopes.pop();
+		return true;
+	}
+
 	public boolean visit(TypeDeclaration decl) throws Exception {
 		IType obj = null;
 		if (moduleAvailable) {
@@ -381,6 +385,11 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		String newKey = scope.reportType(name, obj, decl.getKind() == ASTNodeKinds.INTERFACE_DECLARATION);
 		scopes.push(new ClassScope(decl, newKey));
 
+		return true;
+	}
+
+	public boolean endvisit(TypeDeclaration decl) throws Exception {
+		scopes.pop();
 		return true;
 	}
 }
