@@ -4,14 +4,16 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.sourceModel.IConstant;
+import org.eclipse.php.internal.core.sourceModel.IInterface;
 
 public class PHPMixinElementInfo {
 
 	public static final int K_CLASS = 0;
-	public static final int K_METHOD = 1;
-	public static final int K_VARIABLE = 2;
-	public static final int K_CONSTANT = 3;
-	public static final int K_INCLUDE = 4;
+	public static final int K_INTERFACE = 1;
+	public static final int K_METHOD = 2;
+	public static final int K_VARIABLE = 3;
+	public static final int K_CONSTANT = 4;
+	public static final int K_INCLUDE = 5;
 
 	private int kind = 0;
 	private Object object = null;
@@ -72,6 +74,10 @@ public class PHPMixinElementInfo {
 
 	public static PHPMixinElementInfo createClass(IType type) {
 		return new PHPMixinElementInfo(K_CLASS, type);
+	}
+
+	public static PHPMixinElementInfo createInterface(IInterface type) {
+		return new PHPMixinElementInfo(K_INTERFACE, type);
 	}
 
 	public static PHPMixinElementInfo createMethod(IMethod m) {
