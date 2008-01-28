@@ -66,7 +66,7 @@ public class FormalParameter extends Argument {
 		return isMandatory;
 	}
 
-	public Expression getParameterName() {
+	public VariableReference getParameterName() {
 		return parameterName;
 	}
 

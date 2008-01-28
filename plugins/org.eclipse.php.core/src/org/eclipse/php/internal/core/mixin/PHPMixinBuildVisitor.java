@@ -25,6 +25,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ListVariable;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
@@ -251,6 +252,9 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		if (node instanceof PHPFieldDeclaration) {
 			return visit((PHPFieldDeclaration)node);
 		}
+		if (node instanceof FormalParameter) {
+			return visit((FormalParameter)node);
+		}
 		return true;
 	}
 
@@ -313,6 +317,20 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 				reportVariableDeclaration((VariableReference) variable);
 			}
 		}
+		return true;
+	}
+
+	public boolean visit(FormalParameter parameter) throws Exception {
+		IField obj = null;
+		VariableReference varReference = parameter.getParameterName();
+		String name = varReference.getName();
+		if (moduleAvailable) {
+			IModelElement element = findModelElementFor(varReference);
+			obj = (IField) element;
+		}
+		Scope scope = scopes.peek();
+		scope.reportVariable(name, obj);
+
 		return true;
 	}
 
