@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.ui.corext.SourceRange;
 
-class AssociativeInfixExpressionFragment extends ASTFragment implements IExpressionFragment {
+public class AssociativeInfixExpressionFragment extends ASTFragment implements IExpressionFragment {
 
 	private final List<Expression> fOperands;
 	private final InfixExpression fGroupRoot;
