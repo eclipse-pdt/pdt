@@ -1657,8 +1657,8 @@ public class PhpAstLexer5 implements org.eclipse.php.internal.core.ast.parser.As
         case 325: 
           { 
 if (!parsePHPDoc()) {
-handleCommentStart();
-yybegin(ST_DOCBLOCK);
+	handleCommentStart();
+	yybegin(ST_DOCBLOCK);
 }
  }
         case 679: break;
