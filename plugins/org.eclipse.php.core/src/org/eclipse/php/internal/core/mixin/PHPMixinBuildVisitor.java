@@ -21,14 +21,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ListVariable;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.sourceModel.IConstant;
 import org.eclipse.php.internal.core.sourceModel.IInterface;
 
@@ -58,11 +51,17 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		}
 
 		public abstract String reportMethod(String name, IMethod object);
+
 		public abstract String reportVariable(String name, IField object);
+
 		public abstract String reportConstant(String name, IConstant object);
+
 		public abstract String reportType(String name, IType object, boolean isInterface);
+
 		public abstract String reportInclude(String object);
+
 		public abstract String getClassKey();
+
 		public abstract String getKey();
 	}
 
@@ -223,13 +222,19 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	private void reportVariableDeclaration(VariableReference var) throws Exception {
+		reportVariableDeclaration(var, scopes.peek());
+	}
+
+	private void reportVariableDeclaration(VariableReference var, Scope scope) throws Exception {
+		if(scope == null){
+			throw new Exception("Scope should not be null");
+		}
 		IField obj = null;
 		String name = var.getName();
 		if (moduleAvailable) {
 			IModelElement element = findModelElementFor(var);
 			obj = (IField) element;
 		}
-		Scope scope = scopes.peek();
 		scope.reportVariable(name, obj);
 	}
 
@@ -250,10 +255,19 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return visit((ClassConstantDeclaration) node);
 		}
 		if (node instanceof PHPFieldDeclaration) {
-			return visit((PHPFieldDeclaration)node);
+			return visit((PHPFieldDeclaration) node);
 		}
 		if (node instanceof FormalParameter) {
-			return visit((FormalParameter)node);
+			return visit((FormalParameter) node);
+		}
+		if (node instanceof CatchClause) {
+			return visit((CatchClause) node);
+		}
+		if (node instanceof GlobalStatement) {
+			return visit((GlobalStatement) node);
+		}
+		if (node instanceof ForEachStatement) {
+			return visit((ForEachStatement) node);
 		}
 		return true;
 	}
@@ -344,6 +358,33 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		Scope scope = scopes.peek();
 		scope.reportConstant(stripQuotes(name), obj);
 
+		return true;
+	}
+
+	public boolean visit(CatchClause clause) throws Exception {
+		VariableReference variable = clause.getVariable();
+		reportVariableDeclaration(variable); // catch(Exception $a)
+		return true;
+	}
+
+	public boolean visit(GlobalStatement statement) throws Exception {
+		for (Expression variable : statement.getVariables()) {
+			if (variable instanceof VariableReference) { // global $a, $b
+				reportVariableDeclaration((VariableReference) variable, sourceModuleScope);
+			}
+		}
+		return true;
+	}
+
+	public boolean visit(ForEachStatement statement) throws Exception {
+		Expression key = statement.getKey();//foreach ($list as $key => $value)
+		if (key instanceof VariableReference) {
+			reportVariableDeclaration((VariableReference) key);
+		}
+		Expression value = statement.getValue();
+		if (value instanceof VariableReference) {
+			reportVariableDeclaration((VariableReference) value);
+		}
 		return true;
 	}
 
