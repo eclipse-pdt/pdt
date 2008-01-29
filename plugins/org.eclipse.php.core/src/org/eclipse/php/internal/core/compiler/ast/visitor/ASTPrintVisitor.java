@@ -2,7 +2,10 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.references.ConstantReference;
@@ -47,8 +50,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		}
 	}
 
-	protected HashMap<String, String> createInitialParameters(ASTNode s) throws Exception {
-		HashMap<String, String> parameters = new HashMap<String, String>();
+	protected Map<String, String> createInitialParameters(ASTNode s) throws Exception {
+		Map<String, String> parameters = new LinkedHashMap<String, String>();
 
 		// Print offset information:
 		parameters.put("start", Integer.toString(s.sourceStart()));
@@ -423,19 +426,19 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	public boolean visit(ArrayCreation s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayCreation", parameters);
 		return true;
 	}
 
 	public boolean visit(ArrayElement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayElement", parameters);
 		return true;
 	}
 
 	public boolean visit(ArrayVariableReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", ArrayVariableReference.getArrayType(s.getArrayType()));
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("ArrayVariableReference", parameters);
@@ -443,235 +446,235 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	public boolean visit(Assignment s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator());
 		xmlWriter.startTag("Assignment", parameters);
 		return true;
 	}
 
 	public boolean visit(ASTError s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ASTError", parameters);
 		return true;
 	}
 
 	public boolean visit(BackTickExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("BackTickExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(BreakStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("BreakStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(CastExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", CastExpression.getCastType(s.getCastType()));
 		xmlWriter.startTag("CastExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(CatchClause s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("CatchClause", parameters);
 		return true;
 	}
 
 	public boolean visit(ClassConstantDeclaration s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ClassConstantDeclaration", parameters);
 		return true;
 	}
 
 	public boolean visit(ClassDeclaration s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ClassDeclaration", parameters);
 		return true;
 	}
 
 	public boolean visit(ClassInstanceCreation s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ClassInstanceCreation", parameters);
 		return true;
 	}
 
 	public boolean visit(CloneExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("CloneExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(Comment s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("Comment", parameters);
 		return true;
 	}
 
 	public boolean visit(CommentsStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("CommentsStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(ConditionalExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ConditionalExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(ConstantReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("ConstantReference", parameters);
 		return true;
 	}
 
 	public boolean visit(ContinueStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ContinueStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(DeclareStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("DeclareStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(Dispatch s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("Dispatch", parameters);
 		return true;
 	}
 
 	public boolean visit(DoStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("DoStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(EchoStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("EchoStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(EmptyStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("EmptyStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(ExpressionStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ExpressionStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(FieldAccess s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("FieldAccess", parameters);
 		return true;
 	}
 
 	public boolean visit(ForEachStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ForEachStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(FormalParameter s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isMandatory", Boolean.toString(s.isMandatory()));
 		xmlWriter.startTag("FormalParameter", parameters);
 		return true;
 	}
 
 	public boolean visit(FormalParameterByReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("FormalParameterByReference", parameters);
 		return true;
 	}
 
 	public boolean visit(ForStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ForStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(GlobalStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("GlobalStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(IfStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("IfStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(IgnoreError s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("IgnoreError", parameters);
 		return true;
 	}
 
 	public boolean visit(Include s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("Include", parameters);
 		return true;
 	}
 
 	public boolean visit(InfixExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator());
 		xmlWriter.startTag("InfixExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(InstanceOfExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("InstanceOfExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(InterfaceDeclaration s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("InterfaceDeclaration", parameters);
 		return true;
 	}
 
 	public boolean visit(ListVariable s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ListVariable", parameters);
 		return true;
 	}
 
 	public boolean visit(PHPCallArgumentsList s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPCallArgumentsList", parameters);
 		return true;
 	}
 
 	public boolean visit(PHPCallExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPCallExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(PHPDocBlock s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("shortDescription", s.getShortDescription());
 		xmlWriter.startTag("PHPDocBlock", parameters);
 		return true;
 	}
 	
 	public boolean visit(PHPDocTag s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("tagKind", PHPDocTag.getTagKind(s.getTagKind()));
 		parameters.put("value", s.getValue());
 		xmlWriter.startTag("PHPDocTag", parameters);
@@ -679,82 +682,82 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 	
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPFieldDeclaration", parameters);
 		return true;
 	}
 
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPMethodDeclaration", parameters);
 		return true;
 	}
 
 	public boolean visit(PostfixExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator());
 		xmlWriter.startTag("PostfixExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(PrefixExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator());
 		xmlWriter.startTag("PrefixExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(Program s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("Program", parameters);
 		return true;
 	}
 
 	public boolean visit(Quote s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", Quote.getType(s.getQuoteType()));
 		xmlWriter.startTag("Quote", parameters);
 		return true;
 	}
 
 	public boolean visit(ReferenceExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReferenceExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(ReflectionArrayVariableReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionArrayVariableReference", parameters);
 		return true;
 	}
 
 	public boolean visit(ReflectionCallExpression s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionCallExpression", parameters);
 		return true;
 	}
 
 	public boolean visit(ReflectionStaticMethodInvocation s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionStaticMethodInvocation", parameters);
 		return true;
 	}
 
 	public boolean visit(ReflectionVariableReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReflectionVariableReference", parameters);
 		return true;
 	}
 
 	public boolean visit(ReturnStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ReturnStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(Scalar s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", s.getType());
 		parameters.put("value", s.getValue());
 		xmlWriter.startTag("Scalar", parameters);
@@ -762,89 +765,89 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	public boolean visit(SimpleReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("SimpleReference", parameters);
 		return true;
 	}
 
 	public boolean visit(StaticConstantAccess s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticConstantAccess", parameters);
 		return true;
 	}
 
 	public boolean visit(StaticDispatch s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticDispatch", parameters);
 		return true;
 	}
 
 	public boolean visit(StaticFieldAccess s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticFieldAccess", parameters);
 		return true;
 	}
 
 	public boolean visit(StaticMethodInvocation s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticMethodInvocation", parameters);
 		return true;
 	}
 
 	public boolean visit(StaticStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("StaticStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(SwitchCase s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("SwitchCase", parameters);
 		return true;
 	}
 
 	public boolean visit(SwitchStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("SwitchStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(ThrowStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ThrowStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(TryStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("TryStatement", parameters);
 		return true;
 	}
 
 	public boolean visit(TypeReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("TypeReference", parameters);
 		return true;
 	}
 
 	public boolean visit(UnaryOperation s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("operator", s.getOperator());
 		xmlWriter.startTag("UnaryOperation", parameters);
 		return true;
 	}
 
 	public boolean visit(VariableReference s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("name", s.getName());
 		xmlWriter.startTag("VariableReference", parameters);
 		return true;
 	}
 
 	public boolean visit(WhileStatement s) throws Exception {
-		HashMap<String, String> parameters = createInitialParameters(s);
+		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("WhileStatement", parameters);
 		return true;
 	}
