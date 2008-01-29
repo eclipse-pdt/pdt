@@ -210,6 +210,16 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
+	public boolean endvisit(PHPDocBlock s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(PHPDocTag s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+	
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
 		endvisitGeneral(s);
 		return false;
@@ -501,6 +511,14 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	public boolean visit(PHPCallExpression s) throws Exception {
 		return visitGeneral(s);
 	}
+	
+	public boolean visit(PHPDocBlock s) throws Exception {
+		return visitGeneral(s);
+	}
+	
+	public boolean visit(PHPDocTag s) throws Exception {
+		return visitGeneral(s);
+	}
 
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
 		return visitGeneral(s);
@@ -733,6 +751,12 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s.getClass().equals(PHPFieldDeclaration.class)) {
 			return endvisit((PHPFieldDeclaration) s);
+		}
+		if (s.getClass().equals(PHPDocBlock.class)) {
+			return endvisit((PHPDocBlock) s);
+		}
+		if (s.getClass().equals(PHPDocTag.class)) {
+			return endvisit((PHPDocTag) s);
 		}
 		if (s.getClass().equals(PHPMethodDeclaration.class)) {
 			return endvisit((PHPMethodDeclaration) s);
@@ -967,6 +991,12 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s.getClass().equals(PHPFieldDeclaration.class)) {
 			return visit((PHPFieldDeclaration) s);
+		}
+		if (s.getClass().equals(PHPDocBlock.class)) {
+			return visit((PHPDocBlock) s);
+		}
+		if (s.getClass().equals(PHPDocTag.class)) {
+			return visit((PHPDocTag) s);
 		}
 		if (s.getClass().equals(PHPMethodDeclaration.class)) {
 			return visit((PHPMethodDeclaration) s);

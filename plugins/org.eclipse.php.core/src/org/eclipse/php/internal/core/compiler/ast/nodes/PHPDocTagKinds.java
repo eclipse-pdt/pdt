@@ -63,8 +63,4 @@ public interface PHPDocTagKinds {
 	
 	public static final int THROWS  = 29;
 
-	public int getID();
-
-	public String getValue();
-
 }

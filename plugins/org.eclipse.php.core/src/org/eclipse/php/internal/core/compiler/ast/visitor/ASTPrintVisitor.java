@@ -9,68 +9,7 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayElement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.BackTickExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.BreakStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.CastExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.CatchClause;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.CloneExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.CommentsStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ConditionalExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ContinueStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.DeclareStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Dispatch;
-import org.eclipse.php.internal.core.compiler.ast.nodes.DoStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.EchoStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.EmptyStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ExpressionStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ForStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameterByReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IfStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IgnoreError;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InstanceOfExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InterfaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ListVariable;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallArgumentsList;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PostfixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PrefixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Program;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Quote;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReferenceExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReflectionArrayVariableReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReflectionCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReflectionStaticMethodInvocation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReflectionVariableReference;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticConstantAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticDispatch;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.SwitchCase;
-import org.eclipse.php.internal.core.compiler.ast.nodes.SwitchStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ThrowStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.TryStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UnaryOperation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.WhileStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.util.XMLWriter;
 
 /**
@@ -338,6 +277,16 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	public boolean endvisit(PHPDocBlock s) throws Exception {
+		xmlWriter.endTag("PHPDocBlock");
+		return true;
+	}
+
+	public boolean endvisit(PHPDocTag s) throws Exception {
+		xmlWriter.endTag("PHPDocTag");
+		return true;
+	}
+	
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
 		xmlWriter.endTag("PHPFieldDeclaration");
 		return true;
@@ -714,6 +663,21 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	public boolean visit(PHPDocBlock s) throws Exception {
+		HashMap<String, String> parameters = createInitialParameters(s);
+		parameters.put("shortDescription", s.getShortDescription());
+		xmlWriter.startTag("PHPDocBlock", parameters);
+		return true;
+	}
+	
+	public boolean visit(PHPDocTag s) throws Exception {
+		HashMap<String, String> parameters = createInitialParameters(s);
+		parameters.put("tagKind", PHPDocTag.getTagKind(s.getTagKind()));
+		parameters.put("value", s.getValue());
+		xmlWriter.startTag("PHPDocTag", parameters);
+		return true;
+	}
+	
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
 		HashMap<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPFieldDeclaration", parameters);
