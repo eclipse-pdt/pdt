@@ -230,6 +230,10 @@ public interface Visitor {
 	
 	public void endVisit(Scalar scalar);
 
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration);
+	
+	public void endVisit(SingleFieldDeclaration singleFieldDeclaration);	
+	
 	public boolean visit(StaticConstantAccess classConstantAccess);
 	
 	public void endVisit(StaticConstantAccess staticConstantAccess);

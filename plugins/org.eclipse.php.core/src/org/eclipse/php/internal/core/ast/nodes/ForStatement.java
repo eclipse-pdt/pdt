@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -28,34 +30,76 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ForStatement extends Statement {
 
-	private final Expression[] initializations;
-	private final Expression[] conditions;
-	private final Expression[] increasements;
-	private final Statement action;
+	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(INITIALIZERS_PROPERTY);
+	private final ASTNode.NodeList<Expression> conditions = new ASTNode.NodeList<Expression>(EXPRESSION_PROPERTY);
+	private final ASTNode.NodeList<Expression> updaters = new ASTNode.NodeList<Expression>(UPDATERS_PROPERTY);
+	private Statement body;
 
-	private ForStatement(int start, int end, Expression[] initializations, Expression[] conditions, Expression[] increasements, Statement action) {
-		super(start, end);
+	/**
+	 * The "initializers" structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor INITIALIZERS_PROPERTY = 
+		new ChildListPropertyDescriptor(ForStatement.class, "initializers", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor EXPRESSION_PROPERTY =
+		new ChildListPropertyDescriptor(ForStatement.class, "conditions", Expression.class, CYCLE_RISK); //$NON-NLS-1$		
+	public static final ChildListPropertyDescriptor UPDATERS_PROPERTY = 
+		new ChildListPropertyDescriptor(ForStatement.class, "updaters", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = 
+		new ChildPropertyDescriptor(ForStatement.class, "body", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
-		assert initializations != null && conditions != null && increasements != null && action != null;
-		this.initializations = initializations;
-		this.conditions = conditions;
-		this.increasements = increasements;
-		this.action = action;
-
-		for (int i = 0; i < initializations.length; i++) {
-			initializations[i].setParent(this);
-		}
-		for (int i = 0; i < conditions.length; i++) {
-			conditions[i].setParent(this);
-		}
-		for (int i = 0; i < increasements.length; i++) {
-			increasements[i].setParent(this);
-		}
-		action.setParent(this);
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		properyList.add(INITIALIZERS_PROPERTY);
+		properyList.add(EXPRESSION_PROPERTY);
+		properyList.add(UPDATERS_PROPERTY);
+		properyList.add(BODY_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public ForStatement(int start, int end, List initializations, List conditions, List increasements, Statement action) {
-		this(start, end, initializations == null ? null : (Expression[]) initializations.toArray(new Expression[initializations.size()]), conditions == null ? null : (Expression[]) conditions.toArray(new Expression[conditions.size()]), increasements == null ? null : (Expression[]) increasements
+	/**
+	 * Returns a list of structural property descriptors for this node type.
+	 * Clients must not modify the result.
+	 * 
+	 * @param apiLevel the API level; one of the
+	 * <code>AST.JLS*</code> constants
+
+	 * @return a list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor})
+	 * @since 3.0
+	 */
+	public static List<StructuralPropertyDescriptor> propertyDescriptors(int apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}	
+	
+	private ForStatement(int start, int end, AST ast, Expression[] initializations, Expression[] conditions, Expression[] increasements, Statement action) {
+		super(start, end, ast);
+
+		assert initializations != null && conditions != null && increasements != null && action != null;
+		for (Expression init : initializations) {
+			this.initializers.add(init);
+			init.setParent(this, INITIALIZERS_PROPERTY);
+		}
+		for (Expression cond : conditions) {
+			this.conditions.add(cond);
+			cond.setParent(this, EXPRESSION_PROPERTY);
+		}
+		for (Expression inc : increasements) {
+			this.updaters.add(inc);
+			inc.setParent(this, UPDATERS_PROPERTY);
+		}
+		this.body = action;
+		action.setParent(this, BODY_PROPERTY);
+	}
+
+	public ForStatement(int start, int end, AST ast, List initializations, List conditions, List increasements, Statement action) {
+		this(start, end, ast, initializations == null ? null : (Expression[]) initializations.toArray(new Expression[initializations.size()]), conditions == null ? null : (Expression[]) conditions.toArray(new Expression[conditions.size()]), increasements == null ? null : (Expression[]) increasements
 			.toArray(new Expression[increasements.size()]), action);
 	}
 
@@ -68,44 +112,42 @@ public class ForStatement extends Statement {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < initializations.length; i++) {
-			initializations[i].accept(visitor);
+		for (ASTNode node : this.initializers) {
+			node.accept(visitor);
 		}
-		for (int i = 0; i < conditions.length; i++) {
-			conditions[i].accept(visitor);
+		for (ASTNode node : this.conditions) {
+			node.accept(visitor);
 		}
-		for (int i = 0; i < increasements.length; i++) {
-			increasements[i].accept(visitor);
+		for (ASTNode node : this.updaters) {
+			node.accept(visitor);
 		}
-		action.accept(visitor);
+		body.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
-		accept(visitor);
-		for (int i = 0; i < initializations.length; i++) {
-			initializations[i].traverseTopDown(visitor);
+		for (ASTNode node : this.initializers) {
+			node.traverseTopDown(visitor);
 		}
-		for (int i = 0; i < conditions.length; i++) {
-			conditions[i].traverseTopDown(visitor);
+		for (ASTNode node : this.conditions) {
+			node.traverseTopDown(visitor);
 		}
-		for (int i = 0; i < increasements.length; i++) {
-			increasements[i].traverseTopDown(visitor);
+		for (ASTNode node : this.updaters) {
+			node.traverseTopDown(visitor);
 		}
-		action.traverseTopDown(visitor);
+		body.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < initializations.length; i++) {
-			initializations[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.initializers) {
+			node.traverseBottomUp(visitor);
 		}
-		for (int i = 0; i < conditions.length; i++) {
-			conditions[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.conditions) {
+			node.traverseBottomUp(visitor);
 		}
-		for (int i = 0; i < increasements.length; i++) {
-			increasements[i].traverseBottomUp(visitor);
-		}
-		action.traverseBottomUp(visitor);
-		accept(visitor);
+		for (ASTNode node : this.updaters) {
+			node.traverseBottomUp(visitor);
+		}		
+		body.traverseBottomUp(visitor);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
@@ -113,24 +155,24 @@ public class ForStatement extends Statement {
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<Initializations>\n"); //$NON-NLS-1$
-		for (int i = 0; i < initializations.length; i++) {
-			initializations[i].toString(buffer, TAB + TAB + tab);
+		for (ASTNode node : this.initializers) {
+			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
-		}
+		}		
 		buffer.append(TAB).append(tab).append("</Initializations>\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<Conditions>\n"); //$NON-NLS-1$
-		for (int i = 0; i < conditions.length; i++) {
-			conditions[i].toString(buffer, TAB + TAB + tab);
+		for (ASTNode node : this.conditions) {
+			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
-		}
+		}		
 		buffer.append(TAB).append(tab).append("</Conditions>\n"); //$NON-NLS-1$
 		buffer.append(TAB).append(tab).append("<Increasements>\n"); //$NON-NLS-1$
-		for (int i = 0; i < increasements.length; i++) {
-			increasements[i].toString(buffer, TAB + TAB + tab);
+		for (ASTNode node : this.updaters) {
+			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
-		}
+		}		
 		buffer.append(TAB).append(tab).append("</Increasements>\n"); //$NON-NLS-1$
-		action.toString(buffer, TAB + tab);
+		body.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</ForStatement>"); //$NON-NLS-1$
 	}
@@ -139,20 +181,112 @@ public class ForStatement extends Statement {
 		return ASTNode.FOR_STATEMENT;
 	}
 
+	/**
+	 * Returns the live ordered list of initializer expressions in this for
+	 * statement.
+	 * <p>
+	 * The list should consist of either a list of so called statement 
+	 * expressions (JLS2, 14.8), or a single <code>VariableDeclarationExpression</code>. 
+	 * Otherwise, the for statement would have no Java source equivalent.
+	 * </p>
+	 * 
+	 * @return the live list of initializer expressions 
+	 *    (element type: <code>Expression</code>)
+	 */ 
+	public List initializers() {
+		return this.initializers;
+	}
+	
+	/**
+	 * Returns the condition expression of this for statement, or 
+	 * <code>null</code> if there is none.
+	 * 
+	 * @return the condition expression node, or <code>null</code> if 
+	 *     there is none
+	 */ 
+	public List conditions() {
+		return this.conditions;
+	}
+	
+	/**
+	 * Returns the live ordered list of update expressions in this for
+	 * statement.
+	 * <p>
+	 * The list should consist of so called statement expressions. Otherwise,
+	 * the for statement would have no Java source equivalent.
+	 * </p>
+	 * 
+	 * @return the live list of update expressions 
+	 *    (element type: <code>Expression</code>)
+	 */ 
+	public List updaters() {
+		return this.updaters;
+	}
+	
+	/**
+	 * Returns the body of this for statement.
+	 * 
+	 * @return the body statement node
+	 */ 
+	public Statement getBody() {
+		return this.body;
+	}
+	
+	/**
+	 * Sets the body of this for statement.
+	 * <p>
+	 * Special note: The Java language does not allow a local variable declaration
+	 * to appear as the body of a for statement (they may only appear within a
+	 * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
+	 * as the body of a <code>ForStatement</code>. To get something that will
+	 * compile, be sure to embed the <code>VariableDeclarationStatement</code>
+	 * inside a <code>Block</code>.
+	 * </p>
+	 * 
+	 * @param statement the body statement node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setBody(Statement statement) {
+		if (statement == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.body;
+		preReplaceChild(oldChild, statement, BODY_PROPERTY);
+		this.body = statement;
+		postReplaceChild(oldChild, statement, BODY_PROPERTY);
+	}
+	
+	/**
+	 * @deprecated use {@link #getBody()} 
+	 */
 	public Statement getAction() {
-		return action;
+		return body;
 	}
 
+	/**
+	 * @deprecated use {@link #conditions()} 
+	 */
 	public Expression[] getConditions() {
-		return conditions;
+		return (Expression[]) conditions.toArray(new Expression[conditions.size()]);
 	}
 
+	/**
+	 * @deprecated use {@link #increasements()} 
+	 */
 	public Expression[] getIncreasements() {
-		return increasements;
+		return (Expression[]) updaters.toArray(new Expression[conditions.size()]);
 	}
 
+	/**
+	 * @deprecated use {@link #initializers()} 
+	 */
 	public Expression[] getInitializations() {
-		return initializations;
+		return (Expression[]) initializers.toArray(new Expression[conditions.size()]);
 	}
 	
 	/* 
@@ -161,5 +295,20 @@ public class ForStatement extends Statement {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final List inits = ASTNode.copySubtrees(target, initializers());
+		final List conds = ASTNode.copySubtrees(target, conditions());
+		final List updtaters= ASTNode.copySubtrees(target, updaters());
+		final Statement body = ASTNode.copySubtree(target, getBody());
+		ForStatement result = new ForStatement(this.getStart(), this.getEnd(), target, inits, conds, updtaters, body);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

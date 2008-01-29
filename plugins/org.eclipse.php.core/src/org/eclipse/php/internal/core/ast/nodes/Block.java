@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -29,28 +31,50 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class Block extends Statement {
 
-	private final Statement[] statements;
-	private final boolean isCurly;
+	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(STATEMENTS_PROPERTY);
+	private boolean isCurly;
+	
+	/**
+	 * The "statements" structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = 
+		new ChildListPropertyDescriptor(Block.class, "statements", Statement.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_CURLY_PROPERTY = 
+		new SimplePropertyDescriptor(Block.class, "isCurly", Boolean.class, OPTIONAL); //$NON-NLS-1$
 
-	private Block(int start, int end, Statement[] statements, boolean isCurly) {
-		super(start, end);
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		properyList.add(STATEMENTS_PROPERTY);
+		properyList.add(IS_CURLY_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+	
+	
+	private Block(int start, int end, AST ast, Statement[] statements, boolean isCurly) {
+		super(start, end, ast);
 
 		assert statements != null;
-		this.statements = statements;
 		this.isCurly = isCurly;
 
 		// set the child nodes' parent
 		for (int i = 0; i < statements.length; i++) {
-			statements[i].setParent(this);
+			this.statements.add(statements[i]);
+			statements[i].setParent(this, STATEMENTS_PROPERTY);
 		}
 	}
 
-	public Block(int start, int end, List statements, boolean isCurly) {
-		this(start, end, statements == null ? null : (Statement[]) statements.toArray(new Statement[statements.size()]), isCurly);
+	public Block(int start, int end, AST ast, List statements, boolean isCurly) {
+		this(start, end, ast, statements == null ? null : (Statement[]) statements.toArray(new Statement[statements.size()]), isCurly);
 	}
 
-	public Block(int start, int end, List statements) {
-		this(start, end, statements, true);
+	public Block(int start, int end, AST ast, List statements) {
+		this(start, end, ast, statements, true);
 	}
 
 	public void accept(Visitor visitor) {
@@ -62,22 +86,22 @@ public class Block extends Statement {
 	}	
 	
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].accept(visitor);
-		}
+		for (ASTNode statement : statements) {
+			statement.accept(visitor);			
+		} 
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].traverseTopDown(visitor);
-		}
+		for (ASTNode statement : statements) {
+			statement.traverseTopDown(visitor);			
+		} 
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].traverseBottomUp(visitor);
-		}
+		for (ASTNode statement : statements) {
+			statement.traverseBottomUp(visitor);			
+		} 
 		accept(visitor);
 	}
 
@@ -85,10 +109,10 @@ public class Block extends Statement {
 		buffer.append(tab).append("<Block"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" isCurly='").append(isCurly).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].toString(buffer, TAB + tab);
-			buffer.append("\n"); //$NON-NLS-1$
-		}
+		for (ASTNode statement : statements) {
+			statement.toString(buffer, TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$			
+		} 
 		buffer.append(tab).append("</Block>"); //$NON-NLS-1$
 	}
 
@@ -100,8 +124,19 @@ public class Block extends Statement {
 		return isCurly;
 	}
 
+	/**
+	 * @deprecated use {@link #statements()}
+	 */
 	public Statement[] getStatements() {
-		return statements;
+		return (Statement[]) statements.toArray(new Statement[statements.size()]);
+	}
+
+	/**
+	 * Retrieves the statement parts of this block
+	 * @return statement parts of this block
+	 */
+	public List statements() {
+		return this.statements;
 	}
 	
 	/* 
@@ -110,5 +145,31 @@ public class Block extends Statement {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	ASTNode clone0(AST target) {
+		final List statements = ASTNode.copySubtrees(target, statements());
+		final Block result = new Block(this.getStart(), this.getEnd(), target, statements, this.isCurly());
+		return result;
+	}
+	
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == STATEMENTS_PROPERTY) {
+			return statements();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
 	}
 }

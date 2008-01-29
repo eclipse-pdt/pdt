@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -25,10 +29,29 @@ public class Comment extends ASTNode {
 	public final static int TYPE_MULTILINE = 1;
 	public final static int TYPE_PHPDOC = 2;
 
-	private final int commentType;
+	private int commentType;
+	
+	/**
+	 * The "identifier" structural property of this node type.
+	 */
+	public static final SimplePropertyDescriptor COMMENT_TYPE_PROPERTY = 
+		new SimplePropertyDescriptor(Comment.class, "commentType", Integer.class, MANDATORY); //$NON-NLS-1$
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(1);
+		list.add(COMMENT_TYPE_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
+	}
+	
 
-	public Comment(int start, int end, int type) {
-		super(start, end);
+	public Comment(int start, int end, AST ast, int type) {
+		super(start, end, ast);
 
 		this.commentType = type;
 	}
@@ -84,4 +107,42 @@ public class Comment extends ASTNode {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Comment result = new Comment(this.getStart(), this.getEnd(), target, this.getCommentType());
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == COMMENT_TYPE_PROPERTY) {
+			if (get) {
+				return getCommentType();
+			} else {
+				setCommentType((Integer) value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+
+	public final void setCommentType(int value) {
+		if (value != TYPE_MULTILINE && value != TYPE_PHPDOC && value != TYPE_SINGLE_LINE) {
+			throw new IllegalArgumentException();
+		}
+		
+		preValueChange(COMMENT_TYPE_PROPERTY);
+		this.commentType = value;
+		postValueChange(COMMENT_TYPE_PROPERTY);
+	}
+	
 }

@@ -28,28 +28,39 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class SwitchCase extends Statement {
 
-	private final Expression value;
-	private final Statement[] actions;
-	private final boolean isDefault;
+	private Expression value;
+	private ASTNode.NodeList<Statement> actions = new ASTNode.NodeList<Statement>(ACTIONS_PROPERTY);
+	private boolean isDefault;
 
-	public SwitchCase(int start, int end, Expression value, Statement[] actions, boolean isDefault) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor VALUE_PROPERTY = 
+		new ChildPropertyDescriptor(SwitchCase.class, "value", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor ACTIONS_PROPERTY = 
+		new ChildListPropertyDescriptor(SwitchCase.class, "actions", Statement.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_DEFAULT_PROPERTY = 
+		new SimplePropertyDescriptor(SwitchCase.class, "isDefault", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	
+	
+	public SwitchCase(int start, int end, AST ast, Expression value, Statement[] actions, boolean isDefault) {
+		super(start, end, ast);
 
 		assert actions != null;
-		this.value = value;
-		this.actions = actions;
-		this.isDefault = isDefault;
 
+		this.value = value;
 		if (value != null) {
-			value.setParent(this);
+			value.setParent(this, VALUE_PROPERTY);
 		}
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].setParent(this);
+		
+		for (Statement statement : actions) {
+			this.actions.add(statement);
 		}
+		this.isDefault = isDefault;
 	}
 
-	public SwitchCase(int start, int end, Expression value, List actions, boolean isDefault) {
-		this(start, end, value, actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
+	public SwitchCase(int start, int end, AST ast, Expression value, List actions, boolean isDefault) {
+		this(start, end, ast, value, actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
 	}
 
 	public void accept(Visitor visitor) {
@@ -64,8 +75,8 @@ public class SwitchCase extends Statement {
 		if (value != null) {
 			value.accept(visitor);
 		}
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].accept(visitor);
+		for (ASTNode node : this.actions) {
+			node.accept(visitor);
 		}
 	}
 
@@ -74,8 +85,8 @@ public class SwitchCase extends Statement {
 		if (value != null) {
 			value.traverseTopDown(visitor);
 		}
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].traverseTopDown(visitor);
+		for (ASTNode node : this.actions) {
+			node.traverseTopDown(visitor);
 		}
 	}
 
@@ -83,8 +94,8 @@ public class SwitchCase extends Statement {
 		if (value != null) {
 			value.traverseBottomUp(visitor);
 		}
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.actions) {
+			node.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -99,8 +110,8 @@ public class SwitchCase extends Statement {
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append(tab).append("</Value>\n"); //$NON-NLS-1$
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].toString(buffer, TAB + tab);
+		for (ASTNode node : this.actions) {
+			node.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</SwitchCase>"); //$NON-NLS-1$
@@ -110,23 +121,118 @@ public class SwitchCase extends Statement {
 		return ASTNode.SWITCH_CASE;
 	}
 
+	/**
+	 * @deprecated use #actions()
+	 */
 	public Statement[] getActions() {
-		return actions;
+		return actions.toArray(new Statement[this.actions.size()]);
+	}
+	
+	/**
+	 * The actions of this case statement
+	 * @return List of actions of this case statement
+	 */
+	public List actions() {
+		return this.actions;
 	}
 
+	/**
+	 * True if this is a default case statement
+	 */
 	public boolean isDefault() {
 		return isDefault;
 	}
 
+	/**
+	 * Set to true if this case statement represents a 'default' case
+	 * 
+	 * @param isDefault 
+	 * @exception IllegalArgumentException if the argument is incorrect
+	 */ 
+	public void setIsDefault(boolean isDefault) {
+		preValueChange(IS_DEFAULT_PROPERTY);
+		this.isDefault = isDefault;
+		postValueChange(IS_DEFAULT_PROPERTY);
+	}
+	
+	/**
+	 * The value (expression) of this case statement
+	 * @return value (expression) of this case statement
+	 */
 	public Expression getValue() {
 		return value;
 	}
 	
+	/**
+	 * Sets the value of this case statement
+	 * 
+	 * @param value the value of this case statement.
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setValue(Expression value) {
+		if (value == null) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.value;
+		preReplaceChild(oldChild, value, VALUE_PROPERTY);
+		this.value = value;
+		postReplaceChild(oldChild, value, VALUE_PROPERTY);
+	}	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+		if (property == IS_DEFAULT_PROPERTY) {
+			if (get) {
+				return isDefault();
+			} else {
+				setIsDefault(value);
+				return false;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetBooleanProperty(property, get, value);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == VALUE_PROPERTY) {
+			if (get) {
+				return getValue();
+			} else {
+				setValue((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
+	
+	@Override
+	ASTNode clone0(AST target) {
+		final boolean isDefault = isDefault();
+		final List actions = ASTNode.copySubtrees(target, actions());
+		final Expression value = ASTNode.copySubtree(target, getValue());
+	
+		final SwitchCase result = new SwitchCase(getStart(), getEnd(), target, value, actions, isDefault);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

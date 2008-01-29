@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -24,21 +27,37 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class GlobalStatement extends Statement {
 
-	private final Variable[] variables;
+	private final ASTNode.NodeList<Variable> variables = new ASTNode.NodeList<Variable>(VARIABLES_PROPERTY);
+	
+	/**
+	 * The "variables" structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor VARIABLES_PROPERTY = 
+		new ChildListPropertyDescriptor(GlobalStatement.class, "variables", Variable.class, CYCLE_RISK); //$NON-NLS-1$
 
-	private GlobalStatement(int start, int end, Variable[] variables) {
-		super(start, end);
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		properyList.add(VARIABLES_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+
+	private GlobalStatement(int start, int end, AST ast, Variable[] variables) {
+		super(start, end, ast);
 
 		assert variables != null;
-		this.variables = variables;
-
-		for (int i = 0; i < variables.length; i++) {
-			variables[i].setParent(this);
+		for (Variable variable : variables) {
+			this.variables.add(variable);
 		}
 	}
 
-	public GlobalStatement(int start, int end, List variables) {
-		this(start, end, variables == null ? null : (Variable[]) variables.toArray(new Variable[variables.size()]));
+	public GlobalStatement(int start, int end, AST ast, List variables) {
+		this(start, end, ast, variables == null ? null : (Variable[]) variables.toArray(new Variable[variables.size()]));
 	}
 
 	public void accept(Visitor visitor) {
@@ -50,31 +69,33 @@ public class GlobalStatement extends Statement {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < variables.length; i++) {
-			variables[i].accept(visitor);
+		for (ASTNode node : this.variables) {
+			node.accept(visitor);
 		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
-		accept(visitor);
-		for (int i = 0; i < variables.length; i++) {
-			variables[i].traverseTopDown(visitor);
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			for (ASTNode node : this.variables) {
+				node.traverseTopDown(visitor);
+			}
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < variables.length; i++) {
-			variables[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.variables) {
+			node.traverseBottomUp(visitor);
 		}
-		accept(visitor);
+		visitor.visit(this);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<GlobalStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		for (int i = 0; i < variables.length; i++) {
-			variables[i].toString(buffer, TAB + tab);
+		for (ASTNode node : this.variables) {
+			node.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</GlobalStatement>"); //$NON-NLS-1$
@@ -84,10 +105,20 @@ public class GlobalStatement extends Statement {
 		return ASTNode.GLOBAL_STATEMENT;
 	}
 
+	/**
+	 * @deprecated use {@link #variables()}
+	 */
 	public Variable[] getVariables() {
-		return variables;
+		return variables.toArray(new Variable[this.variables.size()]);
 	}
 	
+	/**
+	 * @return the variables component of the global statement
+	 */
+	private List variables() {
+		return variables();
+	}
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
@@ -95,4 +126,27 @@ public class GlobalStatement extends Statement {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final List variables = ASTNode.copySubtrees(target, variables());
+		GlobalStatement result = new GlobalStatement(this.getStart(), this.getEnd(), target, variables);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == VARIABLES_PROPERTY) {
+			return variables();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}	
 }

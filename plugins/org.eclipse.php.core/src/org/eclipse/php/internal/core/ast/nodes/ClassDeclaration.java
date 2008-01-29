@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -33,22 +35,47 @@ public class ClassDeclaration extends TypeDeclaration {
 	public static final int MODIFIER_ABSTRACT = 1;
 	public static final int MODIFIER_FINAL = 2;
 
-	private final int modifier;
-	private final Identifier superClass;
+	private int modifier;
+	private Identifier superClass;
+	
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor SUPER_CLASS_PROPERTY = 
+		new ChildPropertyDescriptor(ClassDeclaration.class, "superClass", Identifier.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
+		new SimplePropertyDescriptor(ClassDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
-	private ClassDeclaration(int start, int end, int modifier, Identifier className, Identifier superClass, Identifier[] interfaces, Block body) {
-		super(start, end, className, interfaces, body);
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(5);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(INTERFACES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
+		propertyList.add(SUPER_CLASS_PROPERTY);
+		propertyList.add(MODIFIER_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	private ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Identifier superClass, Identifier[] interfaces, Block body) {
+		super(start, end, ast, className, interfaces, body);
 
 		this.modifier = modifier;
 		this.superClass = superClass;
 
 		if (superClass != null) {
-			superClass.setParent(this);
+			superClass.setParent(this, SUPER_CLASS_PROPERTY);
 		}
 	}
 
-	public ClassDeclaration(int start, int end, int modifier, Identifier className, Identifier superClass, List interfaces, Block body) {
-		this(start, end, modifier, className, superClass, interfaces == null ? null : (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
+	public ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Identifier superClass, List interfaces, Block body) {
+		this(start, end, ast, modifier, className, superClass, interfaces == null ? null : (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
 
 	public void accept(Visitor visitor) {
@@ -64,9 +91,9 @@ public class ClassDeclaration extends TypeDeclaration {
 		if (superClass != null) {
 			superClass.accept(visitor);
 		}
-		Identifier[] interfaces = getInterfaces();
-		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-			interfaces[i].accept(visitor);
+		for (Object object : interfaes()) {
+			final ASTNode node = (ASTNode) object;
+			node.accept(visitor);
 		}
 		getBody().accept(visitor);
 	}
@@ -78,8 +105,9 @@ public class ClassDeclaration extends TypeDeclaration {
 			superClass.traverseTopDown(visitor);
 		}
 		Identifier[] interfaces = getInterfaces();
-		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-			interfaces[i].traverseTopDown(visitor);
+		for (Object object : interfaes()) {
+			final ASTNode node = (ASTNode) object;
+			node.traverseTopDown(visitor);
 		}
 		getBody().traverseTopDown(visitor);
 	}
@@ -90,8 +118,9 @@ public class ClassDeclaration extends TypeDeclaration {
 			superClass.traverseBottomUp(visitor);
 		}
 		Identifier[] interfaces = getInterfaces();
-		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-			interfaces[i].traverseBottomUp(visitor);
+		for (Object object : interfaes()) {
+			final ASTNode node = (ASTNode) object;
+			node.traverseBottomUp(visitor);
 		}
 		getBody().traverseBottomUp(visitor);
 		accept(visitor);
@@ -127,9 +156,9 @@ public class ClassDeclaration extends TypeDeclaration {
 		buffer.append(tab).append(TAB).append("</SuperClassName>\n"); //$NON-NLS-1$
 
 		buffer.append(tab).append(TAB).append("<Interfaces>\n"); //$NON-NLS-1$
-		Identifier[] interfaces = getInterfaces();
-		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-			interfaces[i].toString(buffer, TAB + TAB + tab);
+		for (Object object : interfaes()) {
+			final ASTNode node = (ASTNode) object;
+			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append(TAB).append("</Interfaces>\n"); //$NON-NLS-1$
@@ -145,10 +174,54 @@ public class ClassDeclaration extends TypeDeclaration {
 	public int getModifier() {
 		return modifier;
 	}
+	
+	/**
+	 * Sets the modifier of this class declaration
+	 * 
+	 * @param new modifier of this class declaration
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */
+	public final void setModifier(int value) {
+		if (getModifier(value) == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		preValueChange(MODIFIER_PROPERTY);
+		this.modifier = value;
+		postValueChange(MODIFIER_PROPERTY);
+	}	
 
 	public Identifier getSuperClass() {
 		return superClass;
 	}
+
+	/**
+	 * Sets the super class name of this class declaration
+	 * 
+	 * @param the super class name of this class declaration
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setSuperClass(Identifier id) {
+		if (id == null) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.superClass;
+		preReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY );
+		this.superClass = id;
+		postReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY);
+	}	
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -156,5 +229,22 @@ public class ClassDeclaration extends TypeDeclaration {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Block body = ASTNode.copySubtree(target, getBody());
+		final Identifier superName = ASTNode.copySubtree(target, getSuperClass());
+		final int modifier = getModifier();
+		final List interfaces = ASTNode.copySubtrees(target, interfaes());
+		final Identifier name = ASTNode.copySubtree(target, getName());
+		
+		final ClassDeclaration result = new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName, interfaces, body);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

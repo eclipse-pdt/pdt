@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -28,24 +32,64 @@ public class ArrayAccess extends Variable {
 	/**
 	 * In case of array / hashtable variable, the index expression is added
 	 */
-	private final Expression index;
-	private final int arrayType;
+	private Expression index;
+	private int arrayType;
 
-	public ArrayAccess(int start, int end, VariableBase variableName, Expression index, int arrayType) {
-		super(start, end, variableName);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor NAME_PROPERTY = 
+		new ChildPropertyDescriptor(ArrayAccess.class, "name", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor DOLLARED_PROPERTY = 
+		new SimplePropertyDescriptor(ArrayAccess.class, "isDollared", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor INDEX_PROPERTY = 
+		new ChildPropertyDescriptor(ArrayAccess.class, "index", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor ARRAY_TYPE_PROPERTY = 
+		new SimplePropertyDescriptor(ArrayAccess.class, "arrayType", Integer.class, OPTIONAL); //$NON-NLS-1$
+	
+	/**
+	 * @return the name PROPERTY
+	 */
+	protected ChildPropertyDescriptor getNameProperty() {
+		return ArrayAccess.NAME_PROPERTY;
+	}
+
+	/**
+	 * @return the DOLLARED property
+	 */
+	protected SimplePropertyDescriptor getDollaredProperty() {
+		return ArrayAccess.DOLLARED_PROPERTY;
+	}
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(DOLLARED_PROPERTY);
+		propertyList.add(INDEX_PROPERTY);
+		propertyList.add(ARRAY_TYPE_PROPERTY);		
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}
+		
+	public ArrayAccess(int start, int end, AST ast, VariableBase variableName, Expression index, int arrayType) {
+		super(start, end, ast, variableName);
 
 		this.index = index;
 		this.arrayType = arrayType;
 
 		// set the child nodes' parent
-		variableName.setParent(this);
 		if (index != null) {
-			index.setParent(this);
+			index.setParent(this, INDEX_PROPERTY);
 		}
 	}
 
 	public void childrenAccept(Visitor visitor) {
-		getVariableName().accept(visitor);
+		getName().accept(visitor);
 		if (index != null) {
 			index.accept(visitor);
 		}
@@ -53,14 +97,14 @@ public class ArrayAccess extends Variable {
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		getVariableName().traverseTopDown(visitor);
+		getName().traverseTopDown(visitor);
 		if (index != null) {
 			index.traverseTopDown(visitor);
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		getVariableName().traverseBottomUp(visitor);
+		getName().traverseBottomUp(visitor);
 		if (index != null) {
 			index.traverseBottomUp(visitor);
 		}
@@ -71,7 +115,7 @@ public class ArrayAccess extends Variable {
 		buffer.append(tab).append("<ArrayAccess"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" type='").append(getArrayType(arrayType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		getVariableName().toString(buffer, TAB + tab);
+		getName().toString(buffer, TAB + tab);
 		buffer.append("\n").append(TAB).append(tab).append("<Index>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (index != null) {
 			index.toString(buffer, TAB + TAB + tab);
@@ -107,9 +151,105 @@ public class ArrayAccess extends Variable {
 	public Expression getIndex() {
 		return index;
 	}
+	
+	/**
+	 * Sets the index expression of this array access
+	 * 
+	 * @param index the new index expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setIndex(Expression index) {
+		if (index == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.index;
+		preReplaceChild(oldChild, index, INDEX_PROPERTY);
+		this.index = index;
+		postReplaceChild(oldChild, index, INDEX_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == INDEX_PROPERTY) {
+			if (get) {
+				return getIndex();
+			} else {
+				setIndex((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
 
 	public int getArrayType() {
 		return arrayType;
+	}
+
+	/**
+	 * Sets the operator of this unary operation
+	 * 
+	 * @param new operator of this unary operation
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */
+	public final void setArrayType(int value) {
+		if (getArrayType(value) == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		preValueChange(ARRAY_TYPE_PROPERTY);
+		this.arrayType = value;
+		postValueChange(ARRAY_TYPE_PROPERTY);
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == ARRAY_TYPE_PROPERTY) {
+			if (get) {
+				return getArrayType();
+			} else {
+				setArrayType((Integer) value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}	
+	
+	/**
+	 * Sets the name of this variable (this time with VariableBase instead of Expression)
+	 * 
+	 * @param expression the new variable name
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setName(VariableBase variableName) {
+		super.setName(variableName);
+	}
+	
+	/**
+	 * Returns the name (expression) of this variable
+	 * 
+	 * @return the expression name node
+	 */ 
+	public VariableBase getName() {
+		return (VariableBase) super.getName();
 	}
 	
 	/* (omit javadoc for this method)
@@ -119,4 +259,20 @@ public class ArrayAccess extends Variable {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+	
+	@Override
+	ASTNode clone0(AST target) {
+		final VariableBase expr = ASTNode.copySubtree(target, getName());
+		final Expression index = ASTNode.copySubtree(target, getIndex());
+		final int type = getArrayType();
+		
+		final ArrayAccess result = new ArrayAccess(getStart(), getEnd(), target, expr, index, type);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
 }

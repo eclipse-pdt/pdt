@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -32,22 +34,42 @@ public class Quote extends Expression {
 	public static final int QT_SINGLE = 1;
 	public static final int QT_HEREDOC = 2;
 
-	private final Expression[] expressions;
-	private final int quoteType;
+	private final ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<Expression>(EXPRESSIONS_PROPERTY);
+	private int quoteType;
 
-	public Quote(int start, int end, Expression[] expressions, int type) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor EXPRESSIONS_PROPERTY = 
+		new ChildListPropertyDescriptor(Quote.class, "expressions", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor QUOTE_TYPE_PROPERTY = 
+		new SimplePropertyDescriptor(Block.class, "quoteType", Integer.class, OPTIONAL); //$NON-NLS-1$
 
-		this.expressions = expressions;
-		this.quoteType = type;
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		properyList.add(EXPRESSIONS_PROPERTY);
+		properyList.add(QUOTE_TYPE_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+	
+	
+	public Quote(int start, int end, AST ast, Expression[] expressions, int type) {
+		super(start, end, ast);
 
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].setParent(this);
+		for (Expression expression : expressions) {
+			this.expressions.add(expression);
 		}
+		this.quoteType = type;
 	}
 
-	public Quote(int start, int end, List expressions, int type) {
-		this(start, end, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]), type);
+	public Quote(int start, int end, AST ast, List expressions, int type) {
+		this(start, end, ast, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]), type);
 	}
 
 	public static String getType(int type) {
@@ -72,21 +94,21 @@ public class Quote extends Expression {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].accept(visitor);
+		for (ASTNode node : this.expressions) {
+			node.accept(visitor);
 		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].traverseTopDown(visitor);
+		for (ASTNode node : this.expressions) {
+			node.traverseTopDown(visitor);
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.expressions) {
+			node.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -95,8 +117,8 @@ public class Quote extends Expression {
 		buffer.append(tab).append("<Quote"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" type='").append(getType(quoteType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].toString(buffer, TAB + tab);
+		for (ASTNode node : this.expressions) {
+			node.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</Quote>"); //$NON-NLS-1$
@@ -106,13 +128,76 @@ public class Quote extends Expression {
 		return ASTNode.QUOTE;
 	}
 
+	/**
+	 * @deprecated use {@link #expressions()}
+	 */
 	public Expression[] getExpressions() {
-		return expressions;
+		return expressions.toArray(new Expression[this.expressions.size()]);
 	}
 
+	/**
+	 * @return expression list of the echo statement
+	 */
+	public List expressions() {
+		return this.expressions;
+	}
+	
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == EXPRESSIONS_PROPERTY) {
+			return expressions();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+	
+	/**
+	 * The quote type see {@link #QT_HEREDOC}, {@link #QT_QUOTE}, 
+	 * {@link #QT_SINGLE}
+	 * @return quote type
+	 */
 	public int getQuoteType() {
 		return quoteType;
 	}
+	
+	/**
+	 * Sets the operator of this unary operation
+	 * 
+	 * @param new operator of this unary operation
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */
+	public final void setQuoteType(int value) {
+		if (value != QT_HEREDOC && value != QT_QUOTE && value != QT_SINGLE) {
+			throw new IllegalArgumentException();
+		}
+		
+		preValueChange(QUOTE_TYPE_PROPERTY);
+		this.quoteType = value;
+		postValueChange(QUOTE_TYPE_PROPERTY);
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == QUOTE_TYPE_PROPERTY) {
+			if (get) {
+				return getQuoteType();
+			} else {
+				setQuoteType((Integer) value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+	
+	
+
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -121,4 +206,18 @@ public class Quote extends Expression {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final int type = getQuoteType();
+		final List expressions = ASTNode.copySubtrees(target, expressions());
+		final Quote result = new Quote(this.getStart(), this.getEnd(), target, expressions, type);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+
 }

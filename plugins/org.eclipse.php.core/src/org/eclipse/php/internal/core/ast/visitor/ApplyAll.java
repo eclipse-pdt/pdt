@@ -24,6 +24,14 @@ public abstract class ApplyAll extends AbstractVisitor {
 	 */
 	protected abstract boolean apply(ASTNode node);
 
+	/**
+	 * Performs the end visit method over each node
+	 * @param node
+	 */
+	public void endVisitNode(ASTNode node) {
+		return;
+	}
+
 	public boolean visit(ArrayElement arrayElement) {
 		return apply(arrayElement);
 	}
@@ -39,6 +47,11 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(ASTError astError) {
 		return apply(astError);
 	}
+
+	public boolean visit(BackTickExpression backTickExpression) {
+		return apply(backTickExpression);
+	}
+	
 
 	public boolean visit(InfixExpression binaryOperation) {
 		return apply(binaryOperation);
@@ -78,10 +91,6 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	public boolean visit(ClassInstanceCreation classInstanciation) {
 		return apply(classInstanciation);
-	}
-
-	public boolean visit(MethodDeclaration classMethodDeclaration) {
-		return apply(classMethodDeclaration);
 	}
 
 	public boolean visit(ClassName className) {
@@ -131,6 +140,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(ExpressionStatement expressionStatement) {
 		return apply(expressionStatement);
 	}	
+
+	public boolean visit(FieldAccess filedAccess) {
+		return apply(filedAccess);
+	}
 
 	public boolean visit(ForEachStatement forEachStatement) {
 		return apply(forEachStatement);
@@ -196,6 +209,19 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(listVariable);
 	}
 
+	public boolean visit(MethodDeclaration classMethodDeclaration) {
+		return apply(classMethodDeclaration);
+	}
+	
+	public boolean visit(MethodInvocation methodInvocation) {
+		return apply(methodInvocation);
+	}	
+	
+	public boolean visit(ParenthesisExpression parenthesisExpression) {
+		return apply(parenthesisExpression);
+	}	
+	
+	
 	public boolean visit(PostfixExpression postfixExpressions) {
 		return apply(postfixExpressions);
 	}
@@ -228,8 +254,16 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(scalar);
 	}
 
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
+		return apply(singleFieldDeclaration);
+	}
+	
 	public boolean visit(StaticFieldAccess staticMember) {
 		return apply(staticMember);
+	}
+
+	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
+		return apply(staticMethodInvocation);
 	}
 
 	public boolean visit(StaticStatement staticStatement) {
@@ -258,5 +292,261 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	public boolean visit(WhileStatement whileStatement) {
 		return apply(whileStatement);
+	}
+	
+	public void endVisit(ArrayAccess arrayAccess) {
+		endVisitNode(arrayAccess);
+	}
+
+	public void endVisit(ArrayCreation arrayCreation) {
+		endVisitNode(arrayCreation);
+	}
+
+	public void endVisit(ArrayElement arrayElement) {
+		endVisitNode(arrayElement);
+	}
+
+	public void endVisit(ASTError astError) {
+		endVisitNode(astError);
+	}
+
+	public void endVisit(BackTickExpression backTickExpression) {
+		endVisitNode(backTickExpression);
+	}
+
+	public void endVisit(Block block) {
+		endVisitNode(block);
+	}
+
+	public void endVisit(BreakStatement breakStatement) {
+		endVisitNode(breakStatement);
+	}
+
+	public void endVisit(CastExpression castExpression) {
+		endVisitNode(castExpression);
+	}
+
+	public void endVisit(CatchClause catchClause) {
+		endVisitNode(catchClause);
+	}
+
+	public void endVisit(ClassConstantDeclaration classConstantDeclaration) {
+		endVisitNode(classConstantDeclaration);
+	}
+
+	public void endVisit(ClassDeclaration classDeclaration) {
+		endVisitNode(classDeclaration);
+	}
+
+	public void endVisit(ClassInstanceCreation classInstanceCreation) {
+		endVisitNode(classInstanceCreation);
+	}
+
+	public void endVisit(ClassName className) {
+		endVisitNode(className);
+	}
+
+	public void endVisit(CloneExpression cloneExpression) {
+		endVisitNode(cloneExpression);
+	}
+
+	public void endVisit(Comment comment) {
+		endVisitNode(comment);
+	}
+
+	public void endVisit(ConditionalExpression conditionalExpression) {
+		endVisitNode(conditionalExpression);
+	}
+
+	public void endVisit(ContinueStatement continueStatement) {
+		endVisitNode(continueStatement);
+	}
+
+	public void endVisit(DeclareStatement declareStatement) {
+		endVisitNode(declareStatement);
+	}
+
+	public void endVisit(DoStatement doStatement) {
+		endVisitNode(doStatement);
+	}
+
+	public void endVisit(EchoStatement echoStatement) {
+		endVisitNode(echoStatement);		
+	}
+
+	public void endVisit(EmptyStatement emptyStatement) {
+		endVisitNode(emptyStatement);
+	}
+
+	public void endVisit(ExpressionStatement expressionStatement) {
+		endVisitNode(expressionStatement);
+	}
+
+	public void endVisit(FieldAccess fieldAccess) {
+		endVisitNode(fieldAccess);
+	}
+
+	public void endVisit(FieldsDeclaration fieldsDeclaration) {
+		endVisitNode(fieldsDeclaration);
+	}
+
+	public void endVisit(ForEachStatement forEachStatement) {
+		endVisitNode(forEachStatement);
+	}
+
+	public void endVisit(FormalParameter formalParameter) {
+		endVisitNode(formalParameter);
+	}
+
+	public void endVisit(ForStatement forStatement) {
+		endVisitNode(forStatement);
+	}
+
+	public void endVisit(FunctionDeclaration functionDeclaration) {
+		endVisitNode(functionDeclaration);
+	}
+
+	public void endVisit(FunctionInvocation functionInvocation) {
+		endVisitNode(functionInvocation);
+	}
+
+	public void endVisit(FunctionName functionName) {
+		endVisitNode(functionName);
+	}
+
+	public void endVisit(GlobalStatement globalStatement) {
+		endVisitNode(globalStatement);
+	}
+
+	public void endVisit(Identifier identifier) {
+		endVisitNode(identifier);
+	}
+
+	public void endVisit(IfStatement ifStatement) {
+		endVisitNode(ifStatement);
+	}
+
+	public void endVisit(IgnoreError ignoreError) {
+		endVisitNode(ignoreError);
+	}
+
+	public void endVisit(Include include) {
+		endVisitNode(include);
+	}
+
+	public void endVisit(InfixExpression infixExpression) {
+		endVisitNode(infixExpression);
+	}
+
+	public void endVisit(InLineHtml inLineHtml) {
+		endVisitNode(inLineHtml);
+	}
+
+	public void endVisit(InstanceOfExpression instanceOfExpression) {
+		endVisitNode(instanceOfExpression);
+	}
+
+	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
+		endVisitNode(interfaceDeclaration);
+	}
+
+	public void endVisit(ListVariable listVariable) {
+		endVisitNode(listVariable);
+	}
+
+	public void endVisit(MethodDeclaration methodDeclaration) {
+		endVisitNode(methodDeclaration);
+	}
+
+	public void endVisit(MethodInvocation methodInvocation) {
+		endVisitNode(methodInvocation);
+	}
+
+	public void endVisit(ParenthesisExpression parenthesisExpression) {
+		endVisitNode(parenthesisExpression);
+	}
+
+	public void endVisit(PostfixExpression postfixExpression) {
+		endVisitNode(postfixExpression);
+	}
+
+	public void endVisit(PrefixExpression prefixExpression) {
+		endVisitNode(prefixExpression);
+	}
+
+	public void endVisit(Program program) {
+		endVisitNode(program);
+	}
+
+	public void endVisit(Quote quote) {
+		endVisitNode(quote);
+	}
+
+	public void endVisit(Reference reference) {
+		endVisitNode(reference);
+	}
+
+	public void endVisit(ReflectionVariable reflectionVariable) {
+		endVisitNode(reflectionVariable);
+	}
+
+	public void endVisit(ReturnStatement returnStatement) {
+		endVisitNode(returnStatement);
+	}
+
+	public void endVisit(Scalar scalar) {
+		endVisitNode(scalar);
+	}
+	
+	public void endVisit(SingleFieldDeclaration singleFieldDeclaration) {
+		endVisit(singleFieldDeclaration);
+	}	
+
+	public void endVisit(StaticConstantAccess staticConstantAccess) {
+		endVisitNode(staticConstantAccess);
+	}
+
+	public void endVisit(StaticFieldAccess staticFieldAccess) {
+		endVisitNode(staticFieldAccess);
+	}
+
+	public void endVisit(StaticMethodInvocation staticMethodInvocation) {
+		endVisitNode(staticMethodInvocation);
+	}
+
+	public void endVisit(StaticStatement staticStatement) {
+		endVisitNode(staticStatement);
+	}
+
+	public void endVisit(SwitchCase switchCase) {
+		endVisitNode(switchCase);
+	}
+
+	public void endVisit(SwitchStatement switchStatement) {
+		endVisitNode(switchStatement);
+	}
+
+	public void endVisit(ThrowStatement throwStatement) {
+		endVisitNode(throwStatement);
+	}
+
+	public void endVisit(TryStatement tryStatement) {
+		endVisitNode(tryStatement);
+	}
+
+	public void endVisit(UnaryOperation unaryOperation) {
+		endVisitNode(unaryOperation);
+	}
+
+	public void endVisit(Variable variable) {
+		endVisitNode(variable);
+	}
+
+	public void endVisit(WhileStatement whileStatement) {
+		endVisitNode(whileStatement);
+	}
+
+	public void endVisit(Assignment assignment) {
+		endVisitNode(assignment);
 	}
 }

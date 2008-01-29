@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,21 +25,37 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class StaticStatement extends Statement {
 
-	private final Expression[] expressions;
+	private ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<Expression>(EXPRESSIONS_PROPERTY);
 
-	private StaticStatement(int start, int end, Expression[] expressions) {
-		super(start, end);
+	/**
+	 * The "expressions" structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor EXPRESSIONS_PROPERTY = 
+		new ChildListPropertyDescriptor(StaticStatement.class, "expressions", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		properyList.add(EXPRESSIONS_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+
+	private StaticStatement(int start, int end, AST ast, Expression[] expressions) {
+		super(start, end, ast);
 
 		assert expressions != null;
-		this.expressions = expressions;
-
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].setParent(this);
+		for (Expression expression : expressions) {
+			this.expressions.add(expression);
 		}
 	}
 
-	public StaticStatement(int start, int end, List expressions) {
-		this(start, end, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
+	public StaticStatement(int start, int end, AST ast, List expressions) {
+		this(start, end, ast, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
 
 	/**
@@ -46,12 +64,13 @@ public class StaticStatement extends Statement {
 	public Variable[] getVariables() {
 
 		List vars = new LinkedList();
-		for (int i = 0; i < expressions.length; i++) {
-			if (expressions[i] instanceof Variable) {
-				vars.add(expressions[i]);
+		for (Expression node : this.expressions) {
+			if (node instanceof Variable) {
+				vars.add(node);
 			} else {
-				assert expressions[i] instanceof Assignment;
-				vars.add(((Assignment) expressions[i]).getVariable());
+				assert node instanceof Assignment;
+				Assignment ass = (Assignment) node;
+				vars.add(ass.getLeftHandSide());
 			}
 		}
 		return (Variable[]) vars.toArray(new Variable[vars.size()]);
@@ -66,21 +85,21 @@ public class StaticStatement extends Statement {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].accept(visitor);
+		for (ASTNode node : this.expressions) {
+			node.accept(visitor);
 		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].traverseTopDown(visitor);
+		for (ASTNode node : this.expressions) {
+			node.traverseTopDown(visitor);
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.expressions) {
+			node.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -89,8 +108,8 @@ public class StaticStatement extends Statement {
 		buffer.append(tab).append("<StaticStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		for (int i = 0; i < expressions.length; i++) {
-			expressions[i].toString(buffer, TAB + tab);
+		for (ASTNode node : this.expressions) {
+			node.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</StaticStatement>"); //$NON-NLS-1$
@@ -100,8 +119,26 @@ public class StaticStatement extends Statement {
 		return ASTNode.STATIC_STATEMENT;
 	}
 
+	/**
+	 * @deprecated use #expressions()
+	 */
 	public Expression[] getExpressions() {
-		return expressions;
+		return this.expressions.toArray(new Expression[this.expressions.size()]);
+	}
+	
+	/**
+	 * @return expression list of the static statement
+	 */
+	public List expressions() {
+		return this.expressions;
+	}
+	
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == EXPRESSIONS_PROPERTY) {
+			return expressions();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
 	}
 	
 	/* 
@@ -110,5 +147,17 @@ public class StaticStatement extends Statement {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final List expressions = ASTNode.copySubtrees(target, this.expressions());
+		final StaticStatement staticStatementSt = new StaticStatement(this.getStart(), this.getEnd(), target, expressions);
+		return staticStatementSt;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

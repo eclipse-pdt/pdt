@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -20,18 +24,37 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ReturnStatement extends Statement {
 
-	private final Expression expr;
+	private Expression expression;
 
-	public ReturnStatement(int start, int end) {
-		this(start, end, null);
+	/**
+	 * The "expression" structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
+		new ChildPropertyDescriptor(ReturnStatement.class, "expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		propertyList.add(EXPRESSION_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public ReturnStatement(int start, int end, AST ast) {
+		this(start, end, ast, null);
 	}
 
-	public ReturnStatement(int start, int end, Expression expr) {
-		super(start, end);
-		this.expr = expr;
+	public ReturnStatement(int start, int end, AST ast, Expression expr) {
+		super(start, end, ast);
+		this.expression = expr;
 
 		if (expr != null) {
-			expr.setParent(this);
+			expr.setParent(this, EXPRESSION_PROPERTY);
 		}
 	}
 
@@ -44,21 +67,21 @@ public class ReturnStatement extends Statement {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		if (expr != null) {
-			expr.accept(visitor);
+		if (expression != null) {
+			expression.accept(visitor);
 		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		if (expr != null) {
-			expr.traverseTopDown(visitor);
+		if (expression != null) {
+			expression.traverseTopDown(visitor);
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		if (expr != null) {
-			expr.traverseBottomUp(visitor);
+		if (expression != null) {
+			expression.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -67,8 +90,8 @@ public class ReturnStatement extends Statement {
 		buffer.append(tab).append("<ReturnStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		if (expr != null) {
-			expr.toString(buffer, TAB + tab);
+		if (expression != null) {
+			expression.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append("</ReturnStatement>"); //$NON-NLS-1$
@@ -78,15 +101,73 @@ public class ReturnStatement extends Statement {
 		return ASTNode.RETURN_STATEMENT;
 	}
 
+	/**
+	 * Returns the expression of this return statement.
+	 * 
+	 * @return the expression node
+	 */ 
+	public Expression getExpression() {
+		return expression;
+	}
+
+	/**
+	 * @deprecated see {@link #getExpression()}
+	 */
 	public Expression getExpr() {
-		return expr;
+		return expression;
+	}
+		
+	/**
+	 * Sets the expression of this expression statement.
+	 * 
+	 * @param expression the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setExpression(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.expression;
+		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+		this.expression = expression;
+		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == EXPRESSION_PROPERTY) {
+			if (get) {
+				return getExpression();
+			} else {
+				setExpression((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression expr = ASTNode.copySubtree(target, getExpression());
+		final ReturnStatement result = new ReturnStatement(this.getStart(), this.getEnd(), target, expr);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

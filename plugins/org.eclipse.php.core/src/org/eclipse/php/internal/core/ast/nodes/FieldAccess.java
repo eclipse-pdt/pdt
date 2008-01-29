@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -19,15 +23,41 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class FieldAccess extends Dispatch {
 
-	private final Variable field;
+	private Variable field;
 
-	public FieldAccess(int start, int end, VariableBase dispatcher, Variable field) {
-		super(start, end, dispatcher);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor DISPATCHER_PROPERTY = 
+		new ChildPropertyDescriptor(FieldAccess.class, "dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FIELD_PROPERTY = 
+		new ChildPropertyDescriptor(FieldAccess.class, "field", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	@Override
+	ChildPropertyDescriptor getDispatcherProperty() {
+		return FieldAccess.DISPATCHER_PROPERTY;
+	}
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		propertyList.add(FIELD_PROPERTY);
+		propertyList.add(DISPATCHER_PROPERTY);		
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}
+	
+	public FieldAccess(int start, int end, AST ast, VariableBase dispatcher, Variable field) {
+		super(start, end, ast, dispatcher);
 
 		assert field != null;
 		this.field = field;
 
-		field.setParent(this);
+		field.setParent(this, FIELD_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -72,12 +102,55 @@ public class FieldAccess extends Dispatch {
 		return ASTNode.FIELD_ACCESS;
 	}
 
+	/**
+	 * Return the field component of this field access
+	 * 
+	 * @return the field component of this field access
+	 */
 	public Variable getField() {
 		return field;
 	}
 
+
+	/**
+	 * see {@link #getField()}
+	 */
 	public VariableBase getMember() {
 		return getField();
+	}
+	
+	/**
+	 * Sets the field component of this field access.
+	 * 
+	 * @param variable the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setField(Variable variable) {
+		if (variable == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.field;
+		preReplaceChild(oldChild, variable, FIELD_PROPERTY);
+		this.field = variable;
+		postReplaceChild(oldChild, variable, FIELD_PROPERTY);
+	}	
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == FIELD_PROPERTY) {
+			if (get) {
+				return getField();
+			} else {
+				setField((Variable) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 	
 	/* 
@@ -86,5 +159,19 @@ public class FieldAccess extends Dispatch {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+
+	@Override
+	ASTNode clone0(AST target) {
+		final VariableBase dispatcher = ASTNode.copySubtree(target, getDispatcher());
+		final Variable field = ASTNode.copySubtree(target, getField());
+		final FieldAccess result = new FieldAccess(getStart(), getEnd(), target, dispatcher, field);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -21,18 +25,40 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class InstanceOfExpression extends Expression {
 
-	private final Expression expr;
-	private final ClassName className;
+	private Expression expression;
+	private ClassName className;
 
-	public InstanceOfExpression(int start, int end, Expression expr, ClassName type) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
+		new ChildPropertyDescriptor(InstanceOfExpression.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor CLASSNAME_PROPERTY = 
+		new ChildPropertyDescriptor(InstanceOfExpression.class, "className", ClassName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
-		assert expr != null && type != null;
-		this.expr = expr;
-		this.className = type;
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		propertyList.add(CLASSNAME_PROPERTY);
+		propertyList.add(EXPRESSION_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public InstanceOfExpression(int start, int end, AST ast, Expression expr, ClassName className) {
+		super(start, end, ast);
 
-		expr.setParent(this);
-		type.setParent(this);
+		assert expr != null && className != null;
+		this.expression = expr;
+		this.className = className;
+
+		expr.setParent(this, EXPRESSION_PROPERTY);
+		className.setParent(this, CLASSNAME_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -44,18 +70,18 @@ public class InstanceOfExpression extends Expression {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		expr.accept(visitor);
+		expression.accept(visitor);
 		className.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		expr.traverseTopDown(visitor);
+		expression.traverseTopDown(visitor);
 		className.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		expr.traverseBottomUp(visitor);
+		expression.traverseBottomUp(visitor);
 		className.traverseBottomUp(visitor);
 		accept(visitor);
 	}
@@ -64,7 +90,7 @@ public class InstanceOfExpression extends Expression {
 		buffer.append(tab).append("<InstanceofExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		expr.toString(buffer, TAB + tab);
+		expression.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		className.toString(buffer, TAB + tab);
 		buffer.append("\n").append(tab).append("</InstanceofExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -77,9 +103,85 @@ public class InstanceOfExpression extends Expression {
 	public ClassName getClassName() {
 		return className;
 	}
+	
+	/**
+	 * Sets the class name of this instansiation.
+	 * 
+	 * @param classname the new class name
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setClassName(ClassName classname) {
+		if (classname == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.className;
+		preReplaceChild(oldChild, classname, CLASSNAME_PROPERTY);
+		this.className = classname;
+		postReplaceChild(oldChild, classname, CLASSNAME_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == CLASSNAME_PROPERTY) {
+			if (get) {
+				return getClassName();
+			} else {
+				setClassName((ClassName) child);
+				return null;
+			}
+		}
+		if (property == EXPRESSION_PROPERTY) {
+			if (get) {
+				return getExpression();
+			} else {
+				setExpression((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
 
+	/**
+	 * @deprecated use #getExpression()
+	 */
 	public Expression getExpr() {
-		return expr;
+		return expression;
+	}
+
+	/**
+	 * The expression of this instance of expression
+	 * 
+	 * @return expression of this instance of expression
+	 */
+	public Expression getExpression() {
+		return expression;
+	}	
+
+	/**
+	 * Sets the expression of this instance of expression
+	 * 
+	 * @param expression the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setExpression(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.expression;
+		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+		this.expression = expression;
+		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 	}
 	
 	/* 
@@ -88,5 +190,18 @@ public class InstanceOfExpression extends Expression {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression expr = ASTNode.copySubtree(target, getExpression());
+		final ClassName klass = ASTNode.copySubtree(target, getClassName());
+		final InstanceOfExpression result = new InstanceOfExpression(this.getStart(), this.getEnd(), target, expr, klass);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

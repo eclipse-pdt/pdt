@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -31,17 +35,39 @@ public class UnaryOperation extends Expression {
 	// '~'	
 	public static final int OP_TILDA = 3;
 
-	private final Expression expr;
-	private final int operator;
+	private Expression expression;
+	private int operator;
 
-	public UnaryOperation(int start, int end, Expression expr, int operator) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
+		new ChildPropertyDescriptor(UnaryOperation.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = 
+		new SimplePropertyDescriptor(UnaryOperation.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		propertyList.add(EXPRESSION_PROPERTY);
+		propertyList.add(OPERATOR_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public UnaryOperation(int start, int end, AST ast, Expression expr, int operator) {
+		super(start, end, ast);
 
 		assert expr != null;
-		this.expr = expr;
+		this.expression = expr;
 		this.operator = operator;
 
-		expr.setParent(this);
+		expr.setParent(this, EXPRESSION_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -53,16 +79,16 @@ public class UnaryOperation extends Expression {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		expr.accept(visitor);
+		expression.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		expr.traverseTopDown(visitor);
+		expression.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		expr.traverseBottomUp(visitor);
+		expression.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
@@ -70,7 +96,7 @@ public class UnaryOperation extends Expression {
 		buffer.append(tab).append("<UnaryOperation"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" operator='").append(getOperator(operator)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		expr.toString(buffer, TAB + tab);
+		expression.toString(buffer, TAB + tab);
 		buffer.append("\n").append(tab).append("</UnaryOperation>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -93,13 +119,102 @@ public class UnaryOperation extends Expression {
 		return ASTNode.UNARY_OPERATION;
 	}
 
-	public Expression getExpr() {
-		return expr;
+	/**
+	 * Returns the expression of this unary operation.
+	 * 
+	 * @return the expression node
+	 */ 
+	public Expression getExpression() {
+		return expression;
 	}
 
+	/**
+	 * @deprecated see {@link #getExpression()}
+	 */
+	public Expression getExpr() {
+		return expression;
+	}
+		
+	/**
+	 * Sets the expression of this unary operation.
+	 * 
+	 * @param expression the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setExpression(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.expression;
+		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+		this.expression = expression;
+		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == EXPRESSION_PROPERTY) {
+			if (get) {
+				return getExpression();
+			} else {
+				setExpression((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	/**
+	 * the operation type - one of {@link #OP_MINUS}, {@link #OP_NOT},
+	 * {@link #OP_PLUS}, {@link #OP_TILDA}
+	 * @return operation type
+	 */
 	public int getOperator() {
 		return operator;
 	}
+
+	/**
+	 * Sets the operator of this unary operation
+	 * 
+	 * @param new operator of this unary operation
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */
+	public final void setOperator(int value) {
+		if (getOperator(value) == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		preValueChange(OPERATOR_PROPERTY);
+		this.operator = value;
+		postValueChange(OPERATOR_PROPERTY);
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == OPERATOR_PROPERTY) {
+			if (get) {
+				return getOperator();
+			} else {
+				setOperator((Integer) value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -107,5 +222,17 @@ public class UnaryOperation extends Expression {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression expression = ASTNode.copySubtree(target, this.getExpression());
+		final UnaryOperation result = new UnaryOperation(this.getStart(), this.getEnd(), target, expression, this.getOperator());
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

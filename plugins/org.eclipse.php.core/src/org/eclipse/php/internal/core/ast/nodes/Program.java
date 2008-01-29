@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.locator.Locator;
@@ -31,12 +34,32 @@ public class Program extends ASTNode {
 	/**
 	 * Statements array of php program
 	 */
-	private final Statement[] statements;
+	private final ASTNode.NodeList<Statement> statements = new ASTNode.NodeList<Statement>(STATEMENTS_PROPERTY);
 
 	/**
-	 * Map of <Integer, Comment>
+	 * Comments array of the php program
 	 */
-	private final Map comments;
+	private final ASTNode.NodeList<Comment> comments = new ASTNode.NodeList<Comment>(COMMENTS_PROPERTY);
+	
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = 
+		new ChildListPropertyDescriptor(Program.class, "statements", Statement.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor COMMENTS_PROPERTY = 
+		new ChildListPropertyDescriptor(Program.class, "statements", Comment.class, NO_CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		properyList.add(STATEMENTS_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
 	
 	/**
 	 * The comment mapper, or <code>null</code> if none; 
@@ -45,31 +68,72 @@ public class Program extends ASTNode {
 	 */
 	private DefaultCommentMapper commentMapper = null;
 
-	private Program(int start, int end, Statement[] statements, final Map comments) {
-		super(start, end);
+	private Program(int start, int end, AST ast, Statement[] statements, List comments) {
+		super(start, end, ast);
 
 		assert statements != null && comments != null;
-		this.statements = statements;
-		this.comments = comments;
 
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].setParent(this);
+		for (Statement statement : statements) {
+			this.statements.add(statement);
 		}
-		for (Iterator iter = getComments().iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
-			comment.setParent(this);
+		for (Object comment : comments) {
+			this.comments.add((Comment) comment);
 		}
 	}
 
-	public Program(int start, int end, List statements, List commentList) {
-		this(start, end, (Statement[]) statements.toArray(new Statement[statements.size()]), createCommentsMap(commentList));
+	public Program(int start, int end, AST ast, List statements, List commentList) {
+		this(start, end, ast, (Statement[]) statements.toArray(new Statement[statements.size()]), commentList);
 	}
 
 	/**
-	 * @return the program comments
+	 * Returns a list of the comments encountered while parsing
+	 * this source program.
+	 * <p>
+	 * Since the PHP language allows comments to appear most anywhere
+	 * in the source text, it is problematic to locate comments in relation
+	 * to the structure of an AST. The one exception is doc comments 
+	 * which, by convention, immediately precede type, field, and
+	 * method declarations; these comments are located in the AST
+	 * by {@link  BodyDeclaration#getPhpdoc BodyDeclaration.getPhpdoc}.
+	 * Other comments do not show up in the AST. The table of comments
+	 * is provided for clients that need to find the source ranges of
+	 * all comments in the original source string. It includes entries
+	 * for comments of all kinds (line, block, and doc), arranged in order
+	 * of increasing source position. 
+	 * </p>
+	 * <p>
+	 * Note on comment parenting: The {@link ASTNode#getParent() getParent()}
+	 * of a doc comment associated with a body declaration is the body
+	 * declaration node; for these comment nodes
+	 * {@link ASTNode#getRoot() getRoot()} will return the program
+	 * (assuming an unmodified AST) reflecting the fact that these nodes
+	 * are property located in the AST for the compilation unit.
+	 * However, for other comment nodes, {@link ASTNode#getParent() getParent()}
+	 * will return <code>null</code>, and {@link ASTNode#getRoot() getRoot()}
+	 * will return the comment node itself, indicating that these comment nodes
+	 * are not directly connected to the AST for the compilation unit. The 
+	 * {@link Comment#getAlternateRoot Comment.getAlternateRoot}
+	 * method provides a way to navigate from a comment to its source program
+	 * </p>
+	 * <p>
+	 * Clients cannot modify the resulting list.
+	 * </p>
+	 * 
+	 * @return an unmodifiable list of comments in increasing order of source
+	 * start position, or <code>null</code> if comment information
+	 * for this compilation unit is not available
+	 * @see ASTParser
+	 * @since 3.0
 	 */
-	public Collection getComments() {
-		return comments.values();
+	public List comments() {
+		return comments;
+	}	
+	
+	/**
+	 * @deprecated use {@link #comments()}
+	 */
+	public Collection<Comment> getComments() {
+		return Collections.unmodifiableCollection(comments);
 	}
 
 	public void accept(Visitor visitor) {
@@ -81,33 +145,30 @@ public class Program extends ASTNode {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].accept(visitor);
+		for (ASTNode node : this.statements) {
+			node.accept(visitor);
 		}
-		for (Iterator iter = getComments().iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
-			comment.accept(visitor);
+		for (ASTNode node : this.comments) {
+			node.accept(visitor);
 		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].traverseTopDown(visitor);
+		for (ASTNode node : this.statements) {
+			node.traverseTopDown(visitor);
 		}
-		for (Iterator iter = getComments().iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
-			comment.traverseTopDown(visitor);
+		for (ASTNode node : this.comments) {
+			node.traverseTopDown(visitor);
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].traverseBottomUp(visitor);
+		for (ASTNode node : this.statements) {
+			node.traverseBottomUp(visitor);
 		}
-		for (Iterator iter = getComments().iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
-			comment.traverseBottomUp(visitor);
+		for (ASTNode node : this.comments) {
+			node.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -119,34 +180,35 @@ public class Program extends ASTNode {
 		buffer.append("<Program"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n").append(TAB).append("<Statements>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (int i = 0; statements != null && i < statements.length; i++) {
-			statements[i].toString(buffer, TAB + TAB + tab);
+		for (ASTNode node : this.statements) {
+			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append("</Statements>\n").append(TAB).append("<Comments>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (Iterator iter = getComments().iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
+		for (ASTNode comment : this.comments) {
 			comment.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
 		buffer.append(TAB).append("</Comments>\n").append("</Program>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private static Map createCommentsMap(List commentList) {
-		final Map comments = new TreeMap();
-		for (Iterator iter = commentList.iterator(); iter.hasNext();) {
-			Comment comment = (Comment) iter.next();
-			comments.put(new Integer(comment.getEnd()), comment);
-		}
-		return comments;
-	}
-
 	public int getType() {
 		return ASTNode.PROGRAM;
 	}
 
+	/**
+	 * @deprecated use {@link #statements()}
+	 */
 	public Statement[] getStatements() {
-		return statements;
+		return statements.toArray(new Statement[this.statements.size()]);
+	}
+
+	/**
+	 * Retrieves the statement list of this program 
+	 * @return statement parts of this program
+	 */
+	public List statements() {
+		return this.statements;
 	}
 
 	public ASTNode getElementAt(int offset) {
@@ -169,62 +231,10 @@ public class Program extends ASTNode {
 	 * @since 3.0
 	 */
 	public void initCommentMapper(IDocument document, AstLexer scanner) {
-		this.commentMapper = new DefaultCommentMapper((Comment[]) this.getComments().toArray(new Comment[this.getComments().size()]));
+		this.commentMapper = new DefaultCommentMapper(this.getComments().toArray(new Comment[this.getComments().size()]));
 		this.commentMapper.initialize(this, scanner, document);
 	}
 	
-	/**
-	 * Returns a list of the comments encountered while parsing
-	 * this compilation unit.
-	 * <p>
-	 * Since the Java language allows comments to appear most anywhere
-	 * in the source text, it is problematic to locate comments in relation
-	 * to the structure of an AST. The one exception is doc comments 
-	 * which, by convention, immediately precede type, field, and
-	 * method declarations; these comments are located in the AST
-	 * by {@link  BodyDeclaration#getJavadoc BodyDeclaration.getJavadoc}.
-	 * Other comments do not show up in the AST. The table of comments
-	 * is provided for clients that need to find the source ranges of
-	 * all comments in the original source string. It includes entries
-	 * for comments of all kinds (line, block, and doc), arranged in order
-	 * of increasing source position. 
-	 * </p>
-	 * <p>
-	 * Note on comment parenting: The {@link ASTNode#getParent() getParent()}
-	 * of a doc comment associated with a body declaration is the body
-	 * declaration node; for these comment nodes
-	 * {@link ASTNode#getRoot() getRoot()} will return the compilation unit
-	 * (assuming an unmodified AST) reflecting the fact that these nodes
-	 * are property located in the AST for the compilation unit.
-	 * However, for other comment nodes, {@link ASTNode#getParent() getParent()}
-	 * will return <code>null</code>, and {@link ASTNode#getRoot() getRoot()}
-	 * will return the comment node itself, indicating that these comment nodes
-	 * are not directly connected to the AST for the compilation unit. The 
-	 * {@link Comment#getAlternateRoot Comment.getAlternateRoot}
-	 * method provides a way to navigate from a comment to its compilation
-	 * unit.
-	 * </p>
-	 * <p>
-	 * A note on visitors: The only comment nodes that will be visited when
-	 * visiting a compilation unit are the doc comments parented by body
-	 * declarations. To visit all comments in normal reading order, iterate
-	 * over the comment table and call {@link ASTNode#accept(ASTVisitor) accept}
-	 * on each element.
-	 * </p>
-	 * <p>
-	 * Clients cannot modify the resulting list.
-	 * </p>
-	 * 
-	 * @return an unmodifiable list of comments in increasing order of source
-	 * start position, or <code>null</code> if comment information
-	 * for this compilation unit is not available
-	 * @see ASTParser
-	 * @since 3.0
-	 */
-	public Collection<ASTNode> getCommentList() {
-		return this.comments.values();
-	}
-
 	/**
 	 * Returns the internal comment mapper.
 	 * 
@@ -251,7 +261,7 @@ public class Program extends ASTNode {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
-		if (this.commentMapper == null /*|| node.getAST() != getAST()*/) {
+		if (this.commentMapper == null || node.getAST() != getAST()) {
 			// fall back: use best info available
 			return node.getLength();
 		} else {
@@ -275,7 +285,7 @@ public class Program extends ASTNode {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
-		if (this.commentMapper == null /*|| node.getAST() != getAST()*/) {
+		if (this.commentMapper == null || node.getAST() != getAST()) {
 			// fall back: use best info available
 			return node.getStart();
 		} else {
@@ -285,7 +295,7 @@ public class Program extends ASTNode {
 	
 	
 	/**
-	 * Return the index in the whole comments list {@link #getCommentList() }
+	 * Return the index in the whole comments list {@link #getComments() }
 	 * of the first leading comments associated with the given node. 
 	 * 
 	 * @param node the node
@@ -297,14 +307,14 @@ public class Program extends ASTNode {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
-		if (this.commentMapper == null /*|| node.getAST() != getAST()*/) {
+		if (this.commentMapper == null || node.getAST() != getAST()) {
 			return -1;
 		}
 		return this.commentMapper.firstLeadingCommentIndex(node);
 	}
 
 	/**
-	 * Return the index in the whole comments list {@link #getCommentList() }
+	 * Return the index in the whole comments list {@link #getComments() }
 	 * of the last trailing comments associated with the given node. 
 	 * 
 	 * @param node the node
@@ -316,10 +326,35 @@ public class Program extends ASTNode {
 		if (node == null) {
 			throw new IllegalArgumentException();
 		}
-		if (this.commentMapper == null /*|| node.getAST() != getAST()*/) {
+		if (this.commentMapper == null || node.getAST() != getAST()) {
 			return -1;
 		}
 		return this.commentMapper.lastTrailingCommentIndex(node);
 	}	
+
+	ASTNode clone0(AST target) {
+		final List statements = ASTNode.copySubtrees(target, statements());
+		final List comments = ASTNode.copySubtrees(target, comments());
+		final Program result = new Program(this.getStart(), this.getEnd(), target, statements, comments);
+		return result;
+	}
 	
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == STATEMENTS_PROPERTY) {
+			return statements();
+		}
+		if (property == COMMENTS_PROPERTY) {
+			return comments();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
 }

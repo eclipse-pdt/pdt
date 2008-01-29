@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -21,15 +25,34 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class FunctionName extends ASTNode {
 
-	private final Expression functionName;
+	private Expression name;
 
-	public FunctionName(int start, int end, Expression functionName) {
-		super(start, end);
+	/**
+	 * The "expression" structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor NAME_PROPERTY = 
+		new ChildPropertyDescriptor(FunctionName.class, "functionName", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		propertyList.add(NAME_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public FunctionName(int start, int end, AST ast, Expression functionName) {
+		super(start, end, ast);
 
 		assert functionName != null;
-		this.functionName = functionName;
+		this.name = functionName;
 
-		functionName.setParent(this);
+		functionName.setParent(this, NAME_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -41,16 +64,16 @@ public class FunctionName extends ASTNode {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		functionName.accept(visitor);
+		name.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		functionName.traverseTopDown(visitor);
+		name.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		functionName.traverseBottomUp(visitor);
+		name.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
@@ -58,7 +81,7 @@ public class FunctionName extends ASTNode {
 		buffer.append(tab).append("<FunctionName"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		functionName.toString(buffer, TAB + tab);
+		name.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</FunctionName>"); //$NON-NLS-1$
 	}
@@ -67,9 +90,56 @@ public class FunctionName extends ASTNode {
 		return ASTNode.FUNCTION_NAME;
 	}
 
-	public Expression getFunctionName() {
-		return functionName;
+	/**
+	 * Returns the name expression of this function name.
+	 * 
+	 * @return the expression node
+	 */ 
+	public Expression getName() {
+		return this.name;
 	}
+
+	/**
+	 * @deprecated see {@link #getName()}
+	 */
+	public Expression getFunctionName() {
+		return this.name;
+	}
+		
+	/**
+	 * Sets the expression of this function name expression.
+	 * 
+	 * @param expression the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setName(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.name;
+		preReplaceChild(oldChild, expression, NAME_PROPERTY);
+		this.name = expression;
+		postReplaceChild(oldChild, expression, NAME_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == NAME_PROPERTY) {
+			if (get) {
+				return getName();
+			} else {
+				setName((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -78,4 +148,17 @@ public class FunctionName extends ASTNode {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression expr = ASTNode.copySubtree(target, getName());
+		final FunctionName result = new FunctionName(this.getStart(), this.getEnd(), target, expr);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
 }

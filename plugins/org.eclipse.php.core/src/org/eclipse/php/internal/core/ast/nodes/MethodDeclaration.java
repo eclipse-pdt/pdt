@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -20,19 +24,46 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class MethodDeclaration extends BodyDeclaration {
 
-	private final FunctionDeclaration function;
+	private FunctionDeclaration function;
 
-	public MethodDeclaration(int start, int end, int modifier, FunctionDeclaration function, boolean shouldComplete) {
-		super(start, end, modifier, shouldComplete);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor FUNCTION_PROPERTY = 
+		new ChildPropertyDescriptor(MethodDeclaration.class, "function", FunctionDeclaration.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
+		new SimplePropertyDescriptor(MethodDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
+	
+	@Override
+	final SimplePropertyDescriptor getModifierProperty() {
+		return MODIFIER_PROPERTY;
+	}
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		propertyList.add(FUNCTION_PROPERTY);
+		propertyList.add(MODIFIER_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function, boolean shouldComplete) {
+		super(start, end, ast, modifier, shouldComplete);
 
 		assert function != null;
 		this.function = function;
 
-		function.setParent(this);
+		function.setParent(this, FUNCTION_PROPERTY);
 	}
 
-	public MethodDeclaration(int start, int end, int modifier, FunctionDeclaration function) {
-		this(start, end, modifier, function, false);
+	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function) {
+		this(start, end, ast, modifier, function, false);
 	}
 
 	public void accept(Visitor visitor) {
@@ -70,9 +101,48 @@ public class MethodDeclaration extends BodyDeclaration {
 		return ASTNode.METHOD_DECLARATION;
 	}
 
+	/**
+	 * The function declaration component of this method
+	 * 
+	 * @return function declaration component of this method
+	 */
 	public FunctionDeclaration getFunction() {
 		return function;
 	}
+	
+	/**
+	 * Sets the function of this declaration
+	 * 
+	 * @param expression the new function declaration
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setFunction(FunctionDeclaration expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.function;
+		preReplaceChild(oldChild, expression, FUNCTION_PROPERTY);
+		this.function = expression;
+		postReplaceChild(oldChild, expression, FUNCTION_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == FUNCTION_PROPERTY) {
+			if (get) {
+				return getFunction();
+			} else {
+				setFunction((FunctionDeclaration) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -80,5 +150,18 @@ public class MethodDeclaration extends BodyDeclaration {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final FunctionDeclaration function = ASTNode.copySubtree(target, getFunction());
+		final int modifier = getModifier();
+		final MethodDeclaration result = new MethodDeclaration(getStart(), getEnd(), target, modifier, function, true);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

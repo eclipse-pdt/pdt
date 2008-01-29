@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -21,19 +25,34 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ExpressionStatement extends Statement {
 
-	private final Expression expr;
+	private Expression expression;
 
-	public ExpressionStatement(int start, int end, Expression expr) {
-		super(start, end);
+	/**
+	 * The "expression" structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
+		new ChildPropertyDescriptor(ExpressionStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		propertyList.add(EXPRESSION_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public ExpressionStatement(int start, int end, AST ast, Expression expr) {
+		super(start, end, ast);
 
 		assert expr != null;
-		this.expr = expr;
+		this.expression = expr;
 
-		expr.setParent(this);
-	}
-
-	public ExpressionStatement(int start, int end) {
-		this(start, end, null);
+		expr.setParent(this, EXPRESSION_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -45,16 +64,16 @@ public class ExpressionStatement extends Statement {
 	}	
 	
 	public void childrenAccept(Visitor visitor) {
-		expr.accept(visitor);
+		expression.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		expr.traverseTopDown(visitor);
+		expression.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		expr.traverseBottomUp(visitor);
+		expression.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
@@ -62,7 +81,7 @@ public class ExpressionStatement extends Statement {
 		buffer.append(tab).append("<ExpressionStatement"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
-		expr.toString(buffer, TAB + tab);
+		expression.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</ExpressionStatement>"); //$NON-NLS-1$
 	}
@@ -71,15 +90,73 @@ public class ExpressionStatement extends Statement {
 		return ASTNode.EXPRESSION_STATEMENT;
 	}
 
-	public Expression getExpr() {
-		return expr;
+	/**
+	 * Returns the expression of this expression statement.
+	 * 
+	 * @return the expression node
+	 */ 
+	public Expression getExpression() {
+		return expression;
 	}
-	
+
+	/**
+	 * @deprecated see {@link #getExpression()}
+	 */
+	public Expression getExpr() {
+		return expression;
+	}
+		
+	/**
+	 * Sets the expression of this expression statement.
+	 * 
+	 * @param expression the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setExpression(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.expression;
+		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+		this.expression = expression;
+		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == EXPRESSION_PROPERTY) {
+			if (get) {
+				return getExpression();
+			} else {
+				setExpression((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression expr = ASTNode.copySubtree(target, getExpression());
+		final ExpressionStatement result = new ExpressionStatement(this.getStart(), this.getEnd(), target, expr);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

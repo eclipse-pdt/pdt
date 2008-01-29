@@ -231,6 +231,10 @@ public abstract class AbstractVisitor implements Visitor {
 		return true;
 	}
 
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
+		return true;
+	}
+	
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		return true;
 	}
@@ -428,6 +432,9 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(Scalar scalar) {
 	}
 
+	public void endVisit(SingleFieldDeclaration singleFieldDeclaration) {
+	}
+	
 	public void endVisit(StaticConstantAccess staticConstantAccess) {
 	}
 

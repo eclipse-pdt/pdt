@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -20,8 +24,19 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ASTError extends Statement {
 
-	public ASTError(int start, int end) {
-		super(start, end);
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(0);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
+	}
+	
+	public ASTError(int start, int end, AST ast) {
+		super(start, end, ast);
 	}
 
 	public void childrenAccept(Visitor visitor) {
@@ -57,5 +72,16 @@ public class ASTError extends Statement {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final ASTError result = new ASTError(this.getStart(), this.getEnd(), target);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -20,15 +24,43 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class StaticFieldAccess extends StaticDispatch {
 
-	private final Variable field;
+	private Variable field;
 
-	public StaticFieldAccess(int start, int end, Identifier className, Variable field) {
-		super(start, end, className);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
+		new ChildPropertyDescriptor(StaticFieldAccess.class, "className", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FIELD_PROPERTY = 
+		new ChildPropertyDescriptor(StaticFieldAccess.class, "field", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	@Override
+	ChildPropertyDescriptor getClassNameProperty() {
+		return CLASS_NAME_PROPERTY;
+	}
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		properyList.add(FIELD_PROPERTY);
+		properyList.add(CLASS_NAME_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+	
+	
+	public StaticFieldAccess(int start, int end, AST ast, Identifier className, Variable field) {
+		super(start, end, ast, className);
 
 		assert field != null;
 		this.field = field;
 
-		field.setParent(this);
+		field.setParent(this, FIELD_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -71,10 +103,49 @@ public class StaticFieldAccess extends StaticDispatch {
 		return ASTNode.STATIC_FIELD_ACCESS;
 	}
 
+	/**
+	 * The field of this access
+	 * 
+	 * @return field of this access
+	 */
 	public Variable getField() {
 		return field;
 	}
 
+	/**
+	 * Sets the variable declaration of this catch clause.
+	 * 
+	 * @param exception the exception variable declaration node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setField(Variable variable) {
+		if (variable == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.field;
+		preReplaceChild(oldChild, variable, FIELD_PROPERTY);
+		this.field = variable;
+		postReplaceChild(oldChild, variable, FIELD_PROPERTY);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == FIELD_PROPERTY) {
+			if (get) {
+				return getField();
+			} else {
+				setField((Variable) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}	
+	
 	public ASTNode getMember() {
 		return getField();
 	}
@@ -85,6 +156,19 @@ public class StaticFieldAccess extends StaticDispatch {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Identifier name = ASTNode.copySubtree(target, getClassName());
+		final Variable field = ASTNode.copySubtree(target, getField());
+		final StaticFieldAccess result = new StaticFieldAccess(getStart(), getEnd(), target, name, field);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 
 }

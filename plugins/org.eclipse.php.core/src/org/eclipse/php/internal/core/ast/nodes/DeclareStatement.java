@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -22,27 +25,48 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class DeclareStatement extends Statement {
 
-	private final Identifier[] directiveNames;
-	private final Expression[] directiveValues;
-	private final Statement action;
+	private final ASTNode.NodeList<Identifier> directiveNames = new ASTNode.NodeList<Identifier>(DIRECTIVE_NAMES_PROPERTY);
+	private final ASTNode.NodeList<Expression> directiveValues = new ASTNode.NodeList<Expression>(DIRECTIVE_VALUES_PROPERTY);
+	private Statement body;
 
-	private DeclareStatement(int start, int end, Identifier[] directiveNames, Expression[] directiveValues, Statement action) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor DIRECTIVE_NAMES_PROPERTY = new ChildListPropertyDescriptor(DeclareStatement.class, "directiveNames", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor DIRECTIVE_VALUES_PROPERTY = new ChildListPropertyDescriptor(DeclareStatement.class, "directiveValues", Expression.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(DeclareStatement.class, "action", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
-		assert directiveNames != null && directiveValues != null && directiveNames.length == directiveValues.length;
-		this.directiveNames = directiveNames;
-		this.directiveValues = directiveValues;
-		this.action = action;
-
-		for (int i = 0; i < directiveNames.length; i++) {
-			directiveNames[i].setParent(this);
-			directiveValues[i].setParent(this);
-		}
-		action.setParent(this);
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		properyList.add(DIRECTIVE_NAMES_PROPERTY);
+		properyList.add(DIRECTIVE_VALUES_PROPERTY);
+		properyList.add(BODY_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public DeclareStatement(int start, int end, List directiveNames, List directiveValues, Statement action) {
-		this(start, end, directiveNames == null ? null : (Identifier[]) directiveNames.toArray(new Identifier[directiveNames.size()]), directiveValues == null ? null : (Expression[]) directiveValues.toArray(new Expression[directiveValues.size()]), action);
+	private DeclareStatement(int start, int end, AST ast, Identifier[] directiveNames, Expression[] directiveValues, Statement action) {
+		super(start, end, ast);
+
+		assert directiveNames != null && directiveValues != null && directiveNames.length == directiveValues.length;
+		for (Identifier identifier : directiveNames) {
+			this.directiveNames.add(identifier);
+		}
+		for (Expression expression : directiveValues) {
+			this.directiveValues.add(expression);
+		}
+
+		this.body = action;
+		action.setParent(this, BODY_PROPERTY);
+	}
+
+	public DeclareStatement(int start, int end, AST ast, List directiveNames, List directiveValues, Statement action) {
+		this(start, end, ast, directiveNames == null ? null : (Identifier[]) directiveNames.toArray(new Identifier[directiveNames.size()]), directiveValues == null ? null : (Expression[]) directiveValues.toArray(new Expression[directiveValues.size()]), action);
 	}
 
 	public void accept(Visitor visitor) {
@@ -51,31 +75,43 @@ public class DeclareStatement extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < directiveNames.length; i++) {
-			directiveNames[i].accept(visitor);
-			directiveValues[i].accept(visitor);
+		final Iterator<Identifier> itId = directiveNames.iterator();
+		final Iterator<Expression> itExpr = directiveValues.iterator();
+		while (itId.hasNext()) {
+			final Identifier name = itId.next();
+			final Expression value = itExpr.next();
+			name.accept(visitor);
+			value.accept(visitor);
 		}
-		action.accept(visitor);
+		body.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (int i = 0; i < directiveNames.length; i++) {
-			directiveNames[i].traverseTopDown(visitor);
-			directiveValues[i].traverseTopDown(visitor);
+		final Iterator<Identifier> itId = directiveNames.iterator();
+		final Iterator<Expression> itExpr = directiveValues.iterator();
+		while (itId.hasNext()) {
+			final Identifier name = itId.next();
+			final Expression value = itExpr.next();
+			name.traverseTopDown(visitor);
+			value.traverseTopDown(visitor);
 		}
-		action.traverseTopDown(visitor);
+		body.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < directiveNames.length; i++) {
-			directiveNames[i].traverseBottomUp(visitor);
-			directiveValues[i].traverseBottomUp(visitor);
+		final Iterator<Identifier> itId = directiveNames.iterator();
+		final Iterator<Expression> itExpr = directiveValues.iterator();
+		while (itId.hasNext()) {
+			final Identifier name = itId.next();
+			final Expression value = itExpr.next();
+			name.traverseBottomUp(visitor);
+			value.traverseBottomUp(visitor);
 		}
-		action.traverseBottomUp(visitor);
+		body.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
@@ -84,18 +120,22 @@ public class DeclareStatement extends Statement {
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
 		buffer.append(tab).append(TAB).append("<Directives>\n"); //$NON-NLS-1$
-		for (int i = 0; i < directiveNames.length; i++) {
+		final Iterator<Identifier> itId = directiveNames.iterator();
+		final Iterator<Expression> itExpr = directiveValues.iterator();
+		while (itId.hasNext()) {
+			final Identifier name = itId.next();
+			final Expression value = itExpr.next();
 			buffer.append(tab).append(TAB).append(TAB).append("<Name>\n"); //$NON-NLS-1$
-			directiveNames[i].toString(buffer, TAB + TAB + TAB + tab);
+			name.toString(buffer, TAB + TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 			buffer.append(tab).append(TAB).append(TAB).append("</Name>\n"); //$NON-NLS-1$
 			buffer.append(tab).append(TAB).append(TAB).append("<Value>\n"); //$NON-NLS-1$
-			directiveValues[i].toString(buffer, TAB + TAB + TAB + tab);
+			value.toString(buffer, TAB + TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 			buffer.append(tab).append(TAB).append(TAB).append("</Value>\n"); //$NON-NLS-1$
 		}
 		buffer.append(tab).append(TAB).append("</Directives>\n"); //$NON-NLS-1$
-		action.toString(buffer, TAB + tab);
+		body.toString(buffer, TAB + tab);
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append("</DeclareStatement>"); //$NON-NLS-1$
 	}
@@ -104,16 +144,97 @@ public class DeclareStatement extends Statement {
 		return ASTNode.DECLARE_STATEMENT;
 	}
 
+	/**
+	 * @deprecated use #getBody()
+	 */
 	public Statement getAction() {
-		return action;
+		return body;
 	}
 
+	/**
+	 * @deprecated use {@link #directiveNames()}  
+	 */
 	public Identifier[] getDirectiveNames() {
+		return directiveNames.toArray(new Identifier[directiveNames.size()]);
+	}
+
+	/**
+	 * @deprecated {@link #directiveValues()}  
+	 */
+	public Expression[] getDirectiveValues() {
+		return directiveValues.toArray(new Expression[directiveValues.size()]);
+	}
+	
+	/**
+	 * The list of directive names
+	 * 
+	 * @return List of directive names
+	 */
+	public List directiveNames() {
 		return directiveNames;
 	}
 
-	public Expression[] getDirectiveValues() {
+	/**
+	 * The list of directive values
+	 * 
+	 * @return List of directive values
+	 */
+	public List directiveValues() {
 		return directiveValues;
+	}
+
+	/**
+	 * The body of this declare statement
+	 * 
+	 * @return body of this this declare statement
+	 */
+	public Statement getBody() {
+		return this.body;
+	}
+
+	/**
+	 * Sets the expression of this unary operation.
+	 * 
+	 * @param body the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setBody(Statement body) {
+		if (body == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.body;
+		preReplaceChild(oldChild, body, BODY_PROPERTY);
+		this.body = body;
+		postReplaceChild(oldChild, body, BODY_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == BODY_PROPERTY) {
+			if (get) {
+				return getBody();
+			} else {
+				setBody((Statement) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == DIRECTIVE_NAMES_PROPERTY) {
+			return directiveNames();
+		}
+		if (property == DIRECTIVE_VALUES_PROPERTY) {
+			return directiveValues();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
 	}
 	
 	/* 
@@ -122,5 +243,20 @@ public class DeclareStatement extends Statement {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final List names = ASTNode.copySubtrees(target, this.directiveNames());
+		final List values = ASTNode.copySubtrees(target, this.directiveValues());
+		final Statement body = ASTNode.copySubtree(target, getBody());
+		
+		final DeclareStatement echoSt = new DeclareStatement(this.getStart(), this.getEnd(), target, names, values, body);
+		return echoSt;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

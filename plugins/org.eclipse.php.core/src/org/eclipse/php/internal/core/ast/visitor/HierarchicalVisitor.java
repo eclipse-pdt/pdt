@@ -295,6 +295,10 @@ public class HierarchicalVisitor extends AbstractVisitor {
 	public boolean visit(Scalar scalar) {
 		return visit((Expression) scalar);
 	}
+	
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
+		return visit((ASTNode) singleFieldDeclaration);
+	}	
 
 	public boolean visit(StaticConstantAccess classConstantAccess) {
 		return visit((StaticDispatch) classConstantAccess);
