@@ -10,28 +10,58 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represnts a constant class access
+ * Represents a constant class access
  * <pre>e.g.<pre> MyClass::CONST
  */
 public class StaticConstantAccess extends StaticDispatch {
 
-	private final Identifier constant;
+	private Identifier constant;
 
-	public StaticConstantAccess(int start, int end, Identifier className, Identifier constant) {
-		super(start, end, className);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
+		new ChildPropertyDescriptor(StaticConstantAccess.class, "className", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor CONSTANT_PROPERTY = 
+		new ChildPropertyDescriptor(StaticConstantAccess.class, "parameterType", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+
+	@Override
+	ChildPropertyDescriptor getClassNameProperty() {
+		return CLASS_NAME_PROPERTY;
+	}
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		properyList.add(CLASS_NAME_PROPERTY);
+		properyList.add(CONSTANT_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}	
+	
+	public StaticConstantAccess(int start, int end, AST ast, Identifier className, Identifier constant) {
+		super(start, end, ast, className);
 
 		assert constant != null;
 		this.constant = constant;
 
-		constant.setParent(this);
+		constant.setParent(this, CONSTANT_PROPERTY);
 	}
 
-	public StaticConstantAccess(int start, int end, Identifier name) {
-		this(start, end, null, name);
+	public StaticConstantAccess(int start, int end, AST ast, Identifier name) {
+		this(start, end, ast, null, name);
 	}
 
 	public void accept(Visitor visitor) {
@@ -76,9 +106,49 @@ public class StaticConstantAccess extends StaticDispatch {
 		return ASTNode.STATIC_CONSTANT_ACCESS;
 	}
 
+	/**
+	 * Constant name of this static dispatch
+	 *  
+	 * @return constant name of this static dispatch
+	 */
 	public Identifier getConstant() {
 		return constant;
 	}
+	
+	/**
+	 * Sets the class name identifier
+	 * 
+	 * @param name the class name of this dispatch
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setConstant(Identifier name) {
+		if (name == null) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.constant;
+		preReplaceChild(oldChild, name, CONSTANT_PROPERTY);
+		this.constant = name;
+		postReplaceChild(oldChild, name, CONSTANT_PROPERTY);
+	}	
+	
+	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == CONSTANT_PROPERTY) {
+			if (get) {
+				return getConstant();
+			} else {
+				setConstant((Identifier) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}	
 
 	public ASTNode getMember() {
 		return getConstant();
@@ -90,5 +160,19 @@ public class StaticConstantAccess extends StaticDispatch {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Identifier className = ASTNode.copySubtree(target, getClassName());
+		final Identifier constant = ASTNode.copySubtree(target, getConstant());
+		final StaticConstantAccess result = new StaticConstantAccess(getStart(),getEnd(), target, className, constant);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

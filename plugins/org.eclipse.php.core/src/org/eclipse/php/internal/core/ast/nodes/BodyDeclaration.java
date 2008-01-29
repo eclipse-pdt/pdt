@@ -15,15 +15,20 @@ package org.eclipse.php.internal.core.ast.nodes;
  */
 public abstract class BodyDeclaration extends Statement {
 
-	private final int modifier;
+	private int modifier;
 
-	public BodyDeclaration(int start, int end, int modifier, boolean shouldComplete) {
-		super(start, end);
+	/**
+	 * Should be implemented by concrete implementations of body  
+	 */
+	abstract SimplePropertyDescriptor getModifierProperty();
+	
+	public BodyDeclaration(int start, int end, AST ast, int modifier, boolean shouldComplete) {
+		super(start, end, ast);
 		this.modifier = shouldComplete ? completeModifier(modifier) : modifier;
 	}
 
-	public BodyDeclaration(int start, int end, int modifier) {
-		this(start, end, modifier, false);
+	public BodyDeclaration(int start, int end, AST ast, int modifier) {
+		this(start, end, ast, modifier, false);
 	}
 
 	/**
@@ -43,6 +48,34 @@ public abstract class BodyDeclaration extends Statement {
 
 	public int getModifier() {
 		return modifier;
+	}
+	
+	/**
+	 * Sets the operator of this assignment expression.
+	 * 
+	 * @param assignmentOperator the assignment operator
+	 * @exception IllegalArgumentException if the argument is incorrect
+	 */ 
+	public void setModifier(int modifier) {
+		if (Modifier.toString(modifier) == null) {
+			throw new IllegalArgumentException("Invalid modifier");
+		}
+		preValueChange(getModifierProperty());
+		this.modifier = modifier;
+		postValueChange(getModifierProperty());
+	}	
+
+	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == getModifierProperty()) {
+			if (get) {
+				return getModifier();
+			} else {
+				setModifier((Integer) value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
 	}
 
 	/**

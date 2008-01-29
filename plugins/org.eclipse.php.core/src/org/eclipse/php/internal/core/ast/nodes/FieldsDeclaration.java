@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,28 +26,55 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class FieldsDeclaration extends BodyDeclaration {
 
-	private final Variable[] variableNames;
-	private final Expression[] initialValues;
+	private final ASTNode.NodeList<SingleFieldDeclaration> fields = new ASTNode.NodeList<SingleFieldDeclaration>(FIELDS_PROPERTY);
 
-	public FieldsDeclaration(int start, int end, int modifier, List variablesAndDefaults) {
-		super(start, end, modifier);
-
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor FIELDS_PROPERTY = 
+		new ChildListPropertyDescriptor(FieldsDeclaration.class, "fields", SingleFieldDeclaration.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
+		new SimplePropertyDescriptor(FieldsDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
+	
+	@Override
+	final SimplePropertyDescriptor getModifierProperty() {
+		return MODIFIER_PROPERTY;
+	}
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		properyList.add(FIELDS_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+	
+	public FieldsDeclaration(int start, int end, AST ast, int modifier, List variablesAndDefaults) {
+		super(start, end, ast, modifier);
 		assert variablesAndDefaults != null && variablesAndDefaults.size() > 0;
-
-		this.variableNames = new Variable[variablesAndDefaults.size()];
-		this.initialValues = new Expression[variablesAndDefaults.size()];
 
 		int i = 0;
 		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext(); i++) {
-			ASTNode[] element = (ASTNode[]) iter.next();
-			this.variableNames[i] = (Variable) element[0];
-			this.initialValues[i] = (Expression) element[1];
-
-			element[0].setParent(this);
-			if (element[1] != null) {
-				element[1].setParent(this);
+			final Object next = iter.next();
+			if (next instanceof SingleFieldDeclaration) {
+				this.fields.add ((SingleFieldDeclaration) next);
+			} else {
+				ASTNode[] element = (ASTNode[]) next;
+				SingleFieldDeclaration field = createField(ast, (Variable) element[0], (Expression) element[1]);
+				this.fields.add(field);
 			}
 		}
+	}
+	
+	private SingleFieldDeclaration createField(AST ast, Variable name, Expression value) {
+		int start = name.getStart();
+		int end = value == null ? name.getEnd() : value.getEnd();
+		final SingleFieldDeclaration result = new SingleFieldDeclaration(start, end, ast, name, value);
+		return result;
 	}
 
 	public void accept(Visitor visitor) {
@@ -57,33 +86,21 @@ public class FieldsDeclaration extends BodyDeclaration {
 	}	
 
 	public void childrenAccept(Visitor visitor) {
-		for (int i = 0; i < variableNames.length; i++) {
-			variableNames[i].accept(visitor);
-			Expression expr = initialValues[i];
-			if (expr != null) {
-				expr.accept(visitor);
-			}
+		for (ASTNode node : this.fields) {
+			node.accept(visitor);
 		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (int i = 0; i < variableNames.length; i++) {
-			variableNames[i].traverseTopDown(visitor);
-			Expression expr = initialValues[i];
-			if (expr != null) {
-				expr.traverseTopDown(visitor);
-			}
+		for (ASTNode node : this.fields) {
+			node.traverseTopDown(visitor);
 		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (int i = 0; i < variableNames.length; i++) {
-			variableNames[i].traverseBottomUp(visitor);
-			Expression expr = initialValues[i];
-			if (expr != null) {
-				expr.traverseBottomUp(visitor);
-			}
+		for (ASTNode node : this.fields) {
+			node.traverseBottomUp(visitor);
 		}
 		accept(visitor);
 	}
@@ -92,13 +109,13 @@ public class FieldsDeclaration extends BodyDeclaration {
 		buffer.append(tab).append("<FieldsDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" modifier='").append(getModifierString()).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (int i = 0; i < variableNames.length; i++) {
+		for (SingleFieldDeclaration node : this.fields) {
 			buffer.append(tab).append(TAB).append("<VariableName>\n"); //$NON-NLS-1$
-			variableNames[i].toString(buffer, TAB + TAB + tab);
+			node.getName().toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 			buffer.append(tab).append(TAB).append("</VariableName>\n"); //$NON-NLS-1$
 			buffer.append(tab).append(TAB).append("<InitialValue>\n"); //$NON-NLS-1$
-			Expression expr = initialValues[i];
+			Expression expr = node.getValue();
 			if (expr != null) {
 				expr.toString(buffer, TAB + TAB + tab);
 				buffer.append("\n"); //$NON-NLS-1$
@@ -112,12 +129,39 @@ public class FieldsDeclaration extends BodyDeclaration {
 		return ASTNode.FIELD_DECLARATION;
 	}
 
+	/**
+	 * The list of single fields that are declared
+	 * 
+	 * @return List of single fields
+	 */
+	public List fields() {
+		return this.fields;
+	}
+	
 	public Expression[] getInitialValues() {
-		return initialValues;
+		Expression[] result = new Expression[this.fields.size()];
+		int i = 0;
+		for (SingleFieldDeclaration field : this.fields) {
+			result[i++] = field.getValue();
+		}
+		return result;
 	}
 
 	public Variable[] getVariableNames() {
-		return variableNames;
+		Variable[] result = new Variable[this.fields.size()];
+		int i = 0;
+		for (SingleFieldDeclaration field : this.fields) {
+			result[i++] = field.getName();
+		}
+		return result;	
+	}
+
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == FIELDS_PROPERTY) {
+			return fields();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
 	}
 	
 	/* 
@@ -126,5 +170,18 @@ public class FieldsDeclaration extends BodyDeclaration {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final List fields = ASTNode.copySubtrees(target, fields());
+		final int modifier = getModifier();
+		final FieldsDeclaration result = new FieldsDeclaration(getStart(), getEnd(), target, modifier, fields);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

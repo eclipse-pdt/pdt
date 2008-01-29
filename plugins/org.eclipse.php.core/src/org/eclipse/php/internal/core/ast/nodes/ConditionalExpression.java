@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -22,21 +26,46 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ConditionalExpression extends Expression {
 
-	private final Expression condition;
-	private final Expression ifTrue;
-	private final Expression ifFalse;
+	private Expression condition;
+	private Expression ifTrue;
+	private Expression ifFalse;
 
-	public ConditionalExpression(int start, int end, Expression condition, Expression ifTrue, Expression ifFalse) {
-		super(start, end);
+	/**
+	 * The "expression" structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor CONDITION_PROPERTY = 
+		new ChildPropertyDescriptor(ConditionalExpression.class, "condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor IF_TRUE_PROPERTY = 
+		new ChildPropertyDescriptor(ConditionalExpression.class, "ifTrue", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor IF_FALSE_PROPERTY = 
+		new ChildPropertyDescriptor(ConditionalExpression.class, "ifFalse", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
+		list.add(CONDITION_PROPERTY);
+		list.add(IF_TRUE_PROPERTY);
+		list.add(IF_FALSE_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
+	}
+	
+	
+	public ConditionalExpression(int start, int end, AST ast, Expression condition, Expression ifTrue, Expression ifFalse) {
+		super(start, end, ast);
 
 		assert condition != null && ifTrue != null && ifFalse != null;
 		this.condition = condition;
 		this.ifTrue = ifTrue;
 		this.ifFalse = ifFalse;
 
-		condition.setParent(this);
-		ifTrue.setParent(this);
-		ifFalse.setParent(this);
+		condition.setParent(this, CONDITION_PROPERTY);
+		ifTrue.setParent(this, IF_TRUE_PROPERTY);
+		ifFalse.setParent(this, IF_FALSE_PROPERTY);
 	}
 	
 	public void accept(Visitor visitor) {
@@ -87,16 +116,94 @@ public class ConditionalExpression extends Expression {
 		return ASTNode.CONDITIONAL_EXPRESSION;
 	}
 
+	/**
+	 * Returns the condition of this conditional expression.
+	 * 
+	 * @return the condition node
+	 */ 
 	public Expression getCondition() {
-		return condition;
+		return this.condition;
 	}
-
-	public Expression getIfFalse() {
-		return ifFalse;
+	
+	/**
+	 * Sets the condition of this conditional expression.
+	 * 
+	 * @param expression the condition node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setCondition(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.condition;
+		preReplaceChild(oldChild, expression, CONDITION_PROPERTY);
+		this.condition = expression;
+		postReplaceChild(oldChild, expression, CONDITION_PROPERTY);
 	}
-
+	
+	/**
+	 * Returns the "then" part of this conditional expression.
+	 * 
+	 * @return the "then" expression node
+	 */ 
 	public Expression getIfTrue() {
 		return ifTrue;
+	}
+	
+	/**
+	 * Sets the "then" part of this conditional expression.
+	 * 
+	 * @param expression the "then" expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setIfTrue(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.ifTrue;
+		preReplaceChild(oldChild, expression, IF_TRUE_PROPERTY);
+		this.ifTrue = expression;
+		postReplaceChild(oldChild, expression, IF_TRUE_PROPERTY);
+	}
+
+	/**
+	 * Returns the "else" part of this conditional expression.
+	 * 
+	 * @return the "else" expression node
+	 */ 
+	public Expression getIfFalse() {
+		return this.ifFalse;
+	}
+	
+	/**
+	 * Sets the "else" part of this conditional expression.
+	 * 
+	 * @param expression the "else" expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setIfFalse(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.ifFalse;
+		preReplaceChild(oldChild, expression, IF_FALSE_PROPERTY);
+		this.ifFalse = expression;
+		postReplaceChild(oldChild, expression, IF_FALSE_PROPERTY);
 	}
 	
 	/* 
@@ -105,5 +212,48 @@ public class ConditionalExpression extends Expression {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == CONDITION_PROPERTY) {
+			if (get) {
+				return getCondition();
+			} else {
+				setCondition((Expression) child);
+				return null;
+			}
+		}
+		if (property == IF_TRUE_PROPERTY) {
+			if (get) {
+				return getIfTrue();
+			} else {
+				setIfTrue((Expression) child);
+				return null;
+			}
+		}
+		if (property == IF_FALSE_PROPERTY) {
+			if (get) {
+				return getIfFalse();
+			} else {
+				setIfFalse((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression condition = ASTNode.copySubtree(target, this.getCondition());
+		final Expression ifTrue = ASTNode.copySubtree(target, this.getIfTrue());
+		final Expression ifFalse = ASTNode.copySubtree(target, this.getIfTrue());
+		ConditionalExpression result = new ConditionalExpression(this.getStart(), this.getEnd(), target, condition, ifTrue, ifFalse);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

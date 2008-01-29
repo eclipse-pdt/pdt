@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -21,15 +25,42 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class MethodInvocation extends Dispatch {
 
-	private final FunctionInvocation method;
+	private FunctionInvocation method;
 
-	public MethodInvocation(int start, int end, VariableBase dispatcher, FunctionInvocation method) {
-		super(start, end, dispatcher);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor DISPATCHER_PROPERTY = 
+		new ChildPropertyDescriptor(MethodInvocation.class, "dispatcher", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor METHOD_PROPERTY = 
+		new ChildPropertyDescriptor(MethodInvocation.class, "method", FunctionInvocation.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	@Override
+	ChildPropertyDescriptor getDispatcherProperty() {
+		return FieldAccess.DISPATCHER_PROPERTY;
+	}
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		propertyList.add(METHOD_PROPERTY);
+		propertyList.add(DISPATCHER_PROPERTY);		
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}
+	
+	
+	public MethodInvocation(int start, int end, AST ast, VariableBase dispatcher, FunctionInvocation method) {
+		super(start, end, ast, dispatcher);
 
 		assert method != null;
 		this.method = method;
 
-		method.setParent(this);
+		method.setParent(this, METHOD_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -74,12 +105,50 @@ public class MethodInvocation extends Dispatch {
 		return ASTNode.METHOD_INVOCATION;
 	}
 
+	/**
+	 * The method component of this method invocation expression
+	 * @return method component of this method invocation expression
+	 */
 	public FunctionInvocation getMethod() {
 		return method;
 	}
 
-	public VariableBase getMember() {
+	public FunctionInvocation getMember() {
 		return getMethod();
+	}
+	
+	/**
+	 * Sets the method component of this field access.
+	 * 
+	 * @param method the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setMethod(FunctionInvocation method) {
+		if (method == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.method;
+		preReplaceChild(oldChild, method, METHOD_PROPERTY);
+		this.method = method;
+		postReplaceChild(oldChild, method, METHOD_PROPERTY);
+	}	
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == METHOD_PROPERTY) {
+			if (get) {
+				return getMethod();
+			} else {
+				setMethod((FunctionInvocation) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 	
 	/* 
@@ -89,4 +158,18 @@ public class MethodInvocation extends Dispatch {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+	
+	@Override
+	ASTNode clone0(AST target) {
+		final VariableBase dispatcher = ASTNode.copySubtree(target, getDispatcher());
+		final FunctionInvocation field = ASTNode.copySubtree(target, getMethod());
+		final MethodInvocation result = new MethodInvocation(getStart(), getEnd(), target, dispatcher, field);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
 }

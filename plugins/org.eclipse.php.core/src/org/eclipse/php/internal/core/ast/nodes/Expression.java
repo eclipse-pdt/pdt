@@ -15,8 +15,8 @@ package org.eclipse.php.internal.core.ast.nodes;
  */
 public abstract class Expression extends ASTNode {
 
-	public Expression(int start, int end) {
-		super(start, end);
+	public Expression(int start, int end, AST ast) {
+		super(start, end, ast);
 	}
 	
 	/**

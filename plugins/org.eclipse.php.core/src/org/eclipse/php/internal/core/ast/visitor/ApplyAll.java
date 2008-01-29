@@ -47,7 +47,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(ASTError astError) {
 		return apply(astError);
 	}
-	
+
 	public boolean visit(BackTickExpression backTickExpression) {
 		return apply(backTickExpression);
 	}
@@ -140,7 +140,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(ExpressionStatement expressionStatement) {
 		return apply(expressionStatement);
 	}	
-	
+
 	public boolean visit(FieldAccess filedAccess) {
 		return apply(filedAccess);
 	}
@@ -254,10 +254,14 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(scalar);
 	}
 
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
+		return apply(singleFieldDeclaration);
+	}
+	
 	public boolean visit(StaticFieldAccess staticMember) {
 		return apply(staticMember);
 	}
-	
+
 	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
 		return apply(staticMethodInvocation);
 	}
@@ -493,6 +497,10 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public void endVisit(Scalar scalar) {
 		endVisitNode(scalar);
 	}
+	
+	public void endVisit(SingleFieldDeclaration singleFieldDeclaration) {
+		endVisit(singleFieldDeclaration);
+	}	
 
 	public void endVisit(StaticConstantAccess staticConstantAccess) {
 		endVisitNode(staticConstantAccess);

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -71,20 +75,47 @@ public class InfixExpression extends Expression {
 	// '>>'	
 	public static final int OP_SR = 23;
 
-	private final Expression right;
-	private final int operator;
-	private final Expression left;
+	private Expression left;
+	private int operator;
+	private Expression right;
 
-	public InfixExpression(int start, int end, Expression left, int operator, Expression right) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor LEFT_OPERAND_PROPERTY = 
+		new ChildPropertyDescriptor(InfixExpression.class, "left", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = 
+		new SimplePropertyDescriptor(InfixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor RIGHT_OPERAND_PROPERTY = 
+		new ChildPropertyDescriptor(InfixExpression.class, "right", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		properyList.add(LEFT_OPERAND_PROPERTY);
+		properyList.add(OPERATOR_PROPERTY);
+		properyList.add(RIGHT_OPERAND_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+	
+	
+	
+	public InfixExpression(int start, int end, AST ast, Expression left, int operator, Expression right) {
+		super(start, end, ast);
 
-		assert right != null && left != null;
+		assert right != null && left != null && getOperator(operator) != null;
 		this.left = left;
 		this.operator = operator;
 		this.right = right;
 
-		left.setParent(this);
-		right.setParent(this);
+		left.setParent(this, LEFT_OPERAND_PROPERTY);
+		right.setParent(this, RIGHT_OPERAND_PROPERTY);
 	}
 
 	public static String getOperator(int operator) {
@@ -181,17 +212,90 @@ public class InfixExpression extends Expression {
 		return ASTNode.INFIX_EXPRESSION;
 	}
 
-	public Expression getLeft() {
-		return left;
-	}
-
+	/**
+	 * Returns the operator of this infix expression.
+	 * 
+	 * @return the infix operator
+	 */ 
 	public int getOperator() {
-		return operator;
+		return this.operator;
 	}
 
-	public Expression getRight() {
-		return right;
+	/**
+	 * Sets the operator of this infix expression.
+	 * 
+	 * @param operator the infix operator
+	 * @exception IllegalArgumentException if the argument is incorrect
+	 */ 
+	public void setOperator(int operator) {
+		if (getOperator(operator) == null) {
+			throw new IllegalArgumentException();
+		}
+		preValueChange(OPERATOR_PROPERTY);
+		this.operator = operator;
+		postValueChange(OPERATOR_PROPERTY);
 	}
+
+	/**
+	 * Returns the left operand of this infix expression.
+	 * 
+	 * @return the left operand node
+	 */ 
+	public Expression getLeft() {
+		return this.left;
+	}
+		
+	/**
+	 * Sets the left operand of this infix expression.
+	 * 
+	 * @param expression the left operand node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setLeft(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.left;
+		preReplaceChild(oldChild, expression, LEFT_OPERAND_PROPERTY);
+		this.left = expression;
+		postReplaceChild(oldChild, expression, LEFT_OPERAND_PROPERTY);
+	}
+
+	/**
+	 * Returns the right operand of this infix expression.
+	 * 
+	 * @return the right operand node
+	 */ 
+	public Expression getRight() {
+		return this.right;
+	}
+		
+	/**
+	 * Sets the right operand of this infix expression.
+	 * 
+	 * @param expression the right operand node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setRight(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.right;
+		preReplaceChild(oldChild, expression, RIGHT_OPERAND_PROPERTY);
+		this.right = expression;
+		postReplaceChild(oldChild, expression, RIGHT_OPERAND_PROPERTY);
+	}
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -200,4 +304,53 @@ public class InfixExpression extends Expression {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression left = ASTNode.copySubtree(target, getLeft());
+		final Expression right = ASTNode.copySubtree(target, getRight());
+		final InfixExpression result = new InfixExpression(this.getStart(), this.getEnd(), target, left, this.getOperator(), right);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == LEFT_OPERAND_PROPERTY) {
+			if (get) {
+				return getLeft();
+			} else {
+				setLeft((Expression) child);
+				return null;
+			}
+		}
+		if (property == RIGHT_OPERAND_PROPERTY) {
+			if (get) {
+				return getRight();
+			} else {
+				setRight((Expression) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == OPERATOR_PROPERTY) {
+			if (get) {
+				return getOperator();
+			} else {
+				setOperator(value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
 }
+

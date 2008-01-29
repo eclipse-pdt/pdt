@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -25,24 +29,46 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ArrayElement extends ASTNode {
 
-	private final Expression key;
-	private final Expression value;
+	private Expression key;
+	private Expression value;
 
-	public ArrayElement(int start, int end, Expression key, Expression value) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor KEY_PROPERTY = 
+		new ChildPropertyDescriptor(ArrayElement.class, "key", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor VALUE_PROPERTY = 
+		new ChildPropertyDescriptor(ArrayElement.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		properyList.add(KEY_PROPERTY);
+		properyList.add(VALUE_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+	
+	public ArrayElement(int start, int end, AST ast, Expression key, Expression value) {
+		super(start, end, ast);
 
 		assert value != null;
 		this.key = key;
 		this.value = value;
 
 		if (key != null) {
-			key.setParent(this);
+			key.setParent(this, KEY_PROPERTY);
 		}
-		value.setParent(this);
+		value.setParent(this, VALUE_PROPERTY);
 	}
 
-	public ArrayElement(int start, int end, Expression value) {
-		this(start, end, null, value);
+	public ArrayElement(int start, int end, AST ast, Expression value) {
+		this(start, end, ast, null, value);
 	}
 
 	public void childrenAccept(Visitor visitor) {
@@ -96,13 +122,66 @@ public class ArrayElement extends ASTNode {
 		return ASTNode.ARRAY_ELEMENT;
 	}
 
+	/**
+	 * Returns the key of this array element(null if missing).
+	 * 
+	 * @return the key of the array element 
+	 */ 
 	public Expression getKey() {
 		return key;
 	}
-
-	public Expression getValue() {
-		return value;
+		
+	/**
+	 * Sets the key of this array element.
+	 * 
+	 * @param expression the left operand node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setKey(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.key;
+		preReplaceChild(oldChild, expression, KEY_PROPERTY);
+		this.key = expression;
+		postReplaceChild(oldChild, expression, KEY_PROPERTY);
 	}
+
+	/**
+	 * Returns the value expression of this array element.
+	 * 
+	 * @return the value expression of this array element
+	 */ 
+	public Expression getValue() {
+		return this.value;
+	}
+		
+	/**
+	 * Sets the key of this array expression.
+	 * 
+	 * @param expression the right operand node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setValue(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.value;
+		preReplaceChild(oldChild, expression, VALUE_PROPERTY);
+		this.value = expression;
+		postReplaceChild(oldChild, expression, VALUE_PROPERTY);
+	}
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -111,4 +190,40 @@ public class ArrayElement extends ASTNode {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression key = ASTNode.copySubtree(target, getKey());
+		final Expression value = ASTNode.copySubtree(target, getValue());
+		final ArrayElement result = new ArrayElement(this.getStart(), this.getEnd(), target, key, value);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == KEY_PROPERTY) {
+			if (get) {
+				return getKey();
+			} else {
+				setKey((Expression) child);
+				return null;
+			}
+		}
+		if (property == VALUE_PROPERTY) {
+			if (get) {
+				return getValue();
+			} else {
+				setValue((Expression) child);
+				return null;
+			}
+		}
+
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 }

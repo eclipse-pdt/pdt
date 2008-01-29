@@ -8,21 +8,15 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
+package org.eclipse.php.internal.core.ast.parser;
 
-package org.eclipse.php.internal.core.ti.types;
-
-public class RecursionType implements IEvaluatedType {
+public interface IDocumentorLexer {
 	
-	public static final IEvaluatedType INSTANCE = new RecursionType();
-
-	/**
-	 * The constructor is private so that we can rely on comparing with
-	 * <code>INSTANCE</code>.
-	 */
-	private RecursionType() {
-	}
-
-	public String toString() {
-		return "recursion type call"; //$NON-NLS-1$
-	}
+	public Object parse ();
+	
+	public void reset(java.io.Reader  reader, char[] buffer, int[] parameters);
+	
+	public int[] getParamenters();
+	
+    public char[] getBuffer();
 }

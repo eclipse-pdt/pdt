@@ -10,40 +10,138 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.List;
+
 /**
  * Represents base class for class declaration and interface declaration  
  */
 public abstract class TypeDeclaration extends Statement {
 
-	private final Identifier name;
-	private final Identifier[] interfaces;
-	private final Block body;
+	private Identifier name;
+	private ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(INTERFACES_PROPERTY);
+	private Block body;
 
-	public TypeDeclaration(int start, int end, final Identifier name, final Identifier[] interfaces, final Block body) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor NAME_PROPERTY = 
+		new ChildPropertyDescriptor(TypeDeclaration.class, "name", Identifier.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
+		new ChildListPropertyDescriptor(TypeDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = 
+		new ChildPropertyDescriptor(TypeDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	
+	
+	public TypeDeclaration(int start, int end, AST ast, final Identifier name, final Identifier[] interfaces, final Block body) {
+		super(start, end, ast);
 
 		assert name != null && body != null;
 		this.name = name;
-		this.interfaces = interfaces;
+		if (interfaces != null) {
+			for (Identifier identifier : interfaces) {
+				this.interfaces.add(identifier);
+			}
+		}
 		this.body = body;
 
-		name.setParent(this);
-		for (int i = 0; interfaces != null && i < interfaces.length; i++) {
-			interfaces[i].setParent(this);
-		}
-		body.setParent(this);
+		name.setParent(this, NAME_PROPERTY);
+		body.setParent(this, BODY_PROPERTY);
 	}
 
+	/**
+	 * The body component of this type declaration node 
+	 * @return body component of this type declaration node
+	 */
 	public Block getBody() {
 		return body;
 	}
 
+	/**
+	 * Sets the name of this parameter
+	 * 
+	 * @param name of this type declaration.
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setBody(Block block) {
+		if (block == null) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.body;
+		preReplaceChild(oldChild, block, BODY_PROPERTY);
+		this.body = block;
+		postReplaceChild(oldChild, block, BODY_PROPERTY);
+	}	
+	
+	/**
+	 * @deprecated use interfaces()
+	 */
 	public Identifier[] getInterfaces() {
-		return interfaces;
+		return this.interfaces.toArray(new Identifier[interfaces.size()]);
 	}
 
+	/**
+	 * List of interfaces that this type implements / extends
+	 */
+	public List interfaes() {
+		return this.interfaces;
+	}
+	
+	/**
+	 * The name of the type declaration node
+	 * @return name of the type declaration node
+	 */
 	public Identifier getName() {
-		return name;
+		return this.name;
 	}
+	
+	/**
+	 * Sets the name of this parameter
+	 * 
+	 * @param name of this type declaration.
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setName(Identifier id) {
+		if (id == null) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.name;
+		preReplaceChild(oldChild, id, NAME_PROPERTY);
+		this.name = id;
+		postReplaceChild(oldChild, id, NAME_PROPERTY);
+	}	
 
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == NAME_PROPERTY) {
+			if (get) {
+				return getName();
+			} else {
+				setName((Identifier) child);
+				return null;
+			}
+		}
+		if (property == BODY_PROPERTY) {
+			if (get) {
+				return getBody();
+			} else {
+				setBody((Block) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
 }

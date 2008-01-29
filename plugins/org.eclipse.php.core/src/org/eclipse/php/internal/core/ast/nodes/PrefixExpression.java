@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -25,17 +29,39 @@ public class PrefixExpression extends Expression {
 	// '--'
 	public static final int OP_DEC = 1;
 
-	private final VariableBase variable;
-	private final int operator;
+	private VariableBase variable;
+	private int operator;
 
-	public PrefixExpression(int start, int end, VariableBase variable, int operator) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = 
+		new ChildPropertyDescriptor(PrefixExpression.class, "variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = 
+		new SimplePropertyDescriptor(PrefixExpression.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		propertyList.add(VARIABLE_PROPERTY);
+		propertyList.add(OPERATOR_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	public PrefixExpression(int start, int end, AST ast, VariableBase variable, int operator) {
+		super(start, end, ast);
 
 		assert variable != null;
 		this.variable = variable;
 		this.operator = operator;
 
-		variable.setParent(this);
+		variable.setParent(this, VARIABLE_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -83,13 +109,87 @@ public class PrefixExpression extends Expression {
 		return ASTNode.PREFIX_EXPRESSION;
 	}
 
+	/**
+	 * Returns the operator of this prefix expression.
+	 * 
+	 * @return the prefix operator
+	 */ 
 	public int getOperator() {
-		return operator;
+		return this.operator;
 	}
 
+	/**
+	 * Sets the operator of this prefix expression.
+	 * 
+	 * @param operator the prefix operator
+	 * @exception IllegalArgumentException if the argument is incorrect
+	 */ 
+	public void setOperator(int operator) {
+		if (getOperator(operator) == null) {
+			throw new IllegalArgumentException();
+		}
+		preValueChange(OPERATOR_PROPERTY);
+		this.operator = operator;
+		postValueChange(OPERATOR_PROPERTY);
+	}
+	
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == OPERATOR_PROPERTY) {
+			if (get) {
+				return getOperator();
+			} else {
+				setOperator(value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+	
+
+	/**
+	 * Returns the variable in the prefix expression.
+	 * 
+	 * @return the expression node
+	 */ 
 	public VariableBase getVariable() {
 		return variable;
 	}
+
+	/**
+	 * Sets the expression of this prefix expression.
+	 * 
+	 * @param variable the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setVariable(VariableBase variable) {
+		if (variable == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.variable;
+		preReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
+		this.variable = variable;
+		postReplaceChild(oldChild, variable, VARIABLE_PROPERTY);
+	}
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == VARIABLE_PROPERTY) {
+			if (get) {
+				return getVariable();
+			} else {
+				setVariable((VariableBase) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -98,4 +198,17 @@ public class PrefixExpression extends Expression {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final VariableBase variable = ASTNode.copySubtree(target, this.getVariable());
+		final PrefixExpression result = new PrefixExpression(this.getStart(), this.getEnd(), target, variable, this.getOperator());
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+
 }

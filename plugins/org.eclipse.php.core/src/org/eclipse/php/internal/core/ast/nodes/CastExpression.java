@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -35,17 +39,39 @@ public class CastExpression extends Expression {
 	// 'unset'	
 	public static final int TYPE_UNSET = 6;
 
-	private final Expression expr;
-	private final int castType;
+	private Expression expression;
+	private int castingType;
 
-	public CastExpression(int start, int end, Expression expr, int castType) {
-		super(start, end);
+	/**
+	 * The structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
+		new ChildPropertyDescriptor(CastExpression.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor CASTING_TYPE_PROPERTY = 
+		new SimplePropertyDescriptor(CastExpression.class, "castingType", Integer.class, MANDATORY); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		properyList.add(EXPRESSION_PROPERTY);
+		properyList.add(CASTING_TYPE_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+		
+	public CastExpression(int start, int end, AST ast, Expression expr, int castType) {
+		super(start, end, ast);
 
 		assert expr != null;
-		this.expr = expr;
-		this.castType = castType;
+		this.expression = expr;
+		this.castingType = castType;
 
-		expr.setParent(this);
+		expr.setParent(this, EXPRESSION_PROPERTY);
 	}
 
 	public void accept(Visitor visitor) {
@@ -77,24 +103,24 @@ public class CastExpression extends Expression {
 	}
 
 	public void childrenAccept(Visitor visitor) {
-		expr.accept(visitor);
+		expression.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		expr.traverseTopDown(visitor);
+		expression.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		expr.traverseBottomUp(visitor);
+		expression.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<CastExpression"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" castType='").append(getCastType(castType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		expr.toString(buffer, TAB + tab);
+		buffer.append(" castType='").append(getCastType(castingType)).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		expression.toString(buffer, TAB + tab);
 		buffer.append("\n").append(tab).append("</CastExpression>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -102,12 +128,99 @@ public class CastExpression extends Expression {
 		return ASTNode.CAST_EXPRESSION;
 	}
 
+	/**
+	 * @deprecated use #getCastingType()
+	 */
 	public int getCastType() {
-		return castType;
+		return castingType;
 	}
 
+	/**
+	 * @deprecated use #getExpression
+	 */
 	public Expression getExpr() {
-		return expr;
+		return expression;
+	}
+	
+	/**
+	 * Returns the type of this cast expression.
+	 * 
+	 * @return the cast type
+	 */ 
+	public int getCastingType() {
+		return this.castingType;
+	}
+
+	/**
+	 * Sets the type of this cast expression.
+	 * 
+	 * @param castingType the cast type 
+	 * @exception IllegalArgumentException if the argument is incorrect
+	 */ 
+	public void setCastingType(int castingType) {
+		if (getCastType(castingType) == null) {
+			throw new IllegalArgumentException("Invalid type");
+		}
+		preValueChange(CASTING_TYPE_PROPERTY);
+		this.castingType = castingType;
+		postValueChange(CASTING_TYPE_PROPERTY);
+	}
+
+	/**
+	 * Returns the left hand side of this assignment expression.
+	 * 
+	 * @return the left hand side node
+	 */ 
+	public Expression getExpression() {
+		return this.expression;
+	}
+		
+	/**
+	 * Sets the expression of this cast expression.
+	 * 
+	 * @param expression of this cast expression.
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setExpression(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.expression;
+		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+		this.expression = expression;
+		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+	}	
+	
+	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
+		if (property == CASTING_TYPE_PROPERTY) {
+			if (get) {
+				return getCastingType();
+			} else {
+				setCastingType((Integer) value);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetObjectProperty(property, get, value);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == EXPRESSION_PROPERTY) {
+			if (get) {
+				return getExpression();
+			} else {
+				setExpression((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
 	}
 	
 	/* 
@@ -116,5 +229,17 @@ public class CastExpression extends Expression {
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression clone = ASTNode.copySubtree(target, this.getExpression());
+		final CastExpression result = new CastExpression(this.getStart(), this.getEnd(), target, clone, this.getCastingType());
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

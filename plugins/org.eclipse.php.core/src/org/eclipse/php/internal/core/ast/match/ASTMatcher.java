@@ -474,6 +474,16 @@ public class ASTMatcher {
 				&& safeSubtreeListMatch(node.getInitialValues(), o.getInitialValues())
 				&& safeSubtreeListMatch(node.getVariableNames(), o.getVariableNames()));
 	}
+
+	public boolean match(SingleFieldDeclaration node, Object other) {
+		if (!(other instanceof SingleFieldDeclaration)) {
+			return false;
+		}
+		SingleFieldDeclaration o = (SingleFieldDeclaration) other;
+ 
+		return (safeSubtreeMatch(node.getName(), o.getName()) && 
+				safeSubtreeMatch(node.getValue(), o.getValue()));
+	}
 	
 	public boolean match(ForEachStatement node, Object other) {
 		if (!(other instanceof ForEachStatement)) {

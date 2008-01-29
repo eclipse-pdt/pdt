@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -31,22 +35,47 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class IfStatement extends Statement {
 
-	private final Expression condition;
-	private final Statement trueStatement;
-	private final Statement falseStatement;
+	private Expression condition;
+	private Statement trueStatement;
+	private Statement falseStatement;
+	
+	/**
+	 * The "expression" structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor CONDITION_PROPERTY = 
+		new ChildPropertyDescriptor(IfStatement.class, "condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor TRUE_STATEMENT_PROPERTY = 
+		new ChildPropertyDescriptor(IfStatement.class, "trueStatement", Statement.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor FALSE_STATEMENT_PROPERTY = 
+		new ChildPropertyDescriptor(IfStatement.class, "falseStatement", Statement.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> list = new ArrayList<StructuralPropertyDescriptor>(3);
+		list.add(CONDITION_PROPERTY);
+		list.add(TRUE_STATEMENT_PROPERTY);
+		list.add(FALSE_STATEMENT_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
+	}
+	
 
-	public IfStatement(int start, int end, Expression condition, Statement trueStatement, Statement falseStatement) {
-		super(start, end);
+	public IfStatement(int start, int end, AST ast, Expression condition, Statement trueStatement, Statement falseStatement) {
+		super(start, end, ast);
 
 		assert condition != null && trueStatement != null;
 		this.condition = condition;
 		this.trueStatement = trueStatement;
 		this.falseStatement = falseStatement;
 
-		condition.setParent(this);
-		trueStatement.setParent(this);
+		condition.setParent(this, CONDITION_PROPERTY);
+		trueStatement.setParent(this, TRUE_STATEMENT_PROPERTY);
 		if (falseStatement != null) {
-			falseStatement.setParent(this);
+			falseStatement.setParent(this, FALSE_STATEMENT_PROPERTY);
 		}
 	}
 
@@ -109,17 +138,121 @@ public class IfStatement extends Statement {
 		return ASTNode.IF_STATEMENT;
 	}
 
+	/**
+	 * Returns the expression of this if statement.
+	 * 
+	 * @return the expression node
+	 */ 
 	public Expression getCondition() {
-		return condition;
+		return this.condition;
+	}
+	
+	/**
+	 * Sets the condition of this if statement.
+	 * 
+	 * @param expression the expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setCondition(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.condition;
+		preReplaceChild(oldChild, expression, CONDITION_PROPERTY);
+		this.condition = expression;
+		postReplaceChild(oldChild, expression, CONDITION_PROPERTY);
 	}
 
-	public Statement getFalseStatement() {
-		return falseStatement;
-	}
-
+	/**
+	 * Returns the "then" part of this if statement.
+	 * 
+	 * @return the "then" statement node
+	 */ 
 	public Statement getTrueStatement() {
-		return trueStatement;
+		return this.trueStatement;
 	}
+	
+	/**
+	 * Sets the "then" part of this if statement.
+	 * <p>
+	 * Special note: The Java language does not allow a local variable declaration
+	 * to appear as the "then" part of an if statement (they may only appear within a
+	 * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
+	 * as the thenStatement of a <code>IfStatement</code>. To get something that will
+	 * compile, be sure to embed the <code>VariableDeclarationStatement</code>
+	 * inside a <code>Block</code>.
+	 * </p>
+	 * 
+	 * @param statement the "then" statement node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setTrueStatement(Statement statement) {
+		if (statement == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.trueStatement;
+		preReplaceChild(oldChild, statement, TRUE_STATEMENT_PROPERTY);
+		this.trueStatement = statement;
+		postReplaceChild(oldChild, statement, TRUE_STATEMENT_PROPERTY);
+	}
+
+	/**
+	 * Returns the "else" part of this if statement, or <code>null</code> if
+	 * this if statement has <b>no</b> "else" part.
+	 * <p>
+	 * Note that there is a subtle difference between having no else 
+	 * statement and having an empty statement ("{}") or null statement (";").
+	 * </p>
+	 * 
+	 * @return the "else" statement node, or <code>null</code> if none
+	 */ 
+	public Statement getFalseStatement() {
+		return this.falseStatement;
+	}
+
+	/**
+	 * Sets or clears the "else" part of this if statement.
+	 * <p>
+	 * Note that there is a subtle difference between having no else part
+	 * (as in <code>"if(true){}"</code>) and having an empty block (as in
+	 * "if(true){}else{}") or null statement (as in "if(true){}else;"). 
+	 * </p>
+	 * <p>
+	 * Special note: The Java language does not allow a local variable declaration
+	 * to appear as the "else" part of an if statement (they may only appear within a
+	 * block). However, the AST will allow a <code>VariableDeclarationStatement</code>
+	 * as the elseStatement of a <code>IfStatement</code>. To get something that will
+	 * compile, be sure to embed the <code>VariableDeclarationStatement</code>
+	 * inside a <code>Block</code>.
+	 * </p>
+	 * 
+	 * @param statement the "else" statement node, or <code>null</code> if 
+	 *    there is none
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setFalseStatement(Statement statement) {
+		ASTNode oldChild = this.falseStatement;
+		preReplaceChild(oldChild, statement, FALSE_STATEMENT_PROPERTY);
+		this.falseStatement = statement;
+		postReplaceChild(oldChild, statement, FALSE_STATEMENT_PROPERTY);
+	}
+	
+	
 	
 	/* 
 	 * Method declared on ASTNode.
@@ -128,4 +261,52 @@ public class IfStatement extends Statement {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		Expression condition = ASTNode.copySubtree(target, getCondition());
+		Statement trueStatement = ASTNode.copySubtree(target, getTrueStatement());
+		Statement falseStatement = ASTNode.copySubtree(target, getFalseStatement());
+		
+		final IfStatement result = new IfStatement(this.getStart(), this.getEnd(), target, condition, trueStatement, falseStatement);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == CONDITION_PROPERTY) {
+			if (get) {
+				return getCondition();
+			} else {
+				setCondition((Expression) child);
+				return null;
+			}
+		}
+		if (property == TRUE_STATEMENT_PROPERTY) {
+			if (get) {
+				return getTrueStatement();
+			} else {
+				setTrueStatement((Statement) child);
+				return null;
+			}
+		}
+		if (property == FALSE_STATEMENT_PROPERTY) {
+			if (get) {
+				return getFalseStatement();
+			} else {
+				setFalseStatement((Statement) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 }

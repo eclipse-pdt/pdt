@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- *  Represents an reference to a variable or class instanciation.
+ *  Represents an reference to a variable or class instantiation.
  *  <pre>e.g.<pre> &$a,
  *  &new MyClass()
  *  &foo()
@@ -22,26 +26,45 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class Reference extends Expression {
 
 	/**
-	 *  the expressions can be either variable or class instanciation 
+	 *  the expressions can be either variable or class instantiation 
 	 *  note that other expressions can not be assigned to this field
 	 */
-	private final Expression expression;
+	private Expression expression;
 
-	private Reference(int start, int end, Expression expression) {
-		super(start, end);
+	/**
+	 * The "expression" structural property of this node type.
+	 */
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
+		new ChildPropertyDescriptor(ReturnStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		propertyList.add(EXPRESSION_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}	
+	
+	private Reference(int start, int end, AST ast, Expression expression) {
+		super(start, end, ast);
 
 		assert expression != null;
 		this.expression = expression;
 
-		expression.setParent(this);
+		expression.setParent(this, EXPRESSION_PROPERTY);
 	}
 
-	public Reference(int start, int end, VariableBase variable) {
-		this(start, end, (Expression) variable);
+	public Reference(int start, int end, AST ast, VariableBase variable) {
+		this(start, end, ast, (Expression) variable);
 	}
 
-	public Reference(int start, int end, ClassInstanceCreation classInstanciation) {
-		this(start, end, (Expression) classInstanciation);
+	public Reference(int start, int end, AST ast, ClassInstanceCreation classInstanciation) {
+		this(start, end, ast, (Expression) classInstanciation);
 	}
 
 	public void accept(Visitor visitor) {
@@ -78,15 +101,66 @@ public class Reference extends Expression {
 		return ASTNode.REFERENCE;
 	}
 
+	/**
+	 * Returns the expression of this expression statement.
+	 * 
+	 * @return the expression node
+	 */ 
 	public Expression getExpression() {
 		return expression;
 	}
-	
+		
+	/**
+	 * Sets the expression of this expression statement.
+	 * 
+	 * @param expression the new expression node
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setExpression(Expression expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.expression;
+		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+		this.expression = expression;
+		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == EXPRESSION_PROPERTY) {
+			if (get) {
+				return getExpression();
+			} else {
+				setExpression((Expression) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
 	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
+	}
+
+	@Override
+	ASTNode clone0(AST target) {
+		final Expression expr = ASTNode.copySubtree(target, getExpression());
+		final Reference result = new Reference(this.getStart(), this.getEnd(), target, expr);
+		return result;
+	}
+
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+		return PROPERTY_DESCRIPTORS;
 	}
 }

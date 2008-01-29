@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.ast.parser;
 
+import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.javacup.sym;
 import org.eclipse.php.internal.core.phpModel.parser.StateStack;
@@ -59,10 +60,16 @@ import java.util.*;
     private int yy_old_pushbackPos;
     private int commentStartPosition;
 
+	private AST ast;
+
+    public void setAST(AST ast) {
+    	this.ast = ast;
+    }
+    
 	public void setInScriptingState() {
 		yybegin(ST_IN_SCRIPTING);
 	}
-	
+
 	public void resetCommentList() {
 		commentList.clear();
 	}
@@ -73,7 +80,7 @@ import java.util.*;
 	
 	private void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
+		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), ast, type);
 		commentList.add(comment);
 	}	
 	
