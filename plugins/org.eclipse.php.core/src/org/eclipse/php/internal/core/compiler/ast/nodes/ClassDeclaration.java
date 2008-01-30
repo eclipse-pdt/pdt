@@ -26,6 +26,8 @@ public class ClassDeclaration extends TypeDeclaration {
 	public ClassDeclaration(int start, int end, int nameStart, int nameEnd, int modifier, String className, TypeReference superClass, List<TypeReference> interfaces, Block body) {
 		super(className, nameStart, nameEnd, start, end);
 
+		setModifiers(modifier);
+
 		ASTListNode parentsList = new ASTListNode();
 		if (superClass != null) {
 			parentsList.addNode(superClass);

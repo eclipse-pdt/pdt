@@ -4,8 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.references.ConstantReference;
@@ -79,7 +77,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			if (declaration.isStatic()) {
 				buf.append(",static");
 			}
-			parameters.put("modifiers", buf.toString());
+			String modifiers = buf.toString();
+			parameters.put("modifiers", modifiers.length() > 0 ? modifiers.substring(1) : modifiers);
 		}
 
 		return parameters;
@@ -289,7 +288,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.endTag("PHPDocTag");
 		return true;
 	}
-	
+
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
 		xmlWriter.endTag("PHPFieldDeclaration");
 		return true;
@@ -672,7 +671,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("PHPDocBlock", parameters);
 		return true;
 	}
-	
+
 	public boolean visit(PHPDocTag s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("tagKind", PHPDocTag.getTagKind(s.getTagKind()));
@@ -680,7 +679,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("PHPDocTag", parameters);
 		return true;
 	}
-	
+
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPFieldDeclaration", parameters);
