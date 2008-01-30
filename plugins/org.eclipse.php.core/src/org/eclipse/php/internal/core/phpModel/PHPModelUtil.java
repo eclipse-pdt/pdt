@@ -546,6 +546,28 @@ public class PHPModelUtil {
 		return false;
 	}
 
+	public static boolean hasPhpExtention(String fileName) {
+		if (fileName == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		final int index = fileName.lastIndexOf('.');
+		if (index == -1) {
+			return false;
+		}
+		String extension = fileName.substring(index + 1);
+
+		final IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
+		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		for (String validExtension : validExtensions) {
+			if (extension.equalsIgnoreCase(validExtension)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	public static boolean hasSuperClass(final PHPClassData classData, final PHPClassData superClassData) {
 		final PHPSuperClassNameData currentSuperClassNameData = classData.getSuperClassData();
 		if (currentSuperClassNameData == null)

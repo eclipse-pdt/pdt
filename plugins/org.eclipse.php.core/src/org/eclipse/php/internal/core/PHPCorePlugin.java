@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
+import java.util.Hashtable;
+
 import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.osgi.framework.BundleContext;
@@ -90,5 +93,37 @@ public class PHPCorePlugin extends Plugin {
 	public static String getPluginId() {
 		return ID;
 	}
+	
+	/**
+	 * Helper method for returning one option value only. Equivalent to <code>(String)PhpCore.getOptions().get(optionName)</code>
+	 * Note that it may answer <code>null</code> if this option does not exist.
+	 * <p>
+	 * For a complete description of the configurable options, see <code>getDefaultOptions</code>.
+	 * </p>
+	 *
+	 * @param optionName the name of an option
+	 * @return the String value of a given option
+	 * @see PhpCore#getDefaultOptions()
+	 * @see PhpCorePreferenceInitializer for changing default settings
+	 * @since 2.0
+	 */
+	public static String getOption(String optionName) {
+		return ModelManager.getModelManager().getOption(optionName);
+	}
+
+	/**
+	 * Returns the table of the current options. Initially, all options have their default values,
+	 * and this method returns a table that includes all known options.
+	 * <p>For a complete description of the configurable options, see <code>getDefaultOptions</code>.</p>
+	 * <p>Returns a default set of options even if the platform is not running.</p>
+	 *
+	 * @return table of current settings of all options
+	 *   (key type: <code>String</code>; value type: <code>String</code>)
+	 * @see #getDefaultOptions()
+	 * @see JavaCorePreferenceInitializer for changing default settings
+	 */
+	public static Hashtable getOptions() {
+		return ModelManager.getModelManager().getOptions();
+	}	
 
 }
