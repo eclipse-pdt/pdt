@@ -48,12 +48,16 @@ public class CloneExpression extends Expression {
 	public CloneExpression(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
 
-		assert expr != null;
-		this.expression = expr;
-
-		expr.setParent(this, EXPRESSION_PROPERTY);
+		if (expr == null) {
+			throw new IllegalArgumentException();
+		}
+		setExpression(expr);
 	}
 
+	public CloneExpression(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

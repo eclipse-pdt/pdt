@@ -64,8 +64,17 @@ public class Scalar extends Expression {
 	
 	public Scalar(int start, int end, AST ast, String value, int type) {
 		super(start, end, ast);
-		this.stringValue = value;
-		this.scalarType = type;
+
+		if (value == null) {
+			throw new IllegalArgumentException();
+		}
+
+		setScalarType(type);
+		setStringValue(value);
+	}
+
+	public Scalar(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

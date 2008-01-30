@@ -42,25 +42,28 @@ public class SwitchCase extends Statement {
 	public static final SimplePropertyDescriptor IS_DEFAULT_PROPERTY = 
 		new SimplePropertyDescriptor(SwitchCase.class, "isDefault", Boolean.class, OPTIONAL); //$NON-NLS-1$
 	
-	
 	public SwitchCase(int start, int end, AST ast, Expression value, Statement[] actions, boolean isDefault) {
 		super(start, end, ast);
 
-		assert actions != null;
-
-		this.value = value;
-		if (value != null) {
-			value.setParent(this, VALUE_PROPERTY);
+		if (actions == null) {
+			throw new IllegalArgumentException();
 		}
-		
+
+		if (value != null) {
+			setValue(value);
+		}
 		for (Statement statement : actions) {
 			this.actions.add(statement);
 		}
-		this.isDefault = isDefault;
+		setIsDefault(isDefault);
 	}
 
 	public SwitchCase(int start, int end, AST ast, Expression value, List actions, boolean isDefault) {
 		this(start, end, ast, value, actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
+	}
+
+	public SwitchCase(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

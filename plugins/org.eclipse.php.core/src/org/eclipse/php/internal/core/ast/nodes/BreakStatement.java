@@ -30,7 +30,7 @@ public class BreakStatement extends Statement {
 	 * The "expression" structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(BreakStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(BreakStatement.class, "expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -49,13 +49,16 @@ public class BreakStatement extends Statement {
 		this(start, end, ast, null);
 	}
 
+	public BreakStatement(AST ast) {
+		super(ast);
+	}
+	
 	public BreakStatement(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
-		this.expression = expr;
 
 		if (expr != null) {
-			expr.setParent(this, EXPRESSION_PROPERTY);
-		}
+			setExpression(expr);	
+		}		
 	}
 
 	public void accept(Visitor visitor) {

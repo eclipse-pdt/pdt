@@ -19,4 +19,8 @@ public abstract class Statement extends ASTNode {
 		super(start, end, ast);
 	}
 
+	public Statement(AST ast) {
+		super(ast);
+	}
+
 }

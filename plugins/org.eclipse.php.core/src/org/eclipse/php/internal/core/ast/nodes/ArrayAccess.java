@@ -75,17 +75,18 @@ public class ArrayAccess extends Variable {
 		propertyList.add(ARRAY_TYPE_PROPERTY);		
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
-		
+
+	public ArrayAccess(AST ast) {
+		super(ast);
+	}	
+	
 	public ArrayAccess(int start, int end, AST ast, VariableBase variableName, Expression index, int arrayType) {
 		super(start, end, ast, variableName);
 
-		this.index = index;
-		this.arrayType = arrayType;
-
-		// set the child nodes' parent
 		if (index != null) {
-			index.setParent(this, INDEX_PROPERTY);
+			setIndex(index);	
 		}
+		setArrayType(arrayType);
 	}
 
 	public void childrenAccept(Visitor visitor) {

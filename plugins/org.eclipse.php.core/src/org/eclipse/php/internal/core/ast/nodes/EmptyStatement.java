@@ -40,6 +40,10 @@ public class EmptyStatement extends Statement {
 		super(start, end, ast);
 	}
 
+	public EmptyStatement(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

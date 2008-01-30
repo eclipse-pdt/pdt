@@ -50,7 +50,9 @@ public class GlobalStatement extends Statement {
 	private GlobalStatement(int start, int end, AST ast, Variable[] variables) {
 		super(start, end, ast);
 
-		assert variables != null;
+		if (variables == null) {
+			throw new IllegalArgumentException();
+		}
 		for (Variable variable : variables) {
 			this.variables.add(variable);
 		}
@@ -58,6 +60,10 @@ public class GlobalStatement extends Statement {
 
 	public GlobalStatement(int start, int end, AST ast, List variables) {
 		this(start, end, ast, variables == null ? null : (Variable[]) variables.toArray(new Variable[variables.size()]));
+	}
+
+	public GlobalStatement(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

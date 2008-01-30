@@ -52,10 +52,14 @@ public class Comment extends ASTNode {
 
 	public Comment(int start, int end, AST ast, int type) {
 		super(start, end, ast);
-
-		this.commentType = type;
+		
+		setCommentType(type);
 	}
 
+	public Comment(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

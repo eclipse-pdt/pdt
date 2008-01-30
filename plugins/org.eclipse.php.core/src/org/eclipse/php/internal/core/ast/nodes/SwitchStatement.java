@@ -63,12 +63,12 @@ public class SwitchStatement extends Statement {
 	public SwitchStatement(int start, int end, AST ast, Expression expression, Block body) {
 		super(start, end, ast);
 
-		assert expression != null && body != null;
-		this.expression = expression;
-		this.body = body;
-
-		expression.setParent(this, EXPRESSION_PROPERTY);
-		body.setParent(this, BODY_PROPERTY);
+		if (expression == null || body == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setExpression(expression);
+		setBody(body);
 	}
 
 	public void accept(Visitor visitor) {

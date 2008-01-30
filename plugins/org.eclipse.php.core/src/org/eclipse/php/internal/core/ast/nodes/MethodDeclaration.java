@@ -56,14 +56,18 @@ public class MethodDeclaration extends BodyDeclaration {
 	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function, boolean shouldComplete) {
 		super(start, end, ast, modifier, shouldComplete);
 
-		assert function != null;
-		this.function = function;
-
-		function.setParent(this, FUNCTION_PROPERTY);
+		if (function == null) {
+			throw new IllegalArgumentException();
+		}
+		setFunction(function);
 	}
 
 	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function) {
 		this(start, end, ast, modifier, function, false);
+	}
+
+	public MethodDeclaration(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

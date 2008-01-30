@@ -39,6 +39,10 @@ public class ASTError extends Statement {
 		super(start, end, ast);
 	}
 
+	public ASTError(AST ast) {
+		super(ast);
+	}
+	
 	public void childrenAccept(Visitor visitor) {
 	}
 

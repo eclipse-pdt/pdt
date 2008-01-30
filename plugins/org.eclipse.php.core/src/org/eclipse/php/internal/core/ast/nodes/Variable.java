@@ -67,11 +67,11 @@ public class Variable extends VariableBase {
 	protected Variable(int start, int end, AST ast, Expression variableName, boolean isDollared) {
 		super(start, end, ast);
 
-		assert variableName != null;
-		this.name = variableName;
-		this.isDollared = isDollared;
-
-		variableName.setParent(this, getNameProperty());
+		if (variableName == null) {
+			throw new IllegalArgumentException();
+		}
+		setName(variableName);
+		setIsDollared(isDollared);
 	}
 
 	protected Variable(int start, int end, AST ast, Expression variableName) {
@@ -87,6 +87,10 @@ public class Variable extends VariableBase {
 	 */
 	public Variable(int start, int end, AST ast, String variableName) {
 		this(start, end, ast, createIdentifier(start, end, ast, variableName), checkIsDollared(variableName));
+	}
+
+	public Variable(AST ast) {
+		super(ast);
 	}
 
 	private static boolean checkIsDollared(String variableName) {

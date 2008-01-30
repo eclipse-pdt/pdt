@@ -54,14 +54,18 @@ public class FunctionInvocation extends VariableBase {
 	private FunctionInvocation(int start, int end, AST ast, FunctionName functionName, Expression[] parameters) {
 		super(start, end, ast);
 
-		assert functionName != null && parameters != null;
+		if (functionName == null || parameters == null) {
+			throw new IllegalArgumentException();
+		}
 
-		this.functionName = functionName;
+		setFunctionName(functionName);
 		for (Expression expression : parameters) {
 			this.parameters.add(expression);
 		}
+	}
 
-		functionName.setParent(this, FUNCTION_PROPERTY);
+	public FunctionInvocation(AST ast) {
+		super(ast);
 	}
 
 	public FunctionInvocation(int start, int end, AST ast, FunctionName functionName, List parameters) {

@@ -49,9 +49,12 @@ public class ClassConstantDeclaration extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public ClassConstantDeclaration(int start, int end, AST ast, List names, List initializers) {
+	private ClassConstantDeclaration(int start, int end, AST ast, List names, List initializers) {
 		super(start, end, ast);
-		assert names != null && initializers != null && names.size() == initializers.size();
+		
+		if (names == null || initializers == null || names.size() != initializers.size()) {
+			throw new IllegalArgumentException();
+		}
 
 		Iterator<Identifier> iteratorNames = names.iterator();
 		Iterator<Expression> iteratorInitializers = initializers.iterator();
@@ -63,16 +66,23 @@ public class ClassConstantDeclaration extends Statement {
 	
 	public ClassConstantDeclaration(int start, int end, AST ast, List variablesAndDefaults) {
 		super(start, end, ast);
-		assert variablesAndDefaults != null && variablesAndDefaults.size() > 0;
-
+		if (variablesAndDefaults == null || variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
+			throw new IllegalArgumentException();
+		}
+		
 		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext();) {
 			ASTNode[] element = (ASTNode[]) iter.next();
 			assert element != null && element.length == 2 &&  element[0] != null && element[1] != null;
+			
 			this.names.add((Identifier) element[0]);
 			this.initializers.add((Expression) element[1]);
 		}
 	}
 
+	public ClassConstantDeclaration(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

@@ -53,14 +53,17 @@ public class InstanceOfExpression extends Expression {
 	public InstanceOfExpression(int start, int end, AST ast, Expression expr, ClassName className) {
 		super(start, end, ast);
 
-		assert expr != null && className != null;
-		this.expression = expr;
-		this.className = className;
-
-		expr.setParent(this, EXPRESSION_PROPERTY);
-		className.setParent(this, CLASSNAME_PROPERTY);
+		if (expr == null || className == null){
+			throw new IllegalArgumentException();
+		}
+		setExpression(expr);
+		setClassName(className);
 	}
 
+	public InstanceOfExpression(AST ast) {
+		super(ast);
+	}	
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

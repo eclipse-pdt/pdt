@@ -20,4 +20,8 @@ public abstract class VariableBase extends Expression {
 		super(start, end, ast);
 	}
 
+	public VariableBase(AST ast) {
+		super(ast);
+	}
+
 }

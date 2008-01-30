@@ -70,24 +70,24 @@ public class TryStatement extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 	
-
 	private TryStatement(int start, int end, AST ast, Block tryStatement, CatchClause[] catchClauses) {
 		super(start, end, ast);
 
-		assert tryStatement != null && catchClauses != null;
-		this.tryStatement = tryStatement;
+		if (tryStatement == null || catchClauses == null) {
+			throw new IllegalArgumentException();
+		}
+		setBody(tryStatement);
 		for (int i = 0; i < catchClauses.length; i++) {
 			this.catchClauses.add(catchClauses[i]);
-		}
-
-		tryStatement.setParent(this, BODY_PROPERTY);
-		for (int i = 0; i < catchClauses.length; i++) {
-			catchClauses[i].setParent(this, CATCH_CLAUSES_PROPERTY);
 		}
 	}
 
 	public TryStatement(int start, int end, AST ast, Block tryStatement, List catchClauses) {
 		this(start, end, ast, tryStatement, catchClauses == null ? null : (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]));
+	}
+
+	public TryStatement(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

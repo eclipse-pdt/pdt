@@ -53,19 +53,20 @@ public class ConditionalExpression extends Expression {
 		list.add(IF_FALSE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
-	
+
+	public ConditionalExpression(AST ast) {
+		super(ast);
+	}
 	
 	public ConditionalExpression(int start, int end, AST ast, Expression condition, Expression ifTrue, Expression ifFalse) {
 		super(start, end, ast);
 
-		assert condition != null && ifTrue != null && ifFalse != null;
-		this.condition = condition;
-		this.ifTrue = ifTrue;
-		this.ifFalse = ifFalse;
-
-		condition.setParent(this, CONDITION_PROPERTY);
-		ifTrue.setParent(this, IF_TRUE_PROPERTY);
-		ifFalse.setParent(this, IF_FALSE_PROPERTY);
+		if (condition == null || ifTrue == null || ifFalse == null) {
+			throw new IllegalArgumentException();
+		}
+		setCondition(condition);
+		setIfTrue(ifTrue);
+		setIfFalse(ifFalse);
 	}
 	
 	public void accept(Visitor visitor) {

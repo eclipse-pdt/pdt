@@ -48,10 +48,16 @@ public class StaticStatement extends Statement {
 	private StaticStatement(int start, int end, AST ast, Expression[] expressions) {
 		super(start, end, ast);
 
-		assert expressions != null;
+		if (expressions == null) {
+			throw new IllegalArgumentException();
+		}
 		for (Expression expression : expressions) {
 			this.expressions.add(expression);
 		}
+	}
+
+	public StaticStatement(AST ast) {
+		super(ast);
 	}
 
 	public StaticStatement(int start, int end, AST ast, List expressions) {

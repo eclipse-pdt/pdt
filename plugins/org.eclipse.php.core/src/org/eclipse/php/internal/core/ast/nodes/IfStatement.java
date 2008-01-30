@@ -67,18 +67,20 @@ public class IfStatement extends Statement {
 	public IfStatement(int start, int end, AST ast, Expression condition, Statement trueStatement, Statement falseStatement) {
 		super(start, end, ast);
 
-		assert condition != null && trueStatement != null;
-		this.condition = condition;
-		this.trueStatement = trueStatement;
-		this.falseStatement = falseStatement;
-
-		condition.setParent(this, CONDITION_PROPERTY);
-		trueStatement.setParent(this, TRUE_STATEMENT_PROPERTY);
+		if (condition == null || trueStatement == null) {
+			throw new IllegalArgumentException();
+		}
+		setCondition(condition);
+		setTrueStatement(trueStatement);
 		if (falseStatement != null) {
-			falseStatement.setParent(this, FALSE_STATEMENT_PROPERTY);
+			setFalseStatement(falseStatement);
 		}
 	}
 
+	public IfStatement(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

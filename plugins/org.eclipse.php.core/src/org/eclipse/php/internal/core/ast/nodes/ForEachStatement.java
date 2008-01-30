@@ -69,18 +69,16 @@ public class ForEachStatement extends Statement {
 	public ForEachStatement(int start, int end, AST ast,Expression expression, Expression key, Expression value, Statement statement) {
 		super(start, end, ast);
 
-		assert expression != null && value != null && statement != null;
-		this.expression = expression;
-		this.key = key;
-		this.value = value;
-		this.statement = statement;
-
-		expression.setParent(this, EXPRESSION_PROPERTY);
-		if (key != null) {
-			key.setParent(this, KEY_PROPERTY);
+		if (expression == null || value == null || statement == null) {
+			throw new IllegalArgumentException();
 		}
-		value.setParent(this, VALUE_PROPERTY);
-		statement.setParent(this, STATEMENT_PROPERTY);
+		
+		setExpression(expression);
+		setValue(value);
+		setStatement(statement);
+		if (key != null) {
+			setKey(key);
+		}
 	}
 
 	public ForEachStatement(int start, int end, AST ast, Expression expression, Expression value, Statement statement) {

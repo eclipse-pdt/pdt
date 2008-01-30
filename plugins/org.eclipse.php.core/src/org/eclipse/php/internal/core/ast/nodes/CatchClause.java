@@ -66,6 +66,10 @@ public class CatchClause extends Statement {
 		statement.setParent(this, BODY_PROPERTY);
 	}
 
+	public CatchClause(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

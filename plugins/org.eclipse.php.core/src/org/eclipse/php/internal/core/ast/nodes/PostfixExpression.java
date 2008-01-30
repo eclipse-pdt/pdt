@@ -54,14 +54,19 @@ public class PostfixExpression extends Expression {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}	
 	
+	public PostfixExpression(AST ast) {
+		super(ast);
+	}
+
 	public PostfixExpression(int start, int end, AST ast, VariableBase variable, int operator) {
 		super(start, end, ast);
 
-		assert variable != null;
-		this.variable = variable;
-		this.operator = operator;
-
-		variable.setParent(this, VARIABLE_PROPERTY);
+		if (variable == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setVariable(variable);
+		setOperator(operator);
 	}
 
 	public void accept(Visitor visitor) {

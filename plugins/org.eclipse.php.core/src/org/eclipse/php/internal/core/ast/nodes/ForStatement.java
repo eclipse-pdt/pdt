@@ -81,21 +81,19 @@ public class ForStatement extends Statement {
 	private ForStatement(int start, int end, AST ast, Expression[] initializations, Expression[] conditions, Expression[] increasements, Statement action) {
 		super(start, end, ast);
 
-		assert initializations != null && conditions != null && increasements != null && action != null;
+		if (initializations == null || conditions == null || increasements == null || action == null) {
+			throw new IllegalArgumentException();
+		}
 		for (Expression init : initializations) {
 			this.initializers.add(init);
-			init.setParent(this, INITIALIZERS_PROPERTY);
 		}
 		for (Expression cond : conditions) {
 			this.conditions.add(cond);
-			cond.setParent(this, EXPRESSION_PROPERTY);
 		}
 		for (Expression inc : increasements) {
 			this.updaters.add(inc);
-			inc.setParent(this, UPDATERS_PROPERTY);
 		}
-		this.body = action;
-		action.setParent(this, BODY_PROPERTY);
+		setBody(action);
 	}
 
 	public ForStatement(int start, int end, AST ast, List initializations, List conditions, List increasements, Statement action) {
@@ -103,6 +101,10 @@ public class ForStatement extends Statement {
 			.toArray(new Expression[increasements.size()]), action);
 	}
 
+	public ForStatement(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

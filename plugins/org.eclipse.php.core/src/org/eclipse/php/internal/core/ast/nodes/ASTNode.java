@@ -163,8 +163,8 @@ public abstract class ASTNode implements Visitable {
 	/**
 	 * Source range
 	 */
-	private int start;
-	private int length;
+	private int start = -1;
+	private int length = 0;
 	
 	/**
 	 * character containing flags;  none set by default.
@@ -225,7 +225,22 @@ public abstract class ASTNode implements Visitable {
 	 * @see #property1
 	 */
 	private Object property2 = null;
-	
+
+	/**
+	 * Construct an empty ASTNode and attach it with the given AST 
+	 * @param ast
+	 */
+	public ASTNode(AST ast) {
+		if (ast == null) {
+			throw new IllegalArgumentException();
+		}
+		this.ast = ast;
+	}
+
+	/**
+	 * Construct a ranged ASTNode and attach it with the given AST 
+	 * @param ast
+	 */
 	public ASTNode(int start, int end, AST ast) {
 		if (ast == null) {
 			throw new IllegalArgumentException();

@@ -54,10 +54,14 @@ public class StaticConstantAccess extends StaticDispatch {
 	public StaticConstantAccess(int start, int end, AST ast, Identifier className, Identifier constant) {
 		super(start, end, ast, className);
 
-		assert constant != null;
-		this.constant = constant;
+		if (constant == null) {
+			throw new IllegalArgumentException();
+		}
+		setConstant(constant);
+	}
 
-		constant.setParent(this, CONSTANT_PROPERTY);
+	public StaticConstantAccess(AST ast) {
+		super(ast);
 	}
 
 	public StaticConstantAccess(int start, int end, AST ast, Identifier name) {

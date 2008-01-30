@@ -57,11 +57,12 @@ public class PrefixExpression extends Expression {
 	public PrefixExpression(int start, int end, AST ast, VariableBase variable, int operator) {
 		super(start, end, ast);
 
-		assert variable != null;
-		this.variable = variable;
-		this.operator = operator;
-
-		variable.setParent(this, VARIABLE_PROPERTY);
+		if (variable == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setVariable(variable);
+		setOperator(operator);
 	}
 
 	public void accept(Visitor visitor) {

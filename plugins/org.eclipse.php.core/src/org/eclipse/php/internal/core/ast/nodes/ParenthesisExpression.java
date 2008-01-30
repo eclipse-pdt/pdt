@@ -49,13 +49,18 @@ public class ParenthesisExpression extends Expression {
 		this(start, end, ast, null);
 	}
 
+	public ParenthesisExpression(AST ast) {
+		super(ast);
+	}
+
 	public ParenthesisExpression(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
-		this.expression = expr;
 
-		if (expr != null) {
-			expr.setParent(this, EXPRESSION_PROPERTY);
+		if (expr == null) {
+			throw new IllegalArgumentException();
 		}
+		
+		setExpression(expr);
 	}
 
 	public void accept(Visitor visitor) {

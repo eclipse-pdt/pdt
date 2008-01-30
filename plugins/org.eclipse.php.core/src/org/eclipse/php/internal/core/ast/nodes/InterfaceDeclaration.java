@@ -49,6 +49,10 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		this(start, end, ast, interfaceName, (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
 
+	public InterfaceDeclaration(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

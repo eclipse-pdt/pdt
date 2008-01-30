@@ -55,10 +55,12 @@ public class FieldsDeclaration extends BodyDeclaration {
 	
 	public FieldsDeclaration(int start, int end, AST ast, int modifier, List variablesAndDefaults) {
 		super(start, end, ast, modifier);
-		assert variablesAndDefaults != null && variablesAndDefaults.size() > 0;
 
-		int i = 0;
-		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext(); i++) {
+		if (variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
+			throw new IllegalArgumentException();
+		}
+
+		for (Iterator iter = variablesAndDefaults.iterator(); iter.hasNext();) {
 			final Object next = iter.next();
 			if (next instanceof SingleFieldDeclaration) {
 				this.fields.add ((SingleFieldDeclaration) next);
@@ -69,6 +71,10 @@ public class FieldsDeclaration extends BodyDeclaration {
 			}
 		}
 	}
+	
+	public FieldsDeclaration(AST ast) {
+		super(ast);
+	}	
 	
 	private SingleFieldDeclaration createField(AST ast, Variable name, Expression value) {
 		int start = name.getStart();

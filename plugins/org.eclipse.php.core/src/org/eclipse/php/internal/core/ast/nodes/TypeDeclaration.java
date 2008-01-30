@@ -35,17 +35,21 @@ public abstract class TypeDeclaration extends Statement {
 	public TypeDeclaration(int start, int end, AST ast, final Identifier name, final Identifier[] interfaces, final Block body) {
 		super(start, end, ast);
 
-		assert name != null && body != null;
-		this.name = name;
+		if (name == null || body == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setName(name);
+		setBody(body);
 		if (interfaces != null) {
 			for (Identifier identifier : interfaces) {
 				this.interfaces.add(identifier);
 			}
 		}
-		this.body = body;
+	}
 
-		name.setParent(this, NAME_PROPERTY);
-		body.setParent(this, BODY_PROPERTY);
+	public TypeDeclaration(AST ast) {
+		super(ast);
 	}
 
 	/**

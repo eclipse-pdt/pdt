@@ -57,10 +57,14 @@ public class StaticMethodInvocation extends StaticDispatch {
 	public StaticMethodInvocation(int start, int end, AST ast, Identifier className, FunctionInvocation method) {
 		super(start, end, ast, className);
 
-		assert method != null;
+		if (method == null) {
+			throw new IllegalArgumentException();
+		}
+		setMethod(method);
+	}
 
-		this.method = method;
-		method.setParent(this, METHOD_PROPERTY);
+	public StaticMethodInvocation(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

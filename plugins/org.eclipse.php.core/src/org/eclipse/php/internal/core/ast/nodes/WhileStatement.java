@@ -52,18 +52,20 @@ public class WhileStatement extends Statement {
 		list.add(CONDITION_PROPERTY);
 		list.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
+	}	
+	
+	public WhileStatement(AST ast) {
+		super(ast);
 	}
-	
-	
+
 	public WhileStatement(int start, int end, AST ast, Expression condition, Statement action) {
 		super(start, end, ast);
 
-		assert condition != null && action != null;
-		this.condition = condition;
-		this.body = action;
-
-		condition.setParent(this, CONDITION_PROPERTY);
-		action.setParent(this, BODY_PROPERTY);
+		if (condition == null || action == null) {
+			throw new IllegalArgumentException();
+		}
+		setCondition(condition);
+		setBody(action);
 	}
 
 	public void accept(Visitor visitor) {

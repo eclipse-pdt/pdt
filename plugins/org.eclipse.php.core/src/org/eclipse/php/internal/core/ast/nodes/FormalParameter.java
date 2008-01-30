@@ -80,19 +80,21 @@ public class FormalParameter extends ASTNode {
 	private FormalParameter(int start, int end, AST ast, Identifier type, final Expression parameterName, Expression defaultValue, boolean isMandatory) {
 		super(start, end, ast);
 
-		assert parameterName != null;
-		this.parameterType = type;
-		this.parameterName = parameterName;
-		this.defaultValue = defaultValue;
-		this.isMandatory = isMandatory;
-
+		if (parameterName == null) {
+			throw new IllegalArgumentException();
+		}
+		setParameterName(parameterName);
 		if (type != null) {
-			type.setParent(this, PARAMETER_TYPE_PROPERTY);
+			setParameterType(type);	
 		}
-		parameterName.setParent(this, PARAMETER_NAME_PROPERTY);
 		if (defaultValue != null) {
-			defaultValue.setParent(this, DEFAULT_VALUE_PROPERTY);
+			setDefaultValue(defaultValue);	
 		}
+		setIsMandatory(isMandatory);
+	}
+	
+	public FormalParameter(AST ast) {
+		super(ast);
 	}
 
 	public FormalParameter(int start, int end, AST ast, Identifier type, final Variable parameterName, Expression defaultValue) {
@@ -205,10 +207,10 @@ public class FormalParameter extends ASTNode {
 			throw new IllegalArgumentException();
 		}
 		// an Assignment may occur inside a Expression - must check cycles
-		ASTNode oldChild = this.parameterName;
-		preReplaceChild(oldChild, value, PARAMETER_NAME_PROPERTY);
-		this.parameterName = value;
-		postReplaceChild(oldChild, value, PARAMETER_NAME_PROPERTY);
+		ASTNode oldChild = this.defaultValue;
+		preReplaceChild(oldChild, value, DEFAULT_VALUE_PROPERTY);
+		this.defaultValue = value;
+		postReplaceChild(oldChild, value, DEFAULT_VALUE_PROPERTY);
 	}	
 	
 	/**

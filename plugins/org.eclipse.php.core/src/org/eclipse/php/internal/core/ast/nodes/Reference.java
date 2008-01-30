@@ -53,14 +53,18 @@ public class Reference extends Expression {
 	private Reference(int start, int end, AST ast, Expression expression) {
 		super(start, end, ast);
 
-		assert expression != null;
-		this.expression = expression;
-
-		expression.setParent(this, EXPRESSION_PROPERTY);
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		setExpression(expression);
 	}
 
 	public Reference(int start, int end, AST ast, VariableBase variable) {
 		this(start, end, ast, (Expression) variable);
+	}
+
+	public Reference(AST ast) {
+		super(ast);
 	}
 
 	public Reference(int start, int end, AST ast, ClassInstanceCreation classInstanciation) {

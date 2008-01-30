@@ -49,7 +49,10 @@ public class ArrayCreation extends Expression {
 	private ArrayCreation(int start, int end, AST ast,ArrayElement[] elements) {
 		super(start, end, ast);
 
-		assert elements != null;
+		if (elements == null) {
+			throw new IllegalArgumentException();
+		}
+
 		for (ArrayElement arrayElement : elements) {
 			this.elements.add(arrayElement);
 		}

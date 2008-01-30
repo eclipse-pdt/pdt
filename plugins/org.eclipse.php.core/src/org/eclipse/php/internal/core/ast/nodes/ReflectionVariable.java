@@ -58,9 +58,12 @@ public class ReflectionVariable extends Variable {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
 	
-	
 	public ReflectionVariable(int start, int end, AST ast, Expression variable) {
 		super(start, end, ast, variable);
+	}
+
+	public ReflectionVariable(AST ast) {
+		super(ast);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {

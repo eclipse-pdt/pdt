@@ -58,14 +58,17 @@ public class Quote extends Expression {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 	
-	
 	public Quote(int start, int end, AST ast, Expression[] expressions, int type) {
 		super(start, end, ast);
 
 		for (Expression expression : expressions) {
 			this.expressions.add(expression);
 		}
-		this.quoteType = type;
+		setQuoteType(type);
+	}
+
+	public Quote(AST ast) {
+		super(ast);
 	}
 
 	public Quote(int start, int end, AST ast, List expressions, int type) {

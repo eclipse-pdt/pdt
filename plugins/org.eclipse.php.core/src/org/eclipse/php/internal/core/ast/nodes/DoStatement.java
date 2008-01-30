@@ -53,14 +53,17 @@ public class DoStatement extends Statement {
 	public DoStatement(int start, int end, AST ast, Expression condition, Statement body) {
 		super(start, end, ast);
 
-		assert condition != null && body != null;
-		this.condition = condition;
-		this.body = body;
-
-		condition.setParent(this, CONDITION_PROPERTY);
-		body.setParent(this, BODY_PROPERTY);
+		if (condition == null || body == null) {
+			throw new IllegalArgumentException();
+		}
+		setCondition(condition);
+		setBody(body);
 	}
 
+	public DoStatement(AST ast) {
+		super(ast);
+	}	
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

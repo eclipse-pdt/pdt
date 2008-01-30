@@ -59,11 +59,15 @@ public class Include extends Expression {
 	public Include(int start, int end, AST ast, Expression expr, int type) {
 		super(start, end, ast);
 
-		assert expr != null;
-		this.expression = expr;
-		this.includeType = type;
+		if (expr == null) {
+			throw new IllegalArgumentException();
+		}
+		setExpression(expr);
+		setIncludetype(type);
+	}
 
-		expr.setParent(this, EXPRESSION_PROPERTY);
+	public Include(AST ast) {
+		super(ast);
 	}
 
 	public static String getType(int type) {

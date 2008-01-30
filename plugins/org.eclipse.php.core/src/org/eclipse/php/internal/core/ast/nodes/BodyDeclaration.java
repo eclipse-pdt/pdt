@@ -24,11 +24,16 @@ public abstract class BodyDeclaration extends Statement {
 	
 	public BodyDeclaration(int start, int end, AST ast, int modifier, boolean shouldComplete) {
 		super(start, end, ast);
-		this.modifier = shouldComplete ? completeModifier(modifier) : modifier;
+		
+		setModifier(shouldComplete ? completeModifier(modifier) : modifier);
 	}
 
 	public BodyDeclaration(int start, int end, AST ast, int modifier) {
 		this(start, end, ast, modifier, false);
+	}
+
+	public BodyDeclaration(AST ast) {
+		super(ast);
 	}
 
 	/**

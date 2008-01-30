@@ -26,10 +26,14 @@ public abstract class StaticDispatch extends VariableBase {
 	public StaticDispatch(int start, int end, AST ast, Identifier className) {
 		super(start, end, ast);
 
-		assert className != null;
-		this.className = className;
+		if (className == null) {
+			throw new IllegalArgumentException();
+		}
+		setClassName(className);	
+	}
 
-		className.setParent(this, getClassNameProperty());
+	public StaticDispatch(AST ast) {
+		super(ast);
 	}
 
 	public Identifier getClassName() {

@@ -32,9 +32,12 @@ public class DeclareStatement extends Statement {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor DIRECTIVE_NAMES_PROPERTY = new ChildListPropertyDescriptor(DeclareStatement.class, "directiveNames", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor DIRECTIVE_VALUES_PROPERTY = new ChildListPropertyDescriptor(DeclareStatement.class, "directiveValues", Expression.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(DeclareStatement.class, "action", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor DIRECTIVE_NAMES_PROPERTY 
+		= new ChildListPropertyDescriptor(DeclareStatement.class, "directiveNames", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor DIRECTIVE_VALUES_PROPERTY 
+		= new ChildListPropertyDescriptor(DeclareStatement.class, "directiveValues", Expression.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY 
+		= new ChildPropertyDescriptor(DeclareStatement.class, "action", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -53,22 +56,26 @@ public class DeclareStatement extends Statement {
 	private DeclareStatement(int start, int end, AST ast, Identifier[] directiveNames, Expression[] directiveValues, Statement action) {
 		super(start, end, ast);
 
-		assert directiveNames != null && directiveValues != null && directiveNames.length == directiveValues.length;
+		if (directiveNames == null || directiveValues == null || directiveNames.length != directiveValues.length) {
+			throw new IllegalArgumentException();
+		}
 		for (Identifier identifier : directiveNames) {
 			this.directiveNames.add(identifier);
 		}
 		for (Expression expression : directiveValues) {
 			this.directiveValues.add(expression);
 		}
-
-		this.body = action;
-		action.setParent(this, BODY_PROPERTY);
+		setBody(action);
 	}
 
 	public DeclareStatement(int start, int end, AST ast, List directiveNames, List directiveValues, Statement action) {
 		this(start, end, ast, directiveNames == null ? null : (Identifier[]) directiveNames.toArray(new Identifier[directiveNames.size()]), directiveValues == null ? null : (Expression[]) directiveValues.toArray(new Expression[directiveValues.size()]), action);
 	}
 
+	public DeclareStatement(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

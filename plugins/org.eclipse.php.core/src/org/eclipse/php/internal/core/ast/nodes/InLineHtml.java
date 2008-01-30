@@ -40,6 +40,10 @@ public class InLineHtml extends Statement {
 		super(start, end, ast);
 	}
 
+	public InLineHtml(AST ast) {
+		super(ast);
+	}
+
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

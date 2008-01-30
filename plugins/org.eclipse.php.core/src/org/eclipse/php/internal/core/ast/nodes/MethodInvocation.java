@@ -52,15 +52,19 @@ public class MethodInvocation extends Dispatch {
 		propertyList.add(DISPATCHER_PROPERTY);		
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}
-	
+
+	public MethodInvocation(AST ast) {
+		super(ast);
+	}
 	
 	public MethodInvocation(int start, int end, AST ast, VariableBase dispatcher, FunctionInvocation method) {
 		super(start, end, ast, dispatcher);
 
-		assert method != null;
-		this.method = method;
-
-		method.setParent(this, METHOD_PROPERTY);
+		if (method == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setMethod(method);
 	}
 
 	public void accept(Visitor visitor) {

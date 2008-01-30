@@ -54,17 +54,20 @@ public class ClassInstanceCreation extends Expression {
 	
 	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams) {
 		super(start, end, ast);
+		if (className == null || ctorParams == null) {
+			throw new IllegalArgumentException();
+		}
 
-		assert className != null && ctorParams != null;
-
-		this.className = className;
-		className.setParent(this, CLASSNAME_PROPERTY);
-		
+		setClassName(className);
 		for (Expression expression : ctorParams) {
 			this.ctorParams.add(expression);
 		}
 	}
 
+	public ClassInstanceCreation(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

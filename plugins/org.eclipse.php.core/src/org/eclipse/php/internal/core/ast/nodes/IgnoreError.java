@@ -49,13 +49,17 @@ public class IgnoreError extends Expression {
 		this(start, end, ast, null);
 	}
 
+	public IgnoreError(AST ast) {
+		super(ast);
+	}
+
 	public IgnoreError(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
 
-		assert expr != null;
-		this.expression = expr;
-
-		expr.setParent(this, EXPRESSION_PROPERTY);
+		if (expr == null) {
+			throw new IllegalArgumentException();
+		}
+		setExpression(expr);
 	}
 
 	public void accept(Visitor visitor) {

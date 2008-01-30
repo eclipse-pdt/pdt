@@ -54,12 +54,16 @@ public class FieldAccess extends Dispatch {
 	public FieldAccess(int start, int end, AST ast, VariableBase dispatcher, Variable field) {
 		super(start, end, ast, dispatcher);
 
-		assert field != null;
-		this.field = field;
-
-		field.setParent(this, FIELD_PROPERTY);
+		if (field == null) {
+			throw new IllegalArgumentException();
+		}
+		setField(field);
 	}
 
+	public FieldAccess(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

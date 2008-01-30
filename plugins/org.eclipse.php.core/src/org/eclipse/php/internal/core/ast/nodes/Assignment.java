@@ -81,15 +81,13 @@ public class Assignment extends Expression {
 	
 	public Assignment(int start, int end, AST ast, VariableBase leftHandSide, int operator, Expression rightHandSide) {
 		super(start, end, ast);
+		if (leftHandSide == null || rightHandSide == null || getOperator(operator) == null) {
+			throw new IllegalArgumentException();
+		}
 
-		assert leftHandSide != null && rightHandSide != null && getOperator(operator) != null;
-
-		this.leftHandSide = leftHandSide;
-		this.operator = operator;
-		this.rightHandSide = rightHandSide;
-
-		leftHandSide.setParent(this, LEFT_HAND_SIDE_PROPERTY);
-		rightHandSide.setParent(this, RIGHT_HAND_SIDE_PROPERTY);
+		setLeftHandSide(leftHandSide);
+		setOperator(operator);
+		setRightHandSide(rightHandSide);
 	}
 
 	public static String getOperator(int operator) {

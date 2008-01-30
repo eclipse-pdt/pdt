@@ -56,15 +56,14 @@ public class ArrayElement extends ASTNode {
 	
 	public ArrayElement(int start, int end, AST ast, Expression key, Expression value) {
 		super(start, end, ast);
-
-		assert value != null;
-		this.key = key;
-		this.value = value;
-
-		if (key != null) {
-			key.setParent(this, KEY_PROPERTY);
+		if (value == null) {
+			throw new IllegalArgumentException();
 		}
-		value.setParent(this, VALUE_PROPERTY);
+		
+		setValue(value);
+		if (key != null) {
+			setKey(key);
+		}
 	}
 
 	public ArrayElement(int start, int end, AST ast, Expression value) {

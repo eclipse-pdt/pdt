@@ -66,18 +66,20 @@ public class ClassDeclaration extends TypeDeclaration {
 	private ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Identifier superClass, Identifier[] interfaces, Block body) {
 		super(start, end, ast, className, interfaces, body);
 
-		this.modifier = modifier;
-		this.superClass = superClass;
-
+		setModifier(modifier);
 		if (superClass != null) {
-			superClass.setParent(this, SUPER_CLASS_PROPERTY);
+			setSuperClass(superClass);
 		}
 	}
 
+	public ClassDeclaration(AST ast) {
+		super(ast);
+	}
+	
 	public ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Identifier superClass, List interfaces, Block body) {
 		this(start, end, ast, modifier, className, superClass, interfaces == null ? null : (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
-
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

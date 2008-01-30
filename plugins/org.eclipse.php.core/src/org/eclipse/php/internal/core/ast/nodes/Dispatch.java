@@ -20,24 +20,28 @@ package org.eclipse.php.internal.core.ast.nodes;
  */
 public abstract class Dispatch extends VariableBase {
 
-	private VariableBase field;
+	private VariableBase dispatcher;
 
 	public Dispatch(int start, int end, AST ast, VariableBase dispatcher) {
 		super(start, end, ast);
 
-		assert dispatcher != null;
-		this.field = dispatcher;
-
-		dispatcher.setParent(this, getDispatcherProperty());
+		if (dispatcher == null) {
+			throw new IllegalArgumentException();
+		}
+		setDispatcher(dispatcher);
 	}
 
+	public Dispatch(AST ast) {
+		super(ast);
+	}
+	
 	/**
 	 * The dispatcher component of this dispatch expression
 	 * 
 	 * @return dispatcher component of this dispatch expression 
 	 */
 	public VariableBase getDispatcher() {
-		return field;
+		return dispatcher;
 	}
 	
 	/**
@@ -55,9 +59,9 @@ public abstract class Dispatch extends VariableBase {
 		if (dispatcher == null) {
 			throw new IllegalArgumentException();
 		}
-		ASTNode oldChild = this.field;
+		ASTNode oldChild = this.dispatcher;
 		preReplaceChild(oldChild, dispatcher, getDispatcherProperty());
-		this.field = dispatcher;
+		this.dispatcher = dispatcher;
 		postReplaceChild(oldChild, dispatcher, getDispatcherProperty());
 	}
 	

@@ -30,7 +30,7 @@ public class ContinueStatement extends Statement {
 	 * The "expression" structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(ContinueStatement.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(ContinueStatement.class, "expression", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -45,17 +45,19 @@ public class ContinueStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}	
 	
-	
 	public ContinueStatement(int start, int end,AST ast) {
 		this(start, end, ast, null);
 	}
 
+	public ContinueStatement(AST ast) {
+		super(ast);
+	}
+	
 	public ContinueStatement(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
-		this.expression = expr;
-
+		
 		if (expr != null) {
-			expr.setParent(this, EXPRESSION_PROPERTY);
+			setExpression(expr);
 		}
 	}
 

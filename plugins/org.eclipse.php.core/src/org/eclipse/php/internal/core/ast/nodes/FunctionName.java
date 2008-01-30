@@ -49,10 +49,15 @@ public class FunctionName extends ASTNode {
 	public FunctionName(int start, int end, AST ast, Expression functionName) {
 		super(start, end, ast);
 
-		assert functionName != null;
-		this.name = functionName;
+		if (functionName == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setName(functionName);
+	}
 
-		functionName.setParent(this, NAME_PROPERTY);
+	public FunctionName(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

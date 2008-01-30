@@ -49,11 +49,16 @@ public class Identifier extends Expression {
 	public Identifier(int start, int end, AST ast, String value) {
 		super(start, end, ast);
 
-		assert value != null && value.length() > 0;
-		this.name = value;
-
+		if (value == null || value.length() == 0) {
+			throw new IllegalArgumentException();
+		}
 		// intern the string for fast equality check
-		this.name.intern();
+		value.intern();
+		setName(value);
+	}
+
+	public Identifier(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

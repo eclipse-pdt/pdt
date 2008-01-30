@@ -49,12 +49,15 @@ public class ReturnStatement extends Statement {
 		this(start, end, ast, null);
 	}
 
+	public ReturnStatement(AST ast) {
+		super(ast);
+	}
+
 	public ReturnStatement(int start, int end, AST ast, Expression expr) {
 		super(start, end, ast);
-		this.expression = expr;
-
+		
 		if (expr != null) {
-			expr.setParent(this, EXPRESSION_PROPERTY);
+			setExpression(expr);
 		}
 	}
 

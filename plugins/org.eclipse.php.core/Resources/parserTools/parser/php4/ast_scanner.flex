@@ -11,12 +11,15 @@
 
 package org.eclipse.php.internal.core.ast.parser;
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.javacup.sym;
-import org.eclipse.php.internal.core.phpModel.parser.StateStack;
-import org.eclipse.php.internal.core.ast.nodes.Comment;
+import org.eclipse.php.internal.core.ast.nodes.AST;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.eclipse.php.internal.core.ast.nodes.Comment;
+import org.eclipse.php.internal.core.phpModel.javacup.sym;
+import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
+import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 
 %%
 
@@ -55,7 +58,17 @@ import java.util.*;
     private StateStack stack = new StateStack();
     private char yy_old_buffer[] = new char[YY_BUFFERSIZE];
     private int yy_old_pushbackPos;
-    private int commentStartPosition;
+    protected int commentStartPosition;
+
+	private AST ast;
+
+    public void setAST(AST ast) {
+    	this.ast = ast;
+    }
+    
+	public void setInScriptingState() {
+		yybegin(ST_IN_SCRIPTING);
+	}
 
 	public void resetCommentList() {
 		commentList.clear();
@@ -65,9 +78,9 @@ import java.util.*;
 		return commentList;
 	}
 	
-	private void addComment(int type) {
+	protected void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
+		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), this.ast, type);
 		commentList.add(comment);
 	}	
 
@@ -88,11 +101,11 @@ import java.util.*;
         return yyline;
     }
 
-    private int getTokenStartPosition() {
+    protected int getTokenStartPosition() {
         return yy_startRead - yy_pushbackPos;
     }
 
-    private int getTokenLength() {
+    protected int getTokenLength() {
         return yy_markedPos - yy_startRead;
     }
 
@@ -131,6 +144,41 @@ import java.util.*;
         int leftPosition = getTokenStartPosition();
         return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
     }
+    
+    public int[] getParamenters(){
+    	return new int[]{yy_markedPos, yy_pushbackPos, yy_currentPos, yy_startRead, yy_endRead, yyline};
+    }
+    
+	private boolean parsePHPDoc(){	
+		final IDocumentorLexer documentorLexer = getDocumentorLexer(yy_reader);
+		if(documentorLexer == null){
+			return false;
+		}
+		yypushback(yy_markedPos - yy_startRead);
+		int[] parameters = getParamenters();
+		documentorLexer.reset(yy_reader, yy_buffer, parameters);
+		Object phpDocBlock = documentorLexer.parse();
+		commentList.add(phpDocBlock);
+		reset(yy_reader, documentorLexer.getBuffer(), documentorLexer.getParamenters());
+		return true;
+	}
+	
+	
+	protected IDocumentorLexer getDocumentorLexer(java.io.Reader  reader) {
+		return null;
+	}
+	
+	public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
+		this.yy_reader = reader;
+		this.yy_buffer = buffer;
+		this.yy_markedPos = parameters[0];
+		this.yy_pushbackPos = parameters[1];
+		this.yy_currentPos = parameters[2];
+		this.yy_startRead = parameters[3];
+		this.yy_endRead = parameters[4];
+		this.yyline = parameters[5];  
+		this.yychar = this.yy_startRead - this.yy_pushbackPos;
+	}
 %}
 
 LNUM=[0-9]+
@@ -670,8 +718,10 @@ NEWLINE=("\r"|"\n"|"\r\n")
 }
 
 <ST_IN_SCRIPTING>"/**" {
+if (!parsePHPDoc()) {
 handleCommentStart();
 yybegin(ST_DOCBLOCK);
+}
 }
 
 <ST_DOCBLOCK>"*/" {

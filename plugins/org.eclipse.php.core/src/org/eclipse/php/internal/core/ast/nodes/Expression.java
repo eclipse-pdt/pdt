@@ -19,6 +19,10 @@ public abstract class Expression extends ASTNode {
 		super(start, end, ast);
 	}
 	
+	public Expression(AST ast) {
+		super(ast);
+	}
+
 	/**
 	 * A static scalar expression is a "compile-time evaluated scalar" 
 	 * i.e. expression that can be evaluated before execution time.

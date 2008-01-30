@@ -49,13 +49,17 @@ public class ClassName extends ASTNode {
 
 	public ClassName(int start, int end, AST ast, Expression className) {
 		super(start, end, ast);
-		assert className != null;
 
-		this.name = className;
-
-		className.setParent(this, NAME_PROPERTY);
+		if (className == null) {
+			throw new IllegalArgumentException();
+		}
+		setClassName(className);
 	}
 
+	public ClassName(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

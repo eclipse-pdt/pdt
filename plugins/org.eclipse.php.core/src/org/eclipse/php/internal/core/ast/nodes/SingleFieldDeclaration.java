@@ -50,20 +50,21 @@ public class SingleFieldDeclaration extends ASTNode {
 	}	
 	
 	
+	public SingleFieldDeclaration(AST ast) {
+		super(ast);
+	}
+
 	public SingleFieldDeclaration(int start, int end, AST ast, Variable name, Expression value) {
-		super(start, end, ast);
+		super(ast);
 
 		if (name == null) {
 			throw new IllegalArgumentException();
 		}
 
-		this.name = name;
-		this.value = value;
-		
-		this.name.setParent(this, NAME_PROPERTY);
-		if (this.value != null) {
-			this.value.setParent(this, VALUE_PROPERTY);	
-		}		
+		setName(name);
+		if (value != null) {
+			setValue(value);	
+		}
 	}
 
 	public void accept(Visitor visitor) {

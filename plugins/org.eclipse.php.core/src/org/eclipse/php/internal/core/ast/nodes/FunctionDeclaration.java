@@ -65,22 +65,28 @@ public class FunctionDeclaration extends Statement {
 	private FunctionDeclaration(int start, int end, AST ast, Identifier functionName, FormalParameter[] formalParameters, Block body, final boolean isReference) {
 		super(start, end, ast);
 
-		assert functionName != null && formalParameters != null;
-		this.isReference = isReference;
-		this.name = functionName;
-		for (FormalParameter formalParameter : formalParameters) {
-			this.formalParameters.add(formalParameter);
+		if (functionName == null || formalParameters == null) {
+			throw new IllegalArgumentException();
 		}
-		this.body = body;
-
-		functionName.setParent(this, NAME_PROPERTY);
+		
+		setIsReference(isReference);
+		setFunctionName(functionName);
+		if (formalParameters != null) {
+			for (FormalParameter formalParameter : formalParameters) {
+				this.formalParameters.add(formalParameter);
+			}
+		}
 		if (body != null) {
-			body.setParent(this, BODY_PROPERTY);
-		}
+			setBody(body);	
+		}		
 	}
 
 	public FunctionDeclaration(int start, int end, AST ast, Identifier functionName, List formalParameters, Block body, final boolean isReference) {
 		this(start, end, ast, functionName, (FormalParameter[]) formalParameters.toArray(new FormalParameter[formalParameters.size()]), body, isReference);
+	}
+
+	public FunctionDeclaration(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

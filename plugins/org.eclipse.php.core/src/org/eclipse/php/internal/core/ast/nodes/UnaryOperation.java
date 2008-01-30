@@ -63,11 +63,15 @@ public class UnaryOperation extends Expression {
 	public UnaryOperation(int start, int end, AST ast, Expression expr, int operator) {
 		super(start, end, ast);
 
-		assert expr != null;
-		this.expression = expr;
-		this.operator = operator;
+		if (expr == null) {
+			throw new IllegalArgumentException();
+		}
+		setExpression(expr);
+		setOperator(operator);
+	}
 
-		expr.setParent(this, EXPRESSION_PROPERTY);
+	public UnaryOperation(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

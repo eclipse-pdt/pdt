@@ -59,13 +59,14 @@ public class Block extends Statement {
 	private Block(int start, int end, AST ast, Statement[] statements, boolean isCurly) {
 		super(start, end, ast);
 
-		assert statements != null;
-		this.isCurly = isCurly;
+		if (statements == null) {
+			throw new IllegalArgumentException();
+		}
 
+		setIsCurly(isCurly);
 		// set the child nodes' parent
 		for (int i = 0; i < statements.length; i++) {
 			this.statements.add(statements[i]);
-			statements[i].setParent(this, STATEMENTS_PROPERTY);
 		}
 	}
 
@@ -77,6 +78,10 @@ public class Block extends Statement {
 		this(start, end, ast, statements, true);
 	}
 
+	public Block(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
@@ -122,6 +127,18 @@ public class Block extends Statement {
 
 	public boolean isCurly() {
 		return isCurly;
+	}
+	
+	/**
+	 * is this a curly block or an old (ie - : endblock) style
+	 * 
+	 * @param isCurly the assignment operator
+	 * @exception IllegalArgumentException if the argument is incorrect
+	 */ 
+	public void setIsCurly(boolean isCurly) {
+		preValueChange(IS_CURLY_PROPERTY);
+		this.isCurly = isCurly;
+		postValueChange(IS_CURLY_PROPERTY);
 	}
 
 	/**

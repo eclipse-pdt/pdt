@@ -47,12 +47,18 @@ public class BackTickExpression extends Expression {
 	public BackTickExpression(int start, int end, AST ast, Expression[] expressions) {
 		super(start, end, ast);
 
-		assert expressions != null;
+		if (expressions == null) {
+			throw new IllegalArgumentException();
+		}
 		for (Expression expression : expressions) {
 			this.expressions.add(expression);
 		}
 	}
 
+	public BackTickExpression(AST ast) {
+		super(ast);
+	}
+	
 	public BackTickExpression(int start, int end, AST ast, List expressions) {
 		this(start, end, ast, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}

@@ -50,12 +50,18 @@ public class ListVariable extends VariableBase {
 	private ListVariable(int start, int end, AST ast, VariableBase[] variables) {
 		super(start, end, ast);
 
-		assert variables != null;
+		if (variables == null) {
+			throw new IllegalArgumentException();
+		}
 		for (VariableBase variableBase : variables) {
 			this.variables.add(variableBase);
 		}
 	}
 
+	public ListVariable(AST ast) {
+		super(ast);
+	}
+	
 	public ListVariable(int start, int end, AST ast, List variables) {
 		this(start, end, ast, variables == null ? null : (VariableBase[]) variables.toArray(new VariableBase[variables.size()]));
 	}

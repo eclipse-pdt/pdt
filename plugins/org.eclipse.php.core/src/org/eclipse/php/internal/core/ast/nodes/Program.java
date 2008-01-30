@@ -71,7 +71,9 @@ public class Program extends ASTNode {
 	private Program(int start, int end, AST ast, Statement[] statements, List comments) {
 		super(start, end, ast);
 
-		assert statements != null && comments != null;
+		if (statements == null || comments == null) {
+			throw new IllegalArgumentException();
+		}
 
 		for (Statement statement : statements) {
 			this.statements.add(statement);
@@ -83,6 +85,10 @@ public class Program extends ASTNode {
 
 	public Program(int start, int end, AST ast, List statements, List commentList) {
 		this(start, end, ast, (Statement[]) statements.toArray(new Statement[statements.size()]), commentList);
+	}
+
+	public Program(AST ast) {
+		super(ast);
 	}
 
 	/**

@@ -57,10 +57,14 @@ public class StaticFieldAccess extends StaticDispatch {
 	public StaticFieldAccess(int start, int end, AST ast, Identifier className, Variable field) {
 		super(start, end, ast, className);
 
-		assert field != null;
-		this.field = field;
+		if (field == null) {
+			throw new IllegalArgumentException();
+		}
+		setField(field);
+	}
 
-		field.setParent(this, FIELD_PROPERTY);
+	public StaticFieldAccess(AST ast) {
+		super(ast);
 	}
 
 	public void accept(Visitor visitor) {

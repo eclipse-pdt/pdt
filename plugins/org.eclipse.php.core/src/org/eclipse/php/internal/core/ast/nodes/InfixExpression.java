@@ -103,19 +103,21 @@ public class InfixExpression extends Expression {
 		properyList.add(RIGHT_OPERAND_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
-	
-	
+
 	public InfixExpression(int start, int end, AST ast, Expression left, int operator, Expression right) {
 		super(start, end, ast);
 
-		assert right != null && left != null && getOperator(operator) != null;
-		this.left = left;
-		this.operator = operator;
-		this.right = right;
+		if (right == null || left == null || getOperator(operator) == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		setLeft(left);
+		setOperator(operator);
+		setRight(right);
+	}
 
-		left.setParent(this, LEFT_OPERAND_PROPERTY);
-		right.setParent(this, RIGHT_OPERAND_PROPERTY);
+	public InfixExpression(AST ast) {
+		super(ast);
 	}
 
 	public static String getOperator(int operator) {

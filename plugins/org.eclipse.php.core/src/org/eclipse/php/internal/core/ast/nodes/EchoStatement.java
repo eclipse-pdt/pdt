@@ -46,8 +46,10 @@ public class EchoStatement extends Statement {
 	
 	private EchoStatement(int start, int end, AST ast, Expression[] expressions) {
 		super(start, end, ast);
+		if (expressions == null) {
+			throw new IllegalArgumentException();
+		}
 
-		assert expressions != null;
 		for (Expression expression : expressions) {
 			this.expressions.add(expression);
 		}
@@ -57,6 +59,10 @@ public class EchoStatement extends Statement {
 		this(start, end, ast, (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
 	
+	public EchoStatement(AST ast) {
+		super(ast);
+	}
+
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {

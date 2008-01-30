@@ -67,13 +67,17 @@ public class CastExpression extends Expression {
 	public CastExpression(int start, int end, AST ast, Expression expr, int castType) {
 		super(start, end, ast);
 
-		assert expr != null;
-		this.expression = expr;
-		this.castingType = castType;
-
-		expr.setParent(this, EXPRESSION_PROPERTY);
+		if (expr == null) {
+			throw new IllegalArgumentException();
+		}
+		setExpression(expr);
+		setCastingType(castType);
 	}
 
+	public CastExpression(AST ast) {
+		super(ast);
+	}
+	
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
