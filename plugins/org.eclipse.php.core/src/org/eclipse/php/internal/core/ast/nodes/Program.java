@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.locator.Locator;
@@ -21,6 +22,7 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.parser.ASTParser;
 import org.eclipse.php.internal.core.ast.parser.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
+import org.eclipse.text.edits.TextEdit;
 
 /**
  * The AST root node for PHP program (meaning a PHP file).
@@ -336,8 +338,69 @@ public class Program extends ASTNode {
 			return -1;
 		}
 		return this.commentMapper.lastTrailingCommentIndex(node);
-	}	
+	}
+	
+	/**
+	 * Enables the recording of changes to this program
+	 * unit and its descendents. The program must have
+	 * been created by <code>ASTParser</code> and still be in
+	 * its original state. Once recording is on,
+	 * arbitrary changes to the subtree rooted at this compilation
+	 * unit are recorded internally. Once the modification has
+	 * been completed, call <code>rewrite</code> to get an object
+	 * representing the corresponding edits to the original 
+	 * source code string.
+	 *
+	 * @exception IllegalArgumentException if this program is
+	 * marked as unmodifiable, or if this program has already 
+	 * been tampered with, or recording has already been enabled
+	 * @since 3.0
+	 */
+	public void recordModifications() {
+		getAST().recordModifications(this);
+	}
 
+	/**
+	 * Converts all modifications recorded for this program
+	 * into an object representing the corresponding text
+	 * edits to the given document containing the original source
+	 * code for this compilation unit.
+	 * <p>
+	 * The program must have been created by
+	 * <code>ASTParser</code> from the source code string in the
+	 * given document, and recording must have been turned
+	 * on with a prior call to <code>recordModifications</code>
+	 * while the AST was still in its original state.
+	 * </p>
+	 * <p>
+	 * Calling this methods does not discard the modifications
+	 * on record. Subsequence modifications made to the AST
+	 * are added to the ones already on record. If this method
+	 * is called again later, the resulting text edit object will
+	 * accurately reflect the net cumulative affect of all those
+	 * changes.
+	 * </p>
+	 * 
+	 * @param document original document containing source code
+	 * for this program
+	 * @param options the table of formatter options
+	 * (key type: <code>String</code>; value type: <code>String</code>);
+	 * or <code>null</code> to use the standard global options
+	 * {@link org.eclipse.php.core.PhpPluginCore#getOptions()}.
+	 * @return text edit object describing the changes to the
+	 * document corresponding to the recorded AST modifications
+	 * @exception IllegalArgumentException if the document passed is
+	 * <code>null</code> or does not correspond to this AST
+	 * @exception IllegalStateException if <code>recordModifications</code>
+	 * was not called to enable recording
+	 * @see #recordModifications()
+	 * @since 3.0
+	 */
+	public TextEdit rewrite(IDocument document, Map options) {
+		return getAST().rewrite(document, options);
+	}
+	
+	
 	ASTNode clone0(AST target) {
 		final List statements = ASTNode.copySubtrees(target, statements());
 		final List comments = ASTNode.copySubtrees(target, comments());

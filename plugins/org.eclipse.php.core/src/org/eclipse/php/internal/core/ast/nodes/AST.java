@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.ast.parser.PhpAstLexer4;
 import org.eclipse.php.internal.core.ast.parser.PhpAstLexer5;
 import org.eclipse.php.internal.core.ast.parser.PhpAstParser4;
 import org.eclipse.php.internal.core.ast.parser.PhpAstParser5;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFlattener;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.text.edits.TextEdit;
@@ -37,7 +38,7 @@ import org.eclipse.text.edits.TextEdit;
  * Abstract syntax trees may be hand constructed by clients, using the
  * <code>new<i>TYPE</i></code> factory methods to create new nodes, and the
  * various <code>set<i>CHILD</i></code> methods 
- * (see {@link org.eclipse.jdt.core.dom.ASTNode ASTNode} and its subclasses)
+ * (see {@link org.eclipse.php.internal.core.ast.nodes.ASTNode} and its subclasses)
  * to connect them together.
  * </p>
  * <p>
@@ -49,9 +50,9 @@ import org.eclipse.text.edits.TextEdit;
  * <p>
  * There can be any number of AST nodes owned by a single AST instance that are
  * unparented. Each of these nodes is the root of a separate little tree of nodes.
- * The method <code>ASTNode.getRoot()</code> navigates from any node to the root
+ * The method <code>ASTNode.getProgramRoot()</code> navigates from any node to the root
  * of the tree that it is contained in. Ordinarily, an AST instance has one main
- * tree (rooted at a <code>CompilationUnit</code>), with newly-created nodes appearing
+ * tree (rooted at a <code>Program</code>), with newly-created nodes appearing
  * as additional roots until they are parented somewhere under the main tree.
  * One can navigate from any node to its AST instance, but not conversely.
  * </p>
@@ -62,23 +63,25 @@ import org.eclipse.text.edits.TextEdit;
  * the original source characters.
  * </p>
  * <p>
- * Compilation units created by <code>ASTParser</code> from a
+ * Programs created by <code>ASTParser</code> from a
  * source document can be serialized after arbitrary modifications
  * with minimal loss of original formatting. Here is an example:
  * <pre>
- * Document doc = new Document("import PHP.util.List;\nclass X {}\n");
- * ASTParser parser = ASTParser.newParser(AST.JLS3);
+ *  
+ * Document doc = new Document("<?\n class X {} \n echo 'hello world';\n  ?>");
+ * ASTParser parser = ASTParser.newParser(AST.PHP5);
  * parser.setSource(doc.get().toCharArray());
- * CompilationUnit cu = (CompilationUnit) parser.createAST(null);
- * cu.recordModifications();
- * AST ast = cu.getAST();
- * ImportDeclaration id = ast.newImportDeclaration();
- * id.setName(ast.newName(new String[] {"PHP", "util", "Set"});
- * cu.imports().add(id); // add import declaration at end
- * TextEdit edits = cu.rewrite(document, null);
+ * Program program = parser.createAST(null);
+ * program.recordModifications();
+ * AST ast = program.getAST();
+ * EchoStatement echo = ast.newEchoStatement();
+ * echo.setExpression(ast.newScalar(“Hello World“);
+ * program.statements().add(echo);
+ * TextEdit edits = program.rewrite(document, null);
  * UndoEdit undo = edits.apply(document);
+ * 
  * </pre>
- * See also {@link org.eclipse.jdt.core.dom.rewrite.ASTRewrite} for
+ * See also {@link ASTRewrite} for
  * an alternative way to describe and serialize changes to a
  * read-only AST.
  * </p>
@@ -92,9 +95,12 @@ import org.eclipse.text.edits.TextEdit;
  * @since 2.0
  */
 public class AST {
+
+	public final static String PHP4 = PHPVersion.PHP4;
+	public final static String PHP5 = PHPVersion.PHP5;
 	
 	/**
-	 * 
+	 * The scanner for this AST, it can ve 
 	 */
 	private final AstLexer lexer;
 	

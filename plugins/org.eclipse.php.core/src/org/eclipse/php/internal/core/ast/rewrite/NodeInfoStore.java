@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Block;
+import org.eclipse.php.internal.core.ast.nodes.TryStatement;
 import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInfo;
 
 /**
@@ -64,35 +65,34 @@ public final class NodeInfoStore {
 	 * @param nodeType Type of the node to create. Use the type constants in {@link NodeInfoStore}.
 	 * @return Returns a place holder node.
 	 */
-/*	public final ASTNode newPlaceholderNode(int nodeType) {
+	public final ASTNode newPlaceholderNode(int nodeType) {
 	    try {
 		    ASTNode node= this.ast.createInstance(nodeType);
 		    switch (node.getType()) {
 				case ASTNode.FIELD_DECLARATION:
-				    ((FieldsDeclaration) node).fragments().add(this.ast.newVariableDeclarationFragment());
+//				    ((FieldsDeclaration) node).fragments().add(this.ast.newVariableDeclarationFragment());
 				    break;
-				case ASTNode.MODIFIER:
-				    ((Modifier) node).setKeyword(Modifier.ModifierKeyword.ABSTRACT_KEYWORD);
-					break;
+//				case ASTNode.MODIFIER:
+//				    ((Modifier) node).setKeyword(Modifier.ModifierKeyword.ABSTRACT_KEYWORD);
+//					break;
 				case ASTNode.TRY_STATEMENT :
-					((TryStatement) node).setFinally(this.ast.newBlock()); // have to set at least a finally block to be legal code
+//					((TryStatement) node).setFinally(this.ast.newBlock()); // have to set at least a finally block to be legal code
 					break;
-				case ASTNode.VARIABLE_DECLARATION_EXPRESSION :
-				    ((VariableDeclarationExpression) node).fragments().add(this.ast.newVariableDeclarationFragment());
-			    	break;
-				case ASTNode.VARIABLE_DECLARATION_STATEMENT :
-				    ((VariableDeclarationStatement) node).fragments().add(this.ast.newVariableDeclarationFragment());
-		    		break;
-				case ASTNode.PARAMETERIZED_TYPE :
-				    ((ParameterizedType) node).typeArguments().add(this.ast.newWildcardType());
-		    		break;
+//				case ASTNode.VARIABLE_DECLARATION_EXPRESSION :
+//				    ((VariableDeclarationExpression) node).fragments().add(this.ast.newVariableDeclarationFragment());
+//			    	break;
+//				case ASTNode.FIELD_DECLARATION :
+//				    ((VariableDeclarationStatement) node).fragments().add(this.ast.newVariableDeclarationFragment());
+//		    		break;
+//				case ASTNode.PARAMETERIZED_TYPE :
+//				    ((ParameterizedType) node).typeArguments().add(this.ast.newWildcardType());
+//		    		break;
 			}
 		    return node;
 	    } catch (IllegalArgumentException e) {
 	        return null;
 	    }
  	}
-*/	
 	
 	// collapsed nodes: in source: use one node that represents many; to be used as
 	// copy/move source or to replace at once.
