@@ -116,7 +116,7 @@ public class EchoStatement extends Statement {
 	/**
 	 * @return expression list of the echo statement
 	 */
-	public List expressions() {
+	public List<Expression> expressions() {
 		return this.expressions;
 	}
 	
