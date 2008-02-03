@@ -2,10 +2,12 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
@@ -602,7 +604,28 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ForStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ForStatement", parameters);
-		return true;
+
+		xmlWriter.startTag("Initializations", new HashMap<String, String>());
+		for (Expression initialization : s.getInitializations()) {
+			initialization.traverse(this);
+		}
+		xmlWriter.endTag("Initializations");
+
+		xmlWriter.startTag("Conditions", new HashMap<String, String>());
+		for (Expression condition : s.getConditions()) {
+			condition.traverse(this);
+		}
+		xmlWriter.endTag("Conditions");
+
+		xmlWriter.startTag("Increasements", new HashMap<String, String>());
+		for (Expression increasement : s.getIncreasements()) {
+			increasement.traverse(this);
+		}
+		xmlWriter.endTag("Increasements");
+
+		s.getAction().traverse(this);
+
+		return false;
 	}
 
 	public boolean visit(GlobalStatement s) throws Exception {
