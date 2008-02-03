@@ -118,7 +118,15 @@ public class ASTParser {
 		progressMonitor.worked(2);
 		final Symbol symbol = phpParser.parse();
 		progressMonitor.done();
-		return symbol == null ? null : (Program) symbol.value;
+		if (symbol == null) {
+			return null;
+		}
+		Program p = (Program) symbol.value;
+		AST ast = p.getAST();
+		// Set the original modification count to the count after the creation of the Program.
+		// This is important to allow the AST rewriting. 
+		ast.setOriginalModificationCount(ast.modificationCount());
+		return p;
 	}
 	
 	/********************************************************************************
