@@ -12,6 +12,7 @@ import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.util.XMLWriter;
 
@@ -524,7 +525,23 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ConditionalExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ConditionalExpression", parameters);
-		return true;
+
+		xmlWriter.startTag("Condition", new HashMap<String, String>());
+		s.getCondition().traverse(this);
+		xmlWriter.endTag("Condition");
+
+		xmlWriter.startTag("IfTrue", new HashMap<String, String>());
+		s.getIfTrue().traverse(this);
+		xmlWriter.endTag("IfTrue");
+
+		Expression falseExp = s.getIfFalse();
+		if (falseExp != null) {
+			xmlWriter.startTag("IfFalse", new HashMap<String, String>());
+			falseExp.traverse(this);
+			xmlWriter.endTag("IfFalse");
+		}
+
+		return false;
 	}
 
 	public boolean visit(ConstantReference s) throws Exception {
@@ -637,7 +654,23 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(IfStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("IfStatement", parameters);
-		return true;
+
+		xmlWriter.startTag("Condition", new HashMap<String, String>());
+		s.getCondition().traverse(this);
+		xmlWriter.endTag("Condition");
+
+		xmlWriter.startTag("TrueStatement", new HashMap<String, String>());
+		s.getTrueStatement().traverse(this);
+		xmlWriter.endTag("TrueStatement");
+
+		Statement falseStatement = s.getFalseStatement();
+		if (falseStatement != null) {
+			xmlWriter.startTag("FalseStatement", new HashMap<String, String>());
+			falseStatement.traverse(this);
+			xmlWriter.endTag("FalseStatement");
+		}
+
+		return false;
 	}
 
 	public boolean visit(IgnoreError s) throws Exception {
