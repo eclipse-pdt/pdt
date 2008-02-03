@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.print.DocFlavor.STRING;
+
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -198,7 +200,7 @@ public class Scalar extends Expression {
 	}
 	
 	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
-		if (property == TYPE_PROPERTY) {
+		if (property == VALUE_PROPERTY) {
 			if (get) {
 				return getStringValue();
 			} else {
