@@ -985,15 +985,42 @@ public class AST {
 		this.parser.setScanner(this.lexer);
 	}
 
+	/**
+	 * Creates a new {@link EchoStatement} with a given {@link Expression}.
+	 * 
+	 * @param expression An {@link Expression} to set into the returned {@link EchoStatement}.
+	 * @return A new EchoStatement with the given Expression.
+	 */
 	public EchoStatement newEchoStatement(Expression expression) {
 		 EchoStatement echoStatement = new EchoStatement(this);
 		 echoStatement.expressions().add(expression);
 		 return echoStatement;
 	}
 
+	/**
+	 * Creates a new scalar with a given type.
+	 * 
+	 * @param string The scalar's value.
+	 * @param scalarType The scalar's type (e.g. Scalar.TYPE_STRING, Scalar.TYPE_INT etc.).
+	 * @return A new {@link Scalar}.
+	 */
+	public Scalar newScalar(String string, int scalarType) {
+		Scalar scalar = new Scalar(this);
+		scalar.setScalarType(scalarType);
+		scalar.setStringValue(string);
+		return scalar;
+	}
+
+	/**
+	 * Creates a new scalar with a default Scalar.TYPE_INT type.
+	 * 
+	 * @param string The scalar's value.
+	 * @return A new {@link Scalar}.
+	 */
 	public Scalar newScalar(String string) {
 		Scalar scalar = new Scalar(this);
 		scalar.setStringValue(string);
 		return scalar;
 	}
+
 }
