@@ -18,12 +18,6 @@ import java.util.Map;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.ast.parser.ASTParser;
-import org.eclipse.php.internal.core.ast.parser.AstLexer;
-import org.eclipse.php.internal.core.ast.parser.PhpAstLexer4;
-import org.eclipse.php.internal.core.ast.parser.PhpAstLexer5;
-import org.eclipse.php.internal.core.ast.parser.PhpAstParser4;
-import org.eclipse.php.internal.core.ast.parser.PhpAstParser5;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
@@ -989,5 +983,17 @@ public class AST {
 		this.lexer.yyreset(reader);
 		this.lexer.resetCommentList();
 		this.parser.setScanner(this.lexer);
+	}
+
+	public EchoStatement newEchoStatement(Expression expression) {
+		 EchoStatement echoStatement = new EchoStatement(this);
+		 echoStatement.expressions().add(expression);
+		 return echoStatement;
+	}
+
+	public Scalar newScalar(String string) {
+		Scalar scalar = new Scalar(this);
+		scalar.setStringValue(string);
+		return scalar;
 	}
 }

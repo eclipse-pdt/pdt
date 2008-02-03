@@ -11,14 +11,12 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 
-package org.eclipse.php.internal.core.ast.parser;
+package org.eclipse.php.internal.core.ast.nodes;
 
-import org.eclipse.php.internal.core.ast.nodes.AST;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.Comment;
 import org.eclipse.php.internal.core.phpModel.javacup.sym;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.parser.StateStack;
@@ -30,7 +28,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
  * on 1/29/08 2:16 PM from the specification file
  * <tt>file:/C:/development/PDT/parserUtils/parser/php4/ast_scanner.flex</tt>
  */
-public class PhpAstLexer4 implements org.eclipse.php.internal.core.ast.parser.AstLexer {
+public class PhpAstLexer4 implements org.eclipse.php.internal.core.ast.nodes.AstLexer {
 
   /** This character denotes the end of file */
   final public static int YYEOF = -1;

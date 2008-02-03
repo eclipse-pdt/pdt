@@ -4,7 +4,7 @@
 // Tue Jan 29 14:24:47 IST 2008
 //----------------------------------------------------
 
-package org.eclipse.php.internal.core.ast.parser;
+package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.*;
 import org.eclipse.php.internal.core.ast.nodes.*;

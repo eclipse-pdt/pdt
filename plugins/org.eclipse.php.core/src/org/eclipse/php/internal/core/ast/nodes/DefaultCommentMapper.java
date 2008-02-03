@@ -16,7 +16,6 @@ import java.util.Collection;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.ast.parser.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
