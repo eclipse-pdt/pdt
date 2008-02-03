@@ -508,6 +508,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(Comment s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("type", Comment.getCommentType(s.getCommentType()));
 		xmlWriter.startTag("Comment", parameters);
 		return true;
 	}
