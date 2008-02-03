@@ -21,6 +21,9 @@
 			<param name="groupId" value="gef" />
 		</antcall>
 		<antcall target="getAndInstall">
+			<param name="groupId" value="dltk" />
+		</antcall>
+		<antcall target="getAndInstall">
 			<param name="groupId" value="dtp" />
 		</antcall>
 		<antcall target="getAndInstall">
@@ -45,6 +48,9 @@
 		</antcall>
 		<antcall target="getAndInstall">
 			<param name="groupId" value="gefRuntime" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="dltkRuntime" />
 		</antcall>
 		<antcall target="getAndInstall">
 			<param name="groupId" value="dtpRuntime" />
