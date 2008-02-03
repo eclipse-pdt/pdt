@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.ast.parser.PhpAstLexer4;
 import org.eclipse.php.internal.core.ast.parser.PhpAstLexer5;
 import org.eclipse.php.internal.core.ast.parser.PhpAstParser4;
 import org.eclipse.php.internal.core.ast.parser.PhpAstParser5;
-import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFlattener;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.text.edits.TextEdit;
@@ -100,20 +100,15 @@ public class AST {
 	public final static String PHP5 = PHPVersion.PHP5;
 	
 	/**
-	 * The scanner for this AST, it can ve 
+	 * The scanner capabilities to the AST - all has package access
+	 * to enable ASTParser access  
 	 */
-	private final AstLexer lexer;
+	final AstLexer lexer;
+	final lr_parser parser;
+	final String apiLevel;
+	final boolean useASPTags;
+	private Reader reader;
 	
-	/**
-	 * 
-	 */
-	private final lr_parser parser;
-	
-	/**
-	 * 
-	 */
-	public final String apiLevel;
-
 	/**
 	 * The event handler for this AST. 
 	 * Initially an event handler that does not nothing.
@@ -171,6 +166,8 @@ public class AST {
 	private BindingResolver resolver = new BindingResolver();
 	
 	public AST(Reader reader, String apiLevel, boolean aspTagsAsPhp) throws IOException {
+		this.reader = reader;
+		this.useASPTags = aspTagsAsPhp;
 		this.apiLevel = apiLevel;
 		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp);
 		this.parser = getParserInstance(apiLevel);
@@ -253,18 +250,7 @@ public class AST {
 	public long modificationCount() {
 		return this.modificationCount;
 	}
-
-	/**
-	 * Return the API level supported by this AST.
-	 *
-	 * @return level the API level; one of the <code>JLS*</code>LEVEL
-     * declared on <code>AST</code>; assume this set is open-ended
-     * @since 3.0
-	 */
-	public String apiLevel() {
-		return this.apiLevel;
-	}
-
+	
 	/**
 	 * Indicates that this AST is about to be modified.
 	 * <p>
@@ -843,6 +829,7 @@ public class AST {
 	 * @exception IllegalArgumentException if the identifier is invalid
 	 */
 	public Identifier newIdentifier(String identifier) {
+
 		if (identifier == null) {
 			throw new IllegalArgumentException();
 		}
@@ -961,5 +948,46 @@ public class AST {
 	void setFlag(int newValue) {
 		this.bits |= newValue;
 	}
-	
+
+	/**
+	 * @return The lexer used by this AST 
+	 */
+	public AstLexer lexer() {
+		return lexer;
+	}
+
+	/**
+	 * @return The parser used by this AST 
+	 */
+	public lr_parser parser() {
+		return parser;
+	}
+
+	/**
+	 * @return The API level used by this AST 
+	 */
+	public String apiLevel() {
+		return apiLevel;
+	}
+
+	/**
+	 * @return true if this AST "permits" ASP tags 
+	 */
+	public boolean useASPTags() {
+		return useASPTags;
+	}
+
+	/**
+	 * @return true if this AST "permits" ASP tags 
+	 * @throws IOException 
+	 */
+	public void setSource(Reader reader) throws IOException {
+		if (reader == null) {
+			throw new IllegalArgumentException();
+		}
+		this.reader = reader;
+		this.lexer.yyreset(reader);
+		this.lexer.resetCommentList();
+		this.parser.setScanner(this.lexer);
+	}
 }

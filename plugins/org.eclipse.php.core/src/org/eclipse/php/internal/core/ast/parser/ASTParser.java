@@ -10,8 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.parser;
 
-import java.io.*;
+import java.io.CharArrayReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -51,31 +60,67 @@ public class ASTParser {
 		}
 		this.ast = new AST(reader, version, useASPTags);
 	}
-	
-	public ASTParser newParser(String version) throws IOException {
-		return new ASTParser(EMPTY_STRING_READER, version, false);
+
+	/**
+	 * Factory methods for ASTParser
+	 */
+
+	public static ASTParser newParser(String version) {
+		try {
+			return new ASTParser(EMPTY_STRING_READER, version, false);
+		} catch (IOException e) {
+			assert false;
+			// Since we use empty reader we cannot have an IOException here
+			return null;
+		}
 	}
 
-	public ASTParser newParser(Reader reader, String version) throws IOException {
+	public static ASTParser newParser(Reader reader, String version) throws IOException {
 		return new ASTParser(reader, version, false);
 	}
 	
-	public ASTParser newParser(Reader reader, String version, boolean useASPTags) throws IOException {
+	public static ASTParser newParser(Reader reader, String version, boolean useASPTags) throws IOException {
 		return new ASTParser(reader, version, useASPTags);
 	}
 
 	/**
 	 * Set the raw source that will be used on parsing
+	 * @throws IOException 
 	 */
-	public void setSource(char[] source) {
-		
+	public void setSource(char[] source) throws IOException {
+		final CharArrayReader charArrayReader = new CharArrayReader(source);
+		setSource(charArrayReader);
 	}
 	
 	/**
 	 * Set source of the parser
+	 * @throws IOException 
 	 */
-	public void setSource(Reader source) {
+	public void setSource(Reader source) throws IOException {
+		this.ast.setSource(source);
+	}
+
+	/**
+	 * This operation creates an abstract syntax tree for the given AST Factory
+	 * 
+	 * @param progressMonitor
+	 * @return Program that represents the equivalent AST 
+	 * @throws Exception - for exception occurs on the parsing step
+	 */
+	public Program createAST(IProgressMonitor progressMonitor) throws Exception {
+		if (progressMonitor == null) {
+			progressMonitor = new NullProgressMonitor();
+		}
 		
+		progressMonitor.beginTask("Creating Abstract Syntax Tree for source...", 3);
+		final Scanner lexer = this.ast.lexer();
+		final lr_parser phpParser = this.ast.parser();
+		progressMonitor.worked(1);
+		phpParser.setScanner(lexer);
+		progressMonitor.worked(2);
+		final Symbol symbol = phpParser.parse();
+		progressMonitor.done();
+		return symbol == null ? null : (Program) symbol.value;
 	}
 	
 	/********************************************************************************
@@ -95,6 +140,7 @@ public class ASTParser {
 	 * @param aspTagsAsPhp boolean - true if % is used as PHP process intructor   
 	 * @return the {@link Program} node generated from the given source
 	 * @throws Exception
+	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(String phpCode, boolean aspTagsAsPhp) throws Exception {
 		StringReader reader = new StringReader(phpCode);
@@ -106,16 +152,23 @@ public class ASTParser {
 	 * @param aspTagsAsPhp boolean - true if % is used as PHP process intructor   
 	 * @return the {@link Program} node generated from the given source PHP file
 	 * @throws Exception
+	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(File phpFile, boolean aspTagsAsPhp) throws Exception {
 		final Reader reader = new FileReader(phpFile);
 		return parse(reader, aspTagsAsPhp, VERSION_PHP5);
 	}
 
+	/**
+	 * @deprecated use Thread-Safe ASTParser methods
+	 */
 	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, String phpVersion) throws Exception {
 		return parse(phpDocument, aspTagsAsPhp, phpVersion, 0, phpDocument.getLength());
 	}
 
+	/**
+	 * @deprecated use Thread-Safe ASTParser methods
+	 */
 	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, String phpVersion, final int offset, final int length) throws Exception {
 		final Reader reader = new InputStreamReader(new InputStream() {
 			private int index = offset;
@@ -135,12 +188,16 @@ public class ASTParser {
 		return parse(reader, aspTagsAsPhp, phpVersion);
 	}
 
+	/**
+	 * @deprecated use Thread-Safe ASTParser methods
+	 */
 	public static final Program parse(IDocument phpDocument, boolean aspTagsAsPhp) throws Exception {
 		return parse(phpDocument, aspTagsAsPhp, VERSION_PHP5);
 	}
 
 	/**
 	 * @see #parse(String, boolean)
+	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(String phpCode) throws Exception {
 		return parse(phpCode, true);
@@ -148,6 +205,7 @@ public class ASTParser {
 
 	/**
 	 * @see #parse(File, boolean)
+	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(File phpFile) throws Exception {
 		return parse(phpFile, true);
@@ -155,6 +213,7 @@ public class ASTParser {
 
 	/**
 	 * @see #parse(Reader, boolean)
+	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public static final Program parse(Reader reader) throws Exception {
 		return parse(reader, true, VERSION_PHP5);
@@ -164,6 +223,7 @@ public class ASTParser {
 	 * @param reader
 	 * @return the {@link Program} node generated from the given {@link Reader}
 	 * @throws Exception
+	 * @deprecated use Thread-Safe ASTParser methods
 	 */
 	public synchronized static Program parse(Reader reader, boolean aspTagsAsPhp, String phpVersion) throws Exception {
 		AST ast = new AST(EMPTY_STRING_READER, VERSION_PHP5, false);		
