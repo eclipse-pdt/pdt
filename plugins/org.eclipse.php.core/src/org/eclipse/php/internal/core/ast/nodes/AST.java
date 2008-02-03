@@ -69,7 +69,7 @@ import org.eclipse.text.edits.TextEdit;
  * program.recordModifications();
  * AST ast = program.getAST();
  * EchoStatement echo = ast.newEchoStatement();
- * echo.setExpression(ast.newScalar(“Hello World“);
+ * echo.setExpression(ast.newScalar(“Hello"hello world");
  * program.statements().add(echo);
  * TextEdit edits = program.rewrite(document, null);
  * UndoEdit undo = edits.apply(document);
