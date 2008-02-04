@@ -682,6 +682,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(Include s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("type", s.getType());
 		xmlWriter.startTag("Include", parameters);
 		return true;
 	}
