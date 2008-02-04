@@ -499,7 +499,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 	}
 	
 	public void endVisit(SingleFieldDeclaration singleFieldDeclaration) {
-		endVisit(singleFieldDeclaration);
+		endVisitNode(singleFieldDeclaration);
 	}	
 
 	public void endVisit(StaticConstantAccess staticConstantAccess) {

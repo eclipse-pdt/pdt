@@ -55,7 +55,7 @@ public class SingleFieldDeclaration extends ASTNode {
 	}
 
 	public SingleFieldDeclaration(int start, int end, AST ast, Variable name, Expression value) {
-		super(ast);
+		super(start, end, ast);
 
 		if (name == null) {
 			throw new IllegalArgumentException();
