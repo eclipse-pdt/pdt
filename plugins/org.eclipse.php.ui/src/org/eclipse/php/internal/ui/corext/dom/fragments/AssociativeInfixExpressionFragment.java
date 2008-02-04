@@ -164,7 +164,6 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 		return subsequences;
 	}
 
-	// TODO - check that it works after implementing matching
 	private static boolean matchesAt(int index, List subject, List toMatch) {
 		if(index + toMatch.size() > subject.size())
 			return false;  
