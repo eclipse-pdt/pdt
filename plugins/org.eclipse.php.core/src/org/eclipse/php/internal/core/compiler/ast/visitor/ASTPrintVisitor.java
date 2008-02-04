@@ -493,6 +493,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(ClassDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name",s.getName() );
 		xmlWriter.startTag("ClassDeclaration", parameters);
 		return true;
 	}
@@ -700,6 +701,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(InterfaceDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name",s.getName());
 		xmlWriter.startTag("InterfaceDeclaration", parameters);
 		return true;
 	}
@@ -745,6 +747,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
 		xmlWriter.startTag("PHPMethodDeclaration", parameters);
 		return true;
 	}
