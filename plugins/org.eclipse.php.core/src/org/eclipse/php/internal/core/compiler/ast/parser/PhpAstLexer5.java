@@ -5,7 +5,7 @@ import java.io.InputStream;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 
-public class PhpAstLexer5 extends org.eclipse.php.internal.core.ast.nodes.PhpAstLexer5 {
+public class PhpAstLexer5 extends org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5 {
 
 	public PhpAstLexer5(InputStream in) {
 		super(in);

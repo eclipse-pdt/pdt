@@ -9,7 +9,7 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 
-package org.eclipse.php.internal.core.ast.parser;
+package org.eclipse.php.internal.core.ast.scanner;
 
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import java.io.IOException;
@@ -20,6 +20,8 @@ import org.eclipse.php.internal.core.ast.nodes.Comment;
 import org.eclipse.php.internal.core.phpModel.javacup.sym;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.parser.StateStack;
+import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
+
 
 %%
 
@@ -29,7 +31,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 %line
 
 /* %cup */
-%implements org.eclipse.php.internal.core.ast.parser.AstLexer
+%implements org.eclipse.php.internal.core.ast.scanner.AstLexer
 %function next_token
 %type org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol
 %eofval{
