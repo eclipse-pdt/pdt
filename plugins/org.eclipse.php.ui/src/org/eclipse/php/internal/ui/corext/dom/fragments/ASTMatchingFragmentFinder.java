@@ -14,11 +14,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
 class ASTMatchingFragmentFinder extends ApplyAll {
 
+	private static boolean isProgramScope = false;
+	
 	public static IASTFragment[] findMatchingFragments(ASTNode scope, ASTFragment toMatch) {
+		isProgramScope = scope.getType() == ASTNode.PROGRAM ? true : false;
+		
 		return new ASTMatchingFragmentFinder(toMatch).findMatches(scope);		
 	}
 
@@ -34,11 +39,16 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 		scope.accept(this);
 		return getMatches();
 	}
+	
 	private IASTFragment[] getMatches() {
 		return (IASTFragment[]) fMatches.toArray(new IASTFragment[fMatches.size()]);
 	}	
 	
 	protected boolean apply(ASTNode node) {
+		// if the change scope is the program scope, we don't want it to affect the function scope
+		if(node.getType() == ASTNode.FUNCTION_DECLARATION && isProgramScope)
+			return false;
+		
 		IASTFragment[] localMatches= fFragmentToMatch.getMatchingFragmentsWithNode(node);
 		for(int i= 0; i < localMatches.length; i++) {
 			fMatches.add(localMatches[i]);	
