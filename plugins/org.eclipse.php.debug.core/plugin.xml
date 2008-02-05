@@ -8,8 +8,9 @@
    <extension-point id="phpDebugHandlers" name="PHP Debug Handler" schema="schema/phpDebugHandlers.exsd"/>
    <extension-point id="phpExe" name="PHP exe" schema="schema/phpExe.exsd"/>
    <extension-point id="phpDebugParametersInitializers" name="phpDebugParametersInitializers" schema="schema/phpDebugParametersInitializer.exsd"/>
-   <extension-point id="fileMapper" name="XDebug File mapping" schema="schema/fileMapper.exsd"/>
    <extension-point id="phpDebuggers" name="PHP Debuggers" schema="schema/phpDebuggers.exsd"/>
+   <extension-point id="pathEntryFilters" name="PHP Path Entry Filters" schema="schema/pathEntryFilters.exsd"/>
+   <extension-point id="phpDebugStepFilters" name="PHP Debug Step Filters" schema="schema/phpDebugStepFilters.exsd"/>
     
    <extension
          point="org.eclipse.debug.core.sourceLocators">
@@ -18,6 +19,15 @@
             class="org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector"
             id="org.eclipse.php.debug.core.sourceLookupDirector.php">
       </sourceLocator>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.sourceContainerTypes">
+      <sourceContainerType
+            class="org.eclipse.php.internal.debug.core.sourcelookup.containers.WorkspaceRootSourceContainer"
+            description="This source container is used for searching files in the root"
+            id="org.eclipse.php.debug.core.containerType.workspaceRoot"
+            name="Workspace Root Source Container">
+      </sourceContainerType>
    </extension>
    
    <extension
@@ -254,13 +264,15 @@
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebuggerErrorNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.DebugErrorNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.DebuggerErrorNotification"
-	    name="Debugger Error Notification"/>
+            name="Debugger Error Notification"/>
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugScriptEndedNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.ScriptEndedNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.DebugScriptEndedNotification"
-	    name="Debug Script Ended Notification"/>
+            name="Debug Script Ended Notification"/>
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification"
@@ -269,32 +281,48 @@
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.SessionStartedNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.DebugSessionStartedNotification"
-	    name="Debug Session Started Notification"/>
+            name="Debug Session Started Notification"/>
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.HeaderOutputNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.HeaderOutputNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.HeaderOutputNotification"
-	    name="Header Output Notification"/>
+            name="Header Output Notification"/>
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.OutputNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.OutputNotification"
-	    name="Output Notification"/>
+            name="Output Notification"/>
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.ParsingErrorNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.ParsingErrorNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.ParsingErrorNotification"
-	    name="Parsing Error Notification"/>
+            name="Parsing Error Notification"/>
 
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.ReadyNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.ReadyNotificationHandler"
             id="org.eclipse.php.debug.core.debugger.messages.ReadyNotification"
-	    name="Ready Notification"/>
+            name="Ready Notification"/>
       <message
             class="org.eclipse.php.internal.debug.core.zend.debugger.messages.UnknownMessageResponse"
             id="org.eclipse.php.debug.core.debugger.messages.UnknownMessageResponse"
             name="Unknown Message Response"/>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.StartProcessFileNotification"
+            handler="org.eclipse.php.internal.debug.core.zend.debugger.handlers.StartProcessFileNotificationHandler"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.StartProcessFileNotification"
+            name="Start Process File Notification">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.ContinueProcessFileNotification"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.ContinueProcessFileNotification"
+            name="Continue Process File Notification">
+      </message>
 
   </extension>
   <extension
@@ -323,7 +351,7 @@
       <phpDebugger
             debuggerConfiguration="org.eclipse.php.internal.debug.core.zend.debugger.ZendDebuggerConfiguration"
             id="org.eclipse.php.debug.core.zendDebugger"
-            name="Zend">
+            name="Zend Debugger">
       </phpDebugger>
       <phpDebugger
             debuggerConfiguration="org.eclipse.php.internal.debug.core.xdebug.dbgp.XDebugDebuggerConfiguration"
