@@ -11,11 +11,18 @@
 package org.eclipse.php.internal.ui.editor.configuration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.AbstractInformationControlManager;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -66,6 +73,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private LineStyleProvider fLineStyleProvider;
 	private IPropertyChangeListener propertyChangeListener;
 	private final ArrayList detectors;
+	private HashMap<String, ArrayList<IContentAssistProcessor>> processorsCache = new HashMap<String, ArrayList<IContentAssistProcessor>>();
 
 	public PHPStructuredTextViewerConfiguration() {
 		detectors = new ArrayList();
@@ -85,9 +93,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/*
-	 * Returns an array of all the contentTypes (partition names) supported
-	 * by this editor. They include all those supported by HTML editor plus
-	 * PHP.
+	 * Returns an array of all the contentTypes (partition names) supported by
+	 * this editor. They include all those supported by HTML editor plus PHP.
 	 */
 	@Override
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -129,22 +136,28 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		IContentAssistProcessor[] processors = null;
 
 		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
-			ArrayList processorsList = getPHPDefaultProcessors();
+			ArrayList processorsList = getPHPProcessors(partitionType);
 			processors = new IContentAssistProcessor[processorsList.size()];
 			processorsList.toArray(processors);
 		} else {
-			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
+			ArrayList<IContentAssistProcessor> phpDocProcessors = getPHPProcessors(partitionType);
+			IContentAssistProcessor[] superProcessors = super.getContentAssistProcessors(sourceViewer, partitionType);
+			if (superProcessors != null) {
+				for (IContentAssistProcessor processor : superProcessors) {
+					phpDocProcessors.add(processor);
+				}
+			}
+			processors = new IContentAssistProcessor[phpDocProcessors.size()];
+			phpDocProcessors.toArray(processors);
 		}
 		return processors;
 	}
 
-	private ArrayList processors = null;
-
-	private ArrayList getPHPDefaultProcessors() {
-		if (processors != null) {
-			return processors;
+	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType) {
+		if (processorsCache.get(partitionType) != null) {
+			return processorsCache.get(partitionType);
 		}
-		processors = new ArrayList();
+		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
 		processors.add(new PHPContentAssistProcessor());
 		processors.add(new PHPDocContentAssistProcessor());
 		String processorsExtensionName = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
@@ -153,14 +166,22 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("processor")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, processorsExtensionName);
-				IContentAssistProcessor processor = (IContentAssistProcessor) ecProxy.getObject();
-				if (processor != null) {
-					processors.add(processor);
+				String partitionTypeAtt = element.getAttribute("partitionType");
+				if (partitionTypeAtt == null) {// backward compatibility when
+					// no "partitionType" attribute
+					partitionTypeAtt = PHPPartitionTypes.PHP_DEFAULT;
+				}
+				if (partitionTypeAtt.equals(partitionType)) {
+					ElementCreationProxy ecProxy = new ElementCreationProxy(element, processorsExtensionName);
+					IContentAssistProcessor processor = (IContentAssistProcessor) ecProxy.getObject();
+					if (processor != null) {
+						processors.add(processor);
+					}
 				}
 			}
 		}
 
+		processorsCache.put(partitionType, processors);
 		return processors;
 	}
 
@@ -250,7 +271,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	/*
-	 * @see SourceViewerConfiguration#getConfiguredTextHoverStateMasks(ISourceViewer, String)
+	 * @see SourceViewerConfiguration#getConfiguredTextHoverStateMasks(ISourceViewer,
+	 *      String)
 	 */
 	@Override
 	public int[] getConfiguredTextHoverStateMasks(ISourceViewer sourceViewer, String contentType) {
@@ -410,12 +432,13 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		return (String[]) vector.toArray(new String[vector.size()]);
 	}
-	
+
 	/**
-	 * Returns the outline presenter which will determine and shown
-	 * information requested for the current cursor position.
-	 *
-	 * @param sourceViewer the source viewer to be configured by this configuration
+	 * Returns the outline presenter which will determine and shown information
+	 * requested for the current cursor position.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
 	 * @return an information presenter
 	 * @since 2.1
 	 */
@@ -424,19 +447,22 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, "org.eclipse.php.ui.edit.text.php.show.outline")); //$NON-NLS-1$
 		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
-		IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer)sourceViewer).getTextEditor());
+		IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer) sourceViewer).getTextEditor());
 		presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
 		presenter.setSizeConstraints(50, 20, true, false);
 		return presenter;
 	}
 
 	/**
-	 * Returns the outline presenter control creator. The creator is a factory creating outline
-	 * presenter controls for the given source viewer. This implementation always returns a creator
-	 * for <code>PHPOutlineInformationControl</code> instances.
-	 *
-	 * @param sourceViewer the source viewer to be configured by this configuration
-	 * @param commandId the ID of the command that opens this control
+	 * Returns the outline presenter control creator. The creator is a factory
+	 * creating outline presenter controls for the given source viewer. This
+	 * implementation always returns a creator for
+	 * <code>PHPOutlineInformationControl</code> instances.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @param commandId
+	 *            the ID of the command that opens this control
 	 * @return an information control creator
 	 * @since 2.1
 	 */
