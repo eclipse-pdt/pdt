@@ -67,6 +67,10 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
     	this.ast = ast;
     }
     
+	public String getPHPVersion() {
+		return AST.PHP5;
+	}
+    
 	public void setInScriptingState() {
 		yybegin(ST_IN_SCRIPTING);
 	}
