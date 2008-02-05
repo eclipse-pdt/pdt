@@ -86,5 +86,12 @@ public interface AstLexer extends Scanner{
 	 * Sets the lexer state to be php (i.e. start <?php state) 
 	 */
 	public void setInScriptingState();
+	
+	/**
+	 * Returns the PHP version for this lexer.
+	 * 
+	 * @return The PHP version (e.g. php4 / php5)
+	 */
+	public String getPHPVersion();
 
 }
