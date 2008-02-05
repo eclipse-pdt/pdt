@@ -37,6 +37,14 @@ public class PHPDebugUIMessages extends NLS {
 	public static String BreakpointCreated_1;
 	public static String Browse;
 	public static String CannotRunToLine;
+
+	public static String CreateStepFilterDialog_addStepFilter;
+
+	public static String CreateStepFilterDialog_invalidPathPattern;
+
+	public static String CreateStepFilterDialog_patternToFilter;
+
+	public static String CreateStepFilterDialog_stepFilterAlreadyExists;
 	public static String DebugBrowserView_swtBrowserNotAvailable0;
 	public static String DebugPHPArgumentsTab_phpScriptArguments;
 	public static String DebugPHPArgumentsTab_scriptArguments;
@@ -45,6 +53,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String EnableSetCondition_1;
 	public static String EnterCondition_1;
 	public static String ErrorCreatingBreakpoint_1;
+
+	public static String FilterLabelProvider_readOnly;
 	public static String InstalledPHPsBlock_0;
 	public static String InstalledPHPsBlock_1;
 	public static String InstalledPHPsBlock_10;
@@ -106,6 +116,30 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugPreferencesBlock_1;
 
 	public static String PHPDebugPreferencesBlock_2;
+
+	public static String PHPDebugStepFilterPreferencePage_addFilter;
+
+	public static String PHPDebugStepFilterPreferencePage_addResource;
+
+	public static String PHPDebugStepFilterPreferencePage_alreadyExists;
+
+	public static String PHPDebugStepFilterPreferencePage_definedStepFilters;
+
+	public static String PHPDebugStepFilterPreferencePage_deselectAll;
+
+	public static String PHPDebugStepFilterPreferencePage_filterColon;
+
+	public static String PHPDebugStepFilterPreferencePage_remove;
+
+	public static String PHPDebugStepFilterPreferencePage_selectAll;
+
+	public static String PHPDebugStepFilterPreferencePage_selectResourceToFilter;
+
+	public static String PHPDebugStepFilterPreferencePage_stepFiltering;
+
+	public static String PHPDebugStepFilterPreferencePage_stepFiltersAreApplied;
+
+	public static String PHPDebugStepFilterPreferencePage_useStepFilters;
 	public static String PHPexe_Run_With_Debug_Info;
 	public static String PHPExecutableLaunchTab_isNotPHPFile;
 	public static String PHPexesComboBlock_3;
@@ -118,6 +152,8 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPPrimitiveValueEditor_1;
 	public static String PHPPrimitiveValueEditor_2;
 	public static String PHPPrimitiveValueEditor_3;
+
+	public static String PHPResourceSelectionDialog_selectResource;
 	public static String PHPRunToLineAdapter_0;
 	public static String PHPRunToLineAdapter_1;
 	public static String PHPRunToLineAdapter_2;
