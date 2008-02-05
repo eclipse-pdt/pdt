@@ -1,0 +1,14 @@
+<project default="generateScanner">
+
+
+<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
+	
+<target name="generateScanner">
+<jflex
+    file="PhpLexer5.jflex"
+	nobak="on"
+	outdir="../../../src/org/eclipse/php/internal/core/documentModel/parser"
+/>
+</target>
+
+</project>

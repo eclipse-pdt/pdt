@@ -1,0 +1,14 @@
+<project default="generateScanner">
+
+
+<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
+	
+<target name="generateScanner">
+<jflex
+    file="documentor_compiler_ast_scanner.flex"
+	nobak="on"
+	outdir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser"
+/>
+</target>
+
+</project>

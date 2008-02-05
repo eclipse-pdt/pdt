@@ -55,54 +55,54 @@ import java.util.regex.Pattern;
 %state ST_DOCBLOCK
 %state ST_ONE_LINE_COMMENT
 %{
-    /** TODO, Do not forget to change yy_refill to the following code:
-         private boolean yy_refill() throws java.io.IOException {
+    /** TODO, Do not forget to change zzRefill to the following code:
+         private boolean zzRefill() throws java.io.IOException {
 
              // first: make room (if you can)
-             if (yy_startRead > 0) {
-                 char temp[] = yy_buffer;
+             if (zzStartRead > 0) {
+                 char temp[] = zzBuffer;
                  //only if the new buffer will be changed then
                  //we have to keep the old copy
-                 if (yy_endRead - yy_startRead > 0 || yy_startRead == yy_old_buffer.length) {
-                     temp = yy_old_buffer;
-                     yy_old_buffer = yy_buffer;
-                     yy_old_pushbackPos = yy_pushbackPos;
-                     duplicated_string_length = yy_endRead - yy_startRead;
+                 if (zzEndRead - zzStartRead > 0 || zzStartRead == zzOld_buffer.length) {
+                     temp = zzOld_buffer;
+                     zzOld_buffer = zzBuffer;
+                     zzOld_pushbackPos = zzPushbackPos;
+                     duplicated_string_length = zzEndRead - zzStartRead;
                  }
-                 System.arraycopy(yy_buffer, yy_startRead,
+                 System.arraycopy(zzBuffer, zzStartRead,
                          temp, 0,
-                         yy_endRead - yy_startRead);
-                 yy_buffer = temp;
+                         zzEndRead - zzStartRead);
+                 zzBuffer = temp;
 
                  // translate stored positions
-                 yy_endRead -= yy_startRead;
-                 yy_currentPos -= yy_startRead;
-                 yy_markedPos -= yy_startRead;
-                 yy_pushbackPos -= yy_startRead;
-                 yy_startRead = 0;
+                 zzEndRead -= zzStartRead;
+                 zzCurrentPos -= zzStartRead;
+                 zzMarkedPos -= zzStartRead;
+                 zzPushbackPos -= zzStartRead;
+                 zzStartRead = 0;
              }
 
              // is the buffer big enough?
-             if (yy_currentPos >= yy_buffer.length) {
+             if (zzCurrentPos >= zzBuffer.length) {
                  // if not: blow it up
-                 char newBuffer[] = new char[yy_currentPos * 2];
-                 System.arraycopy(yy_buffer, 0, newBuffer, 0, yy_buffer.length);
-                 yy_buffer = newBuffer;
-                 newBuffer = new char[yy_currentPos * 2];
-                 System.arraycopy(yy_old_buffer, 0, newBuffer, 0, yy_old_buffer.length);
-                 System.arraycopy(yy_buffer, duplicated_string_length, newBuffer, yy_old_buffer.length, newBuffer.length - yy_old_buffer.length);
-                 duplicated_string_length += newBuffer.length - yy_old_buffer.length;
-                 yy_old_buffer = newBuffer;
+                 char newBuffer[] = new char[zzCurrentPos * 2];
+                 System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
+                 zzBuffer = newBuffer;
+                 newBuffer = new char[zzCurrentPos * 2];
+                 System.arraycopy(zzOld_buffer, 0, newBuffer, 0, zzOld_buffer.length);
+                 System.arraycopy(zzBuffer, duplicated_string_length, newBuffer, zzOld_buffer.length, newBuffer.length - zzOld_buffer.length);
+                 duplicated_string_length += newBuffer.length - zzOld_buffer.length;
+                 zzOld_buffer = newBuffer;
              }
 
              // finally: fill the buffer with new input
-             int numRead = yy_reader.read(yy_buffer, yy_endRead,
-                     yy_buffer.length - yy_endRead);
+             int numRead = zzReader.read(zzBuffer, zzEndRead,
+                     zzBuffer.length - zzEndRead);
 
              if (numRead < 0) {
                  return true;
              } else {
-                 yy_endRead += numRead;
+                 zzEndRead += numRead;
                  return false;
              }
          }
@@ -114,8 +114,8 @@ import java.util.regex.Pattern;
     private StateStack stack = new StateStack();
     private ParserClient parserClient;
     private Pattern[] tasksPatterns;
-    private char yy_old_buffer[] = new char[YY_BUFFERSIZE];
-    private int yy_old_pushbackPos;
+    private char zzOld_buffer[] = new char[ZZ_BUFFERSIZE];
+    private int zzOld_pushbackPos;
     private int duplicated_string_length;
 
 	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp) {
@@ -123,7 +123,7 @@ import java.util.regex.Pattern;
 	}
 	
     private void pushState(int state) {
-        stack.pushStack(yy_lexical_state);
+        stack.pushStack(zzLexicalState);
         yybegin(state);
     }
 
@@ -137,11 +137,11 @@ import java.util.regex.Pattern;
 
 
     private int getTokenStartPosition() {
-        return yy_startRead - yy_pushbackPos;
+        return zzStartRead - zzPushbackPos;
     }
 
     private int getTokenLength() {
-        return yy_markedPos - yy_startRead;
+        return zzMarkedPos - zzStartRead;
     }
 
     public void setParserClient(ParserClient parserClient) {
@@ -167,7 +167,7 @@ import java.util.regex.Pattern;
     }
 
     public int getLength() {
-        return yy_endRead - yy_pushbackPos;
+        return zzEndRead - zzPushbackPos;
     }
 
     private IntHashtable phpDocs = new IntHashtable();
@@ -212,7 +212,7 @@ import java.util.regex.Pattern;
     }
 
     private void appendTextToComment(){
-    	comment.append(yy_buffer, yy_startRead, yy_markedPos-yy_startRead);
+    	comment.append(zzBuffer, zzStartRead, zzMarkedPos-zzStartRead);
     }
     
     private void clearCommentBuffer(){
@@ -220,7 +220,7 @@ import java.util.regex.Pattern;
     }
     
 	private void handleCommentStart() {
-		commentStartPosition = yy_startRead;
+		commentStartPosition = zzStartRead;
 		commentStartLine = yyline;
 		clearCommentBuffer();
 		appendTextToComment();
@@ -265,7 +265,7 @@ import java.util.regex.Pattern;
 
 			String description = comment.substring(descriptionStartPositionInComment,taskEndPositionInComment);
 			description = description.trim();
-			parserClient.handleTask(taskName, description, commentStartPosition  - yy_pushbackPos + taskStartPositionInComment, commentStartPosition  - yy_pushbackPos + taskEndPositionInComment  - 1,commentStartLine + lineCnt);
+			parserClient.handleTask(taskName, description, commentStartPosition  - zzPushbackPos + taskStartPositionInComment, commentStartPosition  - zzPushbackPos + taskEndPositionInComment  - 1,commentStartLine + lineCnt);
 		}
     }
     
@@ -343,28 +343,28 @@ import java.util.regex.Pattern;
     }
 
     public String createString(int startOffset, int endOffset) {
-        int startPosition = startOffset + yy_pushbackPos;
+        int startPosition = startOffset + zzPushbackPos;
         int length =  endOffset - startOffset;
         if(startPosition < 0){
-            startPosition = startOffset + yy_old_pushbackPos;
-            if(startPosition + length < yy_old_buffer.length){
-            	if(startPosition < 0 || startPosition + length > yy_old_buffer.length){
+            startPosition = startOffset + zzOld_pushbackPos;
+            if(startPosition + length < zzOld_buffer.length){
+            	if(startPosition < 0 || startPosition + length > zzOld_buffer.length){
                 	return "";
                 }
-                return new String(yy_old_buffer, startPosition, length);
+                return new String(zzOld_buffer, startPosition, length);
             }
             // meaning the string was splited between the two buffers
-            int remainder = startPosition + length  + duplicated_string_length - yy_old_buffer.length;
+            int remainder = startPosition + length  + duplicated_string_length - zzOld_buffer.length;
             length -= remainder;
-            if(startPosition < 0 || startPosition + length > yy_old_buffer.length || remainder > yy_buffer.length){
+            if(startPosition < 0 || startPosition + length > zzOld_buffer.length || remainder > zzBuffer.length){
             	return "";
             }
-            return (new String(yy_old_buffer, startPosition, length) + new String(yy_buffer, 0, remainder));
+            return (new String(zzOld_buffer, startPosition, length) + new String(zzBuffer, 0, remainder));
         }
-    	if(startPosition < 0 || startPosition + length > yy_buffer.length){
+    	if(startPosition < 0 || startPosition + length > zzBuffer.length){
         	return "";
         }
-        return new String(yy_buffer, startPosition, length);
+        return new String(zzBuffer, startPosition, length);
     }
 
 %}

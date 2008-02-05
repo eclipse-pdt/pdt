@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.phpModel.parser.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_parser4.cup,v 1.1 2007/08/13 14:15:33 ggurfinke Exp $
+////    $Id: php_parser4.cup,v 1.2 2008/02/05 10:08:20 rganor Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -921,6 +921,7 @@ T_DEFINE:define T_OPEN_PARENTHESE T_CONSTANT_ENCAPSED_STRING:value T_COMMA defin
 {: RESULT = "function_call;" + name;:}
 | cvar:name T_OPEN_PARENTHESE function_call_parameter_list T_CLOSE_PARENTHESE
 {:
+    name = name == null ? "" : name; // fix empty name for indirect call - $variable(1,2,3);
     int index = name.lastIndexOf(';');
     if(index != -1){
         if (name.length() > index && name.charAt(index + 1) == '*'){

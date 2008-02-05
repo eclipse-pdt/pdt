@@ -56,7 +56,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
         numOfLines = 1;
 
         //start parsing
-        while ( !yy_atEOF )
+        while ( !zzAtEOF )
             try {
                 next_token();
             } catch (IOException e) {
@@ -66,7 +66,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
         BasicPHPDocTag[] tags = new BasicPHPDocTag[tagList.size()];
         tagList.toArray(tags);
 
-        PHPDocBlockImp rv = new PHPDocBlockImp(shortDesc, longDesc, tags, 0);
+        PHPDocBlockImp rv = new PHPDocBlockImp(shortDesc, longDesc, tags);
 
         return rv;
 
@@ -101,12 +101,12 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
     }
 
     private void appendText(){
-       sBuffer.append(yy_buffer, startPos, yy_markedPos-startPos);
+       sBuffer.append(zzBuffer, startPos, zzMarkedPos-startPos);
        updateStartPos();
     }
 
     private void hendleDesc() {
-        if(yy_lexical_state == ST_IN_SHORT_DESC){
+        if(zzLexicalState == ST_IN_SHORT_DESC){
             shortDesc = sBuffer.toString().trim();
         }
         else{
@@ -137,7 +137,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
     }
 
     private void appendLastText(){
-       sBuffer.append(yy_buffer, startPos, yy_markedPos-startPos-2);
+       sBuffer.append(zzBuffer, startPos, zzMarkedPos-startPos-2);
        updateStartPos();
     }
 
@@ -169,7 +169,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
 
 
     private void updateStartPos(){
-        startPos = yy_markedPos;
+        startPos = zzMarkedPos;
     }
 %}
 

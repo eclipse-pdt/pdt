@@ -59,7 +59,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
     private boolean asp_tags = false;
     private boolean short_tags_allowed = true;
     private StateStack stack = new StateStack();
-    private char yy_old_buffer[] = new char[YY_BUFFERSIZE];
+    private char yy_old_buffer[] = new char[ZZ_BUFFERSIZE];
     private int yy_old_pushbackPos;
     protected int commentStartPosition;
 
@@ -92,7 +92,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 	}
 	
     private void pushState(int state) {
-        stack.pushStack(yy_lexical_state);
+        stack.pushStack(zzLexicalState);
         yybegin(state);
     }
 
@@ -105,15 +105,15 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
     }
 
     protected int getTokenStartPosition() {
-        return yy_startRead - yy_pushbackPos;
+        return zzStartRead - zzPushbackPos;
     }
 
     protected int getTokenLength() {
-        return yy_markedPos - yy_startRead;
+        return zzMarkedPos - zzStartRead;
     }
 
     public int getLength() {
-        return yy_endRead - yy_pushbackPos;
+        return zzEndRead - zzPushbackPos;
     }
     
     private void handleCommentStart() {
@@ -133,7 +133,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
     }
     
     private void handleVarComment() {
-    	commentStartPosition = yy_startRead;
+    	commentStartPosition = zzStartRead;
     	addComment(Comment.TYPE_MULTILINE);
     }
         
@@ -149,20 +149,20 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
     }
 
     public int[] getParamenters(){
-    	return new int[]{yy_markedPos, yy_pushbackPos, yy_currentPos, yy_startRead, yy_endRead, yyline};
+    	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline};
     }
     
 	private boolean parsePHPDoc(){	
-		final IDocumentorLexer documentorLexer = getDocumentorLexer(yy_reader);
+		final IDocumentorLexer documentorLexer = getDocumentorLexer(zzReader);
 		if(documentorLexer == null){
 			return false;
 		}
-		yypushback(yy_markedPos - yy_startRead);
+		yypushback(zzMarkedPos - zzStartRead);
 		int[] parameters = getParamenters();
-		documentorLexer.reset(yy_reader, yy_buffer, parameters);
+		documentorLexer.reset(zzReader, zzBuffer, parameters);
 		Object phpDocBlock = documentorLexer.parse();
 		commentList.add(phpDocBlock);
-		reset(yy_reader, documentorLexer.getBuffer(), documentorLexer.getParamenters());
+		reset(zzReader, documentorLexer.getBuffer(), documentorLexer.getParamenters());
 		return true;
 	}
 	
@@ -172,15 +172,15 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 	}
 	
 	public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
-		this.yy_reader = reader;
-		this.yy_buffer = buffer;
-		this.yy_markedPos = parameters[0];
-		this.yy_pushbackPos = parameters[1];
-		this.yy_currentPos = parameters[2];
-		this.yy_startRead = parameters[3];
-		this.yy_endRead = parameters[4];
+		this.zzReader = reader;
+		this.zzBuffer = buffer;
+		this.zzMarkedPos = parameters[0];
+		this.zzPushbackPos = parameters[1];
+		this.zzCurrentPos = parameters[2];
+		this.zzStartRead = parameters[3];
+		this.zzEndRead = parameters[4];
 		this.yyline = parameters[5];  
-		this.yychar = this.yy_startRead - this.yy_pushbackPos;
+		this.yychar = this.zzStartRead - this.zzPushbackPos;
 	}
 
 %}
