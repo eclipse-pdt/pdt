@@ -217,14 +217,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(Assignment assignment) {
-		assignment.getVariable().accept(this);
+		assignment.getLeftHandSide().accept(this);
 		result.append(Assignment.getOperator(assignment.getOperator()));
-		assignment.getValue().accept(this);
+		assignment.getRightHandSide().accept(this);
 		return false;
 	}
 
 	public boolean visit(ASTError astError) {
-		// TODO: result.append(this.str.substring(astError.getStart(), astError.getEnd()));
+		// cant flatten, needs source		
 		return false;
 	}
 
@@ -351,7 +351,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(Comment comment) {
-		// TODO: result.append(this.str.substring(comment.getStart(), comment.getEnd()));
+		// can't flatten, needs source
 		return false;
 	}
 
@@ -599,7 +599,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(InLineHtml inLineHtml) {
-		// TODO: result.append(this.str.substring(inLineHtml.getStart(), inLineHtml.getEnd()));
+		// cant flatten, needs source
 		return false;
 	}
 
@@ -760,7 +760,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(Scalar scalar) {
 		if (scalar.getScalarType() == Scalar.TYPE_UNKNOWN) {
-			// TODO : result.append(this.str.substring(scalar.getStart(), scalar.getEnd()));
+			// cant flatten, needs source
 		} else {
 			result.append(scalar.getStringValue());
 		}
