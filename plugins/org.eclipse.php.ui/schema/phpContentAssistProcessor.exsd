@@ -69,6 +69,14 @@ For more information of what is content assist processor, refer to &lt;code&gt;o
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="partitionType" type="string" use="default" value="org.eclipse.php.PHP_DEFAULT">
+            <annotation>
+               <documentation>
+                  The Partition Type denotes the part within the PHP document that is currently processed.
+                  The default one is PHP Partition Type.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
