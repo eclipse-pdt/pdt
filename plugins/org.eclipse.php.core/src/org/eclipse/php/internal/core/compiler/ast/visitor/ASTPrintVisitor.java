@@ -2,16 +2,17 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.util.XMLWriter;
 
@@ -79,7 +80,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 			if (declaration.isStatic()) {
 				buf.append(",static");
 			}
-			parameters.put("modifiers", buf.toString());
+			String modifiers = buf.toString();
+			parameters.put("modifiers", modifiers.length() > 0 ? modifiers.substring(1) : modifiers);
 		}
 
 		return parameters;
@@ -289,7 +291,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.endTag("PHPDocTag");
 		return true;
 	}
-	
+
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
 		xmlWriter.endTag("PHPFieldDeclaration");
 		return true;
@@ -491,6 +493,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(ClassDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name",s.getName() );
 		xmlWriter.startTag("ClassDeclaration", parameters);
 		return true;
 	}
@@ -509,6 +512,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(Comment s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("type", Comment.getCommentType(s.getCommentType()));
 		xmlWriter.startTag("Comment", parameters);
 		return true;
 	}
@@ -522,7 +526,23 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ConditionalExpression s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ConditionalExpression", parameters);
-		return true;
+
+		xmlWriter.startTag("Condition", new HashMap<String, String>());
+		s.getCondition().traverse(this);
+		xmlWriter.endTag("Condition");
+
+		xmlWriter.startTag("IfTrue", new HashMap<String, String>());
+		s.getIfTrue().traverse(this);
+		xmlWriter.endTag("IfTrue");
+
+		Expression falseExp = s.getIfFalse();
+		if (falseExp != null) {
+			xmlWriter.startTag("IfFalse", new HashMap<String, String>());
+			falseExp.traverse(this);
+			xmlWriter.endTag("IfFalse");
+		}
+
+		return false;
 	}
 
 	public boolean visit(ConstantReference s) throws Exception {
@@ -602,7 +622,28 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ForStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ForStatement", parameters);
-		return true;
+
+		xmlWriter.startTag("Initializations", new HashMap<String, String>());
+		for (Expression initialization : s.getInitializations()) {
+			initialization.traverse(this);
+		}
+		xmlWriter.endTag("Initializations");
+
+		xmlWriter.startTag("Conditions", new HashMap<String, String>());
+		for (Expression condition : s.getConditions()) {
+			condition.traverse(this);
+		}
+		xmlWriter.endTag("Conditions");
+
+		xmlWriter.startTag("Increasements", new HashMap<String, String>());
+		for (Expression increasement : s.getIncreasements()) {
+			increasement.traverse(this);
+		}
+		xmlWriter.endTag("Increasements");
+
+		s.getAction().traverse(this);
+
+		return false;
 	}
 
 	public boolean visit(GlobalStatement s) throws Exception {
@@ -614,7 +655,23 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(IfStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("IfStatement", parameters);
-		return true;
+
+		xmlWriter.startTag("Condition", new HashMap<String, String>());
+		s.getCondition().traverse(this);
+		xmlWriter.endTag("Condition");
+
+		xmlWriter.startTag("TrueStatement", new HashMap<String, String>());
+		s.getTrueStatement().traverse(this);
+		xmlWriter.endTag("TrueStatement");
+
+		Statement falseStatement = s.getFalseStatement();
+		if (falseStatement != null) {
+			xmlWriter.startTag("FalseStatement", new HashMap<String, String>());
+			falseStatement.traverse(this);
+			xmlWriter.endTag("FalseStatement");
+		}
+
+		return false;
 	}
 
 	public boolean visit(IgnoreError s) throws Exception {
@@ -625,6 +682,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(Include s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("type", s.getType());
 		xmlWriter.startTag("Include", parameters);
 		return true;
 	}
@@ -644,6 +702,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(InterfaceDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name",s.getName());
 		xmlWriter.startTag("InterfaceDeclaration", parameters);
 		return true;
 	}
@@ -672,7 +731,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("PHPDocBlock", parameters);
 		return true;
 	}
-	
+
 	public boolean visit(PHPDocTag s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("tagKind", PHPDocTag.getTagKind(s.getTagKind()));
@@ -680,7 +739,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("PHPDocTag", parameters);
 		return true;
 	}
-	
+
 	public boolean visit(PHPFieldDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("PHPFieldDeclaration", parameters);
@@ -689,6 +748,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(PHPMethodDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
 		xmlWriter.startTag("PHPMethodDeclaration", parameters);
 		return true;
 	}

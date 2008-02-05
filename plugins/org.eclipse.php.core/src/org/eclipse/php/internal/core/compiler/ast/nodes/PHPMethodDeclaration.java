@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import java.util.List;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.utils.CorePrinter;
@@ -22,13 +23,18 @@ public class PHPMethodDeclaration extends MethodDeclaration {
 
 	private final boolean isReference;
 
-	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, List<FormalParameter> formalParameters, Block body, final boolean isReference) {
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, int modifiers, List<FormalParameter> formalParameters, Block body, final boolean isReference) {
 		super(functionName, nameStart, nameEnd, start, end);
 
+		setModifiers(modifiers);
 		acceptArguments(formalParameters);
 		acceptBody(body);
 
 		this.isReference = isReference;
+	}
+
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, List<FormalParameter> formalParameters, Block body, final boolean isReference) {
+		this(start, end, nameStart, nameEnd, functionName, Modifiers.AccDefault, formalParameters, body, isReference);
 	}
 
 	public boolean isReference() {

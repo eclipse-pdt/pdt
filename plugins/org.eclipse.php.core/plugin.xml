@@ -116,5 +116,50 @@
     <attribute name="userEditable"/>
     <super type="org.eclipse.core.resources.textmarker"/>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.language">
+    <language
+          class="org.eclipse.php.internal.core.PHPLanguageToolkit"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </language>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.sourceParsers">
+    <parserContribution
+          natureId="org.eclipse.php.core.PHPNature">
+       <parser
+             class="org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceParserFactory"
+             description="Creates PHP source parser"
+             id="org.eclipse.php.core.phpSourceParserFactory"
+             name="PHP source parser factory"
+             priority="0">
+       </parser>
+    </parserContribution>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.sourceElementParsers">
+    <parser
+          class="org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceElementParser"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </parser>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.mixin">
+    <mixin
+          class="org.eclipse.php.internal.core.mixin.PHPMixinParser"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </mixin>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.search">
+    <seachFactory
+          class="org.eclipse.php.internal.core.search.PHPSearchFactory"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </seachFactory>
+ </extension>
 
 </plugin>
