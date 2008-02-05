@@ -3,8 +3,6 @@ package org.eclipse.php.internal.core.mixin;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.sourceModel.IConstant;
-import org.eclipse.php.internal.core.sourceModel.IInterface;
 
 public class PHPMixinElementInfo {
 
@@ -76,7 +74,7 @@ public class PHPMixinElementInfo {
 		return new PHPMixinElementInfo(K_CLASS, type);
 	}
 
-	public static PHPMixinElementInfo createInterface(IInterface type) {
+	public static PHPMixinElementInfo createInterface(IType type) {
 		return new PHPMixinElementInfo(K_INTERFACE, type);
 	}
 
@@ -92,7 +90,7 @@ public class PHPMixinElementInfo {
 		return new PHPMixinElementInfo(K_VARIABLE, type);
 	}
 
-	public static PHPMixinElementInfo createConstant(IConstant type) {
+	public static PHPMixinElementInfo createConstant(IField type) {
 		return new PHPMixinElementInfo(K_CONSTANT, type);
 	}
 }

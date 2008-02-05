@@ -10,20 +10,14 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.sourceModel.IConstant;
-import org.eclipse.php.internal.core.sourceModel.IInterface;
 
 public class PHPMixinBuildVisitor extends ASTVisitor {
 
@@ -54,7 +48,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public abstract String reportVariable(String name, IField object);
 
-		public abstract String reportConstant(String name, IConstant object);
+		public abstract String reportConstant(String name, IField object);
 
 		public abstract String reportType(String name, IType object, boolean isInterface);
 
@@ -81,7 +75,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		}
 
 		public String reportType(String name, IType object, boolean isInterface) {
-			return report(name + CLASS_SUFFIX, isInterface ? PHPMixinElementInfo.createInterface((IInterface) object) : PHPMixinElementInfo.createClass(object));
+			return report(name + CLASS_SUFFIX, isInterface ? PHPMixinElementInfo.createInterface(object) : PHPMixinElementInfo.createClass(object));
 		}
 
 		public String reportVariable(String name, IField object) {
@@ -89,7 +83,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return report(name, PHPMixinElementInfo.createVariable(object));
 		}
 
-		public String reportConstant(String name, IConstant object) {
+		public String reportConstant(String name, IField object) {
 			// Report global constant:
 			return report(name + CONSTANT_SUFFIX, PHPMixinElementInfo.createConstant(object));
 		}
@@ -129,7 +123,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return report(getClassKey() + MixinModel.SEPARATOR + name, info);
 		}
 
-		public String reportConstant(String name, IConstant object) {
+		public String reportConstant(String name, IField object) {
 			// Report class constant:
 			return report(getClassKey() + MixinModel.SEPARATOR + name + CONSTANT_SUFFIX, PHPMixinElementInfo.createConstant(object));
 		}
@@ -178,7 +172,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return report(getClassKey() + MixinModel.SEPARATOR + '$' + name, info);
 		}
 
-		public String reportConstant(String name, IConstant object) {
+		public String reportConstant(String name, IField object) {
 			// Constant defined inside of method is a part of global scope:
 			return sourceModuleScope.reportConstant(name, object);
 		}
@@ -221,11 +215,11 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return key;
 	}
 
-	private void reportVariableDeclaration(VariableReference var) throws Exception {
+	private void reportVariableDeclaration(SimpleReference var) throws Exception {
 		reportVariableDeclaration(var, scopes.peek());
 	}
 
-	private void reportVariableDeclaration(VariableReference var, Scope scope) throws Exception {
+	private void reportVariableDeclaration(SimpleReference var, Scope scope) throws Exception {
 		if(scope == null){
 			throw new Exception("Scope should not be null");
 		}
@@ -289,7 +283,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	public boolean visit(CallExpression expr) throws Exception {
 		if ("define".equals(expr.getName())) { //$NON-NLS-1$
 			// report global constant:
-			IConstant obj = null;
+			IField obj = null;
 			List args = expr.getArgs().getChilds();
 			if (args.size() > 1) {
 				ASTNode firstArg = (ASTNode) args.get(0);
@@ -298,7 +292,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 					String name = constant.getValue();
 					if (moduleAvailable) {
 						IModelElement element = findModelElementFor(constant);
-						obj = (IConstant) element;
+						obj = (IField) element;
 					}
 					Scope scope = scopes.peek();
 					scope.reportConstant(stripQuotes(name), obj);
@@ -317,8 +311,8 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			Expression dispatcher = fieldAccess.getDispatcher();
 			if (dispatcher instanceof VariableReference && "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
 				Expression field = fieldAccess.getField();
-				if (field instanceof VariableReference) {
-					reportVariableDeclaration((VariableReference) field);
+				if (field instanceof SimpleReference) {
+					reportVariableDeclaration((SimpleReference) field);
 				}
 			}
 		}
@@ -349,11 +343,11 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(ClassConstantDeclaration decl) throws Exception {
-		IConstant obj = null;
+		IField obj = null;
 		String name = decl.getConstantName().getName();
 		if (moduleAvailable) {
 			IModelElement element = findModelElementFor(decl);
-			obj = (IConstant) element;
+			obj = (IField) element;
 		}
 		Scope scope = scopes.peek();
 		scope.reportConstant(stripQuotes(name), obj);

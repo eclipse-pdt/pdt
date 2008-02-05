@@ -153,5 +153,13 @@
           priority="0">
     </mixin>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.search">
+    <seachFactory
+          class="org.eclipse.php.internal.core.search.PHPSearchFactory"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </seachFactory>
+ </extension>
 
 </plugin>
