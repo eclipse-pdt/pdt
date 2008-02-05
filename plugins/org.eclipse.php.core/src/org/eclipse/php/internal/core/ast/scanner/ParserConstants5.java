@@ -4,7 +4,7 @@
 // Tue Nov 27 17:57:03 GMT+02:00 2007
 //----------------------------------------------------
 
-package org.eclipse.php.internal.core.ast.parser;
+package org.eclipse.php.internal.core.ast.scanner;
 
 /** CUP generated interface containing symbol constants. */
 public interface ParserConstants5 {

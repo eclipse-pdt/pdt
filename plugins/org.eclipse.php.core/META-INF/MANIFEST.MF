@@ -66,3 +66,4 @@ Provide-Package: org.eclipse.php.core,
  org.eclipse.php.internal.core.util.project.observer,
  org.eclipse.php.internal.core.util.text
 Bundle-Vendor: Eclipse.org
+Export-Package: org.eclipse.php.internal.core.ast.scanner

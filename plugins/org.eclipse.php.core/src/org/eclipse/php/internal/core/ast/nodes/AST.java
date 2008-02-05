@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.ast.parser.*;
+import org.eclipse.php.internal.core.ast.scanner.*;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 

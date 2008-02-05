@@ -9,14 +9,18 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 
-package org.eclipse.php.internal.core.ast.parser;
+package org.eclipse.php.internal.core.ast.scanner;
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.javacup.sym;
-import org.eclipse.php.internal.core.phpModel.parser.StateStack;
+import org.eclipse.php.internal.core.ast.nodes.AST;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.nodes.Comment;
-import java.io.IOException;
-import java.util.*;
+import org.eclipse.php.internal.core.phpModel.javacup.sym;
+import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
+import org.eclipse.php.internal.core.phpModel.parser.StateStack;
+import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
+
 
 %%
 
@@ -26,7 +30,7 @@ import java.util.*;
 %line
 
 /* %cup */
-%implements org.eclipse.php.internal.core.ast.parser.AstLexer
+%implements org.eclipse.php.internal.core.ast.scanner.AstLexer
 %function next_token
 %type org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol
 %eofval{
@@ -53,9 +57,19 @@ import java.util.*;
     private boolean asp_tags = false;
     private boolean short_tags_allowed = true;
     private StateStack stack = new StateStack();
-    private char yy_old_buffer[] = new char[YY_BUFFERSIZE];
-    private int yy_old_pushbackPos;
-    private int commentStartPosition;
+    private char zzOld_buffer[] = new char[ZZ_BUFFERSIZE];
+    private int zzOld_pushbackPos;
+    protected int commentStartPosition;
+
+	private AST ast;
+
+    public void setAST(AST ast) {
+    	this.ast = ast;
+    }
+    
+	public void setInScriptingState() {
+		yybegin(ST_IN_SCRIPTING);
+	}
 
 	public void resetCommentList() {
 		commentList.clear();
@@ -65,9 +79,9 @@ import java.util.*;
 		return commentList;
 	}
 	
-	private void addComment(int type) {
+	protected void addComment(int type) {
 		int leftPosition = getTokenStartPosition();
-		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), type);
+		Comment comment = new Comment(commentStartPosition, leftPosition + getTokenLength(), this.ast, type);
 		commentList.add(comment);
 	}	
 
@@ -76,7 +90,7 @@ import java.util.*;
 	}
 	
     private void pushState(int state) {
-        stack.pushStack(yy_lexical_state);
+        stack.pushStack(zzLexicalState);
         yybegin(state);
     }
 
@@ -88,16 +102,16 @@ import java.util.*;
         return yyline;
     }
 
-    private int getTokenStartPosition() {
-        return yy_startRead - yy_pushbackPos;
+    protected int getTokenStartPosition() {
+        return zzStartRead - zzPushbackPos;
     }
 
-    private int getTokenLength() {
-        return yy_markedPos - yy_startRead;
+    protected int getTokenLength() {
+        return zzMarkedPos - zzStartRead;
     }
 
     public int getLength() {
-        return yy_endRead - yy_pushbackPos;
+        return zzEndRead - zzPushbackPos;
     }
     
 	private void handleCommentStart() {
@@ -117,7 +131,7 @@ import java.util.*;
     }
     
     private void handleVarComment() {
-    	commentStartPosition = yy_startRead;
+    	commentStartPosition = zzStartRead;
     	addComment(Comment.TYPE_MULTILINE);
     }
 
@@ -131,6 +145,41 @@ import java.util.*;
         int leftPosition = getTokenStartPosition();
         return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
     }
+    
+    public int[] getParamenters(){
+    	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline};
+    }
+    
+	private boolean parsePHPDoc(){	
+		final IDocumentorLexer documentorLexer = getDocumentorLexer(zzReader);
+		if(documentorLexer == null){
+			return false;
+		}
+		yypushback(zzMarkedPos - zzStartRead);
+		int[] parameters = getParamenters();
+		documentorLexer.reset(zzReader, zzBuffer, parameters);
+		Object phpDocBlock = documentorLexer.parse();
+		commentList.add(phpDocBlock);
+		reset(zzReader, documentorLexer.getBuffer(), documentorLexer.getParamenters());
+		return true;
+	}
+	
+	
+	protected IDocumentorLexer getDocumentorLexer(java.io.Reader  reader) {
+		return null;
+	}
+	
+	public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){
+		this.zzReader = reader;
+		this.zzBuffer = buffer;
+		this.zzMarkedPos = parameters[0];
+		this.zzPushbackPos = parameters[1];
+		this.zzCurrentPos = parameters[2];
+		this.zzStartRead = parameters[3];
+		this.zzEndRead = parameters[4];
+		this.yyline = parameters[5];  
+		this.yychar = this.zzStartRead - this.zzPushbackPos;
+	}
 %}
 
 LNUM=[0-9]+
@@ -670,8 +719,10 @@ NEWLINE=("\r"|"\n"|"\r\n")
 }
 
 <ST_IN_SCRIPTING>"/**" {
+if (!parsePHPDoc()) {
 handleCommentStart();
 yybegin(ST_DOCBLOCK);
+}
 }
 
 <ST_DOCBLOCK>"*/" {

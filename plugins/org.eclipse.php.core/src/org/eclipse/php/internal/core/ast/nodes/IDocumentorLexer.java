@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.ast.parser;
+package org.eclipse.php.internal.core.ast.nodes;
 
 public interface IDocumentorLexer {
 	

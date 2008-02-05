@@ -1,0 +1,14 @@
+<project default="generateScanner">
+
+
+<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
+	
+<target name="generateScanner">
+<jflex
+    file="completion_scanner4.flex"
+	nobak="on"
+	outdir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php4"
+/>
+</target>
+
+</project>

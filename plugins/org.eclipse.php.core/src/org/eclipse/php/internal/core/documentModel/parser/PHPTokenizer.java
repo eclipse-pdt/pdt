@@ -786,7 +786,7 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
-	reset(yy_reader, phpLexer.getYy_buffer(), phpLexer.getParamenters());
+	reset(yy_reader, phpLexer.getZZBuffer(), phpLexer.getParamenters());
 	
 	yybegin(exitState);
 	return searchContext;
