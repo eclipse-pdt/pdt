@@ -325,57 +325,6 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 		return fGroupRoot.getOperator();
 	}
 
-	// TODO - rewrite?
-	//	public Expression createCopyTarget(ASTRewrite rewrite) throws JavaModelException {
-	//		List allOperands= findGroupMembersInOrderFor(fGroupRoot);
-	//		if (allOperands.size() == fOperands.size()) {
-	//			return (Expression) rewrite.createCopyTarget(fGroupRoot);
-	//		}
-	//		
-	//		CompilationUnit root= (CompilationUnit) fGroupRoot.getRoot();
-	//		ICompilationUnit cu= (ICompilationUnit) root.getJavaElement();
-	//		String source= cu.getBuffer().getText(getStart(), getLength());
-	//		return (Expression) rewrite.createStringPlaceholder(source, ASTNode.INFIX_EXPRESSION);
-	//		
-	////		//Todo: see whether we could copy bigger chunks of the original selection
-	////		// (probably only possible from extendedOperands list or from nested InfixExpressions)
-	////		InfixExpression result= rewrite.getAST().newInfixExpression();
-	////		result.setOperator(getOperator());
-	////		Expression first= (Expression) fOperands.get(0);
-	////		Expression second= (Expression) fOperands.get(1);
-	////		result.setLeftOperand((Expression) rewrite.createCopyTarget(first));
-	////		result.setRightOperand((Expression) rewrite.createCopyTarget(second));
-	////		for (int i= 2; i < fOperands.size(); i++) {
-	////			Expression next= (Expression) fOperands.get(i);
-	////			result.extendedOperands().add(rewrite.createCopyTarget(next));
-	////		}
-	////		return result;
-	//	}
-
-	// TODO - replace
-	//	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup) {
-	//		List allOperands= findGroupMembersInOrderFor(fGroupRoot);
-	//		if (allOperands.size() == fOperands.size()) {
-	//			rewrite.replace(fGroupRoot, replacement, textEditGroup);
-	//			return;
-	//		}
-	//		
-	//		// Could maybe be done with less edits.
-	//		// Problem is that the nodes to replace may not be all in the same InfixExpression.
-	//		int first= allOperands.indexOf(fOperands.get(0));
-	//		int after= first + fOperands.size();
-	//		ArrayList newOperands= new ArrayList();
-	//		for (int i= 0; i < allOperands.size(); i++) {
-	//			if (i < first || after <= i) {
-	//				newOperands.add(rewrite.createCopyTarget((Expression) allOperands.get(i)));
-	//			} else /* i == first */ {
-	//				newOperands.add(replacement);
-	//				i= after - 1;
-	//			}
-	//		}
-	//		Expression newExpression= ASTNodeFactory.newInfixExpression(rewrite.getAST(), getOperator(), newOperands);
-	//		rewrite.replace(getGroupRoot(), newExpression, textEditGroup);
-	//	}
 
 	private static ArrayList<Expression> findGroupMembersInOrderFor(InfixExpression groupRoot) {
 		return new GroupMemberFinder(groupRoot).fMembersInOrder;
