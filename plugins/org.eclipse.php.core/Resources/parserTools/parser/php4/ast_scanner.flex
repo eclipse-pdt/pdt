@@ -68,7 +68,7 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
     }
     
 	public String getPHPVersion() {
-		return AST.PHP5;
+		return AST.PHP4;
 	}
     
 	public void setInScriptingState() {
