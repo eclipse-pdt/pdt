@@ -317,7 +317,7 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 		return ((ASTNode) getOperands().get(0)).getStart();
 	}
 
-	public List getOperands() {
+	public List<Expression> getOperands() {
 		return fOperands;
 	}
 
