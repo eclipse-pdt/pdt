@@ -57,12 +57,9 @@ public class Assignment extends Expression {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = 
-		new ChildPropertyDescriptor(Assignment.class, "variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = 
-		new SimplePropertyDescriptor(Assignment.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = 
-		new ChildPropertyDescriptor(Assignment.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor LEFT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class, "variable", VariableBase.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor OPERATOR_PROPERTY = new SimplePropertyDescriptor(Assignment.class, "operator", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor RIGHT_HAND_SIDE_PROPERTY = new ChildPropertyDescriptor(Assignment.class, "value", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -70,7 +67,7 @@ public class Assignment extends Expression {
 	 * or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(LEFT_HAND_SIDE_PROPERTY);
@@ -78,7 +75,7 @@ public class Assignment extends Expression {
 		properyList.add(RIGHT_HAND_SIDE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-	
+
 	public Assignment(int start, int end, AST ast, VariableBase leftHandSide, int operator, Expression rightHandSide) {
 		super(start, end, ast);
 		if (leftHandSide == null || rightHandSide == null || getOperator(operator) == null) {
@@ -155,8 +152,8 @@ public class Assignment extends Expression {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
-	
+	}
+
 	@Override
 	public int getType() {
 		return ASTNode.ASSIGNMENT;
@@ -175,12 +172,12 @@ public class Assignment extends Expression {
 	public VariableBase getVariable() {
 		return leftHandSide;
 	}
-	
+
 	/**
 	 * Returns the operator of this assignment expression.
 	 * 
 	 * @return the assignment operator
-	 */ 
+	 */
 	public int getOperator() {
 		return this.operator;
 	}
@@ -190,7 +187,7 @@ public class Assignment extends Expression {
 	 * 
 	 * @param assignmentOperator the assignment operator
 	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 */
 	public void setOperator(int assignmentOperator) {
 		if (getOperator(assignmentOperator) == null) {
 			throw new IllegalArgumentException("Invalid operator");
@@ -204,11 +201,11 @@ public class Assignment extends Expression {
 	 * Returns the left hand side of this assignment expression.
 	 * 
 	 * @return the left hand side node
-	 */ 
+	 */
 	public VariableBase getLeftHandSide() {
 		return this.leftHandSide;
 	}
-		
+
 	/**
 	 * Sets the left hand side of this assignment expression.
 	 * 
@@ -219,7 +216,7 @@ public class Assignment extends Expression {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setLeftHandSide(VariableBase leftHandSide) {
 		if (leftHandSide == null) {
 			throw new IllegalArgumentException();
@@ -235,11 +232,11 @@ public class Assignment extends Expression {
 	 * Returns the right hand side of this assignment expression.
 	 * 
 	 * @return the right hand side node
-	 */ 
+	 */
 	public Expression getRightHandSide() {
 		return this.rightHandSide;
 	}
-		
+
 	/**
 	 * Sets the right hand side of this assignment expression.
 	 * 
@@ -250,7 +247,7 @@ public class Assignment extends Expression {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setRightHandSide(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -261,8 +258,7 @@ public class Assignment extends Expression {
 		this.rightHandSide = expression;
 		postReplaceChild(oldChild, expression, RIGHT_HAND_SIDE_PROPERTY);
 	}
-	
-	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
@@ -283,18 +279,18 @@ public class Assignment extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
-	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
+
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
 		if (property == OPERATOR_PROPERTY) {
 			if (get) {
 				return getOperator();
 			} else {
 				setOperator((Integer) value);
-				return null;
+				return 0;
 			}
 		}
 		// allow default implementation to flag the error
-		return super.internalGetSetObjectProperty(property, get, value);
+		return super.internalGetSetIntProperty(property, get, value);
 	}
 
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
@@ -317,5 +313,5 @@ public class Assignment extends Expression {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
+
 }
