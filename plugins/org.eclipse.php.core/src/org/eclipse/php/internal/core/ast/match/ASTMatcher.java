@@ -475,16 +475,6 @@ public class ASTMatcher {
 				&& safeSubtreeListMatch(node.getVariableNames(), o.getVariableNames()));
 	}
 
-	public boolean match(SingleFieldDeclaration node, Object other) {
-		if (!(other instanceof SingleFieldDeclaration)) {
-			return false;
-		}
-		SingleFieldDeclaration o = (SingleFieldDeclaration) other;
- 
-		return (safeSubtreeMatch(node.getName(), o.getName()) && 
-				safeSubtreeMatch(node.getValue(), o.getValue()));
-	}
-	
 	public boolean match(ForEachStatement node, Object other) {
 		if (!(other instanceof ForEachStatement)) {
 			return false;
@@ -742,6 +732,16 @@ public class ASTMatcher {
 		Scalar o = (Scalar) other;
 		
 		return (safeEquals(node.getStringValue(), o.getStringValue()) && safeEquals(node.getScalarType(), o.getScalarType()));
+	}
+	
+	public boolean match(SingleFieldDeclaration node, Object other) {
+		if (!(other instanceof SingleFieldDeclaration)) {
+			return false;
+		}
+		SingleFieldDeclaration o = (SingleFieldDeclaration) other;
+ 
+		return (safeSubtreeMatch(node.getName(), o.getName()) && 
+				safeSubtreeMatch(node.getValue(), o.getValue()));
 	}
 	
 	public boolean match(StaticConstantAccess node, Object other) {
