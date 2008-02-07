@@ -87,6 +87,11 @@ public class Assignment extends Expression {
 		setRightHandSide(rightHandSide);
 	}
 
+	public Assignment(AST ast) {
+		super(ast);
+	}
+
+	
 	public static String getOperator(int operator) {
 		switch (operator) {
 			case OP_EQUAL:
