@@ -833,15 +833,7 @@ public class AST {
 	}
 
 	//=============================== TYPES ===========================
-	/**
-	 * Creates an unparented block node owned by this AST, for an empty list
-	 * of statements.
-	 *
-	 * @return a new unparented, empty block node
-	 */
-	public Block newBlock() {
-		return new Block(this);
-	}
+
 
 	/**
 	 * Enables the recording of changes to the given compilation
@@ -985,6 +977,243 @@ public class AST {
 	}
 
 	/**
+	 * Creates a new {@link ArrayAccess}.
+	 * 
+	 * @return a new ArrayAccess.
+	 */
+	public ArrayAccess newArrayAccess(){
+		ArrayAccess arrayAccess = new ArrayAccess(this);
+		return arrayAccess;
+	}
+	
+	/**
+	 * Creates a new {@link ArrayCreation}.
+	 * 
+	 * @return a new ArrayCreation.
+	 */
+	public ArrayCreation newArrayCreation(){
+		ArrayCreation arrayCreation = new ArrayCreation(this);
+		return arrayCreation;
+	}
+	
+	/**
+	 * Creates a new {@link ArrayElement}.
+	 * 
+	 * @return a new ArrayElement.
+	 */
+	public ArrayElement newArrayElement(){
+		ArrayElement arrayElement = new ArrayElement(this);
+		return arrayElement;
+	}
+		
+	/**
+	 * Creates a new {@link Assignment}.
+	 * 
+	 * @return A new Assignment.
+	 */
+	public Assignment newAssignment() {
+		Assignment assignment = new Assignment(this);
+		return assignment;
+	}
+	
+	/**
+	 * Creates a new {@link Assignment}.
+	 * 
+	 * @param leftHandSide A {@link VariableBase}
+	 * @param operator The assignment operator
+	 * @param rightHandSide An {@link Expression}
+	 * @return A new Assignment.
+	 */
+	public Assignment newAssignment(VariableBase leftHandSide, int operator, Expression rightHandSide) {
+		Assignment assignment = new Assignment(this);
+		assignment.setLeftHandSide(leftHandSide);
+		assignment.setOperator(operator);
+		assignment.setRightHandSide(rightHandSide);
+		return assignment;
+	}
+	
+	/**
+	 * Creates a new {@link ASTError}.
+	 * 
+	 * @return A new ASTError.
+	 */
+	public ASTError newASTError() {
+		ASTError astError = new ASTError(this);
+		return astError;
+	}
+	
+	/**
+	 * Creates a new {@link BackTickExpression}.
+	 * 
+	 * @return A new BackTickExpression.
+	 */
+	public BackTickExpression newBackTickExpression() {
+		BackTickExpression backTickExpression = new BackTickExpression(this);
+		return backTickExpression;
+	}
+	
+	
+	/**
+	 * Creates an unparented block node owned by this AST, for an empty list
+	 * of statements.
+	 *
+	 * @return a new unparented, empty block node
+	 */
+	public Block newBlock() {
+		return new Block(this);
+	}
+	
+	/**
+	 * Creates a new {@link BreakStatement}.
+	 * 
+	 * @return A new BreakStatement.
+	 */
+	public BreakStatement newBreakStatement() {
+		BreakStatement breakStatement = new BreakStatement(this);
+		return breakStatement;
+	}
+	
+	/**
+	 * Creates a new {@link CastExpression}.
+	 * 
+	 * @return A new CastExpression.
+	 */
+	public CastExpression newCastExpression() {
+		CastExpression castExpression = new CastExpression(this);
+		return castExpression;
+	}
+	
+	/**
+	 * Creates a new {@link CatchClause}.
+	 * 
+	 * @return A new CatchClause.
+	 */
+	public CatchClause newCatchClause() {
+		CatchClause catchClause = new CatchClause(this);
+		return catchClause;
+	}
+	
+	/**
+	 * Creates a new {@link ClassConstantDeclaration}.
+	 * 
+	 * @return A new ClassConstantDeclaration.
+	 */
+	public ClassConstantDeclaration newClassConstantDeclaration() {
+		ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(this);
+		return classConstantDeclaration;
+	}
+	
+	/**
+	 * Creates a new {@link ClassDeclaration}.
+	 * 
+	 * @return A new ClassDeclaration.
+	 */
+	public ClassDeclaration newClassDeclaration() {
+		ClassDeclaration classDeclaration = new ClassDeclaration(this);
+		return classDeclaration;
+	}
+	
+//	/**
+//	 * Creates a new {@link TypeDeclaration}.
+//	 * 
+//	 * @return A new TypeDeclaration.
+//	 */
+//	public TypeDeclaration newTypeDeclaration() {
+//		TypeDeclaration typeDeclaration = new TypeDeclaration(this);
+//		return typeDeclaration;
+//	}
+	
+	/**
+	 * Creates a new {@link ClassInstanceCreation}.
+	 * 
+	 * @return A new ClassInstanceCreation.
+	 */
+	public ClassInstanceCreation newClassInstanceCreation() {
+		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(this);
+		return classInstanceCreation;
+	}
+	
+	/**
+	 * Creates a new {@link ClassName}.
+	 * 
+	 * @return A new ClassName.
+	 */
+	public ClassName newClassName() {
+		ClassName className = new ClassName(this);
+		return className;
+	}
+	
+	/**
+	 * Creates a new {@link CloneExpression}.
+	 * 
+	 * @return A new CloneExpression.
+	 */
+	public CloneExpression newCloneExpression() {
+		CloneExpression cloneExpression = new CloneExpression(this);
+		return cloneExpression;
+	}
+	
+	/**
+	 * Creates a new {@link Comment}.
+	 * 
+	 * @return A new Comment.
+	 */
+	public Comment newComment() {
+		Comment comment = new Comment(this);
+		return comment;
+	}
+	
+	/**
+	 * Creates a new {@link ConditionalExpression}.
+	 * 
+	 * @return A new ConditionalExpression.
+	 */
+	public ConditionalExpression newConditionalExpression() {
+		ConditionalExpression conditionalExpression = new ConditionalExpression(this);
+		return conditionalExpression;
+	}
+	
+	/**
+	 * Creates a new {@link ContinueStatement}.
+	 * 
+	 * @return A new ContinueStatement.
+	 */
+	public ContinueStatement newContinueStatement() {
+		ContinueStatement continueStatement = new ContinueStatement(this);
+		return continueStatement;
+	}
+	
+	/**
+	 * Creates a new {@link DeclareStatement}.
+	 * 
+	 * @return A new DeclareStatement.
+	 */
+	public DeclareStatement newDeclareStatement() {
+		DeclareStatement declareStatement = new DeclareStatement(this);
+		return declareStatement;
+	}
+	
+	/**
+	 * Creates a new {@link DoStatement}.
+	 * 
+	 * @return A new DoStatement.
+	 */
+	public DoStatement newDoStatement() {
+		DoStatement doStatement = new DoStatement(this);
+		return doStatement;
+	}
+	
+	/**
+	 * Creates a new {@link EchoStatement}.
+	 * 
+	 * @return A new EchoStatement.
+	 */
+	public EchoStatement newEchoStatement() {
+		EchoStatement echoStatement = new EchoStatement(this);
+		return echoStatement;
+	}
+	
+	/**
 	 * Creates a new {@link EchoStatement} with a given {@link Expression}.
 	 * 
 	 * @param expression An {@link Expression} to set into the returned {@link EchoStatement}.
@@ -995,7 +1224,329 @@ public class AST {
 		echoStatement.expressions().add(expression);
 		return echoStatement;
 	}
+	
+	/**
+	 * Creates a new {@link EmptyStatement}.
+	 * 
+	 * @return A new EmptyStatement.
+	 */
+	public EmptyStatement newEmptyStatement() {
+		EmptyStatement emptyStatement = new EmptyStatement(this);
+		return emptyStatement;
+	}
+	
+	/**
+	 * Creates a new {@link ExpressionStatement}.
+	 * 
+	 * @return A new ExpressionStatement.
+	 */
+	public ExpressionStatement newExpressionStatement() {
+		ExpressionStatement expressionStatement = new ExpressionStatement(this);
+		return expressionStatement;
+	}
+	
+	/**
+	 * Creates a new {@link ExpressionStatement} with a given {@link Expression} as an expression.
+	 * 
+	 * @param identifier The {@link Expression} that is the expression of the statement.
+	 * @return A new ExpressionStatement
+	 */
+	public ExpressionStatement newExpressionStatement(Expression expression) {
+		ExpressionStatement statement = newExpressionStatement();
+		statement.setExpression(expression);
+		return statement;
+	}
 
+	/**
+	 * Creates a new {@link FieldAccess}.
+	 * 
+	 * @return A new FieldAccess.
+	 */
+	public FieldAccess newFieldAccess() {
+		FieldAccess fieldAccess = new FieldAccess(this);
+		return fieldAccess;
+	}
+	
+	/**
+	 * Creates a new {@link FieldsDeclaration}.
+	 * 
+	 * @return A new FieldsDeclaration.
+	 */
+	public FieldsDeclaration newFieldsDeclaration() {
+		FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(this);
+		return fieldsDeclaration;
+	}
+	
+	/**
+	 * Creates a new {@link ForEachStatement}.
+	 * 
+	 * @return A new ForEachStatement.
+	 */
+	public ForEachStatement newForEachStatement() {
+		ForEachStatement forEachStatement = new ForEachStatement(this);
+		return forEachStatement;
+	}
+	
+	
+	/**
+	 * Creates a new {@link FormalParameter}.
+	 * 
+	 * @return A new FormalParameter.
+	 */
+	public FormalParameter newFormalParameter() {
+		FormalParameter formalParameter = new FormalParameter(this);
+		return formalParameter;
+	} 
+	
+	/**
+	 * Creates a new {@link ForStatement}.
+	 * 
+	 * @return A new ForStatement.
+	 */
+	public ForStatement newForStatement() {
+		ForStatement forStatement = new ForStatement(this);
+		return forStatement;
+	}
+	
+	/**
+	 * Creates a new {@link FunctionDeclaration}.
+	 * 
+	 * @return A new FunctionDeclaration.
+	 */
+	public FunctionDeclaration newFunctionDeclaration() {
+		FunctionDeclaration functionDeclaration = new FunctionDeclaration(this);
+		return functionDeclaration;
+	}
+	
+	/**
+	 * Creates a new {@link FunctionInvocation}.
+	 * 
+	 * @return A new FunctionInvocation.
+	 */
+	public FunctionInvocation newFunctionInvocation() {
+		FunctionInvocation functionInvocation = new FunctionInvocation(this);
+		return functionInvocation;
+	}
+	
+	/**
+	 * Creates a new {@link FunctionName}.
+	 * 
+	 * @return A new FunctionName.
+	 */
+	public FunctionName newFunctionName() {
+		FunctionName functionName = new FunctionName(this);
+		return functionName;
+	}
+	
+	/**
+	 * Creates a new {@link FieldsDeclaration}.
+	 * 
+	 * @return A new FieldsDeclaration.
+	 */
+	public GlobalStatement newGlobalStatement() {
+		GlobalStatement globalStatement = new GlobalStatement(this);
+		return globalStatement;
+	}
+	
+	/**
+	 * Creates a new {@link Identifier}.
+	 * 
+	 * @return A new Identifier.
+	 */
+	public Identifier newIdentifier() {
+		Identifier identifier = new Identifier(this);
+		return identifier;
+	}
+	
+	/**
+	 * Creates a new {@link IfStatement}.
+	 * 
+	 * @return A new IfStatement.
+	 */
+	public IfStatement newIfStatement() {
+		IfStatement ifStatement = new IfStatement(this);
+		return ifStatement;
+	}
+	
+	/**
+	 * Creates a new {@link IgnoreError}.
+	 * 
+	 * @return A new IgnoreError.
+	 */
+	public IgnoreError newIgnoreError() {
+		IgnoreError ignoreError = new IgnoreError(this);
+		return ignoreError;
+	}
+	
+	/**
+	 * Creates a new {@link Include}.
+	 * 
+	 * @return A new Include.
+	 */
+	public Include newInclude() {
+		Include include = new Include(this);
+		return include;
+	}
+	
+	/**
+	 * Creates a new {@link InfixExpression}.
+	 * 
+	 * @return A new InfixExpression.
+	 */
+	public InfixExpression newInfixExpression() {
+		InfixExpression infixExpression = new InfixExpression(this);
+		return infixExpression;
+	}
+	
+	/**
+	 * Creates a new {@link InLineHtml}.
+	 * 
+	 * @return A new InLineHtml.
+	 */
+	public InLineHtml newInLineHtml() {
+		InLineHtml inLineHtml = new InLineHtml(this);
+		return inLineHtml;
+	}
+	
+	/**
+	 * Creates a new {@link InstanceOfExpression}.
+	 * 
+	 * @return A new InstanceOfExpression.
+	 */
+	public InstanceOfExpression newInstanceOfExpression() {
+		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(this);
+		return instanceOfExpression;
+	}
+	
+	/**
+	 * Creates a new {@link InterfaceDeclaration}.
+	 * 
+	 * @return A new InterfaceDeclaration.
+	 */
+	public InterfaceDeclaration newInterfaceDeclaration() {
+		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(this);
+		return interfaceDeclaration;
+	}
+	
+	/**
+	 * Creates a new {@link ListVariable}.
+	 * 
+	 * @return A new ListVariable.
+	 */
+	public ListVariable newListVariable() {
+		ListVariable listVariable = new ListVariable(this);
+		return listVariable;
+	}
+	
+	/**
+	 * Creates a new {@link MethodDeclaration}.
+	 * 
+	 * @return A new MethodDeclaration.
+	 */
+	public MethodDeclaration newMethodDeclaration() {
+		MethodDeclaration methodDeclaration = new MethodDeclaration(this);
+		return methodDeclaration;
+	}
+	
+	/**
+	 * Creates a new {@link MethodInvocation}.
+	 * 
+	 * @return A new MethodInvocation.
+	 */
+	public MethodInvocation newMethodInvocation() {
+		MethodInvocation methodInvocation = new MethodInvocation(this);
+		return methodInvocation;
+	}
+	/**
+	 * Creates a new {@link ParenthesisExpression}.
+	 * 
+	 * @return A new ParenthesisExpression.
+	 */
+	public ParenthesisExpression newParenthesisExpression() {
+		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(this);
+		return parenthesisExpression;
+	}
+	
+	/**
+	 * Creates a new {@link PostfixExpression}.
+	 * 
+	 * @return A new PostfixExpression.
+	 */
+	public PostfixExpression newPostfixExpression() {
+		PostfixExpression postfixExpression = new PostfixExpression(this);
+		return postfixExpression;
+	}
+	
+	/**
+	 * Creates a new {@link PrefixExpression}.
+	 * 
+	 * @return A new PrefixExpression.
+	 */
+	public PrefixExpression newPrefixExpression() {
+		PrefixExpression prefixExpression = new PrefixExpression(this);
+		return prefixExpression;
+	}
+	
+	/**
+	 * Creates a new {@link Program}.
+	 * 
+	 * @return A new Program.
+	 */
+	public Program newProgram() {
+		Program program = new Program(this);
+		return program;
+	}
+	
+	/**
+	 * Creates a new {@link Quote}.
+	 * 
+	 * @return A new Quote.
+	 */
+	public Quote newQuote() {
+		Quote quote = new Quote(this);
+		return quote;
+	}
+	
+	/**
+	 * Creates a new {@link Reference}.
+	 * 
+	 * @return A new Reference.
+	 */
+	public Reference newReference() {
+		Reference reference = new Reference(this);
+		return reference;
+	}
+	
+	/**
+	 * Creates a new {@link ReflectionVariable}.
+	 * 
+	 * @return A new ReflectionVariable.
+	 */
+	public ReflectionVariable newReflectionVariable() {
+		ReflectionVariable reflectionVariable = new ReflectionVariable(this);
+		return reflectionVariable;
+	}
+	
+	/**
+	 * Creates a new {@link ReturnStatement}.
+	 * 
+	 * @return A new ReturnStatement.
+	 */
+	public ReturnStatement newReturnStatement() {
+		ReturnStatement returnStatement = new ReturnStatement(this);
+		return returnStatement;
+	}
+	
+	/**
+	 * Creates a new {@link Scalar}.
+	 * 
+	 * @return A new Scalar.
+	 */
+	public Scalar newScalar() {
+		Scalar scalar = new Scalar(this);
+		return scalar;
+	}
+	
 	/**
 	 * Creates a new scalar with a given type.
 	 * 
@@ -1020,29 +1571,117 @@ public class AST {
 		scalar.setStringValue(string);
 		return scalar;
 	}
-
+	
 	/**
-	 * Creates a new {@link ExpressionStatement} with a given {@link Expression} as an expression.
+	 * Creates a new {@link SingleFieldDeclaration}.
 	 * 
-	 * @param identifier The {@link Expression} that is the expression of the statement.
-	 * @return A new ExpressionStatement
+	 * @return A new SingleFieldDeclaration.
 	 */
-	public ExpressionStatement newExpressionStatement(Expression expression) {
-		ExpressionStatement statement = newExpressionStatement();
-		statement.setExpression(expression);
-		return statement;
+	public SingleFieldDeclaration newSingleFieldDeclaration() {
+		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
+		return singleFieldDeclaration;
 	}
-
+	
 	/**
-	 * Creates a new {@link ExpressionStatement}.
+	 * Creates a new {@link StaticConstantAccess}.
 	 * 
-	 * @return A new ExpressionStatement.
+	 * @return A new StaticConstantAccess.
 	 */
-	public ExpressionStatement newExpressionStatement() {
-		ExpressionStatement statement = new ExpressionStatement(this);
-		return statement;
+	public StaticConstantAccess newStaticConstantAccess() {
+		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(this);
+		return staticConstantAccess;
 	}
-
+	
+	/**
+	 * Creates a new {@link StaticFieldAccess}.
+	 * 
+	 * @return A new StaticFieldAccess.
+	 */
+	public StaticFieldAccess newStaticFieldAccess() {
+		StaticFieldAccess staticFieldAccess = new StaticFieldAccess(this);
+		return staticFieldAccess;
+	}
+	
+	/**
+	 * Creates a new {@link StaticMethodInvocation}.
+	 * 
+	 * @return A new StaticMethodInvocation.
+	 */
+	public StaticMethodInvocation newStaticMethodInvocation() {
+		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(this);
+		return staticMethodInvocation;
+	}
+	
+	/**
+	 * Creates a new {@link StaticStatement}.
+	 * 
+	 * @return A new StaticStatement.
+	 */
+	public StaticStatement newStaticStatement() {
+		StaticStatement staticStatement = new StaticStatement(this);
+		return staticStatement;
+	}
+	
+	/**
+	 * Creates a new {@link SwitchCase}.
+	 * 
+	 * @return A new SwitchCase.
+	 */
+	public SwitchCase newSwitchCase() {
+		SwitchCase switchCase = new SwitchCase(this);
+		return switchCase;
+	}
+	
+	/**
+	 * Creates a new {@link SwitchStatement}.
+	 * 
+	 * @return A new SwitchStatement.
+	 */
+	public SwitchStatement newSwitchStatement() {
+		SwitchStatement switchStatement = new SwitchStatement(this);
+		return switchStatement;
+	}
+	
+	/**
+	 * Creates a new {@link ThrowStatement}.
+	 * 
+	 * @return A new ThrowStatement.
+	 */
+	public ThrowStatement newThrowStatement() {
+		ThrowStatement throwStatement = new ThrowStatement(this);
+		return throwStatement;
+	}
+	
+	/**
+	 * Creates a new {@link TryStatement}.
+	 * 
+	 * @return A new TryStatement.
+	 */
+	public TryStatement newTryStatement() {
+		TryStatement tryStatement = new TryStatement(this);
+		return tryStatement;
+	}
+	
+	/**
+	 * Creates a new {@link UnaryOperation}.
+	 * 
+	 * @return A new UnaryOperation.
+	 */
+	public UnaryOperation newUnaryOperation() {
+		UnaryOperation unaryOperation = new UnaryOperation(this);
+		return unaryOperation;
+	}
+	
+	/**
+	 * Creates a new {@link Variable}.
+	 * 
+	 * The returned Variable is not dollared and does not have any name {@link Expression}.
+	 * @return A new {@link Variable}.
+	 */
+	public Variable newVariable() {
+		Variable variable = new Variable(this);
+		return variable;
+	}
 	/**
 	 * Creates a new {@link Variable} with a given name expression.
 	 * 
@@ -1058,31 +1697,26 @@ public class AST {
 	}
 
 	/**
-	 * Creates a new {@link Variable}.
+	 * Creates a new dollared {@link Variable} with a given name .
 	 * 
-	 * The returned Variable is not dollared and does not have any name {@link Expression}.
+	 * @param name A name {@link String}
 	 * @return A new {@link Variable}.
 	 */
-	public Variable newVariable() {
-		Variable variable = new Variable(this);
+	public Variable newVariable(String name) {
+		Variable variable = newVariable();
+		variable.setIsDollared(true);
+		variable.setName(newIdentifier(name));
 		return variable;
-	}
+	}	
 	
 	/**
-	 * Creates a new {@link Assignment}.
+	 * Creates a new {@link WhileStatement}.
 	 * 
-	 * @param leftHandSide A {@link VariableBase}
-	 * @param operator The assignment operator
-	 * @param rightHandSide An {@link Expression}
-	 * @return A new Assignment.
+	 * @return A new WhileStatement.
 	 */
-	public Assignment newAssignment(VariableBase leftHandSide, int operator, Expression rightHandSide) {
-		Assignment assignment = new Assignment(this);
-		assignment.setLeftHandSide(leftHandSide);
-		assignment.setOperator(operator);
-		assignment.setRightHandSide(rightHandSide);
-		return assignment;
+	public WhileStatement newWhileStatement() {
+		WhileStatement whileStatement = new WhileStatement(this);
+		return whileStatement;
 	}
-	
 	
 }
