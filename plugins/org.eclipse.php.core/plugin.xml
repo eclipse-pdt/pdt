@@ -7,6 +7,7 @@
    <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
    <extension-point id="modelFilter" name="PHP Model Filter" schema="schema/modelFilter.exsd"/>
    <extension-point id="phpModelExtensions" name="PHP Model Extension" schema="schema/phpModelExtensions.exsd"/>
+   <extension-point id="goalEvaluatorFactories" name="PHP Evaluator Factory" schema="schema/goalEvaluatorFactories.exsd"/>
    
 	<!-- PHP Model Handler -->
 	<extension
@@ -160,6 +161,20 @@
           nature="org.eclipse.php.core.PHPNature"
           priority="0">
     </seachFactory>
+ </extension>
+ <extension
+       point="org.eclipse.dltk.core.typeEvaluators">
+    <evaluator
+          evaluator="org.eclipse.php.internal.core.typeinference.PHPTypeInferencer"
+          nature="org.eclipse.php.core.PHPNature">
+    </evaluator>
+ </extension>
+ <extension
+       point="org.eclipse.php.core.goalEvaluatorFactories">
+    <factory
+          class="org.eclipse.php.internal.core.typeinference.evaluators.DefaultPHPGoalEvaluatorFactory"
+          priority="0">
+    </factory>
  </extension>
 
 </plugin>

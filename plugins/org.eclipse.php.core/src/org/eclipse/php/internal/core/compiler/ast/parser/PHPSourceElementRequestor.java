@@ -6,9 +6,12 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
+import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
@@ -74,6 +77,16 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
 	}
+	
+	public boolean visit(CallExpression call) throws Exception {
+		int argsCount = 0;
+		CallArgumentsList args = call.getArgs();
+		if (args != null && args.getChilds() != null) {
+			argsCount = args.getChilds().size();
+		}
+		fRequestor.acceptMethodReference(call.getName().toCharArray(), argsCount, call.sourceStart(), call.sourceEnd());
+		return true;
+	}
 
 	public boolean visit(ClassConstantDeclaration declaration) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
@@ -123,6 +136,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	public boolean visit(TypeReference reference) throws Exception {
+		fRequestor.acceptTypeReference(reference.getName().toCharArray(), reference.sourceStart());
+		return true;
+	}
+
 	public boolean visit(Statement node) throws Exception {
 		String clasName = node.getClass().getName();
 		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
@@ -131,10 +149,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return visit((ClassConstantDeclaration) node);
 		}
-		//		if (clasName.equals(CallExpression.class.getName())) {//for define("A","A");
-		//			return visit((ClassConstantDeclaration) node);
-		//		}
-
+		if (clasName.equals(CallExpression.class.getName())) {
+			return visit((CallExpression) node);
+		}
 		return true;
 	}
 
@@ -146,9 +163,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return endvisit((ClassConstantDeclaration) node);
 		}
-		//		if (clasName.equals(CallExpression.class.getName())) {//for define("A","A");
-		//			return endvisit((ClassConstantDeclaration) node);
-		//		}
 		return true;
 	}
 
@@ -156,6 +170,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String clasName = node.getClass().getName();
 		if (clasName.equals(Assignment.class.getName())) {
 			return visit((Assignment) node);
+		}
+		if (clasName.equals(TypeReference.class.getName())) {
+			return visit((TypeReference) node);
 		}
 		return true;
 	}

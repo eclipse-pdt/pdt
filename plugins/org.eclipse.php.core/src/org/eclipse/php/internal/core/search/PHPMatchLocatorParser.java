@@ -7,9 +7,11 @@ import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
@@ -87,6 +89,10 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 					}
 				}
 			}
+		} else if (node instanceof TypeReference) {
+			getPatternLocator().match((TypeReference)node, getNodeSet());
+		} else if (node instanceof CallExpression) {
+			getPatternLocator().match((CallExpression)node, getNodeSet());
 		}
 	}
 }

@@ -22,8 +22,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 public class PHPMixinBuildVisitor extends ASTVisitor {
 
 	private static final String CLASS_SUFFIX = "%"; //$NON-NLS-1$
-	private static final String INCLUDE_SUFFIX = "@"; //$NON-NLS-1$
-	private static final String CONSTANT_SUFFIX = "#"; //$NON-NLS-1$
 
 	//	private ModuleDeclaration module;
 	private ISourceModule sourceModule;
@@ -85,7 +83,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public String reportConstant(String name, IField object) {
 			// Report global constant:
-			return report(name + CONSTANT_SUFFIX, PHPMixinElementInfo.createConstant(object));
+			return report(name, PHPMixinElementInfo.createConstant(object));
 		}
 
 		public String getKey() {
@@ -94,7 +92,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public String reportInclude(String object) {
 			// Report include(), require(), require_once() and include_once():
-			return report(object + INCLUDE_SUFFIX, new PHPMixinElementInfo(PHPMixinElementInfo.K_INCLUDE, object));
+			return report(object, new PHPMixinElementInfo(PHPMixinElementInfo.K_INCLUDE, object));
 		}
 	}
 
@@ -125,7 +123,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public String reportConstant(String name, IField object) {
 			// Report class constant:
-			return report(getClassKey() + MixinModel.SEPARATOR + name + CONSTANT_SUFFIX, PHPMixinElementInfo.createConstant(object));
+			return report(getClassKey() + MixinModel.SEPARATOR + name, PHPMixinElementInfo.createConstant(object));
 		}
 
 		public String getClassKey() {
