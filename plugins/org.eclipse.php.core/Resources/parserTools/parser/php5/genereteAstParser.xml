@@ -1,0 +1,38 @@
+<project default="generateParser">
+
+	<target name="generateParser">
+		<java 
+			classname="org.eclipse.php.internal.core.phpModel.javacup.Main" 
+			input="php_ast_parser.cup">
+			<classpath>
+				<pathelement location="../../../../bin" />
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+			<arg value="-compact_red"/>
+			<arg value="-expect"/>
+			<arg value="4"/>
+			<arg value="-parser"/>
+			<arg value="PhpAstParser5"/>
+			<arg value="-symbols"/>
+			<arg value="ParserConstants5"/>
+			<arg value="-interface"/>
+		</java>
+
+		<replace
+			file="PhpAstParser5.java"
+			token="java_cup"
+			value="org.eclipse.php.internal.core.phpModel.javacup"/>
+
+		<move
+			file="PhpAstParser5.java"
+			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner"/>
+
+		<move
+			file="ParserConstants5.java"
+			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner"/>
+
+	</target>
+
+
+
+</project>

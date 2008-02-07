@@ -1,0 +1,44 @@
+<project default="generateParser">
+
+	<target name="generateParser">
+		<java 
+			classname="org.eclipse.php.internal.core.phpModel.javacup.Main" 
+			input="php_parser4.cup">
+			<classpath>
+				<pathelement location="../../../../bin" />
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+			<arg value="-compact_red"/>
+			<arg value="-expect"/>
+			<arg value="4"/>
+			<arg value="-parser"/>
+			<arg value="PhpParser4"/>
+			<arg value="-symbols"/>
+			<arg value="ParserConstants4"/>
+			<arg value="-interface"/>
+		</java>
+
+		<replace
+			file="PhpParser4.java"
+			token="java_cup"
+			value="org.eclipse.php.internal.core.phpModel.javacup"/>
+
+		<replace
+			file="PhpParser4.java"
+			token="extends org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser"
+			value="extends org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser implements PhpParser"/>
+		
+		 
+		<move
+			file="PhpParser4.java"
+			todir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php4"/>
+
+		<move
+			file="ParserConstants4.java"
+			todir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php4"/>
+
+	</target>
+
+
+
+</project>
