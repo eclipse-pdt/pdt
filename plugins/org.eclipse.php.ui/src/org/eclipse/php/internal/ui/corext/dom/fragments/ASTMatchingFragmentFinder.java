@@ -27,10 +27,9 @@ class ASTMatchingFragmentFinder extends ApplyAll {
 	}
 
 	private ASTFragment fFragmentToMatch;
-	private Set fMatches= new HashSet();
+	private Set<IASTFragment> fMatches= new HashSet<IASTFragment>();
 
 	private ASTMatchingFragmentFinder(ASTFragment toMatch) {
-		//super(true);
 		fFragmentToMatch= toMatch;	
 	}
 	private IASTFragment[] findMatches(ASTNode scope) {
