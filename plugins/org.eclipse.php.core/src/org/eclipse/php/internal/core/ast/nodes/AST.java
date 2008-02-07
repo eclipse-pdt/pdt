@@ -1028,4 +1028,25 @@ public class AST {
 		return scalar;
 	}
 
+	/**
+	 * Creates a new {@link ExpressionStatement} with a given {@link Expression} as an expression.
+	 * 
+	 * @param identifier The {@link Expression} that is the expression of the statement.
+	 * @return A new ExpressionStatement
+	 */
+	public ExpressionStatement newExpressionStatement(Expression expression) {
+		ExpressionStatement statement = new ExpressionStatement(this);
+		statement.setExpression(expression);
+		return statement;
+	}
+	
+	/**
+	 * Creates a new {@link ExpressionStatement}.
+	 * 
+	 * @return A new ExpressionStatement.
+	 */
+	public ExpressionStatement newExpressionStatement() {
+		ExpressionStatement statement = new ExpressionStatement(this);
+		return statement;
+	}
 }
