@@ -278,7 +278,7 @@ public class ForStatement extends Statement {
 	}
 
 	/**
-	 * @deprecated use {@link #increasements()} 
+	 * @deprecated use {@link #updaters()} 
 	 */
 	public Expression[] getIncreasements() {
 		return (Expression[]) updaters.toArray(new Expression[conditions.size()]);
