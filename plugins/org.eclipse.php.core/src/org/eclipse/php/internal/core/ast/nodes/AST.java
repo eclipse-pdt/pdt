@@ -97,7 +97,7 @@ public class AST {
 
 	public final static String PHP4 = PHPVersion.PHP4;
 	public final static String PHP5 = PHPVersion.PHP5;
-	
+
 	/**
 	 * The scanner capabilities to the AST - all has package access
 	 * to enable ASTParser access  
@@ -107,14 +107,14 @@ public class AST {
 	final String apiLevel;
 	final boolean useASPTags;
 	private Reader reader;
-	
+
 	/**
 	 * The event handler for this AST. 
 	 * Initially an event handler that does not nothing.
 	 * @since 3.0
 	 */
 	private NodeEventHandler eventHandler = new NodeEventHandler();
-	
+
 	/**
 	 * Internal modification count; initially 0; increases monotonically
 	 * <b>by one or more</b> as the AST is successively modified.
@@ -147,7 +147,7 @@ public class AST {
 	 * @since 3.0
 	 */
 	private final Object internalASTLock = new Object();
-	
+
 	/**
 	 * Default value of <code>flag<code> when a new node is created.
 	 */
@@ -157,13 +157,13 @@ public class AST {
 	 * Internal ast rewriter used to record ast modification when record mode is enabled.
 	 */
 	InternalASTRewrite rewriter;
-	
+
 	/**
 	 * The binding resolver for this AST. Initially a binding resolver that
 	 * does not resolve names at all.
 	 */
 	private BindingResolver resolver = new BindingResolver();
-	
+
 	public AST(Reader reader, String apiLevel, boolean aspTagsAsPhp) throws IOException {
 		this.reader = reader;
 		this.useASPTags = aspTagsAsPhp;
@@ -193,7 +193,7 @@ public class AST {
 			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 	}
-	
+
 	private PhpAstLexer5 getLexer5(Reader reader) throws IOException {
 		final PhpAstLexer5 phpAstLexer5 = new PhpAstLexer5(reader);
 		phpAstLexer5.setAST(this);
@@ -219,7 +219,6 @@ public class AST {
 			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 	}
-	
 
 	/**
 	 * Returns the modification count for this AST. The modification count
@@ -249,7 +248,7 @@ public class AST {
 	public long modificationCount() {
 		return this.modificationCount;
 	}
-	
+
 	/**
 	 * Indicates that this AST is about to be modified.
 	 * <p>
@@ -277,12 +276,12 @@ public class AST {
 	}
 
 	/**
-     * Disable events.
+	 * Disable events.
 	 * This method is thread-safe for AST readers.
 	 *
 	 * @see #reenableEvents()
-     * @since 3.0
-     */
+	 * @since 3.0
+	 */
 	final void disableEvents() {
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by another reader
@@ -292,12 +291,12 @@ public class AST {
 	}
 
 	/**
-     * Reenable events.
+	 * Reenable events.
 	 * This method is thread-safe for AST readers.
 	 *
 	 * @see #disableEvents()
-     * @since 3.0
-     */
+	 * @since 3.0
+	 */
 	final void reenableEvents() {
 		synchronized (this.internalASTLock) {
 			// guard against concurrent access by another reader
@@ -591,8 +590,8 @@ public class AST {
 			reenableEvents();
 		}
 	}
-	
-  	BindingResolver getBindingResolver() {
+
+	BindingResolver getBindingResolver() {
 		return this.resolver;
 	}
 
@@ -713,42 +712,42 @@ public class AST {
 	}
 
 	/**
-     * Checks that this AST operation is not used when
-     * building level JLS2 ASTs.
+	 * Checks that this AST operation is not used when
+	 * building level JLS2 ASTs.
 
-     * @exception UnsupportedOperationException
+	 * @exception UnsupportedOperationException
 	 * @since 3.0
-     */
+	 */
 	void unsupportedIn2() {
-	  if (this.apiLevel == PHPVersion.PHP4) {
-	  	throw new UnsupportedOperationException("Operation not supported in JLS2 AST"); //$NON-NLS-1$
-	  }
+		if (this.apiLevel == PHPVersion.PHP4) {
+			throw new UnsupportedOperationException("Operation not supported in JLS2 AST"); //$NON-NLS-1$
+		}
 	}
 
 	/**
-     * Checks that this AST operation is only used when
-     * building level JLS2 ASTs.
+	 * Checks that this AST operation is only used when
+	 * building level JLS2 ASTs.
 
-     * @exception UnsupportedOperationException
+	 * @exception UnsupportedOperationException
 	 * @since 3.0
-     */
+	 */
 	void supportedOnlyIn2() {
-	  if (this.apiLevel != PHPVersion.PHP4) {
-	  	throw new UnsupportedOperationException("Operation not supported in JLS2 AST"); //$NON-NLS-1$
-	  }
+		if (this.apiLevel != PHPVersion.PHP4) {
+			throw new UnsupportedOperationException("Operation not supported in JLS2 AST"); //$NON-NLS-1$
+		}
 	}
 
 	/**
 	 * new Class[] {AST.class}
 	 * @since 3.0
 	 */
-	private static final Class[] AST_CLASS = new Class[] {AST.class};
+	private static final Class[] AST_CLASS = new Class[] { AST.class };
 
 	/**
 	 * new Object[] {this}
 	 * @since 3.0
 	 */
-	private final Object[] THIS_AST= new Object[] {this};
+	private final Object[] THIS_AST = new Object[] { this };
 
 	/*
 	 * Must not collide with a value for ICompilationUnit constants
@@ -847,8 +846,7 @@ public class AST {
 	public Block newBlock() {
 		return new Block(this);
 	}
-	
-	
+
 	/**
 	 * Enables the recording of changes to the given compilation
 	 * unit and its descendents. The compilation unit must have
@@ -868,13 +866,13 @@ public class AST {
 	 * @since 3.0
 	 */
 	void recordModifications(Program root) {
-		if(this.modificationCount != this.originalModificationCount) {
+		if (this.modificationCount != this.originalModificationCount) {
 			throw new IllegalArgumentException("AST is already modified"); //$NON-NLS-1$
-		} else if(this.rewriter  != null) {
+		} else if (this.rewriter != null) {
 			throw new IllegalArgumentException("AST modifications are already recorded"); //$NON-NLS-1$
-		} else if((root.getFlags() & ASTNode.PROTECT) != 0) {
+		} else if ((root.getFlags() & ASTNode.PROTECT) != 0) {
 			throw new IllegalArgumentException("Root node is unmodifiable"); //$NON-NLS-1$
-		} else if(root.getAST() != this) {
+		} else if (root.getAST() != this) {
 			throw new IllegalArgumentException("Root node is not owned by this ast"); //$NON-NLS-1$
 		}
 
@@ -908,7 +906,7 @@ public class AST {
 		if (document == null) {
 			throw new IllegalArgumentException();
 		}
-		if (this.rewriter  == null) {
+		if (this.rewriter == null) {
 			throw new IllegalStateException("Modifications record is not enabled"); //$NON-NLS-1$
 		}
 		return this.rewriter.rewriteAST(document, options);
@@ -930,20 +928,20 @@ public class AST {
 	 * @return true if the ast tree was created with statements recovery, false otherwise
 	 * @since 3.3
 	 */
-/*	public boolean hasStatementsRecovery() {
-		return (this.bits & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0;
-	}
-*/
+	/*	public boolean hasStatementsRecovery() {
+			return (this.bits & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0;
+		}
+	*/
 	/**
 	 * Returns true if the ast tree was created with bindings recovery, false otherwise
 	 *
 	 * @return true if the ast tree was created with bindings recovery, false otherwise
 	 * @since 3.3
 	 */
-/*	public boolean hasBindingsRecovery() {
-		return (this.bits & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0;
-	}
-*/
+	/*	public boolean hasBindingsRecovery() {
+			return (this.bits & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0;
+		}
+	*/
 	void setFlag(int newValue) {
 		this.bits |= newValue;
 	}
@@ -997,9 +995,9 @@ public class AST {
 	 * @return A new EchoStatement with the given Expression.
 	 */
 	public EchoStatement newEchoStatement(Expression expression) {
-		 EchoStatement echoStatement = new EchoStatement(this);
-		 echoStatement.expressions().add(expression);
-		 return echoStatement;
+		EchoStatement echoStatement = new EchoStatement(this);
+		echoStatement.expressions().add(expression);
+		return echoStatement;
 	}
 
 	/**
@@ -1010,9 +1008,8 @@ public class AST {
 	 * @return A new {@link Scalar}.
 	 */
 	public Scalar newScalar(String string, int scalarType) {
-		Scalar scalar = new Scalar(this);
+		Scalar scalar = newScalar(string);
 		scalar.setScalarType(scalarType);
-		scalar.setStringValue(string);
 		return scalar;
 	}
 
@@ -1035,11 +1032,11 @@ public class AST {
 	 * @return A new ExpressionStatement
 	 */
 	public ExpressionStatement newExpressionStatement(Expression expression) {
-		ExpressionStatement statement = new ExpressionStatement(this);
+		ExpressionStatement statement = newExpressionStatement();
 		statement.setExpression(expression);
 		return statement;
 	}
-	
+
 	/**
 	 * Creates a new {@link ExpressionStatement}.
 	 * 
@@ -1048,5 +1045,30 @@ public class AST {
 	public ExpressionStatement newExpressionStatement() {
 		ExpressionStatement statement = new ExpressionStatement(this);
 		return statement;
+	}
+
+	/**
+	 * Creates a new {@link Variable} with a given name expression.
+	 * 
+	 * @param name A name {@link Expression}
+	 * @param isDollared Indicate that this variable is dollared.
+	 * @return A new {@link Variable}.
+	 */
+	public Variable newVariable(Expression name, boolean isDollared) {
+		Variable variable = newVariable();
+		variable.setIsDollared(isDollared);
+		variable.setName(name);
+		return variable;
+	}
+
+	/**
+	 * Creates a new {@link Variable}.
+	 * 
+	 * The returned Variable is not dollared and does not have any name {@link Expression}.
+	 * @return A new {@link Variable}.
+	 */
+	public Variable newVariable() {
+		Variable variable = new Variable(this);
+		return variable;
 	}
 }
