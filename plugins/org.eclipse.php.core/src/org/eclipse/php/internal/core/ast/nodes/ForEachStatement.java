@@ -80,6 +80,10 @@ public class ForEachStatement extends Statement {
 			setKey(key);
 		}
 	}
+	
+	public ForEachStatement(AST ast) {
+		super(ast);
+	}
 
 	public ForEachStatement(int start, int end, AST ast, Expression expression, Expression value, Statement statement) {
 		this(start, end, ast, expression, null, value, statement);

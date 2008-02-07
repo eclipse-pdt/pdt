@@ -45,6 +45,9 @@ public class ArrayCreation extends Expression {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 	
+	public ArrayCreation(AST ast) {
+		super(ast);
+	}
 	
 	private ArrayCreation(int start, int end, AST ast,ArrayElement[] elements) {
 		super(start, end, ast);

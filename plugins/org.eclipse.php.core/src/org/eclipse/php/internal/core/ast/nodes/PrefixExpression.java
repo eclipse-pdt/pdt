@@ -54,6 +54,10 @@ public class PrefixExpression extends Expression {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}	
 	
+	public PrefixExpression(AST ast) {
+		super(ast);
+	}
+	
 	public PrefixExpression(int start, int end, AST ast, VariableBase variable, int operator) {
 		super(start, end, ast);
 

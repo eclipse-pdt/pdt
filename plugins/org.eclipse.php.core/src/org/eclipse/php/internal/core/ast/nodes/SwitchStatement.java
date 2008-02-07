@@ -60,6 +60,10 @@ public class SwitchStatement extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}	
 	
+	public SwitchStatement(AST ast) {
+		super(ast);
+	}
+	
 	public SwitchStatement(int start, int end, AST ast, Expression expression, Block body) {
 		super(start, end, ast);
 

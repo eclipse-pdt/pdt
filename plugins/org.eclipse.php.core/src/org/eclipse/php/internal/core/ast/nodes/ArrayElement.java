@@ -54,6 +54,10 @@ public class ArrayElement extends ASTNode {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 	
+	public ArrayElement(AST ast) {
+		super(ast);
+	}
+	
 	public ArrayElement(int start, int end, AST ast, Expression key, Expression value) {
 		super(start, end, ast);
 		if (value == null) {
