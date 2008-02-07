@@ -19,11 +19,7 @@ import java.util.Map;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
-import org.eclipse.php.internal.core.ast.scanner.AstLexer;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstParser4;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstParser5;
+import org.eclipse.php.internal.core.ast.scanner.*;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.text.edits.TextEdit;
@@ -1071,4 +1067,22 @@ public class AST {
 		Variable variable = new Variable(this);
 		return variable;
 	}
+	
+	/**
+	 * Creates a new {@link Assignment}.
+	 * 
+	 * @param leftHandSide A {@link VariableBase}
+	 * @param operator The assignment operator
+	 * @param rightHandSide An {@link Expression}
+	 * @return A new Assignment.
+	 */
+	public Assignment newAssignment(VariableBase leftHandSide, int operator, Expression rightHandSide) {
+		Assignment assignment = new Assignment(this);
+		assignment.setLeftHandSide(leftHandSide);
+		assignment.setOperator(operator);
+		assignment.setRightHandSide(rightHandSide);
+		return assignment;
+	}
+	
+	
 }
