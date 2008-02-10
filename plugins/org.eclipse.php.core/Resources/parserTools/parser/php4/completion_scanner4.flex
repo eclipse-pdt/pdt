@@ -54,58 +54,6 @@ import java.util.regex.Pattern;
 %state ST_DOCBLOCK
 %state ST_ONE_LINE_COMMENT
 %{
-    /** TODO, Do not forget to change zzRefill to the following code:
-         private boolean zzRefill() throws java.io.IOException {
-
-             // first: make room (if you can)
-             if (zzStartRead > 0) {
-                 char temp[] = zzBuffer;
-                 //only if the new buffer will be changed then
-                 //we have to keep the old copy
-                 if (zzEndRead - zzStartRead > 0 || zzStartRead == zzOld_buffer.length) {
-                     temp = zzOld_buffer;
-                     zzOld_buffer = zzBuffer;
-                     zzOld_pushbackPos = zzPushbackPos;
-                     duplicated_string_length = zzEndRead - zzStartRead;
-                 }
-                 System.arraycopy(zzBuffer, zzStartRead,
-                         temp, 0,
-                         zzEndRead - zzStartRead);
-                 zzBuffer = temp;
-
-                 // translate stored positions
-                 zzEndRead -= zzStartRead;
-                 zzCurrentPos -= zzStartRead;
-                 zzMarkedPos -= zzStartRead;
-                 zzPushbackPos -= zzStartRead;
-                 zzStartRead = 0;
-             }
-
-             // is the buffer big enough?
-             if (zzCurrentPos >= zzBuffer.length) {
-                 // if not: blow it up
-                 char newBuffer[] = new char[zzCurrentPos * 2];
-                 System.arraycopy(zzBuffer, 0, newBuffer, 0, zzBuffer.length);
-                 zzBuffer = newBuffer;
-                 newBuffer = new char[zzCurrentPos * 2];
-                 System.arraycopy(zzOld_buffer, 0, newBuffer, 0, zzOld_buffer.length);
-                 System.arraycopy(zzBuffer, duplicated_string_length, newBuffer, zzOld_buffer.length, newBuffer.length - zzOld_buffer.length);
-                 duplicated_string_length += newBuffer.length - zzOld_buffer.length;
-                 zzOld_buffer = newBuffer;
-             }
-
-             // finally: fill the buffer with new input
-             int numRead = zzReader.read(zzBuffer, zzEndRead,
-                     zzBuffer.length - zzEndRead);
-
-             if (numRead < 0) {
-                 return true;
-             } else {
-                 zzEndRead += numRead;
-                 return false;
-             }
-         }
-    */
     
     private String heredoc = null;
     private boolean asp_tags = false;
@@ -113,9 +61,6 @@ import java.util.regex.Pattern;
     private StateStack stack = new StateStack();
     private ParserClient parserClient;
     private Pattern[] tasksPatterns;
-    private char zzOld_buffer[] = new char[ZZ_BUFFERSIZE];
-    private int zzOld_pushbackPos;
-    private int duplicated_string_length;
 
 	public void setUseAspTagsAsPhp(boolean useAspTagsAsPhp) {
 		asp_tags = useAspTagsAsPhp;
