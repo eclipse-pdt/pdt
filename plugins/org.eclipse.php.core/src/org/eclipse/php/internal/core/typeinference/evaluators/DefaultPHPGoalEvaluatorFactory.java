@@ -6,10 +6,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
@@ -62,6 +59,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (expression instanceof InfixExpression) {
 			return new InfixExpressionEvaluator(exprGoal);
+		}
+		if (expression instanceof CastExpression) {
+			return new CastEvaluator(exprGoal);
 		}
 
 		return null;
