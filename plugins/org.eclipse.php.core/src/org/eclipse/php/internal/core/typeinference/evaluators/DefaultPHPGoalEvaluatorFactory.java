@@ -8,6 +8,7 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InfixExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -58,6 +59,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (expression instanceof ClassInstanceCreation) {
 			return new InstanceCreationEvaluator(exprGoal);
+		}
+		if (expression instanceof InfixExpression) {
+			return new InfixExpressionEvaluator(exprGoal);
 		}
 
 		return null;
