@@ -1,16 +1,18 @@
 <project default="generateScanner">
 
 
-<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
-	
-<target name="generateScanner">
-<jflex
-    file="completion_scanner4.flex"
-	nobak="on"
-	skel="../common/completion_scanner.skeleton"
-	outdir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php4"
-/>
-	<!--using the skeleton file in order to change the default zzRefill function-->
-</target>
+	<target name="generateScanner">
+		<java jar="..\..\JFlex-1.4.1\JFlex.jar" fork="true">
+			<arg value="-d" />
+			<arg value="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php4" />
+			<arg value="-nobak" />
+
+			<!--using the skeleton file in order to change the default zzRefill function-->
+
+			<arg value="-skel" />
+			<arg value="../common/completion_scanner.skeleton" />
+			<arg value="completion_scanner4.flex" />
+		</java>
+	</target>
 
 </project>

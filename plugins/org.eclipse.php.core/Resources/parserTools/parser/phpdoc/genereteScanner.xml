@@ -1,14 +1,12 @@
 <project default="generateScanner">
 
-
-<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
-	
-<target name="generateScanner">
-<jflex
-    file="documentor_scanner.flex"
-	nobak="on"
-	outdir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/phpdoc"
-/>
-</target>
+	<target name="generateScanner">
+		<java jar="..\..\JFlex-1.4.1\JFlex.jar" fork="true">
+			<arg value="-d" />
+			<arg value="../../../../src/org/eclipse/php/internal/core/phpModel/parser/phpdoc" />
+			<arg value="-nobak" />
+			<arg value="documentor_scanner.flex" />
+		</java>
+	</target>
 
 </project>

@@ -1,14 +1,12 @@
 <project default="generateScanner">
 
-
-<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
-	
-<target name="generateScanner">
-<jflex
-    file="ast_scanner.flex"
-	nobak="on"
-	outdir="../../../../src/org/eclipse/php/internal/core/ast/scanner"
-/>
-</target>
+	<target name="generateScanner">
+		<java jar="..\..\JFlex-1.4.1\JFlex.jar" fork="true">
+			<arg value="-d" />
+			<arg value="../../../../src/org/eclipse/php/internal/core/ast/scanner" />
+			<arg value="-nobak" />
+			<arg value="ast_scanner.flex" />
+		</java>
+	</target>
 
 </project>
