@@ -121,7 +121,7 @@ public class GlobalStatement extends Statement {
 	/**
 	 * @return the variables component of the global statement
 	 */
-	private List variables() {
+	public List variables() {
 		return variables();
 	}
 
