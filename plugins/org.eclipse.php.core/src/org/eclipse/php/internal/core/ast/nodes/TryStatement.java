@@ -188,7 +188,7 @@ public class TryStatement extends Statement {
 	 * @return the live list of catch clauses
 	 *    (element type: <code>CatchClause</code>)
 	 */ 
-	public List catchClauses() {
+	public List<CatchClause> catchClauses() {
 		return this.catchClauses;
 	}
 		

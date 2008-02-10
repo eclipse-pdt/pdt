@@ -132,7 +132,7 @@ public class Program extends ASTNode {
 	 * @see ASTParser
 	 * @since 3.0
 	 */
-	public List comments() {
+	public List<Comment> comments() {
 		return comments;
 	}	
 	
@@ -214,7 +214,7 @@ public class Program extends ASTNode {
 	 * Retrieves the statement list of this program 
 	 * @return statement parts of this program
 	 */
-	public List statements() {
+	public List<Statement> statements() {
 		return this.statements;
 	}
 

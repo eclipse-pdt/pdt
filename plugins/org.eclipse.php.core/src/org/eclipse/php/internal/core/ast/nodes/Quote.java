@@ -141,7 +141,7 @@ public class Quote extends Expression {
 	/**
 	 * @return expression list of the echo statement
 	 */
-	public List expressions() {
+	public List<Expression> expressions() {
 		return this.expressions;
 	}
 	

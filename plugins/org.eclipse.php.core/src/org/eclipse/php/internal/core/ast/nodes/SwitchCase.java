@@ -135,7 +135,7 @@ public class SwitchCase extends Statement {
 	 * The actions of this case statement
 	 * @return List of actions of this case statement
 	 */
-	public List actions() {
+	public List<Statement> actions() {
 		return this.actions;
 	}
 

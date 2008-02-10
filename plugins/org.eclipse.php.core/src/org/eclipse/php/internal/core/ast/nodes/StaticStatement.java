@@ -135,7 +135,7 @@ public class StaticStatement extends Statement {
 	/**
 	 * @return expression list of the static statement
 	 */
-	public List expressions() {
+	public List<Expression> expressions() {
 		return this.expressions;
 	}
 	

@@ -119,7 +119,7 @@ public class ListVariable extends VariableBase {
 	/**
 	 * @return the list of variables
 	 */
-	public List variables() {
+	public List<VariableBase> variables() {
 		return variables;
 	}
 	
