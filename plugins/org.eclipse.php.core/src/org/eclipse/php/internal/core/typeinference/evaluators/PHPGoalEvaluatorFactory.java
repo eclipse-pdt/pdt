@@ -1,4 +1,4 @@
-package org.eclipse.php.internal.core.typeinference;
+package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.ArrayList;
 import java.util.Arrays;

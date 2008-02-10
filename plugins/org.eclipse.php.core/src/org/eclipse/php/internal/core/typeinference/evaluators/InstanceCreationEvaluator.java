@@ -5,20 +5,24 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
 
-public class AssignmentEvaluator extends GoalEvaluator {
+public class InstanceCreationEvaluator extends GoalEvaluator {
 
 	private IEvaluatedType result;
 
-	public AssignmentEvaluator(IGoal goal) {
+	public InstanceCreationEvaluator(IGoal goal) {
 		super(goal);
 	}
 
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		Assignment expression = (Assignment) typedGoal.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), expression.getValue()) };
+		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal.getExpression();
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), expression.getClassName()) };
+	}
+
+	public Object produceResult() {
+		return result;
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
@@ -26,7 +30,4 @@ public class AssignmentEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	public Object produceResult() {
-		return result;
-	}
 }

@@ -8,6 +8,8 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 
 public class PHPMixinParser implements IMixinParser {
 
+	public static final String CLASS_SUFFIX = "%"; //$NON-NLS-1$
+
 	private IMixinRequestor requestor;
 
 	public void parserSourceModule(boolean signature, ISourceModule module) {
