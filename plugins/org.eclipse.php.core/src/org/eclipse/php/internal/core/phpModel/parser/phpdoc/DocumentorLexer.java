@@ -15,8 +15,6 @@ package org.eclipse.php.internal.core.phpModel.parser.phpdoc;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.phpModel.phpElementData.BasicPHPDocTag;
