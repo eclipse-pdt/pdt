@@ -92,7 +92,7 @@ public abstract class TypeDeclaration extends Statement {
 	/**
 	 * List of interfaces that this type implements / extends
 	 */
-	public List interfaes() {
+	public List<Identifier> interfaces() {
 		return this.interfaces;
 	}
 	

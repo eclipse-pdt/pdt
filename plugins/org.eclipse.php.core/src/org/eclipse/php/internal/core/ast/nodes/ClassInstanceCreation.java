@@ -177,7 +177,7 @@ public class ClassInstanceCreation extends Expression {
 	 *     
 	 * @return list of expressions that were given to the the constructor 
 	 */
-	public List ctorParams() {
+	public List<Expression> ctorParams() {
 		return this.ctorParams;
 	}
 	

@@ -119,7 +119,7 @@ public class ArrayCreation extends Expression {
 	 * Retrieves elements parts of array creation
 	 * @return elements
 	 */
-	public List elements() {
+	public List<ArrayElement> elements() {
 		return this.elements;
 	}
 	

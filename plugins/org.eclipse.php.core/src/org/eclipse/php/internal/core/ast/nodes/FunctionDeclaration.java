@@ -200,7 +200,7 @@ public class FunctionDeclaration extends Statement {
 	 * 
 	 * @return the parameters of this declaration   
 	 */
-	public List formalParameters() {
+	public List<FormalParameter> formalParameters() {
 		return this.formalParameters;
 	}
 	

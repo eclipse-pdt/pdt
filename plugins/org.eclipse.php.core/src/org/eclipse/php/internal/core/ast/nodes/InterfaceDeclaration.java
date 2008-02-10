@@ -63,7 +63,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 
 	public void childrenAccept(Visitor visitor) {
 		getName().accept(visitor);
-		final List interfaes = interfaes();
+		final List interfaes = interfaces();
 		for (Object node : interfaes) {
 			ASTNode inter = (ASTNode) node;
 			inter.accept(visitor);
@@ -74,7 +74,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		getName().traverseTopDown(visitor);
-		final List interfaes = interfaes();
+		final List interfaes = interfaces();
 		for (Object node : interfaes) {
 			ASTNode inter = (ASTNode) node;
 			inter.traverseTopDown(visitor);
@@ -84,7 +84,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 
 	public void traverseBottomUp(Visitor visitor) {
 		getName().traverseBottomUp(visitor);
-		final List interfaes = interfaes();
+		final List interfaes = interfaces();
 		for (Object node : interfaes) {
 			ASTNode inter = (ASTNode) node;
 			inter.traverseBottomUp(visitor);
@@ -102,7 +102,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		buffer.append("\n"); //$NON-NLS-1$
 		buffer.append(tab).append(TAB).append("</InterfaceName>\n"); //$NON-NLS-1$
 		buffer.append(tab).append(TAB).append("<Interfaces>\n"); //$NON-NLS-1$
-		final List interfaes = interfaes();
+		final List interfaes = interfaces();
 		for (Object node : interfaes) {
 			ASTNode inter = (ASTNode) node;
 			inter.toString(buffer, TAB + TAB + tab);
@@ -130,7 +130,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	ASTNode clone0(AST target) {
 		final Identifier name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final List interfaces = ASTNode.copySubtrees(target, interfaes());
+		final List interfaces = ASTNode.copySubtrees(target, interfaces());
 		final InterfaceDeclaration result = new InterfaceDeclaration(getStart(), getEnd(), target, name, interfaces, body);
 		return result;
 	}

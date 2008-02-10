@@ -177,7 +177,7 @@ public class DeclareStatement extends Statement {
 	 * 
 	 * @return List of directive names
 	 */
-	public List directiveNames() {
+	public List<Identifier> directiveNames() {
 		return directiveNames;
 	}
 
@@ -186,7 +186,7 @@ public class DeclareStatement extends Statement {
 	 * 
 	 * @return List of directive values
 	 */
-	public List directiveValues() {
+	public List<Expression> directiveValues() {
 		return directiveValues;
 	}
 

@@ -49,7 +49,7 @@ public class ClassConstantDeclaration extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private ClassConstantDeclaration(int start, int end, AST ast, List names, List initializers) {
+	private ClassConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
 		super(start, end, ast);
 		
 		if (names == null || initializers == null || names.size() != initializers.size()) {
@@ -149,14 +149,14 @@ public class ClassConstantDeclaration extends Statement {
 	/**
 	 * @return constant initializers expressions
 	 */
-	public List initializers() {
+	public List<Expression> initializers() {
 		return this.initializers;
 	}
 	
 	/**
 	 * @return the constant names 
 	 */
-	public List names() {
+	public List<Identifier> names() {
 		return this.names;
 	}
 	

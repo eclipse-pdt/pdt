@@ -59,7 +59,7 @@ public class BackTickExpression extends Expression {
 		super(ast);
 	}
 	
-	public BackTickExpression(int start, int end, AST ast, List expressions) {
+	public BackTickExpression(int start, int end, AST ast, List<Expression> expressions) {
 		this(start, end, ast, expressions == null ? null : (Expression[]) expressions.toArray(new Expression[expressions.size()]));
 	}
 
@@ -117,7 +117,7 @@ public class BackTickExpression extends Expression {
 	 * The expression list of the back tick command
 	 * @return expressions of this back tick expression
 	 */
-	public List expressions() {
+	public List<Expression> expressions() {
 		return this.expressions;
 	}
 	

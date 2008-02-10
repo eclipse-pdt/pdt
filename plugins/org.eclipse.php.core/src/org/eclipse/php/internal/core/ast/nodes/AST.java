@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.text.IDocument;
@@ -88,6 +89,22 @@ import org.eclipse.text.edits.TextEdit;
  * @see ASTParser
  * @see ASTNode
  * @since 2.0
+ */
+/**
+ * @author eden
+ *
+ */
+/**
+ * @author eden
+ *
+ */
+/**
+ * @author eden
+ *
+ */
+/**
+ * @author eden
+ *
  */
 public class AST {
 
@@ -813,27 +830,7 @@ public class AST {
 		return createInstance(nodeClass);
 	}
 
-	//=============================== NAMES ===========================
-	/**
-	 * Creates and returns a new unparented simple name node for the given
-	 * identifier. The identifier should be a legal PHP identifier.
-	 *
-	 * @param identifier the identifier
-	 * @return a new unparented simple name node
-	 * @exception IllegalArgumentException if the identifier is invalid
-	 */
-	public Identifier newIdentifier(String identifier) {
-
-		if (identifier == null) {
-			throw new IllegalArgumentException();
-		}
-		Identifier result = new Identifier(this);
-		result.setName(identifier);
-		return result;
-	}
-
 	//=============================== TYPES ===========================
-
 
 	/**
 	 * Enables the recording of changes to the given compilation
@@ -981,31 +978,84 @@ public class AST {
 	 * 
 	 * @return a new ArrayAccess.
 	 */
-	public ArrayAccess newArrayAccess(){
+	public ArrayAccess newArrayAccess() {
 		ArrayAccess arrayAccess = new ArrayAccess(this);
 		return arrayAccess;
 	}
-	
+
+	/**
+	 * Creates a new {@link ArrayAccess}.
+	 * @param variableName
+	 * @param index
+	 * @param arrayType
+	 * @return a new ArrayAccess
+	 */
+	public ArrayAccess newArrayAccess(VariableBase variableName, Expression index, int arrayType) {
+		ArrayAccess arrayAccess = new ArrayAccess(this);
+		arrayAccess.setName(variableName);
+		arrayAccess.setIndex(index);
+		arrayAccess.setArrayType(arrayType);
+		return arrayAccess;
+	}
+
+	/**
+	 * Creates a new {@link ArrayAccess}. Default array type is VARIABLE_ARRAY
+	 * @param variableName
+	 * @param index
+	 * @return a new ArrayAccess
+	 */
+	public ArrayAccess newArrayAccess(VariableBase variableName, Expression index) {
+		ArrayAccess arrayAccess = new ArrayAccess(this);
+		arrayAccess.setName(variableName);
+		arrayAccess.setIndex(index);
+		arrayAccess.setArrayType(ArrayAccess.VARIABLE_ARRAY);
+		return arrayAccess;
+	}
+
 	/**
 	 * Creates a new {@link ArrayCreation}.
 	 * 
 	 * @return a new ArrayCreation.
 	 */
-	public ArrayCreation newArrayCreation(){
+	public ArrayCreation newArrayCreation() {
 		ArrayCreation arrayCreation = new ArrayCreation(this);
 		return arrayCreation;
 	}
-	
+
+	/**
+	 * Creates a new {@link ArrayCreation}.
+	 * @param elements - List of {@link ArrayElement} 
+	 * @return a new ArrayCreation.
+	 */
+	public ArrayCreation newArrayCreation(List<ArrayElement> elements) {
+		ArrayCreation arrayCreation = new ArrayCreation(this);
+		arrayCreation.elements().addAll(elements);
+		return arrayCreation;
+	}
+
 	/**
 	 * Creates a new {@link ArrayElement}.
 	 * 
 	 * @return a new ArrayElement.
 	 */
-	public ArrayElement newArrayElement(){
+	public ArrayElement newArrayElement() {
 		ArrayElement arrayElement = new ArrayElement(this);
 		return arrayElement;
 	}
-		
+
+	/**
+	 * Creates a new {@link ArrayElement}.
+	 * @param key - an {@link Expression} rapresenting the element key
+	 * @param value - an {@link Expression} rapresenting the element value
+	 * @return a new ArrayElement.
+	 */
+	public ArrayElement newArrayElement(Expression key, Expression value) {
+		ArrayElement arrayElement = new ArrayElement(this);
+		arrayElement.setKey(key);
+		arrayElement.setValue(value);
+		return arrayElement;
+	}
+
 	/**
 	 * Creates a new {@link Assignment}.
 	 * 
@@ -1015,7 +1065,7 @@ public class AST {
 		Assignment assignment = new Assignment(this);
 		return assignment;
 	}
-	
+
 	/**
 	 * Creates a new {@link Assignment}.
 	 * 
@@ -1031,7 +1081,7 @@ public class AST {
 		assignment.setRightHandSide(rightHandSide);
 		return assignment;
 	}
-	
+
 	/**
 	 * Creates a new {@link ASTError}.
 	 * 
@@ -1041,7 +1091,7 @@ public class AST {
 		ASTError astError = new ASTError(this);
 		return astError;
 	}
-	
+
 	/**
 	 * Creates a new {@link BackTickExpression}.
 	 * 
@@ -1051,8 +1101,18 @@ public class AST {
 		BackTickExpression backTickExpression = new BackTickExpression(this);
 		return backTickExpression;
 	}
-	
-	
+
+	/**
+	 * Creates a new {@link BackTickExpression}.
+	 * @param expressions - List of {@link Expression}
+	 * @return A new BackTickExpression.
+	 */
+	public BackTickExpression newBackTickExpression(List<Expression> expressions) {
+		BackTickExpression backTickExpression = new BackTickExpression(this);
+		backTickExpression.expressions().addAll(expressions);
+		return backTickExpression;
+	}
+
 	/**
 	 * Creates an unparented block node owned by this AST, for an empty list
 	 * of statements.
@@ -1062,7 +1122,21 @@ public class AST {
 	public Block newBlock() {
 		return new Block(this);
 	}
-	
+
+	/**
+	 * Creates an unparented block node owned by this AST, for an empty list
+	 * of statements.
+	 * @param statements - List of {@link Statement}
+	 * @return a new unparented, empty block node
+	 */
+	public Block newBlock(List<Statement> statements) {
+		Block block = new Block(this);
+		block.statements().addAll(statements);
+		block.setIsCurly(true);
+		return block;
+
+	}
+
 	/**
 	 * Creates a new {@link BreakStatement}.
 	 * 
@@ -1072,7 +1146,18 @@ public class AST {
 		BreakStatement breakStatement = new BreakStatement(this);
 		return breakStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link BreakStatement}.
+	 * @param expression.
+	 * @return A new BreakStatement.
+	 */
+	public BreakStatement newBreakStatement(Expression expression) {
+		BreakStatement breakStatement = new BreakStatement(this);
+		breakStatement.setExpression(expression);
+		return breakStatement;
+	}
+
 	/**
 	 * Creates a new {@link CastExpression}.
 	 * 
@@ -1082,7 +1167,20 @@ public class AST {
 		CastExpression castExpression = new CastExpression(this);
 		return castExpression;
 	}
-	
+
+	/**
+	 * Creates a new {@link CastExpression}.
+	 * @param expression
+	 * @param castType
+	 * @return A new CastExpression.
+	 */
+	public CastExpression newCastExpression(Expression expression, int castType) {
+		CastExpression castExpression = new CastExpression(this);
+		castExpression.setExpression(expression);
+		castExpression.setCastingType(castType);
+		return castExpression;
+	}
+
 	/**
 	 * Creates a new {@link CatchClause}.
 	 * 
@@ -1092,7 +1190,22 @@ public class AST {
 		CatchClause catchClause = new CatchClause(this);
 		return catchClause;
 	}
-	
+
+	/**
+	 * Creates a new {@link CatchClause}.
+	 * @param className
+	 * @param variable
+	 * @param statement
+	 * @return A new CatchClause.
+	 */
+	public CatchClause newCatchClause(Identifier className, Variable variable, Block statement) {
+		CatchClause catchClause = new CatchClause(this);
+		catchClause.setClassName(className);
+		catchClause.setVariable(variable);
+		catchClause.setBody(statement);
+		return catchClause;
+	}
+
 	/**
 	 * Creates a new {@link ClassConstantDeclaration}.
 	 * 
@@ -1102,7 +1215,20 @@ public class AST {
 		ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(this);
 		return classConstantDeclaration;
 	}
-	
+
+	/**
+	 * Creates a new {@link ClassConstantDeclaration}.
+	 * @param names
+	 * @param initializers
+	 * @return A new ClassConstantDeclaration.
+	 */
+	public ClassConstantDeclaration newClassConstantDeclaration(List<Identifier> names, List<Expression> initializers) {
+		ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(this);
+		classConstantDeclaration.initializers().addAll(initializers);
+		classConstantDeclaration.names().addAll(names);
+		return classConstantDeclaration;
+	}
+
 	/**
 	 * Creates a new {@link ClassDeclaration}.
 	 * 
@@ -1112,17 +1238,36 @@ public class AST {
 		ClassDeclaration classDeclaration = new ClassDeclaration(this);
 		return classDeclaration;
 	}
-	
-//	/**
-//	 * Creates a new {@link TypeDeclaration}.
-//	 * 
-//	 * @return A new TypeDeclaration.
-//	 */
-//	public TypeDeclaration newTypeDeclaration() {
-//		TypeDeclaration typeDeclaration = new TypeDeclaration(this);
-//		return typeDeclaration;
-//	}
-	
+
+	/**
+	 * Creates a new {@link ClassDeclaration}.
+	 * @param modifier
+	 * @param className
+	 * @param superClass
+	 * @param interfaces
+	 * @param body
+	 * @return A new ClassDeclaration.
+	 */
+	public ClassDeclaration newClassDeclaration(int modifier, String className, String superClass, List<Identifier> interfaces, Block body) {
+		ClassDeclaration classDeclaration = new ClassDeclaration(this);
+		classDeclaration.setModifier(modifier);
+		classDeclaration.setName(newIdentifier(className));
+		classDeclaration.setSuperClass(newIdentifier(superClass));
+		classDeclaration.interfaces().addAll(interfaces);
+		classDeclaration.setBody(body);
+		return classDeclaration;
+	}
+
+	//	/**
+	//	 * Creates a new {@link TypeDeclaration}.
+	//	 * 
+	//	 * @return A new TypeDeclaration.
+	//	 */
+	//	public TypeDeclaration newTypeDeclaration() {
+	//		TypeDeclaration typeDeclaration = new TypeDeclaration(this);
+	//		return typeDeclaration;
+	//	}
+
 	/**
 	 * Creates a new {@link ClassInstanceCreation}.
 	 * 
@@ -1132,7 +1277,20 @@ public class AST {
 		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(this);
 		return classInstanceCreation;
 	}
-	
+
+	/**
+	 * Creates a new {@link ClassInstanceCreation}.
+	 * @param className
+	 * @param ctorParams
+	 * @return A new ClassInstanceCreation.
+	 */
+	public ClassInstanceCreation newClassInstanceCreation(ClassName className, List<Expression> ctorParams) {
+		ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(this);
+		classInstanceCreation.setClassName(className);
+		classInstanceCreation.ctorParams().addAll(ctorParams);
+		return classInstanceCreation;
+	}
+
 	/**
 	 * Creates a new {@link ClassName}.
 	 * 
@@ -1142,7 +1300,18 @@ public class AST {
 		ClassName className = new ClassName(this);
 		return className;
 	}
-	
+
+	/**
+	 * Creates a new {@link ClassName}.
+	 * @param name
+	 * @return A new ClassName.
+	 */
+	public ClassName newClassName(Expression name) {
+		ClassName className = new ClassName(this);
+		className.setClassName(name);
+		return className;
+	}
+
 	/**
 	 * Creates a new {@link CloneExpression}.
 	 * 
@@ -1152,7 +1321,18 @@ public class AST {
 		CloneExpression cloneExpression = new CloneExpression(this);
 		return cloneExpression;
 	}
-	
+
+	/**
+	 * Creates a new {@link CloneExpression}.
+	 * @param expr
+	 * @return A new CloneExpression.
+	 */
+	public CloneExpression newCloneExpression(Expression expr) {
+		CloneExpression cloneExpression = new CloneExpression(this);
+		cloneExpression.setExpression(expr);
+		return cloneExpression;
+	}
+
 	/**
 	 * Creates a new {@link Comment}.
 	 * 
@@ -1162,7 +1342,18 @@ public class AST {
 		Comment comment = new Comment(this);
 		return comment;
 	}
-	
+
+	/**
+	 * Creates a new {@link Comment}.
+	 * @param commentType
+	 * @return A new Comment.
+	 */
+	public Comment newComment(int commentType) {
+		Comment comment = new Comment(this);
+		comment.setCommentType(commentType);
+		return comment;
+	}
+
 	/**
 	 * Creates a new {@link ConditionalExpression}.
 	 * 
@@ -1172,7 +1363,22 @@ public class AST {
 		ConditionalExpression conditionalExpression = new ConditionalExpression(this);
 		return conditionalExpression;
 	}
-	
+
+	/**
+	 * Creates a new {@link ConditionalExpression}.
+	 * @param condition
+	 * @param ifTrue
+	 * @param ifFalse
+	 * @return A new ConditionalExpression.
+	 */
+	public ConditionalExpression newConditionalExpression(Expression condition, Expression ifTrue, Expression ifFalse) {
+		ConditionalExpression conditionalExpression = new ConditionalExpression(this);
+		conditionalExpression.setCondition(condition);
+		conditionalExpression.setIfTrue(ifTrue);
+		conditionalExpression.setIfFalse(ifFalse);
+		return conditionalExpression;
+	}
+
 	/**
 	 * Creates a new {@link ContinueStatement}.
 	 * 
@@ -1182,17 +1388,33 @@ public class AST {
 		ContinueStatement continueStatement = new ContinueStatement(this);
 		return continueStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link ContinueStatement}.
+	 * @param expr
+	 * @return A new ContinueStatement.
+	 */
+	public ContinueStatement newContinueStatement(Expression expr) {
+		ContinueStatement continueStatement = new ContinueStatement(this);
+		continueStatement.setExpression(expr);
+		return continueStatement;
+	}
+
 	/**
 	 * Creates a new {@link DeclareStatement}.
-	 * 
+	 * @param directiveNames
+	 * @param directiveValues
+	 * @param body
 	 * @return A new DeclareStatement.
 	 */
-	public DeclareStatement newDeclareStatement() {
+	public DeclareStatement newDeclareStatement(List<Identifier> directiveNames, List<Expression> directiveValues, Statement body) {
 		DeclareStatement declareStatement = new DeclareStatement(this);
+		declareStatement.directiveNames().addAll(directiveNames);
+		declareStatement.directiveValues().addAll(directiveValues);
+		declareStatement.setBody(body);
 		return declareStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link DoStatement}.
 	 * 
@@ -1202,7 +1424,20 @@ public class AST {
 		DoStatement doStatement = new DoStatement(this);
 		return doStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link DoStatement}.
+	 * @param condition
+	 * @param body
+	 * @return A new DoStatement.
+	 */
+	public DoStatement newDoStatement(Expression condition, Statement body) {
+		DoStatement doStatement = new DoStatement(this);
+		doStatement.setCondition(condition);
+		doStatement.setBody(body);
+		return doStatement;
+	}
+
 	/**
 	 * Creates a new {@link EchoStatement}.
 	 * 
@@ -1212,7 +1447,18 @@ public class AST {
 		EchoStatement echoStatement = new EchoStatement(this);
 		return echoStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link EchoStatement}.
+	 * @param expressions
+	 * @return A new EchoStatement.
+	 */
+	public EchoStatement newEchoStatement(List<Expression> expressions) {
+		EchoStatement echoStatement = new EchoStatement(this);
+		echoStatement.expressions().addAll(expressions);
+		return echoStatement;
+	}
+
 	/**
 	 * Creates a new {@link EchoStatement} with a given {@link Expression}.
 	 * 
@@ -1224,7 +1470,7 @@ public class AST {
 		echoStatement.expressions().add(expression);
 		return echoStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link EmptyStatement}.
 	 * 
@@ -1234,7 +1480,7 @@ public class AST {
 		EmptyStatement emptyStatement = new EmptyStatement(this);
 		return emptyStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link ExpressionStatement}.
 	 * 
@@ -1244,7 +1490,7 @@ public class AST {
 		ExpressionStatement expressionStatement = new ExpressionStatement(this);
 		return expressionStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link ExpressionStatement} with a given {@link Expression} as an expression.
 	 * 
@@ -1266,7 +1512,20 @@ public class AST {
 		FieldAccess fieldAccess = new FieldAccess(this);
 		return fieldAccess;
 	}
-	
+
+	/**
+	 * Creates a new {@link FieldAccess}.
+	 * @param dispatcher
+	 * @param field 
+	 * @return A new FieldAccess.
+	 */
+	public FieldAccess newFieldAccess(VariableBase dispatcher, Variable field) {
+		FieldAccess fieldAccess = new FieldAccess(this);
+		fieldAccess.setDispatcher(dispatcher);
+		fieldAccess.setField(field);
+		return fieldAccess;
+	}
+
 	/**
 	 * Creates a new {@link FieldsDeclaration}.
 	 * 
@@ -1276,7 +1535,21 @@ public class AST {
 		FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(this);
 		return fieldsDeclaration;
 	}
-	
+
+	/**
+	 * Creates a new {@link FieldsDeclaration}.
+	 * @param modifier
+	 * @param variablesAndDefaults
+	 * @return A new FieldsDeclaration.
+	 */
+	public FieldsDeclaration newFieldsDeclaration(int modifier, List<SingleFieldDeclaration> variablesAndDefaults) {
+		FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(this);
+		fieldsDeclaration.setModifier(modifier);
+		List<SingleFieldDeclaration> fields = fieldsDeclaration.fields();
+		fields.addAll(variablesAndDefaults);
+		return fieldsDeclaration;
+	}
+
 	/**
 	 * Creates a new {@link ForEachStatement}.
 	 * 
@@ -1286,8 +1559,24 @@ public class AST {
 		ForEachStatement forEachStatement = new ForEachStatement(this);
 		return forEachStatement;
 	}
-	
-	
+
+	/**
+	 * Creates a new {@link ForEachStatement}.
+	 * @param expression
+	 * @param key
+	 * @param value
+	 * @param statement
+	 * @return A new ForEachStatement.
+	 */
+	public ForEachStatement newForEachStatement(Expression expression, Expression key, Expression value, Statement statement) {
+		ForEachStatement forEachStatement = new ForEachStatement(this);
+		forEachStatement.setExpression(expression);
+		forEachStatement.setKey(key);
+		forEachStatement.setValue(value);
+		forEachStatement.setStatement(statement);
+		return forEachStatement;
+	}
+
 	/**
 	 * Creates a new {@link FormalParameter}.
 	 * 
@@ -1296,8 +1585,25 @@ public class AST {
 	public FormalParameter newFormalParameter() {
 		FormalParameter formalParameter = new FormalParameter(this);
 		return formalParameter;
-	} 
-	
+	}
+
+	/**
+	 * Creates a new {@link FormalParameter}.
+	 * @param type
+	 * @param parameterName
+	 * @param defaultValue
+	 * @param isMandatory
+	 * @return A new FormalParameter.
+	 */
+	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue, boolean isMandatory) {
+		FormalParameter formalParameter = new FormalParameter(this);
+		formalParameter.setParameterType(type);
+		formalParameter.setParameterName(parameterName);
+		formalParameter.setDefaultValue(defaultValue);
+		formalParameter.setIsMandatory(isMandatory);
+		return formalParameter;
+	}
+
 	/**
 	 * Creates a new {@link ForStatement}.
 	 * 
@@ -1307,7 +1613,24 @@ public class AST {
 		ForStatement forStatement = new ForStatement(this);
 		return forStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link ForStatement}.
+	 * @param initializers
+	 * @param conditions
+	 * @param updaters
+	 * @param body
+	 * @return A new ForStatement.
+	 */
+	public ForStatement newForStatement(List<Expression> initializers, List<Expression> conditions, List<Expression> updaters, Statement body) {
+		ForStatement forStatement = new ForStatement(this);
+		forStatement.initializers().addAll(initializers);
+		forStatement.updaters().addAll(updaters);
+		forStatement.conditions().addAll(conditions);
+		forStatement.setBody(body);
+		return forStatement;
+	}
+
 	/**
 	 * Creates a new {@link FunctionDeclaration}.
 	 * 
@@ -1317,7 +1640,24 @@ public class AST {
 		FunctionDeclaration functionDeclaration = new FunctionDeclaration(this);
 		return functionDeclaration;
 	}
-	
+
+	/**
+	 * Creates a new {@link FunctionDeclaration}.
+	 * @param functionName
+	 * @param formalParameters
+	 * @param body
+	 * @param isReference
+	 * @return A new FunctionDeclaration.
+	 */
+	public FunctionDeclaration newFunctionDeclaration(Identifier functionName, List<FormalParameter> formalParameters, Block body, final boolean isReference) {
+		FunctionDeclaration functionDeclaration = new FunctionDeclaration(this);
+		functionDeclaration.setFunctionName(functionName);
+		functionDeclaration.formalParameters().addAll(formalParameters);
+		functionDeclaration.setBody(body);
+		functionDeclaration.setIsReference(isReference);
+		return functionDeclaration;
+	}
+
 	/**
 	 * Creates a new {@link FunctionInvocation}.
 	 * 
@@ -1327,7 +1667,20 @@ public class AST {
 		FunctionInvocation functionInvocation = new FunctionInvocation(this);
 		return functionInvocation;
 	}
-	
+
+	/**
+	 * Creates a new {@link FunctionInvocation}.
+	 * @param functionName
+	 * @param parameters
+	 * @return A new FunctionInvocation.
+	 */
+	public FunctionInvocation newFunctionInvocation(FunctionName functionName, List<Expression> parameters) {
+		FunctionInvocation functionInvocation = new FunctionInvocation(this);
+		functionInvocation.setFunctionName(functionName);
+		functionInvocation.parameters().addAll(parameters);
+		return functionInvocation;
+	}
+
 	/**
 	 * Creates a new {@link FunctionName}.
 	 * 
@@ -1337,7 +1690,18 @@ public class AST {
 		FunctionName functionName = new FunctionName(this);
 		return functionName;
 	}
-	
+
+	/**
+	 * Creates a new {@link FunctionName}.
+	 * @param functionName
+	 * @return A new FunctionName.
+	 */
+	public FunctionName newFunctionName(Expression name) {
+		FunctionName functionName = new FunctionName(this);
+		functionName.setName(name);
+		return functionName;
+	}
+
 	/**
 	 * Creates a new {@link FieldsDeclaration}.
 	 * 
@@ -1347,7 +1711,18 @@ public class AST {
 		GlobalStatement globalStatement = new GlobalStatement(this);
 		return globalStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link FieldsDeclaration}.
+	 * @param variables
+	 * @return A new FieldsDeclaration.
+	 */
+	public GlobalStatement newGlobalStatement(List<Variable> variables) {
+		GlobalStatement globalStatement = new GlobalStatement(this);
+		globalStatement.variables().addAll(variables);
+		return globalStatement;
+	}
+
 	/**
 	 * Creates a new {@link Identifier}.
 	 * 
@@ -1357,7 +1732,25 @@ public class AST {
 		Identifier identifier = new Identifier(this);
 		return identifier;
 	}
-	
+
+	/**
+	 * Creates and returns a new unparented simple name node for the given
+	 * identifier. The identifier should be a legal PHP identifier.
+	 *
+	 * @param identifier the identifier
+	 * @return a new unparented simple name node
+	 * @exception IllegalArgumentException if the identifier is invalid
+	 */
+	public Identifier newIdentifier(String identifier) {
+
+		if (identifier == null) {
+			throw new IllegalArgumentException();
+		}
+		Identifier result = new Identifier(this);
+		result.setName(identifier);
+		return result;
+	}
+
 	/**
 	 * Creates a new {@link IfStatement}.
 	 * 
@@ -1367,7 +1760,22 @@ public class AST {
 		IfStatement ifStatement = new IfStatement(this);
 		return ifStatement;
 	}
-	
+
+	/**
+	 * Creates a new {@link IfStatement}.
+	 * @param condition
+	 * @param trueStatement
+	 * @param falseStatement
+	 * @return A new IfStatement.
+	 */
+	public IfStatement newIfStatement(Expression condition, Statement trueStatement, Statement falseStatement) {
+		IfStatement ifStatement = new IfStatement(this);
+		ifStatement.setCondition(condition);
+		ifStatement.setTrueStatement(trueStatement);
+		ifStatement.setFalseStatement(falseStatement);
+		return ifStatement;
+	}
+
 	/**
 	 * Creates a new {@link IgnoreError}.
 	 * 
@@ -1377,7 +1785,18 @@ public class AST {
 		IgnoreError ignoreError = new IgnoreError(this);
 		return ignoreError;
 	}
-	
+
+	/**
+	 * Creates a new {@link IgnoreError}.
+	 * @param expression
+	 * @return A new IgnoreError.
+	 */
+	public IgnoreError newIgnoreError(Expression expression) {
+		IgnoreError ignoreError = new IgnoreError(this);
+		ignoreError.setExpression(expression);
+		return ignoreError;
+	}
+
 	/**
 	 * Creates a new {@link Include}.
 	 * 
@@ -1387,7 +1806,21 @@ public class AST {
 		Include include = new Include(this);
 		return include;
 	}
+
 	
+	/**
+	 * Creates a new {@link Include}.
+	 * @param expression
+	 * @param type
+	 * @return A new Include.
+	 */
+	public Include newInclude(Expression expr, int type) {
+		Include include = new Include(this);
+		include.setExpression(expr);
+		include.setIncludetype(type);
+		return include;
+	}
+
 	/**
 	 * Creates a new {@link InfixExpression}.
 	 * 
@@ -1399,6 +1832,22 @@ public class AST {
 	}
 	
 	/**
+	 * Creates a new {@link InfixExpression}.
+	 * @param left
+	 * @param operator
+	 * @param right
+	 * @return A new InfixExpression.
+	 */
+	public InfixExpression newInfixExpression(Expression left, int operator, Expression right) {
+		InfixExpression infixExpression = new InfixExpression(this);
+		infixExpression.setLeft(left);
+		infixExpression.setOperator(operator);
+		infixExpression.setRight(right);
+		return infixExpression;
+	}
+	
+
+	/**
 	 * Creates a new {@link InLineHtml}.
 	 * 
 	 * @return A new InLineHtml.
@@ -1407,7 +1856,7 @@ public class AST {
 		InLineHtml inLineHtml = new InLineHtml(this);
 		return inLineHtml;
 	}
-	
+
 	/**
 	 * Creates a new {@link InstanceOfExpression}.
 	 * 
@@ -1417,7 +1866,7 @@ public class AST {
 		InstanceOfExpression instanceOfExpression = new InstanceOfExpression(this);
 		return instanceOfExpression;
 	}
-	
+
 	/**
 	 * Creates a new {@link InterfaceDeclaration}.
 	 * 
@@ -1427,7 +1876,7 @@ public class AST {
 		InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(this);
 		return interfaceDeclaration;
 	}
-	
+
 	/**
 	 * Creates a new {@link ListVariable}.
 	 * 
@@ -1437,7 +1886,7 @@ public class AST {
 		ListVariable listVariable = new ListVariable(this);
 		return listVariable;
 	}
-	
+
 	/**
 	 * Creates a new {@link MethodDeclaration}.
 	 * 
@@ -1447,7 +1896,7 @@ public class AST {
 		MethodDeclaration methodDeclaration = new MethodDeclaration(this);
 		return methodDeclaration;
 	}
-	
+
 	/**
 	 * Creates a new {@link MethodInvocation}.
 	 * 
@@ -1457,6 +1906,7 @@ public class AST {
 		MethodInvocation methodInvocation = new MethodInvocation(this);
 		return methodInvocation;
 	}
+
 	/**
 	 * Creates a new {@link ParenthesisExpression}.
 	 * 
@@ -1466,7 +1916,7 @@ public class AST {
 		ParenthesisExpression parenthesisExpression = new ParenthesisExpression(this);
 		return parenthesisExpression;
 	}
-	
+
 	/**
 	 * Creates a new {@link PostfixExpression}.
 	 * 
@@ -1476,7 +1926,7 @@ public class AST {
 		PostfixExpression postfixExpression = new PostfixExpression(this);
 		return postfixExpression;
 	}
-	
+
 	/**
 	 * Creates a new {@link PrefixExpression}.
 	 * 
@@ -1486,7 +1936,7 @@ public class AST {
 		PrefixExpression prefixExpression = new PrefixExpression(this);
 		return prefixExpression;
 	}
-	
+
 	/**
 	 * Creates a new {@link Program}.
 	 * 
@@ -1496,7 +1946,7 @@ public class AST {
 		Program program = new Program(this);
 		return program;
 	}
-	
+
 	/**
 	 * Creates a new {@link Quote}.
 	 * 
@@ -1506,7 +1956,7 @@ public class AST {
 		Quote quote = new Quote(this);
 		return quote;
 	}
-	
+
 	/**
 	 * Creates a new {@link Reference}.
 	 * 
@@ -1516,7 +1966,7 @@ public class AST {
 		Reference reference = new Reference(this);
 		return reference;
 	}
-	
+
 	/**
 	 * Creates a new {@link ReflectionVariable}.
 	 * 
@@ -1526,7 +1976,7 @@ public class AST {
 		ReflectionVariable reflectionVariable = new ReflectionVariable(this);
 		return reflectionVariable;
 	}
-	
+
 	/**
 	 * Creates a new {@link ReturnStatement}.
 	 * 
@@ -1536,7 +1986,7 @@ public class AST {
 		ReturnStatement returnStatement = new ReturnStatement(this);
 		return returnStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link Scalar}.
 	 * 
@@ -1546,7 +1996,7 @@ public class AST {
 		Scalar scalar = new Scalar(this);
 		return scalar;
 	}
-	
+
 	/**
 	 * Creates a new scalar with a given type.
 	 * 
@@ -1571,7 +2021,7 @@ public class AST {
 		scalar.setStringValue(string);
 		return scalar;
 	}
-	
+
 	/**
 	 * Creates a new {@link SingleFieldDeclaration}.
 	 * 
@@ -1581,7 +2031,7 @@ public class AST {
 		SingleFieldDeclaration singleFieldDeclaration = new SingleFieldDeclaration(this);
 		return singleFieldDeclaration;
 	}
-	
+
 	/**
 	 * Creates a new {@link StaticConstantAccess}.
 	 * 
@@ -1591,7 +2041,7 @@ public class AST {
 		StaticConstantAccess staticConstantAccess = new StaticConstantAccess(this);
 		return staticConstantAccess;
 	}
-	
+
 	/**
 	 * Creates a new {@link StaticFieldAccess}.
 	 * 
@@ -1601,7 +2051,7 @@ public class AST {
 		StaticFieldAccess staticFieldAccess = new StaticFieldAccess(this);
 		return staticFieldAccess;
 	}
-	
+
 	/**
 	 * Creates a new {@link StaticMethodInvocation}.
 	 * 
@@ -1611,7 +2061,7 @@ public class AST {
 		StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(this);
 		return staticMethodInvocation;
 	}
-	
+
 	/**
 	 * Creates a new {@link StaticStatement}.
 	 * 
@@ -1621,7 +2071,7 @@ public class AST {
 		StaticStatement staticStatement = new StaticStatement(this);
 		return staticStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link SwitchCase}.
 	 * 
@@ -1631,7 +2081,7 @@ public class AST {
 		SwitchCase switchCase = new SwitchCase(this);
 		return switchCase;
 	}
-	
+
 	/**
 	 * Creates a new {@link SwitchStatement}.
 	 * 
@@ -1641,7 +2091,7 @@ public class AST {
 		SwitchStatement switchStatement = new SwitchStatement(this);
 		return switchStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link ThrowStatement}.
 	 * 
@@ -1651,7 +2101,7 @@ public class AST {
 		ThrowStatement throwStatement = new ThrowStatement(this);
 		return throwStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link TryStatement}.
 	 * 
@@ -1661,7 +2111,7 @@ public class AST {
 		TryStatement tryStatement = new TryStatement(this);
 		return tryStatement;
 	}
-	
+
 	/**
 	 * Creates a new {@link UnaryOperation}.
 	 * 
@@ -1671,7 +2121,7 @@ public class AST {
 		UnaryOperation unaryOperation = new UnaryOperation(this);
 		return unaryOperation;
 	}
-	
+
 	/**
 	 * Creates a new {@link Variable}.
 	 * 
@@ -1682,6 +2132,7 @@ public class AST {
 		Variable variable = new Variable(this);
 		return variable;
 	}
+
 	/**
 	 * Creates a new {@link Variable} with a given name expression.
 	 * 
@@ -1707,8 +2158,8 @@ public class AST {
 		variable.setIsDollared(true);
 		variable.setName(newIdentifier(name));
 		return variable;
-	}	
-	
+	}
+
 	/**
 	 * Creates a new {@link WhileStatement}.
 	 * 
@@ -1718,5 +2169,5 @@ public class AST {
 		WhileStatement whileStatement = new WhileStatement(this);
 		return whileStatement;
 	}
-	
+
 }

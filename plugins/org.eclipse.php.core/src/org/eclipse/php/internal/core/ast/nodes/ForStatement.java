@@ -195,7 +195,7 @@ public class ForStatement extends Statement {
 	 * @return the live list of initializer expressions 
 	 *    (element type: <code>Expression</code>)
 	 */ 
-	public List initializers() {
+	public List<Expression> initializers() {
 		return this.initializers;
 	}
 	
@@ -206,7 +206,7 @@ public class ForStatement extends Statement {
 	 * @return the condition expression node, or <code>null</code> if 
 	 *     there is none
 	 */ 
-	public List conditions() {
+	public List<Expression> conditions() {
 		return this.conditions;
 	}
 	
@@ -221,7 +221,7 @@ public class ForStatement extends Statement {
 	 * @return the live list of update expressions 
 	 *    (element type: <code>Expression</code>)
 	 */ 
-	public List updaters() {
+	public List<Expression> updaters() {
 		return this.updaters;
 	}
 	

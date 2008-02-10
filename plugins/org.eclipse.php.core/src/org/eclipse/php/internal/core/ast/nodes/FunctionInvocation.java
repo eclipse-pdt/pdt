@@ -183,7 +183,7 @@ public class FunctionInvocation extends VariableBase {
 	/**
 	 * @return the parameters component of this function invocation expression
 	 */
-	public List parameters() {
+	public List<Expression> parameters() {
 		return parameters;
 	}	
 	/* 

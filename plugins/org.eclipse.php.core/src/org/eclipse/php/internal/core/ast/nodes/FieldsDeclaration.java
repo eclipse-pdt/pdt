@@ -140,7 +140,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 	 * 
 	 * @return List of single fields
 	 */
-	public List fields() {
+	public List<SingleFieldDeclaration> fields() {
 		return this.fields;
 	}
 	

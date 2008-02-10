@@ -26,7 +26,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class ArrayAccess extends Variable {
 
-	public static final int VARIABLE_ARRAY = 1;
+	public static final int VARIABLE_ARRAY = 1; //default
 	public static final int VARIABLE_HASHTABLE = 2;
 
 	/**
@@ -87,6 +87,22 @@ public class ArrayAccess extends Variable {
 			setIndex(index);	
 		}
 		setArrayType(arrayType);
+	}
+	
+	/**
+	 * Create a new ArrayAccess. Default array type is VARIABLE_ARRAY
+	 * @param start
+	 * @param end
+	 * @param ast
+	 * @param variableName
+	 * @param index
+	 */
+	public ArrayAccess(int start, int end, AST ast, VariableBase variableName, Expression index) {
+		super(start, end, ast, variableName);
+
+		if (index != null) {
+			setIndex(index);	
+		}
 	}
 
 	public void childrenAccept(Visitor visitor) {

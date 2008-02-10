@@ -354,7 +354,7 @@ public class ASTMatcher {
 		
 		return (safeSubtreeMatch(node.getName(), o.getName())
 				&& safeSubtreeMatch(node.getBody(), o.getBody())
-				&& safeSubtreeListMatch(node.interfaes(), o.interfaes()));
+				&& safeSubtreeListMatch(node.interfaces(), o.interfaces()));
 	}
 	
 	public boolean match(ClassInstanceCreation node, Object other) {

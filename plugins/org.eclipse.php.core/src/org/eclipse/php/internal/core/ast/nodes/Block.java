@@ -152,7 +152,7 @@ public class Block extends Statement {
 	 * Retrieves the statement parts of this block
 	 * @return statement parts of this block
 	 */
-	public List statements() {
+	public List<Statement> statements() {
 		return this.statements;
 	}
 	

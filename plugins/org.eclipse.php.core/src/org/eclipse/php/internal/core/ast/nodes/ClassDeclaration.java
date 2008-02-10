@@ -93,7 +93,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		if (superClass != null) {
 			superClass.accept(visitor);
 		}
-		for (Object object : interfaes()) {
+		for (Object object : interfaces()) {
 			final ASTNode node = (ASTNode) object;
 			node.accept(visitor);
 		}
@@ -107,7 +107,7 @@ public class ClassDeclaration extends TypeDeclaration {
 			superClass.traverseTopDown(visitor);
 		}
 		Identifier[] interfaces = getInterfaces();
-		for (Object object : interfaes()) {
+		for (Object object : interfaces()) {
 			final ASTNode node = (ASTNode) object;
 			node.traverseTopDown(visitor);
 		}
@@ -120,7 +120,7 @@ public class ClassDeclaration extends TypeDeclaration {
 			superClass.traverseBottomUp(visitor);
 		}
 		Identifier[] interfaces = getInterfaces();
-		for (Object object : interfaes()) {
+		for (Object object : interfaces()) {
 			final ASTNode node = (ASTNode) object;
 			node.traverseBottomUp(visitor);
 		}
@@ -158,7 +158,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		buffer.append(tab).append(TAB).append("</SuperClassName>\n"); //$NON-NLS-1$
 
 		buffer.append(tab).append(TAB).append("<Interfaces>\n"); //$NON-NLS-1$
-		for (Object object : interfaes()) {
+		for (Object object : interfaces()) {
 			final ASTNode node = (ASTNode) object;
 			node.toString(buffer, TAB + TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
@@ -238,7 +238,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		final Block body = ASTNode.copySubtree(target, getBody());
 		final Identifier superName = ASTNode.copySubtree(target, getSuperClass());
 		final int modifier = getModifier();
-		final List interfaces = ASTNode.copySubtrees(target, interfaes());
+		final List interfaces = ASTNode.copySubtrees(target, interfaces());
 		final Identifier name = ASTNode.copySubtree(target, getName());
 		
 		final ClassDeclaration result = new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName, interfaces, body);
