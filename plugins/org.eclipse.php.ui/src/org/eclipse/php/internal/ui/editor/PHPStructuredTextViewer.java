@@ -13,6 +13,7 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -314,5 +315,26 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		((StructuredRegionProcessor) fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
 
 	}
+	
+	/**
+	 * Sets the given reconciler.
+	 * 
+	 * @param reconciler
+	 *            the reconciler
+	 *
+	 */
+	void setReconciler(IReconciler reconciler) {
+		fReconciler = reconciler;
+	}
+
+	/**
+	 * Returns the reconciler.
+	 * 
+	 * @return the reconciler or <code>null</code> if not set
+	 *
+	 */
+	IReconciler getReconciler() {
+		return fReconciler;
+	}	
 
 }

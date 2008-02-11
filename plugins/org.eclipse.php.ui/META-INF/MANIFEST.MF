@@ -37,7 +37,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.compare,
  org.eclipse.debug.core,
  com.ibm.icu,
- org.eclipse.dltk.core;bundle-version="1.0.0"
+ org.eclipse.dltk.core;bundle-version="1.0.0",
+ org.eclipse.dltk.ui;bundle-version="1.0.0"
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.internal.ui,
  org.eclipse.php.internal.ui.actions,
@@ -63,7 +64,6 @@ Export-Package: org.eclipse.php.internal.ui,
  org.eclipse.php.internal.ui.editor.highlighter,
  org.eclipse.php.internal.ui.editor.hover,
  org.eclipse.php.internal.ui.editor.input,
- org.eclipse.php.internal.ui.editor.reconcile,
  org.eclipse.php.internal.ui.editor.templates,
  org.eclipse.php.internal.ui.editor.templates.resolver,
  org.eclipse.php.internal.ui.editor.util,

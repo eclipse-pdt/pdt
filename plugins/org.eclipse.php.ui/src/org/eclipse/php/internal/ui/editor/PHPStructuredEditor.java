@@ -12,22 +12,72 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.action.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.internal.ui.editor.ISavePolicy;
+import org.eclipse.dltk.internal.ui.editor.ISourceModuleDocumentProvider;
+import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.AbstractInformationControlManager;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.ITextViewerExtension4;
+import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.IAnnotationHover;
+import org.eclipse.jface.text.source.IAnnotationHoverExtension;
+import org.eclipse.jface.text.source.ICharacterPairMatcher;
+import org.eclipse.jface.text.source.ILineRange;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.ISourceViewerExtension3;
+import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.IVerticalRulerInfo;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -54,7 +104,19 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
+import org.eclipse.php.internal.ui.actions.BlockCommentAction;
+import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
+import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
+import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
+import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
+import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
+import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
+import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
+import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
@@ -66,19 +128,39 @@ import org.eclipse.php.internal.ui.text.PHPWordIterator;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
+import org.eclipse.swt.custom.ST;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.TextChangeListener;
+import org.eclipse.swt.custom.TextChangedEvent;
+import org.eclipse.swt.custom.TextChangingEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener2;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.editors.text.TextFileDocumentProvider;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.IUpdate;
+import org.eclipse.ui.texteditor.ResourceAction;
+import org.eclipse.ui.texteditor.TextEditorAction;
+import org.eclipse.ui.texteditor.TextNavigationAction;
+import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -92,7 +174,7 @@ import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
-public class PHPStructuredEditor extends StructuredTextEditor {
+public class PHPStructuredEditor extends StructuredTextEditor implements IScriptReconcilingListener {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
@@ -106,6 +188,52 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private CompositeActionGroup fActionGroups;
 	/**Indicates whether the structure editor is displaying an external file*/
 	protected boolean isExternal;
+
+	/** The editor's save policy */
+	protected ISavePolicy fSavePolicy = null;
+	
+	private final class OutlineSelectionListener implements ISelectionChangedListener {
+		private final ConfigurableContentOutlinePage outlinePage;
+		boolean selecting = false;
+
+		private OutlineSelectionListener(ConfigurableContentOutlinePage outlinePage) {
+			this.outlinePage = outlinePage;
+		}
+
+		public void selectionChanged(final SelectionChangedEvent event) {
+			if (!outlinePage.getConfiguration().isLinkedWithEditor(null)) {
+				return;
+			}
+			/*
+			 * The isFiringSelection check only works if a
+			 * selection listener
+			 */
+			if (event.getSelection().isEmpty() || selecting)
+				return;
+
+			if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getEditorPart())
+				if (event.getSelection() instanceof IStructuredSelection) {
+					final ISelection current = getSelectionProvider().getSelection();
+					if (current instanceof IStructuredSelection) {
+						final Object[] currentSelection = ((IStructuredSelection) current).toArray();
+						final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
+						if (!Arrays.equals(currentSelection, newSelection))
+							if (newSelection.length > 0) {
+								/*
+								 * No ordering is guaranteed for
+								 * multiple selection
+								 */
+								final Object o = newSelection[0];
+								selecting = true;
+								if (o instanceof PHPCodeData)
+									setSelection((PHPCodeData) o, true);
+								selecting = false;
+							}
+					}
+				}
+			clearStatusLine();
+		}
+	}
 
 	/**
 	 * This action behaves in two different ways: If there is no current text hover, the javadoc is displayed using
@@ -422,6 +550,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		 */
 		boolean foldingEnabled = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_FOLDING_ENABLED);
 		SSEUIPlugin.getDefault().getPreferenceStore().setValue(IStructuredTextFoldingProvider.FOLDING_ENABLED, foldingEnabled);
+		setDocumentProvider(DLTKUIPlugin.getDocumentProvider());
 	}
 
 	@Override
@@ -447,15 +576,6 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
 		IPreferenceStore phpEditorPrefs = PHPUiPlugin.getDefault().getPreferenceStore();
 		return new ChainedPreferenceStore(new IPreferenceStore[] { sseEditorPrefs, baseEditorPrefs, phpEditorPrefs });
-	}
-
-	@Override
-	protected void setDocumentProvider(IEditorInput input) {
-		if (input instanceof FileStoreEditorInput || input instanceof NonExistingPHPFileEditorInput) {
-			setDocumentProvider(new TextFileDocumentProvider());
-		} else {
-			super.setDocumentProvider(input);
-		}
 	}
 
 	@Override
@@ -1472,7 +1592,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		} else {
 			super.doSetInput(input);
 		}
-
+		
 		ImageDescriptor imageDescriptor = input.getImageDescriptor();
 		if (imageDescriptor != null) {
 			setTitleImage(JFaceResources.getResources().createImageWithDefault(imageDescriptor));
@@ -1495,44 +1615,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				doubleClickListener.setEnabled(true);
 			}
 			if (selectionListener == null) {
-				selectionListener = new ISelectionChangedListener() {
-
-					boolean selecting = false;
-
-					public void selectionChanged(final SelectionChangedEvent event) {
-						if (!outlinePage.getConfiguration().isLinkedWithEditor(null)) {
-							return;
-						}
-						/*
-						 * The isFiringSelection check only works if a
-						 * selection listener
-						 */
-						if (event.getSelection().isEmpty() || selecting)
-							return;
-
-						if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && getSite().getPage().getActivePart() != getEditorPart())
-							if (event.getSelection() instanceof IStructuredSelection) {
-								final ISelection current = getSelectionProvider().getSelection();
-								if (current instanceof IStructuredSelection) {
-									final Object[] currentSelection = ((IStructuredSelection) current).toArray();
-									final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
-									if (!Arrays.equals(currentSelection, newSelection))
-										if (newSelection.length > 0) {
-											/*
-											 * No ordering is guaranteed for
-											 * multiple selection
-											 */
-											final Object o = newSelection[0];
-											selecting = true;
-											if (o instanceof PHPCodeData)
-												setSelection((PHPCodeData) o, true);
-											selecting = false;
-										}
-								}
-							}
-						clearStatusLine();
-					}
-				};
+				selectionListener = new OutlineSelectionListener(outlinePage);
 			}
 			outlinePage.addSelectionChangedListener(selectionListener);
 		}
@@ -1734,6 +1817,26 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		return new PHPStructuredTextViewer(this, parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 	}
 
+	/*
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#performSave(boolean,
+	 *      org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	protected void performSave(boolean overwrite, IProgressMonitor progressMonitor) {
+		IDocumentProvider p = getDocumentProvider();
+		if (p instanceof ISourceModuleDocumentProvider) {
+			ISourceModuleDocumentProvider cp = (ISourceModuleDocumentProvider) p;
+			cp.setSavePolicy(fSavePolicy);
+		}
+		try {
+			super.performSave(overwrite, progressMonitor);
+		} finally {
+			if (p instanceof ISourceModuleDocumentProvider) {
+				ISourceModuleDocumentProvider cp = (ISourceModuleDocumentProvider) p;
+				cp.setSavePolicy(null);
+			}
+		}
+	}	
+
 	@Override
 	public IDocumentProvider getDocumentProvider() {
 		if (getEditorInput() instanceof LocalFileStorageEditorInput) {
@@ -1743,5 +1846,54 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			}
 		}
 		return super.getDocumentProvider();
+	}
+
+	/**
+	 * IScriptReconcilingListener methods - reconcile listeners   
+	 */
+	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
+	public void addReconcileListener(IScriptReconcilingListener reconcileListener) {
+		synchronized (fReconcilingListeners) {
+			fReconcilingListeners.add(reconcileListener);
+		}
+	}
+
+	public void removeReconcileListener(IScriptReconcilingListener reconcileListener) {
+		synchronized (fReconcilingListeners) {
+			fReconcilingListeners.remove(reconcileListener);
+		}
+	}
+
+	public void aboutToBeReconciled() {
+
+		// Notify AST provider
+		// JavaPlugin.getDefault().getASTProvider().aboutToBeReconciled(getInputJavaElement());
+
+		// Notify listeners
+		Object[] listeners = fReconcilingListeners.getListeners();
+		for (int i = 0, length = listeners.length; i < length; ++i)
+			((IScriptReconcilingListener) listeners[i]).aboutToBeReconciled();
+	}
+
+	/*
+	 * @see org.eclipse.jdt.internal.ui.text.java.IJavaReconcilingListener#reconciled(CompilationUnit,
+	 *      boolean, IProgressMonitor)
+	 * @since 3.0
+	 */
+	public void reconciled(ISourceModule ast, boolean forced, IProgressMonitor progressMonitor) {
+
+		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=58245
+		// JavaPlugin javaPlugin= JavaPlugin.getDefault();
+		// if (javaPlugin == null)
+		// return;
+		//		
+		// // Always notify AST provider
+		// javaPlugin.getASTProvider().reconciled(ast, getInputJavaElement(),
+		// progressMonitor);
+
+		// Notify listeners
+		Object[] listeners = fReconcilingListeners.getListeners();
+		for (int i = 0, length = listeners.length; i < length; ++i)
+			((IScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
 	}
 }
