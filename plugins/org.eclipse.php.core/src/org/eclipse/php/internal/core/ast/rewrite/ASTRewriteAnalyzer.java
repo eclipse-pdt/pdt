@@ -1315,7 +1315,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-		int pos = node.getStart();
+		int pos = content.length; // TODO - Check if this is right (using 0 cause for the code to be inserted before the <?php section).
 		rewriteNodeList(node, Program.STATEMENTS_PROPERTY, pos, "", "");
 		//		int startPos = rewriteNode(node, Program.PACKAGE_PROPERTY, 0, ASTRewriteFormatter.NONE);
 		//
@@ -1732,27 +1732,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(CastExpression)
 	 */
 	public boolean visit(CastExpression node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-
-		rewriteRequiredNode(node, CastExpression.CASTING_TYPE_PROPERTY);
-		rewriteRequiredNode(node, CastExpression.EXPRESSION_PROPERTY);
-		return false;
+		return rewriteRequiredNodeVisit(node, CastExpression.CASTING_TYPE_PROPERTY, CastExpression.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(CatchClause)
 	 */
 	public boolean visit(CatchClause node) { // catch (Exception) Block
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-
-		// TODO ???
-		rewriteRequiredNode(node, CatchClause.CLASS_NAME_PROPERTY/*CatchClause.EXCEPTION_PROPERTY*/);
-		rewriteRequiredNode(node, CatchClause.BODY_PROPERTY);
-		return false;
+		return rewriteRequiredNodeVisit(node, CatchClause.CLASS_NAME_PROPERTY, CatchClause.BODY_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -1810,18 +1797,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ConditionalExpression)
 	 */
 	public boolean visit(ConditionalExpression node) { // expression ? thenExpression : elseExpression
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-
-		// TODO ???
-		rewriteRequiredNode(node, ConditionalExpression.CONDITION_PROPERTY);
-		rewriteRequiredNode(node, ConditionalExpression.IF_TRUE_PROPERTY);
-		rewriteRequiredNode(node, ConditionalExpression.IF_FALSE_PROPERTY);
-		//		rewriteRequiredNode(node, ConditionalExpression.EXPRESSION_PROPERTY);
-		//		rewriteRequiredNode(node, ConditionalExpression.THEN_EXPRESSION_PROPERTY);
-		//		rewriteRequiredNode(node, ConditionalExpression.ELSE_EXPRESSION_PROPERTY);
-		return false;
+		return rewriteRequiredNodeVisit(node, ConditionalExpression.CONDITION_PROPERTY, ConditionalExpression.IF_TRUE_PROPERTY, ConditionalExpression.IF_FALSE_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -1880,7 +1856,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-
 		changeNotSupported(node); // no modification possible
 		return false;
 	}
@@ -1889,35 +1864,27 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ExpressionStatement)
 	 */
 	public boolean visit(ExpressionStatement node) { // expression
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-
-		rewriteRequiredNode(node, ExpressionStatement.EXPRESSION_PROPERTY);
-		return false;
+		return rewriteRequiredNodeVisit(node, ExpressionStatement.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(FieldAccess)
 	 */
 	public boolean visit(FieldAccess node) { // expression.name
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-
-		// TODO ??? (maybe need to change the order??)
-		rewriteRequiredNode(node, FieldAccess.DISPATCHER_PROPERTY); // expression
-		rewriteRequiredNode(node, FieldAccess.FIELD_PROPERTY); // name
-		//		rewriteRequiredNode(node, FieldAccess.EXPRESSION_PROPERTY); // expression
-		//		rewriteRequiredNode(node, FieldAccess.NAME_PROPERTY); // name
-		return false;
+		return rewriteRequiredNodeVisit(node, FieldAccess.DISPATCHER_PROPERTY, FieldAccess.FIELD_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(FieldDeclaration)
 	 */
-	public boolean visit(FieldsDeclaration node) { //{ Modifier } Type VariableDeclarationFragment { ',' VariableDeclarationFragment } ';'
-		// TODO
+	public boolean visit(FieldsDeclaration node) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		// FIXME - Experimental - Must be verified (shalom)
+		rewriteModifiers(node, FieldsDeclaration.MODIFIER_PROPERTY, node.getStart());
+		// FIXME - Experimental - Must be verified (shalom)
+		rewriteNodeList(node, FieldsDeclaration.FIELDS_PROPERTY, node.getStart() + node.getModifierString().length(), "", "");
 		//		if (!hasChildrenChanges(node)) {
 		//			return doVisitUnchangedChildren(node);
 		//		}
@@ -1985,7 +1952,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(IfStatement)
 	 */
 	public boolean visit(IfStatement node) {
-		// TODO -- Maybe we also need to treat the ELSEIF condition.
+		// TODO -- Maybe we also need to treat the ELSEIF condition (shalom)
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
@@ -2189,13 +2156,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(SwitchCase)
 	 */
 	public boolean visit(SwitchCase node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-
 		// dont allow switching from case to default or back. New statements should be created.
-		rewriteRequiredNode(node, SwitchCase.VALUE_PROPERTY);
-		return false;
+		return rewriteRequiredNodeVisit(node, SwitchCase.VALUE_PROPERTY);
 	}
 
 	class SwitchListRewriter extends ParagraphListRewriter {
@@ -2320,10 +2282,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ArrayElement)
 	 */
-	@Override
 	public boolean visit(ArrayElement arrayElement) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(arrayElement, ArrayElement.KEY_PROPERTY, ArrayElement.VALUE_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -2347,9 +2307,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.BackTickExpression)
 	 */
-	@Override
 	public boolean visit(BackTickExpression backTickExpression) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(backTickExpression)) {
+			return doVisitUnchangedChildren(backTickExpression);
+		}
+		rewriteNodeList(backTickExpression, BackTickExpression.EXPRESSIONS_PROPERTY, backTickExpression.getStart(), "", "");
 		return false;
 	}
 
@@ -2359,6 +2321,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	@Override
 	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
 		// TODO Auto-generated method stub
+		// TODO - complex
 		return false;
 	}
 
@@ -2368,25 +2331,22 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
 		// TODO Auto-generated method stub
+		// TODO - Note that the ClassDeclaration has properties from the TypeDeclaration
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ClassName)
 	 */
-	@Override
 	public boolean visit(ClassName className) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(className, ClassName.NAME_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.CloneExpression)
 	 */
-	@Override
 	public boolean visit(CloneExpression cloneExpression) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(cloneExpression, CloneExpression.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -2411,7 +2371,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.EchoStatement)
 	 */
 	public boolean visit(EchoStatement echoStatement) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(echoStatement)) {
+			return doVisitUnchangedChildren(echoStatement);
+		}
+		rewriteNodeList(echoStatement, EchoStatement.EXPRESSIONS_PROPERTY, echoStatement.getStart(), "", "");
 		return false;
 	}
 
@@ -2420,46 +2383,64 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(ForEachStatement forEachStatement) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub (complex...)
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FormalParameter)
 	 */
-	@Override
 	public boolean visit(FormalParameter formalParameter) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(formalParameter, FormalParameter.IS_MANDATORY_PROPERTY, FormalParameter.PARAMETER_TYPE_PROPERTY, FormalParameter.PARAMETER_NAME_PROPERTY, FormalParameter.DEFAULT_VALUE_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration)
 	 */
-	@Override
 	public boolean visit(FunctionDeclaration functionDeclaration) {
-		// TODO Auto-generated method stub
+		// FIXME - Experimental!! Test implementation (shalom)
+		if (!hasChildrenChanges(functionDeclaration)) {
+			return doVisitUnchangedChildren(functionDeclaration);
+		}
+		// Reference
+		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.IS_REFERENCE_PROPERTY);
+		// Name
+		int pos = rewriteRequiredNode(functionDeclaration, FunctionDeclaration.NAME_PROPERTY);
+		// Parameters
+		if (isChanged(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY)) {
+			try {
+				int startOffset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
+				rewriteNodeList(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		} else {
+			voidVisit(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY);
+		}
+		// Body
+		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.BODY_PROPERTY);
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FunctionInvocation)
 	 */
-	public boolean visit(FunctionInvocation node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
+	public boolean visit(FunctionInvocation functionInvocation) {
+		// FIXME - Find all the ASTNodes that might have this kind of structure and implement in a similar way... (shalom)
+		if (!hasChildrenChanges(functionInvocation)) {
+			return doVisitUnchangedChildren(functionInvocation);
 		}
-		int pos = rewriteRequiredNode(node, FunctionInvocation.FUNCTION_PROPERTY);
-		if (isChanged(node, FunctionInvocation.PARAMETERS_PROPERTY)) {
+		int pos = rewriteRequiredNode(functionInvocation, FunctionInvocation.FUNCTION_PROPERTY);
+		if (isChanged(functionInvocation, FunctionInvocation.PARAMETERS_PROPERTY)) {
 			// eval position after opening parent
 			try {
 				int startOffset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
-				rewriteNodeList(node, FunctionInvocation.PARAMETERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+				rewriteNodeList(functionInvocation, FunctionInvocation.PARAMETERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (CoreException e) {
 				handleException(e);
 			}
 		} else {
-			voidVisit(node, FunctionInvocation.PARAMETERS_PROPERTY);
+			voidVisit(functionInvocation, FunctionInvocation.PARAMETERS_PROPERTY);
 		}
 		return false;
 	}
@@ -2467,28 +2448,26 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FunctionName)
 	 */
-	public boolean visit(FunctionName node) {
-		if (!hasChildrenChanges(node)) {
-			return doVisitUnchangedChildren(node);
-		}
-		rewriteRequiredNode(node, FunctionName.NAME_PROPERTY);
-		return false;
+	public boolean visit(FunctionName functionName) {
+		return rewriteRequiredNodeVisit(functionName, FunctionName.NAME_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.GlobalStatement)
 	 */
-	@Override
 	public boolean visit(GlobalStatement globalStatement) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(globalStatement)) {
+			return doVisitUnchangedChildren(globalStatement);
+		}
+		rewriteNodeList(globalStatement, GlobalStatement.VARIABLES_PROPERTY, globalStatement.getStart(), "", "");
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Identifier)
 	 */
-	@Override
 	public boolean visit(Identifier node) {
+		// FIXME - Imlement some of the other visits in a similar way once we debug ...(shalom)
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
@@ -2501,19 +2480,15 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.IgnoreError)
 	 */
-	@Override
 	public boolean visit(IgnoreError ignoreError) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(ignoreError, IgnoreError.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Include)
 	 */
-	@Override
 	public boolean visit(Include include) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(include, Include.INCLUDE_TYPE_PROPERTY, Include.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -2528,10 +2503,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.InstanceOfExpression)
 	 */
-	@Override
 	public boolean visit(InstanceOfExpression instanceOfExpression) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(instanceOfExpression, InstanceOfExpression.CLASSNAME_PROPERTY, InstanceOfExpression.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -2540,123 +2513,127 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
 		// TODO Auto-generated method stub
+		// TODO - Note that the InterfaceDeclaration has properties from the TypeDeclaration
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ListVariable)
 	 */
-	@Override
 	public boolean visit(ListVariable listVariable) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(listVariable)) {
+			return doVisitUnchangedChildren(listVariable);
+		}
+		rewriteNodeList(listVariable, ListVariable.VARIABLES_PROPERTY, listVariable.getStart(), "", "");
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ParenthesisExpression)
 	 */
-	@Override
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(parenthesisExpression, ParenthesisExpression.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Quote)
 	 */
-	@Override
 	public boolean visit(Quote quote) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(quote, Quote.QUOTE_TYPE_PROPERTY, Quote.EXPRESSIONS_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Reference)
 	 */
-	@Override
 	public boolean visit(Reference reference) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(reference, Reference.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ReflectionVariable)
 	 */
-	@Override
 	public boolean visit(ReflectionVariable reflectionVariable) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(reflectionVariable, ReflectionVariable.DOLLARED_PROPERTY, ReflectionVariable.NAME_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Scalar)
 	 */
-	@Override
 	public boolean visit(Scalar scalar) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(scalar, Scalar.TYPE_PROPERTY, Scalar.VALUE_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.SingleFieldDeclaration)
 	 */
-	@Override
 	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(singleFieldDeclaration, SingleFieldDeclaration.NAME_PROPERTY, SingleFieldDeclaration.VALUE_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess)
 	 */
-	@Override
 	public boolean visit(StaticConstantAccess classConstantAccess) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(classConstantAccess, StaticConstantAccess.CLASS_NAME_PROPERTY, StaticConstantAccess.CONSTANT_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess)
 	 */
-	@Override
 	public boolean visit(StaticFieldAccess staticFieldAccess) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(staticFieldAccess, StaticFieldAccess.CLASS_NAME_PROPERTY, StaticFieldAccess.FIELD_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation)
 	 */
-	@Override
 	public boolean visit(StaticMethodInvocation staticMethodInvocation) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(staticMethodInvocation, StaticMethodInvocation.CLASS_NAME_PROPERTY, StaticMethodInvocation.METHOD_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.StaticStatement)
 	 */
-	@Override
 	public boolean visit(StaticStatement staticStatement) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(staticStatement)) {
+			return doVisitUnchangedChildren(staticStatement);
+		}
+		rewriteNodeList(staticStatement, StaticStatement.EXPRESSIONS_PROPERTY, staticStatement.getStart(), "", "");
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.UnaryOperation)
 	 */
-	@Override
 	public boolean visit(UnaryOperation unaryOperation) {
-		// TODO Auto-generated method stub
-		return false;
+		return rewriteRequiredNodeVisit(unaryOperation, UnaryOperation.EXPRESSION_PROPERTY, UnaryOperation.OPERATOR_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Variable)
 	 */
-	@Override
 	public boolean visit(Variable variable) {
-		// TODO Auto-generated method stub
+		return rewriteRequiredNodeVisit(variable, Variable.DOLLARED_PROPERTY, Variable.NAME_PROPERTY);
+	}
+
+	/**
+	 * A general visit implementations that calls {@link #doVisitUnchangedChildren(ASTNode)} in case that the node 
+	 * has no changes in its children, and calls {@link #rewriteRequiredNode(ASTNode, StructuralPropertyDescriptor)}
+	 * on the given {@link StructuralPropertyDescriptor} properties. 
+	 * The given property descriptors should be only {@link ChildPropertyDescriptor} and {@link SimplePropertyDescriptor}.
+	 * In any other case, {@link #rewriteNodeList(ASTNode, StructuralPropertyDescriptor, int, String, String)} might be needed.
+	 * 
+	 * @param node An {@link ASTNode}.
+	 * @param properties StructuralPropertyDescriptors of the types {@link ChildPropertyDescriptor} and {@link SimplePropertyDescriptor}.
+	 * @return false by default
+	 */
+	protected boolean rewriteRequiredNodeVisit(ASTNode node, StructuralPropertyDescriptor... properties) {
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		for (StructuralPropertyDescriptor property : properties) {
+			rewriteRequiredNode(node, property);
+		}
 		return false;
 	}
 }
