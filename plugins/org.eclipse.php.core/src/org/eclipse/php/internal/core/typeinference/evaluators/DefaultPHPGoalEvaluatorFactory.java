@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
@@ -62,6 +63,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (expression instanceof CastExpression) {
 			return new CastEvaluator(exprGoal);
+		}
+		if (expression instanceof VariableReference) {
+			return new VariableTypeEvaluator(exprGoal);
 		}
 
 		return null;
