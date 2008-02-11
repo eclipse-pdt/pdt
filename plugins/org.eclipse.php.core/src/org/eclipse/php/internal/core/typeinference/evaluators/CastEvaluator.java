@@ -7,10 +7,11 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.CastExpression;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class CastEvaluator extends GoalEvaluator {
 
-	private IEvaluatedType result;
+	private IEvaluatedType result = null;
 
 	public CastEvaluator(IGoal goal) {
 		super(goal);
@@ -32,13 +33,12 @@ public class CastEvaluator extends GoalEvaluator {
 				result = new SimpleType(SimpleType.TYPE_ARRAY);
 				break;
 			case CastExpression.TYPE_OBJECT:
-				result = new SimpleType(SimpleType.TYPE_NONE);//FIXME
-				break;
+				return new IGoal[]{new ExpressionTypeGoal(typedGoal.getContext(), castExpression.getExpr())};
 			case CastExpression.TYPE_BOOL:
 				result = new SimpleType(SimpleType.TYPE_BOOLEAN);
 				break;
 			case CastExpression.TYPE_UNSET:
-				result = new SimpleType(SimpleType.TYPE_NULL);//FIXME
+				result = new SimpleType(SimpleType.TYPE_NULL);
 				break;
 			default:
 				throw new IllegalArgumentException();
@@ -47,6 +47,11 @@ public class CastEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
+		if(result instanceof PHPClassType){
+			this.result = (PHPClassType) result;
+		} else {
+			this.result = new PHPClassType("StdClass");			
+		}
 		return IGoal.NO_GOALS;
 	}
 
