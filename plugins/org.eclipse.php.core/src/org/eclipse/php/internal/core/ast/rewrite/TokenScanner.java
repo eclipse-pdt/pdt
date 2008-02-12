@@ -35,6 +35,7 @@ public class TokenScanner {
 	private AstLexer scanner;
 	private RandomAccessCharArrayReader charReader;
 	private Symbol currentToken;
+	private int offset;
 
 	/**
 	 * Creates a TokenScanner
@@ -63,9 +64,11 @@ public class TokenScanner {
 	 * @throws IOException 
 	 */
 	public void setOffset(int offset) {
+		this.offset = offset;
 		charReader.reset(offset);
 		try {
 			scanner.yyreset(charReader);
+			scanner.setInScriptingState();
 			scanner.resetCommentList();
 		} catch (IOException e) {
 			Logger.logException(e);
@@ -77,7 +80,7 @@ public class TokenScanner {
 	 */
 	public int getCurrentEndOffset() {
 		if (currentToken != null) {
-			return currentToken.right + 1;
+			return offset + currentToken.right;
 		}
 		return 0;
 	}
@@ -87,7 +90,7 @@ public class TokenScanner {
 	 */
 	public int getCurrentStartOffset() {
 		if (currentToken != null) {
-			return currentToken.left;
+			return offset + currentToken.left;
 		}
 		return 0;
 	}
@@ -166,10 +169,10 @@ public class TokenScanner {
 	 * or a lexical error was detected while scanning (code LEXICAL_ERROR)
 	 */
 	public void readToToken(Symbol tok) throws CoreException {
-		Symbol curr = null;
+		currentToken = null;
 		do {
-			curr = readNext();
-		} while (curr != null && curr.sym == tok.sym);
+			currentToken = readNext();
+		} while (currentToken != null && currentToken.sym != tok.sym);
 	}
 
 	/**
