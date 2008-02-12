@@ -1,6 +1,8 @@
 package org.eclipse.php.internal.core.mixin;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -12,6 +14,7 @@ import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
@@ -29,6 +32,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	private IMixinRequestor requestor;
 	private Stack<Scope> scopes = new Stack<Scope>();
 	private SourceModuleScope sourceModuleScope;
+	private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
+
+	/** Global variables stack */
+	private Stack<Set<String>> globalVariables = new Stack<Set<String>>();
 
 	private abstract class Scope {
 		private final ASTNode node;
@@ -213,14 +220,35 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return key;
 	}
 
-	private void reportVariableDeclaration(SimpleReference var) throws Exception {
+	/**
+	 * Report variable declaration in the current scope
+	 * @param var Variable declaration. Can either contain dollar or not (in case of field access declaration)
+	 * @throws Exception
+	 */
+	protected void reportVariableDeclaration(SimpleReference var) throws Exception {
 		reportVariableDeclaration(var, scopes.peek());
 	}
 
-	private void reportVariableDeclaration(SimpleReference var, Scope scope) throws Exception {
+	/**
+	 * Report variable declaration in the given scope
+	 * @param var Variable declaration. Can either contain dollar or not (in case of field access declaration)
+	 * @param scope Scope that this variable is declared in
+	 * @throws Exception
+	 */
+	protected void reportVariableDeclaration(SimpleReference var, Scope scope) throws Exception {
 		if (scope == null) {
-			throw new Exception("Scope should not be null");
+			throw new NullPointerException("Scope must not be null");
 		}
+
+		// Check whether this variable is global (that means it was previously declared as global):
+		if (var instanceof VariableReference) {
+			Set<String> globalVars = globalVariables.peek();
+			if (globalVars.contains(var.getName())) {
+				// Replace given scope with the global scope:
+				scope = sourceModuleScope;
+			}
+		}
+
 		IField obj = null;
 		String name = var.getName();
 		if (moduleAvailable) {
@@ -235,6 +263,11 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		scope.reportVariable(name, obj);
 	}
 
+	/**
+	 * Strips single or double quotes from the start and from the end of the given string
+	 * @param name String
+	 * @return
+	 */
 	private static String stripQuotes(String name) {
 		int len = name.length();
 		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
@@ -243,7 +276,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return name;
 	}
 
-	private IModelElement findModelElementFor(ASTNode decl) throws ModelException {
+	protected IModelElement findModelElementFor(ASTNode decl) throws ModelException {
 		return sourceModule.getElementAt(decl.sourceStart() + 1);
 	}
 
@@ -278,6 +311,16 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		}
 		if (expr instanceof ListVariable) {
 			return visit((ListVariable) expr);
+		}
+		if (expr instanceof Block) {
+			return visit((Block)expr);
+		}
+		return true;
+	}
+
+	public boolean endvisit(Expression expr) throws Exception {
+		if (expr instanceof Block) {
+			return endvisit((Block)expr);
 		}
 		return true;
 	}
@@ -331,15 +374,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(FormalParameter parameter) throws Exception {
-		IField obj = null;
-		VariableReference varReference = parameter.getParameterName();
-		String name = varReference.getName();
-		if (sourceModule != null) {
-			obj = new FakeField((ModelElement) sourceModule, name, parameter.sourceStart(), parameter.sourceEnd() - parameter.sourceStart());
-		}
-		Scope scope = scopes.peek();
-		scope.reportVariable(name, obj);
-
+		reportVariableDeclaration(parameter.getParameterName());
 		return true;
 	}
 
@@ -365,7 +400,15 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	public boolean visit(GlobalStatement statement) throws Exception {
 		for (Expression variable : statement.getVariables()) {
 			if (variable instanceof VariableReference) { // global $a, $b
-				reportVariableDeclaration((VariableReference) variable, sourceModuleScope);
+
+				VariableReference var = (VariableReference) variable;
+
+				// Add this variable reference to the list of current global variables
+				Set<String> globalVars = globalVariables.peek();
+				globalVars.add(var.getName());
+
+				// We do not handle global statement as variable declaration:
+				//	reportVariableDeclaration(var, sourceModuleScope);
 			}
 		}
 		return true;
@@ -384,26 +427,39 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(PHPFieldDeclaration decl) throws Exception {
-		IField obj = null;
-		String name = decl.getName();
-		if (moduleAvailable) {
-			IModelElement element = findModelElementFor(decl);
-			obj = (IField) element;
-		}
-		Scope scope = scopes.peek();
-		scope.reportVariable(name, obj);
+		reportVariableDeclaration(decl.getRef());
+		return true;
+	}
 
+	public boolean visit(Block block) throws Exception {
+		HashSet<String> globalVars = new HashSet<String>();
+
+		// Check whether this block is not the block of method, since in this case it doesn't inherit global variables from the outer scope:
+		if (nodesStack.isEmpty() || !(nodesStack.peek() instanceof MethodDeclaration)) {
+			globalVars.addAll(globalVariables.peek()); // inherit global variables from the outside
+		}
+		globalVariables.push(globalVars);
+
+		nodesStack.push(block);
+		return true;
+	}
+
+	public boolean endvisit(Block block) throws Exception {
+		globalVariables.pop();
+		nodesStack.pop();
 		return true;
 	}
 
 	public boolean visit(ModuleDeclaration s) throws Exception {
 		sourceModuleScope = new SourceModuleScope(s);
 		scopes.push(sourceModuleScope);
+		globalVariables.push(new HashSet<String>());
 		return true;
 	}
 
 	public boolean endvisit(ModuleDeclaration s) throws Exception {
 		scopes.pop();
+		globalVariables.pop();
 		return true;
 	}
 
@@ -419,11 +475,13 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		String method = scope.reportMethod(name, obj);
 		scopes.push(new MethodScope(decl, scope, method));
 
+		nodesStack.push(decl);
 		return true;
 	}
 
 	public boolean endvisit(MethodDeclaration decl) throws Exception {
 		scopes.pop();
+		nodesStack.pop();
 		return true;
 	}
 
