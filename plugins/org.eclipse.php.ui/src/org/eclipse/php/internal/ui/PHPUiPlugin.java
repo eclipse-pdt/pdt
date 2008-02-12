@@ -25,6 +25,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
+import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.MembersOrderPreferenceCache;
@@ -34,6 +35,7 @@ import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -73,6 +75,12 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private PHPEditorTextHoverDescriptor[] fPHPEditorTextHoverDescriptors;
 	private PHPManualSiteDescriptor[] fPHPManualSiteDescriptors;
 
+	/**
+	 * The AST provider.
+	 * @since 3.0
+	 */
+	private ASTProvider fASTProvider;
+	
 	/**
 	 * The constructor.
 	 */
@@ -298,5 +306,18 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			fPHPManualSiteDescriptors = PHPManualSiteDescriptor.getContributedSites();
 		}
 		return fPHPManualSiteDescriptors;
+	}
+
+	/**
+	 * Returns the AST provider.
+	 * 
+	 * @return the AST provider
+	 * @since 3.0
+	 */
+	public synchronized ASTProvider getASTProvider() {
+		if (fASTProvider == null)
+			fASTProvider= new ASTProvider();
+		
+		return fASTProvider;
 	}
 }

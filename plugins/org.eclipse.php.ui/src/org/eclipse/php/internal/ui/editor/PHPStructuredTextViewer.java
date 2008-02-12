@@ -1,5 +1,10 @@
 package org.eclipse.php.internal.ui.editor;
 
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.ScriptModelUtil;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
@@ -335,6 +340,5 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 */
 	IReconciler getReconciler() {
 		return fReconciler;
-	}	
-
+	}
 }

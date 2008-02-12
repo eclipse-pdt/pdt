@@ -34,7 +34,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.ScriptModelUtil;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ISavePolicy;
 import org.eclipse.dltk.internal.ui.editor.ISourceModuleDocumentProvider;
 import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
@@ -1896,4 +1900,58 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 		for (int i = 0, length = listeners.length; i < length; ++i)
 			((IScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
 	}
+	
+	/**
+	 * Returns the model element wrapped by this editors input.
+	 * 
+	 * @return the model element wrapped by this editors input.
+	 * 
+	 */
+	public IModelElement getInputModelElement() {
+		return EditorUtility.getEditorInputModelElement(this , false);
+	}
+
+	/**
+	 * Returns the most narrow model element including the given offset.
+	 * 
+	 * @param offset
+	 *            the offset inside of the requested element
+	 * @return the most narrow model element
+	 */
+	protected IModelElement getElementAt(int offset) {
+		return getElementAt(offset, true);
+	}
+
+	/**
+	 * Returns the most narrow element including the given offset. If
+	 * <code>reconcile</code> is <code>true</code> the editor's input
+	 * element is reconciled in advance. If it is <code>false</code> this
+	 * method only returns a result if the editor's input element does not need
+	 * to be reconciled.
+	 * 
+	 * @param offset
+	 *            the offset included by the retrieved element
+	 * @param reconcile
+	 *            <code>true</code> if working copy should be reconciled
+	 * @return the most narrow element which includes the given offset
+	 */
+	protected IModelElement getElementAt(int offset, boolean reconcile) {
+		ISourceModule unit = (ISourceModule) getInputModelElement();
+		if (unit != null) {
+			try {
+				if (reconcile) {
+					ScriptModelUtil.reconcile(unit);
+					return unit.getElementAt(offset);
+				} else if (unit.isConsistent())
+					return unit.getElementAt(offset);
+			} catch (ModelException x) {
+				if (!x.isDoesNotExist())
+					// DLTKUIPlugin.log(x.getStatus());
+					System.err.println(x.getStatus());
+				// nothing found, be tolerant and go on
+			}
+		}
+		return null;
+	}
+	
 }
