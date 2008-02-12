@@ -998,6 +998,25 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/*
+	 * Rewrite the dollar property when dealing with a variable.
+	 * // FIXME - This Variable.DOLLARED_PROPERTY might not be needed since variables should always have a $ sign.
+	 */
+	private void rewriteVariableDollar(Variable variable) {
+		// Make the neccessary changes to add or remove the $ sign.
+		RewriteEvent event = getEvent(variable, Variable.DOLLARED_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			TextEditGroup editGroup = getEditGroup(event);
+			if ((Boolean) event.getNewValue()) {
+				// Add a dollar sign to the variable
+				this.doTextInsert(variable.getStart(), "$", editGroup);
+			} else {
+				// Remove the dollar sign from the variable
+				this.doTextRemove(variable.getStart(), 1, editGroup);
+			}
+		}
+	}
+	
+	/*
 	 * Next token is a left brace. Returns the offset after the brace. For incomplete code, return the start offset.  
 	 */
 	private int getPosAfterLeftBrace(int pos) {
@@ -2296,15 +2315,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ASTNode)
-	 */
-	@Override
-	public boolean visit(ASTNode node) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.BackTickExpression)
 	 */
 	public boolean visit(BackTickExpression backTickExpression) {
@@ -2418,6 +2428,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			voidVisit(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY);
 		}
 		// Body
+		// FIXME - might need to call rewrite body
 		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.BODY_PROPERTY);
 		return false;
 	}
@@ -2613,7 +2624,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {
-		return rewriteRequiredNodeVisit(variable, Variable.DOLLARED_PROPERTY, Variable.NAME_PROPERTY);
+		// FIXME - This Variable.DOLLARED_PROPERTY might not be needed since variables should always have a $ sign.
+		if (isChanged(variable, Variable.DOLLARED_PROPERTY)) {
+			rewriteVariableDollar(variable);
+		}
+		return rewriteRequiredNodeVisit(variable, Variable.NAME_PROPERTY);
 	}
 
 	/**
