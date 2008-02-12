@@ -12,7 +12,12 @@ package org.eclipse.php.internal.core;
 
 import java.util.Hashtable;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
@@ -124,6 +129,6 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public static Hashtable getOptions() {
 		return ModelManager.getModelManager().getOptions();
-	}	
+	}
 
 }

@@ -175,7 +175,7 @@ public abstract class ASTNode implements Visitable {
 	 * 
 	 * @see #MALFORMED, #PROTECT, #RECOVERED, #ORIGINAL  
 	 */
-	char flags = 0;
+	int flags = 0;
 
 	/**
 	 * Property of parent in which this node is a child, or <code>null</code>
@@ -1106,7 +1106,7 @@ public abstract class ASTNode implements Visitable {
 	 * @param flags the bitwise-or of individual flags
 	 * @see #getFlags()
 	 */
-	public final void setFlags(char flags) {
+	public final void setFlags(int flags) {
 		this.ast.modifying();
 		this.flags |= flags;
 	}
