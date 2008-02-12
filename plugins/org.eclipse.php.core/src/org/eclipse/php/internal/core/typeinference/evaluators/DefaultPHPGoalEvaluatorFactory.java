@@ -34,19 +34,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (expression instanceof Scalar) {
 			Scalar scalar = (Scalar) expression;
-			int scalarType = scalar.getScalarType();
-			int simpleType = SimpleType.TYPE_NONE;
-			switch (scalarType) {
-				case Scalar.TYPE_INT:
-				case Scalar.TYPE_REAL:
-					simpleType = SimpleType.TYPE_NUMBER;
-					break;
-				case Scalar.TYPE_STRING:
-				case Scalar.TYPE_SYSTEM:
-					simpleType = SimpleType.TYPE_STRING;
-					break;
-			}
-			return new FixedAnswerEvaluator(exprGoal, new SimpleType(simpleType));
+			return new ScalarEvaluator(exprGoal, scalar);
 		}
 		if (expression instanceof TypeReference) {
 			TypeReference type = (TypeReference) expression;
@@ -61,11 +49,29 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expression instanceof InfixExpression) {
 			return new InfixExpressionEvaluator(exprGoal);
 		}
+		if (expression instanceof PrefixExpression) {
+			return new PrefixExpressionEvaluator(exprGoal);
+		}
+		if (expression instanceof PostfixExpression) {
+			return new PostfixExpressionEvaluator(exprGoal);
+		}
 		if (expression instanceof CastExpression) {
 			return new CastEvaluator(exprGoal);
 		}
 		if (expression instanceof VariableReference) {
 			return new VariableTypeEvaluator(exprGoal);
+		}
+		if (expression instanceof BackTickExpression) {
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
+		}
+		if (expression instanceof CloneExpression) {
+			return new CloneEvaluator(exprGoal);
+		}
+		if (expression instanceof InstanceOfExpression) {
+			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_BOOLEAN));
+		}
+		if (expression instanceof ConditionalExpression) {
+			return new ConditionalExpressionEvaluator(exprGoal);
 		}
 
 		return null;

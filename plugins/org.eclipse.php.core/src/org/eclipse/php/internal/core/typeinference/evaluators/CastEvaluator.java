@@ -11,7 +11,7 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class CastEvaluator extends GoalEvaluator {
 
-	private IEvaluatedType result = null;
+	private IEvaluatedType result;
 
 	public CastEvaluator(IGoal goal) {
 		super(goal);
@@ -50,7 +50,7 @@ public class CastEvaluator extends GoalEvaluator {
 		if(result instanceof PHPClassType){
 			this.result = (PHPClassType) result;
 		} else {
-			this.result = new PHPClassType("StdClass");			
+			this.result = new PHPClassType("StdClass");
 		}
 		return IGoal.NO_GOALS;
 	}

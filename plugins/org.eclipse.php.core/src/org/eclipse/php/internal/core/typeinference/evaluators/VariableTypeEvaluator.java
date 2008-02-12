@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.mixin.PHPMixinParser;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -47,15 +44,6 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 
 		// Handle local variables
 		if (context instanceof MethodContext) {
-			MethodContext methodContext = (MethodContext) context;
-			StringBuilder searchKey = new StringBuilder();
-			IEvaluatedType instanceType = methodContext.getInstanceType();
-			if (instanceType != null) {
-				searchKey.append(instanceType.getTypeName()).append(PHPMixinParser.CLASS_SUFFIX);
-			}
-			searchKey.append(MixinModel.SEPARATOR);
-
-			PHPMixinModel.getRawInstance();
 		}
 
 		return IGoal.NO_GOALS;

@@ -1,0 +1,32 @@
+package org.eclipse.php.internal.core.typeinference.evaluators;
+
+import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
+import org.eclipse.dltk.ti.goals.GoalEvaluator;
+import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.CloneExpression;
+
+public class CloneEvaluator extends GoalEvaluator {
+
+	private IEvaluatedType result;
+
+	public CloneEvaluator(IGoal goal) {
+		super(goal);
+	}
+
+	public IGoal[] init() {
+		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
+		CloneExpression cloneExpression = (CloneExpression) typedGoal.getExpression();
+		return new IGoal[] { new ExpressionTypeGoal(typedGoal.getContext(), cloneExpression.getExpr()) };
+	}
+
+	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
+		this.result = (IEvaluatedType) result;
+		return IGoal.NO_GOALS;
+	}
+
+	public Object produceResult() {
+		return result;
+	}
+}

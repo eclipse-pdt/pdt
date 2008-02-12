@@ -1,6 +1,5 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
