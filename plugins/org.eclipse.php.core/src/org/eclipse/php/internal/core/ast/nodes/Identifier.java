@@ -101,13 +101,6 @@ public class Identifier extends Expression {
 		return this.name == other.name;
 	}
 
-	/**
-	 * Hah code of the identifier is performed only on the name field
-	 */
-	public int hashCode() {
-		return 31 + ((name == null) ? 0 : name.hashCode());
-	}
-
 	public int getType() {
 		return ASTNode.IDENTIFIER;
 	}
