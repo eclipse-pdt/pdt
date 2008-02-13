@@ -37,7 +37,7 @@ public class MethodInvocation extends Dispatch {
 
 	@Override
 	ChildPropertyDescriptor getDispatcherProperty() {
-		return FieldAccess.DISPATCHER_PROPERTY;
+		return MethodInvocation.DISPATCHER_PROPERTY;
 	}
 	
 	/**
