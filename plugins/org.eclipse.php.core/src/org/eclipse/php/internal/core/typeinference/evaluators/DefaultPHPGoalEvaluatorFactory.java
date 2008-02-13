@@ -73,6 +73,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expression instanceof ConditionalExpression) {
 			return new ConditionalExpressionEvaluator(exprGoal);
 		}
+		if (expression instanceof ArrayCreation) {
+			return new ArrayCreationEvaluator(exprGoal);
+		}
 
 		return null;
 	}

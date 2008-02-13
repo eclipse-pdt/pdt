@@ -6,11 +6,25 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.dltk.ti.types.RecursionTypeCall;
 
 public class PHPTypeInferenceUtils {
+
+	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluaedTypes) {
+		Set<IEvaluatedType> types = new HashSet<IEvaluatedType>(evaluaedTypes);
+		types.remove(null);
+		if (types.size() > 1 && types.contains(RecursionTypeCall.INSTANCE)) {
+			types.remove(RecursionTypeCall.INSTANCE);
+		}
+		MultiTypeType multiTypeType = new MultiTypeType();
+		for (IEvaluatedType type : types) {
+			multiTypeType.addType(type);
+		}
+		return multiTypeType;
+	}
 
 	public static IEvaluatedType combineTypes(Collection<IEvaluatedType> evaluaedTypes) {
 		Set<IEvaluatedType> types = new HashSet<IEvaluatedType>(evaluaedTypes);
