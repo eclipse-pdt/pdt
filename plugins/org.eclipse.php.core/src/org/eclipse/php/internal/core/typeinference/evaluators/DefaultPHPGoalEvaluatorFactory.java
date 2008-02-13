@@ -9,6 +9,7 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
@@ -20,6 +21,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (goal instanceof MethodReturnTypeGoal) {
 			return new MethodReturnTypeEvaluator(goal);
+		}
+		if (goal instanceof VariableTypeGoal) {
+			return new VariableTypeEvaluator(goal);
 		}
 
 		return null;
@@ -59,7 +63,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			return new CastEvaluator(exprGoal);
 		}
 		if (expression instanceof VariableReference) {
-			return new VariableTypeEvaluator(exprGoal);
+			return new VariableReferenceEvaluator(exprGoal);
 		}
 		if (expression instanceof BackTickExpression) {
 			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));

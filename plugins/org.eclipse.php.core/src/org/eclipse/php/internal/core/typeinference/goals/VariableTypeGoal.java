@@ -1,37 +1,22 @@
 package org.eclipse.php.internal.core.typeinference.goals;
 
-import org.eclipse.dltk.ast.references.VariableKind;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 
 /**
- * Type of a class/instance/global/constant variables
- * 
+ * Type of a local or global variables
  */
 public class VariableTypeGoal extends AbstractTypeGoal {
 
-	private final String name;
-	private final String parentKey;
-	private final VariableKind kind;
+	private final VariableReference variableReference;
 
-	public VariableTypeGoal(IContext context, String name, String parent,
-			VariableKind kind) {
+	public VariableTypeGoal(IContext context, VariableReference variableReference) {
 		super(context);
-		this.name = name;
-		parentKey = parent;
-		this.kind = kind;
+		this.variableReference = variableReference;
 	}
 
-	public VariableKind getKind() {
-		return kind;
+	public VariableReference getVariableReference() {
+		return variableReference;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getParentKey() {
-		return parentKey;
-	}
-
 }

@@ -18,10 +18,38 @@ public class PHPClassType extends ClassType implements IClassType {
 	}
 
 	public boolean subtypeOf(IEvaluatedType type) {
-		return false; //TODO
+		return false;
 	}
 
 	public String getModelKey() {
 		return typeName + PHPMixinParser.CLASS_SUFFIX;
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((typeName == null) ? 0 : typeName.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		PHPClassType other = (PHPClassType) obj;
+		if (typeName == null) {
+			if (other.typeName != null) {
+				return false;
+			}
+		} else if (!typeName.equals(other.typeName)) {
+			return false;
+		}
+		return true;
 	}
 }

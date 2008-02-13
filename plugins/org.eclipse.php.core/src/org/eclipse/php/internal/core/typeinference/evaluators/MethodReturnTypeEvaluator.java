@@ -119,7 +119,7 @@ public class MethodReturnTypeEvaluator extends GoalEvaluator {
 			parameters = new String[0];
 		}
 
-		innerContext = new MethodContext(goal.getContext(), sourceModule, module, parameters, typedGoal.getArguments());
+		innerContext = new MethodContext(goal.getContext(), sourceModule, module, decl, parameters, typedGoal.getArguments());
 
 		ASTVisitor visitor = new ASTVisitor() {
 			public boolean visitGeneral(ASTNode node) throws Exception {
