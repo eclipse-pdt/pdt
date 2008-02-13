@@ -14,88 +14,22 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTError;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.ArrayCreation;
-import org.eclipse.php.internal.core.ast.nodes.ArrayElement;
-import org.eclipse.php.internal.core.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.ast.nodes.BackTickExpression;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.BreakStatement;
-import org.eclipse.php.internal.core.ast.nodes.CastExpression;
-import org.eclipse.php.internal.core.ast.nodes.CatchClause;
-import org.eclipse.php.internal.core.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ClassInstanceCreation;
-import org.eclipse.php.internal.core.ast.nodes.ClassName;
-import org.eclipse.php.internal.core.ast.nodes.CloneExpression;
-import org.eclipse.php.internal.core.ast.nodes.Comment;
-import org.eclipse.php.internal.core.ast.nodes.ConditionalExpression;
-import org.eclipse.php.internal.core.ast.nodes.ContinueStatement;
-import org.eclipse.php.internal.core.ast.nodes.DeclareStatement;
-import org.eclipse.php.internal.core.ast.nodes.DoStatement;
-import org.eclipse.php.internal.core.ast.nodes.EchoStatement;
-import org.eclipse.php.internal.core.ast.nodes.EmptyStatement;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.ExpressionStatement;
-import org.eclipse.php.internal.core.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ForEachStatement;
-import org.eclipse.php.internal.core.ast.nodes.ForStatement;
-import org.eclipse.php.internal.core.ast.nodes.FormalParameter;
-import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
-import org.eclipse.php.internal.core.ast.nodes.FunctionName;
-import org.eclipse.php.internal.core.ast.nodes.GlobalStatement;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.IfStatement;
-import org.eclipse.php.internal.core.ast.nodes.IgnoreError;
-import org.eclipse.php.internal.core.ast.nodes.InLineHtml;
-import org.eclipse.php.internal.core.ast.nodes.Include;
-import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
-import org.eclipse.php.internal.core.ast.nodes.InstanceOfExpression;
-import org.eclipse.php.internal.core.ast.nodes.InterfaceDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ListVariable;
-import org.eclipse.php.internal.core.ast.nodes.MethodDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.MethodInvocation;
-import org.eclipse.php.internal.core.ast.nodes.ParenthesisExpression;
-import org.eclipse.php.internal.core.ast.nodes.PostfixExpression;
-import org.eclipse.php.internal.core.ast.nodes.PrefixExpression;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.Quote;
-import org.eclipse.php.internal.core.ast.nodes.Reference;
-import org.eclipse.php.internal.core.ast.nodes.ReflectionVariable;
-import org.eclipse.php.internal.core.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.ast.nodes.Statement;
-import org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess;
-import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
-import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.ast.nodes.StaticStatement;
-import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
-import org.eclipse.php.internal.core.ast.nodes.SwitchCase;
-import org.eclipse.php.internal.core.ast.nodes.SwitchStatement;
-import org.eclipse.php.internal.core.ast.nodes.ThrowStatement;
-import org.eclipse.php.internal.core.ast.nodes.TryStatement;
-import org.eclipse.php.internal.core.ast.nodes.UnaryOperation;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
-import org.eclipse.php.internal.core.ast.nodes.VariableBase;
-import org.eclipse.php.internal.core.ast.nodes.WhileStatement;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
-	
+
 	/**
 	 * Internal synonynm for deprecated constant AST.JSL2
 	 * to alleviate deprecation warnings.
 	 * @deprecated
 	 */
-	/*package*/ static final String PHP4_INTERNAL = PHPVersion.PHP4;
-	
+	/*package*/static final String PHP4_INTERNAL = PHPVersion.PHP4;
+
 	public static String asString(ASTNode node, RewriteEventStore store) {
-		ASTRewriteFlattener flattener= new ASTRewriteFlattener(store);
+		ASTRewriteFlattener flattener = new ASTRewriteFlattener(store);
 		node.accept(flattener);
 		return flattener.getResult();
 	}
@@ -104,10 +38,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	private RewriteEventStore store;
 
 	public ASTRewriteFlattener(RewriteEventStore store) {
-		this.store= store;
-		this.result= new StringBuffer();
+		this.store = store;
+		this.result = new StringBuffer();
 	}
-	
+
 	/**
 	 * Returns the string accumulated in the visit.
 	 *
@@ -117,14 +51,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		// convert to a string, but lose any extra space in the string buffer by copying
 		return new String(this.result.toString());
 	}
-	
+
 	/**
 	 * Resets this printer so that it can be used again.
 	 */
 	public void reset() {
 		this.result.setLength(0);
 	}
-	
+
 	/**
 	 * Appends the text representation of the given modifier flags, followed by a single space.
 	 * 
@@ -151,42 +85,42 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			buf.append("final "); //$NON-NLS-1$
 		}
 	}
-		
+
 	protected List getChildList(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return (List) getAttribute(parent, childProperty);
 	}
-	
+
 	protected ASTNode getChildNode(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return (ASTNode) getAttribute(parent, childProperty);
 	}
-	
+
 	protected int getIntAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return ((Integer) getAttribute(parent, childProperty)).intValue();
 	}
-	
+
 	protected boolean getBooleanAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return ((Boolean) getAttribute(parent, childProperty)).booleanValue();
 	}
-	
+
 	protected Object getAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
 		return this.store.getNewValue(parent, childProperty);
 	}
-	
+
 	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator) {
-		List list= getChildList(parent, childProperty);
-		for (int i= 0; i < list.size(); i++) {
+		List list = getChildList(parent, childProperty);
+		for (int i = 0; i < list.size(); i++) {
 			if (separator != null && i > 0) {
 				this.result.append(separator);
 			}
 			((ASTNode) list.get(i)).accept(this);
 		}
 	}
-	
+
 	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator, String lead, String post) {
-		List list= getChildList(parent, childProperty);
+		List list = getChildList(parent, childProperty);
 		if (!list.isEmpty()) {
 			this.result.append(lead);
-			for (int i= 0; i < list.size(); i++) {
+			for (int i = 0; i < list.size(); i++) {
 				if (separator != null && i > 0) {
 					this.result.append(separator);
 				}
@@ -846,7 +780,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(Variable variable) {
-		result.append("$");
+		if (variable.isDollared()) {
+			result.append("$");
+		}
 		variable.getVariableName().accept(this);
 		return false;
 	}
@@ -858,7 +794,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		whileStatement.getAction().accept(this);
 		return false;
 	}
-	
+
 	private void acceptQuoteExpression(Expression[] expressions) {
 		for (int i = 0; i < expressions.length; i++) {
 			expressions[i].accept(this);
