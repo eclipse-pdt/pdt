@@ -114,11 +114,11 @@ public class TokenScanner {
 		Symbol curr = null;
 		try {
 			curr = this.scanner.next_token();
-			if (curr.sym == END_OF_FILE) {
-				throw new CoreException(createError(END_OF_FILE, "End Of File", null)); //$NON-NLS-1$
-			}
 		} catch (Exception e) {
 			throw new CoreException(createError(LEXICAL_ERROR, e.getMessage(), e));
+		}
+		if (curr.sym == END_OF_FILE) {
+			throw new CoreException(createError(END_OF_FILE, "End Of File", null)); //$NON-NLS-1$
 		}
 		return curr;
 	}
