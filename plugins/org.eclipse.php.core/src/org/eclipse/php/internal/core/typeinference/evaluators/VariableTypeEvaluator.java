@@ -54,15 +54,12 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
 				LinkedList<ASTNode> declarations = varDecSearcher.getDeclarations();
-				if (varDecSearcher.needsMergingWithGlobalScope()) {
+				if (varDecSearcher.needsMergingWithGlobalScope() || declarations.isEmpty()) {
 					// collect all global variables, and merge results with existing declarations
-					subGoals.add(new GlobalVariableReferencesGoal(context));
+					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
 				}
-
 				for (ASTNode declaration : declarations) {
-					if (declaration != null) {
-						subGoals.add(new ExpressionTypeGoal(context, declaration));
-					}
+					subGoals.add(new ExpressionTypeGoal(context, declaration));
 				}
 				return subGoals.toArray(new IGoal[subGoals.size()]);
 			}
@@ -89,6 +86,10 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 		private boolean mergeWithGlobalScope;
 
 		public LinkedList<ASTNode> getDeclarations() {
+			int nullIdx;
+			while ((nullIdx = declarations.indexOf(null)) != -1) {
+				declarations.remove(nullIdx);
+			}
 			return declarations;
 		}
 

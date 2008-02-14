@@ -7,7 +7,6 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRange;
 
 public class FakeField extends SourceField {
-
 	private int offset;
 	private int length;
 
@@ -23,5 +22,13 @@ public class FakeField extends SourceField {
 
 	public ISourceRange getSourceRange() throws ModelException {
 		return new SourceRange(offset, length);
+	}
+
+	public boolean equals(Object o) {
+		if (super.equals(o)) {
+			FakeField other = (FakeField)o;
+			return other.offset == offset && other.length == length;
+		}
+		return false;
 	}
 }

@@ -5,8 +5,14 @@ import org.eclipse.dltk.ti.goals.AbstractGoal;
 
 public class GlobalVariableReferencesGoal extends AbstractGoal {
 
-	public GlobalVariableReferencesGoal(IContext context) {
+	private String variableName;
+
+	public GlobalVariableReferencesGoal(IContext context, String variableName) {
 		super(context);
+		this.variableName = variableName;
 	}
 
+	public String getVariableName() {
+		return variableName;
+	}
 }

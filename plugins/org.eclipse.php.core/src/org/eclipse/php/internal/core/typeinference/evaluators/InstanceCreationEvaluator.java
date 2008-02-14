@@ -1,11 +1,15 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassInstanceCreation;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class InstanceCreationEvaluator extends GoalEvaluator {
 
@@ -18,7 +22,14 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		ClassInstanceCreation expression = (ClassInstanceCreation) typedGoal.getExpression();
-		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), expression.getClassName()) };
+		Expression className = expression.getClassName();
+		if (className instanceof TypeReference) {
+			TypeReference typeReference = (TypeReference) className;
+			result = new PHPClassType(typeReference.getName());
+		} else {
+			result = UnknownType.INSTANCE;
+		}
+		return IGoal.NO_GOALS;
 	}
 
 	public Object produceResult() {
@@ -26,7 +37,6 @@ public class InstanceCreationEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		this.result = (IEvaluatedType) result;
 		return IGoal.NO_GOALS;
 	}
 

@@ -21,8 +21,21 @@ public class PHPTypeInferenceUtils {
 		return multiTypeType;
 	}
 
+	private static Collection<IEvaluatedType> resolveAmbiguousTypes(Collection<IEvaluatedType> evaluatedTypes) {
+		List<IEvaluatedType> resolved = new LinkedList<IEvaluatedType>();
+		for (IEvaluatedType type : evaluatedTypes) {
+			if (type instanceof AmbiguousType) {
+				AmbiguousType ambType = (AmbiguousType) type;
+				resolved.addAll(resolveAmbiguousTypes(Arrays.asList(ambType.getPossibleTypes())));
+			} else {
+				resolved.add(type);
+			}
+		}
+		return resolved;
+	}
+
 	public static IEvaluatedType combineTypes(Collection<IEvaluatedType> evaluatedTypes) {
-		Set<IEvaluatedType> types = new HashSet<IEvaluatedType>(evaluatedTypes);
+		Set<IEvaluatedType> types = new HashSet<IEvaluatedType>(resolveAmbiguousTypes(evaluatedTypes));
 		if (types.contains(null)) {
 			types.remove(null);
 			types.add(new SimpleType(SimpleType.TYPE_NULL));
