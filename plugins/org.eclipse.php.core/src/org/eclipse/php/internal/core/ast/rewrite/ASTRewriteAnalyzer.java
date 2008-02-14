@@ -1305,7 +1305,16 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		RewriteEvent event = getEvent(parent, property);
 		if (event != null && event.getChangeKind() != RewriteEvent.UNCHANGED) {
 			try {
+				// TODO - Might be better to supply an interface for ASTNodes that has Operators.
+				// This will save the need to cast.
 				String newOperation = event.getNewValue().toString();
+				if (parent instanceof Assignment) {
+					newOperation = Assignment.getOperator((Integer) event.getNewValue());
+				} else if (parent instanceof PrefixExpression) {
+					newOperation = PrefixExpression.getOperator((Integer) event.getNewValue());
+				} else if (parent instanceof PostfixExpression) {
+					newOperation = PostfixExpression.getOperator((Integer) event.getNewValue());
+				}
 				TextEditGroup editGroup = getEditGroup(event);
 				getScanner().readNext(posBeforeOperation/*, true*/);
 				doTextReplace(getScanner().getCurrentStartOffset(), getScanner().getCurrentLength(), newOperation, editGroup);
@@ -2605,7 +2614,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(listVariable)) {
 			return doVisitUnchangedChildren(listVariable);
 		}
-		rewriteNodeList(listVariable, ListVariable.VARIABLES_PROPERTY, listVariable.getStart(), "", "");
+		rewriteNodeList(listVariable, ListVariable.VARIABLES_PROPERTY, listVariable.getStart(), "", ",");
 		return false;
 	}
 
