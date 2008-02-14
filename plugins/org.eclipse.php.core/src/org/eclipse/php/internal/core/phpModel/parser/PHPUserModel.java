@@ -336,7 +336,7 @@ public class PHPUserModel implements IProjectModelListener, IPHPUserModel {
 		List<CodeData> list = Collections.synchronizedList(phpFileDataDB.asList());
 		synchronized (list) {
 			for (CodeData globalFileData : list) {
-				if (fileData.getName().equals(fileName)) {
+				if (globalFileData.getName().equals(fileName)) {
 					continue; // no point in looking again...
 				}
 				variablesTypeManager = ((PHPFileData) globalFileData).getVariableTypeManager();
