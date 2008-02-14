@@ -34,14 +34,14 @@ public class ReflectionVariable extends Variable {
 	/**
 	 * @return the name PROPERTY
 	 */
-	protected ChildPropertyDescriptor getNameProperty() {
+	public ChildPropertyDescriptor getNameProperty() {
 		return ReflectionVariable.NAME_PROPERTY;
 	}
 
 	/**
 	 * @return the DOLLARED property
 	 */
-	protected SimplePropertyDescriptor getDollaredProperty() {
+	public SimplePropertyDescriptor getDollaredProperty() {
 		return ReflectionVariable.DOLLARED_PROPERTY;
 	}
 	

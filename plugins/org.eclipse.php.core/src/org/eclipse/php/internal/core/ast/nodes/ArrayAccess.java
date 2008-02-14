@@ -50,14 +50,14 @@ public class ArrayAccess extends Variable {
 	/**
 	 * @return the name PROPERTY
 	 */
-	protected ChildPropertyDescriptor getNameProperty() {
+	public ChildPropertyDescriptor getNameProperty() {
 		return ArrayAccess.NAME_PROPERTY;
 	}
 
 	/**
 	 * @return the DOLLARED property
 	 */
-	protected SimplePropertyDescriptor getDollaredProperty() {
+	public SimplePropertyDescriptor getDollaredProperty() {
 		return ArrayAccess.DOLLARED_PROPERTY;
 	}
 	

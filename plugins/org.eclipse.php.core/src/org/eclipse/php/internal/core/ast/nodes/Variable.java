@@ -40,14 +40,14 @@ public class Variable extends VariableBase {
 	/**
 	 * @return the name PROPERTY
 	 */
-	protected ChildPropertyDescriptor getNameProperty() {
+	public ChildPropertyDescriptor getNameProperty() {
 		return Variable.NAME_PROPERTY;
 	}
 
 	/**
 	 * @return the DOLLARED property
 	 */
-	protected SimplePropertyDescriptor getDollaredProperty() {
+	public SimplePropertyDescriptor getDollaredProperty() {
 		return Variable.DOLLARED_PROPERTY;
 	}
 	
