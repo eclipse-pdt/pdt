@@ -48,5 +48,4 @@ public class PHPTypeInferenceUtils {
 		}
 		return new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 	}
-
 }

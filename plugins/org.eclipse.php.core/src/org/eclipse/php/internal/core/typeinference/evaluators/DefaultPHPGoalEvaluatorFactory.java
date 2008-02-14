@@ -36,53 +36,57 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 	private GoalEvaluator createExpressionEvaluator(ExpressionTypeGoal exprGoal) {
 
 		ASTNode expression = exprGoal.getExpression();
+		Class<?> expressionClass = expression.getClass();
 
-		if (expression instanceof Assignment) {
+		if (expressionClass == Assignment.class) {
 			return new AssignmentEvaluator(exprGoal);
 		}
-		if (expression instanceof Scalar) {
+		if (expressionClass == Scalar.class) {
 			Scalar scalar = (Scalar) expression;
 			return new ScalarEvaluator(exprGoal, scalar);
 		}
-		if (expression instanceof TypeReference) {
+		if (expressionClass == TypeReference.class) {
 			TypeReference type = (TypeReference) expression;
 			return new FixedAnswerEvaluator(exprGoal, new PHPClassType(type.getName()));
 		}
-		if (expression instanceof CallExpression) {
+		if (expressionClass == CallExpression.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
 		}
-		if (expression instanceof ClassInstanceCreation) {
+		if (expressionClass == ClassInstanceCreation.class) {
 			return new InstanceCreationEvaluator(exprGoal);
 		}
-		if (expression instanceof InfixExpression) {
+		if (expressionClass == InfixExpression.class) {
 			return new InfixExpressionEvaluator(exprGoal);
 		}
-		if (expression instanceof PrefixExpression) {
+		if (expressionClass == PrefixExpression.class) {
 			return new PrefixExpressionEvaluator(exprGoal);
 		}
-		if (expression instanceof PostfixExpression) {
+		if (expressionClass == PostfixExpression.class) {
 			return new PostfixExpressionEvaluator(exprGoal);
 		}
-		if (expression instanceof CastExpression) {
+		if (expressionClass == CastExpression.class) {
 			return new CastEvaluator(exprGoal);
 		}
-		if (expression instanceof VariableReference) {
+		if (expressionClass == VariableReference.class) {
 			return new VariableReferenceEvaluator(exprGoal);
 		}
-		if (expression instanceof BackTickExpression) {
+		if (expressionClass == BackTickExpression.class) {
 			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
 		}
-		if (expression instanceof CloneExpression) {
+		if (expressionClass == CloneExpression.class) {
 			return new CloneEvaluator(exprGoal);
 		}
-		if (expression instanceof InstanceOfExpression) {
+		if (expressionClass == InstanceOfExpression.class) {
 			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_BOOLEAN));
 		}
-		if (expression instanceof ConditionalExpression) {
+		if (expressionClass == ConditionalExpression.class) {
 			return new ConditionalExpressionEvaluator(exprGoal);
 		}
-		if (expression instanceof ArrayCreation) {
+		if (expressionClass == ArrayCreation.class) {
 			return new ArrayCreationEvaluator(exprGoal);
+		}
+		if (expressionClass == ArrayVariableReference.class) {
+			return new ArrayVariableReferenceEvaluator(exprGoal);
 		}
 
 		return null;
