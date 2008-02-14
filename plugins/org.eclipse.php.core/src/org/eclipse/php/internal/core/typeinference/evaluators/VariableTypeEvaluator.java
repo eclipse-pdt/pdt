@@ -8,13 +8,12 @@ import java.util.Stack;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.ti.BasicContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -25,6 +24,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 
 public class VariableTypeEvaluator extends GoalEvaluator {
@@ -45,33 +45,26 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 		IContext context = goal.getContext();
 
 		try {
-			if (context instanceof MethodContext) {
-				MethodContext methodContex = (MethodContext) context;
-				MethodDeclaration methodDecl = methodContex.getMethodNode();
+			if (context instanceof ISourceModuleContext) {
+				ISourceModuleContext typedContext = (ISourceModuleContext) context;
+				ASTNode node = (context instanceof MethodContext) ? ((MethodContext)context).getMethodNode() : typedContext.getRootNode();
 				VariableDeclarationSearcher varDecSearcher = new VariableDeclarationSearcher();
-				methodDecl.traverse(varDecSearcher);
+				node.traverse(varDecSearcher);
 
-				List<ASTNode> declarations = varDecSearcher.getDeclarations();
-				IGoal[] subGoals = new IGoal[declarations.size()];
-				int i = 0;
-				for (ASTNode declaration : declarations) {
-					subGoals[i++] = new ExpressionTypeGoal(context, declaration);
+				List<IGoal> subGoals = new LinkedList<IGoal>();
+
+				LinkedList<ASTNode> declarations = varDecSearcher.getDeclarations();
+				if (varDecSearcher.needsMergingWithGlobalScope()) {
+					// collect all global variables, and merge results with existing declarations
+					subGoals.add(new GlobalVariableReferencesGoal(context));
 				}
-				return subGoals;
 
-			} else if (context instanceof BasicContext) {
-				BasicContext basicContex = (BasicContext) context;
-				ModuleDeclaration moduleDecl = basicContex.getRootNode();
-				VariableDeclarationSearcher varDecSearcher = new VariableDeclarationSearcher();
-				moduleDecl.traverse(varDecSearcher);
-
-				List<ASTNode> declarations = varDecSearcher.getDeclarations();
-				IGoal[] subGoals = new IGoal[declarations.size()];
-				int i = 0;
 				for (ASTNode declaration : declarations) {
-					subGoals[i++] = new ExpressionTypeGoal(context, declaration);
+					if (declaration != null) {
+						subGoals.add(new ExpressionTypeGoal(context, declaration));
+					}
 				}
-				return subGoals;
+				return subGoals.toArray(new IGoal[subGoals.size()]);
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -92,9 +85,15 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 		private LinkedList<ASTNode> declarations = new LinkedList<ASTNode>();
 		private int level = 0;
 		private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
+		private int seenGlobal = 0;
+		private boolean mergeWithGlobalScope;
 
-		public List<ASTNode> getDeclarations() {
+		public LinkedList<ASTNode> getDeclarations() {
 			return declarations;
+		}
+
+		public boolean needsMergingWithGlobalScope() {
+			return mergeWithGlobalScope;
 		}
 
 		public boolean visit(Assignment s) throws Exception {
@@ -102,6 +101,10 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 			if (variable instanceof VariableReference) {
 				VariableReference variableReference = (VariableReference) variable;
 				if (variableName.equals(variableReference.getName())) {
+					if (level <= seenGlobal) { // if current level is lower than one where global statement has been seen - all global vars where overriden
+						mergeWithGlobalScope = false;
+					}
+
 					// remove all declarations of this variable from the inner blocks
 					while (declarations.size() > level) {
 						declarations.removeLast();
@@ -131,6 +134,24 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 		public boolean visit(Statement s) throws Exception {
 			if (!shouldContinue(s)) {
 				return false;
+			}
+			if (s instanceof GlobalStatement) {
+				GlobalStatement globalStatement = (GlobalStatement) s;
+				for (Expression variable : globalStatement.getVariables()) {
+					if (variable instanceof VariableReference) {
+						VariableReference variableReference = (VariableReference) variable;
+						if (variableReference.getName().equals(variableName)) {
+							seenGlobal = level;
+							mergeWithGlobalScope = true;
+
+							// remove all declarations, since global statement overrides them
+							for (int i = 0; i < declarations.size(); ++i) {
+								declarations.set(i, null);
+								return visitGeneral(s);
+							}
+						}
+					}
+				}
 			}
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
@@ -190,6 +211,9 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 		}
 
 		public boolean visit(MethodDeclaration node) throws Exception {
+			if (nodesStack.isEmpty()) {
+				return visitGeneral(node);
+			}
 			return false;
 		}
 

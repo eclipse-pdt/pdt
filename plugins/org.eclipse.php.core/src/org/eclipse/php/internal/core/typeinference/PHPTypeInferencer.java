@@ -9,5 +9,4 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 		super(new PHPGoalEvaluatorFactory());
 	}
 
-
 }

@@ -9,6 +9,7 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
@@ -24,6 +25,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (goal instanceof VariableTypeGoal) {
 			return new VariableTypeEvaluator(goal);
+		}
+		if (goal instanceof GlobalVariableReferencesGoal) {
+			return new GlobalVariableReferencesEvaluator(goal);
 		}
 
 		return null;

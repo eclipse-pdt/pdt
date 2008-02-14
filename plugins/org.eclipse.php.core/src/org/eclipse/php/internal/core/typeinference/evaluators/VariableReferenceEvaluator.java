@@ -16,6 +16,9 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 
+/**
+ * This class tries to run havy inferance first, and if it fails (or pruned) tries to run lite weight  inferance
+ */
 public class VariableReferenceEvaluator extends GoalEvaluator {
 
 	private List<IEvaluatedType> results = new ArrayList<IEvaluatedType>();

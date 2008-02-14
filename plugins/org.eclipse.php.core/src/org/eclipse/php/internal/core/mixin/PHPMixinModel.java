@@ -17,11 +17,11 @@ public class PHPMixinModel {
 		model = new MixinModel(PHPLanguageToolkit.getDefault());
 	}
 
-	public static PHPMixinModel getInstance () {
+	public static PHPMixinModel getInstance() {
 		return instance;
 	}
 
-	public static MixinModel getRawInstance () {
+	public static MixinModel getRawInstance() {
 		return getInstance().getRawModel();
 	}
 
@@ -53,5 +53,21 @@ public class PHPMixinModel {
 	public IModelElement[] getFunction(String functionName) {
 		IMixinElement[] elements = model.find(MixinModel.SEPARATOR + functionName);
 		return filterElements(elements, PHPMixinElementInfo.K_METHOD);
+	}
+
+	public IModelElement[] getVariable(String variableName, String methodName, String typeName) {
+		//{$globalVa
+		String pattern = MixinModel.SEPARATOR + variableName;
+		if (methodName != null) {
+			//{myFunction{$methodVar2
+			pattern = MixinModel.SEPARATOR + methodName + pattern;
+		}
+		if (typeName != null) {
+			// AClass%{classMethod{$methodVariable
+			pattern = typeName + PHPMixinParser.CLASS_SUFFIX + pattern;
+		}
+
+		IMixinElement[] elements = model.find(pattern);
+		return filterElements(elements, PHPMixinElementInfo.K_VARIABLE);
 	}
 }
