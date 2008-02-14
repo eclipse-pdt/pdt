@@ -62,7 +62,7 @@ public abstract class AbstractPHPTextHover implements IPHPTextHover, ITextHoverE
 			region = container.getRegionAtCharacterOffset(offset);
 		}
 
-		if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+		if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 			IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
 			try {
 				region = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - region.getStart());
