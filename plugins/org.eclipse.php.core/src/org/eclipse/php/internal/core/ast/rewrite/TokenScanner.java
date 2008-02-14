@@ -111,16 +111,16 @@ public class TokenScanner {
 	 * or a lexical error was detected while scanning (code LEXICAL_ERROR)
 	 */
 	public Symbol readNext() throws CoreException {
-		Symbol curr = null;
+		currentToken = null;
 		try {
-			curr = this.scanner.next_token();
+			currentToken = this.scanner.next_token();
 		} catch (Exception e) {
 			throw new CoreException(createError(LEXICAL_ERROR, e.getMessage(), e));
 		}
-		if (curr.sym == END_OF_FILE) {
+		if (currentToken.sym == END_OF_FILE) {
 			throw new CoreException(createError(END_OF_FILE, "End Of File", null)); //$NON-NLS-1$
 		}
-		return curr;
+		return currentToken;
 	}
 
 	/**
