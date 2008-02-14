@@ -1003,7 +1003,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	private void rewriteVariableDollar(Variable variable) {
 		// Make the neccessary changes to add or remove the $ sign.
-		RewriteEvent event = getEvent(variable, Variable.DOLLARED_PROPERTY);
+		RewriteEvent event = getEvent(variable, variable.getDollaredProperty());
 		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
 			TextEditGroup editGroup = getEditGroup(event);
 			if ((Boolean) event.getNewValue()) {
@@ -1015,20 +1015,60 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			}
 		}
 	}
-	
+
 	/*
-	 * Next token is a left brace. Returns the offset after the brace. For incomplete code, return the start offset.  
+	 * Next token is a left brace. Returns the offset of the open brace.
+	 * @throws CoreException  
 	 */
-	private int getPosAfterLeftBrace(int pos) {
-		try {
-			Symbol nextToken = getScanner().readNext(pos/*, true*/);
-			if (nextToken != null && nextToken.sym == SymbolsProvider.getSymbol(SymbolsProvider.LBRACE_ID, scanner.getPHPVersion()).sym) {
-				return getScanner().getCurrentEndOffset();
-			}
-		} catch (CoreException e) {
-			handleException(e);
-		}
-		return pos;
+	private int getLeftBraceStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.LBRACE_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a right brace. Returns the offset of the closing brace.
+	 * @throws CoreException  
+	 */
+	private int getRightBraceStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.RBRACE_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a left parentheses. Returns the offset of the open parentheses.
+	 * @throws CoreException  
+	 */
+	private int getLeftParenthesesStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a right parentheses. Returns the offset of the closing parentheses.
+	 * @throws CoreException  
+	 */
+	private int getRightParenthesesStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.RPAREN_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a left bracket. Returns the offset of the open bracket.
+	 * @throws CoreException  
+	 */
+	private int getLeftBracketStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.LBRACKET_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * Next token is a right bracket. Returns the offset of the closing bracket.
+	 * @throws CoreException  
+	 */
+	private int getRightBracketStartPosition(int pos) throws CoreException {
+		return getSymbolStartPosition(pos, SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID, scanner.getPHPVersion()));
+	}
+
+	/*
+	 * A general call to get the scanner's start offset of the Symbol token.
+	 */
+	private int getSymbolStartPosition(int pos, Symbol sym) throws CoreException {
+		return getScanner().getTokenStartOffset(sym, pos);
 	}
 
 	final int getIndent(int offset) {
@@ -1557,12 +1597,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-
-		int startPos;
-		if (isCollapsed(node)) {
-			startPos = node.getStart();
-		} else {
-			startPos = getPosAfterLeftBrace(node.getStart());
+		int startPos = node.getStart();
+		if (!isCollapsed(node)) {
+			try {
+				startPos = getLeftBraceStartPosition(node.getStart()) + 1;
+			} catch (CoreException e) {
+				handleException(e);
+			}
 		}
 		int startIndent = getIndent(node.getStart()) + 1;
 		rewriteParagraphList(node, Block.STATEMENTS_PROPERTY, startPos, startIndent, 0, 1);
@@ -1592,14 +1633,43 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ArrayAccess)
 	 */
 	public boolean visit(ArrayAccess node) {
-		// TODO
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//
-		//		rewriteRequiredNode(node, ArrayAccess.ARRAY_PROPERTY);
-		//		rewriteRequiredNode(node, ArrayAccess.INDEX_PROPERTY);
-		return false;
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		if (isChanged(node, ArrayAccess.DOLLARED_PROPERTY)) {
+			rewriteVariableDollar(node);
+		}
+		if (isChanged(node, ArrayAccess.ARRAY_TYPE_PROPERTY)) {
+			rewriteArrayAccessType(node);
+		}
+
+		return rewriteRequiredNodeVisit(node, ArrayAccess.NAME_PROPERTY, ArrayAccess.INDEX_PROPERTY);
+	}
+
+	private void rewriteArrayAccessType(ArrayAccess arrayAccess) {
+		RewriteEvent event = getEvent(arrayAccess, ArrayAccess.ARRAY_TYPE_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			Integer original = (Integer) event.getOriginalValue();
+			try {
+				if (original.intValue() == ArrayAccess.VARIABLE_ARRAY) {
+					// the modification was from a variable array to a variable hashtable.
+					int openPos = getLeftBracketStartPosition(arrayAccess.getStart());
+					int closePos = arrayAccess.getEnd() - 1;
+					TextEditGroup editGroup = getEditGroup(event);
+					doTextReplace(openPos, 1, "{", editGroup);
+					doTextReplace(closePos, 1, "}", editGroup);
+				} else {
+					// the modification was from a variable hashtable to a variable array.
+					int openPos = getLeftBraceStartPosition(arrayAccess.getStart());
+					int closePos = arrayAccess.getEnd() - 1;
+					TextEditGroup editGroup = getEditGroup(event);
+					doTextReplace(openPos, 1, "[", editGroup);
+					doTextReplace(closePos, 1, "]", editGroup);
+				}
+			} catch (CoreException ce) {
+				handleException(ce);
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -1933,7 +2003,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 			if (isChanged(node, ForStatement.INITIALIZERS_PROPERTY)) {
 				// position after opening parent
-				int startOffset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
+				int startOffset = getLeftParenthesesStartPosition(pos) + 1;
 				pos = rewriteNodeList(node, ForStatement.INITIALIZERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				pos = doVisit(node, ForStatement.INITIALIZERS_PROPERTY, pos);
@@ -2211,7 +2281,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		ChildListPropertyDescriptor property = body.STATEMENTS_PROPERTY;
 		if (getChangeKind(node, property) != RewriteEvent.UNCHANGED) {
 			try {
-				pos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LBRACE_ID, scanner.getPHPVersion()), pos);
+				pos = getLeftBraceStartPosition(pos) + 1;
 				int insertIndent = getIndent(node.getStart()) + 1;
 
 				ParagraphListRewriter listRewriter = new SwitchListRewriter(insertIndent);
@@ -2419,7 +2489,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		// Parameters
 		if (isChanged(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY)) {
 			try {
-				int startOffset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
+				int startOffset = getLeftParenthesesStartPosition(pos) + 1;
 				rewriteNodeList(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (CoreException e) {
 				handleException(e);
@@ -2445,7 +2515,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (isChanged(functionInvocation, FunctionInvocation.PARAMETERS_PROPERTY)) {
 			// eval position after opening parent
 			try {
-				int startOffset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
+				int startOffset = getLeftParenthesesStartPosition(pos) + 1;
 				rewriteNodeList(functionInvocation, FunctionInvocation.PARAMETERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
 			} catch (CoreException e) {
 				handleException(e);
@@ -2624,7 +2694,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Variable)
 	 */
 	public boolean visit(Variable variable) {
-		// FIXME - This Variable.DOLLARED_PROPERTY might not be needed since variables should always have a $ sign.
 		if (isChanged(variable, Variable.DOLLARED_PROPERTY)) {
 			rewriteVariableDollar(variable);
 		}
