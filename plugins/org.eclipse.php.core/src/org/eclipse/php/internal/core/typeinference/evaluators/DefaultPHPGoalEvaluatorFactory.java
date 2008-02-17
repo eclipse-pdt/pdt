@@ -82,7 +82,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == VariableReference.class) {
 			return new VariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == BackTickExpression.class) {
+		if (expressionClass == BackTickExpression.class || expressionClass == Quote.class) {
 			return new FixedAnswerEvaluator(exprGoal, new SimpleType(SimpleType.TYPE_STRING));
 		}
 		if (expressionClass == CloneExpression.class) {
