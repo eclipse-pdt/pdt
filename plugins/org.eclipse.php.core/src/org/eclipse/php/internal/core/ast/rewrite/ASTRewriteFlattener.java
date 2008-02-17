@@ -130,6 +130,30 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ArrayAccess)
+	 */
+	public boolean visit(ArrayAccess arrayAccess) {
+		if (arrayAccess.getName() != null) {
+			arrayAccess.getName().accept(this);
+		}
+		boolean isVariableHashtable = arrayAccess.getType() == ArrayAccess.VARIABLE_HASHTABLE;
+		if (isVariableHashtable) {
+			result.append('{');
+		} else {
+			result.append('[');
+		}
+		if (arrayAccess.getIndex() != null) {
+			arrayAccess.getIndex().accept(this);
+		}
+		if (isVariableHashtable) {
+			result.append('}');
+		} else {
+			result.append(']');
+		}
+		return false;
+	}
+
 	public boolean visit(ArrayCreation arrayCreation) {
 		result.append("array("); //$NON-NLS-1$
 		ArrayElement[] elements = arrayCreation.getElements();
