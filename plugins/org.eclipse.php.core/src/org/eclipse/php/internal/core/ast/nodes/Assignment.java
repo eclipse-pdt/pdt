@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * $a += 5,
  * $a .= $b,
  */
-public class Assignment extends Expression {
+public class Assignment extends Expression implements IOperationNode {
 
 	// '='
 	public static final int OP_EQUAL = 0;
@@ -187,6 +187,21 @@ public class Assignment extends Expression {
 		return this.operator;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString()
+	 */
+	public String getOperationString() {
+		return getOperator(this.getOperator());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString(int)
+	 */
+	public String getOperationString(int op) {
+		return getOperator(op);
+	}
+	
 	/**
 	 * Sets the operator of this assignment expression.
 	 * 

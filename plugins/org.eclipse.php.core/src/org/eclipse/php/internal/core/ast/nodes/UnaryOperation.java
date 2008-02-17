@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * -foo(),
  * +-+-$a
  */
-public class UnaryOperation extends Expression {
+public class UnaryOperation extends Expression implements IOperationNode {
 
 	// '+'
 	public static final int OP_PLUS = 0;
@@ -180,6 +180,21 @@ public class UnaryOperation extends Expression {
 	 */
 	public int getOperator() {
 		return operator;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString()
+	 */
+	public String getOperationString() {
+		return getOperator(this.getOperator());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IOperationNode#getOperationString(int)
+	 */
+	public String getOperationString(int op) {
+		return getOperator(op);
 	}
 
 	/**

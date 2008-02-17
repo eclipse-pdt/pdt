@@ -15,8 +15,11 @@ import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.BlockContext;
@@ -1305,17 +1308,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		RewriteEvent event = getEvent(parent, property);
 		if (event != null && event.getChangeKind() != RewriteEvent.UNCHANGED) {
 			try {
-				// TODO - Might be better to supply an interface for ASTNodes that has Operators.
-				// This will save the need to cast.
 				String newOperation = event.getNewValue().toString();
-				if (parent instanceof Assignment) {
-					newOperation = Assignment.getOperator((Integer) event.getNewValue());
-				} else if (parent instanceof PrefixExpression) {
-					newOperation = PrefixExpression.getOperator((Integer) event.getNewValue());
-				} else if (parent instanceof PostfixExpression) {
-					newOperation = PostfixExpression.getOperator((Integer) event.getNewValue());
-				} else if (parent instanceof UnaryOperation) {
-					newOperation = UnaryOperation.getOperator((Integer) event.getNewValue());
+				if (parent instanceof IOperationNode) {
+					newOperation = ((IOperationNode) parent).getOperationString((Integer) event.getNewValue());
+				} else {
+					throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.ID, "The node must be an IOperationNode")); //$NON-NLS-1$
 				}
 				TextEditGroup editGroup = getEditGroup(event);
 				getScanner().readNext(posBeforeOperation/*, true*/);
