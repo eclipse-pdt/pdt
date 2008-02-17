@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Represents an indirect reference to a variable.
@@ -66,6 +67,14 @@ public class ReflectionVariable extends Variable {
 		super(ast);
 	}
 
+	public void accept(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<ReflectionVariable"); //$NON-NLS-1$
 		appendInterval(buffer);
