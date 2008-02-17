@@ -73,6 +73,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == PostfixExpression.class) {
 			return new PostfixExpressionEvaluator(exprGoal);
 		}
+		if (expressionClass == UnaryOperation.class) {
+			return new UnaryOperationEvaluator(exprGoal);
+		}
 		if (expressionClass == CastExpression.class) {
 			return new CastEvaluator(exprGoal);
 		}
