@@ -125,9 +125,8 @@ public abstract class TypeDeclaration extends Statement {
 		this.name = id;
 		postReplaceChild(oldChild, id, NAME_PROPERTY);
 	}	
-
 	
-	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == NAME_PROPERTY) {
 			if (get) {
 				return getName();
@@ -147,5 +146,17 @@ public abstract class TypeDeclaration extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
+
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == INTERFACES_PROPERTY) {
+			return interfaces();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+	
 	
 }

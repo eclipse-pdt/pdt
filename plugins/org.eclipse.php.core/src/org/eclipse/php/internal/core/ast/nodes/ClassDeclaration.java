@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -223,6 +224,32 @@ public class ClassDeclaration extends TypeDeclaration {
 		this.superClass = id;
 		postReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY);
 	}	
+	
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == SUPER_CLASS_PROPERTY) {
+			if (get) {
+				return getSuperClass();
+			} else {
+				setSuperClass((Identifier) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
+
+	final int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int child) {
+		if (property == MODIFIER_PROPERTY) {
+			if (get) {
+				return getModifier();
+			} else {
+				setModifier(child);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, child);
+	}
 	
 	
 	/* 
