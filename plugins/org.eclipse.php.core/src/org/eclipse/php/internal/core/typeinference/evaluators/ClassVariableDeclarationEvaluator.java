@@ -37,7 +37,7 @@ import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclaratio
 import org.eclipse.php.internal.core.typeinference.goals.IWeightedGoal;
 
 /**
- * This evaluator finds class field declartion either using "var" or in class constructor.
+ * This evaluator finds class field declartion either using "var" or in method body using field access.
  */
 public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements IWeightedGoal {
 
@@ -65,7 +65,7 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 				try {
 					TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
-					ClassVariableDeclarationSearcher searcher = new ClassVariableDeclarationSearcher(sourceModule, moduleDeclaration, field.getName(), typeName);
+					ClassVariableDeclarationSearcher searcher = new ClassVariableDeclarationSearcher(sourceModule, moduleDeclaration, field.getName());
 					typeDeclaration.traverse(searcher);
 
 					Map<IContext, LinkedList<ASTNode>> contextToDeclarationMap = searcher.getContextToDeclarationMap();
@@ -101,7 +101,6 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements 
 	class ClassVariableDeclarationSearcher extends ASTVisitor {
 
 		private String variableName;
-		private Object className;
 		private Stack<IContext> contextStack = new Stack<IContext>();
 		private Map<IContext, LinkedList<ASTNode>> contextToDeclarations = new HashMap<IContext, LinkedList<ASTNode>>();
 		private ISourceModule sourceModule;
@@ -110,11 +109,10 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements 
 		private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
 		private boolean primaryDeclarationOverriden;
 
-		public ClassVariableDeclarationSearcher(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, String variableName, String className) {
+		public ClassVariableDeclarationSearcher(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, String variableName) {
 			this.sourceModule = sourceModule;
 			this.moduleDeclaration = moduleDeclaration;
 			this.variableName = variableName;
-			this.className = className;
 		}
 
 		public Map<IContext, LinkedList<ASTNode>> getContextToDeclarationMap() {
@@ -205,11 +203,7 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements 
 			contextStack.push(context);
 			contextToDeclarations.put(context, new LinkedList<ASTNode>());
 
-			String name = e.getName();
-			if (name.equals("__construct") || name.equals(className)) {
-				return visitGeneral(e);
-			}
-			return false;
+			return visitGeneral(e);
 		}
 
 		public boolean endvisit(MethodDeclaration node) throws Exception {
