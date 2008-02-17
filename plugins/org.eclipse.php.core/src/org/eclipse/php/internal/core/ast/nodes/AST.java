@@ -1670,13 +1670,15 @@ public class AST {
 	/**
 	 * Creates a new {@link FunctionInvocation}.
 	 * @param functionName
-	 * @param parameters
+	 * @param parameters (can be null to indicate no parameters)
 	 * @return A new FunctionInvocation.
 	 */
 	public FunctionInvocation newFunctionInvocation(FunctionName functionName, List<Expression> parameters) {
 		FunctionInvocation functionInvocation = new FunctionInvocation(this);
 		functionInvocation.setFunctionName(functionName);
-		functionInvocation.parameters().addAll(parameters);
+		if (parameters != null) {
+			functionInvocation.parameters().addAll(parameters);
+		}
 		return functionInvocation;
 	}
 
