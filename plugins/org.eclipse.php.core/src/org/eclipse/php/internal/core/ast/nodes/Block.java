@@ -189,4 +189,21 @@ public class Block extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
 	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+		if (property == IS_CURLY_PROPERTY) {
+			if (get) {
+				return isCurly(); 
+			} else {
+				setIsCurly(value);
+				return false;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetBooleanProperty(property, get, value);
+	}
+	
 }

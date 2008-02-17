@@ -313,4 +313,34 @@ public class ForStatement extends Statement {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == INITIALIZERS_PROPERTY) {
+			return initializers();
+		}
+		if (property == EXPRESSION_PROPERTY) {
+			return conditions();
+		}
+		if (property == UPDATERS_PROPERTY) {
+			return updaters();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+
+	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
+		if (property == BODY_PROPERTY) {
+			if (get) {
+				return getBody(); 
+			} else {
+				setBody((Block) child);
+				return null;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetChildProperty(property, get, child);
+	}
 }
