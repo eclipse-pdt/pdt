@@ -1,7 +1,6 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.SimpleType;
@@ -49,7 +48,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			TypeReference type = (TypeReference) expression;
 			return new FixedAnswerEvaluator(exprGoal, new PHPClassType(type.getName()));
 		}
-		if (expressionClass == CallExpression.class) {
+		if (expressionClass == PHPCallExpression.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
 		}
 		if (expressionClass == ClassInstanceCreation.class) {

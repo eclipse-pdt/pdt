@@ -13,6 +13,7 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -54,7 +55,7 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
 				LinkedList<ASTNode> declarations = varDecSearcher.getDeclarations();
-				if (varDecSearcher.needsMergingWithGlobalScope() || declarations.isEmpty()) {
+				if (varDecSearcher.needsMergingWithGlobalScope() || (declarations.isEmpty() && context.getClass() == BasicContext.class)) {
 					// collect all global variables, and merge results with existing declarations
 					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
 				}
