@@ -132,9 +132,6 @@ public class ReturnStatement extends Statement {
 	 * </ul>
 	 */ 
 	public void setExpression(Expression expression) {
-		if (expression == null) {
-			throw new IllegalArgumentException();
-		}
 		ASTNode oldChild = this.expression;
 		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 		this.expression = expression;
