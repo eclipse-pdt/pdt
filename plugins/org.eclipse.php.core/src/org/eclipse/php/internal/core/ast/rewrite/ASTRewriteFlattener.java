@@ -137,7 +137,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (arrayAccess.getName() != null) {
 			arrayAccess.getName().accept(this);
 		}
-		boolean isVariableHashtable = arrayAccess.getType() == ArrayAccess.VARIABLE_HASHTABLE;
+		boolean isVariableHashtable = arrayAccess.getArrayType() == ArrayAccess.VARIABLE_HASHTABLE;
 		if (isVariableHashtable) {
 			result.append('{');
 		} else {
