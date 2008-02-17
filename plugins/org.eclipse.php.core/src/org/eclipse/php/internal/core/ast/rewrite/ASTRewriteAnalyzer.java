@@ -1829,8 +1829,27 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(CastExpression)
 	 */
-	public boolean visit(CastExpression node) {
-		return rewriteRequiredNodeVisit(node, CastExpression.CASTING_TYPE_PROPERTY, CastExpression.EXPRESSION_PROPERTY);
+	public boolean visit(CastExpression cast) {
+		if (isChanged(cast, CastExpression.CASTING_TYPE_PROPERTY)) {
+			try {
+				rewriteCastType(cast);
+			} catch (Exception e) {
+				handleException(e);
+			}
+		}
+		return rewriteRequiredNodeVisit(cast, CastExpression.EXPRESSION_PROPERTY);
+	}
+
+	private void rewriteCastType(CastExpression cast) throws CoreException {
+		RewriteEvent event = getEvent(cast, CastExpression.CASTING_TYPE_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			TextEditGroup editGroup = getEditGroup(event);
+			String castType = CastExpression.getCastType(cast.getCastingType());
+			int offset = cast.getStart() + 1;
+			int closingParenOffset = getScanner().getTokenStartOffset((SymbolsProvider.getSymbol(SymbolsProvider.RPAREN_ID, scanner.getPHPVersion())), offset);
+
+			doTextReplace(offset, closingParenOffset - offset, castType, editGroup);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -2643,7 +2662,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ReflectionVariable)
 	 */
 	public boolean visit(ReflectionVariable reflectionVariable) {
-		if (isChanged(reflectionVariable, ReflectionVariable.DOLLARED_PROPERTY)) { 
+		if (isChanged(reflectionVariable, ReflectionVariable.DOLLARED_PROPERTY)) {
 			rewriteVariableDollar(reflectionVariable);
 		}
 		return rewriteRequiredNodeVisit(reflectionVariable, ReflectionVariable.NAME_PROPERTY);

@@ -45,10 +45,8 @@ public class CastExpression extends Expression {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = 
-		new ChildPropertyDescriptor(CastExpression.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor CASTING_TYPE_PROPERTY = 
-		new SimplePropertyDescriptor(CastExpression.class, "castingType", Integer.class, MANDATORY); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor EXPRESSION_PROPERTY = new ChildPropertyDescriptor(CastExpression.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor CASTING_TYPE_PROPERTY = new SimplePropertyDescriptor(CastExpression.class, "castingType", Integer.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -56,14 +54,14 @@ public class CastExpression extends Expression {
 	 * or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(3);
 		properyList.add(EXPRESSION_PROPERTY);
 		properyList.add(CASTING_TYPE_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
-		
+
 	public CastExpression(int start, int end, AST ast, Expression expr, int castType) {
 		super(start, end, ast);
 
@@ -77,14 +75,15 @@ public class CastExpression extends Expression {
 	public CastExpression(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
+
 	public static String getCastType(int type) {
 		switch (type) {
 			case TYPE_INT:
@@ -145,12 +144,12 @@ public class CastExpression extends Expression {
 	public Expression getExpr() {
 		return expression;
 	}
-	
+
 	/**
 	 * Returns the type of this cast expression.
 	 * 
 	 * @return the cast type
-	 */ 
+	 */
 	public int getCastingType() {
 		return this.castingType;
 	}
@@ -160,7 +159,7 @@ public class CastExpression extends Expression {
 	 * 
 	 * @param castingType the cast type 
 	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 */
 	public void setCastingType(int castingType) {
 		if (getCastType(castingType) == null) {
 			throw new IllegalArgumentException("Invalid type");
@@ -170,15 +169,28 @@ public class CastExpression extends Expression {
 		postValueChange(CASTING_TYPE_PROPERTY);
 	}
 
+	int internalGetSetIntProperty(SimplePropertyDescriptor property, boolean get, int value) {
+		if (property == CASTING_TYPE_PROPERTY) {
+			if (get) {
+				return getCastingType();
+			} else {
+				setCastingType((Integer) value);
+				return 0;
+			}
+		}
+		// allow default implementation to flag the error
+		return super.internalGetSetIntProperty(property, get, value);
+	}
+
 	/**
 	 * Returns the left hand side of this assignment expression.
 	 * 
 	 * @return the left hand side node
-	 */ 
+	 */
 	public Expression getExpression() {
 		return this.expression;
 	}
-		
+
 	/**
 	 * Sets the expression of this cast expression.
 	 * 
@@ -189,7 +201,7 @@ public class CastExpression extends Expression {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setExpression(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -199,8 +211,8 @@ public class CastExpression extends Expression {
 		preReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
 		this.expression = expression;
 		postReplaceChild(oldChild, expression, EXPRESSION_PROPERTY);
-	}	
-	
+	}
+
 	final Object internalGetSetObjectProperty(SimplePropertyDescriptor property, boolean get, Object value) {
 		if (property == CASTING_TYPE_PROPERTY) {
 			if (get) {
@@ -226,7 +238,7 @@ public class CastExpression extends Expression {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
