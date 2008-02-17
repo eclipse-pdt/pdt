@@ -1314,6 +1314,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					newOperation = PrefixExpression.getOperator((Integer) event.getNewValue());
 				} else if (parent instanceof PostfixExpression) {
 					newOperation = PostfixExpression.getOperator((Integer) event.getNewValue());
+				} else if (parent instanceof UnaryOperation) {
+					newOperation = UnaryOperation.getOperator((Integer) event.getNewValue());
 				}
 				TextEditGroup editGroup = getEditGroup(event);
 				getScanner().readNext(posBeforeOperation/*, true*/);
@@ -2718,7 +2720,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.UnaryOperation)
 	 */
 	public boolean visit(UnaryOperation unaryOperation) {
-		return rewriteRequiredNodeVisit(unaryOperation, UnaryOperation.EXPRESSION_PROPERTY, UnaryOperation.OPERATOR_PROPERTY);
+		rewriteOperation(unaryOperation, UnaryOperation.OPERATOR_PROPERTY, unaryOperation.getStart());
+		return rewriteRequiredNodeVisit(unaryOperation, UnaryOperation.EXPRESSION_PROPERTY);
 	}
 
 	/* (non-Javadoc)
