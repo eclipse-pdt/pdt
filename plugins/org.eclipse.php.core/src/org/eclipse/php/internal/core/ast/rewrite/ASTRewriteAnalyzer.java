@@ -2643,7 +2643,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ReflectionVariable)
 	 */
 	public boolean visit(ReflectionVariable reflectionVariable) {
-		return rewriteRequiredNodeVisit(reflectionVariable, ReflectionVariable.DOLLARED_PROPERTY, ReflectionVariable.NAME_PROPERTY);
+		if (isChanged(reflectionVariable, ReflectionVariable.DOLLARED_PROPERTY)) { 
+			rewriteVariableDollar(reflectionVariable);
+		}
+		return rewriteRequiredNodeVisit(reflectionVariable, ReflectionVariable.NAME_PROPERTY);
 	}
 
 	/* (non-Javadoc)
