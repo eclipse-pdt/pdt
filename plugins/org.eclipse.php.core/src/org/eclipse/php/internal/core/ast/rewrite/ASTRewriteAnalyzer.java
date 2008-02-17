@@ -2561,7 +2561,42 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Include)
 	 */
 	public boolean visit(Include include) {
-		return rewriteRequiredNodeVisit(include, Include.INCLUDE_TYPE_PROPERTY, Include.EXPRESSION_PROPERTY);
+		if (!hasChildrenChanges(include)) {
+			return doVisitUnchangedChildren(include);
+		}
+		int offsetGap = 0;
+		if (isChanged(include, Include.INCLUDE_TYPE_PROPERTY)) {
+			RewriteEvent event = getEvent(include, Include.INCLUDE_TYPE_PROPERTY);
+			if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+				TextEditGroup editGroup = getEditGroup(event);
+				int newValue = (Integer) event.getNewValue();
+				int originalTypeLength = Include.getType((Integer) event.getOriginalValue()).length();
+				String newIncludeType = Include.getType(newValue);
+				doTextReplace(include.getStart(), originalTypeLength, newIncludeType, editGroup);
+				offsetGap = originalTypeLength - newIncludeType.length();
+			}
+		}
+		if (isChanged(include, Include.EXPRESSION_PROPERTY)) {
+			// This should be treated specially in case that the new expression removes the parentheses of the 
+			// include. 
+			// In this situation, we might get a syntax error, so we have to deal with it here.
+			RewriteEvent event = getEvent(include, Include.EXPRESSION_PROPERTY);
+			if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+				TextEditGroup editGroup = getEditGroup(event);
+				int typeEndOffset = Include.getType(include.getIncludeType()).length() + include.getStart();
+				ASTNode newNode = (ASTNode) event.getNewValue();
+				ASTNode originalNode = (ASTNode) event.getOriginalValue();
+				// In case that the offset of the original node started right at the end of the include string, check that
+				// the new node is not a parenthesis, and if not - add a blank
+				if (typeEndOffset + offsetGap == originalNode.getStart() && newNode.getType() != ASTNode.PARENTHESIS_EXPRESSION) {
+					doTextInsert(offsetGap + typeEndOffset, " ", editGroup); //$NON-NLS-1$
+					rewriteRequiredNode(include, Include.EXPRESSION_PROPERTY);
+				} else {
+					rewriteRequiredNode(include, Include.EXPRESSION_PROPERTY);
+				}
+			}
+		}
+		return false;
 	}
 
 	/* (non-Javadoc)
