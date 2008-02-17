@@ -5,7 +5,6 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.utils.CorePrinter;
 
 public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
@@ -58,7 +57,6 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		}
 		visitor.endvisit(this);
 	}
-
 
 	public int getKind() {
 		return ASTNodeKinds.PHP_DOC_TAG;

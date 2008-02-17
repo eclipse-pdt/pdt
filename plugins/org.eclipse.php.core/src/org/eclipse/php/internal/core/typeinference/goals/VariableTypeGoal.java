@@ -7,7 +7,7 @@ import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 /**
  * Type of a local or global variables
  */
-public class VariableTypeGoal extends AbstractTypeGoal {
+public class VariableTypeGoal extends AbstractTypeGoal implements IWeightedGoal {
 
 	private final VariableReference variableReference;
 
@@ -18,5 +18,9 @@ public class VariableTypeGoal extends AbstractTypeGoal {
 
 	public VariableReference getVariableReference() {
 		return variableReference;
+	}
+
+	public int getWeight() {
+		return IWeightedGoal.LITE;
 	}
 }

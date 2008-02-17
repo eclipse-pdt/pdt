@@ -1,0 +1,42 @@
+package org.eclipse.php.internal.core.typeinference.evaluators;
+
+import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
+import org.eclipse.dltk.ti.goals.GoalEvaluator;
+import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.StaticConstantAccess;
+import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
+
+public class StaticConstantAccessEvaluator extends GoalEvaluator {
+
+	private IEvaluatedType evaluatedType;
+
+	public StaticConstantAccessEvaluator(IGoal goal) {
+		super(goal);
+	}
+
+	public IGoal[] init() {
+		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
+		StaticConstantAccess expr = (StaticConstantAccess) typedGoal.getExpression();
+
+		Expression dispatcher = expr.getDispatcher();
+		if (dispatcher instanceof TypeReference) {
+			TypeReference typeReference = (TypeReference) dispatcher;
+			return new IGoal[] { new ConstantDeclarationGoal(expr.getConstant().getName(), typeReference.getName()) };
+		}
+		return IGoal.NO_GOALS;
+	}
+
+	public Object produceResult() {
+		return evaluatedType;
+	}
+
+	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
+		evaluatedType = (IEvaluatedType) result;
+		return IGoal.NO_GOALS;
+	}
+
+}

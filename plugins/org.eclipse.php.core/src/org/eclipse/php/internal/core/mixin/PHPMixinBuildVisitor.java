@@ -325,7 +325,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 	@SuppressWarnings("unchecked")
 	public boolean visit(CallExpression expr) throws Exception {
-		if ("define".equals(expr.getName())) { //$NON-NLS-1$
+		if ("define".equalsIgnoreCase(expr.getName())) { //$NON-NLS-1$
 			// report global constant:
 			IField obj = null;
 			List args = expr.getArgs().getChilds();

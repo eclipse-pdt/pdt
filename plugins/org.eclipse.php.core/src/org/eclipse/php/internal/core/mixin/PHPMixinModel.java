@@ -55,6 +55,11 @@ public class PHPMixinModel {
 		return filterElements(elements, PHPMixinElementInfo.K_METHOD);
 	}
 
+	public IModelElement[] getClass(String className) {
+		IMixinElement[] elements = model.find(className + PHPMixinParser.CLASS_SUFFIX);
+		return filterElements(elements, PHPMixinElementInfo.K_CLASS);
+	}
+
 	public IModelElement[] getVariable(String variableName, String methodName, String typeName) {
 		//{$globalVa
 		String pattern = MixinModel.SEPARATOR + variableName;
@@ -66,8 +71,16 @@ public class PHPMixinModel {
 			// AClass%{classMethod{$methodVariable
 			pattern = typeName + PHPMixinParser.CLASS_SUFFIX + pattern;
 		}
-
 		IMixinElement[] elements = model.find(pattern);
 		return filterElements(elements, PHPMixinElementInfo.K_VARIABLE);
+	}
+
+	public IModelElement[] getConstant(String constantName, String typeName) {
+		String pattern = MixinModel.SEPARATOR + constantName;
+		if (typeName != null) {
+			pattern = typeName + PHPMixinParser.CLASS_SUFFIX + pattern;
+		}
+		IMixinElement[] elements = model.find(pattern);
+		return filterElements(elements, PHPMixinElementInfo.K_CONSTANT);
 	}
 }

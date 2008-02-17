@@ -8,27 +8,37 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
-import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
+import org.eclipse.php.internal.core.typeinference.goals.*;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 	public GoalEvaluator createEvaluator(IGoal goal) {
 
-		if (goal instanceof ExpressionTypeGoal) {
+		Class<?> goalClass = goal.getClass();
+
+		if (goalClass == ExpressionTypeGoal.class) {
 			ExpressionTypeGoal exprGoal = (ExpressionTypeGoal) goal;
 			return createExpressionEvaluator(exprGoal);
 		}
-		if (goal instanceof MethodReturnTypeGoal) {
+		if (goalClass == MethodReturnTypeGoal.class) {
 			return new MethodReturnTypeEvaluator(goal);
 		}
-		if (goal instanceof VariableTypeGoal) {
+		if (goalClass == VariableTypeGoal.class) {
 			return new VariableTypeEvaluator(goal);
 		}
-		if (goal instanceof GlobalVariableReferencesGoal) {
+		if (goalClass == GlobalVariableReferencesGoal.class) {
 			return new GlobalVariableReferencesEvaluator(goal);
 		}
-
+		if (goalClass == ClassVariableDeclarationGoal.class) {
+			return new ClassVariableDeclarationEvaluator(goal);
+		}
+		if (goalClass == ScalarGoal.class) {
+			ScalarGoal scalarGoal = (ScalarGoal)goal;
+			return new ScalarEvaluator(scalarGoal);
+		}
+		if (goalClass == ConstantDeclarationGoal.class) {
+			return new ConstantDeclarationEvaluator(goal);
+		}
 		return null;
 	}
 
@@ -48,7 +58,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			TypeReference type = (TypeReference) expression;
 			return new FixedAnswerEvaluator(exprGoal, new PHPClassType(type.getName()));
 		}
-		if (expressionClass == PHPCallExpression.class) {
+		if (expressionClass == PHPCallExpression.class || expressionClass == StaticMethodInvocation.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
 		}
 		if (expressionClass == ClassInstanceCreation.class) {
@@ -86,6 +96,12 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (expressionClass == ArrayVariableReference.class) {
 			return new ArrayVariableReferenceEvaluator(exprGoal);
+		}
+		if (expressionClass == FieldAccess.class) {
+			return new FieldAccessEvaluator(exprGoal);
+		}
+		if (expressionClass == StaticConstantAccess.class) {
+			return new StaticConstantAccessEvaluator(exprGoal);
 		}
 
 		return null;
