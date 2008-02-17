@@ -311,7 +311,7 @@ public class ASTMatcher {
 		}
 		CastExpression o = (CastExpression) other;
 
-		return (safeEquals(node.getExpression(), o.getCastingType()) && safeSubtreeMatch(node.getExpression(), o.getExpression()));
+		return (safeEquals(node.getCastingType(), o.getCastingType()) && safeSubtreeMatch(node.getExpression(), o.getExpression()));
 	}
 	
 	public boolean match(CatchClause node, Object other) {
@@ -332,7 +332,7 @@ public class ASTMatcher {
 		ClassConstantDeclaration o = (ClassConstantDeclaration) other;
 
 		return (safeSubtreeListMatch(node.initializers(), o.initializers())
-				&& safeSubtreeListMatch(node.initializers(), node.names()));
+				&& safeSubtreeListMatch(node.names(), o.names()));
 	}
 	
 	public boolean match(ClassDeclaration node, Object other) {

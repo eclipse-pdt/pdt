@@ -122,7 +122,7 @@ public class GlobalStatement extends Statement {
 	 * @return the variables component of the global statement
 	 */
 	public List<Variable> variables() {
-		return variables();
+		return this.variables;
 	}
 
 	/* 
