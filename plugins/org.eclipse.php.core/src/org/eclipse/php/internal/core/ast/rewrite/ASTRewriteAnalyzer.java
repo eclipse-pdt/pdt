@@ -1862,50 +1862,15 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ClassInstanceCreation)
 	 */
 	public boolean visit(ClassInstanceCreation node) {
-		// TODO
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//
-		//		int pos = rewriteOptionalQualifier(node, ClassInstanceCreation.EXPRESSION_PROPERTY, node.getStart());
-		//		if (node.getAST().apiLevel() == PHP4_INTERNAL) {
-		//			pos = rewriteRequiredNode(node, ClassInstanceCreation.NAME_PROPERTY);
-		//		} else {
-		//			if (isChanged(node, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY)) {
-		//				try {
-		//					pos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.NEW_ID, scanner.getPHPVersion()), pos); //after 'new'
-		//					rewriteOptionalTypeParameters(node, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY, pos, " ", true, true); //$NON-NLS-1$
-		//				} catch (CoreException e) {
-		//					handleException(e);
-		//				}
-		//			} else {
-		//				voidVisit(node, ClassInstanceCreation.TYPE_ARGUMENTS_PROPERTY);
-		//			}
-		//			pos = rewriteRequiredNode(node, ClassInstanceCreation.TYPE_PROPERTY);
-		//		}
-		//
-		//		if (isChanged(node, ClassInstanceCreation.ARGUMENTS_PROPERTY)) {
-		//			try {
-		//				int startpos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
-		//				rewriteNodeList(node, ClassInstanceCreation.ARGUMENTS_PROPERTY, startpos, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
-		//			} catch (CoreException e) {
-		//				handleException(e);
-		//			}
-		//		} else {
-		//			voidVisit(node, ClassInstanceCreation.ARGUMENTS_PROPERTY);
-		//		}
-		//
-		//		int kind = getChangeKind(node, ClassInstanceCreation.ANONYMOUS_CLASS_DECLARATION_PROPERTY);
-		//		if (kind == RewriteEvent.REMOVED) {
-		//			try {
-		//				pos = getScanner().getPreviousTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LBRACE_ID, scanner.getPHPVersion()), pos);
-		//			} catch (CoreException e) {
-		//				handleException(e);
-		//			}
-		//		} else {
-		//			pos = node.getStart() + node.getLength(); // insert pos
-		//		}
-		//		rewriteNode(node, ClassInstanceCreation.ANONYMOUS_CLASS_DECLARATION_PROPERTY, pos, ASTRewriteFormatter.SPACE);
+		rewriteRequiredNodeVisit(node, ClassInstanceCreation.CLASSNAME_PROPERTY);
+		if (isChanged(node, ClassInstanceCreation.CTOR_PARAMS_PROPERTY)) {
+			try {
+				int pos = getLeftParenthesesStartPosition(node.getStart()) + 1;
+				rewriteNodeList(node, ClassInstanceCreation.CTOR_PARAMS_PROPERTY, pos, "", ", ");
+			} catch (Exception e) {
+				handleException(e);
+			}
+		}
 		return false;
 	}
 

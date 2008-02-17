@@ -33,25 +33,23 @@ public class ClassInstanceCreation extends Expression {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor CLASSNAME_PROPERTY = 
-		new ChildPropertyDescriptor(ClassInstanceCreation.class, "className", ClassName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor CTOR_PARAMS_PROPERTY = 
-		new ChildListPropertyDescriptor(ClassInstanceCreation.class, "ctorParams", Expression.class, CYCLE_RISK); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor CLASSNAME_PROPERTY = new ChildPropertyDescriptor(ClassInstanceCreation.class, "className", ClassName.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor CTOR_PARAMS_PROPERTY = new ChildListPropertyDescriptor(ClassInstanceCreation.class, "ctorParams", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+
 	/**
 	 * A list of property descriptors (element type: 
 	 * {@link StructuralPropertyDescriptor}),
 	 * or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(CLASSNAME_PROPERTY);
 		propertyList.add(CTOR_PARAMS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
+	}
+
 	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, Expression[] ctorParams) {
 		super(start, end, ast);
 		if (className == null || ctorParams == null) {
@@ -67,14 +65,14 @@ public class ClassInstanceCreation extends Expression {
 	public ClassInstanceCreation(AST ast) {
 		super(ast);
 	}
-	
+
 	public void accept(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public ClassInstanceCreation(int start, int end, AST ast, ClassName className, List ctorParams) {
 		this(start, end, ast, className, ctorParams == null ? null : (Expression[]) ctorParams.toArray(new Expression[ctorParams.size()]));
@@ -140,7 +138,7 @@ public class ClassInstanceCreation extends Expression {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setClassName(ClassName classname) {
 		if (classname == null) {
 			throw new IllegalArgumentException();
@@ -150,7 +148,7 @@ public class ClassInstanceCreation extends Expression {
 		this.className = classname;
 		postReplaceChild(oldChild, classname, CLASSNAME_PROPERTY);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == CLASSNAME_PROPERTY) {
 			if (get) {
@@ -163,8 +161,14 @@ public class ClassInstanceCreation extends Expression {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	
+
+	public List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == CTOR_PARAMS_PROPERTY) {
+			return ctorParams();
+		}
+		return super.internalGetChildListProperty(property);
+	}
+
 	/**
 	 * @deprecated use {@link #ctoParams()}
 	 */
@@ -180,7 +184,7 @@ public class ClassInstanceCreation extends Expression {
 	public List<Expression> ctorParams() {
 		return this.ctorParams;
 	}
-	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
@@ -188,7 +192,7 @@ public class ClassInstanceCreation extends Expression {
 		// dispatch to correct overloaded match method
 		return matcher.match(this, other);
 	}
-	
+
 	@Override
 	ASTNode clone0(AST target) {
 		final List params = ASTNode.copySubtrees(target, ctorParams());
@@ -201,5 +205,5 @@ public class ClassInstanceCreation extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 }
