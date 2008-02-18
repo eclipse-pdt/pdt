@@ -1006,7 +1006,7 @@ public class PhpAstLexer4 implements org.eclipse.php.internal.core.ast.scanner.A
     }
     
 	public String getPHPVersion() {
-		return AST.PHP5;
+		return AST.PHP4;
 	}
     
 	public void setInScriptingState() {
