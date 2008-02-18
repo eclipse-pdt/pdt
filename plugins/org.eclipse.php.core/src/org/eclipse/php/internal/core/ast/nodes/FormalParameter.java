@@ -184,6 +184,17 @@ public class FormalParameter extends ASTNode {
 	 * @return default value of this parameter
 	 */
 	public Expression getDefaultValue() {
+		if (defaultValue == null) {
+			// lazy init must be thread-safe for readers
+			synchronized (this) {
+				if (defaultValue == null) {
+					preLazyInit();
+					this.defaultValue = ast.newIdentifier();
+					this.defaultValue.setSourceRange(getStart(), 0);
+					postLazyInit(defaultValue, DEFAULT_VALUE_PROPERTY);
+				}
+			}
+		}
 		return defaultValue;
 	}
 
@@ -258,6 +269,17 @@ public class FormalParameter extends ASTNode {
 	 * @return the type of this parameter
 	 */
 	public Identifier getParameterType() {
+		if (parameterType == null) {
+			// lazy init must be thread-safe for readers
+			synchronized (this) {
+				if (parameterType == null) {
+					preLazyInit();
+					this.parameterType = ast.newIdentifier();
+					this.parameterType.setSourceRange(getStart(), 0);
+					postLazyInit(parameterType, PARAMETER_TYPE_PROPERTY);
+				}
+			}
+		}
 		return parameterType;
 	}
 
@@ -273,9 +295,6 @@ public class FormalParameter extends ASTNode {
 	 * </ul>
 	 */
 	public void setParameterType(Identifier id) {
-		if (id == null) {
-			throw new IllegalArgumentException();
-		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.parameterType;
 		preReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
