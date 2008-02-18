@@ -19,11 +19,12 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  *
  * function foo(); -abstract function in class declaration
  */
-public class PHPMethodDeclaration extends MethodDeclaration {
+public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration {
 
 	private final boolean isReference;
+	private PHPDocBlock phpDoc;
 
-	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, int modifiers, List<FormalParameter> formalParameters, Block body, final boolean isReference) {
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, int modifiers, List<FormalParameter> formalParameters, Block body, final boolean isReference, PHPDocBlock phpDoc) {
 		super(functionName, nameStart, nameEnd, start, end);
 
 		setModifiers(modifiers);
@@ -31,10 +32,15 @@ public class PHPMethodDeclaration extends MethodDeclaration {
 		acceptBody(body);
 
 		this.isReference = isReference;
+		this.phpDoc = phpDoc;
 	}
 
-	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, List<FormalParameter> formalParameters, Block body, final boolean isReference) {
-		this(start, end, nameStart, nameEnd, functionName, Modifiers.AccDefault, formalParameters, body, isReference);
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
+	}
+
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, List<FormalParameter> formalParameters, Block body, final boolean isReference, PHPDocBlock phpDoc) {
+		this(start, end, nameStart, nameEnd, functionName, Modifiers.AccDefault, formalParameters, body, isReference, phpDoc);
 	}
 
 	public boolean isReference() {

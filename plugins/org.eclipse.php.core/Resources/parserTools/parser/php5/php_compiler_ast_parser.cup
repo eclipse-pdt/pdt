@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.2 2008/02/05 10:08:19 rganor Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.3 2008/02/18 13:31:36 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +16,8 @@ import org.eclipse.dltk.ast.statements.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 parser code {:
+
+	PHPDocBlock docBlock;
 
 	public Expression createDispatch(Expression dispatcher, Expression property) {
 
@@ -83,7 +85,7 @@ terminal  T_CASE;
 terminal  T_DEFAULT;
 terminal  T_BREAK;
 terminal  T_CONTINUE;
-terminal  T_FUNCTION;
+terminal  PHPDocBlock T_FUNCTION;
 terminal  T_CONST;
 terminal  T_RETURN;
 terminal  T_TRY;
@@ -91,12 +93,12 @@ terminal  T_CATCH;
 terminal  T_THROW;
 terminal  T_USE;
 terminal  T_GLOBAL;
-terminal  T_VAR;
+terminal  PHPDocBlock T_VAR;
 terminal  String T_UNSET;
 terminal  String T_ISSET;
 terminal  String T_EMPTY;
 terminal  T_HALT_COMPILER;
-terminal  T_CLASS;
+terminal  PHPDocBlock T_CLASS;
 terminal  T_INTERFACE;
 terminal  T_EXTENDS;
 terminal  T_IMPLEMENTS;
@@ -150,7 +152,7 @@ terminal T_NEW;
 terminal T_ENDIF;
 terminal T_ELSEIF;
 terminal T_ELSE;
-terminal T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
+terminal PHPDocBlock T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
@@ -702,7 +704,9 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
 	Block block = new Block(blockStartleft, blockEndright, statementList);
-	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue());
+	parser.docBlock = start;
+	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue(), parser.docBlock);
+	parser.docBlock = null;
 	RESULT = functionDeclaration;
 :}
 ;
@@ -722,7 +726,8 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEn
 	}
 	
 	Block block = new Block(blockStartleft, blockEndright, statementList);
-	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, modifier.intValue(), className, superClass, interfaces, block);
+	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, modifier.intValue(), className, superClass, interfaces, block, parser.docBlock);
+	parser.docBlock = null;
 	RESULT = classDeclaration;
 :}
 
@@ -747,18 +752,21 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEn
 ;
 
 class_entry_type ::=
-T_CLASS
+T_CLASS:value
 {:
+	parser.docBlock = value;
 	RESULT = new Integer(Modifiers.AccDefault);
 :}
                
-| T_ABSTRACT T_CLASS
+| T_ABSTRACT:value T_CLASS
 {:
+	parser.docBlock = value;
 	RESULT = new Integer(Modifiers.AccAbstract);
 :}        
 
-| T_FINAL T_CLASS   
+| T_FINAL:value T_CLASS   
 {:
+	parser.docBlock = value;
 	RESULT = new Integer(Modifiers.AccFinal);
 :}        
 ;
@@ -1281,8 +1289,9 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		Expression initializer = (Expression)decl[1];
 		int start = variable.sourceStart();
 		int end = (initializer == null ? variable.sourceEnd() : initializer.sourceEnd());
-		constList.add (new PHPFieldDeclaration(variable, initializer, start, end, modifier.intValue()));
+		constList.add (new PHPFieldDeclaration(variable, initializer, start, end, modifier.intValue(), parser.docBlock));
 	}
+	parser.docBlock = null;
 	RESULT = constList;
 :}
 
@@ -1307,7 +1316,13 @@ method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
 	modifier = modifier == null ? Modifiers.AccPublic : modifier;
-	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, bodyright, functionNameleft, functionNameright, functionName, modifier.intValue(), paramList, body, isReference);
+	
+	if (parser.docBlock == null) {
+		parser.docBlock = start;
+	}
+	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, bodyright, functionNameleft, functionNameright, functionName, modifier.intValue(), paramList, body, isReference, parser.docBlock);
+	parser.docBlock = null;
+	
 	List methodList = new LinkedList();
 	methodList.add(methodDeclaration);
 	RESULT = methodList;
@@ -1343,8 +1358,9 @@ non_empty_member_modifiers:list
 	RESULT = new Integer(result);
 :}
 
-| T_VAR
+| T_VAR:var
 {:
+	parser.docBlock = var;
 	RESULT = Modifiers.AccPublic;
 :}
 ;
@@ -1382,33 +1398,51 @@ member_modifier:modifier
 ;
 
 member_modifier ::=
-T_PUBLIC
+T_PUBLIC:value
 {:
+	if (value != null) {
+		parser.docBlock = value;
+	}
 	RESULT = Modifiers.AccPublic;
 :}
 
-| T_PROTECTED
+| T_PROTECTED:value
 {:
+	if (value != null) {
+		parser.docBlock = value;
+	}
 	RESULT = Modifiers.AccProtected;
 :}
 
-| T_PRIVATE
+| T_PRIVATE:value
 {:
+	if (value != null) {
+		parser.docBlock = value;
+	}
 	RESULT = Modifiers.AccPrivate;
 :}
 
-| T_STATIC
+| T_STATIC:value
 {:
+	if (value != null) {
+		parser.docBlock = value;
+	}
 	RESULT = Modifiers.AccStatic;
 :}
 
-| T_ABSTRACT
+| T_ABSTRACT:value
 {:
+	if (value != null) {
+		parser.docBlock = value;
+	}
 	RESULT = Modifiers.AccAbstract;
 :}
 
-| T_FINAL
+| T_FINAL:value
 {:
+	if (value != null) {
+		parser.docBlock = value;
+	}
 	RESULT = Modifiers.AccFinal;
 :}
 ;

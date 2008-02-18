@@ -7,16 +7,22 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
-public class PHPFieldDeclaration extends FieldDeclaration {
+public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration {
 
 	private Expression initializer;
+	private PHPDocBlock phpDoc;
 
-	public PHPFieldDeclaration(VariableReference variable, Expression initializer, int start, int end, int modifiers) {
+	public PHPFieldDeclaration(VariableReference variable, Expression initializer, int start, int end, int modifiers, PHPDocBlock phpDoc) {
 		super(variable.getName(), variable.sourceStart(), variable.sourceEnd(), start, end);
 
 		setModifiers(modifiers);
 
 		this.initializer = initializer;
+		this.phpDoc = phpDoc;
+	}
+
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {

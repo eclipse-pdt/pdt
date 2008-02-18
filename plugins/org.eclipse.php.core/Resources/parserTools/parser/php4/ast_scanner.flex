@@ -52,7 +52,7 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 %state ST_DOCBLOCK
 %state ST_ONE_LINE_COMMENT
 %{
-	private final List commentList = new LinkedList();
+	private final LinkedList commentList = new LinkedList();
 	private String heredoc = null;
     private boolean asp_tags = false;
     private boolean short_tags_allowed = true;
@@ -79,7 +79,7 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 		commentList.clear();
 	}
 	
-	public List getCommentList() {
+	public LinkedList getCommentList() {
 		return commentList;
 	}
 	
@@ -145,7 +145,7 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
         return symbol;
     }
 
-    private Symbol createSymbol(int symbolNumber) {
+    protected Symbol createSymbol(int symbolNumber) {
         int leftPosition = getTokenStartPosition();
         return new Symbol(symbolNumber, leftPosition, leftPosition + getTokenLength());
     }
@@ -154,7 +154,7 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
     	return new int[]{zzMarkedPos, zzPushbackPos, zzCurrentPos, zzStartRead, zzEndRead, yyline};
     }
     
-	private boolean parsePHPDoc(){	
+	protected boolean parsePHPDoc(){	
 		final IDocumentorLexer documentorLexer = getDocumentorLexer(zzReader);
 		if(documentorLexer == null){
 			return false;

@@ -21,12 +21,15 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  *   private function myFunction($a) { }
  * }
  */
-public class ClassDeclaration extends TypeDeclaration {
+public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration {
 
-	public ClassDeclaration(int start, int end, int nameStart, int nameEnd, int modifier, String className, TypeReference superClass, List<TypeReference> interfaces, Block body) {
+	private PHPDocBlock phpDoc;
+
+	public ClassDeclaration(int start, int end, int nameStart, int nameEnd, int modifier, String className, TypeReference superClass, List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
 		super(className, nameStart, nameEnd, start, end);
 
 		setModifiers(modifier);
+		this.phpDoc = phpDoc;
 
 		ASTListNode parentsList = new ASTListNode();
 		if (superClass != null) {
@@ -40,6 +43,10 @@ public class ClassDeclaration extends TypeDeclaration {
 		setSuperClasses(parentsList);
 
 		setBody(body);
+	}
+
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
 	}
 
 	public int getKind() {

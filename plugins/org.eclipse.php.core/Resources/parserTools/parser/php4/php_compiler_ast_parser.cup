@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.1 2008/02/07 17:12:03 ggurfinke Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.2 2008/02/18 13:31:34 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -110,17 +110,16 @@ terminal  T_CASE;
 terminal  T_DEFAULT;
 terminal  T_BREAK;
 terminal  T_CONTINUE;
-terminal  T_FUNCTION;
-terminal  T_OLD_FUNCTION;
+terminal  PHPDocBlock T_FUNCTION;
 terminal  T_CONST;
 terminal  T_RETURN;
 terminal  T_USE;
 terminal  T_GLOBAL;
-terminal  T_VAR;
+terminal  PHPDocBlock T_VAR;
 terminal  String T_UNSET;
 terminal  String T_ISSET;
 terminal  String T_EMPTY;
-terminal  T_CLASS;
+terminal  PHPDocBlock T_CLASS;
 terminal  T_EXTENDS;
 terminal  T_OBJECT_OPERATOR;
 terminal  T_DOUBLE_ARROW;
@@ -170,7 +169,7 @@ terminal T_NEW;
 terminal T_ENDIF;
 terminal T_ELSEIF;
 terminal T_ELSE;
-terminal T_STATIC;
+terminal PHPDocBlock T_STATIC;
 terminal T_OPEN_PARENTHESE,T_CLOSE_PARENTHESE;
 terminal T_NEKUDOTAIM;
 terminal T_DOLLAR;
@@ -593,7 +592,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
 	Block block = new Block(blockStartleft, blockEndright, statementList);
-    PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue());
+    PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue(), start);
     RESULT = functionDeclaration;
 :}
 
@@ -610,7 +609,7 @@ T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEn
     }
 
     Block block = new Block(blockStartleft, blockEndright, statementList);
-    ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, Modifiers.AccDefault, className, null, null, block);
+    ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, Modifiers.AccDefault, className, null, null, block, modifier);
     RESULT = classDeclaration;
 :}
 | T_CLASS:modifier T_STRING:className T_EXTENDS T_STRING:superClassName T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
@@ -626,7 +625,7 @@ T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEn
 
     Block block = new Block(blockStartleft, blockEndright, statementList);
 	TypeReference superClassReference = new TypeReference (superClassNameleft, superClassNameright, superClassName);
-    ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, Modifiers.AccDefault, className, superClassReference, null, block);
+    ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, Modifiers.AccDefault, className, superClassReference, null, block, modifier);
     RESULT = classDeclaration;
 :}
 ;
@@ -1053,7 +1052,7 @@ T_VAR:modifier class_variable_declaration:decList T_SEMICOLON
         Expression initializer = (Expression)decl[1];
         int start = variable.sourceStart();
         int end = (initializer == null ? variable.sourceEnd() : initializer.sourceEnd());
-        constList.add (new PHPFieldDeclaration(variable, initializer, start, end, Modifiers.AccDefault));
+        constList.add (new PHPFieldDeclaration(variable, initializer, start, end, Modifiers.AccDefault, modifier));
     }
     RESULT = constList;
 :}
@@ -1061,7 +1060,7 @@ T_VAR:modifier class_variable_declaration:decList T_SEMICOLON
 T_CURLY_OPEN:bodyStart inner_statement_list:statementList T_CURLY_CLOSE:end
 {:
 	Block block = new Block(bodyStartleft, endright, statementList);
-    PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, endright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue());
+    PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, endright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue(), start);
 	List methodList = new LinkedList();
     methodList.add(functionDeclaration);
     RESULT = methodList;
