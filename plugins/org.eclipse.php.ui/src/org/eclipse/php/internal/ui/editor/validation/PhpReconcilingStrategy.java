@@ -21,7 +21,14 @@ import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.ast.nodes.ASTParser;
+import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.internal.UIPlugin;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -34,34 +41,53 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
-public class PhpReconciler implements IValidator, ISourceValidator {
+public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 
-	private IFileEditorInput fEditorInput;
-
+	private IEditorPart fEditor;
+	
 	private IWorkingCopyManager fManager;
-
 	private IDocumentProvider fDocumentProvider;
-
 	private IProgressMonitor fProgressMonitor;
-
-	private IScriptReconcilingListener fJavaReconcilingListener;
+	private IPhpScriptReconcilingListener fJavaReconcilingListener;
+	
 	private boolean fIsScriptReconcilingListener;
 
 	private boolean fNotify = true;
 
-	private boolean firstLoad = true;
-
+	/**
+	 * Short cache to transfer the reconcile AST to
+	 * the {@link #reconciled()} method.
+	 * 
+	 * @since 1.1
+	 */
+	private Program fAST;
+	
 	public void connect(IDocument document) {
 	}
 	
 	public void install(IValidationContext helper) {
-		fEditorInput = findEditor(helper);
+		FileEditorInput fEditorInput = findEditor(helper);
 		if (fEditorInput == null) {
 			return;
 		}
 		
 		fManager = DLTKUIPlugin.getDefault().getWorkingCopyManager();
 		fDocumentProvider = DLTKUIPlugin.getDefault().getSourceModuleDocumentProvider();
+
+		fEditor = getEditor(fEditorInput);
+		
+		fIsScriptReconcilingListener= fEditor instanceof IPhpScriptReconcilingListener;
+		if (fIsScriptReconcilingListener){
+			fJavaReconcilingListener=(IPhpScriptReconcilingListener) fEditor;	
+		}
+		
+	}
+
+	private IEditorPart getEditor(FileEditorInput fEditorInput) {
+		IWorkbenchWindow[] workbenchWindows = UIPlugin.getDefault().getWorkbench().getWorkbenchWindows();
+		IEditorPart findEditor = workbenchWindows[0].getActivePage().findEditor(fEditorInput);
+
+		return findEditor;
 	}
 
 	private FileEditorInput findEditor(IValidationContext helper) {
@@ -74,58 +100,88 @@ public class PhpReconciler implements IValidator, ISourceValidator {
 		}
 		return null;
 	}
+	
+	private void reconcile(final boolean initialReconcile) {
+		// Assert.isTrue(fAST == null); // we'll see how this behaves ;-)
+		final ISourceModule unit= fManager.getWorkingCopy(fEditor.getEditorInput(), false);
+		if (unit != null) {
+			SafeRunner.run(new ISafeRunnable() {
+				public void run() throws ModelException {
+					fAST= reconcile(unit, initialReconcile);
+				}
+				public void handleException(Throwable ex) {
+					IStatus status= new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK, "Error in php Core during reconcile", ex);  //$NON-NLS-1$
+					PHPCorePlugin.getDefault().getLog().log(status);
+				}
+			});
+		}
+	}
+
+	/**
+	 * Performs the reconcile and returns the AST if it was computed.
+	 * 
+	 * @param unit the compilation unit
+	 * @param initialReconcile <code>true</code> if this is the initial reconcile
+	 * @return the AST or <code>null</code> if none
+	 * @throws JavaModelException if the original Java element does not exist
+	 * @since 3.4
+	 */
+	private Program reconcile(ISourceModule unit, boolean initialReconcile) throws ModelException {
+		/* fix for missing cancel flag communication */
+		IProblemRequestorExtension extension= getProblemRequestorExtension();
+		if (extension != null) {
+			extension.setProgressMonitor(fProgressMonitor);
+			extension.setIsActive(true);
+		}
+
+		try {
+			// TODO : create ast if needed
+			boolean isASTNeeded= initialReconcile || PHPUiPlugin.getDefault().getASTProvider().isActive(unit);
+			// reconcile
+			synchronized (unit) {
+				unit.reconcile(true, null, fProgressMonitor);
+			}
+			if (isASTNeeded) {
+				ASTParser newParser = ASTParser.newParser(ASTParser.VERSION_PHP5);
+				newParser.setSource(unit.getBuffer().getCharacters());
+				return newParser.createAST(null);
+			}
+			
+		} catch (OperationCanceledException ex) {
+			Assert.isTrue(fProgressMonitor == null || fProgressMonitor.isCanceled());
+
+		} catch (Exception e) {
+			// TODO: handle this event (although can't reach this point 
+			e.printStackTrace();
+			
+		} finally {
+			/* fix for missing cancel flag communication */
+			if (extension != null) {
+				extension.setProgressMonitor(null);
+				extension.setIsActive(false);
+			}
+		}
+		
+		return null;
+	}
+	
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
-		if (firstLoad ) {
+		// install editors
+		if (fEditor == null ) {
 			install(helper);
-			firstLoad = false;
-		}
+			if (fEditor == null) {
+				return;
+			}
+		}	
 		
-		if (fEditorInput == null) {
-			return;
-		}
-		
-		final ISourceModule unit = fManager.getWorkingCopy(fEditorInput);
-
+		final ISourceModule unit = fManager.getWorkingCopy(fEditor.getEditorInput());
 		if (unit == null) {
 			return;
 		}
 
 		try {
-			SafeRunner.run(new ISafeRunnable() {
-				public void run() {
-					try {
-						/* fix for missing cancel flag communication */
-						IProblemRequestorExtension extension = getProblemRequestorExtension();
-						if (extension != null) {
-							extension.setProgressMonitor(fProgressMonitor);
-							extension.setIsActive(true);
-						}
-
-						try {
-							// reconcile
-							synchronized (unit) {
-								unit.reconcile(true, null, fProgressMonitor);
-							}
-						} catch (OperationCanceledException ex) {
-							Assert.isTrue(fProgressMonitor == null || fProgressMonitor.isCanceled());
-						} finally {
-							/* fix for missing cancel flag communication */
-							if (extension != null) {
-								extension.setProgressMonitor(null);
-								extension.setIsActive(false);
-							}
-						}
-					} catch (ModelException ex) {
-						handleException(ex);
-					}
-				}
-
-				public void handleException(Throwable ex) {
-					IStatus status = new Status(IStatus.ERROR, DLTKUIPlugin.PLUGIN_ID, IStatus.OK, "Error in DLTK Core during reconcile", ex); //$NON-NLS-1$
-					DLTKUIPlugin.getDefault().getLog().log(status);
-				}
-			});
+			reconcile(true);
 		} finally {
 			// Always notify listeners, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=55969 for the final solution
 			try {
@@ -133,13 +189,13 @@ public class PhpReconciler implements IValidator, ISourceValidator {
 					IProgressMonitor pm = fProgressMonitor;
 					if (pm == null)
 						pm = new NullProgressMonitor();
-					fJavaReconcilingListener.reconciled(unit, !fNotify, pm);
+					fJavaReconcilingListener.reconciled(fAST, !fNotify, pm);
 				}
 			} finally {
 				fNotify = true;
 			}
 		}
-	}
+	}	
 	
 	/**
 	 * @param delta
@@ -173,7 +229,7 @@ public class PhpReconciler implements IValidator, ISourceValidator {
 	}
 	
 	private IProblemRequestorExtension getProblemRequestorExtension() {
-		IAnnotationModel model = fDocumentProvider.getAnnotationModel(fEditorInput);
+		IAnnotationModel model = fDocumentProvider.getAnnotationModel(fEditor.getEditorInput());
 		if (model instanceof IProblemRequestorExtension)
 			return (IProblemRequestorExtension) model;
 		return null;

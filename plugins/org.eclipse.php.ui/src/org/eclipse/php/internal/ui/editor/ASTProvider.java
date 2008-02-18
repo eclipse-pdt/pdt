@@ -590,7 +590,7 @@ public final class ASTProvider {
 	/*
 	 * @see org.eclipse.jdt.internal.ui.text.java.IPhpReconcilingListener#reconciled(org.eclipse.jdt.core.dom.Program)
 	 */
-	void reconciled(Program ast, ISourceModule javaElement, IProgressMonitor progressMonitor) {
+	public void reconciled(Program ast, ISourceModule javaElement, IProgressMonitor progressMonitor) {
 		if (DEBUG)
 			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "reconciled: " + toString(javaElement) + ", AST: " + toString(ast)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 

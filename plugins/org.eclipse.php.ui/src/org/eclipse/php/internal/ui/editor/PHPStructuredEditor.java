@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
+import java.io.IOException;
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.filesystem.URIUtil;
@@ -32,8 +35,11 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -42,6 +48,7 @@ import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ISavePolicy;
 import org.eclipse.dltk.internal.ui.editor.ISourceModuleDocumentProvider;
 import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
+import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -56,25 +63,36 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.AbstractInformationControlManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ISelectionValidator;
+import org.eclipse.jface.text.ISynchronizable;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.link.LinkedModeModel;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.IAnnotationHoverExtension;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ILineRange;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -87,6 +105,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.IBinding;
+import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
+import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -122,13 +145,20 @@ import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
 import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
 import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
+import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.search.IOccurrencesFinder;
+import org.eclipse.php.internal.ui.search.MethodExitsFinder;
+import org.eclipse.php.internal.ui.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.text.PHPWordIterator;
+import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
+import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
@@ -142,15 +172,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener2;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
@@ -178,7 +213,7 @@ import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
-public class PHPStructuredEditor extends StructuredTextEditor implements IScriptReconcilingListener {
+public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
@@ -195,7 +230,114 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 
 	/** The editor's save policy */
 	protected ISavePolicy fSavePolicy = null;
+
+	/**
+	 * The internal shell activation listener for updating occurrences.
+	 * @since 3.0
+	 */
+	private ActivationListener fActivationListener= new ActivationListener();
+	private ISelectionListenerWithAST fPostSelectionListenerWithAST;
+	private OccurrencesFinderJob fOccurrencesFinderJob;
+	/** The occurrences finder job canceler */
+	private OccurrencesFinderJobCanceler fOccurrencesFinderJobCanceler;	
+
+	/**
+	 * The selection used when forcing occurrence marking
+	 * through code.
+	 * @since 3.0
+	 */
+	private ISelection fForcedMarkOccurrencesSelection;
+	/**
+	 * The document modification stamp at the time when the last
+	 * occurrence marking took place.
+	 * @since 3.1
+	 */
+	private long fMarkOccurrenceModificationStamp= IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
+	/**
+	 * The region of the word under the caret used to when
+	 * computing the current occurrence markings.
+	 * @since 3.1
+	 */
+	private IRegion fMarkOccurrenceTargetRegion;
+
+	/**
+	 * Holds the current occurrence annotations.
+	 * @since 3.0
+	 */
+	private Annotation[] fOccurrenceAnnotations= null;
+	/**
+	 * Tells whether all occurrences of the element at the
+	 * current caret location are automatically marked in
+	 * this editor.
+	 * @since 3.0
+	 */
+	private boolean fMarkOccurrenceAnnotations;
+	/**
+	 * Tells whether the occurrence annotations are sticky
+	 * i.e. whether they stay even if there's no valid Java
+	 * element at the current caret position.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fStickyOccurrenceAnnotations;
+	/**
+	 * Tells whether to mark type occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkTypeOccurrences;
+	/**
+	 * Tells whether to mark method occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkMethodOccurrences;
+	/**
+	 * Tells whether to mark constant occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkConstantOccurrences;
+	/**
+	 * Tells whether to mark field occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkFieldOccurrences;
+	/**
+	 * Tells whether to mark local variable occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkLocalVariableypeOccurrences;
+	/**
+	 * Tells whether to mark exception occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkExceptions;
+	/**
+	 * Tells whether to mark method exits in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.0
+	 */
+	private boolean fMarkMethodExitPoints;
 	
+	/**
+	 * Tells whether to mark targets of <code>break</code> and <code>continue</code> statements in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.2
+	 */
+	private boolean fMarkBreakContinueTargets;
+	
+	/**
+	 * Tells whether to mark implementors in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.1
+	 */
+	private boolean fMarkImplementors;
+
+
 	private final class OutlineSelectionListener implements ISelectionChangedListener {
 		private final ConfigurableContentOutlinePage outlinePage;
 		boolean selecting = false;
@@ -446,6 +588,228 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 	}
 
 	/**
+	 * Internal activation listener.
+	 * @since 3.0
+	 */
+	private class ActivationListener implements IWindowListener {
+
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
+		 */
+		public void windowActivated(IWorkbenchWindow window) {
+			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
+				fForcedMarkOccurrencesSelection= getSelectionProvider().getSelection();
+				IModelElement sourceModule = getInputModelElement();
+				if (sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
+					try {
+						updateOccurrenceAnnotations((ITextSelection)fForcedMarkOccurrencesSelection, SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_NO, getProgressMonitor()));
+					} catch (ModelException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
+		 */
+		public void windowDeactivated(IWorkbenchWindow window) {
+			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart())
+				removeOccurrenceAnnotations();
+		}
+
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
+		 */
+		public void windowClosed(IWorkbenchWindow window) {
+		}
+
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
+		 */
+		public void windowOpened(IWorkbenchWindow window) {
+		}
+	}
+	
+	/**
+	 * Cancels the occurrences finder job upon document changes.
+	 *
+	 * @since 3.0
+	 */
+	class OccurrencesFinderJobCanceler implements IDocumentListener, ITextInputListener {
+
+		public void install() {
+			ISourceViewer sourceViewer= getSourceViewer();
+			if (sourceViewer == null)
+				return;
+
+			StyledText text= sourceViewer.getTextWidget();
+			if (text == null || text.isDisposed())
+				return;
+
+			sourceViewer.addTextInputListener(this);
+
+			IDocument document= sourceViewer.getDocument();
+			if (document != null)
+				document.addDocumentListener(this);
+		}
+
+		public void uninstall() {
+			ISourceViewer sourceViewer= getSourceViewer();
+			if (sourceViewer != null)
+				sourceViewer.removeTextInputListener(this);
+
+			IDocumentProvider documentProvider= getDocumentProvider();
+			if (documentProvider != null) {
+				IDocument document= documentProvider.getDocument(getEditorInput());
+				if (document != null)
+					document.removeDocumentListener(this);
+			}
+		}
+
+
+		/*
+		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+		 */
+		public void documentAboutToBeChanged(DocumentEvent event) {
+			if (fOccurrencesFinderJob != null)
+				fOccurrencesFinderJob.doCancel();
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+		 */
+		public void documentChanged(DocumentEvent event) {
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.ITextInputListener#inputDocumentAboutToBeChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
+		 */
+		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
+			if (oldInput == null)
+				return;
+
+			oldInput.removeDocumentListener(this);
+		}
+
+		/*
+		 * @see org.eclipse.jface.text.ITextInputListener#inputDocumentChanged(org.eclipse.jface.text.IDocument, org.eclipse.jface.text.IDocument)
+		 */
+		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
+			if (newInput == null)
+				return;
+			newInput.addDocumentListener(this);
+		}
+	}	
+	
+	/**
+	 * Finds and marks occurrence annotations.
+	 *
+	 * @since 3.0
+	 */
+	class OccurrencesFinderJob extends Job {
+
+		private final IDocument fDocument;
+		private final ISelection fSelection;
+		private final ISelectionValidator fPostSelectionValidator;
+		private boolean fCanceled= false;
+		private final OccurrenceLocation[] fLocations;
+
+		public OccurrencesFinderJob(IDocument document, OccurrenceLocation[] locations, ISelection selection) {
+			super("mark occrrences job name"); // TODO should externals
+			fDocument= document;
+			fSelection= selection;
+			fLocations= locations;
+
+			if (getSelectionProvider() instanceof ISelectionValidator)
+				fPostSelectionValidator= (ISelectionValidator)getSelectionProvider();
+			else
+				fPostSelectionValidator= null;
+		}
+
+		// cannot use cancel() because it is declared final
+		void doCancel() {
+			fCanceled= true;
+			cancel();
+		}
+
+		private boolean isCanceled(IProgressMonitor progressMonitor) {
+			return fCanceled || progressMonitor.isCanceled()
+				||  fPostSelectionValidator != null && !(fPostSelectionValidator.isValid(fSelection) || fForcedMarkOccurrencesSelection == fSelection)
+				|| LinkedModeModel.hasInstalledModel(fDocument);
+		}
+
+		/*
+		 * @see Job#run(org.eclipse.core.runtime.IProgressMonitor)
+		 */
+		public IStatus run(IProgressMonitor progressMonitor) {
+			if (isCanceled(progressMonitor))
+				return Status.CANCEL_STATUS;
+
+			ITextViewer textViewer= getTextViewer();
+			if (textViewer == null)
+				return Status.CANCEL_STATUS;
+
+			IDocument document= textViewer.getDocument();
+			if (document == null)
+				return Status.CANCEL_STATUS;
+
+			IDocumentProvider documentProvider= getDocumentProvider();
+			if (documentProvider == null)
+				return Status.CANCEL_STATUS;
+
+			IAnnotationModel annotationModel= documentProvider.getAnnotationModel(getEditorInput());
+			if (annotationModel == null)
+				return Status.CANCEL_STATUS;
+
+			// Add occurrence annotations
+			int length= fLocations.length;
+			Map annotationMap= new HashMap(length);
+			for (int i= 0; i < length; i++) {
+
+				if (isCanceled(progressMonitor))
+					return Status.CANCEL_STATUS;
+				
+				OccurrenceLocation location= fLocations[i];
+				Position position= new Position(location.getOffset(), location.getLength());
+
+				String description= location.getDescription();
+				String annotationType= (location.getFlags() == IOccurrencesFinder.F_WRITE_OCCURRENCE) ? "org.eclipse.jdt.ui.occurrences.write" : "org.eclipse.jdt.ui.occurrences"; //$NON-NLS-1$ //$NON-NLS-2$
+				
+				annotationMap.put(new Annotation(annotationType, false, description), position);
+			}
+
+			if (isCanceled(progressMonitor))
+				return Status.CANCEL_STATUS;
+
+			synchronized (getLockObject(annotationModel)) {
+				if (annotationModel instanceof IAnnotationModelExtension) {
+					((IAnnotationModelExtension)annotationModel).replaceAnnotations(fOccurrenceAnnotations, annotationMap);
+				} else {
+					removeOccurrenceAnnotations();
+					Iterator iter= annotationMap.entrySet().iterator();
+					while (iter.hasNext()) {
+						Map.Entry mapEntry= (Map.Entry)iter.next();
+						annotationModel.addAnnotation((Annotation)mapEntry.getKey(), (Position)mapEntry.getValue());
+					}
+				}
+				fOccurrenceAnnotations= (Annotation[])annotationMap.keySet().toArray(new Annotation[annotationMap.keySet().size()]);
+			}
+
+			return Status.OK_STATUS;
+		}
+	}
+	
+	
+	/**
 	 * Information provider used to present focusable information shells.
 	 *
 	 * @since 3.2
@@ -566,7 +930,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 	protected void initializeEditor() {
 		super.initializeEditor();
 
-		setPreferenceStore(createCombinedPreferenceStore());
+		IPreferenceStore store = createCombinedPreferenceStore();
+		setPreferenceStore(store);
+		
+		fMarkOccurrenceAnnotations= store.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
+		fStickyOccurrenceAnnotations= store.getBoolean(PreferenceConstants.EDITOR_STICKY_OCCURRENCES);
+		fMarkTypeOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES);
+		fMarkMethodOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES);
+		fMarkConstantOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES);
+		fMarkFieldOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES);
+		fMarkLocalVariableypeOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES);
+		fMarkExceptions= store.getBoolean(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES);
+		fMarkImplementors= store.getBoolean(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS);
+		fMarkMethodExitPoints= store.getBoolean(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS);
+		fMarkBreakContinueTargets= store.getBoolean(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS);
 	}
 
 	/**
@@ -1390,6 +1767,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 	@Override
 	public void createPartControl(final Composite parent) {
 		super.createPartControl(parent);
+		
+		if (isMarkingOccurrences())
+			installOccurrencesFinder(false);
+		
 		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
 
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
@@ -1871,7 +2252,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 	public void aboutToBeReconciled() {
 
 		// Notify AST provider
-		// JavaPlugin.getDefault().getASTProvider().aboutToBeReconciled(getInputJavaElement());
+		PHPUiPlugin.getDefault().getASTProvider().aboutToBeReconciled((ISourceModule) getInputModelElement());
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
@@ -1884,21 +2265,22 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 	 *      boolean, IProgressMonitor)
 	 * @since 3.0
 	 */
-	public void reconciled(ISourceModule ast, boolean forced, IProgressMonitor progressMonitor) {
+	public void reconciled(Program ast, boolean forced, IProgressMonitor progressMonitor) {
 
 		// see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=58245
-		// JavaPlugin javaPlugin= JavaPlugin.getDefault();
-		// if (javaPlugin == null)
-		// return;
-		//		
-		// // Always notify AST provider
-		// javaPlugin.getASTProvider().reconciled(ast, getInputJavaElement(),
-		// progressMonitor);
+		PHPUiPlugin phpPlugin= PHPUiPlugin.getDefault();
+		if (phpPlugin == null)
+			return;
+		
+		// Always notify AST provider
+		ISourceModule inputModelElement = (ISourceModule) getInputModelElement();
+		// TODO: notify AST provider
+		phpPlugin.getASTProvider().reconciled(ast , inputModelElement, progressMonitor);
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
 		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
+			((IScriptReconcilingListener) listeners[i]).reconciled(inputModelElement, forced, progressMonitor);
 	}
 	
 	/**
@@ -1952,6 +2334,248 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IScript
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Support mark occurrences in PHP Editor
+	 */
+	
+	/**
+	 * Returns the lock object for the given annotation model.
+	 *
+	 * @param annotationModel the annotation model
+	 * @return the annotation model's lock object
+	 * @since 3.0
+	 */
+	private Object getLockObject(IAnnotationModel annotationModel) {
+		if (annotationModel instanceof ISynchronizable) {
+			Object lock= ((ISynchronizable)annotationModel).getLockObject();
+			if (lock != null)
+				return lock;
+		}
+		return annotationModel;
+	}
+
+
+	/**
+	 * Updates the occurrences annotations based
+	 * on the current selection.
+	 *
+	 * @param selection the text selection
+	 * @param astRoot the compilation unit AST
+	 * @since 3.0
+	 */
+	protected void updateOccurrenceAnnotations(ITextSelection selection, Program astRoot) {
+
+		if (fOccurrencesFinderJob != null)
+			fOccurrencesFinderJob.cancel();
+
+		if (!fMarkOccurrenceAnnotations)
+			return;
+
+		if (astRoot == null || selection == null)
+			return;
+
+		IDocument document= getSourceViewer().getDocument();
+		if (document == null)
+			return;
+
+		boolean hasChanged= false;
+		if (document instanceof IDocumentExtension4) {
+			int offset= selection.getOffset();
+			long currentModificationStamp= ((IDocumentExtension4)document).getModificationStamp();
+			IRegion markOccurrenceTargetRegion= fMarkOccurrenceTargetRegion;
+			hasChanged= currentModificationStamp != fMarkOccurrenceModificationStamp;
+			if (markOccurrenceTargetRegion != null && !hasChanged) {
+				if (markOccurrenceTargetRegion.getOffset() <= offset && offset <= markOccurrenceTargetRegion.getOffset() + markOccurrenceTargetRegion.getLength())
+					return;
+			}
+			fMarkOccurrenceTargetRegion= ScriptWordFinder.findWord(document, offset);
+			fMarkOccurrenceModificationStamp= currentModificationStamp;
+		}
+
+		OccurrenceLocation[] locations= null;
+		
+		ASTNode selectedNode= NodeFinder.perform(astRoot, selection.getOffset(), selection.getLength());
+		if (fMarkExceptions) {
+//          TODO : Implement Me!
+//			ExceptionOccurrencesFinder finder= new ExceptionOccurrencesFinder();
+//			if (finder.initialize(astRoot, selectedNode) == null) {
+//				locations= finder.getOccurrences();
+//			}
+		}
+
+		if (locations == null && fMarkMethodExitPoints) {
+//          TODO : Implement Me!			
+			MethodExitsFinder finder= new MethodExitsFinder();
+			if (finder.initialize(astRoot, selectedNode) == null) {
+				locations= finder.getOccurrences();
+			}
+		}
+
+		if (locations == null && fMarkBreakContinueTargets) {
+//          TODO : Implement Me!			
+//			BreakContinueTargetFinder finder= new BreakContinueTargetFinder();
+//			if (finder.initialize(astRoot, selectedNode) == null) {
+//				locations= finder.getOccurrences();
+//			}
+		}
+		
+		if (locations == null && fMarkImplementors) {
+//          TODO : Implement Me!			
+//			ImplementOccurrencesFinder finder= new ImplementOccurrencesFinder();
+//			if (finder.initialize(astRoot, selectedNode) == null) {
+//				locations= finder.getOccurrences();
+//			}
+		}
+
+		if (locations == null && selectedNode instanceof Identifier) {
+//          TODO : Implement Me!			
+//			IBinding binding= ((Name)selectedNode).resolveBinding();
+//			if (binding != null && markOccurrencesOfType(binding)) {
+//				OccurrencesFinder finder= new OccurrencesFinder();
+//				if (finder.initialize(astRoot, selectedNode) == null) {
+//					locations= finder.getOccurrences();
+//				}
+//			}
+		}
+
+		if (locations == null) {
+			if (!fStickyOccurrenceAnnotations)
+				removeOccurrenceAnnotations();
+			else if (hasChanged) // check consistency of current annotations
+				removeOccurrenceAnnotations();
+			return;
+		}
+
+		fOccurrencesFinderJob= new OccurrencesFinderJob(document, locations, selection);
+		//fOccurrencesFinderJob.setPriority(Job.DECORATE);
+		//fOccurrencesFinderJob.setSystem(true);
+		//fOccurrencesFinderJob.schedule();
+		fOccurrencesFinderJob.run(new NullProgressMonitor());
+	}
+	
+	protected void installOccurrencesFinder(boolean forceUpdate) {
+		fMarkOccurrenceAnnotations= true;
+
+		fPostSelectionListenerWithAST= new ISelectionListenerWithAST() {
+			public void selectionChanged(IEditorPart part, ITextSelection selection, Program astRoot) {
+				updateOccurrenceAnnotations(selection, astRoot);
+			}
+		};
+		SelectionListenerWithASTManager.getDefault().addListener(this, fPostSelectionListenerWithAST);
+		if (forceUpdate && getSelectionProvider() != null) {
+			fForcedMarkOccurrencesSelection= getSelectionProvider().getSelection();
+			IModelElement source = getInputModelElement();
+			if (source.getElementType() == IModelElement.SOURCE_MODULE) {
+				try {
+					final Program ast = SharedASTProvider.getAST((ISourceModule) source, SharedASTProvider.WAIT_NO, getProgressMonitor());
+					updateOccurrenceAnnotations((ITextSelection)fForcedMarkOccurrencesSelection, ast);
+				} catch (ModelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		if (fOccurrencesFinderJobCanceler == null) {
+			fOccurrencesFinderJobCanceler= new OccurrencesFinderJobCanceler();
+			fOccurrencesFinderJobCanceler.install();
+		}
+	}
+
+	protected void uninstallOccurrencesFinder() {
+		fMarkOccurrenceAnnotations= false;
+
+		if (fOccurrencesFinderJob != null) {
+			fOccurrencesFinderJob.cancel();
+			fOccurrencesFinderJob= null;
+		}
+
+		if (fOccurrencesFinderJobCanceler != null) {
+			fOccurrencesFinderJobCanceler.uninstall();
+			fOccurrencesFinderJobCanceler= null;
+		}
+
+		if (fPostSelectionListenerWithAST != null) {
+			SelectionListenerWithASTManager.getDefault().removeListener(this, fPostSelectionListenerWithAST);
+			fPostSelectionListenerWithAST= null;
+		}
+
+		removeOccurrenceAnnotations();
+	}
+
+	protected boolean isMarkingOccurrences() {
+		IPreferenceStore store= getPreferenceStore();
+		return store != null && store.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
+	}
+
+	boolean markOccurrencesOfType(IBinding binding) {
+
+		if (binding == null)
+			return false;
+
+		int kind= binding.getKind();
+
+		if (fMarkTypeOccurrences && kind == IBinding.TYPE)
+			return true;
+
+		if (fMarkMethodOccurrences && kind == IBinding.METHOD)
+			return true;
+
+		if (kind == IBinding.VARIABLE) {
+			IVariableBinding variableBinding= (IVariableBinding)binding;
+			if (variableBinding.isField()) {
+				int constantModifier= Modifiers.AccStatic | Modifiers.AccFinal;
+				boolean isConstant= (variableBinding.getModifiers() & constantModifier) == constantModifier;
+				if (isConstant)
+					return fMarkConstantOccurrences;
+				else
+					return fMarkFieldOccurrences;
+			}
+
+			return fMarkLocalVariableypeOccurrences;
+		}
+
+		return false;
+	}
+
+	void removeOccurrenceAnnotations() {
+		fMarkOccurrenceModificationStamp= IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
+		fMarkOccurrenceTargetRegion= null;
+
+		IDocumentProvider documentProvider= getDocumentProvider();
+		if (documentProvider == null)
+			return;
+
+		IAnnotationModel annotationModel= documentProvider.getAnnotationModel(getEditorInput());
+		if (annotationModel == null || fOccurrenceAnnotations == null)
+			return;
+
+		synchronized (getLockObject(annotationModel)) {
+			if (annotationModel instanceof IAnnotationModelExtension) {
+				((IAnnotationModelExtension)annotationModel).replaceAnnotations(fOccurrenceAnnotations, null);
+			} else {
+				for (int i= 0, length= fOccurrenceAnnotations.length; i < length; i++)
+					annotationModel.removeAnnotation(fOccurrenceAnnotations[i]);
+			}
+			fOccurrenceAnnotations= null;
+		}
+	}
+
+	protected boolean isActivePart() {
+		IWorkbenchPart part= getActivePart();
+		return part != null && part.equals(this);
+	}
+	
+	private IWorkbenchPart getActivePart() {
+		IWorkbenchWindow window= getSite().getWorkbenchWindow();
+		IPartService service= window.getPartService();
+		IWorkbenchPart part= service.getActivePart();
+		return part;
 	}
 	
 }

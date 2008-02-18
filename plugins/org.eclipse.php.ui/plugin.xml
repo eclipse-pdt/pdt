@@ -304,7 +304,7 @@
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="total"
-			class="org.eclipse.php.internal.ui.editor.validation.PhpReconciler"
+			class="org.eclipse.php.internal.ui.editor.validation.PhpReconcilingStrategy"
 			id="org.eclipse.php.ui.internal.validation.phpreconciler">
 			<contentTypeIdentifier id="org.eclipse.php.core.phpsource">
 				<partitionType id="org.eclipse.php.PHP_DEFAULT"/>

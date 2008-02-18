@@ -20,6 +20,7 @@ import org.eclipse.ui.IWorkbenchSite;
 public abstract class SelectionDispatchAction extends Action implements ISelectionChangedListener {
 
 	private IWorkbenchSite fSite;
+	private ISelectionProvider fSpecialSelectionProvider;
 
 	/**
 	 * Creates a new action with no text and no image.
@@ -70,6 +71,9 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	 * @return the site's selection provider	
 	 */
 	public ISelectionProvider getSelectionProvider() {
+		if (fSpecialSelectionProvider != null) {
+			return fSpecialSelectionProvider;
+		}
 		return fSite.getSelectionProvider();
 	}
 
@@ -176,4 +180,21 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 			run(selection);
 		}
 	}
+	
+	/**
+	 * Sets a special selection provider which will be used instead of the site's selection provider.
+	 * This method should be used directly after constructing the action and before the action is
+	 * registered as a selection listener. The invocation will not a perform a selection change notification. 
+	 * 
+	 * @param provider a special selection provider which is used
+	 * instead of the site's selection provider or <code>null</code> to use the site's
+	 * selection provider. Clients can for example use a {@link ConvertingSelectionProvider}
+	 * to first convert a selection before passing it to the action.
+	 * 
+	 * @since 3.2
+	 */
+	public void setSpecialSelectionProvider(ISelectionProvider provider) {
+		fSpecialSelectionProvider= provider;
+	}
+	
 }
