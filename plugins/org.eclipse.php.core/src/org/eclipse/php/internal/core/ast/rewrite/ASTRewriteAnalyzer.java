@@ -1684,93 +1684,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(ArrayCreation)
 	 */
 	public boolean visit(ArrayCreation node) {
-		// TODO
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//
-		//		ArrayType arrayType = (ArrayType) getOriginalValue(node, ArrayCreation.TYPE_PROPERTY);
-		//		int nOldBrackets = getDimensions(arrayType); // number of total brackets
-		//		int nNewBrackets = nOldBrackets;
-		//
-		//		TextEditGroup editGroup = null;
-		//		RewriteEvent typeEvent = getEvent(node, ArrayCreation.TYPE_PROPERTY);
-		//		if (typeEvent != null && typeEvent.getChangeKind() == RewriteEvent.REPLACED) { // changed arraytype can have different dimension or type name
-		//			ArrayType replacingType = (ArrayType) typeEvent.getNewValue();
-		//			editGroup = getEditGroup(typeEvent);
-		//			Type newType = replacingType.getElementType();
-		//			Type oldType = getElementType(arrayType);
-		//			if (!newType.equals(oldType)) {
-		//				SourceRange range = getExtendedRange(oldType);
-		//				int offset = range.getStartPosition();
-		//				int length = range.getLength();
-		//				doTextRemove(offset, length, editGroup);
-		//				doTextInsert(offset, newType, 0, false, editGroup);
-		//			}
-		//			nNewBrackets = replacingType.getDimensions(); // is replaced type
-		//		}
-		//		voidVisit(arrayType);
-		//
-		//		try {
-		//			int offset = getScanner().getTokenStartOffset(SymbolsProvider.getSymbol(SymbolsProvider.LBRACKET_ID, scanner.getPHPVersion()), arrayType.getStart());
-		//			// dimension node with expressions
-		//			RewriteEvent dimEvent = getEvent(node, ArrayCreation.DIMENSIONS_PROPERTY);
-		//			boolean hasDimensionChanges = (dimEvent != null && dimEvent.getChangeKind() != RewriteEvent.UNCHANGED);
-		//			if (hasDimensionChanges) {
-		//				RewriteEvent[] events = dimEvent.getChildren();
-		//				// offset on first opening brace
-		//				for (int i = 0; i < events.length; i++) {
-		//					RewriteEvent event = events[i];
-		//					int changeKind = event.getChangeKind();
-		//					if (changeKind == RewriteEvent.INSERTED) { // insert new dimension
-		//						editGroup = getEditGroup(event);
-		//						doTextInsert(offset, "[", editGroup); //$NON-NLS-1$
-		//						doTextInsert(offset, (ASTNode) event.getNewValue(), 0, false, editGroup);
-		//						doTextInsert(offset, "]", editGroup); //$NON-NLS-1$
-		//						nNewBrackets--;
-		//					} else {
-		//						ASTNode elem = (ASTNode) event.getOriginalValue();
-		//						int elemEnd = elem.getStart() + elem.getLength();
-		//						int endPos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID, scanner.getPHPVersion()), elemEnd);
-		//						if (changeKind == RewriteEvent.REMOVED) {
-		//							editGroup = getEditGroup(event);
-		//							doTextRemoveAndVisit(offset, endPos - offset, elem, editGroup);
-		//						} else if (changeKind == RewriteEvent.REPLACED) {
-		//							editGroup = getEditGroup(event);
-		//							SourceRange range = getExtendedRange(elem);
-		//							int elemOffset = range.getStartPosition();
-		//							int elemLength = range.getLength();
-		//							doTextRemoveAndVisit(elemOffset, elemLength, elem, editGroup);
-		//							doTextInsert(elemOffset, (ASTNode) event.getNewValue(), 0, false, editGroup);
-		//							nNewBrackets--;
-		//						} else {
-		//							voidVisit(elem);
-		//							nNewBrackets--;
-		//						}
-		//						offset = endPos;
-		//						nOldBrackets--;
-		//					}
-		//				}
-		//			} else {
-		//				offset = doVisit(node, ArrayCreation.DIMENSIONS_PROPERTY, offset);
-		//			}
-		//			if (nOldBrackets != nNewBrackets) {
-		//				if (!hasDimensionChanges) {
-		//					offset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID, scanner.getPHPVersion()), offset);
-		//				}
-		//				rewriteExtraDimensions(nOldBrackets, nNewBrackets, offset, editGroup);
-		//			}
-		//
-		//			int kind = getChangeKind(node, ArrayCreation.INITIALIZER_PROPERTY);
-		//			if (kind == RewriteEvent.REMOVED) {
-		//				offset = getScanner().getPreviousTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LBRACE_ID, scanner.getPHPVersion()), offset);
-		//			} else {
-		//				offset = node.getStart() + node.getLength(); // insert pos
-		//			}
-		//			rewriteNode(node, ArrayCreation.INITIALIZER_PROPERTY, offset, ASTRewriteFormatter.SPACE);
-		//		} catch (CoreException e) {
-		//			handleException(e);
-		//		}
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteNodeList(node, ArrayCreation.ELEMENTS_PROPERTY, node.getStart(), "", ", ");
 		return false;
 	}
 
