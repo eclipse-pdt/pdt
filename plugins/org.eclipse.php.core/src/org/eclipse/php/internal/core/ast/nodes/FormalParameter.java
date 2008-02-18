@@ -35,14 +35,10 @@ public class FormalParameter extends ASTNode {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor PARAMETER_TYPE_PROPERTY = 
-		new ChildPropertyDescriptor(FormalParameter.class, "parameterType", Identifier.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor PARAMETER_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(FormalParameter.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor DEFAULT_VALUE_PROPERTY = 
-		new ChildPropertyDescriptor(FormalParameter.class, "defaultValue", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor IS_MANDATORY_PROPERTY = 
-		new SimplePropertyDescriptor(FormalParameter.class, "isMandatory", Boolean.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor PARAMETER_TYPE_PROPERTY = new ChildPropertyDescriptor(FormalParameter.class, "parameterType", Identifier.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor PARAMETER_NAME_PROPERTY = new ChildPropertyDescriptor(FormalParameter.class, "expression", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor DEFAULT_VALUE_PROPERTY = new ChildPropertyDescriptor(FormalParameter.class, "defaultValue", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_MANDATORY_PROPERTY = new SimplePropertyDescriptor(FormalParameter.class, "isMandatory", Boolean.class, OPTIONAL); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -76,7 +72,7 @@ public class FormalParameter extends ASTNode {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return apiLevel == PHPVersion.PHP4 ? PROPERTY_DESCRIPTORS_PHP4 : PROPERTY_DESCRIPTORS_PHP5;
 	}
-	
+
 	private FormalParameter(int start, int end, AST ast, Identifier type, final Expression parameterName, Expression defaultValue, boolean isMandatory) {
 		super(start, end, ast);
 
@@ -85,14 +81,14 @@ public class FormalParameter extends ASTNode {
 		}
 		setParameterName(parameterName);
 		if (type != null) {
-			setParameterType(type);	
+			setParameterType(type);
 		}
 		if (defaultValue != null) {
-			setDefaultValue(defaultValue);	
+			setDefaultValue(defaultValue);
 		}
 		setIsMandatory(isMandatory);
 	}
-	
+
 	public FormalParameter(AST ast) {
 		super(ast);
 	}
@@ -123,7 +119,7 @@ public class FormalParameter extends ASTNode {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		if (parameterType != null) {
@@ -201,18 +197,15 @@ public class FormalParameter extends ASTNode {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setDefaultValue(Expression value) {
-		if (value == null) {
-			throw new IllegalArgumentException();
-		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.defaultValue;
 		preReplaceChild(oldChild, value, DEFAULT_VALUE_PROPERTY);
 		this.defaultValue = value;
 		postReplaceChild(oldChild, value, DEFAULT_VALUE_PROPERTY);
-	}	
-	
+	}
+
 	/**
 	 * indicates if this parameter is mandatory when invoking the function
 	 */
@@ -225,16 +218,16 @@ public class FormalParameter extends ASTNode {
 	 * 
 	 * @param castingType the cast type 
 	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 */
 	public void setIsMandatory(boolean isMandatory) {
 		preValueChange(IS_MANDATORY_PROPERTY);
 		this.isMandatory = isMandatory;
 		postValueChange(IS_MANDATORY_PROPERTY);
 	}
-	
+
 	/**
 	 * @return the name of this parameter
-	 */ 
+	 */
 	public Expression getParameterName() {
 		return parameterName;
 	}
@@ -249,7 +242,7 @@ public class FormalParameter extends ASTNode {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setParameterName(Expression name) {
 		if (name == null) {
 			throw new IllegalArgumentException();
@@ -259,15 +252,15 @@ public class FormalParameter extends ASTNode {
 		preReplaceChild(oldChild, name, PARAMETER_NAME_PROPERTY);
 		this.parameterName = name;
 		postReplaceChild(oldChild, name, PARAMETER_NAME_PROPERTY);
-	}	
-	
+	}
+
 	/**
 	 * @return the type of this parameter
-	 */ 
+	 */
 	public Identifier getParameterType() {
 		return parameterType;
 	}
-			
+
 	/**
 	 * Sets the type of this parameter
 	 * 
@@ -278,7 +271,7 @@ public class FormalParameter extends ASTNode {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setParameterType(Identifier id) {
 		if (id == null) {
 			throw new IllegalArgumentException();
@@ -288,8 +281,8 @@ public class FormalParameter extends ASTNode {
 		preReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 		this.parameterType = id;
 		postReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
-	}	
-	
+	}
+
 	final boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
 		if (property == IS_MANDATORY_PROPERTY) {
 			if (get) {
@@ -331,8 +324,7 @@ public class FormalParameter extends ASTNode {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	
+
 	/**
 	 * @return Identifier name of the formal parameter name  
 	 */
@@ -350,7 +342,7 @@ public class FormalParameter extends ASTNode {
 		}
 		throw new IllegalStateException();
 	}
-	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
