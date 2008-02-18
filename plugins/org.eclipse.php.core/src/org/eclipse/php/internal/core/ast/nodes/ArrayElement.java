@@ -146,9 +146,6 @@ public class ArrayElement extends ASTNode {
 	 * </ul>
 	 */ 
 	public void setKey(Expression expression) {
-		if (expression == null) {
-			throw new IllegalArgumentException();
-		}
 		ASTNode oldChild = this.key;
 		preReplaceChild(oldChild, expression, KEY_PROPERTY);
 		this.key = expression;
