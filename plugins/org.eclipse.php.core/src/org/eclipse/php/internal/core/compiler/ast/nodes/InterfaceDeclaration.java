@@ -19,10 +19,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  *	 public function myFunction($a);
  * }
  */
-public class InterfaceDeclaration extends TypeDeclaration {
+public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwareDeclaration {
 
-	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd, String interfaceName, List<TypeReference> interfaces, Block body) {
+	private PHPDocBlock phpDoc;
+
+	public InterfaceDeclaration(int start, int end, int nameStart, int nameEnd, String interfaceName, List<TypeReference> interfaces, Block body, PHPDocBlock phpDoc) {
 		super(interfaceName, nameStart, nameEnd, start, end);
+
+		this.phpDoc = phpDoc;
 
 		ASTListNode parentsList = new ASTListNode();
 		for (TypeReference intface: interfaces) {
@@ -31,6 +35,10 @@ public class InterfaceDeclaration extends TypeDeclaration {
 		setSuperClasses(parentsList);
 
 		setBody(body);
+	}
+
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
 	}
 
 	public int getKind() {

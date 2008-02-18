@@ -12,12 +12,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  * <pre>e.g.<pre> const MY_CONST = 5;
  * const MY_CONST = 5, YOUR_CONSTANT = 8;
  */
-public class ClassConstantDeclaration extends Declaration {
+public class ClassConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration {
 
 	private final ConstantReference constant;
 	private final Expression initializer;
+	private PHPDocBlock phpDoc;
 
-	public ClassConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end) {
+	public ClassConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end, PHPDocBlock phpDoc) {
 		super(start, end);
 
 		assert constant != null;
@@ -25,6 +26,11 @@ public class ClassConstantDeclaration extends Declaration {
 
 		this.constant = constant;
 		this.initializer = initializer;
+		this.phpDoc = phpDoc;
+	}
+
+	public PHPDocBlock getPHPDoc() {
+		return phpDoc;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
