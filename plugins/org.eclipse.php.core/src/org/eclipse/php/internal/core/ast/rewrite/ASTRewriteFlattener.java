@@ -417,9 +417,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(FormalParameter formalParameter) {
+		if (formalParameter.isMandatory()) {
+			if (formalParameter.getAST().apiLevel().equals(AST.PHP4)) {
+				result.append("const "); // only for PHP 4
+			}
+		}
 		if (formalParameter.getParameterType() != null) {
 			formalParameter.getParameterType().accept(this);
 		}
+		result.append(' ');
 		formalParameter.getParameterName().accept(this);
 		if (formalParameter.getDefaultValue() != null) {
 			formalParameter.getDefaultValue().accept(this);
