@@ -379,12 +379,15 @@ public class EditorUtility {
 
 		input = getEditorInput(inputElement);
 
+		return getEditor(input);
+	}
+
+	public static IEditorPart getEditor(IEditorInput input) {
 		if (input != null) {
 			final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 			if (p != null)
 				return p.findEditor(input);
 		}
-
 		return null;
 	}
 
