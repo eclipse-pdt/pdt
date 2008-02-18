@@ -28,4 +28,5 @@ public class PHPModelUtils {
 		}
 		return (TypeDeclaration) visitor.getResult();
 	};
+
 }

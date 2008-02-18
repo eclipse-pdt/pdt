@@ -106,6 +106,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == StaticConstantAccess.class) {
 			return new StaticConstantAccessEvaluator(exprGoal);
 		}
+		if (expressionClass == FormalParameter.class) {
+			return new FormalParameterEvaluator(exprGoal);
+		}
 
 		return null;
 	}

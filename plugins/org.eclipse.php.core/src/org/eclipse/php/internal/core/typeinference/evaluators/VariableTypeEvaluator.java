@@ -155,6 +155,12 @@ public class VariableTypeEvaluator extends GoalEvaluator {
 					}
 				}
 			}
+			else if (s instanceof FormalParameter) {
+				// declarations list should be empty!
+				assert declarations.isEmpty();
+				declarations.addLast(s);
+				return visitGeneral(s);
+			}
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
 				increaseConditionalLevel();
