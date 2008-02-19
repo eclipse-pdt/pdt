@@ -2402,7 +2402,19 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			handleException(e);
 		}
 
-		// Handle the parameter type
+		// Rewrite the parameter type
+		rewriteFormalParameterType(formalParameter);
+		// Rewrite the default parameters
+		rewriteFomalParameterDefault(formalParameter);
+		return rewriteRequiredNodeVisit(formalParameter, FormalParameter.PARAMETER_NAME_PROPERTY);
+	}
+
+	/*
+	 * Rewrite the parameter type of a {@link FormalParameter}
+	 * @param formalParameter
+	 */
+	private void rewriteFormalParameterType(FormalParameter formalParameter) {
+		// Rewrite the parameter type
 		RewriteEvent event = getEvent(formalParameter, FormalParameter.PARAMETER_TYPE_PROPERTY);
 		if (event != null) {
 			int kind = event.getChangeKind();
@@ -2428,9 +2440,14 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					break;
 			}
 		}
+	}
 
-		// Rewrite the default parameters
-		event = getEvent(formalParameter, FormalParameter.DEFAULT_VALUE_PROPERTY);
+	/*
+	 * Rewrite the parameter's default value of a {@link FormalParameter}
+	 * @param formalParameter
+	 */
+	private void rewriteFomalParameterDefault(FormalParameter formalParameter) {
+		RewriteEvent event = getEvent(formalParameter, FormalParameter.DEFAULT_VALUE_PROPERTY);
 		if (event != null) {
 			int kind = event.getChangeKind();
 			switch (kind) {
@@ -2454,19 +2471,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					break;
 			}
 		}
-		return rewriteRequiredNodeVisit(formalParameter, FormalParameter.PARAMETER_NAME_PROPERTY);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration)
 	 */
 	public boolean visit(FunctionDeclaration functionDeclaration) {
-		// FIXME - Experimental!! Test implementation (shalom)
 		if (!hasChildrenChanges(functionDeclaration)) {
 			return doVisitUnchangedChildren(functionDeclaration);
 		}
 		// Reference
-		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.IS_REFERENCE_PROPERTY);
+		rewriteFunctionReference(functionDeclaration);
 		// Name
 		int pos = rewriteRequiredNode(functionDeclaration, FunctionDeclaration.NAME_PROPERTY);
 		// Parameters
@@ -2484,6 +2499,26 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		// FIXME - might need to call rewrite body
 		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.BODY_PROPERTY);
 		return false;
+	}
+
+	private void rewriteFunctionReference(FunctionDeclaration functionDeclaration) {
+		RewriteEvent event = getEvent(functionDeclaration, FunctionDeclaration.IS_REFERENCE_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			boolean isReference = (Boolean) event.getNewValue();
+
+			TextEditGroup editGroup = getEditGroup(event);
+			// we need to remove everything between the word 'function' to the start of the function's
+			// name and then place a blank or an &.
+			int nameStart = functionDeclaration.getFunctionName().getStart();
+			int startDeletionFrom = functionDeclaration.getStart() + 8; // 8 is the 'function' keyword length
+			doTextRemove(startDeletionFrom, nameStart - startDeletionFrom, editGroup);
+			if (isReference) {
+				// we need to insert the &
+				doTextInsert(startDeletionFrom, " &", editGroup);
+			} else {
+				doTextInsert(startDeletionFrom, " ", editGroup);
+			}
+		}
 	}
 
 	/* (non-Javadoc)
