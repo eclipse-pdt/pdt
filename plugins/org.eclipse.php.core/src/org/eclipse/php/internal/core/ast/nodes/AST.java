@@ -1116,10 +1116,12 @@ public class AST {
 	 * Creates an unparented block node owned by this AST, for an empty list
 	 * of statements.
 	 *
-	 * @return a new unparented, empty block node
+	 * @return a new unparented, empty curly block node
 	 */
 	public Block newBlock() {
-		return new Block(this);
+		Block block = new Block(this);
+		block.setIsCurly(true);
+		return block;
 	}
 
 	/**
@@ -1591,7 +1593,7 @@ public class AST {
 	 * @param type
 	 * @param parameterName
 	 * @param defaultValue
-	 * @param isMandatory
+	 * @param isMandatory The mandatory field is only effective when the API level is AST.PHP4
 	 * @return A new FormalParameter.
 	 */
 	public FormalParameter newFormalParameter(Identifier type, Expression parameterName, Expression defaultValue, boolean isMandatory) {
@@ -1599,7 +1601,9 @@ public class AST {
 		formalParameter.setParameterType(type);
 		formalParameter.setParameterName(parameterName);
 		formalParameter.setDefaultValue(defaultValue);
-		formalParameter.setIsMandatory(isMandatory);
+		if (apiLevel().equals(AST.PHP4)) {
+			formalParameter.setIsMandatory(isMandatory);
+		}
 		return formalParameter;
 	}
 
