@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -42,11 +41,32 @@ public class ClassDeclaration extends TypeDeclaration {
 	/**
 	 * The structural property of this node type.
 	 */
+	public static final ChildPropertyDescriptor NAME_PROPERTY = 
+		new ChildPropertyDescriptor(ClassDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
+		new ChildListPropertyDescriptor(ClassDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = 
+		new ChildPropertyDescriptor(ClassDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor SUPER_CLASS_PROPERTY = 
 		new ChildPropertyDescriptor(ClassDeclaration.class, "superClass", Identifier.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
 		new SimplePropertyDescriptor(ClassDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
+	@Override
+	protected ChildPropertyDescriptor getBodyProperty() {
+		return BODY_PROPERTY;
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getInterfacesProperty() {
+		return INTERFACES_PROPERTY;
+	}
+
+	@Override
+	protected ChildPropertyDescriptor getNameProperty() {
+		return NAME_PROPERTY;
+	}	
+	
 	/**
 	 * A list of property descriptors (element type: 
 	 * {@link StructuralPropertyDescriptor}),

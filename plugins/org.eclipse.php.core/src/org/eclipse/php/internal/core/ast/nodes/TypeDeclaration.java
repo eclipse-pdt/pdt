@@ -18,19 +18,15 @@ import java.util.List;
 public abstract class TypeDeclaration extends Statement {
 
 	private Identifier name;
-	private ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(INTERFACES_PROPERTY);
+	protected ASTNode.NodeList<Identifier> interfaces = new ASTNode.NodeList<Identifier>(getInterfacesProperty());;
 	private Block body;
 
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(TypeDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
-		new ChildListPropertyDescriptor(TypeDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(TypeDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	
+	protected abstract ChildPropertyDescriptor getNameProperty(); 
+	protected abstract ChildListPropertyDescriptor getInterfacesProperty();
+	protected abstract ChildPropertyDescriptor getBodyProperty();	
 	
 	public TypeDeclaration(int start, int end, AST ast, final Identifier name, final Identifier[] interfaces, final Block body) {
 		super(start, end, ast);
@@ -77,9 +73,9 @@ public abstract class TypeDeclaration extends Statement {
 		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.body;
-		preReplaceChild(oldChild, block, BODY_PROPERTY);
+		preReplaceChild(oldChild, block, getBodyProperty());
 		this.body = block;
-		postReplaceChild(oldChild, block, BODY_PROPERTY);
+		postReplaceChild(oldChild, block, getBodyProperty());
 	}	
 	
 	/**
@@ -121,13 +117,13 @@ public abstract class TypeDeclaration extends Statement {
 		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.name;
-		preReplaceChild(oldChild, id, NAME_PROPERTY);
+		preReplaceChild(oldChild, id, getNameProperty());
 		this.name = id;
-		postReplaceChild(oldChild, id, NAME_PROPERTY);
+		postReplaceChild(oldChild, id, getNameProperty());
 	}	
 	
 	ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
-		if (property == NAME_PROPERTY) {
+		if (property == getNameProperty()) {
 			if (get) {
 				return getName();
 			} else {
@@ -135,7 +131,7 @@ public abstract class TypeDeclaration extends Statement {
 				return null;
 			}
 		}
-		if (property == BODY_PROPERTY) {
+		if (property == getBodyProperty()) {
 			if (get) {
 				return getBody();
 			} else {
@@ -151,7 +147,7 @@ public abstract class TypeDeclaration extends Statement {
 	 * Method declared on ASTNode.
 	 */
 	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
-		if (property == INTERFACES_PROPERTY) {
+		if (property == getInterfacesProperty()) {
 			return interfaces();
 		}
 		// allow default implementation to flag the error

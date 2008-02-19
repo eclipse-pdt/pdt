@@ -29,6 +29,28 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class InterfaceDeclaration extends TypeDeclaration {
 
+	public static final ChildPropertyDescriptor NAME_PROPERTY = 
+		new ChildPropertyDescriptor(ClassDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
+		new ChildListPropertyDescriptor(ClassDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = 
+		new ChildPropertyDescriptor(ClassDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+
+	@Override
+	protected ChildPropertyDescriptor getBodyProperty() {
+		return BODY_PROPERTY;
+	}
+
+	@Override
+	protected ChildListPropertyDescriptor getInterfacesProperty() {
+		return INTERFACES_PROPERTY;
+	}
+
+	@Override
+	protected ChildPropertyDescriptor getNameProperty() {
+		return NAME_PROPERTY;
+	}	
+	
 	/**
 	 * A list of property descriptors (element type: 
 	 * {@link StructuralPropertyDescriptor}),
@@ -37,7 +59,10 @@ public class InterfaceDeclaration extends TypeDeclaration {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 	
 	static {
-		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(0);
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(3);
+		propertyList.add(NAME_PROPERTY);
+		propertyList.add(INTERFACES_PROPERTY);
+		propertyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}		
 
