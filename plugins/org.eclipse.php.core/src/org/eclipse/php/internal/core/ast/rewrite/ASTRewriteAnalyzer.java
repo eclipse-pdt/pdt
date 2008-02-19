@@ -2380,7 +2380,81 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FormalParameter)
 	 */
 	public boolean visit(FormalParameter formalParameter) {
-		return rewriteRequiredNodeVisit(formalParameter, FormalParameter.IS_MANDATORY_PROPERTY, FormalParameter.PARAMETER_TYPE_PROPERTY, FormalParameter.PARAMETER_NAME_PROPERTY, FormalParameter.DEFAULT_VALUE_PROPERTY);
+		try {
+			if (formalParameter.getAST().apiLevel().equals(AST.PHP4) && isChanged(formalParameter, FormalParameter.IS_MANDATORY_PROPERTY)) {
+				if (formalParameter.getAST().apiLevel().equals(AST.PHP5)) {
+					throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.ID, "Could not set a FormalParameter 'isMandatory' property for PHP5 AST"));
+				}
+				// Rewrite the isMandatory field
+				RewriteEvent event = getEvent(formalParameter, FormalParameter.IS_MANDATORY_PROPERTY);
+				if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+					TextEditGroup editGroup = getEditGroup(event);
+					boolean isMandatory = (Boolean) event.getNewValue();
+					if (isMandatory) {
+						// remove the const from the start of the parameter (6 characters including the space)
+						doTextRemove(formalParameter.getStart(), 6, editGroup);
+					} else {
+						doTextInsert(formalParameter.getStart(), "const ", editGroup);
+					}
+				}
+			}
+		} catch (Exception e) {
+			handleException(e);
+		}
+
+		// Handle the parameter type
+		RewriteEvent event = getEvent(formalParameter, FormalParameter.PARAMETER_TYPE_PROPERTY);
+		if (event != null) {
+			int kind = event.getChangeKind();
+			switch (kind) {
+				case RewriteEvent.REPLACED:
+					int pos = rewriteRequiredNode(formalParameter, FormalParameter.PARAMETER_TYPE_PROPERTY);
+					ASTNode originalValue = (ASTNode) event.getOriginalValue();
+					if (originalValue == null || originalValue.getLength() == 0) {
+						// Add another space to split the type from the name
+						doTextInsert(pos, " ", getEditGroup(event));
+					}
+					break;
+				case RewriteEvent.INSERTED:
+					Scalar scalar = (Scalar) event.getNewValue();
+					String scalarValue = scalar.getStringValue();
+					if (scalar != null) {
+						doTextInsert(formalParameter.getStart(), " = " + scalarValue, getEditGroup(event));
+					}
+					break;
+				case RewriteEvent.REMOVED:
+					originalValue = (ASTNode) event.getOriginalValue();
+					doTextRemove(originalValue.getStart(), originalValue.getLength(), getEditGroup(event));
+					break;
+			}
+		}
+
+		// Rewrite the default parameters
+		event = getEvent(formalParameter, FormalParameter.DEFAULT_VALUE_PROPERTY);
+		if (event != null) {
+			int kind = event.getChangeKind();
+			switch (kind) {
+				case RewriteEvent.REPLACED:
+					rewriteRequiredNode(formalParameter, FormalParameter.DEFAULT_VALUE_PROPERTY);
+					break;
+				case RewriteEvent.INSERTED:
+					Identifier identifier = (Identifier) event.getNewValue();
+					String name = identifier.getName();
+					if (name != null) {
+						if (!name.endsWith(" ") && !name.endsWith("\t")) {
+							name += ' ';
+						}
+						doTextInsert(formalParameter.getStart(), name, getEditGroup(event));
+					}
+					break;
+				case RewriteEvent.REMOVED:
+					ASTNode originalValue = (ASTNode) event.getOriginalValue();
+					int nameEnd = formalParameter.getParameterName().getEnd();
+					doTextRemove(nameEnd, originalValue.getEnd() - nameEnd, getEditGroup(event));
+					break;
+			}
+		}
+		return rewriteRequiredNodeVisit(formalParameter, FormalParameter.PARAMETER_NAME_PROPERTY);
 	}
 
 	/* (non-Javadoc)
@@ -2457,7 +2531,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Identifier)
 	 */
 	public boolean visit(Identifier node) {
-		// FIXME - Imlement some of the other visits in a similar way once we debug ...(shalom)
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
@@ -2588,7 +2661,29 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Scalar)
 	 */
 	public boolean visit(Scalar scalar) {
-		return rewriteRequiredNodeVisit(scalar, Scalar.TYPE_PROPERTY, Scalar.VALUE_PROPERTY);
+		// For now, we ignore the Scalar.TYPE_PROPERTY changes and we only deal with the value property of the scalar.
+		RewriteEvent event = getEvent(scalar, Scalar.VALUE_PROPERTY);
+		if (event != null) {
+			String newValue = (String) event.getNewValue();
+			if (newValue == null) {
+				newValue = "";
+			}
+			if (event != null) {
+				int kind = event.getChangeKind();
+				switch (kind) {
+					case RewriteEvent.REPLACED:
+						doTextReplace(scalar.getStart(), scalar.getLength(), newValue, getEditGroup(event));
+						break;
+					case RewriteEvent.INSERTED:
+						doTextInsert(scalar.getStart(), newValue, getEditGroup(event));
+						break;
+					case RewriteEvent.REMOVED:
+						doTextRemove(scalar.getStart(), scalar.getLength(), getEditGroup(event));
+						break;
+				}
+			}
+		}
+		return false;
 	}
 
 	/* (non-Javadoc)
