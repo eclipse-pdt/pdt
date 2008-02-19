@@ -12,6 +12,8 @@ public class PHPMixinElementInfo {
 	public static final int K_VARIABLE = 3;
 	public static final int K_CONSTANT = 4;
 	public static final int K_INCLUDE = 5;
+	public static final int K_PHPDOC = 6;
+	public static final int K_PHPDOC_FOR_CONSTANT = 7; // This is since consant and method elements are stored in the mixin under same key
 
 	private int kind = 0;
 	private Object object = null;
@@ -31,20 +33,26 @@ public class PHPMixinElementInfo {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final PHPMixinElementInfo other = (PHPMixinElementInfo) obj;
-		if (kind != other.kind)
+		if (kind != other.kind) {
 			return false;
+		}
 		if (object == null) {
-			if (other.object != null)
+			if (other.object != null) {
 				return false;
-		} else if (!object.equals(other.object))
+			}
+		} else if (!object.equals(other.object)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -92,5 +100,13 @@ public class PHPMixinElementInfo {
 
 	public static PHPMixinElementInfo createConstant(IField type) {
 		return new PHPMixinElementInfo(K_CONSTANT, type);
+	}
+
+	public static PHPMixinElementInfo createPHPDoc(IField type) {
+		return new PHPMixinElementInfo(K_PHPDOC, type);
+	}
+
+	public static PHPMixinElementInfo createPHPDocForConstant(IField type) {
+		return new PHPMixinElementInfo(K_PHPDOC_FOR_CONSTANT, type);
 	}
 }

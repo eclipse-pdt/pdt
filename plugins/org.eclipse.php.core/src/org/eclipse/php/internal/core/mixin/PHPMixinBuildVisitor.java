@@ -222,19 +222,21 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	/**
 	 * Report variable declaration in the current scope
 	 * @param var Variable declaration. Can either contain dollar or not (in case of field access declaration)
+	 * @return new model key
 	 * @throws Exception
 	 */
-	protected void reportVariableDeclaration(SimpleReference var) throws Exception {
-		reportVariableDeclaration(var, scopes.peek());
+	protected String reportVariableDeclaration(SimpleReference var) throws Exception {
+		return reportVariableDeclaration(var, scopes.peek());
 	}
 
 	/**
 	 * Report variable declaration in the given scope
 	 * @param var Variable declaration. Can either contain dollar or not (in case of field access declaration)
 	 * @param scope Scope that this variable is declared in
+	 * @return new model key
 	 * @throws Exception
 	 */
-	protected void reportVariableDeclaration(SimpleReference var, Scope scope) throws Exception {
+	protected String reportVariableDeclaration(SimpleReference var, Scope scope) throws Exception {
 		if (scope == null) {
 			throw new NullPointerException("Scope must not be null");
 		}
@@ -259,7 +261,25 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		if (obj == null && sourceModule != null) {
 			obj = new FakeField((ModelElement) sourceModule, name, var.sourceStart(), var.sourceEnd() - var.sourceStart());
 		}
-		scope.reportVariable(name, obj);
+		return scope.reportVariable(name, obj);
+	}
+
+	/**
+	 * Report PHPDoc node
+	 * @throws ModelException
+	 */
+	protected void reportPHPDoc(String key, PHPDocBlock phpDoc) throws ModelException {
+		IField phpDocField = new DocMember((ModelElement) sourceModule, phpDoc);
+		report(key, PHPMixinElementInfo.createPHPDoc(phpDocField));
+	}
+
+	/**
+	 * Report PHPDoc node for constant declaration
+	 * @throws ModelException
+	 */
+	protected void reportPHPDocForConstant(String key, PHPDocBlock phpDoc) throws ModelException {
+		IField phpDocField = new DocMember((ModelElement) sourceModule, phpDoc);
+		report(key, PHPMixinElementInfo.createPHPDocForConstant(phpDocField));
 	}
 
 	/**
@@ -384,7 +404,12 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			obj = (IField) element;
 		}
 		Scope scope = scopes.peek();
-		scope.reportConstant(stripQuotes(name), obj);
+		String newKey = scope.reportConstant(stripQuotes(name), obj);
+
+		PHPDocBlock doc = decl.getPHPDoc();
+		if (doc != null) {
+			reportPHPDocForConstant(newKey, doc);
+		}
 
 		return visitGeneral(decl);
 	}
@@ -425,7 +450,12 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(PHPFieldDeclaration decl) throws Exception {
-		reportVariableDeclaration(decl.getRef());
+		String newKey = reportVariableDeclaration(decl.getRef());
+
+		PHPDocBlock doc = decl.getPHPDoc();
+		if (doc != null) {
+			reportPHPDoc(newKey, doc);
+		}
 		return visitGeneral(decl);
 	}
 
@@ -459,6 +489,14 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		globalVariables.push(new HashSet<String>());
 
+		if (decl instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) decl;
+			PHPDocBlock doc = phpDocAwareDeclaration.getPHPDoc();
+			if (doc != null) {
+				reportPHPDoc(method, doc);
+			}
+		}
+
 		return visitGeneral(decl);
 	}
 
@@ -481,6 +519,14 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		Scope scope = scopes.peek();
 		String newKey = scope.reportType(name, obj, decl.getKind() == ASTNodeKinds.INTERFACE_DECLARATION);
 		scopes.push(new ClassScope(decl, newKey));
+
+		if (decl instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) decl;
+			PHPDocBlock doc = phpDocAwareDeclaration.getPHPDoc();
+			if (doc != null) {
+				reportPHPDoc(newKey, doc);
+			}
+		}
 
 		return visitGeneral(decl);
 	}

@@ -50,9 +50,19 @@ public class PHPMixinModel {
 		return filterElements(elements, PHPMixinElementInfo.K_METHOD);
 	}
 
+	public IModelElement[] getMethodDoc(String className, String methodName) {
+		IMixinElement[] elements = model.find(className + PHPMixinParser.CLASS_SUFFIX + MixinModel.SEPARATOR + methodName);
+		return filterElements(elements, PHPMixinElementInfo.K_PHPDOC);
+	}
+
 	public IModelElement[] getFunction(String functionName) {
 		IMixinElement[] elements = model.find(MixinModel.SEPARATOR + functionName);
 		return filterElements(elements, PHPMixinElementInfo.K_METHOD);
+	}
+
+	public IModelElement[] getFunctionDoc(String functionName) {
+		IMixinElement[] elements = model.find(MixinModel.SEPARATOR + functionName);
+		return filterElements(elements, PHPMixinElementInfo.K_PHPDOC);
 	}
 
 	public IModelElement[] getClass(String className) {
@@ -60,7 +70,12 @@ public class PHPMixinModel {
 		return filterElements(elements, PHPMixinElementInfo.K_CLASS);
 	}
 
-	public IModelElement[] getVariable(String variableName, String methodName, String typeName) {
+	public IModelElement[] getClassDoc(String className) {
+		IMixinElement[] elements = model.find(className + PHPMixinParser.CLASS_SUFFIX);
+		return filterElements(elements, PHPMixinElementInfo.K_PHPDOC);
+	}
+
+	private IMixinElement[] internalGetVariable(String variableName, String methodName, String typeName) {
 		//{$globalVa
 		String pattern = MixinModel.SEPARATOR + variableName;
 		if (methodName != null) {
@@ -71,16 +86,30 @@ public class PHPMixinModel {
 			// AClass%{classMethod{$methodVariable
 			pattern = typeName + PHPMixinParser.CLASS_SUFFIX + pattern;
 		}
-		IMixinElement[] elements = model.find(pattern);
-		return filterElements(elements, PHPMixinElementInfo.K_VARIABLE);
+		return model.find(pattern);
 	}
 
-	public IModelElement[] getConstant(String constantName, String typeName) {
+	public IModelElement[] getVariable(String variableName, String methodName, String typeName) {
+		return filterElements(internalGetVariable(variableName, methodName, typeName), PHPMixinElementInfo.K_VARIABLE);
+	}
+
+	public IModelElement[] getVariableDoc(String variableName, String methodName, String typeName) {
+		return filterElements(internalGetVariable(variableName, methodName, typeName), PHPMixinElementInfo.K_PHPDOC);
+	}
+
+	private IMixinElement[] internalGetConstant(String constantName, String typeName) {
 		String pattern = MixinModel.SEPARATOR + constantName;
 		if (typeName != null) {
 			pattern = typeName + PHPMixinParser.CLASS_SUFFIX + pattern;
 		}
-		IMixinElement[] elements = model.find(pattern);
-		return filterElements(elements, PHPMixinElementInfo.K_CONSTANT);
+		return model.find(pattern);
+	}
+
+	public IModelElement[] getConstant(String constantName, String typeName) {
+		return filterElements(internalGetConstant(constantName, typeName), PHPMixinElementInfo.K_CONSTANT);
+	}
+
+	public IModelElement[] getConstantDoc(String constantName, String typeName) {
+		return filterElements(internalGetConstant(constantName, typeName), PHPMixinElementInfo.K_PHPDOC_FOR_CONSTANT);
 	}
 }

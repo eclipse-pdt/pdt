@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.4 2008/02/18 13:55:17 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.5 2008/02/19 08:28:09 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,8 +17,16 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 parser code {:
 
-	PHPDocBlock docBlock;
-
+	class ModifierDocPair {
+		public int modifier;
+		public PHPDocBlock doc;
+		
+		public ModifierDocPair(int modifier, PHPDocBlock doc) {
+			this.modifier = modifier;
+			this.doc = doc;
+		}
+	}
+	
 	public Expression createDispatch(Expression dispatcher, Expression property) {
 
 		if (property.getKind() == ASTNodeKinds.REFLECTION_CALL_EXPRESSION) {
@@ -225,17 +233,17 @@ non terminal Expression encaps_var;
 non terminal Expression encaps_var_offset;
 non terminal Expression internal_functions_in_yacc;
 non terminal String string_st;
-non terminal interface_entry;
+non terminal PHPDocBlock interface_entry;
 non terminal List interface_extends_list;
 
 non terminal Expression w_variable;
 non terminal TypeReference fully_qualified_class_name;
 non terminal List class_variable_declaration;
 non terminal List class_constant_declaration;
-non terminal Integer method_modifiers;
+non terminal PhpAstParser5.ModifierDocPair method_modifiers;
 non terminal Block method_body;
 non terminal List non_empty_member_modifiers;
-non terminal Integer member_modifier;
+non terminal PhpAstParser5.ModifierDocPair member_modifier;
 non terminal PHPCallArgumentsList method_or_not;
 non terminal List variable_properties;
 non terminal PHPMethodDeclaration function_declaration_statement;
@@ -246,13 +254,13 @@ non terminal List non_empty_additional_catches;
 non terminal CatchClause additional_catch;
 non terminal PHPMethodDeclaration unticked_function_declaration_statement;
 non terminal Statement unticked_class_declaration_statement;
-non terminal Integer class_entry_type;
+non terminal PhpAstParser5.ModifierDocPair class_entry_type;
 non terminal TypeReference extends_from;
 non terminal List implements_list;
 non terminal List interface_list;
 non terminal TypeReference optional_class_type;
 non terminal Expression r_variable;
-non terminal Integer variable_modifiers;
+non terminal PhpAstParser5.ModifierDocPair variable_modifiers;
 non terminal Expression rw_variable;
 non terminal Expression variable_without_objects;
 non terminal Expression variable_property;
@@ -704,9 +712,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
 	Block block = new Block(blockStartleft, blockEndright, statementList);
-	parser.docBlock = start;
-	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue(), parser.docBlock);
-	parser.docBlock = null;
+	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue(), start);
 	RESULT = functionDeclaration;
 :}
 ;
@@ -726,8 +732,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEn
 	}
 	
 	Block block = new Block(blockStartleft, blockEndright, statementList);
-	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, modifier.intValue(), className, superClass, interfaces, block, parser.docBlock);
-	parser.docBlock = null;
+	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, modifier.modifier, className, superClass, interfaces, block, modifier.doc);
 	RESULT = classDeclaration;
 :}
 
@@ -746,8 +751,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEn
 	}
 	
 	Block block = new Block(blockStartleft, blockEndright, statementList);
-	InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(startleft ,blockEndright, classNameleft, classNameright, className, interfaces, block, parser.docBlock);
-	parser.docBlock = null;
+	InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(startleft ,blockEndright, classNameleft, classNameright, className, interfaces, block, start);
 	RESULT = interfaceDeclaration;
 :}
 ;
@@ -755,20 +759,17 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEn
 class_entry_type ::=
 T_CLASS:value
 {:
-	parser.docBlock = value;
-	RESULT = new Integer(Modifiers.AccDefault);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccDefault, value); 
 :}
                
 | T_ABSTRACT:value T_CLASS
 {:
-	parser.docBlock = value;
-	RESULT = new Integer(Modifiers.AccAbstract);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccAbstract, value);
 :}        
 
 | T_FINAL:value T_CLASS   
 {:
-	parser.docBlock = value;
-	RESULT = new Integer(Modifiers.AccFinal);
+	RESULT = parser.new ModifierDocPair(Modifiers.AccFinal, value);
 :}        
 ;
 
@@ -788,7 +789,7 @@ extends_from ::=
 interface_entry ::=
 T_INTERFACE:value
 {:
-	parser.docBlock = value; 
+	RESULT = value;
 :}
 ;
 
@@ -1293,9 +1294,8 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		Expression initializer = (Expression)decl[1];
 		int start = variable.sourceStart();
 		int end = (initializer == null ? variable.sourceEnd() : initializer.sourceEnd());
-		constList.add (new PHPFieldDeclaration(variable, initializer, start, end, modifier.intValue(), parser.docBlock));
+		constList.add (new PHPFieldDeclaration(variable, initializer, start, end, modifier.modifier, modifier.doc));
 	}
-	parser.docBlock = null;
 	RESULT = constList;
 :}
 
@@ -1307,11 +1307,15 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		ASTNode[] decl = (ASTNode[]) i.next();
 		ConstantReference constant = (ConstantReference)decl[0];
 		Expression initializer = (Expression)decl[1];
+		
+		PHPDocBlock docBlock = null;
+		if (decl.length == 3) {
+			docBlock = (PHPDocBlock)decl[2];
+		}
 		int start = constant.sourceStart();
 		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
-		constList.add (new ClassConstantDeclaration(constant, initializer, start, end, parser.docBlock));
+		constList.add (new ClassConstantDeclaration(constant, initializer, start, end, docBlock));
 	}
-	parser.docBlock = null;
 	RESULT = constList;
 :}
 
@@ -1320,14 +1324,12 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
-	modifier = modifier == null ? Modifiers.AccPublic : modifier;
-	
-	if (parser.docBlock == null) {
-		parser.docBlock = start;
+	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.modifier;
+	PHPDocBlock docBlock = start;
+	if (modifier != null && modifier.doc != null) {
+		docBlock = modifier.doc;
 	}
-	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, bodyright, functionNameleft, functionNameright, functionName, modifier.intValue(), paramList, body, isReference, parser.docBlock);
-	parser.docBlock = null;
-	
+	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, bodyright, functionNameleft, functionNameright, functionName, modifierValue, paramList, body, isReference, docBlock);
 	List methodList = new LinkedList();
 	methodList.add(methodDeclaration);
 	RESULT = methodList;
@@ -1356,17 +1358,20 @@ variable_modifiers ::=
 non_empty_member_modifiers:list
 {:
 	int result = 0;
+	PHPDocBlock docBlock = null;
 	for (Iterator it = list.iterator(); it.hasNext() ; ) {
-		Integer modifier = (Integer)it.next();
-		result |= modifier.intValue();
+		PhpAstParser5.ModifierDocPair modifier = (PhpAstParser5.ModifierDocPair)it.next();
+		if (modifier.doc != null) {
+			docBlock = modifier.doc;
+		}
+		result |= modifier.modifier;
 	}
-	RESULT = new Integer(result);
+	RESULT = parser.new ModifierDocPair(result, docBlock);
 :}
 
 | T_VAR:var
 {:
-	parser.docBlock = var;
-	RESULT = Modifiers.AccPublic;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, var);
 :}
 ;
 
@@ -1379,11 +1384,15 @@ method_modifiers ::=
 | non_empty_member_modifiers:list
 {:
 	int result = 0;
+	PHPDocBlock docBlock = null;
 	for (Iterator it = list.iterator(); it.hasNext() ; ) {
-		Integer modifier = (Integer)it.next();
-		result |= modifier.intValue();
+		PhpAstParser5.ModifierDocPair modifier = (PhpAstParser5.ModifierDocPair)it.next();
+		if (modifier.doc != null) {
+			docBlock = modifier.doc;
+		}
+		result |= modifier.modifier;
 	}
-	RESULT = new Integer(result);
+	RESULT = parser.new ModifierDocPair(result, docBlock);
 :}
 ;
 
@@ -1405,50 +1414,32 @@ member_modifier:modifier
 member_modifier ::=
 T_PUBLIC:value
 {:
-	if (value != null) {
-		parser.docBlock = value;
-	}
-	RESULT = Modifiers.AccPublic;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPublic, value);
 :}
 
 | T_PROTECTED:value
 {:
-	if (value != null) {
-		parser.docBlock = value;
-	}
-	RESULT = Modifiers.AccProtected;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccProtected, value);
 :}
 
 | T_PRIVATE:value
 {:
-	if (value != null) {
-		parser.docBlock = value;
-	}
-	RESULT = Modifiers.AccPrivate;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccPrivate, value);
 :}
 
 | T_STATIC:value
 {:
-	if (value != null) {
-		parser.docBlock = value;
-	}
-	RESULT = Modifiers.AccStatic;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccStatic, value);
 :}
 
 | T_ABSTRACT:value
 {:
-	if (value != null) {
-		parser.docBlock = value;
-	}
-	RESULT = Modifiers.AccAbstract;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccAbstract, value);
 :}
 
 | T_FINAL:value
 {:
-	if (value != null) {
-		parser.docBlock = value;
-	}
-	RESULT = Modifiers.AccFinal;
+	RESULT = parser.new ModifierDocPair(Modifiers.AccFinal, value);
 :}
 ;
 
@@ -1496,9 +1487,7 @@ class_constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar
 {:
 	List list = new LinkedList();
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
-	list.add(new ASTNode[] {constId, expr});
-	
-	parser.docBlock = value;
+	list.add(new ASTNode[] {constId, expr, value});
 	RESULT = list;
 :}
 ;
