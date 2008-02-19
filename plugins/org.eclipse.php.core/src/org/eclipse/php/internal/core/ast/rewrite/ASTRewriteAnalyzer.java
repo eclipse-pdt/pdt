@@ -1399,117 +1399,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(TypeDeclaration)
 	 */
 	public boolean visit(TypeDeclaration node) {
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//		String apiLevel = node.getAST().apiLevel();
-		//
-		//		int pos = rewriteDocumentation(node, TypeDeclaration.JAVADOC_PROPERTY);
-		//
-		//		if (apiLevel == PHP4_INTERNAL) {
-		//			rewriteModifiers(node, TypeDeclaration.MODIFIERS_PROPERTY, pos);
-		//		} else {
-		//			rewriteModifiers2(node, TypeDeclaration.MODIFIERS2_PROPERTY, pos);
-		//		}
-		//
-		//		boolean isInterface = ((Boolean) getOriginalValue(node, TypeDeclaration.INTERFACE_PROPERTY)).booleanValue();
-		//		// modifiers & class/interface
-		//		boolean invertType = isChanged(node, TypeDeclaration.INTERFACE_PROPERTY);
-		//		if (invertType) {
-		//			try {
-		//				Symbol typeToken = isInterface ? SymbolsProvider.getSymbol(SymbolsProvider.INTERFACE_ID, scanner.getPHPVersion()) : SymbolsProvider.getSymbol(SymbolsProvider.CLASS_ID, scanner.getPHPVersion());
-		//				getScanner().readToToken(typeToken, node.getStart());
-		//
-		//				String str = isInterface ? "class" : "interface"; //$NON-NLS-1$ //$NON-NLS-2$
-		//				int start = getScanner().getCurrentStartOffset();
-		//				int end = getScanner().getCurrentEndOffset();
-		//
-		//				doTextReplace(start, end - start, str, getEditGroup(node, TypeDeclaration.INTERFACE_PROPERTY));
-		//			} catch (CoreException e) {
-		//				// ignore
-		//			}
-		//		}
-		//
-		//		// name
-		//		pos = rewriteRequiredNode(node, TypeDeclaration.NAME_PROPERTY);
-		//
-		//		if (apiLevel >= AST.JLS3) {
-		//			pos = rewriteOptionalTypeParameters(node, TypeDeclaration.TYPE_PARAMETERS_PROPERTY, pos, "", false, true); //$NON-NLS-1$
-		//		}
-		//
-		//		// superclass
-		//		if (!isInterface || invertType) {
-		//			ChildPropertyDescriptor superClassProperty = (apiLevel == PHP4_INTERNAL) ? TypeDeclaration.SUPERCLASS_PROPERTY : TypeDeclaration.SUPERCLASS_TYPE_PROPERTY;
-		//
-		//			RewriteEvent superClassEvent = getEvent(node, superClassProperty);
-		//
-		//			int changeKind = superClassEvent != null ? superClassEvent.getChangeKind() : RewriteEvent.UNCHANGED;
-		//			switch (changeKind) {
-		//				case RewriteEvent.INSERTED: {
-		//					doTextInsert(pos, " extends ", getEditGroup(superClassEvent)); //$NON-NLS-1$
-		//					doTextInsert(pos, (ASTNode) superClassEvent.getNewValue(), 0, false, getEditGroup(superClassEvent));
-		//					break;
-		//				}
-		//				case RewriteEvent.REMOVED: {
-		//					ASTNode superClass = (ASTNode) superClassEvent.getOriginalValue();
-		//					int endPos = getExtendedEnd(superClass);
-		//					doTextRemoveAndVisit(pos, endPos - pos, superClass, getEditGroup(superClassEvent));
-		//					pos = endPos;
-		//					break;
-		//				}
-		//				case RewriteEvent.REPLACED: {
-		//					ASTNode superClass = (ASTNode) superClassEvent.getOriginalValue();
-		//					SourceRange range = getExtendedRange(superClass);
-		//					int offset = range.getStartPosition();
-		//					int length = range.getLength();
-		//					doTextRemoveAndVisit(offset, length, superClass, getEditGroup(superClassEvent));
-		//					doTextInsert(offset, (ASTNode) superClassEvent.getNewValue(), 0, false, getEditGroup(superClassEvent));
-		//					pos = offset + length;
-		//					break;
-		//				}
-		//				case RewriteEvent.UNCHANGED: {
-		//					pos = doVisit(node, superClassProperty, pos);
-		//				}
-		//			}
-		//		}
-		//		// extended interfaces
-		//		ChildListPropertyDescriptor superInterfaceProperty = (apiLevel == PHP4_INTERNAL) ? TypeDeclaration.SUPER_INTERFACES_PROPERTY : TypeDeclaration.SUPER_INTERFACE_TYPES_PROPERTY;
-		//
-		//		RewriteEvent interfaceEvent = getEvent(node, superInterfaceProperty);
-		//		if (interfaceEvent == null || interfaceEvent.getChangeKind() == RewriteEvent.UNCHANGED) {
-		//			if (invertType) {
-		//				List originalNodes = (List) getOriginalValue(node, superInterfaceProperty);
-		//				if (!originalNodes.isEmpty()) {
-		//					String keyword = isInterface ? " implements " : " extends "; //$NON-NLS-1$ //$NON-NLS-2$
-		//					ASTNode firstNode = (ASTNode) originalNodes.get(0);
-		//					doTextReplace(pos, firstNode.getStart() - pos, keyword, getEditGroup(node, TypeDeclaration.INTERFACE_PROPERTY));
-		//				}
-		//			}
-		//			pos = doVisit(node, superInterfaceProperty, pos);
-		//		} else {
-		//			String keyword = (isInterface == invertType) ? " implements " : " extends "; //$NON-NLS-1$ //$NON-NLS-2$
-		//			if (invertType) {
-		//				List newNodes = (List) interfaceEvent.getNewValue();
-		//				if (!newNodes.isEmpty()) {
-		//					List origNodes = (List) interfaceEvent.getOriginalValue();
-		//					int firstStart = pos;
-		//					if (!origNodes.isEmpty()) {
-		//						firstStart = ((ASTNode) origNodes.get(0)).getStart();
-		//					}
-		//					doTextReplace(pos, firstStart - pos, keyword, getEditGroup(node, TypeDeclaration.INTERFACE_PROPERTY));
-		//					keyword = ""; //$NON-NLS-1$
-		//					pos = firstStart;
-		//				}
-		//			}
-		//			pos = rewriteNodeList(node, superInterfaceProperty, pos, keyword, ", "); //$NON-NLS-1$
-		//		}
-		//
-		//		// type members
-		//		// startPos : find position after left brace of type, be aware that bracket might be missing
-		//		int startIndent = getIndent(node.getStart()) + 1;
-		//		int startPos = getPosAfterLeftBrace(pos);
-		//		rewriteParagraphList(node, TypeDeclaration.BODY_DECLARATIONS_PROPERTY, startPos, startIndent, -1, 2);
-		// TODO
+		// Return false.
+		// There is no need to visit it, all the implementation is done in the extending ClassDeclaration and InterfaceDeclaration.
 		return false;
 	}
 
@@ -2319,9 +2210,99 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
-		// TODO Auto-generated method stub
 		// TODO - Note that the ClassDeclaration has properties from the TypeDeclaration
+		if (!hasChildrenChanges(classDeclaration)) {
+			return doVisitUnchangedChildren(classDeclaration);
+		}
+		try {
+			// Rewrite the modifier property
+			rewriteClassDeclarationModifier(classDeclaration);
+			// Rewrite the super-class property
+			rewriteClassDeclarationSuperClass(classDeclaration);
+			// Rewrite the interfaces
+			int pos;
+			if (classDeclaration.getSuperClass() == null) {
+				pos = classDeclaration.getName().getEnd();
+			} else {
+				pos = classDeclaration.getSuperClass().getEnd();
+			}
+			rewriteNodeList(classDeclaration, ClassDeclaration.INTERFACES_PROPERTY, pos, " implements ", ", ");
+			// Rewrite the name and the body
+			return rewriteRequiredNodeVisit(classDeclaration, ClassDeclaration.NAME_PROPERTY, ClassDeclaration.BODY_PROPERTY);
+		} catch (Exception e) {
+			handleException(e);
+		}
 		return false;
+	}
+
+	/* 
+	 * Rewrite the modifier part of the class declaration 
+	 * @param classDeclaration
+	 */
+	private void rewriteClassDeclarationModifier(ClassDeclaration classDeclaration) throws CoreException {
+		RewriteEvent event = getEvent(classDeclaration, ClassDeclaration.MODIFIER_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			TextEditGroup editGroup = getEditGroup(event);
+			int start = classDeclaration.getStart();
+			int classKeywordStart = getScanner().getTokenStartOffset(SymbolsProvider.getSymbol(SymbolsProvider.CLASS_ID, scanner.getPHPVersion()), start);
+			int modifier = (Integer) event.getNewValue();
+			switch (modifier) {
+				case ClassDeclaration.MODIFIER_NONE:
+					// The modifier was removed
+					doTextRemove(start, classKeywordStart - start, editGroup);
+					break;
+				case ClassDeclaration.MODIFIER_ABSTRACT:
+				case ClassDeclaration.MODIFIER_FINAL:
+					// Replace what we have (if we have it) with the 'abstract' or the 'final' keyword
+					doTextReplace(start, classKeywordStart - start, ClassDeclaration.getModifier(modifier) + ' ', editGroup);
+					break;
+			}
+		}
+	}
+
+	/* 
+	 * Rewrite the super-class part of the class declaration 
+	 * @param classDeclaration
+	 */
+	private void rewriteClassDeclarationSuperClass(ClassDeclaration classDeclaration) throws CoreException {
+		RewriteEvent event = getEvent(classDeclaration, ClassDeclaration.SUPER_CLASS_PROPERTY);
+		if (event != null) {
+			int changeKind = event.getChangeKind();
+			TextEditGroup editGroup = getEditGroup(event);
+			switch (changeKind) {
+				case RewriteEvent.INSERTED:
+					Identifier superClass = (Identifier) event.getNewValue();
+					int insertionPos = classDeclaration.getName().getEnd();
+					String extendsKeyword = " extends ";
+					doTextInsert(insertionPos, extendsKeyword, editGroup);
+					doTextInsert(insertionPos, superClass, 0, false, editGroup);
+					break;
+				case RewriteEvent.REMOVED:
+					superClass = (Identifier) event.getOriginalValue();
+					// locate the end offset of the deletion
+					int deletionEnd;
+					if (classDeclaration.interfaces().size() > 0) {
+						deletionEnd = getScanner().getTokenStartOffset(SymbolsProvider.getSymbol(SymbolsProvider.IMPLEMENTS_ID, scanner.getPHPVersion()), classDeclaration.getStart());
+					} else {
+						deletionEnd = classDeclaration.getBody().getStart();
+					}
+					int deletionStart = classDeclaration.getName().getEnd();
+					doTextRemove(deletionStart, deletionEnd - deletionStart, editGroup);
+					doTextInsert(deletionStart, " ", editGroup);
+					break;
+				case RewriteEvent.REPLACED:
+					rewriteRequiredNode(classDeclaration, ClassDeclaration.SUPER_CLASS_PROPERTY);
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Rewrite the interfaces in the class declaration
+	 * @param classDeclaration
+	 */
+	private void rewriteInterfaces(ClassDeclaration classDeclaration) {
+			
 	}
 
 	/* (non-Javadoc)
