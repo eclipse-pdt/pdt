@@ -23,7 +23,4 @@ class SimpleExpressionFragment extends SimpleFragment implements IExpressionFrag
 		return (Expression) getAssociatedNode();
 	}
 
-//	public Expression createCopyTarget(ASTRewrite rewrite) {
-//		return (Expression) rewrite.createCopyTarget(getAssociatedNode());
-//	}
 }
