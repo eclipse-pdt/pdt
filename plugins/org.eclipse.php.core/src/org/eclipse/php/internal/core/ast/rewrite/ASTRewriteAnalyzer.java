@@ -2210,7 +2210,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(ClassDeclaration classDeclaration) {
-		// TODO - Note that the ClassDeclaration has properties from the TypeDeclaration
 		if (!hasChildrenChanges(classDeclaration)) {
 			return doVisitUnchangedChildren(classDeclaration);
 		}
@@ -2302,7 +2301,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @param classDeclaration
 	 */
 	private void rewriteInterfaces(ClassDeclaration classDeclaration) {
-			
+
 	}
 
 	/* (non-Javadoc)
@@ -2626,8 +2625,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
-		// TODO Auto-generated method stub
-		// TODO - Note that the InterfaceDeclaration has properties from the TypeDeclaration
+		if (!hasChildrenChanges(interfaceDeclaration)) {
+			return doVisitUnchangedChildren(interfaceDeclaration);
+		}
+		try {
+			// Rewrite the extended interfaces
+			rewriteNodeList(interfaceDeclaration, InterfaceDeclaration.INTERFACES_PROPERTY, interfaceDeclaration.getName().getEnd(), " extends ", ", ");
+			// Rewrite the name and the body
+			return rewriteRequiredNodeVisit(interfaceDeclaration, InterfaceDeclaration.NAME_PROPERTY, InterfaceDeclaration.BODY_PROPERTY);
+		} catch (Exception e) {
+			handleException(e);
+		}
 		return false;
 	}
 
