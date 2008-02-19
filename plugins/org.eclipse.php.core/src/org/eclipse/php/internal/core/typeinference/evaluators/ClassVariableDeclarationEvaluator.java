@@ -34,12 +34,11 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
-import org.eclipse.php.internal.core.typeinference.goals.IWeightedGoal;
 
 /**
  * This evaluator finds class field declartion either using "var" or in method body using field access.
  */
-public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements IWeightedGoal {
+public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -92,10 +91,6 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator implements 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		evaluated.add((IEvaluatedType) result);
 		return IGoal.NO_GOALS;
-	}
-
-	public int getWeight() {
-		return IWeightedGoal.LITE;
 	}
 
 	class ClassVariableDeclarationSearcher extends ASTVisitor {

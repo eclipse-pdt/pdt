@@ -8,7 +8,9 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.*;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
@@ -22,6 +24,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (goalClass == MethodReturnTypeGoal.class) {
 			return new MethodReturnTypeEvaluator(goal);
+		}
+		if (goalClass == PHPDocMethodReturnTypeGoal.class) {
+			return new PHPDocMethodReturnTypeEvaluator(goal);
 		}
 		if (goalClass == VariableTypeGoal.class) {
 			return new VariableTypeEvaluator(goal);

@@ -14,10 +14,21 @@ public class DocMember extends SourceField {
 
 	public DocMember(ModelElement parent, PHPDocBlock docBlock) {
 		super(parent, NAME);
+
+		assert docBlock != null;
+
 		this.docBlock = docBlock;
 	}
 
 	public PHPDocBlock getDocBlock() {
 		return docBlock;
+	}
+
+	public boolean equals(Object o) {
+		if (super.equals(o)) {
+			DocMember other = (DocMember)o;
+			return docBlock.sourceStart() == other.docBlock.sourceStart() && docBlock.sourceEnd() == other.docBlock.sourceEnd();
+		}
+		return false;
 	}
 }
