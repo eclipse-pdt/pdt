@@ -424,10 +424,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 		if (formalParameter.getParameterType() != null) {
 			formalParameter.getParameterType().accept(this);
+			result.append(' ');
 		}
-		result.append(' ');
+		
 		formalParameter.getParameterName().accept(this);
 		if (formalParameter.getDefaultValue() != null) {
+			result.append(" = ");
 			formalParameter.getDefaultValue().accept(this);
 		}
 		return false;
@@ -473,11 +475,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(" function ");
 		functionDeclaration.getFunctionName().accept(this);
 		result.append("("); //$NON-NLS-1$
-		FormalParameter[] formalParameters = functionDeclaration.getFormalParameters();
+		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
+		FormalParameter[] formalParameters = formalParametersList.toArray(new FormalParameter[formalParametersList.size()]);
 		if (formalParameters.length != 0) {
 			formalParameters[0].accept(this);
 			for (int i = 1; i < formalParameters.length; i++) {
-				result.append(","); //$NON-NLS-1$
+				result.append(", "); //$NON-NLS-1$
 				formalParameters[i].accept(this);
 			}
 
