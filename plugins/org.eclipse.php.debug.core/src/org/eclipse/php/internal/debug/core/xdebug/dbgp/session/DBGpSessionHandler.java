@@ -95,11 +95,11 @@ public class DBGpSessionHandler {
 	 * @param fileName
 	 * @return
 	 */
-	public synchronized void addSessionListener(DBGpSessionListener l) {
+	public synchronized void addSessionListener(IDBGpSessionListener l) {
 		listeners.add(l);
 	}
 
-	public void removeSessionListener(DBGpSessionListener l) {
+	public void removeSessionListener(IDBGpSessionListener l) {
 		listeners.remove(l);
 	}
 
@@ -110,7 +110,7 @@ public class DBGpSessionHandler {
 			DBGpLogger.debug("firing to " + copiedListeners.length + " active debug targets");
 		}
 		for (int i = 0; i < copiedListeners.length && !allocated; i++) {
-			DBGpSessionListener l = (DBGpSessionListener) copiedListeners[i];
+			IDBGpSessionListener l = (IDBGpSessionListener) copiedListeners[i];
 			allocated = l.SessionCreated(session);
 		}
 		return allocated;
