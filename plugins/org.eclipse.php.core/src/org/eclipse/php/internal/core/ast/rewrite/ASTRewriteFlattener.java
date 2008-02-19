@@ -262,6 +262,11 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(ClassDeclaration classDeclaration) {
+		int modifier = classDeclaration.getModifier();
+		if (modifier != ClassDeclaration.MODIFIER_NONE) {
+			result.append(ClassDeclaration.getModifier(modifier));
+			result.append(' ');
+		}
 		result.append("class "); //$NON-NLS-1$
 		classDeclaration.getName().accept(this);
 		if (classDeclaration.getSuperClass() != null) {
