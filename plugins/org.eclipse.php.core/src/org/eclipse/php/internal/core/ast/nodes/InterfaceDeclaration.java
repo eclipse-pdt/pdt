@@ -30,11 +30,11 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class InterfaceDeclaration extends TypeDeclaration {
 
 	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(ClassDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(InterfaceDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
-		new ChildListPropertyDescriptor(ClassDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildListPropertyDescriptor(InterfaceDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(ClassDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(InterfaceDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
 	protected ChildPropertyDescriptor getBodyProperty() {
