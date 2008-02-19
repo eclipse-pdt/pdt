@@ -190,10 +190,6 @@ public class ClassDeclaration extends TypeDeclaration {
 	 * </ul>
 	 */
 	public final void setModifier(int value) {
-		if (getModifier(value) == null) {
-			throw new IllegalArgumentException();
-		}
-		
 		preValueChange(MODIFIER_PROPERTY);
 		this.modifier = value;
 		postValueChange(MODIFIER_PROPERTY);
@@ -215,9 +211,6 @@ public class ClassDeclaration extends TypeDeclaration {
 	 * </ul>
 	 */ 
 	public void setSuperClass(Identifier id) {
-		if (id == null) {
-			throw new IllegalArgumentException();
-		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.superClass;
 		preReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY );
