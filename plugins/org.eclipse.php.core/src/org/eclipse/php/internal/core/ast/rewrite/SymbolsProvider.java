@@ -34,6 +34,7 @@ public class SymbolsProvider {
 	public static final int THROW_ID = 17; // PHP 5 only
 	public static final int NEW_ID = 18;
 	public static final int ELSE_ID = 19;
+	public static final int IMPLEMENTS_ID = 20;
 
 	public static final Symbol ERROR_SYMBOL = new Symbol(Integer.MIN_VALUE);
 	// Pre-defined PHP 5 Symbols.
@@ -57,6 +58,7 @@ public class SymbolsProvider {
 	private static final Symbol THROW_SYMBOL_PHP5 = new Symbol(ParserConstants5.T_THROW);
 	private static final Symbol NEW_SYMBOL_PHP5 = new Symbol(ParserConstants5.T_NEW);
 	private static final Symbol ELSE_SYMBOL_PHP5 = new Symbol(ParserConstants5.T_ELSE);
+	private static final Symbol IMPLEMENTS_SYMBOL_PHP5 = new Symbol(ParserConstants5.T_IMPLEMENTS);
 
 	// Pre-defined PHP 4 Symbols.
 	private static final Symbol DOT_SYMBOL_PHP4 = new Symbol(ParserConstants4.T_NEKUDA);
@@ -133,6 +135,8 @@ public class SymbolsProvider {
 					return NEW_SYMBOL_PHP5;
 				case ELSE_ID:
 					return ELSE_SYMBOL_PHP5;
+				case IMPLEMENTS_ID:
+					return IMPLEMENTS_SYMBOL_PHP5;
 				default:
 					break;
 			}
