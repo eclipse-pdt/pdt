@@ -2,6 +2,8 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.evaluation.types.SimpleType;
+import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
@@ -35,7 +37,11 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		evaluatedType = (IEvaluatedType) result;
+		if (state == GoalState.PRUNED || result == null || result == UnknownType.INSTANCE) {
+			evaluatedType = new SimpleType(SimpleType.TYPE_STRING);
+		} else {
+			evaluatedType = (IEvaluatedType) result;
+		}
 		return IGoal.NO_GOALS;
 	}
 
