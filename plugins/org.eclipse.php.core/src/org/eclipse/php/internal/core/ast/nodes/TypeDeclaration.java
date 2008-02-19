@@ -25,7 +25,7 @@ public abstract class TypeDeclaration extends Statement {
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(TypeDeclaration.class, "name", Identifier.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(TypeDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
 		new ChildListPropertyDescriptor(TypeDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor BODY_PROPERTY = 
