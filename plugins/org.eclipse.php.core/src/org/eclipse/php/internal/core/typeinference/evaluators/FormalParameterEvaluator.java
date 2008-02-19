@@ -2,12 +2,18 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
+import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 
@@ -25,7 +31,27 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 		if (type != null) {
 			result = new PHPClassType(type.getName());
 		} else {
-			// XXX: look at PHP doc
+			IContext context = typedGoal.getContext();
+			if (context instanceof MethodContext) {
+				MethodContext methodContext = (MethodContext) context;
+				PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration) methodContext.getMethodNode();
+				PHPDocBlock docBlock = methodDeclaration.getPHPDoc();
+				if (docBlock != null) {
+					for (PHPDocTag tag : docBlock.getTags()) {
+						if (tag.getTagKind() == PHPDocTag.PARAM) {
+							SimpleReference[] references = tag.getReferences();
+							if (references.length == 2) {
+								if (references[0].getName().equals(parameter.getName())) {
+									result = PHPSimpleTypes.fromString(references[1].getName());
+									if (result == null) {
+										result = new PHPClassType(references[1].getName());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		return IGoal.NO_GOALS;
 	}

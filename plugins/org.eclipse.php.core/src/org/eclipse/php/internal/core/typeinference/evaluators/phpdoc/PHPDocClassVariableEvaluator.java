@@ -3,7 +3,6 @@ package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 import java.util.*;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
@@ -79,15 +78,12 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
-					if (references.length > 0) {
-						SimpleReference firstReference = references[0];
-						if (firstReference instanceof TypeReference) {
-							IEvaluatedType type = PHPSimpleTypes.fromString(firstReference.getName());
-							if (type == null) {
-								type = new PHPClassType(firstReference.getName());
-							}
-							evaluated.add(type);
+					if (references.length == 1) {
+						IEvaluatedType type = PHPSimpleTypes.fromString(references[0].getName());
+						if (type == null) {
+							type = new PHPClassType(references[0].getName());
 						}
+						evaluated.add(type);
 					}
 				}
 			}

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
@@ -48,8 +47,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 			for (IModelElement e : elements) {
 				docs.add((DocMember) e);
 			}
-		}
-		else if (instanceType instanceof AmbiguousType) {
+		} else if (instanceType instanceof AmbiguousType) {
 			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
 			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 				if (type instanceof PHPClassType) {
@@ -60,8 +58,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			IModelElement[] elements = PHPMixinModel.getInstance().getFunctionDoc(methodName);
 			for (IModelElement e : elements) {
 				docs.add((DocMember) e);
@@ -86,15 +83,12 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.RETURN) {
 					SimpleReference[] references = tag.getReferences();
-					if (references.length > 0) {
-						SimpleReference firstReference = references[0];
-						if (firstReference instanceof TypeReference) {
-							IEvaluatedType type = PHPSimpleTypes.fromString(firstReference.getName());
-							if (type == null) {
-								type = new PHPClassType(firstReference.getName());
-							}
-							evaluated.add(type);
+					if (references.length == 1) {
+						IEvaluatedType type = PHPSimpleTypes.fromString(references[0].getName());
+						if (type == null) {
+							type = new PHPClassType(references[0].getName());
 						}
+						evaluated.add(type);
 					}
 				}
 			}
