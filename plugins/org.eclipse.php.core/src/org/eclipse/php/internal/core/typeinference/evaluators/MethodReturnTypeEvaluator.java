@@ -20,10 +20,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.*;
 
 public class MethodReturnTypeEvaluator extends GoalEvaluator {
 
@@ -122,7 +119,7 @@ public class MethodReturnTypeEvaluator extends GoalEvaluator {
 							ReturnStatement statement = (ReturnStatement) node;
 							Expression expr = statement.getExpr();
 							if (expr == null) {
-								evaluated.add(new PHPClassType("void"));
+								evaluated.add(PHPSimpleTypes.VOID);
 							} else {
 								subGoals.add(new ExpressionTypeGoal(innerContext, expr));
 							}

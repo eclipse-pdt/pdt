@@ -8,6 +8,8 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPGoalEvaluatorFactory;
+import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 public class PHPTypeInferencer extends DefaultTypeInferencer {
@@ -34,7 +36,8 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 		}
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
-			if (goal instanceof MethodReturnTypeGoal) {
+			// here are heavy goals pruned
+			if (goal instanceof MethodReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);
@@ -51,7 +54,8 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 		}
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
-			if (goal instanceof PHPDocMethodReturnTypeGoal) {
+			// here are PHPDoc (liteweight) goals pruned
+			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

@@ -8,8 +8,10 @@ import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.*;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
@@ -36,6 +38,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (goalClass == ClassVariableDeclarationGoal.class) {
 			return new ClassVariableDeclarationEvaluator(goal);
+		}
+		if (goalClass == PHPDocClassVariableGoal.class) {
+			return new PHPDocClassVariableEvaluator(goal);
 		}
 		if (goalClass == ScalarGoal.class) {
 			ScalarGoal scalarGoal = (ScalarGoal)goal;

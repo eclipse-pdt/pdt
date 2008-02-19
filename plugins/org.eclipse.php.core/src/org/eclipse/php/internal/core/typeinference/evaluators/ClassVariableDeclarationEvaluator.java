@@ -13,10 +13,8 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.GoalState;
@@ -49,35 +47,64 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 	public IGoal[] init() {
 		ClassVariableDeclarationGoal typedGoal = (ClassVariableDeclarationGoal) goal;
 		InstanceContext context = (InstanceContext) typedGoal.getContext();
-		SimpleReference field = typedGoal.getField();
+		String variableName = typedGoal.getVariableName();
 
 		List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		String typeName = context.getInstanceType().getTypeName();
+		IEvaluatedType instanceType = context.getInstanceType();
 
-		IModelElement[] elements = PHPMixinModel.getInstance().getClass(typeName);
+		Set<IType> types = new HashSet<IType>();
 
-		for (IModelElement element : elements) {
-			if (element instanceof IType) {
-				IType type = (IType) element;
-				ISourceModule sourceModule = type.getSourceModule();
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-				try {
-					TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
-					ClassVariableDeclarationSearcher searcher = new ClassVariableDeclarationSearcher(sourceModule, moduleDeclaration, field.getName());
-					typeDeclaration.traverse(searcher);
-
-					Map<IContext, LinkedList<ASTNode>> contextToDeclarationMap = searcher.getContextToDeclarationMap();
-					Iterator<IContext> contextIt = contextToDeclarationMap.keySet().iterator();
-					while (contextIt.hasNext()) {
-						IContext c = contextIt.next();
-						for (ASTNode declaration : contextToDeclarationMap.get(c)) {
-							subGoals.add(new ExpressionTypeGoal(c, declaration));
-						}
+		if (instanceType instanceof PHPClassType) {
+			PHPClassType classType = (PHPClassType) instanceType;
+			IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+			for (IModelElement e : elements) {
+				types.add((IType) e);
+			}
+		} else if (instanceType instanceof AmbiguousType) {
+			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
+			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
+				if (type instanceof PHPClassType) {
+					PHPClassType classType = (PHPClassType) instanceType;
+					IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+					for (IModelElement e : elements) {
+						types.add((IType) e);
 					}
-				} catch (Exception e) {
-					Logger.logException(e);
 				}
+			}
+		}
+
+		IType typeFromSameFile = null;
+		for (IType type : types) {
+			if (type.getSourceModule().equals(context.getSourceModule())) {
+				typeFromSameFile = type;
+				break;
+			}
+		}
+		// If type from the same file was found  - use it
+		if (typeFromSameFile != null) {
+			types.clear();
+			types.add(typeFromSameFile);
+		}
+
+		for (IType type : types) {
+			ISourceModule sourceModule = type.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			try {
+				TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
+				ClassVariableDeclarationSearcher searcher = new ClassVariableDeclarationSearcher(sourceModule, moduleDeclaration, variableName);
+				typeDeclaration.traverse(searcher);
+
+				Map<IContext, LinkedList<ASTNode>> contextToDeclarationMap = searcher.getContextToDeclarationMap();
+				Iterator<IContext> contextIt = contextToDeclarationMap.keySet().iterator();
+				while (contextIt.hasNext()) {
+					IContext c = contextIt.next();
+					for (ASTNode declaration : contextToDeclarationMap.get(c)) {
+						subGoals.add(new ExpressionTypeGoal(c, declaration));
+					}
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
 			}
 		}
 
@@ -135,7 +162,7 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 
 		public boolean visit(PHPFieldDeclaration e) throws Exception {
 			if (!primaryDeclarationOverriden) {
-				if (e.getName().equals('$' + variableName)) {
+				if (e.getName().equals(variableName)) {
 					Expression variableValue = e.getVariableValue();
 					if (variableValue != null) {
 						LinkedList<ASTNode> declList = contextToDeclarations.get(contextStack.peek());
@@ -154,17 +181,20 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 				Expression dispatcher = fieldAccess.getDispatcher();
 				if (dispatcher instanceof VariableReference && "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
 					Expression field = fieldAccess.getField();
-					if (field instanceof SimpleReference && ((SimpleReference) field).getName().equals(variableName)) {
-						LinkedList<ASTNode> declList = contextToDeclarations.get(contextStack.peek());
-						// remove all declarations of this variable from the inner blocks
-						while (declList.size() > level) {
-							declList.removeLast();
-						}
-						declList.addLast(e.getValue());
+					if (field instanceof SimpleReference) {
+						String fieldVarName = '$' + ((SimpleReference) field).getName();
+						if (fieldVarName.equals(variableName)) {
+							LinkedList<ASTNode> declList = contextToDeclarations.get(contextStack.peek());
+							// remove all declarations of this variable from the inner blocks
+							while (declList.size() > level) {
+								declList.removeLast();
+							}
+							declList.addLast(e.getValue());
 
-						// Override primary field declaration:
-						if (level == 0) {
-							primaryDeclarationOverriden = true;
+							// Override primary field declaration:
+							if (level == 0) {
+								primaryDeclarationOverriden = true;
+							}
 						}
 					}
 				}

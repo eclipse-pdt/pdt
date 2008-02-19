@@ -20,9 +20,9 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	}
 
 	private void updateReferences(int start, int end) {
-		if (tagKind == RETURN || tagKind == PARAM) {
+		if (tagKind == RETURN || tagKind == PARAM || tagKind == VAR) {
 			String[] parts = value.split(" ");
-			if (tagKind == RETURN) {
+			if (tagKind == RETURN || tagKind == VAR) {
 				if (parts.length != 0) {
 					references = new SimpleReference[1];
 					int firstWordPosition = start + value.indexOf(parts[0]);

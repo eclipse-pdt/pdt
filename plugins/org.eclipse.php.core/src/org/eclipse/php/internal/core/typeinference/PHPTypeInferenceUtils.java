@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
-import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
@@ -14,7 +13,7 @@ public class PHPTypeInferenceUtils {
 		MultiTypeType multiTypeType = new MultiTypeType();
 		for (IEvaluatedType type : evaluatedTypes) {
 			if (type == null) {
-				type = new SimpleType(SimpleType.TYPE_NULL);
+				type = PHPSimpleTypes.NULL;
 			}
 			multiTypeType.addType(type);
 		}
@@ -38,7 +37,7 @@ public class PHPTypeInferenceUtils {
 		Set<IEvaluatedType> types = new HashSet<IEvaluatedType>(resolveAmbiguousTypes(evaluatedTypes));
 		if (types.contains(null)) {
 			types.remove(null);
-			types.add(new SimpleType(SimpleType.TYPE_NULL));
+			types.add(PHPSimpleTypes.NULL);
 		}
 		if (types.size() == 0) {
 			return UnknownType.INSTANCE;
