@@ -14,10 +14,13 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -32,6 +35,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -104,7 +108,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Creates new RemoteDebugSession
 	 */
 	public RemoteDebugger(IDebugHandler debugHandler, DebugConnectionThread connectionThread) {
-		//		this.kit = createCommunicationKit();
+		// this.kit = createCommunicationKit();
 		connection = connectionThread;
 		this.debugHandler = debugHandler;
 		connection.setCommunicationAdministrator(this);
@@ -367,8 +371,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Synchronic addBreakpoint Returns true if succeeded adding the
-	 * Breakpoint.
+	 * Synchronic addBreakpoint Returns true if succeeded adding the Breakpoint.
 	 */
 	public void addBreakpoint(Breakpoint breakpoint) {
 		if (!this.isActive()) {
@@ -405,7 +408,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	/**
-	 * Ssynchronic removeBreakpoint Returns true if succeeded removing the
+	 * Synchronic removeBreakpoint Returns true if succeeded removing the
 	 * Breakpoint.
 	 */
 	public boolean removeBreakpoint(int id) {
@@ -617,7 +620,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 
-		debugHandler.getDebugTarget().installDeferredBreakpoints();
+		try {
+			debugHandler.getDebugTarget().installDeferredBreakpoints();
+		} catch (CoreException ce) {
+			return false;
+		}
+		
 		StartRequest request = new StartRequest();
 		try {
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));
