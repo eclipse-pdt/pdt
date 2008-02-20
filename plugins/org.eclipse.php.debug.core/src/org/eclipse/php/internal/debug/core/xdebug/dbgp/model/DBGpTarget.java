@@ -35,14 +35,14 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionListener;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, IBreakpointManagerListener, DBGpSessionListener {
+public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, IBreakpointManagerListener, IDBGpSessionListener {
 
 	// used to identify this debug target with the associated
 	// script being debugged.
