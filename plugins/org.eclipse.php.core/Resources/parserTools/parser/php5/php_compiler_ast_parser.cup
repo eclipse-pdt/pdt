@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.5 2008/02/19 08:28:09 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.6 2008/02/20 17:11:25 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -132,7 +132,7 @@ terminal String T_DEFINE;
 terminal String T_INCLUDE,T_INCLUDE_ONCE,T_EVAL,T_REQUIRE,T_REQUIRE_ONCE;
 terminal T_COMMA;
 terminal String T_LOGICAL_OR,T_LOGICAL_XOR,T_LOGICAL_AND,T_PRINT;
-terminal T_EQUAL;
+terminal VarComment T_EQUAL;
 terminal T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL;
 terminal T_QUESTION_MARK;
 terminal T_SEMICOLON;
@@ -1243,10 +1243,10 @@ static_var_list:list T_COMMA T_VARIABLE:var
 	RESULT = list;
 :}
 
-| static_var_list:list T_COMMA T_VARIABLE:var T_EQUAL static_scalar:expr
+| static_var_list:list T_COMMA T_VARIABLE:var T_EQUAL:varComment static_scalar:expr
 {:
 	VariableReference v = new VariableReference(varleft, varright, var); 
-	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr); 
+	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr, varComment); 
 	list.add(assignment);
 	RESULT = list;
 :}
@@ -1259,10 +1259,10 @@ static_var_list:list T_COMMA T_VARIABLE:var
 	RESULT = list;
 :}
 
-| T_VARIABLE:var T_EQUAL static_scalar:expr
+| T_VARIABLE:var T_EQUAL:varComment static_scalar:expr
 {:
 	VariableReference v = new VariableReference(varleft, varright, var); 
-	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr); 
+	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr, varComment); 
 	List list = new LinkedList();
 	list.add(assignment);
 	RESULT = list;
@@ -1272,7 +1272,9 @@ static_var_list:list T_COMMA T_VARIABLE:var
 class_statement_list ::=
 class_statement_list:list class_statement:classStatement
 {:
-	list.addAll(classStatement);
+	if (classStatement != null) {
+		list.addAll(classStatement);
+	}
 	RESULT = list;
 :}
 
@@ -1541,20 +1543,20 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	RESULT = list; 
 :}
 
-| variable:var T_EQUAL expr:expr
+| variable:var T_EQUAL:varComment expr:expr
 {: 
-	RESULT = new Assignment(varleft, exprright, var, Assignment.OP_EQUAL, expr); 
+	RESULT = new Assignment(varleft, exprright, var, Assignment.OP_EQUAL, expr, varComment); 
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken variable:refvar
+| variable:var T_EQUAL:varComment T_REFERENCE:reftoken variable:refvar
 {: 
-	RESULT = new Assignment(varleft, refvarright, var, Assignment.OP_REF_EQUAL, refvar); 
+	RESULT = new Assignment(varleft, refvarright, var, Assignment.OP_REF_EQUAL, refvar, varComment); 
 :}
 
-| variable:var T_EQUAL T_REFERENCE:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
+| variable:var T_EQUAL:varComment T_REFERENCE:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
 {:
 	ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(startleft, ctorright, className, ctor);
-	Assignment assignment = new Assignment(varleft, ctorright, var, Assignment.OP_REF_EQUAL, classInstanceCreation);
+	Assignment assignment = new Assignment(varleft, ctorright, var, Assignment.OP_REF_EQUAL, classInstanceCreation, varComment);
 	RESULT = assignment;
 :} 
 

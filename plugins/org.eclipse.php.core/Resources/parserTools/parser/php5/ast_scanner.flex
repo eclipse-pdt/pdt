@@ -136,7 +136,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 		addComment(Comment.TYPE_PHPDOC);
     }
     
-    private void handleVarComment() {
+    protected void handleVarComment() {
     	commentStartPosition = zzStartRead;
     	addComment(Comment.TYPE_MULTILINE);
     }

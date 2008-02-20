@@ -134,7 +134,7 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 		addComment(Comment.TYPE_PHPDOC);
     }
     
-    private void handleVarComment() {
+    protected void handleVarComment() {
     	commentStartPosition = zzStartRead;
     	addComment(Comment.TYPE_MULTILINE);
     }
