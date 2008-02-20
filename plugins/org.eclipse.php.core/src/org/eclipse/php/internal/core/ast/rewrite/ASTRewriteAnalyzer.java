@@ -2172,7 +2172,41 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ArrayElement)
 	 */
 	public boolean visit(ArrayElement arrayElement) {
-		return rewriteRequiredNodeVisit(arrayElement, ArrayElement.KEY_PROPERTY, ArrayElement.VALUE_PROPERTY);
+		// Since the key property is optional, we need to treat it separately.
+		rewriteArrayElementKey(arrayElement);
+		return rewriteRequiredNodeVisit(arrayElement, ArrayElement.VALUE_PROPERTY);
+	}
+
+	/*
+	 * Rewrite the optional key part of the array element
+	 * 
+	 * @param arrayElement
+	 */
+	private void rewriteArrayElementKey(ArrayElement arrayElement) {
+		RewriteEvent event = getEvent(arrayElement, ArrayElement.KEY_PROPERTY);
+		if (event != null) {
+			int kind = event.getChangeKind();
+			TextEditGroup editGroup = getEditGroup(event);
+			switch (kind) {
+				case RewriteEvent.INSERTED:
+					// We should insert the key and the => string
+					Expression newValue = (Expression) event.getNewValue();
+					int start = arrayElement.getStart();
+					doTextInsert(start, newValue, 0, false, editGroup);
+					doTextInsert(start, "=>", editGroup);
+					break;
+				case RewriteEvent.REMOVED:
+					Expression removedExpression = (Expression) event.getOriginalValue();
+					int deleteEndPos = arrayElement.getValue().getStart();
+					int deleteStartPos = removedExpression.getStart();
+					doTextRemove(deleteStartPos, deleteEndPos - deleteStartPos, editGroup);
+					break;
+				case RewriteEvent.REPLACED:
+					rewriteRequiredNode(arrayElement, ArrayElement.KEY_PROPERTY);
+					break;
+			}
+		}
+
 	}
 
 	/* (non-Javadoc)
