@@ -93,9 +93,6 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 
 	private IThread[] allThreads;
 
-	// stack frame tracking
-	// private boolean refreshStackFrames;
-
 	private int currentStackLevel;
 
 	private IStackFrame[] stackFrames;
@@ -293,7 +290,6 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		if (targetState != STATE_INIT_SESSION_WAIT && targetState != STATE_STARTED_SESSION_WAIT) {
 			DBGpLogger.logWarning("initiateSession in Wrong State: " + targetState, this, null);
 		}
-		// refreshStackFrames = true;
 		stackFrames = null;
 		currentVariables = null;
 
@@ -913,9 +909,9 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	public void suspended(int detail) {
 		setState(STATE_STARTED_SUSPENDED);
 		processQueuedBpCmds();
-		// refreshStackFrames = true;
 		stackFrames = null;
 		currentVariables = null;
+		superGlobalVars = null;
 		fireSuspendEvent(detail);
 		langThread.fireSuspendEvent(detail);
 	}
@@ -994,8 +990,6 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		// is global across the debug target, you could end up with 2 threads
 		// doing this at the same time on will be getting the data and the other
 		// will not and returning null as the data is not yet ready.
-		// if (refreshStackFrames) {
-		// refreshStackFrames = false;
 		if (stackFrames == null) {
 			DBGpResponse resp = session.sendSyncCmd(DBGpCommand.stackGet);
 			if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
@@ -1030,6 +1024,8 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 
 	/**
 	 * get the super globals. never returns null (IVariable[0]).
+	 * Cache the info so that it is never got again when going to other
+	 * stack levels to view variables.
 	 * 
 	 * @return
 	 */
@@ -1045,6 +1041,8 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 
 	/**
 	 * get all variables to be displayed. Never returns null (IVariable[0])
+	 * cache the top level stack frame as this is the one most likely always
+	 * requested multiple times.
 	 * 
 	 * @param level
 	 * @return
@@ -1145,8 +1143,10 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 					// a variable has been changed on a previous stack
 					// the gui won't have updated the current stack
 					// level view, so we invalidate the cache to reload
-					// the data.
+					// the data. The variable also could have been a super
+					// global, so invalid the superglobal cache as well.
 					currentVariables = null;
+					superGlobalVars = null;
 				}
 				success = true;
 			}
