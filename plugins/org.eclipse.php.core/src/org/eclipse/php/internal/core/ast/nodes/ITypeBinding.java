@@ -73,17 +73,7 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public String getBinaryName();
 
-	/**
-	 * Returns the bound of this wildcard type if it has one.
-	 * Returns <code>null</code> if this is not a wildcard type.
-	 *
-	 * @return the bound of this wildcard type, or <code>null</code> if none
-	 * @see #isWildcardType()
-	 * @see #isUpperbound()
-	 * @since 3.1
-	 */
-	public ITypeBinding getBound();
-
+	
 	/**
 	 * Returns the binding representing the component type of this array type,
 	 * or <code>null</code> if this is not an array type binding. The component
@@ -426,25 +416,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public ITypeBinding[] getTypeArguments();
 
-	/**
-	 * Returns the declared type bounds of this type variable or capture. If the
-	 * variable or the capture had no explicit bound, then it returns an empty list.
-     * <p>
-     * Note that per construction, it can only contain one class or array type,
-     * at most, and then it is located in first position.
-     * </p>
-     * <p>
-     * Also note that array type bound may only occur in the case of a capture
-     * binding, e.g. <code>capture-of ? extends Object[]</code>
-     * </p>
-	 *
-	 * @return the list of type bindings for this type variable or capture,
-     * or otherwise the empty list
-	 * @see #isCapture()
-	 * @see #isTypeVariable()
-	 * @since 3.1
-	 */
-	public ITypeBinding[] getTypeBounds();
 
 	/**
 	 * Returns the binding for the type declaration corresponding to this type
@@ -493,7 +464,7 @@ public interface ITypeBinding extends IBinding {
 	 *    and <code>false</code> otherwise
 	 * @since 3.1
 	 */
-	public boolean isAnnotation();
+	//public boolean isAnnotation();
 
 
 	/**
@@ -634,21 +605,7 @@ public interface ITypeBinding extends IBinding {
 	 *   interface, enum, or annotation type, and <code>false</code> otherwise
 	 */
 	public boolean isMember();
-
-	/**
-	 * Returns whether this type binding represents a nested class, interface,
-	 * enum, or annotation type.
-	 * <p>
-	 * A nested type is any type whose declaration occurs within
-	 * the body of another. The set of nested types is disjoint from the set of
-	 * top-level types. Nested types further subdivide into member types, local
-	 * types, and anonymous types.
-	 * </p>
-	 *
-	 * @return <code>true</code> if this type binding is for a nested class,
-	 *   interface, enum, or annotation type, and <code>false</code> otherwise
-	 */
-	public boolean isNested();
+	
 
 	/**
 	 * Returns whether this type binding represents the null type.
@@ -661,30 +618,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isNullType();
 
-	/**
-	 * Returns whether this type binding represents an instance of
-	 * a generic type corresponding to a parameterized type reference.
-	 * <p>
-	 * For example, an AST type like
-	 * <code>Collection&lt;String&gt;</code> typically resolves to a
-	 * type binding whose type argument is the type binding for the
-	 * class <code>java.lang.String</code> and whose erasure is the type
-	 * binding for the generic type <code>java.util.Collection</code>.
-	 * </p>
-	 * <p>
-	 * Note that {@link #isGenericType()},
-	 * {@link #isParameterizedType()},
-	 * and {@link #isRawType()} are mutually exclusive.
-	 * </p>
-	 *
-	 * @return <code>true</code> if this type binding represents a
-	 * an instance of a generic type corresponding to a parameterized
-	 * type reference, and <code>false</code> otherwise
-	 * @see #getTypeArguments()
-	 * @see #getTypeDeclaration()
-	 * @since 3.1
-	 */
-	public boolean isParameterizedType();
 
 	/**
 	 * Returns whether this type binding represents a primitive type.
