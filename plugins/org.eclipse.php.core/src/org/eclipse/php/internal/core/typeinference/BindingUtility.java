@@ -8,9 +8,9 @@ import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.UnknownType;
+import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -78,6 +78,28 @@ public class BindingUtility {
 	}
 
 	/**
+	 * This method returns evaluated type for the given model element.
+	 * Returns cached type from previous evaluations (if exists).
+	 *
+	 * @param element Model element.
+	 * @return evaluated type.
+	 *
+	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * @throws NullPointerException if the given element is <code>null</code>.
+	 * @throws ModelException
+	 */
+	public IEvaluatedType getType(SourceRefElement element) throws ModelException {
+		if (element == null) {
+			throw new NullPointerException();
+		}
+		ISourceModule elementModule = element.getSourceModule();
+		if (!elementModule.equals(sourceModule)) {
+			throw new IllegalArgumentException("Unknown model element");
+		}
+		return getType(new SourceRange(element.getSourceRange()));
+	}
+
+	/**
 	 * This method returns evaluated type for the expression under the given offset and length.
 	 * Returns cached type from previous evaluations (if exists).
 	 *
@@ -117,6 +139,11 @@ public class BindingUtility {
 	private class SourceRange {
 		private final int offset;
 		private final int length;
+
+		public SourceRange(ISourceRange sourceRange) {
+			offset = sourceRange.getOffset();
+			length = sourceRange.getLength();
+		}
 
 		public SourceRange(int offset, int length){
 			this.length= length;
