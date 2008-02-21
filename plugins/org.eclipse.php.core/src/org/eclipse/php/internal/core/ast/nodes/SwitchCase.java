@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -35,13 +37,25 @@ public class SwitchCase extends Statement {
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor VALUE_PROPERTY = 
-		new ChildPropertyDescriptor(SwitchCase.class, "value", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor ACTIONS_PROPERTY = 
-		new ChildListPropertyDescriptor(SwitchCase.class, "actions", Statement.class, CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor IS_DEFAULT_PROPERTY = 
-		new SimplePropertyDescriptor(SwitchCase.class, "isDefault", Boolean.class, OPTIONAL); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor VALUE_PROPERTY = new ChildPropertyDescriptor(SwitchCase.class, "value", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor ACTIONS_PROPERTY = new ChildListPropertyDescriptor(SwitchCase.class, "actions", Statement.class, CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor IS_DEFAULT_PROPERTY = new SimplePropertyDescriptor(SwitchCase.class, "isDefault", Boolean.class, OPTIONAL); //$NON-NLS-1$
+
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+
+	static {
+		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(1);
+		propertyList.add(VALUE_PROPERTY);
+		propertyList.add(ACTIONS_PROPERTY);
+		propertyList.add(IS_DEFAULT_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
+	}
+
 	public SwitchCase(int start, int end, AST ast, Expression value, Statement[] actions, boolean isDefault) {
 		super(start, end, ast);
 
@@ -72,7 +86,7 @@ public class SwitchCase extends Statement {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		if (value != null) {
@@ -130,7 +144,7 @@ public class SwitchCase extends Statement {
 	public Statement[] getActions() {
 		return actions.toArray(new Statement[this.actions.size()]);
 	}
-	
+
 	/**
 	 * The actions of this case statement
 	 * @return List of actions of this case statement
@@ -151,13 +165,13 @@ public class SwitchCase extends Statement {
 	 * 
 	 * @param isDefault 
 	 * @exception IllegalArgumentException if the argument is incorrect
-	 */ 
+	 */
 	public void setIsDefault(boolean isDefault) {
 		preValueChange(IS_DEFAULT_PROPERTY);
 		this.isDefault = isDefault;
 		postValueChange(IS_DEFAULT_PROPERTY);
 	}
-	
+
 	/**
 	 * The value (expression) of this case statement
 	 * @return value (expression) of this case statement
@@ -165,7 +179,7 @@ public class SwitchCase extends Statement {
 	public Expression getValue() {
 		return value;
 	}
-	
+
 	/**
 	 * Sets the value of this case statement
 	 * 
@@ -176,7 +190,7 @@ public class SwitchCase extends Statement {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setValue(Expression value) {
 		if (value == null) {
 			throw new IllegalArgumentException();
@@ -186,7 +200,7 @@ public class SwitchCase extends Statement {
 		preReplaceChild(oldChild, value, VALUE_PROPERTY);
 		this.value = value;
 		postReplaceChild(oldChild, value, VALUE_PROPERTY);
-	}	
+	}
 
 	/* 
 	 * Method declared on ASTNode.
@@ -208,7 +222,7 @@ public class SwitchCase extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetBooleanProperty(property, get, value);
 	}
-	
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == VALUE_PROPERTY) {
 			if (get) {
@@ -221,21 +235,31 @@ public class SwitchCase extends Statement {
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.ASTNode#internalGetChildListProperty(org.eclipse.php.internal.core.ast.nodes.ChildListPropertyDescriptor)
+	 */
+	@Override
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == ACTIONS_PROPERTY) {
+			return actions();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+
 	@Override
 	ASTNode clone0(AST target) {
 		final boolean isDefault = isDefault();
 		final List actions = ASTNode.copySubtrees(target, actions());
 		final Expression value = ASTNode.copySubtree(target, getValue());
-	
+
 		final SwitchCase result = new SwitchCase(getStart(), getEnd(), target, value, actions, isDefault);
 		return result;
 	}
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
-		// TODO Auto-generated method stub
-		return null;
+		return PROPERTY_DESCRIPTORS;
 	}
 }
