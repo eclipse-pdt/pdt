@@ -374,68 +374,6 @@ public interface ITypeBinding extends IBinding {
 	 * a type variable, a wildcard type, a capture binding.
 	public IPackageBinding getPackage();
 	 */
-	
-	/**
-	 * Returns the fully qualified name of the type represented by this
-	 * binding if it has one.
-	 * <ul>
-	 * <li>For top-level types, the fully qualified name is the simple name of
-	 * the type preceded by the package name (or unqualified if in a default package)
-	 * and a ".".
-	 * Example: <code>"java.lang.String"</code> or <code>"java.util.Collection"</code>.
-	 * Note that the type parameters of a generic type are not included.</li>
-	 * <li>For members of top-level types, the fully qualified name is the
-	 * simple name of the type preceded by the fully qualified name of the
-	 * enclosing type (as computed by this method) and a ".".
-	 * Example: <code>"java.io.ObjectInputStream.GetField"</code>.
-	 * If the binding is for a member type that corresponds to a particular instance
-	 * of a generic type arising from a parameterized type reference, the simple
-	 * name of the type is followed by the fully qualified names of the type arguments
-	 * (as computed by this method) surrounded by "&lt;&gt;" and separated by ",".
-	 * Example: <code>"pkg.Outer.Inner&lt;java.lang.String&gt;"</code>.
-	 * </li>
-	 * <li>For primitive types, the fully qualified name is the keyword for
-	 * the primitive type.
-	 * Example: <code>"int"</code>.</li>
-	 * <li>For the null type, the fully qualified name is the string
-	 * "null".</li>
-	 * <li>Local types (including anonymous classes) and members of local
-	 * types do not have a fully qualified name. For these types, and array
-	 * types thereof, this method returns an empty string.</li>
-	 * <li>For array types whose component type has a fully qualified name,
-	 * the fully qualified name is the fully qualified name of the component
-	 * type (as computed by this method) followed by "[]".
-	 * Example: <code>"java.lang.String[]"</code>.</li>
-	 * <li>For type variables, the fully qualified name is just the name of the
-	 * type variable (type bounds are not included).
-	 * Example: <code>"X"</code>.</li>
-	 * <li>For type bindings that correspond to particular instances of a generic
-	 * type arising from a parameterized type reference,
-	 * the fully qualified name is the fully qualified name of the erasure
-	 * type followed by the fully qualified names of the type arguments surrounded by "&lt;&gt;" and separated by ",".
-	 * Example: <code>"java.util.Collection&lt;java.lang.String&gt;"</code>.
-	 * </li>
-	 * <li>For type bindings that correspond to particular instances of a generic
-	 * type arising from a raw type reference,
-	 * the fully qualified name is the fully qualified name of the erasure type.
-	 * Example: <code>"java.util.Collection"</code>. Note that the
-	 * the type parameters are omitted.</li>
-	 * <li>For wildcard types, the fully qualified name is "?" optionally followed by
-	 * a single space followed by the keyword "extends" or "super"
-	 * followed a single space followed by the fully qualified name of the bound
-	 * (as computed by this method) when present.
-	 * Example: <code>"? extends java.io.InputStream"</code>.
-	 * </li>
-    * <li>Capture types do not have a fully qualified name. For these types,
-    * and array types thereof, this method returns an empty string.</li>
-	 * </ul>
-	 *
-	 * @return the fully qualified name of the type represented by this
-	 *    binding, or the empty string if it has none
-	 * @see #getName()
-	 * @since 2.1
-	 */
-	public String getQualifiedName();
 
 	/**
 	 * Returns the type binding for the superclass of the type represented
@@ -544,16 +482,6 @@ public interface ITypeBinding extends IBinding {
 	// TODO (jeem) - clarify whether binding for a generic type instance carries a copy of the generic type's type parameters as well as type arguments
 	public ITypeBinding[] getTypeParameters();
 
-	/**
-	 * Returns the corresponding wildcard binding of this capture binding.
-     * Returns <code>null</code> if this type bindings does not represent
-     * a capture binding.
-	 *
-	 * @return the corresponding wildcard binding for a capture
-	 * binding, <code>null</code> otherwise
-	 * @since 3.1
-	 */
-	public ITypeBinding getWildcard();
 
 	/**
 	 * Returns whether this type binding represents an annotation type.
@@ -567,18 +495,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isAnnotation();
 
-	/**
-	 * Returns whether this type binding represents an anonymous class.
-	 * <p>
-	 * An anonymous class is a subspecies of local class, and therefore mutually
-	 * exclusive with member types. Note that anonymous classes have no name
-	 * (<code>getName</code> returns the empty string).
-	 * </p>
-	 *
-	 * @return <code>true</code> if this type binding is for an anonymous class,
-	 *   and <code>false</code> otherwise
-	 */
-	public boolean isAnonymous();
 
 	/**
 	 * Returns whether this type binding represents an array type.
@@ -662,14 +578,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isClass();
 
-	/**
-	 * Returns whether this type binding represents an enum type.
-	 *
-	 * @return <code>true</code> if this object represents an enum type,
-	 *    and <code>false</code> otherwise
-	 * @since 3.1
-	 */
-	public boolean isEnum();
 
 	/**
 	 * Returns whether this type binding originated in source code.
@@ -684,29 +592,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isFromSource();
 
-	/**
-	 * Returns whether this type binding represents a declaration of
-	 * a generic class or interface.
-	 * <p>
-	 * Note that type parameters only occur on the binding of the
-	 * declaring generic class or interface; e.g., <code>Collection&lt;T&gt;</code>.
-	 * Type bindings corresponding to a raw or parameterized reference to a generic
-	 * type do not carry type parameters (they instead have non-empty type arguments
-	 * and non-trivial erasure).
-	 * This method is fully equivalent to <code>getTypeParameters().length &gt; 0)</code>.
-	 * </p>
-	 * <p>
-	 * Note that {@link #isGenericType()},
-	 * {@link #isParameterizedType()},
-	 * and {@link #isRawType()} are mutually exclusive.
-	 * </p>
-	 *
-	 * @return <code>true</code> if this type binding represents a
-	 * declaration of a generic class or interface, and <code>false</code> otherwise
-	 * @see #getTypeParameters()
-	 * @since 3.1
-	 */
-	public boolean isGenericType();
 
 	/**
 	 * Returns whether this type binding represents an interface type.
@@ -891,35 +776,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isTypeVariable();
 
-	/**
-	 * Returns whether this wildcard type is an upper bound
-	 * ("extends") as opposed to a lower bound ("super").
-	 * Note that this property is only relevant for wildcards
-	 * that have a bound.
-	 *
-	 * @return <code>true</code> if this wildcard type has a bound that is
-	 * an upper bound, and <code>false</code> in all other cases
-	 * @see #isWildcardType()
-	 * @see #getBound()
-	 * @since 3.1
-	 */
-	public boolean isUpperbound();
-
-	/**
-	 * Returns whether this type binding represents a wildcard type. A wildcard
-	 * type occus only as an argument to a parameterized type reference.
-	 * <p>
-	 * For example, a AST type like
-	 * <code>Collection&lt;? extends Object&gt;</code> typically resolves to a
-	 * parameterized type binding whose type argument is a wildcard type
-	 * with upper type bound <code>java.util.Object</code>.
-	 * </p>
-	 *
-	 * @return <code>true</code> if this object represents a wildcard type,
-	 *    and <code>false</code> otherwise
-	 * @since 3.1
-	 * @see #getBound()
-	 * @see #isUpperbound()
-	 */
-	public boolean isWildcardType();
+	
+	
 }
