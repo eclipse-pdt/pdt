@@ -36,7 +36,9 @@ public class ArrayCreationEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		evaluated.add((IEvaluatedType)result);
+		if (state != GoalState.RECURSIVE) {
+			evaluated.add((IEvaluatedType)result);
+		}
 		return IGoal.NO_GOALS;
 	}
 }

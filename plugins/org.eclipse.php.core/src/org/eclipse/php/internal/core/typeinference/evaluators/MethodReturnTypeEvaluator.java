@@ -143,7 +143,7 @@ public class MethodReturnTypeEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (result != null) {
+		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);
 		}
 		return IGoal.NO_GOALS;

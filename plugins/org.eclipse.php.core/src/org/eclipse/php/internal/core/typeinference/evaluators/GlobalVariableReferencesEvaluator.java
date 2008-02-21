@@ -15,7 +15,6 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.*;
-import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -27,7 +26,11 @@ import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
+import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
+/**
+ * This evaluator finds all global declarations of the variable and produces {@link VariableDeclarationGoal} as a subgoal.
+ */
 public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
@@ -93,7 +96,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 						while (contextIt.hasNext()) {
 							IContext c = contextIt.next();
 							for (ASTNode declaration : contextToDeclarationMap.get(c)) {
-								subGoals.add(new ExpressionTypeGoal(c, declaration));
+								subGoals.add(new VariableDeclarationGoal(c, declaration));
 							}
 						}
 					} catch (Exception e) {
@@ -111,7 +114,9 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		evaluated.add((IEvaluatedType)result);
+		if (state != GoalState.RECURSIVE) {
+			evaluated.add((IEvaluatedType)result);
+		}
 		return IGoal.NO_GOALS;
 	}
 

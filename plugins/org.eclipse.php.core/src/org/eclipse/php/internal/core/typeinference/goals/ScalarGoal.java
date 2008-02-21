@@ -13,4 +13,28 @@ public class ScalarGoal extends AbstractGoal {
 	public int getScalarType() {
 		return scalarType;
 	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + scalarType;
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ScalarGoal other = (ScalarGoal) obj;
+		if (scalarType != other.scalarType) {
+			return false;
+		}
+		return true;
+	}
 }

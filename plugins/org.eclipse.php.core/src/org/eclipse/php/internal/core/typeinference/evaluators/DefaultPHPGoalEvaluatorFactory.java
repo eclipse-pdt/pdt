@@ -10,9 +10,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
+import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.VarCommentVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.*;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.VarCommentVariableGoal;
 
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
@@ -24,14 +26,17 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			ExpressionTypeGoal exprGoal = (ExpressionTypeGoal) goal;
 			return createExpressionEvaluator(exprGoal);
 		}
+		if (goalClass == VariableTypeGoal.class) {
+			return new VariableTypeEvaluator(goal);
+		}
+		if (goalClass == VariableDeclarationGoal.class) {
+			return new VariableDeclarationEvaluator(goal);
+		}
 		if (goalClass == MethodReturnTypeGoal.class) {
 			return new MethodReturnTypeEvaluator(goal);
 		}
 		if (goalClass == PHPDocMethodReturnTypeGoal.class) {
 			return new PHPDocMethodReturnTypeEvaluator(goal);
-		}
-		if (goalClass == VariableTypeGoal.class) {
-			return new VariableTypeEvaluator(goal);
 		}
 		if (goalClass == GlobalVariableReferencesGoal.class) {
 			return new GlobalVariableReferencesEvaluator(goal);
@@ -48,6 +53,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (goalClass == ConstantDeclarationGoal.class) {
 			return new ConstantDeclarationEvaluator(goal);
+		}
+		if (goalClass == VarCommentVariableGoal.class) {
+			return new VarCommentVariableEvaluator(goal);
 		}
 		return null;
 	}

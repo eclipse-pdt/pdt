@@ -4,23 +4,23 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.AbstractGoal;
 
-public class VariableTypeGoal extends AbstractGoal {
+public class VariableDeclarationGoal extends AbstractGoal {
 
-	private ASTNode expression;
+	private ASTNode declaration;
 
-	public VariableTypeGoal(IContext context, ASTNode expression) {
+	public VariableDeclarationGoal(IContext context, ASTNode declaration) {
 		super(context);
-		this.expression = expression;
+		this.declaration = declaration;
 	}
 
-	public ASTNode getExpression() {
-		return expression;
+	public ASTNode getDeclaration() {
+		return declaration;
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
+		result = prime * result + ((declaration == null) ? 0 : declaration.hashCode());
 		return result;
 	}
 
@@ -34,12 +34,12 @@ public class VariableTypeGoal extends AbstractGoal {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		VariableTypeGoal other = (VariableTypeGoal) obj;
-		if (expression == null) {
-			if (other.expression != null) {
+		VariableDeclarationGoal other = (VariableDeclarationGoal) obj;
+		if (declaration == null) {
+			if (other.declaration != null) {
 				return false;
 			}
-		} else if (!expression.equals(other.expression)) {
+		} else if (!declaration.equals(other.declaration)) {
 			return false;
 		}
 		return true;
