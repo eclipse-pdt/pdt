@@ -105,7 +105,7 @@ class BindingResolver {
 	 * </p>
 	 *
 	 * @param currentNode the new node
-	 * @return org.eclipse.jdt.internal.compiler.ast.ASTNode
+	 * @return org.eclipse.dltk.compiler.ast.ASTNode
 	 */
 	org.eclipse.dltk.ast.ASTNode getCorrespondingNode(ASTNode currentNode) {
 		return null;
@@ -480,6 +480,27 @@ class BindingResolver {
 		return null;
 	}
 
+	/**
+	 * Resolves the given name and returns the type binding for it.
+	 * <p>
+	 * The implementation of <code>Name.resolveBinding</code> forwards to
+	 * this method. How the name resolves is often a function of the context
+	 * in which the name node is embedded as well as the name itself.
+	 * </p>
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param name the name of interest
+	 * @return the binding for the name, or <code>null</code> if no binding is
+	 *    available
+	 */
+	IVariableBinding resolveVariable(Variable variable) {
+		return null;
+	}
+	
+	
 	/**
 	 * TODO : For PHP 5.3 ??? 
 	 * Resolves the given package declaration and returns the binding for it.

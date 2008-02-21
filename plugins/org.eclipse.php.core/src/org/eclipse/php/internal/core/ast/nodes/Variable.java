@@ -253,4 +253,21 @@ public class Variable extends VariableBase {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/**
+	 * Resolves and returns the binding for the field accessed by this
+	 * expression.
+	 * <p>
+	 * Note that bindings are generally unavailable unless requested when the
+	 * AST is being built.
+	 * </p>
+	 *
+	 * @return the variable binding, or <code>null</code> if the binding cannot
+	 * be resolved
+	 * @since 3.0
+	 */
+	public IVariableBinding resolveVariableBinding() {
+		return this.ast.getBindingResolver().resolveVariable(this);
+	}
+	
 }

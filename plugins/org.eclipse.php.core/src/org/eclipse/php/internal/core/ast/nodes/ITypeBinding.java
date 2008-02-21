@@ -19,8 +19,6 @@ package org.eclipse.php.internal.core.ast.nodes;
  * possibly with type parameters</li>
  * <li>an interface - represents the class declaration;
  * possibly with type parameters</li>
- * <li>an enum - represents the enum declaration (enum types do not have
- * have type parameters)</li>
  * <li>an annotation - represents the annotation type declaration
  * (annotation types do not have have type parameters)</li>
  * <li>an array type - array types are referenced but not explicitly
@@ -30,12 +28,6 @@ package org.eclipse.php.internal.core.ast.nodes;
  * <li>the null type - this is the special type of <code>null</code></li>
  * <li>a type variable - represents the declaration of a type variable;
  * possibly with type bounds</li>
- * <li>a wildcard type - represents a wild card used as a type argument in
- * a parameterized type reference</li>
- * <li>a raw type - represents a legacy non-parameterized reference to
- * a generic type</li>
- * <li>a parameterized type - represents an copy of a type declaration
- * with substitutions for its type parameters</li>
  * <li>a capture - represents a capture binding</li>
  * </ul>
  * <p>
