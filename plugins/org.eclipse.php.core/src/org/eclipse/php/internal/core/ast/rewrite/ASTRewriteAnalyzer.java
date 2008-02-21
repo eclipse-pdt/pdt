@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.rewrite;
 
+import java.awt.geom.QuadCurve2D;
 import java.io.IOException;
 import java.util.*;
 
@@ -1895,50 +1896,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(InfixExpression)
 	 */
 	public boolean visit(InfixExpression node) {
-		// TODO
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//
-		//		int pos = rewriteRequiredNode(node, InfixExpression.LEFT_OPERAND_PROPERTY);
-		//
-		//		boolean needsNewOperation = isChanged(node, InfixExpression.OPERATOR_PROPERTY);
-		//		String operation = getNewValue(node, InfixExpression.OPERATOR_PROPERTY).toString();
-		//		if (needsNewOperation) {
-		//			replaceOperation(pos, operation, getEditGroup(node, InfixExpression.OPERATOR_PROPERTY));
-		//		}
-		//
-		//		pos = rewriteRequiredNode(node, InfixExpression.RIGHT_OPERAND_PROPERTY);
-		//
-		//		RewriteEvent event = getEvent(node, InfixExpression.EXTENDED_OPERANDS_PROPERTY);
-		//		String prefixString = ' ' + operation + ' ';
-		//
-		//		if (needsNewOperation) {
-		//			int startPos = pos;
-		//			TextEditGroup editGroup = getEditGroup(node, InfixExpression.OPERATOR_PROPERTY);
-		//
-		//			if (event != null && event.getChangeKind() != RewriteEvent.UNCHANGED) {
-		//				RewriteEvent[] extendedOperands = event.getChildren();
-		//				for (int i = 0; i < extendedOperands.length; i++) {
-		//					RewriteEvent curr = extendedOperands[i];
-		//					ASTNode elem = (ASTNode) curr.getOriginalValue();
-		//					if (elem != null) {
-		//						if (curr.getChangeKind() != RewriteEvent.REPLACED) {
-		//							replaceOperation(startPos, operation, editGroup);
-		//						}
-		//						startPos = elem.getStart() + elem.getLength();
-		//					}
-		//				}
-		//			} else {
-		//				List extendedOperands = (List) getOriginalValue(node, InfixExpression.EXTENDED_OPERANDS_PROPERTY);
-		//				for (int i = 0; i < extendedOperands.size(); i++) {
-		//					ASTNode elem = (ASTNode) extendedOperands.get(i);
-		//					replaceOperation(startPos, operation, editGroup);
-		//					startPos = elem.getStart() + elem.getLength();
-		//				}
-		//			}
-		//		}
-		//		rewriteNodeList(node, InfixExpression.EXTENDED_OPERANDS_PROPERTY, pos, prefixString, prefixString);
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+
+		int pos = rewriteRequiredNode(node, InfixExpression.LEFT_OPERAND_PROPERTY);
+		boolean needsNewOperation = isChanged(node, InfixExpression.OPERATOR_PROPERTY);
+		if (needsNewOperation) {
+			String operation = InfixExpression.getOperator((Integer) getNewValue(node, InfixExpression.OPERATOR_PROPERTY));
+			replaceOperation(pos, operation, getEditGroup(node, InfixExpression.OPERATOR_PROPERTY));
+		}
+		pos = rewriteRequiredNode(node, InfixExpression.RIGHT_OPERAND_PROPERTY);
 		return false;
 	}
 
@@ -2695,7 +2663,97 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.Quote)
 	 */
 	public boolean visit(Quote quote) {
-		return rewriteRequiredNodeVisit(quote, Quote.QUOTE_TYPE_PROPERTY, Quote.EXPRESSIONS_PROPERTY);
+		// Rewrite the quoate's type
+		rewriteQuoteType(quote);
+		// Rewrite the quoate's expressions list
+		rewriteQuoteExpression(quote);
+		return false;
+	}
+
+	/**
+	 * @param quote
+	 */
+	private void rewriteQuoteExpression(Quote quote) {
+		int expressionStart = quote.getStart();
+		switch (quote.getQuoteType()) {
+			case Quote.QT_QUOTE:
+			case Quote.QT_SINGLE:
+				expressionStart++;
+				break;
+			case Quote.QT_HEREDOC:
+				// search for the first new line 
+				int quoteEnd = quote.getEnd();
+				for (; expressionStart < quoteEnd; expressionStart++) {
+					if (content[expressionStart] == '\n' || content[expressionStart] == '\r') {
+						expressionStart++;
+						if (content[expressionStart] == '\n' || content[expressionStart] == '\r') {
+							expressionStart++;
+						}
+						break;
+					}
+				}
+				break;
+
+		}
+		rewriteNodeList(quote, Quote.EXPRESSIONS_PROPERTY, expressionStart, "", "");
+		// In case that the original expressions list was empty, we should add a new line
+		List originalValue = (List) getOriginalValue(quote, Quote.EXPRESSIONS_PROPERTY);
+		List newValue = (List) getNewValue(quote, Quote.EXPRESSIONS_PROPERTY);
+		if ((originalValue == null || originalValue.size() == 0) && newValue != null && newValue.size() > 0) {
+			doTextInsert(expressionStart, "\n", getEditGroup(quote, Quote.EXPRESSIONS_PROPERTY));
+		}
+	}
+
+	/**
+	 * @param quote
+	 */
+	private void rewriteQuoteType(Quote quote) {
+		if (isChanged(quote, Quote.QUOTE_TYPE_PROPERTY)) {
+			List<Expression> expressions = quote.expressions();
+			if (expressions.size() > 0) {
+				RewriteEvent event = getEvent(quote, Quote.QUOTE_TYPE_PROPERTY);
+				if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+					TextEditGroup editGroup = getEditGroup(event);
+					int expressionsStart = expressions.get(0).getStart();
+					int expressionsEnd = expressions.get(expressions.size() - 1).getEnd();
+					int quoteStart = quote.getStart();
+					int quoteEnd = quote.getEnd();
+					// In case this is a Heredoc, we need to fix the expression end position to exclude the heredoc marker.
+					int originalType = (Integer) event.getOriginalValue();
+					if (originalType == Quote.QT_HEREDOC) {
+						for (; expressionsEnd > expressionsStart; expressionsEnd--) {
+							if (content[expressionsEnd] == '\n' || content[expressionsEnd] == '\r') {
+								// Check that we don't have a pair of \n\r before we break the loop
+								if (content[expressionsEnd - 1] == '\n' || content[expressionsEnd - 1] == '\r') {
+									expressionsEnd--;
+								}
+								break;
+							}
+						}
+					}
+
+					int newType = (Integer) event.getNewValue();
+					String newStart = "";
+					String newEnd = "";
+					switch (newType) {
+						case Quote.QT_SINGLE:
+							newStart = "'";
+							newEnd = "'";
+							break;
+						case Quote.QT_QUOTE:
+							newStart = "\"";
+							newEnd = "\"";
+							break;
+						case Quote.QT_HEREDOC:
+							newStart = "<<<Heredoc\n";
+							newEnd = "\nHeredoc;\n";
+							break;
+					}
+					doTextReplace(quoteStart, expressionsStart - quoteStart, newStart, editGroup);
+					doTextReplace(expressionsEnd, quoteEnd - expressionsEnd, newEnd, editGroup);
+				}
+			}
+		}
 	}
 
 	/* (non-Javadoc)
