@@ -35,8 +35,6 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 		InstanceContext context = (InstanceContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
 
-		List<IGoal> subGoals = new LinkedList<IGoal>();
-
 		IEvaluatedType instanceType = context.getInstanceType();
 
 		Set<DocMember> docs = new HashSet<DocMember>();
@@ -89,7 +87,7 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 			}
 		}
 
-		return subGoals.toArray(new IGoal[subGoals.size()]);
+		return IGoal.NO_GOALS;
 	}
 
 	public Object produceResult() {
