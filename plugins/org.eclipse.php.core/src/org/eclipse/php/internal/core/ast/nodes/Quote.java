@@ -23,7 +23,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * <pre>e.g.<pre> 
  * "this is $a quote",
  * "'single ${$complex->quote()}'"
- * >>>Heredoc\n  This is here documents \nHeredoc;\n 
+ * <<<Heredoc\n  This is here documents \nHeredoc;\n 
  * 
  * Note: "This is".$not." a quote node",
  *       'This is $not a quote too'
