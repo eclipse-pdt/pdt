@@ -1507,6 +1507,39 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		}
 		int startIndent = getIndent(node.getStart()) + 1;
 		rewriteParagraphList(node, Block.STATEMENTS_PROPERTY, startPos, startIndent, 0, 1);
+
+		// Check for While, For, If, ForEach, Switch
+		// In each case, the basic form of the alternate syntax is to change the opening brace to a colon (:) 
+		// and the closing brace to endif;, endwhile;, endfor;, endforeach;, or endswitch;, respectively.
+		RewriteEvent event = getEvent(node, Block.IS_CURLY_PROPERTY);
+		if (event != null) {
+			TextEditGroup editGroup = getEditGroup(event);
+			int blockStart = node.getStart();
+			int blockEnd = node.getEnd() - 1;
+			boolean shouldBeCurly = (Boolean) event.getNewValue();
+			StructuralPropertyDescriptor propertyDescriptor = node.getLocationInParent();
+			if (propertyDescriptor == IfStatement.TRUE_STATEMENT_PROPERTY) {
+				// Change the if's open block char to colon or to opening brace
+				if (shouldBeCurly) {
+					doTextReplace(blockStart, 1, "{", editGroup);
+					doTextReplace(blockEnd, 6, "}", editGroup);
+				} else {
+					doTextReplace(blockStart, 1, ":", editGroup);
+					doTextRemove(blockEnd, 1, editGroup);
+				}
+			} else if (propertyDescriptor == IfStatement.FALSE_STATEMENT_PROPERTY) {
+				// Change the if's closing block char to an endif; or to a closing brace
+				if (shouldBeCurly) {
+					doTextReplace(blockStart, 1, "{", editGroup);
+					// endif; length
+					doTextReplace(blockEnd, 6, "}", editGroup);
+				} else {
+					doTextReplace(blockStart, 1, ":", editGroup);
+					doTextReplace(blockEnd, 1, "endif;", editGroup);
+				}
+			}
+		}
+
 		return false;
 	}
 
