@@ -1623,10 +1623,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-
 		try {
 			int offset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.BREAK_ID, scanner.getPHPVersion()), node.getStart());
-			// TODO ??
 			rewriteNode(node, BreakStatement.EXPRESSION_PROPERTY, offset, ASTRewriteFormatter.SPACE); // space between break and label
 		} catch (CoreException e) {
 			handleException(e);
@@ -1697,12 +1695,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-
 		try {
 			int offset = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.CONTINUE_ID, scanner.getPHPVersion()), node.getStart());
-			// TODO ???
 			rewriteNode(node, ContinueStatement.EXPRESSION_PROPERTY, offset, ASTRewriteFormatter.SPACE); // space between continue and label
-			//			rewriteNode(node, ContinueStatement.LABEL_PROPERTY, offset, ASTRewriteFormatter.SPACE); // space between continue and label
 		} catch (CoreException e) {
 			handleException(e);
 		}
@@ -2014,6 +2009,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	public boolean visit(SwitchCase node) {
 		// dont allow switching from case to default or back. New statements should be created.
+		if (isChanged(node, SwitchCase.ACTIONS_PROPERTY)) {
+			int pos = node.getStart();
+			ASTNode value = node.getValue();
+			if (value != null) {
+				int valueEnd = value.getEnd();
+				if (valueEnd > -1) {
+					pos = valueEnd;
+				}
+			}
+			rewriteNodeList(node, SwitchCase.ACTIONS_PROPERTY, pos, "", "");
+		}
 		return rewriteRequiredNodeVisit(node, SwitchCase.VALUE_PROPERTY);
 	}
 
@@ -2046,22 +2052,21 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 
 		int pos = rewriteRequiredNode(node, SwitchStatement.EXPRESSION_PROPERTY);
 		Block body = node.getBody();
-		ChildListPropertyDescriptor property = body.STATEMENTS_PROPERTY;
-		if (getChangeKind(node, property) != RewriteEvent.UNCHANGED) {
+		ChildListPropertyDescriptor property = Block.STATEMENTS_PROPERTY;
+		if (getChangeKind(body, property) != RewriteEvent.UNCHANGED) {
 			try {
 				pos = getLeftBraceStartPosition(pos) + 1;
-				int insertIndent = getIndent(node.getStart()) + 1;
-
+				int insertIndent = getIndent(body.getStart()) + 1;
 				ParagraphListRewriter listRewriter = new SwitchListRewriter(insertIndent);
 				StringBuffer leadString = new StringBuffer();
 				leadString.append(getLineDelimiter());
 				leadString.append(createIndentString(insertIndent));
-				listRewriter.rewriteList(node, property, pos, leadString.toString());
+				listRewriter.rewriteList(body, property, pos, leadString.toString());
 			} catch (CoreException e) {
 				handleException(e);
 			}
 		} else {
-			voidVisit(node, body.STATEMENTS_PROPERTY);
+			voidVisit(body, Block.STATEMENTS_PROPERTY);
 		}
 		return false;
 	}
@@ -2345,7 +2350,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(echoStatement)) {
 			return doVisitUnchangedChildren(echoStatement);
 		}
-		rewriteNodeList(echoStatement, EchoStatement.EXPRESSIONS_PROPERTY, echoStatement.getStart(), "", "");
+		rewriteNodeList(echoStatement, EchoStatement.EXPRESSIONS_PROPERTY, echoStatement.getStart(), "", ", ");
 		return false;
 	}
 

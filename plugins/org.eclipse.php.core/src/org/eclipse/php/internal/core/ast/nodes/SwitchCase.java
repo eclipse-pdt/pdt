@@ -189,10 +189,11 @@ public class SwitchCase extends Statement {
 	 * <li>the node belongs to a different AST</li>
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
+	 * <li>the SwitchCase is the default case</li>
 	 * </ul>
 	 */
 	public void setValue(Expression value) {
-		if (value == null) {
+		if (isDefault || value == null) {
 			throw new IllegalArgumentException();
 		}
 		// an Assignment may occur inside a Expression - must check cycles

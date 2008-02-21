@@ -217,8 +217,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(BreakStatement breakStatement) {
-		result.append("break "); //$NON-NLS-1$
+		result.append("break"); //$NON-NLS-1$
 		if (breakStatement.getExpr() != null) {
+			result.append(' ');
 			breakStatement.getExpr().accept(this);
 		}
 		result.append(";\n"); //$NON-NLS-1$
@@ -369,8 +370,11 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		Expression[] expressions = echoStatement.getExpressions();
 		for (int i = 0; i < expressions.length; i++) {
 			expressions[i].accept(this);
+			if (i + 1 < expressions.length) {
+				result.append(", ");
+			}
 		}
-		result.append(";\n "); //$NON-NLS-1$
+		result.append(";\n"); //$NON-NLS-1$
 		return false;
 	}
 
@@ -779,10 +783,14 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(SwitchCase switchCase) {
-
-		if (switchCase.getValue() != null) {
-			switchCase.getValue().accept(this);
-			result.append(":\n"); //$NON-NLS-1$
+		if (switchCase.isDefault()) {
+			result.append("default:\n");
+		} else {
+			result.append("case ");
+			if (switchCase.getValue() != null) {
+				switchCase.getValue().accept(this);
+				result.append(":\n"); //$NON-NLS-1$
+			}
 		}
 		Statement[] actions = switchCase.getActions();
 		for (int i = 0; i < actions.length; i++) {
