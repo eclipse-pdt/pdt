@@ -22,7 +22,7 @@ import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.osgi.framework.BundleContext;
-
+ 
 /**
  * The main plugin class to be used in the desktop.
  */
@@ -130,5 +130,4 @@ public class PHPCorePlugin extends Plugin {
 	public static Hashtable getOptions() {
 		return ModelManager.getModelManager().getOptions();
 	}
-
 }
