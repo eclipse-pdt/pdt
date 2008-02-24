@@ -93,10 +93,15 @@
 		</exec>
 
 		<property name="source" value="${junitreport-html-file}" />
+		<property name="xml-source" value="${junitreport-xml-file}" />
 		<exec dir="." executable="rsync">
 			<arg line="-avz --password-file=$HOME/.pass --stats ${source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
 		</exec>
+		<exec dir="." executable="rsync">
+			<arg line="-avz --password-file=$HOME/.pass --stats ${xml-source} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
+		</exec>
 
+		
 		<!-- Uploads the map file (for dependencies) -->
 		<exec dir="." executable="rsync">
 			<arg line="-avz --password-file=$HOME/.pass --stats ${dependencies} apeled@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/"/>
