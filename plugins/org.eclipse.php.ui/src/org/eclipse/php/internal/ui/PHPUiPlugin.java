@@ -18,12 +18,16 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
@@ -37,6 +41,7 @@ import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -319,5 +324,33 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			fASTProvider= new ASTProvider();
 		
 		return fASTProvider;
+	}
+
+	/**
+	 * Returns the {@link ITypeRoot} wrapped by the given editor input.
+	 *
+	 * @param editorInput the editor input
+	 * @return the {@link ITypeRoot} wrapped by <code>editorInput</code> or <code>null</code> if the editor input
+	 * does not stand for a ITypeRoot
+	 * 
+	 * @since 3.4
+	 */
+	public static ISourceModule getEditorInputTypeRoot(IEditorInput editorInput) {
+		// Performance: check working copy manager first: this is faster
+		ISourceModule cu= DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput);
+		if (cu != null)
+			return cu;
+		
+		ISourceModule je= (ISourceModule) editorInput.getAdapter(ISourceModule.class);
+		return je;
+	}
+
+	/**
+	 * Returns the working copy manager for the Java UI plug-in.
+	 *
+	 * @return the working copy manager for the Java UI plug-in
+	 */
+	public static IWorkingCopyManager getWorkingCopyManager() {
+		return DLTKUIPlugin.getDefault().getWorkingCopyManager();
 	}
 }

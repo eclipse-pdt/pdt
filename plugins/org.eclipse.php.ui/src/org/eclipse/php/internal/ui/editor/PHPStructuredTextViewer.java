@@ -16,6 +16,7 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
+import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -269,7 +270,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// 248036 - disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
-
+		
 		fOutlinePresenter = phpConfiguration.getOutlinePresenter(this);
 		if (fOutlinePresenter != null)
 			fOutlinePresenter.install(this);

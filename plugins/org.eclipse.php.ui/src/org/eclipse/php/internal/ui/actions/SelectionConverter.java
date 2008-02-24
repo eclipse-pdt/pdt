@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -234,5 +236,18 @@ public class SelectionConverter {
 		return atOffset;
 
 	}
+	
+	public static IModelElement getModelInput(PHPStructuredEditor editor) {
+		return getModelInput(editor, true);
+	}
 
+	/**
+	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
+	 *
+	 */
+	private static IModelElement getModelInput(PHPStructuredEditor editor, boolean primaryOnly) {
+		if (editor == null)
+			return null;
+		return org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInputModelElement(editor, primaryOnly);
+	}
 }

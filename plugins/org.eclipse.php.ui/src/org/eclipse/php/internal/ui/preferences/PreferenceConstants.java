@@ -948,6 +948,16 @@ public class PreferenceConstants {
 	public static final String PHP_MANUAL_OPEN_IN_NEW_BROWSER = "phpManualOpenInNewBrowser"; //$NON-NLS-1$
 
 	public static final String SWITCH_BACK_TO_PHP_PERSPECTIVE = "switchBackToPHPPerspective"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that controls a reduced search menu is used in the php editors.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 * @since 3.0
+	 */
+	public static final String SEARCH_USE_REDUCED_MENU= "Search.usereducemenu"; //$NON-NLS-1$
+
 	/**
 	 * some constants for auto-ident Smart Tab
 	 */
@@ -1107,6 +1117,8 @@ public class PreferenceConstants {
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
 
+		store.setDefault(PreferenceConstants.SEARCH_USE_REDUCED_MENU, true);
+		
 		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale

@@ -40,8 +40,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
@@ -82,6 +85,7 @@ import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
@@ -101,8 +105,10 @@ import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -148,6 +154,7 @@ import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
+import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -212,6 +219,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
@@ -337,6 +345,72 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private boolean fMarkImplementors;
 
+
+	/**
+	 * Internal implementation class for a change listener.
+	 * @since 3.0
+	 */
+	protected abstract class AbstractSelectionChangedListener implements ISelectionChangedListener  {
+
+		/**
+		 * Installs this selection changed listener with the given selection provider. If
+		 * the selection provider is a post selection provider, post selection changed
+		 * events are the preferred choice, otherwise normal selection changed events
+		 * are requested.
+		 *
+		 * @param selectionProvider
+		 */
+		public void install(ISelectionProvider selectionProvider) {
+			if (selectionProvider == null)
+				return;
+
+			if (selectionProvider instanceof IPostSelectionProvider)  {
+				IPostSelectionProvider provider= (IPostSelectionProvider) selectionProvider;
+				provider.addPostSelectionChangedListener(this);
+			} else  {
+				selectionProvider.addSelectionChangedListener(this);
+			}
+		}
+
+		/**
+		 * Removes this selection changed listener from the given selection provider.
+		 *
+		 * @param selectionProvider the selection provider
+		 */
+		public void uninstall(ISelectionProvider selectionProvider) {
+			if (selectionProvider == null)
+				return;
+
+			if (selectionProvider instanceof IPostSelectionProvider)  {
+				IPostSelectionProvider provider= (IPostSelectionProvider) selectionProvider;
+				provider.removePostSelectionChangedListener(this);
+			} else  {
+				selectionProvider.removeSelectionChangedListener(this);
+			}
+		}
+	}
+
+
+	/**
+	 * Updates the Java outline page selection and this editor's range indicator.
+	 *
+	 * @since 3.0
+	 */
+	private class EditorSelectionChangedListener extends AbstractSelectionChangedListener {
+
+		/*
+		 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+		 */
+		public void selectionChanged(SelectionChangedEvent event) {
+			// XXX: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=56161
+			PHPStructuredEditor.this.selectionChanged();
+		}
+	}	
+	
+	/**
+	 * The editor selection changed listener.
+	 */
+	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 
 	private final class OutlineSelectionListener implements ISelectionChangedListener {
 		private final ConfigurableContentOutlinePage outlinePage;
@@ -772,7 +846,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 			// Add occurrence annotations
 			int length= fLocations.length;
-			Map annotationMap= new HashMap(length);
+			Map<Annotation, Position> annotationMap= new HashMap<Annotation, Position>(length);
 			for (int i= 0; i < length; i++) {
 
 				if (isCanceled(progressMonitor))
@@ -782,7 +856,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				Position position= new Position(location.getOffset(), location.getLength());
 
 				String description= location.getDescription();
-				String annotationType= (location.getFlags() == IOccurrencesFinder.F_WRITE_OCCURRENCE) ? "org.eclipse.jdt.ui.occurrences.write" : "org.eclipse.jdt.ui.occurrences"; //$NON-NLS-1$ //$NON-NLS-2$
+				String annotationType= (location.getFlags() == IOccurrencesFinder.F_WRITE_OCCURRENCE) ? "org.eclipse.php.ui.occurrences.write" : "org.eclipse.php.ui.occurrences"; //$NON-NLS-1$ //$NON-NLS-2$
 				
 				annotationMap.put(new Annotation(annotationType, false, description), position);
 			}
@@ -795,13 +869,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					((IAnnotationModelExtension)annotationModel).replaceAnnotations(fOccurrenceAnnotations, annotationMap);
 				} else {
 					removeOccurrenceAnnotations();
-					Iterator iter= annotationMap.entrySet().iterator();
-					while (iter.hasNext()) {
-						Map.Entry mapEntry= (Map.Entry)iter.next();
-						annotationModel.addAnnotation((Annotation)mapEntry.getKey(), (Position)mapEntry.getValue());
+					for (Map.Entry<Annotation, Position> entry : annotationMap.entrySet()) {
+						annotationModel.addAnnotation(entry.getKey(), entry.getValue());	
 					}
 				}
-				fOccurrenceAnnotations= (Annotation[])annotationMap.keySet().toArray(new Annotation[annotationMap.keySet().size()]);
+				fOccurrenceAnnotations= annotationMap.keySet().toArray(new Annotation[annotationMap.keySet().size()]);
 			}
 
 			return Status.OK_STATUS;
@@ -906,7 +978,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	/** Cursor dependent actions. */
-	private final List fCursorActions = new ArrayList(5);
+	private final List<String> fCursorActions = new ArrayList<String>(5);
 
 	/** The information presenter. */
 	protected InformationPresenter fInformationPresenter;
@@ -1641,11 +1713,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+		ActionGroup jsg = new PHPSearchActionGroup(this);
+
 		// We have to keep the context menu group separate to have better control over positioning
-		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg });
-
-		fActionGroups = new CompositeActionGroup(new ActionGroup[] { rg });
-
+		fActionGroups= new CompositeActionGroup(new ActionGroup[] { rg,  jsg });
+		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg, jsg });
 	}
 
 	/**
@@ -1893,6 +1965,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		});
 
+		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
+		fEditorSelectionChangedListener.install(getSelectionProvider());
 	}
 
 	private void refreshViewer() {
@@ -2161,9 +2235,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	protected void updateCursorDependentActions() {
 		if (fCursorActions != null) {
-			final Iterator e = fCursorActions.iterator();
+			final Iterator<String> e = fCursorActions.iterator();
 			while (e.hasNext())
-				updateAction((String) e.next());
+				updateAction(e.next());
 		}
 	}
 
@@ -2578,4 +2652,113 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		return part;
 	}
 	
+	/**
+	 * React to changed selection.
+	 *
+	 * @since 3.0
+	 */
+	protected void selectionChanged() {
+		if (getSelectionProvider() == null)
+			return;
+		ISourceReference element= computeHighlightRangeSourceReference();
+		// if (getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE))
+		//	  synchronizeOutlinePage(element);
+		setSelection(element, false);
+		// if (!fSelectionChangedViaGotoAnnotation)
+		// 	updateStatusLine();
+		// fSelectionChangedViaGotoAnnotation= false;
+	}
+	
+	/**
+	 * Computes and returns the source reference that includes the caret and
+	 * serves as provider for the outline page selection and the editor range
+	 * indication.
+	 * 
+	 * @return the computed source reference
+	 */
+	protected ISourceReference computeHighlightRangeSourceReference() {
+		ISourceViewer sourceViewer = getSourceViewer();
+		if (sourceViewer == null)
+			return null;
+		StyledText styledText = sourceViewer.getTextWidget();
+		if (styledText == null)
+			return null;
+		int caret = 0;
+		if (sourceViewer instanceof ITextViewerExtension5) {
+			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+			caret = extension.widgetOffset2ModelOffset(styledText
+					.getCaretOffset());
+		} else {
+			int offset = sourceViewer.getVisibleRegion().getOffset();
+			caret = offset + styledText.getCaretOffset();
+		}
+		IModelElement element = getElementAt(caret, false);
+		if (!(element instanceof ISourceReference))
+			return null;
+		return (ISourceReference) element;
+	}
+
+	protected void setSelection(ISourceReference reference, boolean moveCursor) {
+		if (getSelectionProvider() == null)
+			return;
+		ISelection selection = getSelectionProvider().getSelection();
+		if (selection instanceof TextSelection) {
+			TextSelection textSelection = (TextSelection) selection;
+			// PR 39995: [navigation] Forward history cleared after going back
+			// in navigation history:
+			// mark only in navigation history if the cursor is being moved
+			// (which it isn't if
+			// this is called from a PostSelectionEvent that should only update
+			// the magnet)
+			if (moveCursor
+					&& (textSelection.getOffset() != 0 || textSelection
+							.getLength() != 0))
+				markInNavigationHistory();
+		}
+		if (reference != null) {
+			StyledText textWidget = null;
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null)
+				textWidget = sourceViewer.getTextWidget();
+			if (textWidget == null)
+				return;
+			try {
+				ISourceRange range = null;
+				range = reference.getSourceRange();
+				if (range == null)
+					return;
+				int offset = range.getOffset();
+				int length = range.getLength();
+				if (offset < 0 || length < 0)
+					return;
+				setHighlightRange(offset, length, moveCursor);
+				if (!moveCursor)
+					return;
+				offset = -1;
+				length = -1;
+				if (reference instanceof IMember) {
+					range = ((IMember) reference).getNameRange();
+					if (range != null) {
+						offset = range.getOffset();
+						length = range.getLength();
+					}
+				}
+				if (offset > -1 && length > 0) {
+					try {
+						textWidget.setRedraw(false);
+						sourceViewer.revealRange(offset, length);
+						sourceViewer.setSelectedRange(offset, length);
+					} finally {
+						textWidget.setRedraw(true);
+					}
+					markInNavigationHistory();
+				}
+			} catch (ModelException x) {
+			} catch (IllegalArgumentException x) {
+			}
+		} else if (moveCursor) {
+			resetHighlightRange();
+			markInNavigationHistory();
+		}
+	}
 }

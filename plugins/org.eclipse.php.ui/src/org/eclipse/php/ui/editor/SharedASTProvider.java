@@ -23,7 +23,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 
 /**
  * The {@link SharedASTProvider} provides access to the {@link CompilationUnit AST root} used by
- * the current active Java editor.
+ * the current active php editor.
  * 
  * <p>For performance reasons, not more than one AST should be kept in memory at a time. Therefore, clients must
  * not keep any references to the shared AST or its nodes or bindings. 
@@ -76,7 +76,7 @@ public final class SharedASTProvider {
 	 * wants to wait until an AST is ready.
 	 * <p>
 	 * An AST will be created by this AST provider if the shared
-	 * AST is not for the given Java element.
+	 * AST is not for the given php element.
 	 * </p>
 	 */
 	public static final WAIT_FLAG WAIT_YES= new WAIT_FLAG("wait yes"); //$NON-NLS-1$
@@ -101,8 +101,8 @@ public final class SharedASTProvider {
 
 	
 	/**
-	 * Returns a compilation unit AST for the given Java element. If the element is the input of the active
-	 * Java editor, the AST is the shared AST.
+	 * Returns a compilation unit AST for the given php element. If the element is the input of the active
+	 * php editor, the AST is the shared AST.
 	 * <p>
 	 * Clients are not allowed to modify the AST and must not keep any references.
 	 * </p>
@@ -116,9 +116,9 @@ public final class SharedASTProvider {
 	 * @return
 	 * 			the AST or <code>null</code>.
 	 *         <dl><li>if {@link #WAIT_NO} has been specified <code>null</code> is returned if the element is not 
-	 *         input of the current Java editor or no AST is available</li>
+	 *         input of the current php editor or no AST is available</li>
 	 *         <li>if {@link #WAIT_ACTIVE_ONLY} has been specified <code>null</code> is returned if the element is not 
-	 *         input of the current Java editor</li>
+	 *         input of the current php editor</li>
 	 *         	<li>if {@link #WAIT_YES} has been specified either the shared AST is returned or a new AST is created.</li>
 	 *         </dl>
 	 * @throws IOException 

@@ -121,6 +121,20 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	 */
 	public static final String SHOW_IN_NAVIGATOR_VIEW = "org.eclipse.php.ui.edit.text.show.in.navigator.view"; //$NON-NLS-1$
 
+	/**
+	 * Action definition ID of the search -> occurrences in file > method exits action
+	 * (value <code>"org.eclipse.php.ui.edit.text.search.method.exits"</code>).
+	 * @since 3.4
+	 */
+	public static final String SEARCH_METHOD_EXIT_OCCURRENCES= "org.eclipse.php.ui.edit.text.search.method.exits"; //$NON-NLS-1$
+
+	/**
+	 * Action definition ID of the search -> occurrences in file quick menu action
+	 * (value <code>"org.eclipse.php.ui.edit.text.search.occurrences.in.file.quickMenu"</code>).
+	 * @since 3.1
+	 */
+	public static final String SEARCH_OCCURRENCES_IN_FILE_QUICK_MENU= "org.eclipse.php.ui.edit.text.search.occurrences.in.file.quickMenu"; //$NON-NLS-1$
+	
 	// miscellaneous
 
 	/**

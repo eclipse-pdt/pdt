@@ -18,6 +18,7 @@ import org.eclipse.dltk.internal.ui.text.IProblemRequestorExtension;
 import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -61,8 +62,11 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	 * @since 1.1
 	 */
 	private Program fAST;
+
+	private IDocument document;
 	
 	public void connect(IDocument document) {
+		this.document = document;
 	}
 	
 	public void install(IValidationContext helper) {
@@ -144,7 +148,12 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			if (isASTNeeded) {
 				ASTParser newParser = ASTParser.newParser(ASTParser.VERSION_PHP5);
 				newParser.setSource(unit.getBuffer().getCharacters());
-				return newParser.createAST(null);
+				Program createdAST = newParser.createAST(null);
+				createdAST.setSourceModule(unit);
+				if (document != null) {
+					createdAST.setLineEndTable(lineEndTable(document));
+				}
+				return createdAST;
 			}
 			
 		} catch (OperationCanceledException ex) {
@@ -165,6 +174,25 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		return null;
 	}
 	
+
+	private int[] lineEndTable(IDocument document) {
+		int numberOfLines = document.getNumberOfLines();
+		int[] result = new int[numberOfLines];
+		int i = 0;
+		while (i < numberOfLines) {
+			try {
+				String lineDelimiter = (i == numberOfLines - 1 ? "" : document.getLineDelimiter(i));				
+				IRegion lineInformation = document.getLineInformation(i);
+				result[i] = lineInformation.getOffset() + lineInformation.getLength() + lineDelimiter.length(); 
+			} catch (BadLocationException e) {
+				assert false;
+				throw new IllegalStateException("PhpReconcilingStrategy#lineEndTable(document");
+			}
+			i++;			
+		}
+		// take care for the last line
+		return result;
+	}
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
 		// install editors

@@ -10,34 +10,29 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.CatchClause;
 import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
-import org.eclipse.php.internal.core.ast.nodes.FunctionName;
-import org.eclipse.php.internal.core.ast.nodes.MethodDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.ast.nodes.Statement;
 import org.eclipse.php.internal.core.ast.nodes.ThrowStatement;
-import org.eclipse.php.internal.core.ast.nodes.TryStatement;
-import org.eclipse.php.internal.core.ast.nodes.TypeDeclaration;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.ui.corext.ASTNodes;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+/**
+ * Searches for exit execution path for a given method
+ * @author Roy, 2008
+ *
+ */
 public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFinder {
 
 	public static final String ID= "MethodExitsFinder"; //$NON-NLS-1$
 	
-	private FunctionDeclaration fMethodDeclaration;
-	private List fResult;
-	private List fCatchedExceptions;
+	private FunctionDeclaration fFunctionDeclaration;
+	private List<OccurrenceLocation> fResult;
 	private String fExitDescription;
 	private Program fASTRoot;
 
@@ -53,9 +48,9 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot= root;
 		
-		if (node instanceof ReturnStatement) {
-			fMethodDeclaration= (FunctionDeclaration)ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
-			if (fMethodDeclaration == null)
+		if (isExitExecutionPath(node)) {
+			fFunctionDeclaration= (FunctionDeclaration)ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
+			if (fFunctionDeclaration == null)
 				return "MethodExitsFinder_no_return_type_selected";
 			return null;
 			
@@ -65,8 +60,12 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 		return fExitDescription;
 	}
 
+	private final boolean isExitExecutionPath(ASTNode node) {
+		return node != null && (node.getType() == ASTNode.RETURN_STATEMENT || node.getType() == ASTNode.THROW_STATEMENT) ; 
+	}
+
 	private void performSearch() {
-		fResult= new ArrayList();
+		fResult= new ArrayList<OccurrenceLocation>();
 		markReferences();
 	}
 
@@ -75,17 +74,20 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 		if (fResult.isEmpty())
 			return null;
 
-		return (OccurrenceLocation[]) fResult.toArray(new OccurrenceLocation[fResult.size()]);
+		return fResult.toArray(new OccurrenceLocation[fResult.size()]);
 	}	
 	
 	
 	private void markReferences() {
-		fCatchedExceptions= new ArrayList();
-		boolean isVoid= true;
-		fMethodDeclaration.accept(this);
-		Block block= fMethodDeclaration.getBody();
-		if (block != null) {
-			List statements= block.statements();
+		fExitDescription= Messages.format("Exit point of ''{0}()", fFunctionDeclaration.getFunctionName().getName());
+		
+		fFunctionDeclaration.accept(this);
+
+//      TODO : check execution path to determine if the last bracket 
+// 			   is also a possible exit path
+//		Block block= fMethodDeclaration.getBody();
+//		if (block != null) {
+//			List statements= block.statements();
 //			if (statements.size() > 0) {
 //				Statement last= (Statement)statements.get(statements.size() - 1);
 //				int maxVariableId= LocalVariableIndex.perform(fMethodDeclaration);
@@ -99,53 +101,18 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 //						return;
 //				}
 //			}
-			int offset= fMethodDeclaration.getStart() + fMethodDeclaration.getLength() - 1; // closing bracket
-			fResult.add(new OccurrenceLocation(offset, 1, 0, fExitDescription));
-		}
-	}
-
-	public boolean visit(TypeDeclaration node) {
-		// Don't dive into a local type.
-		return false;
+		int offset= fFunctionDeclaration.getStart() + fFunctionDeclaration.getLength() - 1; // closing bracket
+		fResult.add(new OccurrenceLocation(offset, 1, K_EXIT_POINT_OCCURRENCE, fExitDescription));
+//		}
 	}
 
 	public boolean visit(ReturnStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), 0, fExitDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), K_EXIT_POINT_OCCURRENCE, fExitDescription));
 		return super.visit(node);
 	}
-	
-	public boolean visit(TryStatement node) {
-		int currentSize= fCatchedExceptions.size();
-		List catchClauses= node.catchClauses();
-		for (Iterator iter= catchClauses.iterator(); iter.hasNext();) {
-//			IVariableBinding variable= ((CatchClause)iter.next()).getException().resolveBinding();
-//			if (variable != null && variable.getType() != null) {
-//				fCatchedExceptions.add(variable.getType());
-//			}
-		}
-		node.getBody().accept(this);
-		int toRemove= fCatchedExceptions.size() - currentSize;
-		for(int i= toRemove; i > 0; i--) {
-			fCatchedExceptions.remove(currentSize);
-		}
-		
-		// visit catch and finally
-		for (Iterator iter= catchClauses.iterator(); iter.hasNext(); ) {
-			((CatchClause)iter.next()).accept(this);
-		}
 			
-		// return false. We have visited the body by ourselves.	
-		return false;
-	}
-	
 	public boolean visit(ThrowStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), 5, 0, fExitDescription));
-		return true;
-	}
-	
-	public boolean visit(FunctionInvocation node) {
-		FunctionName name = node.getFunctionName();
-		fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), 0, fExitDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), K_EXIT_POINT_OCCURRENCE, fExitDescription));
 		return true;
 	}
 	
@@ -154,7 +121,7 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 	}
 
 	public String getElementName() {
-		return fMethodDeclaration.getFunctionName().getName();
+		return fFunctionDeclaration.getFunctionName().getName();
 	}
 
 	public String getID() {

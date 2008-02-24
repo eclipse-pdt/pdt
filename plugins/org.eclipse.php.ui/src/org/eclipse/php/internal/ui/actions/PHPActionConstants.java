@@ -108,4 +108,11 @@ public class PHPActionConstants {
 	 */
 	public static final String SHOW_PHP_DOC = "org.eclipse.php.ui.actions.ShowPHPDoc"; //$NON-NLS-1$
 
+	/**
+	 * Search menu: name of standard method exit occurrences global action (value
+	 * <code>"org.eclipse.php.ui.actions.MethodExitOccurrences"</code>).
+	 * 
+	 * @since 3.4
+	 */
+	public static final String FIND_METHOD_EXIT_OCCURRENCES= "org.eclipse.php.ui.actions.MethodExitOccurrences"; //$NON-NLS-1$		
 }

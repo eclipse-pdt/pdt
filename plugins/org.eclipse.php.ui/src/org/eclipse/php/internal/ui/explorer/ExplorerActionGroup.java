@@ -73,7 +73,7 @@ public class ExplorerActionGroup extends CompositeActionGroup {
 		};
 
 		IWorkbenchPartSite site = fPart.getSite();
-		setGroups(new ActionGroup[] { new NewWizardsActionGroup(site), fNavigateActionGroup = new NavigateActionGroup(fPart), new PHPSearchActionGroup(), new CCPActionGroup(fPart), new ConfigureIncludePathActionGroup(fPart), fRefactorActionGroup = new RefactorActionGroup(fPart),
+		setGroups(new ActionGroup[] { new NewWizardsActionGroup(site), fNavigateActionGroup = new NavigateActionGroup(fPart), new PHPSearchActionGroup(fPart.getViewSite()), new CCPActionGroup(fPart), new ConfigureIncludePathActionGroup(fPart), fRefactorActionGroup = new RefactorActionGroup(fPart),
 			new ImportActionGroup(fPart), new BuildActionGroup(fPart), new ProjectActionGroup(fPart), fViewActionGroup = new ExplorerViewActionGroup(fPart.getRootMode(), workingSetListener, site), fCustomFiltersActionGroup = new CustomFiltersActionGroup(fPart, viewer),
 			new ConvertProjectActionGroup(fPart), });
 		fViewActionGroup.fillFilters(viewer);
