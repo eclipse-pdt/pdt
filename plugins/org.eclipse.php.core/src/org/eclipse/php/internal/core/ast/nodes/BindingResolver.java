@@ -250,10 +250,6 @@ class BindingResolver {
 	 * and qualified names that refer to constant variables (JLS2 4.12.4).
 	 * </p>
 	 * <p>
-	 * Note 1: enum constants are not considered constant expressions either.
-	 * The result is always <code>null</code> for these.
-	 * </p>
-	 * <p>
 	 * Note 2: Compile-time constant expressions cannot denote <code>null</code>.
 	 * So technically {@link NullLiteral} nodes are not constant expressions.
 	 * The result is <code>null</code> for these nonetheless.
@@ -377,9 +373,31 @@ class BindingResolver {
 	}
 
 	/**
+	 * Resolves the given constant access and returns the 
+	 * compile-time constant expression value.
+	 * <p>
+	 * The implementation of <code>StaticConstantAccess.resolveFieldBinding</code>
+	 * forwards to this method. How the field resolves is often a function of
+	 * the context in which the super field access node is embedded as well as
+	 * the super field access subtree itself.
+	 * </p>
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param fieldAccess the super field access of interest
+	 * @return the binding for the given field access, or
+	 *    <code>null</code> if no binding is available
+	 */
+	Object resolveField(StaticConstantAccess constantAccess) {
+		return null;
+	}
+	
+	/**
 	 * Resolves the given import declaration and returns the binding for it.
 	 * <p>
-	 * The implementation of <code>ImportDeclaration.resolveBinding</code>
+	 * The implementation of <code>Include.resolveBinding</code>
 	 * forwards to this method.
 	 * </p>
 	 * <p>
@@ -393,10 +411,31 @@ class BindingResolver {
 	 *         (for single-type imports), or <code>null</code> if no binding is
 	 *         available
 	 */
-	IBinding resolveImport(Include importDeclaration) {
+	ISourceBinding resolveInclude(Include includeDeclaration) {
 		return null;
 	}
 
+	/**
+	 * Resolves the given function declaration and returns the binding for it.
+	 * <p>
+	 * The implementation of <code>FunctionDeclaration.resolveBinding</code>
+	 * forwards to this method. How the method resolves is often a function of
+	 * the context in which the method declaration node is embedded as well as
+	 * the method declaration subtree itself.
+	 * </p>
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param method the method or constructor declaration of interest
+	 * @return the binding for the given method declaration, or
+	 *    <code>null</code> if no binding is available
+	 */
+	IFunctionBinding resolveFunction(FunctionDeclaration function) {
+		return null;
+	}	
+	
 	/**
 	 * Resolves the given method declaration and returns the binding for it.
 	 * <p>
@@ -435,10 +474,31 @@ class BindingResolver {
 	 * @return the binding for the given method invocation, or
 	 *    <code>null</code> if no binding is available
 	 */
-	IMethodBinding resolveMethod(MethodInvocation method) {
+	IFunctionBinding resolveFunction(FunctionInvocation function) {
 		return null;
 	}
 
+	/**
+	 * Resolves the given function invocation and returns the binding for it.
+	 * <p>
+	 * The implementation of <code>MethodInvocation.resolveMethodBinding</code>
+	 * forwards to this method. How the method resolves is often a function of
+	 * the context in which the method invocation node is embedded as well as
+	 * the method invocation subtree itself.
+	 * </p>
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param method the method invocation of interest
+	 * @return the binding for the given method invocation, or
+	 *    <code>null</code> if no binding is available
+	 */
+	IMethodBinding resolveMethod(MethodInvocation method) {
+		return null;
+	}	
+	
 	/**
 	 * Resolves the given method invocation and returns the binding for it.
 	 * <p>
@@ -463,7 +523,7 @@ class BindingResolver {
 	/**
 	 * Resolves the given name and returns the type binding for it.
 	 * <p>
-	 * The implementation of <code>Name.resolveBinding</code> forwards to
+	 * The implementation of <code>Identifier.resolveBinding</code> forwards to
 	 * this method. How the name resolves is often a function of the context
 	 * in which the name node is embedded as well as the name itself.
 	 * </p>
@@ -675,10 +735,11 @@ class BindingResolver {
 	 * @return an array type binding with the given type binding and the given
 	 * dimensions
 	 * @throws IllegalArgumentException if the type binding represents the <code>void</code> type binding
-	 */
+	 * TODO : make sure we don't need it.
 	ITypeBinding resolveArrayType(ITypeBinding typeBinding, int dimensions) {
 		return null;
 	}
+	 */
 
 	/**
 	 * Returns the compilation unit scope used by this binding resolver.

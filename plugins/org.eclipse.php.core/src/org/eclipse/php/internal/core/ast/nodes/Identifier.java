@@ -31,9 +31,8 @@ public class Identifier extends Expression {
 	/**
 	 * The "identifier" structural property of this node type.
 	 */
-	public static final SimplePropertyDescriptor NAME_PROPERTY = 
-		new SimplePropertyDescriptor(Identifier.class, "name", String.class, MANDATORY); //$NON-NLS-1$
-	
+	public static final SimplePropertyDescriptor NAME_PROPERTY = new SimplePropertyDescriptor(Identifier.class, "name", String.class, MANDATORY); //$NON-NLS-1$
+
 	/**
 	 * A list of property descriptors (element type: 
 	 * {@link StructuralPropertyDescriptor}),
@@ -45,7 +44,7 @@ public class Identifier extends Expression {
 		list.add(NAME_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(list);
 	}
-	
+
 	public Identifier(int start, int end, AST ast, String value) {
 		super(start, end, ast);
 
@@ -67,7 +66,7 @@ public class Identifier extends Expression {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 	}
@@ -108,7 +107,7 @@ public class Identifier extends Expression {
 	public String getName() {
 		return name;
 	}
-	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
@@ -127,7 +126,7 @@ public class Identifier extends Expression {
 	protected List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/* (omit javadoc for this method)
 	 * Method declared on ASTNode.
 	 */
@@ -148,9 +147,19 @@ public class Identifier extends Expression {
 		if (value == null || value.length() == 0) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		preValueChange(NAME_PROPERTY);
 		this.name = value;
 		postValueChange(NAME_PROPERTY);
+	}
+
+	/**
+	 * Resolves and returns the binding for the entity referred to by this name.	
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */
+	public final IBinding resolveBinding() {
+		return this.ast.getBindingResolver().resolveName(this);
 	}
 }

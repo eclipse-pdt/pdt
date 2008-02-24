@@ -233,5 +233,15 @@ public class Include extends Expression {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/**
+	 * Resolves and returns the binding for the source named in this include declaration.
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */	
+	public ISourceBinding resolveSourceBinding() {
+		return this.ast.getBindingResolver().resolveInclude(this);
+	}
 
 }

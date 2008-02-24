@@ -288,5 +288,5 @@ public class ClassDeclaration extends TypeDeclaration {
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
-	}
+	}	
 }

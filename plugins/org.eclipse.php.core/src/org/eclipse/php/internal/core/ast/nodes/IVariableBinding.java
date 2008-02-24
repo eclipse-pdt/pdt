@@ -14,7 +14,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 /**
  * A variable binding represents either a field of a class or interface, or 
  * a local variable declaration (including formal parameters, local variables, 
- * and exception variables).
+ * and exception variables) or a global variable.
  * <p>
  * This interface is not intended to be implemented by clients.
  * </p>
@@ -26,25 +26,14 @@ public interface IVariableBinding extends IBinding {
 	
 	/**
 	 * Returns whether this binding is for a field.
-	 * Note that this method returns <code>true</code> for constants,
-	 * including enum constants. This method returns <code>false</code>
+	 * Note that this method returns <code>true</code> for constants. 
+	 * This method returns <code>false</code>
 	 * for local variables.
 	 * 
 	 * @return <code>true</code> if this is the binding for a field,
 	 *    and <code>false</code> otherwise
 	 */ 
 	public boolean isField();
-	
-	/**
-	 * Returns whether this binding is for an enum constant.
-	 * Note that this method returns <code>false</code> for local variables
-	 * and for fields other than enum constants.
-	 * 
-	 * @return <code>true</code> if this is the binding for an enum constant,
-	 *    and <code>false</code> otherwise
-	 * @since 3.1
-	 */ 
-	public boolean isEnumConstant();
 	
 	/**
 	 * Returns whether this binding corresponds to a parameter. 
@@ -56,6 +45,24 @@ public interface IVariableBinding extends IBinding {
 	public boolean isParameter();
 
 	/**
+	 * Returns whether this binding corresponds to a global. 
+	 * 
+	 * @return <code>true</code> if this is the binding for a global,
+	 *    and <code>false</code> otherwise
+	 * @since 3.2
+	 */
+	public boolean isGlobal();
+
+	/**
+	 * Returns whether this binding corresponds to a local. 
+	 * 
+	 * @return <code>true</code> if this is the binding for a local,
+	 *    and <code>false</code> otherwise
+	 * @since 3.2
+	 */
+	public boolean isLocal();	
+	
+	/**
 	 * Returns the name of the field or local variable declared in this binding.
 	 * The name is always a simple identifier.
 	 * 
@@ -63,20 +70,6 @@ public interface IVariableBinding extends IBinding {
 	 */
 	public String getName();
 	
-	/**
-	 * Returns the type binding representing the class or interface
-	 * that declares this field.
-	 * <p>
-	 * The declaring class of a field is the class or interface of which it is
-	 * a member. Local variables have no declaring class. The field length of an 
-	 * array type has no declaring class.
-	 * </p>
-	 * 
-	 * @return the binding of the class or interface that declares this field,
-	 *   or <code>null</code> if none
-	 */
-	public ITypeBinding getDeclaringClass();
-
 	/**
 	 * Returns the binding for the type of this field or local variable.
 	 * 
@@ -93,14 +86,8 @@ public interface IVariableBinding extends IBinding {
 	 * declared before var2.
 	 * </p>
 	 * <p>
-	 * <b>Local variables outside methods:</b> Local variables declared in a
-	 * type's static initializers (or initializer expressions of static fields)
-	 * are assigned ascending ids in normal code reading order. Local variables
-	 * declared in a type's instance initializers (or initializer expressions
-	 * of non-static fields) are assigned ascending ids in normal code reading
-	 * order. These ids are useful when checking definite assignment for
-	 * static initializers (JLS 16.7) and instance initializers (JLS 16.8), 
-	 * respectively.
+	 * <b>Globals:</b> Global variables declared in a program's scope 
+	 * are assigned ascending ids in normal code reading order. 
 	 * </p>
 	 * <p>
 	 * <b>Fields:</b> Fields declared as members of a type are assigned 
@@ -145,5 +132,19 @@ public interface IVariableBinding extends IBinding {
 	 * local variable, or <code>null</code> if none
 	 * @since 3.1
 	 */
-	public IMethodBinding getDeclaringMethod();
+	public IFunctionBinding getDeclaringFunction();
+	
+	/**
+	 * Returns the type binding representing the class or interface
+	 * that declares this field.
+	 * <p>
+	 * The declaring class of a field is the class or interface of which it is
+	 * a member. Local variables have no declaring class. The field length of an 
+	 * array type has no declaring class.
+	 * </p>
+	 * 
+	 * @return the binding of the class or interface that declares this field,
+	 *   or <code>null</code> if none
+	 */
+	public ITypeBinding getDeclaringClass();	
 }

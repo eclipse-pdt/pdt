@@ -18,7 +18,7 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a class instanciation.
+ * Represents a class instantiation.
  * This class holds the class name as an expression and
  * array of constructor parameters
  * <pre>e.g.<pre> new MyClass(),
@@ -204,6 +204,17 @@ public class ClassInstanceCreation extends Expression {
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+	
+	/**
+	 * Resolves and returns the binding for the constructor invoked by this
+	 * expression.
+	 *
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */	
+	public IMethodBinding resolveConstructorBinding() {
+		return this.ast.getBindingResolver().resolveConstructor(this);
 	}
 
 }

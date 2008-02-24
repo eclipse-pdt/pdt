@@ -206,4 +206,14 @@ public class FunctionInvocation extends VariableBase {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/**
+	 * Resolves and returns the binding for this function 
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */	
+	public IFunctionBinding resolveFunctionBinding() {
+		return this.ast.getBindingResolver().resolveFunction(this);
+	}
 }

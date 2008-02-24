@@ -190,4 +190,14 @@ public class FieldsDeclaration extends BodyDeclaration {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/**
+	 * Resolves and returns the binding for this field	
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */
+	public final IVariableBinding resolveTypeBinding() {
+		return this.ast.getBindingResolver().resolveVariable(this);
+	}
 }

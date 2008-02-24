@@ -168,4 +168,14 @@ public class MethodDeclaration extends BodyDeclaration {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/**
+	 * Resolves and returns the binding for this method 
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */	
+	public IMethodBinding resolveMethodBinding() {
+		return this.ast.getBindingResolver().resolveMethod(this);
+	}
 }

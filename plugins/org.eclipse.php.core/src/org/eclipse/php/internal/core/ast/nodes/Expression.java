@@ -82,4 +82,24 @@ public abstract class Expression extends ASTNode {
 		
 		return false;
 	}
+	
+	public boolean isNull() {
+		if (getType() == ASTNode.SCALAR) {
+			final Scalar scalar = (Scalar) this;
+			if (scalar.getScalarType() == Scalar.TYPE_STRING && scalar.getStringValue().equalsIgnoreCase("null")) { //$NON-NLS-1$
+				return true;
+			}
+		}
+		return false;
+	}	
+	
+	/**
+	 * Resolves and returns the binding for the type of this expression.
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved	 
+	 */
+	public ITypeBinding resolveExpressionBinding() {
+		return this.ast.getBindingResolver().resolveExpressionType(this);
+	}
 }

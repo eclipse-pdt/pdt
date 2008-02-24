@@ -389,4 +389,14 @@ public class FormalParameter extends ASTNode {
 		final FormalParameter result = new FormalParameter(this.getStart(), this.getEnd(), target, type, name, value, isMandatory);
 		return result;
 	}
+	
+	/**
+	 * Resolves and returns the binding for this formal parameter	
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */
+	public final ITypeBinding resolveTypeBinding() {
+		return this.ast.getBindingResolver().resolveTypeParameter(this);
+	}
 }

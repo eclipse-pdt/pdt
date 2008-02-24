@@ -179,4 +179,15 @@ public class StaticConstantAccess extends StaticDispatch {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
+	
+	/**
+	 * Resolves and returns the binding for the static constant accessed by this
+	 * expression.
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */		 
+	public Object resolveFieldBinding() {
+		return this.ast.getBindingResolver().resolveField(this);
+	}
 }
