@@ -1936,8 +1936,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			// position after first semicolon
 			Symbol semicolonSym = SymbolsProvider.getSymbol(SymbolsProvider.SEMICOLON_ID, scanner.getPHPVersion());
 			pos = getScanner().getTokenEndOffset(semicolonSym, pos);
-
-			pos = rewriteNode(node, ForStatement.EXPRESSION_PROPERTY, pos, ASTRewriteFormatter.NONE);
+			
+			// FIXME - Should be fixed once the ForStatement's EXPRESSION_PROPERTY will be fixed to to a single expression.
+			// (Should be rewriteOptionalExpression)
+			pos = rewriteNodeList(node, ForStatement.EXPRESSION_PROPERTY, pos, "", "");
 
 			if (isChanged(node, ForStatement.UPDATERS_PROPERTY)) {
 				int startOffset = getScanner().getTokenEndOffset(semicolonSym, pos);
