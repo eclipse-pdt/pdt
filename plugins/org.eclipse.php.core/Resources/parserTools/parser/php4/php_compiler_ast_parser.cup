@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.3 2008/02/20 17:11:24 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.4 2008/02/25 16:55:07 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -178,7 +178,7 @@ terminal T_QUATE,T_BACKQUATE,T_SINGLE_QUATE;
 
 /* Non terminals */
 
-non terminal Program thestart;
+non terminal ModuleDeclaration thestart;
 non terminal List top_statement_list;
 non terminal Statement top_statement;
 non terminal Statement statement;
@@ -286,9 +286,10 @@ precedence right T_STATIC;
 thestart ::=
 top_statement_list:statementList
 {:
-	PhpAstLexer4 phpAstLexer4 = (PhpAstLexer4) parser.getScanner();
-	List commentList = phpAstLexer4.getCommentList();
-	Program program = new Program(statementListleft, statementListright, statementList, commentList);
+	ModuleDeclaration program = new ModuleDeclaration(statementListright - statementListleft);
+	program.setStatements(statementList);
+	program.setStart(statementListleft);
+	program.setEnd(statementListright);
 	RESULT = program; 
 :}
 ;
