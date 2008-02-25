@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
@@ -209,9 +210,28 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		}
 
 		if (block.isCurly()) {
-			result.append("\n}\n"); //$NON-NLS-1$
+			result.append("}\n"); //$NON-NLS-1$
 		} else {
-			result.append("end;\n"); //$NON-NLS-1$
+			StructuralPropertyDescriptor locationInParent = block.getLocationInParent();
+			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
+				if (((IfStatement)block.getParent()).getFalseStatement() == null) {
+					// End the if statement
+					result.append("endif;\n"); //$NON-NLS-1$
+				} else {
+					// Just add a new line char
+					result.append("\n"); //$NON-NLS-1$
+				}
+			} else if (locationInParent == IfStatement.FALSE_STATEMENT_PROPERTY) {
+				result.append("endif;\n"); //$NON-NLS-1$
+			} else if (locationInParent == WhileStatement.BODY_PROPERTY) {
+				result.append("endwhile;\n"); //$NON-NLS-1$
+			} else if (locationInParent == ForStatement.BODY_PROPERTY) {
+				result.append("endfor;\n"); //$NON-NLS-1$
+			} else if (locationInParent == ForEachStatement.STATEMENT_PROPERTY) {
+				result.append("endforeach;\n"); //$NON-NLS-1$
+			} else if (locationInParent == SwitchStatement.BODY_PROPERTY) {
+				result.append("endswitch;\n"); //$NON-NLS-1$
+			}
 		}
 		return false;
 	}
