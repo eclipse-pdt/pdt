@@ -1497,16 +1497,9 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-		int startPos = node.getStart();
-		if (!isCollapsed(node)) {
-			try {
-				startPos = getLeftBraceStartPosition(node.getStart()) + 1;
-			} catch (CoreException e) {
-				handleException(e);
-			}
-		}
+		int blockStart = node.getStart();
 		int startIndent = getIndent(node.getStart()) + 1;
-		rewriteParagraphList(node, Block.STATEMENTS_PROPERTY, startPos, startIndent, 0, 1);
+		rewriteParagraphList(node, Block.STATEMENTS_PROPERTY, blockStart + 1, startIndent, 0, 1);
 
 		// Check for While, For, If, ForEach, Switch
 		// In each case, the basic form of the alternate syntax is to change the opening brace to a colon (:) 
@@ -1514,33 +1507,135 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		RewriteEvent event = getEvent(node, Block.IS_CURLY_PROPERTY);
 		if (event != null) {
 			TextEditGroup editGroup = getEditGroup(event);
-			int blockStart = node.getStart();
-			int blockEnd = node.getEnd() - 1;
 			boolean shouldBeCurly = (Boolean) event.getNewValue();
 			StructuralPropertyDescriptor propertyDescriptor = node.getLocationInParent();
-			if (propertyDescriptor == IfStatement.TRUE_STATEMENT_PROPERTY) {
-				// Change the if's open block char to colon or to opening brace
-				if (shouldBeCurly) {
-					doTextReplace(blockStart, 1, "{", editGroup);
-					doTextReplace(blockEnd, 6, "}", editGroup);
-				} else {
-					doTextReplace(blockStart, 1, ":", editGroup);
-					doTextRemove(blockEnd, 1, editGroup);
-				}
-			} else if (propertyDescriptor == IfStatement.FALSE_STATEMENT_PROPERTY) {
-				// Change the if's closing block char to an endif; or to a closing brace
-				if (shouldBeCurly) {
-					doTextReplace(blockStart, 1, "{", editGroup);
-					// endif; length
-					doTextReplace(blockEnd, 6, "}", editGroup);
-				} else {
-					doTextReplace(blockStart, 1, ":", editGroup);
-					doTextReplace(blockEnd, 1, "endif;", editGroup);
-				}
+			if (propertyDescriptor == IfStatement.TRUE_STATEMENT_PROPERTY || propertyDescriptor == IfStatement.FALSE_STATEMENT_PROPERTY) {
+				rewriteIfBlocks(node, editGroup, shouldBeCurly);
+			} else if (propertyDescriptor == WhileStatement.BODY_PROPERTY) {
+				Symbol symbol = SymbolsProvider.getSymbol(SymbolsProvider.END_WHILE_ID, scanner.getPHPVersion());
+				rewriteBlock(node, editGroup, shouldBeCurly, "endwhile", symbol);
+			} else if (propertyDescriptor == ForStatement.BODY_PROPERTY) {
+				Symbol symbol = SymbolsProvider.getSymbol(SymbolsProvider.END_FOR_ID, scanner.getPHPVersion());
+				rewriteBlock(node, editGroup, shouldBeCurly, "endfor", symbol);
+			} else if (propertyDescriptor == ForEachStatement.STATEMENT_PROPERTY) {
+				Symbol symbol = SymbolsProvider.getSymbol(SymbolsProvider.END_FOREACH_ID, scanner.getPHPVersion());
+				rewriteBlock(node, editGroup, shouldBeCurly, "endforeach", symbol);
+			} else if (propertyDescriptor == SwitchStatement.BODY_PROPERTY) {
+				Symbol symbol = SymbolsProvider.getSymbol(SymbolsProvider.END_SWITCH_ID, scanner.getPHPVersion());
+				rewriteBlock(node, editGroup, shouldBeCurly, "endswitch", symbol);
 			}
 		}
 
 		return false;
+	}
+
+	/*
+	 * Rewrite the If statement blocks from curly to 'Alternative syntax' blocks.
+	 * 
+	 * @param node
+	 * @param editGroup
+	 * @param shouldBeCurly
+	 */
+	private void rewriteIfBlocks(Block node, TextEditGroup editGroup, boolean shouldBeCurly) {
+		int blockStart = node.getStart();
+		int blockEnd = node.getEnd() - 1;
+		StructuralPropertyDescriptor propertyDescriptor = node.getLocationInParent();
+		IfStatement ifStatement = (IfStatement) node.getParent();
+		if (propertyDescriptor == IfStatement.TRUE_STATEMENT_PROPERTY) {
+			if (shouldBeCurly) {
+				// Change the if's open block char to the opening brace char
+				doTextReplace(blockStart, 1, "{", editGroup);
+				// Change the closing mark to be a closing brace
+
+				doTextInsert(blockEnd + 1, "\n}", editGroup);
+				// remove the endif token at this stage
+				Symbol endIfSymbol = SymbolsProvider.getSymbol(SymbolsProvider.END_IF_ID, scanner.getPHPVersion());
+				try {
+					int endifPos = getScanner().getTokenStartOffset(endIfSymbol, blockEnd);
+					// search for the semicolon that might appear after that token
+					int semicolonPos = scanToSemicolon(endifPos + 5);
+					doTextRemove(endifPos, semicolonPos - endifPos + 1, editGroup);
+				} catch (Exception e) {
+					// Should not happen, since the if should have an endif
+					handleException(e);
+				}
+			} else {
+				doTextReplace(blockStart, 1, ":", editGroup);
+				// In case that we don't have a false statement, add the endif word
+				if (ifStatement.getFalseStatement() == null) {
+					doTextReplace(blockEnd, 1, "endif;", editGroup);
+				} else {
+					doTextRemove(blockEnd, 1, editGroup);
+				}
+			}
+		} else if (propertyDescriptor == IfStatement.FALSE_STATEMENT_PROPERTY) {
+			// Change the if's closing block char to an endif; or to a closing brace
+			if (shouldBeCurly) {
+				// replace the opening colon char to a brace char
+				doTextReplace(blockStart, 1, "{", editGroup);
+				// close the block with a brace
+				doTextInsert(blockEnd + 1, "\n}", editGroup);
+			} else {
+				// TODO - Check when we have no braces in the if-statement
+				doTextReplace(blockStart, 1, ":", editGroup);
+				// End the if statement
+				doTextReplace(blockEnd, 1, "endif;", editGroup);
+			}
+		}
+	}
+
+	/*
+	 * Rewrite a statement blocks from curly to 'Alternative syntax' blocks.
+	 * 
+	 * @param node
+	 * @param editGroup
+	 * @param shouldBeCurly
+	 * @param keyword The block closing keyword (e.g. endif, endwhile etc.)
+	 * @param keywordSymbol The keyword Symbol
+	 */
+	private void rewriteBlock(Block node, TextEditGroup editGroup, boolean shouldBeCurly, String keyword, Symbol keywordSymbol) {
+		int blockStart = node.getStart();
+		int blockEnd = node.getEnd() - 1;
+		if (shouldBeCurly) {
+			// Change the if's open block char to the opening brace char
+			doTextReplace(blockStart, 1, "{", editGroup);
+			// Change the closing mark to be a closing brace
+			doTextInsert(blockEnd + 1, "\n}", editGroup);
+			try {
+				// We scan for the Block end position by looking for the symbol's start offset.
+				// The search is done a bit before the block's end in order to cover the 'SwitchStatement' that is 
+				// marking the end of the Block after the 'endswitch' keyword (unlike all the other types of blocks).
+				int endBlockPos = getScanner().getTokenStartOffset(keywordSymbol, blockEnd - keyword.length());
+				// search for the semicolon that might appear after that token
+				int semicolonPos = scanToSemicolon(endBlockPos + keyword.length());
+				doTextRemove(endBlockPos, semicolonPos - endBlockPos + 1, editGroup);
+			} catch (Exception e) {
+				// Should not happen, since the if should have the keyword
+				handleException(e);
+			}
+		} else {
+			doTextReplace(blockStart, 1, ":", editGroup);
+			// In case that we don't have a false statement, add the keyword
+			doTextReplace(blockEnd, 1, keyword + ';', editGroup);
+		}
+	}
+
+	/*
+	 * Scan to the first semicolon that appears in the content after the given position.
+	 * The scan skip all the whitespace characters and tries to locate the first non-whitespace that is a semicolon (;).
+	 * The return value is the semicolon index.
+	 * The given index is returned when no semicolon was found right after the whitespaces. 
+	 */
+	private int scanToSemicolon(int startIndex) {
+		for (int i = startIndex; i < content.length; i++) {
+			if (content[i] == ';') {
+				return i;
+			}
+			if (content[i] != ' ' && content[i] != '\t' && content[i] != '\n' && content[i] != '\r') {
+				return startIndex;
+			}
+		}
+		return startIndex;
 	}
 
 	/* (non-Javadoc)
@@ -2392,7 +2487,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(ForEachStatement forEachStatement) {
-		// TODO Auto-generated method stub (complex...)
+		if (!hasChildrenChanges(forEachStatement)) {
+			return doVisitUnchangedChildren(forEachStatement);
+		}
+		rewriteRequiredNodeVisit(forEachStatement, ForEachStatement.EXPRESSION_PROPERTY, ForEachStatement.KEY_PROPERTY, ForEachStatement.VALUE_PROPERTY, ForEachStatement.STATEMENT_PROPERTY);
 		return false;
 	}
 
