@@ -3,7 +3,6 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
@@ -81,11 +80,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(Comment s) throws Exception {
-		endvisitGeneral(s);
-		return false;
-	}
-
-	public boolean endvisit(CommentsStatement s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -219,7 +213,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		endvisitGeneral(s);
 		return false;
 	}
-	
+
 	public boolean endvisit(PHPFieldDeclaration s) throws Exception {
 		endvisitGeneral(s);
 		return false;
@@ -236,11 +230,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(PrefixExpression s) throws Exception {
-		endvisitGeneral(s);
-		return false;
-	}
-
-	public boolean endvisit(Program s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -411,10 +400,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
-	public boolean visit(CommentsStatement s) throws Exception {
-		return visitGeneral(s);
-	}
-
 	public boolean visit(ConditionalExpression s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -511,11 +496,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	public boolean visit(PHPCallExpression s) throws Exception {
 		return visitGeneral(s);
 	}
-	
+
 	public boolean visit(PHPDocBlock s) throws Exception {
 		return visitGeneral(s);
 	}
-	
+
 	public boolean visit(PHPDocTag s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -533,10 +518,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(PrefixExpression s) throws Exception {
-		return visitGeneral(s);
-	}
-
-	public boolean visit(Program s) throws Exception {
 		return visitGeneral(s);
 	}
 
@@ -671,9 +652,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(Comment.class)) {
 			return endvisit((Comment) s);
 		}
-		if (s.getClass().equals(CommentsStatement.class)) {
-			return endvisit((CommentsStatement) s);
-		}
 		if (s.getClass().equals(ConditionalExpression.class)) {
 			return endvisit((ConditionalExpression) s);
 		}
@@ -767,9 +745,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(PrefixExpression.class)) {
 			return endvisit((PrefixExpression) s);
 		}
-		if (s.getClass().equals(Program.class)) {
-			return endvisit((Program) s);
-		}
 		if (s.getClass().equals(Quote.class)) {
 			return endvisit((Quote) s);
 		}
@@ -847,13 +822,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ModuleDeclaration s) throws Exception {
-		if (s instanceof Program) {
-			return endvisit((Program) s);
-		}
-		return true;
-	}
-
 	public boolean endvisit(Statement s) throws Exception {
 		return endvisit((ASTNode)s);
 	}
@@ -910,9 +878,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s.getClass().equals(Comment.class)) {
 			return visit((Comment) s);
-		}
-		if (s.getClass().equals(CommentsStatement.class)) {
-			return visit((CommentsStatement) s);
 		}
 		if (s.getClass().equals(ConditionalExpression.class)) {
 			return visit((ConditionalExpression) s);
@@ -1007,9 +972,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(PrefixExpression.class)) {
 			return visit((PrefixExpression) s);
 		}
-		if (s.getClass().equals(Program.class)) {
-			return visit((Program) s);
-		}
 		if (s.getClass().equals(Quote.class)) {
 			return visit((Quote) s);
 		}
@@ -1083,13 +1045,6 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	public boolean visit(MethodDeclaration s) throws Exception {
 		if (s instanceof PHPMethodDeclaration) {
 			return visit((PHPMethodDeclaration) s);
-		}
-		return true;
-	}
-
-	public boolean visit(ModuleDeclaration s) throws Exception {
-		if (s instanceof Program) {
-			return visit((Program) s);
 		}
 		return true;
 	}

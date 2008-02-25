@@ -4,7 +4,6 @@ import java.io.Reader;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Program;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 
 public class PHPSourceParser5 extends AbstractPHPSourceParser {
@@ -15,7 +14,7 @@ public class PHPSourceParser5 extends AbstractPHPSourceParser {
 		parser.setScanner(lexer);
 
 		Symbol symbol = parser.parse();
-		Program program = (Program) symbol.value;
+		ModuleDeclaration program = (ModuleDeclaration) symbol.value;
 
 		return program;
 	}

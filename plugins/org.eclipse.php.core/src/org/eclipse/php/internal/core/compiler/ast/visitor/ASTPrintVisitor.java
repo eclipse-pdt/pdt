@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.LinkedHashMap;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -154,11 +155,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean endvisit(Comment s) throws Exception {
 		xmlWriter.endTag("Comment");
-		return true;
-	}
-
-	public boolean endvisit(CommentsStatement s) throws Exception {
-		xmlWriter.endTag("CommentsStatement");
 		return true;
 	}
 
@@ -312,11 +308,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(Program s) throws Exception {
-		xmlWriter.endTag("Program");
-		return true;
-	}
-
 	public boolean endvisit(Quote s) throws Exception {
 		xmlWriter.endTag("Quote");
 		return true;
@@ -427,6 +418,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
+	public boolean endvisit(ModuleDeclaration s) throws Exception {
+		xmlWriter.endTag("ModuleDeclaration");
+		return true;
+	}
+
 	public boolean visit(ArrayCreation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ArrayCreation", parameters);
@@ -514,12 +510,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", Comment.getCommentType(s.getCommentType()));
 		xmlWriter.startTag("Comment", parameters);
-		return true;
-	}
-
-	public boolean visit(CommentsStatement s) throws Exception {
-		Map<String, String> parameters = createInitialParameters(s);
-		xmlWriter.startTag("CommentsStatement", parameters);
 		return true;
 	}
 
@@ -767,12 +757,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean visit(Program s) throws Exception {
-		Map<String, String> parameters = createInitialParameters(s);
-		xmlWriter.startTag("Program", parameters);
-		return true;
-	}
-
 	public boolean visit(Quote s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("type", Quote.getType(s.getQuoteType()));
@@ -909,6 +893,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(WhileStatement s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("WhileStatement", parameters);
+		return true;
+	}
+
+	public boolean visit(ModuleDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("ModuleDeclaration", parameters);
 		return true;
 	}
 }
