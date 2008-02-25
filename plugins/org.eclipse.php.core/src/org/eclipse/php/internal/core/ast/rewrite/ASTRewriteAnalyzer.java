@@ -14,11 +14,14 @@ import java.awt.geom.QuadCurve2D;
 import java.io.IOException;
 import java.util.*;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
+import org.eclipse.jdt.internal.compiler.ast.ForeachStatement;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -1936,7 +1939,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			// position after first semicolon
 			Symbol semicolonSym = SymbolsProvider.getSymbol(SymbolsProvider.SEMICOLON_ID, scanner.getPHPVersion());
 			pos = getScanner().getTokenEndOffset(semicolonSym, pos);
-			
+
 			// FIXME - Should be fixed once the ForStatement's EXPRESSION_PROPERTY will be fixed to to a single expression.
 			// (Should be rewriteOptionalExpression)
 			pos = rewriteNodeList(node, ForStatement.EXPRESSION_PROPERTY, pos, "", "");
@@ -2288,28 +2291,49 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	private void rewriteArrayElementKey(ArrayElement arrayElement) {
 		RewriteEvent event = getEvent(arrayElement, ArrayElement.KEY_PROPERTY);
 		if (event != null) {
-			int kind = event.getChangeKind();
-			TextEditGroup editGroup = getEditGroup(event);
-			switch (kind) {
-				case RewriteEvent.INSERTED:
-					// We should insert the key and the => string
-					Expression newValue = (Expression) event.getNewValue();
-					int start = arrayElement.getStart();
-					doTextInsert(start, newValue, 0, false, editGroup);
-					doTextInsert(start, "=>", editGroup);
-					break;
-				case RewriteEvent.REMOVED:
-					Expression removedExpression = (Expression) event.getOriginalValue();
-					int deleteEndPos = arrayElement.getValue().getStart();
-					int deleteStartPos = removedExpression.getStart();
-					doTextRemove(deleteStartPos, deleteEndPos - deleteStartPos, editGroup);
-					break;
-				case RewriteEvent.REPLACED:
-					rewriteRequiredNode(arrayElement, ArrayElement.KEY_PROPERTY);
-					break;
-			}
+			rewriteKeyValue(arrayElement, event);
 		}
 
+	}
+
+	/*
+	 * Rewrite a key=>value pair
+	 * @param arrayElement
+	 * @param event
+	 */
+	private void rewriteKeyValue(ASTNode node, RewriteEvent event) {
+		int kind = event.getChangeKind();
+		TextEditGroup editGroup = getEditGroup(event);
+		switch (kind) {
+			case RewriteEvent.INSERTED:
+				// We should insert the key and the => string
+				Expression newValue = (Expression) event.getNewValue();
+				int start = node.getStart();
+				if (node instanceof ForEachStatement) {
+					start = ((ForEachStatement) node).getValue().getStart();
+				}
+				doTextInsert(start, newValue, 0, false, editGroup);
+				doTextInsert(start, "=>", editGroup);
+				break;
+			case RewriteEvent.REMOVED:
+				Expression removedExpression = (Expression) event.getOriginalValue();
+				int deleteEndPos = -1;
+				if (node instanceof ArrayElement) {
+					deleteEndPos = ((ArrayElement) node).getValue().getStart();
+				} else if (node instanceof ForEachStatement) {
+					deleteEndPos = ((ForEachStatement) node).getValue().getStart();
+				}
+				int deleteStartPos = removedExpression.getStart();
+				doTextRemove(deleteStartPos, deleteEndPos - deleteStartPos, editGroup);
+				break;
+			case RewriteEvent.REPLACED:
+				if (node instanceof ArrayElement) {
+					rewriteRequiredNode(node, ArrayElement.KEY_PROPERTY);
+				} else if (node instanceof ForEachStatement) {
+					rewriteRequiredNode(node, ForEachStatement.KEY_PROPERTY);
+				}
+				break;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -2492,7 +2516,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(forEachStatement)) {
 			return doVisitUnchangedChildren(forEachStatement);
 		}
-		rewriteRequiredNodeVisit(forEachStatement, ForEachStatement.EXPRESSION_PROPERTY, ForEachStatement.KEY_PROPERTY, ForEachStatement.VALUE_PROPERTY, ForEachStatement.STATEMENT_PROPERTY);
+		RewriteEvent event = getEvent(forEachStatement, ForEachStatement.KEY_PROPERTY);
+		if (event != null) {
+			rewriteKeyValue(forEachStatement, event);
+		}
+		rewriteRequiredNodeVisit(forEachStatement, ForEachStatement.EXPRESSION_PROPERTY, ForEachStatement.VALUE_PROPERTY, ForEachStatement.STATEMENT_PROPERTY);
 		return false;
 	}
 
