@@ -131,6 +131,7 @@ if [ ! -r ../org.eclipse.releng.basebuilder ]
     mv org.eclipse.releng.basebuilder ../
 fi
 
+export BASEARCH=ppc
 $vm/bin/java -jar ../org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -application org.eclipse.ant.core.antRunner -f buildAll.xml $target $logger $bootclasspath -DbuildingOSGi=true -DmapVersionTag=$mapVersionTag $cvsuser $buildTypeArg $notest $buildID $rsyncPWFile $ftpUser $ftpPassword $tag $versionQualifier -Djava-home=$vm $platformParams
 
 #rm -rf ../org.eclipse.releng.basebuilder
