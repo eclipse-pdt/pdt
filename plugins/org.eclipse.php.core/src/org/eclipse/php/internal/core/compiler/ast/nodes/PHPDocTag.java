@@ -30,15 +30,16 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				}
 			} else {
 				if (parts.length >= 2) {
-					references = new SimpleReference[2];
 					int firstWordPosition = start + value.indexOf(parts[0]);
 					int secondWordPosition = start + value.indexOf(parts[1]);
 					if (parts[0].charAt(0) == '$') {
+						references = new SimpleReference[2];
 						references[0] = new VariableReference(firstWordPosition, firstWordPosition + parts[0].length(), parts[0]);
 						references[1] = new TypeReference(secondWordPosition, secondWordPosition + parts[1].length(), parts[1]);
 					} else if (parts[1].charAt(0) == '$') {
-						references[0] = new VariableReference(firstWordPosition, firstWordPosition + parts[0].length(), parts[0]);
-						references[1] = new TypeReference(secondWordPosition, secondWordPosition + parts[1].length(), parts[1]);
+						references = new SimpleReference[2];
+						references[0] = new VariableReference(firstWordPosition, firstWordPosition + parts[1].length(), parts[1]);
+						references[1] = new TypeReference(secondWordPosition, secondWordPosition + parts[0].length(), parts[0]);
 					}
 				}
 			}
