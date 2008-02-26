@@ -472,7 +472,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		Expression[] increasements = forStatement.getIncreasements();
 		for (int i = 0; i < initializations.length; i++) {
 			if (!isFirst) {
-				result.append(","); //$NON-NLS-1$
+				result.append(", "); //$NON-NLS-1$
 			}
 			initializations[i].accept(this);
 			isFirst = false;
@@ -481,7 +481,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(" ; "); //$NON-NLS-1$
 		for (int i = 0; i < conditions.length; i++) {
 			if (!isFirst) {
-				result.append(","); //$NON-NLS-1$
+				result.append(", "); //$NON-NLS-1$
 			}
 			conditions[i].accept(this);
 			isFirst = false;
@@ -490,7 +490,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(" ; "); //$NON-NLS-1$
 		for (int i = 0; i < increasements.length; i++) {
 			if (!isFirst) {
-				result.append(","); //$NON-NLS-1$
+				result.append(", "); //$NON-NLS-1$
 			}
 			increasements[i].accept(this);
 			isFirst = false;
