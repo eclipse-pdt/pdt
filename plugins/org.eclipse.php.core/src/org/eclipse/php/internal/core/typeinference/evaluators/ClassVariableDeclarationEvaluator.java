@@ -65,7 +65,7 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
 			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 				if (type instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) instanceType;
+					PHPClassType classType = (PHPClassType) type;
 					IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
 					for (IModelElement e : elements) {
 						types.add((IType) e);

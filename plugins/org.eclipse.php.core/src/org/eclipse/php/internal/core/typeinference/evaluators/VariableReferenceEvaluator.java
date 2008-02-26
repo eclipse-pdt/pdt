@@ -182,10 +182,12 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				}
 			}
 			else if (s instanceof FormalParameter) {
-				// declarations list should be empty!
-				assert declarations.isEmpty();
-				declarations.addLast(s);
-				return visitGeneral(s);
+				FormalParameter parameter = (FormalParameter) s;
+				if (parameter.getName().equals(variableName)) {
+					declarations.clear(); // declarations list should be empty, but we still remove everything (maybe user typed the same argument twice)
+					declarations.addLast(s);
+					return visitGeneral(s);
+				}
 			}
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {

@@ -49,7 +49,7 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
 			for (IEvaluatedType doc : ambiguousType.getPossibleTypes()) {
 				if (doc instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) instanceType;
+					PHPClassType classType = (PHPClassType) doc;
 					IModelElement[] elements = PHPMixinModel.getInstance().getVariableDoc(variableName, null, classType.getTypeName());
 					for (IModelElement e : elements) {
 						docs.add((DocMember) e);

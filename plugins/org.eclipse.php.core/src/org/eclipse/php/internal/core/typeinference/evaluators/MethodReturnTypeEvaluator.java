@@ -62,7 +62,7 @@ public class MethodReturnTypeEvaluator extends GoalEvaluator {
 			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
 			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 				if (type instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) instanceType;
+					PHPClassType classType = (PHPClassType) type;
 					IModelElement[] elements = PHPMixinModel.getInstance().getMethod(classType.getTypeName(), methodName);
 					for (IModelElement e : elements) {
 						methods.add((IMethod) e);
