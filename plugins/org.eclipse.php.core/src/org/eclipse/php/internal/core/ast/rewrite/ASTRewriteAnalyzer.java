@@ -1093,8 +1093,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			return;
 		}
 		try {
-			int oldModifiers = ((Integer) event.getOriginalValue()).intValue();
-			int newModifiers = ((Integer) event.getNewValue()).intValue();
+			int oldModifiers = (Integer) event.getOriginalValue();
+			int newModifiers = (Integer) event.getNewValue();
 			TextEditGroup editGroup = getEditGroup(event);
 
 			TokenScanner scanner = getScanner();
@@ -1102,25 +1102,29 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			Symbol tok = scanner.readNext(offset/*, false*/);
 			int startPos = scanner.getCurrentStartOffset();
 			int nextStart = startPos;
+			// prepare the modifiers 'syms'
+			String phpVersion = this.scanner.getPHPVersion();
+			int modifiers[] = new int[] { SymbolsProvider.getModifierSym("public", phpVersion), SymbolsProvider.getModifierSym("private", phpVersion), SymbolsProvider.getModifierSym("protected", phpVersion), SymbolsProvider.getModifierSym("static", phpVersion),
+				SymbolsProvider.getModifierSym("abstract", phpVersion), SymbolsProvider.getModifierSym("final", phpVersion) };
 			loop: while (true) {
 				if (TokenScanner.isComment(tok)) {
 					tok = scanner.readNext(/*true*/); // next non-comment token
 				}
 				boolean keep = true;
-				if (tok == null || tok.value == null) {
+				if (tok == null) {
 					break loop;
 				}
-				if (tok.value.equals("public")) {
+				if (tok.sym == modifiers[0]) {
 					keep = Modifier.isPublic(newModifiers);
-				} else if (tok.value.equals("private")) {
+				} else if (tok.sym == modifiers[1]) {
 					keep = Modifier.isPrivate(newModifiers);
-				} else if (tok.value.equals("protected")) {
+				} else if (tok.sym == modifiers[2]) {
 					keep = Modifier.isProtected(newModifiers);
-				} else if (tok.value.equals("static")) {
+				} else if (tok.sym == modifiers[3]) {
 					keep = Modifier.isStatic(newModifiers);
-				} else if (tok.value.equals("abstract")) {
+				} else if (tok.sym == modifiers[4]) {
 					keep = Modifier.isAbstract(newModifiers);
-				} else if (tok.value.equals("final")) {
+				} else if (tok.sym == modifiers[5]) {
 					keep = Modifier.isFinal(newModifiers);
 				} else {
 					break loop;
