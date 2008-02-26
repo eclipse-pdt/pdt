@@ -200,9 +200,6 @@ public class ForEachStatement extends Statement {
 	 * </ul>
 	 */ 
 	public void setKey(Expression key) {
-		if (key == null) {
-			throw new IllegalArgumentException();
-		}
 		ASTNode oldChild = this.key;
 		preReplaceChild(oldChild, key, KEY_PROPERTY);
 		this.key = key;
