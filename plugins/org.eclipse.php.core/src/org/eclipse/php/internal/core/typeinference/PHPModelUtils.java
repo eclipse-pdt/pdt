@@ -32,7 +32,7 @@ public class PHPModelUtils {
 		superTypesQ.add(type);
 
 		while (!superTypesQ.isEmpty()) {
-			IType superType = superTypesQ.pop();
+			IType superType = superTypesQ.removeFirst();
 			IMethod method = superType.getMethod(name);
 			if (method.exists()) {
 				return method;
