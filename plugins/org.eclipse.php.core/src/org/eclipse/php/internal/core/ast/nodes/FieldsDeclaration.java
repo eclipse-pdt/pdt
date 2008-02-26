@@ -50,6 +50,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		properyList.add(FIELDS_PROPERTY);
+		properyList.add(MODIFIER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 	
