@@ -20847,7 +20847,7 @@ define ('CAL_JEWISH_ADD_GERESHAYIM', 8);
 
 // End of calendar v.
 
-// Start of exif v.1.4 $Id: phpFunctions5.php,v 1.21 2007/11/15 10:18:13 mspector Exp $
+// Start of exif v.1.4
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -20899,7 +20899,7 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: phpFunctions5.php,v 1.21 2007/11/15 10:18:13 mspector Exp $
+// End of exif v.1.4
 
 // Start of gmp v.
 

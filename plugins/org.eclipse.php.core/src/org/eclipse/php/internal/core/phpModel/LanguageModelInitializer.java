@@ -1,0 +1,104 @@
+package org.eclipse.php.internal.core.phpModel;
+
+import java.io.IOException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.BuildpathEntry;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+
+public class LanguageModelInitializer extends BuildpathContainerInitializer {
+
+	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
+
+	public LanguageModelInitializer() {
+	}
+
+	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
+		try {
+			if (isPHPProject(project)) {
+				DLTKCore.setBuildpathContainer(containerPath,
+					new IScriptProject[] { project },
+					new IBuildpathContainer[] { getBuildpathContainer(project, containerPath) }, null);
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+	}
+
+	private IBuildpathContainer getBuildpathContainer(IScriptProject project, IPath containerPath) throws IOException {
+		String libraryPath = getLanguageLibraryPath(project);
+
+		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(), new Path(libraryPath), null);
+		URL resolved = FileLocator.resolve(url);
+		IPath path = Path.fromOSString(resolved.getFile());
+
+		return new LanguageModelContainer(path, containerPath);
+	}
+
+	private static int getPHPVersion(IScriptProject project) {
+		return PHPVersion.PHP4.equals(PhpVersionProjectPropertyHandler.getVersion(project.getProject())) ? 4 : 5;
+	}
+
+	private static String getLanguageLibraryPath(IScriptProject project) {
+		return String.format(LANGUAGE_LIBRARY_PATH, getPHPVersion(project));
+	}
+
+	private boolean isPHPProject(IScriptProject project) {
+		String nature = getNatureFromProject(project);
+		return PHPNature.ID.equals(nature);
+	}
+
+	private String getNatureFromProject(IScriptProject project) {
+		try {
+			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
+			if (languageToolkit != null) {
+				return languageToolkit.getNatureId();
+			}
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+
+	class LanguageModelContainer implements IBuildpathContainer {
+
+		private IPath libraryPath;
+		private IPath containerPath;
+
+		public LanguageModelContainer(IPath libraryPath, IPath containerPath) {
+			this.libraryPath = libraryPath;
+			this.containerPath = containerPath;
+		}
+
+		public IBuildpathEntry[] getBuildpathEntries() {
+			return new IBuildpathEntry[] {
+				DLTKCore.newBuiltinEntry(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY.append(libraryPath),
+					new IAccessRule[0], new IBuildpathAttribute[0], BuildpathEntry.INCLUDE_ALL, new IPath[0],
+					false, true
+				)
+			};
+		}
+
+		public IBuiltinModuleProvider getBuiltinProvider() {
+			return null;
+		}
+
+		public String getDescription() {
+			return "PHP Language Library";
+		}
+
+		public int getKind() {
+			return K_DEFAULT_SYSTEM;
+		}
+
+		public IPath getPath() {
+			return containerPath;
+		}
+	}
+}

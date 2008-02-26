@@ -176,5 +176,12 @@
           priority="0">
     </factory>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.buildpathContainerInitializer">
+    <buildpathContainerInitializer
+          class="org.eclipse.php.internal.core.phpModel.LanguageModelInitializer"
+          id="org.eclipse.php.core.LANGUAGE_INITIALIZER">
+    </buildpathContainerInitializer>
+ </extension>
 
 </plugin>

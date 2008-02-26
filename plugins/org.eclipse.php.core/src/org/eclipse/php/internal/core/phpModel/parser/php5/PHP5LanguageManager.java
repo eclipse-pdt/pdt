@@ -16,7 +16,7 @@ import org.eclipse.php.internal.core.phpModel.parser.*;
 
 public class PHP5LanguageManager implements PHPLanguageManager {
 
-	private static final String PHP5_FUNCTIONS_PATH = "Resources/phpFunctions5.php"; //$NON-NLS-1$
+	private static final String PHP5_FUNCTIONS_PATH = "Resources/language/php5/basic.php"; //$NON-NLS-1$
 
 	private PHPLanguageModel languageModel;
 
@@ -35,7 +35,7 @@ public class PHP5LanguageManager implements PHPLanguageManager {
 	public String getPHPFunctionPath() {
 		return PHP5_FUNCTIONS_PATH;
 	}
-	
+
 	public String getPHPMajorVerison() {
 		return "5"; //$NON-NLS-1$
 	}
