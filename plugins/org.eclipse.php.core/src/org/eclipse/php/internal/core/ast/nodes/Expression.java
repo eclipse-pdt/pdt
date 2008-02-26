@@ -99,7 +99,17 @@ public abstract class Expression extends ASTNode {
 	 * @return the binding, or <code>null</code> if the binding cannot be 
 	 *    resolved	 
 	 */
-	public ITypeBinding resolveExpressionBinding() {
+	public ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveExpressionType(this);
+	}
+	
+	/**
+	 * Resolves and returns the constant expression value
+	 * 
+	 * @return the binding, or <code>null</code> if the binding cannot be 
+	 *    resolved
+	 */	
+	public Object resolveConstantExpressionValue() {
+		return this.ast.getBindingResolver().resolveConstantExpressionValue(this);
 	}
 }

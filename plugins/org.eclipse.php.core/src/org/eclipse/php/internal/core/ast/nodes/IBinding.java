@@ -88,6 +88,17 @@ public interface IBinding {
 	 * @since 3.2
 	 */
 	public static final int MEMBER_VALUE_PAIR = 6;
+	
+	/**
+	 * Kind constant (value ) indicating a source binding.
+	 * Bindings of this kind can be safely cast to <code>ISourceBinding</code>.
+	 *
+	 * @see #getKind()
+	 * @see ISourceBinding
+	 * @since 3.2
+	 */
+	public static final int SOURCE = 7;
+	
 
 	/**
 	 * Returns the kind of bindings this is. That is one of the kind constants:
