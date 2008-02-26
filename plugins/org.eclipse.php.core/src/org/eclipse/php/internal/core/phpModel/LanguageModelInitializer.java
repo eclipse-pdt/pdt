@@ -14,20 +14,23 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProje
 
 public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
+	public static final String CONTAINER_PATH = "org.eclipse.php.core.LANGUAGE";
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
 
 	public LanguageModelInitializer() {
 	}
 
 	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
-		try {
-			if (isPHPProject(project)) {
-				DLTKCore.setBuildpathContainer(containerPath,
-					new IScriptProject[] { project },
-					new IBuildpathContainer[] { getBuildpathContainer(project, containerPath) }, null);
+		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER_PATH)) {
+			try {
+				if (isPHPProject(project)) {
+					DLTKCore.setBuildpathContainer(containerPath,
+						new IScriptProject[] { project },
+						new IBuildpathContainer[] { getBuildpathContainer(project, containerPath) }, null);
+				}
+			} catch (Exception e) {
+				Logger.logException(e);
 			}
-		} catch (Exception e) {
-			Logger.logException(e);
 		}
 	}
 
@@ -78,10 +81,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 		public IBuildpathEntry[] getBuildpathEntries() {
 			return new IBuildpathEntry[] {
-				DLTKCore.newBuiltinEntry(IBuildpathEntry.BUILTIN_EXTERNAL_ENTRY.append(libraryPath),
-					new IAccessRule[0], new IBuildpathAttribute[0], BuildpathEntry.INCLUDE_ALL, new IPath[0],
-					false, true
-				)
+				DLTKCore.newLibraryEntry(libraryPath, BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES,
+					BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true)
 			};
 		}
 
@@ -94,7 +95,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 
 		public int getKind() {
-			return K_DEFAULT_SYSTEM;
+			return K_SYSTEM;
 		}
 
 		public IPath getPath() {
