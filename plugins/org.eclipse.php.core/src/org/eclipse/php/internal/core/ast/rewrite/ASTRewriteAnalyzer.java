@@ -10,18 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.rewrite;
 
-import java.awt.geom.QuadCurve2D;
 import java.io.IOException;
 import java.util.*;
-
-import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
-import org.eclipse.jdt.internal.compiler.ast.ForeachStatement;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -934,82 +930,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		return doVisit(parent, property, pos);
 	}
 
-	private void rewriteMethodBody(MethodDeclaration parent, int startPos) {
-		// TODO
-		//		RewriteEvent event = getEvent(parent, MethodDeclaration.BODY_PROPERTY);
-		//		if (event != null) {
-		//			switch (event.getChangeKind()) {
-		//				case RewriteEvent.INSERTED: {
-		//					int endPos = parent.getStart() + parent.getLength();
-		//					TextEditGroup editGroup = getEditGroup(event);
-		//					ASTNode body = (ASTNode) event.getNewValue();
-		//					doTextRemove(startPos, endPos - startPos, editGroup);
-		//					int indent = getIndent(parent.getStart());
-		//					String prefix = this.formatter.METHOD_BODY.getPrefix(indent);
-		//					doTextInsert(startPos, prefix, editGroup);
-		//					doTextInsert(startPos, body, indent, true, editGroup);
-		//					return;
-		//				}
-		//				case RewriteEvent.REMOVED: {
-		//					TextEditGroup editGroup = getEditGroup(event);
-		//					ASTNode body = (ASTNode) event.getOriginalValue();
-		//					int endPos = parent.getStart() + parent.getLength();
-		//					doTextRemoveAndVisit(startPos, endPos - startPos, body, editGroup);
-		//					doTextInsert(startPos, ";", editGroup); //$NON-NLS-1$
-		//					return;
-		//				}
-		//				case RewriteEvent.REPLACED: {
-		//					TextEditGroup editGroup = getEditGroup(event);
-		//					ASTNode body = (ASTNode) event.getOriginalValue();
-		//					doTextRemoveAndVisit(body.getStart(), body.getLength(), body, editGroup);
-		//					doTextInsert(body.getStart(), (ASTNode) event.getNewValue(), getIndent(body.getStart()), true, editGroup);
-		//					return;
-		//				}
-		//			}
-		//		}
-		//		voidVisit(parent, MethodDeclaration.BODY_PROPERTY);
-	}
-
-	private int rewriteExtraDimensions(ASTNode parent, StructuralPropertyDescriptor property, int pos) {
-		RewriteEvent event = getEvent(parent, property);
-		if (event == null || event.getChangeKind() == RewriteEvent.UNCHANGED) {
-			return ((Integer) getOriginalValue(parent, property)).intValue();
-		}
-		int oldDim = ((Integer) event.getOriginalValue()).intValue();
-		int newDim = ((Integer) event.getNewValue()).intValue();
-
-		if (oldDim != newDim) {
-			TextEditGroup editGroup = getEditGroup(event);
-			rewriteExtraDimensions(oldDim, newDim, pos, editGroup);
-		}
-		return oldDim;
-	}
-
-	private void rewriteExtraDimensions(int oldDim, int newDim, int pos, TextEditGroup editGroup) {
-
-		if (oldDim < newDim) {
-			for (int i = oldDim; i < newDim; i++) {
-				doTextInsert(pos, "[]", editGroup); //$NON-NLS-1$
-			}
-		} else if (newDim < oldDim) {
-			try {
-				getScanner().setOffset(pos);
-				for (int i = newDim; i < oldDim; i++) {
-					getScanner().readToToken(SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID, scanner.getPHPVersion()));
-				}
-				doTextRemove(pos, getScanner().getCurrentEndOffset() - pos, editGroup);
-			} catch (CoreException e) {
-				handleException(e);
-			}
-		}
-	}
-
 	/*
 	 * Rewrite the dollar property when dealing with a variable.
-	 * // FIXME - This Variable.DOLLARED_PROPERTY might not be needed since variables should always have a $ sign.
 	 */
 	private void rewriteVariableDollar(Variable variable) {
-		// Make the neccessary changes to add or remove the $ sign.
+		// Make the necessary changes to add or remove the $ sign.
 		RewriteEvent event = getEvent(variable, variable.getDollaredProperty());
 		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
 			TextEditGroup editGroup = getEditGroup(event);
@@ -1440,56 +1365,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(MethodDeclaration)
 	 */
 	public boolean visit(MethodDeclaration node) {
-		// TODO
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//		int pos = rewriteDocumentation(node, MethodDeclaration.JAVADOC_PROPERTY);
-		//		if (node.getAST().apiLevel() == PHP4_INTERNAL) {
-		//			rewriteModifiers(node, MethodDeclaration.MODIFIERS_PROPERTY, pos);
-		//		} else {
-		//			pos = rewriteModifiers2(node, MethodDeclaration.MODIFIERS2_PROPERTY, pos);
-		//			pos = rewriteOptionalTypeParameters(node, MethodDeclaration.TYPE_PARAMETERS_PROPERTY, pos, " ", true, pos != node.getStart()); //$NON-NLS-1$
-		//		}
-		//
-		//		boolean isConstructorChange = isChanged(node, MethodDeclaration.CONSTRUCTOR_PROPERTY);
-		//		boolean isConstructor = ((Boolean) getOriginalValue(node, MethodDeclaration.CONSTRUCTOR_PROPERTY)).booleanValue();
-		//		if (!isConstructor || isConstructorChange) {
-		//			rewriteReturnType(node, isConstructor, isConstructorChange);
-		//		}
-		//		// method name
-		//		pos = rewriteRequiredNode(node, MethodDeclaration.NAME_PROPERTY);
-		//
-		//		// parameters
-		//		try {
-		//			if (isChanged(node, MethodDeclaration.PARAMETERS_PROPERTY)) {
-		//				pos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.LPAREN_ID, scanner.getPHPVersion()), pos);
-		//				pos = rewriteNodeList(node, MethodDeclaration.PARAMETERS_PROPERTY, pos, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
-		//			} else {
-		//				pos = doVisit(node, MethodDeclaration.PARAMETERS_PROPERTY, pos);
-		//			}
-		//
-		//			pos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.RPAREN_ID, scanner.getPHPVersion()), pos);
-		//
-		//			int extraDims = rewriteExtraDimensions(node, MethodDeclaration.EXTRA_DIMENSIONS_PROPERTY, pos);
-		//
-		//			boolean hasExceptionChanges = isChanged(node, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
-		//
-		//			int bodyChangeKind = getChangeKind(node, MethodDeclaration.BODY_PROPERTY);
-		//
-		//			if ((extraDims > 0) && (hasExceptionChanges || bodyChangeKind == RewriteEvent.INSERTED || bodyChangeKind == RewriteEvent.REMOVED)) {
-		//				int dim = ((Integer) getOriginalValue(node, MethodDeclaration.EXTRA_DIMENSIONS_PROPERTY)).intValue();
-		//				while (dim > 0) {
-		//					pos = getScanner().getTokenEndOffset(SymbolsProvider.getSymbol(SymbolsProvider.RBRACKET_ID, scanner.getPHPVersion()), pos);
-		//					dim--;
-		//				}
-		//			}
-		//
-		//			pos = rewriteNodeList(node, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY, pos, " throws ", ", "); //$NON-NLS-1$ //$NON-NLS-2$
-		//			rewriteMethodBody(node, pos);
-		//		} catch (CoreException e) {
-		//			// ignore
-		//		}
+		if (!hasChildrenChanges(node)) {
+			return doVisitUnchangedChildren(node);
+		}
+		rewriteModifiers(node, MethodDeclaration.MODIFIER_PROPERTY, node.getStart());
+		rewriteRequiredNode(node, MethodDeclaration.FUNCTION_PROPERTY);
 		return false;
 	}
 
@@ -1579,7 +1459,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 				// close the block with a brace
 				doTextInsert(blockEnd + 1, "\n}", editGroup);
 			} else {
-				// TODO - Check when we have no braces in the if-statement
 				doTextReplace(blockStart, 1, ":", editGroup);
 				// End the if statement
 				doTextReplace(blockEnd, 1, "endif;", editGroup);
@@ -1895,24 +1774,56 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
-		// FIXME - Experimental - Must be verified (shalom)
 		rewriteModifiers(node, FieldsDeclaration.MODIFIER_PROPERTY, node.getStart());
-		// FIXME - Experimental - Must be verified (shalom)
-		rewriteNodeList(node, FieldsDeclaration.FIELDS_PROPERTY, node.getStart() + node.getModifierString().length(), "", "");
-		//		if (!hasChildrenChanges(node)) {
-		//			return doVisitUnchangedChildren(node);
-		//		}
-		//		int pos = rewriteDocumentation(node, FieldsDeclaration.JAVADOC_PROPERTY);
-		//
-		//		if (node.getAST().apiLevel() == PHP4_INTERNAL) {
-		//			rewriteModifiers(node, FieldDeclaration.MODIFIERS_PROPERTY, pos);
-		//		} else {
-		//			rewriteModifiers2(node, FieldDeclaration.MODIFIERS2_PROPERTY, pos);
-		//		}
-		//
-		//		pos = rewriteRequiredNode(node, FieldDeclaration.TYPE_PROPERTY);
-		//		rewriteNodeList(node, FieldDeclaration.FRAGMENTS_PROPERTY, pos, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+		rewriteNodeList(node, FieldsDeclaration.FIELDS_PROPERTY, node.getStart() + node.getModifierString().length(), "", ", ");
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.SingleFieldDeclaration)
+	 */
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
+		if (!hasChildrenChanges(singleFieldDeclaration)) {
+			return doVisitUnchangedChildren(singleFieldDeclaration);
+		}
+		RewriteEvent event = getEvent(singleFieldDeclaration, SingleFieldDeclaration.VALUE_PROPERTY);
+		if (event != null) {
+			rewriteOptionalValueProperty(singleFieldDeclaration, singleFieldDeclaration.getName().getEnd(), SingleFieldDeclaration.VALUE_PROPERTY, event);
+		}
+		return rewriteRequiredNodeVisit(singleFieldDeclaration, SingleFieldDeclaration.NAME_PROPERTY);
+	}
+
+	/*
+	 * Rewrite an optional value property.
+	 * This should handle declarations like $a = 3 etc. and add, remove or modify the assigned value.
+	 * Note that the new value that will be used must be an ASTNode, so in any other case where a value property does not
+	 * hold an ASTNode this call will fail.
+	 * 
+	 * @param node The node that we rewrite
+	 * @param pos The position that the edit should start from
+	 * @param valueProperty ChildPropertyDescriptor
+	 * @param event Non-null RewriteEvent
+	 */
+	private void rewriteOptionalValueProperty(ASTNode node, int pos, ChildPropertyDescriptor valueProperty, RewriteEvent event) {
+		TextEditGroup editGroup = getEditGroup(event);
+		int kind = event.getChangeKind();
+		switch (kind) {
+			case RewriteEvent.REPLACED:
+				rewriteRequiredNode(node, valueProperty);
+				break;
+			case RewriteEvent.INSERTED:
+				ASTNode newNode = (ASTNode) event.getNewValue();
+				doTextInsert(pos, " = ", editGroup);
+				doTextInsert(pos, newNode, 0, false, editGroup);
+				break;
+			case RewriteEvent.REMOVED:
+				ASTNode originalNode = (ASTNode) event.getOriginalValue();
+				int endPos = originalNode.getEnd();
+				doTextRemove(pos, endPos - pos, editGroup);
+				break;
+			default:
+				// do nothing
+		}
 	}
 
 	/* (non-Javadoc)
@@ -1966,17 +1877,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(IfStatement)
 	 */
 	public boolean visit(IfStatement node) {
-		// TODO -- Maybe we also need to treat the ELSEIF condition (shalom)
 		if (!hasChildrenChanges(node)) {
 			return doVisitUnchangedChildren(node);
 		}
 
-		//		int pos = rewriteRequiredNode(node, IfStatement.EXPRESSION_PROPERTY); // statement
 		int pos = rewriteRequiredNode(node, IfStatement.CONDITION_PROPERTY); // statement
 
-		//		RewriteEvent thenEvent = getEvent(node, IfStatement.THEN_STATEMENT_PROPERTY);
 		RewriteEvent thenEvent = getEvent(node, IfStatement.TRUE_STATEMENT_PROPERTY);
-		//		int elseChange = getChangeKind(node, IfStatement.ELSE_STATEMENT_PROPERTY);
 		int elseChange = getChangeKind(node, IfStatement.FALSE_STATEMENT_PROPERTY);
 
 		if (thenEvent != null && thenEvent.getChangeKind() != RewriteEvent.UNCHANGED) {
@@ -2360,8 +2267,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
-		// TODO Auto-generated method stub
-		// TODO - complex
+		// TODO - Same as with the DeclareStatement, this require a different rewriting for now.
+		if (!hasChildrenChanges(classConstantDeclaration)) {
+			return doVisitUnchangedChildren(classConstantDeclaration);
+		}
+		changeNotSupported(classConstantDeclaration);
 		return false;
 	}
 
@@ -2492,12 +2402,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(DeclareStatement declareStatement) {
-		// TODO - This require a different rewrite approach since a regular list rewrite will not work here when adding and removing items
-		//		if (!hasChildrenChanges(declareStatement)) {
-		//			return doVisitUnchangedChildren(declareStatement);
-		//		}
-		//		rewriteNodeList(declareStatement, DeclareStatement.DIRECTIVE_NAMES_PROPERTY, declareStatement.getStart(), "", ", ");
-		//		rewriteNodeList(declareStatement, DeclareStatement.DIRECTIVE_VALUES_PROPERTY, declareStatement.getStart(), "", ", ");
+		//	TODO - This require a different rewrite approach since a regular list rewrite will not work here when adding and removing items
+		if (!hasChildrenChanges(declareStatement)) {
+			return doVisitUnchangedChildren(declareStatement);
+		}
+		changeNotSupported(declareStatement);
 		return false;
 	}
 
@@ -2648,7 +2557,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			voidVisit(functionDeclaration, FunctionDeclaration.FORMAL_PARAMETERS_PROPERTY);
 		}
 		// Body
-		// FIXME - might need to call rewrite body
 		rewriteRequiredNode(functionDeclaration, FunctionDeclaration.BODY_PROPERTY);
 		return false;
 	}
@@ -2677,7 +2585,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.FunctionInvocation)
 	 */
 	public boolean visit(FunctionInvocation functionInvocation) {
-		// FIXME - Find all the ASTNodes that might have this kind of structure and implement in a similar way... (shalom)
 		if (!hasChildrenChanges(functionInvocation)) {
 			return doVisitUnchangedChildren(functionInvocation);
 		}
@@ -2973,13 +2880,6 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			}
 		}
 		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.SingleFieldDeclaration)
-	 */
-	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
-		return rewriteRequiredNodeVisit(singleFieldDeclaration, SingleFieldDeclaration.NAME_PROPERTY, SingleFieldDeclaration.VALUE_PROPERTY);
 	}
 
 	/* (non-Javadoc)
