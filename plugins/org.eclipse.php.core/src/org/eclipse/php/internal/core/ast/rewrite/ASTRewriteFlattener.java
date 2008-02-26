@@ -17,7 +17,6 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
@@ -214,7 +213,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		} else {
 			StructuralPropertyDescriptor locationInParent = block.getLocationInParent();
 			if (locationInParent == IfStatement.TRUE_STATEMENT_PROPERTY) {
-				if (((IfStatement)block.getParent()).getFalseStatement() == null) {
+				if (((IfStatement) block.getParent()).getFalseStatement() == null) {
 					// End the if statement
 					result.append("endif;\n"); //$NON-NLS-1$
 				} else {
@@ -271,7 +270,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		Expression[] constantValues = classConstantDeclaration.getConstantValues();
 		for (int i = 0; i < variableNames.length; i++) {
 			if (!isFirst) {
-				result.append(","); //$NON-NLS-1$
+				result.append(", "); //$NON-NLS-1$
 			}
 			variableNames[i].accept(this);
 			result.append(" = "); //$NON-NLS-1$
@@ -863,6 +862,16 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		whileStatement.getCondition().accept(this);
 		result.append(")\n"); //$NON-NLS-1$
 		whileStatement.getAction().accept(this);
+		return false;
+	}
+
+	public boolean visit(SingleFieldDeclaration singleFieldDeclaration) {
+		singleFieldDeclaration.getName().accept(this);
+		Expression value = singleFieldDeclaration.getValue();
+		if (value != null) {
+			result.append(" = ");//$NON-NLS-1$
+			value.accept(this);
+		}
 		return false;
 	}
 
