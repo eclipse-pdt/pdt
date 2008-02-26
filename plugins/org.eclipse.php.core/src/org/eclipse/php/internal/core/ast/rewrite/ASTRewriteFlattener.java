@@ -364,7 +364,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		Expression[] directiveValues = declareStatement.getDirectiveValues();
 		for (int i = 0; i < directiveNames.length; i++) {
 			if (!isFirst) {
-				result.append(","); //$NON-NLS-1$
+				result.append(", "); //$NON-NLS-1$
 			}
 			directiveNames[i].accept(this);
 			result.append(" = "); //$NON-NLS-1$

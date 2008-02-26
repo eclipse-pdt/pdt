@@ -1859,9 +1859,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			handleException(e);
 		}
 
-		// TODO ??
 		rewriteRequiredNode(node, DoStatement.CONDITION_PROPERTY);
-		//		rewriteRequiredNode(node, DoStatement.EXPRESSION_PROPERTY);
 		return false;
 	}
 
@@ -2339,7 +2337,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(ASTError astError) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(astError)) {
+			return doVisitUnchangedChildren(astError);
+		}
+		changeNotSupported(astError); // no modification possible
 		return false;
 	}
 
@@ -2491,7 +2492,12 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(DeclareStatement declareStatement) {
-		// TODO Auto-generated method stub
+		// TODO - This require a different rewrite approach since a regular list rewrite will not work here when adding and removing items
+		//		if (!hasChildrenChanges(declareStatement)) {
+		//			return doVisitUnchangedChildren(declareStatement);
+		//		}
+		//		rewriteNodeList(declareStatement, DeclareStatement.DIRECTIVE_NAMES_PROPERTY, declareStatement.getStart(), "", ", ");
+		//		rewriteNodeList(declareStatement, DeclareStatement.DIRECTIVE_VALUES_PROPERTY, declareStatement.getStart(), "", ", ");
 		return false;
 	}
 
@@ -2704,7 +2710,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(globalStatement)) {
 			return doVisitUnchangedChildren(globalStatement);
 		}
-		rewriteNodeList(globalStatement, GlobalStatement.VARIABLES_PROPERTY, globalStatement.getStart(), "", "");
+		rewriteNodeList(globalStatement, GlobalStatement.VARIABLES_PROPERTY, globalStatement.getStart(), "", ", ");
 		return false;
 	}
 
@@ -2775,7 +2781,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	@Override
 	public boolean visit(InLineHtml inLineHtml) {
-		// TODO Auto-generated method stub
+		if (!hasChildrenChanges(inLineHtml)) {
+			return doVisitUnchangedChildren(inLineHtml);
+		}
+		changeNotSupported(inLineHtml); // no modification possible
 		return false;
 	}
 
@@ -3001,7 +3010,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		if (!hasChildrenChanges(staticStatement)) {
 			return doVisitUnchangedChildren(staticStatement);
 		}
-		rewriteNodeList(staticStatement, StaticStatement.EXPRESSIONS_PROPERTY, staticStatement.getStart(), "", "");
+		rewriteNodeList(staticStatement, StaticStatement.EXPRESSIONS_PROPERTY, staticStatement.getStart(), "", ", ");
 		return false;
 	}
 
