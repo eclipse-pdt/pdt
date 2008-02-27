@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.core.ast.rewrite;
 
 import org.eclipse.php.internal.core.ast.nodes.AST;
+import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.scanner.ParserConstants4;
 import org.eclipse.php.internal.core.ast.scanner.ParserConstants5;
 import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
@@ -218,5 +219,35 @@ public class SymbolsProvider {
 			}
 		}
 		return ERROR_SYMBOL;
+	}
+
+	/**
+	 * Returns the sym integer for the given modifier ('public', 'final', 'protected' etc.).
+	 * 
+	 * @param modifier The modifier string
+	 * @param phpVersion The relevant PHP version.
+	 * @return The sym id or the ERROR_SYMBOL.sym in case of an error.
+	 */
+	public static int getModifierSym(String modifier, String phpVersion) {
+		if (AST.PHP5.equals(phpVersion)) {
+			if (modifier.equals("public")) {
+				return ParserConstants5.T_PUBLIC;
+			} else if (modifier.equals("private")) {
+				return ParserConstants5.T_PRIVATE;
+			} else if (modifier.equals("protected")) {
+				return ParserConstants5.T_PROTECTED;
+			} else if (modifier.equals("static")) {
+				return ParserConstants5.T_STATIC;
+			} else if (modifier.equals("abstract")) {
+				return ParserConstants5.T_ABSTRACT;
+			} else if (modifier.equals("final")) {
+				return ParserConstants5.T_FINAL;
+			}
+		} else if (AST.PHP4.equals(phpVersion)) {
+			if (modifier.equals("static")) {
+				return ParserConstants4.T_STATIC;
+			}
+		}
+		return ERROR_SYMBOL.sym;
 	}
 }
