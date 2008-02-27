@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.4 2008/02/25 16:55:07 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.5 2008/02/27 14:35:23 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -286,10 +286,7 @@ precedence right T_STATIC;
 thestart ::=
 top_statement_list:statementList
 {:
-	ModuleDeclaration program = new ModuleDeclaration(statementListright - statementListleft);
-	program.setStatements(statementList);
-	program.setStart(statementListleft);
-	program.setEnd(statementListright);
+	PHPModuleDeclaration program = new PHPModuleDeclaration(statementListleft, statementListright, statementList);
 	RESULT = program; 
 :}
 ;

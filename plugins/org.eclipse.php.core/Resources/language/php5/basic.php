@@ -15920,7 +15920,7 @@ class PDO  {
 	 * @param object object
 	 * @return PDOStatement 
 	 */
-	public function query ($statement, $PDO::FETCH_INTO, $object) {}
+	public function query ($statement, $PDO_FETCH_INTO, $object) {}
 
 	/**
 	 * Returns the ID of the last inserted row or sequence value
@@ -16120,7 +16120,7 @@ class PDOStatement implements Traversable {
 	 * @param object object
 	 * @return bool 1 on success or false on failure.
 	 */
-	public function setFetchMode ($PDO::FETCH_INTO, $object) {}
+	public function setFetchMode ($PDO_FETCH_INTO, $object) {}
 
 	/**
 	 * Advances to the next rowset in a multi-rowset statement handle

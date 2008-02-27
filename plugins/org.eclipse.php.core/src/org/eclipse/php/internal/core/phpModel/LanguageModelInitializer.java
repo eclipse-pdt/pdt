@@ -73,11 +73,11 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	/**
-	 * Modifies PHP project buildpath so it will contain language model
+	 * Modifies PHP project buildpath so it will contain path to the language model library
 	 * @param project Project handle
 	 * @throws ModelException
 	 */
-	public static void upgradePHPProject(IScriptProject project) throws ModelException {
+	public static void addLanguageModelToBuildpath(IScriptProject project) throws ModelException {
 		if (!isPHPProject(project)) {
 			return;
 		}
