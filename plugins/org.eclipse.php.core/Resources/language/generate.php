@@ -77,6 +77,16 @@ function make_funckey_from_str ($name) {
 }
 
 /**
+ * Replaces all invalid charaters with '_' in PHP identifier
+ * @param name PHP identifier
+ * @return string PHP identifier with stripped invalid characters
+ */
+function clean_php_identifier ($name) {
+	$name = preg_replace('/[^\$\w\_]+/', '_', $name);
+	return $name;
+}
+
+/**
  * Makes generic key from given function reference
  * @param name ReflectionMethod function reference
  * @return string generic key
@@ -136,7 +146,7 @@ function parse_phpdoc_functions ($phpdoc_dir) {
 						for ($i = 0; $i < count($match[0]); ++$i) {
 							$parameter = array (
 								'type' => trim($match[2][$i]),
-								'name' => trim($match[4][$i]),
+								'name' => clean_php_identifier(trim($match[4][$i])),
 							);
 							if (preg_match ('@choice=[\'"]opt[\'"]@', $match[1][$i])) {
 								$parameter['isoptional'] = true;
@@ -277,7 +287,7 @@ function print_class ($classRef, $tabs = 0) {
 	print "\n";
 	print_doccomment ($classRef, $tabs);
 	print_tabs ($tabs);
-	print_modifiers ($classRef);
+	if ($classRef->isFinal()) print "final ";
 
 	print $classRef->isInterface() ? "interface " : "class ";
 	print "{$classRef->getName()} ";
@@ -291,7 +301,7 @@ function print_class ($classRef, $tabs = 0) {
 	// print out interfaces
 	$interfacesRef = $classRef->getInterfaces();
 	if (count ($interfacesRef) > 0) {
-		print "implements ";
+		print $classRef->isInterface() ? "extends " : "implements ";
 		$i = 0;
 		foreach ($interfacesRef as $interfaceRef) {
 			if ($i++ > 0) {

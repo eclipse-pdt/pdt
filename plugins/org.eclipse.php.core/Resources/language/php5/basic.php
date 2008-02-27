@@ -962,7 +962,7 @@ function simplexml_import_dom (DOMNode $node, $class_name = null) {}
 
 // Start of SPL v.0.2
 
-interface RecursiveIterator implements Iterator, Traversable {
+interface RecursiveIterator extends Iterator, Traversable {
 
 	abstract public function hasChildren () {}
 
@@ -1062,7 +1062,7 @@ class RecursiveIteratorIterator implements Iterator, Traversable, OuterIterator 
 
 }
 
-interface OuterIterator implements Iterator, Traversable {
+interface OuterIterator extends Iterator, Traversable {
 
 	abstract public function getInnerIterator () {}
 
@@ -1254,7 +1254,7 @@ interface Countable  {
 
 }
 
-interface SeekableIterator implements Iterator, Traversable {
+interface SeekableIterator extends Iterator, Traversable {
 
 	/**
 	 * @param position
@@ -22500,7 +22500,7 @@ class mysqli  {
 
 }
 
-final protected class mysqli_warning  {
+final class mysqli_warning  {
 
 	protected function __construct () {}
 
@@ -26752,13 +26752,13 @@ class ErrorException extends Exception  {
 interface Traversable  {
 }
 
-interface IteratorAggregate implements Traversable {
+interface IteratorAggregate extends Traversable {
 
 	abstract public function getIterator () {}
 
 }
 
-interface Iterator implements Traversable {
+interface Iterator extends Traversable {
 
 	abstract public function current () {}
 
@@ -27430,7 +27430,7 @@ class ZendAPI_Job {
     function setJobDependency($job_id) {}
     function setScheduledTime($timestamp) {}
     function setRecurrenceData($interval, $end_time=null) {}
-    function setPreserved($preserved)
+    function setPreserved($preserved) {}
     
     /**
      * Get the job properties
