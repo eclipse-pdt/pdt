@@ -112,8 +112,11 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
     }
 
     private void appendText(){
-       sBuffer.append(zzBuffer, startPos, zzMarkedPos-startPos);
-       updateStartPos();
+    	if(oldString != null){
+    		sBuffer.append(oldString);
+    	}
+       	sBuffer.append(zzBuffer, startPos, zzMarkedPos-startPos);
+       	updateStartPos();
     }
 
     private void hendleDesc() {
@@ -181,6 +184,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 
     private void updateStartPos(){
         startPos = zzMarkedPos;
+        oldString = null;
     }
     
     public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){

@@ -5,6 +5,11 @@
 			<arg value="-d" />
 			<arg value="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser" />
 			<arg value="-nobak" />
+			
+			<!--using the skeleton file in order to change the default zzRefill function-->
+			
+			<arg value="-skel" />
+			<arg value="documentor_compiler_ast_scanner.skeleton" />
 			<arg value="documentor_compiler_ast_scanner.flex" />
 		</java>
 	</target>
