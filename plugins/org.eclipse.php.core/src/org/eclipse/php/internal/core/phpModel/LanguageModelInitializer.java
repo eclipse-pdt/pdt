@@ -2,6 +2,9 @@ package org.eclipse.php.internal.core.phpModel;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
@@ -52,12 +55,12 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return String.format(LANGUAGE_LIBRARY_PATH, getPHPVersion(project));
 	}
 
-	private boolean isPHPProject(IScriptProject project) {
+	private static boolean isPHPProject(IScriptProject project) {
 		String nature = getNatureFromProject(project);
 		return PHPNature.ID.equals(nature);
 	}
 
-	private String getNatureFromProject(IScriptProject project) {
+	private static String getNatureFromProject(IScriptProject project) {
 		try {
 			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
 			if (languageToolkit != null) {
@@ -67,6 +70,38 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			Logger.logException(e);
 		}
 		return null;
+	}
+
+	/**
+	 * Modifies PHP project buildpath so it will contain language model
+	 * @param project Project handle
+	 * @throws ModelException
+	 */
+	public static void upgradePHPProject(IScriptProject project) throws ModelException {
+		if (!isPHPProject(project)) {
+			return;
+		}
+
+		IPath containerPath = new Path(LanguageModelInitializer.CONTAINER_PATH);
+
+		boolean found = false;
+
+		IBuildpathEntry[] rawBuildpath = project.getRawBuildpath();
+		for (IBuildpathEntry entry : rawBuildpath) {
+			if (entry.isContainerEntry() && entry.getPath().equals(containerPath)) {
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			IBuildpathEntry containerEntry = DLTKCore.newContainerEntry(containerPath);
+			int newSize = rawBuildpath.length + 1;
+			List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>(newSize);
+			newRawBuildpath.addAll(Arrays.asList(rawBuildpath));
+			newRawBuildpath.add(containerEntry);
+			project.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
+		}
 	}
 
 	class LanguageModelContainer implements IBuildpathContainer {
