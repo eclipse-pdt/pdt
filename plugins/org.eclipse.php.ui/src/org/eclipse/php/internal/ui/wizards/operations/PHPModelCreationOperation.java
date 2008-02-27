@@ -108,7 +108,7 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 				}
 
 			};
-			job.setRule(project.getWorkspace().getRuleFactory().modifyRule(project));
+			job.setRule(project.getWorkspace().getRoot());
 			job.schedule();
 		} catch (CoreException e) {
 			Logger.logException(e);
