@@ -25,8 +25,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ScriptNature;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.phpModel.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
@@ -108,8 +111,9 @@ public class PHPNature extends ScriptNature {
 		outputFile.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		InputStream inputStream = new ByteArrayInputStream(newFileContents.getBytes());
-		if (!(outputFile.exists()))
+		if (!(outputFile.exists())) {
 			outputFile.create(inputStream, true, null);
+		}
 	}
 
 	/**
@@ -171,8 +175,12 @@ public class PHPNature extends ScriptNature {
 	 */
 	public void configure() throws org.eclipse.core.runtime.CoreException {
 		// enable workspace validation for this nature
+		addToFrontOfBuildSpec(DLTKCore.BUILDER_ID);
 		addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
 		addToFrontOfBuildSpec(PHPProjectOptions.BUILDER_ID);
+
+		IScriptProject scriptProject = DLTKCore.create(project);
+		LanguageModelInitializer.enableLanguageModelFor(scriptProject);
 	}
 
 	/**
@@ -204,8 +212,9 @@ public class PHPNature extends ScriptNature {
 	 *                The exception description.
 	 */
 	public IFolder createFolder(String aProjectRelativePathString) throws CoreException {
-		if (aProjectRelativePathString != null && aProjectRelativePathString.length() > 0)
+		if (aProjectRelativePathString != null && aProjectRelativePathString.length() > 0) {
 			return createFolder(new Path(aProjectRelativePathString));
+		}
 		return null;
 	}
 
@@ -218,8 +227,9 @@ public class PHPNature extends ScriptNature {
 	public IFolder createFolder(IPath aProjectRelativePath) throws CoreException {
 		if (aProjectRelativePath != null && !aProjectRelativePath.isEmpty()) {
 			IFolder folder = getWorkspace().getRoot().getFolder(getProjectPath().append(aProjectRelativePath));
-			if (!folder.exists())
+			if (!folder.exists()) {
 				folder.create(true, true, null);
+			}
 			return folder;
 		}
 		return null;
