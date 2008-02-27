@@ -7,7 +7,6 @@ import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocClassVariableEvaluator;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.PHPDocMethodReturnTypeEvaluator;
 import org.eclipse.php.internal.core.typeinference.evaluators.phpdoc.VarCommentVariableEvaluator;
@@ -74,7 +73,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		}
 		if (expressionClass == TypeReference.class) {
 			TypeReference type = (TypeReference) expression;
-			return new FixedAnswerEvaluator(exprGoal, new PHPClassType(type.getName()));
+			return new TypeReferenceEvaluator(exprGoal, type);
 		}
 		if (expressionClass == PHPCallExpression.class || expressionClass == StaticMethodInvocation.class) {
 			return new MethodCallTypeEvaluator(exprGoal);
@@ -118,7 +117,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == ArrayVariableReference.class) {
 			return new ArrayVariableReferenceEvaluator(exprGoal);
 		}
-		if (expressionClass == FieldAccess.class) {
+		if (expressionClass == FieldAccess.class || expressionClass == StaticFieldAccess.class) {
 			return new FieldAccessEvaluator(exprGoal);
 		}
 		if (expressionClass == StaticConstantAccess.class) {

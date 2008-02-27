@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -11,6 +12,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
@@ -33,15 +35,30 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 	private IGoal[] produceNextSubgoal(IGoal previousGoal, IEvaluatedType previousResult, GoalState goalState) {
 
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
-		FieldAccess expression = (FieldAccess) typedGoal.getExpression();
-		Expression receiver = expression.getDispatcher();
-		Expression field = expression.getField();
+		Expression expression = (Expression) typedGoal.getExpression();
 
-		if (!(field instanceof SimpleReference)) {
+		Expression receiver;
+		Expression field;
+		if (expression instanceof FieldAccess) {
+			FieldAccess fieldAccess = (FieldAccess) expression;
+			receiver = fieldAccess.getDispatcher();
+			field = fieldAccess.getField();
+		} else if (expression instanceof StaticFieldAccess) {
+			StaticFieldAccess fieldAccess = (StaticFieldAccess) expression;
+			receiver = fieldAccess.getDispatcher();
+			field = fieldAccess.getField();
+		} else {
 			return null;
 		}
 
-		String variableName = '$' + ((SimpleReference)field).getName();
+		String variableName;
+		if (field instanceof VariableReference) { // static access
+			variableName = ((VariableReference) field).getName();
+		} else if (field instanceof SimpleReference) { // object access
+			variableName = '$' + ((SimpleReference) field).getName();
+		} else {
+			return null;
+		}
 
 		// just starting to evaluate method, evaluate method receiver first:
 		if (state == STATE_INIT) {
