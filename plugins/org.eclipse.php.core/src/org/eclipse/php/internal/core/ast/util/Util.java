@@ -10,23 +10,35 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URI;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.resources.mapping.IModelProviderDescriptor;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourceAttributes;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
 import org.eclipse.dltk.core.IModelElement;
@@ -34,11 +46,9 @@ import org.eclipse.dltk.core.IModelStatusConstants;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -68,8 +78,8 @@ public class Util {
 
 	private static final String EMPTY_ARGUMENT = "   "; //$NON-NLS-1$
 	
-	private static char[][] JAVA_LIKE_EXTENSIONS;
-	public static boolean ENABLE_JAVA_LIKE_EXTENSIONS = true;
+	private static char[][] PHP_LIKE_EXTENSIONS;
+	public static final boolean ENABLE_PHP_LIKE_EXTENSIONS = true;
 
 	private static final char[] BOOLEAN = "boolean".toCharArray(); //$NON-NLS-1$
 	private static final char[] BYTE = "byte".toCharArray(); //$NON-NLS-1$
@@ -739,10 +749,10 @@ public class Util {
 	 * Returns the registered Java like extensions.
 	 */
 	public static char[][] getPhpLikeExtensions() {
-		if (JAVA_LIKE_EXTENSIONS == null) {
+		if (PHP_LIKE_EXTENSIONS == null) {
 			// TODO (jerome) reenable once JDT UI supports other file extensions (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=71460)
-			if (!ENABLE_JAVA_LIKE_EXTENSIONS)
-				JAVA_LIKE_EXTENSIONS = new char[][] {"php".toCharArray()};
+			if (!ENABLE_PHP_LIKE_EXTENSIONS)
+				PHP_LIKE_EXTENSIONS = new char[][] {"php".toCharArray()};
 			else {
 				IContentType javaContentType = Platform.getContentTypeManager().getContentType(PHPNature.ID);
 				HashSet fileExtensions = new HashSet();
@@ -768,10 +778,10 @@ public class Util {
 						continue;
 					extensions[index++] = fileExtension.toCharArray();
 				}
-				JAVA_LIKE_EXTENSIONS = extensions;
+				PHP_LIKE_EXTENSIONS = extensions;
 			}
 		}
-		return JAVA_LIKE_EXTENSIONS;
+		return PHP_LIKE_EXTENSIONS;
 	}
 	/**
 	 * Get the jdk level of this root.
@@ -1778,7 +1788,7 @@ public class Util {
 	 * Resets the list of Java-like extensions after a change in content-type.
 	 */
 	public static void resetJavaLikeExtensions() {
-		JAVA_LIKE_EXTENSIONS = null;
+		PHP_LIKE_EXTENSIONS = null;
 	}
 	
 	/**
