@@ -118,7 +118,6 @@ public class AST {
 	final lr_parser parser;
 	final String apiLevel;
 	final boolean useASPTags;
-	private Reader reader;
 
 	/**
 	 * The event handler for this AST. 
@@ -177,7 +176,6 @@ public class AST {
 	private BindingResolver resolver = new BindingResolver();
 
 	public AST(Reader reader, String apiLevel, boolean aspTagsAsPhp) throws IOException {
-		this.reader = reader;
 		this.useASPTags = aspTagsAsPhp;
 		this.apiLevel = apiLevel;
 		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp);
@@ -762,7 +760,7 @@ public class AST {
 	private final Object[] THIS_AST = new Object[] { this };
 
 	/*
-	 * Must not collide with a value for ICompilationUnit constants
+	 * Must not collide with a value for IProgram constants
 	 */
 	static final int RESOLVED_BINDINGS = 0x80000000;
 
@@ -846,7 +844,7 @@ public class AST {
 	 * marked as unmodifiable, or if this compilation unit has already
 	 * been tampered with, or if recording has already been enabled,
 	 * or if <code>root</code> is not owned by this AST
-	 * @see CompilationUnit#recordModifications()
+	 * @see Program#recordModifications()
 	 * @since 3.0
 	 */
 	void recordModifications(Program root) {
@@ -883,7 +881,7 @@ public class AST {
 	 * <code>null</code> or does not correspond to this AST
 	 * @exception IllegalStateException if <code>recordModifications</code>
 	 * was not called to enable recording
-	 * @see CompilationUnit#rewrite(IDocument, Map)
+	 * @see Program#rewrite(IDocument, Map)
 	 * @since 3.0
 	 */
 	TextEdit rewrite(IDocument document, Map options) {
@@ -913,7 +911,7 @@ public class AST {
 	 * @since 3.3
 	 */
 	/*	public boolean hasStatementsRecovery() {
-			return (this.bits & ICompilationUnit.ENABLE_STATEMENTS_RECOVERY) != 0;
+			return (this.bits & IProgram.ENABLE_STATEMENTS_RECOVERY) != 0;
 		}
 	*/
 	/**
@@ -923,7 +921,7 @@ public class AST {
 	 * @since 3.3
 	 */
 	/*	public boolean hasBindingsRecovery() {
-			return (this.bits & ICompilationUnit.ENABLE_BINDINGS_RECOVERY) != 0;
+			return (this.bits & IProgram.ENABLE_BINDINGS_RECOVERY) != 0;
 		}
 	*/
 	void setFlag(int newValue) {
@@ -966,7 +964,6 @@ public class AST {
 		if (reader == null) {
 			throw new IllegalArgumentException();
 		}
-		this.reader = reader;
 		this.lexer.yyreset(reader);
 		this.lexer.resetCommentList();
 		this.parser.setScanner(this.lexer);
