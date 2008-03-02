@@ -78,12 +78,11 @@ class InternalASTRewrite extends NodeEventHandler {
 					return new SourceRange(extendedStartPosition, extendedLength);
 				}
 			};
-			char[] content = document.get().toCharArray();
 			LineInformation lineInfo = LineInformation.create(document);
 			String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 			List comments = rootNode.comments();
 
-			ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(lexer, content, lineInfo, lineDelim, result, this.eventStore, this.nodeStore, comments, options, xsrComputer);
+			ASTRewriteAnalyzer visitor = new ASTRewriteAnalyzer(lexer, document, lineInfo, lineDelim, result, this.eventStore, this.nodeStore, comments, options, xsrComputer);
 			rootNode.accept(visitor);
 		}
 		return result;

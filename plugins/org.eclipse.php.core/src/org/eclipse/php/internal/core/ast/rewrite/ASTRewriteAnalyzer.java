@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -62,6 +63,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	private final Stack sourceCopyEndNodes;
 
 	private final char[] content;
+	private final IDocument document;
 	private final LineInformation lineInfo;
 	private final ASTRewriteFormatter formatter;
 	private final NodeInfoStore nodeInfos;
@@ -73,7 +75,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	/**
 	 * Constructor for ASTRewriteAnalyzer.
 	 * @param scanner An {@link AstLexer} scanner.
-	 * @param content the content of the compilation unit to rewrite.
+	 * @param document The IDocument that contains the content of the compilation unit to rewrite.
 	 * @param lineInfo line information for the content of the compilation unit to rewrite.
 	 * @param rootEdit the edit to add all generated edits to
 	 * @param eventStore the event store containing the description of changes
@@ -82,10 +84,11 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @param options the current options (formatting/compliance) or <code>null</code>.
 	 * @param extendedSourceRangeComputer the source range computer to use
 	 */
-	public ASTRewriteAnalyzer(AstLexer scanner, char[] content, LineInformation lineInfo, String lineDelim, TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List comments, Map options, TargetSourceRangeComputer extendedSourceRangeComputer) {
+	public ASTRewriteAnalyzer(AstLexer scanner, IDocument document, LineInformation lineInfo, String lineDelim, TextEdit rootEdit, RewriteEventStore eventStore, NodeInfoStore nodeInfos, List comments, Map options, TargetSourceRangeComputer extendedSourceRangeComputer) {
 		this.scanner = scanner;
 		this.eventStore = eventStore;
-		this.content = content;
+		this.document = document;
+		this.content = document.get().toCharArray();
 		this.lineInfo = lineInfo;
 		this.nodeInfos = nodeInfos;
 		this.tokenScanner = null;
@@ -93,7 +96,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 		this.sourceCopyInfoToEdit = new IdentityHashMap();
 		this.sourceCopyEndNodes = new Stack();
 
-		this.formatter = new ASTRewriteFormatter(nodeInfos, eventStore, options, lineDelim);
+		this.formatter = new ASTRewriteFormatter(document, nodeInfos, eventStore, options, lineDelim, scanner.getPHPVersion());
 
 		this.extendedSourceRangeComputer = extendedSourceRangeComputer;
 		this.lineCommentEndOffsets = new LineCommentEndOffsets(comments);
