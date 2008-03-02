@@ -269,6 +269,32 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
+	/**
+	 * Returns the next position on the text where one the given delimiters start
+	 * @param textSequence  - The input text sequence
+	 * @param startPosition - The current position in the text sequence to start from 
+	 * @param delims        - The array of delimiters
+	 */
+	public static int readForwardUntilDelim(TextSequence textSequence, int startPosition, char[] delims) {
+		int rv = startPosition;
+		for (; rv < textSequence.length(); rv++) {
+			char c = textSequence.charAt(rv);
+			if (isDelimiter(c, delims)) {
+				break;
+			}
+		}
+		return rv;
+	}
+
+	private static boolean isDelimiter(char c, char[] delims) {
+		for (char curr : delims) {
+			if (curr == c) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
