@@ -25,18 +25,26 @@ import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
 import org.eclipse.php.internal.core.format.NullCodeFormattingProcessor;
 import org.eclipse.text.edits.*;
 
+/**
+ * AST rewrite formatter
+ * 
+ * @author shalom (based on JDT code)
+ */
 /* package */final class ASTRewriteFormatter {
+
+	// TODO - Need a code cleanup
+	private static IFormatterProcessorFactory contentFormatter;
 
 	public static class NodeMarker extends Position {
 		public Object data;
 	}
 	private class ExtendedFlattener extends ASTRewriteFlattener {
 
-		private ArrayList positions;
+		private ArrayList<NodeMarker> positions;
 
 		public ExtendedFlattener(RewriteEventStore store) {
 			super(store);
-			this.positions = new ArrayList();
+			this.positions = new ArrayList<NodeMarker>();
 		}
 
 		/* (non-Javadoc)
@@ -89,7 +97,7 @@ import org.eclipse.text.edits.*;
 
 		private void fixupLength(Object data, int endOffset) {
 			for (int i = this.positions.size() - 1; i >= 0; i--) {
-				NodeMarker marker = (NodeMarker) this.positions.get(i);
+				NodeMarker marker = this.positions.get(i);
 				if (marker.data == data) {
 					marker.length = endOffset - marker.offset;
 					return;
@@ -98,7 +106,7 @@ import org.eclipse.text.edits.*;
 		}
 
 		public NodeMarker[] getMarkers() {
-			return (NodeMarker[]) this.positions.toArray(new NodeMarker[this.positions.size()]);
+			return this.positions.toArray(new NodeMarker[this.positions.size()]);
 		}
 	}
 
@@ -160,7 +168,7 @@ import org.eclipse.text.edits.*;
 	 * @param resultingMarkers Resulting the updated NodeMarkers.
 	 * @return Returns the serialized and formatted code.
 	 */
-	public String getFormattedResult(ASTNode node, int initialIndentationLevel, Collection resultingMarkers) {
+	public String getFormattedResult(ASTNode node, int initialIndentationLevel, Collection<NodeMarker> resultingMarkers) {
 
 		ExtendedFlattener flattener = new ExtendedFlattener(this.eventStore);
 		node.accept(flattener);
@@ -188,7 +196,6 @@ import org.eclipse.text.edits.*;
 	}
 
 	public String createIndentString(int indentationUnits) {
-		// TODO : take from preference return ToolFactory.createCodeFormatter(this.options).createIndentationString(indentationUnits);
 		try {
 			return createCodeFormatter(this.options, new Region(0, 0), createDocument("", null)).createIndentationString(indentationUnits);
 		} catch (Exception e) {
@@ -236,10 +243,7 @@ import org.eclipse.text.edits.*;
 	}
 
 	public TextEdit formatString(int kind, String string, int offset, int length, int indentationLevel) {
-		// TODO provide code formatter to format the string into TextEdit 
-		// FIXME - Test this code (maybe we need to take only the partial string and add <?php to it).
 		try {
-			// The created ICodeFormattingProcessor should already parse and accept the given String code.
 			ICodeFormattingProcessor codeFormatter = createCodeFormatter(this.options, new Region(offset, length), createDocument(string, null));
 			return codeFormatter.getTextEdits();
 		} catch (Exception e) {
@@ -258,7 +262,7 @@ import org.eclipse.text.edits.*;
 	/*
 	 * Returns an instance of IFormatterProcessorFactory extracted from the extension point of the 'phpFormatterProcessor'
 	 */
-	private IFormatterProcessorFactory getContentFomatter() {
+	private static IFormatterProcessorFactory getContentFomatter() {
 		if (contentFormatter != null) {
 			return contentFormatter;
 		}
@@ -318,22 +322,38 @@ import org.eclipse.text.edits.*;
 		TextEdit edit = formatString(0, concatStr, prefix.length(), str.length(), indentationLevel);
 
 		if (prefix.length() > 0) {
-			edit = shifEdit(edit, prefix.length());
+			edit = shifEdit(edit, prefix.length(), prefix);
 		}
 		return edit;
 	}
 
-	private static TextEdit shifEdit(TextEdit oldEdit, int diff) {
+	private static TextEdit shifEdit(TextEdit oldEdit, int diff, String prefix) {
 		TextEdit newEdit;
 		if (oldEdit instanceof ReplaceEdit) {
 			ReplaceEdit edit = (ReplaceEdit) oldEdit;
-			newEdit = new ReplaceEdit(edit.getOffset() - diff, edit.getLength(), edit.getText());
+			int editOffset = edit.getOffset();
+			if (editOffset >= diff) {
+				newEdit = new ReplaceEdit(editOffset - diff, edit.getLength(), edit.getText());
+			} else {
+				// The new edit is actually an insertion of whitespace and new lines characters.
+				newEdit = getEndPrefixInsertion(edit.getText());
+			}
 		} else if (oldEdit instanceof InsertEdit) {
 			InsertEdit edit = (InsertEdit) oldEdit;
-			newEdit = new InsertEdit(edit.getOffset() - diff, edit.getText());
+			int editOffset = edit.getOffset();
+			if (editOffset >= diff) {
+				newEdit = new InsertEdit(editOffset - diff, edit.getText());
+			} else {
+				newEdit = new InsertEdit(0, edit.getText());
+			}
 		} else if (oldEdit instanceof DeleteEdit) {
 			DeleteEdit edit = (DeleteEdit) oldEdit;
-			newEdit = new DeleteEdit(edit.getOffset() - diff, edit.getLength());
+			int editOffset = edit.getOffset();
+			if (editOffset >= diff) {
+				newEdit = new DeleteEdit(editOffset - diff, edit.getLength());
+			} else {
+				newEdit = new DeleteEdit(0, edit.getLength() - (diff - editOffset));
+			}
 		} else if (oldEdit instanceof MultiTextEdit) {
 			newEdit = new MultiTextEdit();
 		} else {
@@ -341,12 +361,31 @@ import org.eclipse.text.edits.*;
 		}
 		TextEdit[] children = oldEdit.getChildren();
 		for (int i = 0; i < children.length; i++) {
-			TextEdit shifted = shifEdit(children[i], diff);
+			TextEdit shifted = shifEdit(children[i], diff, prefix);
 			if (shifted != null) {
 				newEdit.addChild(shifted);
 			}
 		}
 		return newEdit;
+	}
+
+	/*
+	 * Returns an InsertEdit edit for a situation where the edit was done also on the prefix string. 
+	 * In this case, the edit always start from offset 0 and the added string contains the new line and the whitespace characters.
+	 */
+	private static InsertEdit getEndPrefixInsertion(String newPrefix) {
+		// collect the whitespace characters from the end of the new prefix
+		StringBuilder newPrefixEnding = new StringBuilder();
+		char[] newPrefixArr = newPrefix.toCharArray();
+		for (int i = newPrefixArr.length - 1; i >= 0; i--) {
+			char c = newPrefixArr[i];
+			if (c == ' ' || c == '\r' || c == '\n' || c == '\t') {
+				newPrefixEnding.append(c);
+			} else {
+				break;
+			}
+		}
+		return new InsertEdit(0, newPrefixEnding.reverse().toString());
 	}
 
 	private static Document createDocument(String string, Position[] positions) throws IllegalArgumentException {
@@ -502,6 +541,5 @@ import org.eclipse.text.edits.*;
 	public final BlockContext FOR_BLOCK = new BlockFormattingPrefix("for (;;) ", 7); //$NON-NLS-1$
 	public final BlockContext WHILE_BLOCK = new BlockFormattingPrefix("while (true)", 11); //$NON-NLS-1$
 	public final BlockContext DO_BLOCK = new BlockFormattingPrefixSuffix("do ", "while (true);", 1); //$NON-NLS-1$ //$NON-NLS-2$
-	private IFormatterProcessorFactory contentFormatter;
 
 }
