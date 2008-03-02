@@ -66,4 +66,9 @@ public class PHPWatchAction extends WatchExpressionAction implements IWorkbenchW
 		}
 	}
 
+	/**
+	 * @since 3.4
+	 */
+	public void dispose() {
+	}
 }
