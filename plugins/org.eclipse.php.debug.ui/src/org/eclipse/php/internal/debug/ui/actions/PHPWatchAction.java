@@ -67,9 +67,8 @@ public class PHPWatchAction extends WatchExpressionAction implements IWorkbenchW
 	}
 
 	/**
-	 * TODO SHALOM - please check this implementation
+	 * @since 3.4
 	 */
 	public void dispose() {
-		// TODO Auto-generated method stub
 	}
 }
