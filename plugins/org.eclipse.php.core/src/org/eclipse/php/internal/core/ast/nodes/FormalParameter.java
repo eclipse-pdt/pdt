@@ -304,7 +304,7 @@ public class FormalParameter extends ASTNode {
 	 * </ul>
 	 */
 	public void setParameterType(Identifier id) {
-//		// an Assignment may occur inside a Expression - must check cycles
+		//		// an Assignment may occur inside a Expression - must check cycles
 		Identifier oldChild = this.parameterType;
 		preReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 		this.parameterType = id;
@@ -366,7 +366,7 @@ public class FormalParameter extends ASTNode {
 					throw new IllegalStateException();
 				}
 			case ASTNode.VARIABLE:
-				final Identifier variableName = (Identifier) ((Variable) expression).getVariableName();
+				final Identifier variableName = (Identifier) ((Variable) expression).getName();
 				return variableName;
 		}
 		throw new IllegalStateException();
@@ -389,7 +389,7 @@ public class FormalParameter extends ASTNode {
 		final FormalParameter result = new FormalParameter(this.getStart(), this.getEnd(), target, type, name, value, isMandatory);
 		return result;
 	}
-	
+
 	/**
 	 * Resolves and returns the binding for this formal parameter	
 	 * 
@@ -398,5 +398,14 @@ public class FormalParameter extends ASTNode {
 	 */
 	public final ITypeBinding resolveTypeBinding() {
 		return this.ast.getBindingResolver().resolveTypeParameter(this);
+	}
+
+	/**
+	 * Returns true if this FormalParemeter has a valid (non null and with value) default value.
+	 * 
+	 * @return True, iff the default value is valid.
+	 */
+	public boolean hasDefaultValue() {
+		return defaultValue != null && defaultValue.getLength() > 0;
 	}
 }
