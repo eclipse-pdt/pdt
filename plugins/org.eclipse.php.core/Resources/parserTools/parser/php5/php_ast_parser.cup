@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.7 2008/02/05 10:08:19 rganor Exp $
+////    $Id: php_ast_parser.cup,v 1.8 2008/03/03 08:10:37 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +53,21 @@ parser code {:
 	   	//	System.err.println("");
     }	
 	
+	
+	public void report_fatal_error(
+    String   message, 
+    Object   info)
+    throws java.lang.Exception
+    {
+      /* stop parsing (not really necessary since we throw an exception, but) */
+      done_parsing();
+
+      /* use the normal error message reporting to put out the message */
+      report_error(message, info);
+
+      /* throw an exception */
+     // throw new Exception("Can't recover from previous error(s)");
+    }
 :}
 
 /* terminals */
