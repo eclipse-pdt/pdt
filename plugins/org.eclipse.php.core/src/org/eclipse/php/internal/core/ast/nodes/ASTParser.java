@@ -61,6 +61,7 @@ public class ASTParser {
 			throw new IllegalArgumentException("Invalid version in ASTParser");
 		}
 		this.ast = new AST(reader, version, useASPTags);
+		this.ast.setDefaultNodeFlag(ASTNode.ORIGINAL);		
 	}
 
 	/**
@@ -127,6 +128,7 @@ public class ASTParser {
 		}
 		Program p = (Program) symbol.value;
 		AST ast = p.getAST();
+		ast.setDefaultNodeFlag(0);
 		// Set the original modification count to the count after the creation of the Program.
 		// This is important to allow the AST rewriting. 
 		ast.setOriginalModificationCount(ast.modificationCount());

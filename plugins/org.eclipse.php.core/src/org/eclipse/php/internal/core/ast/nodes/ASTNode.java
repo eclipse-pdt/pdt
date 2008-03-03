@@ -235,6 +235,7 @@ public abstract class ASTNode implements Visitable {
 			throw new IllegalArgumentException();
 		}
 		this.ast = ast;
+		setFlags(ast.getDefaultNodeFlag());
 	}
 
 	/**
@@ -242,11 +243,8 @@ public abstract class ASTNode implements Visitable {
 	 * @param ast
 	 */
 	public ASTNode(int start, int end, AST ast) {
-		if (ast == null) {
-			throw new IllegalArgumentException();
-		}
-
-		this.ast = ast;
+		this(ast);
+		
 		this.start = start;
 		this.length = end - start;
 	}
