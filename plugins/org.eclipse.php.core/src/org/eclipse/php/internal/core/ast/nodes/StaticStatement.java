@@ -82,7 +82,7 @@ public class StaticStatement extends Statement {
 		return (Variable[]) vars.toArray(new Variable[vars.size()]);
 	}
 
-	public void accept(Visitor visitor) {
+	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);

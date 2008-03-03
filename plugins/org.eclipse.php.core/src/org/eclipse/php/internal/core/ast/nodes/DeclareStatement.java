@@ -76,7 +76,7 @@ public class DeclareStatement extends Statement {
 		super(ast);
 	}
 	
-	public void accept(Visitor visitor) {
+	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);

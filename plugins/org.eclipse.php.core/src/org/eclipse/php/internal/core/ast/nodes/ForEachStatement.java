@@ -89,7 +89,7 @@ public class ForEachStatement extends Statement {
 		this(start, end, ast, expression, null, value, statement);
 	}
 
-	public void accept(Visitor visitor) {
+	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);

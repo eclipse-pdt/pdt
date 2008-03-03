@@ -19,6 +19,20 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  */
 public abstract class AbstractVisitor implements Visitor {
 
+	/**
+	 *@see Visitor#preVisit(ASTNode)
+	 */
+	public void preVisit(ASTNode node) {
+		// default implementation: do nothing
+	}
+	
+	/**
+	 *@see Visitor#postVisit(ASTNode)
+	 */
+	public void postVisit(ASTNode node) {
+		// default implementation: do nothing
+	}
+	
 	public boolean visit(ASTNode node) {
 		return true;
 	}

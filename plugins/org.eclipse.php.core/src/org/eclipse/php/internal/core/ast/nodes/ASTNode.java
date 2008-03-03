@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.*;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
  * Abstract superclass of all Abstract Syntax Tree (AST) node types. <p>
@@ -249,6 +250,47 @@ public abstract class ASTNode implements Visitable {
 		this.length = end - start;
 	}
 
+	/**
+	 * Accepts the given visitor on a visit of the current node.
+	 * 
+	 * @param visitor the visitor object
+	 * @exception IllegalArgumentException if the visitor is null
+	 */
+	public final void accept(Visitor visitor) {
+		if (visitor == null) {
+			throw new IllegalArgumentException();
+		}
+		// begin with the generic pre-visit
+		visitor.preVisit(this);
+		// dynamic dispatch to internal method for type-specific visit/endVisit
+		accept0(visitor);
+		// end with the generic post-visit
+		visitor.postVisit(this);
+	}
+
+	/**
+	 * Accepts the given visitor on a type-specific visit of the current node.
+	 * This method must be implemented in all concrete AST node types.
+	 * <p>
+	 * General template for implementation on each concrete ASTNode class:
+	 * <pre>
+	 * <code>
+	 * boolean visitChildren = visitor.visit(this);
+	 * if (visitChildren) {
+	 *    // visit children in normal left to right reading order
+	 *    ... acceptChild();
+	 * }
+	 * visitor.endVisit(this);
+	 * </code>
+	 * </pre>
+	 * Note that the caller (<code>accept</code>) take cares of invoking
+	 * <code>visitor.preVisit(this)</code> and <code>visitor.postVisit(this)</code>.
+	 * </p>
+	 * 
+	 * @param visitor the visitor object
+	 */
+	abstract void accept0(Visitor visitor);
+	
 	/**
 	 * Returns whether the subtree rooted at the given node matches the
 	 * given other object as decided by the given matcher.

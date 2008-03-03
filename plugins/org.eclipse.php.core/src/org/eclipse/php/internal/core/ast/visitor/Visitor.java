@@ -22,6 +22,28 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  */
 public interface Visitor {
 
+	/**
+	 * Visits the given AST node prior to the type-specific visit.
+	 * (before <code>visit</code>).
+	 * <p>
+	 * The default implementation does nothing. Subclasses may reimplement.
+	 * </p>
+	 * 
+	 * @param node the node to visit
+	 */
+	public void preVisit(ASTNode node);
+	
+	/**
+	 * Visits the given AST node following the type-specific visit
+	 * (after <code>endVisit</code>).
+	 * <p>
+	 * The default implementation does nothing. Subclasses may reimplement.
+	 * </p>
+	 * 
+	 * @param node the node to visit
+	 */
+	public void postVisit(ASTNode node);
+	
 	public boolean visit(ArrayAccess arrayAccess);
 
 	public void endVisit(ArrayAccess arrayAccess);

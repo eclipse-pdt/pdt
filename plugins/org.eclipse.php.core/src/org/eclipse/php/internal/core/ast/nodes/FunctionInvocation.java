@@ -72,7 +72,7 @@ public class FunctionInvocation extends VariableBase {
 		this(start, end, ast, functionName, parameters == null ? null : (Expression[]) parameters.toArray(new Expression[parameters.size()]));
 	}
 
-	public void accept(Visitor visitor) {
+	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);

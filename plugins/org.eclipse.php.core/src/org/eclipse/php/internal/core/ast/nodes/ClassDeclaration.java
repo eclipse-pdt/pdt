@@ -101,7 +101,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		this(start, end, ast, modifier, className, superClass, interfaces == null ? null : (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
 	
-	public void accept(Visitor visitor) {
+	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);

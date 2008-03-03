@@ -66,7 +66,7 @@ public class ListVariable extends VariableBase {
 		this(start, end, ast, variables == null ? null : (VariableBase[]) variables.toArray(new VariableBase[variables.size()]));
 	}
 
-	public void accept(Visitor visitor) {
+	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
