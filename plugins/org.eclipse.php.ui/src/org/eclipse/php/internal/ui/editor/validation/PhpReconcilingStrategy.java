@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.text.IProblemRequestorExtension;
-import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.BadLocationException;
@@ -159,9 +158,8 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		} catch (OperationCanceledException ex) {
 			Assert.isTrue(fProgressMonitor == null || fProgressMonitor.isCanceled());
 
-		} catch (Exception e) {
-			// TODO: handle this event (although can't reach this point 
-			e.printStackTrace();
+		} catch (Exception e) { 
+			throw new ModelException(e, IStatus.ERROR);	
 			
 		} finally {
 			/* fix for missing cancel flag communication */
