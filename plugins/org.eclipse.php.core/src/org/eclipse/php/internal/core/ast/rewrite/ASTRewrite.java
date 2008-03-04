@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.jdt.core.IClassFile;
-import org.eclipse.jdt.core.ITypeRoot;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -36,7 +33,7 @@ import org.eclipse.text.edits.TextEditGroup;
  * quick fix proposals). The rewrite infrastructure tries to generate minimal
  * text changes, preserve existing comments and indentation, and follow code
  * formatter settings. If the freedom to explore multiple alternate changes is
- * not required, consider using the AST's built-in rewriter 
+ * not required, consider using the AST's built-in rewriter
  * (see {@link org.eclipse.php.core.ast.nodes.Program#rewrite(IDocument, Map)}).
  * <p>
  * The following code snippet illustrated usage of this class:
@@ -57,7 +54,7 @@ import org.eclipse.text.edits.TextEditGroup;
  * TextEdit edits = rewriter.rewriteAST(document, null);
  * UndoEdit undo = edits.apply(document);
  * assert "<?php class X {\n function foo() { } \n } ?>".equals(doc.get().toCharArray());
- * </pre> 
+ * </pre>
  * <p>
  * This class is not intended to be subclassed.
  * </p>
@@ -81,7 +78,7 @@ public class ASTRewrite {
 	/**
 	 * Creates a new instance for describing manipulations of
 	 * the given AST.
-	 * 
+	 *
 	 * @param ast the AST whose nodes will be rewritten
 	 * @return the new rewriter instance
 	 */
@@ -92,7 +89,7 @@ public class ASTRewrite {
 	/**
 	 * Internal constructor. Creates a new instance for the given AST.
 	 * Clients should use {@link #create(AST)} to create instances.
-	 * 
+	 *
 	 * @param ast the AST being rewritten
 	 */
 	protected ASTRewrite(AST ast) {
@@ -103,7 +100,7 @@ public class ASTRewrite {
 
 	/**
 	 * Returns the AST the rewrite was set up on.
-	 * 
+	 *
 	 * @return the AST the rewrite was set up on
 	 */
 	public final AST getAST() {
@@ -145,7 +142,7 @@ public class ASTRewrite {
 	 * the resulting text edit object will accurately reflect
 	 * the net cumulative affect of all those changes.
 	 * </p>
-	 * 
+	 *
 	 * @param document original document containing source code
 	 * @param options the table of formatter options
 	 * (key type: <code>String</code>; value type: <code>String</code>);
@@ -154,7 +151,7 @@ public class ASTRewrite {
 	 * @return text edit object describing the changes to the
 	 * document corresponding to the changes recorded by this rewriter
 	 * @throws IllegalArgumentException An <code>IllegalArgumentException</code>
-	 * is thrown if the document passed does not correspond to the AST that is rewritten. 
+	 * is thrown if the document passed does not correspond to the AST that is rewritten.
 	 */
 	public TextEdit rewriteAST(IDocument document, Map options) throws IllegalArgumentException {
 		if (document == null) {
@@ -199,16 +196,16 @@ public class ASTRewrite {
 	 * the resulting text edit object will accurately reflect
 	 * the net cumulative affect of all those changes.
 	 * </p>
-	 * 
+	 *
 	 * @return text edit object describing the changes to the
 	 * document corresponding to the changes recorded by this rewriter
 	 * @throws ModelException A {@link ModelException} is thrown when
 	 * the underlying compilation units buffer could not be accessed.
 	 * @throws IllegalArgumentException An {@link IllegalArgumentException}
 	 * is thrown if the document passed does not correspond to the AST that is rewritten.
-	 * 
+	 *
 	 * @since 3.2
-	
+
 	TODO: Rewrite action goes here
 
 	public TextEdit rewriteAST() throws ModelException, IllegalArgumentException {
@@ -216,7 +213,7 @@ public class ASTRewrite {
 		if (rootNode == null) {
 			return new MultiTextEdit(); // no changes
 		}
-		
+
 		ASTNode root= rootNode.getProgramRoot();
 		if (!(root instanceof Program)) {
 			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
@@ -226,12 +223,12 @@ public class ASTRewrite {
 		if (typeRoot == null || typeRoot.getBuffer() == null) {
 			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
 		}
-		
+
 		char[] content= typeRoot.getBuffer().getCharacters();
 		LineInformation lineInfo= LineInformation.create(astRoot);
 		String lineDelim= typeRoot.findRecommendedLineSeparator();
 		Map options= typeRoot.getJavaProject().getOptions(true);
-		
+
 		return internalRewriteAST(content, lineInfo, lineDelim, astRoot.comments(), options, rootNode);
 	}
 	 */
@@ -306,7 +303,7 @@ public class ASTRewrite {
 	 * Removes the given node from its parent in this rewriter. The AST itself
 	 * is not actually modified in any way; rather, the rewriter just records
 	 * a note that this node should not be there.
-	 * 
+	 *
 	 * @param node the node being removed
 	 * @param editGroup the edit group in which to collect the corresponding
 	 * text edits, or <code>null</code> if ungrouped
@@ -333,7 +330,7 @@ public class ASTRewrite {
 	 * or {@link #createStringPlaceholder(String, int)}). The AST itself
 	 * is not actually modified in any way; rather, the rewriter just records
 	 * a note that this node has been replaced.
-	 * 
+	 *
 	 * @param node the node being replaced
 	 * @param replacement the replacement node, or <code>null</code> if no
 	 * replacement
@@ -366,7 +363,7 @@ public class ASTRewrite {
 	 * value (primitive types must be boxed) or <code>null</code>.
 	 * The AST itself is not actually modified in any way; rather, the rewriter
 	 * just records a note that this node has been changed in the specified way.
-	 * 
+	 *
 	 * @param node the node
 	 * @param property the node's property; either a simple property or a child property
 	 * @param value the replacement child or new value, or <code>null</code> if none
@@ -397,11 +394,11 @@ public class ASTRewrite {
 	 * <p>
 	 * For child list properties use {@link ListRewrite#getRewrittenList()} to get access to the
 	 * rewritten nodes in a list. </p>
-	 * 
+	 *
 	 * @param node the node
 	 * @param property the node's property
 	 * @return the value of the given property as managed by this rewriter
-	 * 
+	 *
 	 * @since 3.2
 	 */
 	public Object get(ASTNode node, StructuralPropertyDescriptor property) {
@@ -417,7 +414,7 @@ public class ASTRewrite {
 	/**
 	 * Creates and returns a new rewriter for describing modifications to the
 	 * given list property of the given node.
-	 * 
+	 *
 	 * @param node the node
 	 * @param property the node's property; the child list property
 	 * @return a new list rewriter object
@@ -440,7 +437,7 @@ public class ASTRewrite {
 	 * the given node's current source range in the AST. After
 	 * <code>rewrite</code> is called, the result object is updated to
 	 * reflect the given node's source range in the rewritten AST.
-	 * 
+	 *
 	 * @param node the node to track
 	 * @return an object that tracks the source range of <code>node</code>
 	 * @throws IllegalArgumentException if the node is null, or if the node
@@ -502,9 +499,9 @@ public class ASTRewrite {
 	 * The string will be inserted without being reformatted beyond correcting
 	 * the indentation level. The placeholder node can either be inserted as new or
 	 * used to replace an existing node.
-	 * 
+	 *
 	 * @param code the string to be inserted; lines should should not have extra indentation
-	 * @param nodeType the ASTNode type that corresponds to the passed code. 
+	 * @param nodeType the ASTNode type that corresponds to the passed code.
 	 * @return the new placeholder node
 	 * @throws IllegalArgumentException if the code is null, or if the node
 	 * type is invalid
@@ -523,7 +520,7 @@ public class ASTRewrite {
 	}
 
 	/**
-	 * Creates and returns a node that represents a sequence of nodes. 
+	 * Creates and returns a node that represents a sequence of nodes.
 	 * Each of the given nodes must be either be brand new (not part of the original AST), or
 	 * a placeholder node (for example, one created by {@link #createCopyTarget(ASTNode)}
 	 * or {@link #createStringPlaceholder(String, int)}), or another group node.
@@ -532,7 +529,7 @@ public class ASTRewrite {
 	 * When the document is rewritten, the source code for each of the given nodes is
 	 * inserted, in order, into the output document at the position corresponding to the
 	 * group (indentation is adjusted).
-	 * 
+	 *
 	 * @param targetNodes the nodes to go in the group
 	 * @return the new group node
 	 * @throws IllegalArgumentException if the targetNodes is <code>null</code> or empty
@@ -544,8 +541,8 @@ public class ASTRewrite {
 		}
 		Block res = getNodeStore().createCollapsePlaceholder();
 		ListRewrite listRewrite = getListRewrite(res, Block.STATEMENTS_PROPERTY);
-		for (int i = 0; i < targetNodes.length; i++) {
-			listRewrite.insertLast(targetNodes[i], null);
+		for (ASTNode targetNode : targetNodes) {
+			listRewrite.insertLast(targetNode, null);
 		}
 		return res;
 	}
@@ -570,10 +567,10 @@ public class ASTRewrite {
 	/**
 	 * Creates and returns a placeholder node for a true copy of the given node.
 	 * The placeholder node can either be inserted as new or used to replace an
-	 * existing node. When the document is rewritten, a copy of the source code 
+	 * existing node. When the document is rewritten, a copy of the source code
 	 * for the given node is inserted into the output document at the position
 	 * corresponding to the placeholder (indentation is adjusted).
-	 * 
+	 *
 	 * @param node the node to create a copy placeholder for
 	 * @return the new placeholder node
 	 * @throws IllegalArgumentException if the node is null, or if the node
@@ -589,8 +586,8 @@ public class ASTRewrite {
 	 * The placeholder node can either be inserted as new or used to replace an
 	 * existing node. When the document is rewritten, the source code for the given
 	 * node is inserted into the output document at the position corresponding to the
-	 * placeholder (indentation is adjusted). 
-	 * 
+	 * placeholder (indentation is adjusted).
+	 *
 	 * @param node the node to create a move placeholder for
 	 * @return the new placeholder node
 	 * @throws IllegalArgumentException if the node is null, or if the node
@@ -603,7 +600,7 @@ public class ASTRewrite {
 	/**
 	 * Returns the extended source range computer for this AST rewriter.
 	 * The default value is a <code>new TargetSourceRangeComputer()</code>.
-	 * 
+	 *
 	 * @return an extended source range computer
 	 * @since 3.1
 	 */
@@ -618,7 +615,7 @@ public class ASTRewrite {
 	/**
 	 * Sets a custom target source range computer for this AST rewriter. This is advanced feature to modify how
 	 * comments are associated with nodes, which should be done only in special cases.
-	 * 
+	 *
 	 * @param computer a target source range computer,
 	 * or <code>null</code> to restore the default value of
 	 * <code>new TargetSourceRangeComputer()</code>
@@ -631,7 +628,7 @@ public class ASTRewrite {
 
 	/**
 	 * Returns a string suitable for debugging purposes (only).
-	 * 
+	 *
 	 * @return a debug string
 	 */
 	public String toString() {
