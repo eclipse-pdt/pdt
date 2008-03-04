@@ -20,8 +20,8 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.wst" version="2.0.0" match="compatible"/>
-      <import feature="org.eclipse.platform" version="3.3.0" match="compatible"/>
+      <import feature="org.eclipse.wst" version="3.0.0" match="compatible"/>
+      <import feature="org.eclipse.platform" version="3.4.0" match="compatible"/>
    </requires>
 
    <plugin
