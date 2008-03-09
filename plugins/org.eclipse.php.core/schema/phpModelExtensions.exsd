@@ -96,7 +96,7 @@
                   Java class that defines this language model extension.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.core.phpModel.ILanguageModelExtension"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.php.internal.core.phpModel.IPHPModelExtension"/>
                </appInfo>
             </annotation>
          </attribute>
