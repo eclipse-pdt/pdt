@@ -11,27 +11,59 @@ if (version_compare(phpversion(), "5.0.0") < 0) {
 	die ("This script requires PHP 5.0.0 or higher!\n");
 }
 
+
+$splitFiles = false;
+$phpdocDir = null;
+
+// Parse arguments:
 $argv = $_SERVER["argv"];
 $argv0 = array_shift ($argv);
-$phpdoc_dir = array_shift ($argv);
-if (!$phpdoc_dir) {
-	die ("USAGE: $argv0 <PHP.net documentation directory>\n");
+for ($i = 0; $i < count($argv); ++$i) {
+	switch ($argv[$i]) {
+		case "-split":
+			$splitFiles = true;
+			break;
+
+		case "-help":
+			show_help();
+			break;
+
+		default:
+			$phpdocDir = $argv[$i];
+	}
 }
 
-$functionsDoc = parse_phpdoc_functions ($phpdoc_dir);
-$classesDoc = parse_phpdoc_classes ($phpdoc_dir);
-$constantsDoc = parse_phpdoc_constants ($phpdoc_dir);
+if (!$phpdocDir) {
+	show_help();
+}
+
+$functionsDoc = parse_phpdoc_functions ($phpdocDir);
+$classesDoc = parse_phpdoc_classes ($phpdocDir);
+$constantsDoc = parse_phpdoc_constants ($phpdocDir);
 
 $processedFunctions = array();
 $processedClasses = array();
 $processedConstants = array();
 
-print "<?php\n";
+@mkdir ("php5");
+
+if (!$splitFiles) {
+	begin_file_output();
+}
 $extensions = get_loaded_extensions();
 foreach ($extensions as $extName) {	
+	if ($splitFiles) {
+		begin_file_output();
+	}
 	print_extension (new ReflectionExtension ($extName));
+	if ($splitFiles) {
+		finish_file_output("php5/{$extName}.php");
+	}
 }
 
+if ($splitFiles) {
+	begin_file_output();
+}
 $intFunctions = get_defined_functions();
 foreach ($intFunctions["internal"] as $intFunction) {
 	if (!$processedFunctions[strtolower($intFunction)]) {
@@ -61,7 +93,7 @@ foreach ($intConstants as $name => $value) {
 	}
 }
 
-print "?>";
+finish_file_output("php5/basic.php");
 
 // === Functions ===
 /**
@@ -102,13 +134,13 @@ function make_funckey_from_ref ($ref) {
 
 /**
  * Parses PHP documentation
- * @param phpdoc_dir string PHP.net documentation directory
+ * @param phpdocDir string PHP.net documentation directory
  * @return array Function information gathered from the PHP.net documentation by parsing XML files
  */
-function parse_phpdoc_functions ($phpdoc_dir) {
+function parse_phpdoc_functions ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdoc_dir}/en/reference/*/functions/*.xml"), 
-		glob ("{$phpdoc_dir}/en/reference/*/functions/*/*.xml") 
+		glob ("{$phpdocDir}/en/reference/*/functions/*.xml"), 
+		glob ("{$phpdocDir}/en/reference/*/functions/*/*.xml") 
 	);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
@@ -180,15 +212,15 @@ function parse_phpdoc_functions ($phpdoc_dir) {
 
 /**
  * Parses PHP documentation
- * @param phpdoc_dir string PHP.net documentation directory
+ * @param phpdocDir string PHP.net documentation directory
  * @return array Class information gathered from the PHP.net documentation by parsing XML files
  */
-function parse_phpdoc_classes ($phpdoc_dir) {
+function parse_phpdoc_classes ($phpdocDir) {
 	$xml_files = array_merge (
-		glob ("{$phpdoc_dir}/en/reference/*/reference.xml"),
-		glob ("{$phpdoc_dir}/en/reference/*/classes.xml"),
-		glob ("{$phpdoc_dir}/en/language/*/*.xml"),
-		glob ("{$phpdoc_dir}/en/language/*.xml")
+		glob ("{$phpdocDir}/en/reference/*/reference.xml"),
+		glob ("{$phpdocDir}/en/reference/*/classes.xml"),
+		glob ("{$phpdocDir}/en/language/*/*.xml"),
+		glob ("{$phpdocDir}/en/language/*.xml")
 	);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
@@ -213,11 +245,11 @@ function parse_phpdoc_classes ($phpdoc_dir) {
 
 /**
  * Parses PHP documentation
- * @param phpdoc_dir string PHP.net documentation directory
+ * @param phpdocDir string PHP.net documentation directory
  * @return array Constant information gathered from the PHP.net documentation by parsing XML files
  */
-function parse_phpdoc_constants ($phpdoc_dir) {
-	exec ("find ".addslashes($phpdoc_dir)." -name \"*constants.xml\"", $xml_files);
+function parse_phpdoc_constants ($phpdocDir) {
+	exec ("find ".addslashes($phpdocDir)." -name \"*constants.xml\"", $xml_files);
 	foreach ($xml_files as $xml_file) {
 		$xml = file_get_contents ($xml_file);
 		if (preg_match ('@xml:id=["\'](.*?)["\']@', $xml, $match)) {
@@ -657,6 +689,45 @@ function newline_to_phpdoc ($str, $tabs = 0) {
  */
 function print_tabs ($tabs) {
 	print str_repeat("\t", $tabs);
+}
+
+/**
+ * Starts outputing to the new file
+ */
+function begin_file_output() {
+	ob_start();
+	print "<?php\n";
+}
+
+/**
+ * Ends outputing, and dumps the output to the specified file
+ * @param filename File to dump the output
+ */
+function finish_file_output($filename) {
+	if (file_exists ($filename)) {
+		rename ($filename, "{$filename}.bak");
+	}
+	print "?>\n";
+	file_put_contents ($filename, ob_get_contents());
+	ob_end_clean();
+}
+
+/**
+ * Prints usage help to the screen, and exits from program
+ */
+function show_help() {
+	global $argv0;
+
+	die (<<<EOF
+USAGE: {$argv0} [options] <PHP.net documentation directory>
+
+Where options are:
+
+-help	Show this help.
+-split	Split output to different files (one file per PHP extension).
+
+EOF
+	);
 }
 
 ?>
