@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -14,11 +16,13 @@ import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.mixin.DocMember;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -41,21 +45,35 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 		Set<DocMember> docs = new HashSet<DocMember>();
 
-		if (instanceType instanceof PHPClassType) {
-			PHPClassType classType = (PHPClassType) instanceType;
-			IModelElement[] elements = PHPMixinModel.getInstance().getMethodDoc(classType.getTypeName(), methodName);
-			for (IModelElement e : elements) {
-				docs.add((DocMember) e);
-			}
-		} else if (instanceType instanceof AmbiguousType) {
-			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
-			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
-				if (type instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) type;
-					IModelElement[] elements = PHPMixinModel.getInstance().getMethodDoc(classType.getTypeName(), methodName);
-					for (IModelElement e : elements) {
-						docs.add((DocMember) e);
+		if (instanceType instanceof PHPClassType || instanceType instanceof AmbiguousType) {
+
+			List<IType> types = new LinkedList<IType>();
+			if (instanceType instanceof AmbiguousType) {
+				AmbiguousType ambiguousType = (AmbiguousType) instanceType;
+				for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
+					if (type instanceof PHPClassType) {
+						PHPClassType classType = (PHPClassType) type;
+						IModelElement[] classes = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+						for (IModelElement c : classes) {
+							types.add((IType) c);
+						}
 					}
+				}
+			} else {
+				PHPClassType classType = (PHPClassType) instanceType;
+				IModelElement[] classes = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+				for (IModelElement c : classes) {
+					types.add((IType) c);
+				}
+			}
+
+			for (IType type : types) {
+				try {
+					for (DocMember doc : PHPModelUtils.getClassMethodDoc(type, methodName, null)) {
+						docs.add(doc);
+					}
+				} catch (CoreException e) {
+					Logger.logException(e);
 				}
 			}
 		} else {
