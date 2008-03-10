@@ -13,20 +13,24 @@ package org.eclipse.php.internal.ui.corext.dom.fragments;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.internal.core.ast.nodes.ParenthesisExpression;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
+import org.eclipse.text.edits.TextEditGroup;
 
 class SimpleFragment extends ASTFragment {
 	private final ASTNode fNode;
 
 	SimpleFragment(ASTNode node) {
 		Assert.isNotNull(node);
-		fNode= node;
+		fNode = node;
 	}
 
 	public IASTFragment[] getMatchingFragmentsWithNode(ASTNode node) {
-		if (! PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
+		if (!PHPASTMatcher.doNodesMatch(getAssociatedNode(), node))
 			return new IASTFragment[0];
 
-		IASTFragment match= ASTFragmentFactory.createFragmentForFullSubtree(node);
+		IASTFragment match = ASTFragmentFactory.createFragmentForFullSubtree(node);
 		Assert.isTrue(match.matches(this) || this.matches(match));
 		return new IASTFragment[] { match };
 	}
@@ -51,10 +55,15 @@ class SimpleFragment extends ASTFragment {
 	public ASTNode getAssociatedNode() {
 		return fNode;
 	}
-	
-//	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup) {
-//		rewrite.replace(fNode, replacement, textEditGroup);
-//	}
+
+	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup) {
+		if (replacement instanceof Identifier && fNode.getParent() instanceof ParenthesisExpression) {
+			// replace including the parenthesized expression around it
+			rewrite.replace(fNode.getParent(), replacement, textEditGroup);
+		} else {
+			rewrite.replace(fNode, replacement, textEditGroup);
+		}
+	}
 
 	public int hashCode() {
 		return fNode.hashCode();
@@ -67,8 +76,7 @@ class SimpleFragment extends ASTFragment {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SimpleFragment other= (SimpleFragment) obj;
+		SimpleFragment other = (SimpleFragment) obj;
 		return fNode.equals(other.fNode);
 	}
-	
 }

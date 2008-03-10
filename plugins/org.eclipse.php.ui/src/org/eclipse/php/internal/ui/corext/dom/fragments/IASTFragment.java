@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.corext.dom.fragments;
 
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.text.edits.TextEditGroup;
 
 /**
@@ -83,5 +84,5 @@ public interface IASTFragment {
 	 * @param replacement replacement for this fragment
 	 * @param textEditGroup a description or <code>null</code>
 	 */
-	//public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup);
+	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup);
 }

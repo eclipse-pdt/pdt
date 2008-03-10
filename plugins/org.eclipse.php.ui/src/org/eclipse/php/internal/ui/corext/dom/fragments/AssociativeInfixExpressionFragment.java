@@ -16,14 +16,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.match.PHPASTMatcher;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.InfixExpression;
+import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 import org.eclipse.php.internal.ui.corext.SourceRange;
+import org.eclipse.text.edits.TextEditGroup;
 
 public class AssociativeInfixExpressionFragment extends ASTFragment implements IExpressionFragment {
 
@@ -33,7 +34,7 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	public static IExpressionFragment createSubPartFragmentBySourceRange(InfixExpression node, SourceRange range, IDocument document) throws BadLocationException {
 		Assert.isNotNull(node);
 		Assert.isNotNull(range);
-		Assert.isTrue(!range.covers(node));			
+		Assert.isTrue(!range.covers(node));
 		Assert.isTrue(new SourceRange(node).covers(range));
 
 		if (!isAssociativeInfix(node))
@@ -145,6 +146,49 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 		}
 	}
 
+	public void replace(ASTRewrite rewrite, ASTNode replacement, TextEditGroup textEditGroup) {
+		ASTNode groupNode = getGroupRoot();
+
+		List allOperands = findGroupMembersInOrderFor(getGroupRoot());
+		if (allOperands.size() == fOperands.size()) {
+			if (replacement instanceof Identifier && groupNode.getParent() instanceof ParenthesisExpression) {
+				// replace including the parenthesized expression around it
+				rewrite.replace(groupNode.getParent(), replacement, textEditGroup);
+			} else {
+				rewrite.replace(groupNode, replacement, textEditGroup);
+			}
+			return;
+		}
+
+		// Could maybe be done with less edits.
+		// Problem is that the nodes to replace may not be all in the same InfixExpression.
+		int first = allOperands.indexOf(fOperands.get(0));
+		int after = first + fOperands.size();
+		ArrayList newOperands = new ArrayList();
+		for (int i = 0; i < allOperands.size(); i++) {
+			if (i < first || after <= i) {
+				newOperands.add(rewrite.createCopyTarget((Expression) allOperands.get(i)));
+			} else /* i == first */{
+				newOperands.add(replacement);
+				i = after - 1;
+			}
+		}
+		Expression newExpression = rewrite.getAST().newInfixExpression((Expression) newOperands.get(0), getOperator(), (Expression) newOperands.get(1));
+		rewrite.replace(groupNode, newExpression, textEditGroup);
+	}
+
+	public Expression createCopyTarget(ASTRewrite rewrite, boolean removeSurroundingParenthesis) throws CoreException {
+		List allOperands = findGroupMembersInOrderFor(fGroupRoot);
+		if (allOperands.size() == fOperands.size()) {
+			return (Expression) rewrite.createCopyTarget(fGroupRoot);
+		}
+		int startPosition = getStartPosition();
+		// TODO - Check if it's working
+		String source = fGroupRoot.getProgramRoot().getSourceModule().getSource().substring(startPosition, getLength() + startPosition);
+		//		String source= cu.getBuffer().getText(getStartPosition(), getLength());
+		return (Expression) rewrite.createStringPlaceholder(source, ASTNode.INFIX_EXPRESSION);
+	}
+
 	/**
 	 * Returns List of Lists of <code>ASTNode</code>s
 	 */
@@ -165,13 +209,10 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	}
 
 	private static boolean matchesAt(int index, List subject, List toMatch) {
-		if(index + toMatch.size() > subject.size())
-			return false;  
-		for(int i= 0; i < toMatch.size(); i++, index++) {
-			if(!PHPASTMatcher.doNodesMatch(
-			        (ASTNode) subject.get(index), (ASTNode) toMatch.get(i)
-			    )
-			)
+		if (index + toMatch.size() > subject.size())
+			return false;
+		for (int i = 0; i < toMatch.size(); i++, index++) {
+			if (!PHPASTMatcher.doNodesMatch((ASTNode) subject.get(index), (ASTNode) toMatch.get(i)))
 				return false;
 		}
 		return true;
@@ -221,9 +262,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 		while (myOperands.hasNext() && othersOperands.hasNext()) {
 			ASTNode myOperand = (ASTNode) myOperands.next();
 			ASTNode othersOperand = (ASTNode) othersOperands.next();
-			
+
 			//TODO  - check that it works after implementing matching
-			if (! PHPASTMatcher.doNodesMatch(myOperand, othersOperand))
+			if (!PHPASTMatcher.doNodesMatch(myOperand, othersOperand))
 				return false;
 		}
 
@@ -256,9 +297,9 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	// TODO  - check that it works after implementing matching
 	private IASTFragment[] getSubFragmentsWithAnotherNodeMatching(IASTFragment toMatch) {
 		IASTFragment[] result = new IASTFragment[0];
-		for (Iterator iter= getOperands().iterator(); iter.hasNext();) {
-			ASTNode operand= (ASTNode) iter.next();
-			result= union(result, ASTMatchingFragmentFinder.findMatchingFragments(operand, (ASTFragment)toMatch));
+		for (Iterator iter = getOperands().iterator(); iter.hasNext();) {
+			ASTNode operand = (ASTNode) iter.next();
+			result = union(result, ASTMatchingFragmentFinder.findMatchingFragments(operand, (ASTFragment) toMatch));
 		}
 		return result;
 	}
@@ -324,7 +365,6 @@ public class AssociativeInfixExpressionFragment extends ASTFragment implements I
 	public int getOperator() {
 		return fGroupRoot.getOperator();
 	}
-
 
 	private static ArrayList<Expression> findGroupMembersInOrderFor(InfixExpression groupRoot) {
 		return new GroupMemberFinder(groupRoot).fMembersInOrder;
