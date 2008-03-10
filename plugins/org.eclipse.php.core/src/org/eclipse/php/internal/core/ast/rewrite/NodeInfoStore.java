@@ -15,10 +15,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.php.internal.core.ast.nodes.AST;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.TryStatement;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInfo;
 
 /**
@@ -68,7 +65,24 @@ public final class NodeInfoStore {
 	public final ASTNode newPlaceholderNode(int nodeType) {
 	    try {
 		    ASTNode node= this.ast.createInstance(nodeType);
-		    switch (node.getType()) {
+		    
+			switch (node.getType()) {
+		    	case ASTNode.ASSIGNMENT:
+		    		Assignment assignment = (Assignment) node;
+		    		assignment.setLeftHandSide(this.ast.newVariable("a"));
+		    		assignment.setOperator(Assignment.OP_EQUAL);
+		    		assignment.setRightHandSide(this.ast.newVariable("a"));
+		    		break;
+		    	case ASTNode.INFIX_EXPRESSION:
+		    		InfixExpression expression = (InfixExpression) node;
+		    		expression.setLeft(this.ast.newScalar("a"));
+		    		expression.setOperator(InfixExpression.OP_MINUS);
+		    		expression.setRight(this.ast.newVariable("a"));
+		    		break;
+		    	case ASTNode.VARIABLE:
+		    		Variable variable = (Variable) node;
+		    		variable.setName(this.ast.newIdentifier(""));
+		    		break;
 				case ASTNode.FIELD_DECLARATION:
 //				    ((FieldsDeclaration) node).fragments().add(this.ast.newVariableDeclarationFragment());
 				    break;
