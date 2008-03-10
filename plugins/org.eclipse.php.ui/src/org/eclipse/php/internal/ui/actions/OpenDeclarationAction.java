@@ -24,6 +24,10 @@ public class OpenDeclarationAction extends PHPEditorResolvingAction implements I
 		link.open();
 	}
 
+	public void update() {
+		setEnabled (getTextEditor() != null && isValid());
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.actions.PHPEditorResolvingAction#filterCodeDatas(org.eclipse.php.internal.core.phpModel.phpElementData.CodeData[])
 	 */
