@@ -13,107 +13,36 @@ package org.eclipse.php.internal.ui.editor;
 import java.io.IOException;
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.ScriptModelUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ISavePolicy;
 import org.eclipse.dltk.internal.ui.editor.ISourceModuleDocumentProvider;
 import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentExtension4;
-import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ISelectionValidator;
-import org.eclipse.jface.text.ISynchronizable;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextInputListener;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.LinkedModeModel;
-import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelExtension;
-import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.IPostSelectionProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.IBinding;
-import org.eclipse.php.internal.core.ast.nodes.IVariableBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
@@ -137,19 +66,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
-import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
@@ -160,6 +77,8 @@ import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.Double
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder;
 import org.eclipse.php.internal.ui.search.MethodExitsFinder;
+import org.eclipse.php.internal.ui.search.LocalVariableOccurrencesFinder;
+import org.eclipse.php.internal.ui.search.OccurrencesFinderFactory;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.text.PHPWordIterator;
@@ -169,44 +88,17 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ST;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TextChangeListener;
-import org.eclipse.swt.custom.TextChangedEvent;
-import org.eclipse.swt.custom.TextChangingEvent;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPartService;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
-import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextNavigationAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -219,7 +111,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
-import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
@@ -2504,14 +2395,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (locations == null && selectedNode instanceof Identifier) {
-//          TODO : Implement Me!			
-//			IBinding binding= ((Name)selectedNode).resolveBinding();
-//			if (binding != null && markOccurrencesOfType(binding)) {
-//				OccurrencesFinder finder= new OccurrencesFinder();
-//				if (finder.initialize(astRoot, selectedNode) == null) {
-//					locations= finder.getOccurrences();
-//				}
-//			}
+			int type = PhpElementConciliator.concile(selectedNode);
+			if (markOccurrencesOfType(type)) {
+				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
+				if (finder != null) {
+					if (finder.initialize(astRoot, selectedNode) == null) {
+						locations = finder.getOccurrences();
+					}
+				}
+			}
 		}
 
 		if (locations == null) {
@@ -2587,34 +2479,29 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		return store != null && store.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
 	}
 
-	boolean markOccurrencesOfType(IBinding binding) {
-
-		if (binding == null)
-			return false;
-
-		int kind= binding.getKind();
-
-		if (fMarkTypeOccurrences && kind == IBinding.TYPE)
-			return true;
-
-		if (fMarkMethodOccurrences && kind == IBinding.METHOD)
-			return true;
-
-		if (kind == IBinding.VARIABLE) {
-			IVariableBinding variableBinding= (IVariableBinding)binding;
-			if (variableBinding.isField()) {
-				int constantModifier= Modifiers.AccStatic | Modifiers.AccFinal;
-				boolean isConstant= (variableBinding.getModifiers() & constantModifier) == constantModifier;
-				if (isConstant)
-					return fMarkConstantOccurrences;
-				else
-					return fMarkFieldOccurrences;
-			}
-
-			return fMarkLocalVariableypeOccurrences;
+	/**
+	 * Returns is the occurrences of the type should be marked.
+	 * 
+	 * @param type One of the {@link PhpElementConciliator} constants integer type. 
+	 * @return True, if the type occurrences should be marked; False, otherwise.
+	 */
+	boolean markOccurrencesOfType(int type) {
+		switch (type) {
+			case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
+			case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
+				return fMarkFieldOccurrences;
+			case PhpElementConciliator.CONCILIATOR_FUNCTION:
+				return fMarkMethodOccurrences;
+			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
+			case PhpElementConciliator.CONCILIATOR_CONSTANT:
+			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
+				// TODO - Add more types to mark by
+				return true;
+			case PhpElementConciliator.CONCILIATOR_UNKNOWN:
+			case PhpElementConciliator.CONCILIATOR_PROGRAM:
+			default:
+				return false;
 		}
-
-		return false;
 	}
 
 	void removeOccurrenceAnnotations() {
