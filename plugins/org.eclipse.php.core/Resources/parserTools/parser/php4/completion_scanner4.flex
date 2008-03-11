@@ -11,8 +11,8 @@
 
 package org.eclipse.php.internal.core.phpModel.parser.php4;
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.javacup.sym;
+import java_cup.runtime.Symbol;
+import java_cup.sym;
 import org.eclipse.php.internal.core.phpModel.parser.CompletionLexer;
 import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
 import org.eclipse.php.internal.core.phpModel.parser.StateStack;
@@ -32,9 +32,9 @@ import java.util.regex.Pattern;
 %line
 
 /* %cup */
-%implements org.eclipse.php.internal.core.phpModel.javacup.runtime.Scanner
+%implements java_cup.runtime.Scanner
 %function next_token
-%type org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol
+%type java_cup.runtime.Symbol
 %eofval{
     return createSymbol(sym.EOF);
 %eofval}

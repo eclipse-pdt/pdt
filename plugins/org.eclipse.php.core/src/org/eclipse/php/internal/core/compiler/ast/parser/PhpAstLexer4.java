@@ -4,13 +4,14 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java_cup.runtime.Symbol;
+
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 
 public class PhpAstLexer4 extends org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4 {
 

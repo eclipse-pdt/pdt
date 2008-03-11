@@ -10,14 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.io.CharArrayReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
+
+import java_cup.runtime.Scanner;
+import java_cup.runtime.Symbol;
+import java_cup.runtime.lr_parser;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,9 +25,6 @@ import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4;
 import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5;
 import org.eclipse.php.internal.core.ast.scanner.PhpAstParser4;
 import org.eclipse.php.internal.core.ast.scanner.PhpAstParser5;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Scanner;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 
 
@@ -139,12 +133,12 @@ public class ASTParser {
 	 * NOT THREAD SAFE IMPLEMENTATION STARTS HERE 
 	 *********************************************************************************/
 	// php 5 analysis
-	private static final PhpAstParser5 PHP_AST_PARSER5 = new PhpAstParser5();
 	private static final PhpAstLexer5 PHP_AST_LEXER5 = new PhpAstLexer5(ASTParser.EMPTY_STRING_READER);
+	private static final PhpAstParser5 PHP_AST_PARSER5 = new PhpAstParser5(PHP_AST_LEXER5);
 
 	// php 4 analysis	
-	private static final PhpAstParser4 PHP_AST_PARSER4 = new PhpAstParser4();
 	private static final PhpAstLexer4 PHP_AST_LEXER4 = new PhpAstLexer4(ASTParser.EMPTY_STRING_READER);
+	private static final PhpAstParser4 PHP_AST_PARSER4 = new PhpAstParser4(PHP_AST_LEXER4);
 
 	
 	/**

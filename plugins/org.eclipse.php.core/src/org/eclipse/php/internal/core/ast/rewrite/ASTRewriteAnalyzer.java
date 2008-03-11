@@ -13,6 +13,8 @@ package org.eclipse.php.internal.core.ast.rewrite;
 import java.io.IOException;
 import java.util.*;
 
+import java_cup.runtime.Symbol;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -32,7 +34,6 @@ import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInf
 import org.eclipse.php.internal.core.ast.rewrite.TargetSourceRangeComputer.SourceRange;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.text.edits.*;
 

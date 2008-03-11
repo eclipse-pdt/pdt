@@ -1,10 +1,10 @@
 package org.eclipse.php.internal.core.ast.rewrite;
 
+import java_cup.runtime.Symbol;
+
 import org.eclipse.php.internal.core.ast.nodes.AST;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.scanner.ParserConstants4;
 import org.eclipse.php.internal.core.ast.scanner.ParserConstants5;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 
 /**
  * A class that holds all the relevant PHP4/PHP5 Symbols that are in use in the

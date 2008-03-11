@@ -12,6 +12,9 @@ package org.eclipse.php.internal.core.ast.rewrite;
  *******************************************************************************/
 import java.io.IOException;
 
+import java_cup.sym;
+import java_cup.runtime.Symbol;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -19,8 +22,6 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.util.RandomAccessCharArrayReader;
-import org.eclipse.php.internal.core.phpModel.javacup.sym;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
 
 /**
  * Wraps a scanner and offers convenient methods for finding tokens 

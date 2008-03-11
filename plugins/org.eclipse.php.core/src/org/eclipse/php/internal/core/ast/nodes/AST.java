@@ -17,10 +17,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import java_cup.runtime.Scanner;
+import java_cup.runtime.lr_parser;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.ast.scanner.*;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.lr_parser;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.text.edits.TextEdit;
 
@@ -179,7 +181,7 @@ public class AST {
 		this.useASPTags = aspTagsAsPhp;
 		this.apiLevel = apiLevel;
 		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp);
-		this.parser = getParserInstance(apiLevel);
+		this.parser = getParserInstance(apiLevel, this.lexer);
 	}
 
 	/**
@@ -216,13 +218,13 @@ public class AST {
 		return phpAstLexer4;
 	}
 
-	private lr_parser getParserInstance(String phpVersion) {
+	private lr_parser getParserInstance(String phpVersion, Scanner lexer) {
 		if (PHPVersion.PHP4.equals(phpVersion)) {
-			final PhpAstParser4 parser = new PhpAstParser4();
+			final PhpAstParser4 parser = new PhpAstParser4(lexer);
 			parser.setAST(this);
 			return parser;
 		} else if (PHPVersion.PHP5.equals(phpVersion)) {
-			final PhpAstParser5 parser = new PhpAstParser5();
+			final PhpAstParser5 parser = new PhpAstParser5(lexer);
 			parser.setAST(this);
 			return parser;
 		} else {

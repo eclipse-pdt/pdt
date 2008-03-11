@@ -17,9 +17,9 @@ import java.util.List;
 
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
-import org.eclipse.php.internal.core.phpModel.javacup.sym;
+import java_cup.sym;
 import org.eclipse.php.internal.core.ast.nodes.AST;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
+import java_cup.runtime.Symbol;
 import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 
 %%
@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 /* %cup */
 %implements org.eclipse.php.internal.core.ast.scanner.AstLexer
 %function next_token
-%type org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol
+%type java_cup.runtime.Symbol
 %eofval{
     return createSymbol(sym.EOF);
 %eofval}
