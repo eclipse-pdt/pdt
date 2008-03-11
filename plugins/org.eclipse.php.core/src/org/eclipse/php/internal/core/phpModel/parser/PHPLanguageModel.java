@@ -232,7 +232,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			Reader reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(phpFunctionPath), false));
 			ParserClient innerParserClient = new InnerParserClient();
 
-			ParserExecuter executer = new ParserExecuter(phpParserManager, null, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
+			ParserExecuter executer = new ParserExecuter(phpParserManager, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
 			executer.run();
 
 			// load language model extensions:
@@ -263,7 +263,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 						if (enabled && getPHPVersion().equals(phpVersion)) {
 							reader = new InputStreamReader(FileLocator.openStream(Platform.getBundle(element.getNamespaceIdentifier()), new Path(file), false));
 							innerParserClient = new InnerParserClient();
-							executer = new ParserExecuter(phpParserManager, null, innerParserClient, file, reader, new Pattern[0], 0, false);
+							executer = new ParserExecuter(phpParserManager, innerParserClient, file, reader, new Pattern[0], 0, false);
 							executer.run();
 						}
 					} catch (CoreException e) {

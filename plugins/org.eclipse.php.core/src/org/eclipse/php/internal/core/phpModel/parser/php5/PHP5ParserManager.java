@@ -12,6 +12,8 @@ package org.eclipse.php.internal.core.phpModel.parser.php5;
 
 import java.io.Reader;
 
+import java_cup.runtime.Scanner;
+
 import org.eclipse.php.internal.core.phpModel.parser.CompletionLexer;
 import org.eclipse.php.internal.core.phpModel.parser.PHPParserManager;
 import org.eclipse.php.internal.core.phpModel.parser.PhpParser;
@@ -23,8 +25,8 @@ public class PHP5ParserManager extends PHPParserManager {
 		return new CompletionLexer5(reader);
 	}
 
-	protected PhpParser createPhpParser() {
-		return new PhpParser5();
+	protected PhpParser createPhpParser(Scanner lexer) {
+		return new PhpParser5(lexer);
 	}
 
 }

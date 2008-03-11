@@ -13,14 +13,16 @@ package org.eclipse.php.internal.core.phpModel.parser;
 import java.io.Reader;
 import java.util.regex.Pattern;
 
+import java_cup.runtime.Scanner;
+
 public abstract class PHPParserManager {
 
 	protected abstract CompletionLexer createCompletionLexer(Reader reader);
 
-	protected abstract PhpParser createPhpParser();
+	protected abstract PhpParser createPhpParser(Scanner lexer);
 
 	/**
-	 * Parse now is used by the PHP builders - there is no schedule or delay process  
+	 * Parse now is used by the PHP builders - there is no schedule or delay process
 	 * @param reader
 	 * @param fileName
 	 * @param lastModified
@@ -29,7 +31,7 @@ public abstract class PHPParserManager {
 	 * @param useAspTagsAsPhp
 	 */
 	public void parseNow(Reader reader, String fileName, long lastModified, ParserClient client, Pattern[] tasksPatterns, boolean useAspTagsAsPhp) {
-		final ParserExecuter parserExecuter = new ParserExecuter(this, this.createPhpParser(), client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+		final ParserExecuter parserExecuter = new ParserExecuter(this, client, fileName, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 		parserExecuter.run();
 	}
 }

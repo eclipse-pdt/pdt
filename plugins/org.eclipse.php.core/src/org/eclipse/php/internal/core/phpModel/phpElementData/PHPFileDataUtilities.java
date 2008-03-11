@@ -188,11 +188,11 @@ public final class PHPFileDataUtilities {
 			CompletionLexer lexer = null;
 			if (phpVersion == PHPVersion.PHP5) {
 				lexer = new CompletionLexer5(reader);
-				phpParser = new PhpParser5();
+				phpParser = new PhpParser5(lexer);
 				client = new PHP5DefaultParserClient(model, null);
 			} else {
 				lexer = new CompletionLexer4(reader);
-				phpParser = new PhpParser4();
+				phpParser = new PhpParser4(lexer);
 				client = new PHP4DefaultParserClient(model, null);
 			}
 			lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);

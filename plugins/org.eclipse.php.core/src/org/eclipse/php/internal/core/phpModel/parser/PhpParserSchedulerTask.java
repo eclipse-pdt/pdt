@@ -16,25 +16,25 @@ import java.util.regex.Pattern;
 
 /**
  * This task handles the scheduling of the model parser queue. <br>
- * The task can be suspended, resumed and stopped, depending on the que state.<br> 
- * Refer to the following link for more information about timing a thread: 
+ * The task can be suspended, resumed and stopped, depending on the que state.<br>
+ * Refer to the following link for more information about timing a thread:
  * {@link http://java.sun.com/docs/books/tutorial/essential/threads/synchronization.html}
- * In addition the queue is handled in a Mutual exclusion way, so no double reference is possible for the que  
- *    
+ * In addition the queue is handled in a Mutual exclusion way, so no double reference is possible for the que
+ *
  * @author Roy Ganor, 2006
  */
 public class PhpParserSchedulerTask implements Runnable {
 
-	// variable needed for the stop operation 
+	// variable needed for the stop operation
 	private volatile boolean threadAlive = true;
 
-	// a limit size for the parser stack 
+	// a limit size for the parser stack
 	private static final int BUFFER_MAX_SIZE = Integer.MAX_VALUE;
 
 	// holds the stack of tasks
 	private final LinkedList<ParserExecuter> buffer = new LinkedList<ParserExecuter>();
 
-	// this class is singleton - only one instance is allowed  
+	// this class is singleton - only one instance is allowed
 	protected static final PhpParserSchedulerTask instance = new PhpParserSchedulerTask();
 
 	/**
@@ -44,17 +44,17 @@ public class PhpParserSchedulerTask implements Runnable {
 	}
 
 	/**
-	 * @return the instance 
+	 * @return the instance
 	 */
 	public static PhpParserSchedulerTask getInstance() {
 		return instance;
 	}
 
 	/**
-	 * Run the consumer operation 
-	 * Note: we want to reduce the number of parsing operations 
-	 *       by removing all sequence tasks besides the last one 
-	 * 
+	 * Run the consumer operation
+	 * Note: we want to reduce the number of parsing operations
+	 *       by removing all sequence tasks besides the last one
+	 *
 	 * inside the loop we have
 	 * 1) released the next parsing operation
 	 * 2) wait for 500 ms.
@@ -89,9 +89,9 @@ public class PhpParserSchedulerTask implements Runnable {
 	}
 
 	/**
-	 * CONSUMER - Releases the first item in the stack 
-	 * @throws InterruptedException 
-	 * @throws InterruptedException 
+	 * CONSUMER - Releases the first item in the stack
+	 * @throws InterruptedException
+	 * @throws InterruptedException
 	 */
 	protected synchronized ParserExecuter release() throws InterruptedException {
 
@@ -108,7 +108,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		// get the next item
 		final ParserExecuter item = buffer.removeFirst();
 
-		// notify that the stack is not full 
+		// notify that the stack is not full
 		notifyAll();
 
 		return item;
@@ -124,7 +124,7 @@ public class PhpParserSchedulerTask implements Runnable {
 	 */
 	public synchronized void schedule(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
 
-		// check the top of the stack, if it is the file is already 
+		// check the top of the stack, if it is the file is already
 		// on stack just ignore the last one
 		if (buffer.size() > 0) {
 			final ParserExecuter top = buffer.getFirst();
@@ -134,7 +134,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		}
 
 		// add it (safely)
-		// if the stack is full - wait() for an empty place 
+		// if the stack is full - wait() for an empty place
 		while (buffer.size() >= BUFFER_MAX_SIZE) {
 			try {
 				wait();
@@ -145,7 +145,7 @@ public class PhpParserSchedulerTask implements Runnable {
 		}
 
 		// creates the new task properties
-		final ParserExecuter parserProperties = new ParserExecuter(parserManager, phpParser, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
+		final ParserExecuter parserProperties = new ParserExecuter(parserManager, client, filename, reader, tasksPatterns, lastModified, useAspTagsAsPhp);
 
 		// adds  the task to the head of the list
 		buffer.addFirst(parserProperties);

@@ -43,9 +43,8 @@ public final class ParserExecuter implements Runnable {
 	public final boolean useAspTagsAsPhp;
 	private PhpParser phpParser; // maybe we should re-create the parser
 
-	public ParserExecuter(PHPParserManager parserManager, PhpParser phpParser, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
+	public ParserExecuter(PHPParserManager parserManager, ParserClient client, String filename, Reader reader, Pattern[] tasksPatterns, long lastModified, boolean useAspTagsAsPhp) {
 		this.parserManager = parserManager;
-		this.phpParser = phpParser;
 		this.client = client;
 		this.filename = filename;
 		this.reader = reader;
@@ -70,7 +69,7 @@ public final class ParserExecuter implements Runnable {
 					lexer.setTasksPatterns(tasksPatterns);
 
 					if (phpParser == null) {
-						phpParser = parserManager.createPhpParser();
+						phpParser = parserManager.createPhpParser(lexer);
 					}
 					phpParser.setScanner(lexer);
 					phpParser.setParserClient(client);
