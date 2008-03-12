@@ -25,6 +25,7 @@ public class OccurrencesFinderFactory {
 			case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
 				return new LocalVariableOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
+				return new GlobalVariableOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_FUNCTION:
 			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
 			case PhpElementConciliator.CONCILIATOR_CONSTANT:

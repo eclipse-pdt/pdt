@@ -1,0 +1,196 @@
+package org.eclipse.php.internal.ui.search;
+
+import java.util.List;
+
+import org.eclipse.php.internal.core.ast.nodes.*;
+
+/**
+ * A global variable occurrence finder.
+ * 
+ * @author shalom
+ */
+public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
+
+	public static final String ID = "GlobalVariableOccurrencesFinder"; //$NON-NLS-1$
+	private String globalName;
+	private boolean isGlobalScope;
+
+	/**
+	 * @param root the AST root
+	 * @param node the selected node (must be an {@link Identifier} or {@link Scalar} instance)
+	 * @return returns a message if there is a problem
+	 */
+	public String initialize(Program root, ASTNode node) {
+		fASTRoot = root;
+		isGlobalScope = true;
+		if (node.getType() == ASTNode.SCALAR) {
+			// We have a scalar inside a GLOBALS array.
+			// For example: $GLOBALS['b'] = $GLOBALS['a'] + $GLOBALS['b'];
+			globalName = ((Scalar) node).getStringValue();
+			return null;
+		}
+		if (node.getType() == ASTNode.IDENTIFIER) {
+			globalName = ((Identifier) node).getName();
+			return null;
+		}
+		fDescription = "OccurrencesFinder_occurrence_description";
+		return fDescription;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
+	 */
+	protected void findOccurrences() {
+		fDescription = Messages.format("Occurrance of ''{0}()", globalName);
+		fASTRoot.accept(this);
+	}
+
+	/**
+	 * class declaration
+	 */
+	public boolean visit(ClassDeclaration classDeclaration) {
+		setGlobalScope(false);
+		return true;
+	}
+
+	public void endVisit(ClassDeclaration classDeclaration) {
+		setGlobalScope(true);
+	}
+
+	/**
+	 * change the name of the function
+	 */
+	public boolean visit(FunctionDeclaration functionDeclaration) {
+		setGlobalScope(false);
+		return true;
+
+	}
+
+	public void endVisit(FunctionDeclaration functionDeclaration) {
+		setGlobalScope(true);
+	}
+
+	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+		setGlobalScope(false);
+		return true;
+	}
+
+	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
+		setGlobalScope(true);
+	}
+
+	public boolean visit(FieldsDeclaration fieldDeclaration) {
+		setGlobalScope(false);
+		return true;
+	}
+
+	public void endVisit(FieldsDeclaration fieldsDeclaration) {
+		setGlobalScope(true);
+	}
+
+	/**
+	 * Rename $a on global references: $a = 5;
+	 */
+	public boolean visit(Variable variable) {
+		if (variable.isDollared() && variable.getName().getType() == ASTNode.IDENTIFIER) {
+			Identifier identifier = (Identifier) variable.getName();
+			if (globalName.equals(identifier.getName()) && isGlobalScope) {
+				fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Rename $a on global references (on function/methods) : ...global $a;$a = 5;...
+	 */
+	public boolean visit(GlobalStatement globalStatement) {
+		final List<Variable> variables = globalStatement.variables();
+		for (final Variable variable : variables) {
+			if (variable.isDollared()) {
+				Identifier identifier = (Identifier) variable.getName();
+				if (globalName.equals(identifier.getName())) {
+					fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
+					setGlobalScope(true);
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Rename $GLOBALS['variableName'] occurences
+	 */
+	public boolean visit(ArrayAccess arrayAccess) {
+		// check the case of $GLOBALS['var']
+		final Expression variableName = arrayAccess.getName();
+		if (variableName.getType() == ASTNode.VARIABLE) {
+			final Variable var = (Variable) variableName;
+			Expression varName = var.getName();
+			if (var.isDollared() && varName.getType() == ASTNode.IDENTIFIER) {
+				final Identifier id = (Identifier) varName;
+				if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$
+					final Expression index = arrayAccess.getIndex();
+					if (index.getType() == ASTNode.SCALAR) {
+						Scalar scalar = (Scalar) index;
+						final String stringValue = scalar.getStringValue();
+						if (stringValue.length() > 2 && isQuated(stringValue)) {
+							if (globalName.equals(stringValue.substring(1, stringValue.length() - 1))) {
+								fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean isQuated(String stringValue) {
+		char first = stringValue.charAt(0);
+		char last = stringValue.charAt(stringValue.length() - 1);
+		return (first == '\'' && last == '\'' || first == '\"' && last == '\"');
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 */
+	protected int getOccurrenceReadWriteType(ASTNode node) {
+		if (node.getType() == ASTNode.VARIABLE) {
+			Variable variable = (Variable) node;
+			ASTNode parent = variable.getParent();
+			if (parent.getType() == ASTNode.ASSIGNMENT) {
+				Assignment assignment = (Assignment) parent;
+				if (assignment.getLeftHandSide() == node) {
+					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
+				}
+			}
+		}
+		return IOccurrencesFinder.F_READ_OCCURRENCE;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getElementName()
+	 */
+	public String getElementName() {
+		return globalName;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getID()
+	 */
+	public String getID() {
+		return ID;
+	}
+
+	/**
+	 * @param isGlobalScope the isGlobalScope to set
+	 */
+	public void setGlobalScope(boolean isGlobalScope) {
+		this.isGlobalScope = isGlobalScope;
+	}
+}
