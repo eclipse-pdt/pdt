@@ -2,7 +2,7 @@
 
 	<target name="generateParser">
 		<java 
-			jar="../../cup11a/java-cup-11.jar"  
+			jar="../../javacup/java-cup-10k.jar"  
 			input="php_ast_parser.cup"
 			fork="true">
 			
