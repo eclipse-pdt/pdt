@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
- * A global variable occurrence finder.
+ * A global variable occurrences finder.
  * 
  * @author shalom
  */
@@ -27,6 +27,9 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 			// We have a scalar inside a GLOBALS array.
 			// For example: $GLOBALS['b'] = $GLOBALS['a'] + $GLOBALS['b'];
 			globalName = ((Scalar) node).getStringValue();
+			if (globalName.length() > 2 && isQuated(globalName)) {
+				globalName = globalName.substring(1, globalName.length() - 1);
+			}
 			return null;
 		}
 		if (node.getType() == ASTNode.IDENTIFIER) {
@@ -90,12 +93,12 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Rename $a on global references: $a = 5;
+	 * Visit $a on global references: $a = 5;
 	 */
 	public boolean visit(Variable variable) {
 		if (variable.isDollared() && variable.getName().getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) variable.getName();
-			if (globalName.equals(identifier.getName()) && isGlobalScope) {
+			if (isGlobalScope && globalName.equals(identifier.getName())) {
 				fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
 			}
 		}
@@ -103,7 +106,34 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Rename $a on global references (on function/methods) : ...global $a;$a = 5;...
+	 * Make sure we mark the occurrences when selecting a scalar inside a GLOBALS array access.
+	 */
+	public boolean visit(Scalar scalar) {
+		String stringValue = scalar.getStringValue();
+		if (stringValue.length() > 2 && isQuated(stringValue)) {
+			stringValue = stringValue.substring(1, stringValue.length() - 1);
+		}
+		if (globalName.equals(stringValue)) {
+			ASTNode parent = scalar.getParent();
+			if (parent.getType() == ASTNode.ARRAY_ACCESS) {
+				Expression variableName = ((ArrayAccess) parent).getName();
+				if (variableName.getType() == ASTNode.VARIABLE) {
+					final Variable var = (Variable) variableName;
+					Expression varName = var.getName();
+					if (var.isDollared() && varName.getType() == ASTNode.IDENTIFIER) {
+						final Identifier id = (Identifier) varName;
+						if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$
+							fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Visit $a on global references (on function/methods) : ...global $a;$a = 5;...
 	 */
 	public boolean visit(GlobalStatement globalStatement) {
 		final List<Variable> variables = globalStatement.variables();
@@ -120,7 +150,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * Rename $GLOBALS['variableName'] occurences
+	 * Visit $GLOBALS['variableName'] occurrences
 	 */
 	public boolean visit(ArrayAccess arrayAccess) {
 		// check the case of $GLOBALS['var']

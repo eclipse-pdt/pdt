@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -2394,7 +2395,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 //			}
 		}
 
-		if (locations == null && selectedNode instanceof Identifier) {
+		if (locations == null && (selectedNode instanceof Identifier || selectedNode instanceof Scalar)) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
