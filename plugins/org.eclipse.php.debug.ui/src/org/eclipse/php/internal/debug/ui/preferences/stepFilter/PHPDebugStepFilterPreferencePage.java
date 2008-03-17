@@ -420,7 +420,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		IPreferenceStore store = getPreferenceStore();
 		String[] parsedFilters = parseList(store.getString(IPHPDebugConstants.PREF_STEP_FILTERS_LIST));
 		for (int i = 0; i < parsedFilters.length; i++) {
-			String[] tokens = parsedFilters[i].split("\\"+DebugStepFilter.FILTER_TOKENS_DELIM); //$NON-NLS-1$
+			String[] tokens = parsedFilters[i].split("\\" + DebugStepFilter.FILTER_TOKENS_DELIM); //$NON-NLS-1$
 			if (tokens.length < 3) {
 				return new DebugStepFilter[0];
 			}
@@ -453,8 +453,8 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		return (String[]) list.toArray(new String[list.size()]);
 	}
 
-//	  Serializes the array of strings into one comma
-//	  separated string.
+	//	  Serializes the array of strings into one comma
+	//	  separated string.
 	private String serializeList(String[] list) {
 		if (list == null) {
 			return ""; //$NON-NLS-1$
@@ -478,10 +478,12 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 		}
 
 		public String isValid(Object selection) {
-			Path selectedPath = (Path) selection;
-			for (DebugStepFilter filter : existingFilters) {
-				if (selectedPath.equals(new Path(filter.getPath()))) {
-					return PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_filterColon + selectedPath + PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_alreadyExists;
+			if (selection != null) {
+				Path selectedPath = (Path) selection;
+				for (DebugStepFilter filter : existingFilters) {
+					if (selectedPath.equals(new Path(filter.getPath()))) {
+						return PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_filterColon + selectedPath + PHPDebugUIMessages.PHPDebugStepFilterPreferencePage_alreadyExists;
+					}
 				}
 			}
 			return null;
