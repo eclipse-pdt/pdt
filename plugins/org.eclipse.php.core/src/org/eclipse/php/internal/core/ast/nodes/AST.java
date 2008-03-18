@@ -91,22 +91,6 @@ import org.eclipse.text.edits.TextEdit;
  * @see ASTNode
  * @since 2.0
  */
-/**
- * @author eden
- *
- */
-/**
- * @author eden
- *
- */
-/**
- * @author eden
- *
- */
-/**
- * @author eden
- *
- */
 public class AST {
 
 	public final static String PHP4 = PHPVersion.PHP4;
@@ -677,25 +661,6 @@ public class AST {
 	 * <li><code>"long"</code></li>
 	 * <li><code>"short"</code></li>
 	 * <li><code>"void"</code></li>
-	 * <li><code>"PHP.lang.Boolean"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Byte"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Character"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Class"</code></li>
-	 * <li><code>"PHP.lang.Cloneable"</code></li>
-	 * <li><code>"PHP.lang.Double"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Error"</code></li>
-	 * <li><code>"PHP.lang.Exception"</code></li>
-	 * <li><code>"PHP.lang.Float"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Integer"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Long"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.Object"</code></li>
-	 * <li><code>"PHP.lang.RuntimeException"</code></li>
-	 * <li><code>"PHP.lang.Short"</code> (since 3.1)</li>
-	 * <li><code>"PHP.lang.String"</code></li>
-	 * <li><code>"PHP.lang.StringBuffer"</code></li>
-	 * <li><code>"PHP.lang.Throwable"</code></li>
-	 * <li><code>"PHP.lang.Void"</code> (since 3.1)</li>
-	 * <li><code>"PHP.io.Serializable"</code></li>
 	 * </ul>
 	 * </p>
 	 *
@@ -1257,16 +1222,6 @@ public class AST {
 		classDeclaration.setBody(body);
 		return classDeclaration;
 	}
-
-	//	/**
-	//	 * Creates a new {@link TypeDeclaration}.
-	//	 * 
-	//	 * @return A new TypeDeclaration.
-	//	 */
-	//	public TypeDeclaration newTypeDeclaration() {
-	//		TypeDeclaration typeDeclaration = new TypeDeclaration(this);
-	//		return typeDeclaration;
-	//	}
 
 	/**
 	 * Creates a new {@link ClassInstanceCreation}.

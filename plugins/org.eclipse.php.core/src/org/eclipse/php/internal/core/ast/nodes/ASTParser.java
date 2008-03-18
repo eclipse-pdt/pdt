@@ -122,6 +122,8 @@ public class ASTParser {
 		}
 		Program p = (Program) symbol.value;
 		AST ast = p.getAST();
+
+		// now reset the ast default node flag back to differntate between original nodes 
 		ast.setDefaultNodeFlag(0);
 		// Set the original modification count to the count after the creation of the Program.
 		// This is important to allow the AST rewriting. 
