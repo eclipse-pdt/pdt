@@ -13,7 +13,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	/**
 	 * @param root the AST root
-	 * @param node the selected node (must be an {@link Identifier} instance)
+	 * @param node the selected node (must be an {@link Scalar} instance)
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {

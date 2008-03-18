@@ -17,8 +17,8 @@ public class OccurrencesFinderFactory {
 	/**
 	 * Creates and returns an {@link IOccurrencesFinder} for the given {@link PhpElementConciliator} type.
 	 * 
-	 * @param type
-	 * @return
+	 * @param type One of the {@link PhpElementConciliator} constant types.
+	 * @return An {@link IOccurrencesFinder}; Null, if the given type does not have an occurrences finder.
 	 */
 	public static IOccurrencesFinder getOccurrencesFinder(int type) {
 		switch (type) {
@@ -31,6 +31,7 @@ public class OccurrencesFinderFactory {
 			case PhpElementConciliator.CONCILIATOR_CONSTANT:
 				return new ConstantsOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
+				return new ClassNameOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
 			case PhpElementConciliator.CONCILIATOR_UNKNOWN:
 			case PhpElementConciliator.CONCILIATOR_PROGRAM:
