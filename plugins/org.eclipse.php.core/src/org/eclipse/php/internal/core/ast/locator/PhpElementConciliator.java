@@ -139,12 +139,12 @@ public class PhpElementConciliator {
 		}
 
 		final FunctionInvocation functionInvocation = (FunctionInvocation) previous;
-		if (functionInvocation.getFunctionName().getFunctionName().getType() != ASTNode.IDENTIFIER) {
+		if (functionInvocation.getFunctionName().getName().getType() != ASTNode.IDENTIFIER) {
 			return false;
 		}
 
-		final Identifier identifier = (Identifier) functionInvocation.getFunctionName().getFunctionName();
-		return "define".equalsIgnoreCase(identifier.getName()); //$NON-NLS-1$
+		final Identifier identifier = (Identifier) functionInvocation.getFunctionName().getName();
+		return "define".equalsIgnoreCase(identifier.getName()) || "constant".equalsIgnoreCase(identifier.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
