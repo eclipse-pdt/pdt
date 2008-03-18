@@ -28,8 +28,9 @@ public class OccurrencesFinderFactory {
 				return new GlobalVariableOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_FUNCTION:
 				return new FunctionOccurrencesFinder();
-			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
 			case PhpElementConciliator.CONCILIATOR_CONSTANT:
+				return new ConstantsOccurrencesFinder();
+			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
 			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
 			case PhpElementConciliator.CONCILIATOR_UNKNOWN:
 			case PhpElementConciliator.CONCILIATOR_PROGRAM:
