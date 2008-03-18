@@ -90,8 +90,8 @@ public class PHPMixinElementInfo {
 		return new PHPMixinElementInfo(K_METHOD, m);
 	}
 
-	public static PHPMixinElementInfo createInclude(String key) {
-		return new PHPMixinElementInfo(K_INCLUDE, key);
+	public static PHPMixinElementInfo createInclude(IField includeField) {
+		return new PHPMixinElementInfo(K_INCLUDE, includeField);
 	}
 
 	public static PHPMixinElementInfo createVariable(IField type) {
@@ -102,8 +102,8 @@ public class PHPMixinElementInfo {
 		return new PHPMixinElementInfo(K_CONSTANT, type);
 	}
 
-	public static PHPMixinElementInfo createPHPDoc(IField type) {
-		return new PHPMixinElementInfo(K_PHPDOC, type);
+	public static PHPMixinElementInfo createPHPDoc(IField docField) {
+		return new PHPMixinElementInfo(K_PHPDOC, docField);
 	}
 
 	public static PHPMixinElementInfo createPHPDocForConstant(IField type) {

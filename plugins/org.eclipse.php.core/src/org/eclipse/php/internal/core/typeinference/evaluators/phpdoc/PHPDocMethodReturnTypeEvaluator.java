@@ -19,7 +19,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.mixin.DocMember;
+import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -43,7 +43,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 		InstanceContext typedGontext = (InstanceContext) context;
 		IEvaluatedType instanceType = typedGontext.getInstanceType();
 
-		Set<DocMember> docs = new HashSet<DocMember>();
+		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 
 		if (instanceType instanceof PHPClassType || instanceType instanceof AmbiguousType) {
 
@@ -69,7 +69,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 			for (IType type : types) {
 				try {
-					for (DocMember doc : PHPModelUtils.getClassMethodDoc(type, methodName, null)) {
+					for (PHPDocField doc : PHPModelUtils.getClassMethodDoc(type, methodName, null)) {
 						docs.add(doc);
 					}
 				} catch (CoreException e) {
@@ -79,12 +79,12 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 		} else {
 			IModelElement[] elements = PHPMixinModel.getInstance().getFunctionDoc(methodName);
 			for (IModelElement e : elements) {
-				docs.add((DocMember) e);
+				docs.add((PHPDocField) e);
 			}
 		}
 
-		DocMember docFromSameFile = null;
-		for (DocMember doc : docs) {
+		PHPDocField docFromSameFile = null;
+		for (PHPDocField doc : docs) {
 			if (doc.getSourceModule().equals(typedGontext.getSourceModule())) {
 				docFromSameFile = doc;
 				break;
@@ -96,7 +96,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 			docs.add(docFromSameFile);
 		}
 
-		for (DocMember doc : docs) {
+		for (PHPDocField doc : docs) {
 			PHPDocBlock docBlock = doc.getDocBlock();
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.RETURN) {

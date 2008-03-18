@@ -7,12 +7,12 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 /**
  * Fake member that represents PHPDoc
  */
-public class DocMember extends SourceField {
+public class PHPDocField extends SourceField {
 
 	public static final String NAME = "__phpdoc__"; //$NON-NLS-1$
 	private PHPDocBlock docBlock;
 
-	public DocMember(ModelElement parent, PHPDocBlock docBlock) {
+	public PHPDocField(ModelElement parent, PHPDocBlock docBlock) {
 		super(parent, NAME);
 
 		assert docBlock != null;
@@ -26,7 +26,7 @@ public class DocMember extends SourceField {
 
 	public boolean equals(Object o) {
 		if (super.equals(o)) {
-			DocMember other = (DocMember)o;
+			PHPDocField other = (PHPDocField)o;
 			return docBlock.sourceStart() == other.docBlock.sourceStart() && docBlock.sourceEnd() == other.docBlock.sourceEnd();
 		}
 		return false;

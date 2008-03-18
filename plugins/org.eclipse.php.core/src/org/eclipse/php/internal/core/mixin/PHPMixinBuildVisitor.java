@@ -56,7 +56,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public abstract String reportType(String name, IType object, boolean isInterface);
 
-		public abstract String reportInclude(String object);
+		public abstract String reportInclude(String filePath);
 
 		public abstract String getClassKey();
 
@@ -96,9 +96,16 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return "";
 		}
 
-		public String reportInclude(String object) {
+		public String reportInclude(String filePath) {
 			// Report include(), require(), require_once() and include_once():
-			return report(object, new PHPMixinElementInfo(PHPMixinElementInfo.K_INCLUDE, object));
+
+			IncludeField object = new IncludeField((ModelElement) sourceModule, filePath);
+
+			int i = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+			if (i >= 0) {
+				filePath = filePath.substring(i+1);
+			}
+			return report(filePath + PHPMixinParser.INCLUDE_SUFFIX, PHPMixinElementInfo.createInclude(object));
 		}
 	}
 
@@ -140,7 +147,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return classKey;
 		}
 
-		public String reportInclude(String object) {
+		public String reportInclude(String filePath) {
 			// There's no possibility to include other files from within a class
 			return null;
 		}
@@ -189,9 +196,9 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return methodKey;
 		}
 
-		public String reportInclude(String object) {
+		public String reportInclude(String filePath) {
 			// Included file in the method belongs to the global scope:
-			return sourceModuleScope.reportInclude(object);
+			return sourceModuleScope.reportInclude(filePath);
 		}
 	}
 
@@ -269,7 +276,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	 * @throws ModelException
 	 */
 	protected void reportPHPDoc(String key, PHPDocBlock phpDoc) throws ModelException {
-		IField phpDocField = new DocMember((ModelElement) sourceModule, phpDoc);
+		IField phpDocField = new PHPDocField((ModelElement) sourceModule, phpDoc);
 		report(key, PHPMixinElementInfo.createPHPDoc(phpDocField));
 	}
 
@@ -278,7 +285,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	 * @throws ModelException
 	 */
 	protected void reportPHPDocForConstant(String key, PHPDocBlock phpDoc) throws ModelException {
-		IField phpDocField = new DocMember((ModelElement) sourceModule, phpDoc);
+		IField phpDocField = new PHPDocField((ModelElement) sourceModule, phpDoc);
 		report(key, PHPMixinElementInfo.createPHPDocForConstant(phpDocField));
 	}
 
@@ -330,6 +337,9 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		}
 		if (expr instanceof ListVariable) {
 			return visit((ListVariable) expr);
+		}
+		if (expr instanceof Include) {
+			return visit((Include)expr);
 		}
 		return visitGeneral(expr);
 	}
@@ -457,6 +467,19 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			reportPHPDoc(newKey, doc);
 		}
 		return visitGeneral(decl);
+	}
+
+	public boolean visit(Include include) throws Exception {
+		Expression expr = include.getExpr();
+		if (expr instanceof Scalar) {
+			IBuffer buffer = sourceModule.getBuffer();
+			if (buffer != null) {
+				String text = buffer.getText(expr.sourceStart(), expr.sourceEnd() - expr.sourceStart());
+				Scope scope = scopes.peek();
+				scope.reportInclude(stripQuotes(text));
+			}
+		}
+		return visitGeneral(include);
 	}
 
 	public boolean visit(ModuleDeclaration s) throws Exception {

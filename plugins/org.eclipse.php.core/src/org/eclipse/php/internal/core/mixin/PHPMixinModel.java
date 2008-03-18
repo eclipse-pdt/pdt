@@ -112,4 +112,9 @@ public class PHPMixinModel {
 	public IModelElement[] getConstantDoc(String constantName, String typeName) {
 		return filterElements(internalGetConstant(constantName, typeName), PHPMixinElementInfo.K_PHPDOC_FOR_CONSTANT);
 	}
+
+	public IModelElement[] getInclude(String fileName) {
+		IMixinElement[] elements = model.find(fileName + PHPMixinParser.INCLUDE_SUFFIX);
+		return filterElements(elements, PHPMixinElementInfo.K_INCLUDE);
+	}
 }

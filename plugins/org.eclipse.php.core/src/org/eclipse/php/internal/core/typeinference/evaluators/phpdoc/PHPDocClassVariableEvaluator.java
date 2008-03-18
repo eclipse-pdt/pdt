@@ -12,7 +12,7 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.mixin.DocMember;
+import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -37,13 +37,13 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 
 		IEvaluatedType instanceType = context.getInstanceType();
 
-		Set<DocMember> docs = new HashSet<DocMember>();
+		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 
 		if (instanceType instanceof PHPClassType) {
 			PHPClassType classType = (PHPClassType) instanceType;
 			IModelElement[] elements = PHPMixinModel.getInstance().getVariableDoc(variableName, null, classType.getTypeName());
 			for (IModelElement e : elements) {
-				docs.add((DocMember) e);
+				docs.add((PHPDocField) e);
 			}
 		} else if (instanceType instanceof AmbiguousType) {
 			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
@@ -52,14 +52,14 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 					PHPClassType classType = (PHPClassType) doc;
 					IModelElement[] elements = PHPMixinModel.getInstance().getVariableDoc(variableName, null, classType.getTypeName());
 					for (IModelElement e : elements) {
-						docs.add((DocMember) e);
+						docs.add((PHPDocField) e);
 					}
 				}
 			}
 		}
 
-		DocMember docFromSameFile = null;
-		for (DocMember doc : docs) {
+		PHPDocField docFromSameFile = null;
+		for (PHPDocField doc : docs) {
 			if (doc.getSourceModule().equals(context.getSourceModule())) {
 				docFromSameFile = doc;
 				break;
@@ -71,7 +71,7 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 			docs.add(docFromSameFile);
 		}
 
-		for (DocMember doc : docs) {
+		for (PHPDocField doc : docs) {
 			PHPDocBlock docBlock = doc.getDocBlock();
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {

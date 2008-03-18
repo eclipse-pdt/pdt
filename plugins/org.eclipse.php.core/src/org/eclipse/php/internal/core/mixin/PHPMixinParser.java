@@ -9,6 +9,7 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 public class PHPMixinParser implements IMixinParser {
 
 	public static final String CLASS_SUFFIX = "%"; //$NON-NLS-1$
+	public static final String INCLUDE_SUFFIX = "#"; //$NON-NLS-1$
 
 	private IMixinRequestor requestor;
 
