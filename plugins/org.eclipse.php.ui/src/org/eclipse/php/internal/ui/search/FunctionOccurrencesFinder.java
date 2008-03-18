@@ -40,10 +40,17 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Visit the function declaration
 	 */
 	public boolean visit(FunctionDeclaration functionDeclaration) {
-		// check the function name
-		Identifier name = functionDeclaration.getFunctionName();
-		if (functionName.equalsIgnoreCase(name.getName())) {
-			fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceReadWriteType(name), fDescription));
+		// Handle nesting functions that might be nested inside a method declaration
+		ASTNode parent = functionDeclaration.getParent();
+		while (parent.getType() == ASTNode.BLOCK || parent.getType() == ASTNode.FUNCTION_DECLARATION) {
+			parent = parent.getParent();
+		}
+		if (parent.getType() != ASTNode.METHOD_DECLARATION) {
+			// check the function name
+			Identifier name = functionDeclaration.getFunctionName();
+			if (functionName.equalsIgnoreCase(name.getName())) {
+				fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceReadWriteType(name), fDescription));
+			}
 		}
 		return true;
 	}
