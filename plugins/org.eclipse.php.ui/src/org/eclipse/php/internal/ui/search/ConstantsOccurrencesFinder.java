@@ -45,13 +45,13 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		String scalarValue = scalar.getStringValue();
 		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue != null) {
 			if (!isQuoted(scalarValue)) {
-				if (constantName.equals(scalarValue)) {
+				if (constantName.equalsIgnoreCase(scalarValue)) {
 					// Usage of the scalar
 					fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
 				}
 			} else {
 				scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
-				if (constantName.equals(scalarValue)) {
+				if (constantName.equalsIgnoreCase(scalarValue)) {
 					ASTNode parent = scalar.getParent();
 					if (parent.getType() == ASTNode.FUNCTION_INVOCATION) {
 						// Check if this is the definition function of the scalar (define).
