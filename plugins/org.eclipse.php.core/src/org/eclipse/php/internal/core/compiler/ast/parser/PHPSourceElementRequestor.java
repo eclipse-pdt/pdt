@@ -16,16 +16,13 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	/*
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
-	 * since in php the type declarations can be nested. 
+	 * since in php the type declarations can be nested.
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 
@@ -77,7 +74,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
 	}
-	
+
 	public boolean visit(CallExpression call) throws Exception {
 		int argsCount = 0;
 		CallArgumentsList args = call.getArgs();
@@ -85,6 +82,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			argsCount = args.getChilds().size();
 		}
 		fRequestor.acceptMethodReference(call.getName().toCharArray(), argsCount, call.sourceStart(), call.sourceEnd());
+		return true;
+	}
+
+	public boolean visit(Include include) throws Exception {
+		// special case for include statements; we need to cache this information in order to access it quickly:
+		if (include.getExpr() instanceof Scalar) {
+			Scalar filePath = (Scalar) include.getExpr();
+			fRequestor.acceptMethodReference("include".toCharArray(), 0, filePath.sourceStart(), filePath.sourceEnd());
+		}
 		return true;
 	}
 
@@ -173,6 +179,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (clasName.equals(TypeReference.class.getName())) {
 			return visit((TypeReference) node);
+		}
+		if (clasName.equals(Include.class.getName())) {
+			return visit((Include) node);
 		}
 		return true;
 	}

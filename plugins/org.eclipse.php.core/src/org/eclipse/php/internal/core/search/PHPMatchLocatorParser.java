@@ -7,6 +7,7 @@ import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.ConstantReference;
@@ -17,9 +18,7 @@ import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.MatchLocatorParser;
 import org.eclipse.dltk.core.search.matching.PossibleMatch;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 public class PHPMatchLocatorParser extends MatchLocatorParser {
 
@@ -93,6 +92,13 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			getPatternLocator().match((TypeReference)node, getNodeSet());
 		} else if (node instanceof CallExpression) {
 			getPatternLocator().match((CallExpression)node, getNodeSet());
+		} else if (node instanceof Include) {
+			Include include = (Include) node;
+			if (include.getExpr() instanceof Scalar) {
+				Scalar filePath = (Scalar) include.getExpr();
+				CallExpression callExpression = new CallExpression(filePath.sourceStart(), filePath.sourceEnd(), null, "include", new CallArgumentsList());
+				getPatternLocator().match(callExpression, getNodeSet());
+			}
 		}
 	}
 }
