@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.ui.search;
 
+import java.util.List;
+
 import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
@@ -9,6 +11,8 @@ import org.eclipse.php.internal.core.ast.nodes.*;
  */
 public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	public static final String ID = "ConstantsOccurrencesFinder"; //$NON-NLS-1$
+	private boolean defineFound;
+	private boolean isCaseSensitiveConstant = true; // The default is true
 	private String constantName;
 
 	/**
@@ -18,6 +22,8 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
+		defineFound = false;
+		isCaseSensitiveConstant = true;
 		if (node.getType() == ASTNode.SCALAR) {
 			constantName = ((Scalar) node).getStringValue();
 			if (isQuoted(constantName)) {
@@ -45,13 +51,14 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		String scalarValue = scalar.getStringValue();
 		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue != null) {
 			if (!isQuoted(scalarValue)) {
-				if (constantName.equalsIgnoreCase(scalarValue)) {
+				if (checkEquality(scalarValue)) {
 					// Usage of the scalar
 					fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
 				}
 			} else {
+				// The scalar is quoted, so it might be in a 'define' or a 'constant' call.
 				scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
-				if (constantName.equalsIgnoreCase(scalarValue)) {
+				if (checkEquality(scalarValue)) {
 					ASTNode parent = scalar.getParent();
 					if (parent.getType() == ASTNode.FUNCTION_INVOCATION) {
 						// Check if this is the definition function of the scalar (define).
@@ -60,9 +67,16 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 						if (name.getType() == ASTNode.IDENTIFIER) {
 							String functionName = ((Identifier) name).getName();
 							if ("define".equalsIgnoreCase(functionName)) {//$NON-NLS-1$
-								fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), IOccurrencesFinder.F_WRITE_OCCURRENCE, fDescription));
+								defineFound = true;
+								// check if the 'define' has a case sensitivity definition
+								isCaseSensitiveConstant = isCaseSensitiveDefined(functionInvocation.parameters());
+								if (!isCaseSensitiveConstant || isCaseSensitiveConstant && constantName.equals(scalarValue)) {
+									fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), IOccurrencesFinder.F_WRITE_OCCURRENCE, fDescription));
+								}
 							} else if ("constant".equalsIgnoreCase(functionName)) { //$NON-NLS-1$
-								fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), IOccurrencesFinder.F_READ_OCCURRENCE, fDescription));
+								if (!isCaseSensitiveConstant || isCaseSensitiveConstant && constantName.equals(scalarValue)) {
+									fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), IOccurrencesFinder.F_READ_OCCURRENCE, fDescription));
+								}
 							}
 						}
 					}
@@ -70,6 +84,45 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 			}
 		}
 		return true;
+	}
+
+	/*
+	 * Check the function invocation parameters to see if the case-sensitive parameter is
+	 * true or false.
+	 * Define signature: { define ( string $name , mixed $value [, bool $case_insensitive ] ) }
+	 * 
+	 * @param parameters The function invocation parameters.
+	 * @return True, if the 'define' call does not contain a case parameter or contains it as true;
+	 * False, in case that the parameters contain a 'false' case parameter.
+	 */
+	private boolean isCaseSensitiveDefined(List<Expression> parameters) {
+		if (parameters.size() == 2 || parameters.size() > 3) {
+			// default behavior is case sensitive.
+			return true;
+		}
+		Expression expression = parameters.get(2);
+		if (expression.getType() == ASTNode.SCALAR) {
+			Scalar scalar = (Scalar) expression;
+			String value = scalar.getStringValue();
+			return "true".equalsIgnoreCase(value);
+		}
+		return false;
+	}
+
+	/*
+	 * Check that the given name is equal to the searched constant name.
+	 * The equality check is done according to these rules:
+	 * 	1.	In case that the case-sensitive flag is false, or in case that the scalar
+	 * 		appears before a 'define' call, we check for case-insensitive equality.
+	 *  2.	In any other case, the equality check is case sensitive.
+	 * @param scalarValue The value to compare.
+	 * @return True, if equals according to the conditions; False, otherwise.
+	 */
+	private boolean checkEquality(String scalarValue) {
+		if (!isCaseSensitiveConstant || !defineFound) {
+			return constantName.equalsIgnoreCase(scalarValue);
+		}
+		return constantName.equals(scalarValue);
 	}
 
 	private static boolean isQuoted(String str) {
