@@ -16,6 +16,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
@@ -62,14 +63,16 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		}
 
 		String localPath = null;
-		if (isFirstFileToDebug) { // we suppose that we always get full path here
+		if (isFirstFileToDebug) { // we suppose that we always get full path
+									// here
 			if (isWebServerDebugger) {
 				PathEntry pathEntry = debugTarget.mapFirstDebugFile(remoteFileName);
 				if (pathEntry != null) {
 					localPath = pathEntry.getResolvedPath();
 				}
 
-				// set current working directory to the current script directory on debugger side
+				// set current working directory to the current script directory
+				// on debugger side
 				if (debugType.equals(IDebugParametersKeys.PHP_WEB_SCRIPT_DEBUG)) {
 					VirtualPath remotePath = new VirtualPath(remoteFileName);
 					remotePath.removeLastSegment();
@@ -82,12 +85,21 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 		// send found breakpoints with remote file name
 		if (localPath != null && ILaunchManager.DEBUG_MODE.equals(debugTarget.getLaunch().getLaunchMode())) {
-			IBreakpoint[] breakPoints = findBreakpoints (localPath, debugTarget);
+			IBreakpoint[] breakPoints = findBreakpoints(localPath, debugTarget);
 
 			for (IBreakpoint bp : breakPoints) {
 				try {
-					int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
-					debugTarget.getRemoteDebugger().addBreakpoint(new Breakpoint(remoteFileName, lineNumber));
+					if (bp.isEnabled()) {
+						int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
+						int bpID = ((PHPConditionalBreakpoint)bp).getRuntimeBreakpoint().getID();
+						int bpType = ((PHPConditionalBreakpoint)bp).getRuntimeBreakpoint().getType();
+						int bpLifeTime = ((PHPConditionalBreakpoint)bp).getRuntimeBreakpoint().getLifeTime();
+						Breakpoint bpToSend = new Breakpoint(remoteFileName, lineNumber);
+						bpToSend.setID(bpID);
+						bpToSend.setType(bpType);
+						bpToSend.setLifeTime(bpLifeTime);
+						debugTarget.getRemoteDebugger().addBreakpoint(bpToSend);
+					}
 				} catch (CoreException e) {
 					PHPDebugPlugin.log(e);
 				}
@@ -97,7 +109,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		isFirstFileToDebug = false;
 	}
 
-	protected IBreakpoint[] findBreakpoints (String localPath, PHPDebugTarget debugTarget) {
+	protected IBreakpoint[] findBreakpoints(String localPath, PHPDebugTarget debugTarget) {
 		IBreakpointManager breakpointManager = debugTarget.getBreakpointManager();
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> l = new LinkedList<IBreakpoint>();
@@ -109,7 +121,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 			try {
 				Object secondaryId = bp.getMarker().getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY);
 				if (secondaryId != null) {
-					if (new VirtualPath(localPath).equals(new VirtualPath((String)secondaryId))) {
+					if (new VirtualPath(localPath).equals(new VirtualPath((String) secondaryId))) {
 						l.add(bp);
 					}
 				}
