@@ -9,11 +9,43 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.mixin.IncludeField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.*;
 
+/**
+ * This utility is used for resolving reference dependencies between files.
+ * Usage examples:
+ * <p>I. Filter model elements that accessible from current source module:
+ * <pre>
+ * ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(currentSourceModule, null);
+ * List&lt;IModelElement&gt; filteredElements = new LinkedList&lt;IModelElement&gt();
+ * for (IModelElement element : elements) {
+ *   if (referenceTree.find(element.getSourceModule()) {
+ *     filteredElements.add(element);
+ *   }
+ * }
+ * </pre>
+ * </p>
+ * <p>II. Find all files that reference current file and rebuild them
+ * <pre>
+ * ReferenceTree referenceTree = FileNetworkUtility.buildReferencingFilesTree(currentSourceModule, null);
+ * LinkedList&lt;Node&gt; nodesQ = new  LinkedList&lt;Node&gt();
+ * nodesQ.addFirst(referenceTree.getRoot());
+ * while (!nodesQ.isEmpty()) {
+ *   Node node = nodesQ.removeLast();
+ *   rebuildFile (node.getFile());
+ *   if (node.getChildren() != null) {
+ *     for (Node child : node.getChildren()) {
+ *       nodesQ.addFirst(child);
+ *     }
+ *   }
+ * }
+ * </pre>
+ * </p>
+ */
 public class FileNetworkUtility {
 
 	/**
@@ -22,17 +54,18 @@ public class FileNetworkUtility {
 	 * @param monitor Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTreeNode buildReferencingFilesTree(ISourceModule file, IProgressMonitor monitor) {
-		ReferenceTreeNode tree = new ReferenceTreeNode(file);
+	public static ReferenceTree buildReferencingFilesTree(ISourceModule file, IProgressMonitor monitor) {
 
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
 
-		internalBuildReferencingFilesTree(tree, processedFiles, monitor);
-		return tree;
+		Node root = new Node(file);
+		internalBuildReferencingFilesTree(root, processedFiles, monitor);
+
+		return new ReferenceTree(root);
 	}
 
-	private static void internalBuildReferencingFilesTree(ReferenceTreeNode root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
+	private static void internalBuildReferencingFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
 
 		ISourceModule file = root.getFile();
 
@@ -50,13 +83,13 @@ public class FileNetworkUtility {
 			// If this is the correct include (that means that included file is the original file):
 			if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
 				processedFiles.add(referencingFile);
-				root.addChild(new ReferenceTreeNode(referencingFile));
+				root.addChild(new Node(referencingFile));
 			}
 		}
 
-		Collection<ReferenceTreeNode> children = root.getChildren();
+		Collection<Node> children = root.getChildren();
 		if (children != null) {
-			for (ReferenceTreeNode child : children) {
+			for (Node child : children) {
 				internalBuildReferencingFilesTree(child, processedFiles, monitor);
 			}
 		}
@@ -68,21 +101,21 @@ public class FileNetworkUtility {
 	 * @param monitor Progress monitor
 	 * @return reference tree
 	 */
-	public static ReferenceTreeNode buildReferencedFilesTree(ISourceModule file, IProgressMonitor monitor) {
-		ReferenceTreeNode tree = new ReferenceTreeNode(file);
-
+	public static ReferenceTree buildReferencedFilesTree(ISourceModule file, IProgressMonitor monitor) {
 		HashSet<ISourceModule> processedFiles = new HashSet<ISourceModule>();
 		processedFiles.add(file);
 
+		Node root = new Node(file);
 		try {
-			internalBuildReferencedFilesTree(tree, processedFiles, monitor);
+			internalBuildReferencedFilesTree(root, processedFiles, monitor);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
-		return tree;
+
+		return new ReferenceTree(root);
 	}
 
-	private static void internalBuildReferencedFilesTree(ReferenceTreeNode root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) throws CoreException {
+	private static void internalBuildReferencedFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) throws CoreException {
 		ISourceModule sourceModule = root.getFile();
 
 		final List<String> includes = new LinkedList<String>();
@@ -104,13 +137,13 @@ public class FileNetworkUtility {
 			ISourceModule testFile = findSourceModule(sourceModule, filePath);
 			if (testFile != null && !processedFiles.contains(testFile)) {
 				processedFiles.add(testFile);
-				root.addChild(new ReferenceTreeNode(testFile));
+				root.addChild(new Node(testFile));
 			}
 		}
 
-		Collection<ReferenceTreeNode> children = root.getChildren();
+		Collection<Node> children = root.getChildren();
 		if (children != null) {
-			for (ReferenceTreeNode child : children) {
+			for (Node child : children) {
 				internalBuildReferencedFilesTree(child, processedFiles, monitor);
 			}
 		}
