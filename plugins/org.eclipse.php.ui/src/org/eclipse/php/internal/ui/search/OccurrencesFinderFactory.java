@@ -33,6 +33,7 @@ public class OccurrencesFinderFactory {
 			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
 				return new ClassNameOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
+				return new ClassMembersOccurrencesFinder();
 			case PhpElementConciliator.CONCILIATOR_UNKNOWN:
 			case PhpElementConciliator.CONCILIATOR_PROGRAM:
 			default:
