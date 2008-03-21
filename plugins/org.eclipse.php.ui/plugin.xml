@@ -1031,6 +1031,13 @@
 			<keywordReference id="org.eclipse.php.ui.hover" />
 		</page>
 		<page
+			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.MarkOccurrencesPreferencePage"
+			id="org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage"
+			name="%editorMarkOccurrencesPageName">
+			<keywordReference id="org.eclipse.php.ui.markOccurrences" />
+		</page>
+		<page
 			category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathVarsPreferencePage"
 			id="org.eclipse.php.ui.preferences.IncludePathVariables"
