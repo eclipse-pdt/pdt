@@ -22,6 +22,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.PHPActionConstants;
+import org.eclipse.php.internal.ui.actions.ToggleMarkOccurrencesAction;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -31,7 +32,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 
 /**
- * A PHPEditorActionBarContributor, which is a simple extention for
+ * A PHPEditorActionBarContributor, which is a simple extension for
  * BasicTextEditorActionContributor.
  */
 public class PHPEditorActionBarContributor extends TextEditorActionContributor {
@@ -46,8 +47,8 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private RetargetTextEditorAction fOpenDeclaration;
 	private RetargetTextEditorAction fRename;
 	private RetargetTextEditorAction fMove;
-	
-	
+	private ToggleMarkOccurrencesAction fMarkOccurrences; // Registers as a global action
+
 	protected MenuManager fFormatMenu = null;
 
 	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
@@ -58,9 +59,8 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$ //$NON-NLS-2$
 		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements", //$NON-NLS-1$
-		IPHPEditorActionDefinitionIds.RENAME_ELEMENT,
-		IPHPEditorActionDefinitionIds.MOVE_ELEMENT
-		
+		IPHPEditorActionDefinitionIds.RENAME_ELEMENT, IPHPEditorActionDefinitionIds.MOVE_ELEMENT
+
 	}; //$NON-NLS-1$
 
 	// private ToggleCommentAction fToggleCommentAction;
@@ -88,14 +88,16 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		fOpenDeclaration = new RetargetTextEditorAction(b, "OpenAction_declaration_"); //$NON-NLS-1$
 		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
-		
-		fRename = new RetargetTextEditorAction(b,""); //$NON-NLS-1$
+
+		fRename = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
 		fRename.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
-		
-		fMove = new RetargetTextEditorAction(b,""); //$NON-NLS-1$
+
+		fMove = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
 		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
-		
-		
+
+		fMarkOccurrences = new ToggleMarkOccurrencesAction(b);
+		fMarkOccurrences.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES);
+
 		//		fFormatMenu = new MenuManager("Format");
 		//		fFormatMenu.add(fFormatDocument);
 		//		fFormatMenu.add(fFormatActiveElements);
@@ -131,6 +133,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		super.init(bars, page);
 
 		bars.setGlobalActionHandler(PHPActionConstants.SHOW_PHP_DOC, fShowPHPDoc);
+		bars.setGlobalActionHandler(PHPActionConstants.TOGGLE_MARK_OCCURRENCES, fMarkOccurrences);
 	}
 
 	/*
@@ -148,12 +151,12 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fFormatDocument.setAction(getAction(editor, "FormatDocument")); //$NON-NLS-1$
 		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements")); //$NON-NLS-1$
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
-		
+		fMarkOccurrences.setEditor(editor);
 		if (part instanceof PHPStructuredEditor) {
-			PHPStructuredEditor phpEditor= (PHPStructuredEditor) part;
-			phpEditor.getActionGroup().fillActionBars(getActionBars());			
+			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;
+			phpEditor.getActionGroup().fillActionBars(getActionBars());
 		}
-		
+
 		IActionBars actionBars = getActionBars();
 		if (actionBars == null)
 			return;

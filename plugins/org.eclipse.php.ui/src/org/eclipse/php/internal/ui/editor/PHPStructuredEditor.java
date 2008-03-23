@@ -2026,8 +2026,65 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected void handlePreferenceStoreChanged(final PropertyChangeEvent event) {
 		final String property = event.getProperty();
 		try {
-			if (PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS.equals(property) || PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS.equals(property))
+			if (PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS.equals(property) || PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS.equals(property)) {
 				updateHoverBehavior();
+				return;
+			}
+			boolean newBooleanValue= false;
+			Object newValue= event.getNewValue();
+			if (newValue != null) {
+				newBooleanValue= Boolean.valueOf(newValue.toString()).booleanValue();
+			}
+			if (PreferenceConstants.EDITOR_MARK_OCCURRENCES.equals(property)) {
+				if (newBooleanValue != fMarkOccurrenceAnnotations) {
+					fMarkOccurrenceAnnotations= newBooleanValue;
+					if (!fMarkOccurrenceAnnotations)
+						uninstallOccurrencesFinder();
+					else
+						installOccurrencesFinder(true);
+				}
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES.equals(property)) {
+				fMarkTypeOccurrences= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES.equals(property)) {
+				fMarkMethodOccurrences= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES.equals(property)) {
+				fMarkConstantOccurrences= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES.equals(property)) {
+				fMarkFieldOccurrences= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES.equals(property)) {
+				fMarkLocalVariableypeOccurrences= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES.equals(property)) {
+				fMarkExceptions= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS.equals(property)) {
+				fMarkMethodExitPoints= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS.equals(property)) {
+				fMarkBreakContinueTargets= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_MARK_IMPLEMENTORS.equals(property)) {
+				fMarkImplementors= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.EDITOR_STICKY_OCCURRENCES.equals(property)) {
+				fStickyOccurrenceAnnotations= newBooleanValue;
+				return;
+			}
 		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
@@ -2475,7 +2532,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		removeOccurrenceAnnotations();
 	}
 
-	protected boolean isMarkingOccurrences() {
+	public boolean isMarkingOccurrences() {
 		IPreferenceStore store= getPreferenceStore();
 		return store != null && store.getBoolean(PreferenceConstants.EDITOR_MARK_OCCURRENCES);
 	}
