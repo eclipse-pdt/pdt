@@ -151,8 +151,8 @@
 	<!-- ===================================================================== -->
 	<target name="test">
 
-		<antcall target="runTest" />
 		<!--
+		<antcall target="runTest" />
 
 
                 <mkdir dir="/eclipse-testing" />
