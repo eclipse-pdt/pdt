@@ -52,9 +52,9 @@
 		<antcall target="getAndInstall">
 			<param name="groupId" value="dltkRuntime" />
 		</antcall>
-		<antcall target="getAndInstall">
+		<!--<antcall target="getAndInstall">
 			<param name="groupId" value="dtpRuntime" />
-		</antcall>
+		</antcall>-->
 		<antcall target="getAndInstall">
 			<param name="groupId" value="eclipseRuntime" />
 		</antcall>
