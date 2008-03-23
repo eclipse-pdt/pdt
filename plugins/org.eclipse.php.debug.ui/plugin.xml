@@ -339,6 +339,9 @@
           <actionSet
                 id="org.eclipse.php.debug.ui.actionSet">
           </actionSet>
+          <actionSet
+                id="org.eclipse.php.ui.text.php.actionSet.presentation">
+          </actionSet>
        </perspectiveExtension>
     </extension>  
     
