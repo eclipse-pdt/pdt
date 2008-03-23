@@ -10,5 +10,5 @@ plugin@org.eclipse.php.help=v20080323,:pserver:anonymous@dev.eclipse.org:/cvsroo
 plugin@org.eclipse.php.delivery=v20080323,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
 feature@org.eclipse.php_feature=v20080323,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php-feature/
 feature@org.eclipse.php.sdk_feature=v20080323,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.sdk-feature/
-feature@org.eclipse.php.test_feature=v20080323,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.test-feature/
-plugin@org.eclipse.php.test=v20080323,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
+feature@org.eclipse.php.test_feature=v20080323a,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.php.test-feature/
+plugin@org.eclipse.php.test=v20080323a,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,
