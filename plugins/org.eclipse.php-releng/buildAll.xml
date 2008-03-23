@@ -62,7 +62,7 @@
 	</target>
 
 	<target name="buildAll" depends="init,buildSDK">
-		<antcall target="runTests" />
+		<antcall target="buildRuntime" />
 		<!-- <antcall target="publishupdatesite" /> -->
 	</target>
 
