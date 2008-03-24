@@ -1733,7 +1733,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		super.createPartControl(parent);
 		
 		if (isMarkingOccurrences())
-			installOccurrencesFinder(false);
+			installOccurrencesFinder(true);
 		
 		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
 
