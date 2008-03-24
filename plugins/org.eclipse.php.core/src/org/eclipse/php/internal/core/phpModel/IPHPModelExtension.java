@@ -3,10 +3,10 @@ package org.eclipse.php.internal.core.phpModel;
 public interface IPHPModelExtension {
 
 	/**
-	 * Returns path to the PHP file that contains language model
+	 * Returns path to the directory that contains language model PHP files
 	 * @return file path
 	 */
-	public String getFile();
+	public String getDirectory();
 
 	/**
 	 * Returns whether this extension should be enabled

@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,12 +21,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.IPHPModelExtension;
@@ -45,6 +38,8 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
+import org.eclipse.wst.xml.core.internal.Logger;
+import org.osgi.framework.Bundle;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
@@ -223,62 +218,73 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	// ////////////////////////////////////////////////////////////////////////////////////////
 
-	protected void loadFiles(PHPLanguageManager languageManager) {
+	protected void parseFile(PHPParserManager phpParserManager, Bundle bundle, IPath path) {
 		try {
-			final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
-
-			// parse the specific language model
-			String phpFunctionPath = languageManager.getPHPFunctionPath();
-			Reader reader = new InputStreamReader(FileLocator.openStream(PHPCorePlugin.getDefault().getBundle(), new Path(phpFunctionPath), false));
+			Reader reader = new InputStreamReader(FileLocator.openStream(bundle, path, false));
 			ParserClient innerParserClient = new InnerParserClient();
-
-			ParserExecuter executer = new ParserExecuter(phpParserManager, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
+			ParserExecuter executer = new ParserExecuter(phpParserManager, innerParserClient, path.toOSString(), reader, new Pattern[0], 0, false);
 			executer.run();
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+	}
 
-			// load language model extensions:
-			IExtensionRegistry registry = Platform.getExtensionRegistry();
-			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPCorePlugin.ID, "phpModelExtensions"); //$NON-NLS-1$
+	protected void parseFilesFrom(PHPParserManager phpParserManager, Bundle bundle, String directory) {
+		try {
+			IPath filesList = new Path(directory).append(".list");
+			BufferedReader s = new BufferedReader(new InputStreamReader(FileLocator.openStream(bundle, filesList, false)));
+			String line;
+			while ((line = s.readLine()) != null) {
+				parseFile(phpParserManager, bundle, new Path(directory).append(line.trim()));
+			}
+			s.close();
+		} catch (IOException e) {
+			Logger.logException(e);
+		}
+	}
 
-			for (IConfigurationElement element : elements) {
-				if ("model".equals(element.getName())) { //$NON-NLS-1$
-					String id = element.getAttribute("id"); //$NON-NLS-1$
+	protected void loadFiles(PHPLanguageManager languageManager) {
+		final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
 
-					try {
-						String enabledAttr = element.getAttribute("enabled"); //$NON-NLS-1$
-						boolean enabled = (enabledAttr == null) ? true : Boolean.parseBoolean(enabledAttr);
-						String file = element.getAttribute("file"); //$NON-NLS-1$
-						String phpVersion = element.getAttribute("phpVersion"); //$NON-NLS-1$
+		parseFilesFrom(phpParserManager, PHPCorePlugin.getDefault().getBundle(), languageManager.getPHPFunctionPath());
 
-						if (element.getAttribute("class") != null) { //$NON-NLS-1$
-							IPHPModelExtension extension = (IPHPModelExtension) element.createExecutableExtension("class"); //$NON-NLS-1$
-							enabled = extension.isEnabled();
-							if (extension.getFile() != null) {
-								file = extension.getFile();
-							}
-							if (extension.getPHPVersion() != null) {
-								phpVersion = extension.getPHPVersion();
-							}
+		// load language model extensions:
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPCorePlugin.ID, "phpModelExtensions");
+
+		for (IConfigurationElement element : elements) {
+			if ("model".equals(element.getName())) {
+				String id = element.getAttribute("id");
+
+				try {
+					String enabledAttr = element.getAttribute("enabled");
+					boolean enabled = (enabledAttr == null) ? true : Boolean.parseBoolean(enabledAttr);
+					String directory = element.getAttribute("directory");
+					String phpVersion = element.getAttribute("phpVersion");
+
+					if (element.getAttribute("class") != null) {
+						IPHPModelExtension extension = (IPHPModelExtension) element.createExecutableExtension("class");
+						enabled = extension.isEnabled();
+						if (extension.getDirectory() != null) {
+							directory = extension.getDirectory();
 						}
-
-						if (enabled && getPHPVersion().equals(phpVersion)) {
-							reader = new InputStreamReader(FileLocator.openStream(Platform.getBundle(element.getNamespaceIdentifier()), new Path(file), false));
-							innerParserClient = new InnerParserClient();
-							executer = new ParserExecuter(phpParserManager, innerParserClient, file, reader, new Pattern[0], 0, false);
-							executer.run();
+						if (extension.getPHPVersion() != null) {
+							phpVersion = extension.getPHPVersion();
 						}
-					} catch (CoreException e) {
-						PHPCorePlugin.logErrorMessage(NLS.bind("Error loading PHP model extension ID {0}", id)); //$NON-NLS-1$
 					}
+
+					if (enabled && getPHPVersion().equals(phpVersion)) {
+						parseFilesFrom(phpParserManager, Platform.getBundle(element.getNamespaceIdentifier()), directory);
+					}
+				} catch (CoreException e) {
+					PHPCorePlugin.logErrorMessage(NLS.bind("Error loading PHP model extension ID {0}", id));
 				}
 			}
-
-			Arrays.sort(functions);
-			Arrays.sort(classes);
-			Arrays.sort(constants);
-
-		} catch (IOException e) {
-			PHPCorePlugin.log(e);
 		}
+
+		Arrays.sort(functions);
+		Arrays.sort(classes);
+		Arrays.sort(constants);
 	}
 
 	protected class InnerParserClient implements ParserClient {

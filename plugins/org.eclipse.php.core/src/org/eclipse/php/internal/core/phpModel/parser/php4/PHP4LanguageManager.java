@@ -15,7 +15,7 @@ import org.eclipse.php.internal.core.phpModel.parser.*;
 
 public class PHP4LanguageManager implements PHPLanguageManager {
 
-	private static final String PHP4_FUNCTIONS_PATH = "Resources/language/php4/basic.php"; //$NON-NLS-1$
+	private static final String PHP4_FUNCTIONS_PATH = "Resources/language/php4"; //$NON-NLS-1$
 
 	private PHPLanguageModel languageModel;
 

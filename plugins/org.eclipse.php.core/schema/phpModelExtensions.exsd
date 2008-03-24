@@ -73,10 +73,10 @@
                </restriction>
             </simpleType>
          </attribute>
-         <attribute name="file" type="string">
+         <attribute name="directory" type="string">
             <annotation>
                <documentation>
-                  Path to the PHP file that contains language model.
+                  Path to the directory that contains PHP files that define language model.
                </documentation>
                <appInfo>
                   <meta.attribute kind="resource"/>
