@@ -926,6 +926,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	public void dispose() {
 		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+		uninstallOccurrencesFinder();
 		super.dispose();
 	}
 
