@@ -60,8 +60,9 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_IMPLEMENTORS));
@@ -115,15 +116,19 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markMethodOccurrences");
 		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, 0);
 		createDependency(master, PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, slave);
+		
+		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markFunctionOccurrences");
+		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, 0);
+		createDependency(master, PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, slave);
 
 		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markConstantOccurrences");
 		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, 0);
 		createDependency(master, PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, slave);
 
-		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markFieldOccurrences");
-		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES, 0);
-		createDependency(master, PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES, slave);
-
+		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markGlobalVariableOccurrences");
+		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES, 0);
+		createDependency(master, PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES, slave);
+		
 		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markLocalVariableOccurrences");
 		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES, 0);
 		createDependency(master, PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES, slave);

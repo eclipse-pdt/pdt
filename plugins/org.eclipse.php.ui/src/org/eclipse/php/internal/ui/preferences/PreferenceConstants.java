@@ -681,16 +681,18 @@ public class PreferenceConstants {
 	 * @since 3.0
 	 */
 	public static final String EDITOR_MARK_METHOD_OCCURRENCES= "markMethodOccurrences"; //$NON-NLS-1$
+	
 	/**
-	 * A named preference that controls whether non-constant field occurrences are marked.
+	 * A named preference that controls whether function occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 * 
-	 * @since 3.0
+	 * @since 3.4
 	 */
-	public static final String EDITOR_MARK_FIELD_OCCURRENCES= "markFieldOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_FUNCTION_OCCURRENCES= "markFunctionOccurrences"; //$NON-NLS-1$
+	
 	/**
 	 * A named preference that controls whether constant (static final) occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -712,6 +714,17 @@ public class PreferenceConstants {
 	 * @since 3.0
 	 */
 	public static final String EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES= "markLocalVariableOccurrences"; //$NON-NLS-1$
+	
+	/**
+	 * A named preference that controls whether global variable occurrences are marked.
+	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 * 
+	 * @since 3.4
+	 */
+	public static final String EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES= "markGlobalVariableOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether exception occurrences are marked.
@@ -1014,8 +1027,9 @@ public class PreferenceConstants {
 		store.setDefault(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES, true);
+		store.setDefault(PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);

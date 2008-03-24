@@ -133,7 +133,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	/**
 	 * The internal shell activation listener for updating occurrences.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private ActivationListener fActivationListener= new ActivationListener();
 	private ISelectionListenerWithAST fPostSelectionListenerWithAST;
@@ -144,32 +144,32 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	/**
 	 * The selection used when forcing occurrence marking
 	 * through code.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private ISelection fForcedMarkOccurrencesSelection;
 	/**
 	 * The document modification stamp at the time when the last
 	 * occurrence marking took place.
-	 * @since 3.1
+	 * @since 3.4
 	 */
 	private long fMarkOccurrenceModificationStamp= IDocumentExtension4.UNKNOWN_MODIFICATION_STAMP;
 	/**
 	 * The region of the word under the caret used to when
 	 * computing the current occurrence markings.
-	 * @since 3.1
+	 * @since 3.4
 	 */
 	private IRegion fMarkOccurrenceTargetRegion;
 
 	/**
 	 * Holds the current occurrence annotations.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private Annotation[] fOccurrenceAnnotations= null;
 	/**
 	 * Tells whether all occurrences of the element at the
 	 * current caret location are automatically marked in
 	 * this editor.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fMarkOccurrenceAnnotations;
 	/**
@@ -177,63 +177,69 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * i.e. whether they stay even if there's no valid Java
 	 * element at the current caret position.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fStickyOccurrenceAnnotations;
 	/**
 	 * Tells whether to mark type occurrences in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fMarkTypeOccurrences;
 	/**
-	 * Tells whether to mark method occurrences in this editor.
+	 * Tells whether to mark method and declaration occurrences in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fMarkMethodOccurrences;
 	/**
+	 * Tells whether to mark function occurrences in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.4
+	 */
+	private boolean fMarkFunctionOccurrences;
+	/**
 	 * Tells whether to mark constant occurrences in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fMarkConstantOccurrences;
 	/**
-	 * Tells whether to mark field occurrences in this editor.
+	 * Tells whether to mark field global variable in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
-	private boolean fMarkFieldOccurrences;
+	private boolean fMarkGlobalVariableOccurrences;
 	/**
 	 * Tells whether to mark local variable occurrences in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
-	private boolean fMarkLocalVariableypeOccurrences;
+	private boolean fMarkLocalVariableOccurrences;
 	/**
 	 * Tells whether to mark exception occurrences in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fMarkExceptions;
 	/**
 	 * Tells whether to mark method exits in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.0
+	 * @since 3.4
 	 */
 	private boolean fMarkMethodExitPoints;
 	
 	/**
 	 * Tells whether to mark targets of <code>break</code> and <code>continue</code> statements in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.2
+	 * @since 3.4
 	 */
 	private boolean fMarkBreakContinueTargets;
 	
 	/**
 	 * Tells whether to mark implementors in this editor.
 	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * @since 3.1
+	 * @since 3.4
 	 */
 	private boolean fMarkImplementors;
 
@@ -586,8 +592,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		 * @since 3.1
 		 */
 		public void windowDeactivated(IWorkbenchWindow window) {
-			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart())
+			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
 				removeOccurrenceAnnotations();
+			}
 		}
 
 		/*
@@ -901,9 +908,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		fStickyOccurrenceAnnotations= store.getBoolean(PreferenceConstants.EDITOR_STICKY_OCCURRENCES);
 		fMarkTypeOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_TYPE_OCCURRENCES);
 		fMarkMethodOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_METHOD_OCCURRENCES);
+		fMarkFunctionOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES);
 		fMarkConstantOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES);
-		fMarkFieldOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES);
-		fMarkLocalVariableypeOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES);
+		fMarkGlobalVariableOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES);
+		fMarkLocalVariableOccurrences= store.getBoolean(PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES);
 		fMarkExceptions= store.getBoolean(PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES);
 		fMarkImplementors= store.getBoolean(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS);
 		fMarkMethodExitPoints= store.getBoolean(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS);
@@ -926,6 +934,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	public void dispose() {
 		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+		if (fActivationListener != null) {
+			PlatformUI.getWorkbench().removeWindowListener(fActivationListener);
+			fActivationListener= null;
+		}
 		uninstallOccurrencesFinder();
 		super.dispose();
 	}
@@ -1860,6 +1872,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
+		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
 	}
 
 	private void refreshViewer() {
@@ -2054,16 +2067,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				fMarkMethodOccurrences= newBooleanValue;
 				return;
 			}
+			if (PreferenceConstants.EDITOR_MARK_FUNCTION_OCCURRENCES.equals(property)) {
+				fMarkFunctionOccurrences= newBooleanValue;
+				return;
+			}
 			if (PreferenceConstants.EDITOR_MARK_CONSTANT_OCCURRENCES.equals(property)) {
 				fMarkConstantOccurrences= newBooleanValue;
 				return;
 			}
-			if (PreferenceConstants.EDITOR_MARK_FIELD_OCCURRENCES.equals(property)) {
-				fMarkFieldOccurrences= newBooleanValue;
+			if (PreferenceConstants.EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES.equals(property)) {
+				fMarkGlobalVariableOccurrences= newBooleanValue;
 				return;
 			}
 			if (PreferenceConstants.EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES.equals(property)) {
-				fMarkLocalVariableypeOccurrences= newBooleanValue;
+				fMarkLocalVariableOccurrences= newBooleanValue;
 				return;
 			}
 			if (PreferenceConstants.EDITOR_MARK_EXCEPTION_OCCURRENCES.equals(property)) {
@@ -2547,15 +2564,17 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	boolean markOccurrencesOfType(int type) {
 		switch (type) {
 			case PhpElementConciliator.CONCILIATOR_GLOBAL_VARIABLE:
+				return fMarkGlobalVariableOccurrences;
 			case PhpElementConciliator.CONCILIATOR_LOCAL_VARIABLE:
-				return fMarkFieldOccurrences;
+				return fMarkLocalVariableOccurrences;
 			case PhpElementConciliator.CONCILIATOR_FUNCTION:
-				return fMarkMethodOccurrences;
+				return fMarkFunctionOccurrences;
 			case PhpElementConciliator.CONCILIATOR_CLASSNAME:
+				return fMarkTypeOccurrences;
 			case PhpElementConciliator.CONCILIATOR_CONSTANT:
+				return fMarkConstantOccurrences;
 			case PhpElementConciliator.CONCILIATOR_CLASS_MEMBER:
-				// TODO - Add more types to mark by
-				return true;
+				return fMarkMethodOccurrences;
 			case PhpElementConciliator.CONCILIATOR_UNKNOWN:
 			case PhpElementConciliator.CONCILIATOR_PROGRAM:
 			default:
