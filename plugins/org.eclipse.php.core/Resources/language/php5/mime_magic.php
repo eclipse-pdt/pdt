@@ -1,0 +1,14 @@
+<?php
+
+// Start of mime_magic v.0.1
+
+/**
+ * Detect MIME Content-type for a file (deprecated)
+ * @link http://php.net/manual/en/function.mime-content-type.php
+ * @param filename string
+ * @return string the content type in MIME format, like
+ */
+function mime_content_type ($filename) {}
+
+// End of mime_magic v.0.1
+?>

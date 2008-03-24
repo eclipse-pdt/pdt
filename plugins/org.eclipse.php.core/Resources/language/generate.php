@@ -12,7 +12,7 @@ if (version_compare(phpversion(), "5.0.0") < 0) {
 }
 
 
-$splitFiles = false;
+$splitFiles = true;
 $phpdocDir = null;
 
 // Parse arguments:
@@ -20,8 +20,8 @@ $argv = $_SERVER["argv"];
 $argv0 = array_shift ($argv);
 for ($i = 0; $i < count($argv); ++$i) {
 	switch ($argv[$i]) {
-		case "-split":
-			$splitFiles = true;
+		case "-nosplit":
+			$splitFiles = false;
 			break;
 
 		case "-help":
@@ -94,6 +94,15 @@ foreach ($intConstants as $name => $value) {
 }
 
 finish_file_output("php5/basic.php");
+
+// Create .list file
+$fp = fopen ("php5/.list", "w");
+foreach (glob("php5/*.php") as $f) {
+	fwrite ($fp, basename($f));
+	fwrite ($fp, "\n");
+}
+fclose($fp);
+
 
 // === Functions ===
 /**
