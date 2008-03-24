@@ -2,7 +2,7 @@
 
 // Start of oci8 v.1.2.3
 
-class OCI-Lob  {
+class OCI_Lob  {
 
 	/**
 	 * Returns large object's contents
@@ -177,7 +177,7 @@ class OCI-Lob  {
 
 }
 
-class OCI-Collection  {
+class OCI_Collection  {
 
 	/**
 	 * Appends element to the collection

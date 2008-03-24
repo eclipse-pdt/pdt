@@ -331,7 +331,7 @@ function print_class ($classRef, $tabs = 0) {
 	if ($classRef->isFinal()) print "final ";
 
 	print $classRef->isInterface() ? "interface " : "class ";
-	print "{$classRef->getName()} ";
+	print clean_php_identifier($classRef->getName())." ";
 	
 	// print out parent class
 	$parentClassRef = $classRef->getParentClass();
@@ -713,9 +713,9 @@ function begin_file_output() {
  * @param filename File to dump the output
  */
 function finish_file_output($filename) {
-	if (file_exists ($filename)) {
-		rename ($filename, "{$filename}.bak");
-	}
+	//if (file_exists ($filename)) {
+	//	rename ($filename, "{$filename}.bak");
+	//}
 	print "?>\n";
 	file_put_contents ($filename, ob_get_contents());
 	ob_end_clean();
