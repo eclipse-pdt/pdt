@@ -122,7 +122,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					SimpleReference ref = (SimpleReference) field;
 					ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 					info.modifiers = Modifiers.AccDefault;
-					info.name = ref.getName();
+					info.name = '$' + ref.getName();
 					info.nameSourceEnd = ref.sourceEnd() - 1;
 					info.nameSourceStart = ref.sourceStart();
 					info.declarationStart = assignment.sourceStart();

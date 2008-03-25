@@ -83,7 +83,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 					Expression field = fieldAccess.getField();
 					if (field instanceof SimpleReference) {
 						SimpleReference ref = (SimpleReference) field;
-						FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+						FieldDeclaration decl = new FieldDeclaration('$' + ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
 						getPatternLocator().match(decl, getNodeSet());
 					}
 				}
