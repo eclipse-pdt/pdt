@@ -13,7 +13,6 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
-import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.BasicContext;
@@ -26,7 +25,6 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -50,41 +48,7 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		IEvaluatedType instanceType = context.getInstanceType();
-
-		Set<IType> types = new HashSet<IType>();
-
-		if (instanceType instanceof PHPClassType) {
-			PHPClassType classType = (PHPClassType) instanceType;
-			IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
-			for (IModelElement e : elements) {
-				types.add((IType) e);
-			}
-		} else if (instanceType instanceof AmbiguousType) {
-			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
-			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
-				if (type instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) type;
-					IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
-					for (IModelElement e : elements) {
-						types.add((IType) e);
-					}
-				}
-			}
-		}
-
-		IType typeFromSameFile = null;
-		for (IType type : types) {
-			if (type.getSourceModule().equals(context.getSourceModule())) {
-				typeFromSameFile = type;
-				break;
-			}
-		}
-		// If type from the same file was found  - use it
-		if (typeFromSameFile != null) {
-			types.clear();
-			types.add(typeFromSameFile);
-		}
+		IType[] types = PHPTypeInferenceUtils.getTypes(context.getInstanceType(), context.getSourceModule());
 
 		String variableName = typedGoal.getVariableName();
 		SearchEngine searchEngine = new SearchEngine();

@@ -2,13 +2,13 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.InstanceContext;
@@ -46,47 +46,30 @@ public class MethodReturnTypeEvaluator extends GoalEvaluator {
 		MethodReturnTypeGoal typedGoal = getTypedGoal();
 		InstanceContext typedContext = getTypedContext();
 
-		IEvaluatedType instanceType = typedContext.getInstanceType();
+		final Set<IMethod> methods = new HashSet<IMethod>();
 
 		String methodName = typedGoal.getMethodName();
+		IType[] types = PHPTypeInferenceUtils.getTypes(typedContext.getInstanceType(), typedContext.getSourceModule());
 
-		Set<IMethod> methods = new HashSet<IMethod>();
-
-		if (instanceType instanceof PHPClassType) {
-			PHPClassType classType = (PHPClassType) instanceType;
-			IModelElement[] elements = PHPMixinModel.getInstance().getMethod(classType.getTypeName(), methodName);
-			for (IModelElement e : elements) {
-				methods.add((IMethod) e);
-			}
-		} else if (instanceType instanceof AmbiguousType) {
-			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
-			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
-				if (type instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) type;
-					IModelElement[] elements = PHPMixinModel.getInstance().getMethod(classType.getTypeName(), methodName);
-					for (IModelElement e : elements) {
-						methods.add((IMethod) e);
-					}
-				}
-			}
-		} else {
+		if (types.length == 0) {
 			IModelElement[] elements = PHPMixinModel.getInstance().getFunction(methodName);
 			for (IModelElement e : elements) {
 				methods.add((IMethod) e);
 			}
-		}
-
-		IMethod methodFromSameFile = null;
-		for (IMethod method : methods) {
-			if (method.getSourceModule().equals(typedContext.getSourceModule())) {
-				methodFromSameFile = method;
-				break;
+		} else {
+			for (IType type : types) {
+				try {
+					IModelElement[] elements = PHPMixinModel.getInstance().getMethod(type.getElementName(), methodName);
+					if (elements.length == 0) {
+						elements = PHPModelUtils.getClassMethod(type, methodName, null);
+					}
+					for (IModelElement e : elements) {
+						methods.add((IMethod) e);
+					}
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
 			}
-		}
-		// If method from the same file was found  - use it
-		if (methodFromSameFile != null) {
-			methods.clear();
-			methods.add(methodFromSameFile);
 		}
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
