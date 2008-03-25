@@ -2460,7 +2460,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 		
-		if (fMarkExceptions) {
+		if (locations == null && fMarkExceptions) {
 //          TODO : Implement Me!
 //			ExceptionOccurrencesFinder finder= new ExceptionOccurrencesFinder();
 //			if (finder.initialize(astRoot, selectedNode) == null) {
