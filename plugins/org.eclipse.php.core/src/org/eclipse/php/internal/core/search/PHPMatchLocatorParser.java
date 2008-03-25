@@ -57,11 +57,11 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		}
 	}
 
-	private MethodDeclaration processMethod(MethodDeclaration m) {
+	protected MethodDeclaration processMethod(MethodDeclaration m) {
 		return m;
 	}
 
-	private TypeDeclaration processType(TypeDeclaration t) {
+	protected TypeDeclaration processType(TypeDeclaration t) {
 		return t;
 	}
 

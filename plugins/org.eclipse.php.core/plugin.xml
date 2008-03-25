@@ -183,5 +183,13 @@
           id="org.eclipse.php.core.LANGUAGE">
     </buildpathContainerInitializer>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.fileHierarchyResolvers">
+    <fileHierarchyResolver
+          class="org.eclipse.php.internal.core.filenetwork.PHPFileHierarchyResolver"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </fileHierarchyResolver>
+ </extension>
 
 </plugin>
