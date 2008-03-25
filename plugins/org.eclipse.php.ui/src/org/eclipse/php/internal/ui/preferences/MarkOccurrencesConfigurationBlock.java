@@ -67,6 +67,7 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_IMPLEMENTORS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_MARK_HTML_TAGS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_STICKY_OCCURRENCES));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
@@ -148,6 +149,10 @@ public class MarkOccurrencesConfigurationBlock implements IPreferenceConfigurati
 		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markBreakContinueTargets");
 		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, 0);
 		createDependency(master, PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, slave);
+		
+		label = PHPUIMessages.getString("MarkOccurrencesConfigurationBlock_markHTMLTags");
+		slave = addCheckBox(composite, label, PreferenceConstants.EDITOR_MARK_HTML_TAGS, 0);
+		createDependency(master, PreferenceConstants.EDITOR_MARK_HTML_TAGS, slave);
 
 		addFiller(composite);
 

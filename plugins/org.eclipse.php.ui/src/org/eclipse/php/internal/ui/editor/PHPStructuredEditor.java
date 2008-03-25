@@ -48,6 +48,7 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -78,7 +79,6 @@ import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.Double
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder;
 import org.eclipse.php.internal.ui.search.MethodExitsFinder;
-import org.eclipse.php.internal.ui.search.LocalVariableOccurrencesFinder;
 import org.eclipse.php.internal.ui.search.OccurrencesFinderFactory;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
@@ -101,7 +101,10 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.wst.common.frameworks.internal.DoNotUseMeThisWillBeDeletedPost15;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -112,6 +115,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
@@ -243,6 +247,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private boolean fMarkImplementors;
 
+	/**
+	 * Tells whether to mark HTML tags in this editor.
+	 * Only valid if {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
+	 * @since 3.4
+	 */
+	private boolean fMarkHTMLTags;
 
 	/**
 	 * Internal implementation class for a change listener.
@@ -916,6 +926,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		fMarkImplementors= store.getBoolean(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS);
 		fMarkMethodExitPoints= store.getBoolean(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS);
 		fMarkBreakContinueTargets= store.getBoolean(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS);
+		fMarkHTMLTags= store.getBoolean(PreferenceConstants.EDITOR_MARK_HTML_TAGS);
 	}
 
 	/**
@@ -2103,6 +2114,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				fStickyOccurrenceAnnotations= newBooleanValue;
 				return;
 			}
+			if (PreferenceConstants.EDITOR_MARK_HTML_TAGS.equals(property)) {
+				fMarkHTMLTags= newBooleanValue;
+				return;
+			}
 		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
@@ -2438,6 +2453,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		OccurrenceLocation[] locations= null;
 		
 		ASTNode selectedNode= NodeFinder.perform(astRoot, selection.getOffset(), selection.getLength());
+		if (fMarkHTMLTags && ASTNode.IN_LINE_HTML == selectedNode.getType()) {
+			IOccurrencesFinder finder = OccurrencesFinderFactory.createHTMLOccurrencesFinder(document, selection.getOffset());
+			if (finder.initialize(astRoot, selectedNode) == null) {
+				locations = finder.getOccurrences();
+			}
+		}
+		
 		if (fMarkExceptions) {
 //          TODO : Implement Me!
 //			ExceptionOccurrencesFinder finder= new ExceptionOccurrencesFinder();
@@ -2463,8 +2485,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 		
 		if (locations == null && fMarkImplementors) {
-//          TODO : Implement Me!			
-//			ImplementOccurrencesFinder finder= new ImplementOccurrencesFinder();
+			//TODO
+//			IOccurrencesFinder finder= OccurrencesFinderFactory.createImplementorsOccurrencesFinder();
 //			if (finder.initialize(astRoot, selectedNode) == null) {
 //				locations= finder.getOccurrences();
 //			}
