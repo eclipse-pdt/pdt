@@ -25,4 +25,10 @@ public abstract class AbstractPHPSourceParser extends AbstractSourceParser imple
 	}
 
 	public abstract ModuleDeclaration parse(Reader in, IProblemReporter reporter) throws Exception;
+
+	protected ModuleDeclaration parse(AbstractASTParser parser) throws Exception {
+		parser.parse();
+		return parser.getModuleDeclaration();
+	}
+
 }

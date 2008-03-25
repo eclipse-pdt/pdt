@@ -2,8 +2,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import java.io.Reader;
 
-import java_cup.runtime.Symbol;
-
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 
@@ -13,9 +11,6 @@ public class PHPSourceParser4 extends AbstractPHPSourceParser {
 		PhpAstLexer4 lexer = new PhpAstLexer4(in);
 		PhpAstParser4 parser = new PhpAstParser4(lexer);
 
-		Symbol symbol = parser.parse();
-		ModuleDeclaration program = (ModuleDeclaration) symbol.value;
-
-		return program;
+		return parse(parser);
 	}
 }

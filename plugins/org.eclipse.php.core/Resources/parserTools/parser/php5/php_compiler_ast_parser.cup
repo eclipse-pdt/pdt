@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.9 2008/03/03 08:10:37 ggurfinke Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.10 2008/03/25 16:47:03 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -42,38 +42,6 @@ parser code {:
 		return dispatcher;
 	}
 
-    /**
-     * Report a non fatal error (or warning).  This method takes a message
-     * string and an additional object (to be used by specializations implemented in subclasses).
-     * The super class prints the message to System.err.
-     * @param message an error message.
-     * @param info    an extra object reserved for use by specialized subclasses.
-     */
-    public void report_error(String message, Object info) {
-		// System.err.print(message);
-  		// if (info instanceof Symbol)
-		//	if (((Symbol)info).left != -1)
-		//		System.err.println(" at character " + ((Symbol)info).left + " of input");
-		//	else System.err.println("");
-	    // else 
-	   	//	System.err.println("");
-    }
-    
-    public void report_fatal_error(
-    String   message, 
-    Object   info)
-    throws java.lang.Exception
-    {
-      /* stop parsing (not really necessary since we throw an exception, but) */
-      done_parsing();
-
-      /* use the normal error message reporting to put out the message */
-      report_error(message, info);
-
-      /* throw an exception */
-     // throw new Exception("Can't recover from previous error(s)");
-    }	
-	
 :}
 
 /* terminals */
@@ -184,7 +152,7 @@ terminal T_QUATE,T_BACKQUATE;
 /* Non terminals */
 
 non terminal ModuleDeclaration thestart;
-non terminal List top_statement_list;
+non terminal top_statement_list;
 non terminal Statement top_statement;
 non terminal Statement statement;
 non terminal List inner_statement_list;
@@ -215,8 +183,8 @@ non terminal PHPCallArgumentsList non_empty_function_call_parameter_list;
 non terminal List global_var_list;
 non terminal Expression global_var;
 non terminal List static_var_list;
-non terminal List class_statement_list;
-non terminal List class_statement;
+non terminal class_statement_list;
+non terminal class_statement;
 non terminal Boolean is_reference;
 non terminal List echo_expr_list;
 non terminal List for_expr;
@@ -256,7 +224,7 @@ non terminal TypeReference fully_qualified_class_name;
 non terminal List class_variable_declaration;
 non terminal List class_constant_declaration;
 non terminal PhpAstParser5.ModifierDocPair method_modifiers;
-non terminal Block method_body;
+non terminal Statement method_body;
 non terminal List non_empty_member_modifiers;
 non terminal PhpAstParser5.ModifierDocPair member_modifier;
 non terminal PHPCallArgumentsList method_or_not;
@@ -292,6 +260,10 @@ non terminal Expression dynamic_class_name_variable_property;
 non terminal StaticConstantAccess static_class_constant;
 non terminal Expression base_variable_with_function_calls;
 
+/* added the following rules for improving error recovery*/
+non terminal Statement class_closure;
+non terminal PHPMethodDeclaration function_body;
+non terminal errorOrNot;
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
@@ -325,7 +297,9 @@ precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC
 thestart ::=
 top_statement_list:statementList
 {:
-	PHPModuleDeclaration program = new PHPModuleDeclaration(statementListleft, statementListright, statementList);
+	PHPModuleDeclaration program = parser.getModuleDeclaration();
+	program.setStart(statementListleft);
+	program.setEnd(statementListright);
 	RESULT = program; 
 :}
 ;
@@ -334,15 +308,18 @@ top_statement_list ::=
 top_statement_list:statementList top_statement:statement
 {:
 	if(statement != null) {
-		statementList.add(statement);
+		parser.addStatement(statement);
+		if(parser.pendingStatement != null){
+			parser.addStatement(parser.pendingStatement);
+			parser.pendingStatement = null;
+		}
+	}
+	while(!parser.declarations.isEmpty() ) {
+		parser.getModuleDeclaration().addStatement(parser.declarations.pop());
 	}		
-	RESULT = statementList;
 :}
 
 | /* empty */
-{: 
-	RESULT = new LinkedList(); 
-:}
 ;
 
 top_statement ::=
@@ -374,7 +351,15 @@ inner_statement_list:statementList inner_statement:statement
 	// Ignore null statements
 	if(statement != null) {
 		statementList.add(statement);
-	}		
+		if(statement.getKind() == ASTNodeKinds.AST_ERROR){
+			if(!parser.declarations.isEmpty()) {
+				Statement node = parser.declarations.peek();
+				if(node.sourceStart() == statement.sourceStart() && node.sourceEnd() == statement.sourceEnd()) {
+					statementList.add(parser.declarations.pop());
+				}
+			}		
+		}
+	}
 	RESULT = statementList;
 :}
 
@@ -412,12 +397,32 @@ unticked_statement:statement
 {: 
 	RESULT = statement; 
 :}
+| T_VAR_COMMENT:varComment
+{:
+	// TODO: var comment should be added as ast node
+:}
+| error:theError /* error statement */
+{:
+	parser.reportError();
+	ASTError error = new ASTError(theErrorleft, theErrorright);
+	RESULT = error;	
+:}
 ;
 
 unticked_statement ::=
-T_CURLY_OPEN:token inner_statement_list:statementList T_CURLY_CLOSE:end
+T_CURLY_OPEN:token
 {:
-	Block block = new Block(tokenleft, endright, statementList);
+	Block block = new Block(tokenleft, tokenleft, new LinkedList());
+	parser.declarations.push(block);
+	
+:}
+inner_statement_list:statementList T_CURLY_CLOSE:end
+{:
+	Block block = (Block)parser.declarations.pop();
+	block.setEnd(endright);
+	block.getStatements().clear();
+	block.acceptStatements(statementList);
+	
 	RESULT = block;
 :}
 
@@ -607,16 +612,6 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
 	RESULT = new ThrowStatement(tokenleft, endright, expr); 
 :}
 
-| error:theError /* error statement */
-{:
-	ASTError error = new ASTError(theErrorleft, theErrorright);
-	RESULT = error;	
-:}
-
-| T_VAR_COMMENT:varComment
-{:
-	// TODO: var comment should be added as ast node
-:}
 ;
 
 additional_catches ::=
@@ -721,52 +716,116 @@ is_reference ::=
 
 unticked_function_declaration_statement ::=
 T_FUNCTION:start is_reference:isReference string_st:functionName
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
+{:
+	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, null, new Block(functionNameright,functionNameright,null), isReference.booleanValue(), start);
+	parser.addDeclarationStatement(functionDeclaration);
+	parser.declarations.push(functionDeclaration);
+:}
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:closeParenthese
+{:
+	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
+	functionDeclaration.acceptArguments(paramList);
+	functionDeclaration.setEnd(closeParentheseright);
+:}
+function_body:body
+{:
+RESULT = body;
+:}
+;
+
+function_body ::=
 T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
-	Block block = new Block(blockStartleft, blockEndright, statementList);
-	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, blockEndright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, paramList, block, isReference.booleanValue(), start);
+	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.pop();
+	Block block = functionDeclaration.getBody();
+	block.setStart(blockStartleft);
+	block.setEnd(blockEndright);
+	block.acceptStatements(statementList);
+	functionDeclaration.setEnd(blockEndright);
 	RESULT = functionDeclaration;
+:}
+| error:theError
+{:
+	RESULT = (PHPMethodDeclaration)parser.declarations.pop();
 :}
 ;
 
 unticked_class_declaration_statement ::=
 class_entry_type:modifier T_STRING:className
-extends_from:superClass implements_list:interfaces
-T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
-	Iterator statementIt = statementList.iterator();
-	while (statementIt.hasNext()) {
-		Statement statement = (Statement)statementIt.next();
-		if (statement.getKind() == Declaration.D_METHOD) {
-			MethodDeclaration methodDeclaration = (MethodDeclaration)statement;
-			methodDeclaration.setDeclaringTypeName(className);
+	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, modifier.modifier, className, null, null, new Block(classNameright,classNameright,null), modifier.doc);
+	parser.addDeclarationStatement(classDeclaration);
+	parser.declarations.push(classDeclaration);
+:}
+extends_from:superClass errorOrNot implements_list:interfaces
+{:
+	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.peek();
+	ASTListNode parentsList = new ASTListNode();
+		if (superClass != null) {
+			parentsList.addNode(superClass);
 		}
+		if (interfaces != null) {
+			for (TypeReference intface: (List<TypeReference>)interfaces) {
+				parentsList.addNode(intface);
+			}
+		}
+		classDeclaration.setSuperClasses(parentsList);
+		classDeclaration.setEnd(interfacesright);
+		classDeclaration.getBody().setStart(interfacesright);
+		classDeclaration.getBody().setEnd(interfacesright);
+:}
+T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
+{:
+	if(blockEnd != null) {
+		parser.reportError(new ASTError(statementListright - 1, statementListright));
+		parser.pendingStatement = blockEnd;
 	}
-	
-	Block block = new Block(blockStartleft, blockEndright, statementList);
-	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,blockEndright, classNameleft, classNameright, modifier.modifier, className, superClass, interfaces, block, modifier.doc);
+
+	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.pop();
+	classDeclaration.setEnd(blockEndright);
+	classDeclaration.getBody().setStart(blockStartleft);
+	classDeclaration.getBody().setEnd(blockEndright);
 	RESULT = classDeclaration;
 :}
 
 |
 interface_entry:start T_STRING:className
 interface_extends_list:interfaces
-T_CURLY_OPEN:blockStart class_statement_list:statementList T_CURLY_CLOSE:blockEnd
 {:
-	Iterator statementIt = statementList.iterator();
-	while (statementIt.hasNext()) {
-		Statement statement = (Statement)statementIt.next();
-		if (statement.getKind() == Declaration.D_METHOD) {
-			MethodDeclaration methodDeclaration = (MethodDeclaration)statement;
-			methodDeclaration.setDeclaringTypeName(className);
-		}
+	InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(startleft ,interfacesright, classNameleft, classNameright, className, interfaces, new Block(interfacesright,interfacesright,null), start);
+	parser.declarations.push(interfaceDeclaration);
+:}
+T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
+{:
+	if(blockEnd != null) {
+		parser.reportError(new ASTError(statementListright - 1, statementListright));
+		parser.pendingStatement = blockEnd;
 	}
-	
-	Block block = new Block(blockStartleft, blockEndright, statementList);
-	InterfaceDeclaration interfaceDeclaration = new InterfaceDeclaration(startleft ,blockEndright, classNameleft, classNameright, className, interfaces, block, start);
+
+	InterfaceDeclaration interfaceDeclaration = (InterfaceDeclaration)parser.declarations.pop();
+	interfaceDeclaration.setEnd(blockEndright);
+	interfaceDeclaration.getBody().setStart(blockStartleft);
+	interfaceDeclaration.getBody().setEnd(blockEndright);
 	RESULT = interfaceDeclaration;
 :}
+;
+
+errorOrNot ::=
+error
+|
+;
+
+class_closure ::=
+T_CURLY_CLOSE
+|
+unticked_statement:statement /* error recovery */ 
+{: 
+	RESULT = statement;
+:}
+|class_declaration_statement:statement /* error recovery */
+{: 
+	RESULT = statement;
+:} 
 ;
 
 class_entry_type ::=
@@ -795,6 +854,10 @@ extends_from ::=
 | T_EXTENDS fully_qualified_class_name:className
 {:
 	RESULT = className;
+:}
+| T_EXTENDS error:theError /* error recovery */
+{:
+	parser.reportError(new ASTError(theErrorleft, theErrorright));
 :}
 ;
 
@@ -836,7 +899,9 @@ interface_list ::=
 fully_qualified_class_name:className
 {:
 	List list = new LinkedList();
-	list.add(className);
+	if(className != null) {
+		list.add(className);
+	}
 	RESULT = list;
 :}
 
@@ -844,6 +909,16 @@ fully_qualified_class_name:className
 {:
 	list.add(className);
 	RESULT = list;
+:}
+| interface_list:list T_COMMA:comma error:theError /* error recovery */
+{:
+	parser.reportError(new ASTError(theErrorleft, theErrorright));
+	RESULT = list;
+:}
+| error:theError 
+{:
+	parser.reportError(new ASTError(theErrorleft, theErrorright));
+	RESULT = new LinkedList();
 :}
 ;
 
@@ -1093,13 +1168,22 @@ non_empty_parameter_list ::=
 parameter:parameter
 {:
 	List list = new LinkedList();
-	list.add(parameter);
+	if(parameter != null) {
+		list.add(parameter);
+	}
 	RESULT = list;
 :}
 
 | non_empty_parameter_list:list T_COMMA parameter:parameter
 {:
-	list.add(parameter);
+	if(parameter != null) {
+		list.add(parameter);
+	}
+	RESULT = list;
+:}
+| non_empty_parameter_list:list T_COMMA:comma /* error recovery */
+{:
+	parser.reportError(new ASTError(commaleft, commaright));
 	RESULT = list;
 :}
 ;
@@ -1135,6 +1219,11 @@ optional_class_type:classType T_VARIABLE:var
 	VariableReference v = new VariableReference(varleft, varright, var, PHPVariableKind.LOCAL);
 	FormalParameter parameter = new FormalParameterByReference(start, scalarright, classType, v, scalar);
 	RESULT = parameter;	
+:}
+| error:theError
+{:
+	parser.reportError(new ASTError(theErrorleft, theErrorright));
+	RESULT = null;	
 :}
 ;
 
@@ -1285,23 +1374,17 @@ static_var_list:list T_COMMA T_VARIABLE:var
 class_statement_list ::=
 class_statement_list:list class_statement:classStatement
 {:
-	if (classStatement != null) {
-		list.addAll(classStatement);
+	if(!(parser.declarations.peek() instanceof TypeDeclaration)) {
+		parser.declarations.pop();
 	}
-	RESULT = list;
 :}
 
 | /* empty */
-{:
-	List list = new LinkedList();
-	RESULT = list;
-:}
 ;
 
 class_statement ::=
 variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 {:
-	List constList = new LinkedList();
 	Iterator i = decList.iterator();
 	while (i.hasNext()) {
 		ASTNode[] decl = (ASTNode[]) i.next();
@@ -1309,14 +1392,12 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		Expression initializer = (Expression)decl[1];
 		int start = variable.sourceStart();
 		int end = (initializer == null ? variable.sourceEnd() : initializer.sourceEnd());
-		constList.add (new PHPFieldDeclaration(variable, initializer, start, end, modifier.modifier, modifier.doc));
+		parser.addDeclarationStatement(new PHPFieldDeclaration(variable, initializer, start, end, modifier.modifier, modifier.doc));
 	}
-	RESULT = constList;
 :}
 
 | class_constant_declaration:decList T_SEMICOLON
 {:
-	List constList = new LinkedList();
 	Iterator i = decList.iterator();
 	while (i.hasNext()) {
 		ASTNode[] decl = (ASTNode[]) i.next();
@@ -1329,14 +1410,11 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		}
 		int start = constant.sourceStart();
 		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
-		constList.add (new ClassConstantDeclaration(constant, initializer, start, end, docBlock));
+		parser.addDeclarationStatement(new ClassConstantDeclaration(constant, initializer, start, end, docBlock));
 	}
-	RESULT = constList;
 :}
 
 | method_modifiers:modifier T_FUNCTION:start is_reference:isReference string_st:functionName
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
-method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
 	int modifierValue = modifier == null ? Modifiers.AccPublic : modifier.modifier;
@@ -1344,28 +1422,61 @@ method_body:body
 	if (modifier != null && modifier.doc != null) {
 		docBlock = modifier.doc;
 	}
-	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, bodyright, functionNameleft, functionNameright, functionName, modifierValue, paramList, body, isReference, docBlock);
-	List methodList = new LinkedList();
-	methodList.add(methodDeclaration);
-	RESULT = methodList;
+	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(methodStart, functionNameright, functionNameleft, functionNameright, functionName, modifierValue, null, new Block(functionNameright, functionNameright, null), isReference.booleanValue(), docBlock);
+	parser.addDeclarationStatement(methodDeclaration);
+	parser.declarations.push(methodDeclaration);
+:}
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE:closeParenthese
+{:
+	PHPMethodDeclaration functionDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
+	functionDeclaration.acceptArguments(paramList);
+	functionDeclaration.setEnd(closeParentheseright);
+:}
+method_body:body
+{:
+	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.pop();
+	if(body instanceof ASTError) {
+		parser.reportError(new ASTError(methodDeclaration.sourceEnd() - 1, methodDeclaration.sourceEnd()));
+	}
+	TypeDeclaration type = (TypeDeclaration)parser.declarations.peek();
+	methodDeclaration.setDeclaringTypeName(type.getName());
 :}
 
 | T_VAR_COMMENT:varComment
 {:
 
 :}
+| error:theError /* error statement */
+{:
+	parser.reportError();
+	ASTError error = new ASTError(theErrorleft, theErrorright);
+	parser.addDeclarationStatement(error);
+:}
 ;
 
 method_body ::=
-T_SEMICOLON /* abstract method */
+T_SEMICOLON:end /* abstract method */
 {:
+	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
+	methodDeclaration.getBody().setStart(endleft);
+	methodDeclaration.getBody().setEnd(endright);
+	methodDeclaration.setEnd(endright);
 	RESULT = null;
 :}
 
 | T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end
 {:
-	Block block = new Block(startleft, endright, statementList);
-	RESULT = block;
+	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
+	methodDeclaration.getBody().setStart(startleft);
+	methodDeclaration.getBody().setEnd(endright);
+	methodDeclaration.getBody().acceptStatements(statementList);
+	methodDeclaration.setEnd(endright);
+	RESULT = null;
+:}
+| /* error recovery */
+{:
+	parser.reportError();
+	RESULT = new ASTError(0,0);
 :}
 ;
 

@@ -16,6 +16,12 @@
 			<arg value="-interface"/>
 		</java>
 
+		
+		<replace
+			file="PhpAstParser4.java"
+			token="extends java_cup.runtime.lr_parser"
+			value="extends AbstractASTParser"/>
+
 		<move
 			file="PhpAstParser4.java"
 			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser"/>

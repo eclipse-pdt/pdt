@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import org.eclipse.dltk.ast.ASTNode;
@@ -61,7 +62,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 		// Print modifiers:
 		if (s instanceof Declaration) {
-			Declaration declaration = (Declaration)s;
+			Declaration declaration = (Declaration) s;
 			StringBuilder buf = new StringBuilder();
 			if (declaration.isAbstract()) {
 				buf.append(",abstract");
@@ -419,6 +420,14 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	}
 
 	public boolean endvisit(ModuleDeclaration s) throws Exception {
+		List<ASTError> errors = ((PHPModuleDeclaration) s).getErrors();
+		if (!errors.isEmpty()) {
+			xmlWriter.startTag("Errors", null);
+			for (ASTError error : errors) {
+				error.traverse(this);
+			}
+			xmlWriter.endTag("Errors");
+		}
 		xmlWriter.endTag("ModuleDeclaration");
 		return true;
 	}
@@ -489,7 +498,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(ClassDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
-		parameters.put("name",s.getName() );
+		parameters.put("name", s.getName());
 		xmlWriter.startTag("ClassDeclaration", parameters);
 		return true;
 	}
@@ -692,7 +701,7 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean visit(InterfaceDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
-		parameters.put("name",s.getName());
+		parameters.put("name", s.getName());
 		xmlWriter.startTag("InterfaceDeclaration", parameters);
 		return true;
 	}
