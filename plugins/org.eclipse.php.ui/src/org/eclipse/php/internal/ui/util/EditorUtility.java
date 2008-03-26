@@ -18,6 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.resources.*;
@@ -218,7 +219,7 @@ public class EditorUtility {
 			return getEditorInput((PHPCodeData) ((TreeItem) input).getData(), project, incDir);
 		}
 
-		if (input instanceof PHPCodeData) {			
+		if (input instanceof PHPCodeData) {
 			return getEditorInput((PHPCodeData) input, null, null);
 		}
 
@@ -714,6 +715,50 @@ public class EditorUtility {
 	 */
 	public static void openFileInEditor(String filePath, int lineNumber) {
 		openFileInEditor(filePath, lineNumber, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+	}
+
+	public static IResource getResourceFromEditorInput(IEditorInput input) {
+		IResource resource = null;
+		IPath externalPath = null;
+		if (input instanceof IFileEditorInput) {
+			// This is the existing workspace file
+			final IFileEditorInput fileInput = (IFileEditorInput) input;
+			resource = fileInput.getFile();
+		} else if (input instanceof IStorageEditorInput) {
+			final IStorageEditorInput editorInput = (IStorageEditorInput) input;
+			IStorage storage = null;
+
+			try {
+				storage = editorInput.getStorage();
+			} catch (CoreException e) {
+				Logger.logException(e);
+				return null;
+			}
+
+			if (storage instanceof ZipEntryStorage) {
+				resource = ((ZipEntryStorage) storage).getProject();
+			} else if (storage instanceof LocalFileStorage) {
+				// don't create external resource, it's wrong! Include paths should not have a resource.
+			} else {
+				// This is, probably, a remote storage:
+				externalPath = storage.getFullPath();
+				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+			}
+		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
+			// External file editor input. It's usually used when opening PHP file
+			// via "File -> Open File" menu option, or using D&D:
+			//OR
+			// When we are dealing with an Untitled PHP document and the underlying PHP file
+			// does not really exist, but is still considered as an "External" file.
+			if (input instanceof NonExistingPHPFileEditorInput) {
+				externalPath = ((NonExistingPHPFileEditorInput) input).getPath();
+			} else {
+				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
+			}
+			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+		}
+
+		return resource;
 	}
 
 }
