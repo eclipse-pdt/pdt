@@ -68,8 +68,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 		attachProjectOpenObserver();
 
-		instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
-
 		runBuild();
 	}
 
@@ -184,6 +182,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						}
 						monitor.worked(1);
 					}
+					instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
 				} finally {
 					monitor.done();
 				}
