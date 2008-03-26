@@ -4,13 +4,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.dltk.core.IFileHierarchyInfo;
 import org.eclipse.dltk.core.ISourceModule;
 
 /**
  * This tree represents file references network
  */
-public class ReferenceTree implements IFileHierarchyInfo {
+public class ReferenceTree /*implements IFileHierarchyInfo*/ {
 
 	final private Node root;
 
