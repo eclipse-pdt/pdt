@@ -382,7 +382,11 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource,
 	 * @see org.eclipse.core.resources.IResource#equals(java.lang.Object)
 	 */
 	public boolean equals(Object other) {
-		return file.equals(other);
+		if (other instanceof ExternalFileWrapper){
+			ExternalFileWrapper externalOther = (ExternalFileWrapper)other;
+			return path.equals(externalOther.path);
+		}
+		return false;
 	}
 
 	/**
