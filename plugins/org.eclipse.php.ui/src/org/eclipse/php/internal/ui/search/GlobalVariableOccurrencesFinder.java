@@ -200,11 +200,14 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (node.getType() == ASTNode.VARIABLE) {
 			Variable variable = (Variable) node;
 			ASTNode parent = variable.getParent();
-			if (parent.getType() == ASTNode.ASSIGNMENT) {
+			int parentType = parent.getType();
+			if (parentType == ASTNode.ASSIGNMENT) {
 				Assignment assignment = (Assignment) parent;
 				if (assignment.getLeftHandSide() == node) {
 					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 				}
+			} else if (parentType == ASTNode.POSTFIX_EXPRESSION || parentType == ASTNode.PREFIX_EXPRESSION) {
+				return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 			}
 		}
 		return IOccurrencesFinder.F_READ_OCCURRENCE;

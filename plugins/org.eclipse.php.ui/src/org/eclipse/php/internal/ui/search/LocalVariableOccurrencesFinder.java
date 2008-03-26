@@ -88,11 +88,13 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		Variable variable = (Variable) node;
 		ASTNode parent = variable.getParent();
 		boolean isArrayAccess = false;
-		if (parent.getType() == ASTNode.ARRAY_ACCESS) {
+		int parentType = parent.getType();
+		if (parentType == ASTNode.ARRAY_ACCESS) {
 			parent = parent.getParent();
+			parentType = parent.getType();
 			isArrayAccess = true;
 		}
-		if (parent.getType() == ASTNode.ASSIGNMENT) {
+		if (parentType == ASTNode.ASSIGNMENT) {
 			Assignment assignment = (Assignment) parent;
 			VariableBase leftHandSide = assignment.getLeftHandSide();
 			if (!isArrayAccess) {
@@ -105,10 +107,13 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				}
 			}
 		}
-		if (parent.getType() == ASTNode.FOR_EACH_STATEMENT || parent.getType() == ASTNode.FORMAL_PARAMETER || parent.getType() == ASTNode.CATCH_CLAUSE) {
+		if (parentType == ASTNode.FOR_EACH_STATEMENT || 
+				parentType == ASTNode.FORMAL_PARAMETER || 
+				parentType == ASTNode.CATCH_CLAUSE || 
+				parentType == ASTNode.PREFIX_EXPRESSION || 
+				parentType == ASTNode.POSTFIX_EXPRESSION) {
 			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 		}
-
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 
