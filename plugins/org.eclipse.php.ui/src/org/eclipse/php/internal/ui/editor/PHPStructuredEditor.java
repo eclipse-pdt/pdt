@@ -110,6 +110,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
@@ -767,7 +768,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				String description= location.getDescription();
 				String annotationType= (location.getFlags() == IOccurrencesFinder.F_WRITE_OCCURRENCE) ? "org.eclipse.php.ui.occurrences.write" : "org.eclipse.php.ui.occurrences"; //$NON-NLS-1$ //$NON-NLS-2$
 				
-				annotationMap.put(new Annotation(annotationType, false, description), position);
+				annotationMap.put(new TemporaryAnnotation(annotationType, false, description), position);
 			}
 
 			if (isCanceled(progressMonitor))
@@ -789,6 +790,32 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 	
+	/*
+	 * An internal implementation of the ITemporaryAnnotation interface that is needed for the StructuredTextAnnotationHover
+	 * to display the tool-tips for the occurrences in the right ruler bar.
+	 */
+	private static class TemporaryAnnotation extends Annotation implements ITemporaryAnnotation {
+		
+		/**
+		 * @param isPersistent
+		 */
+		public TemporaryAnnotation(boolean isPersistent) {
+			super(isPersistent);
+		}
+
+		/**
+		 * @param type
+		 * @param isPersistent
+		 * @param text
+		 */
+		public TemporaryAnnotation(String type, boolean isPersistent, String text) {
+			super(type, isPersistent, text);
+		}
+
+		public Object getKey() {
+			return null;
+		}
+	}
 	
 	/**
 	 * Information provider used to present focusable information shells.
