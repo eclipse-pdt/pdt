@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.6 2008/03/25 16:47:03 ggurfinke Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.7 2008/03/26 16:45:59 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -715,6 +715,7 @@ T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEn
 	Block block = functionDeclaration.getBody();
 	block.setStart(blockStartleft);
 	block.setEnd(blockEndright);
+	block.getStatements().clear();
 	block.acceptStatements(statementList);
 	functionDeclaration.setEnd(blockEndright);
 	RESULT = functionDeclaration;
@@ -1202,6 +1203,7 @@ T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end
 	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
 	methodDeclaration.getBody().setStart(startleft);
 	methodDeclaration.getBody().setEnd(endright);
+	methodDeclaration.getBody().getStatements().clear();
 	methodDeclaration.getBody().acceptStatements(statementList);
 	methodDeclaration.setEnd(endright);
 	RESULT = null;
