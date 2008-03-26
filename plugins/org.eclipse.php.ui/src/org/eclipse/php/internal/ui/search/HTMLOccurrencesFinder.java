@@ -58,7 +58,6 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 		IStructuredDocument structuredDocument = ((IStructuredDocument) document);
 		IStructuredDocumentRegion region = structuredDocument.getRegionAtCharacterOffset(offset);
 		htmlTag = region.getFullText();
-		fDescription = Messages.format(BASE_DESCRIPTION, htmlTag);
 		if (region.isEnded()) {
 			IStructuredModel existingModelForRead = null;
 			try {
@@ -72,6 +71,7 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 						IStructuredDocumentRegion startStructuredDocumentRegion = domElement.getStartStructuredDocumentRegion();
 						if (endStructuredDocumentRegion != null && startStructuredDocumentRegion != null) {
 							// mark the occurrences only when the HTML tag has a closing tag
+							fDescription = Messages.format(BASE_DESCRIPTION, startStructuredDocumentRegion.getFullText());
 							fResult.add(new OccurrenceLocation(startStructuredDocumentRegion.getStart(), startStructuredDocumentRegion.getLength(), getOccurrenceReadWriteType(null), fDescription));
 							fResult.add(new OccurrenceLocation(endStructuredDocumentRegion.getStart(), endStructuredDocumentRegion.getLength(), getOccurrenceReadWriteType(null), fDescription));
 						}
