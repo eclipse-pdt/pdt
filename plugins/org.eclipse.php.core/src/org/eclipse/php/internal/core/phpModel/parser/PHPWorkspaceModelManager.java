@@ -67,8 +67,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 		attachProjectOpenObserver();
 
-		instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
-
 		runBuild();
 	}
 
@@ -187,6 +185,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						}
 						monitor.worked(1);
 					}
+					instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
 				} finally {
 					monitor.done();
 				}
@@ -194,7 +193,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			}
 		};
 		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
-		cleanJob.setPriority(Job.BUILD);
+		cleanJob.setPriority(Job.LONG);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
