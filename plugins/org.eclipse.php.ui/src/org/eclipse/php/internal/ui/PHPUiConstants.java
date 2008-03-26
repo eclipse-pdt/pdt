@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui;
 public interface PHPUiConstants {
 	public static final int INTERNAL_ERROR = 10001;
 	public static final String PHP_EDITOR_ID = "org.eclipse.php.editor"; //$NON-NLS-1$
+	public static final String PHP_SOURCE_TYPE_ID = "org.eclipse.php.core.phpsource"; //$NON-NLS-1$
 	public static final String PHP_UNTITLED_EDITOR_ID = "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
 	
 			// disable cut/copy/paste/rename etc on php elements within file
