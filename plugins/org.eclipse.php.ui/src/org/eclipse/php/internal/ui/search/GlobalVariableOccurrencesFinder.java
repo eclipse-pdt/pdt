@@ -184,7 +184,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	private void addOccurrence(ASTNode node) {
-		int readWriteType = getOccurrenceReadWriteType(node);
+		int readWriteType = getOccurrenceType(node);
 		String desc = fDescription;
 		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
 			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + globalName);
@@ -196,7 +196,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
-	protected int getOccurrenceReadWriteType(ASTNode node) {
+	protected int getOccurrenceType(ASTNode node) {
 		if (node.getType() == ASTNode.VARIABLE) {
 			Variable variable = (Variable) node;
 			ASTNode parent = variable.getParent();

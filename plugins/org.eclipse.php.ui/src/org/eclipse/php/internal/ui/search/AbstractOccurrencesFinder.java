@@ -18,7 +18,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	protected static final String BASE_DESCRIPTION = "Occurrance of ''{0}''";
 	protected static final String BASE_WRITE_DESCRIPTION = "Write occurrance of ''{0}''";
 	protected static final String BRACKETS = "()";
-	
+
 	protected List<OccurrenceLocation> fResult;
 	protected String fDescription;
 	protected Program fASTRoot;
@@ -54,14 +54,13 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	protected abstract void findOccurrences();
 
 	/**
-	 * Returns the read or write type of this occurrence.
+	 * Returns the type of this occurrence.
 	 * 
 	 * @param node The {@link ASTNode} to check.
-	 * @return The occurrence type (F_WRITE_OCCURRENCE or F_READ_OCCURRENCE)
-	 * @see IOccurrencesFinder#F_READ_OCCURRENCE
-	 * @see IOccurrencesFinder#F_WRITE_OCCURRENCE
+	 * @return The occurrence type (one of {@link IOccurrencesFinder} type constants)
+	 * @see IOccurrencesFinder
 	 */
-	protected abstract int getOccurrenceReadWriteType(ASTNode node);
+	protected abstract int getOccurrenceType(ASTNode node);
 
 	/*
 	 * (non-Javadoc)

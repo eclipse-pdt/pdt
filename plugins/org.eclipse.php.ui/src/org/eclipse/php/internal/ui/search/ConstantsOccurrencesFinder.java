@@ -53,7 +53,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 			if (!isQuoted(scalarValue)) {
 				if (checkEquality(scalarValue)) {
 					// Usage of the scalar
-					fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
+					fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceType(scalar), fDescription));
 				}
 			} else {
 				// The scalar is quoted, so it might be in a 'define' or a 'constant' call.
@@ -139,7 +139,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
-	protected int getOccurrenceReadWriteType(ASTNode node) {
+	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}

@@ -49,7 +49,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 			// check the function name
 			Identifier name = functionDeclaration.getFunctionName();
 			if (functionName.equalsIgnoreCase(name.getName())) {
-				fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceReadWriteType(name), fDescription));
+				fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
 			}
 		}
 		return true;
@@ -64,7 +64,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (functionName.getType() == ASTNode.IDENTIFIER && invocationParent != ASTNode.METHOD_INVOCATION && invocationParent != ASTNode.STATIC_METHOD_INVOCATION) {
 			final Identifier identifier = (Identifier) functionName;
 			if (this.functionName.equalsIgnoreCase(identifier.getName())) {
-				fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceReadWriteType(functionName), fDescription));
+				fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
 			}
 		}
 		return true;
@@ -74,7 +74,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
-	protected int getOccurrenceReadWriteType(ASTNode node) {
+	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 

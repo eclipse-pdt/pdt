@@ -107,7 +107,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (classConstantAccess.getClassName().getName().equals(typeDeclarationName)) {
 			Identifier constant = classConstantAccess.getConstant();
 			if (classMemberName.equals(constant.getName())) {
-				fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceReadWriteType(constant), fDescription));
+				fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
 			}
 		}
 		return true;
@@ -186,7 +186,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (isFunction) {
 						final Identifier functionName = classMethodDeclaration.getFunction().getFunctionName();
 						if (classMemberName.equalsIgnoreCase(functionName.getName())) {
-							fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceReadWriteType(functionName), fDescription));
+							fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
 						}
 					}
 				} else if (statement.getType() == ASTNode.FIELD_DECLARATION) {
@@ -198,7 +198,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 
 						final Identifier variable = (Identifier) variableNames[j].getName();
 						if (classMemberName.equals(variable.getName())) {
-							fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
+							fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceType(variable), fDescription));
 						}
 					}
 				} else if (statement.getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
@@ -206,7 +206,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					List<Identifier> variableNames = classVariableDeclaration.names();
 					for (Identifier name : variableNames) {
 						if (classMemberName.equals(name.getName())) {
-							fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceReadWriteType(name), fDescription));
+							fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
 						}
 					}
 				}
@@ -219,14 +219,14 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @param identifier
 	 */
 	private void checkIdentifier(Identifier identifier) {
-		fResult.add(new OccurrenceLocation(identifier.getStart(), identifier.getLength(), getOccurrenceReadWriteType(identifier), fDescription));
+		fResult.add(new OccurrenceLocation(identifier.getStart(), identifier.getLength(), getOccurrenceType(identifier), fDescription));
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
-	protected int getOccurrenceReadWriteType(ASTNode node) {
+	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}

@@ -94,7 +94,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 			ClassDeclaration classDeclaration = (ClassDeclaration) parent.getParent();
 			final Identifier functionName = methodDeclaration.getFunction().getFunctionName();
 			if (checkForNameEquality(classDeclaration.getName()) && checkForNameEquality(functionName)) {
-				fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceReadWriteType(methodDeclaration), fDescription));
+				fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(methodDeclaration), fDescription));
 			}
 		}
 		return true;
@@ -122,7 +122,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	private void checkIdentifier(Identifier identifier) {
 		if (checkForNameEquality(identifier)) {
-			fResult.add(new OccurrenceLocation(identifier.getStart(), identifier.getLength(), getOccurrenceReadWriteType(identifier), fDescription));
+			fResult.add(new OccurrenceLocation(identifier.getStart(), identifier.getLength(), getOccurrenceType(identifier), fDescription));
 		}
 	}
 
@@ -134,7 +134,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
-	protected int getOccurrenceReadWriteType(ASTNode node) {
+	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}

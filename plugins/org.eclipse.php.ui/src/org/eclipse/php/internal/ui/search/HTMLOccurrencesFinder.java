@@ -72,8 +72,8 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 						if (endStructuredDocumentRegion != null && startStructuredDocumentRegion != null) {
 							// mark the occurrences only when the HTML tag has a closing tag
 							fDescription = Messages.format(BASE_DESCRIPTION, startStructuredDocumentRegion.getFullText());
-							fResult.add(new OccurrenceLocation(startStructuredDocumentRegion.getStart(), startStructuredDocumentRegion.getLength(), getOccurrenceReadWriteType(null), fDescription));
-							fResult.add(new OccurrenceLocation(endStructuredDocumentRegion.getStart(), endStructuredDocumentRegion.getLength(), getOccurrenceReadWriteType(null), fDescription));
+							fResult.add(new OccurrenceLocation(startStructuredDocumentRegion.getStart(), startStructuredDocumentRegion.getLength(), getOccurrenceType(null), fDescription));
+							fResult.add(new OccurrenceLocation(endStructuredDocumentRegion.getStart(), endStructuredDocumentRegion.getLength(), getOccurrenceType(null), fDescription));
 						}
 					}
 
@@ -90,7 +90,7 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
 	 */
-	protected int getOccurrenceReadWriteType(ASTNode node) {
+	protected int getOccurrenceType(ASTNode node) {
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 

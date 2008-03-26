@@ -10,31 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.ui.corext.ASTNodes;
-import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 
 /**
  * Searches for exit execution path for a given method
  * @author Roy, 2008
  *
  */
-public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFinder {
+public class MethodExitsFinder extends AbstractOccurrencesFinder {
 
 	public static final String ID = "MethodExitsFinder"; //$NON-NLS-1$
 
 	private FunctionDeclaration fFunctionDeclaration;
-	private List<OccurrenceLocation> fResult;
 	private String fExitDescription;
-	private Program fASTRoot;
-
-	public String initialize(Program root, int offset, int length) {
-		return initialize(root, NodeFinder.perform(root, offset, length));
-	}
 
 	/**
 	 * @param root the AST root
@@ -43,7 +32,6 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
-
 		if (isExitExecutionPath(node)) {
 			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fFunctionDeclaration == null)
@@ -51,7 +39,6 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 			return null;
 
 		}
-
 		fExitDescription = "MethodExitsFinder_occurrence_exit_description";
 		return fExitDescription;
 	}
@@ -60,22 +47,12 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 		return node != null && (node.getType() == ASTNode.RETURN_STATEMENT || node.getType() == ASTNode.THROW_STATEMENT);
 	}
 
-	private void performSearch() {
-		fResult = new ArrayList<OccurrenceLocation>();
+	protected void findOccurrences() {
+		fExitDescription = Messages.format("Exit point of ''{0}()''", fFunctionDeclaration.getFunctionName().getName());
 		markReferences();
 	}
 
-	public OccurrenceLocation[] getOccurrences() {
-		performSearch();
-		if (fResult.isEmpty())
-			return null;
-
-		return fResult.toArray(new OccurrenceLocation[fResult.size()]);
-	}
-
 	private void markReferences() {
-		fExitDescription = Messages.format("Exit point of ''{0}()''", fFunctionDeclaration.getFunctionName().getName());
-
 		fFunctionDeclaration.accept(this);
 
 		//      TODO : check execution path to determine if the last bracket 
@@ -97,17 +74,25 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 		//				}
 		//			}
 		int offset = fFunctionDeclaration.getStart() + fFunctionDeclaration.getLength() - 1; // closing bracket
-		fResult.add(new OccurrenceLocation(offset, 1, K_EXIT_POINT_OCCURRENCE, fExitDescription));
+		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fExitDescription));
 		//		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
+	 */
+	protected int getOccurrenceType(ASTNode node) {
+		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
+	}
+
 	public boolean visit(ReturnStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), K_EXIT_POINT_OCCURRENCE, fExitDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fExitDescription));
 		return super.visit(node);
 	}
 
 	public boolean visit(ThrowStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), K_EXIT_POINT_OCCURRENCE, fExitDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fExitDescription));
 		return true;
 	}
 
@@ -138,5 +123,4 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 	public String getUnformattedSingularLabel() {
 		return "MethodExitsFinder_label_singular";
 	}
-
 }
