@@ -2453,7 +2453,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		OccurrenceLocation[] locations= null;
 		
 		ASTNode selectedNode= NodeFinder.perform(astRoot, selection.getOffset(), selection.getLength());
-		if (fMarkHTMLTags && ASTNode.IN_LINE_HTML == selectedNode.getType()) {
+		if (fMarkHTMLTags) {
 			IOccurrencesFinder finder = OccurrencesFinderFactory.createHTMLOccurrencesFinder(document, selection.getOffset());
 			if (finder.initialize(astRoot, selectedNode) == null) {
 				locations = finder.getOccurrences();

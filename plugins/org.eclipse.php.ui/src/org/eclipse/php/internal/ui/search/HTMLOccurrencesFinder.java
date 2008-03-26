@@ -39,10 +39,11 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	/**
-	 * The initialize in this case just verify the inputs that we got in the constructor.
+	 * The initialize in this case just verify the inputs that we got in the constructor, and that
+	 * the node is an ASTNode.IN_LINE_HTML.
 	 */
 	public String initialize(Program root, ASTNode node) {
-		if (document != null && offset >= 0) {
+		if (document != null && offset >= 0 && node != null && ASTNode.IN_LINE_HTML == node.getType()) {
 			return null;
 		}
 		fDescription = "OccurrencesFinder_occurrence_description";
