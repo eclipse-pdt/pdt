@@ -45,7 +45,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''{0}()", globalName);
+		fDescription = Messages.format(BASE_DESCRIPTION, '$' + globalName);
 		fASTRoot.accept(this);
 	}
 
@@ -99,7 +99,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (variable.isDollared() && variable.getName().getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) variable.getName();
 			if (isGlobalScope && globalName.equals(identifier.getName())) {
-				fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
+				addOccurrence(variable);
 			}
 		}
 		return true;
@@ -123,7 +123,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (var.isDollared() && varName.getType() == ASTNode.IDENTIFIER) {
 						final Identifier id = (Identifier) varName;
 						if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$
-							fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
+							addOccurrence(scalar);
 						}
 					}
 				}
@@ -141,7 +141,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 			if (variable.isDollared()) {
 				Identifier identifier = (Identifier) variable.getName();
 				if (globalName.equals(identifier.getName())) {
-					fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
+					addOccurrence(variable);
 					setGlobalScope(true);
 				}
 			}
@@ -167,7 +167,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 						final String stringValue = scalar.getStringValue();
 						if (stringValue.length() > 2 && isQuated(stringValue)) {
 							if (globalName.equals(stringValue.substring(1, stringValue.length() - 1))) {
-								fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceReadWriteType(scalar), fDescription));
+								addOccurrence(scalar);
 							}
 						}
 					}
@@ -181,6 +181,15 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		char first = stringValue.charAt(0);
 		char last = stringValue.charAt(stringValue.length() - 1);
 		return (first == '\'' && last == '\'' || first == '\"' && last == '\"');
+	}
+
+	private void addOccurrence(ASTNode node) {
+		int readWriteType = getOccurrenceReadWriteType(node);
+		String desc = fDescription;
+		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
+			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + globalName);
+		}
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
 	}
 
 	/*

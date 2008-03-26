@@ -40,7 +40,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''{0}()", constantName);
+		fDescription = Messages.format(BASE_DESCRIPTION, constantName);
 		fASTRoot.accept(this);
 	}
 
@@ -71,7 +71,8 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 								// check if the 'define' has a case sensitivity definition
 								isCaseSensitiveConstant = isCaseSensitiveDefined(functionInvocation.parameters());
 								if (!isCaseSensitiveConstant || isCaseSensitiveConstant && constantName.equals(scalarValue)) {
-									fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), IOccurrencesFinder.F_WRITE_OCCURRENCE, fDescription));
+									String writeDescription = Messages.format(BASE_WRITE_DESCRIPTION, scalar.getStringValue());
+									fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), IOccurrencesFinder.F_WRITE_OCCURRENCE, writeDescription));
 								}
 							} else if ("constant".equalsIgnoreCase(functionName)) { //$NON-NLS-1$
 								if (!isCaseSensitiveConstant || isCaseSensitiveConstant && constantName.equals(scalarValue)) {

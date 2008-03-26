@@ -15,6 +15,10 @@ import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
  */
 public abstract class AbstractOccurrencesFinder extends AbstractVisitor implements IOccurrencesFinder {
 
+	protected static final String BASE_DESCRIPTION = "Occurrance of ''{0}''";
+	protected static final String BASE_WRITE_DESCRIPTION = "Write occurrance of ''{0}''";
+	protected static final String BRACKETS = "()";
+	
 	protected List<OccurrenceLocation> fResult;
 	protected String fDescription;
 	protected Program fASTRoot;

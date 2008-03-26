@@ -58,7 +58,7 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 		IStructuredDocument structuredDocument = ((IStructuredDocument) document);
 		IStructuredDocumentRegion region = structuredDocument.getRegionAtCharacterOffset(offset);
 		htmlTag = region.getFullText();
-		fDescription = Messages.format("Occurrance of ''{0}''", htmlTag);
+		fDescription = Messages.format(BASE_DESCRIPTION, htmlTag);
 		if (region.isEnded()) {
 			IStructuredModel existingModelForRead = null;
 			try {

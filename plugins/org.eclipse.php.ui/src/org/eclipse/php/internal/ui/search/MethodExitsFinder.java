@@ -13,11 +13,7 @@ package org.eclipse.php.internal.ui.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.ReturnStatement;
-import org.eclipse.php.internal.core.ast.nodes.ThrowStatement;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.ui.corext.ASTNodes;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
@@ -29,8 +25,8 @@ import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
  */
 public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFinder {
 
-	public static final String ID= "MethodExitsFinder"; //$NON-NLS-1$
-	
+	public static final String ID = "MethodExitsFinder"; //$NON-NLS-1$
+
 	private FunctionDeclaration fFunctionDeclaration;
 	private List<OccurrenceLocation> fResult;
 	private String fExitDescription;
@@ -39,33 +35,33 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 	public String initialize(Program root, int offset, int length) {
 		return initialize(root, NodeFinder.perform(root, offset, length));
 	}
-	
+
 	/**
 	 * @param root the AST root
 	 * @param node the selected node
 	 * @return returns a message if there is a problem
 	 */
 	public String initialize(Program root, ASTNode node) {
-		fASTRoot= root;
-		
+		fASTRoot = root;
+
 		if (isExitExecutionPath(node)) {
-			fFunctionDeclaration= (FunctionDeclaration)ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
+			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fFunctionDeclaration == null)
 				return "MethodExitsFinder_no_return_type_selected";
 			return null;
-			
+
 		}
-		
-		fExitDescription= "MethodExitsFinder_occurrence_exit_description";
+
+		fExitDescription = "MethodExitsFinder_occurrence_exit_description";
 		return fExitDescription;
 	}
 
 	private final boolean isExitExecutionPath(ASTNode node) {
-		return node != null && (node.getType() == ASTNode.RETURN_STATEMENT || node.getType() == ASTNode.THROW_STATEMENT) ; 
+		return node != null && (node.getType() == ASTNode.RETURN_STATEMENT || node.getType() == ASTNode.THROW_STATEMENT);
 	}
 
 	private void performSearch() {
-		fResult= new ArrayList<OccurrenceLocation>();
+		fResult = new ArrayList<OccurrenceLocation>();
 		markReferences();
 	}
 
@@ -75,47 +71,46 @@ public class MethodExitsFinder extends AbstractVisitor implements IOccurrencesFi
 			return null;
 
 		return fResult.toArray(new OccurrenceLocation[fResult.size()]);
-	}	
-	
-	
+	}
+
 	private void markReferences() {
-		fExitDescription= Messages.format("Exit point of ''{0}()", fFunctionDeclaration.getFunctionName().getName());
-		
+		fExitDescription = Messages.format("Exit point of ''{0}()''", fFunctionDeclaration.getFunctionName().getName());
+
 		fFunctionDeclaration.accept(this);
 
-//      TODO : check execution path to determine if the last bracket 
-// 			   is also a possible exit path
-//		Block block= fMethodDeclaration.getBody();
-//		if (block != null) {
-//			List statements= block.statements();
-//			if (statements.size() > 0) {
-//				Statement last= (Statement)statements.get(statements.size() - 1);
-//				int maxVariableId= LocalVariableIndex.perform(fMethodDeclaration);
-//				FlowContext flowContext= new FlowContext(0, maxVariableId + 1);
-//				flowContext.setConsiderAccessMode(false);
-//				flowContext.setComputeMode(FlowContext.ARGUMENTS);
-//				InOutFlowAnalyzer flowAnalyzer= new InOutFlowAnalyzer(flowContext);
-//				FlowInfo info= flowAnalyzer.perform(new ASTNode[] {last});
-//				if (!info.isNoReturn() && !isVoid) {
-//					if (!info.isPartialReturn())
-//						return;
-//				}
-//			}
-		int offset= fFunctionDeclaration.getStart() + fFunctionDeclaration.getLength() - 1; // closing bracket
+		//      TODO : check execution path to determine if the last bracket 
+		// 			   is also a possible exit path
+		//		Block block= fMethodDeclaration.getBody();
+		//		if (block != null) {
+		//			List statements= block.statements();
+		//			if (statements.size() > 0) {
+		//				Statement last= (Statement)statements.get(statements.size() - 1);
+		//				int maxVariableId= LocalVariableIndex.perform(fMethodDeclaration);
+		//				FlowContext flowContext= new FlowContext(0, maxVariableId + 1);
+		//				flowContext.setConsiderAccessMode(false);
+		//				flowContext.setComputeMode(FlowContext.ARGUMENTS);
+		//				InOutFlowAnalyzer flowAnalyzer= new InOutFlowAnalyzer(flowContext);
+		//				FlowInfo info= flowAnalyzer.perform(new ASTNode[] {last});
+		//				if (!info.isNoReturn() && !isVoid) {
+		//					if (!info.isPartialReturn())
+		//						return;
+		//				}
+		//			}
+		int offset = fFunctionDeclaration.getStart() + fFunctionDeclaration.getLength() - 1; // closing bracket
 		fResult.add(new OccurrenceLocation(offset, 1, K_EXIT_POINT_OCCURRENCE, fExitDescription));
-//		}
+		//		}
 	}
 
 	public boolean visit(ReturnStatement node) {
 		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), K_EXIT_POINT_OCCURRENCE, fExitDescription));
 		return super.visit(node);
 	}
-			
+
 	public boolean visit(ThrowStatement node) {
 		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), K_EXIT_POINT_OCCURRENCE, fExitDescription));
 		return true;
 	}
-	
+
 	public Program getASTRoot() {
 		return fASTRoot;
 	}

@@ -32,7 +32,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''{0}()", functionName);
+		fDescription = Messages.format(BASE_DESCRIPTION, functionName + BRACKETS);
 		fASTRoot.accept(this);
 	}
 

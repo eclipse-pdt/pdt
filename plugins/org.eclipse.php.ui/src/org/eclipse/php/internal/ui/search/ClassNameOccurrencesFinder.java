@@ -34,7 +34,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''{0}()", className);
+		fDescription = Messages.format(BASE_DESCRIPTION, className);
 		fASTRoot.accept(this);
 	}
 

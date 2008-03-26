@@ -53,7 +53,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''{0}()", fIdentifier.getName());
+		fDescription = Messages.format("Occurrance of ''${0}''", fIdentifier.getName());
 		fFunctionDeclaration.accept(this);
 	}
 
@@ -65,10 +65,19 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		Expression name = variable.getName();
 		if (name.getType() == ASTNode.IDENTIFIER) {
 			if (((Identifier) name).getName().equals(this.fIdentifier.getName())) {
-				fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceReadWriteType(variable), fDescription));
+				addOccurrence(variable);
 			}
 		}
 		return true;
+	}
+
+	private void addOccurrence(ASTNode node) {
+		int readWriteType = getOccurrenceReadWriteType(node);
+		String desc = fDescription;
+		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
+			desc = Messages.format(BASE_WRITE_DESCRIPTION, fIdentifier.getName());
+		}
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
 	}
 
 	/*

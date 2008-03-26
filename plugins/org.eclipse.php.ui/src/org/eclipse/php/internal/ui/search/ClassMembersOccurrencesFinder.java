@@ -51,7 +51,11 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''{0}()", classMemberName);
+		if (isFunction) {
+			fDescription = Messages.format(BASE_DESCRIPTION, classMemberName + BRACKETS);
+		} else {
+			fDescription = Messages.format(BASE_DESCRIPTION, classMemberName);
+		}
 		fASTRoot.accept(this);
 	}
 
