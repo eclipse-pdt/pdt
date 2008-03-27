@@ -48,13 +48,8 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 
 	protected void findOccurrences() {
 		fDescription = Messages.format(EXIT_POINT_OF, fFunctionDeclaration.getFunctionName().getName());
-		markReferences();
-	}
-
-	private void markReferences() {
 		fFunctionDeclaration.accept(this);
-
-		//      TODO : check execution path to determine if the last bracket 
+//      TODO : check execution path to determine if the last bracket 
 		// 			   is also a possible exit path
 		//		Block block= fMethodDeclaration.getBody();
 		//		if (block != null) {
@@ -76,7 +71,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fDescription));
 		//		}
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#getOccurrenceReadWriteType(org.eclipse.php.internal.core.ast.nodes.ASTNode)
