@@ -2496,19 +2496,17 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (locations == null && fMarkMethodExitPoints) {
-//          TODO : Implement Me!			
-			MethodExitsFinder finder= new MethodExitsFinder();
+			IOccurrencesFinder finder = OccurrencesFinderFactory.createMethodExitsFinder();
 			if (finder.initialize(astRoot, selectedNode) == null) {
-				locations= finder.getOccurrences();
+				locations = finder.getOccurrences();
 			}
 		}
 
 		if (locations == null && fMarkBreakContinueTargets) {
-//          TODO : Implement Me!			
-//			BreakContinueTargetFinder finder= new BreakContinueTargetFinder();
-//			if (finder.initialize(astRoot, selectedNode) == null) {
-//				locations= finder.getOccurrences();
-//			}
+			IOccurrencesFinder finder = OccurrencesFinderFactory.createBreakContinueTargetFinder();
+			if (finder.initialize(astRoot, selectedNode) == null) {
+				locations = finder.getOccurrences();
+			}
 		}
 		
 		if (locations == null && fMarkImplementors) {

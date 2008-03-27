@@ -52,4 +52,22 @@ public class OccurrencesFinderFactory {
 	public static IOccurrencesFinder createHTMLOccurrencesFinder(IDocument document, int selectionOffset) {
 		return new HTMLOccurrencesFinder(document, selectionOffset);
 	}
+
+	/**
+	 * Creates and returns an {@link MethodExitsFinder}.
+	 * 
+	 * @return A new {@link MethodExitsFinder}
+	 */
+	public static IOccurrencesFinder createMethodExitsFinder() {
+		return new MethodExitsFinder();
+	}
+
+	/**
+	 * Creates and returns an {@link BreakContinueTargetFinder}.
+	 * 
+	 * @return A new {@link BreakContinueTargetFinder}
+	 */
+	public static IOccurrencesFinder createBreakContinueTargetFinder() {
+		return new BreakContinueTargetFinder();
+	}
 }
