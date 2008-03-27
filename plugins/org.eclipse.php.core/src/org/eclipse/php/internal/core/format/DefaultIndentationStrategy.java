@@ -83,7 +83,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			// in the same line
 			do {
 				String token = tRegion.getType();
-				if (!PHPPartitionTypes.isPHPCommentState(token) && token != PHPRegionTypes.WHITESPACE) {
+				if(regionStart + tRegion.getStart() >= forOffset){
+					//making sure the region found is not after the caret (https://bugs.eclipse.org/bugs/show_bug.cgi?id=222019 - caret before '{')
+				} else if (!PHPPartitionTypes.isPHPCommentState(token) && token != PHPRegionTypes.WHITESPACE) {
 					// not comment nor white space
 					return tRegion;
 				}
