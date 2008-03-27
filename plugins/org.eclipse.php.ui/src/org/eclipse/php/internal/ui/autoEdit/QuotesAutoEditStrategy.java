@@ -15,8 +15,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
@@ -75,17 +75,16 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 							} else {
 								command.length++;
 							}
-						}						
+						}
 					} else {
 						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(startOffset);
 						ITextRegion tRegion = getPhpRegion(sdRegion, startOffset);
 						// adding a specific char to close the qoute in case the 2 following conditions fulfilled:
 						// 1. The region ends with whitespace.
 						// 2. The command offest is located at the end of the region(include the region whitespace)
-						int regionLength = tRegion.getLength();						
+						int regionLength = tRegion.getLength();
 						int regionTextLength = tRegion.getTextLength();
-						if (regionTextLength != regionLength && startOffset > getRegionStart(sdRegion, startOffset) + regionTextLength &&
-								shouldAddClosingBracket(document, endOffset, true)) {
+						if (regionTextLength != regionLength && startOffset > getRegionStart(sdRegion, startOffset) + regionTextLength && shouldAddClosingBracket(document, endOffset, true)) {
 							command.text = command.text + insertedChar;
 							//making the change in the documet ourselfs and consuming the original command
 							document.replace(command.offset, command.length, command.text);
@@ -122,18 +121,18 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			document.getUndoManager().enableUndoManagement();
 		}
 	}
-	
+
 	/*
 	 * get php region by given IStructuredDocumentRegion and offset
 	 */
 	private ITextRegion getPhpRegion(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		
+
 		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
-			offset --;
+			offset--;
 			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		int regionStart = sdRegion.getStartOffset(tRegion);
 		// in case of container we have the extract the PhpScriptRegion
 		if (tRegion instanceof ITextRegionContainer) {
@@ -142,25 +141,25 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			regionStart += tRegion.getStart();
 		}
 
-		if (tRegion instanceof PhpScriptRegion) {
-			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+		if (tRegion instanceof IPhpScriptRegion) {
+			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 			tRegion = scriptRegion.getPhpToken(offset - regionStart);
 			return tRegion;
 		}
 		return null;
 	}
-	
+
 	/*
 	 * get php region by given IStructuredDocumentRegion and offset
 	 */
 	private int getRegionStart(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-		
+
 		if (tRegion.getType().equals(PHPRegionContext.PHP_CLOSE)) {
-			offset --;
+			offset--;
 			tRegion = sdRegion.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		int regionStart = sdRegion.getStartOffset(tRegion);
 		// in case of container we have the extract the PhpScriptRegion
 		if (tRegion instanceof ITextRegionContainer) {
@@ -168,7 +167,11 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			tRegion = container.getRegionAtCharacterOffset(offset);
 			regionStart += tRegion.getStart();
 		}
-		
+		if (tRegion instanceof IPhpScriptRegion) {
+			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+			tRegion = scriptRegion.getPhpToken(offset - regionStart);
+			regionStart += tRegion.getStart();
+		}
 		return regionStart;
 	}
 
@@ -223,8 +226,8 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 				regionStart += tRegion.getStart();
 			}
 
-			if (tRegion instanceof PhpScriptRegion) {
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+			if (tRegion instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 				tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
 				if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
@@ -250,37 +253,26 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 	private boolean isBetweenBackquotes(IStructuredDocumentRegion sdRegion, int offset) throws BadLocationException {
 		if (sdRegion.getParentDocument().getLength() <= offset) {
 			return false;
-		}		
-		ITextRegion tRegion =  getPhpRegion(sdRegion, offset);
-		int regionStart = getRegionStart(sdRegion, offset);
-		if (tRegion instanceof PhpScriptRegion) {
-			PhpScriptRegion scriptRegion = (PhpScriptRegion)tRegion;			
-			ITextRegion quoteRegion = scriptRegion.getPhpToken(offset - regionStart);
-			if (quoteRegion == null || quoteRegion.getLength() > 1) {
-				return false;
-			}
-		}		
+		}
+		ITextRegion quoteRegion = getPhpRegion(sdRegion, offset);
+		if (quoteRegion == null || quoteRegion.getLength() > 1) {
+			return false;
+		}
 
 		// fixed bug 197412
 		if (sdRegion.getFullText().charAt(offset - sdRegion.getStartOffset()) != BACK_QOUTE) {
 			return false;
 		}
 
-		tRegion = getPhpRegion(sdRegion, offset + 1);
-		regionStart = getRegionStart(sdRegion, offset + 1);
-		if (tRegion instanceof PhpScriptRegion) {
-			PhpScriptRegion scriptRegion = (PhpScriptRegion)tRegion;
-			ITextRegion quoteRegion = scriptRegion.getPhpToken(offset + 1 - regionStart);
-			if (quoteRegion == null || quoteRegion.getLength() > 1) {
-				return false;
-			}
+		quoteRegion = getPhpRegion(sdRegion, offset + 1);
+		if (quoteRegion == null || quoteRegion.getLength() > 1) {
+			return false;
 		}
 
 		// fixed bug 197412
-		if (sdRegion.getFullText().charAt(offset + 1  - sdRegion.getStartOffset()) != BACK_QOUTE) {
+		if (sdRegion.getFullText().charAt(offset + 1 - sdRegion.getStartOffset()) != BACK_QOUTE) {
 			return false;
 		}
-		String startState = FormatterUtils.getPartitionType(sdRegion.getParentDocument(), offset, true);
-		return (startState != PHPPartitionTypes.PHP_QUOTED_STRING);
+		return true;
 	}
 }
