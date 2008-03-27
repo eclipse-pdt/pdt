@@ -167,7 +167,11 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			tRegion = container.getRegionAtCharacterOffset(offset);
 			regionStart += tRegion.getStart();
 		}
-
+		if (tRegion instanceof IPhpScriptRegion) {
+			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+			tRegion = scriptRegion.getPhpToken(offset - regionStart);
+			regionStart += tRegion.getStart();
+		}
 		return regionStart;
 	}
 
@@ -250,14 +254,9 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 		if (sdRegion.getParentDocument().getLength() <= offset) {
 			return false;
 		}
-		ITextRegion tRegion = getPhpRegion(sdRegion, offset);
-		int regionStart = getRegionStart(sdRegion, offset);
-		if (tRegion instanceof IPhpScriptRegion) {
-			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			ITextRegion quoteRegion = scriptRegion.getPhpToken(offset - regionStart);
-			if (quoteRegion == null || quoteRegion.getLength() > 1) {
-				return false;
-			}
+		ITextRegion quoteRegion = getPhpRegion(sdRegion, offset);
+		if (quoteRegion == null || quoteRegion.getLength() > 1) {
+			return false;
 		}
 
 		// fixed bug 197412
@@ -265,21 +264,15 @@ public class QuotesAutoEditStrategy extends MatchingCharAutoEditStrategy {
 			return false;
 		}
 
-		tRegion = getPhpRegion(sdRegion, offset + 1);
-		regionStart = getRegionStart(sdRegion, offset + 1);
-		if (tRegion instanceof IPhpScriptRegion) {
-			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-			ITextRegion quoteRegion = scriptRegion.getPhpToken(offset + 1 - regionStart);
-			if (quoteRegion == null || quoteRegion.getLength() > 1) {
-				return false;
-			}
+		quoteRegion = getPhpRegion(sdRegion, offset + 1);
+		if (quoteRegion == null || quoteRegion.getLength() > 1) {
+			return false;
 		}
 
 		// fixed bug 197412
 		if (sdRegion.getFullText().charAt(offset + 1 - sdRegion.getStartOffset()) != BACK_QOUTE) {
 			return false;
 		}
-		String startState = FormatterUtils.getPartitionType(sdRegion.getParentDocument(), offset, true);
-		return (startState != PHPPartitionTypes.PHP_QUOTED_STRING);
+		return true;
 	}
 }
