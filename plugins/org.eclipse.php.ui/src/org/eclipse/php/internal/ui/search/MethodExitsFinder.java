@@ -20,10 +20,9 @@ import org.eclipse.php.internal.ui.corext.ASTNodes;
  */
 public class MethodExitsFinder extends AbstractOccurrencesFinder {
 
+	private static final String EXIT_POINT_OF = "Exit point of ''{0}()''";
 	public static final String ID = "MethodExitsFinder"; //$NON-NLS-1$
-
 	private FunctionDeclaration fFunctionDeclaration;
-	private String fExitDescription;
 
 	/**
 	 * @param root the AST root
@@ -39,8 +38,8 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 			return null;
 
 		}
-		fExitDescription = "MethodExitsFinder_occurrence_exit_description";
-		return fExitDescription;
+		fDescription = "MethodExitsFinder_occurrence_exit_description";
+		return fDescription;
 	}
 
 	private final boolean isExitExecutionPath(ASTNode node) {
@@ -48,7 +47,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	}
 
 	protected void findOccurrences() {
-		fExitDescription = Messages.format("Exit point of ''{0}()''", fFunctionDeclaration.getFunctionName().getName());
+		fDescription = Messages.format(EXIT_POINT_OF, fFunctionDeclaration.getFunctionName().getName());
 		markReferences();
 	}
 
@@ -74,7 +73,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		//				}
 		//			}
 		int offset = fFunctionDeclaration.getStart() + fFunctionDeclaration.getLength() - 1; // closing bracket
-		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fExitDescription));
+		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fDescription));
 		//		}
 	}
 
@@ -87,12 +86,12 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(ReturnStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fExitDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return super.visit(node);
 	}
 
 	public boolean visit(ThrowStatement node) {
-		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fExitDescription));
+		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(null), fDescription));
 		return true;
 	}
 
@@ -113,7 +112,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	}
 
 	public int getSearchKind() {
-		return IOccurrencesFinder.K_BREAK_TARGET_OCCURRENCE;
+		return IOccurrencesFinder.K_EXIT_POINT_OCCURRENCE;
 	}
 
 	public String getUnformattedPluralLabel() {
