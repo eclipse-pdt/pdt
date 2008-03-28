@@ -206,8 +206,12 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (assignment.getLeftHandSide() == node) {
 					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 				}
-			} else if (parentType == ASTNode.POSTFIX_EXPRESSION || parentType == ASTNode.PREFIX_EXPRESSION) {
+			} else if (parentType == ASTNode.POSTFIX_EXPRESSION || parentType == ASTNode.PREFIX_EXPRESSION || parentType == ASTNode.CATCH_CLAUSE) {
 				return IOccurrencesFinder.F_WRITE_OCCURRENCE;
+			} else if (parentType == ASTNode.FOR_EACH_STATEMENT) {
+				if (variable.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY) {
+					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
+				}
 			}
 		}
 		return IOccurrencesFinder.F_READ_OCCURRENCE;

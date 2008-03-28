@@ -75,7 +75,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 		int readWriteType = getOccurrenceType(node);
 		String desc = fDescription;
 		if (readWriteType == IOccurrencesFinder.F_WRITE_OCCURRENCE) {
-			desc = Messages.format(BASE_WRITE_DESCRIPTION, fIdentifier.getName());
+			desc = Messages.format(BASE_WRITE_DESCRIPTION, '$' + fIdentifier.getName());
 		}
 		fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), readWriteType, desc));
 	}
