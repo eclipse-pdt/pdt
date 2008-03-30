@@ -167,7 +167,7 @@ public class AST {
 		this.lexer = getLexerInstance(reader, apiLevel, aspTagsAsPhp);
 		this.parser = getParserInstance(apiLevel, this.lexer);
 	}
-
+	
 	/**
 	 * Constructs a scanner from a given reader
 	 * @param reader

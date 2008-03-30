@@ -83,7 +83,10 @@ public abstract class Expression extends ASTNode {
 		return false;
 	}
 	
-	public boolean isNull() {
+	/**
+	 * @return true if this is expression is the "null" expression
+	 */
+	public boolean isNullExpression() {
 		if (getType() == ASTNode.SCALAR) {
 			final Scalar scalar = (Scalar) this;
 			if (scalar.getScalarType() == Scalar.TYPE_STRING && scalar.getStringValue().equalsIgnoreCase("null")) { //$NON-NLS-1$
