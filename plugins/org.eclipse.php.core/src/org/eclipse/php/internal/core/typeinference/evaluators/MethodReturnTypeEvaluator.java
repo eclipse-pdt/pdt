@@ -13,7 +13,6 @@ import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
-import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -22,7 +21,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.*;
 
-public class MethodReturnTypeEvaluator extends GoalEvaluator {
+public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -49,7 +48,7 @@ public class MethodReturnTypeEvaluator extends GoalEvaluator {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 
 		String methodName = typedGoal.getMethodName();
-		IType[] types = PHPTypeInferenceUtils.getTypes(typedContext.getInstanceType(), typedContext.getSourceModule());
+		IType[] types = getTypes(typedContext.getInstanceType(), typedContext.getSourceModule());
 
 		if (types.length == 0) {
 			IModelElement[] elements = PHPMixinModel.getInstance().getFunction(methodName);

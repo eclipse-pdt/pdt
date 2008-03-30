@@ -6,7 +6,6 @@ import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.InstanceContext;
-import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -16,12 +15,13 @@ import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
 /**
  * This evaluator finds class field declartion either using "var" or in method body using field access.
  */
-public class PHPDocClassVariableEvaluator extends GoalEvaluator {
+public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -34,7 +34,7 @@ public class PHPDocClassVariableEvaluator extends GoalEvaluator {
 		InstanceContext context = (InstanceContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
 
-		IType[] types = PHPTypeInferenceUtils.getTypes(context.getInstanceType(), context.getSourceModule());
+		IType[] types = getTypes(context.getInstanceType(), context.getSourceModule());
 
 		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 		for (IType type : types) {

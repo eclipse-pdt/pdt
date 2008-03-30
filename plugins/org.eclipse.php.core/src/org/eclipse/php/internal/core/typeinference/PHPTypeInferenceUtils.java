@@ -4,11 +4,15 @@ import java.util.*;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
+import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
+import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
+import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 
 public class PHPTypeInferenceUtils {
@@ -53,48 +57,33 @@ public class PHPTypeInferenceUtils {
 	}
 
 	/**
-	 * Returns all model elements for the given class type. If current file is not <code>null</code> this method tries to find
-	 * only type declared in the very file.
-	 * @param instanceType Evaluated type of the class
-	 * @param currentModule Current file module
-	 * @return
+	 * Converts IEvaluatedType to IModelElement, if found
+	 * @param evaluatedType Evaluated type
+	 * @return model elements
 	 */
-	public static IType[] getTypes(IEvaluatedType instanceType, ISourceModule currentModule) {
-		Set<IType> types = new HashSet<IType>();
+	public static IModelElement[] getModelElements(IEvaluatedType type, BasicContext context) {
+		IModelElement[] elements = null;
 
-		if (instanceType instanceof PHPClassType) {
-			PHPClassType classType = (PHPClassType) instanceType;
-			IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
-			for (IModelElement e : elements) {
-				types.add((IType) e);
-			}
-		} else if (instanceType instanceof AmbiguousType) {
-			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
-			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
-				if (type instanceof PHPClassType) {
-					PHPClassType classType = (PHPClassType) type;
-					IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
-					for (IModelElement e : elements) {
-						types.add((IType) e);
-					}
-				}
-			}
+		if (type instanceof ModelClassType) {
+			return new IModelElement[] { ((ModelClassType)type).getTypeDeclaration() };
+		}
+		if (type instanceof PHPClassType) {
+			elements = PHPMixinModel.getInstance().getClass(((PHPClassType)type).getModelKey());
 		}
 
-		if (currentModule != null) {
-			IType typeFromSameFile = null;
-			for (IType type : types) {
-				if (type.getSourceModule().equals(currentModule)) {
-					typeFromSameFile = type;
-					break;
+		// Filter model elements using file network:
+		if (elements != null && elements.length > 0) {
+			ISourceModule sourceModule = context.getSourceModule();
+			ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
+			List<IModelElement> filteredElements = new LinkedList<IModelElement>();
+			for (IModelElement element : elements) {
+				if (referenceTree.find(((ModelElement)element).getSourceModule())) {
+					filteredElements.add(element);
 				}
 			}
-			// If type from the same file was found  - use it
-			if (typeFromSameFile != null) {
-				return new IType[] { typeFromSameFile };
-			}
+			elements = filteredElements.toArray(new IModelElement[filteredElements.size()]);
 		}
 
-		return types.toArray(new IType[types.size()]);
+		return elements;
 	}
 }

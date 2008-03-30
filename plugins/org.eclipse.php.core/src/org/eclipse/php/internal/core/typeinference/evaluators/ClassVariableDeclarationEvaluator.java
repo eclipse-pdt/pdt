@@ -20,7 +20,6 @@ import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
-import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
@@ -34,7 +33,7 @@ import org.eclipse.wst.xml.core.internal.Logger;
 /**
  * This evaluator finds class field declartion either using "var" or in method body using field access.
  */
-public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
+public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator {
 
 	private List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
@@ -48,7 +47,7 @@ public class ClassVariableDeclarationEvaluator extends GoalEvaluator {
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 
-		IType[] types = PHPTypeInferenceUtils.getTypes(context.getInstanceType(), context.getSourceModule());
+		IType[] types = getTypes(context.getInstanceType(), context.getSourceModule());
 
 		String variableName = typedGoal.getVariableName();
 		SearchEngine searchEngine = new SearchEngine();
