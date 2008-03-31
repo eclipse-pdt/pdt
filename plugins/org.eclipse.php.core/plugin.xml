@@ -173,7 +173,7 @@
        point="org.eclipse.php.core.goalEvaluatorFactories">
     <factory
           class="org.eclipse.php.internal.core.typeinference.evaluators.DefaultPHPGoalEvaluatorFactory"
-          priority="0">
+          priority="10">
     </factory>
  </extension>
  <extension
