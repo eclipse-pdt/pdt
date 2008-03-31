@@ -128,10 +128,13 @@ public class PHPValidator implements IValidator, ISourceValidator {
 		if (filePath != null) {
 			fileName = filePath.toString();
 		}
-		final PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
+		PHPFileData fileData = projectModel.getFileData(file.getFullPath().toString());
 
 		if (fileData == null) {
-			return;
+			fileData = projectModel.getFileData(file.getFullPath().toOSString());
+			if (fileData == null) {
+				return;
+			}
 		}
 
 		final IPHPMarker[] markers = fileData.getMarkers();
