@@ -13,7 +13,7 @@ import org.eclipse.php.internal.core.ast.nodes.*;
 public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	public static final String ID = "ClassMembersOccurrencesFinder"; //$NON-NLS-1$
 	private String classMemberName; // The member's name
-	private String typeDeclarationName; // Class or Interface name
+	private String typeDeclarationName; // Class or Interface name // TODO - use Binding
 	private boolean isFunction;
 
 	/**
@@ -104,12 +104,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Mark CON on: MyClass::CON;
 	 */
 	public boolean visit(StaticConstantAccess classConstantAccess) {
-		if (classConstantAccess.getClassName().getName().equals(typeDeclarationName)) {
-			Identifier constant = classConstantAccess.getConstant();
-			if (classMemberName.equals(constant.getName())) {
-				fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
-			}
+		// TODO - Change this naive implementation to support real binded occurrences (using the Binding mechanism)
+		// if (classConstantAccess.getClassName().getName().equals(typeDeclarationName)) {
+		Identifier constant = classConstantAccess.getConstant();
+		if (classMemberName.equals(constant.getName())) {
+			fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
 		}
+		// }
 		return true;
 	}
 
@@ -178,40 +179,41 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		Block body = typeDeclaration.getBody();
 
 		// definitions of the class property
-		if (className.getName().equalsIgnoreCase(typeDeclarationName)) {
-			List<Statement> statements = body.statements();
-			for (Statement statement : statements) {
-				if (statement.getType() == ASTNode.METHOD_DECLARATION) {
-					final MethodDeclaration classMethodDeclaration = (MethodDeclaration) statement;
-					if (isFunction) {
-						final Identifier functionName = classMethodDeclaration.getFunction().getFunctionName();
-						if (classMemberName.equalsIgnoreCase(functionName.getName())) {
-							fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
-						}
+		// TODO - Change this naive implementation to support real binded occurrences (using the Binding mechanism)		
+		//		if (className.getName().equalsIgnoreCase(typeDeclarationName)) {
+		List<Statement> statements = body.statements();
+		for (Statement statement : statements) {
+			if (statement.getType() == ASTNode.METHOD_DECLARATION) {
+				final MethodDeclaration classMethodDeclaration = (MethodDeclaration) statement;
+				if (isFunction) {
+					final Identifier functionName = classMethodDeclaration.getFunction().getFunctionName();
+					if (classMemberName.equalsIgnoreCase(functionName.getName())) {
+						fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
 					}
-				} else if (statement.getType() == ASTNode.FIELD_DECLARATION) {
-					FieldsDeclaration classVariableDeclaration = (FieldsDeclaration) statement;
-					final Variable[] variableNames = classVariableDeclaration.getVariableNames();
-					for (int j = 0; j < variableNames.length; j++) {
-						// safe cast to identifier
-						assert variableNames[j].getName().getType() == ASTNode.IDENTIFIER;
+				}
+			} else if (statement.getType() == ASTNode.FIELD_DECLARATION) {
+				FieldsDeclaration classVariableDeclaration = (FieldsDeclaration) statement;
+				final Variable[] variableNames = classVariableDeclaration.getVariableNames();
+				for (int j = 0; j < variableNames.length; j++) {
+					// safe cast to identifier
+					assert variableNames[j].getName().getType() == ASTNode.IDENTIFIER;
 
-						final Identifier variable = (Identifier) variableNames[j].getName();
-						if (classMemberName.equals(variable.getName())) {
-							fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceType(variable), fDescription));
-						}
+					final Identifier variable = (Identifier) variableNames[j].getName();
+					if (classMemberName.equals(variable.getName())) {
+						fResult.add(new OccurrenceLocation(variable.getStart(), variable.getLength(), getOccurrenceType(variable), fDescription));
 					}
-				} else if (statement.getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
-					ClassConstantDeclaration classVariableDeclaration = (ClassConstantDeclaration) statement;
-					List<Identifier> variableNames = classVariableDeclaration.names();
-					for (Identifier name : variableNames) {
-						if (classMemberName.equals(name.getName())) {
-							fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
-						}
+				}
+			} else if (statement.getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
+				ClassConstantDeclaration classVariableDeclaration = (ClassConstantDeclaration) statement;
+				List<Identifier> variableNames = classVariableDeclaration.names();
+				for (Identifier name : variableNames) {
+					if (classMemberName.equals(name.getName())) {
+						fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
 					}
 				}
 			}
 		}
+		//		}
 		body.accept(this);
 	}
 
@@ -228,6 +230,9 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
+		if (node.getParent().getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
+			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
+		}
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 
