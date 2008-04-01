@@ -20,12 +20,27 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 public class ModelSupport {
 
+	/**
+	 *
+	 */
+	private static final CodeData[] EMPTY_DATA = new CodeData[0];
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	public static final CodeDataFilter STATIC_VARIABLES_FILTER = new StaticVariablesFilter(true);
 	public static final CodeDataFilter NOT_STATIC_VARIABLES_FILTER = new StaticVariablesFilter(false);
 	public static final CodeDataFilter STATIC_FUNCTIONS_FILTER = new StaticFunctionsFilter(true);
 	public static final CodeDataFilter INTERNAL_CODEDATA_FILTER = new InternalPhpCodeData();
 	public static final CodeDataFilter NOT_MAGIC_FUNCTION = new MagicFunctionFilter(false);
+
+	public static final CodeDataFilter IS_ABSTRACT_CLASS_FILTER = new CodeDataFilter() {
+		public boolean accept(CodeData codeData) {
+			if (codeData instanceof PHPClassData) {
+				int modifier = ((PHPClassData) codeData).getModifiers();
+				return PHPModifier.isAbstract(modifier);
+			}
+			return true;
+		}
+		
+	};
 
 	public static final CodeDataFilter PIRVATE_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
@@ -39,12 +54,12 @@ public class ModelSupport {
 	};
 	public static final CodeDataFilter PUBLIC_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
-			return (!PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier));
+			return !PHPModifier.isPrivate(modifier) && !PHPModifier.isProtected(modifier);
 		}
 	};
 	public static final CodeDataFilter NOT_FINAL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
-			return (!PHPModifier.isFinal(modifier));
+			return !PHPModifier.isFinal(modifier);
 		}
 	};
 
@@ -121,18 +136,18 @@ public class ModelSupport {
 		int length = startsWith.length();
 		for (int i = start; i < sortedArray.length; i++) {
 			String name = useComparableName ? ((ComparableName) sortedArray[i]).getComparableName() : sortedArray[i].getName();
-			name = (name.length() > length) ? name.substring(0, length) : name;
+			name = name.length() > length ? name.substring(0, length) : name;
 			if (caseSensitive) {
 				if (name.compareTo(startsWith) > 0) {
 					end = i - 1;
 					break;
 				}
-			} else if (name.compareToIgnoreCase(startsWith) > 0) {
+			} else if (name.compareToIgnoreCase(startsWith) != 0) {
 				end = i - 1;
 				break;
 			}
 		}
-		int arrayLength = (end < start) ? 0 : end - start + 1;
+		int arrayLength = end < start ? 0 : end - start + 1;
 		CodeData[] rv = new CodeData[arrayLength];
 		System.arraycopy(sortedArray, start, rv, 0, rv.length);
 		return rv;
@@ -182,12 +197,12 @@ public class ModelSupport {
 		int start = 0;
 		int end = sortedArray.length - 1;
 		while (start <= end) {
-			int mid = (start + end) >> 1;
+			int mid = start + end >> 1;
 			String name = useComparableName ? ((ComparableName) sortedArray[mid]).getComparableName() : sortedArray[mid].getName();
 			if (!exactName && name.length() > searchNameLength) {
 				name = name.substring(0, searchNameLength);
 			}
-			int compareResult = (caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName));
+			int compareResult = caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName);
 			if (compareResult == 0) {
 				start = mid;
 				break;
@@ -263,12 +278,12 @@ public class ModelSupport {
 		int start = 0;
 		int end = sortedArray.length - 1;
 		while (start <= end) {
-			int mid = (start + end) >> 1;
+			int mid = start + end >> 1;
 			String name = sortedArray[mid].getName();
 			if (name.length() > searchNameLength) {
 				name = name.substring(0, searchNameLength);
 			}
-			int compareResult = (caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName));
+			int compareResult = caseSensitive ? name.compareTo(searchName) : name.compareToIgnoreCase(searchName);
 			if (compareResult == 0) {
 				start = mid;
 				break;
@@ -317,10 +332,10 @@ public class ModelSupport {
 		}
 		ArrayList<CodeData> newCodeDataList = new ArrayList<CodeData>();
 		String baseName = ""; //$NON-NLS-1$
-		for (int i = 0; i < sortedArray.length; i++) {
-			String curName = sortedArray[i].getName();
+		for (CodeData element : sortedArray) {
+			String curName = element.getName();
 			if (!baseName.equals(curName)) {
-				newCodeDataList.add(sortedArray[i]);
+				newCodeDataList.add(element);
 			}
 			baseName = curName;
 		}
@@ -331,62 +346,57 @@ public class ModelSupport {
 
 	}
 
-	public static CodeData[] mergeAndRemoveDuplicated(CodeData[] sortedArray1, CodeData[] sortedArray2) {
-		if (sortedArray1 == null) {
+	public static CodeData[] mergeNoDuplicates(CodeData[] sortedArray1, CodeData[] sortedArray2) {
+		if (sortedArray1 == null || sortedArray1.length == 0) {
+			if (sortedArray2 == null) {
+				return EMPTY_DATA;
+			}
 			return sortedArray2;
 		}
-		if (sortedArray2 == null) {
+		if (sortedArray2 == null || sortedArray2.length == 0) {
 			return sortedArray1;
 		}
-		if (sortedArray1.length == 0) {
-			return sortedArray2;
-		}
-		if (sortedArray2.length == 0) {
-			return sortedArray1;
-		}
-		List result = new ArrayList(sortedArray1.length + sortedArray2.length);
+		List<CodeData> merged = new ArrayList<CodeData>(sortedArray1.length + sortedArray2.length);
 		int pointer1 = 0;
 		int pointer2 = 0;
 		while (pointer1 != sortedArray1.length || pointer2 != sortedArray2.length) {
 			if (pointer1 == sortedArray1.length) {
-				result.add(sortedArray2[pointer2++]);
+				merged.add(sortedArray2[pointer2++]);
 				continue;
 			}
 			if (pointer2 == sortedArray2.length) {
-				result.add(sortedArray1[pointer1++]);
+				merged.add(sortedArray1[pointer1++]);
 				continue;
 			}
-			int compareTo = sortedArray1[pointer1].compareTo(sortedArray2[pointer2]);
-			if (compareTo == 0) {
-				result.add(sortedArray1[pointer1++]);
+			int compared = sortedArray1[pointer1].compareTo(sortedArray2[pointer2]);
+			if (compared == 0) {
+				merged.add(sortedArray1[pointer1++]);
 				pointer2++;
 				continue;
 			}
-			if (compareTo < 0) {
-				result.add(sortedArray1[pointer1++]);
+			if (compared < 0) {
+				merged.add(sortedArray1[pointer1++]);
 			} else {
-				result.add(sortedArray2[pointer2++]);
+				merged.add(sortedArray2[pointer2++]);
 			}
 		}
 
-		CodeData[] rv = new CodeData[result.size()];
-		result.toArray(rv);
-		return rv;
+		CodeData[] result = new CodeData[merged.size()];
+		merged.toArray(result);
+		return result;
 	}
 
 	public static CodeData[] merge(CodeData[] sortedArray1, CodeData[] sortedArray2) {
-		if (sortedArray1 == null) {
+		if (sortedArray1 == null || sortedArray1.length == 0) {
+			if (sortedArray2 == null) {
+				return EMPTY_DATA;
+			}
 			return sortedArray2;
 		}
-		if (sortedArray2 == null) {
+		if (sortedArray2 == null || sortedArray2.length == 0) {
 			return sortedArray1;
 		}
-		if (sortedArray1.length == 0) {
-			return sortedArray2;
-		}
-		if (sortedArray2.length == 0) {
-			return sortedArray1;
-		}
+
 		int size = sortedArray1.length + sortedArray2.length;
 		CodeData[] rv = new CodeData[size];
 
@@ -455,12 +465,12 @@ public class ModelSupport {
 
 	public static CodeData[] getFilteredCodeData(CodeData[] data, CodeDataFilter codeDataFilter) {
 		if (data == null || data.length == 0) {
-			return data;
+			return EMPTY_DATA;
 		}
-		List listResult = new ArrayList();
-		for (int i = 0; i < data.length; i++) {
-			if (codeDataFilter.accept(data[i])) {
-				listResult.add(data[i]);
+		List<CodeData> listResult = new ArrayList<CodeData>();
+		for (CodeData element : data) {
+			if (codeDataFilter.accept(element)) {
+				listResult.add(element);
 			}
 		}
 		CodeData[] result = new CodeData[listResult.size()];
@@ -472,7 +482,7 @@ public class ModelSupport {
 		if (data == null || data.length == 0) {
 			return data;
 		}
-		List listResult = new ArrayList();
+		List<CodeData> listResult = new ArrayList<CodeData>();
 		for (int i = 0; i < data.length; i++) {
 			if (!codeDataFilter.accept(data[i])) {
 				listResult.add(data[i]);
@@ -502,7 +512,7 @@ public class ModelSupport {
 		int length = startsWith.length();
 		for (int i = start; i < sortedArray.length; i++) {
 			String name = sortedArray[i].getName();
-			name = (name.length() > length) ? name.substring(0, length) : name;
+			name = name.length() > length ? name.substring(0, length) : name;
 			if (caseSensitive) {
 				if (name.compareTo(startsWith) > 0) {
 					end = i - 1;
@@ -513,7 +523,7 @@ public class ModelSupport {
 				break;
 			}
 		}
-		int arrayLength = (end < start) ? 0 : end - start + 1;
+		int arrayLength = end < start ? 0 : end - start + 1;
 		File[] rv = new File[arrayLength];
 		System.arraycopy(sortedArray, start, rv, 0, rv.length);
 		return rv;
@@ -628,7 +638,7 @@ public class ModelSupport {
 	}
 
 	/**
-	 * filters magic functions (constructors are considered as magic functions) 
+	 * filters magic functions (constructors are considered as magic functions)
 	 * @author guy.g
 	 *
 	 */
@@ -638,7 +648,7 @@ public class ModelSupport {
 		boolean acceptMagicFunction;
 
 		/**
-		 * @param acceptMagicFunction the return value that should be returned if the function is a magic function.  
+		 * @param acceptMagicFunction the return value that should be returned if the function is a magic function.
 		 */
 		MagicFunctionFilter(boolean acceptMagicFunction) {
 			this.acceptMagicFunction = acceptMagicFunction;
@@ -678,12 +688,11 @@ public class ModelSupport {
 		}
 
 		/**
-		 * checking if the function name is one of the known magic functions  
+		 * checking if the function name is one of the known magic functions
 		 * @return <code>true</code> if the function is a magic function
 		 */
 		private boolean isMagicFunction(String functionName) {
-			for (int i = 0; i < magicFunction.length; i++) {
-				String magicFunctionName = magicFunction[i];
+			for (String magicFunctionName : magicFunction) {
 				if (magicFunctionName.equals(functionName)) {
 					return true;
 				}
