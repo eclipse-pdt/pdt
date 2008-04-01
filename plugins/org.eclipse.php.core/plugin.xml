@@ -8,6 +8,7 @@
    <extension-point id="modelFilter" name="PHP Model Filter" schema="schema/modelFilter.exsd"/>
    <extension-point id="phpModelExtensions" name="PHP Model Extension" schema="schema/phpModelExtensions.exsd"/>
    <extension-point id="goalEvaluatorFactories" name="PHP Evaluator Factory" schema="schema/goalEvaluatorFactories.exsd"/>
+   <extension-point id="phpSourceElementRequestors" name="PHP Source Element Requestor" schema="schema/phpSourceElementRequestors.exsd"/>
    
 	<!-- PHP Model Handler -->
 	<extension

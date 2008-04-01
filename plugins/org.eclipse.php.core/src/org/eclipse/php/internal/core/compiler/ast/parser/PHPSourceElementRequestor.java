@@ -1,7 +1,12 @@
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -16,7 +21,9 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.wst.xml.core.internal.Logger;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
@@ -25,9 +32,27 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 * since in php the type declarations can be nested.
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
+	private PHPSourceElementRequestorExtension[] extensions;
 
-	public PHPSourceElementRequestor(ISourceElementRequestor requestor) {
+	public PHPSourceElementRequestor(ISourceElementRequestor requestor, char[] contents, char[] filename) {
 		super(requestor);
+
+		// Load PHP source element requestor extensions
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, "phpSourceElementRequestors");
+		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(elements.length);
+		for (IConfigurationElement element : elements) {
+			try {
+				PHPSourceElementRequestorExtension extension = (PHPSourceElementRequestorExtension) element.createExecutableExtension("class");
+				extension.setRequestor(fRequestor);
+				extension.setContents(contents);
+				extension.setFilename(new String(filename));
+
+				requestors.add(extension);
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+		extensions = requestors.toArray(new PHPSourceElementRequestorExtension[requestors.size()]);
 	}
 
 	protected MethodDeclaration getCurrentMethod() {
@@ -40,21 +65,37 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		declarations.pop();
+
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.endvisit(method);
+		}
 		return super.endvisit(method);
 	}
 
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		declarations.pop();
+
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.endvisit(type);
+		}
 		return super.endvisit(type);
 	}
 
 	public boolean visit(MethodDeclaration method) throws Exception {
 		declarations.push(method);
+
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.visit(method);
+		}
 		return super.visit(method);
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
 		declarations.push(type);
+
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.visit(type);
+		}
 		return super.visit(type);
 	}
 
@@ -111,6 +152,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean visit(Assignment assignment) throws Exception {
 		Expression left = assignment.getVariable();
 		if (left instanceof FieldAccess) { // class variable ($this->a = .)
@@ -148,6 +190,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(Statement node) throws Exception {
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.visit(node);
+		}
+
 		String clasName = node.getClass().getName();
 		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
 			return visit((PHPFieldDeclaration) node);
@@ -162,6 +208,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(Statement node) throws Exception {
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.endvisit(node);
+		}
+
 		String clasName = node.getClass().getName();
 		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
 			return endvisit((PHPFieldDeclaration) node);
@@ -173,6 +223,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(Expression node) throws Exception {
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.visit(node);
+		}
+
 		String clasName = node.getClass().getName();
 		if (clasName.equals(Assignment.class.getName())) {
 			return visit((Assignment) node);
@@ -187,6 +241,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(Expression node) throws Exception {
+		for (SourceElementRequestVisitor visitor : extensions) {
+			visitor.endvisit(node);
+		}
+
 		String clasName = node.getClass().getName();
 		if (clasName.equals(Assignment.class.getName())) {
 			return endvisit((Assignment) node);
