@@ -91,15 +91,15 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 		public IWorkspaceModelListener getListener() {
 			if (listener == null) {
-				SafeRunner.run(new ISafeRunnable() { 
-						public void run() throws Exception {
-							listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
-						}
+				SafeRunner.run(new ISafeRunnable() {
+					public void run() throws Exception {
+						listener = (IWorkspaceModelListener) element.createExecutableExtension("class"); //$NON-NLS-1$
+					}
 
-						public void handleException(Throwable exception) {
-							Logger.log(Logger.ERROR, "Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener");
-						}
-					});
+					public void handleException(Throwable exception) {
+						Logger.log(Logger.ERROR, "Error creation PhpModel for extension-point org.eclipse.php.internal.core.workspaceModelListener");
+					}
+				});
 			}
 			return listener;
 		}
@@ -139,15 +139,14 @@ public class PHPWorkspaceModelManager implements ModelListener {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				try {
-					PHPWorkspaceModelManager.getInstance().getModelForProject(project, true);
+					PHPWorkspaceModelManager.getInstance().getModelForProject(project, true, false);
 				} finally {
 					monitor.done();
 				}
 				return Status.OK_STATUS;
 			}
 		};
-		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
-		cleanJob.setPriority(Job.BUILD);
+		cleanJob.setPriority(Job.LONG);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
 	}
@@ -178,21 +177,20 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 					for (IProject project : phpProjects) {
 						if (project.isOpen()) {
-							PHPWorkspaceModelManager.getInstance().getModelForProject(project, true);
+							PHPWorkspaceModelManager.getInstance().getModelForProject(project, true, false);
 							if (monitor.isCanceled()) {
 								break;
 							}
 						}
 						monitor.worked(1);
 					}
-					instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel);
+					instance.putModel(ExternalFilesRegistry.getInstance().getExternalFilesProject(), defaultModel, false);
 				} finally {
 					monitor.done();
 				}
 				return Status.OK_STATUS;
 			}
 		};
-		cleanJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 		cleanJob.setPriority(Job.LONG);
 		cleanJob.setUser(false);
 		cleanJob.schedule();
@@ -361,6 +359,15 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	public PHPProjectModel getModelForProject(final IProject project, boolean forceCreation) {
+		//any requests not coming from separated job should use getModelForProject with fork = true.
+		return getModelForProject(project, forceCreation, true);
+	}
+
+	/**
+	 * @param fork use different job when building a project. (in order not to run in UI thread).
+	 * by default use true, use false only if you're running from non-UI job
+	 */
+	private PHPProjectModel getModelForProject(final IProject project, boolean forceCreation, boolean fork) {
 		PHPProjectModel projectModel = (PHPProjectModel) models.get(project);
 		if (projectModel == null && forceCreation) {
 			synchronized (project) {
@@ -379,12 +386,12 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						}
 						if (hasNature) {
 							projectModel = new PHPProjectModel();
-							putModel(project, projectModel);
+							putModel(project, projectModel, fork);
 							attachProjectCloseObserver(project);
 						}
 					} else if (!project.exists() && project.equals(ExternalFilesRegistry.getInstance().getExternalFilesProject())) {
 						projectModel = getDefaultPHPProjectModel();
-						putModel(project, projectModel);
+						putModel(project, projectModel, fork);
 						attachProjectCloseObserver(project);
 					}
 				}
@@ -450,7 +457,11 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		fireProjectModelRemoved(removedProject);
 	}
 
-	private void putModel(final IProject project, PHPProjectModel projectModel) {
+	/**
+	 * @param fork use different job when building a project. (in order not to run in UI thread)
+	 * by default use true, use false only if you're running from non-UI job.
+	 */
+	private void putModel(final IProject project, PHPProjectModel projectModel, boolean fork) {
 		PHPProjectModel oldPhpProjectModel = (PHPProjectModel) models.get(project);
 		models.put(project, projectModel);
 		projectModel.initialize(project);
@@ -461,11 +472,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		}
 		fireProjectModelAdded(project);
 		if (projectModel.isBuildNeeded()) {
-			//checking if we are currently at a job with build scheduling rule
-			//because the build must run in such a job
-			Job currentJob = Job.getJobManager().currentJob();
-			boolean newJobNeeded = currentJob == null || currentJob.getRule() != ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
-			if (newJobNeeded) {
+			if (fork) {
 				WorkspaceJob buildJob = new WorkspaceJob(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName())) {
 					@Override
 					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
@@ -473,7 +480,6 @@ public class PHPWorkspaceModelManager implements ModelListener {
 						return Status.OK_STATUS;
 					}
 				};
-				buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
 				buildJob.setUser(false);
 				buildJob.schedule();
 
