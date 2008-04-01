@@ -1268,6 +1268,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			case NEW:
 				completionProposalGroup = newStatementCompletionProposalGroup;
 				classes = getOnlyClasses(projectModel);
+				classes = ModelSupport.removeFilteredCodeData(classes, ModelSupport.IS_ABSTRACT_CLASS_FILTER);
 				if (selfClassData != null) {
 					classes = addSelfFunctionToProposals(classes, selfClassData);
 				}
