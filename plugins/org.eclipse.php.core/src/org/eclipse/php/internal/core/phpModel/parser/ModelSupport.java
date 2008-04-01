@@ -31,6 +31,16 @@ public class ModelSupport {
 	public static final CodeDataFilter INTERNAL_CODEDATA_FILTER = new InternalPhpCodeData();
 	public static final CodeDataFilter NOT_MAGIC_FUNCTION = new MagicFunctionFilter(false);
 
+	public static final CodeDataFilter IS_ABSTRACT_CLASS_FILTER = new CodeDataFilter() {
+		public boolean accept(CodeData codeData) {
+			if (codeData instanceof PHPClassData) {
+				int modifier = ((PHPClassData) codeData).getModifiers();
+				return PHPModifier.isAbstract(modifier);
+			}
+			return true;
+		}
+
+	};
 	public static final CodeDataFilter PIRVATE_ACCESS_LEVEL_FILTER = new AccessLevelFilter() {
 		public boolean verify(int modifier) {
 			return true;
