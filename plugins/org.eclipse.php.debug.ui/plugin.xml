@@ -336,6 +336,9 @@
           <showInPart
                 id="org.eclipse.ui.views.ResourceNavigator">
           </showInPart>
+          <showInPart
+                id="org.eclipse.php.ui.explorer">
+          </showInPart>
           <actionSet
                 id="org.eclipse.php.debug.ui.actionSet">
           </actionSet>
