@@ -87,22 +87,7 @@ public abstract class AbstractCodeData implements CodeData {
 	 * @return
 	 */
 	public int compareTo(CodeData other) {
-        String otherName = other.getName();
-        int minNameLength = Math.min(name.length(), otherName.length());
-        for(int i = 0; i< minNameLength; i++){
-        	char ch1 = name.charAt(0);
-        	char ch2 = otherName.charAt(0);
-        	if(ch1 == '_'){
-        		if(ch2 == '_'){
-        			continue;
-        		}
-        		return 1;
-        	} else if(ch2 == '_'){
-        		return -1;
-        	}
-        	break;
-        }
-		int compared = name.compareToIgnoreCase(otherName);
+		int compared = name.compareToIgnoreCase(other.getName());
 		if (compared != 0) {
 			return compared;
 		}
