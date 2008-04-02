@@ -1407,6 +1407,14 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 * @see org.eclipse.debug.core.IBreakpointListener#breakpointAdded(org.eclipse.debug.core.model.IBreakpoint)
 	 */
 	public void breakpointAdded(IBreakpoint breakpoint) {
+		// attempt to add a breakpoint under the following conditions
+		// 1. breakpoint manager enabled
+		// 2. the breakpoint is valid for the environment
+		// 3. the breakpoint is enabled
+		// 4. the debugee is suspended or running and async is supported (send immediately) 
+		// 5. the debugee is running and async not supported (defer and send later)
+		// otherwise do not send or defer the breakpoint
+		
 		if (!DebugPlugin.getDefault().getBreakpointManager().isEnabled()) {
 			return;
 		}
@@ -1415,21 +1423,20 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			try {
 				if (breakpoint.isEnabled()) {
 					DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
-					if (asyncSupported || isSuspended()) {
-						// we are suspended or async mode is supported so send
-						// the
-						// breakpoint
+					if (isSuspended() || (asyncSupported && isRunning())) {
+						// we are suspended or async mode is supported and we
+						// are running, so send the breakpoint.
 						if (DBGpLogger.debugBP()) {
 							DBGpLogger.debug("Breakpoint Add requested immediately");
 						}
 						sendBreakpointAddCmd(bp, false);
-					} else {
+					} else if (isRunning()) {
 
-						// we are not suspended and async mode is not supported
-						// so if we send a breakpoint command we may not get a
+						// we are running and async mode is not supported
+						// If we send a breakpoint command we may not get a
 						// response at all or may get a response when the script
 						// suspends on another breakpoint which will hang the
-						// gui if we send it synchronously.
+						// gui until then if we send it synchronously.
 						// Async would require the read thread to handle
 						// the response, locate the breakpoint from the txn_id
 						// and add the id to the runtimeBreakpoint.
@@ -1522,16 +1529,16 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	public void breakpointRemoved(IBreakpoint breakpoint, IMarkerDelta delta) {
 		if (supportsBreakpoint(breakpoint)) {
 			DBGpBreakpoint bp = bpFacade.createDBGpBreakpoint(breakpoint);
-			if (asyncSupported || isSuspended()) {
+			if (isSuspended() || (asyncSupported && isRunning())) {
 
-				// aysnc mode or we are suspended so send the remove request
+				// aysnc mode and running or we are suspended so send the remove request
 				if (DBGpLogger.debugBP()) {
 					DBGpLogger.debug("Immediately removing of breakpoint with ID: " + bp.getID());
 				}
 				sendBreakpointRemoveCmd(bp, false);
-			} else {
+			} else if (isRunning()) {
 
-				// no async mode and not suspended so queue the request.
+				// running and not suspended and no async support, so we must defer the removal.
 				if (DBGpLogger.debugBP()) {
 					DBGpLogger.debug("Deferring Removing of breakpoint with ID: " + bp.getID());
 				}
@@ -1984,4 +1991,13 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	public void setPathMapper(PathMapper pathMapper) {
 		this.pathMapper = pathMapper;
 	}
+	
+	/**
+	 * return true if a script is executed, ie in running state.
+	 * @return true if running.
+	 */
+	public boolean isRunning() {
+		boolean isRunning = (STATE_STARTED_RUNNING == targetState);
+		return isRunning;
+	}	
 }
