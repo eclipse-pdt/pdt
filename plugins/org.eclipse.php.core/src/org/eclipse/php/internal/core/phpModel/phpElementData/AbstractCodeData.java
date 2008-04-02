@@ -86,14 +86,10 @@ public abstract class AbstractCodeData implements CodeData {
 	 * @param o the object that we compare to.
 	 * @return
 	 */
-	public int compareTo(Object o) {
-		if (!(o instanceof CodeData)) {
-			return -1;
-		}
-		CodeData other = ((CodeData) o);
-		int rv = name.compareToIgnoreCase(other.getName());
-		if (rv != 0) {
-			return rv;
+	public int compareTo(CodeData other) {
+		int compared = name.compareToIgnoreCase(other.getName());
+		if (compared != 0) {
+			return compared;
 		}
 		boolean otherIsUserCode = other.isUserCode();
 		if (!isUserCode) {
@@ -112,7 +108,7 @@ public abstract class AbstractCodeData implements CodeData {
 		if (getUserData() == null) {
 			return name;
 		}
-		return name + " (in " + getUserData().getFileName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+		return name + " in " + getUserData().getFileName(); //$NON-NLS-1$
 	}
 
 	/**
@@ -136,5 +132,5 @@ public abstract class AbstractCodeData implements CodeData {
 	public Object getAdapter(Class adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
-	
+
 }
