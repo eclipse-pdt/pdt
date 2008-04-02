@@ -1,4 +1,4 @@
-package org.eclipse.php.internal.core.compiler.ast.parser;
+package org.eclipse.php.core;
 
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;

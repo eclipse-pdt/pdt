@@ -14,6 +14,7 @@ public class PHPMixinElementInfo {
 	public static final int K_INCLUDE = 5;
 	public static final int K_PHPDOC = 6;
 	public static final int K_PHPDOC_FOR_CONSTANT = 7; // This is since consant and method elements are stored in the mixin under same key
+	public static final int K_NON_PHP = 10;
 
 	private int kind = 0;
 	private Object object = null;
