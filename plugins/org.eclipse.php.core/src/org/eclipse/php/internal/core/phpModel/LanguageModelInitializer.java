@@ -61,13 +61,9 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	private static String getNatureFromProject(IScriptProject project) {
-		try {
-			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
-			if (languageToolkit != null) {
-				return languageToolkit.getNatureId();
-			}
-		} catch (CoreException e) {
-			Logger.logException(e);
+		IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(project);
+		if (languageToolkit != null) {
+			return languageToolkit.getNatureId();
 		}
 		return null;
 	}
@@ -114,18 +110,18 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			this.containerPath = containerPath;
 		}
 
-		public IBuildpathEntry[] getBuildpathEntries() {
+		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
 			return new IBuildpathEntry[] {
 				DLTKCore.newLibraryEntry(libraryPath, BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES,
 					BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true)
 			};
 		}
 
-		public IBuiltinModuleProvider getBuiltinProvider() {
+		public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
 			return null;
 		}
 
-		public String getDescription() {
+		public String getDescription(IScriptProject project) {
 			return "PHP Language Library";
 		}
 
