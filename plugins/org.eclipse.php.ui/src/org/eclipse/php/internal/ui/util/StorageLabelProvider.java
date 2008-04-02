@@ -119,7 +119,7 @@ public class StorageLabelProvider extends LabelProvider {
 
 	private Image getDefaultImage() {
 		if (fDefaultImage == null)
-			fDefaultImage = fEditorRegistry.getImageDescriptor((String) null).createImage();
+			fDefaultImage = fEditorRegistry.getImageDescriptor(null, null).createImage();
 		return fDefaultImage;
 	}
 }
