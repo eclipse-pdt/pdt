@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.documentModel.parser;
 
+import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%
 
@@ -64,6 +65,10 @@ package org.eclipse.php.internal.core.documentModel.parser;
     	initialize(parameters[6]);
     }
 
+    protected boolean isHeredocState(int state){
+    	return state == ST_PHP_HEREDOC;
+    }
+    
     public int[] getParamenters(){
     	return new int[]{yy_markedPos, yy_pushbackPos, yy_currentPos, yy_startRead, yy_endRead, yyline, yy_lexical_state};
     }
@@ -80,7 +85,7 @@ package org.eclipse.php.internal.core.documentModel.parser;
         return yy_endRead;
     }
 
-    protected char[] getYy_buffer() {
+    public char[] getYy_buffer() {
         return yy_buffer;
     }
 
@@ -94,6 +99,13 @@ package org.eclipse.php.internal.core.documentModel.parser;
     
 	protected void pushBack(int i) {
 		yypushback(i);
+	}
+
+	// A pool of states. To avoid creation of a new state on each createMemento.
+	private static final IntHashtable lexerStates = new IntHashtable(100);
+	
+	IntHashtable getLexerStates() {
+		return lexerStates;
 	}
 
  // End user code
@@ -515,9 +527,11 @@ PHP_OPERATOR=       "=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-=
     "@license"       {return PHPDOC_LICENSE;}
     "@link"          {return PHPDOC_LINK;}
     "@magic"         {return PHPDOC_MAGIC;}
+    "@method"        {return PHPDOC_METHOD;}    
     "@name"          {return PHPDOC_NAME;}
     "@package"       {return PHPDOC_PACKAGE;}
     "@param"         {return PHPDOC_PARAM;}
+    "@property"      {return PHPDOC_PROPERTY;}
     "@return"        {return PHPDOC_RETURN;}
     "@see"           {return PHPDOC_SEE;}
     "@since"         {return PHPDOC_SINCE;}
