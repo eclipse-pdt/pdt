@@ -1,6 +1,5 @@
 package org.eclipse.php.internal.core.typeinference;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.DLTKLanguageManager;
@@ -10,7 +9,6 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.IInstanceContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
 
 public class MethodContext implements IContext, IArgumentsContext, IInstanceContext, ISourceModuleContext {
 
@@ -64,13 +62,9 @@ public class MethodContext implements IContext, IArgumentsContext, IInstanceCont
 
 	public String getLangNature() {
 		if (sourceModule != null) {
-			try {
-				IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(sourceModule);
-				if (languageToolkit != null) {
-					return languageToolkit.getNatureId();
-				}
-			} catch (CoreException e) {
-				Logger.logException(e);
+			IDLTKLanguageToolkit languageToolkit = DLTKLanguageManager.getLanguageToolkit(sourceModule);
+			if (languageToolkit != null) {
+				return languageToolkit.getNatureId();
 			}
 		}
 		return null;
