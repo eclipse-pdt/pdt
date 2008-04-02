@@ -117,11 +117,11 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			};
 		}
 
-		public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
+		public IBuiltinModuleProvider getBuiltinProvider(/*IScriptProject project*/) {
 			return null;
 		}
 
-		public String getDescription(IScriptProject project) {
+		public String getDescription(/*IScriptProject project*/) {
 			return "PHP Language Library";
 		}
 
