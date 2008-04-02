@@ -209,6 +209,10 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @see IPhpScriptRegion#completeReparse(IDocument, int, int)
 	 */
 	public void completeReparse(IDocument doc, int start, int length) {
+		//bug fix for 225118 we need to refresh the constants since this function is being called
+		//after the project's PHP version was changed. 
+		ST_PHP_LINE_COMMENT = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_LINE_COMMENT);
+		ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
 		PhpLexer lexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null);
 		completeReparse(lexer);
 	}

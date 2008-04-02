@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.documentModel.parser;
 
+import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%
 
@@ -98,6 +99,13 @@ package org.eclipse.php.internal.core.documentModel.parser;
     
 	protected void pushBack(int i) {
 		yypushback(i);
+	}
+
+	// A pool of states. To avoid creation of a new state on each createMemento.
+	private static final IntHashtable lexerStates = new IntHashtable(100);
+	
+	IntHashtable getLexerStates() {
+		return lexerStates;
 	}
 
  // End user code

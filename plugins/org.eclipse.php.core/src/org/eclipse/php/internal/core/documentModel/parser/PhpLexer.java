@@ -108,16 +108,19 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 
 		//System.out.println("lexerStates size:" + lexerStates.size());
 		final int key = buildStateKey();
-		Object state = lexerStates.get(key);
+		Object state = getLexerStates().get(key);
 		if (state == null) {
 			state = new BasicLexerState(this);
 			if (isHeredocState(getZZLexicalState()))
 				state = new HeredocState((BasicLexerState) state, this);
-			lexerStates.put(key, state);
+			getLexerStates().put(key, state);
 		}
 		return state;
 	}
-
+	
+	// A pool of states. To avoid creation of a new state on each createMemento.
+	abstract IntHashtable getLexerStates();
+	
 	public boolean getAspTags() {
 		return asp_tags;
 	}
