@@ -350,6 +350,8 @@ public class PHPTextSequenceUtilities {
 						if (bracketsNum == 0 && rv >= 2) {
 							if (textSequence.charAt(rv - 2) == ':') {
 								return rv - 2;
+							} else {
+								return -1;
 							}
 						}
 						break;
