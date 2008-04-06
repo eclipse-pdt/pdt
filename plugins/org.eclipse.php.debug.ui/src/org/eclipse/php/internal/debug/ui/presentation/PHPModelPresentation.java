@@ -30,7 +30,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.filesystem.FileStoreFactory;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceNotFoundInput;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -128,7 +128,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 				return null;
 			} else if (resource instanceof IWorkspaceRoot) {
 				try {
-					String filename = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
+					String filename = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_FILE);
 					Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
 					return filename + " [line: " + lineNumber.toString() + "]";
 				} catch (CoreException e) {
@@ -247,13 +247,13 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			// Breakpoints for external files are stored in workspace root:
 			else if (resource instanceof IWorkspaceRoot) {
 				try {
-					String filename = (String) marker.getAttribute(IPHPConstants.STORAGE_FILE);
-					String type = (String) marker.getAttribute(IPHPConstants.STORAGE_TYPE);
+					String filename = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_FILE);
+					String type = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE);
 					
-					if (IPHPConstants.STORAGE_TYPE_INCLUDE.equals(type)) {
-						String projectName = (String) marker.getAttribute(IPHPConstants.STORAGE_PROJECT, "");
+					if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE.equals(type)) {
+						String projectName = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_PROJECT, "");
 						IProject project = PHPDebugUIPlugin.getProject(projectName);
-						String includeBaseDir = (String) marker.getAttribute(IPHPConstants.STORAGE_INC_BASEDIR, "");
+						String includeBaseDir = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_INC_BASEDIR, "");
 						filename = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, filename);
 						
 						File file = new File(filename);
@@ -261,7 +261,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 						lfs.setProject(project);
 						lfs.setIncBaseDirName(includeBaseDir);
 						return new LocalFileStorageEditorInput(lfs);
-					} else if (IPHPConstants.STORAGE_TYPE_EXTERNAL.equals(type) || IPHPConstants.STORAGE_TYPE_REMOTE.equals(type)) {
+					} else if (IPHPDebugConstants.STORAGE_TYPE_EXTERNAL.equals(type) || IPHPDebugConstants.STORAGE_TYPE_REMOTE.equals(type)) {
 						File file = new File(filename);
 						return new FileStoreEditorInput(FileStoreFactory.createFileStore(file));
 					}

@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.debug.ui.launching;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.eclipse.core.filesystem.URIUtil;
@@ -38,10 +39,9 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.launching.PHPExecutableLaunchDelegate;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.preferences.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -115,10 +115,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			}
 
 			if (path != null) {
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toString())) {
-					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toString());
+				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
 				} else {
-					file = ExternalFileWrapper.createFile(path.toString());
+					file = ExternalFileWrapper.createFile(path.toOSString());
 				}
 			}
 		}
@@ -137,7 +137,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 	//reteive all the line numbers of breakpoints that exist within the file in the given path 
 	private int[] getBreakpointLines(IPath path) throws CoreException {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPConstants.ID_PHP_DEBUG_CORE);
+		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < breakpoints.length; i++) {
 			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
@@ -155,7 +155,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm.getLaunchConfigurationType(IPHPConstants.PHPEXELaunchType);
+		return lm.getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
 	}
 
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
@@ -176,13 +176,15 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					project = file.getProject();
 					IContentType contentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 					if (contentType.isAssociatedWith(file.getName())) {
-						phpPathString = file.getFullPath().toString();
+						if (new File(file.getFullPath().toOSString()).exists()) {
+							phpPathString = file.getFullPath().toOSString();
+						} else {
+							phpPathString = file.getFullPath().toString();
+						}
 						IPath location = file.getLocation();
 						//check for non null values - EFS issues
 						if (location != null) {
-							phpFileLocation = location.toString();
-						} else if (file.getLocationURI() != null) {
-							phpFileLocation = file.getLocationURI().toString();
+							phpFileLocation = location.toOSString();
 						} else {
 							phpFileLocation = file.getFullPath().toString();
 						}
@@ -198,7 +200,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				if (defaultEXE == null) {
 					defaultEXE = getWorkspaceDefaultExe();
 				}
-				String phpExeName = (defaultEXE != null) ? defaultEXE.getPhpEXE().getAbsolutePath().toString() : null;
+				String phpExeName = (defaultEXE != null) ? defaultEXE.getExecutable().getAbsolutePath().toString() : null;
 
 				if (phpExeName == null) {
 					MessageDialog.openError(PHPDebugUIPlugin.getActiveWorkbenchShell(), PHPDebugUIMessages.launch_noexe_msg_title, PHPDebugUIMessages.launch_noexe_msg_text);
@@ -280,9 +282,11 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
 				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+				String iniPath = configs[i].getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
 
-				if (phpPathString.equals(fileName) && exeName.equals(defaultEXE.getPhpEXE().getAbsolutePath().toString())) {
+				if (phpPathString.equals(fileName) && defaultEXE.equals(item)) {
 					config = configs[i].getWorkingCopy();
 					break;
 				}
@@ -310,8 +314,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
 		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
-		wc.setAttribute(PHPCoreConstants.ATTR_LOCATION, defaultEXE.getPhpEXE().getAbsolutePath().toString());
-		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getExecutable().getAbsolutePath().toString());
+		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
+		wc.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 
 		config = wc.doSave();
