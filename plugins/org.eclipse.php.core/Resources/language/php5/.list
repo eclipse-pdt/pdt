@@ -51,6 +51,7 @@ shmop.php
 soap.php
 sockets.php
 standard.php
+sybase_ct.php
 sysvmsg.php
 sysvsem.php
 sysvshm.php
