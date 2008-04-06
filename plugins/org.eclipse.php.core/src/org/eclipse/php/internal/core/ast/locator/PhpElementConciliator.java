@@ -88,7 +88,7 @@ public class PhpElementConciliator {
 				return false;
 			}
 
-			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION) {
+			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION || parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 				return true;
 			}
 		}
@@ -246,6 +246,10 @@ public class PhpElementConciliator {
 			if (staticFieldAccess.getMember() == variable) {
 				return false;
 			}
+		}
+		
+		if (parent.getParent().getLocationInParent() == FieldsDeclaration.FIELDS_PROPERTY) {
+			return false;
 		}
 
 		// check if declared global in function
