@@ -59,7 +59,6 @@
 		schema="schema/phpActionDelegator.exsd" />
  <extension-point id="phpFormatterProcessor" name="PHP Formatter Processor" schema="schema/phpFormatterProcessor.exsd"/>
  <extension-point id="phpFormatterPrefBlock" name="PHP Formatter Preferences Block" schema="schema/phpFormatterPrefBlock.exsd"/>
- <extension-point id="phpPerspectiveShortcut" name="PHP Perspective Shortcut" schema="schema/phpPerspectiveShortut.exsd"/>
 
 	<!--PHP Perspective Definition:-->
 	<extension point="org.eclipse.ui.perspectives">
@@ -93,6 +92,10 @@
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
+			<showInPart id="org.eclipse.php.ui.explorer" />
+   <viewShortcut
+         id="org.eclipse.ui.views.ResourceNavigator">
+   </viewShortcut>
 		</perspectiveExtension>
 
 		<perspectiveExtension targetID="org.eclipse.ui.resourcePerspective">
@@ -234,7 +237,7 @@
 	<extension point="org.eclipse.core.filebuffers.annotationModelCreation">
 		<factory
 			contentTypeId="org.eclipse.php.core.phpsource"
-			class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory" />
+			class="org.eclipse.php.internal.ui.editor.PHPResourceMarkerAnnotationModelFactory" />
 	</extension>
 
 	<!--======================================================================================-->
@@ -369,6 +372,12 @@
 				name="nature"
 				value="org.eclipse.php.core.PHPNature" />
 		</page>
+		<page
+			class="org.eclipse.php.internal.ui.preferences.IncludePathInfoPage"
+			id="org.eclipse.php.ui.preferences.PreferencePages.IncludePathInfoPage"
+			name="%phpIncludepathPreferenceName"
+			objectClass="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel">
+		</page>
 	</extension>
 
 	<!--Adapters:-->
@@ -438,7 +447,7 @@
 			visible="false"
 			id="org.eclipse.php.ui.PHPActionSet">
 			<action
-				class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
+				class="org.eclipse.php.internal.ui.actions.OpenPhpElementAction"
 				definitionId="org.eclipse.php.ui.navigate.open.type"
 				disabledIcon="icons/full/dtool16/opentype.gif"
 				icon="icons/full/etool16/opentype.gif"
@@ -451,7 +460,7 @@
 				allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 				id="org.eclipse.php.ui.actions.OpenDeclaration"
-				label="%OpenTypeAction.label"
+				label="%OpenDeclarationAction.label"
 				menubarPath="navigate/open.ext2"
 				retarget="true" />
 		</actionSet>
@@ -1170,9 +1179,16 @@
 				menubarPath="source/sourceGroup"
 				id="org.eclipse.php.ui.actions.AddDescriptionAction">
 				<enablement>
-					<objectState
-						name="actionFilterContributorId"
-						value="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor" />
+       <and>
+          <objectState
+                name="actionFilterContributorId"
+                value="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor">
+          </objectState>
+          <objectState
+                name="actionFilterContributorId"
+                value="org.eclipse.php.ui.actions.filters.SourceActionFilterNotInEFS">
+          </objectState>
+       </and>
 				</enablement>
 			</action>
 		</objectContribution>
@@ -1185,6 +1201,10 @@
 		<contributor
 			class="org.eclipse.php.internal.ui.phpCodeData.CodeDataActionFilterContributor"
 			id="org.eclipse.php.ui.phpCodeData.CodeDataActionFilterContributor" />
+  <contributor
+        class="org.eclipse.php.internal.ui.actions.filters.SourceActionFilterNotInEFS"
+        id="org.eclipse.php.ui.actions.filters.SourceActionFilterNotInEFS">
+  </contributor>
 	</extension>
 
 	<extension point="org.eclipse.php.ui.foldingStructureProviders">

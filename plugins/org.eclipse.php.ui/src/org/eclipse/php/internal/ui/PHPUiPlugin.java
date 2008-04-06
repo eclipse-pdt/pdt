@@ -22,8 +22,11 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.formatter.IContentFormatter;
+import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
@@ -31,6 +34,7 @@ import org.eclipse.php.internal.ui.preferences.MembersOrderPreferenceCache;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
+import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
@@ -41,6 +45,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ConfigurationElementSorter;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.osgi.framework.BundleContext;
 
@@ -51,6 +58,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	// The shared instance.
 	private static PHPUiPlugin plugin;
+	
+	//the active formatter for this execution
+	private IContentFormatter fActiveFormatter = null;
 
 	public static final String ID = "org.eclipse.php.ui"; //$NON-NLS-1$
 	public static final int INTERNAL_ERROR = 10001;
@@ -298,5 +308,28 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			fPHPManualSiteDescriptors = PHPManualSiteDescriptor.getContributedSites();
 		}
 		return fPHPManualSiteDescriptors;
+	}
+
+	/**
+	 * Returns the current active formatter
+	 * @return
+	 */
+	public IContentFormatter getActiveFormatter() {
+		if (fActiveFormatter == null) {
+			String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
+			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+			for (int i = 0; i < elements.length; i++) {
+				IConfigurationElement element = elements[i];
+				if (element.getName().equals("processor")) { //$NON-NLS-1$
+					ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
+					fActiveFormatter = (IContentFormatter) ecProxy.getObject();
+				}
+			}
+			if (fActiveFormatter == null) {
+				fActiveFormatter = new MultiPassContentFormatter(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IHTMLPartitions.HTML_DEFAULT);
+				((MultiPassContentFormatter) fActiveFormatter).setMasterStrategy(new StructuredFormattingStrategy(new PhpFormatProcessorImpl()));
+			}
+		}
+		return fActiveFormatter;
 	}
 }
