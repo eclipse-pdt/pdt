@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.editor.highlighter;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
@@ -545,8 +546,18 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 			StyleRange[] array = (StyleRange[]) holdResults.toArray(new StyleRange[holdResults.size()]);
 			final TextPresentation presentation = createPresentation(damage, array);
 			fHighlighter.getTextViewer().changeTextPresentation(presentation, false);
+			completeStyleRanges(holdResults, presentation);
 		}		
 		return prepareTextRegions;
+	}
+
+	private void completeStyleRanges(Collection holdResults, TextPresentation presentation) {
+		holdResults.clear();
+		Iterator allStyleRangeIterator = presentation.getAllStyleRangeIterator();
+		while (allStyleRangeIterator.hasNext()) {
+			Object next = allStyleRangeIterator.next();
+			holdResults.add(next);
+		}
 	}
 
 	/**
