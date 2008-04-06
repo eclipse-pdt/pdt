@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.util.FileUtils;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
@@ -42,7 +42,7 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * A PHP web page launch shortcut.
- * 
+ *
  * @author Shalom Gibly
  */
 public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
@@ -63,7 +63,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 	private ILaunchConfigurationType getPHPServerLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-		return lm.getLaunchConfigurationType(IPHPConstants.PHPServerLaunchType);
+		return lm.getLaunchConfigurationType(IPHPDebugConstants.PHPServerLaunchType);
 	}
 
 	public static void searchAndLaunch(Object[] search, String mode, ILaunchConfigurationType configType) {
@@ -123,7 +123,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 	/**
 	 * Locate a configuration to relaunch for the given type.  If one cannot be found, create one.
-	 * 
+	 *
 	 * @return a re-useable config or <code>null</code> if none
 	 */
 	static ILaunchConfiguration findLaunchConfiguration(IProject project, String fileName, Server server, String mode, ILaunchConfigurationType configType) {
@@ -182,28 +182,24 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 	 */
 	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType, String mode) throws CoreException {
 		ILaunchConfiguration config = null;
-		if (!FileUtils.fileExists(fileName)) {
+		if (!FileUtils.resourceExists(fileName)) {
 			return null;
 		}
 		String URL = server.getBaseURL() + '/' + new Path(fileName).removeFirstSegments(1);
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(fileName));
-		
+
 		// Set the debugger ID and the configuration delegate for this launch configuration
 		String debuggerID = PHPProjectPreferences.getDefaultDebuggerID(project);
 		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
-		
+
 		wc.setAttribute(Server.NAME, server.getName());
 		wc.setAttribute(Server.FILE_NAME, fileName);
-		wc.setAttribute(Server.CONTEXT_ROOT, computeContextRoot(URL, fileName, server));
 		wc.setAttribute(Server.BASE_URL, URL);
-		wc.setAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
-		wc.setAttribute(IPHPConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
+		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
+		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
-		if (server.canPublish()) {
-			wc.setAttribute(Server.PUBLISH, true);
-		}
 
 		// Display a dialog for selecting the URL.
 		String title = ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : "Run PHP Web Page";
@@ -220,7 +216,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 	/**
 	 * Returns a name for a newly created launch configuration according to the given file name.
 	 * In case the name generation fails, return the "New_configuration" string.
-	 * 
+	 *
 	 * @param fileName	The original file name that this shortcut shoul execute.
 	 * @return The new configuration name, or "New_configuration" in case it fails for some reason.
 	 */
