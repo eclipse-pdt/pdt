@@ -27,6 +27,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNam
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -93,6 +94,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		XDebugLaunchListener.shutdown();
+		DBGpProxyHandler.instance.unregister();
 		savePluginPreferences();
 
 		super.stop(context);
@@ -111,7 +113,7 @@ public class PHPDebugPlugin extends Plugin {
 	 * Returns the PHP debug ID.
 	 */
 	public static String getID() {
-		return IPHPConstants.ID_PHP_DEBUG_CORE;
+		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
 
 	public static boolean getStopAtFirstLine() {
@@ -198,7 +200,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public static void createDefaultPHPServer() {
 		if (ServersManager.getServers().length == 0) {
-			Server server = ServersManager.createServer(IPHPConstants.Default_Server_Name, BASE_URL);
+			Server server = ServersManager.createServer(IPHPDebugConstants.Default_Server_Name, BASE_URL);
 			ServersManager.save();
 			ServersManager.setDefaultServer(null, server);
 		}

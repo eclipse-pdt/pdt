@@ -10,6 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.session;
 
-public interface IDBGpSessionListener {
+public interface DBGpSessionListener {
 	public boolean SessionCreated(DBGpSession session);
 }

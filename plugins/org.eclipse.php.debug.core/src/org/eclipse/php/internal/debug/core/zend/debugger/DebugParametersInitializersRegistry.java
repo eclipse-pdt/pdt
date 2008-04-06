@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 /**
@@ -114,7 +114,7 @@ public class DebugParametersInitializersRegistry {
 	 */
 	public static IDebugParametersInitializer getCurrentDebugParametersInitializer() {
 		try {
-			String id = PHPDebugPlugin.getDefault().getPluginPreferences().getString(IPHPConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
+			String id = PHPDebugPlugin.getDefault().getPluginPreferences().getString(IPHPDebugConstants.PHP_DEBUG_PARAMETERS_INITIALIZER);
 			return getParametersInitializer(id);
 		} catch (Exception e) {
 			PHPDebugPlugin.log(e);

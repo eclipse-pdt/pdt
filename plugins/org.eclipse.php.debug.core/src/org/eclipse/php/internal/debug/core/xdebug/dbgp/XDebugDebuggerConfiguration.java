@@ -75,7 +75,10 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 		setPort(preferences.getDefaultInt(XDebugUIAttributeConstants.XDEBUG_PREF_PORT));
 		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS));
 		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, preferences.getDefaultInt(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH));
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION));		
+		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION));
+		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY));		
+		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY));		
+		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY));				
 		save();
 	}
 }

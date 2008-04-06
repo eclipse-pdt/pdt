@@ -23,7 +23,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -33,6 +33,7 @@ import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeS
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
 
 public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
@@ -43,11 +44,7 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 	}
 
 	public String getBreakpointModelID() {
-		return IPHPConstants.ID_PHP_DEBUG_CORE;
-	}
-
-	public boolean getStopAtFirstLine(IProject project) {
-		return PHPProjectPreferences.getStopAtFirstLine(project);
+		return IPHPDebugConstants.ID_PHP_DEBUG_CORE;
 	}
 
 	public Object sourceNotFound(Object debugElement) {
@@ -79,8 +76,8 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 					int bLineNumber = zBP.getLineNumber();
 					if (bLineNumber == lineno && bFileName.equals(filename)) {
 						bpFound = breakpoint;
-						if (Logger.isDebugging()) {
-							Logger.debugMSG("breakpoint at " + filename + "(" + lineno + ") found");
+						if (DBGpLogger.debugBP()) {
+							DBGpLogger.debug("breakpoint at " + filename + "(" + lineno + ") found");
 						}
 
 					}
@@ -90,12 +87,12 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 					if (breakpoint instanceof PHPRunToLineBreakpoint) {
 						IBreakpointManager bmgr = DebugPlugin.getDefault().getBreakpointManager();
 						try {
-							if (Logger.isDebugging()) {
-								Logger.debugMSG("removing runtoline breakpoint");
+							if (DBGpLogger.debugBP()) {
+								DBGpLogger.debug("removing runtoline breakpoint");
 							}
 							bmgr.removeBreakpoint(breakpoint, true);
 						} catch (CoreException e) {
-							Logger.logException("Exception trying to remove a runtoline breakpoint", e);
+							DBGpLogger.logException("Exception trying to remove a runtoline breakpoint", this, e);
 						}
 					}
 				}
@@ -116,18 +113,6 @@ public class PdtLayer implements IDELayer, DBGpBreakpointFacade {
 
 	public IBreakpoint createRunToLineBreakpoint(IFile fileName, int lineNumber) throws DebugException {
 		return new PHPRunToLineBreakpoint(fileName, lineNumber);
-	}
-
-	public String getEXEFileAttrName() {
-		return PHPCoreConstants.ATTR_FILE;
-	}
-
-	public String getEXELocationAttrName() {
-		return PHPCoreConstants.ATTR_LOCATION;
-	}
-
-	public String getEXEFirstLineAttrName() {
-		return IDebugParametersKeys.FIRST_LINE_BREAKPOINT;
 	}
 
 	public String getSystemDebugProperty() {

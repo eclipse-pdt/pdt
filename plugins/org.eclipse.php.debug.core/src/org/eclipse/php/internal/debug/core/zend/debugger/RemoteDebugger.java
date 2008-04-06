@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -617,7 +618,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 			return false;
 		}
 
-		debugHandler.getDebugTarget().installDeferredBreakpoints();
+		try {
+			debugHandler.getDebugTarget().installDeferredBreakpoints();
+		}catch (CoreException ce){
+			return false;
+		}
 		StartRequest request = new StartRequest();
 		try {
 			connection.sendRequest(request, new ThisHandleResponse(responseHandler));

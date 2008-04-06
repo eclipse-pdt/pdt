@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.ui.IEditorInput;
@@ -79,7 +79,7 @@ public class DebugSearchEngine {
 		if (project == null) {
 			String projectName;
 			try {
-				projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
+				projectName = launchConfiguration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
 				if (projectName != null) {
 					project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 				}
@@ -159,7 +159,10 @@ public class DebugSearchEngine {
 					Set<Object> s = new LinkedHashSet<Object>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
-						PHPSearchEngine.buildIncludePath(project, s);
+						if (project.isOpen() && project.isAccessible()) {
+							s.add(project);
+							PHPSearchEngine.buildIncludePath(project, s);
+						}
 					}
 					includePaths = s.toArray();
 				}

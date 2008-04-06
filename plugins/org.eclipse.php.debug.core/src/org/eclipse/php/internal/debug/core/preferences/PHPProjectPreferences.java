@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
@@ -22,7 +22,7 @@ import org.eclipse.php.internal.server.core.manager.ServersManager;
 public class PHPProjectPreferences {
 
 	public static String getPreferenceNodeQualifier() {
-		return IPHPConstants.DEBUG_QUALIFIER;
+		return IPHPDebugConstants.DEBUG_QUALIFIER;
 	}
 
 	public static Preferences getModelPreferences() {
@@ -39,7 +39,7 @@ public class PHPProjectPreferences {
 	}
 
 	public static String getProjectSettingsKey() {
-		return IPHPConstants.DEBUG_PER_PROJECT;
+		return IPHPDebugConstants.DEBUG_PER_PROJECT;
 	}
 
 	public static boolean getStopAtFirstLine(IProject project) {

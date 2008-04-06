@@ -14,8 +14,10 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -38,13 +40,12 @@ import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.BlockingQueue;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
-import org.eclipse.php.internal.debug.core.launching.PHPServerLaunchDecorator;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
@@ -60,7 +61,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * The debug connection thread is responsible of initializing and handle a single debug session that was
  * triggered by a remote or local debugger.
- * 
+ *
  * @author shalom
  */
 public class DebugConnectionThread implements Runnable {
@@ -74,11 +75,11 @@ public class DebugConnectionThread implements Runnable {
 	private InputMessageHandler inputMessageHandler;
 	private CommunicationClient communicationClient;
 	private CommunicationAdministrator administrator;
-	private Object CONNECTION_CLOSED_MSG = new Object();
-	protected boolean isDebugMode = System.getProperty("loggingDebug") != null;
+	private IDebugMessage CONNECTION_CLOSED_MSG = new DummyDebugMessage();
+	protected boolean isDebugMode = System.getProperty("loggingDebug") != null; //$NON-NLS-1$
 	private IntHashtable requestsTable;
 	private IntHashtable responseTable;
-	private Hashtable responseHandlers;
+	private Hashtable<Integer, ResponseHandler> responseHandlers;
 	private InputManager inputManager;
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
@@ -86,17 +87,19 @@ public class DebugConnectionThread implements Runnable {
 	protected int peerResponseTimeout = 500; // 0.5 seconds.
 	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
+	private Map<Integer, IDebugMessageHandler> messageHandlers;
 
 	/**
 	 * Constructs a new DebugConnectionThread with a given Socket.
-	 * 
+	 *
 	 * @param socket
 	 */
 	public DebugConnectionThread(Socket socket) {
 		this.socket = socket;
 		requestsTable = new IntHashtable();
 		responseTable = new IntHashtable();
-		responseHandlers = new Hashtable();
+		responseHandlers = new Hashtable<Integer, ResponseHandler>();
+		messageHandlers = new HashMap<Integer, IDebugMessageHandler>();
 		theThread = new Thread(this);
 		theThread.start();
 	}
@@ -150,6 +153,14 @@ public class DebugConnectionThread implements Runnable {
 		this.peerResponseTimeout = peerResponseTimeout;
 	}
 
+	private IDebugMessageHandler createMessageHandler(IDebugMessage message) {
+		if (!messageHandlers.containsKey(message.getType())) {
+			IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler(message);
+			messageHandlers.put(message.getType(), requestHandler);
+		}
+		return messageHandlers.get(message.getType());
+	}
+
 	/**
 	 * Deliver a Notification.
 	 *
@@ -163,7 +174,7 @@ public class DebugConnectionThread implements Runnable {
 				synchronized (out) {
 					out.writeInt(byteArrayOutputStream.size());
 					if (isDebugMode) {
-						System.out.println("sending notification request size=" + byteArrayOutputStream.size());
+						System.out.println("sending notification request size=" + byteArrayOutputStream.size()); //$NON-NLS-1$
 					}
 					byteArrayOutputStream.writeTo(out);
 					out.flush();
@@ -190,7 +201,7 @@ public class DebugConnectionThread implements Runnable {
 		if (isDebugMode) {
 			if (request instanceof GetVariableValueRequest) {
 				GetVariableValueRequest gvr = (GetVariableValueRequest) request;
-				System.out.println("sendRequest()->GetVariableValueRequest:getVar() = " + gvr.getVar());
+				System.out.println("sendRequest()->GetVariableValueRequest:getVar() = " + gvr.getVar()); //$NON-NLS-1$
 			}
 		}
 		try {
@@ -203,7 +214,7 @@ public class DebugConnectionThread implements Runnable {
 				int messageSize = byteArrayOutputStream.size();
 
 				if (isDebugMode) {
-					System.out.println("sending message request size=" + messageSize + " type=" + theMsg.getType());
+					System.out.println("sending message request size=" + messageSize + " type=" + theMsg.getType()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				synchronized (out) {
 					requestsTable.put(theMsg.getID(), theMsg);
@@ -221,7 +232,7 @@ public class DebugConnectionThread implements Runnable {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
 						if (isDebugMode) {
-							System.out.println("Response is null. Waiting " + ((21 - timeoutCount) * peerResponseTimeout) + " milliseconds");
+							System.out.println("Response is null. Waiting " + ((21 - timeoutCount) * peerResponseTimeout) + " milliseconds"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						if (timeoutCount == 15) { // Display a progress dialog after a quarter of the assigned time have passed.
 							// Display a message that we are waiting for the server response.
@@ -240,7 +251,7 @@ public class DebugConnectionThread implements Runnable {
 				// This can be because on the peerResponseTimeout.
 				if (response == null && isConnected()) {
 					if (isDebugMode) {
-						System.out.println("Communication problems");
+						System.out.println("Communication problems"); //$NON-NLS-1$
 					}
 					// Handle time out will stop the communication if need to stop.
 					//System.out.println("handleto");
@@ -251,49 +262,43 @@ public class DebugConnectionThread implements Runnable {
 					} else {
 						closeConnection();
 						PHPLaunchUtilities.hideWaitForDebuggerMessage();
-						PHPLaunchUtilities.showDebuggerErrorMessage();
+						PHPLaunchUtilities.showLaunchErrorMessage();
 					}
 					if (!isConnected())
 						break;
-					//System.out.println("rewaiting");
 				}
 			}
 			PHPLaunchUtilities.hideWaitForDebuggerMessage();
 			if (isDebugMode) {
-				System.out.println("response received by client: " + response);
+				System.out.println("response received by client: " + response); //$NON-NLS-1$
 			}
 			return response;
 
-		} catch (IOException exc) { // Return null for any exception
-			//Log.writeLog("No Connection");
-			//Log.writeLog(exc);
-
-		} catch (InterruptedException exc) {// Return null for any exception
-			//Log.writeLog(exc);
+		} catch (IOException e) { // Return null for any exception
+			PHPDebugPlugin.log(e);
+		} catch (InterruptedException e) {// Return null for any exception
+			PHPDebugPlugin.log(e);
 		}
 		return null;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param request
 	 * @param responseHandler
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
-		//Integer msgId = new Integer(lastRequestID++);
 		int msgId = lastRequestID++;
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
 		try {
-			//System.out.println("sending:"+request);
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
-			//msg.setID(msgId.intValue());
 			theMsg.setID(msgId);
 			theMsg.serialize(dataOutputStream);
 
 			int messageSize = byteArrayOutputStream.size();
 			if (isDebugMode) {
-				System.out.println("sending message request size=" + messageSize);
+				System.out.println("sending message request size=" + messageSize); //$NON-NLS-1$
 			}
 
 			synchronized (out) {
@@ -304,7 +309,7 @@ public class DebugConnectionThread implements Runnable {
 				out.flush();
 			}
 		} catch (Exception exc) { // Return null for any exception
-			System.out.println("Exception for request no." + theMsg.getType() + exc.toString());
+			System.out.println("Exception for request no." + theMsg.getType() + exc.toString()); //$NON-NLS-1$
 			responseHandler.handleResponse(request, null);
 			responseHandlers.remove(new Integer(msgId));
 		}
@@ -330,15 +335,15 @@ public class DebugConnectionThread implements Runnable {
 	 * The cleaning will be done by InputMessageHandler on termination.
 	 */
 	public synchronized void closeConnection() {
-		Logger.debugMSG("[" + this + "] DebugConnectionThread: Starting closeConnection");
+		Logger.debugMSG("[" + this + "] DebugConnectionThread: Starting closeConnection"); //$NON-NLS-1$ //$NON-NLS-2$
 		cleanSocket();
 
-		Logger.debugMSG("[" + this + "] DebugConnectionThread: Thread interrupt");
+		Logger.debugMSG("[" + this + "] DebugConnectionThread: Thread interrupt"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (theThread.isAlive()) {
 			theThread.interrupt();
 		}
 
-		Logger.debugMSG("[" + this + "] DebugConnectionThread: closing the socket");
+		Logger.debugMSG("[" + this + "] DebugConnectionThread: closing the socket"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (socket != null) {
 			try {
 				if (!socket.isClosed())
@@ -369,7 +374,6 @@ public class DebugConnectionThread implements Runnable {
 		if (inputMessageHandler == null) {
 			inputMessageHandler = new InputMessageHandler(out);
 		} else {
-			//inputMessageHandler.start(out,true);
 			inputMessageHandler.waitForStart(out, true);
 		}
 	}
@@ -383,7 +387,6 @@ public class DebugConnectionThread implements Runnable {
 			if (inputManager == null) {
 				inputManager = new InputManager(in);
 			} else {
-				//inputManager.start(in,out);
 				inputManager.waitForStart(in);
 			}
 		} catch (Exception exc) {
@@ -393,7 +396,7 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Reads and returns the message type from the data input stream.
-	 * 
+	 *
 	 * @return The message type id.
 	 * @throws IOException
 	 */
@@ -408,7 +411,6 @@ public class DebugConnectionThread implements Runnable {
 		if (!isInitialized) {
 			return;
 		}
-		//        System.out.println("close connection");
 		if (socket != null) {
 			try {
 				socket.shutdownInput();
@@ -451,7 +453,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 	}
 
-	/*
+	/**
 	 * In case of a peerResponseTimeout exception we let the communication client handle the
 	 * logic of the peerResponseTimeout.
 	 */
@@ -462,7 +464,7 @@ public class DebugConnectionThread implements Runnable {
 	/**
 	 * Extract the session id from the query.
 	 * Return -1 if no session id was located.
-	 * 
+	 *
 	 * @param query
 	 * @return The session id, or -1 if non was located in the query.
 	 */
@@ -481,20 +483,20 @@ public class DebugConnectionThread implements Runnable {
 	}
 
 	/**
-	 * Hook the debug session to the correct ILaunch that started it. 
+	 * Hook the debug session to the correct ILaunch that started it.
 	 * In case there is no such launch, the user will have to fill in some of the details needed to start a debug
 	 * session correctly.
-	 *  
+	 *
 	 * @param debugSessionStartedNotification
 	 * @return True, if the debug session hook was successful; False, otherwise.
 	 */
-	protected boolean hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification) throws CoreException {
+	public boolean hookDebugSession(DebugSessionStartedNotification debugSessionStartedNotification) throws CoreException {
 		String query = debugSessionStartedNotification.getQuery();
 		int sessionID = getSessionID(query);
 		if (sessionID == 0) {
 			sessionID = getSessionID(debugSessionStartedNotification.getOptions());
 		}
-		// Get the launch, but keep it in the mapper for any other debug requests that are 
+		// Get the launch, but keep it in the mapper for any other debug requests that are
 		// related to the debug session id.
 		// The launch is mapped until the launches are cleared.
 		ILaunch launch = PHPSessionLaunchMapper.get(sessionID);
@@ -502,10 +504,9 @@ public class DebugConnectionThread implements Runnable {
 			// We cannot find a launch the we can associate to the given session id (if any)
 			// Try to take the first launch that is terminated and has a 'Debug all Pages' attribute.
 			ILaunch[] launchs = DebugPlugin.getDefault().getLaunchManager().getLaunches();
-			for (int i = 0; i < launchs.length; i++) {
-				ILaunch aLaunch = launchs[i];
-				String debugType = aLaunch.getAttribute(IPHPConstants.DEBUGGING_PAGES);
-				if (aLaunch.isTerminated() && (IPHPConstants.DEBUGGING_ALL_PAGES.equals(debugType) || IPHPConstants.DEBUGGING_START_FROM.equals(debugType))) {
+			for (ILaunch aLaunch : launchs) {
+				String debugType = aLaunch.getAttribute(IPHPDebugConstants.DEBUGGING_PAGES);
+				if (aLaunch.isTerminated() && (IPHPDebugConstants.DEBUGGING_ALL_PAGES.equals(debugType) || IPHPDebugConstants.DEBUGGING_START_FROM.equals(debugType))) {
 					launch = aLaunch;
 					break;
 				}
@@ -515,35 +516,35 @@ public class DebugConnectionThread implements Runnable {
 			// Remove any debug targets and processes that were terminated.
 			IDebugTarget[] debugTargets = launch.getDebugTargets();
 			IProcess[] processes = launch.getProcesses();
-			for (int i = 0; i < debugTargets.length; i++) {
-				if (debugTargets[i].isTerminated()) {
-					launch.removeDebugTarget(debugTargets[i]);
+			for (IDebugTarget element : debugTargets) {
+				if (element.isTerminated()) {
+					launch.removeDebugTarget(element);
 				} else {
 					// Do not allow any other targets or processes when an active debug target exists
 					return true;
 				}
 			}
-			for (int i = 0; i < processes.length; i++) {
-				if (processes[i].isTerminated()) {
-					launch.removeProcess(processes[i]);
+			for (IProcess element : processes) {
+				if (element.isTerminated()) {
+					launch.removeProcess(element);
 				}
 			}
 
-			if (launch instanceof PHPServerLaunchDecorator || Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
+			if (Boolean.toString(true).equals(launch.getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER))) {
 				hookServerDebug(launch, debugSessionStartedNotification);
 			} else {
 				hookPHPExeDebug(launch, debugSessionStartedNotification);
 			}
 			return true;
 		}
-		return handleHookError("No session id");
+		return handleHookError("No session id"); //$NON-NLS-1$
 	}
 
 	/**
 	 * Handle a debug session hook error.
 	 * This method can be subclassed for handling more complex causes.
 	 * The default implementation is to display the toString() value of the cause and return false.
-	 * 
+	 *
 	 * @param cause An object that represents the cause for the error. Can be a String description or a different
 	 * 				complex object that can supply more information.
 	 * @return True, if the error was fixed in this method; False, otherwise.
@@ -552,40 +553,38 @@ public class DebugConnectionThread implements Runnable {
 		if (cause != null) {
 			Logger.log(Logger.ERROR, cause.toString());
 		} else {
-			Logger.log(Logger.ERROR, "Debug hook error");
+			Logger.log(Logger.ERROR, "Debug hook error"); //$NON-NLS-1$
 		}
 		return false;
 	}
 
 	/**
 	 * Hook a server debug session
-	 * 
+	 *
 	 * @param launch An {@link ILaunch}
 	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
 	protected void hookServerDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		PHPServerLaunchDecorator launchDecorator;
-		if (launch instanceof PHPServerLaunchDecorator) {
-			launchDecorator = (PHPServerLaunchDecorator) launch;
-		} else {
-			// Get the project by its name
-			String projectName = launchConfiguration.getAttribute(IPHPConstants.PHP_Project, (String) null);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-			launchDecorator = new PHPServerLaunchDecorator(launch, project);
+		String projectName = launchConfiguration.getAttribute(IPHPDebugConstants.PHP_Project, (String) null);
+
+		IProject project = null;
+		if (projectName != null) {
+			project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		}
-		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
-		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, ""));
-		String URL = launchConfiguration.getAttribute(Server.BASE_URL, "");
-		String contextRoot = launchConfiguration.getAttribute(Server.CONTEXT_ROOT, "");
-		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(launchDecorator.getProject());
+
+		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		String URL = launchConfiguration.getAttribute(Server.BASE_URL, ""); //$NON-NLS-1$
+
+		boolean stopAtFirstLine = project == null ? true : PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
-		boolean runWithDebug = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebug = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebug = false;
 		}
 		PHPProcess process = new PHPProcess(launch, URL);
-		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, launchDecorator.getProject());
+		debugTarget = (PHPDebugTarget) createDebugTraget(this, launch, URL, requestPort, process, runWithDebug, stopAtFirstLine, project);
 		launch.addDebugTarget(debugTarget);
 		// A fix for Linux display problem.
 		// This code will auto-expand the debugger view tree.
@@ -603,18 +602,18 @@ public class DebugConnectionThread implements Runnable {
 	/**
 	 * Creates a new IDebugTarget.
 	 * This create method is usually used when hooking a PHP web page launch.
-	 * 
+	 *
 	 * @throws CoreException
 	 */
-	protected IDebugTarget createDebugTraget(DebugConnectionThread thread, ILaunch launch, String url, int requestPort, PHPProcess process, String contextRoot, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
-		return new PHPDebugTarget(thread, launch, url, requestPort, process, contextRoot, runWithDebug, stopAtFirstLine, project);
+	protected IDebugTarget createDebugTraget(DebugConnectionThread thread, ILaunch launch, String url, int requestPort, PHPProcess process, boolean runWithDebug, boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, url, requestPort, process, runWithDebug, stopAtFirstLine, project);
 	}
 
 	/**
 	 * Creates a new IDebugTarget.
 	 * This create method is usually used when hooking a PHP executable launch.
-	 * 
-	 * @throws CoreException 
+	 *
+	 * @throws CoreException
 	 */
 	protected IDebugTarget createDebugTarget(DebugConnectionThread thread, ILaunch launch, String phpExeString, String debugFileName, String workspaceRootPath, int requestPort, PHPProcess process, boolean runWithDebugInfo, boolean stopAtFirstLine, IProject project) throws CoreException {
 		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
@@ -622,17 +621,17 @@ public class DebugConnectionThread implements Runnable {
 
 	/**
 	 * Hook a PHP executable debug session
-	 * 
+	 *
 	 * @param launch An {@link ILaunch}
 	 * @param startedNotification	A DebugSessionStartedNotification
 	 */
 	protected void hookPHPExeDebug(final ILaunch launch, DebugSessionStartedNotification startedNotification) throws CoreException {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
-		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, ""));
-		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, ""));
-		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_LOCATION, (String) null);
+		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
+		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
+		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		String projectString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
 
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
@@ -688,7 +687,7 @@ public class DebugConnectionThread implements Runnable {
 		private boolean inWork = true;
 		private Thread theThread;
 		private DataOutputStream out;
-		private Object STOP_MSG = new Object();
+		private DummyDebugMessage STOP_MSG = new DummyDebugMessage();
 
 		private ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
 		private DataOutputStream outArray = new DataOutputStream(byteArray);
@@ -774,10 +773,6 @@ public class DebugConnectionThread implements Runnable {
 			inputMessageQueue.queueIn(m);
 		}
 
-		private void queueIn(Object m) {
-			inputMessageQueue.queueIn(m);
-		}
-
 		/**
 		 * This method is called by the input manager so that the message handler
 		 * will queueIn an internal protocol message for the closure of connection.
@@ -787,6 +782,7 @@ public class DebugConnectionThread implements Runnable {
 			queueIn(CONNECTION_CLOSED_MSG);
 		}
 
+		@SuppressWarnings("unchecked")
 		private synchronized void resetCommunication() {
 			// Now we can stop the input manager.
 			if (inputManager != null)
@@ -832,86 +828,73 @@ public class DebugConnectionThread implements Runnable {
 					break;
 
 				try {
-
-					Object newInputMessage = inputMessageQueue.queueOut();
-
-					//System.out.println("InputMessageHandler handle: " + newInputMessage);
+					IDebugMessage newInputMessage = (IDebugMessage)inputMessageQueue.queueOut();
 
 					// do not stop until the message is processed.
-
 					synchronized (this) {
 						try {
+							// first debug message has received - create debug target
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
-								hookDebugSession((DebugSessionStartedNotification) newInputMessage);
-								if (getCommunicationClient() != null) {
-									getCommunicationClient().handleNotification(newInputMessage);
-								} else {
+								hookDebugSession((DebugSessionStartedNotification)newInputMessage);
+							}
+
+							// creation of debug session has succeeded
+							if (debugTarget != null) {
+
+								// try to find relevant handler for the message:
+								IDebugMessageHandler messageHandler = createMessageHandler(newInputMessage);
+
+								if (messageHandler != null) {
+									// handle the request
+									messageHandler.handle(newInputMessage, debugTarget);
+
+									if (messageHandler instanceof IDebugRequestHandler) {
+										// create response
+										IDebugResponseMessage response = ((IDebugRequestHandler) messageHandler).getResponseMessage();
+
+										// send response
+										byteArray.reset();
+										response.serialize(outArray);
+
+										synchronized (out) {
+											out.writeInt(byteArray.size());
+											byteArray.writeTo(out);
+											out.flush();
+										}
+									}
+								}
+								else if (newInputMessage instanceof IDebugResponseMessage) {
+									IDebugResponseMessage r = (IDebugResponseMessage) newInputMessage;
+									int requestId = r.getID(); // take the request ID from the response.
+									IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(requestId); // find the request.
+									ResponseHandler handler = responseHandlers.remove(new Integer(requestId)); // find the handler.
+									handler.handleResponse(req, r);
+								}
+								else if (newInputMessage == STOP_MSG) {
+									synchronized (STOP_MSG) {
+										inWork = false;
+										STOP_MSG.notifyAll();
+										if (shouldExit) {
+											isAlive = false;
+											inputMessageQueue.releaseReaders(); // why do we need this??
+											//notifyAll();
+										}
+									}
+								}
+								else if (newInputMessage == CONNECTION_CLOSED_MSG) {
 									handleConnectionClosed();
 								}
-							} else if (newInputMessage instanceof IDebugNotificationMessage) {
-								//System.out.println("Processing notification:"+ newInputMessage);
-								getCommunicationClient().handleNotification(newInputMessage);
-							} else if (newInputMessage instanceof IDebugRequestMessage) {
-
-								//								int reqId = ((IDebugRequestMessage) newInputMessage).getID();
-								IDebugMessageHandler requestHandler = DebugMessagesRegistry.getHandler((IDebugRequestMessage) newInputMessage);
-
-								if (requestHandler instanceof IDebugRequestHandler) {
-									requestHandler.handle((IDebugRequestMessage) newInputMessage, debugTarget);
-									IDebugResponseMessage response = ((IDebugRequestHandler) requestHandler).getResponseMessage();
-
-									//Log.writeLog("Client Sending response: " +response);
-									//ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-									//DataOutputStream outArray = new DataOutputStream (byteArray );
-									byteArray.reset();
-									response.serialize(outArray);
-									if (isDebugMode) {
-										System.out.println("sending message size=" + byteArray.size());
-									}
-									synchronized (out) {
-										out.writeInt(byteArray.size());
-										byteArray.writeTo(out);
-										out.flush();
-									}
-								} else {
-									// error, we could not find the relevant request message handler for the received message.
-								}
-							} else if (newInputMessage instanceof IDebugResponseMessage) {
-								IDebugResponseMessage r = (IDebugResponseMessage) newInputMessage;
-								//                                Object requestId = new Integer(r.getID()); // take the req id from the response.
-								int requestId = r.getID(); // take the req id from the response.
-								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(requestId); // find the request.
-								ResponseHandler handler = (ResponseHandler) responseHandlers.remove(new Integer(requestId)); // find the handler.
-								handler.handleResponse(req, r);
-							} else if (newInputMessage == STOP_MSG) {
-								synchronized (STOP_MSG) {
-									inWork = false;
-									STOP_MSG.notifyAll();
-									if (shouldExit) {
-										isAlive = false;
-										inputMessageQueue.releaseReaders(); // why do we need this??
-										//notifyAll();
-									}
-								}
-							} else if (newInputMessage == CONNECTION_CLOSED_MSG) {
-								handleConnectionClosed();
-								//inWork = false;
 							}
-							//else if (newInputMessage == MULTIPLE_BINDINGS_MSG){
-							//    handleMultipleBindingsMessage();
-							//}
-							//else if (newInputMessage == PEER_RESPONSE_TIMEOUT_MSG){
-							//    handlePeerResponseTimeoutMessage();
-							//}
-
-						} catch (Exception exc) { // error processing the current message.
-							PHPDebugPlugin.log(exc);
+							else { // no debug target - probably creation of debug session hasn't succeeded
+								handleConnectionClosed();
+							}
+						} catch (Exception e) { // error processing the current message.
+							PHPDebugPlugin.log(e);
 						}
 					}
 
-				} catch (Exception exc) {
-					//inWork = false;
-					PHPDebugPlugin.log(exc);
+				} catch (Exception e) {
+					PHPDebugPlugin.log(e);
 				}
 			}
 		}
@@ -929,7 +912,7 @@ public class DebugConnectionThread implements Runnable {
 	public String toString() {
 		String className = getClass().getName();
 		className = className.substring(className.lastIndexOf('.') + 1);
-		return className + "@" + Integer.toHexString(hashCode());
+		return className + "@" + Integer.toHexString(hashCode()); //$NON-NLS-1$
 	}
 
 	/**
@@ -952,7 +935,7 @@ public class DebugConnectionThread implements Runnable {
 
 		/**
 		 * Sets the transfer encoding.
-		 * 
+		 *
 		 * @param transferEncoding
 		 */
 		public void setTransferEncoding(String transferEncoding) {
@@ -960,9 +943,9 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		/**
-		 * Set the debug output encoding. 
+		 * Set the debug output encoding.
 		 * The output encoding effects the {@link OutputNotification} strings encoding.
-		 * 
+		 *
 		 * @param outputEncoding
 		 */
 		public void setOutputEncoding(String outputEncoding) {
@@ -1055,7 +1038,7 @@ public class DebugConnectionThread implements Runnable {
 						}
 					} catch (InterruptedException e) {
 						if (isDebugMode) {
-							System.out.println("interrupted: inWork = " + inWork + ", isAlive = " + isAlive);
+							System.out.println("interrupted: inWork = " + inWork + ", isAlive = " + isAlive); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
 				}
@@ -1069,31 +1052,32 @@ public class DebugConnectionThread implements Runnable {
 					// reads the length
 					int num = in.readInt();
 					if (isDebugMode) {
-						System.out.println("recieved message size = " + num);
+						System.out.println("recieved message size = " + num); //$NON-NLS-1$
 					}
 					if (num < 0) {
 						shutDown();
 						if (isDebugMode) {
-							System.out.println("Socket error (length is negative): possibly Server is SSL, Client is not.");
+							System.out.println("Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
 						}
-						Logger.log(Logger.ERROR, "Socket error (length is negative): possibly Server is SSL, Client is not.");
+						Logger.log(Logger.ERROR, "Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
 					}
+
 					// We have a new message. process it !!.
 					// This part is synchronized since we do not want the thread to be stopped
 					// when in processing of a message.
 					synchronized (this) {
 						int messageType = getMessageType(in);
-						// If this is the first message, the protocol is still held as invalid. 
+						// If this is the first message, the protocol is still held as invalid.
 						// Check that the first message has the DebugSessionStartedNotification type. If not, then we
 						// can assume that the remote debugger protocol has a different version then expected.
 						if (!validProtocol && messageType != startMessageId) {
 							// display an error message that the protocol in used is wrong.
-							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new String[] { String.valueOf(RemoteDebugger.PROTOCOL_ID) });
-							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null);
+							final String errorMessage = MessageFormat.format(PHPDebugCoreMessages.Debugger_Incompatible_Protocol, new Object[] { String.valueOf(RemoteDebugger.PROTOCOL_ID_2006040703) });
+							Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
 							DebugPlugin.log(status);
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
-									MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage);
+									MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
 								}
 							});
 							shutDown();
@@ -1101,7 +1085,7 @@ public class DebugConnectionThread implements Runnable {
 						}
 						validProtocol = true;
 						if (isDebugMode) {
-							System.out.println("message type=" + messageType);
+							System.out.println("message type=" + messageType); //$NON-NLS-1$
 						}
 
 						IDebugMessage message = DebugMessagesRegistry.getMessage(messageType);
@@ -1116,27 +1100,27 @@ public class DebugConnectionThread implements Runnable {
 						// handle the message
 						if (message instanceof IDebugNotificationMessage) {
 							if (isDebugMode) {
-								System.out.println("Starting to read notification ");
+								System.out.println("Starting to read notification "); //$NON-NLS-1$
 							}
 							message.deserialize(in);
 							if (isDebugMode) {
-								System.out.println("End reading of notification " + message);
+								System.out.println("End reading of notification " + message); //$NON-NLS-1$
 							}
 							//getCommunicationClient().handleNotification((Notification)message);
 							//PUT NOTIFICATION TO NOTIFICATION QUEUE
 							inputMessageHandler.queueIn(message);
 						} else if (message instanceof IDebugResponseMessage) {
 							if (isDebugMode) {
-								System.out.println("Starting to read response");
+								System.out.println("Starting to read response"); //$NON-NLS-1$
 							}
 							message.deserialize(in);
 							int idd = ((IDebugResponseMessage) message).getID();
 							if (isDebugMode) {
-								System.out.println("End reading of response " + message);
+								System.out.println("End reading of response " + message); //$NON-NLS-1$
 							}
 							//responseQueue.queueIn(message);
 							//INSERT RESPONSE TO TABLE AND RELEASE THE THREAD WAITING FOR THE REQUEST
-							ResponseHandler handler = (ResponseHandler) responseHandlers.get(new Integer(idd)); // find the handler.
+							ResponseHandler handler = responseHandlers.get(new Integer(idd)); // find the handler.
 							if (handler == null) {
 								responseTable.put(/*requestId*/idd, message);
 								IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(idd); // find the request.
@@ -1153,26 +1137,22 @@ public class DebugConnectionThread implements Runnable {
 							}
 						} else if (message instanceof IDebugRequestMessage) { // this is a request.
 							if (isDebugMode) {
-								System.out.println("Starting to read request");
+								System.out.println("Starting to read request"); //$NON-NLS-1$
 							}
 							message.deserialize(in);
 							if (isDebugMode) {
-								System.out.println("End reading of request " + message);
+								System.out.println("End reading of request " + message); //$NON-NLS-1$
 							}
 							//Response response =  getCommunicationClient().handleRequest((Request)message);
 							inputMessageHandler.queueIn(message);
 						}
 					} // end of synchronized part.
 
-				} catch (EOFException exc) {
+				} catch (IOException e) {
+//					PHPDebugPlugin.log(e);
 					shutDown();
-				} catch (SocketException exc) {
-					shutDown();
-				} catch (IOException exc) {
-					PHPDebugPlugin.log(exc);
-					shutDown();
-				} catch (Exception exc) {
-					PHPDebugPlugin.log(exc);
+				} catch (Exception e) {
+					PHPDebugPlugin.log(e);
 				}
 			}
 		}
@@ -1181,6 +1161,29 @@ public class DebugConnectionThread implements Runnable {
 			terminate();
 			cleanSocket();
 			inputMessageHandler.connectionClosed();
+		}
+	}
+
+	/**
+	 * This is a dummy debug protocol message, used for internal needs
+	 * @author michael
+	 */
+	private class DummyDebugMessage implements IDebugMessage {
+		public void deserialize(DataInputStream in) throws IOException {
+		}
+
+		public String getTransferEncoding() {
+			return null;
+		}
+
+		public int getType() {
+			return 0;
+		}
+
+		public void serialize(DataOutputStream out) throws IOException {
+		}
+
+		public void setTransferEncoding(String encoding) {
 		}
 	}
 }

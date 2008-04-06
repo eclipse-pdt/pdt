@@ -68,7 +68,12 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_xdebugSettings;
 	public static String XDebugConfigurationDialog_invalidPortRange;
 	public static String XDebugConfigurationDialog_useMultisession;
+	public static String XDebugConfigurationDialog_useProxy;
+	public static String XDebugConfigurationDialog_idekey;
+	public static String XDebugConfigurationDialog_proxy;
+	public static String XDebugConfigurationDialog_proxyGroup;
 
+	
     static {
         // load message values from bundle file
         NLS.initializeMessages(BUNDLE_NAME, PHPDebugCoreMessages.class);

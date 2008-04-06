@@ -103,7 +103,7 @@ public class DBGpUtils {
 				DBGpLogger.logError("DBGp Response Error: " + resp.getCommand() + ":=" + resp.getErrorCode() + " msg:" + resp.getErrorMessage(), caller, null);
 			}
 		} else {
-			// init, parser failure, unknown type. Callers of this are not
+			// init, parser failure, unknown type, proxyError. Callers of this are not
 			// expecting init either
 			DBGpLogger.logError("Unexpected XML or parser failure: " + resp.getRawXML(), caller, null);
 		}

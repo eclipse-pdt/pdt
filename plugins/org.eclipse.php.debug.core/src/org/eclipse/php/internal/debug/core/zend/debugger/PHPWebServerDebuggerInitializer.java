@@ -25,7 +25,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -46,16 +46,28 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		final String encodedURL = parametersInitializer.getRequestURL(launch).replaceAll(" ", "%20");
 		boolean runWithDebug = true;
 		try {
-			runWithDebug = launch.getLaunchConfiguration().getAttribute(IPHPConstants.RUN_WITH_DEBUG_INFO, true);
+			runWithDebug = launch.getLaunchConfiguration().getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 		} catch (CoreException e1) {
 		}
-		final String debugQuery = (!runWithDebug && ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) ? encodedURL : encodedURL + '?' + parametersInitializer.generateQuery(launch);
+
+		final String debugQuery;
+		if (!runWithDebug && ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
+			debugQuery = encodedURL;
+		} else {
+			String query = parametersInitializer.generateQuery(launch);
+			if (encodedURL.indexOf('?') == -1) {
+				debugQuery = encodedURL + '?' + query;
+			} else {
+				debugQuery = encodedURL + '&' + query;
+			}
+		}
+
 		if (isDebugMode) {
 			System.out.println("debugQuery = " + debugQuery);
 		}
 		boolean openInBrowser = false;
 		try {
-			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPConstants.OPEN_IN_BROWSER, false);
+			openInBrowser = launch.getLaunchConfiguration().getAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, false);
 		} catch (Throwable t) {
 			Logger.logException("Error obtaining the 'openInBrowser' configuration.", t);
 		}
@@ -71,7 +83,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					} catch (Throwable t) {
 						Logger.logException("Error initializing the web browser.", t);
 						String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
-						exception = new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, t));
+						exception = new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, t));
 					}
 				}
 			});
@@ -84,7 +96,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			} catch (java.net.MalformedURLException e) {
 				Logger.logException("Malformed URL Exception " + debugQuery, e); //Debugger_Unexpected_Error
 				String errorMessage = PHPDebugCoreMessages.Debugger_Unexpected_Error_1;
-				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, e));
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, e));
 			}
 		}
 	}
@@ -96,7 +108,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			if (headerKey == null) {
 				Logger.log(Logger.WARNING, "No HeaderKey returned by server. Most likely not started");
 				String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_1;
-				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null));
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
 			}
 
 			for (int i = 1; (headerKey = connection.getHeaderFieldKey(i)) != null; i++) {
@@ -105,7 +117,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					if (!headerValue.equals("OK")) {
 						Logger.log(Logger.WARNING, "Unexpected Header Value returned by Server. " + headerValue);
 						String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_2 + " - " + headerValue;
-						throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, null));
+						throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
 					}
 					break;
 				}
@@ -118,11 +130,11 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		} catch (UnknownHostException exc) {
 			Logger.log(Logger.WARNING, "Unknown Host Exception.");
 			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_3;
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, exc));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, exc));
 		} catch (ConnectException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
 			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { url.toString() });
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (IOException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
 			String baseURL = url.toString();
@@ -135,11 +147,11 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				filePath = filePath.substring(1);
 			}
 			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { baseURL, filePath });
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (Exception exc) {
 			Logger.logException("Unexpected exception communicating with server", exc);
 			String errorMessage = exc.getMessage();
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPConstants.INTERNAL_ERROR, errorMessage, exc));
+			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, exc));
 		}
 	}
 

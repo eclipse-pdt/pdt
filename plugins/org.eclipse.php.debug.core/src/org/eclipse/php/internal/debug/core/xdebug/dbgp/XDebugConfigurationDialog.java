@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
+import java.net.InetAddress;
+
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -22,7 +24,10 @@ import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 /**
@@ -33,10 +38,12 @@ import org.eclipse.swt.widgets.*;
 public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDialog {
 
 	private Text portTextBox;
-	//	private Text timeoutTextBox;
 	private Button showGlobals;
 	private Spinner variableDepth;
 	private Button useMultiSession;
+	private Button useProxy;
+	private Text idekeyTextBox;
+	private Text proxyTextBox;
 	private XDebugDebuggerConfiguration xdebugDebuggerConfiguration;
 
 	/**
@@ -50,22 +57,42 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		this.xdebugDebuggerConfiguration = xdebugDebuggerConfiguration;
 	}
 
+	private void toggleProxyFields(boolean selection) {
+		idekeyTextBox.setEnabled(selection);
+		proxyTextBox.setEnabled(selection);	
+	}
+
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 		setTitle(PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings);
 		Composite composite = createSubsection(parent, PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings);		
 		addLabelControl(composite, PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort, XDebugUIAttributeConstants.XDEBUG_PREF_PORT); //$NON-NLS-1$
 		portTextBox = addNumTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_PORT, 5, 2, false);
-		
-		//		addLabelControl(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_debugPortTimeout, XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT);
-		//		timeoutTextBox = addNumTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT, 5, 2, true);
-		//		addLabelControl(composite, "Default server URL", XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL); //$NON-NLS-1$
-		//		defaultServerURLBox = addDefaultServerURLTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL, 2);
-		
 		showGlobals = addCheckBox(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_showSuperGlobals, XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, 0);
 		addLabelControl(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_maxArrayDepth, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH);
-		variableDepth = addVariableLevel(composite, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, 1, 100, 2);		
+		variableDepth = addVariableLevel(composite, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, 1, 150, 2);		
 		useMultiSession = addCheckBox(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_useMultisession, XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, 0);
+		
+		Composite proxySubSection = createSubsection(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_proxyGroup);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 2;		
+		proxySubSection.setLayout(layout);
+		useProxy = addCheckBox(proxySubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_useProxy, XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY, 0);
+		useProxy.addSelectionListener(new SelectionListener() {
+		public void widgetSelected(SelectionEvent e) {
+				toggleProxyFields(useProxy.getSelection());
+				
+			}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			toggleProxyFields(useProxy.getSelection());
+		}	
+		});
+		addLabelControl(proxySubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_idekey, XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY); //$NON-NLS-1$
+		idekeyTextBox = addATextField(proxySubSection, XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY, 100, 2);
+		addLabelControl(proxySubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_proxy, XDebugUIAttributeConstants.XDEBUG_PREF_PROXY); //$NON-NLS-1$
+		proxyTextBox = addATextField(proxySubSection, XDebugUIAttributeConstants.XDEBUG_PREF_PROXY, 100, 2);
+		
 		internalInitializeValues(); // Initialize the dialog's values.
 		return composite;
 	}
@@ -75,6 +102,19 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		text.addModifyListener(new NumFieldValidateListener(isTimeout));
 		return text;
 	}
+	
+	private Text addATextField(Composite parent, String key, int minWidth, int horizontalIndent) {
+		Text textBox = new Text(parent, SWT.BORDER | SWT.SINGLE);
+		textBox.setData(key);
+
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		data.horizontalIndent = horizontalIndent;
+		data.horizontalSpan = 2;
+		data.grabExcessHorizontalSpace = false;
+		data.minimumWidth = minWidth;
+		textBox.setLayoutData(data);
+		return textBox;
+	}	
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
@@ -85,21 +125,13 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		Preferences prefs = layer.getPrefs();
 
 		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_PORT, portTextBox.getText());
-		//		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT, timeoutTextBox.getText());
-
-		// No need, it will be handled by the XDebugCommunicationDaemon.
-		//		try {
-		//			int port = Integer.parseInt(portTextBox.getText());
-		//			int timeout = Integer.parseInt(timeoutTextBox.getText());
-		//			DBGpSessionHandler.setGlobalHandlerProperties(port, timeout);
-		//		} catch (NumberFormatException nfe) {
-		//		}
-
 		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, showGlobals.getSelection());
 		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, variableDepth.getSelection());
 		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, useMultiSession.getSelection());
-		
-		//		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL, defaultServerURLBox.getText());
+		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY, useProxy.getSelection());
+		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY, idekeyTextBox.getText());
+		prefs.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY, proxyTextBox.getText());
+		DBGpProxyHandler.instance.configure();
 		PHPDebugPlugin.getDefault().savePluginPreferences(); // save
 		super.okPressed();
 	}
@@ -114,14 +146,21 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 			port = prefs.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_PORT);
 		}
 		portTextBox.setText(Integer.toString(port));
-		//		int timeout = prefs.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_TIMEOUT);
-		//		timeoutTextBox.setText(Integer.toString(timeout));
 		showGlobals.setSelection(prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS));
 		useMultiSession.setSelection(prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION));
 		
 		variableDepth.setSelection(prefs.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH));
-		//		defaultServerURLBox.setText(prefs.getString(XDebugUIAttributeConstants.XDEBUG_PREF_DEFAULTSERVERURL));
+		boolean useProxyState = prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY);
+		useProxy.setSelection(useProxyState);
+		String ideKey = prefs.getString(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY);
+		if (ideKey == null || ideKey.length() == 0) {
+			ideKey = DBGpProxyHandler.instance.generateIDEKey();
+		}
+		idekeyTextBox.setText(ideKey);
+		proxyTextBox.setText(prefs.getString(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY));
+		toggleProxyFields(useProxyState);
 	}
+	
 
 	private Spinner addVariableLevel(Composite parent, String key, int min, int max, int horizontalIndent) {
 		Spinner spin = new Spinner(parent, SWT.VERTICAL);

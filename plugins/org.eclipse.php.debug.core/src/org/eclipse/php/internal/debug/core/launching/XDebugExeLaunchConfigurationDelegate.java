@@ -35,7 +35,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.debug.core.IPHPConstants;
+import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
@@ -46,6 +46,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
@@ -77,17 +78,18 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// locate the project from the php script
 		final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		final IPath filePath = new Path(phpScriptString);
-		final IResource res = workspaceRoot.findMember(filePath);
-		if (res == null) {
+		final IResource scriptRes = workspaceRoot.findMember(filePath);
+		if (scriptRes == null) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			displayErrorMessage("Specified script cannot be found");
+			displayErrorMessage("Specified script cannot be found");  //TODO: NLS
 			return;
 		}
-		IProject project = res.getProject();
+	
+		// resolve php exe location
+		final IPath phpExe = new Path(phpExeString);
 
-		// check the launch for stop at first line, if not there go to project specifics
-		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
-		stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
+		// resolve project directory
+		IProject project = scriptRes.getProject();
 
 		// Set Project Name as this is required by the source lookup computer delegate
 		final String projectString = project.getFullPath().toString();
@@ -97,29 +99,21 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		} else {
 			wc = configuration.getWorkingCopy();
 		}
-		wc.setAttribute(IPHPConstants.PHP_Project, projectString);
+		wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
+		wc.doSave();
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
-
-		// resolve php exe location
-		final IPath phpExe = new Path(phpExeString);
-
-		// resolve project directory
+		
 		IPath projectLocation = project.getRawLocation();
-		if (projectLocation == null)
+		if (projectLocation == null) {
 			projectLocation = project.getLocation();
-		final String location = projectLocation.toOSString();
-		final IPath projectPath = new Path(location);
-		final File projectDir = projectPath.toFile();
-
-		// resolve the php script relative to the project directory (ie doesn't have the project name on the path)
-		IPath phpFile = new Path(phpScriptString);
-		if (phpScriptString.startsWith("/")) {
-			phpFile = phpFile.removeFirstSegments(1);
 		}
+		
+		// resolve the script location, but not relative to anything
+		IPath phpFile = scriptRes.getLocation();
 
 		if (monitor.isCanceled()) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
@@ -132,7 +126,6 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		File tempIni = PHPINIUtil.prepareBeforeDebug(phpIni, phpExeString, project);
 		launch.setAttribute(IDebugParametersKeys.PHP_INI_LOCATION, tempIni.getAbsolutePath());
 
-		wc.doSave();
 
 
 		// add process type to process attributes, basically the name of the exe that was launched
@@ -161,9 +154,23 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		String[] envVarString = null;
 		DBGpTarget target = null;
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+			// check the launch for stop at first line, if not there go to project specifics
+			boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+			stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
 			String sessionID = DBGpSessionHandler.getInstance().generateSessionId();
-			String ideKey = DBGpSessionHandler.getInstance().getIDEKey();
-			target = new DBGpTarget(launch, phpFile.toOSString(), ideKey, sessionID, stopAtFirstLine);
+			String ideKey = null;
+			if (DBGpProxyHandler.instance.useProxy()) {
+				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
+				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
+					displayErrorMessage("Unable to connect to proxy\n" + DBGpProxyHandler.instance.getErrorMsg());
+					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+					return;					
+				}
+			}
+			else {
+				ideKey = DBGpSessionHandler.getInstance().getIDEKey();
+			}			
+			target = new DBGpTarget(launch, phpFile.lastSegment(), ideKey, sessionID, stopAtFirstLine);
 			target.setPathMapper(PathMapperRegistry.getByLaunchConfiguration(configuration));
 			DBGpSessionHandler.getInstance().addSessionListener(target);
 			envVarString = createDebugLaunchEnvironment(configuration, sessionID, ideKey, phpExe);
@@ -175,14 +182,21 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
 		subMonitor.beginTask("Launching script", 10);
 
-		//determine the working directory
-		File workingDir = projectDir;
-		for (int i = 0; i < envVarString.length && workingDir == projectDir; i++) {
+		//determine the working directory. default is the location of the script
+		IPath workingPath = phpFile.removeLastSegments(1);
+		File workingDir = workingPath.makeAbsolute().toFile();
+		
+		boolean found = false;
+		for (int i = 0; i < envVarString.length && !found; i++) {
 			String envEntity = envVarString[i];
 			String[] elements = envEntity.split("=");
 			if (elements.length > 0 && elements[0].equals("XDEBUG_WORKING_DIR")) {
-				IPath workingPath = projectPath.append(phpFile.removeLastSegments(1));
-				workingDir = workingPath.makeAbsolute().toFile();
+				found = true;
+				workingPath = new Path(elements[1]);
+				File temp = workingPath.makeAbsolute().toFile();
+				if (temp.exists()) {
+					workingDir = temp;
+				}
 			}
 		}
 
@@ -203,15 +217,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		//define the command line for launching
 		String[] cmdLine = null;
-		if (workingDir == projectDir) {
-			// script name is relative to the project directory
-			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.toOSString(), args);
-		}
-		else {
-			// script is relative to the working directory.
-			cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.lastSegment(), args);
-			
-		}
+		cmdLine = PHPLaunchUtilities.getCommandLine(configuration, phpExe.toOSString(), tempIni.toString(), phpFile.toOSString(), args);
 
 		// Launch the process
 		final Process phpExeProcess = DebugPlugin.exec(cmdLine, workingDir, envVarString);
@@ -272,12 +278,12 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	}
 
 	/**
-	 * 
-	 * @param exePath
-	 * @return
+	 * create the LD_LIBRARY_PATH information
+	 * @param exePath the path to put into LD_LIBRARY_PATH
+	 * @return environment string
 	 */
 	private String getLibraryPath(IPath exePath) {
-		//TODO: Should also append here
+		//TODO: Should append if already present
 		StringBuffer buf = new StringBuffer();
 		buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
 		buf.append('=');

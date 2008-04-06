@@ -107,6 +107,9 @@ public class DBGpResponse {
 	public static final int INIT = 1;
 	public static final int RESPONSE = 2;
 	public static final int STREAM = 3;
+	public static final int PROXY_INIT = 4;
+	public static final int PROXY_ERROR = 5;
+	
 	public static final int UNKNOWN_TYPE = 99;
 
 	int type;
@@ -210,7 +213,11 @@ public class DBGpResponse {
 				parseInitType();
 			} else if (nodeName.equals("stream")) {
 				parseStreamType();
-			} 
+			} else if (nodeName.equals("proxyinit")) {
+				parseProxyInitType();
+			} else if (nodeName.equals("proxyerror")) {
+				parseProxyErrorType();
+			}
 			
 		} catch (SAXException e) {
 			DBGpLogger.logException(null, this, e);
@@ -240,6 +247,21 @@ public class DBGpResponse {
 		}
 			
 	}
+	
+	private void parseProxyInitType() {
+		type = PROXY_INIT;
+		idekey = getTopAttribute("idekey");
+		//caller can retrieve address, port
+		getErrorInformation(false);
+		
+	}
+	
+	private void parseProxyErrorType() {
+		type = PROXY_ERROR;
+		getErrorInformation(false);
+		
+	}
+	
 
 	private void parseInitType() {
 		// get the init information
@@ -286,7 +308,10 @@ public class DBGpResponse {
 		command = getTopAttribute("command");
 		status = getTopAttribute("status");
 		reason = getTopAttribute("reason");
+		getErrorInformation(true);
+	}
 
+	private void getErrorInformation(boolean checkID) {
 		// get the error information
 		Node errNode = parent.getFirstChild();
 		if (errNode != null && errNode.getNodeName().equals("error")) {
@@ -305,10 +330,8 @@ public class DBGpResponse {
 			}
 		}
 		else {
-			if (id.length() != 0) {
-				errorCode = ERROR_OK;
-			}
-			else {
+			errorCode = ERROR_OK;
+			if (checkID && (id == null || id.length() == 0)) {
 				errorCode = ERROR_INVALID_RESPONSE;
 			}
 		}
