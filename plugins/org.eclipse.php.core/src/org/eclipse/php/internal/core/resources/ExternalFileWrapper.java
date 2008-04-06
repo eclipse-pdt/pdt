@@ -45,7 +45,7 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 		this.path = Path.fromOSString(pathString);
 		IPath p = new Path(path.toOSString());
 		if (path.segmentCount() == 1) {
-			p = new Path(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath().toString());
+			p = new Path(ExternalFilesRegistry.getInstance().getExternalFilesProject().getFullPath().toOSString());
 			p = p.append(path.segment(0));
 			p = p.setDevice(path.getDevice());
 		}
@@ -317,7 +317,11 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 	 * @see org.eclipse.core.resources.IResource#equals(java.lang.Object)
 	 */
 	public boolean equals(Object other) {
-		return file.equals(other);
+		if (other instanceof ExternalFileWrapper){
+			ExternalFileWrapper externalOther = (ExternalFileWrapper)other;
+			return path.equals(externalOther.path);
+		}
+		return false;
 	}
 
 	/**
@@ -932,7 +936,7 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource, ICoreC
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return getFullPath().toString();
+		return getFullPath().toOSString();
 	}
 
 	/**

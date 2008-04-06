@@ -257,6 +257,14 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	}
 
 	private String getClassVariableType(PHPClassData classData, String variableName, int line) {
+		return innerGetClassVariableType(classData, variableName, line, new LinkedList<String>());
+	}
+	
+	/**
+	 * This is an internal function please use getClassVariableType().
+	 * @param checkedClasses is for internal use - making sure there is no cyclic in the class hierarchy 
+	 */
+	private String innerGetClassVariableType(PHPClassData classData, String variableName, int line, List<String> checkedClasses) {
 		if (classData == null) {
 			return null;
 		}
@@ -273,10 +281,10 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		if (typeData != null) {
 			return typeData.getType();
 		}
-
-		String superClassName = (classData.getSuperClassData() != null) ? classData.getSuperClassData().getName() : null;
-		if (superClassName != null) {
-			String rv = getClassVariableType(getClass(fileName, superClassName), variableName, line);
+		checkedClasses.add(classData.getName());
+		String superClassName = classData.getSuperClassData() != null ? classData.getSuperClassData().getName() : null;
+		if (superClassName != null && !checkedClasses.contains(superClassName)) {
+			String rv = innerGetClassVariableType(getClass(fileName, superClassName), variableName, line, checkedClasses);
 			return rv;
 		}
 		return null;

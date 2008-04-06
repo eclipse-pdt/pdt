@@ -12,8 +12,8 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -72,8 +72,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			regionStart += tRegion.getStart();
 		}
 
-		if (tRegion instanceof PhpScriptRegion) {
-			PhpScriptRegion scriptRegion = (PhpScriptRegion) tRegion;
+		if (tRegion instanceof IPhpScriptRegion) {
+			IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
 			tRegion = scriptRegion.getPhpToken(offset - regionStart);
 
 			if (tRegion == null)
@@ -83,7 +83,9 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 			// in the same line
 			do {
 				String token = tRegion.getType();
-				if (!PHPPartitionTypes.isPHPCommentState(token) && token != PHPRegionTypes.WHITESPACE) {
+				if(regionStart + tRegion.getStart() >= forOffset){
+					//making sure the region found is not after the caret (https://bugs.eclipse.org/bugs/show_bug.cgi?id=222019 - caret before '{')
+				} else if (!PHPPartitionTypes.isPHPCommentState(token) && token != PHPRegionTypes.WHITESPACE) {
 					// not comment nor white space
 					return tRegion;
 				}
@@ -132,8 +134,8 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				phpContentStartOffset += phpScriptRegion.getStart();
 			}
 
-			if (phpScriptRegion instanceof PhpScriptRegion) {
-				PhpScriptRegion scriptRegion = (PhpScriptRegion) phpScriptRegion;
+			if (phpScriptRegion instanceof IPhpScriptRegion) {
+				IPhpScriptRegion scriptRegion = (IPhpScriptRegion) phpScriptRegion;
 				//the region we are trying to check if it is the indent base for the line we need to format
 				ContextRegion checkedRegion = (ContextRegion) scriptRegion.getPhpToken(lineStart - phpContentStartOffset);
 				//the current region we need to format
@@ -204,12 +206,12 @@ public class DefaultIndentationStrategy implements IIndentationStrategy {
 				scriptRegion = container.getRegionAtCharacterOffset(offset);
 				regionStart += scriptRegion.getStart();
 			}
-			if (scriptRegion instanceof PhpScriptRegion) {
+			if (scriptRegion instanceof IPhpScriptRegion) {
 				if (tokenType == PHPRegionTypes.PHP_TOKEN && document.getChar(regionStart + token.getStart()) == ':') {
 					//checking if the line starts with "case" or "default"
 					int currentOffset = regionStart + token.getStart() - 1;
 					while (currentOffset >= lineInfo.getOffset()) {
-						token = ((PhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
+						token = ((IPhpScriptRegion) scriptRegion).getPhpToken(token.getStart() - 1);
 						tokenType = token.getType();
 						if (tokenType == PHPRegionTypes.PHP_CASE || tokenType == PHPRegionTypes.PHP_DEFAULT)
 							return true;
