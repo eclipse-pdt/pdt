@@ -102,8 +102,10 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 				}
 			} else {
-				if (((ArrayAccess) leftHandSide).getName() == node) {
-					return IOccurrencesFinder.F_WRITE_OCCURRENCE;
+				if (leftHandSide.getType() == ASTNode.ARRAY_ACCESS) {
+					if (((ArrayAccess) leftHandSide).getName() == node) {
+						return IOccurrencesFinder.F_WRITE_OCCURRENCE;
+					}
 				}
 			}
 		}

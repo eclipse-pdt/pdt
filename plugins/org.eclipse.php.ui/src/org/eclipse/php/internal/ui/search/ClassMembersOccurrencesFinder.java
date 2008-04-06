@@ -8,6 +8,7 @@ import org.eclipse.php.internal.core.ast.nodes.ClassConstantDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration;
+import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
 import org.eclipse.php.internal.core.ast.nodes.FunctionName;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.InterfaceDeclaration;
@@ -48,7 +49,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			// IBinding binding = identifier.resolveBinding(); // FIXME - This should be implemented...
 			ASTNode parent = identifier.getParent();
 			int type = parent.getType();
-			isMethod = type == ASTNode.FUNCTION_DECLARATION || parent.getLocationInParent() == FunctionName.NAME_PROPERTY;
+			isMethod = type == ASTNode.FUNCTION_DECLARATION || parent.getLocationInParent() == FunctionName.NAME_PROPERTY || parent.getLocationInParent() == FunctionInvocation.FUNCTION_PROPERTY;
 			while (typeDeclarationName == null && parent != fASTRoot) {
 				if (type == ASTNode.CLASS_DECLARATION || type == ASTNode.INTERFACE_DECLARATION) {
 					typeDeclarationName = ((TypeDeclaration) parent).getName().getName();
