@@ -17,7 +17,7 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
@@ -40,7 +40,7 @@ class ProjectionViewerInformation {
 	 * annotation model.
 	 */
 	private static class DocumentListener implements IDocumentListener {
-		private ProjectionViewerInformation fInfo;
+		private final ProjectionViewerInformation fInfo;
 
 		public DocumentListener(ProjectionViewerInformation info) {
 			fInfo = info;
@@ -73,7 +73,7 @@ class ProjectionViewerInformation {
 	 * documentchanged has been fired.
 	 */
 	private static class PostDocumentChangedListener implements IDocumentExtension.IReplace {
-		private ProjectionViewerInformation fInfo;
+		private final ProjectionViewerInformation fInfo;
 
 		public PostDocumentChangedListener(ProjectionViewerInformation info) {
 			fInfo = info;
@@ -89,11 +89,11 @@ class ProjectionViewerInformation {
 	 * Projection annotation model current associated with this projection
 	 * viewer
 	 */
-	private ProjectionAnnotationModel fProjectionAnnotationModel;
+	private final ProjectionAnnotationModel fProjectionAnnotationModel;
 	/**
 	 * Document currently associated with this projection viewer
 	 */
-	private IDocument fDocument;
+	private final IDocument fDocument;
 	/**
 	 * Listener to fProjectionViewer's document
 	 */
@@ -141,7 +141,6 @@ class ProjectionViewerInformation {
 		while (!queuedChanges.isEmpty()) {
 			ProjectionAnnotationModelChanges changes = queuedChanges.remove(0);
 			try {
-
 				// 1. Collect annotations and their positions and store collapsed ones:
 				Set<Position> collapsedPositions = new HashSet<Position>();
 				Map<Position, ProjectionAnnotation> positionAnnotations = new HashMap<Position, ProjectionAnnotation>();
@@ -183,23 +182,31 @@ class ProjectionViewerInformation {
 						} else {
 							newAnnotation.markExpanded();
 						}
-						fProjectionAnnotationModel.removeAnnotation(existingAnnotation);
-						fProjectionAnnotationModel.addAnnotation(newAnnotation, position);
+						Map annotationAddition = new HashMap(1);
+						annotationAddition.put(newAnnotation, position);
+						fProjectionAnnotationModel.replaceAnnotations(new Annotation[] { existingAnnotation }, annotationAddition);
 					}
 				}
 
 				//4. Replace positions for modified annotations or add if missing and not persistent:
 				Map<ProjectionAnnotation, Position> modifications = changes.getModifications();
-				for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
-					ProjectionAnnotation modifiedAnnotation = modification.getKey();
-					Position modifiedPosition = modification.getValue();
-					Position position = fProjectionAnnotationModel.getPosition(modifiedAnnotation);
-					if (position == null) {
-						if (!persistentPositions.contains(modifiedPosition)) {
-							fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+				List<Annotation> annotationsToModify = new ArrayList<Annotation>();
+				if (modifications != null) {
+					for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
+						ProjectionAnnotation modifiedAnnotation = modification.getKey();
+						Position modifiedPosition = modification.getValue();
+						Position position = fProjectionAnnotationModel.getPosition(modifiedAnnotation);
+						if (position == null) {
+							if (!persistentPositions.contains(modifiedPosition)) {
+								fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+							}
+						} else if (!modifiedPosition.equals(position)) {
+							annotationsToModify.add(modifiedAnnotation);
 						}
-					} else if (!modifiedPosition.equals(position)) {
-						fProjectionAnnotationModel.modifyAnnotationPosition(modifiedAnnotation, modifiedPosition);
+					}
+					// call the modification event only after all annotations are validated as should modified
+					if (annotationsToModify.size() > 0) {
+						fProjectionAnnotationModel.modifyAnnotations(null, null, annotationsToModify.toArray(new Annotation[annotationsToModify.size()]));	
 					}
 				}
 
@@ -227,19 +234,28 @@ class ProjectionViewerInformation {
 			container = (ITextRegionContainer) textRegion;
 			textRegion = container.getRegionAtCharacterOffset(offset);
 		}
-		if (!(textRegion instanceof PhpScriptRegion)) {
+		if (!(textRegion instanceof IPhpScriptRegion)) {
 			return false;
 		}
 
-		PhpScriptRegion phpScriptRegion = (PhpScriptRegion) textRegion;
+		final IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
 
 		int internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 		try {
-			if (phpScriptRegion.getPartition(internalOffset) != PHPPartitionTypes.PHP_DEFAULT) {
-				return false;
+			String partitionType = phpScriptRegion.getPartition(internalOffset);
+			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
+				return true;
 			}
-			return true;
+
+			if (partitionType == PHPPartitionTypes.PHP_DOC || partitionType == PHPPartitionTypes.PHP_MULTI_LINE_COMMENT) {
+				ITextRegion phpToken = phpScriptRegion.getPhpToken(internalOffset);
+				if (phpToken.getStart() == internalOffset) {
+					return true;
+				}
+			}
+
+			return false;
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		}
