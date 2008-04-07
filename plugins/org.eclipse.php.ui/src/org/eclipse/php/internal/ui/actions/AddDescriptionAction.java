@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import org.eclipse.jface.action.IAction;
@@ -45,9 +47,33 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 		if (phpCodeData == null) {
 			return;
 		}
+		
+		// Sorting the PHP code elements array by "first-line" position.
+		// this will enable "right" order of iteration
+		Arrays.sort(phpCodeData, new Comparator<PHPCodeData>() {
+			public int compare(PHPCodeData object1, PHPCodeData object2) {
 
-		for (int i = 0; i < phpCodeData.length; ++i) {
+				/* handling null-pointers on both levels (object=null or object1.getUserData()=null)
+				   'null' objects will be considered as 'bigger' and will be pushed to the end of the array 
+				 */
+				if (object1 == null || object1.getUserData() == null){
+					if (object2 == null || object2.getUserData() == null) {
+						return 0 ;	// both null => equal
+					}else return 1;	// only object1 is null => object1 is bigger
+				}
+				if (object2 == null || object2.getUserData() == null){ 
+					return -1;		// only object2 is null => object2 is bigger
+				}
+				return object1.getUserData().getStartPosition() - object2.getUserData().getStartPosition() ;			
+			}	
+		});
+		
+		// iterating the functions that need to add 'PHP Doc' bottoms-up - to eliminate mutual interference
+		for (int i = phpCodeData.length-1 ; i >= 0; i--) {
 			PHPCodeData codeData = phpCodeData[i];
+			if (null == codeData){
+				continue ; // if we got to null pointer, skipping it
+			}
 			IEditorPart editorPart;
 			IEditorInput input = EditorUtility.getEditorInput(codeData);
 			IWorkbenchPage page = PHPUiPlugin.getActivePage();
