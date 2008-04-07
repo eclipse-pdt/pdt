@@ -8,6 +8,7 @@ package org.eclipse.php.internal.core.documentModel;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
@@ -82,8 +83,8 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		// external file
-		if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
-			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation());
+		if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
+			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
 			return fileData;
 		}
 
@@ -98,7 +99,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		IFile iFile = getIFile();
-		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile)) {
+		if (iFile != null && ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
 			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
@@ -147,14 +148,17 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (result != null) {
 			return result;
 		}
-		if (ExternalFilesRegistry.getInstance().isEntryExist(path)) {
-			result = ExternalFilesRegistry.getInstance().getFileEntry(path);
+		if (ExternalFilesRegistry.getInstance().isEntryExist(new Path(path).toOSString())) {
+			result = ExternalFilesRegistry.getInstance().getFileEntry(new Path(path).toOSString());
 		}
 		if (result == null) {
 			if (Platform.getOS() != Platform.OS_WIN32) {
 				path = path.replace('\\', '/');
 			}
-			result = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(path));
+			IPath osPath = Path.fromOSString(path);
+			if (osPath.segmentCount() > 1) {
+				result = ResourcesPlugin.getWorkspace().getRoot().getFile(osPath);
+			}
 		}
 		return result;
 	}
