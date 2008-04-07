@@ -64,4 +64,10 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
 	}
 
+	@Override
+	protected void restoreDefaultButtonValues() {
+		super.restoreDefaultButtonValues();
+		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
+	}
+	
 }

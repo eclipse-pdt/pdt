@@ -58,4 +58,13 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 		autoActivationTriggersPHPDoc.setEnabled(false);
 
 	}
+		
+	// restore text boxes enablement according to the checkbox 
+	@Override
+	protected void restoreDefaultTextValues() {
+		super.restoreDefaultTextValues();
+		boolean enable = autoActivationCheckBox.getSelection();
+		autoActivationDelay.setEnabled(enable);
+		autoActivationTriggersPHP.setEnabled(enable);
+	}
 }
