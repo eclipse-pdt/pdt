@@ -99,7 +99,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 
 		IFile iFile = getIFile();
-		if (ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
+		if (iFile != null && ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
 			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
