@@ -21,17 +21,9 @@ public class ParsingErrorNotificationHandler implements IDebugMessageHandler {
 		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
 		String errorText = parseError.getErrorText();
 
-		String fileName = parseError.getFileName();
-		try {
-			Path errorFilePath = new Path(parseError.getFileName());
-			if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
-				fileName = errorFilePath.lastSegment();
-			}
-		} catch (RuntimeException e) { // if new Path() fails - do nothing
-		}
-
 		int lineNumber = parseError.getLineNumber();
 		int errorLevel = parseError.getErrorLevel();
+		String fileName = parseError.getFileName();
 
 		// Check whether the problematic file is actually eval() code:
 		Matcher m = EVALD_CODE_PATTERN.matcher(fileName);
