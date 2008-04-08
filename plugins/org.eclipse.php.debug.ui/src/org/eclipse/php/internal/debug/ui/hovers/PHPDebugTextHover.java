@@ -68,11 +68,35 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 			}
 
 			if (region != null) {
+				int varOffset = 0;
+				int varLength = 0;
+				
 				String regionType = region.getType();
 				if (regionType == PHPRegionTypes.PHP_VARIABLE) {
+					varOffset = hoverRegion.getOffset();
+					varLength = hoverRegion.getLength();
+				} else if (regionType == PHPRegionTypes.PHP_STRING) {
+					try {
+						ITextRegion nextRegion = phpScriptRegion.getPhpToken(region.getEnd());
+						ITextRegion prevRegion = phpScriptRegion.getPhpToken(region.getStart() - 1);
+						if (prevRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR) {
+							prevRegion = phpScriptRegion.getPhpToken(prevRegion.getStart() - 1);
+							if (prevRegion.getType() == PHPRegionTypes.PHP_VARIABLE) {
+								String nextTokenString = textViewer.getDocument().get(phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getLength());
+								if (!"(".equals(nextTokenString)) {
+									varOffset = phpScriptRegion.getStart() + prevRegion.getStart();
+									varLength = region.getEnd() - prevRegion.getStart();
+								}
+							}
+						}
+					} catch (BadLocationException e) {
+					}
+				}
+				
+				if (varLength > 0) {
 					String variable = null;
 					try {
-						int[] variableRange = getVariableRange(textViewer, hoverRegion.getOffset(), hoverRegion.getLength());
+						int[] variableRange = getVariableRange(textViewer, varOffset, varLength);
 						variable = textViewer.getDocument().get(variableRange[0], variableRange[1]);
 						variable = "<B>" + variable + " = </B>" + getValue(debugTarget, variable);
 					} catch (BadLocationException e) {
