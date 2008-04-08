@@ -449,6 +449,23 @@ public class EditorUtility {
 
 		return null;
 	}
+	
+	public static IEditorPart revealInEditor(IEditorPart part, int lineNumber) {
+		if (lineNumber > 0) {
+			if (part instanceof ITextEditor) {
+				ITextEditor textEditor = (ITextEditor) part;
+				// If a line number was given, go to it
+				try {
+					lineNumber = lineNumber - 1;
+					IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+					textEditor.selectAndReveal(document.getLineOffset(lineNumber), document.getLineLength(lineNumber));
+				} catch (BadLocationException e) {
+					// invalid text position -> do nothing
+				}
+			}
+		}
+		return part;
+	}
 
 	/**
 	 * Opens a PHP editor for file and line number
@@ -459,6 +476,15 @@ public class EditorUtility {
 
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
+		
+		try {
+			Path errorFilePath = new Path(fileName);
+			if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
+				IEditorPart editor = openInEditor(new NonExistingPHPFileEditorInput(errorFilePath), PHPUiConstants.PHP_UNTITLED_EDITOR_ID, true);
+				return revealInEditor(editor, lineNumber);
+			}
+		} catch (RuntimeException e) { // if new Path() fails - do nothing
+		}
 
 		IPath path = new Path(fileName);
 		IFile file = root.getFileForLocation(path);
@@ -510,20 +536,7 @@ public class EditorUtility {
 					final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 					if (p != null) {
 						IEditorPart part = openInEditor(editorInput, getEditorID(editorInput), true);
-						if (lineNumber > 0) {
-							if (part instanceof ITextEditor) {
-								ITextEditor textEditor = (ITextEditor) part;
-								// If a line number was given, go to it
-								try {
-									lineNumber = lineNumber - 1;
-									IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
-									textEditor.selectAndReveal(document.getLineOffset(lineNumber), document.getLineLength(lineNumber));
-								} catch (BadLocationException e) {
-									// invalid text position -> do nothing
-								}
-							}
-						}
-						return part;
+						return revealInEditor(part, lineNumber);
 					}
 					return null;
 				}
