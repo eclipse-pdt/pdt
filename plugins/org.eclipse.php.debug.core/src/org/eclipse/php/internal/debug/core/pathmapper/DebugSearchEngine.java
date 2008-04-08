@@ -226,7 +226,7 @@ public class DebugSearchEngine {
 							}
 						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
 							IProject project = (IProject) entry.getResource();
-							if (project.isAccessible()) {
+							if (project.isOpen() && project.isAccessible()) {
 								try {
 									find(project, abstractPath, results);
 								} catch (InterruptedException e) {
