@@ -48,8 +48,20 @@
 			-->
 		</content-type>
    </extension>  
+ 
+ 	<!-- Adding default "Eclipse text editor" for *.[ini,cfg] files --> 
+	<extension
+        point="org.eclipse.core.runtime.contentTypes">
+		<content-type 
+               base-type="org.eclipse.core.runtime.text"
+               file-extensions="ini,cfg"
+               id="org.eclipse.ui.texteditor"
+               name="Configurataion Files"
+               priority="high">
+		</content-type>
+	</extension>
    
-   	 <extension
+    <extension
 		 id="PHPNature"
 		 name="PHP Properties"
 		 point="org.eclipse.core.resources.natures">
