@@ -160,7 +160,6 @@ public class DebugSearchEngine {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
 						if (project.isOpen() && project.isAccessible()) {
-							s.add(project);
 							PHPSearchEngine.buildIncludePath(project, s);
 						}
 					}
