@@ -90,15 +90,21 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 			for (IBreakpoint bp : breakPoints) {
 				try {
 					if (bp.isEnabled()) {
+						
+						PHPConditionalBreakpoint phpBP = (PHPConditionalBreakpoint) bp;
+						Breakpoint runtimeBreakpoint = phpBP.getRuntimeBreakpoint();
+						
 						int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
-						int bpID = ((PHPConditionalBreakpoint)bp).getRuntimeBreakpoint().getID();
-						int bpType = ((PHPConditionalBreakpoint)bp).getRuntimeBreakpoint().getType();
-						int bpLifeTime = ((PHPConditionalBreakpoint)bp).getRuntimeBreakpoint().getLifeTime();
+						int bpID = runtimeBreakpoint.getID();
+						int bpType = runtimeBreakpoint.getType();
+						int bpLifeTime = runtimeBreakpoint.getLifeTime();
 						Breakpoint bpToSend = new Breakpoint(remoteFileName, lineNumber);
 						bpToSend.setID(bpID);
 						bpToSend.setType(bpType);
 						bpToSend.setLifeTime(bpLifeTime);
+						
 						debugTarget.getRemoteDebugger().addBreakpoint(bpToSend);
+						runtimeBreakpoint.setID(bpToSend.getID());
 					}
 				} catch (CoreException e) {
 					PHPDebugPlugin.log(e);
