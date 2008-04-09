@@ -548,7 +548,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		}
 		int type = resource.getType();
 		if (type == IResource.FILE || type == IResource.FOLDER) {
-			formatFile = resource.getProjectRelativePath().toString();
+			formatFile = resource.getFullPath().toString();
 		} else {
 			formatFile = "/"; //$NON-NLS-1$
 		}
