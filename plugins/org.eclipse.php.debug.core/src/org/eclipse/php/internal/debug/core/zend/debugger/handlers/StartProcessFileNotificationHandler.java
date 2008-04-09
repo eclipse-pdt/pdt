@@ -16,6 +16,7 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
@@ -87,8 +88,12 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 			for (IBreakpoint bp : breakPoints) {
 				try {
 					if (bp.isEnabled()) {
+						PHPConditionalBreakpoint phpBP = (PHPConditionalBreakpoint) bp;
+						Breakpoint runtimeBreakpoint = phpBP.getRuntimeBreakpoint();
 						int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
-						debugTarget.getRemoteDebugger().addBreakpoint(new Breakpoint(remoteFileName, lineNumber));
+						Breakpoint tempBreakpoint = new Breakpoint(remoteFileName, lineNumber);
+						debugTarget.getRemoteDebugger().addBreakpoint(tempBreakpoint);
+						runtimeBreakpoint.setID(tempBreakpoint.getID());
 					}
 				} catch (CoreException e) {
 					PHPDebugPlugin.log(e);
