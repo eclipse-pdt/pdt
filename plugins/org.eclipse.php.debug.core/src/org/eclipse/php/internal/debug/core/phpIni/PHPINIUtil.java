@@ -1,7 +1,9 @@
 package org.eclipse.php.internal.debug.core.phpIni;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,9 +175,33 @@ public class PHPINIUtil {
 	public static File findPHPIni(String phpExe) {
 		File phpExeFile = new File(phpExe);
 		File phpIniFile = new File(phpExeFile.getParentFile(), PHP_INI_FILE);
+
+		if (!phpIniFile.exists() || !phpIniFile.canRead()) {
+			// Try to detect via library:
+			try {
+				Process p = Runtime.getRuntime().exec(new String[] { phpExeFile.getAbsolutePath(), "-i"});
+				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String l;
+				while ((l = r.readLine()) != null) {
+					int i = l.indexOf(" => ");
+					if (i > 0) {
+						String key = l.substring(0, i);
+						String value = l.substring(i + 4);
+						if ("Loaded Configuration File".equals(key)) {
+							phpIniFile = new File(value);
+							break;
+						}
+					}
+				}
+				r.close();
+			} catch (IOException e) {
+			}
+		}
+		
 		if (phpIniFile.exists() && phpIniFile.canRead()) {
 			return phpIniFile;
 		}
+		
 		return null;
 	}
 }
