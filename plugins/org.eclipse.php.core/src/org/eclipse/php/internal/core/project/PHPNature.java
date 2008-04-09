@@ -13,27 +13,18 @@ package org.eclipse.php.internal.core.project;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.eclipse.core.resources.ICommand;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
 public class PHPNature implements IProjectNature {
 	public static final String ID = PHPCorePlugin.ID + ".PHPNature"; //$NON-NLS-1$
 
 	public static final String PROJECTTYPE_VALUE = "PHP"; //$NON-NLS-1$
-	public static final String VALIDATION_BUILDER_ID = ValidationPlugin.VALIDATION_BUILDER_ID;
+	public static final String VALIDATION_BUILDER_ID = PHPCorePlugin.ID + ".ValidationManagerWrapper";
 
 	private static int instanceCount = 0;
 	public int instanceStamp;

@@ -35,17 +35,16 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 	public void startupOnInitialize(IncrementalProjectBuilder builder) {
 	}
 
-	public void clean(IncrementalProjectBuilder builder, IProgressMonitor monitor) throws CoreException {
-		cleanBuild(builder.getProject());
+	public void clean(IProject project, IProgressMonitor monitor) throws CoreException {
+		cleanBuild(project.getProject());
 	}
 
-	public IProject[] build(IncrementalProjectBuilder builder, int kind, Map args, IProgressMonitor monitor) throws CoreException {
+	public IProject[] build(IProject project, IResourceDelta delta, int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		if (kind == IncrementalProjectBuilder.FULL_BUILD) {
-			fullBuild(builder, monitor);
+			fullBuild(project, monitor);
 			return null;
 		}
 		
-		IResourceDelta delta = builder.getDelta(builder.getProject());
 		if (delta == null) {
 			return null;
 		}
@@ -55,9 +54,8 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 		return null;
 	}
 
-	private void fullBuild(IncrementalProjectBuilder builder, IProgressMonitor monitor) {
+	private void fullBuild(IProject project, IProgressMonitor monitor) {
 		try {
-			IProject project = builder.getProject();
 			project.accept(new FullPhpProjectBuildVisitor(monitor));
 			PHPWorkspaceModelManager.getInstance().fireProjectModelChanged(project);
 		} catch (CoreException e) {

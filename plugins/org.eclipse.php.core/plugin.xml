@@ -128,5 +128,14 @@
     <attribute name="userEditable"/>
     <super type="org.eclipse.core.resources.textmarker"/>
  </extension>
-
+ <extension
+       id="ValidationManagerWrapper"
+       name="Validation Manager"
+       point="org.eclipse.core.resources.builders">
+    <builder>
+       <run
+             class="org.eclipse.php.internal.core.project.build.ValidationManagerWrapper">
+       </run>
+    </builder>
+ </extension>
 </plugin>

@@ -13,6 +13,7 @@ package org.eclipse.php.core.project.build;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,14 +29,15 @@ import org.eclipse.php.internal.core.project.build.PHPIncrementalProjectBuilder;
 public interface IPHPBuilderExtension {
 
 	/**
+	 * @param delta TODO
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public IProject[] build(IncrementalProjectBuilder builder, int kind, Map args, IProgressMonitor monitor) throws CoreException;
+	public IProject[] build(IProject project, IResourceDelta delta, int kind, Map args, IProgressMonitor monitor) throws CoreException;
 	
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void clean(IncrementalProjectBuilder builder, IProgressMonitor monitor) throws CoreException;
+	public void clean(IProject project, IProgressMonitor monitor) throws CoreException;
 
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#startupOnInitialize()
