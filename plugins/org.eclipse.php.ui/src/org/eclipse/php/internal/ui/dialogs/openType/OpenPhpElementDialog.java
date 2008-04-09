@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -141,7 +140,7 @@ public class OpenPhpElementDialog extends Dialog {
 				for (int j = 0; j < models.length; ++j) {
 					IPhpModel model = models[j];
 					if (model != languageModel) {
-						addClassesData(model.getClasses(), arrayList);
+						addData(model.getClasses(), arrayList);
 						addData(model.getFunctions(), arrayList);
 						addData(model.getConstants(), arrayList);
 					}
@@ -179,15 +178,6 @@ public class OpenPhpElementDialog extends Dialog {
 			last = codeData;
 		}
 		return result.toArray();
-	}
-
-	private void addClassesData(CodeData[] classes, Collection arrayList) {
-		addData(classes, arrayList);
-		for (CodeData element : classes) {
-			PHPClassData classData = (PHPClassData) element;
-			addData(classData.getConsts(), arrayList);
-			addData(classData.getFunctions(), arrayList);
-		}
 	}
 
 	private void addData(CodeData[] classes, Collection arrayList) {
