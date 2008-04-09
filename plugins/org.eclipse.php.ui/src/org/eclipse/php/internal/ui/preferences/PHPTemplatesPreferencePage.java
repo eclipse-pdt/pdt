@@ -21,4 +21,9 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 		setTemplateStore(PHPUiPlugin.getDefault().getTemplateStore());
 		setContextTypeRegistry(PHPUiPlugin.getDefault().getTemplateContextRegistry());
 	}
+	
+	protected boolean isShowFormatterSetting() {
+		return false;
+	}
+
 }
