@@ -42,7 +42,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionListener;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
@@ -149,7 +149,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 				target = new DBGpTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
 				target.setPathMapper(PathMapperRegistry.getByServer(server));				
 			}
-			DBGpSessionHandler.getInstance().addSessionListener((DBGpSessionListener)target);
+			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);
 		}
 		else {
 			startStopURLs = new String[] {baseURL, null};
@@ -192,7 +192,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			// display an error about not being able to launch a browser
 			Logger.logException("we have an exception on the browser", exception[0]);
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
-				DBGpSessionHandler.getInstance().removeSessionListener((DBGpSessionListener)target);
+				DBGpSessionHandler.getInstance().removeSessionListener((IDBGpSessionListener)target);
 			}
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 		}
