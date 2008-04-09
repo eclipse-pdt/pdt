@@ -26,15 +26,15 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 public class PhpTokenContainer {
 
 	// holds PHP tokens 
-	protected final LinkedList phpTokens = new LinkedList(); // of ITextRegion
+	protected final LinkedList<ContextRegion> phpTokens = new LinkedList<ContextRegion>(); // of ITextRegion
 
 	// holds the location and state, where the lexical anlyzer state was changed
-	protected final LinkedList lexerStateChanges = new LinkedList(); // of LexerStateChanged
+	protected final LinkedList<LexerStateChange> lexerStateChanges = new LinkedList<LexerStateChange>(); // of LexerStateChanged
 
 	// holds the iterator for the php tokens linked list
 	// this iterator follows the localization principle 
 	// i.e. the user usually works in the same area of the document 
-	protected ListIterator tokensIterator = null;
+	protected ListIterator<ContextRegion> tokensIterator = null;
 	
 	/**
 	 * find token for a given location 
@@ -42,7 +42,7 @@ public class PhpTokenContainer {
 	 * @return
 	 * @throws BadLocationException - if the offset is out of bound 
 	 */
-	public ITextRegion getToken(int offset) throws BadLocationException {
+	public synchronized ITextRegion getToken(int offset) throws BadLocationException {
 		assert tokensIterator != null;
 		if (phpTokens.isEmpty()) {
 			return null;
@@ -52,18 +52,18 @@ public class PhpTokenContainer {
 		checkBadLocation(offset);
 
 		// smart searching
-		ITextRegion result = (ITextRegion) (tokensIterator.hasNext() ? tokensIterator.next() : tokensIterator.previous());
+		ITextRegion result = tokensIterator.hasNext() ? tokensIterator.next() : tokensIterator.previous();
 		if (isInside(result, offset)) {
 			return result;
 		}
 
 		if (offset >= result.getEnd()) { // if the offset is beyond - go fetch from next
 			while (tokensIterator.hasNext() && !isInside(result, offset)) {
-				result = (ITextRegion) tokensIterator.next();
+				result = tokensIterator.next();
 			}
 		} else { // else go fetch from previous
 			while (tokensIterator.hasPrevious() && !isInside(result, offset)) {
-				result = (ITextRegion) tokensIterator.previous();
+				result = tokensIterator.previous();
 			}
 			// moves the iterator to the next one
 			if (tokensIterator.hasNext()) {
@@ -74,19 +74,19 @@ public class PhpTokenContainer {
 		return result;
 	}
 
-	public ITextRegion[] getTokens(final int offset, final int length) throws BadLocationException {
+	public synchronized ITextRegion[] getTokens(final int offset, final int length) throws BadLocationException {
 		assert length >= 0;
-		List result = new ArrayList(); // list of ITextRegion
+		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of ITextRegion
 
 		ITextRegion token = getToken(offset);
 		result.add(token);
 
 		while (tokensIterator.hasNext() && token.getEnd() <= offset + length) {
-			token = (ITextRegion) tokensIterator.next();
+			token = tokensIterator.next();
 			result.add(token);
 		}
 
-		return (ITextRegion[]) result.toArray(new ITextRegion[result.size()]);
+		return result.toArray(new ITextRegion[result.size()]);
 	}
 
 	private final boolean isInside(ITextRegion region, int offset) {
@@ -99,10 +99,10 @@ public class PhpTokenContainer {
 	 * @throws BadLocationException
 	 */
 	public LexerState getState(int offset) throws BadLocationException {
-		Iterator iter = lexerStateChanges.iterator();
+		Iterator<LexerStateChange> iter = lexerStateChanges.iterator();
 		assert iter.hasNext();
 
-		LexerStateChange element = (LexerStateChange) iter.next();
+		LexerStateChange element = iter.next();
 		LexerState lastState = null;
 
 		while (offset >= element.getOffset()) {
@@ -110,7 +110,7 @@ public class PhpTokenContainer {
 			if (!iter.hasNext()) {
 				return lastState;
 			}
-			element = (LexerStateChange) iter.next();
+			element = iter.next();
 		}
 		return lastState;
 	}
@@ -154,10 +154,10 @@ public class PhpTokenContainer {
 		}
 
 		// remove
-		final ListIterator oldIterator = removeOldChanges(fromOffset, toOffset);
+		final ListIterator<LexerStateChange> oldIterator = removeOldChanges(fromOffset, toOffset);
 
 		// add
-		final Iterator newIterator = newContainer.lexerStateChanges.iterator();
+		final Iterator<LexerStateChange> newIterator = newContainer.lexerStateChanges.iterator();
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
 		
 		// goto the previous before adding
@@ -169,7 +169,7 @@ public class PhpTokenContainer {
 		}
 	}
 
-	public ListIterator removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
+	public synchronized  ListIterator<ContextRegion> removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
 		assert tokenStart != null;
 
 		// go to the start region
@@ -188,7 +188,7 @@ public class PhpTokenContainer {
 		if (tokenStart != tokenEnd) {
 			// remove to the end 
 			do {
-				region = (ITextRegion) tokensIterator.next();
+				region = tokensIterator.next();
 				tokensIterator.remove();
 			} while (tokensIterator.hasNext() && region != tokenEnd);
 		}
@@ -199,14 +199,14 @@ public class PhpTokenContainer {
 	/**
 	 * One must call getModelForWrite() in order to construct the list of php tokens 
 	 */
-	public void getModelForCreation() {
+	public synchronized void getModelForCreation() {
 		tokensIterator = null;
 	}
 
 	/**
 	 * One must call releaseModelForWrite() after constructing the  
 	 */
-	public void releaseModelFromCreation() {
+	public synchronized  void releaseModelFromCreation() {
 		tokensIterator = phpTokens.listIterator();
 	}
 
@@ -218,7 +218,7 @@ public class PhpTokenContainer {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public ListIterator getPhpTokensIterator(final int offset) throws BadLocationException {
+	public synchronized  ListIterator<ContextRegion> getPhpTokensIterator(final int offset) throws BadLocationException {
 		// fast results for empty lists
 		if (phpTokens.isEmpty()) {
 			return tokensIterator;
@@ -234,7 +234,7 @@ public class PhpTokenContainer {
 	 * @return the whole tokens as an array 
 	 */
 	public ITextRegion[] getPhpTokens() {
-		return (ITextRegion[]) phpTokens.toArray(new ITextRegion[phpTokens.size()]);
+		return phpTokens.toArray(new ITextRegion[phpTokens.size()]);
 	}
 
 	/**
@@ -257,7 +257,7 @@ public class PhpTokenContainer {
 	 * @param region
 	 * @param lexerState
 	 */
-	public void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
+	public synchronized void addLast(String yylex, int start, int yylengthLength, int yylength, Object lexerState) {
 		assert (phpTokens.size() == 0 || getLastToken().getEnd() == start) && tokensIterator == null;
 
 		// if state was change - we add a new token and add state 
@@ -273,7 +273,7 @@ public class PhpTokenContainer {
 		assert phpTokens.size() > 0;
 		// if we can only adjust the previous token size 
 		if (yylex == PhpLexer.WHITESPACE) {
-			final ITextRegion last = (ITextRegion) phpTokens.getLast();
+			final ITextRegion last = phpTokens.getLast();
 			last.adjustLength(yylength);
 		} else { // else - add as a new token
 			final ContextRegion contextRegion = new ContextRegion(yylex, start, yylengthLength, yylength);
@@ -294,7 +294,7 @@ public class PhpTokenContainer {
 
 		// if state was change - we add a new token and add state 
 		if (lexerStateChanges.size() != 0 && getLastChange().state.equals(lexerState)) {
-			final ITextRegion last = (ITextRegion) phpTokens.getLast();
+			final ITextRegion last = phpTokens.getLast();
 			last.adjustLength(yylength);
 		}
 	}
@@ -348,17 +348,17 @@ public class PhpTokenContainer {
 	}
 
 	protected final ITextRegion getLastToken() {
-		return (ITextRegion) phpTokens.getLast();
+		return phpTokens.getLast();
 	}
 
 	protected LexerStateChange getLastChange() {
-		return (LexerStateChange) lexerStateChanges.getLast();
+		return lexerStateChanges.getLast();
 	}
 
-	protected final ListIterator removeOldChanges(int fromOffset, int toOffset) {
-		final ListIterator iterator = (ListIterator) lexerStateChanges.iterator();
+	protected synchronized final ListIterator<LexerStateChange> removeOldChanges(int fromOffset, int toOffset) {
+		final ListIterator<LexerStateChange> iterator = (ListIterator<LexerStateChange>) lexerStateChanges.iterator();
 
-		LexerStateChange element = (LexerStateChange) iterator.next();
+		LexerStateChange element = iterator.next();
 		while (element.getOffset() <= toOffset) {
 			if (element.getOffset() > fromOffset && element.getOffset() <= toOffset) {
 				iterator.remove();
@@ -366,7 +366,7 @@ public class PhpTokenContainer {
 			if (!iterator.hasNext()) {
 				return iterator;
 			}
-			element = (LexerStateChange) iterator.next();
+			element = iterator.next();
 		}
 
 		return iterator;
