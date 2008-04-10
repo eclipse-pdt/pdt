@@ -255,7 +255,7 @@ public class VariableCreationDialog extends StatusDialog {
 	private IPath chooseExtDirectory() {
 		String initPath = getInitPath();
 
-		DirectoryDialog dialog = new DirectoryDialog(getParentShell());
+		DirectoryDialog dialog = new DirectoryDialog(getParentShell(), SWT.APPLICATION_MODAL);
 		dialog.setText(PHPUIMessages.getString("VariableCreationDialog_extdirdialog_text"));
 		dialog.setMessage(PHPUIMessages.getString("VariableCreationDialog_extdirdialog_message"));
 		dialog.setFilterPath(initPath);
