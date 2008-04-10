@@ -191,6 +191,11 @@ public class PHPexeItem {
 		if (executable == null) {
 			throw new IllegalArgumentException("PHP executable path is null");
 		}
+
+		if (executable.equals(this.executable)) {
+			return;
+		}
+		
 		this.executable = executable;
 		this.config = null;
 
