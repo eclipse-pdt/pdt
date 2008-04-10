@@ -68,7 +68,7 @@ public class HelpContextGenerator {
 		File javaTemplateFile = getJavaTemplateFile();
 		File helpContextFile = new File(javaTemplateFile.getParent(), HELP_CONTEXT_FILE);
 		File newJavaFile = new File(javaTemplateFile.getParent(), JAVA_HELP_CONTEXT_NAME);
-		StringBuilder helpContextBuilder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE + "<contexts>" + NEW_LINE); //$NON-NLS-1$ //$NON-NLS-2$
+		StringBuilder helpContextBuilder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NEW_LINE + "<!-- Auto generated using the HelpContextGenerator -->" + NEW_LINE + "<contexts>" + NEW_LINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		StringBuilder newJavaFileBuilder = new StringBuilder();
 		loadJavaTemplate(newJavaFileBuilder, javaTemplateFile);
 
