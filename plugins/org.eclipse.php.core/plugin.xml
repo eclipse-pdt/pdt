@@ -48,6 +48,16 @@
 			-->
 		</content-type>
    </extension>  
+
+	<!-- Ignoring certain filename patterns/extension at team-work -->
+	<extension point="org.eclipse.team.core.ignore">
+		<!-- '/.settings' dir and content -->
+		<ignore pattern=".settings" enabled="true"/>
+		<ignore pattern="*.prefs" enabled="true"/>
+		<!-- '/.cache' dir and content -->
+		<ignore pattern=".cache" enabled="true"/>
+		<ignore pattern=".dataModel" enabled="true"/>
+	</extension> 
  
  	<!-- Adding default "Eclipse text editor" for *.[ini,cfg] files --> 
 	<extension
