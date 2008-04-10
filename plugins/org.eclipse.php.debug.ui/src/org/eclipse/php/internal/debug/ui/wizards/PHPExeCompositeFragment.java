@@ -282,6 +282,10 @@ public class PHPExeCompositeFragment extends CompositeFragment implements IPHPEx
 			setMessage(PHPDebugUIMessages.addPHPexeDialog_locationNotExists, IMessageProvider.ERROR);
 			return;
 		}
+		if (!executableLocation.getName().toLowerCase().contains("php")) { //$NON-NLS-1$
+			setMessage("Selected location doesn't refer to a valid PHP executable", IMessageProvider.ERROR);
+			return;
+		}
 
 		String iniLocationName = fPHPIni.getText();
 		File iniFile = null;
