@@ -24,7 +24,6 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -41,7 +40,6 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
-import org.eclipse.php.internal.ui.functions.PHPFunctionsPart;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.util.WeakPropertyChangeListener;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
@@ -922,7 +920,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		for (int i = text.length() - 1; i >= functionStart; i--) {
 			if (text.charAt(i) == '(') {
 				boolean showClassCompletion = true;
-				for (int j = text.length() - 1; j > i; j--) {
+				int j = text.length() - 1;
+				for (; j > i; j--) {
 					// fixed bug 178032 - check if the cursor is after type means no '$' sign between cursor to '(' sign or ',' sign
 					if (text.charAt(j) == '$') {
 						showClassCompletion = false;
@@ -935,7 +934,17 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				if (showClassCompletion) {
 					CodeData[] classes = projectModel.getClasses();
 					completionProposalGroup = phpCompletionProposalGroup;
-					String prefix = text.subTextSequence(i + 1, text.length()).toString();
+					String prefix = text.subTextSequence(j + 1, text.length()).toString();
+					//remove leading white spaces
+					int k = 0;
+					for (; k < prefix.length(); k++) {
+						if (!Character.isWhitespace(prefix.charAt(k))) {
+							break;
+						}
+					}
+					if (k != 0) {
+						prefix = prefix.substring(k);
+					}
 					completionProposalGroup.setData(offset, classes, prefix, selectionLength, false);
 				}
 				return true;
