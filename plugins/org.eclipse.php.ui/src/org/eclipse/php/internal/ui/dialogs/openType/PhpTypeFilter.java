@@ -14,30 +14,39 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.dialogs.openType.filter.IPhpTypeFilterReadModel;
 import org.eclipse.php.internal.ui.dialogs.openType.filter.IPhpTypeFilterWriteModel;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.filter.ElementSpecificFilter;
 
 public class PhpTypeFilter extends ElementSpecificFilter implements IPhpTypeFilterWriteModel, IPhpTypeFilterReadModel {
 
-	private boolean selectClasses = true;
-	private boolean selectFunctions = true;
-	private boolean selectConstants = true;
-	
+	private static final int USE_CLASSES = 1 << 1;
+	private static final int USE_FUNCTION = 1 << 2;
+	private static final int USE_CONSTANTS = 1 << 3;
+
+	private static final String OPEN_PHP_ELEMENT_PREFERENCE = "open_php_element_preference";
+
+	static {
+		PHPUiPlugin.getDefault().getPreferenceStore().setDefault(OPEN_PHP_ELEMENT_PREFERENCE, USE_CLASSES | USE_FUNCTION | USE_CONSTANTS);
+	}
+
+	private int state = PHPUiPlugin.getDefault().getPreferenceStore().getInt(OPEN_PHP_ELEMENT_PREFERENCE);
+
 	public boolean select(Object element) {
-		if (selectClasses && selectFunctions && selectConstants) {
+		if ((state & (USE_CLASSES | USE_FUNCTION | USE_CONSTANTS)) == (USE_CLASSES | USE_FUNCTION | USE_CONSTANTS)) {
 			return true;
 		}
 		if (element instanceof PHPClassData) {
-			return selectClasses;
+			return ((state & USE_CLASSES) != 0);
 		}
 
 		if (element instanceof PHPFunctionData) {
-			return selectFunctions;
+			return ((state & USE_FUNCTION) != 0);
 		}
 
 		if (element instanceof PHPConstantData | element instanceof PHPClassConstData) {
-			return selectConstants;
+			return ((state & USE_CONSTANTS) != 0);
 		}
 
 		//assert false;
@@ -45,29 +54,36 @@ public class PhpTypeFilter extends ElementSpecificFilter implements IPhpTypeFilt
 	}
 
 	public void setSelectClasses(boolean select) {
-		this.selectClasses = select;
-		this.notifyFilterChanged();
+		valueChanged(select, USE_CLASSES);
 	}
 
 	public void setSelectFunctions(boolean select) {
-		this.selectFunctions = select;
-		this.notifyFilterChanged();
+		valueChanged(select, USE_FUNCTION);
 	}
 
 	public void setSelectConstants(boolean select) {
-		this.selectConstants = select;
+		valueChanged(select, USE_CONSTANTS);
+	}
+
+	private void valueChanged(boolean select, int value) {
+		if (select) {
+			state |= value;
+		} else {
+			state &= ~value;
+		}
+		PHPUiPlugin.getDefault().getPreferenceStore().setValue(OPEN_PHP_ELEMENT_PREFERENCE, state);
 		this.notifyFilterChanged();
 	}
 
 	public boolean getSelectClasss() {
-		return this.selectClasses;
+		return ((state & USE_CLASSES) != 0);
 	}
 
 	public boolean getSelectFunctions() {
-		return selectFunctions;
+		return ((state & USE_FUNCTION) != 0);
 	}
 
 	public boolean getSelectConstants() {
-		return selectConstants;
+		return ((state & USE_CONSTANTS) != 0);
 	}
 }
