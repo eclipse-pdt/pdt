@@ -41,8 +41,9 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 	 * @return <code>null</code>
 	 */
 	protected IProject[] build(final int kind, final Map args, IProgressMonitor monitor) throws CoreException {
+		final IProject project = getProject();
+		final IResourceDelta delta = getDelta(project);
 		if (kind == IncrementalProjectBuilder.AUTO_BUILD) {
-			IResourceDelta delta = getDelta(getProject());
 			RSEFolderReporter visitor = new RSEFolderReporter();
 			try {
 				delta.accept(visitor);
@@ -54,7 +55,7 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 					@Override
 					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-						internalBuild(kind, args, monitor);
+						internalBuild(project, delta, kind, args, monitor);
 						return Status.OK_STATUS;
 					}
 
@@ -63,16 +64,15 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 				return null;
 			}
 		}
-		return internalBuild(kind, args, monitor);
+		return internalBuild(project, delta, kind, args, monitor);
 	}
 
-	private IProject[] internalBuild(int kind, Map args, IProgressMonitor monitor) throws CoreException {
+	private IProject[] internalBuild(IProject project, IResourceDelta delta, int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(CoreMessages.getString("PHPIncrementalProjectBuilder_0"), extensions.length);
 		for (int i = 0; i < extensions.length; ++i) {
 			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
 			if (extensions[i].isEnabled()) {
-				IProject project = getProject();
-				extensions[i].build(project, getDelta(project), kind, args, subMonitor);
+				extensions[i].build(project, delta, kind, args, subMonitor);
 			}
 		}
 		return null;
