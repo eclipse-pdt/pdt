@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
@@ -172,12 +173,28 @@ public class OpenPhpElementDialog extends Dialog {
 		final List<Object> result = new ArrayList<Object>();
 		result.add(last);
 		for (CodeData codeData : elements) {
-			if (last != codeData && comparator.compare(last, codeData) != 0) {
+			if (!equals(last, codeData)) {
 				result.add(codeData);
 			}
 			last = codeData;
 		}
 		return result.toArray();
+	}
+
+	private boolean equals(CodeData o1, CodeData o2) {
+
+		if (o1.getClass() != o2.getClass()) {
+			return false;
+		}
+
+		if (!o1.getName().equalsIgnoreCase(o1.getName())) {
+			return false;
+		}
+		//since we know the input can be either class, function or constant - the casting here is safe.
+		String fileName1 = PHPModelUtil.getPHPFileContainer((PHPCodeData) o1).getName();
+		String fileName2 = PHPModelUtil.getPHPFileContainer((PHPCodeData) o2).getName();
+
+		return fileName1.equals(fileName2);
 	}
 
 	private void addData(CodeData[] classes, Collection arrayList) {
