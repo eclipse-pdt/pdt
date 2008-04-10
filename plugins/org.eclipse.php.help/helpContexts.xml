@@ -1,7 +1,371 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <contexts>
+	<context id="pdt_user_guide">
+		<description>PDT User Guide Help</description>
+		<topic href="html/Welcome.htm" label="PDT User Guide"/>
+	</context>
+	<context id="getting_started">
+		<description>Getting Started Help</description>
+		<topic href="html/Getting_Started.htm" label="Getting Started"/>
+	</context>
+	<context id="quick_start">
+		<description>Quick Start Help</description>
+		<topic href="html/Quick_Start.htm" label="Quick Start"/>
+	</context>
+	<context id="basic_tutorials">
+		<description>Basic Tutorials Help</description>
+		<topic href="html/Basic_Tutorial.htm" label="Basic Tutorials"/>
+	</context>
+	<context id="creating_projects_and_files">
+		<description>Creating Projects and Files Help</description>
+		<topic href="html/Creating_and_Uploading_a_Project.htm" label="Creating Projects and Files"/>
+	</context>
+	<context id="working_with_code_assist">
+		<description>Working with Code Assist Help</description>
+		<topic href="html/Working_with_Code_Assist.htm" label="Working with Code Assist"/>
+	</context>
+	<context id="working_with_the_debugger">
+		<description>Working with the Debugger Help</description>
+		<topic href="html/Working_with_the_Debugger.htm" label="Working with the Debugger"/>
+	</context>
+	<context id="concepts">
+		<description>Concepts Help</description>
+		<topic href="html/Concepts.htm" label="Concepts"/>
+	</context>
+	<context id="php_support">
+		<description>PHP Support Help</description>
+		<topic href="html/PHP_Support.htm" label="PHP Support"/>
+	</context>
+	<context id="code_assist">
+		<description>Code Assist Help</description>
+		<topic href="html/Code_Assist_Concept.htm" label="Code Assist"/>
+	</context>
+	<context id="automatic_completion">
+		<description>Automatic Completion Help</description>
+		<topic href="html/Automatic_Insertion.htm" label="Automatic Completion"/>
+	</context>
+	<context id="matching_brackets">
+		<description>Matching Brackets Help</description>
+		<topic href="html/Matching_Brackets.htm" label="Matching Brackets"/>
+	</context>
+	<context id="code_folding">
+		<description>Code Folding Help</description>
+		<topic href="html/Code_Folding.htm" label="Code Folding"/>
+	</context>
+	<context id="syntax_coloring">
+		<description>Syntax Coloring Help</description>
+		<topic href="html/Syntax_Highlighting.htm" label="Syntax Coloring"/>
+	</context>
+	<context id="commenting_code">
+		<description>Commenting Code Help</description>
+		<topic href="html/Commenting_Code.htm" label="Commenting Code"/>
+	</context>
+	<context id="phpdoc_block_comments">
+		<description>phpDoc Block Comments Help</description>
+		<topic href="html/phpDoc_Comments.htm" label="phpDoc Block Comments"/>
+	</context>
+	<context id="hover_support">
+		<description>Hover Support Help</description>
+		<topic href="html/Hover_Support.htm" label="Hover Support"/>
+	</context>
+	<context id="php_manual_integration">
+		<description>PHP Manual Integration Help</description>
+		<topic href="html/PHP_Manual_Integration.htm" label="PHP Manual Integration"/>
+	</context>
+	<context id="real_time_error_detection">
+		<description>Real Time Error Detection Help</description>
+		<topic href="html/Real_Time_Error_Detection.htm" label="Real Time Error Detection"/>
+	</context>
+	<context id="debugging">
+		<description>Debugging Help</description>
+		<topic href="html/Debugging_Concept.htm" label="Debugging"/>
+	</context>
 	<context id="path_mapping">
 		<description>Path Mapping Help</description>
 		<topic href="html/Path_Mapping.htm" label="Path Mapping"/>
+	</context>
+	<context id="include_paths">
+		<description>Include Paths Help</description>
+		<topic href="html/Include_Paths.htm" label="Include Paths"/>
+	</context>
+	<context id="tasks">
+		<description>Tasks Help</description>
+		<topic href="html/Tasks.htm" label="Tasks"/>
+	</context>
+	<context id="easy_file_creation">
+		<description>Easy File Creation Help</description>
+		<topic href="html/File_Creation.htm" label="Easy File Creation"/>
+	</context>
+	<context id="creating_a_php_file_within_a_project">
+		<description>Creating a PHP File Within a Project Help</description>
+		<topic href="html/Creating_a_PHP_File_within_a_Project.htm" label="Creating a PHP File Within a Project"/>
+	</context>
+	<context id="opening_an_external_file">
+		<description>Opening an External File Help</description>
+		<topic href="html/Opening_an_External_File_in_Neon.htm" label="Opening an External File"/>
+	</context>
+	<context id="using_code_assist">
+		<description>Using Code Assist Help</description>
+		<topic href="html/Using_Code_Assist.htm" label="Using Code Assist"/>
+	</context>
+	<context id="using_templates">
+		<description>Using Templates Help</description>
+		<topic href="html/Using_Templates.htm" label="Using Templates"/>
+	</context>
+	<context id="searching_for_php_elements">
+		<description>Searching for PHP Elements Help</description>
+		<topic href="html/Searching_for_PHP_Elements.htm" label="Searching for PHP Elements"/>
+	</context>
+	<context id="opening_php_elements">
+		<description>Opening PHP Elements Help</description>
+		<topic href="html/Opening_PHP_Elements.htm" label="Opening PHP Elements"/>
+	</context>
+	<context id="formatting_code">
+		<description>Formatting Code Help</description>
+		<topic href="html/Formatting_Code.htm" label="Formatting Code"/>
+	</context>
+	<context id="using_code_folding">
+		<description>Using Code Folding Help</description>
+		<topic href="html/Using_Code_Folding.htm" label="Using Code Folding"/>
+	</context>
+	<context id="adding_comments">
+		<description>Adding Comments Help</description>
+		<topic href="html/How_to_Comment_and_Uncomment_PHP_Code.htm" label="Adding Comments"/>
+	</context>
+	<context id="adding_php_docblock_comments">
+		<description>Adding PHP DocBlock Comments Help</description>
+		<topic href="html/Commenting_PHP_DocBlocks.htm" label="Adding PHP DocBlock Comments"/>
+	</context>
+	<context id="using_smart_goto_source">
+		<description>Using Smart Goto Source Help</description>
+		<topic href="html/Using_Smart_Goto_Source.htm" label="Using Smart Goto Source"/>
+	</context>
+	<context id="using_the_debugger">
+		<description>Using the Debugger Help</description>
+		<topic href="html/Debugging.htm" label="Using the Debugger"/>
+	</context>
+	<context id="locally_debugging_a_php_script">
+		<description>Locally Debugging a PHP Script Help</description>
+		<topic href="html/Locally_Debugging_a_PHP_Script.htm" label="Locally Debugging a PHP Script"/>
+	</context>
+	<context id="debugging_a_php_web_page">
+		<description>Debugging a PHP Web Page Help</description>
+		<topic href="html/Debugging_a_PHP_Web_Page.htm" label="Debugging a PHP Web Page"/>
+	</context>
+	<context id="running_and_analyzing_debugger_results">
+		<description>Running and Analyzing Debugger Results Help</description>
+		<topic href="html/Analyzing_Debugger_Results.htm" label="Running and Analyzing Debugger Results"/>
+	</context>
+	<context id="adding_a_server_location_path_map">
+		<description>Adding a Server Location Path Map Help</description>
+		<topic href="html/Adding_a_Server_Path_Map.htm" label="Adding a Server Location Path Map"/>
+	</context>
+	<context id="adding_elements_to_a_project_s_include_path">
+		<description>Adding Elements to a Project's Include Path Help</description>
+		<topic href="html/Adding_Elements_to_a_Project_s_Include_Path.htm" label="Adding Elements to a Project's Include Path"/>
+	</context>
+	<context id="reference">
+		<description>Reference Help</description>
+		<topic href="html/Reference.htm" label="Reference"/>
+	</context>
+	<context id="php_perspectives_and_views">
+		<description>PHP Perspectives and Views Help</description>
+		<topic href="html/PHP_Perspectives_and_Views.htm" label="PHP Perspectives and Views"/>
+	</context>
+	<context id="php_perspective">
+		<description>PHP Perspective Help</description>
+		<topic href="html/PHP_Perspective_Views.htm" label="PHP Perspective"/>
+	</context>
+	<context id="php_explorer_view">
+		<description>PHP Explorer View Help</description>
+		<topic href="html/PHP_Explorer_view.htm" label="PHP Explorer View"/>
+	</context>
+	<context id="php_functions_view">
+		<description>PHP Functions View Help</description>
+		<topic href="html/PHP_Functions_View.htm" label="PHP Functions View"/>
+	</context>
+	<context id="php_project_outline_view">
+		<description>PHP Project Outline View Help</description>
+		<topic href="html/Project_Outline_view.htm" label="PHP Project Outline View"/>
+	</context>
+	<context id="outline_view">
+		<description>Outline View Help</description>
+		<topic href="html/PHP_Outline_VIew.htm" label="Outline View"/>
+	</context>
+	<context id="php_debug_perspective">
+		<description>PHP Debug Perspective Help</description>
+		<topic href="html/PHP_Debug_Perspective.htm" label="PHP Debug Perspective"/>
+	</context>
+	<context id="debug_view">
+		<description>Debug View Help</description>
+		<topic href="html/Debug_View.htm" label="Debug View"/>
+	</context>
+	<context id="variables_view">
+		<description>Variables View Help</description>
+		<topic href="html/Variables_View.htm" label="Variables View"/>
+	</context>
+	<context id="breakpoints_view">
+		<description>Breakpoints View Help</description>
+		<topic href="html/Breakpoints_View.htm" label="Breakpoints View"/>
+	</context>
+	<context id="parameter_stack_view">
+		<description>Parameter Stack View Help</description>
+		<topic href="html/Parameter_Stack.htm" label="Parameter Stack View"/>
+	</context>
+	<context id="debug_output_view">
+		<description>Debug Output View Help</description>
+		<topic href="html/Debug_Output_View.htm" label="Debug Output View"/>
+	</context>
+	<context id="browser_output_view">
+		<description>Browser Output View Help</description>
+		<topic href="html/Browser_Output_View.htm" label="Browser Output View"/>
+	</context>
+	<context id="php_perspective_menus">
+		<description>PHP Perspective Menus Help</description>
+		<topic href="html/Menus.htm" label="PHP Perspective Menus"/>
+	</context>
+	<context id="file">
+		<description>File Help</description>
+		<topic href="html/File.htm" label="File"/>
+	</context>
+	<context id="new">
+		<description>New Help</description>
+		<topic href="html/New.htm" label="New"/>
+	</context>
+	<context id="import">
+		<description>Import Help</description>
+		<topic href="html/Import.htm" label="Import"/>
+	</context>
+	<context id="export">
+		<description>Export Help</description>
+		<topic href="html/Export.htm" label="Export"/>
+	</context>
+	<context id="edit">
+		<description>Edit Help</description>
+		<topic href="html/Edit.htm" label="Edit"/>
+	</context>
+	<context id="source">
+		<description>Source Help</description>
+		<topic href="html/Source.htm" label="Source"/>
+	</context>
+	<context id="refactor">
+		<description>Refactor Help</description>
+		<topic href="html/Refactor.htm" label="Refactor"/>
+	</context>
+	<context id="navigate">
+		<description>Navigate Help</description>
+		<topic href="html/Navigate.htm" label="Navigate"/>
+	</context>
+	<context id="search">
+		<description>Search Help</description>
+		<topic href="html/Search.htm" label="Search"/>
+	</context>
+	<context id="project">
+		<description>Project Help</description>
+		<topic href="html/Project.htm" label="Project"/>
+	</context>
+	<context id="run">
+		<description>Run Help</description>
+		<topic href="html/Run.htm" label="Run"/>
+	</context>
+	<context id="window">
+		<description>Window Help</description>
+		<topic href="html/Window.htm" label="Window"/>
+	</context>
+	<context id="navigation">
+		<description>Navigation Help</description>
+		<topic href="html/Navigation.htm" label="Navigation"/>
+	</context>
+	<context id="help">
+		<description>Help Help</description>
+		<topic href="html/Help.htm" label="Help"/>
+	</context>
+	<context id="php_perspective_main_toolbar">
+		<description>PHP Perspective Main Toolbar Help</description>
+		<topic href="html/PHP_Perspective_Main_Toolbar.htm" label="PHP Perspective Main Toolbar"/>
+	</context>
+	<context id="php_preferences">
+		<description>PHP Preferences Help</description>
+		<topic href="html/Preferences.htm" label="PHP Preferences"/>
+	</context>
+	<context id="php_preferences_page">
+		<description>PHP Preferences Page Help</description>
+		<topic href="html/PHP.htm" label="PHP Preferences Page"/>
+	</context>
+	<context id="appearance_preferences">
+		<description>Appearance Preferences Help</description>
+		<topic href="html/Appearance.htm" label="Appearance Preferences"/>
+	</context>
+	<context id="debug_preferences">
+		<description>Debug Preferences Help</description>
+		<topic href="html/Debug.htm" label="Debug Preferences"/>
+	</context>
+	<context id="installed_debuggers">
+		<description>Installed Debuggers Help</description>
+		<topic href="html/Installed_Debuggers.htm" label="Installed Debuggers"/>
+	</context>
+	<context id="workbench_options">
+		<description>Workbench Options Help</description>
+		<topic href="html/Launching.htm" label="Workbench Options"/>
+	</context>
+	<context id="editor_preferences">
+		<description>Editor Preferences Help</description>
+		<topic href="html/Editor.htm" label="Editor Preferences"/>
+	</context>
+	<context id="code_assist_preferences">
+		<description>Code Assist Preferences Help</description>
+		<topic href="html/Code_Assist.htm" label="Code Assist Preferences"/>
+	</context>
+	<context id="folding_preferences">
+		<description>Folding Preferences Help</description>
+		<topic href="html/Folding.htm" label="Folding Preferences"/>
+	</context>
+	<context id="hovers_preferences">
+		<description>Hovers Preferences Help</description>
+		<topic href="html/Hovers.htm" label="Hovers Preferences"/>
+	</context>
+	<context id="syntax_coloring_preferences">
+		<description>Syntax Coloring Preferences Help</description>
+		<topic href="html/Syntax_Coloring.htm" label="Syntax Coloring Preferences"/>
+	</context>
+	<context id="task_tags_preferences">
+		<description>Task Tags Preferences Help</description>
+		<topic href="html/Task_Tags.htm" label="Task Tags Preferences"/>
+	</context>
+	<context id="typing_preferences">
+		<description>Typing Preferences Help</description>
+		<topic href="html/Typing.htm" label="Typing Preferences"/>
+	</context>
+	<context id="formatter_preferences">
+		<description>Formatter Preferences Help</description>
+		<topic href="html/Formatter.htm" label="Formatter Preferences"/>
+	</context>
+	<context id="path_variables_preferences">
+		<description>Path Variables Preferences Help</description>
+		<topic href="html/Path_Variables.htm" label="Path Variables Preferences"/>
+	</context>
+	<context id="php_executables_preferences">
+		<description>PHP Executables Preferences Help</description>
+		<topic href="html/PHP_Executables.htm" label="PHP Executables Preferences"/>
+	</context>
+	<context id="php_interpreter_preferences">
+		<description>PHP Interpreter Preferences Help</description>
+		<topic href="html/PHP_Interpreter.htm" label="PHP Interpreter Preferences"/>
+	</context>
+	<context id="php_manual_preferences">
+		<description>PHP Manual Preferences Help</description>
+		<topic href="html/PHP_Manual.htm" label="PHP Manual Preferences"/>
+	</context>
+	<context id="php_servers_preferences">
+		<description>PHP Servers Preferences Help</description>
+		<topic href="html/PHP_Servers.htm" label="PHP Servers Preferences"/>
+	</context>
+	<context id="templates_preferences">
+		<description>Templates Preferences Help</description>
+		<topic href="html/Templates.htm" label="Templates Preferences"/>
+	</context>
+	<context id="keymap">
+		<description>Keymap Help</description>
+		<topic href="html/Keymap.htm" label="Keymap"/>
 	</context>
 </contexts>
