@@ -166,9 +166,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				PHPCorePlugin.log(e);
 			}
 		}
-		if (phpProjects.isEmpty()) {
-			return;
-		}
+		
 		WorkspaceJob cleanJob = new WorkspaceJob(CoreMessages.getString("PHPWorkspaceModelManager_5")) {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
