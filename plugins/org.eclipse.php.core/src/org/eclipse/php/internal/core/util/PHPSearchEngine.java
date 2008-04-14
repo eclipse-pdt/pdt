@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.util;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
@@ -35,6 +36,8 @@ import org.eclipse.php.internal.core.project.options.includepath.IncludePathVari
  * @author michael
  */
 public class PHPSearchEngine {
+	
+	private static Pattern RELATIVE_PATH_PATTERN = Pattern.compile("\\.\\.?[/\\\\].*");
 
 	/**
 	 * Searches for the given path using internal PHP mechanism
@@ -55,7 +58,7 @@ public class PHPSearchEngine {
 		if (file.isAbsolute()) {
 			return searchExternalOrWorkspaceFile(file);
 		}
-		if (path.matches("\\.\\.?[/\\\\].*")) { // check whether the path starts with ./ or ../
+		if (RELATIVE_PATH_PATTERN.matcher(path).matches()) { // check whether the path starts with ./ or ../
 			return searchExternalOrWorkspaceFile(currentWorkingDir, path);
 		}
 
