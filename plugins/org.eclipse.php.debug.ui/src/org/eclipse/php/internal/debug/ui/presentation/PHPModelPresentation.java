@@ -178,14 +178,6 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 
 	private String getStackFrameText(PHPStackFrame frame) {
 		try {
-			// Fix bug #160443 (Stack frames line numbers update).
-			// Synchronize the top frame with the given values.
-			PHPThread thread = (PHPThread) frame.getThread();
-			PHPStackFrame topFrame = (PHPStackFrame) thread.getTopStackFrame();
-			if (topFrame != null && topFrame.equals(frame)) {
-				frame = topFrame;
-			} // end fix
-
 			StringBuffer buffer = new StringBuffer();
 			String frameName = frame.getName();
 			if (frameName != null && frameName.length() > 0) {
