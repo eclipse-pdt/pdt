@@ -15,9 +15,8 @@
 
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author guy
@@ -30,19 +29,21 @@ public class StackLayer {
     private int callerLineNumber;
     private String callerFunctionName;
 
+    private String resolvedCalledFileName;
     private String calledFileName;
     private int calledLineNumber;
     private String calledFunctionName;
 
-    private List variables;
-    
+    private Expression[] variables;
+    private Map<String, byte[]> unresolvedVariables;
+
     private ExpressionsValueDeserializer expressionValueDeserializer;
 
     /**
      * Creates new StackLayer
      */
     public StackLayer(String transferEncoding) {
-        variables = new ArrayList(6);
+        unresolvedVariables = new HashMap<String, byte[]>();
         expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
     }
 
@@ -98,6 +99,14 @@ public class StackLayer {
         this.calledFileName = calledFileName;
     }
 
+    public final String getResolvedCalledFileName() {
+        return resolvedCalledFileName;
+    }
+
+    public final void setResolvedCalledFileName(String resolvedCalledFileName) {
+        this.resolvedCalledFileName = resolvedCalledFileName;
+    }
+
     public final int getCalledLineNumber() {
         return calledLineNumber;
     }
@@ -115,28 +124,20 @@ public class StackLayer {
     }
 
     public void addVariable(String variableName, byte[] value) {
-        StackVariable variable = new DefaultStackVariable(variableName, getDepth());
-        variable.setValue(expressionValueDeserializer.deserializer(variable, value));
-
-        variables.add(variable);
-    }
-
-    public void addVariable(Expression expression) {
-        variables.add(expression);
-    }
-
-    public int getNumberOfVariables() {
-        return variables.size();
+    	unresolvedVariables.put(variableName, value);
     }
 
     public Expression[] getVariables() {
-        Expression[] arrayVariables = new Expression[variables.size()];
-        variables.toArray(arrayVariables);
-        return arrayVariables;
-    }
-
-    public Iterator iterator() {
-        return variables.iterator();
+	    if (variables == null) {
+	    	variables = new Expression[unresolvedVariables.size()];
+	    	int i = 0;
+	    	for (String variableName : unresolvedVariables.keySet()) {
+		   		StackVariable variable = new DefaultStackVariable(variableName, depth);
+		   	    variable.setValue(expressionValueDeserializer.deserializer(variable, unresolvedVariables.get(variableName)));
+		   	    variables[i++] = variable;
+	    	}
+	    }
+    	return variables;
     }
 
     public String toString() {
@@ -151,11 +152,12 @@ public class StackLayer {
             return "";
         }
         StringBuffer buffer = new StringBuffer(getCallerFunctionName() + '(');
-        for (int i = 0; i < variables.size(); i++) {
-            Expression expression = (Expression) variables.get(i);
+        Expression[] variables = getVariables();
+        for (int i = 0; i < variables.length; i++) {
+            Expression expression = variables[i];
             buffer.append(" $");
             buffer.append(expression.getLastName());
-            if (i != variables.size() - 1) {
+            if (i != variables.length - 1) {
                 buffer.append(',');
             }
         }
