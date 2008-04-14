@@ -7,12 +7,14 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.help.IToc;
 import org.eclipse.help.ITocContribution;
 import org.eclipse.help.ITopic;
 import org.eclipse.help.IUAElement;
+import org.eclipse.help.internal.Topic;
 import org.eclipse.help.internal.toc.TocFileProvider;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +39,9 @@ public class HelpContextGenerator {
 	private static final String HELP_CONTEXT_FILE = "helpContexts.xml"; //$NON-NLS-1$
 	private static final String DESCRIPTION_POSTFIX = " Help";//$NON-NLS-1$
 	private static final String CONTEXT_BLOCK = "\t<context id=\"%1$s\">" + NEW_LINE + "\t\t<description>%2$s</description>" + NEW_LINE + "\t\t<topic href=\"%3$s\" label=\"%4$s\"/>" + NEW_LINE + "\t</context>" + NEW_LINE;//$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$
-	private static final String JAVA_CONSTANT_LINE = "\tpublic static final String %1$s = PREFIX + \"%2$s\"; //$NON-NLS-1$" + NEW_LINE;//$NON-NLS-1$
+	private static final String JAVA_CONSTANT_LINE = "public static final String %1$s = PREFIX + \"%2$s\"; //$NON-NLS-1$ [%3$s]" + NEW_LINE;//$NON-NLS-1$
+
+	private LinkedHashSet<String> topics = new LinkedHashSet<String>();
 
 	@Test
 	public void run() {
@@ -76,7 +80,7 @@ public class HelpContextGenerator {
 		for (ITocContribution tocContribution : phpTocs) {
 			IToc toc = tocContribution.getToc();
 			IUAElement[] children = toc.getChildren();
-			writeElements(children, helpContextBuilder, newJavaFileBuilder);
+			writeElements(children, helpContextBuilder, newJavaFileBuilder, 1);
 		}
 
 		newJavaFileBuilder.append('}');
@@ -92,7 +96,7 @@ public class HelpContextGenerator {
 	 * @param helpContextBuilder
 	 * @param newJavaFileBuilder
 	 */
-	private void writeElements(IUAElement[] children, StringBuilder helpContextBuilder, StringBuilder newJavaFileBuilder) {
+	private void writeElements(IUAElement[] children, StringBuilder helpContextBuilder, StringBuilder newJavaFileBuilder, int tocLevel) {
 		for (IUAElement child : children) {
 			if (child instanceof ITopic) {
 				ITopic topic = ((ITopic) child);
@@ -104,11 +108,24 @@ public class HelpContextGenerator {
 				if (Character.isDigit(labelAsModifier.charAt(0))) {
 					labelAsModifier = '_' + labelAsModifier;
 				}
-				newJavaFileBuilder.append(String.format(JAVA_CONSTANT_LINE, labelAsModifier.toUpperCase(), labelAsKey));
+				if (topics.contains(labelAsModifier)) {
+					// append the parent topic name to this label
+					ITopic parent = (ITopic) ((Topic) topic).getParentElement();
+					String parentLabel = cleanLabel(parent.getLabel()).toLowerCase();
+					if (Character.isDigit(parentLabel.charAt(0))) {
+						parentLabel = '_' + parentLabel;
+					}
+					labelAsModifier = parentLabel + labelAsModifier;
+				}
+				topics.add(labelAsModifier);
+				for (int i = 0; i < tocLevel; i++) {
+					newJavaFileBuilder.append('\t');
+				}
+				newJavaFileBuilder.append(String.format(JAVA_CONSTANT_LINE, labelAsModifier.toUpperCase(), labelAsKey, href));
 				helpContextBuilder.append(String.format(CONTEXT_BLOCK, labelAsKey, label + DESCRIPTION_POSTFIX, href, label)); // id, description, href, label
 				ITopic[] subtopics = topic.getSubtopics();
 				if (subtopics != null && subtopics.length > 0) {
-					writeElements(subtopics, helpContextBuilder, newJavaFileBuilder);
+					writeElements(subtopics, helpContextBuilder, newJavaFileBuilder, tocLevel + 1);
 				}
 			}
 		}

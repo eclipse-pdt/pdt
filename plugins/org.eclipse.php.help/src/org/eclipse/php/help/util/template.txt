@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.help.util; // TODO - Change the package to fit the final location
+package org.eclipse.php.help.util; // TODO - Change the package to fit the final destination
 
 /**
  * This code was generated using the HelpContextGenerator (org.eclipse.php.help.util).
@@ -16,4 +16,7 @@ package org.eclipse.php.help.util; // TODO - Change the package to fit the final
 public interface IPHPHelpContextIds {
 	
 	public static final String PREFIX = "org.eclipse.php.help."; //$NON-NLS-1$;
-
+	
+	// Note: This interface is indented according to the TOC levels.
+	// Do not format this code
+	
