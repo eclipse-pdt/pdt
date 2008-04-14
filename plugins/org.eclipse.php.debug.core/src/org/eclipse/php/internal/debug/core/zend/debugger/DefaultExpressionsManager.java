@@ -163,7 +163,7 @@ public class DefaultExpressionsManager implements ExpressionsManager {
             }
         }
 
-        hashResultDepthOne.put("LOCLAS", localVariables);
+        hashResultDepthOne.put("LOCALS", localVariables);
 
         return localVariables;
     }
