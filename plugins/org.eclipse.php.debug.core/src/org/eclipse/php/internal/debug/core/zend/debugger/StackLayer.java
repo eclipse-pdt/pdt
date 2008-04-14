@@ -15,9 +15,8 @@
 
 package org.eclipse.php.internal.debug.core.zend.debugger;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author guy
@@ -35,7 +34,8 @@ public class StackLayer {
     private int calledLineNumber;
     private String calledFunctionName;
 
-    private List<Expression> variables;
+    private Expression[] variables;
+    private Map<String, byte[]> unresolvedVariables;
 
     private ExpressionsValueDeserializer expressionValueDeserializer;
 
@@ -43,7 +43,7 @@ public class StackLayer {
      * Creates new StackLayer
      */
     public StackLayer(String transferEncoding) {
-        variables = new ArrayList<Expression>(6);
+        unresolvedVariables = new HashMap<String, byte[]>();
         expressionValueDeserializer = new ExpressionsValueDeserializer(transferEncoding);
     }
 
@@ -124,28 +124,20 @@ public class StackLayer {
     }
 
     public void addVariable(String variableName, byte[] value) {
-        StackVariable variable = new DefaultStackVariable(variableName, getDepth());
-        variable.setValue(expressionValueDeserializer.deserializer(variable, value));
-
-        variables.add(variable);
-    }
-
-    public void addVariable(Expression expression) {
-        variables.add(expression);
-    }
-
-    public int getNumberOfVariables() {
-        return variables.size();
+    	unresolvedVariables.put(variableName, value);
     }
 
     public Expression[] getVariables() {
-        Expression[] arrayVariables = new Expression[variables.size()];
-        variables.toArray(arrayVariables);
-        return arrayVariables;
-    }
-
-    public Iterator<Expression> iterator() {
-        return variables.iterator();
+	    if (variables == null) {
+	    	variables = new Expression[unresolvedVariables.size()];
+	    	int i = 0;
+	    	for (String variableName : unresolvedVariables.keySet()) {
+		   		StackVariable variable = new DefaultStackVariable(variableName, depth);
+		   	    variable.setValue(expressionValueDeserializer.deserializer(variable, unresolvedVariables.get(variableName)));
+		   	    variables[i++] = variable;
+	    	}
+	    }
+    	return variables;
     }
 
     public String toString() {
@@ -160,11 +152,12 @@ public class StackLayer {
             return "";
         }
         StringBuffer buffer = new StringBuffer(getCallerFunctionName() + '(');
-        for (int i = 0; i < variables.size(); i++) {
-            Expression expression = variables.get(i);
+        Expression[] variables = getVariables();
+        for (int i = 0; i < variables.length; i++) {
+            Expression expression = variables[i];
             buffer.append(" $");
             buffer.append(expression.getLastName());
-            if (i != variables.size() - 1) {
+            if (i != variables.length - 1) {
                 buffer.append(',');
             }
         }
