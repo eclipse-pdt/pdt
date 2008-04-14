@@ -21,7 +21,7 @@ public class PHPManualPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	protected String getHelpId() {
-		return IPHPHelpContextIds.PHP_MANUAL_PREFERENCE_PAGE;
+		return IPHPHelpContextIds.PHP_MANUAL_PREFERENCES;
 	}
 
 	protected void setDescription() {

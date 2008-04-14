@@ -29,7 +29,7 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
-		return IPHPHelpContextIds.PHP_EDITOR_PREFERENCE_PAGE;
+		return IPHPHelpContextIds.EDITOR_PREFERENCES;
 	}
 
 	/*

@@ -20,13 +20,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.DeleteResourceAction;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 public class DeleteAction extends SelectionDispatchAction {
 
@@ -40,7 +40,7 @@ public class DeleteAction extends SelectionDispatchAction {
 		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
 
 		update(getSelection());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.DELETE_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.DELETE_RESOURCE_ACTION);
 	}
 
 	/*

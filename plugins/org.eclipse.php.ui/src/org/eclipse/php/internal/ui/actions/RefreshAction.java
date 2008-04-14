@@ -26,13 +26,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.Resources;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 public class RefreshAction extends SelectionDispatchAction {
 
@@ -48,7 +48,7 @@ public class RefreshAction extends SelectionDispatchAction {
 		setText(PHPUIMessages.getString("RefreshAction_label"));
 		setToolTipText(PHPUIMessages.getString("RefreshAction_toolTip"));
 		PHPPluginImages.setLocalImageDescriptors(this, "refresh_nav.gif");//$NON-NLS-1$
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.REFRESH_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.REFRESH_ACTION);
 	}
 
 	/* (non-Javadoc)

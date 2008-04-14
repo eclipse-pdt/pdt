@@ -11,10 +11,8 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.ui.PlatformUI;
 
 public abstract class AbstractToggleLinkingAction extends Action {
 
@@ -26,7 +24,7 @@ public abstract class AbstractToggleLinkingAction extends Action {
 		setDescription(PHPUIMessages.getString("ToggleLinkingAction_description"));
 		setToolTipText(PHPUIMessages.getString("ToggleLinkingAction_tooltip"));
 		PHPPluginImages.setLocalImageDescriptors(this, "synced.gif"); //$NON-NLS-1$		
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.LINK_EDITOR_ACTION);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.LINK_EDITOR_ACTION);
 	}
 
 	/**

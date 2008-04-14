@@ -20,13 +20,13 @@ import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 
 public class OpenAction extends SelectionDispatchAction {
@@ -45,7 +45,7 @@ public class OpenAction extends SelectionDispatchAction {
 		setText(PHPUIMessages.getString("OpenAction_label"));
 		setToolTipText(PHPUIMessages.getString("OpenAction_tooltip"));
 		setDescription(PHPUIMessages.getString("OpenAction_description"));
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
 	}
 
 	/* 

@@ -51,7 +51,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.IP_VARIABLES_PREFERENCE_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 	}
 
 	/*

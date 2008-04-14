@@ -99,7 +99,7 @@ public class VariablePathDialogField extends StringButtonDialogField {
 		 */
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.CHOOSE_VARIABLE_DIALOG);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 		}
 	}
 

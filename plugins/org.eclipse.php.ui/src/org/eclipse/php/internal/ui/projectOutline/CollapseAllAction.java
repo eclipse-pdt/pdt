@@ -11,10 +11,8 @@
 package org.eclipse.php.internal.ui.projectOutline;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.ui.PlatformUI;
 
 class CollapseAllAction extends Action {
 
@@ -27,7 +25,7 @@ class CollapseAllAction extends Action {
 		PHPPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
 
 		fOutlinePart = part;
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.COLLAPSE_ALL_ACTION);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.COLLAPSE_ALL_ACTION);
 	}
 
 	public void run() {

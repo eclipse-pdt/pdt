@@ -27,7 +27,7 @@ class CollapseAllAction extends Action {
 		PHPPluginImages.setLocalImageDescriptors(this, "collapseall.gif"); //$NON-NLS-1$
 
 		fPHPExplorer = part;
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.COLLAPSE_ALL_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.PHP_EXPLORER_VIEW);
 	}
 
 	public void run() {

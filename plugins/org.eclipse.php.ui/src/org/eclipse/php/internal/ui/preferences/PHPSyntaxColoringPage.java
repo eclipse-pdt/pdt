@@ -181,7 +181,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fDefaultForeground = parent.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 		fDefaultBackground = parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		Composite pageComponent = createComposite(parent, 2);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.PHP_SYNTAX_COLORING_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.SYNTAX_COLORING_PREFERENCES);
 
 		Link link = new Link(pageComponent, SWT.WRAP);
 		link.setText(SSEUIMessages.SyntaxColoring_Link);
@@ -290,7 +290,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 
 		top.setWeights(new int[] { 2, 1 });
 		editor.setWeights(new int[] { 1, 1 });
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.PHP_SYNTAX_COLORING_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.SYNTAX_COLORING_PREFERENCES);
 
 		fStylesViewer.setInput(getStylePreferenceKeys());
 

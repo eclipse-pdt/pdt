@@ -99,7 +99,7 @@ public class IncludePathContainerDefaultPage extends WizardPage implements IIncl
 
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.INCLUDEPATH_CONTAINER_DEFAULT_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.INCLUDE_PATHS);
 	}
 
 	/* (non-Javadoc)

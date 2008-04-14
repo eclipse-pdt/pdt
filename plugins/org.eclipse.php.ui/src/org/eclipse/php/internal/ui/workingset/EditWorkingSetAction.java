@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.workingset;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Shell;
@@ -24,6 +23,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.IWorkingSetEditWizard;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 
 /**
  * Displays an IWorkingSetEditWizard for editing a working set.
@@ -51,7 +51,7 @@ public class EditWorkingSetAction extends Action {
 		setToolTipText(PHPUIMessages.getString("EditWorkingSetAction_toolTip"));
 		setEnabled(actionGroup.getWorkingSet() != null);
 		fActionGroup = actionGroup;
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.EDIT_WORKING_SET_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IWorkbenchHelpContextIds.EDIT_WORKING_SET_ACTION);
 	}
 
 	/*

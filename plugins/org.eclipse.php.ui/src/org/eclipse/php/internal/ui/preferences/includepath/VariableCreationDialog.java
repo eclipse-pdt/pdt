@@ -93,7 +93,7 @@ public class VariableCreationDialog extends StatusDialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.VARIABLE_CREATION_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 	}
 
 	public IPVariableElement getIncludePathElement() {

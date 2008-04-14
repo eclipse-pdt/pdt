@@ -63,7 +63,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		setText(fWorkbenchAction.getText());
 		setToolTipText(fWorkbenchAction.getToolTipText());
 		setEnabled(hasCloseProjects());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_PROJECT_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.PROJECT);
 	}
 
 	/*

@@ -13,13 +13,11 @@ package org.eclipse.php.internal.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.PlatformUI;
 
 
 public class CutAction extends SelectionDispatchAction {
@@ -37,7 +35,7 @@ public class CutAction extends SelectionDispatchAction {
 		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_CUT));
 
 		update(getSelection());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.CUT_ACTION);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.CUT_ACTION);
 	}
 
 	public void selectionChanged(IStructuredSelection selection) {

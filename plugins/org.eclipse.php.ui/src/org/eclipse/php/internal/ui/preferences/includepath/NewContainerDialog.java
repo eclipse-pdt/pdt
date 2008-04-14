@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.dialogs.StatusDialog;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.fields.DialogField;
 import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
@@ -31,7 +30,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 public class NewContainerDialog extends StatusDialog {
 
@@ -149,7 +147,7 @@ public class NewContainerDialog extends StatusDialog {
 	 */
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.NEW_CONTAINER_DIALOG);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.NEW_CONTAINER_DIALOG);
 	}
 
 }
