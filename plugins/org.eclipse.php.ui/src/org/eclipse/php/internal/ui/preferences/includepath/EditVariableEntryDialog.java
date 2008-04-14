@@ -22,7 +22,6 @@ import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.wizards.fields.DialogField;
 import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
@@ -35,7 +34,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 /**
  */
@@ -116,7 +114,7 @@ public class EditVariableEntryDialog extends StatusDialog {
 
 		fFileNameField.postSetFocusOnDialogField(parent.getDisplay());
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.SOURCE_ATTACHMENT_BLOCK);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.SOURCE_ATTACHMENT_BLOCK);
 		applyDialogFont(composite);
 		return composite;
 	}

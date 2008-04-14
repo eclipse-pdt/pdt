@@ -167,7 +167,7 @@ public class IncludePathBlock {
 		});
 		fTabFolder = folder;
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.INCLUDE_PATH_BLOCK);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 		Dialog.applyDialogFont(composite);
 		return composite;
 	}

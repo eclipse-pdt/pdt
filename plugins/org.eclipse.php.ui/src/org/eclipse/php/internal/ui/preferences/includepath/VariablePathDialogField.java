@@ -33,6 +33,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 public class VariablePathDialogField extends StringButtonDialogField {
 
@@ -99,7 +100,7 @@ public class VariablePathDialogField extends StringButtonDialogField {
 		 */
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.CHOOSE_VARIABLE_DIALOG);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 		}
 	}
 

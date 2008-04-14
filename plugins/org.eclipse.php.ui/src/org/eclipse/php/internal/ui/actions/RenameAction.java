@@ -22,12 +22,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.actions.IRenamePHPElementActionFactory;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 public class RenameAction extends SelectionDispatchAction {
 
@@ -63,7 +63,7 @@ public class RenameAction extends SelectionDispatchAction {
 		// rename resource
 		fRenameResource = new RenameResourceAction(site);
 		fRenameResource.setText(getText());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.RENAME_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.RENAME_RESOURCE_ACTION);
 	}
 
 	/**

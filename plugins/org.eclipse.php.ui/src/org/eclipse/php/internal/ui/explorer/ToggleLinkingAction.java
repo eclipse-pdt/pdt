@@ -34,7 +34,7 @@ public class ToggleLinkingAction extends Action {
 		setDescription(PHPUIMessages.getString("ToggleLinkingAction_description"));
 		setToolTipText(PHPUIMessages.getString("ToggleLinkingAction_tooltip"));
 		PHPPluginImages.setLocalImageDescriptors(this, "synced.gif"); //$NON-NLS-1$		
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.LINK_EDITOR_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.PHP_EXPLORER_VIEW);
 
 		setChecked(explorer.isLinkingEnabled());
 		fExplorerPart = explorer;

@@ -14,8 +14,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -74,8 +74,8 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	private Map fStyleToDescriptionMap;
 	private StyledText fText;
 	private Button fUnderline;
-	private LineStyleProviderForPhp fStyleProvider;
-	
+	private final LineStyleProviderForPhp fStyleProvider;
+
 	public PHPSyntaxColoringPage() {
 		fStyleProvider = new LineStyleProviderForPhp();
 	}
@@ -98,8 +98,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			fItalic.setSelection(false);
 			fStrike.setSelection(false);
 			fUnderline.setSelection(false);
-		}
-		else {
+		} else {
 			TextAttribute attribute = getAttributeFor(namedStyle);
 			fClearStyle.setEnabled(true);
 			fBold.setEnabled(true);
@@ -132,14 +131,14 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 	void applyStyles() {
 		if (fText == null || fText.isDisposed())
 			return;
-		
+
 		fStyleProvider.loadColors();
 
 		IStructuredDocumentRegion documentRegion = fDocument.getFirstStructuredDocumentRegion();
 		while (documentRegion != null) {
 			final Collection holdResults = new ArrayList();
 			fStyleProvider.prepareTextRegions(documentRegion, 0, documentRegion.getEnd(), holdResults);
-			
+
 			for (Iterator iter = holdResults.iterator(); iter.hasNext();) {
 				StyleRange element = (StyleRange) iter.next();
 				fText.setStyleRange(element);
@@ -175,24 +174,26 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		return composite;
 	}
 
+	@Override
 	protected Control createContents(final Composite parent) {
 		initializeDialogUnits(parent);
 
 		fDefaultForeground = parent.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 		fDefaultBackground = parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 		Composite pageComponent = createComposite(parent, 2);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.PHP_SYNTAX_COLORING_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.SYNTAX_COLORING_PREFERENCES);
 
 		Link link = new Link(pageComponent, SWT.WRAP);
 		link.setText(SSEUIMessages.SyntaxColoring_Link);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(), e.text, null, null);
 			}
 		});
 
-		GridData linkData= new GridData(SWT.FILL, SWT.BEGINNING, true, false, 2, 1);
-		linkData.widthHint= 150; // only expand further if anyone else requires it
+		GridData linkData = new GridData(SWT.FILL, SWT.BEGINNING, true, false, 2, 1);
+		linkData.widthHint = 150; // only expand further if anyone else requires it
 		link.setLayoutData(linkData);
 
 		new Label(pageComponent, SWT.NONE).setLayoutData(new GridData());
@@ -287,9 +288,9 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fDocument.set(getExampleText());
 		viewer.setDocument(fDocument);
 
-		top.setWeights(new int[]{2, 1});
-		editor.setWeights(new int[]{1, 1});
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.PHP_SYNTAX_COLORING_PAGE);
+		top.setWeights(new int[] { 2, 1 });
+		editor.setWeights(new int[] { 1, 1 });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IPHPHelpContextIds.SYNTAX_COLORING_PREFERENCES);
 
 		fStylesViewer.setInput(getStylePreferenceKeys());
 
@@ -357,6 +358,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fBold.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -379,6 +381,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fItalic.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -401,6 +404,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fStrike.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -423,6 +427,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fUnderline.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -445,6 +450,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		});
 
 		fClearStyle.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (fStylesViewer.getSelection().isEmpty())
 					return;
@@ -499,6 +505,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		StructuredViewer stylesViewer = new ListViewer(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		stylesViewer.setComparator(new ViewerComparator(Collator.getInstance()));
 		stylesViewer.setLabelProvider(new LabelProvider() {
+			@Override
 			public String getText(Object element) {
 				Object description = fStyleToDescriptionMap.get(element);
 				if (description != null)
@@ -532,6 +539,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		return stylesViewer;
 	}
 
+	@Override
 	public void dispose() {
 		if (fOverlayStore != null) {
 			fOverlayStore.stop();
@@ -539,6 +547,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		super.dispose();
 	}
 
+	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		return PreferenceConstants.getPreferenceStore();
 	}
@@ -593,12 +602,12 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			return getNamedStyleAtOffset(fDocument.getLength() - 1);
 		else if (offset < 0)
 			return getNamedStyleAtOffset(0);
-		
+
 		IStructuredDocumentRegion documentRegion = fDocument.getFirstStructuredDocumentRegion();
 		while (documentRegion != null && !documentRegion.containsOffset(offset)) {
 			documentRegion = documentRegion.getNext();
 		}
-		
+
 		if (documentRegion != null) {
 			String regionContext;
 			ITextRegion interest = documentRegion.getRegionAtCharacterOffset(offset);
@@ -610,7 +619,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			}
 
 			if (interest.getType() == PHPRegionContext.PHP_CONTENT) {
-				PhpScriptRegion phpScript = (PhpScriptRegion) interest;
+				IPhpScriptRegion phpScript = (IPhpScriptRegion) interest;
 				try {
 					regionContext = phpScript.getPhpTokenType(offset - container.getStartOffset() - phpScript.getStart());
 				} catch (BadLocationException e) {
@@ -734,7 +743,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
 		fOverlayStore.load();
 		fOverlayStore.start();
-		
+
 		fStyleProvider.setColorPreferences(fOverlayStore);
 	}
 
@@ -755,6 +764,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fStyleToDescriptionMap.put(PreferenceConstants.EDITOR_TASK_COLOR, PHPUIMessages.getString("ColorPage_TaskTag"));
 	}
 
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		getOverlayStore().loadDefaults();
@@ -764,6 +774,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		fText.redraw();
 	}
 
+	@Override
 	public boolean performOk() {
 		getOverlayStore().propagate();
 
@@ -776,8 +787,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 		if (namedStyle != null) {
 			fStylesViewer.setSelection(new StructuredSelection(namedStyle));
 			fStylesViewer.reveal(namedStyle);
-		}
-		else {
+		} else {
 			fStylesViewer.setSelection(StructuredSelection.EMPTY);
 		}
 		activate(namedStyle);
@@ -791,6 +801,7 @@ public final class PHPSyntaxColoringPage extends PreferencePage implements IWork
 			return;
 		final String n = name;
 		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				if (e.childID == ACC.CHILDID_SELF)
 					e.result = n;

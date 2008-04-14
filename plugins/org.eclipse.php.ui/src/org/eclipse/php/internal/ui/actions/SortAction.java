@@ -34,7 +34,7 @@ public class SortAction extends Action {
 		fSorter.setUsingLocation(true);
 
 		this.treeViewer = treeViewer;
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.SORTING_OUTLINE_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
 		setText(PHPUIMessages.getString("PHPOutlinePage_Sort_label"));
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.getString("PHPOutlinePage_Sort_tooltip"));

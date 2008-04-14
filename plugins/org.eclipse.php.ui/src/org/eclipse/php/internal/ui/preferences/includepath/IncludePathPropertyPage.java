@@ -74,7 +74,7 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.INCLUDE_PATH_PROPERTY_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.INCLUDE_PATHS);
 	}
 
 	private IDialogSettings getSettings() {

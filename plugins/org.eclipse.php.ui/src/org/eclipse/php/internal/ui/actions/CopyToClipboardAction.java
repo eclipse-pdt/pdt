@@ -25,13 +25,15 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.*;
+import org.eclipse.php.internal.ui.PHPElementLabelProvider;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiConstants;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ResourceTransfer;
 
 public class CopyToClipboardAction extends SelectionDispatchAction {
@@ -180,7 +182,7 @@ public class CopyToClipboardAction extends SelectionDispatchAction {
 		setHoverImageDescriptor(workbenchImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 		update(getSelection());
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.COPY_ACTION);
+		// HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.COPY_ACTION);
 	}
 
 	public void setAutoRepeatOnFailure(boolean autorepeatOnFailure) {

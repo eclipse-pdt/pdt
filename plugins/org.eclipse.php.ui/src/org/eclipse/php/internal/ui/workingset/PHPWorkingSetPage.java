@@ -26,7 +26,6 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SelectionConverter;
@@ -42,6 +41,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.IWorkingSetPage;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 
 /**
  * The PHP working set page allows the user to create
@@ -179,8 +179,7 @@ public class PHPWorkingSetPage extends WizardPage implements IWorkingSetPage {
 
 		Dialog.applyDialogFont(composite);
 		// Set help for the page 
-		//		PHPUIHelp.setHelp(fTree, IPHPHelpContextIds.PHP_WORKING_SET_PAGE);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_WORKING_SET_PAGE);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IWorkbenchHelpContextIds.WORKING_SET_SELECTION_DIALOG);
 	}
 
 	/*

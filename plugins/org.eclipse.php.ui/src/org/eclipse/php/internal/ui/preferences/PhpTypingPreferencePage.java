@@ -30,7 +30,7 @@ public class PhpTypingPreferencePage extends AbstractConfigurationBlockPreferenc
 	}
 
 	protected String getHelpId() {
-		return IPHPHelpContextIds.PHP_TYPING_PREFERENCE_PAGE;
+		return IPHPHelpContextIds.TYPING_PREFERENCES;
 	}
 
 	protected void setDescription() {

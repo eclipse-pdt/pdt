@@ -141,7 +141,7 @@ public class NewVariableEntryDialog extends StatusDialog {
 	 */
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.NEW_VARIABLE_ENTRY_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 	}
 
 	/* (non-Javadoc)

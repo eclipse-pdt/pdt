@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.OpenResourceAction;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 
 ;
 
@@ -63,7 +64,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 		setText(fWorkbenchAction.getText());
 		setToolTipText(fWorkbenchAction.getToolTipText());
 		setEnabled(hasCloseProjects());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_PROJECT_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.PROJECT);
 	}
 
 	/*

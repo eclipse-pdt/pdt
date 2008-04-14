@@ -76,7 +76,7 @@ public class CustomFiltersDialog extends SelectionDialog {
 		setTitle(PHPUIMessages.getString("CustomFiltersDialog_title"));
 		setMessage(PHPUIMessages.getString("CustomFiltersDialog_filterList_label"));
 		super.configureShell(shell);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.CUSTOM_FILTERS_DIALOG);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(shell, IPHPHelpContextIds.PHP_EXPLORER_VIEW);
 	}
 
 	/**

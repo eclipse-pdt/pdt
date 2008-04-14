@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.workingset;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.ui.IPHPHelpContextIds;
+import org.eclipse.jface.action.Action;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.IWorkbenchHelpContextIds;
 
 /**
  * Clears the selected working set in the action group's view.
@@ -28,7 +28,7 @@ public class ClearWorkingSetAction extends Action {
 		Assert.isNotNull(actionGroup);
 		setToolTipText(PHPUIMessages.getString("ClearWorkingSetAction_toolTip"));
 		setEnabled(actionGroup.getWorkingSet() != null);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.CLEAR_WORKING_SET_ACTION);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IWorkbenchHelpContextIds.CLEAR_WORKING_SET_ACTION);
 		fActionGroup = actionGroup;
 	}
 
