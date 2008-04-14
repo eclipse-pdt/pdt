@@ -10,25 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
@@ -36,8 +25,8 @@ import org.eclipse.php.internal.debug.core.pathmapper.BestMatchPathComparator;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
-import org.eclipse.php.internal.debug.ui.IHelpContextId;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.SWT;
@@ -50,13 +39,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -97,7 +80,7 @@ public class PathEntrySelectionDialog extends TrayDialog {
 		newShell.setText("Path Mapping - Select Local Resource");
 		newShell.setImage(PHPDebugUIImages.get(PHPDebugUIImages.IMG_OBJ_PATH_MAPPING));
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IHelpContextId.PATH_MAPPING);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IPHPHelpContextIds.PATH_MAPPING);
 	}
 
 	protected Control createDialogArea(Composite parent) {
