@@ -762,7 +762,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 * In case {@link #isRunWithDebug()} returns true, nothing will happen.
 	 */
 	public void installDeferredBreakpoints() throws CoreException{
-		if (fIsRunAsDebug) {
+		/*if (fIsRunAsDebug) {
 			return;
 		}
 		if (!fBreakpointManager.isEnabled())
@@ -773,7 +773,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 			if (element.isEnabled()){
 				breakpointAdded(element);
 			}
-		}
+		}*/
 	}
 
 	/**
