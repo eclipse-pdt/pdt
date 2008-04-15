@@ -26,7 +26,7 @@ public class Identifier extends Expression {
 	public Identifier(int start, int end, String value) {
 		super(start, end);
 
-		assert value != null && value.length() > 0;
+		assert value != null;
 		this.name = value;
 
 		// intern the string for fast equality check
