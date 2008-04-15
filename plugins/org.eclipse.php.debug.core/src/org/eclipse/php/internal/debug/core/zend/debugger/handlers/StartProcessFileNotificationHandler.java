@@ -130,6 +130,9 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 
 	protected IBreakpoint[] findBreakpoints(String localPath, PHPDebugTarget debugTarget) {
 		IBreakpointManager breakpointManager = debugTarget.getBreakpointManager();
+		if (!breakpointManager.isEnabled()) {
+			return new IBreakpoint[0];
+		}
 		IBreakpoint[] breakpoints = breakpointManager.getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
 		List<IBreakpoint> l = new LinkedList<IBreakpoint>();
 		for (IBreakpoint bp : breakpoints) {
