@@ -48,7 +48,7 @@ public class Identifier extends Expression {
 	public Identifier(int start, int end, AST ast, String value) {
 		super(start, end, ast);
 
-		if (value == null || value.length() == 0) {
+		if (value == null) {
 			throw new IllegalArgumentException();
 		}
 		// intern the string for fast equality check
