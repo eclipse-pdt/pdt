@@ -3,10 +3,12 @@ package org.eclipse.php.internal.debug.core.zend.debugger.handlers;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
@@ -77,6 +79,17 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 					VirtualPath remotePath = new VirtualPath(remoteFileName);
 					remotePath.removeLastSegment();
 					remoteDebugger.setCurrentWorkingDirectory(remotePath.toString());
+				}
+			} else {
+				try {
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(Path.fromOSString(remoteFileName));
+					if (file != null) {
+						localPath = file.getFullPath().toString();
+					}
+				} catch (Exception e) {
+				}
+				if (localPath == null) {
+					localPath = remoteFileName;
 				}
 			}
 		} else {
