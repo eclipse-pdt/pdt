@@ -159,10 +159,11 @@ class ProjectionViewerInformation {
 					deletions = EMPTY_ANNOTATIONS;
 				}
 				Set<Position> persistentPositions = new HashSet<Position>(deletions.length);
+				Collection<Annotation> finalDeletions = new ArrayList<Annotation>(1); 
 				for (Annotation deletion : deletions) {
 					Position position = fProjectionAnnotationModel.getPosition(deletion);
 					if (!collapsedPositions.contains(position)) {
-						fProjectionAnnotationModel.removeAnnotation(deletion);
+						finalDeletions.add(deletion);
 					} else {
 						persistentPositions.add(position);
 					}
@@ -204,12 +205,11 @@ class ProjectionViewerInformation {
 							annotationsToModify.add(modifiedAnnotation);
 						}
 					}
-					// call the modification event only after all annotations are validated as should modified
-					if (annotationsToModify.size() > 0) {
-						fProjectionAnnotationModel.modifyAnnotations(null, null, annotationsToModify.toArray(new Annotation[annotationsToModify.size()]));	
-					}
 				}
-				
+
+				// call the modification event only after all annotations are validated as should modified
+				fProjectionAnnotationModel.modifyAnnotations(finalDeletions.toArray(new Annotation[finalDeletions.size()]), null, annotationsToModify.toArray(new Annotation[annotationsToModify.size()]));	
+
 			} catch (RuntimeException e) {
 				Logger.logException(e);
 			}
