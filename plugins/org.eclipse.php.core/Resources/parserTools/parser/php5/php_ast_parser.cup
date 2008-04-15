@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.8 2008/03/03 08:10:37 ggurfinke Exp $
+////    $Id: php_ast_parser.cup,v 1.9 2008/04/15 08:40:33 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2421,7 +2421,9 @@ assignment_list:listElements T_COMMA assignment_list_element:element
 {:
 	if (element != null) {
 		listElements.add(element);
-	}
+	} else {
+		listElements.add(new Variable(elementleft, elementright, parser.ast, ""));
+	}	
 	RESULT = listElements;
 :}
 
@@ -2430,6 +2432,8 @@ assignment_list:listElements T_COMMA assignment_list_element:element
 	List listElements = new LinkedList();
 	if (var != null) {
 		listElements.add(var);	
+	} else {
+		listElements.add(new Variable(varleft, varright, parser.ast, ""));
 	}
 	RESULT = listElements;
 	;
