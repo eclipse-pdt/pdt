@@ -81,28 +81,34 @@ public class DefaultBindingResolver extends BindingResolver {
 			throw new IllegalArgumentException("Can not resolve null expression");
 		}
 		
-		IModelElement element;
-		try {
-			element = this.sourceModule.getElementAt(expression.getEnd());
-		} catch (ModelException e) {
-			// will throw an error, in next command
-			element = null;
-		}
-		if (element == null) {
-			throw new IllegalStateException("Resolving operation problem");
-		}
-		
-		final String handleIdentifier = element.getHandleIdentifier();
-		IBinding binding = this.bindingTables.bindingKeysToBindings.get(handleIdentifier);
-		
-		if (binding != null) {
-			return (ITypeBinding) binding;
-		}
+		IEvaluatedType type = this.bindingUtil.getType(expression.getStart(), expression.getLength());
+		return new TypeBinding(type);
 
-		IEvaluatedType type = this.bindingUtil.getType(expression.getStart(), expression.getEnd());
-		binding = new TypeBinding(type);
-		
-		this.bindingTables.bindingKeysToBindings.put(handleIdentifier, binding);
-		return (ITypeBinding) binding;
+		/*
+		 * TODO handle caching
+			IModelElement element;
+			try {
+				element = this.sourceModule.getElementAt(expression.getStart());
+			} catch (ModelException e) {
+				// will throw an error, in next command
+				element = null;
+			}
+			if (element == null) {
+				element = this.sourceModule;
+			}
+			
+			final String handleIdentifier = element.getHandleIdentifier() + "_" +   ;
+			IBinding binding = this.bindingTables.bindingKeysToBindings.get(handleIdentifier);
+			
+			if (binding != null) {
+				return (ITypeBinding) binding;
+			}
+	
+			type = this.bindingUtil.getType(expression.getStart(), expression.getLength());
+			binding = new TypeBinding(type);
+			
+			this.bindingTables.bindingKeysToBindings.put(handleIdentifier, binding);
+			return (ITypeBinding) binding;
+		*/
 	}
 }

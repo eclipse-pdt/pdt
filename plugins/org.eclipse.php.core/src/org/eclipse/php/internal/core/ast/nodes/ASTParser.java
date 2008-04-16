@@ -10,7 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.io.*;
+import java.io.CharArrayReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
@@ -18,6 +25,8 @@ import java_cup.runtime.lr_parser;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -51,17 +60,31 @@ public class ASTParser {
 	private final AST ast;
 	
 	private ASTParser(Reader reader, String version, boolean useASPTags) throws IOException {
+		this(reader, version, useASPTags, null);
+	}
+	
+	private ASTParser(Reader reader, String version, boolean useASPTags, ISourceModule sourceModule) throws IOException {
+		
 		if (version != VERSION_PHP4 && version != VERSION_PHP5) {
 			throw new IllegalArgumentException("Invalid version in ASTParser");
 		}
 		this.ast = new AST(reader, version, useASPTags);
-		this.ast.setDefaultNodeFlag(ASTNode.ORIGINAL);		
-	}
+		this.ast.setDefaultNodeFlag(ASTNode.ORIGINAL);
 
+		// set resolve binding property and the binding resolver 
+		if (sourceModule != null) {
+			this.ast.setFlag(AST.RESOLVED_BINDINGS);
+			try {
+				this.ast.setBindingResolver(new DefaultBindingResolver(sourceModule, sourceModule.getWorkingCopy(null).getOwner()));
+			} catch (ModelException e) {
+				throw new IOException(e);
+			}
+		}
+	}
+	
 	/**
 	 * Factory methods for ASTParser
 	 */
-
 	public static ASTParser newParser(String version) {
 		try {
 			return new ASTParser(EMPTY_STRING_READER, version, false);
@@ -78,6 +101,10 @@ public class ASTParser {
 	
 	public static ASTParser newParser(Reader reader, String version, boolean useASPTags) throws IOException {
 		return new ASTParser(reader, version, useASPTags);
+	}
+
+	public static ASTParser newParser(Reader reader, String version, boolean useASPTags, ISourceModule sourceModule) throws IOException {
+		return new ASTParser(reader, version, useASPTags, sourceModule);
 	}
 
 	/**
