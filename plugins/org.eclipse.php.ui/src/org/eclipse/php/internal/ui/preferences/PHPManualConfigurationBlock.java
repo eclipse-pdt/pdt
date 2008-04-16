@@ -379,7 +379,6 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 
 			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITES, sitesBuffer.toString());
 			fStore.setValue(PreferenceConstants.PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(elements.get(0)));
-			fStore.getString(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER);
 		}
 	}
 }
