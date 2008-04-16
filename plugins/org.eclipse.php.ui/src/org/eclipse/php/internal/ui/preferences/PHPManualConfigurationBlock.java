@@ -287,7 +287,7 @@ public class PHPManualConfigurationBlock implements IPreferenceConfigurationBloc
 		}
 
 		for (Map.Entry<Button, String> entry : fCheckBoxes.entrySet()) {
-			entry.getKey().setSelection(fStore.getDefaultBoolean(entry.getValue()));
+			entry.getKey().setSelection(fStore.getBoolean(entry.getValue()));
 		}
 	}
 
