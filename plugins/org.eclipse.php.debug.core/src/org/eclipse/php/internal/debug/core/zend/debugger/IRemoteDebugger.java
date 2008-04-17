@@ -21,7 +21,7 @@ import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThr
  * @author michael
  *
  */
-public interface IRemoteDebugger extends Debugger, CommunicationClient, CommunicationAdministrator {
+public interface IRemoteDebugger extends Debugger, CommunicationClient, CommunicationAdministrator, IDebugFeatures {
 
 	public DebugConnectionThread getConnectionThread();
 

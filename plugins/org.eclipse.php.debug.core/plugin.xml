@@ -323,6 +323,26 @@
             id="org.eclipse.php.internal.debug.core.zend.debugger.messages.ContinueProcessFileNotification"
             name="Continue Process File Notification">
       </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDRequest"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDRequest"
+            name="Get CWD Request">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDResponse"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDResponse"
+            name="Get CWD Response">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteRequest"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteRequest"
+            name="Get Call Stack Request (Lite)">
+      </message>
+      <message
+            class="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteResponse"
+            id="org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteResponse"
+            name="Get Call Stack Response (Lite)">
+      </message>
 
   </extension>
   <extension

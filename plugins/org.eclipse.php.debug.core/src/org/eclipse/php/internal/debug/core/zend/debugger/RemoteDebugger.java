@@ -16,15 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.internal.ui.DebugUIPlugin;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
@@ -35,7 +31,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
-import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -54,6 +50,10 @@ import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpoi
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackResponse;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueRequest;
@@ -95,6 +95,18 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * for doing on-demand path mapping, and for sending breakpoints for the next file.
 	 */
 	public static final int PROTOCOL_ID_2006040703 = 2006040703;
+	
+	/**
+	 * New protocol ID from 04/2008 which provides two new message types:
+	 * {@link GetCWDRequest} allows to ask Debugger to return current working directory,
+	 */
+	public static final int PROTOCOL_ID_2006040705 = 2006040705;
+
+	/**
+	 * Latest protocol ID
+	 */
+	public static final int PROTOCOL_ID_LATEST = PROTOCOL_ID_2006040705;
+	
 
 	private static final String EVAL_ERROR = "[Error]"; //$NON-NLS-1$
 
@@ -103,6 +115,7 @@ public class RemoteDebugger implements IRemoteDebugger {
 	private IDebugHandler debugHandler;
 	private Map<String, String> resolvedFiles;
 	private int currentProtocolId = 0;
+	private String cachedCWD;
 
 	/**
 	 * Creates new RemoteDebugSession
@@ -153,24 +166,63 @@ public class RemoteDebugger implements IRemoteDebugger {
 	public void handlePeerResponseTimeout() {
 		debugHandler.connectionTimedout();
 	}
-
-	public String sendCWDRequest() {
-		try {
-			EvalRequest request = new EvalRequest();
-			request.setCommand("getcwd()"); //$NON-NLS-1$
-			IDebugResponseMessage response = sendCustomRequest(request);
-			if (response != null && response instanceof EvalResponse) {
-				String result = ((EvalResponse) response).getResult();
-				if (!EVAL_ERROR.equals(result)) {
-					return result;
-				}
+	
+	public boolean canDo(int feature) {
+		switch (feature) {
+			case START_PROCESS_FILE_NOTIFICATION:
+				return getCurrentProtocolID() >= PROTOCOL_ID_2006040703;
+			case GET_CWD:
+			case GET_CALL_STACK_LITE:
+				return getCurrentProtocolID() >= PROTOCOL_ID_2006040705;
+		}
+		return false;
+	}
+	
+	/**
+	 * Asks Debug server for a current working directory (old way)
+	 * @return current working directory, or <code>null</code> in case of error
+	 */
+	public String getCWDOld() {
+		EvalRequest request = new EvalRequest();
+		request.setCommand("getcwd()"); //$NON-NLS-1$
+		IDebugResponseMessage response = sendCustomRequest(request);
+		if (response != null && response instanceof EvalResponse) {
+			String result = ((EvalResponse) response).getResult();
+			if (!EVAL_ERROR.equals(result)) {
+				return result;
 			}
-		} catch (Exception e) {
-			Logger.logException(e);
 		}
 		return null;
 	}
-
+	
+	/**
+	 * Asks Debug server for a current working directory (new way)
+	 * @return current working directory, or <code>null</code> in case of error
+	 */
+	public String getCWDNew() {
+		GetCWDRequest request = new GetCWDRequest();
+		IDebugResponseMessage response = sendCustomRequest(request);
+		if (response != null && response.getStatus() == 0) {
+			return ((GetCWDResponse) response).getCWD();
+		}
+		return null;
+	}
+	
+	public String getCWD() {
+		if (cachedCWD == null || !canDo(START_PROCESS_FILE_NOTIFICATION)) {
+			if (canDo(GET_CWD)) {
+				cachedCWD = getCWDNew();
+			} else {
+				cachedCWD = getCWDOld();
+			}
+		}
+		return cachedCWD;
+	}
+	
+	public void removeCWDCache() {
+		cachedCWD = null;
+	}
+	
 	/**
 	 * Returns local path corresponding to the current working directory of the PHP script,
 	 * which is currently running.
@@ -179,7 +231,8 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	public String getCurrentWorkingDirectory() {
 		PHPDebugTarget debugTarget = debugHandler.getDebugTarget();
-		String cwd = sendCWDRequest();
+		
+		String cwd = getCWD();
 		if (cwd != null) {
 			PathMapper pathMapper = PathMapperRegistry.getByLaunchConfiguration(debugTarget.getLaunch().getLaunchConfiguration());
 			if (pathMapper != null) {
@@ -664,12 +717,17 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 */
 	protected boolean detectProtocolID() {
 		// check whether debugger is using the latest protocol ID:
+		if (setProtocol(PROTOCOL_ID_LATEST)) {
+			return true;
+		}
+		// check whether debugger is using one of older protocol ID:
 		if (setProtocol(PROTOCOL_ID_2006040703)) {
+			// warn user that he is using an old debugger
+			warnOlderDebugVersion();
 			return true;
 		}
 		// check whether debugger is using one of older protocol ID:
 		if (setProtocol(PROTOCOL_ID_2006040701)) {
-
 			// warn user that he is using an old debugger
 			warnOlderDebugVersion();
 			return true;
@@ -680,13 +738,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 	}
 
 	public static void warnOlderDebugVersion() {
-		final IPreferenceStore preferenceStore = DebugUIPlugin.getDefault().getPreferenceStore();
-		String dontShowWarning = preferenceStore.getString("DontShowOlderDebuggerWarning"); //$NON-NLS-1$
-		if (!MessageDialogWithToggle.ALWAYS.equals(dontShowWarning)) {
+		boolean dontShowWarning = PHPDebugPlugin.getDefault().getPluginPreferences().getBoolean("DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+		if (!dontShowWarning) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialogWithToggle.openInformation(Display.getDefault().getActiveShell(), "Old Zend Debugger Protocol ID", "The Zend Debugger protocol ID is older than the one you are using.\n\nSome debugging features may not work properly!",
-						"Don't show this message", false, preferenceStore, "DontShowOlderDebuggerWarning"); //$NON-NLS-1$
+					OldDebuggerWarningDialog dialog = new OldDebuggerWarningDialog(Display.getDefault().getActiveShell());
+			        dialog.open();
 				}
 			});
 		}
@@ -911,6 +968,16 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * Synchronic getCallStack Returns the Stack layer.
 	 */
 	public PHPstack getCallStack() {
+		if (canDo(GET_CALL_STACK_LITE)) {
+			return getCallStackLite();
+		}
+		return getCallStackHeavy();
+	}
+		
+	/**
+	 * Synchronic getCallStack Returns the Stack layer.
+	 */
+	public PHPstack getCallStackHeavy() {
 		if (!this.isActive()) {
 			return null;
 		}
@@ -918,6 +985,27 @@ public class RemoteDebugger implements IRemoteDebugger {
 		PHPstack remoteStack = null;
 		try {
 			GetCallStackResponse response = (GetCallStackResponse) connection.sendRequest(request);
+			if (response != null) {
+				remoteStack = response.getPHPstack();
+			}
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		convertToSystem(remoteStack);
+		return remoteStack;
+	}
+	
+	/**
+	 * Synchronic getCallStack Returns the Stack layer without function parameters.
+	 */
+	public PHPstack getCallStackLite() {
+		if (!this.isActive()) {
+			return null;
+		}
+		GetCallStackLiteRequest request = new GetCallStackLiteRequest();
+		PHPstack remoteStack = null;
+		try {
+			GetCallStackLiteResponse response = (GetCallStackLiteResponse) connection.sendRequest(request);
 			if (response != null) {
 				remoteStack = response.getPHPstack();
 			}
