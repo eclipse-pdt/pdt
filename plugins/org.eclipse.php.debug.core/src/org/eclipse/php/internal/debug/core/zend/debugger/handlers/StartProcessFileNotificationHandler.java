@@ -54,6 +54,7 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		RemoteDebugger remoteDebugger = (RemoteDebugger) debugTarget.getRemoteDebugger();
 		ILaunchConfiguration launchConfiguration = debugTarget.getLaunch().getLaunchConfiguration();
 
+		remoteDebugger.removeCWDCache();
 		debugTarget.setLastFileName(remoteFileName);
 
 		boolean isWebServerDebugger = Boolean.toString(true).equals(debugTarget.getLaunch().getAttribute(IDebugParametersKeys.WEB_SERVER_DEBUGGER));
