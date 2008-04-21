@@ -82,7 +82,7 @@ public class PhpTemplateProposal extends TemplateProposal implements ICompletion
 		boolean result = m.find();
 		while (result) {
 			matchedDelimiter = m.group(0);
-			m.appendReplacement(sb, matchedDelimiter + blanks);
+			m.appendReplacement(sb, docLineDelimiter + blanks);
 			result = m.find();
 		}
 		// Add the last segment of input to the new String
