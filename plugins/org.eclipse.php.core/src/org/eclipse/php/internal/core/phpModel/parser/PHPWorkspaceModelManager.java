@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
+import org.eclipse.ui.internal.progress.ProgressManager;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 /*
@@ -357,7 +358,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 		//any requests not coming from separated job should use getModelForProject with fork = true.
 		return getModelForProject(project, forceCreation, true);
 	}
-	
+
 	/**
 	 * @param fork use different job when building a project. (in order not to run in UI thread).
 	 * by default use true, use false only if you're running from non-UI job
@@ -479,7 +480,10 @@ public class PHPWorkspaceModelManager implements ModelListener {
 				buildJob.schedule();
 
 			} else {
-				IProgressMonitor monitor = new NullProgressMonitor();
+				IProgressMonitor monitor = ProgressManager.getInstance().progressFor(Job.getJobManager().currentJob());
+				if (monitor == null) { // shouldn't happen, as far as I understand, but just in case.
+					monitor = new NullProgressMonitor();
+				}
 				buildModel(monitor, project);
 			}
 		} else {
