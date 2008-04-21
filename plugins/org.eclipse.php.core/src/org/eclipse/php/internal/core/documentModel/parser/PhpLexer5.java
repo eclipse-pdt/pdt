@@ -905,7 +905,7 @@ public class PhpLexer5 extends PhpLexer {
 
   /** this buffer contains the current text to be matched and is
       the source of the yytext() string - Set the buffer size to 4K to keep good performance */
-  private char yy_buffer[] = new char[1024];
+  private char yy_buffer[] = new char[YY_BUFFERSIZE];
 
   /** the textposition at the last accepting state */
   private int yy_markedPos;
