@@ -14,13 +14,25 @@ package org.eclipse.php.internal.ui.folding.projection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.folding.projection.Element.ElementFactory;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
@@ -73,6 +85,14 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			if (modelViewer == null) {
 				return;
 			}
+			
+			// undo operations should not call the update node operation since the model is not updated 
+			if (modelViewer instanceof PHPStructuredTextViewer) {
+				PHPStructuredTextViewer v = (PHPStructuredTextViewer) modelViewer;
+				if (v.isUndoOperation) {
+					return;
+				}
+			}			
 
 			// ignore editor changes when the php model isn't ready.
 			ProjectionViewerInformation information = getAdapterFactory().getInformation(modelViewer);
