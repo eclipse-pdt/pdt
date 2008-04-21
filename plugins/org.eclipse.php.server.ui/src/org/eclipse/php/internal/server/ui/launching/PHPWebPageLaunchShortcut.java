@@ -185,7 +185,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		if (!FileUtils.resourceExists(fileName)) {
 			return null;
 		}
-		String URL = server.getBaseURL() + '/' + new Path(fileName).removeFirstSegments(1);
+		String URL = server.getBaseURL() + new Path(fileName).toString();
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(fileName));
 
 		// Set the debugger ID and the configuration delegate for this launch configuration
