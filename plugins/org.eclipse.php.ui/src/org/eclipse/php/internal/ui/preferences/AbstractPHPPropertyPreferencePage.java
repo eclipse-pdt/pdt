@@ -289,11 +289,15 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	}
 
 	public void performDefaults() {
-		for (int i = 0; i < projectScopeAddons.length; i++) {
-			projectScopeAddons[i].performDefaults();
+		if (projectScopeAddons != null) {
+			for (int i = 0; i < projectScopeAddons.length; i++) {
+				projectScopeAddons[i].performDefaults();
+			}
 		}
-		for (int i = 0; i < workspaceAddons.length; i++) {
-			workspaceAddons[i].performDefaults();
+		if (workspaceAddons != null) {
+			for (int i = 0; i < workspaceAddons.length; i++) {
+				workspaceAddons[i].performDefaults();
+			}
 		}
 		super.performDefaults();
 	}
