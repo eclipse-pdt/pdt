@@ -13,9 +13,6 @@ package org.eclipse.php.internal.server.ui.launching;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -122,25 +119,5 @@ public class PHPWebPageURLLaunchDialog extends MessageDialog {
 			launchConfiguration.setAttribute(Server.BASE_URL, url);
 		}
 		super.buttonPressed(buttonId);
-	}
-
-	private String formatFileName(String fileName) {
-		String formatFile = null;
-
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IResource resource = root.findMember(fileName);
-		if (resource == null) {
-			return fileName;
-		}
-		int type = resource.getType();
-		if (type == IResource.FILE || type == IResource.FOLDER) {
-			formatFile = resource.getFullPath().toString();
-		} else {
-			formatFile = "/"; //$NON-NLS-1$
-		}
-		if (!formatFile.startsWith("/")) { //$NON-NLS-1$
-			formatFile = "/" + formatFile; //$NON-NLS-1$
-		}
-		return formatFile;
 	}
 }
