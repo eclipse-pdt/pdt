@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.ui.preferences;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -23,7 +24,11 @@ import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.*;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -35,9 +40,15 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.wst.xml.ui.internal.preferences.EncodingSettings;
+import org.eclipse.ui.ide.IDEEncoding;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -58,8 +69,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 	private Combo fDefaultServer;
 	private Combo fDefaultPHPExe;
 	private Collection<String> debuggersIds;
-	private EncodingSettings fDebugEncodingSettings;
-	private EncodingSettings fOutputEncodingSettings;
+	private Combo fDebugEncodingSettings;
+	private Combo fOutputEncodingSettings;
 	private PreferencePage propertyPage;
 
 	public void setCompositeAddon(Composite parent) {
@@ -122,8 +133,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		fDefaultDebugger.select(fDefaultDebugger.indexOf(debuggerName));
 		fDefaultServer.select(fDefaultServer.indexOf(serverName));
 		fDefaultPHPExe.select(fDefaultPHPExe.indexOf(phpExeName));
-		fDebugEncodingSettings.setIANATag(transferEncoding);
-		fOutputEncodingSettings.setIANATag(outputEncoding);
+		fDebugEncodingSettings.setText(transferEncoding);
+		fOutputEncodingSettings.setText(outputEncoding);
 	}
 
 	public boolean performOK(boolean isProjectSpecific) {
@@ -145,8 +156,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		loadDebuggers(fDefaultDebugger);
 		loadServers(fDefaultServer);
 		loadPHPExes(fDefaultPHPExe, PHPexes.getInstance().getItems(PHPDebugPlugin.getCurrentDebuggerId()));
-		fDebugEncodingSettings.setIANATag(prefs.getDefaultString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING));
-		fOutputEncodingSettings.setIANATag(prefs.getDefaultString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING));
+		fDebugEncodingSettings.setText(prefs.getDefaultString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING));
+		fOutputEncodingSettings.setText(prefs.getDefaultString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING));
 	}
 
 	protected String getPreferenceNodeQualifier() {
@@ -180,20 +191,14 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 		Group encodingGroup = new Group(composite, SWT.NONE);
 		encodingGroup.setText(PHPDebugUIMessages.PHPDebugPreferencesBlock_2);
-		encodingGroup.setLayout(new GridLayout());
+		encodingGroup.setLayout(new GridLayout(2, false));
 		encodingGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugTransferEncoding, PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
-		Composite inner = new Composite(encodingGroup, SWT.NONE);
-		inner.setFont(encodingGroup.getFont());
-		inner.setLayout(new GridLayout(3, false));
-		fDebugEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
+		fDebugEncodingSettings = addEncodingSettings(encodingGroup);
 
 		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
-		inner = new Composite(encodingGroup, SWT.NONE);
-		inner.setFont(encodingGroup.getFont());
-		inner.setLayout(new GridLayout(3, false));
-		fOutputEncodingSettings = addEncodingSettings(inner, PHPDebugUIMessages.PHPDebugPreferencesAddon_selectedEncoding);
+		fOutputEncodingSettings = addEncodingSettings(encodingGroup);
 
 		new Label(composite, SWT.NONE); // dummy label
 
@@ -322,15 +327,17 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		}
 	}
 
-	private EncodingSettings addEncodingSettings(Composite parent, String label) {
-		EncodingSettings encodingSettings = new EncodingSettings(parent, label);
-		GridData data = (GridData) encodingSettings.getLayoutData();
-		data.horizontalSpan = 3;
-		data.verticalAlignment = 0;
-		data.verticalIndent = -5;
-		data.horizontalIndent = -5;
-		encodingSettings.setLayoutData(data);
-		return encodingSettings;
+	private Combo addEncodingSettings(Composite parent) {
+		Combo encodingCombo = new Combo(parent, SWT.NONE);
+		GridData data = new GridData();
+		encodingCombo.setLayoutData(data);
+		
+		List encodings = IDEEncoding.getIDEEncodings();
+		String[] encodingStrings = new String[encodings.size()];
+		encodings.toArray(encodingStrings);
+		encodingCombo.setItems(encodingStrings);
+		
+		return encodingCombo;
 	}
 
 	private Combo addCombo(Composite parent, int horizontalIndent) {
@@ -361,16 +368,16 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		if (isProjectSpecific && debugUINode != null && preferenceScopes[0] instanceof ProjectScope && project != null) {
 			debugUINode.putBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
 			debugUINode.put(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExe);
-			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getIANATag());
-			debugUINode.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getIANATag());
+			debugUINode.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getText());
+			debugUINode.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getText());
 			debugUINode.put(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getSelectedDebuggerId());
 			ServersManager.setDefaultServer(project, fDefaultServer.getText());
 		} else {
 			if (project == null) {
 				// Workspace settings
 				prefs.setValue(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, fStopAtFirstLine.getSelection());
-				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getIANATag());
-				prefs.setValue(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getIANATag());
+				prefs.setValue(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, fDebugEncodingSettings.getText());
+				prefs.setValue(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, fOutputEncodingSettings.getText());
 				prefs.setValue(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, getSelectedDebuggerId());
 				exes.setDefaultItem(getSelectedDebuggerId(), phpExe);
 				ServersManager.setDefaultServer(null, fDefaultServer.getText());
