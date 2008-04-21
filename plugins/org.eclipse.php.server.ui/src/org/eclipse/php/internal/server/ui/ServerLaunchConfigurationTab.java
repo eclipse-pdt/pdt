@@ -413,7 +413,11 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			URL url = new URL(urlStr);
 			String port = url.getPort() == -1 ? "" : ":" + url.getPort();
 			fURLHost.setText(url.getProtocol() + "://" + url.getHost() + port + "/"); //$NON-NLS-1$ //$NON-NLS-2$
-			fURLPath.setText(url.getPath());
+			if (url.getQuery() != null) {
+				fURLPath.setText(url.getPath() + "?" + url.getQuery());
+			} else {
+				fURLPath.setText(url.getPath());
+			}
 		} catch (MalformedURLException e) {
 			Logger.logException(e);
 		}
