@@ -375,6 +375,17 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 
 		@Override
 		public int read(char[] b, int off, int len) throws IOException {
+			/**
+			 * For boosting performance - Read only 80 characters from the buffer 
+			 * as the changes are usually small
+			 * 
+			 * Start of change 
+			 */
+			len = 80;
+			/**
+			 * End of change
+			 */
+			
 			if (b == null) {
 				throw new NullPointerException();
 			} else if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) {
