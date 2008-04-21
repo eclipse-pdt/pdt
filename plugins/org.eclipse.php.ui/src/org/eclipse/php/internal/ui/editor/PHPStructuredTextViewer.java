@@ -11,11 +11,11 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.source.IOverviewRuler;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.projection.ProjectionMapping;
+import org.eclipse.jface.text.reconciler.DirtyRegion;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
@@ -41,27 +42,30 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private ITextEditor textEditor;
 	private IInformationPresenter fOutlinePresenter;
 
+	private IAnnotationHover fProjectionAnnotationHover;
+	public boolean isUndoOperation;
+
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 	}
-	
+
 	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
 		this.textEditor = textEditor;
 	}
-	
+
 	public ITextEditor getTextEditor() {
 		return textEditor;
 	}
 
-
 	/**
 	 * This method overrides WST since sometimes we get a subset of the document and NOT the whole document, although the case is FORMAT_DOCUMENT. In all other cases we call the parent method.
 	 */
+	@Override
 	public void doOperation(int operation) {
 		Point selection = getTextWidget().getSelection();
 		int cursorPosition = selection.x;
-		// save the last cursor position and the top visible line.  
+		// save the last cursor position and the top visible line.
 		int selectionLength = selection.y - selection.x;
 		int topLine = getTextWidget().getTopIndex();
 		if (operation == FORMAT_DOCUMENT) {
@@ -84,7 +88,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			} finally {
 				// end recording
 				selection = getTextWidget().getSelection();
-				
+
 				selectionLength = selection.y - selection.x;
 				endRecording(cursorPosition, selectionLength);
 				// return the cursor to its original position after the formatter change its position.
@@ -98,7 +102,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// IStructuredDocument sDoc = (IStructuredDocument) getDocument();
 			// IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
 			// ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
-			//			
+			//
 			// boolean shouldFormat = false;
 			//
 			// if (textRegion instanceof ITextRegionContainer) {
@@ -124,9 +128,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			if (config != null) {
 				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
 				IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
-				for (int i = 0; i < all.length; i++) {
-					if (all[i] instanceof IContentAssistProcessorForPHP) {
-						((IContentAssistProcessorForPHP) all[i]).explicitActivationRequest();
+				for (IContentAssistProcessor element : all) {
+					if (element instanceof IContentAssistProcessorForPHP) {
+						((IContentAssistProcessorForPHP) element).explicitActivationRequest();
 					}
 				}
 			}
@@ -141,6 +145,15 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} else if (operation == QUICK_ASSIST) {
 			if (fOutlinePresenter != null) {
 				fOutlinePresenter.showInformation();
+			}
+		} else if (operation == SHIFT_LEFT) {
+			shift(false, false, true);
+		} else if (operation == UNDO) {
+			try {
+				isUndoOperation = true;
+				super.doOperation(operation);
+			} finally {
+				isUndoOperation = false;			
 			}
 		} else {
 			super.doOperation(operation);
@@ -169,8 +182,25 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 	}
 
+	@Override
 	protected IDocumentAdapter createDocumentAdapter() {
 		return new StructuredDocumentToTextAdapterForPhp(getTextWidget());
+	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.projection.ProjectionViewer#addVerticalRulerColumn(org.eclipse.jface.text.source.IVerticalRulerColumn)
+	 *
+	 * This method is only called to add Projection ruler column.
+	 * It's actually a hack to override Projection presentation (information control) in order to enable syntax highlighting
+	 */
+	@Override
+	public void addVerticalRulerColumn(IVerticalRulerColumn column) {
+		// bug #210211 fix
+		if (fProjectionAnnotationHover == null) {
+			fProjectionAnnotationHover = new PHPStructuredTextProjectionAnnotationHover();
+		}
+		((AnnotationRulerColumn) column).setHover(fProjectionAnnotationHover);
+		super.addVerticalRulerColumn(column);
 	}
 
 	public class StructuredDocumentToTextAdapterForPhp extends StructuredDocumentToTextAdapter {
@@ -183,10 +213,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			super(styledTextWidget);
 		}
 
+		@Override
 		protected void redrawRegionChanged(RegionChangedEvent structuredDocumentEvent) {
 			if (structuredDocumentEvent != null && structuredDocumentEvent.getRegion() != null && structuredDocumentEvent.getRegion().getType() == PHPRegionContext.PHP_CONTENT) {
-				final PhpScriptRegion region = (PhpScriptRegion) structuredDocumentEvent.getRegion();
-				if (region.isFullReparsed) {
+				final IPhpScriptRegion region = (IPhpScriptRegion) structuredDocumentEvent.getRegion();
+				if (region.isFullReparsed()) {
 					final TextRegionListImpl newList = new TextRegionListImpl();
 					newList.add(region);
 					final IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
@@ -194,7 +225,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					final RegionsReplacedEvent regionsReplacedEvent = new RegionsReplacedEvent(structuredDocument, structuredDocumentRegion, structuredDocumentRegion, null, newList, null, 0, 0);
 					redrawRegionsReplaced(regionsReplacedEvent);
 				} else {
-					region.isFullReparsed = true;
+					region.setFullReparsed(true);
 				}
 			}
 			super.redrawRegionChanged(structuredDocumentEvent);
@@ -204,31 +235,33 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	/**
 	 * We override this function in order to use content assist for php and not use the default one dictated by StructuredTextViewerConfiguration
 	 */
+	@Override
 	public void configure(SourceViewerConfiguration configuration) {
 
 		super.configure(configuration);
-		
+
 		// release old annotation hover before setting new one
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
 			((StructuredTextAnnotationHover) fAnnotationHover).release();
 		}
 		// set PHP fAnnotationHover and initial the AnnotationHoverManager
 		setAnnotationHover(new PHPStructuredTextAnnotationHover());
+
 		ensureAnnotationHoverManagerInstalled();
 
 		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
 			return;
 		}
 		config = configuration;
-		
+
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
-		
+
 		// Uninstall content assistant created in super:
 		if (fContentAssistant != null) {
 			fContentAssistant.uninstall();
 		}
-		
+
 		// Assign, and configure our content assistant:
 		fContentAssistant = newPHPAssistant;
 		if (fContentAssistant != null) {
@@ -238,27 +271,29 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// 248036 - disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
-		
-		fOutlinePresenter= phpConfiguration.getOutlinePresenter(this);
+
+		fOutlinePresenter = phpConfiguration.getOutlinePresenter(this);
 		if (fOutlinePresenter != null)
 			fOutlinePresenter.install(this);
 	}
-	
+
 	/**
 	 * override the parent method to prevent initialization of wrong
-	 * fAnnotationHover specific instance 
+	 * fAnnotationHover specific instance
 	 */
+	@Override
 	protected void ensureAnnotationHoverManagerInstalled() {
 		if (fAnnotationHover instanceof PHPStructuredTextAnnotationHover) {
 			super.ensureAnnotationHoverManagerInstalled();
 		}
 	}
-	
+
 	/**
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#modelLine2WidgetLine(int)
-	 * TODO: ask Seva why he put this here - we shouldn't handle things like this 
+	 * Workaround for bug #195600 IllegalState is thrown by {@link ProjectionMapping#toImageLine(int)}
 	 */
+	@Override
 	public int modelLine2WidgetLine(int modelLine) {
 		try {
 			return super.modelLine2WidgetLine(modelLine);
@@ -266,4 +301,26 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			return -1;
 		}
 	}
+
+	/** (non-Javadoc)
+	 * @see org.eclipse.jface.text.TextViewer#getClosestWidgetLineForModelLine(int)
+	 * Workaround for bug #195600 IllegalState is thrown by {@link ProjectionMapping#toImageLine(int)}
+	 */
+	@Override
+	protected int getClosestWidgetLineForModelLine(int modelLine) {
+		try {
+			return super.getClosestWidgetLineForModelLine(modelLine);
+		} catch (IllegalStateException e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * Reconciles the whole document (to re-run PHPValidator)
+	 */
+	public void reconcile() {
+		((StructuredRegionProcessor) fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
+
+	}
+
 }
