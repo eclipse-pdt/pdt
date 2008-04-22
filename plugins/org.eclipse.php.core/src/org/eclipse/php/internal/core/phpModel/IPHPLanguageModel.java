@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.core.phpModel;
 
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 
