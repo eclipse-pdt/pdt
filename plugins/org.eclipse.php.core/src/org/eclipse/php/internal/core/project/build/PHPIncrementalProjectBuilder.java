@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.core.project.build.IPHPBuilderExtension;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
@@ -60,6 +61,8 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 					}
 
 				};
+				j.setPriority(Job.LONG);
+				j.setUser(false);
 				j.schedule();
 				return null;
 			}

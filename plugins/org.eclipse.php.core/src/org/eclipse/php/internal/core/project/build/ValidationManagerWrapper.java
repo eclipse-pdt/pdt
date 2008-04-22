@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jem.util.logger.LogEntry;
 import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.validation.internal.*;
@@ -42,6 +43,8 @@ public class ValidationManagerWrapper extends ValidationBuilder {
 					}
 
 				};
+				j.setPriority(Job.LONG);
+				j.setUser(false);
 				j.schedule();
 				return null;
 			}
