@@ -66,7 +66,7 @@ public class DefaultPHPBuilderExtension implements IPHPBuilderExtension {
 
 	private void buildDelta(IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
 		// the visitor does the work.
-		delta.accept(new PhpResourceDeltaBuildVisitor());
+		delta.accept(new PhpResourceDeltaBuildVisitor(monitor));
 	}
 
 	private void cleanBuild(IProject project) {

@@ -12,9 +12,12 @@ package org.eclipse.php.internal.core.project.build;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.markers.MarkerContributor;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -28,10 +31,18 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 
 	private MarkerContributor validator = MarkerContributor.getInstance();
 
+	private IProgressMonitor monitor;
+	
+	public PhpResourceDeltaBuildVisitor (IProgressMonitor monitor){
+		this.monitor = monitor;
+	}
+	
 	public boolean visit(IResourceDelta delta) {
-		switch (delta.getResource().getType()) {
+		IResource resource = delta.getResource();
+		switch (resource.getType()) {
 			//only process files with PHP content type
 			case IResource.FILE:
+				monitor.subTask(NLS.bind(CoreMessages.getString("FullPhpProjectBuildVisitor_0"), resource.getFullPath().toPortableString()));
 				processFileDelta(delta);
 				return false;
 
