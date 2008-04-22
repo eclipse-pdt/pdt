@@ -172,6 +172,7 @@ public class PHPWorkspaceModelManager implements ModelListener {
 					monitor.beginTask(CoreMessages.getString("PHPWorkspaceModelManager_5"), phpProjects.size());
 
 					for (IProject project : phpProjects) {
+						monitor.subTask(project.getName());
 						if (project.isOpen()) {
 							PHPWorkspaceModelManager.getInstance().getModelForProject(project, true, false);
 							if (monitor.isCanceled()) {
@@ -496,12 +497,29 @@ public class PHPWorkspaceModelManager implements ModelListener {
 
 	private void buildModel(IProgressMonitor monitor, IProject project) {
 		try {
+			FileCounter fc = new FileCounter();
+			project.accept(fc);
+			monitor.beginTask(NLS.bind(CoreMessages.getString("PHPWorkspaceModelManager_4"), project.getName()), fc.numOfFiles);
 			project.accept(new FullPhpProjectBuildVisitor(monitor));
 			fireProjectModelChanged(project);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {
 			monitor.done();
+		}
+
+	}
+
+	class FileCounter implements IResourceVisitor {
+
+		public int numOfFiles = 0;
+
+		public boolean visit(IResource resource) throws CoreException {
+			if (resource.getType() == IResource.FILE) {
+				numOfFiles++;
+				return false;
+			}
+			return true;
 		}
 
 	}

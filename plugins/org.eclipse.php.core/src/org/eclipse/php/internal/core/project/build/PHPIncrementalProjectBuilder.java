@@ -12,10 +12,7 @@ package org.eclipse.php.internal.core.project.build;
 
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.core.project.build.IPHPBuilderExtension;
@@ -29,7 +26,7 @@ import org.eclipse.php.internal.core.Logger;
  * @author michael
  */
 public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
-	
+
 	private IPHPBuilderExtension[] extensions;
 
 	public PHPIncrementalProjectBuilder() {
@@ -72,13 +69,30 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	private IProject[] internalBuild(IProject project, IResourceDelta delta, int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(CoreMessages.getString("PHPIncrementalProjectBuilder_0"), extensions.length);
+		FileCounter fc = new FileCounter();
+		delta.accept(fc);
 		for (int i = 0; i < extensions.length; ++i) {
-			IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
 			if (extensions[i].isEnabled()) {
+				IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
+				subMonitor.beginTask(project.getName(), fc.numOfFiles);
 				extensions[i].build(project, delta, kind, args, subMonitor);
 			}
 		}
 		return null;
+	}
+
+	class FileCounter implements IResourceDeltaVisitor {
+
+		public int numOfFiles = 0;
+
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			if (delta.getResource().getType() == IResource.FILE) {
+				numOfFiles++;
+				return false;
+			}
+			return true;
+		}
+
 	}
 
 	protected void clean(IProgressMonitor monitor) throws CoreException {
@@ -91,7 +105,7 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	protected void startupOnInitialize() {
 		super.startupOnInitialize();
-		
+
 		for (int i = 0; i < extensions.length; ++i) {
 			extensions[i].startupOnInitialize(this);
 		}

@@ -44,6 +44,7 @@ public class PhpResourceDeltaBuildVisitor implements IResourceDeltaVisitor {
 			case IResource.FILE:
 				monitor.subTask(NLS.bind(CoreMessages.getString("FullPhpProjectBuildVisitor_0"), resource.getFullPath().toPortableString()));
 				processFileDelta(delta);
+				monitor.worked(1);
 				return false;
 
 				//only process projects with PHP nature
