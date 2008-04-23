@@ -69,12 +69,16 @@ public class PHPIncrementalProjectBuilder extends IncrementalProjectBuilder {
 
 	private IProject[] internalBuild(IProject project, IResourceDelta delta, int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask(CoreMessages.getString("PHPIncrementalProjectBuilder_0"), extensions.length);
-		FileCounter fc = new FileCounter();
-		delta.accept(fc);
+		int numOfFiles = 1;
+		if (delta != null) {
+			FileCounter fc = new FileCounter();
+			delta.accept(fc);
+			numOfFiles = fc.numOfFiles;
+		}
 		for (int i = 0; i < extensions.length; ++i) {
 			if (extensions[i].isEnabled()) {
 				IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 1);
-				subMonitor.beginTask(project.getName(), fc.numOfFiles);
+				subMonitor.beginTask(project.getName(), numOfFiles);
 				extensions[i].build(project, delta, kind, args, subMonitor);
 			}
 		}
