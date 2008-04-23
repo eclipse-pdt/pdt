@@ -77,7 +77,7 @@ public class ASTParser {
 			try {
 				this.ast.setBindingResolver(new DefaultBindingResolver(sourceModule, sourceModule.getWorkingCopy(null).getOwner()));
 			} catch (ModelException e) {
-				throw new IOException(e);
+				throw new IOException("ModelException " + e.getMessage());
 			}
 		}
 	}
