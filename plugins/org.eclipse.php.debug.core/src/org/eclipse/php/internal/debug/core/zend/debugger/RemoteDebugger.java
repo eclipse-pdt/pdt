@@ -363,18 +363,12 @@ public class RemoteDebugger implements IRemoteDebugger {
 	 * @return message response recieved from the debugger
 	 */
 	public IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
-		if (isDebugMode) {
-			System.out.println("Sending custome request: " + request + " (type = " + request.getType() + ')');
-		}
 		IDebugResponseMessage response = null;
 		if (this.isActive()) {
 			try {
 				Object obj = connection.sendRequest(request);
 				if (obj instanceof IDebugResponseMessage) {
 					response = (IDebugResponseMessage) obj;
-				}
-				if (isDebugMode && response != null) {
-					System.out.println("Response to custom request: " + response + " (type = " + response.getType() + ')');
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

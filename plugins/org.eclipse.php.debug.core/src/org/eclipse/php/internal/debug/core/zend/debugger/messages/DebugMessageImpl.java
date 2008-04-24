@@ -23,4 +23,10 @@ public abstract class DebugMessageImpl implements IDebugMessage {
 	public void setTransferEncoding(String encoding) {
 		fEncoding = encoding;
 	}
+	
+	public String toString() {
+		return new StringBuilder(this.getClass().getName().replaceFirst(".*\\.", ""))
+			.append(" [ID=").append(getType()).append(']')
+			.toString();
+	}
 }

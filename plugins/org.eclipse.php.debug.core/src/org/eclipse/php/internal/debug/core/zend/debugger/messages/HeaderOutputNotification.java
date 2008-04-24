@@ -37,10 +37,6 @@ public class HeaderOutputNotification extends DebugMessageNotificationImpl imple
 		this.output = outputText;
 	}
 
-	public String toString() {
-		return super.toString() + ":" + output;
-	}
-
 	public void deserialize(DataInputStream in) throws IOException {
 		setOutput(CommunicationUtilities.readString(in));
 	}

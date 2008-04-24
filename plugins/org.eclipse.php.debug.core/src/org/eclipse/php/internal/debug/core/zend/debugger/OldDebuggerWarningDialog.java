@@ -64,7 +64,7 @@ public class OldDebuggerWarningDialog extends Dialog {
 		button.setText("Don't show this message again.");
 		button.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PHPDebugPlugin.getDefault().getPluginPreferences().setValue("DontShowOlderDebuggerWarning", true);
+				PHPDebugPlugin.getDefault().getPluginPreferences().setValue("DontShowOlderDebuggerWarning", button.getSelection());
 			}
 		});
 

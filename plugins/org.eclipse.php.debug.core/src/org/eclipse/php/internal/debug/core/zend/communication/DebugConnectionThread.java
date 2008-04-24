@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.communication;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.text.MessageFormat;
@@ -19,8 +22,16 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -50,8 +61,8 @@ import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageImpl;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -173,9 +184,6 @@ public class DebugConnectionThread implements Runnable {
 				((IDebugMessage) msg).serialize(dataOutputStream);
 				synchronized (out) {
 					out.writeInt(byteArrayOutputStream.size());
-					if (isDebugMode) {
-						System.out.println("sending notification request size=" + byteArrayOutputStream.size()); //$NON-NLS-1$
-					}
 					byteArrayOutputStream.writeTo(out);
 					out.flush();
 				}
@@ -199,10 +207,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public Object sendRequest(Object request) throws Exception {
 		if (isDebugMode) {
-			if (request instanceof GetVariableValueRequest) {
-				GetVariableValueRequest gvr = (GetVariableValueRequest) request;
-				System.out.println("sendRequest()->GetVariableValueRequest:getVar() = " + gvr.getVar()); //$NON-NLS-1$
-			}
+			System.out.println("Sending syncrhonic request: " + request);
 		}
 		try {
 			IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -212,13 +217,8 @@ public class DebugConnectionThread implements Runnable {
 				theMsg.serialize(dataOutputStream);
 
 				int messageSize = byteArrayOutputStream.size();
-
-				if (isDebugMode) {
-					System.out.println("sending message request size=" + messageSize + " type=" + theMsg.getType()); //$NON-NLS-1$ //$NON-NLS-2$
-				}
 				synchronized (out) {
 					requestsTable.put(theMsg.getID(), theMsg);
-					//System.out.println("Request table has " +requestsTable.size() +" items");
 					out.writeInt(messageSize);
 					byteArrayOutputStream.writeTo(out);
 					out.flush();
@@ -251,10 +251,9 @@ public class DebugConnectionThread implements Runnable {
 				// This can be because on the peerResponseTimeout.
 				if (response == null && isConnected()) {
 					if (isDebugMode) {
-						System.out.println("Communication problems"); //$NON-NLS-1$
+						System.out.println("Communication problems (response is null)"); //$NON-NLS-1$
 					}
 					// Handle time out will stop the communication if need to stop.
-					//System.out.println("handleto");
 
 					if (timeoutCount > 0) {
 						timeoutCount--;
@@ -270,7 +269,7 @@ public class DebugConnectionThread implements Runnable {
 			}
 			PHPLaunchUtilities.hideWaitForDebuggerMessage();
 			if (isDebugMode) {
-				System.out.println("response received by client: " + response); //$NON-NLS-1$
+				System.out.println("Received response: " + response); //$NON-NLS-1$
 			}
 			return response;
 
@@ -288,6 +287,9 @@ public class DebugConnectionThread implements Runnable {
 	 * @param responseHandler
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
+		if (isDebugMode) {
+			System.out.println("Sending asynchronic request: " + request);
+		}
 		int msgId = lastRequestID++;
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
 		try {
@@ -297,10 +299,6 @@ public class DebugConnectionThread implements Runnable {
 			theMsg.serialize(dataOutputStream);
 
 			int messageSize = byteArrayOutputStream.size();
-			if (isDebugMode) {
-				System.out.println("sending message request size=" + messageSize); //$NON-NLS-1$
-			}
-
 			synchronized (out) {
 				requestsTable.put(msgId, request);
 				responseHandlers.put(new Integer(msgId), responseHandler);
@@ -829,7 +827,11 @@ public class DebugConnectionThread implements Runnable {
 
 				try {
 					IDebugMessage newInputMessage = (IDebugMessage)inputMessageQueue.queueOut();
-
+					
+					if (isDebugMode) {
+						System.out.println("New message received: " + newInputMessage);
+					}
+					
 					// do not stop until the message is processed.
 					synchronized (this) {
 						try {
@@ -843,8 +845,11 @@ public class DebugConnectionThread implements Runnable {
 
 								// try to find relevant handler for the message:
 								IDebugMessageHandler messageHandler = createMessageHandler(newInputMessage);
-
+								
 								if (messageHandler != null) {
+									if (isDebugMode) {
+										System.out.println("Creating message handler: " + messageHandler.getClass().getName().replaceFirst(".*\\.", ""));
+									}
 									// handle the request
 									messageHandler.handle(newInputMessage, debugTarget);
 
@@ -1051,9 +1056,6 @@ public class DebugConnectionThread implements Runnable {
 
 					// reads the length
 					int num = in.readInt();
-					if (isDebugMode) {
-						System.out.println("recieved message size = " + num); //$NON-NLS-1$
-					}
 					if (num < 0) {
 						shutDown();
 						if (isDebugMode) {
@@ -1084,9 +1086,6 @@ public class DebugConnectionThread implements Runnable {
 							return;
 						}
 						validProtocol = true;
-						if (isDebugMode) {
-							System.out.println("message type=" + messageType); //$NON-NLS-1$
-						}
 
 						IDebugMessage message = DebugMessagesRegistry.getMessage(messageType);
 						if (message != null) {
@@ -1099,25 +1098,13 @@ public class DebugConnectionThread implements Runnable {
 
 						// handle the message
 						if (message instanceof IDebugNotificationMessage) {
-							if (isDebugMode) {
-								System.out.println("Starting to read notification "); //$NON-NLS-1$
-							}
 							message.deserialize(in);
-							if (isDebugMode) {
-								System.out.println("End reading of notification " + message); //$NON-NLS-1$
-							}
 							//getCommunicationClient().handleNotification((Notification)message);
 							//PUT NOTIFICATION TO NOTIFICATION QUEUE
 							inputMessageHandler.queueIn(message);
 						} else if (message instanceof IDebugResponseMessage) {
-							if (isDebugMode) {
-								System.out.println("Starting to read response"); //$NON-NLS-1$
-							}
 							message.deserialize(in);
 							int idd = ((IDebugResponseMessage) message).getID();
-							if (isDebugMode) {
-								System.out.println("End reading of response " + message); //$NON-NLS-1$
-							}
 							//responseQueue.queueIn(message);
 							//INSERT RESPONSE TO TABLE AND RELEASE THE THREAD WAITING FOR THE REQUEST
 							ResponseHandler handler = responseHandlers.get(new Integer(idd)); // find the handler.
@@ -1136,13 +1123,7 @@ public class DebugConnectionThread implements Runnable {
 								inputMessageHandler.queueIn(message);
 							}
 						} else if (message instanceof IDebugRequestMessage) { // this is a request.
-							if (isDebugMode) {
-								System.out.println("Starting to read request"); //$NON-NLS-1$
-							}
 							message.deserialize(in);
-							if (isDebugMode) {
-								System.out.println("End reading of request " + message); //$NON-NLS-1$
-							}
 							//Response response =  getCommunicationClient().handleRequest((Request)message);
 							inputMessageHandler.queueIn(message);
 						}
@@ -1168,12 +1149,9 @@ public class DebugConnectionThread implements Runnable {
 	 * This is a dummy debug protocol message, used for internal needs
 	 * @author michael
 	 */
-	private class DummyDebugMessage implements IDebugMessage {
+	private class DummyDebugMessage extends DebugMessageImpl {
+		
 		public void deserialize(DataInputStream in) throws IOException {
-		}
-
-		public String getTransferEncoding() {
-			return null;
 		}
 
 		public int getType() {
@@ -1181,9 +1159,6 @@ public class DebugConnectionThread implements Runnable {
 		}
 
 		public void serialize(DataOutputStream out) throws IOException {
-		}
-
-		public void setTransferEncoding(String encoding) {
 		}
 	}
 }
