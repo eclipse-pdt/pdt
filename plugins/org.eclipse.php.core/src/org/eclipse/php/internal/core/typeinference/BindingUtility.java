@@ -140,6 +140,59 @@ public class BindingUtility {
 		return evaluatedTypesCache.get(sourceRange);
 	}
 	
+	/**
+	 * This method returns model elements for the given AST expression node.
+	 * This method uses cached evaluated type from previous evaluations (if exists).
+	 *
+	 * @param node AST node that needs to be evaluated.
+	 * @return model element or <code>null</code> in case it couldn't be found
+	 *
+	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * @throws NullPointerException if the given node is <code>null</code>.
+	 */
+	public IModelElement[] getModelElement(ASTNode node) {
+		if (node == null) {
+			throw new NullPointerException();
+		}
+		return getModelElement(new SourceRange(node));
+	}
+
+	/**
+	 * This method returns model elements for the given model element.
+	 * This method uses cached evaluated type from previous evaluations (if exists).
+	 *
+	 * @param element Source Model element.
+	 * @return model element or <code>null</code> in case it couldn't be found
+	 *
+	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * @throws NullPointerException if the given element is <code>null</code>.
+	 * @throws ModelException
+	 */
+	public IModelElement[] getModelElement(SourceRefElement element) throws ModelException {
+		if (element == null) {
+			throw new NullPointerException();
+		}
+		ISourceModule elementModule = element.getSourceModule();
+		if (!elementModule.equals(sourceModule)) {
+			throw new IllegalArgumentException("Unknown model element");
+		}
+		return getModelElement(new SourceRange(element.getSourceRange()));
+	}
+
+	/**
+	 * This method returns model elements for the expression under the given offset and length.
+	 * This method uses cached evaluated type from previous evaluations (if exists).
+	 *
+	 * @param startOffset Starting offset of the expression.
+	 * @param length Length of the expression.
+	 * @return model element or <code>null</code> in case it couldn't be found
+	 *
+	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 */
+	public IModelElement[] getModelElement(int startOffset, int length) {
+		return getModelElement(new SourceRange(startOffset, length));
+	}
+	
 	protected IModelElement[] getModelElement(SourceRange sourceRange) {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
