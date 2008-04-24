@@ -38,10 +38,6 @@ public class OutputNotification extends DebugMessageNotificationImpl implements 
 		this.output = outputText;
 	}
 
-	public String toString() {
-		return super.toString() + ":" + output;
-	}
-
 	public void deserialize(DataInputStream in) throws IOException {
 		setOutput(CommunicationUtilities.readEncodedString(in, getTransferEncoding()));
 	}
