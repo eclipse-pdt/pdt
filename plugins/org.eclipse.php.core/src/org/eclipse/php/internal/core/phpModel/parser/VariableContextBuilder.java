@@ -12,14 +12,12 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
@@ -27,12 +25,12 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeMan
 
 public class VariableContextBuilder {
 
-	private Map contextsToVariables;
-	private Map variablesInstansiation;
+	private Map<PHPCodeContext, List<PHPVariableData>> contextsToVariables;
+	private Map<String, List<PHPVariableTypeData>> variablesInstansiation;
 
 	public VariableContextBuilder() {
-		contextsToVariables = new HashMap();
-		variablesInstansiation = new HashMap();
+		contextsToVariables = new HashMap<PHPCodeContext, List<PHPVariableData>>();
+		variablesInstansiation = new HashMap<String, List<PHPVariableTypeData>>();
 	}
 
 	/**
@@ -46,9 +44,9 @@ public class VariableContextBuilder {
 			return variable;
 		}
 
-		List list = (List) contextsToVariables.get(context);
+		List<PHPVariableData> list = contextsToVariables.get(context);
 		if (list == null) {
-			list = new ArrayList(6);
+			list = new LinkedList<PHPVariableData>();
 			contextsToVariables.put(context, list);
 		}
 		variable = PHPCodeDataFactory.createPHPVariableData(variableName, null, null);
@@ -64,9 +62,9 @@ public class VariableContextBuilder {
 		if (getVariable(context, variable.getName()) != null) {
 			return;
 		}
-		List list = (List) contextsToVariables.get(context);
+		List<PHPVariableData> list = contextsToVariables.get(context);
 		if (list == null) {
-			list = new ArrayList(6);
+			list = new LinkedList<PHPVariableData>();
 			contextsToVariables.put(context, list);
 		}
 		list.add(variable);
@@ -74,26 +72,27 @@ public class VariableContextBuilder {
 
 	public void addObjectInstantiation(PHPCodeContext context, String variableName, String objectType, boolean isUserDocumentation, int lineNumber, int position) {
 		variableName = removeDollar(variableName);
-		Object variableContext = createVariableContext(variableName, context);
-		List list = (List) variablesInstansiation.get(variableContext);
+		String variableContext = createVariableContext(variableName, context);
+		List<PHPVariableTypeData> list = variablesInstansiation.get(variableContext);
 		if (list == null) {
-			list = new ArrayList(4);
+			list = new LinkedList<PHPVariableTypeData>();
 			variablesInstansiation.put(variableContext, list);
 		}
 		list.add(new VariableTypeDataImp(objectType, lineNumber, position, isUserDocumentation));
 	}
 
 	public PHPVariablesTypeManager getPHPVariablesTypeManager() {
-		final Map vars = new HashMap(contextsToVariables.size());
-		final Iterator iterator = contextsToVariables.entrySet().iterator();
+		final Map<PHPCodeContext, PHPVariableData[]> vars = new HashMap<PHPCodeContext, PHPVariableData[]>(contextsToVariables.size());
+		final Iterator<Map.Entry<PHPCodeContext, List<PHPVariableData>>> iterator = contextsToVariables.entrySet().iterator();
 		
 		while (iterator.hasNext()) {
-			final Map.Entry next = (Entry) iterator.next();
-			Object key = next.getKey();
-			List contextList = (List) next.getValue();
-			PHPVariableData[] contextVars = new PHPVariableData[contextList.size()];
-			contextList.toArray(contextVars);
+			final Map.Entry<PHPCodeContext, List<PHPVariableData>> next = iterator.next();
+			PHPCodeContext key = next.getKey();
+			List<PHPVariableData> contextList = next.getValue();
+			
+			PHPVariableData[] contextVars = contextList.toArray(new PHPVariableData[contextList.size()]);
 			Arrays.sort(contextVars);
+			
 			vars.put(key, contextVars);
 		}
 		return new PHPVariablesTypeManagerImp(vars, variablesInstansiation);
@@ -101,11 +100,11 @@ public class VariableContextBuilder {
 
 	private PHPVariableData getVariable(PHPCodeContext context, String variableName) {
 		variableName = removeDollar(variableName);
-		List list = (List) contextsToVariables.get(context);
+		List<PHPVariableData> list = contextsToVariables.get(context);
 		if (list == null) {
 			return null;
 		}
-		Iterator iterator = list.iterator();
+		Iterator<PHPVariableData> iterator = list.iterator();
 		while (iterator.hasNext()) {
 			PHPVariableData curr = (PHPVariableData) iterator.next();
 			if (curr.getName().equals(variableName)) {
@@ -129,10 +128,10 @@ public class VariableContextBuilder {
 
 	private static class PHPVariablesTypeManagerImp implements PHPVariablesTypeManager, Serializable {
 
-		private Map contextsToVariables;
-		private Map variablesInstansiation;
+		private Map<PHPCodeContext, PHPVariableData[]> contextsToVariables;
+		private Map<String, List<PHPVariableTypeData>> variablesInstansiation;
 
-		private PHPVariablesTypeManagerImp(Map contextsToVariables, Map variablesInstansiation) {
+		private PHPVariablesTypeManagerImp(Map<PHPCodeContext, PHPVariableData[]> contextsToVariables, Map<String, List<PHPVariableTypeData>> variablesInstansiation) {
 			this.contextsToVariables = contextsToVariables;
 			this.variablesInstansiation = variablesInstansiation;
 		}
@@ -147,32 +146,31 @@ public class VariableContextBuilder {
 			if (variables == null) {
 				return null;
 			}
-			for (int i = 0; i < variables.length; i++) {
-				if (variables[i].getName().equalsIgnoreCase(variableName)) {
-					return variables[i];
+			for (PHPVariableData variable : variables) {
+				if (variable.getName().equalsIgnoreCase(variableName)) {
+					return variable;
 				}
 			}
 			return null;
 		}
 
-		public Map getContextsToVariables() {
+		public Map<PHPCodeContext, PHPVariableData[]> getContextsToVariables() {
 			return contextsToVariables;
 		}
 
-		public Map getVariablesInstansiation() {
+		public Map<String, List<PHPVariableTypeData>> getVariablesInstansiation() {
 			return variablesInstansiation;
 		}
 
 		public PHPVariableTypeData getVariableTypeData(PHPCodeContext context, String variableName, int line) {
 			variableName = removeDollar(variableName);
 			Object variablrContext = createVariableContext(variableName, context);
-			List list = (List) variablesInstansiation.get(variablrContext);
+			List<PHPVariableTypeData> list = variablesInstansiation.get(variablrContext);
 			if (list == null) {
 				return null;
 			}
 			PHPVariableTypeData lastKnowenData = null;
-			for (int i = list.size() - 1; i >= 0; i -= 1) {
-				PHPVariableTypeData curr = (PHPVariableTypeData) list.get(i);
+			for (PHPVariableTypeData curr : list) {
 				if (curr.getLine() <= line) {
 					if (lastKnowenData == null) {
 						if (curr.getType() != null) {
@@ -195,13 +193,12 @@ public class VariableContextBuilder {
 		public PHPVariableTypeData getVariableTypeDataByPosition(PHPCodeContext context, String variableName, int position) {
 			variableName = removeDollar(variableName);
 			Object variablrContext = createVariableContext(variableName, context);
-			List list = (List) variablesInstansiation.get(variablrContext);
+			List<PHPVariableTypeData> list = variablesInstansiation.get(variablrContext);
 			if (list == null) {
 				return null;
 			}
 			PHPVariableTypeData lastKnowenData = null;
-			for (int i = list.size() - 1; i >= 0; i -= 1) {
-				PHPVariableTypeData curr = (PHPVariableTypeData) list.get(i);
+			for (PHPVariableTypeData curr : list) {
 				if (curr.getPosition() <= position) {
 					if (lastKnowenData == null) {
 						if (curr.getType() != null) {
@@ -233,7 +230,7 @@ public class VariableContextBuilder {
 		return new VariableTypeDataImp(type, line, position, isUserDocumentation);
 	}
 
-	public static PHPVariablesTypeManagerImp createPHPVariablesTypeManager(Map contextsToVariables, Map variablesInstansiation) {
+	public static PHPVariablesTypeManagerImp createPHPVariablesTypeManager(Map<PHPCodeContext, PHPVariableData[]> contextsToVariables, Map<String, List<PHPVariableTypeData>> variablesInstansiation) {
 		return new PHPVariablesTypeManagerImp(contextsToVariables, variablesInstansiation);
 	}
 
@@ -266,6 +263,6 @@ public class VariableContextBuilder {
 		public boolean isUserDocumentation() {
 			return isUserDocumentation;
 		}
-
+		
 	}
 }
