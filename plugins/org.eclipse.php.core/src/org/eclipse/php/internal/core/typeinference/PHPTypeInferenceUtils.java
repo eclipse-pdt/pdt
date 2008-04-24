@@ -1,6 +1,11 @@
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -9,7 +14,7 @@ import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.ti.BasicContext;
+import org.eclipse.dltk.ti.BasicContext; 
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -55,13 +60,23 @@ public class PHPTypeInferenceUtils {
 		}
 		return new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 	}
-
+	
 	/**
-	 * Converts IEvaluatedType to IModelElement, if found
+	 * Converts IEvaluatedType to IModelElement, if found. This method filters elements using file network dependencies.
 	 * @param evaluatedType Evaluated type
 	 * @return model elements
 	 */
 	public static IModelElement[] getModelElements(IEvaluatedType type, BasicContext context) {
+		return getModelElements(type, context, true);
+	}
+
+	/**
+	 * Converts IEvaluatedType to IModelElement, if found
+	 * @param evaluatedType Evaluated type
+	 * @param filter Whether to filter result using file network dependencies.
+	 * @return model elements
+	 */
+	public static IModelElement[] getModelElements(IEvaluatedType type, BasicContext context, boolean filter) {
 		IModelElement[] elements = null;
 
 		if (type instanceof ModelClassType) {
@@ -70,9 +85,20 @@ public class PHPTypeInferenceUtils {
 		if (type instanceof PHPClassType) {
 			elements = PHPMixinModel.getInstance().getClass(((PHPClassType)type).getModelKey());
 		}
+		if (type instanceof AmbiguousType) {
+			List<IModelElement> tmpList = new LinkedList<IModelElement>();
+			IEvaluatedType[] possibleTypes = ((AmbiguousType)type).getPossibleTypes();
+			for (IEvaluatedType possibleType : possibleTypes) {
+				IModelElement[] tmpArray = getModelElements(possibleType, context, false);
+				if (tmpArray != null) {
+					tmpList.addAll(Arrays.asList(tmpArray));
+				}
+			}
+			elements = tmpList.toArray(new IModelElement[tmpList.size()]);
+		}
 
 		// Filter model elements using file network:
-		if (elements != null && elements.length > 0) {
+		if (filter && elements != null && elements.length > 0) {
 			ISourceModule sourceModule = context.getSourceModule();
 			ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 			List<IModelElement> filteredElements = new LinkedList<IModelElement>();

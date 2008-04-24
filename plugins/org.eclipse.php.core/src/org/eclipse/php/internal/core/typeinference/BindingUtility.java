@@ -231,7 +231,7 @@ public class BindingUtility {
 				this.node = node;
 				return false;
 			}
-			return true;
+			return context == null;
 		}
 
 		public boolean visit(ModuleDeclaration node) throws Exception {
