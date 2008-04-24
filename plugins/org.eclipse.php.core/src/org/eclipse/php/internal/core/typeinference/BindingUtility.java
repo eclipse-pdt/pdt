@@ -161,7 +161,7 @@ public class BindingUtility {
 	 * This method returns model elements for the given model element.
 	 * This method uses cached evaluated type from previous evaluations (if exists).
 	 *
-	 * @param element Source Model element.
+	 * @param element Source Reference Model element.
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
