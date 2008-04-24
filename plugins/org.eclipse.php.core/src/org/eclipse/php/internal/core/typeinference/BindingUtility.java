@@ -113,27 +113,40 @@ public class BindingUtility {
 		return getType(new SourceRange(startOffset, length));
 	}
 
+	protected IEvaluatedType getType(SourceRange sourceRange, IContext context, ASTNode node) {
+		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+		return typeInferencer.evaluateType(new ExpressionTypeGoal(context, node), timeLimit);
+	}
+	
+	protected ContextFinder getContext(SourceRange sourceRange) {
+		ContextFinder contextFinder = new ContextFinder(sourceRange);
+		try {
+			rootNode.traverse(contextFinder);
+		} catch (Exception e) {
+			Logger.logException(e);
+			return null;
+		}
+		if (contextFinder.getNode() == null) {
+			throw new IllegalArgumentException("AST node can not be found for the given source range: " + sourceRange);
+		}
+		return contextFinder;
+	}
+	
 	protected IEvaluatedType getType(SourceRange sourceRange) {
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
-
-			ContextFinder contextFinder = new ContextFinder(sourceRange);
-			try {
-				rootNode.traverse(contextFinder);
-			} catch (Exception e) {
-				Logger.logException(e);
-				return null;
-			}
-
-			IContext context = contextFinder.getContext();
-			ASTNode node= contextFinder.getNode();
-			if (node == null) {
-				throw new IllegalArgumentException("AST node can not be found for the given source range: " + sourceRange);
-			}
-
-			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-			evaluatedTypesCache.put(sourceRange, typeInferencer.evaluateType(new ExpressionTypeGoal(context, node), timeLimit));
+			ContextFinder contextFinder = getContext(sourceRange);
+			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
 		}
 		return evaluatedTypesCache.get(sourceRange);
+	}
+	
+	protected IModelElement[] getModelElement(SourceRange sourceRange) {
+		ContextFinder contextFinder = getContext(sourceRange);
+		if (!evaluatedTypesCache.containsKey(sourceRange)) {
+			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
+		}
+		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (BasicContext) contextFinder.getContext());
 	}
 
 	private class SourceRange {
