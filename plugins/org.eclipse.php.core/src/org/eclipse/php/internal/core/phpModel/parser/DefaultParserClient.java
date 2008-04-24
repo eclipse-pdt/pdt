@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 
 public abstract class DefaultParserClient extends ContextParserClient {
 
@@ -85,9 +86,9 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		if (parameterName.charAt(0) == '$') {
 			parameterName = parameterName.substring(1);
 		}
-		for (int i = 0; i < parameters.length; i++) {
-			if (parameterName.equalsIgnoreCase(parameters[i].getName())) {
-				return parameters[i];
+		for (PHPFunctionParameter element : parameters) {
+			if (parameterName.equalsIgnoreCase(element.getName())) {
+				return element;
 			}
 		}
 		return null;
@@ -116,7 +117,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			Iterator it = docInfo.getTags(PHPDocTag.PARAM);
 			while (it.hasNext()) {
 				PHPDocTag param = (PHPDocTag) it.next();
-				String arg = (param.getValue()).trim();
+				String arg = param.getValue().trim();
 				String[] values = arg.split(" ");
 				String name = null;
 				String type = null;
@@ -175,10 +176,10 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 
 		functionsStack.push(functionData);
-		for (int i = 0; i < parameters.length; i++) {
-			((PHPCodeDataFactory.PHPFunctionParameterImp) parameters[i]).setContainer(functionData);
-			variableContextBuilder.addVariable(getContext(), parameters[i]);
-			variableContextBuilder.addObjectInstantiation(getContext(), parameters[i].getName(), parameters[i].getClassType(), false, 0, startPosition);
+		for (PHPFunctionParameter element : parameters) {
+			((PHPCodeDataFactory.PHPFunctionParameterImp) element).setContainer(functionData);
+			variableContextBuilder.addVariable(getContext(), element);
+			variableContextBuilder.addObjectInstantiation(getContext(), element.getName(), element.getClassType(), false, 0, startPosition);
 		}
 	}
 
@@ -274,14 +275,14 @@ public abstract class DefaultParserClient extends ContextParserClient {
 				classFunctions.toArray(func);
 				Arrays.sort(func);
 
-				for (int i = 0; i < vars.length; i++) {
-					((PHPCodeDataFactory.PHPClassVarDataImp) vars[i]).setContainer(classData);
+				for (PHPClassVarData element : vars) {
+					((PHPCodeDataFactory.PHPClassVarDataImp) element).setContainer(classData);
 				}
-				for (int i = 0; i < consts.length; i++) {
-					((PHPCodeDataFactory.PHPClassConstDataImp) consts[i]).setContainer(classData);
+				for (PHPClassConstData element : consts) {
+					((PHPCodeDataFactory.PHPClassConstDataImp) element).setContainer(classData);
 				}
-				for (int i = 0; i < func.length; i++) {
-					((PHPCodeDataFactory.PHPFunctionDataImp) func[i]).setContainer(classData);
+				for (PHPFunctionData element : func) {
+					((PHPCodeDataFactory.PHPFunctionDataImp) element).setContainer(classData);
 				}
 
 				classData.setFunctions(func);
@@ -310,7 +311,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			Iterator it = docInfo.getTags(PHPDocTag.VAR);
 			while (it.hasNext()) {
 				PHPDocTag varTag = (PHPDocTag) it.next();
-				String value = (varTag.getValue()).trim();
+				String value = varTag.getValue().trim();
 				String[] values = value.split(" ");
 				classType = values[0];
 			}
@@ -324,9 +325,9 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 	}
 
-	public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+	public void handleClassConstDeclaration(String constName, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, endPosition, stopPosition, 0);
-		PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, docInfo, userData);
+		PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, value, docInfo, userData);
 		classConsts.add(classConstData);
 	}
 
@@ -409,7 +410,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 	}
 
-	//This method gets the end position in case there's a syntax error and 
+	//This method gets the end position in case there's a syntax error and
 	//a class OR a function are not closed properly
 	private int getEndPosition(int endPosition, final String currentElementName, Collection repository) {
 		for (Iterator iter = repository.iterator(); iter.hasNext();) {
@@ -433,26 +434,41 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	public void finishParsing(int lastPosition, int lastLine, long lastModified) {
 		restoreToDefaultContext(lastPosition);
 
-		PHPClassData[] allClasses = new PHPClassData[classes.size()];
-		classes.toArray(allClasses);
+		PHPClassData[] allClasses = PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY;
+		if (!classes.isEmpty()) {
+			allClasses = new PHPClassData[classes.size()];
+			classes.toArray(allClasses);
+		}
 
-		PHPFunctionData[] allFunctions = new PHPFunctionData[functions.size()];
-		functions.toArray(allFunctions);
+		PHPFunctionData[] allFunctions = PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY;
+		if (!functions.isEmpty()) {
+			allFunctions = new PHPFunctionData[functions.size()];
+			functions.toArray(allFunctions);
+		}
 
-		PHPIncludeFileData[] allIncludes = new PHPIncludeFileData[includeFiles.size()];
-		includeFiles.toArray(allIncludes);
+		PHPIncludeFileData[] allIncludes = PHPCodeDataFactory.EMPTY_INCLUDE_DATA_ARRAY;
+		if (!includeFiles.isEmpty()) {
+			allIncludes = new PHPIncludeFileData[includeFiles.size()];
+			includeFiles.toArray(allIncludes);
+		}
 
-		PHPConstantData[] allConstants = new PHPConstantData[constants.size()];
-		constants.toArray(allConstants);
+		PHPConstantData[] allConstants = PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY;
+		if (!includeFiles.isEmpty()) {
+			allConstants = new PHPConstantData[constants.size()];
+			constants.toArray(allConstants);
+		}
 
-		IPHPMarker[] allMarkers = new IPHPMarker[markers.size()];
-		markers.toArray(allMarkers);
+		IPHPMarker[] allMarkers = PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY;
+		if (!markers.isEmpty()) {
+			allMarkers = new IPHPMarker[markers.size()];
+			markers.toArray(allMarkers);
+		}
 
 		if (phpTags.size() % 2 == 1) {
 			phpTags.add(PHPCodeDataFactory.createUserData(workingFileName, lastPosition, lastPosition, lastPosition, 0));
 		}
 
-		PHPBlock[] phpBlocks = new PHPBlock[(phpTags.size() + 1) >> 1]; // we
+		PHPBlock[] phpBlocks = new PHPBlock[phpTags.size() + 1 >> 1]; // we
 		// want
 		// to
 		// round
@@ -478,20 +494,20 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 		PHPFileData fileData = PHPCodeDataFactory.createPHPFileData(workingFileName, userData, allClasses, allFunctions, variablesTypeManager, allIncludes, allConstants, allMarkers, phpBlocks, firstPHPDocBlock, lastModified);
 
-		for (int i = 0; i < allClasses.length; i++) {
-			allClasses[i].setContainer(fileData);
+		for (PHPClassData element : allClasses) {
+			element.setContainer(fileData);
 		}
 
-		for (int i = 0; i < allFunctions.length; i++) {
-			allFunctions[i].setContainer(fileData);
+		for (PHPFunctionData element : allFunctions) {
+			element.setContainer(fileData);
 		}
 
-		for (int i = 0; i < allConstants.length; i++) {
-			allConstants[i].setContainer(fileData);
+		for (PHPConstantData element : allConstants) {
+			element.setContainer(fileData);
 		}
 
-		for (int i = 0; i < allIncludes.length; i++) {
-			allIncludes[i].setContainer(fileData);
+		for (PHPIncludeFileData element : allIncludes) {
+			element.setContainer(fileData);
 		}
 
 		userModel.insert(fileData);
@@ -502,7 +518,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	 * for the follwing assignment the target's new type. and then fixes the
 	 * database accordingly. $a = $b; $a = foo(); $a = MyClass::foo(); $a =
 	 * $b->f(); / $a = $b->c;
-	 * 
+	 *
 	 * @param cls
 	 *            the classes that was created in this parsing (not in the model
 	 *            yet)
@@ -550,7 +566,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 					if (variableContext[i].equals("null")) {
 						continue;
 					}
-					variableName = (variableName == null) ? variableContext[i] : variableContext[i] + ";" + variableName;
+					variableName = variableName == null ? variableContext[i] : variableContext[i] + ";" + variableName;
 				}
 			} else {
 				if (variableContext.length >= 3) {
@@ -575,7 +591,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 				int lineNumber = variableTypeData.getLine();
 				int position = variableTypeData.getPosition();
 				boolean isUserDocumentation = variableTypeData.isUserDocumentation();
-				if (className != null && (className.startsWith("r_variable"))) {
+				if (className != null && className.startsWith("r_variable")) {
 					className = getClassName(className, position, lineNumber, cls, func, projectClasses, projectFunctions);
 				}
 				if ("self".equalsIgnoreCase(className)) {
@@ -603,8 +619,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 		while (contextesIterator.hasNext()) {
 			final String next = (String) variablesNamesIterator.next();
-			variableContextBuilder.addObjectInstantiation((PHPCodeContext) contextesIterator.next(), next, (String) classNamesIterator.next(), ((Boolean) userDocumentationsIterator.next()).booleanValue(), ((Integer) linesIterator.next()).intValue(),
-				((Integer) positionsIterator.next()).intValue());
+			variableContextBuilder.addObjectInstantiation((PHPCodeContext) contextesIterator.next(), next, (String) classNamesIterator.next(), ((Boolean) userDocumentationsIterator.next()).booleanValue(), ((Integer) linesIterator.next()).intValue(), ((Integer) positionsIterator.next()).intValue());
 		}
 	}
 
@@ -617,10 +632,10 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			return null;
 		}
 		if (classNameParts.length == 2) {
-			// meaning we are in a statment of $a = $b
+			// meaning we are in a statement of $a = $b
 			return PHPFileDataUtilities.getVariableType(workingFileName, classNameParts[1], position, lineNumber, userModel, true);
 		}
-		if ((classNameParts[1].equals("function_call"))) {
+		if (classNameParts[1].equals("function_call")) {
 			// meaning it's $a = foo();
 			sourceClassName = getFunctionReturnType(classNameParts[2], position, cls, func, projectClasses, projectFunctions);
 			propertyNamePosition = 3;
@@ -653,8 +668,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	 * for example: $a = foo()
 	 */
 	private String getFunctionReturnType(String functionName, int position, PHPClassData[] classes, PHPFunctionData[] functions, CodeData[] projectClasses, CodeData[] projectFunctions) {
-		for (int i = 0; i < classes.length; i++) {
-			PHPClassData cl = classes[i];
+		for (PHPClassData cl : classes) {
 			UserData userData = cl.getUserData();
 			if (position > userData.getStartPosition() && position <= userData.getEndPosition()) {
 				return getPropertyType(cl.getName(), functionName, classes, functions, projectClasses, projectFunctions);
@@ -666,7 +680,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 
 	private String getPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions, CodeData[] projectClasses, CodeData[] projectFunctions) {
 		String rv;
-		if (className == null && (projectModel != null)) {
+		if (className == null && projectModel != null) {
 			rv = getFunctionReturnType(propertyName, functions);
 			if (rv == null) {
 				rv = getFunctionReturnType(propertyName, projectFunctions);
@@ -674,7 +688,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 			return rv;
 		}
 		rv = innerGetPropertyType(className, propertyName, classes, functions);
-		if (rv == null && (projectModel != null)) {
+		if (rv == null && projectModel != null) {
 			// maybe the class is not in the current file but in the project
 			rv = innerGetPropertyType(className, propertyName, projectClasses, projectFunctions);
 		}
@@ -684,14 +698,14 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	private String innerGetPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions) {
 		return innerGetPropertyType(className, propertyName, classes, functions, new HashMap<String, String>());
 	}
-	
+
 	/**
 	 * This function is an internal function developers should use the innerGetPropertyType version without the Map.
-	 * @param subClasses uses as a stopping condition in case there's a loop in the inheritance tree.   
+	 * @param subClasses uses as a stopping condition in case there's a loop in the inheritance tree.
 	 */
 	private String innerGetPropertyType(String className, String propertyName, CodeData[] classes, CodeData[] functions, Map<String, String> subClasses) {
-		for (int i = 0; i < classes.length; i++) {
-			PHPClassData currClass = (PHPClassData) classes[i];
+		for (CodeData element : classes) {
+			PHPClassData currClass = (PHPClassData) element;
 			if (currClass.getName().equals(className)) {
 				String rv;
 				if (propertyName.charAt(0) == '*') {
@@ -707,7 +721,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 				if (rv == null && currClass.getSuperClassData() != null) {
 					// trying to find in the ancestor
 					String superClassName = currClass.getSuperClassData().getName();
-					if(subClasses.containsKey(superClassName)){
+					if (subClasses.containsKey(superClassName)) {
 						return null;
 					}
 					subClasses.put(className, className);
@@ -720,8 +734,8 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	private String getFunctionReturnType(String functionName, CodeData[] functions) {
-		for (int i = 0; i < functions.length; i++) {
-			PHPFunctionData phpFunctionData = (PHPFunctionData) functions[i];
+		for (CodeData element : functions) {
+			PHPFunctionData phpFunctionData = (PHPFunctionData) element;
 			if (functionName.equals(phpFunctionData.getName())) {
 				String returnType = phpFunctionData.getReturnType();
 				if (returnType.equals("void") || returnType.equals("unknown")) {
@@ -734,8 +748,8 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	private String getVariableType(String variableName, CodeData[] variables) {
-		for (int i = 0; i < variables.length; i++) {
-			PHPClassVarData classVarData = (PHPClassVarData) variables[i];
+		for (CodeData element : variables) {
+			PHPClassVarData classVarData = (PHPClassVarData) element;
 			if (variableName.equals(classVarData.getName())) {
 				String returnType = classVarData.getClassType();
 				if (returnType != null && returnType.equals("unknown")) {
