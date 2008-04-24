@@ -29,7 +29,9 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
  */
 public class DocumentorLexer {
 
-  /** This character denotes the end of file */
+  private static final String EMPTY = "";
+
+/** This character denotes the end of file */
   final public static int YYEOF = -1;
 
   /** initial size of the lookahead buffer */
@@ -330,7 +332,7 @@ public class DocumentorLexer {
 
     public PHPDocBlock parse (){
 
-        longDesc = "";
+        longDesc = EMPTY;
         tagList = new ArrayList();
         sBuffer = new StringBuffer();
         numOfLines = 1;

@@ -23,12 +23,8 @@ public class PHPLanguageManagerProvider {
 	private static final PHPLanguageManagerProvider instance = new PHPLanguageManagerProvider(); 
 	private PHPLanguageManagerProvider() { }
 	
-	// avaliable models
-	private final static Map models = new HashMap();
-	static {
-		models.put(PHPVersion.PHP4, new PHP4LanguageManager());
-		models.put(PHPVersion.PHP5, new PHP5LanguageManager());
-	}
+	// available models
+	private final static Map<String, PHPLanguageManager> models = new HashMap<String, PHPLanguageManager>();
 	
 	/**
 	 * @return language provider instance
@@ -38,8 +34,16 @@ public class PHPLanguageManagerProvider {
 	}
 
 	// get the relevant language model 
-	public PHPLanguageManager getPHPLanguageManager(String key) {
+	public synchronized PHPLanguageManager getPHPLanguageManager(String key) {
 		assert key.equals(PHPVersion.PHP4) || key.equals(PHPVersion.PHP5);
+		
+		if (!models.containsKey(key)) {
+			if (key.equals(PHPVersion.PHP4)) {
+				models.put(PHPVersion.PHP4, new PHP4LanguageManager());
+			} else {
+				models.put(PHPVersion.PHP5, new PHP5LanguageManager());
+			}
+		}
 		
 		return (PHPLanguageManager) models.get(key);
 	}
