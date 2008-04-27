@@ -200,6 +200,8 @@ public class PHPCodeDataFactory {
 		return (CodeData[]) constructors.toArray(new CodeData[constructors.size()]);
 	}
 
+	private static final String EMPTY_STRING = "";
+	
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// PHPIdentifierData implemation
 	/////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +211,7 @@ public class PHPCodeDataFactory {
 		protected PHPDocBlock docBlock;
 
 		public PHPCodeDataImp(String name, PHPDocBlock docBlock, UserData userData) {
-			super(name, docBlock != null ? docBlock.getShortDescription() : "", userData);
+			super(name, userData);
 			this.docBlock = docBlock;
 		}
 

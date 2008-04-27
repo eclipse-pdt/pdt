@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.Platform;
 public abstract class AbstractCodeData implements CodeData {
 
 	protected String name;
-	private String description;
 	private boolean isUserCode;
 	protected UserData userData;
 
@@ -26,8 +25,8 @@ public abstract class AbstractCodeData implements CodeData {
 	 * @param name        The name of the Code Data.
 	 * @param description The description of the Code Data.
 	 */
-	public AbstractCodeData(String name, String description) {
-		this(name, description, null);
+	public AbstractCodeData(String name) {
+		this(name, null);
 	}
 
 	/**
@@ -37,9 +36,8 @@ public abstract class AbstractCodeData implements CodeData {
 	 * @param description The description of the Code Data.
 	 * @param userData
 	 */
-	public AbstractCodeData(String name, String description, UserData userData) {
+	public AbstractCodeData(String name, UserData userData) {
 		this.name = name;
-		this.description = description;
 		this.userData = userData;
 		this.isUserCode = userData != null;
 	}
@@ -51,15 +49,6 @@ public abstract class AbstractCodeData implements CodeData {
 	 */
 	public final String getName() {
 		return name;
-	}
-
-	/**
-	 * Returns a description of the CodeData.
-	 *
-	 * @return Description of the CodeData.
-	 */
-	public String getDescription() {
-		return description;
 	}
 
 	/**

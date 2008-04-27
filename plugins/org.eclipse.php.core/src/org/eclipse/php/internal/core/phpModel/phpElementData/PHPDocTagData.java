@@ -15,11 +15,18 @@ import org.eclipse.php.internal.core.util.Visitor;
 
 public class PHPDocTagData extends AbstractCodeData {
 
+	private String description = null;
+	
 	public PHPDocTagData(String name, String description) {
-		super(name, description);
+		super(name);
+		this.description =description; 
 	}
 
 	public void accept(Visitor v) {
 		((PHPProjectModelVisitor) v).visit(this);
+	}
+
+	public String getDescription() {
+		return description == null ? getName() : description;
 	}
 }

@@ -12,8 +12,6 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTagData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPProjectModelVisitor;
-import org.eclipse.php.internal.core.util.Visitor;
 
 
 public class PHPDocCodeDataFactory {
@@ -25,19 +23,7 @@ public class PHPDocCodeDataFactory {
 	 * Returns new PHPDocTagData.
 	 */
 	public static PHPDocTagData createPHPDocTagData(String name, String description) {
-		return new PHPDocTagDataImp(name, description);
+		return new PHPDocTagData(name, description);
 	}
 
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	static class PHPDocTagDataImp extends PHPDocTagData {
-
-		private PHPDocTagDataImp(String name, String description) {
-			super(name, description);
-		}
-
-		public void accept(Visitor v) {
-			((PHPProjectModelVisitor) v).visit(this);
-		}
-
-	}
 }
