@@ -122,6 +122,7 @@ public class PHPNature extends ScriptNature {
 	 * @see IProjectNature#deconfigure
 	 */
 	public void deconfigure() throws CoreException {
+		removeFromBuildSpec(DLTKCore.BUILDER_ID);
 		removeFromBuildSpec(PHPProjectOptions.BUILDER_ID);
 		removeFromBuildSpec(VALIDATION_BUILDER_ID);
 		clean();
