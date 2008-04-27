@@ -12,8 +12,10 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -34,6 +36,7 @@ public class PHPCodeDataFactory {
 	public static final PHPBlock[] EMPTY_PHP_BLOCK_ARRAY = new PHPBlock[0];
 	public static final PHPFunctionData.PHPFunctionParameter[] EMPTY_FUNCTION_PARAMETER_DATA_ARRAY = new PHPFunctionData.PHPFunctionParameter[0];
 	public static final PHPDocTag[] EMPTY_PHP_DOC_TAG = new PHPDocTag[0];
+	public static final EmptyPHPVariablesTypeManager EMPTY_PHP_VARIABLES_TYPE_MANAGER = new EmptyPHPVariablesTypeManager();
 
 	/**
 	 * Returns new PHPFunctionData.
@@ -56,8 +59,8 @@ public class PHPCodeDataFactory {
 	/**
 	 * Returns new PHPClassVarData.
 	 */
-	public static PHPClassConstData createPHPClassConstData(String name, PHPDocBlock docBlock, UserData userData) {
-		return new PHPClassConstDataImp(name, docBlock, userData);
+	public static PHPClassConstData createPHPClassConstData(String name, String value, PHPDocBlock docBlock, UserData userData) {
+		return new PHPClassConstDataImp(name, value, docBlock, userData);
 	}
 
 	/**
@@ -153,22 +156,26 @@ public class PHPCodeDataFactory {
 			null));
 
 		if (isPHP5) {
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__isset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time isset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
-				new BasicPHPDocTag(PHPDocTag.RETURN, "true if the object variable is set, otherwise false") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "boolean"));
+			methods
+				.add(PHPCodeDataFactory.createPHPFuctionData("__isset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time isset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
+					new BasicPHPDocTag(PHPDocTag.RETURN, "true if the object variable is set, otherwise false") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), },
+					"boolean"));
 
 			methods.add(PHPCodeDataFactory.createPHPFuctionData("__unset", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time unset() is called on the object variable", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name variable name"),
 				new BasicPHPDocTag(PHPDocTag.RETURN, "unsets the object variable") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "void"));
-			
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__toString", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is used for setting a string value for the object that will be used if the object is used as a string.", null, new PHPDocTag[]{new BasicPHPDocTag(PHPDocTag.RETURN, "string representing the object")} ,
-				PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[0], "string"));
-			
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__set_state", PHPModifier.PUBLIC, new PHPDocBlockImp("This static method is called for classes exported by var_export() since PHP 5.1.0", null, new PHPDocTag[0], PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[0], "void"));
-			
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__clone", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time clone is called on the object variable", null, new PHPDocTag[0], PHPDocBlock.FUNCTION_DOCBLOCK),
-				classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[0], "void"));
-			
-			methods.add(PHPCodeDataFactory.createPHPFuctionData("__autoload", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked in case you are trying to use a class which hasn't been defined yet", null, new PHPDocTag[] { new BasicPHPDocTag(PHPDocTag.PARAM, "string $name class name"),
-				new BasicPHPDocTag(PHPDocTag.RETURN, "new class object") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false, "string", null), }, "mixed"));
+
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__toString", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is used for setting a string value for the object that will be used if the object is used as a string.", null, new PHPDocTag[] { new BasicPHPDocTag(
+				PHPDocTag.RETURN, "string representing the object") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[0], "string"));
+
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__set_state", PHPModifier.PUBLIC, new PHPDocBlockImp("This static method is called for classes exported by var_export() since PHP 5.1.0", null, new PHPDocTag[0], PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(),
+				new PHPFunctionData.PHPFunctionParameter[0], "void"));
+
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__clone", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked each time clone is called on the object variable", null, new PHPDocTag[0], PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(),
+				new PHPFunctionData.PHPFunctionParameter[0], "void"));
+
+			methods.add(PHPCodeDataFactory.createPHPFuctionData("__autoload", PHPModifier.PUBLIC, new PHPDocBlockImp("This magic method is invoked in case you are trying to use a class which hasn't been defined yet", null, new PHPDocTag[] {
+				new BasicPHPDocTag(PHPDocTag.PARAM, "string $name class name"), new BasicPHPDocTag(PHPDocTag.RETURN, "new class object") }, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), new PHPFunctionData.PHPFunctionParameter[] { new PHPFunctionParameterImp("name", null, false, false,
+				"string", null), }, "mixed"));
 		}
 
 		return (CodeData[]) methods.toArray(new CodeData[methods.size()]);
@@ -186,7 +193,7 @@ public class PHPCodeDataFactory {
 		if (isPHP5) {
 			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.CONSTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Constructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
 				classData.getName()));
-			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESCRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Destructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
+			constructors.add(PHPCodeDataFactory.createPHPFuctionData(PHPClassData.DESTRUCTOR, PHPModifier.PUBLIC, new PHPDocBlockImp("Destructs this object", null, EMPTY_PHP_DOC_TAG, PHPDocBlock.FUNCTION_DOCBLOCK), classData.getUserData(), PHPCodeDataFactory.EMPTY_FUNCTION_PARAMETER_DATA_ARRAY,
 				"void"));
 		}
 
@@ -229,6 +236,15 @@ public class PHPCodeDataFactory {
 			return "";
 		}
 
+		public String toString() {
+			StringBuffer string = new StringBuffer(name);
+			boolean hasContainer = getContainer() != null;
+			boolean hasUserData = userData != null;
+			if (container != null) {
+				string.append(" in " + container.toString());
+			}
+			return string.toString();
+		}
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
@@ -388,11 +404,18 @@ public class PHPCodeDataFactory {
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	static class PHPClassConstDataImp extends PHPCodeDataImp implements PHPClassConstData {
 
+		private String value;
+
 		/**
 		 * Construct a new PHPClassConstDataImp.
 		 */
-		public PHPClassConstDataImp(String name, PHPDocBlock docBlock, UserData userData) {
+		public PHPClassConstDataImp(String name, String value, PHPDocBlock docBlock, UserData userData) {
 			super(name, docBlock, userData);
+			this.value = value;
+		}
+
+		public String getValue() {
+			return value;
 		}
 
 		public void accept(Visitor v) {
@@ -471,10 +494,10 @@ public class PHPCodeDataFactory {
 			this.functions = functions;
 
 			hasConstructor = false;
-			for (int i = 0; i < functions.length; i++) {
-				String functionName = functions[i].getName();
+			for (PHPFunctionData element : functions) {
+				String functionName = element.getName();
 				if (functionName.equals(CONSTRUCTOR) || functionName.equalsIgnoreCase(getName())) {
-					constructor = functions[i];
+					constructor = element;
 					hasConstructor = true;
 					break;
 				}
@@ -616,10 +639,10 @@ public class PHPCodeDataFactory {
 
 		// fix bug 9124.
 		// We can have 2 constants differ only in capitalization.
-		public int compareTo(Object o) {
-			int rv = super.compareTo(o);
-			if (rv != 0) {
-				return rv;
+		public int compareTo(CodeData o) {
+			int compared = super.compareTo(o);
+			if (compared != 0) {
+				return compared;
 			}
 			if (!(o instanceof PHPConstantDataImp)) {
 				return -1;
@@ -711,7 +734,7 @@ public class PHPCodeDataFactory {
 			return comparableName;
 		}
 
-		public int compareTo(Object o) {
+		public int compareTo(CodeData o) {
 			return comparableName.compareToIgnoreCase(((ComparableName) o).getComparableName());
 		}
 	}
@@ -800,6 +823,37 @@ public class PHPCodeDataFactory {
 			UserData other = (UserData) obj;
 			return startPosition == other.getStartPosition() && endPosition == other.getEndPosition() && stopPosition == other.getStopPosition() && fileName.equals(other.getFileName());
 		}
+	}
+
+	private static class EmptyPHPVariablesTypeManager implements PHPVariablesTypeManager {
+
+		private static final Map EMPTY_MAP = new HashMap(0);
+		private static final PHPVariableData[] EMPTY_PHP_VARIABLE_DATA_ARRAY = new PHPVariableData[0];
+
+		public Map getContextsToVariables() {
+			return EMPTY_MAP;
+		}
+
+		public PHPVariableData getVariable(PHPCodeContext context, String variableName) {
+			return null;
+		}
+
+		public PHPVariableTypeData getVariableTypeData(PHPCodeContext context, String variableName, int line) {
+			return null;
+		}
+
+		public PHPVariableTypeData getVariableTypeDataByPosition(PHPCodeContext context, String variableName, int position) {
+			return null;
+		}
+
+		public PHPVariableData[] getVariables(PHPCodeContext context) {
+			return EMPTY_PHP_VARIABLE_DATA_ARRAY;
+		}
+
+		public Map getVariablesInstansiation() {
+			return EMPTY_MAP;
+		}
+
 	}
 
 }
