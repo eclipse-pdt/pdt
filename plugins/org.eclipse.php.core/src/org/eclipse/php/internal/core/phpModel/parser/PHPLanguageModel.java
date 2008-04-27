@@ -23,9 +23,15 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.phpModel.IPHPModelExtension;
 import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
@@ -38,32 +44,23 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 
 public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	protected PHPFunctionData[] functions = PHPCodeDataFactory.EMPTY_FUNCTIONS_DATA_ARRAY;
-
-	protected Map functionsHash = new HashMap(3000);
-
+	protected Map<String, PHPFunctionData> functionsHash = new HashMap<String, PHPFunctionData>(3000);
 	protected PHPClassData[] classes = PHPCodeDataFactory.EMPTY_CLASS_DATA_ARRAY;
-
-	protected Map classesHash = new HashMap(10);
-
+	protected Map<String, PHPClassData> classesHash = new HashMap<String, PHPClassData>(10);
 	protected PHPConstantData[] constants = PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY;
-
 	protected IPHPMarker[] markers = PHPCodeDataFactory.EMPTY_MARKERS_DATA_ARRAY;
-
 	protected PHPVariableData[] phpVariables;
-
 	protected PHPVariableData[] serverVariables;
-
 	protected PHPVariableData[] sessionVariables;
-
 	protected PHPVariableData[] classVariables;
 
 	public PHPLanguageModel(PHPLanguageManager languageManager) {
-		loadFile(languageManager);
+		loadFiles(languageManager);
 		initVariables();
 	}
 
@@ -100,7 +97,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	public PHPFunctionData getFunction(String fileName, String functionName) {
-		return (PHPFunctionData) functionsHash.get(functionName);
+		return functionsHash.get(functionName);
 	}
 
 	public CodeData[] getFunctions(String startsWith) {
@@ -144,7 +141,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 	}
 
 	public PHPClassData getClass(String fileName, String className) {
-		return (PHPClassData) classesHash.get(className);
+		return classesHash.get(getNormalizedString(className));
 	}
 
 	public CodeData[] getClass(String className) {
@@ -161,7 +158,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	public CodeData[] getVariables(String fileName, PHPCodeContext context, String startsWith, boolean showVariablesFromOtherFiles) {
 		String className = context.getContainerClassName();
-		if (className == null || className.equals("")) {
+		if (className == null || className.equals("")) { //$NON-NLS-1$
 			return phpVariables;
 		}
 		return ModelSupport.merge(phpVariables, classVariables);
@@ -190,28 +187,35 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * Returns a trimmed string changed to lower case
+	 */
+	private final String getNormalizedString(final String name) {
+		return (name == null) ? null : name.trim().toLowerCase();
+	}
+
 	private void initVariables() {
 
-		phpVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("_GET", null, null), PHPCodeDataFactory.createPHPVariableData("_POST", null, null), PHPCodeDataFactory.createPHPVariableData("_COOKIE", null, null),
-			PHPCodeDataFactory.createPHPVariableData("_SESSION", null, null), PHPCodeDataFactory.createPHPVariableData("_SERVER", null, null), PHPCodeDataFactory.createPHPVariableData("_ENV", null, null), PHPCodeDataFactory.createPHPVariableData("_REQUEST", null, null),
-			PHPCodeDataFactory.createPHPVariableData("_FILES", null, null), PHPCodeDataFactory.createPHPVariableData("GLOBALS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_GET_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_POST_VARS", null, null),
-			PHPCodeDataFactory.createPHPVariableData("HTTP_COOKIE_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_SESSION_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_SERVER_VARS", null, null),
-			PHPCodeDataFactory.createPHPVariableData("HTTP_ENV_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_POST_FILES", null, null) };
+		phpVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("_GET", null, null), PHPCodeDataFactory.createPHPVariableData("_POST", null, null), PHPCodeDataFactory.createPHPVariableData("_COOKIE", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PHPCodeDataFactory.createPHPVariableData("_SESSION", null, null), PHPCodeDataFactory.createPHPVariableData("_SERVER", null, null), PHPCodeDataFactory.createPHPVariableData("_ENV", null, null), PHPCodeDataFactory.createPHPVariableData("_REQUEST", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPCodeDataFactory.createPHPVariableData("_FILES", null, null), PHPCodeDataFactory.createPHPVariableData("GLOBALS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_GET_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_POST_VARS", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPCodeDataFactory.createPHPVariableData("HTTP_COOKIE_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_SESSION_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_SERVER_VARS", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PHPCodeDataFactory.createPHPVariableData("HTTP_ENV_VARS", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_POST_FILES", null, null) }; //$NON-NLS-1$ //$NON-NLS-2$
 		Arrays.sort(phpVariables);
 
-		serverVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("DOCUMENT_ROOT", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_ACCEPT", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_ACCEPT_ENCODING", null, null),
-			PHPCodeDataFactory.createPHPVariableData("HTTP_ACCEPT_LANGUAGE", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_CONNECTION", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_HOST", null, null),
-			PHPCodeDataFactory.createPHPVariableData("HTTP_USER_AGENT", null, null), PHPCodeDataFactory.createPHPVariableData("REMOTE_ADDR", null, null), PHPCodeDataFactory.createPHPVariableData("SCRIPT_FILENAME", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_NAME", null, null),
-			PHPCodeDataFactory.createPHPVariableData("GATEWAY_INTERFACE", null, null), PHPCodeDataFactory.createPHPVariableData("REQUEST_METHOD", null, null), PHPCodeDataFactory.createPHPVariableData("QUERY_STRING", null, null), PHPCodeDataFactory.createPHPVariableData("REQUEST_URI", null, null),
-			PHPCodeDataFactory.createPHPVariableData("SCRIPT_NAME", null, null), PHPCodeDataFactory.createPHPVariableData("PHP_SELF", null, null), PHPCodeDataFactory.createPHPVariableData("PATH", null, null), PHPCodeDataFactory.createPHPVariableData("REMOTE_PORT", null, null),
-			PHPCodeDataFactory.createPHPVariableData("SERVER_ADDR", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_ADMIN", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_PORT", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_SIGNATURE", null, null),
-			PHPCodeDataFactory.createPHPVariableData("SERVER_SOFTWARE", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_PROTOCOL", null, null), PHPCodeDataFactory.createPHPVariableData("PATH_TRANSLATED", null, null), };
+		serverVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("DOCUMENT_ROOT", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_ACCEPT", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_ACCEPT_ENCODING", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PHPCodeDataFactory.createPHPVariableData("HTTP_ACCEPT_LANGUAGE", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_CONNECTION", null, null), PHPCodeDataFactory.createPHPVariableData("HTTP_HOST", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			PHPCodeDataFactory.createPHPVariableData("HTTP_USER_AGENT", null, null), PHPCodeDataFactory.createPHPVariableData("REMOTE_ADDR", null, null), PHPCodeDataFactory.createPHPVariableData("SCRIPT_FILENAME", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_NAME", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPCodeDataFactory.createPHPVariableData("GATEWAY_INTERFACE", null, null), PHPCodeDataFactory.createPHPVariableData("REQUEST_METHOD", null, null), PHPCodeDataFactory.createPHPVariableData("QUERY_STRING", null, null), PHPCodeDataFactory.createPHPVariableData("REQUEST_URI", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPCodeDataFactory.createPHPVariableData("SCRIPT_NAME", null, null), PHPCodeDataFactory.createPHPVariableData("PHP_SELF", null, null), PHPCodeDataFactory.createPHPVariableData("PATH", null, null), PHPCodeDataFactory.createPHPVariableData("REMOTE_PORT", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPCodeDataFactory.createPHPVariableData("SERVER_ADDR", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_ADMIN", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_PORT", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_SIGNATURE", null, null), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			PHPCodeDataFactory.createPHPVariableData("SERVER_SOFTWARE", null, null), PHPCodeDataFactory.createPHPVariableData("SERVER_PROTOCOL", null, null), PHPCodeDataFactory.createPHPVariableData("PATH_TRANSLATED", null, null), }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		Arrays.sort(serverVariables);
 
-		classVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("this", null, null) };
+		classVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("this", null, null) }; //$NON-NLS-1$
 		Arrays.sort(classVariables);
 
-		sessionVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("SID", null, null) };
+		sessionVariables = new PHPVariableData[] { PHPCodeDataFactory.createPHPVariableData("SID", null, null) }; //$NON-NLS-1$
 
 	}
 
@@ -219,7 +223,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 	// ////////////////////////////////////////////////////////////////////////////////////////
 
-	protected void loadFile(PHPLanguageManager languageManager) {
+	protected void loadFiles(PHPLanguageManager languageManager) {
 		try {
 			final PHPParserManager phpParserManager = languageManager.createPHPParserManager();
 
@@ -230,50 +234,72 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 			ParserExecuter executer = new ParserExecuter(phpParserManager, null, innerParserClient, phpFunctionPath, reader, new Pattern[0], 0, false);
 			executer.run();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+
+			// load language model extensions:
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPCorePlugin.ID, "phpModelExtensions"); //$NON-NLS-1$
+
+			for (IConfigurationElement element : elements) {
+				if ("model".equals(element.getName())) { //$NON-NLS-1$
+					String id = element.getAttribute("id"); //$NON-NLS-1$
+
+					try {
+						String enabledAttr = element.getAttribute("enabled"); //$NON-NLS-1$
+						boolean enabled = (enabledAttr == null) ? true : Boolean.parseBoolean(enabledAttr);
+						String file = element.getAttribute("file"); //$NON-NLS-1$
+						String phpVersion = element.getAttribute("phpVersion"); //$NON-NLS-1$
+
+						if (element.getAttribute("class") != null) { //$NON-NLS-1$
+							IPHPModelExtension extension = (IPHPModelExtension) element.createExecutableExtension("class"); //$NON-NLS-1$
+							enabled = extension.isEnabled();
+							if (extension.getFile() != null) {
+								file = extension.getFile();
+							}
+							if (extension.getPHPVersion() != null) {
+								phpVersion = extension.getPHPVersion();
+							}
+						}
+
+						if (enabled && getPHPVersion().equals(phpVersion)) {
+							reader = new InputStreamReader(FileLocator.openStream(Platform.getBundle(element.getNamespaceIdentifier()), new Path(file), false));
+							innerParserClient = new InnerParserClient();
+							executer = new ParserExecuter(phpParserManager, null, innerParserClient, file, reader, new Pattern[0], 0, false);
+							executer.run();
+						}
+					} catch (CoreException e) {
+						PHPCorePlugin.logErrorMessage(NLS.bind("Error loading PHP model extension ID {0}", id)); //$NON-NLS-1$
+					}
+				}
+			}
+
+			Arrays.sort(functions);
+			Arrays.sort(classes);
+			Arrays.sort(constants);
+
+		} catch (IOException e) {
+			PHPCorePlugin.log(e);
 		}
 	}
 
 	protected class InnerParserClient implements ParserClient {
 
-		private String className = "";
-
-		private List functionsList = new ArrayList(3000);
-
-		private List classConstsList = new ArrayList();
-
-		private List classVarsList = new ArrayList();
-
-		private List classFunctionsList = new ArrayList();
-
-		private List classesList = new ArrayList();
-
-		private List constansList = new ArrayList(2000);
-
-		private List functionParametersList = new ArrayList();
+		private String className = ""; //$NON-NLS-1$
+		private List<PHPFunctionData> functionsList = new ArrayList<PHPFunctionData>(3000);
+		private List<PHPClassConstData> classConstsList = new ArrayList<PHPClassConstData>();
+		private List<PHPClassVarData> classVarsList = new ArrayList<PHPClassVarData>();
+		private List<PHPFunctionData> classFunctionsList = new ArrayList<PHPFunctionData>();
+		private List<PHPClassData> classesList = new ArrayList<PHPClassData>();
+		private List<PHPConstantData> constansList = new ArrayList<PHPConstantData>(2000);
+		private List<PHPFunctionParameter> functionParametersList = new ArrayList<PHPFunctionParameter>();
 
 		public void dispose() {
 			functionsList.clear();
-			functionsList = null;
-
 			classConstsList.clear();
-			classConstsList = null;
-
 			classVarsList.clear();
-			classVarsList = null;
-
 			classFunctionsList.clear();
-			classFunctionsList = null;
-
 			classesList.clear();
-			classesList = null;
-
 			constansList.clear();
-			constansList = null;
-
 			functionParametersList.clear();
-			functionParametersList = null;
 		}
 
 		public void handleFunctionParameter(String classType, String variableName, boolean isReference, boolean isConst, String defaultValue, int startPosition, int endPosition, int stopPosition, int lineNumber) {
@@ -295,9 +321,9 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			if (parameterName.charAt(0) == '$') {
 				parameterName = parameterName.substring(1);
 			}
-			for (int i = 0; i < parameters.length; i++) {
-				if (parameterName.equalsIgnoreCase(parameters[i].getName())) {
-					return parameters[i];
+			for (PHPFunctionParameter element : parameters) {
+				if (parameterName.equalsIgnoreCase(element.getName())) {
+					return element;
 				}
 			}
 			return null;
@@ -314,17 +340,17 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			String returnType = null;
 
 			if (docInfo != null) {
-				Iterator it = docInfo.getTags(PHPDocTag.PARAM);
+				Iterator<PHPDocTag> it = docInfo.getTags(PHPDocTag.PARAM);
 				while (it.hasNext()) {
-					PHPDocTag param = (PHPDocTag) it.next();
-					String arg = (param.getValue()).trim();
-					String[] values = arg.split(" ");
+					PHPDocTag param = it.next();
+					String arg = param.getValue().trim();
+					String[] values = arg.split(" "); //$NON-NLS-1$
 					String name = null;
 					String type = null;
 
 					int length = values.length > 2 ? 2 : values.length;
 					for (int i = 0; i < length; i++) {
-						if (values[i].startsWith("$")) {
+						if (values[i].startsWith("$")) { //$NON-NLS-1$
 							name = values[i];
 						} else {
 							type = values[i];
@@ -342,22 +368,25 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 					}
 					// update parameter.
 					if (parameter != null && type != null && type.length() > 0) {
+						type = getType(type);
 						String originalClassType = parameter.getClassType();
 						if (originalClassType == null || originalClassType.length() == 0) {
 							parameter.setClassType(type);
 						}
 					}
 				}
-				Iterator returnIt = docInfo.getTags(PHPDocTag.RETURN);
-				returnType = returnIt.hasNext() ? (String) ((PHPDocTag) returnIt.next()).getValue() : null;
+				Iterator<PHPDocTag> returnIt = docInfo.getTags(PHPDocTag.RETURN);
+				returnType = returnIt.hasNext() ? (String) returnIt.next().getValue() : null;
 			}
 
 			if (returnType == null) {
 				if (isClassFunction && functionName.equals(className)) {
 					returnType = className;
 				} else {
-					returnType = "void";
+					returnType = TYPE_VOID; //$NON-NLS-1$
 				}
+			} else {
+				returnType = getType(returnType);
 			}
 
 			PHPFunctionData functionData = PHPCodeDataFactory.createPHPFuctionData(functionName, modifier, docInfo, null, parameters, returnType);
@@ -366,6 +395,37 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			} else {
 				functionsList.add(functionData);
 			}
+		}
+
+		/**
+		 * lowering memory footprint by using static objects
+		 */
+		private String getType(String type) {
+			if(TYPE_STRING.equals(type)){
+				return TYPE_STRING;
+			}
+			if(TYPE_INT.equals(type)){
+				return TYPE_INT;
+			}
+			if(TYPE_BOOL.equals(type)){
+				return TYPE_BOOL;
+			}
+			if(TYPE_RESOURCE.equals(type)){
+				return TYPE_RESOURCE;
+			}
+			if(TYPE_ARRAY.equals(type)){
+				return TYPE_ARRAY;
+			}
+			if(TYPE_MIXED.equals(type)){
+				return TYPE_MIXED;
+			}
+			if(TYPE_OBJECT.equals(type)){
+				return TYPE_OBJECT;
+			}
+			if(TYPE_VOID.equals(type)){
+				return TYPE_VOID;
+			}
+			return type;
 		}
 
 		public void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition) {
@@ -383,7 +443,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 			PHPClassData.PHPInterfaceNameData[] interfaces;
 			if (interfacesNames != null) {
-				String[] interfacesNamesArray = interfacesNames.split(",");
+				String[] interfacesNamesArray = interfacesNames.split(","); //$NON-NLS-1$
 				interfaces = new PHPClassData.PHPInterfaceNameData[interfacesNamesArray.length];
 				for (int i = 0; i < interfacesNamesArray.length; i++) {
 					String interfaceName = interfacesNamesArray[i];
@@ -419,11 +479,11 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 					for (int i = 0; i < consts.length; ++i) {
 						((PHPCodeDataFactory.PHPClassConstDataImp) consts[i]).setContainer(classData);
 					}
-					for (int i = 0; i < vars.length; i++) {
-						((PHPCodeDataFactory.PHPClassVarDataImp) vars[i]).setContainer(classData);
+					for (PHPClassVarData element : vars) {
+						((PHPCodeDataFactory.PHPClassVarDataImp) element).setContainer(classData);
 					}
-					for (int i = 0; i < func.length; i++) {
-						((PHPCodeDataFactory.PHPFunctionDataImp) func[i]).setContainer(classData);
+					for (PHPFunctionData element : func) {
+						((PHPCodeDataFactory.PHPFunctionDataImp) element).setContainer(classData);
 					}
 
 					classData.setConsts(consts);
@@ -436,21 +496,21 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			classVarsList.clear();
 			classFunctionsList.clear();
 
-			this.className = "";
+			this.className = ""; //$NON-NLS-1$
 		}
 
 		public void handleClassVariablesDeclaration(String variables, int modifier, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
 			String classType = null;
 			if (docInfo != null) {
-				Iterator it = docInfo.getTags(PHPDocTag.VAR);
+				Iterator<PHPDocTag> it = docInfo.getTags(PHPDocTag.VAR);
 				while (it.hasNext()) {
-					PHPDocTag varTag = (PHPDocTag) it.next();
-					String value = (varTag.getValue()).trim();
-					String[] values = value.split(" ");
+					PHPDocTag varTag = it.next();
+					String value = varTag.getValue().trim();
+					String[] values = value.split(" "); //$NON-NLS-1$
 					classType = values[0];
 				}
 			}
-			StringTokenizer t = new StringTokenizer(variables, ",", false);
+			StringTokenizer t = new StringTokenizer(variables, ",", false); //$NON-NLS-1$
 			while (t.hasMoreTokens()) {
 				String var = t.nextToken().substring(1);
 				PHPClassVarData classVarData = PHPCodeDataFactory.createPHPClassVarData(var, modifier, classType, docInfo, null);
@@ -459,8 +519,8 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			}
 		}
 
-		public void handleClassConstDeclaration(String constName, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
-			PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, docInfo, null);
+		public void handleClassConstDeclaration(String constName, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
+			PHPClassConstData classConstData = PHPCodeDataFactory.createPHPClassConstData(constName, value, docInfo, null);
 			classConstsList.add(classConstData);
 		}
 
@@ -486,33 +546,34 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 		}
 
 		public void finishParsing(int lastPosition, int lastLine, long lastModified) {
-			PHPFunctionData[] arrayFunctions = new PHPFunctionData[functionsList.size()];
+
+			PHPFunctionData[] arrayFunctions = new PHPFunctionData[functionsList.size() + functions.length];
 			functionsList.toArray(arrayFunctions);
-			Arrays.sort(arrayFunctions);
+			System.arraycopy(functions, 0, arrayFunctions, functionsList.size(), functions.length);
 			functions = arrayFunctions;
-			for (int i = 0; i < arrayFunctions.length; i++) {
-				functionsHash.put(arrayFunctions[i].getName(), arrayFunctions[i]);
+			for (PHPFunctionData element : functionsList) {
+				functionsHash.put(element.getName(), element);
 			}
 
-			PHPClassData[] arrayClasses = new PHPClassData[classesList.size()];
+			PHPClassData[] arrayClasses = new PHPClassData[classesList.size() + classes.length];
 			classesList.toArray(arrayClasses);
-			Arrays.sort(arrayClasses);
+			System.arraycopy(classes, 0, arrayClasses, classesList.size(), classes.length);
 			classes = arrayClasses;
-			for (int i = 0; i < arrayClasses.length; i++) {
-				classesHash.put(arrayClasses[i].getName(), arrayClasses[i]);
+			for (PHPClassData element : classesList) {
+				classesHash.put(getNormalizedString(element.getName()), element);
 			}
 
-			PHPConstantData[] arratConstans = new PHPConstantData[constansList.size()];
-			constansList.toArray(arratConstans);
-			Arrays.sort(arratConstans);
-			constants = arratConstans;
+			PHPConstantData[] arrayConstants = new PHPConstantData[constansList.size() + constants.length];
+			constansList.toArray(arrayConstants);
+			System.arraycopy(constants, 0, arrayConstants, constansList.size(), constants.length);
+			constants = arrayConstants;
 		}
 
 		public void handleDefine(String name, String value, PHPDocBlock docInfo, int startPosition, int endPosition, int stopPosition) {
-			if (name.startsWith("\"") || name.startsWith("\'")) {
+			if (name.startsWith("\"") || name.startsWith("\'")) { //$NON-NLS-1$ //$NON-NLS-2$
 				name = name.substring(1);
 			}
-			if (name.endsWith("\"") || name.endsWith("\'")) {
+			if (name.endsWith("\"") || name.endsWith("\'")) { //$NON-NLS-1$ //$NON-NLS-2$
 				name = name.substring(0, name.length() - 1);
 			}
 
@@ -536,7 +597,15 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 
 		public void setFirstDocBlock(PHPDocBlock docBlock) {
 		}
-
 	}
-
+	
+	private static final String TYPE_STRING = "string";
+	private static final String TYPE_INT = "int";
+	private static final String TYPE_BOOL = "bool";
+	private static final String TYPE_OBJECT = "object";
+	private static final String TYPE_MIXED = "mixed";
+	private static final String TYPE_ARRAY = "array";
+	private static final String TYPE_RESOURCE = "resource";
+	private static final String TYPE_VOID = "void";
+	
 }
