@@ -1,11 +1,6 @@
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
@@ -14,7 +9,8 @@ import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.ti.BasicContext; 
+import org.eclipse.dltk.ti.BasicContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -66,7 +62,7 @@ public class PHPTypeInferenceUtils {
 	 * @param evaluatedType Evaluated type
 	 * @return model elements
 	 */
-	public static IModelElement[] getModelElements(IEvaluatedType type, BasicContext context) {
+	public static IModelElement[] getModelElements(IEvaluatedType type, ISourceModuleContext context) {
 		return getModelElements(type, context, true);
 	}
 
@@ -76,16 +72,16 @@ public class PHPTypeInferenceUtils {
 	 * @param filter Whether to filter result using file network dependencies.
 	 * @return model elements
 	 */
-	public static IModelElement[] getModelElements(IEvaluatedType type, BasicContext context, boolean filter) {
+	public static IModelElement[] getModelElements(IEvaluatedType type, ISourceModuleContext context, boolean filter) {
 		IModelElement[] elements = null;
 
 		if (type instanceof ModelClassType) {
 			return new IModelElement[] { ((ModelClassType)type).getTypeDeclaration() };
 		}
 		if (type instanceof PHPClassType) {
-			elements = PHPMixinModel.getInstance().getClass(((PHPClassType)type).getModelKey());
+			elements = PHPMixinModel.getInstance().getClass(((PHPClassType)type).getTypeName());
 		}
-		if (type instanceof AmbiguousType) {
+		else if (type instanceof AmbiguousType) {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType)type).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
