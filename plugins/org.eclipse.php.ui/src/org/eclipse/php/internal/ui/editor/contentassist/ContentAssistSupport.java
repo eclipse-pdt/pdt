@@ -1352,7 +1352,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData selfFunction = null;
 		if(constructorData != null){
 			PHPDocBlock docBlock = constructorData.getDocBlock();
-			selfFunction = PHPCodeDataFactory.createPHPFuctionData("self", classData.getModifiers(), new PHPDocBlockImp(docBlock.getShortDescription(),docBlock.getLongDescription(), docBlock.getTagsAsArray()), classData.getUserData(), constructorData.getParameters(), "void");
+			selfFunction = PHPCodeDataFactory.createPHPFuctionData("self", classData.getModifiers(), docBlock, classData.getUserData(), constructorData.getParameters(), "void");
 		} else {
 			selfFunction = PHPCodeDataFactory.createPHPFuctionData("self", classData.getModifiers(), new PHPDocBlockImp("","",new PHPDocTag[0]) , classData.getUserData(), new PHPFunctionParameter[0], null);
 		}
