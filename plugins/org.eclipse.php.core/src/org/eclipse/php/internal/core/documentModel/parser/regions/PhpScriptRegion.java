@@ -381,7 +381,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			 * 
 			 * Start of change 
 			 */
-			len = 80;
+			len = len > 80 ? 80 : len;
 			/**
 			 * End of change
 			 */
