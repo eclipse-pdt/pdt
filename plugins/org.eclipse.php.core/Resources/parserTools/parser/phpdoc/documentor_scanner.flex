@@ -12,7 +12,7 @@
 package org.eclipse.php.internal.core.phpModel.parser.phpdoc;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
@@ -42,17 +42,17 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
 %{
     private String shortDesc = null;
     private String longDesc = null;
-    private ArrayList tagList = null;
+    private LinkedList tagList = null;
     private int currTagId = 0;
-    private StringBuffer sBuffer = null;
+    private StringBuilder sBuffer = null;
     private int numOfLines = 0;
     private int startPos = 0;
 
     public PHPDocBlock parse (){
 
         longDesc = "";
-        tagList = new ArrayList();
-        sBuffer = new StringBuffer();
+        tagList = new LinkedList();
+        sBuffer = new StringBuilder();
         numOfLines = 1;
 
         //start parsing
@@ -76,7 +76,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
         updateStartPos();
         hendleDesc();
         currTagId = BasicPHPDocTag.getID(firstState);
-        sBuffer = new StringBuffer();
+        sBuffer = new StringBuilder();
         yybegin(ST_IN_TAGS);
     }
 
@@ -84,7 +84,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
        updateStartPos();
        setTagValue();
 
-       sBuffer = new StringBuffer();
+       sBuffer = new StringBuilder();
        currTagId = BasicPHPDocTag.getID(newTag);
     }
 
@@ -113,7 +113,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
             longDesc = sBuffer.toString().trim();
         }
 
-        sBuffer = new StringBuffer();
+        sBuffer = new StringBuilder();
     }
 
     private void startLongDescState() {
