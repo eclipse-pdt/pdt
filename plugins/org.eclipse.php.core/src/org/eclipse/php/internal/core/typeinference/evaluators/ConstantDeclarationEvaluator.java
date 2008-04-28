@@ -10,15 +10,16 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
-import org.eclipse.php.internal.core.typeinference.goals.ScalarGoal;
 
 public class ConstantDeclarationEvaluator extends GoalEvaluator {
 
@@ -70,7 +71,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 				try {
 					moduleDeclaration.traverse(searcher);
 					for (Scalar scalar : searcher.getDeclarations()) {
-						subGoals.add(new ScalarGoal(scalar.getScalarType()));
+						subGoals.add(new ExpressionTypeGoal(goal.getContext(), scalar));
 					}
 				} catch (Exception e) {
 					Logger.logException(e);

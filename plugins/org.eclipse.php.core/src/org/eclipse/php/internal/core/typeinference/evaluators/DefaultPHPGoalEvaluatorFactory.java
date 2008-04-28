@@ -46,10 +46,6 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (goalClass == PHPDocClassVariableGoal.class) {
 			return new PHPDocClassVariableEvaluator(goal);
 		}
-		if (goalClass == ScalarGoal.class) {
-			ScalarGoal scalarGoal = (ScalarGoal)goal;
-			return new ScalarEvaluator(scalarGoal);
-		}
 		if (goalClass == ConstantDeclarationGoal.class) {
 			return new ConstantDeclarationEvaluator(goal);
 		}
