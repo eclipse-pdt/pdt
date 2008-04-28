@@ -115,7 +115,7 @@ public class VariableContextBuilder {
 	}
 
 	public static String createVariableContext(String variabletName, PHPCodeContext context) {
-		StringBuffer buffer = new StringBuffer(16);
+		StringBuilder buffer = new StringBuilder(16);
 		buffer.append(variabletName);
 		buffer.append(';');
 		buffer.append(context.getContainerClassName());

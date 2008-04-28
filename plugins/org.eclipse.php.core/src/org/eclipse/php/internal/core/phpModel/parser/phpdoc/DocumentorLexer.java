@@ -424,7 +424,7 @@ public class DocumentorLexer {
     private String longDesc = null;
     private ArrayList tagList = null;
     private int currTagId = 0;
-    private StringBuffer sBuffer = null;
+    private StringBuilder sBuffer = null;
     private int numOfLines = 0;
     private int startPos = 0;
 
@@ -432,7 +432,7 @@ public class DocumentorLexer {
 
         longDesc = "";
         tagList = new ArrayList();
-        sBuffer = new StringBuffer();
+        sBuffer = new StringBuilder();
         numOfLines = 1;
 
         //start parsing
@@ -456,7 +456,7 @@ public class DocumentorLexer {
         updateStartPos();
         hendleDesc();
         currTagId = BasicPHPDocTag.getID(firstState);
-        sBuffer = new StringBuffer();
+        sBuffer = new StringBuilder();
         yybegin(ST_IN_TAGS);
     }
 
@@ -464,7 +464,7 @@ public class DocumentorLexer {
        updateStartPos();
        setTagValue();
 
-       sBuffer = new StringBuffer();
+       sBuffer = new StringBuilder();
        currTagId = BasicPHPDocTag.getID(newTag);
     }
 
@@ -493,7 +493,7 @@ public class DocumentorLexer {
             longDesc = sBuffer.toString().trim();
         }
 
-        sBuffer = new StringBuffer();
+        sBuffer = new StringBuilder();
     }
 
     private void startLongDescState() {
