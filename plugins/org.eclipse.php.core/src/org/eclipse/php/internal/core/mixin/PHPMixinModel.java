@@ -36,7 +36,7 @@ public class PHPMixinModel {
 			for (Object obj : objects) {
 				if (obj instanceof PHPMixinElementInfo) {
 					PHPMixinElementInfo info = (PHPMixinElementInfo) obj;
-					if (info.getKind() == kind) {
+					if ((info.getKind() & kind) != 0) {
 						filtered.add((IModelElement) info.getObject());
 					}
 				}
@@ -67,7 +67,7 @@ public class PHPMixinModel {
 
 	public IModelElement[] getClass(String className) {
 		IMixinElement[] elements = model.find(className + PHPMixinParser.CLASS_SUFFIX);
-		return filterElements(elements, PHPMixinElementInfo.K_CLASS);
+		return filterElements(elements, PHPMixinElementInfo.K_CLASS | PHPMixinElementInfo.K_INTERFACE);
 	}
 
 	public IModelElement[] getClassDoc(String className) {

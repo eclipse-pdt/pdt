@@ -6,15 +6,15 @@ import org.eclipse.dltk.core.IType;
 
 public class PHPMixinElementInfo {
 
-	public static final int K_CLASS = 0;
-	public static final int K_INTERFACE = 1;
-	public static final int K_METHOD = 2;
-	public static final int K_VARIABLE = 3;
-	public static final int K_CONSTANT = 4;
-	public static final int K_INCLUDE = 5;
-	public static final int K_PHPDOC = 6;
-	public static final int K_PHPDOC_FOR_CONSTANT = 7; // This is since consant and method elements are stored in the mixin under same key
-	public static final int K_NON_PHP = 10;
+	public static final int K_CLASS = 1 << 0;
+	public static final int K_INTERFACE = 1 << 1;
+	public static final int K_METHOD = 1 << 2;
+	public static final int K_VARIABLE = 1 << 3;
+	public static final int K_CONSTANT = 1 << 4;
+	public static final int K_INCLUDE = 1 << 5;
+	public static final int K_PHPDOC = 1 << 6;
+	public static final int K_PHPDOC_FOR_CONSTANT = 1 << 7; // This is since consant and method elements are stored in the mixin under same key
+	public static final int K_NON_PHP = 1 << 10;
 
 	private int kind = 0;
 	private Object object = null;

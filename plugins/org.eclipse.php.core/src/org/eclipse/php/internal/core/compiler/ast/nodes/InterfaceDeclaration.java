@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.compiler.ast.nodes;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTListNode;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.statements.Block;
@@ -35,6 +36,8 @@ public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 		setSuperClasses(parentsList);
 
 		setBody(body);
+		
+		setModifier(Modifiers.AccInterface);
 	}
 
 	public PHPDocBlock getPHPDoc() {
