@@ -24,6 +24,12 @@ import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider
  * @author shalom
  */
 public class PHPFoldingStructureProviderProxy implements  IProjectionListener, IStructuredTextFoldingProvider {
+	
+	private IStructuredTextFoldingProvider currentFoldingProvider;
+
+	public PHPFoldingStructureProviderProxy() {
+		currentFoldingProvider = PHPUiPlugin.getDefault().getFoldingStructureProviderRegistry().getCurrentFoldingProvider();
+	}
 
 	/**
 	 * Tells this listener that projection has been enabled.
@@ -85,12 +91,12 @@ public class PHPFoldingStructureProviderProxy implements  IProjectionListener, I
 
 	// Returns the current IStructuredTextFoldingProvider
 	private IStructuredTextFoldingProvider getFoldingProvider() {
-		return PHPUiPlugin.getDefault().getFoldingStructureProviderRegistry().getCurrentFoldingProvider();
+		return currentFoldingProvider;
 	}
 
 	// Returns the current IProjectionListener or null, if the current folding provider is not a projection listener.
 	private IProjectionListener getProjectionListener() {
-		Object obj = PHPUiPlugin.getDefault().getFoldingStructureProviderRegistry().getCurrentFoldingProvider();
+		Object obj = getFoldingProvider();
 		if (obj instanceof IProjectionListener) {
 			return (IProjectionListener)obj;
 		}
