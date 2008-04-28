@@ -12,10 +12,12 @@ package org.eclipse.php.internal.ui.editor.configuration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.AbstractInformationControlManager;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IInformationControl;
@@ -31,10 +33,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
@@ -50,7 +49,6 @@ import org.eclipse.php.internal.ui.editor.contentassist.PHPDocContentAssistProce
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.preferences.util.WeakPropertyChangeListener;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
 import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
@@ -70,21 +68,31 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
 
 public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerConfigurationHTML {
 
-	private String[] configuredContentTypes;
-	private LineStyleProvider fLineStyleProvider;
-	private IPropertyChangeListener propertyChangeListener;
-	private final ArrayList detectors;
 	private HashMap<String, ArrayList<IContentAssistProcessor>> processorsCache = new HashMap<String, ArrayList<IContentAssistProcessor>>();
+    private static final String PHP_CONTENT_ASSISTANT_EXT = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
+    private static final String CONTENT_ASSIST_PROCESSOR_EXT = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
+    private static final String HYPERLINK_DETECTOR_EXT = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
+    private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
+    private static final String SHOW_OUTLINE_PREF_KEY = "org.eclipse.php.ui.edit.text.php.show.outline"; //$NON-NLS-1$
+    private static final String EMPTY = ""; //$NON-NLS-1$
+    private static final String[] DEFAULT_PREFIXES = new String[] { "//", "#", EMPTY }; //$NON-NLS-1$
+    private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
+    private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
+    private static final IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
 
+    private String[] configuredContentTypes;
+    private LineStyleProvider fLineStyleProvider;
+    private final List<IHyperlinkDetectorForPHP> detectors;
+    private StructuredContentAssistant fContentAssistant = null;
+    
 	public PHPStructuredTextViewerConfiguration() {
-		detectors = new ArrayList();
+		detectors = new ArrayList<IHyperlinkDetectorForPHP>();
 		detectors.add(new PHPCodeHyperlinkDetector());
-		String detectorsExtensionName = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(detectorsExtensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(HYPERLINK_DETECTOR_EXT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("detector")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, detectorsExtensionName);
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, HYPERLINK_DETECTOR_EXT);
 				IHyperlinkDetectorForPHP detector = (IHyperlinkDetectorForPHP) ecProxy.getObject();
 				if (detector != null) {
 					detectors.add(detector);
@@ -137,7 +145,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		IContentAssistProcessor[] processors = null;
 
 		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
-			ArrayList processorsList = getPHPProcessors(partitionType);
+			ArrayList<IContentAssistProcessor> processorsList = getPHPProcessors(partitionType);
 			processors = new IContentAssistProcessor[processorsList.size()];
 			processorsList.toArray(processors);
 		} else {
@@ -161,9 +169,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
 		processors.add(new PHPContentAssistProcessor());
 		processors.add(new PHPDocContentAssistProcessor());
-		String processorsExtensionName = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
 
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(processorsExtensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTENT_ASSIST_PROCESSOR_EXT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("processor")) { //$NON-NLS-1$
@@ -173,7 +180,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 					partitionTypeAtt = PHPPartitionTypes.PHP_DEFAULT;
 				}
 				if (partitionTypeAtt.equals(partitionType)) {
-					ElementCreationProxy ecProxy = new ElementCreationProxy(element, processorsExtensionName);
+					ElementCreationProxy ecProxy = new ElementCreationProxy(element, CONTENT_ASSIST_PROCESSOR_EXT);
 					IContentAssistProcessor processor = (IContentAssistProcessor) ecProxy.getObject();
 					if (processor != null) {
 						processors.add(processor);
@@ -186,32 +193,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return processors;
 	}
 
-	protected void setupPropertyChangeListener(final ISourceViewer sourceViewer) {
-		if (propertyChangeListener == null) {
-			propertyChangeListener = new IPropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent event) {
-					String property = event.getProperty();
-					if (PreferenceConstants.CODEASSIST_AUTOINSERT.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property)) {
-						configureContentAssistant(sourceViewer);
-					}
-				}
-			};
-			PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(propertyChangeListener, PreferenceConstants.getPreferenceStore()));
-		}
-	}
-
-	private void configureContentAssistant(ISourceViewer sourceViewer) {
-		IContentAssistant contentAssistant = getPHPContentAssistant(sourceViewer);
-		if (contentAssistant instanceof StructuredContentAssistant) {
-			StructuredContentAssistant structuredContentAssistant = (StructuredContentAssistant) contentAssistant;
-			structuredContentAssistant.enableAutoInsert(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
-			structuredContentAssistant.enableAutoActivation(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
-			structuredContentAssistant.setAutoActivationDelay(PreferenceConstants.getPreferenceStore().getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
-		}
-	}
-
-	private StructuredContentAssistant fContentAssistant = null;
-
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer) {
 		return getPHPContentAssistant(sourceViewer, false);
 	}
@@ -219,15 +200,16 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer, boolean reCreate) {
 		if (fContentAssistant == null || reCreate) {
 			fContentAssistant = getPHPContentAssistantExtension();
-			setupPropertyChangeListener(sourceViewer);
+			
 			if (fContentAssistant == null) {
 				fContentAssistant = new StructuredContentAssistant();
 			}
 			// content assistant configurations
+			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			fContentAssistant.enableAutoActivation(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
-			fContentAssistant.setAutoActivationDelay(PreferenceConstants.getPreferenceStore().getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
-			fContentAssistant.enableAutoInsert(PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
+			fContentAssistant.enableAutoActivation(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
+			fContentAssistant.setAutoActivationDelay(preferenceStore.getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
+			fContentAssistant.enableAutoInsert(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
@@ -251,12 +233,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private StructuredContentAssistant getPHPContentAssistantExtension() {
 		StructuredContentAssistant rv = null;
-		String extensionName = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(extensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHP_CONTENT_ASSISTANT_EXT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("contentAssistant")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, extensionName);
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, PHP_CONTENT_ASSISTANT_EXT);
 				StructuredContentAssistant contentAssistant = (StructuredContentAssistant) ecProxy.getObject();
 				if (contentAssistant != null) {
 					rv = contentAssistant;
@@ -268,7 +249,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	public String[] getDefaultPrefixes(ISourceViewer sourceViewer, String contentType) {
-		return new String[] { "//", "#", "" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return DEFAULT_PREFIXES;
 	}
 
 	/*
@@ -350,12 +331,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		IContentFormatter usedFormatter = null;
 
-		String formatterExtensionName = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(formatterExtensionName);
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(FORMATTER_PROCESSOR_EXT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
 			if (element.getName().equals("processor")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, formatterExtensionName);
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, FORMATTER_PROCESSOR_EXT);
 				usedFormatter = (IContentFormatter) ecProxy.getObject();
 			}
 		}
@@ -367,10 +347,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 		return usedFormatter;
 	}
-
-	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
-	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
-	private static final IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
 
 	@Override
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
@@ -402,7 +378,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	@Override
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
-		Vector vector = new Vector();
+		Vector<String> vector = new Vector<String>();
 
 		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
 		char indentCharPref = FormatPreferencesSupport.getInstance().getIndentationChar(null);
@@ -429,7 +405,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			vector.add(prefix.toString());
 		}
 
-		vector.add(""); //$NON-NLS-1$
+		vector.add(EMPTY); //$NON-NLS-1$
 
 		return (String[]) vector.toArray(new String[vector.size()]);
 	}
@@ -445,7 +421,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 */
 	public IInformationPresenter getOutlinePresenter(ISourceViewer sourceViewer) {
 		InformationPresenter presenter;
-		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, "org.eclipse.php.ui.edit.text.php.show.outline")); //$NON-NLS-1$
+		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, SHOW_OUTLINE_PREF_KEY)); //$NON-NLS-1$
 		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
 		IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer) sourceViewer).getTextEditor());

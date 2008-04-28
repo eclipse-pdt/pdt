@@ -151,6 +151,7 @@ import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
 import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
+import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
@@ -217,6 +218,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
+import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
@@ -424,6 +426,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * The editor selection changed listener.
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
+	private IPreferencesPropagatorListener phpVersionListener;
+	private IResourceChangeListener fResourceChangeListener;
 
 	private final class OutlineSelectionListener implements ISelectionChangedListener {
 		private final ConfigurableContentOutlinePage outlinePage;
@@ -941,32 +945,58 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
-	protected final IPreferencesPropagatorListener phpVersionListener = new IPreferencesPropagatorListener() {
-		public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-			try {
-				// get the structured document and go over its regions
-				// in case of PhpScriptRegion reparse the region text
-				IDocument doc = getDocumentProvider().getDocument(getEditorInput());
-				if (doc instanceof IStructuredDocument) {
-					IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc).getStructuredDocumentRegions();
-					for (IStructuredDocumentRegion element : sdRegions) {
-						Iterator regionsIt = element.getRegions().iterator();
-						reparseRegion(doc, regionsIt, element.getStartOffset());
+	private void initPHPVersionsListener() {
+		if (phpVersionListener != null) {
+			return;
+		}
+		
+		phpVersionListener = new IPreferencesPropagatorListener() {
+			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
+				try {
+					// get the structured document and go over its regions
+					// in case of PhpScriptRegion reparse the region text
+					IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+					if (doc instanceof IStructuredDocument) {
+						IStructuredDocumentRegion[] sdRegions = ((IStructuredDocument) doc).getStructuredDocumentRegions();
+						for (IStructuredDocumentRegion element : sdRegions) {
+							Iterator regionsIt = element.getRegions().iterator();
+							reparseRegion(doc, regionsIt, element.getStartOffset());
+						}
+						PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
+						textViewer.reconcile();
 					}
-					PHPStructuredTextViewer textViewer = (PHPStructuredTextViewer) getTextViewer();
-					textViewer.reconcile();
+				} catch (BadLocationException e) {
 				}
-			} catch (BadLocationException e) {
 			}
+	
+			public IProject getProject() {
+				IFile file = getFile();
+				if (file == null)
+					return null;
+				return file.getProject();
+			}
+		};
+		
+		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
+	}
+	
+	private void initResourceChangeListener() {
+		if (fResourceChangeListener != null) {
+			return;
 		}
-
-		public IProject getProject() {
-			IFile file = getFile();
-			if (file == null)
-				return null;
-			return file.getProject();
-		}
-	};
+		fResourceChangeListener = new IResourceChangeListener() {
+	
+			public void resourceChanged(IResourceChangeEvent event) {
+				try {
+					if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
+						refreshViewer();
+					}
+				} catch (NullPointerException e) {
+				}
+			}
+		};
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener);
+	}
 
 	/**
 	 * iterate over regions in case of PhpScriptRegion reparse the region. in case of region contaioner iterate over the
@@ -1048,7 +1078,27 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	@Override
 	public void dispose() {
-		PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+		if (fContextMenuGroup != null) {
+			fContextMenuGroup.dispose();
+			fContextMenuGroup = null;
+		}
+		if (fActionGroups != null) {
+			fActionGroups.dispose();
+			fActionGroups = null;
+		}
+		if (fInformationPresenter != null) {
+			fInformationPresenter.dispose();
+			fInformationPresenter = null;
+		}
+		if (fResourceChangeListener != null) {
+			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fResourceChangeListener);
+			fResourceChangeListener = null;
+		}
+		if (phpVersionListener != null) {
+			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
+			phpVersionListener = null;
+		}
+		
 		if (fActivationListener != null) {
 			PlatformUI.getWorkbench().removeWindowListener(fActivationListener);
 			fActivationListener= null;
@@ -1970,20 +2020,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		});
 
-		//		 bug fix - #156810
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
-
-			public void resourceChanged(IResourceChangeEvent event) {
-				try {
-					if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
-						refreshViewer();
-					}
-				} catch (NullPointerException e) {
-
-				}
-			}
-
-		});
+		// bug fix - #156810
+		initResourceChangeListener();
 
 		fEditorSelectionChangedListener = new EditorSelectionChangedListener();
 		fEditorSelectionChangedListener.install(getSelectionProvider());
@@ -2064,7 +2102,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
-				PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
+				
+				initPHPVersionsListener();
+				
 			} else {
 				super.doSetInput(input);
 				//				close(false);
@@ -2220,6 +2260,21 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 			if (PreferenceConstants.EDITOR_MARK_HTML_TAGS.equals(property)) {
 				fMarkHTMLTags= newBooleanValue;
+				return;
+			}
+			if (PreferenceConstants.CODEASSIST_AUTOINSERT.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property)) {
+				ISourceViewer sourceViewer = getSourceViewer();
+				if (sourceViewer != null) {
+					PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
+					if (configuration != null) {
+						StructuredContentAssistant contentAssistant = (StructuredContentAssistant) configuration.getPHPContentAssistant(sourceViewer);
+						
+						IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
+						contentAssistant.enableAutoInsert(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
+						contentAssistant.enableAutoActivation(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
+						contentAssistant.setAutoActivationDelay(preferenceStore.getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
+					}
+				}
 				return;
 			}
 		} finally {
