@@ -44,15 +44,23 @@ public class Element {
 	public final ElementType type;
 	public final String name;
 	public final Element parent;
+	public final int index;
+	public int length; // can update the length without other information
 
-	public Element(ElementType type, String name, Element parent) {
+	Element(Element parent, ElementType type, String name, int length) {
+		this(parent, type, name, length, 0);
+	}
+
+	Element(Element parent, ElementType type, String name, int length, int index) {
 		this.type = type;
 		this.name = name;
 		this.parent = parent;
+		this.index = index;
+		this.length = length;
 	}
 
-	public Element(ElementType type, String name) {
-		this(type, name, null);
+	public Element(ElementType type, String name, int length) {
+		this(null, type, name, length);
 	}
 
 	@Override
@@ -88,6 +96,8 @@ public class Element {
 				return false;
 		} else if (!type.equals(other.type))
 			return false;
+		else if (index != other.index)
+			return false;
 		return true;
 	}
 
@@ -100,6 +110,8 @@ public class Element {
 		buffer.append(name);
 		buffer.append(", Parent: "); //$NON-NLS-1$
 		buffer.append(parent);
+		buffer.append(", Index: "); //$NON-NLS-1$
+		buffer.append(index);
 		buffer.append("]"); //$NON-NLS-1$
 		return buffer.toString();
 	}
@@ -112,86 +124,53 @@ public class Element {
 		private ElementFactory() {
 		}
 
-		public static final Element createElement(final PHPFileData fileData, boolean isPhpDoc) {
-			final Element element = new Element(ElementType.FILE, fileData.getComparableName());
-			return isPhpDoc ? createElement(element) : element;
+		public static Element createDocElement(Element container, PHPDocBlock codeData) {
+			return new Element(container, ElementType.DOC, container.name, codeData.getEndPosition() - codeData.getStartPosition());
 		}
 
-		public static final Element createElement(final PHPClassData classData, boolean isPhpDoc) {
-			final Element element = new Element(ElementType.CLASS, classData.getName());
-			return isPhpDoc ? createElement(element) : element;
+		public static Element createFileElement(PHPFileData codeData) {
+			return createElement(null, codeData, 0);
 		}
 
-		public static final Element createElement(final PHPFunctionData functionData, boolean isPhpDoc) {
-			final Element element = new Element(ElementType.FUNCTION, functionData.getName());
-			return isPhpDoc ? createElement(element) : element;
-		}
-
-		public static final Element createElement(final PHPClassData classData, final PHPFunctionData functionData, boolean isPhpDoc) {
-			final Element parent = createElement(classData, false);
-			final Element element = new Element(ElementType.METHOD, functionData.getName(), parent);
-			return isPhpDoc ? createElement(element) : element;
-		}
-
-		public static final Element createElement(final PHPClassData classData, final PHPClassVarData variableData, boolean isPhpDoc) {
-			final Element parent = createElement(classData, false);
-			final Element element = new Element(ElementType.FIELD, variableData.getName(), parent);
-			return isPhpDoc ? createElement(element) : element;
-		}
-
-		public static final Element createElement(final PHPClassData classData, final PHPClassConstData classConstantData, boolean isPhpDoc) {
-			final Element parent = createElement(classData, false);
-			final Element element = new Element(ElementType.CONSTANT, classConstantData.getName(), parent);
-			return isPhpDoc ? createElement(element) : element;
-		}
-
-		public static final Element createElement(final Element documentedElement) {
-			return new Element(ElementType.DOC, null, documentedElement);
-		}
-
-		public static Element createElement(PHPCodeData codeData, boolean isPhpDoc) {
+		public static Element createElement(Element container, PHPCodeData codeData, int index) {
 			Element element = null;
-
-			// the container of the code data is used to identify the whole picture
-			final PHPCodeData container = codeData.getContainer();
 
 			// file element
 			if (codeData instanceof PHPFileData) {
-				element = createElement((PHPFileData) codeData, false);
+				element = new Element(ElementType.FILE, codeData.getName(), 0);
 
 				// class element
 			} else if (codeData instanceof PHPClassData) {
-				element = createElement((PHPClassData) codeData, false);
+				element = new Element(container, ElementType.CLASS, codeData.getName(), getLength(codeData), index);
 
 			} else if (codeData instanceof PHPFunctionData) {
 				// method element
-				if (container instanceof PHPClassData) {
-					assert container != null;
-					element = createElement((PHPClassData) container, (PHPFunctionData) codeData, false);
+				if (container.type == ElementType.FILE) {
+					element = new Element(container, ElementType.FUNCTION, codeData.getName(), getLength(codeData), index);
 				} else {
-
 					// function element
-					assert container instanceof PHPFileData;
-					element = createElement((PHPFunctionData) codeData, false);
+					element = new Element(container, ElementType.METHOD, codeData.getName(), getLength(codeData), index);
 				}
 
 				// field element
 			} else if (codeData instanceof PHPClassVarData) {
-				assert container != null;
-				element = createElement((PHPClassData) container, (PHPClassVarData) codeData, false);
+				element = new Element(container, ElementType.FIELD, codeData.getName(), getLength(codeData), index);
 
 				// class constant
 			} else if (codeData instanceof PHPClassConstData) {
 				assert container != null;
-				element = createElement((PHPClassData) container, (PHPClassConstData) codeData, false);
-
+				element = new Element(container, ElementType.CONSTANT, codeData.getName(), getLength(codeData), index);
 			} else {
 				throw new IllegalStateException("Internal Error: CodeData is not supported as folded element"); //$NON-NLS-1$
 			}
 
-			return isPhpDoc ? createElement(element) : element;
+			return element;
+		}
+
+		private final static int getLength(PHPCodeData codeData) {
+			final int len = codeData.getUserData().getEndPosition() - codeData.getUserData().getStartPosition();
+			return len < 0 ? 0 : len;
 		}
 	}
-
 
 }

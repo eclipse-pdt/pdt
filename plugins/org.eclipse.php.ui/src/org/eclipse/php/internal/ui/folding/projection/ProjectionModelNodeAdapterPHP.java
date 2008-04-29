@@ -14,12 +14,23 @@ package org.eclipse.php.internal.ui.folding.projection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.folding.projection.Element.ElementFactory;
@@ -163,7 +174,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		for (PHPClassData classData : classes) {
 			Integer classIndex = classIndices.get(classData.getName());
 			if (classIndex == null) {
-				classIndex = new Integer(0);
+				classIndex = 0;
 			} else {
 				classIndex++;
 			}
@@ -174,7 +185,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			for (PHPFunctionData methodData : methods) {
 				Integer methodIndex = methodIndices.get(methodData.getName());
 				if (methodIndex == null) {
-					methodIndex = new Integer(0);
+					methodIndex = 0;
 				} else {
 					methodIndex++;
 				}
@@ -186,7 +197,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			for (PHPClassVarData variableData : variables) {
 				Integer variableIndex = variableIndices.get(variableData.getName());
 				if (variableIndex == null) {
-					variableIndex = new Integer(0);
+					variableIndex = 0;
 				} else {
 					variableIndex++;
 				}
@@ -199,7 +210,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			for (PHPClassConstData constantData : constants) {
 				Integer constantIndex = constantIndices.get(constantData.getName());
 				if (constantIndex == null) {
-					constantIndex = new Integer(0);
+					constantIndex = 0;
 				} else {
 					constantIndex++;
 				}
@@ -213,7 +224,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		for (PHPFunctionData functionData : functions) {
 			Integer functionIndex = functionIndices.get(functionData.getName());
 			if (functionIndex == null) {
-				functionIndex = new Integer(0);
+				functionIndex = 0;
 			} else {
 				functionIndex++;
 			}
@@ -361,7 +372,10 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (!previousAnnotations.isEmpty()) {
 			for (ProjectionAnnotation annotation : previousAnnotations.keySet()) {
 				if (projectionAnnotation.equals(annotation)) {
-					return (ElementProjectionAnnotation) annotation;
+					final ElementProjectionAnnotation annotation2 = (ElementProjectionAnnotation) annotation;
+					annotation2.sameSize = projectionAnnotation.element.length == annotation2.element.length;
+					annotation2.element.length = projectionAnnotation.element.length;
+					return annotation2;
 				}
 			}
 		}
