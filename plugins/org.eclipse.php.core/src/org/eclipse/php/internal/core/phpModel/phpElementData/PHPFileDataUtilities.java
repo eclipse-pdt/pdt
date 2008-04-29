@@ -106,7 +106,7 @@ public final class PHPFileDataUtilities {
 		return null;
 	}
 
-	public static PHPClassData getContainerClassDada(PHPFileData fileData, int position) {
+	public static PHPClassData getContainerClassData(PHPFileData fileData, int position) {
 		if (position < 0 || fileData == null) {
 			return null;
 		}
@@ -150,11 +150,16 @@ public final class PHPFileDataUtilities {
 	public static String getVariableType(PHPFileData fileData, String variableName, int position, int line, IPhpModel model, boolean showObjectsFromOtherFiles) {
 		String className;
 		if ("$this".equals(variableName)) { //$NON-NLS-1$
-			PHPClassData classData = getContainerClassDada(fileData, position);
+			PHPClassData classData = getContainerClassData(fileData, position);
 			if (classData != null) {
 				className = classData.getName();
 			} else {
-				className = ""; // we are not inside a class. //$NON-NLS-1$
+				// search if $this was defined as "magic" call
+				PHPCodeContext context = ModelSupport.createContext(fileData, position);
+				className = model.getVariableType(fileData.getName(), context, variableName, line, false);
+				if (className == null) {
+					className = ""; // we are not inside a class. //$NON-NLS-1$
+				}
 			}
 		} else {
 			int currentLine = line + 1;
