@@ -21,6 +21,7 @@ import org.eclipse.php.internal.core.util.WeakObject;
 
 /**
  * WeakPreferencesPropagatorListener
+ * @deprecated (Not effective - candidate for removal)
  */
 public class WeakPreferencesPropagatorListener extends WeakObject implements IPreferencesPropagatorListener {
 
