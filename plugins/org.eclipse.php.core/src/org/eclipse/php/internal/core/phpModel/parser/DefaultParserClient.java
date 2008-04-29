@@ -453,7 +453,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 
 		PHPConstantData[] allConstants = PHPCodeDataFactory.EMPTY_CONSTANT_DATA_ARRAY;
-		if (!includeFiles.isEmpty()) {
+		if (!constants.isEmpty()) {
 			allConstants = new PHPConstantData[constants.size()];
 			constants.toArray(allConstants);
 		}
