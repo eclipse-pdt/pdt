@@ -45,20 +45,22 @@ public class Element {
 	public final String name;
 	public final Element parent;
 	public final int index;
+	public int length; // can update the length without other information
 
-	Element(Element parent, ElementType type, String name) {
-		this(parent, type, name, 0);
+	Element(Element parent, ElementType type, String name, int length) {
+		this(parent, type, name, length, 0);
 	}
 
-	Element(Element parent, ElementType type, String name, int index) {
+	Element(Element parent, ElementType type, String name, int length, int index) {
 		this.type = type;
 		this.name = name;
 		this.parent = parent;
 		this.index = index;
+		this.length = length;
 	}
 
-	public Element(ElementType type, String name) {
-		this(null, type, name);
+	public Element(ElementType type, String name, int length) {
+		this(null, type, name, length);
 	}
 
 	@Override
@@ -123,7 +125,7 @@ public class Element {
 		}
 
 		public static Element createDocElement(Element container, PHPDocBlock codeData) {
-			return new Element(container, ElementType.DOC, container.name);
+			return new Element(container, ElementType.DOC, container.name, codeData.getEndPosition() - codeData.getStartPosition());
 		}
 
 		public static Element createFileElement(PHPFileData codeData) {
@@ -135,34 +137,39 @@ public class Element {
 
 			// file element
 			if (codeData instanceof PHPFileData) {
-				element = new Element(ElementType.FILE, codeData.getName());
+				element = new Element(ElementType.FILE, codeData.getName(), 0);
 
 				// class element
 			} else if (codeData instanceof PHPClassData) {
-				element = new Element(container, ElementType.CLASS, codeData.getName(), index);
+				element = new Element(container, ElementType.CLASS, codeData.getName(), getLength(codeData), index);
 
 			} else if (codeData instanceof PHPFunctionData) {
 				// method element
 				if (container.type == ElementType.FILE) {
-					element = new Element(container, ElementType.FUNCTION, codeData.getName(), index);
+					element = new Element(container, ElementType.FUNCTION, codeData.getName(), getLength(codeData), index);
 				} else {
 					// function element
-					element = new Element(container, ElementType.METHOD, codeData.getName(), index);
+					element = new Element(container, ElementType.METHOD, codeData.getName(), getLength(codeData), index);
 				}
 
 				// field element
 			} else if (codeData instanceof PHPClassVarData) {
-				element = new Element(container, ElementType.FIELD, codeData.getName(), index);
+				element = new Element(container, ElementType.FIELD, codeData.getName(), getLength(codeData), index);
 
 				// class constant
 			} else if (codeData instanceof PHPClassConstData) {
 				assert container != null;
-				element = new Element(container, ElementType.CONSTANT, codeData.getName(), index);
+				element = new Element(container, ElementType.CONSTANT, codeData.getName(), getLength(codeData), index);
 			} else {
 				throw new IllegalStateException("Internal Error: CodeData is not supported as folded element"); //$NON-NLS-1$
 			}
 
 			return element;
+		}
+
+		private final static int getLength(PHPCodeData codeData) {
+			final int len = codeData.getUserData().getEndPosition() - codeData.getUserData().getStartPosition();
+			return len < 0 ? 0 : len;
 		}
 	}
 

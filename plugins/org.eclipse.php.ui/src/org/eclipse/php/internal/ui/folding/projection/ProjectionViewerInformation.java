@@ -147,7 +147,7 @@ class ProjectionViewerInformation {
 				for (Iterator<ProjectionAnnotation> i = fProjectionAnnotationModel.getAnnotationIterator(); i.hasNext();) {
 					ProjectionAnnotation existingAnnotation = i.next();
 					Position position = fProjectionAnnotationModel.getPosition(existingAnnotation);
-					if (existingAnnotation.isCollapsed() && inScript(position.offset)) {
+					if (existingAnnotation.isCollapsed()) {
 						collapsedPositions.add(position);
 					}
 					positionAnnotations.put(position, existingAnnotation);
@@ -158,14 +158,14 @@ class ProjectionViewerInformation {
 				if (deletions == null) {
 					deletions = EMPTY_ANNOTATIONS;
 				}
-				Set<Position> persistentPositions = new HashSet<Position>(deletions.length);
-				Collection<Annotation> finalDeletions = new ArrayList<Annotation>(1); 
+				Set<Position> shouldNotDelete = new HashSet<Position>(deletions.length);
 				for (Annotation deletion : deletions) {
 					Position position = fProjectionAnnotationModel.getPosition(deletion);
 					if (!collapsedPositions.contains(position)) {
-						finalDeletions.add(deletion);
+						// fProjectionAnnotationModel.removeAnnotation(deletion);
+						// System.out.println("removed");
 					} else {
-						persistentPositions.add(position);
+						shouldNotDelete.add(position);
 					}
 				}
 
@@ -174,41 +174,40 @@ class ProjectionViewerInformation {
 				for (Map.Entry<ProjectionAnnotation, Position> addition : additions.entrySet()) {
 					Position position = addition.getValue();
 					ProjectionAnnotation newAnnotation = addition.getKey();
-					if (!persistentPositions.contains(position)) {
-						fProjectionAnnotationModel.addAnnotation(newAnnotation, position);
+					if (!shouldNotDelete.contains(position)) {
+						final Position position2 = fProjectionAnnotationModel.getPosition(newAnnotation);
+						if (position2 == null) {
+							fProjectionAnnotationModel.addAnnotation(newAnnotation, position);
+						}
 					} else {
 						ProjectionAnnotation existingAnnotation = positionAnnotations.get(position);
-						if (existingAnnotation.isCollapsed()) {
-							newAnnotation.markCollapsed();
-						} else {
+						if (!existingAnnotation.isCollapsed()) {
 							newAnnotation.markExpanded();
+							Map annotationAddition = new HashMap(1);
+							annotationAddition.put(newAnnotation, position);
+							fProjectionAnnotationModel.replaceAnnotations(new Annotation[] { existingAnnotation }, annotationAddition);
 						}
-						Map annotationAddition = new HashMap(1);
-						annotationAddition.put(newAnnotation, position);
-						fProjectionAnnotationModel.replaceAnnotations(new Annotation[] { existingAnnotation }, annotationAddition);
 					}
 				}
 
 				//4. Replace positions for modified annotations or add if missing and not persistent:
 				Map<ProjectionAnnotation, Position> modifications = changes.getModifications();
-				List<Annotation> annotationsToModify = new ArrayList<Annotation>();
 				if (modifications != null) {
 					for (Map.Entry<ProjectionAnnotation, Position> modification : modifications.entrySet()) {
-						ProjectionAnnotation modifiedAnnotation = modification.getKey();
+						ElementProjectionAnnotation modifiedAnnotation = (ElementProjectionAnnotation) modification.getKey();
 						Position modifiedPosition = modification.getValue();
 						Position position = fProjectionAnnotationModel.getPosition(modifiedAnnotation);
 						if (position == null) {
-							if (!persistentPositions.contains(modifiedPosition)) {
-								fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+							if (!shouldNotDelete.contains(modifiedPosition)) {
+								// fProjectionAnnotationModel.addAnnotation(modifiedAnnotation, modifiedPosition);
+								// System.out.println("added " + modifiedAnnotation.toString());
 							}
-						} else if (!modifiedPosition.equals(position)) {
-							annotationsToModify.add(modifiedAnnotation);
+						} else if (!modifiedPosition.equals(position) && modifiedAnnotation.sameSize) {
+							fProjectionAnnotationModel.modifyAnnotationPosition(modifiedAnnotation, modifiedPosition);
+							break;
 						}
 					}
 				}
-
-				// call the modification event only after all annotations are validated as should modified
-				fProjectionAnnotationModel.modifyAnnotations(finalDeletions.toArray(new Annotation[finalDeletions.size()]), null, annotationsToModify.toArray(new Annotation[annotationsToModify.size()]));	
 
 			} catch (RuntimeException e) {
 				Logger.logException(e);

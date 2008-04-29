@@ -83,6 +83,7 @@ public class ElementProjectionAnnotation extends ProjectionAnnotation {
 	}
 
 	private boolean fIsVisible = false; /* workaround for BUG85874 */
+	public boolean sameSize = false;
 
 	/**
 	 * Does not paint hidden annotations. Annotations are hidden when they

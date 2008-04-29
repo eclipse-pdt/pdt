@@ -85,14 +85,14 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			if (modelViewer == null) {
 				return;
 			}
-			
+
 			// undo operations should not call the update node operation since the model is not updated 
 			if (modelViewer instanceof PHPStructuredTextViewer) {
 				PHPStructuredTextViewer v = (PHPStructuredTextViewer) modelViewer;
 				if (v.isUndoOperation) {
 					return;
 				}
-			}			
+			}
 
 			// ignore editor changes when the php model isn't ready.
 			ProjectionViewerInformation information = getAdapterFactory().getInformation(modelViewer);
@@ -174,7 +174,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		for (PHPClassData classData : classes) {
 			Integer classIndex = classIndices.get(classData.getName());
 			if (classIndex == null) {
-				classIndex = new Integer(0);
+				classIndex = 0;
 			} else {
 				classIndex++;
 			}
@@ -185,7 +185,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			for (PHPFunctionData methodData : methods) {
 				Integer methodIndex = methodIndices.get(methodData.getName());
 				if (methodIndex == null) {
-					methodIndex = new Integer(0);
+					methodIndex = 0;
 				} else {
 					methodIndex++;
 				}
@@ -197,7 +197,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			for (PHPClassVarData variableData : variables) {
 				Integer variableIndex = variableIndices.get(variableData.getName());
 				if (variableIndex == null) {
-					variableIndex = new Integer(0);
+					variableIndex = 0;
 				} else {
 					variableIndex++;
 				}
@@ -210,7 +210,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 			for (PHPClassConstData constantData : constants) {
 				Integer constantIndex = constantIndices.get(constantData.getName());
 				if (constantIndex == null) {
-					constantIndex = new Integer(0);
+					constantIndex = 0;
 				} else {
 					constantIndex++;
 				}
@@ -224,7 +224,7 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		for (PHPFunctionData functionData : functions) {
 			Integer functionIndex = functionIndices.get(functionData.getName());
 			if (functionIndex == null) {
-				functionIndex = new Integer(0);
+				functionIndex = 0;
 			} else {
 				functionIndex++;
 			}
@@ -372,7 +372,10 @@ public class ProjectionModelNodeAdapterPHP extends ProjectionModelNodeAdapterHTM
 		if (!previousAnnotations.isEmpty()) {
 			for (ProjectionAnnotation annotation : previousAnnotations.keySet()) {
 				if (projectionAnnotation.equals(annotation)) {
-					return (ElementProjectionAnnotation) annotation;
+					final ElementProjectionAnnotation annotation2 = (ElementProjectionAnnotation) annotation;
+					annotation2.sameSize = projectionAnnotation.element.length == annotation2.element.length;
+					annotation2.element.length = projectionAnnotation.element.length;
+					return annotation2;
 				}
 			}
 		}
