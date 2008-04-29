@@ -69,43 +69,40 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	public PHPFileData getFileData(boolean forceCreation) {
 		PHPFileData fileData = null;
 		IFile file = getIFile();
-
+		
 		if (file != null) {
+			PHPProjectModel projectModel = getProjectModel();
 			if (projectModel != null) {
 				fileData = projectModel.getFileData(file.getFullPath().toString());
 			}
 		}
 		if (fileData == null) {
-			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), projectModel != null && forceCreation);
-			if (fileData != null) {
-				return fileData;
+			PHPProjectModel projectModel = getProjectModel();
+			fileData = internalGetFileData(projectModel != null && forceCreation);
+		}
+		return fileData;
+	}
+	
+	protected PHPFileData internalGetFileData(boolean forceCreation) {
+		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), forceCreation);
+		if (fileData == null) {
+			IFile file = getIFile();
+			// external file
+			if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
+				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
 			}
 		}
-
-		// external file
-		if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
-			fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
-			return fileData;
-		}
-
 		return fileData;
 	}
 
-	PHPProjectModel projectModel;
-
 	public PHPProjectModel getProjectModel() {
-		if (projectModel != null) {
-			return projectModel;
-		}
-
 		IFile iFile = getIFile();
 		if (iFile != null && ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
 			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
 		}
 
-		PHPFileData fileData = getFileData();
-		projectModel = fileData != null ? PHPModelUtil.getProjectModelForFile(fileData) : null;
-		return projectModel;
+		PHPFileData fileData = internalGetFileData(false);
+		return fileData != null ? PHPModelUtil.getProjectModelForFile(fileData) : null;
 	}
 
 	public void updateFileData() {

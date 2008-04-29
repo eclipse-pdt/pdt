@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 
 /**
  * WeakPreferencesPropagatorListener
+ * @deprecated (Not effective - candidate for removal)
  */
 public class WeakPropertyChangeListener extends WeakObject implements IPropertyChangeListener {
 

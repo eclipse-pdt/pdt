@@ -20,6 +20,7 @@ import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 
 /**
  * WeakPreferencesPropagatorListener
+ * @deprecated  (Not effective - candidate for removal)
  */
 public class WeakPreferencesPropagatorListener extends WeakObject implements IPreferencesPropagatorListener {
 
