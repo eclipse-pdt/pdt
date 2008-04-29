@@ -28,10 +28,12 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
-import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -40,38 +42,19 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 
-public class PHPManual implements IPropertyChangeListener {
+public class PHPManual {
 	
 	private static final String BROWSER_ID = "PHPManual.browser"; //$NON-NLS-1$
 	private static final Pattern HTTP_URL_PATTERN = Pattern.compile("http://[^\\s]*"); //$NON-NLS-1$
 	private static int browserCount = 0;
 	
 	private PHPManualSite site;
-	private boolean openManualInNewBrowser;
-	private IPreferenceStore fStore;
-	private static Map phpEntityPathMap;
+	private static Map<String, String> phpEntityPathMap;
 	
 	public PHPManual (PHPManualSite site) {
 		this.site = site;
-		
-		fStore = PHPUiPlugin.getDefault().getPreferenceStore();
-		initPreferences();
-		fStore.addPropertyChangeListener(WeakPropertyChangeListener.create(this, fStore));
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-	 */
-	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getProperty().equals(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER)) {
-			initPreferences();
-		}
-	}
-
-	public void initPreferences() {
-		openManualInNewBrowser = fStore.getBoolean(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER);
-	}
-
 	public PHPManualSite getSite() {
 		return site;
 	}
@@ -80,9 +63,9 @@ public class PHPManual implements IPropertyChangeListener {
 		this.site = site;
 	}
 	
-	private synchronized Map getPHPEntityPathMap() {
+	private synchronized Map<String, String> getPHPEntityPathMap() {
 		if (phpEntityPathMap == null) {
-			phpEntityPathMap = new HashMap();
+			phpEntityPathMap = new HashMap<String, String>();
 			URL url = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path("phpdoc.mapping"), null); //$NON-NLS-1$
 			if (url != null) {
 				try {
@@ -127,7 +110,7 @@ public class PHPManual implements IPropertyChangeListener {
 		
 		PHPDocBlock docBlock = codeData.getDocBlock();
 		if (docBlock != null) {
-			Iterator i = docBlock.getTags(PHPDocTag.LINK);
+			Iterator<PHPDocTag> i = docBlock.getTags(PHPDocTag.LINK);
 			while (i.hasNext()) {
 				PHPDocTag docTag = (PHPDocTag)i.next();
 				Matcher m = HTTP_URL_PATTERN.matcher(docTag.getValue().trim());
@@ -190,7 +173,8 @@ public class PHPManual implements IPropertyChangeListener {
 		IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 		IWebBrowser browser;
 		try {
-			if (openManualInNewBrowser) {
+			IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+			if (store.getBoolean(PreferenceConstants.PHP_MANUAL_OPEN_IN_NEW_BROWSER)) {
 				browser = browserSupport.createBrowser(BROWSER_ID + ++browserCount);
 			} else {
 				browser = browserSupport.createBrowser(BROWSER_ID);

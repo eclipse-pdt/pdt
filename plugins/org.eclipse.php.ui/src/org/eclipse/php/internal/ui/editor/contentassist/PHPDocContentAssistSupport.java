@@ -10,19 +10,25 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.parser.*;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
-import org.eclipse.php.internal.core.util.WeakPropertyChangeListener;
+import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
+import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
+import org.eclipse.php.internal.core.phpModel.parser.PHPDocLanguageModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
@@ -31,7 +37,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class PHPDocContentAssistSupport extends ContentAssistSupport {
@@ -40,34 +45,28 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 	private char[] autoActivationTriggers;
 
-	private CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
+	private final CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
 
-	protected IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event != null) {
-				initPreferences(event.getProperty());
-			}
-		}
-	};
-
+	@Override
 	protected void initPreferences(String prefKey) {
+		super.initPreferences(prefKey);
+		
 		if (prefKey == null || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC.equals(prefKey)) {
-			autoActivationTriggers = PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
+			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
+			autoActivationTriggers = preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
 		}
 	}
 
 	public PHPDocContentAssistSupport() {
-		// Initialize all preferences
-		initPreferences(null);
-
-		// Listen to preferences changes
-		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
+		super();
 	}
 
+	@Override
 	public char[] getAutoactivationTriggers() {
 		return autoActivationTriggers;
 	}
 
+	@Override
 	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer, boolean explicit) throws BadLocationException {
 
 		PHPProjectModel projectModel = editorModel.getProjectModel();
@@ -80,7 +79,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 		int selectionLength = ((TextSelection) viewer.getSelectionProvider().getSelection()).getLength();
 
-		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, offset);
+		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion(viewer, offset);
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
 		if (offset == editorModel.getStructuredDocument().getLength()) {
@@ -105,7 +104,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
 			if (sdRegion.getStartOffset(textRegion) == offset) {
 				ITextRegion regionBefore = sdRegion.getRegionAtCharacterOffset(offset - 1);
-				if (regionBefore instanceof PhpScriptRegion) {
+				if (regionBefore instanceof IPhpScriptRegion) {
 					textRegion = regionBefore;
 				}
 			} else {
@@ -116,25 +115,25 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		// find the start String for completion
 		int startOffset = container.getStartOffset(textRegion);
 
-		//in case we are standing at the beginning of a word and asking for completion 
+		//in case we are standing at the beginning of a word and asking for completion
 		//should not take into account the found region
 		//find the previous region and update the start offset
 		if (startOffset == offset) {
 			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
 			IStructuredDocumentRegion preSdRegion = null;
-			if (preTextRegion != null || ((preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null)) {
+			if (preTextRegion != null || (preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null) {
 				if (preTextRegion.getType() == "") { //$NON-NLS-1$
-					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string?? 
+					// TODO needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string??
 				}
 			}
 			startOffset = sdRegion.getStartOffset(textRegion);
 		}
 
-		PhpScriptRegion phpScriptRegion = null;
+		IPhpScriptRegion phpScriptRegion = null;
 		String partitionType = null;
 		int internalOffset = 0;
-		if (textRegion instanceof PhpScriptRegion) {
-			phpScriptRegion = (PhpScriptRegion) textRegion;
+		if (textRegion instanceof IPhpScriptRegion) {
+			phpScriptRegion = (IPhpScriptRegion) textRegion;
 			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
@@ -147,22 +146,22 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 					}
 				}
 			}
-			if ((!partitionType.equals(PHPPartitionTypes.PHP_DOC))) {
+			if (!partitionType.equals(PHPPartitionTypes.PHP_DOC)) {
 				return;
 			}
 		} else {
 			return;
 		}
 
-		TextSequence statmentText = PHPTextSequenceUtilities.getStatment(offset, sdRegion, false);
+		TextSequence statementText = PHPTextSequenceUtilities.getStatement(offset, sdRegion, false);
 
-		int totalLength = statmentText.length();
-		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statmentText, totalLength); // read whitespace
-		int startPosition = PHPTextSequenceUtilities.readIdentifiarStartIndex(statmentText, endPosition, true);
-		String lastWord = statmentText.subSequence(startPosition, endPosition).toString();
+		int totalLength = statementText.length();
+		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
+		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
+		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
-		if (isInPhpDocCompletion(viewer, statmentText, offset, lastWord, selectionLength, haveSpacesAtEnd, explicit)) {
+		if (isInPhpDocCompletion(viewer, statementText, offset, lastWord, selectionLength, haveSpacesAtEnd, explicit)) {
 			// the current position is php doc block.
 			return;
 		}
@@ -178,12 +177,12 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		}
 	}
 
-	private boolean isInPhpDocCompletion(ITextViewer viewer, CharSequence statmentText, int offset, String tagName, int selectionLength, boolean hasSpacesAtEnd, boolean explicit) {
+	private boolean isInPhpDocCompletion(ITextViewer viewer, CharSequence statementText, int offset, String tagName, int selectionLength, boolean hasSpacesAtEnd, boolean explicit) {
 		if (hasSpacesAtEnd) {
 			return false;
 		}
-		int startPosition = statmentText.length() - tagName.length();
-		if (startPosition <= 0 || statmentText.charAt(startPosition - 1) != TAG_SIGN) {
+		int startPosition = statementText.length() - tagName.length();
+		if (startPosition <= 0 || statementText.charAt(startPosition - 1) != TAG_SIGN) {
 			return false; // this is not a tag
 		}
 
@@ -191,8 +190,8 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		// verify that only whitespaces and '*' before the tag
 		boolean founeX = false;
 		for (; startPosition > 0; startPosition--) {
-			if (!Character.isWhitespace(statmentText.charAt(startPosition - 1))) {
-				if (founeX || statmentText.charAt(startPosition - 1) != '*') {
+			if (!Character.isWhitespace(statementText.charAt(startPosition - 1))) {
+				if (founeX || statementText.charAt(startPosition - 1) != '*') {
 					break;
 				}
 				founeX = true;
@@ -222,8 +221,8 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 			PHPClassData[] classes = fileData.getClasses();
 			boolean mergedData = false;
-			for (int i = 0; i < classes.length; i++) {
-				CodeData rv = isInClassBlocks(classes[i], offset);
+			for (PHPClassData element : classes) {
+				CodeData rv = isInClassBlocks(element, offset);
 				if (rv != null) {
 					context = ModelSupport.createContext(rv);
 					CodeData[] contextVariables = projectModel.getVariables(fileName, context, tagName, false);
@@ -234,9 +233,9 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			}
 			if (!mergedData) {
 				PHPFunctionData[] functions = fileData.getFunctions();
-				for (int i = 0; i < functions.length; i++) {
-					if (isInBlock(functions[i], offset)) {
-						context = ModelSupport.createContext(functions[i]);
+				for (PHPFunctionData element : functions) {
+					if (isInBlock(element, offset)) {
+						context = ModelSupport.createContext(element);
 						CodeData[] contextVariables = projectModel.getVariables(fileName, context, tagName, false);
 						variables = mergeCodeData(variables, contextVariables);
 						break;
@@ -256,9 +255,9 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 			return data;
 		} else {
 			PHPFunctionData[] functions = data.getFunctions();
-			for (int i = 0; i < functions.length; i++) {
-				if (isInBlock(functions[i], position)) {
-					return functions[i];
+			for (PHPFunctionData element : functions) {
+				if (isInBlock(element, position)) {
+					return element;
 				}
 			}
 		}
@@ -276,6 +275,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 		return data.getDocBlock() != null ? data.getDocBlock().containsPosition(position) : false;
 	}
 
+	@Override
 	protected String getTemplateContext() {
 		return PHPTemplateContextTypeIds.PHPDOC;
 	}

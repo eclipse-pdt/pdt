@@ -58,6 +58,7 @@ import org.eclipse.jface.text.ITextViewerExtension4;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
@@ -119,6 +120,7 @@ import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.Double
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.text.PHPWordIterator;
+import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
@@ -1714,11 +1716,19 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				updateHoverBehavior();
 			}
 			
-			if (PreferenceConstants.CODEASSIST_AUTOINSERT.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property)) {
-				ISourceViewer sourceViewer = getSourceViewer();
-				if (sourceViewer != null) {
-					PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
-					if (configuration != null) {
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (sourceViewer != null) {
+				PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
+				if (configuration != null) {
+
+					IContentAssistProcessor[] contentAssistProcessors = configuration.getContentAssistProcessors(sourceViewer, PHPPartitionTypes.PHP_DEFAULT);
+					for (IContentAssistProcessor contentAssistProcessor : contentAssistProcessors) {
+						if (contentAssistProcessor instanceof IContentAssistProcessorForPHP) {
+							((IContentAssistProcessorForPHP)contentAssistProcessor).handlePreferenceStoreChanged(event);
+						}
+					}
+					
+					if (PreferenceConstants.CODEASSIST_AUTOINSERT.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property)) {
 						StructuredContentAssistant contentAssistant = (StructuredContentAssistant) configuration.getPHPContentAssistant(sourceViewer);
 						
 						IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();

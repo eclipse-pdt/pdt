@@ -19,6 +19,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.text.PHPCodeReader;
@@ -32,9 +33,17 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP {
 
 	// This is the resource that it's being edited in the Editor
-	protected IContentAssistSupport support = new ContentAssistSupport();
+	protected IContentAssistSupport support;
 	protected PHPContextInformationValidator contextInformationValidator = new PHPContextInformationValidator();
 	protected static final char[] contextInformationActivationChars = { '(', ',' };
+	
+	public PHPContentAssistProcessor() {
+		support = createContentAssistSupport();
+	}
+	
+	public IContentAssistSupport createContentAssistSupport() {
+		return new ContentAssistSupport();
+	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		// System.out.println("computeCompletionProposals: " + offset);
@@ -78,7 +87,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 
 		//the following for loop is fix for bug #200119
 		//if we're getting more than one proposals - then we show show only the ones
-		//with the shortest name. (the only case it can happen is inside C'tor 
+		//with the shortest name. (the only case it can happen is inside C'tor
 		//when there are two classes and one name includes (actually starts with)the other  )
 		int shortestName = Integer.MAX_VALUE;
 		for (int i = 0; i < proposals.length; ++i) {
@@ -93,8 +102,8 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 			IContextInformation info = proposals[i].getContextInformation();
 			if (info != null && proposals[i].getDisplayString().length() == shortestName) {
 				ContextInformationWrapper contextInformation = new ContextInformationWrapper(info);
-				contextInformation.setContextInformationPosition(contextInformationPosition + 1); 
-				//the +1 is because guessContextInformationPosition() 
+				contextInformation.setContextInformationPosition(contextInformationPosition + 1);
+				//the +1 is because guessContextInformationPosition()
 				//returns the position of the '(' and the ContextInformationPosition needs the position after it.
 				contextInfo.add(contextInformation);
 			}
@@ -103,7 +112,7 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 	}
 
 	/**
-	 * This class purpose is to support {@link}IContextInformationExtension 
+	 * This class purpose is to support {@link}IContextInformationExtension
 	 * It suppose to resolve bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=204653 after wst will do their part in it.
 	 * @author guy.g
 	 *
@@ -230,12 +239,16 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 	/**
 	 * The protocol here is that we know when it is an implicit request - since we ask for it in {@link PHPContentAssistant}
 	 * The explicit request comes fromn the editor and we don't control it.
-	 * 
-	 *  so we set it as implicit when we are asked for by PHPContentAssistant and unset it after the first request. 
+	 *
+	 *  so we set it as implicit when we are asked for by PHPContentAssistant and unset it after the first request.
 	 */
 	private boolean isExplicitRequest = false;
 
 	public void explicitActivationRequest() {
 		isExplicitRequest = true;
+	}
+
+	public void handlePreferenceStoreChanged(PropertyChangeEvent event) {
+		support.handlePreferenceStoreChanged(event);
 	}
 }
