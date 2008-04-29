@@ -1,6 +1,7 @@
 package org.eclipse.php.ui.editor.contentassist;
 
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.util.PropertyChangeEvent;
 
 /**
  * processors who implement this interface has the abilty to allow recieving a heads up about the 
@@ -10,4 +11,8 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 public interface IContentAssistProcessorForPHP extends IContentAssistProcessor {
 
 	public void explicitActivationRequest();
+	
+	public IContentAssistSupport createContentAssistSupport();
+	
+	public void handlePreferenceStoreChanged(PropertyChangeEvent event);
 }

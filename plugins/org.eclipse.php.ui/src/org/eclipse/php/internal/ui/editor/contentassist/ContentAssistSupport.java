@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
@@ -86,32 +86,26 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CATCH, NEW, INSTANCEOF
 	};
 
-	protected IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event != null) {
-				initPreferences(event.getProperty());
-			}
-		}
-	};
-
 	protected void initPreferences(String prefKey) {
 		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey) || PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE.equals(prefKey) || PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES.equals(prefKey)
 			|| PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX.equals(prefKey) || PreferenceConstants.CODEASSIST_GROUP_OPTIONS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
 
-			showVariablesFromOtherFiles = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
-			groupCompletionOptions = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_GROUP_OPTIONS);
-			cutCommonPrefix = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX);
-			disableConstants = !PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
-			showClassNamesInGlobalList = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
-			showNonStrictOptions = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
-			constantCaseSensitive = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
-			determineObjectTypeFromOtherFile = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
-			autoShowClassNames = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-			autoShowFunctionsKeywordsConstants = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
-			autoShowVariables = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
-			autoActivationTriggers = PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
+			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
+			
+			showVariablesFromOtherFiles = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
+			groupCompletionOptions = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_GROUP_OPTIONS);
+			cutCommonPrefix = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX);
+			disableConstants = !preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
+			showClassNamesInGlobalList = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
+			showNonStrictOptions = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
+			constantCaseSensitive = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
+			determineObjectTypeFromOtherFile = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
+			autoShowClassNames = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+			autoShowFunctionsKeywordsConstants = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+			autoShowVariables = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+			autoActivationTriggers = preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
 		}
 	}
 
@@ -129,9 +123,10 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	public ContentAssistSupport() {
 		// Initialize all preferences
 		initPreferences(null);
-
-		// Listen to preferences changes
-		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
+	}
+	
+	public void handlePreferenceStoreChanged(PropertyChangeEvent event) {
+		initPreferences(event.getProperty());
 	}
 
 	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset, boolean explicit) throws BadLocationException {

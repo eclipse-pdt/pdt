@@ -14,16 +14,26 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
+import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 public class PHPDocContentAssistProcessor implements IContentAssistProcessorForPHP {
 
-	private PHPDocContentAssistSupport support = new PHPDocContentAssistSupport();
+	private IContentAssistSupport support;
+	
+	public PHPDocContentAssistProcessor() {
+		support = createContentAssistSupport();
+	}
+	
+	public IContentAssistSupport createContentAssistSupport() {
+		return new PHPDocContentAssistSupport();
+	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
@@ -81,4 +91,7 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessorForP
 		isExplicitRequest = true;
 	}
 
+	public void handlePreferenceStoreChanged(PropertyChangeEvent event) {
+		support.handlePreferenceStoreChanged(event);
+	}
 }

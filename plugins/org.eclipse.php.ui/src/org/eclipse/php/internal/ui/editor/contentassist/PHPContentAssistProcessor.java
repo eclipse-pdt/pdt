@@ -19,6 +19,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.text.PHPCodeReader;
@@ -32,9 +33,17 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP {
 
 	// This is the resource that it's being edited in the Editor
-	protected IContentAssistSupport support = new ContentAssistSupport();
+	protected IContentAssistSupport support;
 	protected PHPContextInformationValidator contextInformationValidator = new PHPContextInformationValidator();
 	protected static final char[] contextInformationActivationChars = { '(', ',' };
+	
+	public PHPContentAssistProcessor() {
+		support = createContentAssistSupport();
+	}
+	
+	public IContentAssistSupport createContentAssistSupport() {
+		return new ContentAssistSupport();
+	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		// System.out.println("computeCompletionProposals: " + offset);
@@ -237,5 +246,9 @@ public class PHPContentAssistProcessor implements IContentAssistProcessorForPHP 
 
 	public void explicitActivationRequest() {
 		isExplicitRequest = true;
+	}
+
+	public void handlePreferenceStoreChanged(PropertyChangeEvent event) {
+		support.handlePreferenceStoreChanged(event);
 	}
 }

@@ -10,23 +10,29 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.parser.*;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
+import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
+import org.eclipse.php.internal.core.phpModel.parser.PHPDocLanguageModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.preferences.util.WeakPropertyChangeListener;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -41,27 +47,18 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 	private final CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
 
-	protected IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent event) {
-			if (event != null) {
-				initPreferences(event.getProperty());
-			}
-		}
-	};
-
 	@Override
 	protected void initPreferences(String prefKey) {
+		super.initPreferences(prefKey);
+		
 		if (prefKey == null || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC.equals(prefKey)) {
-			autoActivationTriggers = PreferenceConstants.getPreferenceStore().getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
+			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
+			autoActivationTriggers = preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
 		}
 	}
 
 	public PHPDocContentAssistSupport() {
-		// Initialize all preferences
-		initPreferences(null);
-
-		// Listen to preferences changes
-		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(WeakPropertyChangeListener.create(prefChangeListener, PreferenceConstants.getPreferenceStore()));
+		super();
 	}
 
 	@Override
