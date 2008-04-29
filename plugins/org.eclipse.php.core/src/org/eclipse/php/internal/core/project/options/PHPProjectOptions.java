@@ -29,6 +29,8 @@ import org.eclipse.php.internal.core.project.IIncludePathEntry;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
+import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 import org.osgi.service.prefs.BackingStoreException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -113,6 +115,12 @@ public class PHPProjectOptions {
 		ProjectScope projectScope = new ProjectScope(project);
 		preferences = projectScope.getNode(PREF_QUALIFIER);
 		loadIncludePath();
+		
+		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
+			public void closed() {
+				optionsChangeListenersMap.clear();
+			}
+		});
 	}
 
 	public void addOptionChangeListener(final String optionKey, final IPhpProjectOptionChangeListener optionChangeListener) {
