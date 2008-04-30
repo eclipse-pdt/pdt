@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.2.8.1 2008/04/15 08:26:47 rganor Exp $
+////    $Id: php_ast_parser.cup,v 1.2.8.2 2008/04/30 15:55:05 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -426,7 +426,7 @@ T_CURLY_OPEN:token inner_statement_list:statementList T_CURLY_CLOSE:end
 		falseStatement = new IfStatement(start, iffalseright, innerCondition, trueStatement, falseStatement);
 	}
 	Block block = new Block(colonleft, ifTrueStatementListright, ifTrueStatementList, false);
-	IfStatement ifStatement = new IfStatement(tokenleft, iffalseright, condition, block, falseStatement);		
+	IfStatement ifStatement = new IfStatement(tokenleft, endright, condition, block, falseStatement);		
 	
 	RESULT = ifStatement;
 :}

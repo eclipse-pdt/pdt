@@ -8372,7 +8372,7 @@ class CUP$PhpAstParser5$actions {
 		falseStatement = new IfStatement(start, iffalseright, innerCondition, trueStatement, falseStatement);
 	}
 	Block block = new Block(colonleft, ifTrueStatementListright, ifTrueStatementList, false);
-	IfStatement ifStatement = new IfStatement(tokenleft, iffalseright, condition, block, falseStatement);		
+	IfStatement ifStatement = new IfStatement(tokenleft, endright, condition, block, falseStatement);		
 	
 	RESULT = ifStatement;
 
