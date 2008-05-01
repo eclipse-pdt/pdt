@@ -154,7 +154,6 @@ public class PHPFormatterConfigurationBlock extends PHPCoreOptionsConfigurationB
 		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
 
 		group.setLayoutData(data);
-		group.setLayoutData(data);
 
 		return group;
 	}
