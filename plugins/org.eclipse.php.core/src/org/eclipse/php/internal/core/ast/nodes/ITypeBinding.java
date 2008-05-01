@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 
 /**
  * A type binding represents fully-resolved type. There are a number of
@@ -38,7 +39,6 @@ package org.eclipse.php.internal.core.ast.nodes;
  * @since 2.0
  */
 public interface ITypeBinding extends IBinding {
-
 
 	/**
 	 * Answer an array type binding using the receiver and the given dimension.
@@ -73,7 +73,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public String getBinaryName();
 
-	
 	/**
 	 * Returns the binding representing the component type of this array type,
 	 * or <code>null</code> if this is not an array type binding. The component
@@ -92,10 +91,9 @@ public interface ITypeBinding extends IBinding {
 	 * 
 	 * <p>These include public, protected, default (package-private) access,
 	 * and private fields declared by the class, but excludes inherited fields.
-	 * Synthetic fields may or may not be included. Fields from binary types that
-	 * reference unresolvable types may not be included.</p>
+	 * Fields from binary types that reference unresolvable types may not be included.</p>
 	 *
-	 * <p>Returns an empty list if the class, interface, or enum declares no fields,
+	 * <p>Returns an empty list if the class or interface declares no fields,
 	 * and for other kinds of type bindings that do not directly have members.</p>
 	 *
 	 * <p>The resulting bindings are in no particular order.</p>
@@ -134,11 +132,9 @@ public interface ITypeBinding extends IBinding {
 	 * represent a class or interface.
 	 *
 	 * @return the bit-wise or of <code>Modifier</code> constants
-	 * @see #getModifiers()
 	 * @see Modifier
 	 */
-	public int getDeclaredModifiers();
-
+	public int getModifiers();
 
 	/**
 	 * Returns the dimensionality of this array type, or <code>0</code> if this
@@ -158,7 +154,6 @@ public interface ITypeBinding extends IBinding {
 	 *   not an array type
 	 */
 	public ITypeBinding getElementType();
-
 
 	/**
 	 * Returns a list of type bindings representing the direct superinterfaces
@@ -183,7 +178,7 @@ public interface ITypeBinding extends IBinding {
 	 * no interfaces, or if this type binding represents an array type, a
 	 * primitive type, the null type, a type variable, an annotation type,
 	 * a wildcard type, or a capture binding, this method returns an array of
-     * length 0.
+	 * length 0.
 	 * </p>
 	 *
 	 * @return the list of type bindings for the interfaces extended by this
@@ -191,23 +186,6 @@ public interface ITypeBinding extends IBinding {
 	 *   the empty list
 	 */
 	public ITypeBinding[] getInterfaces();
-
-	/**
-	 * Returns the compiled modifiers for this class, interface, enum,
-	 * or annotation type binding.
-	 * The result may not correspond to the modifiers as declared in the
-	 * original source, since the compiler may change them (in particular,
-	 * for inner class emulation). The <code>getDeclaredModifiers</code> method
-	 * should be used if the original modifiers are needed.
-	 * Returns 0 if this type does not represent a class, an interface, an enum, an annotation
-	 * type or a recovered type.
-	 *
-	 * @return the compiled modifiers for this type binding or 0
-	 * if this type does not represent a class, an interface, an enum, an annotation
-	 * type or a recovered type.
-	 * @see #getDeclaredModifiers()
-	 */
-	public int getModifiers();
 
 	/**
 	 * Returns the unqualified name of the type represented by this binding
@@ -246,8 +224,8 @@ public interface ITypeBinding extends IBinding {
 	 * this method) when present.
 	 * Example: <code>"? extends InputStream"</code>.
 	 * </li>
-     * <li>Capture types do not have a name. For these types,
-     * and array types thereof, this method returns an empty string.</li>
+	 * <li>Capture types do not have a name. For these types,
+	 * and array types thereof, this method returns an empty string.</li>
 	 * </ul>
 	 *
 	 * @return the unqualified name of the type represented by this binding,
@@ -300,7 +278,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public ITypeBinding getSuperclass();
 
-
 	/**
 	 * Returns the binding for the type declaration corresponding to this type
 	 * binding.
@@ -319,7 +296,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public ITypeBinding getTypeDeclaration();
 
-	
 	/**
 	 * Returns whether this type binding represents an annotation type.
 	 * <p>
@@ -331,8 +307,6 @@ public interface ITypeBinding extends IBinding {
 	 * @since 3.1
 	 */
 	//public boolean isAnnotation();
-
-
 	/**
 	 * Returns whether this type binding represents an array type.
 	 *
@@ -344,63 +318,12 @@ public interface ITypeBinding extends IBinding {
 	public boolean isArray();
 
 	/**
-	 * Returns whether an expression of this type can be assigned to a variable
-	 * of the given type, as specified in section 5.2 of <em>The Java Language
-	 * Specification, Third Edition</em> (JLS3).
-	 *
-	 * <p>If the receiver or the argument is a recovered type, the answer is always false,
-	 * unless the two types are identical or the argument is <code>java.lang.Object</code>.</p>
-	 *
-	 * @param variableType the type of a variable to check compatibility against
-	 * @return <code>true</code> if an expression of this type can be assigned to a
-	 *   variable of the given type, and <code>false</code> otherwise
-	 * @since 3.1
-	 */
-	public boolean isAssignmentCompatible(ITypeBinding variableType);
-
-
-	/**
-	 * Returns whether this type is cast compatible with the given type,
-	 * as specified in section 5.5 of <em>The Java Language
-	 * Specification, Third Edition</em> (JLS3).
-	 * <p>
-	 * NOTE: The cast compatibility check performs backwards.
-	 * When testing whether type B can be cast to type A, one would use:
-	 * <code>A.isCastCompatible(B)</code>
-	 * </p>
-	 *
-	 * <p>If the receiver or the argument is a recovered type, the answer is always false,
-	 * unless the two types are identical or the argument is <code>java.lang.Object</code>.</p>
-	 *
-	 * @param type the type to check compatibility against
-	 * @return <code>true</code> if this type is cast compatible with the
-	 * given type, and <code>false</code> otherwise
-	 * @since 3.1
-	 */
-	public boolean isCastCompatible(ITypeBinding type);
-
-	/**
-	 * Returns whether this type binding represents a class type or a recovered binding.
-	 *
-	 * @return <code>true</code> if this object represents a class or a recovered binding,
-	 *    and <code>false</code> otherwise
-	 */
+	* Returns whether this type binding represents a class type or a recovered binding.
+	*
+	* @return <code>true</code> if this object represents a class or a recovered binding,
+	*    and <code>false</code> otherwise
+	*/
 	public boolean isClass();
-
-
-	/**
-	 * Returns whether this type binding originated in source code.
-	 * Returns <code>false</code> for all primitive types, the null type,
-	 * array types, and for all classes, interfaces, enums, annotation
-	 * types, type variables, parameterized type references,
-	 * raw type references, wildcard types, and capture bindings
-     * whose information came from a built-in PHP definition.
-	 *
-	 * @return <code>true</code> if the type is in source code,
-	 *    and <code>false</code> otherwise
-	 */
-	public boolean isFromSource();
-
 
 	/**
 	 * Returns whether this type binding represents an interface type.
@@ -413,7 +336,6 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isInterface();
 
-
 	/**
 	 * Returns whether this type binding represents the null type.
 	 * <p>
@@ -424,7 +346,6 @@ public interface ITypeBinding extends IBinding {
 	 *   and <code>false</code> otherwise
 	 */
 	public boolean isNullType();
-
 
 	/**
 	 * Returns whether this type binding represents a primitive type.
@@ -440,61 +361,12 @@ public interface ITypeBinding extends IBinding {
 	 */
 	public boolean isPrimitive();
 
-
 	/**
-	 * Returns whether this type is subtype compatible with the given type,
-	 * as specified in section 4.10 of <em>The Java Language
-	 * Specification, Third Edition</em> (JLS3).
-	 *
-	 * <p>If the receiver or the argument is a recovered type, the answer is always false,
-	 * unless the two types are identical or the argument is <code>java.lang.Object</code>.</p>
-	 *
+	 * Returns whether this type is subtype compatible with the given type.
+	 * 
 	 * @param type the type to check compatibility against
 	 * @return <code>true</code> if this type is subtype compatible with the
 	 * given type, and <code>false</code> otherwise
-	 * @since 3.1
 	 */
 	public boolean isSubTypeCompatible(ITypeBinding type);
-
-	/**
-	 * Returns whether this type binding represents a type variable.
-	 * Type variables bindings carry the type variable's bounds.
-     * <p>
-     * Note that type variables are distinct from capture bindings
-     * (even though capture bindings are often depicted as synthetic
-     * type variables); as such, {@link #isTypeVariable()} answers
-     * <code>false</code> for capture bindings, and
-     * {@link #isCapture()} answers <code>false</code> for type variables.
-     * </p>
-	 *
-	 * @return <code>true</code> if this type binding is for a type variable,
-	 *   and <code>false</code> otherwise
-	 * @see #getName()
-	 * @see #getTypeBounds()
-	 * @since 3.1
-	 */
-	public boolean isTypeVariable();
-	
-	/**
-	 * Returns the declared type bounds of this type variable or capture. If the
-	 * variable or the capture had no explicit bound, then it returns an empty list.
-     * <p>
-     * Note that per construction, it can only contain one class or array type,
-     * at most, and then it is located in first position.
-     * </p>
-     * <p>
-     * Also note that array type bound may only occur in the case of a capture
-     * binding, e.g. <code>capture-of ? extends Object[]</code>
-     * </p>
-	 *
-	 * @return the list of type bindings for this type variable or capture,
-     * or otherwise the empty list
-	 * @see #isCapture()
-	 * @see #isTypeVariable()
-	 * @since 3.1
-	 */
-	public ITypeBinding[] getTypeBounds();
-
-	
-	
 }

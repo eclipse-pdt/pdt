@@ -1,167 +1,655 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.compiler.util.SimpleLookupTable;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.evaluation.types.MultiTypeType;
+import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class TypeBinding implements ITypeBinding {
 
-	private final IEvaluatedType type;
-	private final IModelElement element;
+	private IEvaluatedType type;
+	private IModelElement element;
+	private BindingResolver resolver;
+	private SimpleLookupTable compatibleCache;
 
-	public TypeBinding(IEvaluatedType type) {
+	/**
+	 * Constructs a new TypeBinding.
+	 * 
+	 * @param resolver
+	 * @param type
+	 * @param elements
+	 */
+	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement[] elements) {
+		this.resolver = resolver;
 		this.type = type;
-		// TODO should assign element
-		this.element = null;
+		if (elements != null) {
+			if (elements.length > 0) {
+				this.element = elements[0];
+			}
+			if (elements.length > 1) {
+				Logger.log(IStatus.WARNING, "TypeBinding: Found more then one model element");
+			}
+		}
 	}
-	
+
+	/**
+	 * Constructs a new TypeBinding.
+	 * 
+	 * @param resolver
+	 * @param type
+	 * @param element
+	 */
+	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement element) {
+		this.resolver = resolver;
+		this.type = type;
+		this.element = element;
+	}
+
+	/**
+	 * Answer an array type binding using the receiver and the given dimension.
+	 *
+	 * <p>If the receiver is an array binding, then the resulting dimension is the given dimension
+	 * plus the dimension of the receiver. Otherwise the resulting dimension is the given
+	 * dimension.</p>
+	 *
+	 * @param dimension the given dimension
+	 * @return an array type binding
+	 * @throws IllegalArgumentException:<ul>
+	 * <li>if the receiver represents the void type</li>
+	 * <li>if the resulting dimensions is lower than one or greater than 255</li>
+	 * </ul>
+	 */
 	public ITypeBinding createArrayType(int dimension) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Returns the binary name of this type binding.
+	 * The binary name of a class is defined in the Java Language
+	 * Specification 3rd edition, section 13.1.
+	 * <p>
+	 * Note that in some cases, the binary name may be unavailable.
+	 * This may happen, for example, for a local type declared in
+	 * unreachable code.
+	 * </p>
+	 *
+	 * @return the binary name of this type, or <code>null</code>
+	 * if the binary name is unknown
+	 */
 	public String getBinaryName() {
+		if (element == null) {
+			return null;
+		}
 		return this.element.getHandleIdentifier();
 	}
 
+	/**
+	 * Returns the binding representing the component type of this array type,
+	 * or <code>null</code> if this is not an array type binding. The component
+	 * type of an array might be an array type.
+	 * <p>This is subject to change before 3.2 release.</p>
+	 *
+	 * @return the component type binding, or <code>null</code> if this is
+	 *   not an array type
+	 */
 	public ITypeBinding getComponentType() {
-		// TODO Auto-generated method stub
+		if (!isArray()) {
+			return null;
+		}
+		// TODO - This should be implemented as soon as the we will be able to identify the types that
+		// the array is holding.
+		// Once we have that, we can return a TypeBinding or a CompositeTypeBinding for multiple types array.
 		return null;
 	}
 
+	/**
+	 * Returns a list of bindings representing all the fields declared
+	 * as members of this class or interface type.
+	 * 
+	 * <p>These include public, protected, default (package-private) access,
+	 * and private fields declared by the class, but excludes inherited fields.
+	 * Fields from binary types that reference unresolvable types may not be included.</p>
+	 *
+	 * <p>Returns an empty list if the class or interface declares no fields,
+	 * and for other kinds of type bindings that do not directly have members.</p>
+	 *
+	 * <p>The resulting bindings are in no particular order.</p>
+	 *
+	 * @return the list of bindings for the field members of this type,
+	 *   or the empty list if this type does not have field members
+	 */
 	public IVariableBinding[] getDeclaredFields() {
-		// TODO Auto-generated method stub
-		return null;
+		if (element == null) {
+			return new IVariableBinding[0];
+		}
+		if (isClass()) {
+			IType type = (IType) element;
+			try {
+				IField[] fields = type.getFields();
+				IVariableBinding[] variableBindings = new IVariableBinding[fields.length];
+				for (int i = 0; i < fields.length; i++) {
+					variableBindings[i] = resolver.getVariableBinding(fields[i]);
+				}
+				return variableBindings;
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return new IVariableBinding[0]; // TODO - Implement IVariableBinding
 	}
 
+	/**
+	 * Returns a list of method bindings representing all the methods and
+	 * constructors declared for this class, interface or annotation
+	 * type.
+	 * <p>These include public, protected, default (package-private) access,
+	 * and private methods Synthetic methods and constructors may or may not be
+	 * included. Returns an empty list if the class or interface
+	 * type declares no methods or constructors, if the annotation type declares
+	 * no members, or if this type binding represents some other kind of type
+	 * binding. Methods from binary types that reference unresolvable types may
+	 * not be included.</p>
+	 * <p>The resulting bindings are in no particular order.</p>
+	 *
+	 * @return the list of method bindings for the methods and constructors
+	 *   declared by this class, interface, or annotation type,
+	 *   or the empty list if this type does not declare any methods or constructors
+	 */
 	public IMethodBinding[] getDeclaredMethods() {
-		// TODO Auto-generated method stub
-		return null;
+		if (element == null) {
+			return new IMethodBinding[0];
+		}
+		if (isClass()) {
+			IType type = (IType) element;
+			try {
+				IMethod[] methods = type.getMethods();
+				if (methods != null) {
+					IMethodBinding[] methodBinding = new IMethodBinding[methods.length];
+					for (int i = 0; i < methods.length; i++) {
+						methodBinding[i] = resolver.getMethodBinding(methods[i]);
+					}
+					return methodBinding;
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return new IMethodBinding[0]; // TODO - Implement IMethodBinding
 	}
 
-	public int getDeclaredModifiers() {
-		// TODO Auto-generated method stub
-		return 0;
+	/**
+	 * Returns the declared modifiers for this class or interface binding
+	 * as specified in the original source declaration of the class or
+	 * interface. The result may not correspond to the modifiers in the compiled
+	 * binary, since the compiler may change them (in particular, for inner
+	 * class emulation). The <code>getModifiers</code> method should be used if
+	 * the compiled modifiers are needed. Returns -1 if this type does not
+	 * represent a class or interface.
+	 *
+	 * @return the bit-wise or of <code>Modifier</code> constants
+	 * @see Modifier
+	 */
+	public int getModifiers() {
+		if (isClass()) {
+			//			element.
+		}
+		return -1;
 	}
 
+	/**
+	 * Returns the dimensionality of this array type, or <code>0</code> if this
+	 * is not an array type binding.
+	 *
+	 * @return the number of dimension of this array type binding, or
+	 *   <code>0</code> if this is not an array type
+	 */
 	public int getDimensions() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	/**
+	 * Returns the binding representing the element type of this array type,
+	 * or <code>null</code> if this is not an array type binding. The element
+	 * type of an array is never itself an array type.
+	 *
+	 * @return the element type binding, or <code>null</code> if this is
+	 *   not an array type
+	 */
 	public ITypeBinding getElementType() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Returns a list of type bindings representing the direct superinterfaces
+	 * of the class, interface, or enum type represented by this type binding.
+	 * <p>
+	 * If this type binding represents a class or enum type, the return value
+	 * is an array containing type bindings representing all interfaces
+	 * directly implemented by this class. The number and order of the interface
+	 * objects in the array corresponds to the number and order of the interface
+	 * names in the <code>implements</code> clause of the original declaration
+	 * of this type.
+	 * </p>
+	 * <p>
+	 * If this type binding represents an interface, the array contains
+	 * type bindings representing all interfaces directly extended by this
+	 * interface. The number and order of the interface objects in the array
+	 * corresponds to the number and order of the interface names in the
+	 * <code>extends</code> clause of the original declaration of this interface.
+	 * </p>
+	 * <p>
+	 * If the class or enum implements no interfaces, or the interface extends
+	 * no interfaces, or if this type binding represents an array type, a
+	 * primitive type, the null type, a type variable, an annotation type,
+	 * a wildcard type, or a capture binding, this method returns an array of
+	 * length 0.
+	 * </p>
+	 *
+	 * @return the list of type bindings for the interfaces extended by this
+	 *   class or enum, or interfaces extended by this interface, or otherwise
+	 *   the empty list
+	 */
 	public ITypeBinding[] getInterfaces() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public int getModifiers() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
+	/**
+	 * Returns the unqualified name of the type represented by this binding
+	 * if it has one.
+	 * <ul>
+	 * <li>For top-level types, member types, and local types,
+	 * the name is the simple name of the type.
+	 * Example: <code>"String"</code> or <code>"Collection"</code>.
+	 * Note that the type parameters of a generic type are not included.</li>
+	 * <li>For primitive types, the name is the keyword for the primitive type.
+	 * Example: <code>"int"</code>.</li>
+	 * <li>For the null type, the name is the string "null".</li>
+	 * <li>For anonymous classes, which do not have a name,
+	 * this method returns an empty string.</li>
+	 * <li>For array types, the name is the unqualified name of the component
+	 * type (as computed by this method) followed by "[]".
+	 * Example: <code>"String[]"</code>. Note that the component type is never an
+	 * an anonymous class.</li>
+	 * <li>For type variables, the name is just the simple name of the
+	 * type variable (type bounds are not included).
+	 * Example: <code>"X"</code>.</li>
+	 * <li>For type bindings that correspond to particular instances of a generic
+	 * type arising from a parameterized type reference,
+	 * the name is the unqualified name of the erasure type (as computed by this method)
+	 * followed by the names (again, as computed by this method) of the type arguments
+	 * surrounded by "&lt;&gt;" and separated by ",".
+	 * Example: <code>"Collection&lt;String&gt;"</code>.
+	 * </li>
+	 * <li>For type bindings that correspond to particular instances of a generic
+	 * type arising from a raw type reference, the name is the unqualified name of
+	 * the erasure type (as computed by this method).
+	 * Example: <code>"Collection"</code>.</li>
+	 * <li>For wildcard types, the name is "?" optionally followed by
+	 * a single space followed by the keyword "extends" or "super"
+	 * followed a single space followed by the name of the bound (as computed by
+	 * this method) when present.
+	 * Example: <code>"? extends InputStream"</code>.
+	 * </li>
+	 * <li>Capture types do not have a name. For these types,
+	 * and array types thereof, this method returns an empty string.</li>
+	 * </ul>
+	 *
+	 * @return the unqualified name of the type represented by this binding,
+	 * or the empty string if it has none
+	 * @see #getQualifiedName()
+	 */
 	public String getName() {
 		return this.type.getTypeName();
 	}
 
+	/**
+	 * Returns the type binding for the superclass of the type represented
+	 * by this class binding.
+	 * <p>
+	 * If this type binding represents any class other than the class
+	 * <code>java.lang.Object</code>, then the type binding for the direct
+	 * superclass of this class is returned. If this type binding represents
+	 * the class <code>java.lang.Object</code>, then <code>null</code> is
+	 * returned.
+	 * <p>
+	 * Loops that ascend the class hierarchy need a suitable termination test.
+	 * Rather than test the superclass for <code>null</code>, it is more
+	 * transparent to check whether the class is <code>Object</code>, by
+	 * comparing whether the class binding is identical to
+	 * <code>ast.resolveWellKnownType("java.lang.Object")</code>.
+	 * </p>
+	 * <p>
+	 * If this type binding represents an interface, an array type, a
+	 * primitive type, the null type, a type variable, an enum type,
+	 * an annotation type, a wildcard type, or a capture binding then
+	 * <code>null</code> is returned.
+	 * </p>
+	 *
+	 * @return the superclass of the class represented by this type binding,
+	 *    or <code>null</code> if none
+	 * @see AST#resolveWellKnownType(String)
+	 */
 	public ITypeBinding getSuperclass() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public ITypeBinding[] getTypeBounds() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	/**
+	 * Returns the binding for the type declaration corresponding to this type
+	 * binding.
+	 * <p>For parameterized types ({@link #isParameterizedType()})
+	 * and most raw types ({@link #isRawType()}), this method returns the binding
+	 * for the corresponding generic type.</p>
+	 * <p>For raw member types ({@link #isRawType()}, {@link #isMember()})
+	 * of a raw declaring class, the type declaration is a generic or a non-generic
+	 * type.</p>
+	 * <p>A different non-generic binding will be returned when one of the declaring
+	 * types/methods was parameterized.</p>
+	 * <p>For other type bindings, this returns the same binding.</p>
+	 *
+	 * @return the type binding
+	 */
 	public ITypeBinding getTypeDeclaration() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Returns whether this type binding represents an array type.
+	 *
+	 * @return <code>true</code> if this type binding is for an array type,
+	 *   and <code>false</code> otherwise
+	 * @see #getElementType()
+	 * @see #getDimensions()
+	 */
 	public boolean isArray() {
-		// TODO Auto-generated method stub
-		return false;
+		return type.getClass() == MultiTypeType.class;
 	}
 
-	public boolean isAssignmentCompatible(ITypeBinding variableType) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean isCastCompatible(ITypeBinding type) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	/**
+	 * Returns whether this type binding represents a class type or a recovered binding.
+	 *
+	 * @return <code>true</code> if this object represents a class or a recovered binding,
+	 *    and <code>false</code> otherwise
+	 */
 	public boolean isClass() {
-		// TODO Auto-generated method stub
-		return false;
+		return type.getClass() == PHPClassType.class;
 	}
 
-	public boolean isFromSource() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	/**
+	 * Returns whether this type binding represents an interface type.
+	 * <p>
+	 * Note that an interface can also be an annotation type.
+	 * </p>
+	 *
+	 * @return <code>true</code> if this object represents an interface,
+	 *    and <code>false</code> otherwise
+	 */
 	public boolean isInterface() {
-		// TODO Auto-generated method stub
+		if (element instanceof IMember) {
+			IMember member = (IMember) element;
+			try {
+				return (member.getFlags() & Modifiers.AccInterface) != 0;
+			} catch (ModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return false;
 	}
 
+	/**
+	 * Returns whether this type binding represents the null type.
+	 * <p>
+	 * The null type is the type of a <code>NullLiteral</code> node.
+	 * </p>
+	 *
+	 * @return <code>true</code> if this type binding is for the null type,
+	 *   and <code>false</code> otherwise
+	 */
 	public boolean isNullType() {
-		// TODO Auto-generated method stub
+		if (type instanceof SimpleType) {
+			return ((SimpleType) type).getType() == SimpleType.TYPE_NULL;
+		}
 		return false;
 	}
 
+	/**
+	 * Returns whether this type binding represents a primitive type.
+	 * <p>
+	 * There are nine predefined type bindings to represent the eight primitive
+	 * types and <code>void</code>. These have the same names as the primitive
+	 * types that they represent, namely boolean, byte, char, short, int,
+	 * long, float, and double, and void.
+	 * </p>
+	 *
+	 * @return <code>true</code> if this type binding is for a primitive type,
+	 *   and <code>false</code> otherwise
+	 */
 	public boolean isPrimitive() {
-		// TODO Auto-generated method stub
+		return type.getClass() == SimpleType.class && !isNullType();
+	}
+
+	/**
+	 * Returns whether this type is subtype compatible with the given type.
+	 * 
+	 * @param type the type to check compatibility against
+	 * @return <code>true</code> if this type is subtype compatible with the
+	 * given type, and <code>false</code> otherwise
+	 */
+	public boolean isSubTypeCompatible(ITypeBinding otherType) {
+		if (otherType instanceof TypeBinding) {
+			if (element instanceof IType) {
+				try {
+					IModelElement otherElement = ((TypeBinding) otherType).element;
+					if (otherElement instanceof IType) {
+						ITypeHierarchy supertypeHierarchy = ((IType) element).newSupertypeHierarchy(new NullProgressMonitor());
+						return supertypeHierarchy.contains((IType) otherElement);
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+			}
+		}
 		return false;
 	}
 
-	public boolean isSubTypeCompatible(ITypeBinding type) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean isTypeVariable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	/**
+	 * Returns the key for this binding.
+	 * <p>
+	 * Within a connected cluster of bindings (for example, all bindings
+	 * reachable from a given AST), each binding will have a distinct keys.
+	 * The keys are generated in a manner that is predictable and as
+	 * stable as possible. This last property makes these keys useful for
+	 * comparing bindings between disconnected clusters of bindings (for example,
+	 * the bindings between the "before" and "after" ASTs of the same
+	 * compilation unit).
+	 * </p>
+	 * <p>
+	 * The exact details of how the keys are generated is unspecified.
+	 * However, it is a function of the following information:
+	 * <ul>
+	 * <li>packages - the name of the package (for an unnamed package,
+	 *   some internal id)</li>
+	 * <li>classes or interfaces - the VM name of the type and the key
+	 *   of its package</li>
+	 * <li>array types - the key of the component type and number of
+	 *   dimensions</li>
+	 * <li>primitive types - the name of the primitive type</li>
+	 * <li>fields - the name of the field and the key of its declaring
+	 *   type</li>
+	 * <li>methods - the name of the method, the key of its declaring
+	 *   type, and the keys of the parameter types</li>
+	 * <li>constructors - the key of its declaring class, and the
+	 *   keys of the parameter types</li>
+	 * <li>local variables - the name of the local variable, the index of the
+	 *   declaring block relative to its parent, the key of its method</li>
+	 * <li>local types - the name of the type, the index of the declaring
+	 *   block relative to its parent, the key of its method</li>
+	 * <li>anonymous types - the occurence count of the anonymous
+	 *   type relative to its declaring type, the key of its declaring type</li>
+	 * <li>enum types - treated like classes</li>
+	 * <li>annotation types - treated like interfaces</li>
+	 * <li>type variables - the name of the type variable and
+	 * the key of the generic type or generic method that declares that
+	 * type variable</li>
+	 * <li>wildcard types - the key of the optional wildcard type bound</li>
+	 * <li>capture type bindings - the key of the wildcard captured</li>
+	 * <li>generic type instances - the key of the generic type and the keys
+	 * of the type arguments used to instantiate it, and whether the
+	 * instance is explicit (a parameterized type reference) or
+	 * implicit (a raw type reference)</li>
+	 * <li>generic method instances - the key of the generic method and the keys
+	 * of the type arguments used to instantiate it, and whether the
+	 * instance is explicit (a parameterized method reference) or
+	 * implicit (a raw method reference)</li>
+	 * <li>members of generic type instances - the key of the generic type
+	 * instance and the key of the corresponding member in the generic
+	 * type</li>
+	 * <li>annotations - the key of the annotated element and the key of
+	 * the annotation type</li>
+	 * </ul>
+	 * </p>
+	 * <p>Note that the key for member value pair bindings is
+	 * not yet implemented. This returns <code>null</code> for this kind of bindings.<br>
+	 * Recovered bindings have a unique key.
+	 * </p>
+	 *
+	 * @return the key for this binding
+	 */
 	public String getKey() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Returns the kind of bindings this is. That is one of the kind constants:
+	 * 	<code>TYPE</code>,
+	 * 	<code>VARIABLE</code>,
+	 * 	<code>METHOD</code>,
+	 * or <code>MEMBER_VALUE_PAIR</code>.
+	 * <p>
+	 * Note that additional kinds might be added in the
+	 * future, so clients should not assume this list is exhaustive and
+	 * should program defensively, e.g. by having a reasonable default
+	 * in a switch statement.
+	 * </p>
+	 * @return one of the kind constants
+	 */
 	public int getKind() {
-		// TODO Auto-generated method stub
-		return 0;
+		return IBinding.TYPE;
 	}
 
+	/**
+	 * Returns the PHP element that corresponds to this binding.
+	 * Returns <code>null</code> if this binding has no corresponding
+	 * PHP element.
+	 * <p>
+	 * For array types, this method returns the PHP element that corresponds
+	 * to the array's element type. For raw and parameterized types, this method
+	 * returns the PHP element of the erasure. For annotations, this method
+	 * returns the PHP element of the annotation (i.e. an {@link IAnnotation}).
+	 * </p>
+	 * <p>
+	 * Here are the cases where a <code>null</code> should be expected:
+	 * <ul>
+	 * <li>primitive types, including void</li>
+	 * <li>null type</li>
+	 * <li>wildcard types</li>
+	 * <li>capture types</li>
+	 * <li>array types of any of the above</li>
+	 * <li>the "length" field of an array type</li>
+	 * <li>the default constructor of a source class</li>
+	 * <li>the constructor of an anonymous class</li>
+	 * <li>member value pairs</li>
+	 * </ul>
+	 * For all other kind of type, method, variable, annotation and package bindings,
+	 * this method returns non-<code>null</code>.
+	 * </p>
+	 *
+	 * @return the PHP element that corresponds to this binding,
+	 * 		or <code>null</code> if none
+	 * @since 3.1
+	 */
 	public IModelElement getPHPElement() {
-		// TODO Auto-generated method stub
-		return null;
+		return element;
 	}
 
+	/**
+	 * Return whether this binding is for something that is deprecated.
+	 * A deprecated class, interface, field, method, or constructor is one that
+	 * is marked with the 'deprecated' tag in its PHPdoc comment.
+	 * 
+	 * Note: Currently we return false for all type bindings since we do not check for the 
+	 * PHPDoc deprecated annotation.
+	 *  
+	 * @return <code>true</code> if this binding is deprecated, and
+	 *    <code>false</code> otherwise (Currently, returns false all the time).
+	 */
 	public boolean isDeprecated() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean isEqualTo(IBinding binding) {
-		// TODO Auto-generated method stub
-		return false;
+	/**
+	 * There is no special definition of equality for bindings; equality is
+	 * simply object identity.  Within the context of a single cluster of
+	 * bindings, each binding is represented by a distinct object. However,
+	 * between different clusters of bindings, the binding objects may or may
+	 * not be different; in these cases, the client should compare bindings
+	 * using {@link #isEqualTo(IBinding)}, which checks their keys.
+	 *
+	 * @param other {@inheritDoc}
+	 * @return {@inheritDoc}
+	 */
+	public boolean equals(Object other) {
+		if (other == this) {
+			// identical binding - equal (key or no key)
+			return true;
+		}
+		if (other == null) {
+			// other binding missing
+			return false;
+		}
+		if (!(other instanceof TypeBinding)) {
+			return false;
+		}
+		TypeBinding otherBinding = (TypeBinding) other;
+		if (!this.type.equals(otherBinding.type)) {
+			return false;
+		}
+		if (this.element == null) {
+			return otherBinding.element == null;
+		}
+		return this.element.equals(otherBinding.element);
+
 	}
 
-	public boolean isRecovered() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	/**
+	 * Returns whether this binding is synthetic. A synthetic binding is one that
+	 * was made up by the compiler, rather than something declared in the
+	 * source code. Note that default constructors (the 0-argument constructor that
+	 * the compiler generates for class declarations with no explicit constructors
+	 * declarations) are not generally considered synthetic (although they
+	 * may be if the class itself is synthetic).
+	 * But see {@link IMethodBinding#isDefaultConstructor() IMethodBinding.isDefaultConstructor}
+	 * for cases where the compiled-generated default constructor can be recognized
+	 * instead.
+	 *
+	 * @return <code>true</code> if this binding is synthetic, and
+	 *    <code>false</code> otherwise
+	 * @see IMethodBinding#isDefaultConstructor()
+	 */
 	public boolean isSynthetic() {
 		// TODO Auto-generated method stub
 		return false;

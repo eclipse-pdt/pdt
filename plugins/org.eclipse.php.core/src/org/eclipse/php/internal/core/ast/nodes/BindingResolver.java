@@ -11,8 +11,7 @@
 
 package org.eclipse.php.internal.core.ast.nodes;
 
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.WorkingCopyOwner;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.compiler.lookup.BlockScope;
 import org.eclipse.dltk.internal.compiler.lookup.LookupEnvironment;
 import org.eclipse.dltk.internal.compiler.lookup.SourceModuleScope;
@@ -153,7 +152,6 @@ class BindingResolver {
 		return null;
 	}
 
-
 	/**
 	 * Returns the new type binding corresponding to the given variableDeclaration.
 	 * This is used for recovered binding only.
@@ -170,8 +168,8 @@ class BindingResolver {
 	}
 
 	/**
-	 * Returns the new type binding corresponding to the given type. This is used for recovered binding
-	 * only.
+	 * Returns the new type binding corresponding to the given type. 
+	 * 
 	 * <p>
 	 * The default implementation of this method returns <code>null</code>.
 	 * Subclasses may reimplement.
@@ -191,10 +189,24 @@ class BindingResolver {
 	 * Subclasses may reimplement.
 	 * </p>
 	 *
-	 * @param binding the old variable binding
+	 * @param field An {@link IField}
 	 * @return the new variable binding
 	 */
-	IVariableBinding getVariableBinding(IEvaluatedType binding) {
+	IVariableBinding getVariableBinding(IField field) {
+		return null;
+	}
+
+	/**
+	 * Returns the new method binding corresponding to the given {@link IMethod}.
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param method An {@link IMethod}
+	 * @return the new method binding
+	 */
+	public IMethodBinding getMethodBinding(IMethod method) {
 		return null;
 	}
 
@@ -307,7 +319,7 @@ class BindingResolver {
 	IMethodBinding resolveConstructor(MethodInvocation expression) {
 		return null;
 	}
-	
+
 	/**
 	 * Resolves the type of the given expression and returns the type binding
 	 * for it.
@@ -393,7 +405,7 @@ class BindingResolver {
 	Object resolveField(StaticConstantAccess constantAccess) {
 		return null;
 	}
-	
+
 	/**
 	 * Resolves the given import declaration and returns the binding for it.
 	 * <p>
@@ -434,8 +446,8 @@ class BindingResolver {
 	 */
 	IFunctionBinding resolveFunction(FunctionDeclaration function) {
 		return null;
-	}	
-	
+	}
+
 	/**
 	 * Resolves the given method declaration and returns the binding for it.
 	 * <p>
@@ -497,8 +509,8 @@ class BindingResolver {
 	 */
 	IMethodBinding resolveMethod(MethodInvocation method) {
 		return null;
-	}	
-	
+	}
+
 	/**
 	 * Resolves the given method invocation and returns the binding for it.
 	 * <p>
@@ -559,8 +571,7 @@ class BindingResolver {
 	IVariableBinding resolveVariable(Variable variable) {
 		return null;
 	}
-	
-	
+
 	/**
 	 * TODO : For PHP 5.3 ??? 
 	 * Resolves the given package declaration and returns the binding for it.
@@ -580,7 +591,7 @@ class BindingResolver {
 		return null;
 	}
 	 */
-	
+
 	/**
 	 * TODO should add doc comment block
 	 * Resolves the given reference and returns the binding for it.
@@ -602,7 +613,6 @@ class BindingResolver {
 		return null;
 	}
 	 */
-
 
 	/**
 	 * TODO should add doc comment block
@@ -740,6 +750,28 @@ class BindingResolver {
 		return null;
 	}
 	 */
+
+	/**
+	 * Returns the {@link IEvaluatedType} according to the offset and the length.
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 */
+	public IEvaluatedType getEvaluatedType(int offset, int length) {
+		return null;
+	}
+
+	/**
+	 * Returns an {@link IModelElement} array according to the offset and the length.
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 */
+	public IModelElement[] getModelElements(int offset, int length) {
+		return null;
+	}
 
 	/**
 	 * Returns the compilation unit scope used by this binding resolver.

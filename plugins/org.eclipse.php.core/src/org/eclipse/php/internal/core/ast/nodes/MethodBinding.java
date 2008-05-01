@@ -1,0 +1,105 @@
+/**
+ * 
+ */
+package org.eclipse.php.internal.core.ast.nodes;
+
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.Logger;
+
+/**
+ * PHP method binding implementation.
+ * 
+ * @author shalom
+ */
+public class MethodBinding extends FunctionBinding implements IMethodBinding {
+
+	private ITypeBinding declaringClassTypeBinding;
+
+	/**
+	 * Constructs a new MethodBinding.
+	 * 
+	 * @param resolver
+	 * @param modelElement
+	 */
+	public MethodBinding(BindingResolver resolver, IMethod modelElement) {
+		super(resolver, modelElement);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IMethodBinding#getDeclaringClass()
+	 */
+	public ITypeBinding getDeclaringClass() {
+		if (declaringClassTypeBinding == null) {
+			IModelElement parent = modelElement.getParent();
+			declaringClassTypeBinding = resolver.getTypeBinding((IType) parent);
+		}
+		return declaringClassTypeBinding;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IMethodBinding#isConstructor()
+	 */
+	public boolean isConstructor() {
+		try {
+			return modelElement.isConstructor();
+		} catch (ModelException e) {
+			Logger.logException(e);
+			return false;
+		}
+	}
+
+	/**
+	 * Returns whether this method overrides the given method.
+	 * 
+	 * @param method the method that is possibly overriden
+	 * @return <code>true</code> if this method overrides the given method,
+	 * and <code>false</code> otherwise
+	 */
+	public boolean overrides(IMethodBinding method) {
+		/*
+		 // TODO - Implement as the JDT implementation ?
+		 LookupEnvironment lookupEnvironment = this.resolver.lookupEnvironment();
+			return lookupEnvironment != null
+				&& lookupEnvironment.methodVerifier().doesMethodOverride(this.binding, ((MethodBinding) otherMethod).binding);
+		 */
+		if (isConstructor() || method.isConstructor()) {
+			return false;
+		}
+		if (getDeclaringClass().isSubTypeCompatible(method.getDeclaringClass())) {
+			// Check the method name
+			if (getName().equalsIgnoreCase(method.getName())) {
+				// Check that the given method is not final
+				int otherModifiers = method.getModifiers();
+				if ((otherModifiers & Modifiers.AccFinal) == 0) {
+					// Check that we are not narrowing the method visibility
+					if ((otherModifiers & Modifiers.AccPrivate) != 0) {
+						return false; // the other method is private, thus, this one is not overriding it.
+					}
+					int thisModifiers = getModifiers();
+					if ((otherModifiers & Modifiers.AccPublic) != 0 || (otherModifiers & Modifiers.AccDefault) != 0) {
+						// 'public' (default in PHP) can be overridden only by other 'public' methods.
+						return (thisModifiers & Modifiers.AccPublic) != 0 || (thisModifiers & Modifiers.AccDefault) != 0;
+					}
+					if ((otherModifiers & Modifiers.AccProtected) != 0) {
+						// 'protected' can be overridden by 'default', 'public' or 'protected'.
+						return (thisModifiers & Modifiers.AccProtected) != 0 || (thisModifiers & Modifiers.AccPublic) != 0 || (thisModifiers & Modifiers.AccDefault) != 0;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKey()
+	 */
+	public String getKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

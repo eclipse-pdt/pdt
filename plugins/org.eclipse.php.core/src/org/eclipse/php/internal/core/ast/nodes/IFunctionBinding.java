@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.ast.nodes;
  * @since 2.0
  */
 public interface IFunctionBinding extends IBinding {
-	
+
 	/**
 	 * Returns the name of the method declared in this binding. The method name
 	 * is always a simple identifier. The name of a constructor is always the
@@ -23,7 +23,7 @@ public interface IFunctionBinding extends IBinding {
 	 *   constructor's declaring class
 	 */
 	public String getName();
-	
+
 	/**
 	 * Returns a list of type bindings representing the formal parameter types,
 	 * in declaration order, of this method or constructor. Returns an array of
@@ -66,7 +66,6 @@ public interface IFunctionBinding extends IBinding {
 	 */
 	public ITypeBinding[] getExceptionTypes();
 
-
 	/**
 	 * Returns whether this is a variable arity method.
 	 * <p>
@@ -76,40 +75,7 @@ public interface IFunctionBinding extends IBinding {
 	 * @return <code>true</code> if this is a variable arity method,
 	 *    and <code>false</code> otherwise
 	 * @since 3.1
-	 */ 
+	 */
 	public boolean isVarargs();
-	
-	
-	/**
-	 * Returns the resolved default value of an annotation type member, 
-	 * or <code>null</code> if the member has no default value, or if this
-	 * is not the binding for an annotation type member.
-	 * <p>
-	 * Resolved values are represented as follows (same as for
-	 * {@link IMemberValuePairBinding#getValue()}):
-	 * <ul>
-	 * <li>Primitive type - the equivalent boxed object</li>
-	 * <li>java.lang.Class - the <code>ITypeBinding</code> for the class object</li>
-	 * <li>java.lang.String - the string value itself</li>
-	 * <li>enum type - the <code>IVariableBinding</code> for the enum constant</li>
-	 * <li>annotation type - an <code>IAnnotationBinding</code></li>
-	 * <li>array type - an <code>Object[]</code> whose elements are as per above
-	 * (the language only allows single dimensional arrays in annotations)</li>
-	 * </ul>
-	 * 
-	 * @return the default value of this annotation type member, or <code>null</code>
-	 * if none or not applicable
-	 * @since 3.2
-	 */
-	public Object getDefaultValue();
-	
-	/**
-	 * Returns whether this is the binding for an annotation type member.
-	 * 
-	 * @return <code>true</code> iff this is the binding for an annotation type member
-	 *         and <code>false</code> otherwise
-	 * @since 3.2
-	 */
-	public boolean isAnnotationMember();
-		
+
 }

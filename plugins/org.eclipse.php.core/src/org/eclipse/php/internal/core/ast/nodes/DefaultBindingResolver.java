@@ -7,19 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.WorkingCopyOwner;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
  * @author Roy, 2008
  *
  */
 public class DefaultBindingResolver extends BindingResolver {
-		
+
 	/*
 	 * Holds on binding tables that can be shared by several ASTs.
 	 */
@@ -47,7 +45,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * The shared binding tables accros ASTs.
 	 */
 	BindingTables bindingTables;
-	
+
 	/**
 	 * Shared source module for this binding resolver, used when resolving types
 	 */
@@ -62,7 +60,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * Used to resolve types of expressions
 	 */
 	private BindingUtility bindingUtil;
-	
+
 	/**
 	 * @param sourceModule of this resolver
 	 */
@@ -70,6 +68,72 @@ public class DefaultBindingResolver extends BindingResolver {
 		this.sourceModule = sourceModule;
 		this.workingCopyOwner = owner;
 		this.bindingUtil = new BindingUtility(this.sourceModule);
+		this.bindingTables = new BindingTables();
+	}
+
+	/**
+	 * Returns the new type binding corresponding to the given type. 
+	 * 
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param type the given type
+	 * @return the new type binding
+	 */
+	ITypeBinding getTypeBinding(IType type) {
+		if (type != null) {
+			// Cache?
+			return new TypeBinding(this, new PHPClassType(type.getElementName()), type);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the new variable binding corresponding to the given old variable binding.
+	 * 
+	 * @param field An {@link IField}
+	 * @return the new variable binding, or null in case the given field is null.
+	 */
+	IVariableBinding getVariableBinding(IField field) {
+		if (field != null) {
+			// Cache?
+			return new VariableBinding(this, field);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the new method binding corresponding to the given {@link IMethod}.
+	 *
+	 * @param method An {@link IMethod}
+	 * @return the new method binding
+	 */
+	public IMethodBinding getMethodBinding(IMethod method) {
+		if (method != null) {
+			// Cache?
+			return new MethodBinding(this, method);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the {@link IEvaluatedType} according to the offset and the length.
+	 */
+	public IEvaluatedType getEvaluatedType(int offset, int length) {
+		return bindingUtil.getType(offset, length);
+	}
+
+	/**
+	 * Returns an {@link IModelElement} array according to the offset and the length.
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 */
+	public IModelElement[] getModelElements(int offset, int length) {
+		return bindingUtil.getModelElement(offset, length);
 	}
 
 	/**
@@ -80,10 +144,11 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (expression == null) {
 			throw new IllegalArgumentException("Can not resolve null expression");
 		}
-		
-		IEvaluatedType type = this.bindingUtil.getType(expression.getStart(), expression.getLength());
-		return new TypeBinding(type);
-
+		int start = expression.getStart();
+		int length = expression.getLength();
+		IEvaluatedType type = getEvaluatedType(start, length);
+		IModelElement[] modelElement = getModelElements(start, length);
+		return new TypeBinding(this, type, modelElement);
 		/*
 		 * TODO handle caching
 			IModelElement element;
@@ -103,7 +168,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			if (binding != null) {
 				return (ITypeBinding) binding;
 			}
-	
+		
 			type = this.bindingUtil.getType(expression.getStart(), expression.getLength());
 			binding = new TypeBinding(type);
 			

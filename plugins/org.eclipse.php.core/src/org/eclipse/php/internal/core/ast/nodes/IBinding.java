@@ -88,7 +88,7 @@ public interface IBinding {
 	 * @since 3.2
 	 */
 	public static final int MEMBER_VALUE_PAIR = 6;
-	
+
 	/**
 	 * Kind constant (value ) indicating a source binding.
 	 * Bindings of this kind can be safely cast to <code>ISourceBinding</code>.
@@ -98,15 +98,12 @@ public interface IBinding {
 	 * @since 3.2
 	 */
 	public static final int SOURCE = 7;
-	
 
 	/**
 	 * Returns the kind of bindings this is. That is one of the kind constants:
-	 * <code>PACKAGE</code>,
 	 * 	<code>TYPE</code>,
 	 * 	<code>VARIABLE</code>,
 	 * 	<code>METHOD</code>,
-	 * 	<code>ANNOTATION</code>,
 	 * or <code>MEMBER_VALUE_PAIR</code>.
 	 * <p>
 	 * Note that additional kinds might be added in the
@@ -147,16 +144,6 @@ public interface IBinding {
 	 *    <code>false</code> otherwise
 	 */
 	public boolean isDeprecated();
-
-	/**
-	 * Return whether this binding is created because the bindings recovery is enabled. This binding is considered
-	 * to be incomplete. Its internal state might be incomplete.
-	 *
-	 * @return <code>true</code> if this binding is a recovered binding, and
-	 *    <code>false</code> otherwise
-	 * @since 3.3
-	 */
-	public boolean isRecovered();
 
 	/**
 	 * Returns whether this binding is synthetic. A synthetic binding is one that
@@ -248,7 +235,7 @@ public interface IBinding {
 	 * the key of the generic type or generic method that declares that
 	 * type variable</li>
 	 * <li>wildcard types - the key of the optional wildcard type bound</li>
-     * <li>capture type bindings - the key of the wildcard captured</li>
+	 * <li>capture type bindings - the key of the wildcard captured</li>
 	 * <li>generic type instances - the key of the generic type and the keys
 	 * of the type arguments used to instantiate it, and whether the
 	 * instance is explicit (a parameterized type reference) or
@@ -303,8 +290,7 @@ public interface IBinding {
 	 * @see #getKey()
 	 * @since 3.1
 	 */
-	public boolean isEqualTo(IBinding binding);
-
+	// public boolean isEqualTo(IBinding binding);
 	/**
 	 * Returns a string representation of this binding suitable for debugging
 	 * purposes only.
