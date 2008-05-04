@@ -12,7 +12,7 @@ package org.eclipse.php.internal.core.ast.parser;
 
 import java.util.List;
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Scanner;
+import java_cup.runtime.Scanner;
 
 /**
  * Description:   

@@ -428,7 +428,7 @@ public abstract class PHPLanguageModel implements IPHPLanguageModel {
 			return type;
 		}
 
-		public void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition) {
+		public void handleFunctionDeclarationEnds(boolean isClassFunction, int endPosition) {
 		}
 
 		public void handleClassDeclaration(String className, int modifier, String superClassName, String interfacesNames, PHPDocBlock docInfo, int startPosition, int stopPosition, int lineNumber) {

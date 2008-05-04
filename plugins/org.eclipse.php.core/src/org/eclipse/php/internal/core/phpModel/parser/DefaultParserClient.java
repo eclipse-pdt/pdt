@@ -183,7 +183,18 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 	}
 
-	public void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition) {
+	public void handleFunctionDeclarationEnds(boolean isClassFunction, int endPosition) {
+		String functionName = null;
+		if (!functionsStack.isEmpty()) {
+			PHPFunctionData lastFunction = (PHPFunctionData) functionsStack.peek();
+			if (lastFunction != null) {
+				functionName = lastFunction.getName();
+			}
+		}
+		handleFunctionDeclarationEnds(functionName, isClassFunction, endPosition);
+	}
+
+	private void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition) {
 		PHPFunctionData lastFunction = null;
 		boolean wasEmpty = functionsStack.isEmpty();
 		if (!wasEmpty) {
@@ -201,7 +212,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 
 		hadReturnStatement = false;
-		super.handleFunctionDeclarationEnds(functionName, isClassFunction, endPosition);
+		super.handleFunctionDeclarationEnds(isClassFunction, endPosition);
 	}
 
 	public void handleClassDeclaration(String className, int modifier, String superClassName, String interfacesNames, PHPDocBlock docInfo, int startPosition, int stopPosition, int lineNumber) {

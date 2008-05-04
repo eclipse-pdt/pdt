@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Scanner;
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
+import java_cup.runtime.Scanner;
+import java_cup.runtime.Symbol;
 
 public interface PhpParser {
 

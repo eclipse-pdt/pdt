@@ -1,0 +1,30 @@
+<project default="generateParser">
+
+	<target name="generateParser">
+		<java 
+			jar="../../javacup/java-cup-10k.jar" 
+			input="php_ast_parser.cup"
+			fork="true">
+			<arg value="-compact_red"/>
+			<arg value="-expect"/>
+			<arg value="4"/>
+			<arg value="-parser"/>
+			<arg value="PhpAstParser5"/>
+			<arg value="-symbols"/>
+			<arg value="ParserConstants5"/>
+			<arg value="-interface"/>
+		</java>
+
+		<move
+			file="PhpAstParser5.java"
+			todir="../../../../src/org/eclipse/php/internal/core/ast/parser"/>
+
+		<move
+			file="ParserConstants5.java"
+			todir="../../../../src/org/eclipse/php/internal/core/ast/parser"/>
+
+	</target>
+
+
+
+</project>

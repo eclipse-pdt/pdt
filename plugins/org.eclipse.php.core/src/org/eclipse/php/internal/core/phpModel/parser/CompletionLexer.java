@@ -12,7 +12,7 @@ package org.eclipse.php.internal.core.phpModel.parser;
 
 import java.util.regex.Pattern;
 
-public abstract class CompletionLexer implements org.eclipse.php.internal.core.phpModel.javacup.runtime.Scanner {
+public abstract class CompletionLexer implements java_cup.runtime.Scanner {
 
 	public abstract void setUseAspTagsAsPhp(boolean useAspTagsAsPhp);
 
@@ -44,5 +44,5 @@ public abstract class CompletionLexer implements org.eclipse.php.internal.core.p
 
 	public abstract int yylength();
 
-	public abstract org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol next_token() throws java.io.IOException;
+	public abstract java_cup.runtime.Symbol next_token() throws java.io.IOException;
 }

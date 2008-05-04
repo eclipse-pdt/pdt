@@ -1,0 +1,36 @@
+<project default="generateParser">
+
+	<target name="generateParser">
+		<java 
+			jar="../../javacup/java-cup-10k.jar" 
+			input="php_parser.cup"
+			fork="true">
+			<arg value="-compact_red"/>
+			<arg value="-expect"/>
+			<arg value="4"/>
+			<arg value="-parser"/>
+			<arg value="PhpParser5"/>
+			<arg value="-symbols"/>
+			<arg value="ParserConstants5"/>
+			<arg value="-interface"/>
+		</java>
+
+		<replace
+			file="PhpParser5.java"
+			token="extends java_cup.runtime.lr_parser"
+			value="extends java_cup.runtime.lr_parser implements PhpParser"/>
+		
+		 
+		<move
+			file="PhpParser5.java"
+			todir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php5"/>
+
+		<move
+			file="ParserConstants5.java"
+			todir="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php5"/>
+
+	</target>
+
+
+
+</project>

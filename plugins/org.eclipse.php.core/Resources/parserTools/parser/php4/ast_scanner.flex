@@ -11,8 +11,8 @@
 
 package org.eclipse.php.internal.core.ast.parser;
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.javacup.sym;
+import java_cup.runtime.Symbol;
+import java_cup.sym;
 import org.eclipse.php.internal.core.phpModel.parser.StateStack;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.util.*;
 /* %cup */
 %implements org.eclipse.php.internal.core.ast.parser.AstLexer
 %function next_token
-%type org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol
+%type java_cup.runtime.Symbol
 %eofval{
     return createSymbol(sym.EOF);
 %eofval}
@@ -640,7 +640,7 @@ NEWLINE=("\r"|"\n"|"\r\n")
 //	yymore();
 }
 
-<ST_ONE_LINE_COMMENT>[^\n\r?%>]*{ANY_CHAR} {
+<ST_ONE_LINE_COMMENT>[^\n\r?%>]*(.|{NEWLINE}) {
 	String yytext = yytext();
 	switch (yytext.charAt(yytext.length() - 1)) {
 		case '?':
@@ -653,12 +653,6 @@ NEWLINE=("\r"|"\n"|"\r\n")
 			yybegin(ST_IN_SCRIPTING);
 	}
 //	yymore();
-}
-
-<ST_ONE_LINE_COMMENT>{NEWLINE} {
-	handleLineCommentEnd();
-	yybegin(ST_IN_SCRIPTING);
-	//return T_COMMENT;
 }
 
 <ST_ONE_LINE_COMMENT>"?>"|"%>" {
@@ -777,7 +771,7 @@ yybegin(ST_DOCBLOCK);
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>{ESCAPED_AND_WHITESPACE} {
-    return createSymbol(ParserConstants4.T_ENCAPSED_AND_WHITESPACE);
+    return createFullSymbol(ParserConstants4.T_ENCAPSED_AND_WHITESPACE);
 }
 
 <ST_SINGLE_QUOTE>([^'\\]|\\[^'\\])+ {

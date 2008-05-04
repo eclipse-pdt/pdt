@@ -1,0 +1,13 @@
+<project default="generateScanner">
+
+	<target name="generateScanner">
+		<java jar="..\..\JFlex-1.3.5\JFlex.jar" fork="true">
+			<arg value="-d" />
+			<arg value="../../../../src/org/eclipse/php/internal/core/phpModel/parser/php5" />
+			<arg value="-nobak" />
+			
+			<arg value="completion_scanner.flex" />
+		</java>
+	</target>
+
+</project>

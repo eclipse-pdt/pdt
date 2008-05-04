@@ -2,11 +2,11 @@ package org.eclipse.php.internal.core.phpModel.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_parser.cup,v 1.1 2007/08/13 14:15:31 ggurfinke Exp $
+////    $Id: php_parser.cup,v 1.4.8.1 2008/05/04 10:09:58 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import org.eclipse.php.internal.core.phpModel.javacup.runtime.Symbol;
+import java_cup.runtime.Symbol;
 import java.io.StringReader;
 import java.util.StringTokenizer;
 import org.eclipse.php.internal.core.phpModel.parser.CompletionLexer;
@@ -415,8 +415,9 @@ non terminal dynamic_class_name_reference;
 non terminal String base_variable;
 non terminal dynamic_class_name_variable_properties;
 non terminal dynamic_class_name_variable_property;
-non terminal static_class_constant;
+non terminal String static_class_constant;
 non terminal String base_variable_with_function_calls;
+non terminal function_body; /* added in order to improve error handling */
 
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -586,8 +587,17 @@ T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
     {:
         parser.getParserClient().handleFunctionDeclaration(functionName, false, 0, parser.getPHPDoc(tFuncleft), tFuncleft, functionNameleft, parser.getCurrentLine());
      :}
+function_body;
+
+function_body ::=
 T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:curlyClose
-    {:parser.getParserClient().handleFunctionDeclarationEnds(functionName, false, curlyCloseright);:}
+    {:parser.getParserClient().handleFunctionDeclarationEnds(false, curlyCloseright);:}
+| error:theError
+	{:
+		parser.getParserClient().handleError("function_body::=error ", theErrorleft, theErrorright, parser.getCurrentLine());
+		parser.getParserClient().handleFunctionDeclarationEnds(false, theErrorleft - 1);
+		
+	:}
 ;
 
 unticked_class_declaration_statement ::=
@@ -836,7 +846,7 @@ T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
 :}
 method_body:body
 {:
-    parser.getParserClient().handleFunctionDeclarationEnds(functionName, true, bodyright);
+    parser.getParserClient().handleFunctionDeclarationEnds(true, bodyright);
 :}
 
 | T_VAR_COMMENT:varComment
@@ -854,11 +864,15 @@ method_body:body
         parser.getParserClient().handleObjectInstansiation(objectName, objectType, null, parser.getCurrentLine(), varCommentleft, true);
     }
 :}
+|error:theError
+	{:parser.getParserClient().handleError("class_statement::=error ", theErrorleft, theErrorright, parser.getCurrentLine());:}
 ;
 
 method_body ::=
 T_SEMICOLON /* abstract method */
 | T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE
+|error:theError
+	{:parser.getParserClient().handleError("method_body::=error ", theErrorleft, theErrorright, parser.getCurrentLine());:}
 ;
 
 variable_modifiers ::=
@@ -911,11 +925,11 @@ class_variable_declaration:decl T_COMMA T_VARIABLE:var
 class_constant_declaration ::=
 class_constant_declaration T_COMMA:comma T_STRING:constName T_EQUAL static_scalar:value
 {:
-    parser.getParserClient().handleClassConstDeclaration(constName, parser.getPHPDoc(commaleft), commaleft, valueright, constNameleft);
+    parser.getParserClient().handleClassConstDeclaration(constName, value, parser.getPHPDoc(commaleft), commaleft, valueright, constNameleft);
 :}
 | T_CONST:tconst T_STRING:constName T_EQUAL static_scalar:value
 {:
-    parser.getParserClient().handleClassConstDeclaration(constName, parser.getPHPDoc(tconstleft), tconstleft, valueright, constNameleft);
+    parser.getParserClient().handleClassConstDeclaration(constName, value, parser.getPHPDoc(tconstleft), tconstleft, valueright, constNameleft);
 :}
 
 ;
@@ -1141,15 +1155,19 @@ common_scalar:scalar
 {: RESULT = scalar; :}
 | string_st:str
 {: RESULT = str; :}
-| T_PLUS static_scalar
-| T_MINUS static_scalar
+| T_PLUS static_scalar:str
+{: RESULT = "+" + str; :}
+| T_MINUS static_scalar:str
+{: RESULT = "-" + str; :}
 | T_ARRAY T_OPEN_PARENTHESE static_array_pair_list T_CLOSE_PARENTHESE
-{: RESULT = "array"; :}
-| static_class_constant
+{: RESULT = "array()"; :}
+| static_class_constant:clsConst
+{: RESULT = clsConst; :}
 ;
 
 static_class_constant ::=
-T_STRING T_PAAMAYIM_NEKUDOTAYIM T_STRING
+T_STRING:str T_PAAMAYIM_NEKUDOTAYIM T_STRING:str2
+{: RESULT = str+"::"+str2; :}
 ;
 
 scalar ::=
@@ -1161,7 +1179,6 @@ string_st:str
 | common_scalar:scalar
 {: RESULT = scalar; :}
 | T_QUATE encaps_list T_QUATE
-| T_SINGLE_QUATE encaps_list T_SINGLE_QUATE
 | T_START_HEREDOC encaps_list T_END_HEREDOC
 ;
 
@@ -1340,16 +1357,7 @@ non_empty_array_pair_list T_COMMA expr T_DOUBLE_ARROW expr
 
 encaps_list ::=
 encaps_list encaps_var
-| encaps_list string_st
-| encaps_list T_NUM_STRING
 | encaps_list T_ENCAPSED_AND_WHITESPACE
-| encaps_list T_CHARACTER
-| encaps_list T_BAD_CHARACTER
-| encaps_list T_OPEN_RECT
-| encaps_list T_CLOSE_RECT
-| encaps_list T_CURLY_OPEN
-| encaps_list T_CURLY_CLOSE
-| encaps_list T_OBJECT_OPERATOR
 | /* empty */
 ;
 
