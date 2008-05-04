@@ -378,6 +378,15 @@
 			name="%phpIncludepathPreferenceName"
 			objectClass="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel">
 		</page>
+		<page
+            class="org.eclipse.php.internal.ui.preferences.SaveActionsPreferencePage"
+            id="org.eclipse.php.ui.propertyPages.PHPEditorSaveActionsPreferencePage"
+            name="%saveActionsPreferencePageName"
+            objectClass="org.eclipse.core.resources.IProject">
+         	<filter
+               name="nature"
+               value="org.eclipse.php.core.PHPNature"/>
+      	</page>
 	</extension>
 
 	<!--Adapters:-->
@@ -977,6 +986,13 @@
 			class="org.eclipse.php.internal.ui.preferences.PHPAppearancePreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPAppearancePreferencePage"
 			name="%phpAppearancePageName" />
+		<page
+            category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
+            class="org.eclipse.php.internal.ui.preferences.SaveActionsPreferencePage"
+            id="org.eclipse.php.ui.preferences.PHPEditorSaveActionsPreferencePage"
+            name="%saveActionsPreferencePageName">
+      	</page>
+			
 	</extension>
 
 	<extension point="org.eclipse.ui.keywords">

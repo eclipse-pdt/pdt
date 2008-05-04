@@ -12,66 +12,29 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.IFileBufferStatusCodes;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.manipulation.MultiTextEditWithProgress;
+import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperation;
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.core.internal.filebuffers.Progress;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextOperationTarget;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension4;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IAnnotationHoverExtension;
-import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.jface.text.source.ILineRange;
-import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.ISourceViewerExtension3;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -91,6 +54,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
@@ -98,19 +62,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
-import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
@@ -124,41 +76,20 @@ import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ST;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TextChangeListener;
-import org.eclipse.swt.custom.TextChangedEvent;
-import org.eclipse.swt.custom.TextChangingEvent;
+import org.eclipse.swt.custom.*;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
-import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.text.edits.DeleteEdit;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.ui.texteditor.ResourceAction;
-import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.ui.texteditor.TextNavigationAction;
-import org.eclipse.ui.texteditor.TextOperationAction;
+import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -185,19 +116,22 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 	private PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
 	private CompositeActionGroup fActionGroups;
-	
+
 	/**Indicates whether the structure editor is displaying an external file*/
 	private boolean isExternal;
-	
+
 	/** Cursor dependent actions. */
 	private final List fCursorActions = new ArrayList(5);
 
 	/** The information presenter. */
 	private InformationPresenter fInformationPresenter;
-	
+
 	private IResourceChangeListener fResourceChangeListener;
-	
+
 	private IPreferencesPropagatorListener phpVersionListener;
+
+	private boolean saveActionsEnabled = false;
+	private boolean saveActionsIgnoreEmptyLines = false;
 
 	/**
 	 * This action behaves in two different ways: If there is no current text hover, the javadoc is displayed using
@@ -456,7 +390,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		if (phpVersionListener != null) {
 			return;
 		}
-		
+
 		phpVersionListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 				try {
@@ -475,7 +409,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				} catch (BadLocationException e) {
 				}
 			}
-	
+
 			public IProject getProject() {
 				IFile file = getFile();
 				if (file == null)
@@ -483,7 +417,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				return file.getProject();
 			}
 		};
-		
+
 		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
 	}
 
@@ -514,7 +448,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			return;
 		}
 		fResourceChangeListener = new IResourceChangeListener() {
-	
+
 			public void resourceChanged(IResourceChangeEvent event) {
 				try {
 					if (getSite().getPage().getActiveEditor().equals(PHPStructuredEditor.this) && event.getType() == IResourceChangeEvent.POST_CHANGE && event.getDelta() != null) {
@@ -1582,9 +1516,9 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 				}
 				PhpSourceParser.editFile.set(resource);
 				super.doSetInput(input);
-				
+
 				initPHPVersionsListener();
-				
+
 			} else {
 				super.doSetInput(input);
 				//				close(false);
@@ -1715,7 +1649,7 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			if (PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS.equals(property) || PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS.equals(property)) {
 				updateHoverBehavior();
 			}
-			
+
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
@@ -1724,13 +1658,13 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 					IContentAssistProcessor[] contentAssistProcessors = configuration.getContentAssistProcessors(sourceViewer, PHPPartitionTypes.PHP_DEFAULT);
 					for (IContentAssistProcessor contentAssistProcessor : contentAssistProcessors) {
 						if (contentAssistProcessor instanceof IContentAssistProcessorForPHP) {
-							((IContentAssistProcessorForPHP)contentAssistProcessor).handlePreferenceStoreChanged(event);
+							((IContentAssistProcessorForPHP) contentAssistProcessor).handlePreferenceStoreChanged(event);
 						}
 					}
-					
+
 					if (PreferenceConstants.CODEASSIST_AUTOINSERT.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property)) {
 						StructuredContentAssistant contentAssistant = (StructuredContentAssistant) configuration.getPHPContentAssistant(sourceViewer);
-						
+
 						IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
 						contentAssistant.enableAutoInsert(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
 						contentAssistant.enableAutoActivation(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
@@ -1888,4 +1822,100 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 		}
 		return super.getDocumentProvider();
 	}
+
+	/*
+	 * Gets the preferences set for this editor in the Save Actions section
+	 */
+	public void updateSaveActionsState(IProject project) {
+		PreferencesSupport prefSupport = new PreferencesSupport(PHPUiPlugin.ID, PHPUiPlugin.getDefault().getPreferenceStore());
+		String doCleanupPref = prefSupport.getPreferencesValue(PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES, null, project);
+		String ignoreEmptyPref = prefSupport.getPreferencesValue(PreferenceConstants.FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, null, project);
+
+		saveActionsEnabled = Boolean.parseBoolean(doCleanupPref);
+		saveActionsIgnoreEmptyLines = Boolean.parseBoolean(ignoreEmptyPref);
+	}
+
+	/*
+	 * Added the handling of Save Actions
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#doSave(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	@Override
+	public void doSave(IProgressMonitor progressMonitor) {
+		updateSaveActionsState(getFile().getProject());
+		if (saveActionsEnabled) {
+			RemoveTrailingWhitespaceOperation op = new ExtendedRemoveTrailingWhitespaceOperation(saveActionsIgnoreEmptyLines);
+			try {
+				op.run(FileBuffers.getTextFileBufferManager().getTextFileBuffer(getDocument()), progressMonitor);
+			} catch (OperationCanceledException e) {
+				Logger.logException(e);
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+		super.doSave(progressMonitor);
+	}
+
+	/*
+	 * Operation used for removing whitepsaces from line ends
+	 */
+	class ExtendedRemoveTrailingWhitespaceOperation extends RemoveTrailingWhitespaceOperation {
+
+		// skip empty lines when removing whitespaces
+		private boolean fIgnoreEmptyLines;
+
+		public ExtendedRemoveTrailingWhitespaceOperation(boolean ignoreEmptyLines) {
+			super();
+			fIgnoreEmptyLines = ignoreEmptyLines;
+		}
+
+		/*
+		 * Same as in parent, with the addition of the ability to ignore empty lines - depending on the value of fIgnoreEmptyLines
+		 */
+		@Override
+		protected MultiTextEditWithProgress computeTextEdit(ITextFileBuffer fileBuffer, IProgressMonitor progressMonitor) throws CoreException {
+			IDocument document = fileBuffer.getDocument();
+			int lineCount = document.getNumberOfLines();
+
+			progressMonitor = Progress.getMonitor(progressMonitor);
+			progressMonitor.beginTask(PHPUIMessages.getString("RemoveTrailingWhitespaceOperation_task_generatingChanges"), lineCount);
+			try {
+
+				MultiTextEditWithProgress multiEdit = new MultiTextEditWithProgress(PHPUIMessages.getString("RemoveTrailingWhitespaceOperation_task_applyingChanges"));
+
+				for (int i = 0; i < lineCount; i++) {
+					if (progressMonitor.isCanceled()) {
+						throw new OperationCanceledException();
+					}
+					IRegion region = document.getLineInformation(i);
+					if (region.getLength() == 0) {
+						continue;
+					}
+					int lineStart = region.getOffset();
+					int lineExclusiveEnd = lineStart + region.getLength();
+					int j = lineExclusiveEnd - 1;
+					while (j >= lineStart && Character.isWhitespace(document.getChar(j))) {
+						--j;
+					}
+					++j;
+					// A flag for skipping empty lines, if required
+					if (fIgnoreEmptyLines && j == lineStart) {
+						continue;
+					}
+					if (j < lineExclusiveEnd) {
+						multiEdit.addChild(new DeleteEdit(j, lineExclusiveEnd - j));
+					}
+					progressMonitor.worked(1);
+				}
+
+				return multiEdit.getChildrenSize() <= 0 ? null : multiEdit;
+
+			} catch (BadLocationException x) {
+				throw new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, IFileBufferStatusCodes.CONTENT_CHANGE_FAILED, "", x)); //$NON-NLS-1$
+			} finally {
+				progressMonitor.done();
+			}
+		}
+	}
+
 }
