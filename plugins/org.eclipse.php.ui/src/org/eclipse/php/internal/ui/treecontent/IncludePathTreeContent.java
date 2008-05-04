@@ -411,8 +411,9 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 			return null;
 		final IPath[] modelPaths = includePathTree.getChildren(INCLUDE_PATHS_ROOT_PATH);
 		for (int i = 0; i < modelPaths.length; ++i) {
-			final IPath includeLocation = PHPModelUtil.getIncludeModelLocation((PHPIncludePathModel) includePathTree.getElementData(modelPaths[i]));
-			if (!fileName.startsWith(includeLocation.toOSString()))
+			Object elementData = includePathTree.getElementData(modelPaths[i]);
+			final IPath includeLocation = PHPModelUtil.getIncludeModelLocation((IPhpModel) elementData);
+			if (!fileName.startsWith(includeLocation.toOSString()) && !fileName.startsWith(includeLocation.makeAbsolute().toString()))
 				continue;
 			final IPath fileTreeLocation = modelPaths[i].append(fileLocation.removeFirstSegments(includeLocation.segmentCount()));
 			if (includePathTree.includes(fileTreeLocation)) {
@@ -590,6 +591,7 @@ public class IncludePathTreeContent implements IPHPTreeContentProvider, IWorkspa
 			if (options != null) {
 				if (projectNodes != null) {
 					IncludesNode node = projectNodes.get(project);
+					PHPWorkspaceModelManager.getInstance().removeModelListener(node);
 					options.removeOptionChangeListener(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, node);
 				}
 			}
