@@ -136,6 +136,37 @@ public class DefaultBindingResolver extends BindingResolver {
 		return bindingUtil.getModelElement(offset, length);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveName(org.eclipse.php.internal.core.ast.nodes.Identifier)
+	 */
+	IBinding resolveName(Identifier name) {
+		return resolveExpressionType(name);
+	}
+
+	/**
+	 * Resolves the given method declaration and returns the binding for it.
+	 * <p>
+	 * The implementation of <code>MethodDeclaration.resolveBinding</code>
+	 * forwards to this method. How the method resolves is often a function of
+	 * the context in which the method declaration node is embedded as well as
+	 * the method declaration subtree itself.
+	 * </p>
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param method the method or constructor declaration of interest
+	 * @return the binding for the given method declaration, or
+	 *    <code>null</code> if no binding is available
+	 */
+	IMethodBinding resolveMethod(MethodDeclaration method) {
+		if (method == null || method.getFunction() == null) {
+			throw new IllegalArgumentException("Can not resolve null expression");
+		}
+		return getMethodBinding(sourceModule.getMethod(method.getFunction().getFunctionName().getName()));
+	}
+
 	/**
 	 * @return the resolved type of the given expression, null if can't evaluate
 	 */

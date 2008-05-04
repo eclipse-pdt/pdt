@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
@@ -260,8 +262,25 @@ public class TypeBinding implements ITypeBinding {
 	 *   the empty list
 	 */
 	public ITypeBinding[] getInterfaces() {
-		// TODO Auto-generated method stub
-		return null;
+		if (element != null && element instanceof IType) {
+			IType type = (IType) element;
+			try {
+				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
+				IType[] superTypes = supertypeHierarchy.getSupertypes(type);
+				if (superTypes != null) {
+					ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
+					for (IType superType : superTypes) {
+						if ((superType.getFlags() & Modifiers.AccInterface) != 0) {
+							interfaces.add(resolver.getTypeBinding(superType));
+						}
+					}
+					return interfaces.toArray(new ITypeBinding[interfaces.size()]);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return new ITypeBinding[0];
 	}
 
 	/**
@@ -341,7 +360,22 @@ public class TypeBinding implements ITypeBinding {
 	 * @see AST#resolveWellKnownType(String)
 	 */
 	public ITypeBinding getSuperclass() {
-		// TODO Auto-generated method stub
+		if (element != null && element instanceof IType) {
+			IType type = (IType) element;
+			try {
+				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
+				IType[] superclasses = supertypeHierarchy.getSuperclass(type);
+				if (superclasses != null) {
+					for (IType superClass : superclasses) {
+						if ((superClass.getFlags() & Modifiers.AccInterface) == 0) {
+							return resolver.getTypeBinding(superClass);
+						}
+					}
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
 		return null;
 	}
 
