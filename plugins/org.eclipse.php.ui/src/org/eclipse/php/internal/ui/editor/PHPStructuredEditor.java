@@ -2655,12 +2655,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (locations == null && fMarkImplementors) {
-			// TODO
-			// IOccurrencesFinder finder=
-			// OccurrencesFinderFactory.createImplementorsOccurrencesFinder();
-			// if (finder.initialize(astRoot, selectedNode) == null) {
-			// locations= finder.getOccurrences();
-			// }
+			IOccurrencesFinder finder= OccurrencesFinderFactory.createImplementorsOccurrencesFinder();
+			if (finder.initialize(astRoot, selectedNode) == null) {
+				locations = finder.getOccurrences();
+			}
 		}
 
 		if (locations == null && (selectedNode instanceof Identifier || selectedNode instanceof Scalar)) {

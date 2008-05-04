@@ -70,4 +70,13 @@ public class OccurrencesFinderFactory {
 	public static IOccurrencesFinder createBreakContinueTargetFinder() {
 		return new BreakContinueTargetFinder();
 	}
+	
+	/**
+	 * Creates and returns an {@link ImplementOccurrencesFinder}.
+	 * 
+	 * @return A new {@link ImplementOccurrencesFinder}
+	 */
+	public static IOccurrencesFinder createImplementorsOccurrencesFinder() {
+		return new ImplementOccurrencesFinder();
+	}
 }
