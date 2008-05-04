@@ -94,6 +94,19 @@ public class ASTParser {
 			return null;
 		}
 	}
+	
+	/**
+	 * Factory methods for ASTParser
+	 */
+	public static ASTParser newParser(String version, ISourceModule sourceModule) {
+		try {
+			return new ASTParser(EMPTY_STRING_READER, version, false, sourceModule);
+		} catch (IOException e) {
+			assert false;
+			// Since we use empty reader we cannot have an IOException here
+			return null;
+		}
+	}
 
 	public static ASTParser newParser(Reader reader, String version) throws IOException {
 		return new ASTParser(reader, version, false);
