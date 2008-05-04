@@ -631,7 +631,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
 				fForcedMarkOccurrencesSelection = getSelectionProvider().getSelection();
 				IModelElement sourceModule = getInputModelElement();
-				if (sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
+				if (sourceModule != null && sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
 					try {
 						updateOccurrenceAnnotations((ITextSelection) fForcedMarkOccurrencesSelection, SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_NO, getProgressMonitor()));
 					} catch (ModelException e) {

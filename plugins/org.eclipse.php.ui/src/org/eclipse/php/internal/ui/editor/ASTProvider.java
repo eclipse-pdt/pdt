@@ -248,7 +248,7 @@ public final class ASTProvider {
 		ISourceModule javaElement= null;
 		if (editor instanceof PHPStructuredEditor) {
 			IModelElement inputModelElement = ((PHPStructuredEditor) editor).getInputModelElement();
-			if (inputModelElement.getElementType() == IModelElement.SOURCE_MODULE) {
+			if (inputModelElement != null && inputModelElement.getElementType() == IModelElement.SOURCE_MODULE) {
 				javaElement= (ISourceModule) inputModelElement;
 			}			
 		}
