@@ -39,13 +39,19 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected PHPOutlineContentProvider fContentProvider = null;
 	protected PHPOutlineLabelProvider fLabelProvider = null;
 	IPHPTreeContentProvider[] treeProviders;
+	private IPropertyChangeListener propertyChangeListener;
+	private ChangeOutlineModeAction changeOutlineModeActionPHP;
+	private ChangeOutlineModeAction changeOutlineModeActionHTML;
 
 	protected IContributionItem[] createMenuContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
-		final IContributionItem showPHPItem = new ActionContributionItem(new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_php"), PHPOutlineContentProvider.MODE_PHP, viewer));
-		ChangeOutlineModeAction action = new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_html"), PHPOutlineContentProvider.MODE_HTML, viewer);
-		action.addPropertyChangeListener(new IPropertyChangeListener() {
+		
+		changeOutlineModeActionPHP = new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_php"), PHPOutlineContentProvider.MODE_PHP, viewer);
+		final IContributionItem showPHPItem = new ActionContributionItem(changeOutlineModeActionPHP);
 
+		changeOutlineModeActionHTML = new ChangeOutlineModeAction(PHPUIMessages.getString("PHPOutlinePage_mode_html"), PHPOutlineContentProvider.MODE_HTML, viewer);
+		
+		propertyChangeListener = new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals("checked")) { //$NON-NLS-1$
 					boolean checked = ((Boolean) event.getNewValue()).booleanValue();
@@ -53,11 +59,11 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 						sortAction.setEnabled(!checked);
 					}
 				}
-
 			}
-
-		});
-		final IContributionItem showHTMLItem = new ActionContributionItem(action);
+		};
+		changeOutlineModeActionHTML.addPropertyChangeListener(propertyChangeListener);
+		
+		final IContributionItem showHTMLItem = new ActionContributionItem(changeOutlineModeActionHTML);
 		items = super.createMenuContributions(viewer);
 		if (items == null)
 			items = new IContributionItem[] { showPHPItem, showHTMLItem };
@@ -68,7 +74,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			combinedItems[items.length + 1] = showHTMLItem;
 			items = combinedItems;
 		}
-		if (action.isChecked()) {
+		if (changeOutlineModeActionHTML.isChecked()) {
 			sortAction.setEnabled(false);
 		}
 		return items;
@@ -108,6 +114,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	DoubleClickListener doubleClickListener = new DoubleClickListener();
 	private SortAction sortAction;
 	private JFaceNodeLabelProvider fSimpleLabelProvider;
+	private ShowGroupsAction fShowGroupsAction;
 
 	public DoubleClickListener getDoubleClickListener() {
 		return doubleClickListener;
@@ -115,7 +122,9 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
-		final IContributionItem showGroupsItem = new ActionContributionItem(new ShowGroupsAction("Show Groups", viewer)); //$NON-NLS-1$
+		fShowGroupsAction = new ShowGroupsAction("Show Groups", viewer);
+		final IContributionItem showGroupsItem = new ActionContributionItem(fShowGroupsAction); //$NON-NLS-1$
+		
 		// fixed bug 174653
 		// use only the toggleLinking menu and dispose the others
 		IContributionItem[] menuContributions = super.createMenuContributions(viewer);
@@ -139,6 +148,16 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		}
 		return items;
 
+	}
+	
+	public void unconfigure(TreeViewer viewer) {
+		if (fShowGroupsAction != null) {
+			fShowGroupsAction.dispose();
+		}
+		if (changeOutlineModeActionHTML != null && propertyChangeListener != null) {
+			changeOutlineModeActionHTML.removePropertyChangeListener(propertyChangeListener);
+		}
+		super.unconfigure(viewer);
 	}
 
 	public IContentProvider getContentProvider(final TreeViewer viewer) {

@@ -24,13 +24,15 @@ public class ShowGroupsAction extends Action {
 	public static final String PREF_SHOW_GROUPS = "ShowGroupsAction.show"; //$NON-NLS-1$
 
 	private TreeViewer treeViewer;
+	private IPropertyChangeListener propertyChangeListener;
 
 	public ShowGroupsAction(String label, TreeViewer treeViewer) {
 		super(label, AS_CHECK_BOX); //$NON-NLS-1$
 		this.treeViewer = treeViewer;
 		PHPPluginImages.setLocalImageDescriptors(this, "showGroups.gif"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.getString("ShowGroupsAction.1")); //$NON-NLS-1$
-		PHPUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
+		
+		propertyChangeListener = new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(ChangeOutlineModeAction.PREF_OUTLINEMODE)) {
@@ -38,9 +40,14 @@ public class ShowGroupsAction extends Action {
 				}
 
 			}
-		});
+		};
+		PHPUiPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(propertyChangeListener);
 		boolean show = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_SHOW_GROUPS); //$NON-NLS-1$
 		setChecked(show);
+	}
+	
+	public void dispose() {
+		PHPUiPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(propertyChangeListener);
 	}
 
 	public void run() {
