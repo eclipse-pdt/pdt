@@ -88,7 +88,7 @@ public class ContextParserClient implements ParserClient {
 		updateContext();
 	}
 
-	public void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition) {
+	public void handleFunctionDeclarationEnds(boolean isClassFunction, int endPosition) {
 		if (!functions.isEmpty()) {
 			this.functions.pop();
 		}

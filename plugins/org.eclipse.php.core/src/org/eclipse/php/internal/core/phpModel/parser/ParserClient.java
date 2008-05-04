@@ -25,7 +25,7 @@ public interface ParserClient {
 
 	public void handleFunctionDeclaration(String functionName, boolean isClassFunction, int modifier, PHPDocBlock docInfo, int startPosition, int stopPosition, int lineNumber);
 
-	public void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition);
+	public void handleFunctionDeclarationEnds(boolean isClassFunction, int endPosition);
 
 	public void handleFunctionParameter(String classType, String variableName, boolean isReference, boolean isConst, String defaultValue, int startPosition, int endPosition, int stopPosition, int lineNumber);
 

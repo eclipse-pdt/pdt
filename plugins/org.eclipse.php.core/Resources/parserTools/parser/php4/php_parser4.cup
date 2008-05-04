@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.phpModel.parser.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_parser4.cup,v 1.3 2008/03/11 12:06:46 ggurfinke Exp $
+////    $Id: php_parser4.cup,v 1.4 2008/05/04 10:10:51 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -378,6 +378,8 @@ non terminal String cvar_without_objects;
 non terminal isset_variables;
 non terminal String tracked_variable;
 non terminal ref_list;
+non terminal function_body; /* added in order to improve error handling */
+non terminal method_body; /* added in order to improve error handling */
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
 precedence left T_COMMA;
@@ -509,8 +511,7 @@ T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
     {:
         parser.getParserClient().handleFunctionDeclaration(functionName, false, 0, parser.getPHPDoc(tFuncleft), tFuncleft, functionNameleft, parser.getCurrentLine());
      :}
-T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:curlyClose
-    {:parser.getParserClient().handleFunctionDeclarationEnds(functionName, false, curlyCloseright);:}
+function_body
 /* old_function support was removed */
 | T_CLASS:modifier T_STRING:className
     {: parser.getParserClient().hadleClassDeclarationStarts(className, modifierleft);
@@ -527,6 +528,16 @@ T_EXTENDS T_STRING:superClassName
     :}
 T_CURLY_OPEN class_statement_list T_CURLY_CLOSE:end_curly
     {: parser.getParserClient().handleClassDeclarationEnds(className, end_curlyright); :}
+;
+
+function_body ::=
+T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:curlyClose
+    {:parser.getParserClient().handleFunctionDeclarationEnds(false, curlyCloseright);:}
+|error:theError
+	{:
+		parser.getParserClient().handleError("function_body::=error ", theErrorleft, theErrorright, parser.getCurrentLine());
+		parser.getParserClient().handleFunctionDeclarationEnds(false, theErrorleft - 1);
+	:}
 ;
 
 foreach_optional_arg ::=
@@ -701,9 +712,9 @@ T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
     int leftPosition = tfuncleft;
     parser.getParserClient().handleFunctionDeclaration(functionName, true, PhpParser4.ZERO_INTEGER.intValue(), parser.getPHPDoc(leftPosition), leftPosition, functionNameleft, parser.getCurrentLine());
 :}
-T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:close
+method_body:body
 {:
-    parser.getParserClient().handleFunctionDeclarationEnds(functionName, true, closeright);
+    parser.getParserClient().handleFunctionDeclarationEnds(true, bodyright);
 :}
 /* old_function support was removed */
 | T_VAR_COMMENT:varComment
@@ -721,6 +732,14 @@ T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:close
         parser.getParserClient().handleObjectInstansiation(objectName, objectType, null, parser.getCurrentLine(), varCommentleft, true);
     }
 :}
+|error:theError
+	{:parser.getParserClient().handleError("class_statement::=error ", theErrorleft, theErrorright, parser.getCurrentLine());:}
+;
+
+method_body ::=
+T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE
+|error:theError
+	{:parser.getParserClient().handleError("method_body::=error ", theErrorleft, theErrorright, parser.getCurrentLine());:}
 ;
 
 is_reference ::=

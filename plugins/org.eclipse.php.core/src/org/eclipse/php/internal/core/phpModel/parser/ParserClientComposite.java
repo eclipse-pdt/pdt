@@ -41,10 +41,10 @@ public class ParserClientComposite extends HashSet implements ParserClient {
 		}
 	}
 
-	public void handleFunctionDeclarationEnds(String functionName, boolean isClassFunction, int endPosition) {
+	public void handleFunctionDeclarationEnds(boolean isClassFunction, int endPosition) {
 		for (Iterator iter = iterator(); iter.hasNext();) {
 			ParserClient parserClient = (ParserClient) iter.next();
-			parserClient.handleFunctionDeclarationEnds(functionName, isClassFunction, endPosition);
+			parserClient.handleFunctionDeclarationEnds(isClassFunction, endPosition);
 		}
 	}
 

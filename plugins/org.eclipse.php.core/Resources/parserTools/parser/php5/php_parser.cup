@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.phpModel.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_parser.cup,v 1.5 2008/03/11 12:06:40 ggurfinke Exp $
+////    $Id: php_parser.cup,v 1.6 2008/05/04 10:10:51 ggurfinke Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -417,6 +417,7 @@ non terminal dynamic_class_name_variable_properties;
 non terminal dynamic_class_name_variable_property;
 non terminal String static_class_constant;
 non terminal String base_variable_with_function_calls;
+non terminal function_body; /* added in order to improve error handling */
 
 
 precedence left T_INCLUDE, T_INCLUDE_ONCE, T_EVAL, T_REQUIRE, T_REQUIRE_ONCE;
@@ -586,8 +587,17 @@ T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
     {:
         parser.getParserClient().handleFunctionDeclaration(functionName, false, 0, parser.getPHPDoc(tFuncleft), tFuncleft, functionNameleft, parser.getCurrentLine());
      :}
+function_body;
+
+function_body ::=
 T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE:curlyClose
-    {:parser.getParserClient().handleFunctionDeclarationEnds(functionName, false, curlyCloseright);:}
+    {:parser.getParserClient().handleFunctionDeclarationEnds(false, curlyCloseright);:}
+| error:theError
+	{:
+		parser.getParserClient().handleError("function_body::=error ", theErrorleft, theErrorright, parser.getCurrentLine());
+		parser.getParserClient().handleFunctionDeclarationEnds(false, theErrorleft - 1);
+		
+	:}
 ;
 
 unticked_class_declaration_statement ::=
@@ -836,7 +846,7 @@ T_OPEN_PARENTHESE parameter_list T_CLOSE_PARENTHESE
 :}
 method_body:body
 {:
-    parser.getParserClient().handleFunctionDeclarationEnds(functionName, true, bodyright);
+    parser.getParserClient().handleFunctionDeclarationEnds(true, bodyright);
 :}
 
 | T_VAR_COMMENT:varComment
@@ -854,11 +864,15 @@ method_body:body
         parser.getParserClient().handleObjectInstansiation(objectName, objectType, null, parser.getCurrentLine(), varCommentleft, true);
     }
 :}
+|error:theError
+	{:parser.getParserClient().handleError("class_statement::=error ", theErrorleft, theErrorright, parser.getCurrentLine());:}
 ;
 
 method_body ::=
 T_SEMICOLON /* abstract method */
 | T_CURLY_OPEN inner_statement_list T_CURLY_CLOSE
+|error:theError
+	{:parser.getParserClient().handleError("method_body::=error ", theErrorleft, theErrorright, parser.getCurrentLine());:}
 ;
 
 variable_modifiers ::=
