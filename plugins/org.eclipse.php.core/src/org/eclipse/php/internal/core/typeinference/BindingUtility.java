@@ -117,7 +117,7 @@ public class BindingUtility {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 		return typeInferencer.evaluateType(new ExpressionTypeGoal(context, node), timeLimit);
 	}
-	
+
 	protected ContextFinder getContext(SourceRange sourceRange) {
 		ContextFinder contextFinder = new ContextFinder(sourceRange);
 		try {
@@ -131,7 +131,7 @@ public class BindingUtility {
 		}
 		return contextFinder;
 	}
-	
+
 	protected IEvaluatedType getType(SourceRange sourceRange) {
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			ContextFinder contextFinder = getContext(sourceRange);
@@ -139,7 +139,7 @@ public class BindingUtility {
 		}
 		return evaluatedTypesCache.get(sourceRange);
 	}
-	
+
 	/**
 	 * This method returns model elements for the given AST expression node.
 	 * This method uses cached evaluated type from previous evaluations (if exists).
@@ -154,7 +154,7 @@ public class BindingUtility {
 		if (node == null) {
 			throw new NullPointerException();
 		}
-		return getModelElement(new SourceRange(node));
+		return getModelElement(new SourceRange(node), true);
 	}
 
 	/**
@@ -176,7 +176,23 @@ public class BindingUtility {
 		if (!elementModule.equals(sourceModule)) {
 			throw new IllegalArgumentException("Unknown model element");
 		}
-		return getModelElement(new SourceRange(element.getSourceRange()));
+		return getModelElement(new SourceRange(element.getSourceRange()), true);
+	}
+
+	/**
+	 * This method returns model elements for the expression under the given offset and length, and
+	 * will filter the results using the file-network.
+	 * This method uses cached evaluated type from previous evaluations (if exists).
+	 *
+	 * @param startOffset Starting offset of the expression.
+	 * @param length Length of the expression.
+	 * @return model element or <code>null</code> in case it couldn't be found
+	 *
+	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
+	 * @see #getModelElement(int, int, boolean)
+	 */
+	public IModelElement[] getModelElement(int startOffset, int length) {
+		return getModelElement(startOffset, length, true);
 	}
 
 	/**
@@ -185,21 +201,22 @@ public class BindingUtility {
 	 *
 	 * @param startOffset Starting offset of the expression.
 	 * @param length Length of the expression.
+	 * @param filter Filter the results using the 'File-Network'.
 	 * @return model element or <code>null</code> in case it couldn't be found
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length) {
-		return getModelElement(new SourceRange(startOffset, length));
+	public IModelElement[] getModelElement(int startOffset, int length, boolean filter) {
+		return getModelElement(new SourceRange(startOffset, length), filter);
 	}
-	
-	protected IModelElement[] getModelElement(SourceRange sourceRange) {
+
+	protected IModelElement[] getModelElement(SourceRange sourceRange, boolean filter) {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
 		}
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
-		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext());
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext(), filter);
 	}
 
 	private class SourceRange {
@@ -211,9 +228,9 @@ public class BindingUtility {
 			length = sourceRange.getLength();
 		}
 
-		public SourceRange(int offset, int length){
-			this.length= length;
-			this.offset= offset;
+		public SourceRange(int offset, int length) {
+			this.length = length;
+			this.offset = offset;
 		}
 
 		public SourceRange(ASTNode node) {
@@ -320,7 +337,7 @@ public class BindingUtility {
 				argTypes.add(UnknownType.INSTANCE);
 			}
 			IContext parent = contextStack.peek();
-			ModuleDeclaration rootNode = ((ISourceModuleContext)parent).getRootNode();
+			ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
 			contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
 			return visitGeneral(node);
 		}
