@@ -516,7 +516,7 @@ public final class ASTProvider {
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
 		
-		final ASTParser parser = ASTParser.newParser(SHARED_AST_LEVEL);
+		final ASTParser parser = ASTParser.newParser(SHARED_AST_LEVEL, input);
 		// parser.setResolveBindings(true);
 		// parser.setStatementsRecovery(SHARED_AST_STATEMENT_RECOVERY);
 		// parser.setBindingsRecovery(SHARED_BINDING_RECOVERY);
