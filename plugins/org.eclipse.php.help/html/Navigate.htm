@@ -16,20 +16,20 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-p.whs1 { font-weight:bold; }
-table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
-col.whs3 { width:9.73%; }
-col.whs4 { width:12.655%; }
-col.whs5 { width:74.775%; }
-tr.whs6 { x-cell-content-align:top; }
-td.whs7 { width:9.73%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-td.whs8 { width:12.655%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-td.whs9 { width:74.775%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-td.whs10 { width:9.73%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-td.whs11 { width:12.655%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-td.whs12 { width:74.775%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-p.whs13 { font-weight:normal; }
-img_whs14 { border:none; width:105px; height:152px; float:none; border-style:none; }
+div.whs1 { float:none; }
+p.whs2 { font-weight:bold; }
+table.whs3 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs4 { width:9.73%; }
+col.whs5 { width:12.655%; }
+col.whs6 { width:74.775%; }
+tr.whs7 { x-cell-content-align:top; }
+td.whs8 { width:9.73%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs9 { width:12.655%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs10 { width:74.775%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs11 { width:9.73%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs12 { width:12.655%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs13 { width:74.775%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+p.whs14 { font-weight:normal; }
 table.whs15 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs16 { width:7.093%; }
 col.whs17 { width:92.907%; }
@@ -78,7 +78,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nReference\nPHP Perspective Menus\nNavigate");
+	addTocInfo("PDT Help\nReference\nPHP Perspective Menus\nNavigate");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Refactor.htm","Search.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -87,10 +88,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Navigate</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -115,96 +113,99 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;"><span style="x-condition: PDT;">Navigate</span></p>
+<h1>Navigate</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
 <p>The Navigate menu allows you to navigate through your scripts in order 
  to find information and text.</p>
-<p class="whs1">&nbsp;</p>
-<p class="whs1">The options available from the Navigate menu 
+<p class="whs2">&nbsp;</p>
+<p class="whs2">The options available from the Navigate menu 
  are:</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='100%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
 //--></script>
-<col class="whs3">
 <col class="whs4">
 <col class="whs5">
+<col class="whs6">
 
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs7">
-<p class="whs1">Name</td>
-<td width="12.655%" class="whs8">
-<p class="whs1">Shortcut</td>
-<td width="74.775%" class="whs9">
-<p class="whs1">Description</td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">Go Into</td>
-<td width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs8">
+<p class="whs2">Name</td>
+<td width="12.655%" class="whs9">
+<p class="whs2">Shortcut</td>
+<td width="74.775%" class="whs10">
+<p class="whs2">Description</td></tr>
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">Go Into</td>
+<td width="12.655%" class="whs12">
 <p>&nbsp;</td>
-<td width="74.775%" class="whs12">
+<td width="74.775%" class="whs13">
 <p>Goes into a selected folder so that only that folder's contents will 
  be displayed in the Navigator view.</p>
 <p>Note: This will not work in PHP Explorer view.</td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">Go To</td>
-<td width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">Go To</td>
+<td width="12.655%" class="whs12">
 <p>&nbsp;</td>
-<td width="74.775%" class="whs12">
-<p class="whs1">Back </p>
+<td width="74.775%" class="whs13">
+<p class="whs2">Back </p>
 <p>Displays the previously displayed hierarchy in the Navigator view.</td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">&nbsp;</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="9.73%" class="whs11">
+<p class="whs2">&nbsp;</td>
+<td colspan="1" rowspan="1" width="12.655%" class="whs12">
 <p>&nbsp;</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
-<p class="whs1">Forward<span style="font-weight: normal;"><br>
+<td colspan="1" rowspan="1" width="74.775%" class="whs13">
+<p class="whs2">Forward<span style="font-weight: normal;"><br>
 Returns to the display from which the back button was pressed in the Navigator 
- view..</span></td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">&nbsp;</td>
-<td width="12.655%" class="whs11">
+ view.</span></td></tr>
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">&nbsp;</td>
+<td width="12.655%" class="whs12">
 <p>&nbsp;</td>
-<td width="74.775%" class="whs12">
-<p class="whs1">Up one level</p>
-<p>Will go up one level in the hierarchy in the Navigator view..</td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">&nbsp;</td>
-<td width="12.655%" class="whs11">
+<td width="74.775%" class="whs13">
+<p class="whs2">Up one level</p>
+<p>Will go up one level in the hierarchy in the Navigator view.</td></tr>
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">&nbsp;</td>
+<td width="12.655%" class="whs12">
 <p>&nbsp;</td>
-<td width="74.775%" class="whs12">
-<p class="whs1">Resource</p>
+<td width="74.775%" class="whs13">
+<p class="whs2">Resource</p>
 <p>Goes to a resource within the files and folders displayed in the Navigator 
  view.<br>
 Enter the first few letters of the a resource in the Go To Resource dialog, 
  and select the required one from the list.</p>
 <p>Note: This functionality will not work in the PHP Explorer view.</td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">&nbsp;</td>
-<td width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">&nbsp;</td>
+<td width="12.655%" class="whs12">
 <p>Ctrl+Shift+P</td>
-<td width="74.775%" class="whs12">
-<p class="whs1">Matching Bracket</p>
+<td width="74.775%" class="whs13">
+<p class="whs2">Matching Bracket</p>
 <p>Jumps to a bracket's pair.</p>
-<p class="whs13">Clicking to the right of a bracket will 
+<p class="whs14">Clicking to the right of a bracket will 
  highlight its matching pair. To jump to the matching bracket, press Ctrl+Shift+P.</td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">Open Declaration</td>
-<td width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">Open Declaration</td>
+<td width="12.655%" class="whs12">
 <p>F3</td>
-<td width="74.775%" class="whs12">
+<td width="74.775%" class="whs13">
 <p>Goes to the declaration of an item selected in the editor.</td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">Open PHP Element...</td>
-<td width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">Open PHP Element...</td>
+<td width="12.655%" class="whs12">
 <p>Alt+Shift+G</td>
-<td width="74.775%" class="whs12">
+<td width="74.775%" class="whs13">
 <p>Navigates to declarations of classes, functions and constants in other 
  files.</p>
 <p>Choosing this option will cause an Open PHP Element dialog to be displayed. 
@@ -213,67 +214,64 @@ Enter the first few letters of the a resource in the Go To Resource dialog,
 <p>Select the required element and click OK. </p>
 <p>The file containing the element will be opened, and the element will 
  be highlighted. </td></tr>
-<tr valign="top" class="whs6">
-<td width="9.73%" class="whs10">
-<p class="whs1">Open Resource...</td>
-<td width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td width="9.73%" class="whs11">
+<p class="whs2">Open Resource...</td>
+<td width="12.655%" class="whs12">
 <p>Ctrl+Shift+R</td>
-<td width="74.775%" class="whs12">
+<td width="74.775%" class="whs13">
 <p>Opens files within the same project as the active file.</p>
 <p>An Open Resource dialog will appear. Enter the first few letters of 
  the required file to see a list of matching files.</p>
 <p>Select the required file and click OK to open it in an editor window.</td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">Show In</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="9.73%" class="whs11">
+<p class="whs2">Show In</td>
+<td colspan="1" rowspan="1" width="12.655%" class="whs12">
 <p>Alt+Shift+W</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
+<td colspan="1" rowspan="1" width="74.775%" class="whs13">
+<p><span style="font-weight: bold;"><B>PHP Explorer - </B></span>Displays the 
+ current active file in the PHP Explorer view.</p>
 <p><span style="font-weight: bold;"><B>Navigator</B></span> - Displays the current 
- active file in the Navigator view.</td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">&nbsp;</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
-<p>&nbsp;</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
-<p><span style="font-weight: bold;"><B>Outline</B></span> - Displays an element 
+ active file in the Navigator view.</p>
+<p><span style="font-weight: bold;"><B>Outline -</B></span> Displays an element 
  in the Outline view.</td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">Next / Previous Annotation</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="9.73%" class="whs11">
+<p class="whs2">Next / Previous </td>
+<td colspan="1" rowspan="1" width="12.655%" class="whs12">
 <p>Ctrl+.<br>
 Ctrl+,</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
+<td colspan="1" rowspan="1" width="74.775%" class="whs13">
 <p>Goes to the next / previous annotation in the script.</p>
 <p>Possible annotations are: Bookmarks, Diff additions, Diff changes, Errors, 
  Info, Search Results, Spelling Errors, Tasks and Warnings.</p>
 <p>Click the arrow next to the next / previous annotation icon on the toolbar 
  to configure which types of annotations should be included.</p>
-<p>&nbsp;<img src="annotation_icon.png" x-maintain-ratio="TRUE" width="105px" height="152px" border="0" class="img_whs14"> </td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">Last Edit Location</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
+<p>Possible annotation types are Bookmarks, Diff Additions, Diff Changes, 
+ Errors, Info, Search Results, Spelling Errors, Tasks and Warnings. </td></tr>
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="9.73%" class="whs11">
+<p class="whs2">Last Edit Location</td>
+<td colspan="1" rowspan="1" width="12.655%" class="whs12">
 <p>Ctrl+Q</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
+<td colspan="1" rowspan="1" width="74.775%" class="whs13">
 <p>Jumps to the last location that was edited.</td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">Go to Line...</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="9.73%" class="whs11">
+<p class="whs2">Go to Line...</td>
+<td colspan="1" rowspan="1" width="12.655%" class="whs12">
 <p>Ctrl+L</p>
 <p>&nbsp;</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
+<td colspan="1" rowspan="1" width="74.775%" class="whs13">
 <p>Allows you to go to a specific line in the active editor.</td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="9.73%" class="whs10">
-<p class="whs1">Back / &nbsp;Forward</td>
-<td colspan="1" rowspan="1" width="12.655%" class="whs11">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="9.73%" class="whs11">
+<p class="whs2">Back / &nbsp;Forward</td>
+<td colspan="1" rowspan="1" width="12.655%" class="whs12">
 <p>Alt+Left</p>
 <p>Alt+Right</td>
-<td colspan="1" rowspan="1" width="74.775%" class="whs12">
+<td colspan="1" rowspan="1" width="74.775%" class="whs13">
 <p>Scrolls through last viewed sections in active and previously edited 
  files in the current session.</td></tr>
 <script language='JavaScript'><!--
@@ -291,7 +289,7 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <tr valign="top" class="whs22"><td width="7.093%" class="whs23">
 <p class="whs20"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs24"></td>
 <td width="92.907%" class="whs25">
-<p class="whs1">Related Links:</p>
+<p class="whs2">Related Links:</p>
 <p class="whs26"><a href="Menus.htm" 
  style="font-weight: normal; x-condition: Online;">Menus</a></p>
 <p><a href="File.htm">File</a></p>
@@ -323,9 +321,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Menus.htm\">PHP Perspective Menus</a> &gt; Navigate</p>");
 
 }
 //-->

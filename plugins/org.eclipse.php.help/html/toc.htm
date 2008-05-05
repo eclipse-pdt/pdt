@@ -17,23 +17,24 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 p.whs1 { line-height:200%; font-weight:bold; }
-p.whs2 { line-height:200%; font-weight:bold; x-condition:PDT; }
-p.whs3 { margin-left:40px; font-weight:bold; line-height:200%; }
-p.whs4 { margin-left:0px; font-weight:bold; line-height:200%; }
-p.whs5 { margin-left:0px; line-height:200%; font-weight:bold; }
+p.whs2 { margin-left:40px; font-weight:bold; }
+p.whs3 { font-weight:bold; line-height:200%; margin-left:40px; }
+p.whs4 { line-height:200%; margin-left:40px; font-weight:bold; }
+p.whs5 { margin-left:40px; font-weight:bold; line-height:200%; }
 p.whs6 { font-weight:bold; line-height:200%; }
-p.whs7 { line-height:200%; font-weight:normal; }
-div.whs8 { width:100%; }
-p.whs9 { text-align:right; x-condition:Online; }
-p.whs10 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs7 { font-weight:bold; margin-left:40px; line-height:200%; }
+p.whs8 { line-height:200%; }
+p.whs9 { margin-left:0px; font-weight:bold; line-height:200%; }
+div.whs10 { width:100%; }
+p.whs11 { text-align:right; x-condition:Online; }
+p.whs12 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript">
 <!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
 {
   var strNSS = "<style type='text/css'>";
-  strNSS += "p.whs4 {margin-left:1pt; }";
-  strNSS += "p.whs5 {margin-left:1pt; }";
+  strNSS += "p.whs9 {margin-left:1pt; }";
   strNSS +="</style>";
   document.write(strNSS);
 }
@@ -70,7 +71,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+	addTocInfo("PDT Help\nTable of Contents");
+addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
 	}
@@ -103,131 +105,161 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Table of Contents</p>
+<h1 class=PDThelp>Table of Contents</h1>
+<h2><span 
+ style="x-condition: PDT;">PHP Development Tools (PDT)</span></h2>
 <p class="whs1">&nbsp;</p>
-<p class="whs2"><a HREF="Welcome.htm" 
- style="x-condition: PDT;">PDT User Guide</a></p>
-<p class="whs1"><a href="Getting_Started.htm" style="font-weight: bold;">Getting 
- Started</a> | <a href="Quick_Start.htm" normal;&quot; style="font-weight: bold;">Quick 
- Start</a></p>
-<p class="whs3">&nbsp;</p>
-<p class="whs4"><a href="Basic_Tutorial.htm">Basic 
- Tutorials</a></p>
-<p class="whs5"><a HREF="Creating_and_Uploading_a_Project.htm">Creating 
- Projects and Files</a> | <a 
- href="Working_with_Code_Assist.htm">Working with Code Assist</a> | <a 
- href="Working_with_the_Debugger.htm" style="font-weight: bold;">Working 
- with the Debugger</a> &nbsp;</p>
-<p class="whs3">&nbsp;</p>
-<p class="whs6"><a href="Concepts.htm"><span 
- style="font-weight: bold;"><B>Concepts</B></span></a></p>
-<p class="whs6"><a href="PHP_Support.htm">PHP 
+<ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1 
+ style="font-weight: bold;"><a href="Getting_Started.htm" style="font-weight: bold;">Getting 
+ Started</a></p></li>
+</ul>
+<p class="whs2"><a href="Quick_Start.htm" 
+ normal;&quot; style="font-weight: bold;">Quick Start</a></p>
+<p class="whs3"><a 
+ href="Basic_Tutorial.htm">Basic Tutorials</a> :</p>
+<p class="whs4"><a 
+ HREF="Creating_and_Uploading_a_Project.htm">Creating Projects and Files</a> 
+ | <a href="Working_with_Code_Assist.htm" style="font-weight: bold;">Working 
+ with Code Assist</a> | <a href="Working_with_the_Debugger.htm" style="font-weight: bold;">Working 
+ with the Debugger</a> </p>
+<p class="whs5">&nbsp;</p>
+<ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1 
+ style="font-weight: bold;"><a href="Concepts.htm">Concepts</a></p></li>
+</ul>
+<p class="whs3"><a href="PHP_Support.htm">PHP 
  Support</a> | <a href="Code_Assist_Concept.htm" style="font-weight: bold;">Code 
- Assist</a> | <a HREF="Automatic_Insertion.htm">Automatic Completion</a> 
- | <a HREF="Matching_Brackets.htm">Matching Brackets</a>| <a HREF="Code_Folding.htm">Code 
- Folding</a> | <a HREF="Syntax_Highlighting.htm">Syntax Coloring</a>  
- | <a HREF="Commenting_Code.htm">Commenting Code</a> | <span style="font-weight: normal;"><a 
- HREF="phpDoc_Comments.htm" style="font-weight: normal;">phpDoc Block Comments</a> 
- | </span><a HREF="Hover_Support.htm">Hover Support</a> | <a HREF="PHP_Manual_Integration.htm">PHP 
- Manual Integration</a> | <a HREF="Real_Time_Error_Detection.htm">Real 
- Time Error Detection</a> <a HREF="Debugging_Concept.htm">Debugging</a> | <a HREF="Path_Mapping.htm">Path 
- Mapping</a> | &nbsp;<a HREF="Include_Paths.htm">Include 
- Paths</a> </p>
-<p class="whs6"><span style="font-weight: bold;"><B>&nbsp;</B></span></p>
-<p class="whs6"><a href="Tasks.htm"><span 
- style="font-weight: bold;"><B>Tasks</B></span></a></p>
-<p class="whs6"><a HREF="File_Creation.htm">Easy 
- File Creation</a> | <a HREF="Creating_a_PHP_File_within_a_Project.htm"><span 
+ Assist</a> | <a HREF="Syntax_Highlighting.htm">Syntax Coloring</a> | <a 
+ HREF="Automatic_Insertion.htm">Automatic Completion</a> | <a HREF="Matching_Brackets.htm">Matching 
+ Brackets</a>| <a HREF="Code_Folding.htm">Code Folding</a> | &nbsp;<a 
+ HREF="Commenting_Code.htm">Commenting Code</a> | <a HREF="phpDoc_Comments.htm">phpDoc 
+ Block Comments</a> | <a HREF="Bookmarks.htm">Bookmarks</a> | &nbsp;<a HREF="Hover_Support.htm">Hover 
+ Support</a> | <a HREF="PHP_Manual_Integration.htm">PHP Manual Integration</a> 
+ | <a HREF="Real_Time_Error_Detection.htm">Real Time Error Detection</a> 
+ | </a>  | </span>&nbsp;<a 
+ HREF="Debugging_Concept.htm">Debugging</a> |<a HREF="Include_Paths.htm">Include Paths</a> &nbsp;| 
+ <a HREF="Path_Mapping.htm">Path Mapping</a> |  | &nbsp;</span>&nbsp;</p>
+<p class="whs6">&nbsp;</p>
+<ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1 
+ style="font-weight: bold;"><a href="Tasks.htm">Tasks</a></p></li>
+</ul>
+<p class="whs7"><a 
+ HREF="File_Creation.htm">Easy File Creation</a> | <a HREF="Creating_a_PHP_File_within_a_Project.htm" 
  style="font-weight: normal;">Creating a PHP File Within a Project</a> 
- | </span><a HREF="Opening_an_External_File_in_Neon.htm"><span style="font-weight: normal;">Opening 
- an External File</a> </span><a href="Using_Code_Assist.htm" style="font-weight: bold;">Using 
+ | <span style="font-weight: normal;"><a HREF="Creating_a_new_PHP_File_Outside_of_a_Project.htm">Creating 
+ a PHP File Outside of a Project</a> | </span><a HREF="Opening_an_External_File_in_Neon.htm" 
+ style="font-weight: normal;">Opening an External File</a> <a href="Using_Code_Assist.htm" style="font-weight: bold;">Using 
  Code Assist</a> | <a HREF="Using_Templates.htm">Using Templates</a> | 
- <a HREF="Searching_for_PHP_Elements.htm">Searching 
- for PHP Elements</a> | <a HREF="Opening_PHP_Elements.htm">Opening PHP 
- Elements</a> | <a HREF="Formatting_Code.htm">Formatting 
- Code</a> | <a HREF="Using_Code_Folding.htm">Using Code Folding</a> | <a 
- HREF="How_to_Comment_and_Uncomment_PHP_Code.htm">Adding Comments</a> | 
- <a HREF="Commenting_PHP_DocBlocks.htm" style="font-weight: normal;">Adding 
- PHP DocBlock Comments</a> | <a HREF="Using_Smart_Goto_Source.htm">Using 
- Smart Goto Source</a> | <span></span><span></span> | </span><span></span><span></span><span></span><a 
+ <a HREF="Formatting_Code.htm">Formatting Code</a> | <a HREF="Using_Code_Folding.htm">Using 
+ Code Folding</a> | &nbsp;<a HREF="Opening_PHP_Elements.htm">Opening 
+ PHP El</a>ements</a> | <a HREF="Opening_PHP_Elements.htm"><a HREF="Searching_for_PHP_Elements.htm">Searching 
+ for PHP Elements</a> | <a HREF="Using_Smart_Goto_Source.htm">Using Smart 
+ Goto Source</a> | </a><a HREF="Opening_PHP_Elements.htm">nd Replacing |</a>&nbsp;&nbsp;<a HREF="How_to_Comment_and_Uncomment_PHP_Code.htm">Adding 
+ Comments</a> | <a HREF="Commenting_PHP_DocBlocks.htm" style="font-weight: normal;">Adding 
+ PHP DocBlock Comments</a> | <span style="font-weight: normal;">&nbsp;Using Local 
+ History | Comparing 
+ Files | Replacing 
+ Files | Restoring 
+ Deleted Files</span> Using CVS | <span 
+ style="font-weight: normal;">Configuring 
+ a CVS Connection</span> | <span style="font-weight: normal;">Importing 
+ Projects from CVS | <a HREF="Accessing_an_Existing_CVS_Checkout.htm">Accessing 
+ an Existing CVS Checkout</a> | Uploading Projects to CVS</span> | Using SVN | 
+ <span style="font-weight: normal;">Configuring an SVN Connection </span>Importing 
+ Projects From SVN<span style="font-weight: normal;"> | Accessing 
+ an Existing SVN Checkout | </span><span style="font-weight: normal;">Uploading 
+ Projects to SVN | </span>&nbsp;FTP 
+ and SFTP Support <span style="font-weight: normal;">| Creating 
+ an FTP/SFTP Connection | Viewing 
+ and Editing Files on an FTP Server | Viewing 
+ and Editing FTP Files in your Workspace</span> | <a HREF="Using_Zend_Framework_Integration.htm">Integrating 
+ with Zend Framework</a> | <span 
+ style="font-weight: normal;">Creating Zend Framework Projects | <a 
+ HREF="Creating_MVC_Files.htm" style="font-weight: normal;">Creating Zend 
+ Framework MVC Files</a> | <a HREF="Searching_the_Zend_Framework_Site.htm" 
+ style="font-weight: normal;">Searching the Zend Framework Site</a> | </span>Using the Data Tools 
+ Platform | <span style="font-weight: normal;">Creating 
+ a Database Connection Profile | Connecting to a Database | Viewing and Editing Database Table Content 
+ | Creating 
+ and Executing an SQL Query</span> | <a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm">Adding 
+ Elements to a Project's Include Path</a> | <a HREF="Adding_a_Server_Path_Map.htm">Adding 
+ a Server Location Path Map</a> | <a 
  HREF="Debugging.htm" style="font-weight: bold;">Using the Debugger</a> 
- | <span style="font-weight: normal;"> <a HREF="Locally_Debugging_a_PHP_Script.htm" 
+ | <a HREF="Locally_Debugging_a_PHP_Script.htm" style="font-weight: normal;"><span 
  style="font-weight: normal;">Locally Debugging a PHP Script</a> | </span><span 
  style="font-weight: normal;"> <a HREF="Debugging_a_PHP_Web_Page.htm" style="font-weight: normal;">Debugging 
- a PHP Web Page</a> | </span><span style="font-weight: normal;"> <a HREF="Analyzing_Debugger_Results.htm" 
- style="font-weight: normal;">Running and Analyzing Debugger Results</a></span> 
- | <a HREF="Adding_a_Server_Path_Map.htm">Adding a Server Location Path 
- Map</a> | <a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm"><span 
- style="font-weight: normal;">Adding Elements to a Project's Include Path</a> 
- </span></p>
-<p class="whs7">&nbsp;</p>
-<p class="whs1"><a HREF="Reference.htm">Reference</a></p>
-<p class="whs4">&nbsp;</p>
-<p class="whs4"><a HREF="PHP_Perspectives_and_Views.htm">PHP 
- Perspectives and Views</a></p>
-<p class="whs4"><a HREF="PHP_Perspective_Views.htm">PHP 
- Perspective</a> | <a HREF="PHP_Explorer_view.htm"><span style="font-weight: normal;">PHP 
- Explorer view</a> | <a HREF="PHP_Functions_View.htm" style="font-weight: normal;">PHP 
- Functions View</a> | <a HREF="Project_Outline_view.htm" style="font-weight: normal;">PHP 
- Project Outline View</a> | <a HREF="PHP_Outline_VIew.htm" style="font-weight: normal;">Outline 
- View</a> | </span></p>
-<p class="whs4"><a HREF="PHP_Debug_Perspective.htm">PHP 
- Debug Perspective</a> | <a HREF="Debug_View.htm"><span style="font-weight: normal;">Debug 
- View</a> | <a HREF="Variables_View.htm" style="font-weight: normal;">Variables 
- View</a> | <a HREF="Breakpoints_View.htm" style="font-weight: normal;">Breakpoints 
- View</a> | <a HREF="Parameter_Stack.htm" style="font-weight: normal;">Parameter 
- Stack View</a> | <a HREF="Debug_Output_View.htm" style="font-weight: normal;">Debug 
- Output View</a> | <a HREF="Browser_Output_View.htm" style="font-weight: normal;">Browser 
- Output View</a></span></p>
-<p class="whs4">&nbsp;</p>
-<p class="whs4"><a HREF="Menus.htm">PHP 
- Perspective Menus</a></p>
-<p class="whs4"><a href="File.htm">File</a> 
- &nbsp;| <a href="New.htm"><span style="font-weight: normal;">New</a> 
- | <a href="Import.htm" style="font-weight: normal;">Import</a> | <a href="Export.htm" 
- style="font-weight: normal;">Export</a></span> | <a href="Edit.htm" style="font-weight: bold;">Edit</a> 
- | <a href="Source.htm" style="font-weight: bold;">Source</a> | <a href="Refactor.htm" 
- style="font-weight: bold;">Refactor</a> | <a href="Navigate.htm" style="font-weight: bold;">Navigate</a> 
- | <a href="Search.htm" style="font-weight: bold;">Search</a> | <a href="Project.htm" 
+ a PHP Web Page</a> </span> 
+ | </span><span style="font-weight: normal;"></span><span style="font-weight: normal;"><a 
+ HREF="Analyzing_Debugger_Results.htm" style="font-weight: normal;">Running 
+ and Analyzing Debugger Results</a> |</span>  | Locally 
+ Profiling a PHP Script | Remotely Profiling a PHP Script | Profiling 
+ a PHP Web Page | Profiling 
+ a URL</span> 
+ | </span> | </span> | </span><span 
+ style="font-weight: normal;">cts Using Zend Guard</span></a></p>
+<p class="whs8">&nbsp;</p>
+<ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1 
+ style="font-weight: bold;"><a HREF="Reference.htm">Reference</a></p></li>
+</ul>
+<p class="whs3"><a 
+ HREF="PHP_Perspectives_and_Views.htm">PHP Perspectives and Views</a>:</p>
+<p class="whs3"><a 
+ HREF="PHP_Perspective_Views.htm">PHP Perspective</a> | <a HREF="PHP_Explorer_view.htm">PHP 
+ Explorer view</a> | <a HREF="PHP_Functions_View.htm">PHP Functions View</a> 
+ | <a HREF="Project_Outline_view.htm">PHP Project Outline View</a> | <a 
+ HREF="PHP_Outline_VIew.htm">Outline View</a> | </p>
+<p class="whs3"><a 
+ HREF="PHP_Debug_Perspective.htm">PHP Debug Perspective</a> | <a HREF="Debug_View.htm">Debug 
+ View</a> | <a HREF="Variables_View.htm">Variables View</a> | <a HREF="Breakpoints_View.htm">Breakpoints 
+ View</a> | <a HREF="Parameter_Stack.htm">Parameter Stack View</a> | <a 
+ HREF="Debug_Output_View.htm">Debug Output View</a> | <a HREF="Browser_Output_View.htm">Browser 
+ Output View</a></p>
+<p class="whs9">&nbsp;</p>
+<p class="whs3"><a 
+ HREF="Menus.htm">PHP Perspective Menus</a>:</p>
+<p class="whs4"><a 
+ href="File.htm">File</a> &nbsp;| <a href="New.htm">New</a> 
+ | <a href="Import.htm">Import</a> | <a href="Export.htm">Export</a> | 
+ <a href="Edit.htm" style="font-weight: bold;">Edit</a> | <a href="Source.htm" 
+ style="font-weight: bold;">Source</a> | <a href="Refactor.htm" style="font-weight: bold;">Refactor</a> 
+ | <a href="Navigate.htm" style="font-weight: bold;">Navigate</a> | <a 
+ href="Search.htm" style="font-weight: bold;">Search</a> | <a href="Project.htm" 
  style="font-weight: bold;">Project</a> | <a href="Run.htm" style="font-weight: bold;">Run</a> 
  | <a href="Window.htm" style="font-weight: bold;">Window</a> | <a href="Navigation.htm" 
  style="font-weight: bold;">Navigation</a> | <a href="Help.htm" style="font-weight: bold;">Help</a></p>
-<p class="whs4"><a HREF="PHP_Perspective_Main_Toolbar.htm">PHP 
- Perspective Main Toolbar</a></p>
-<p class="whs4">&nbsp;</p>
-<p class="whs4"><span 
- style="line-height: 200%;"><a href="Preferences.htm"><span style="font-weight: bold;"><B>PHP 
- Preferences</B></span></a></span></p>
-<p class="whs4"><a href="PHP.htm">PHP 
- Preferences Page </a>&nbsp;| <a href="Appearance.htm" 
+<p class="whs3"><a 
+ HREF="PHP_Perspective_Main_Toolbar.htm">PHP Perspective Main Toolbar</a></p>
+<p class="whs3">&nbsp;</p>
+<p class="whs3"><a 
+ href="Preferences.htm">PHP Preferences</a>:</p>
+<p class="whs4"><a 
+ href="PHP.htm">PHP Preferences Page </a>&nbsp;| <a href="Appearance.htm" 
  style="font-weight: bold;">Appearance Preferences</a> |<a href="Debug.htm" style="font-weight: bold;">Debug 
- Preferences</a> | <a HREF="Installed_Debuggers.htm"><span style="font-weight: normal;">Installed 
- Debuggers</a> | <a HREF="Launching.htm" style="font-weight: normal;">Workbench 
- </span><span style="font-weight: normal;">Options</span></a> &nbsp;| 
+ Preferences</a> | <a HREF="Installed_Debuggers.htm">Installed Debuggers</a> 
+ | <a HREF="Launching.htm">Workbench Options</a> &nbsp;| 
  <a href="Editor.htm" style="font-weight: bold;">Editor Preferences</a> 
- | <a href="Code_Assist.htm"><span style="font-weight: normal;">Code Assist 
- Preferences</a> | <a href="Folding.htm" style="font-weight: normal;">Folding 
- Preferences</a> | <a href="Hovers.htm" style="font-weight: normal;">Hovers 
- Preferences</a> | <a href="Syntax_Coloring.htm" style="font-weight: normal;">Syntax 
- Coloring Preferences</a> | <a href="Task_Tags.htm" style="font-weight: normal;">Task 
- Tags Preferences</a> | <a href="Typing.htm" style="font-weight: normal;">Typing 
- Preferences</a></span> | <a href="Formatter.htm" style="font-weight: bold;">Formatter 
- Preferences</a> | <a href="Path_Variables.htm" 
- style="font-weight: bold;">Path Variables Preferences</a> | <a href="PHP_Executables.htm" 
- style="font-weight: bold;">PHP Executables Preferences</a> | <a href="PHP_Interpreter.htm" 
- style="font-weight: bold;">PHP Interpreter Preferences</a> | <a href="PHP_Manual.htm" 
- style="font-weight: bold;">PHP Manual Preferences</a> | <a href="PHP_Servers.htm" 
- style="font-weight: bold;">PHP Servers Preferences</a> | <a href="Templates.htm" 
- style="font-weight: bold;">Templates Preferences</a> | </p>
-<p class="whs6">&nbsp;</p>
-<p class="whs6"><a href="Keymap.htm">Keymap</a> 
- </p>
-<div placeholder id="footer" class="whs8">
- <p align="right" class="whs9"><span><span 
+ | <a HREF="File_Network.htm">File Network Preferences</a> | <a href="Code_Assist.htm">Code 
+ Assist Preferences</a> | <a href="Folding.htm">Folding Preferences</a> 
+ | <a href="Hovers.htm">Hovers Preferences</a> | <a href="Syntax_Coloring.htm">Syntax 
+ Coloring Preferences</a> | <a href="Task_Tags.htm">Task Tags Preferences</a> 
+ | <a href="Typing.htm">Typing Preferences</a> | <a href="Formatter.htm" 
+ style="font-weight: bold;">Formatter Preferences</a> | <a 
+ href="Path_Variables.htm" style="font-weight: bold;">Path Variables Preferences</a> 
+ | <a href="PHP_Executables.htm" style="font-weight: bold;">PHP Executables 
+ Preferences</a> | <a href="PHP_Interpreter.htm" style="font-weight: bold;">PHP 
+ Interpreter Preferences</a> | <a href="PHP_Manual.htm" style="font-weight: bold;">PHP 
+ Manual Preferences</a> | <a href="PHP_Servers.htm" style="font-weight: bold;">PHP 
+ Servers Preferences</a> | <a 
+ href="Templates.htm" style="font-weight: bold;">Templates Preferences</a> 
+ | </p>
+<p class="whs3">&nbsp;</p>
+<p class="whs3"><a 
+ href="Keymap.htm">Keymap</a>  |  &nbsp;</span></p>
+<div placeholder id="footer" class="whs10">
+ <p align="right" class="whs11"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs10">PHP Development 
+ <p align="center" class="whs12">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

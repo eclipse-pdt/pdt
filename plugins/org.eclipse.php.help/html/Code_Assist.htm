@@ -16,23 +16,30 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-p.whs1 { font-style:normal; }
-img_whs2 { border:none; width:353px; height:446px; float:none; border-style:none; }
-table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs4 { width:7.093%; }
-col.whs5 { width:92.907%; }
-tr.whs6 { x-cell-content-align:top; }
-td.whs7 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs8 { font-size:6pt; }
-td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs11 { border:none; width:28px; height:18px; float:none; border-style:none; }
-td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-p.whs13 { font-weight:bold; }
-p.whs14 { x-condition:Online; }
-div.whs15 { width:100%; }
-p.whs16 { text-align:right; x-condition:Online; }
-p.whs17 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+p.whs2 { font-style:normal; }
+img_whs3 { border:none; width:353px; height:446px; float:none; border-style:none; }
+table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs5 { width:7.093%; }
+col.whs6 { width:92.907%; }
+tr.whs7 { x-cell-content-align:top; }
+td.whs8 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs9 { font-size:6pt; }
+td.whs10 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs11 { font-weight:bold; }
+td.whs12 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs13 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs14 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs15 { list-style:decimal; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs21 { x-condition:Online; }
+div.whs22 { width:100%; }
+p.whs23 { text-align:right; x-condition:Online; }
+p.whs24 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -65,7 +72,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nReference\nPHP Preferences\nEditor Preferences\nCode Assist Preferences");
+	addTocInfo("PDT Help\nReference\nPHP Preferences\nEditor Preferences\nCode Assist Preferences");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Editor.htm","Folding.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -74,10 +82,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Preferences.htm\">PHP Preferences</a> &gt; <a href=\"Editor.htm\">Editor Preferences</a> &gt; Code Assist Preferences</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -102,96 +107,119 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;"><span style="x-condition: PDT;">Code Assist 
- Preferences</span></p>
-<p class=picture style="text-align: left; font-style: normal;" align=left>The 
- Code Assist feature enables the selection and insertion of existing code 
- elements to complete partially entered code. </p>
-<p class="whs1">The Code Assist preferences page allows 
+<h1>Code Assist 
+ Preferences</h1>
+<div class="whs1">
+</div>
+<p class=picture style="text-align: left; font-style: normal;" 
+ align=left>The Code Assist feature enables the selection and insertion 
+ of existing code elements to complete partially entered code. </p>
+<p class="whs2">The Code Assist preferences page allows 
  you to configure your Code Assist preferences.</p>
-<p class="whs1">&nbsp;</p>
+<p class="whs2">&nbsp;</p>
 <p>The Code Assist 
  Preferences page is accessed from Window | Preferences | PHP | Editor 
  | Code Assist.</p>
-<p class=picture style="x-condition: PDT;"><img src="code_assist_preferences_pdt.png" x-maintain-ratio="TRUE" width="353px" height="446px" border="0" class="img_whs2"></p>
-<p>&nbsp;</p>
-<p>Mark the required checkboxes to configure the following options: </p>
-<p class=Strong style="margin-left: 0px;">Options</p>
-<ul><li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Completion 
- Inserts / Completion Overwrites: Select whether to insert new code or 
- overwrite existing code. </p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Insert 
- single proposals automatically: When only one code assist suggestion exists, 
- the code assist suggestion will be inserted automatically. </p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Show 
- variables from other files: Shows variables which are in other files in 
- the project.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>&nbsp;Determine 
- object type from other files: Shows objects from other files in the project.</p></li>
-</ul>
-<p class=Strong style="margin-left: 0px;">Filters</p>
-<ul><li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Show 
- constants assist: Displays constants in Code Assist. </p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Case 
- sensitive for constants: Constants will be case sensitive.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Show 
- class name in Global Completion list: Enables the addition of class names 
- to the code assist list.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Show 
- non-strict options : Will show options which go against PHP strict practice.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Group 
- completion options: Groups options according to element type.</p></li>
-</ul>
-<p class=Strong style="margin-left: 0px;">Auto-activation</p>
-<ul><li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Enable 
- auto activation: Enable code assist to be automatically activated.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Auto 
- activation delay: Determines the delay before the Code Assist box is automatically 
- displayed.</p></li>
-	<li style="margin-left: -20px; x-condition: PDT;" class=p-ListBullet2><p 
- class=ListBullet2>Auto-activation triggers for PHP: Sets the characters 
- that determine PHP context.</p></li>
-	<li style="margin-left: -20px; x-condition: PDT;" class=p-ListBullet2><p 
- class=ListBullet2>Auto-activation triggers for PHPDoc: Sets the characters 
- that determine PHP context.</p></li>
-</ul>
-<p class=Note style="margin-left: 40px;">Note: </p>
-<p class=NoteText style="margin-left: 40px;">A maximum of 4 characters 
- can be entered. </p>
-<p class=ListBullet2 style="margin-left: 0px;">Click Apply to apply your 
- settings.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
-<col class="whs4">
+<p class=picture style="x-condition: PDT;"><img src="code_assist_preferences_pdt.png" x-maintain-ratio="TRUE" width="353px" height="446px" border="0" class="img_whs3"></p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs4">
 <col class="whs5">
+<col class="whs6">
 
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="7.093%" class="whs7">
-<p class="whs8">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs9">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="7.093%" class="whs8">
+<p class="whs9">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs10">
+<p class="whs11">&nbsp;</td></tr>
+<tr valign="top" class="whs7">
+<td width="7.093%" class="whs12">
+<p class="whs9"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs13"></td>
+<td width="92.907%" class="whs14">
+<p class="whs11">To configure Code Assist preferences:</p>
+<ol type="1" class="whs15">
+	<li style="margin-left: -20px;" class=p><p>Mark the required checkboxes 
+ to configure the following options: </p></li>
+</ol>
+<p class=Strong style="margin-left: 40px;">Options</p>
+<ul><li class=p-ListBullet2><p class=ListBullet2>Completion Inserts / Completion 
+ Overwrites: Select whether to insert new code or overwrite existing code. 
+ </p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Insert single proposals 
+ automatically: When only one code assist suggestion exists, the code assist 
+ suggestion will be inserted automatically. </p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Show variables from other 
+ files: Shows variables which are in other files in the project.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Determine object type 
+ from other files: Shows objects from other files in the project.</p></li>
+</ul>
+<p class=Strong style="margin-left: 40px;">Filters</p>
+<ul><li class=p-ListBullet2><p class=ListBullet2>Show constants assist: 
+ Displays constants in Code Assist. </p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Case sensitive for constants: 
+ Constants will be case sensitive.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Show class name in Global 
+ Completion list: Enables the addition of class names to the code assist 
+ list.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Show non-strict options 
+ : Will show options which go against PHP strict practice.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Group completion options: 
+ Groups options according to element type.</p></li>
+</ul>
+<p class=Strong style="margin-left: 40px;">Auto-activation</p>
+<ul><li class=p-ListBullet2><p class=ListBullet2>Enable auto activation: 
+ Enable code assist to be automatically activated.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Auto activation delay: 
+ Determines the delay before the Code Assist box is automatically displayed.</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Auto-activation triggers 
+ for PHP: Sets the characters that determine PHP context (Community Edition 
+ only).</p></li>
+	<li class=p-ListBullet2><p class=ListBullet2>Auto-activation triggers 
+ for PHPDoc: Sets the characters that determine PHP context (Community Edition 
+ only).</p></li>
+</ul>
+<p class=Note style="margin-left: 64px;">Note: </p>
+<p class=NoteText style="margin-left: 64px;">A maximum of 4 characters 
+ can be entered. </p>
+<ol start="2" type="1" class="whs15">
+	<li style="margin-left: -20px;" class=p><p>Click Apply to apply your 
+ settings.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs7">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>&nbsp;</td>
+</tr>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs17">
+<col class="whs5">
+<col class="whs6">
+
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<p class="whs9">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs19">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs6">
-<td width="7.093%" class="whs10">
-<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs11"></td>
-<td width="92.907%" class="whs12">
-<p class="whs13">Related Links:</p>
-<p class="whs14"><a href="Using_Code_Assist.htm" style="x-condition: Online;">Using 
+<tr valign="top" class="whs7">
+<td width="7.093%" class="whs12">
+<p class="whs9"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs20"></td>
+<td width="92.907%" class="whs14">
+<p class="whs11">Related Links:</p>
+<p class="whs21"><a href="Using_Code_Assist.htm" style="x-condition: Online;">Using 
  Code Assist</a></p>
-<p class="whs14"><a href="Working_with_Code_Assist.htm" 
+<p class="whs21"><a href="Working_with_Code_Assist.htm" 
  style="x-condition: Online;">Working with Code Assist</a></p>
-<p class="whs14"><a HREF="Preferences.htm">PHP Preferences</a></p>
-<p class="whs14"><a HREF="Editor.htm">Editor Preferences</a></td></tr>
-<tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="7.093%" class="whs10">
-<p class="whs8">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs12">
+<p class="whs21"><a HREF="Preferences.htm">PHP Preferences</a></p>
+<p class="whs21"><a HREF="Editor.htm">Editor Preferences</a></td></tr>
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="7.093%" class="whs12">
+<p class="whs9">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs14">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs15">
- <p align="right" class="whs16"><span><span 
+<div placeholder id="footer" class="whs22">
+ <p align="right" class="whs23"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs17">PHP Development 
+ <p align="center" class="whs24">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -201,9 +229,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"Preferences.htm\">PHP Preferences</a> &gt; <a href=\"Editor.htm\">Editor Preferences</a> &gt; Code Assist Preferences</p>");
 
 }
 //-->

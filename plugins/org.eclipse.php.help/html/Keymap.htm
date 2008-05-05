@@ -42,13 +42,13 @@ td.whs23 { width:2px; padding-right:10px; padding-left:10px; border-right-style:
 td.whs24 { width:109px; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 td.whs25 { width:68px; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 td.whs26 { width:88px; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-td.whs27 { width:110px; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-tr.whs28 { x-cell-content-align:top; height:36px; }
-tr.whs29 { x-cell-content-align:top; height:44px; }
-p.whs30 { line-height:Normal; font-weight:bold; }
-tr.whs31 { x-cell-content-align:top; height:53px; }
+p.whs27 { line-height:Normal; font-weight:bold; }
+td.whs28 { width:110px; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+tr.whs29 { x-cell-content-align:top; height:36px; }
+p.whs30 { line-height:Normal; font-weight:normal; }
+tr.whs31 { x-cell-content-align:top; height:44px; }
 p.whs32 { font-weight:bold; }
-tr.whs33 { x-cell-content-align:top; height:41px; }
+tr.whs33 { x-cell-content-align:top; height:53px; }
 table.whs34 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs35 { width:7.093%; }
 col.whs36 { width:92.907%; }
@@ -96,7 +96,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nKeymap");
+	addTocInfo("PDT Help\nReference\nKeymap");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Templates.htm","");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -105,10 +106,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; Keymap</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -133,7 +131,7 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Keymap</p>
+<h1>Keymap</h1>
 <p>The following table displays a list of commonly used keyboard shortcuts 
  which can be printed for quick access.</p>
 <p>&nbsp;</p>
@@ -165,20 +163,60 @@ if (window.writeIntopicBar)
 <td colspan="1" rowspan="1" width="2px" class="whs15">
 <p class="whs12">&nbsp;</td>
 <td width="109px" class="whs16">
-<p class="whs12">Run/Debug</td>
+<p class="whs14">Alt-/</td>
 <td width="68px" class="whs17">
-<p>&nbsp;</td>
+<p class="whs14">Word Completion</td>
 <td colspan="1" rowspan="1" width="2px" class="whs15">
 <p class="whs12">&nbsp;</td>
 <td width="88px" class="whs18">
-<p class="whs12">Source</td>
+<p class="whs14"><span style="line-height: Normal;">Ctrl+I</span></p>
+<p>&nbsp;</td>
 <td width="110px" class="whs19">
-<p class="whs14">&nbsp;</td></tr>
+<p class="whs14">Format Active Elements</td></tr>
 <tr valign="top" class="whs20">
 <td colspan="1" rowspan="1" width="101px" class="whs21">
 <p class="whs14">Ctrl+S</td>
 <td colspan="1" rowspan="1" width="81px" class="whs22">
 <p class="whs14">Save</td>
+<td colspan="1" rowspan="1" width="2px" class="whs23">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="109px" class="whs24">
+<p class="whs14"><span style="line-height: Normal;">F2</span></p>
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" width="68px" class="whs25">
+<p class="whs14"><span style="line-height: Normal;">Show 
+ Tooltip </span></p>
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" width="2px" class="whs23">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="88px" class="whs26">
+<p class="whs27">Views</td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">&nbsp;</td></tr>
+<tr valign="top" class="whs29">
+<td colspan="1" rowspan="1" width="101px" class="whs21">
+<p class="whs14">Ctrl+F4 / Ctrl+W</td>
+<td colspan="1" rowspan="1" width="81px" class="whs22">
+<p class="whs14">Close</td>
+<td colspan="1" rowspan="1" width="2px" class="whs23">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="109px" class="whs24">
+<p class="whs12"><span style="font-weight: bold; line-height: Normal;"><B>Run/Debug</B></span></td>
+<td colspan="1" rowspan="1" width="68px" class="whs25">
+<p>&nbsp;</td>
+<td colspan="1" rowspan="1" width="2px" class="whs23">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="88px" class="whs26">
+<p class="whs14"><span style="line-height: Normal;">Alt+Shift+Q, 
+ Q</span></td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">Show View</td></tr>
+<tr valign="top" class="whs29">
+<td colspan="1" rowspan="1" width="101px" class="whs21">
+<p class="whs14">Ctrl+P</p>
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="81px" class="whs22">
+<p class="whs14">Print</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="109px" class="whs24">
@@ -188,50 +226,10 @@ if (window.writeIntopicBar)
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">Ctrl+Shift+/<br>
-Ctrl+Shift+\</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Add/Remove Block Comment</td></tr>
-<tr valign="top" class="whs28">
-<td colspan="1" rowspan="1" width="101px" class="whs21">
-<p class="whs14">Ctrl+F4 / Ctrl+W</td>
-<td colspan="1" rowspan="1" width="81px" class="whs22">
-<p class="whs14">Close</p>
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="109px" class="whs24">
-<p class="whs14">Alt+Shift+D, H</td>
-<td colspan="1" rowspan="1" width="68px" class="whs25">
-<p class="whs14">Debug PHP Script</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">Ctrl+Shift +F</p>
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Format Script</p>
+<p class="whs12">Navigate</td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
 <p class="whs14">&nbsp;</td></tr>
-<tr valign="top" class="whs28">
-<td colspan="1" rowspan="1" width="101px" class="whs21">
-<p class="whs14">Ctrl+P</p>
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="81px" class="whs22">
-<p class="whs14">Print</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="109px" class="whs24">
-<p class="whs14">Alt+Shift+D, W</p>
-<p>&nbsp;</td>
-<td colspan="1" rowspan="1" width="68px" class="whs25">
-<p class="whs14">Debug PHP Web Page</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">Ctrl+I</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Format Active Elements</td></tr>
-<tr valign="top" class="whs28">
+<tr valign="top" class="whs29">
 <td colspan="1" rowspan="1" width="101px" class="whs21">
 <p class="whs14">Alt+Shift+N / Ctrl +N</td>
 <td colspan="1" rowspan="1" width="81px" class="whs22">
@@ -240,15 +238,16 @@ Ctrl+Shift+\</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs12">&nbsp;</td>
 <td colspan="1" rowspan="1" width="109px" class="whs24">
-<p class="whs14">Ctrl+F11</td>
+<p class="whs14">Alt+Shift+D, H</td>
 <td colspan="1" rowspan="1" width="68px" class="whs25">
-<p class="whs14">Run</td>
+<p class="whs14">Debug PHP Script</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs12">&nbsp;</td>
 <td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs12">Navigate</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">&nbsp;</td></tr>
+<p class="whs30">Alt+Left<br>
+Alt+Right</td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">Backward / Forward History</td></tr>
 <tr valign="top" class="whs20">
 <td colspan="1" rowspan="1" width="101px" class="whs21">
 <p class="whs14">Alt+Enter</td>
@@ -257,17 +256,15 @@ Ctrl+Shift+\</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="109px" class="whs24">
-<p class="whs14">Alt+Shift+X, H</p>
-<p>&nbsp;</td>
+<p class="whs14">Ctrl+F11</td>
 <td colspan="1" rowspan="1" width="68px" class="whs25">
-<p class="whs14">Run PHP Script</td>
+<p class="whs14">Run</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">Alt+Left<br>
-Alt+Right</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Backward / Forward History</td></tr>
+<p class="whs14">Ctrl+L</td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">Go to Line</td></tr>
 <tr valign="top" class="whs20">
 <td colspan="1" rowspan="1" width="101px" class="whs21">
 <p class="whs14">F5</td>
@@ -276,17 +273,15 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="109px" class="whs24">
-<p class="whs14">&nbsp;</p>
-<p class="whs14">Alt+Shift+X, W</p>
-<p>&nbsp;</td>
+<p class="whs14">Alt+Shift+X, H</td>
 <td colspan="1" rowspan="1" width="68px" class="whs25">
-<p class="whs14">Run PHP Web Page</td>
+<p class="whs14">Run PHP Script</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">Ctrl+L</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Go to Line</td></tr>
+<p class="whs14">F3</td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">Open Declaration</td></tr>
 <tr valign="top" class="whs20">
 <td colspan="1" rowspan="1" width="101px" class="whs21">
 <p class="whs14">Ctrl+Shift+S</p>
@@ -303,10 +298,10 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">Ctrl+Shift+P</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Go to Matching Bracket</td></tr>
-<tr valign="top" class="whs28">
+<p class="whs14">Alt+Shift+G</td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">Open PHP Element</td></tr>
+<tr valign="top" class="whs29">
 <td colspan="1" rowspan="1" width="101px" class="whs21">
 <p class="whs12">Edit</p>
 <p class="whs14">&nbsp;</td>
@@ -315,16 +310,16 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="109px" class="whs24">
-<p class="whs12">Views</td>
+<p class="whs12">Text Editing</td>
 <td colspan="1" rowspan="1" width="68px" class="whs25">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="88px" class="whs26">
-<p class="whs14">F3</td>
-<td colspan="1" rowspan="1" width="110px" class="whs27">
-<p class="whs14">Open Declaration</td></tr>
-<tr valign="top" class="whs29">
+<p class="whs14"><span style="line-height: Normal;">Ctrl+Shift+R</span></td>
+<td colspan="1" rowspan="1" width="110px" class="whs28">
+<p class="whs14">Open Resource</td></tr>
+<tr valign="top" class="whs31">
 <td width="101px" class="whs21">
 <p class="whs14">Ctrl+Shift+Q</p>
 <p>&nbsp;</td>
@@ -333,16 +328,17 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="109px" class="whs24">
-<p class="whs14">Alt+Shift+Q, Q</p>
-<p>&nbsp;</td>
+<p class="whs14">&nbsp;</p>
+<p>Ctrl+Alt+Up</td>
 <td width="68px" class="whs25">
-<p class="whs14">Show View</td>
+<p class="whs14">Duplicate Lines</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="88px" class="whs26">
-<p class="whs14">Alt+Shift+G</td>
-<td width="110px" class="whs27">
-<p class="whs14">Open PHP Element</td></tr>
+<p class="whs27"><span style="line-height: Normal; font-weight: bold;"><B>Window</B></span></p>
+<p>&nbsp;</td>
+<td width="110px" class="whs28">
+<p class="whs14">&nbsp;</td></tr>
 <tr valign="top" class="whs20">
 <td width="101px" class="whs21">
 <p class="whs14">Ctrl+Shift+C</td>
@@ -351,15 +347,16 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="109px" class="whs24">
-<p class="whs30">Refactor</td>
+<p class="whs30">Ctrl+Alt+Down</td>
 <td width="68px" class="whs25">
-<p class="whs14">&nbsp;</td>
+<p class="whs14">Copy Lines</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="88px" class="whs26">
-<p class="whs14">Ctrl+Shift+R</td>
-<td width="110px" class="whs27">
-<p class="whs14">Open Resource</td></tr>
+<p class="whs14"><span style="line-height: Normal;">Ctrl+M</span></p>
+<p>&nbsp;</td>
+<td width="110px" class="whs28">
+<p class="whs14">Maximize Active View or Editor</td></tr>
 <tr valign="top" class="whs10">
 <td width="101px" class="whs21">
 <p class="whs14">Ctrl+Shift+A</p>
@@ -369,15 +366,17 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="109px" class="whs24">
-<p class="whs14">Move</td>
+<p class="whs14">Ctrl+D</td>
 <td width="68px" class="whs25">
-<p class="whs14">Alt+Shift+V</td>
+<p class="whs14">Delete Line</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="88px" class="whs26">
-<p class="whs14">Window</td>
-<td width="110px" class="whs27">
-<p class="whs14">&nbsp;</td></tr>
+<p class="whs14">Ctrl+F10</td>
+<td width="110px" class="whs28">
+<p class="whs14"><span style="line-height: Normal;">Show 
+ View Menu</span></p>
+<p>&nbsp;</td></tr>
 <tr valign="top" class="whs20">
 <td width="101px" class="whs21">
 <p class="whs14">Ctrl+Space</td>
@@ -386,16 +385,18 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="109px" class="whs24">
-<p>Rename</td>
+<p class="whs12"><span style="font-weight: bold; line-height: Normal;"><B>Source</B></span></p>
+<p>&nbsp;</td>
 <td width="68px" class="whs25">
-<p>Alt+Shift+R</td>
+<p class="whs14">&nbsp;</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="88px" class="whs26">
-<p class="whs14">Ctrl+M</td>
-<td width="110px" class="whs27">
-<p class="whs14">Maximize Active View or Editor</td></tr>
-<tr valign="top" class="whs28">
+<p class="whs32"><span style="font-weight: bold;"><B>Search</B></span></p>
+<p>&nbsp;</td>
+<td width="110px" class="whs28">
+<p class="whs14">&nbsp;</td></tr>
+<tr valign="top" class="whs29">
 <td width="101px" class="whs21">
 <p class="whs14">Ctrl+Shift+Space</td>
 <td width="81px" class="whs22">
@@ -403,16 +404,17 @@ Alt+Right</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="109px" class="whs24">
-<p class="whs12">Text Editing</td>
+<p class="whs30">Ctrl+Shift+/<br>
+Ctrl+Shift+\</td>
 <td width="68px" class="whs25">
-<p class="whs30">&nbsp;</td>
+<p class="whs30">Add/Remove Block Comment</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="88px" class="whs26">
-<p class="whs14">Ctrl+F10</td>
-<td width="110px" class="whs27">
-<p class="whs14">Show View Menu</td></tr>
-<tr valign="top" class="whs31">
+<p class="whs14">Ctrl+H</td>
+<td width="110px" class="whs28">
+<p class="whs14">Open Search Dialog</td></tr>
+<tr valign="top" class="whs33">
 <td width="101px" class="whs21">
 <p class="whs14">&nbsp;Ctrl+J/<br>
 Ctrl+Shift+J</p>
@@ -422,51 +424,14 @@ Ctrl+Shift+J</p>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs14">&nbsp;</td>
 <td width="109px" class="whs24">
-<p>Ctrl+Alt+Up</td>
+<p class="whs14">Ctrl+Shift +F</td>
 <td width="68px" class="whs25">
-<p class="whs14">Duplicate Lines</td>
+<p class="whs14">Format Script</td>
 <td colspan="1" rowspan="1" width="2px" class="whs23">
 <p class="whs12">&nbsp;</td>
 <td width="88px" class="whs26">
-<p class="whs32">Search</td>
-<td width="110px" class="whs27">
-<p>&nbsp;</td></tr>
-<tr valign="top" class="whs33">
-<td width="101px" class="whs21">
-<p class="whs14">Alt-/</td>
-<td width="81px" class="whs22">
-<p class="whs14">Word Completion</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td width="109px" class="whs24">
-<p>Ctrl+Alt+Down</p>
-<p>&nbsp;</td>
-<td width="68px" class="whs25">
-<p class="whs14">Copy Lines</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td width="88px" class="whs26">
-<p>Ctrl+H</td>
-<td width="110px" class="whs27">
-<p class="whs14">Open Search Dialog</td></tr>
-<tr valign="top" class="whs28">
-<td width="101px" class="whs21">
-<p class="whs14">F2</td>
-<td width="81px" class="whs22">
-<p class="whs14">Show Tooltip </td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td width="109px" class="whs24">
-<p>Ctrl+D</td>
-<td width="68px" class="whs25">
-<p class="whs14">&nbsp;</p>
-<p class="whs14">Delete Line</td>
-<td colspan="1" rowspan="1" width="2px" class="whs23">
-<p class="whs14">&nbsp;</td>
-<td width="88px" class="whs26">
-<p class="whs14">Ctrl+Alt+G</p>
-<p>&nbsp;</td>
-<td width="110px" class="whs27">
+<p class="whs14">Ctrl+Alt+G</td>
+<td width="110px" class="whs28">
 <p class="whs14">Find Text in Workspace</td></tr>
 </table>
 </div>
@@ -484,7 +449,7 @@ Ctrl+Shift+J</p>
 <p><span style="font-weight: bold; x-condition: Online;"><B>Related Links:</B></span><a 
  href="Reference.htm"><br>
 Reference</a></p>
-<p>Useful Links</td></tr>
+</td></tr>
 <tr valign="top" class="whs45"><td colspan="1" rowspan="1" width="7.093%" class="whs42">
 <p class="whs39">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs44">
@@ -505,9 +470,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; Keymap</p>");
 
 }
 //-->

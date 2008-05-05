@@ -20,7 +20,7 @@ table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs2 { width:50%; }
 tr.whs3 { x-cell-content-align:top; }
 td.whs4 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
-td.whs5 { width:50%; padding-right:10px; padding-left:10px; x-condition:Neon; }
+td.whs5 { width:50%; padding-right:10px; padding-left:10px; x-condition:StudioEclipse; }
 td.whs6 { width:50%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
 td.whs7 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 td.whs8 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; }
@@ -82,7 +82,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nGetting Started\nQuick Start");
+	addTocInfo("PDT Help\nGetting Started\nQuick Start");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Getting_Started.htm","Basic_Tutorial.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -91,10 +92,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Getting_Started.htm\">Getting Started</a> &gt; Quick Start</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -119,10 +117,10 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Quick Start</p>
+<h1><a name=Top></a>Quick Start</h1>
 <p>The following Quick Start page will help newcomers and (even) our veteran 
  users familiarize themselves with this new version.</p>
-<p class=Strong>The Features covered in the Quick Start are:</p>
+<p>The Features covered in the Quick Start are:</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
 <col class="whs2">
@@ -130,22 +128,22 @@ if (window.writeIntopicBar)
 <tr valign="top" class="whs3">
 <td colspan="1" rowspan="1" width="50%" class="whs4">
 <p><a href="#Getting_started">Getting Started</a></td>
-<td colspan="1" rowspan="1" width="50%" discard="yes" class="whs5">
+<td colspan="1" rowspan="1" width="50%" class="whs5">
 <p>&nbsp;</p></td></tr>
 <tr valign="top" class="whs3">
 <td width="50%" class="whs6">
 <p><a href="#Workbench">Workbench</a></td>
-<td width="50%" discard="yes" class="whs5">
+<td width="50%" class="whs5">
 <p>&nbsp;</p></td></tr>
 <tr valign="top" class="whs3">
 <td width="50%" class="whs7">
 <p><a href="#Creating">Creating a PHP Project</a></td>
-<td width="50%" discard="yes" class="whs5">
+<td width="50%" class="whs5">
 <p>&nbsp;</p></td></tr>
 <tr valign="top" class="whs3">
 <td width="50%" class="whs7">
 <p><a href="#Creating1">Creating a PHP File</a></td>
-<td width="50%" discard="yes" class="whs5">
+<td width="50%" class="whs5">
 <p>&nbsp;</p></td></tr>
 <tr valign="top" class="whs3">
 <td width="50%" class="whs7">
@@ -160,27 +158,26 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <h2><a name=Getting_started></a>Getting Started</h2>
-<p>Before launching, <span 
- style="x-condition: PDT;">PDT</span> will ask you to select a Workspace 
- where all projects will be created and stored.</p>
+<p>Before launching, PDT 
+ will ask you to select a Workspace where all projects will be created 
+ and stored.</p>
 <p>You can use the default Workspace suggested or click Browse to select 
  a different Workspace.</p>
-<p><a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-13.htm" 
- style="x-condition: Online;">Click here</a> for more on Workspaces.</p>
+<p>See the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-02a.htm">Workbench 
+ User Guide</a> for more on Workspaces.</p>
 <p>&nbsp;</p>
 <p align="right" class="whs11"><span><a 
  href="#Top" style="x-condition: Online;">Back to Top</a></span></p>
-<h2><a name=Workbench>Workbench</a></h2>
+<h2><a name=Workbench></a>Workbench</h2>
 <p>The Workbench is a window displaying <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-4.htm">perspectives</a>, 
  <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm">views</a> 
  and menu bars through which different operations can be performed. </p>
-<p><a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-02a.htm" 
- style="x-condition: Online;">Click here</a> for more on how to customize your 
- Workbench.</p>
+<p>See the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/gettingStarted/qs-02a.htm">Workbench 
+ User Guide</a> for more on how to customize your Workbench.</p>
 <p align="right" class="whs11"><a href="#Top" 
  style="x-condition: Online;">Back to Top</a></p>
-<h2><a name=Creating>Creating a PHP Project</a></h2>
-<p>A project is a group of files and resources, which will be displayed 
+<h2><a name=Creating></a>Creating a PHP Project</h2>
+<p>A project is a group of files and resources which will be displayed 
  in a tree in the Navigator and PHP Explorer views. </p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs12">
@@ -209,7 +206,7 @@ if (window.writeIntopicBar)
  from being stored with other project files).</p>
 <p align="right" class="whs11"><a href="#Top" 
  style="x-condition: Online;">Back to Top</a></p>
-<h2><a name=Creating1>Creating a PHP File</a></h2>
+<h2><a name=Creating1></a>Creating a PHP File</h2>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs12">
 <col class="whs13">
@@ -229,10 +226,10 @@ if (window.writeIntopicBar)
  like to create your file and select New | PHP File</p>
 <p>-Or- Click the New PHP File icon on the toolbar <img src="new_php_file.png" x-maintain-ratio="TRUE" width="23px" height="24px" border="0" class="img_whs21">. This will create a file outside of a project.</td></tr>
 </table>
-<p>&nbsp;</p>
+<p>See <a HREF="File_Creation.htm">Easy File Creation</a> for more information.</p>
 <p align="right" class="whs11"><a href="#Top" 
  style="x-condition: Online;">Back to Top</a></p>
-<h2><a name=bookmark>PHP Debugging</a></h2>
+<h2><a name=bookmark></a>PHP Debugging</h2>
 <p>The Zend Debugger detects and diagnoses errors in PHP code situated 
  on local or remote servers: </p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
@@ -304,7 +301,7 @@ if (window.writeIntopicBar)
  on Debugging.</p>
 <p align="right" class="whs11"><a href="#Top" 
  style="x-condition: Online;">Back to Top</a></p>
-<h2><a name=Perspectives>Perspectives of Interest</a></h2>
+<h2><a name=Perspectives></a>Perspectives of Interest</h2>
 <p>To open a perspective go to Window | Open Perspective, select &quot;Other&quot; 
  to view a full list of perspectives.</p>
 <ul><li class=p-ListBullet1><p class=ListBullet1 style="font-weight: bold;">PHP 
@@ -318,10 +315,9 @@ if (window.writeIntopicBar)
 	<li class=p-ListBullet1><p class=ListBullet1><span style="font-weight: bold;"><B>CVS 
  / SVN Repository Exploring</B></span> - Allows you to manage and view your 
  source control. </p></li>
-	<li class=p-ListBullet1><p class=ListBullet1><span style="font-weight: bold;"><B>Database 
- Development</B></span> - Allows you to view and manage your database content. 
- <span style="x-condition: PDT;">PDT </span>allows connection with several types of databases.</p></li>
 	</ul>
+<p class=ListBullet1>See <a HREF="PHP_Perspectives_and_Views.htm">PHP Perspectives 
+ and Views</a> for more information.</p>
 <p class=ListBullet1 style="text-align: right; x-condition: Online;" align=right><a 
  href="#Top" style="x-condition: Online;">Back to Top</a></p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs24">
@@ -358,9 +354,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Getting_Started.htm\">Getting Started</a> &gt; Quick Start</p>");
 
 }
 //-->

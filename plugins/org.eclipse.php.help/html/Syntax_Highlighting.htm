@@ -16,21 +16,22 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-table.whs1 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs2 { width:7.093%; }
-col.whs3 { width:92.907%; }
-tr.whs4 { x-cell-content-align:top; }
-td.whs5 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs6 { font-size:6pt; }
-td.whs7 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs8 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs9 { border:none; width:28px; height:18px; float:none; border-style:none; }
-td.whs10 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-p.whs11 { font-weight:bold; }
-p.whs12 { x-condition:Online; }
-div.whs13 { width:100%; }
-p.whs14 { text-align:right; x-condition:Online; }
-p.whs15 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+table.whs2 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs10 { border:none; width:28px; height:18px; float:none; border-style:none; }
+td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+p.whs12 { font-weight:bold; }
+p.whs13 { x-condition:Online; }
+div.whs14 { width:100%; }
+p.whs15 { text-align:right; x-condition:Online; }
+p.whs16 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -63,7 +64,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nConcepts\nSyntax Coloring");
+	addTocInfo("PDT Help\nConcepts\nSyntax Coloring");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Code_Folding.htm","Bookmarks.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -72,10 +74,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Syntax Coloring</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -100,19 +99,22 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Syntax Coloring</p>
-<p><span 
- style="x-condition: PDT;">PDT</span> can automatically apply different 
- colors and font attributes to different PHP syntax elements in order for 
- your scripts to be more easily navigable and to help you find relevant 
- sections quickly and easily.</p>
+<h1>Syntax Coloring</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p>PDT 
+ can automatically apply different colors and font attributes to different 
+ PHP syntax elements in order for your scripts to be more easily navigable 
+ and to help you find relevant sections quickly and easily.</p>
 <p>Completing the relevant element will cause the required color and font 
  settings to be applied to it.</p>
 <p>&nbsp;</p>
 <p>The default color and font settings for PHP elements are:</p>
-<ul><li class=p-ListBullet1><p class=ListBullet1><span style="color: #ff0000;"><font color=red >Boundry 
- Maker</font></span></p></li>
-	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #808080;"><font color=gray >Comment</font></span></p></li>
+<ul><li style=" color: #ff0000; " class=p-ListBullet1><p class=ListBullet1><span 
+ style="color: #ff0000;"><font color=red >Boundry Maker</font></span></p></li>
+	<li style=" color: #808080; " class=p-ListBullet1><p class=ListBullet1><span 
+ style="color: #808080;"><font color=gray >Comment</font></span></p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #007f7f;"><font color=#007f7f >HereDoc</font></span> 
  </p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #0000ff;"><font color=blue >Keyword</font></span> 
@@ -122,7 +124,8 @@ if (window.writeIntopicBar)
  </p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #808080;"><font color=gray >PHPDoc</font></span> 
  </p></li>
-	<li class=p-ListBullet1><p class=ListBullet1 style="color: #215b35;">String</p></li>
+	<li style=" color: #215b35; " class=p-ListBullet1><p class=ListBullet1 
+ style="color: #215b35;">String</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Task Tag</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #800000;"><font color=maroon >Variable</font></span> 
  </p></li>
@@ -131,34 +134,34 @@ if (window.writeIntopicBar)
 <p>The color and font settings can be configured from the <a href="Syntax_Coloring.htm">Syntax 
  Coloring preferences</a> page, accessed from Window | Preferences | PHP 
  | Editor | Syntax Coloring.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
-<col class="whs2">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
+<col class="whs4">
 
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs5">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs7">
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs4">
-<td width="7.093%" class="whs8">
-<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs9"></td>
-<td width="92.907%" class="whs10">
-<p class="whs11">Related Links:</p>
-<p class="whs12"><a href="Syntax_Coloring.htm" style="x-condition: Online;">Syntax 
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs9">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs10"></td>
+<td width="92.907%" class="whs11">
+<p class="whs12">Related Links:</p>
+<p class="whs13"><a href="Syntax_Coloring.htm" style="x-condition: Online;">Syntax 
  Coloring preferences</a> </td></tr>
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs8">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs10">
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs9">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs11">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs13">
- <p align="right" class="whs14"><span><span 
+<div placeholder id="footer" class="whs14">
+ <p align="right" class="whs15"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs15">PHP Development 
+ <p align="center" class="whs16">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -168,9 +171,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Syntax Coloring</p>");
 
 }
 //-->

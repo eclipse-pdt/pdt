@@ -1,0 +1,254 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Troubleshooting Platform Integration on an HTTPS Server</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+div.whs1 { float:none; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+img_whs14 { border:none; width:569px; height:347px; float:none; border-style:none; }
+img_whs15 { border:none; width:569px; height:466px; float:none; border-style:none; }
+img_whs16 { border:none; width:286px; height:338px; float:none; border-style:none; }
+img_whs17 { border:none; width:402px; height:314px; float:none; border-style:none; }
+td.whs18 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs19 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs20 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs21 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs22 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs23 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs24 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs25 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs26 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs27 { font-weight:normal; }
+tr.whs28 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs29 { width:100%; }
+p.whs30 { text-align:right; x-condition:Online; }
+p.whs31 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
+
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1>Troubleshooting Platform Integration on an HTTPS Server</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p>When Zend Platform is installed on an HTTPS server which has a problem 
+ with its security certificate, PDT will not be able to display Platform 
+ Events in the Platform Events view. This is because the JVM that executes 
+ the Studio does not consider the Web server as a &quot;trusted identity&quot;.<br>&nbsp;</p>
+<p>In this case, when you try to connect to Zend Platform through the Platform 
+ Events view, you will receive the following error message:<br>
+&quot;Unable to verify the identity of 'https://&lt;MyServer&gt;/ZendPlatform' 
+ as a trusted site&quot;.</p>
+<p>&nbsp;</p>
+<p>This procedure describes how to add the certificate for the Web server 
+ on which your Zend Platform is installed to your JVM, so that Studio will 
+ consider it 'safe':</p>
+<p class=Note>Note:</p>
+<p class=NoteText>The following instructions are only applicable to Internet 
+ Explorer.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To add the Web server certificate to the 
+ JVM:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Open Internet Explorer and 
+ enter your Zend Platform URL.<br>
+	An error message is displayed.</p></li>
+</ol>
+<p class=picture><img src="platform_https_error.png" x-maintain-ratio="TRUE" width="569px" height="347px" border="0" class="img_whs14"></p>
+<p>&nbsp;</p>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click “Continue to this 
+ website”.<br>
+	You will be taken to the Zend Platform login page and a Certificate 
+ Error notification will appear next to the address bar:</p></li>
+</ol>
+<p class=picture><img src="platform_https_certificate_error.png" x-maintain-ratio="TRUE" width="569px" height="466px" border="0" class="img_whs15"></p>
+<ol start="3" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click on the “Certificate 
+ Error” next to the URL.<br>
+	A 'Certificate Invalid' popup will be displayed.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click on the &quot;View 
+ certificates&quot; link at the bottom of the popup to display the certificate 
+ details.</p></li>
+</ol>
+<p class=picture><img src="platform_https_certificate_details.png" x-maintain-ratio="TRUE" width="286px" height="338px" border="0" class="img_whs16"></p>
+<ol start="5" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Select the Details tab.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click “Copy to File…”.<br>
+	The Certificate Export wizard will launch.</p></li>
+</ol>
+<p class=picture><img src="platform_https_certificate_wizard.png" x-maintain-ratio="TRUE" width="402px" height="314px" border="0" class="img_whs17"></p>
+<ol start="7" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click Next.<br>
+	You will be asked to select an export file fomat.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Select the &quot;DER encoded 
+ binary X.509&quot; format and click Next.</p></li>
+	<li style="margin-left: -20px;" class=p><p>In the File name field, 
+ browse to your JVM directory.<br>
+	By default, this is located in:<span style="font-weight: bold;"><B><br>
+	Windows/Linux: </B></span>&lt;Studio_Directory&gt;/jre<span style="font-weight: bold;"> 
+ <B><br>
+	Mac: &nbsp;</B></span>/System/Library/Frameworks/JavaVM.framework/Home</p></li>
+	<li style="margin-left: -20px;" class=p><p>In the File Name field, 
+ enter 'MyServer'.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Next.<br>
+	A summary screen will be displayed.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Finish.<br>
+	The certificate will be exported to the specified destination.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Run the following command 
+ in your CLI:<br>
+	&lt;JVM_Directory&gt;/bin/keytool -import -trustcacerts -alias &lt;anyuniquename&gt; 
+ -file &lt;JVM_Directory&gt;/MyServer.cert -keystore &lt;JVM_Directory&gt;/lib/security/cacerts</p></li>
+</ol>
+<p class=Note style="margin-left: 24px;">Note:</p>
+<p class=NoteText style="margin-left: 24px;">On Linux/Mac, run the command 
+ with ‘sudo’.</p>
+<ol start="14" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>When asked for a password 
+ for the JVM certificate store, enter 'changeit'. &nbsp;</p></li>
+	<li style="margin-left: -20px;" class=p><p>If asked whether you trust 
+ the certificate source, enter 'Yes'.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Restart PDT.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs18">
+<p>The Web server will now be treated as 'safe' and you will be able to 
+ retrieve Zend Platform Events.</td>
+</tr>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs19">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs20"><td colspan="1" rowspan="1" width="7.093%" class="whs21">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs22">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs23"><td width="7.093%" class="whs24">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs25"></td>
+<td width="92.907%" class="whs26">
+<p class="whs9">Related Links:</p>
+<p class="whs27"><a HREF="Troubleshooting_Zend_Platform_Integration.htm" 
+ style="font-weight: normal;">Troubleshooting Zend Platform Integration</a></p>
+<p>Integrating with Zend Platform</p>
+<p>Accessing 
+ and Using the Zend Platform Event List View</td></tr>
+<tr valign="top" class="whs28"><td colspan="1" rowspan="1" width="7.093%" class="whs24">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs26">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs29">
+ <p align="right" class="whs30"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs31">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

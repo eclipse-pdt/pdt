@@ -16,24 +16,25 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-ul.whs1 { list-style:decimal; }
-img_whs2 { border:none; width:399px; height:330px; float:none; border-style:none; }
-img_whs3 { border:none; width:589px; height:490px; float:none; border-style:none; }
-table.whs4 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs5 { width:7.093%; }
-col.whs6 { width:92.907%; }
-tr.whs7 { x-cell-content-align:top; }
-td.whs8 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs9 { font-size:6pt; }
-td.whs10 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs11 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs12 { border:none; width:28px; height:18px; float:none; border-style:none; }
-td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-p.whs14 { font-weight:bold; }
-p.whs15 { x-condition:Online; }
-div.whs16 { width:100%; }
-p.whs17 { text-align:right; x-condition:Online; }
-p.whs18 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+ul.whs2 { list-style:decimal; }
+img_whs3 { border:none; width:399px; height:330px; float:none; border-style:none; }
+img_whs4 { border:none; width:589px; height:490px; float:none; border-style:none; }
+table.whs5 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs6 { width:7.093%; }
+col.whs7 { width:92.907%; }
+tr.whs8 { x-cell-content-align:top; }
+td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+p.whs10 { font-size:6pt; }
+td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs12 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs13 { border:none; width:28px; height:18px; float:none; border-style:none; }
+td.whs14 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+p.whs15 { font-weight:bold; }
+p.whs16 { x-condition:Online; }
+div.whs17 { width:100%; }
+p.whs18 { text-align:right; x-condition:Online; }
+p.whs19 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -66,7 +67,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nConcepts\nPHP Support");
+	addTocInfo("PDT Help\nConcepts\nPHP Support");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Concepts.htm","Code_Assist_Concept.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -75,10 +77,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; PHP Support</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -103,9 +102,12 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">PHP Support</p>
-<p><span 
- style="x-condition: PDT;">PDT</span> supports PHP versions 4 and 5.</p>
+<h1>PHP Support</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p>PDT 
+ supports PHP versions 4 and 5.</p>
 <p>&nbsp;</p>
 <p>PHP version settings affect:</p>
 <ul><li class=p-ListBullet1><p class=ListBullet1>The elements displayed 
@@ -116,7 +118,7 @@ if (window.writeIntopicBar)
 </ul>
 <p>&nbsp;</p>
 <p>PHP version settings can be configured from the following places:</p>
-<ul type="1" class="whs1">
+<ul type="1" class="whs2">
 	<li class=p-ListBullet1><p class=ListBullet1>PHP Executables can be 
  added and edited from the <a href="PHP_Executables.htm">PHP Executables 
  Preferences</a> page.</p></li>
@@ -128,54 +130,54 @@ if (window.writeIntopicBar)
  a new PHP project by marking the Enable Project Settings checkbox in the 
  new PHP Project dialog.</p></li>
 </ul>
-<p class=picture style="x-condition: PDT;"><img src="new_php_project_pdt.png" x-maintain-ratio="TRUE" width="399px" height="330px" border="0" class="img_whs2"></p>
-<ul type="1" class="whs1">
+<p class=picture style="x-condition: PDT;"><img src="new_php_project_pdt.png" x-maintain-ratio="TRUE" width="399px" height="330px" border="0" class="img_whs3"></p>
+<ul type="1" class="whs2">
 	<li class=p-ListBullet1><p class=ListBullet1>The default PHP executable 
  used with the debugger can be set in the <a href="Debug.htm">Debugging 
  Preferences</a> page, accessed from Window | Preferences | PHP | Debug. 
  Through this page you can also set the PHP executable used to debug specific 
  projects.<br>
 	In addition, you can also configure the PHP executable used for each 
- Debug session in the 
- Debug configuration 
+ Debug session 
+ in the Debug configuration 
  screen. </p></li>
 </ul>
-<p class=picture style="x-condition: PDT;"><img src="debug_session_pdt.png" x-maintain-ratio="TRUE" width="589px" height="490px" border="0" class="img_whs3"></p>
+<p class=picture style="x-condition: PDT;"><img src="debug_session_pdt.png" x-maintain-ratio="TRUE" width="589px" height="490px" border="0" class="img_whs4"></p>
 <p class=Note>Note:</p>
 <p class=NoteText>In order to minimize errors, the PHP Executable used 
- for debugging should 
- match the PHP version used for the project.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs4">
-<col class="whs5">
+ for debugging 
+ should match the PHP version used for the project.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs5">
 <col class="whs6">
+<col class="whs7">
 
-<tr valign="top" class="whs7">
-<td colspan="1" rowspan="1" width="7.093%" class="whs8">
-<p class="whs9">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs10">
+<tr valign="top" class="whs8">
+<td colspan="1" rowspan="1" width="7.093%" class="whs9">
+<p class="whs10">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs11">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs7">
-<td width="7.093%" class="whs11">
-<p class="whs9"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs12"></td>
-<td width="92.907%" class="whs13">
-<p class="whs14">Related Links:</p>
-<p class="whs15"><a href="PHP_Interpreter.htm" style="x-condition: Online;">PHP 
+<tr valign="top" class="whs8">
+<td width="7.093%" class="whs12">
+<p class="whs10"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs13"></td>
+<td width="92.907%" class="whs14">
+<p class="whs15">Related Links:</p>
+<p class="whs16"><a href="PHP_Interpreter.htm" style="x-condition: Online;">PHP 
  Interpreter Preferences</a></p>
-<p class="whs15"><a href="PHP_Executables.htm" style="x-condition: Online;">PHP 
+<p class="whs16"><a href="PHP_Executables.htm" style="x-condition: Online;">PHP 
  Executables Preferences</a></p>
-<p class="whs15"><a href="Debugging.htm" style="x-condition: Online;">Debugging</a></td></tr>
-<tr valign="top" class="whs7">
-<td colspan="1" rowspan="1" width="7.093%" class="whs11">
-<p class="whs9">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs13">
+<p class="whs16"><a href="Debugging.htm" style="x-condition: Online;">Debugging</a></td></tr>
+<tr valign="top" class="whs8">
+<td colspan="1" rowspan="1" width="7.093%" class="whs12">
+<p class="whs10">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs14">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs16">
- <p align="right" class="whs17"><span><span 
+<div placeholder id="footer" class="whs17">
+ <p align="right" class="whs18"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs18">PHP Development 
+ <p align="center" class="whs19">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -185,9 +187,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; PHP Support</p>");
 
 }
 //-->

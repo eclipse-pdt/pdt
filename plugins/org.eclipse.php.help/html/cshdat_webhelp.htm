@@ -84,7 +84,7 @@ function GetTopicNumberOnly(strTopicString)
 			return GetTopicNumberById(strValue);
 		} else if (strTopicString.toLowerCase().indexOf("remoteurl") == 0) {
 			if(IsInternal(strValue))
-				gstrURL = strValue;
+				gstrURL = _textToHtml(strValue);
 			return -1;
 		}
 

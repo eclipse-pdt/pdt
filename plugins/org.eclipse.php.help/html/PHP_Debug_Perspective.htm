@@ -16,22 +16,23 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-img_whs1 { border:none; width:572px; height:340px; float:none; border-style:none; }
-table.whs2 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs3 { width:7.093%; }
-col.whs4 { width:92.907%; }
-tr.whs5 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
-p.whs7 { font-size:6pt; }
-td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs9 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs11 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-tr.whs13 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs14 { width:100%; }
-p.whs15 { text-align:right; x-condition:Online; }
-p.whs16 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+img_whs2 { border:none; width:572px; height:340px; float:none; border-style:none; }
+table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs4 { width:7.093%; }
+col.whs5 { width:92.907%; }
+tr.whs6 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs7 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs8 { font-size:6pt; }
+td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs10 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs11 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs12 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+tr.whs14 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs15 { width:100%; }
+p.whs16 { text-align:right; x-condition:Online; }
+p.whs17 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -64,7 +65,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nReference\nPHP Perspectives and Views\nPHP Debug Perspective");
+	addTocInfo("PDT Help\nReference\nPHP Perspectives and Views\nPHP Debug Perspective");
+addAvenueInfo("Zend Studio for Eclipse User Guide","PHP_Outline_VIew.htm","Debug_View.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -73,10 +75,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"PHP_Perspectives_and_Views.htm\">PHP Perspectives and Views</a> &gt; PHP Debug Perspective</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -101,11 +100,14 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">PHP Debug Perspective</p>
+<h1>PHP Debug Perspective</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
 <p>The PHP Debug Perspective can be launched automatically when a Debug 
- session is run. It contains views which allows you to control and monitor 
+ session is run. It contains views which allow you to control and monitor 
  the debugging process.</p>
-<p class=picture><img src="debug_perspective.png" x-maintain-ratio="TRUE" width="572px" height="340px" border="0" class="img_whs1"></p>
+<p class=picture><img src="debug_perspective.png" x-maintain-ratio="TRUE" width="572px" height="340px" border="0" class="img_whs2"></p>
 <p>&nbsp;</p>
 <p>The PHP Debug Perspective contains the following views:</p>
 <ul><li class=p-ListBullet1><p class=ListBullet1><a HREF="Debug_View.htm">Debug 
@@ -113,26 +115,28 @@ if (window.writeIntopicBar)
  process. You can also decide whether to step into, step over or step return 
  (step out off) certain functions.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Variables_View.htm">Variables 
- View</a> &nbsp;- Will display the various variables in 
- your script.</p></li>
+ View</a> &nbsp;- Displays the various variables in your 
+ script.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Breakpoints_View.htm">Breakpoints 
- View</a> - Will display the breakpoints you have entered</p></li>
+ View</a> - Displays the breakpoints you have entered</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Parameter_Stack.htm">Parameter 
- Stack View</a> - Will display the parameters through which functions are 
- reached.</p></li>
+ Stack View</a> - Displays the parameters through which functions are reached.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Debug_Output_View.htm">Debug 
- Output View</a> - Will show the textual output of the script. This will 
+ Output View</a> - Displays the textual output of the script. This will 
  be updated as the debugging process continues.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Browser_Output_View.htm">Browser 
- Output View</a> - Will show the output of the script to a browser. This 
+ Output View</a> - Displays the output of the script to a browser. This 
  will be updated as the debugging process continues.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Editor - Will display 
- the code at the relevant sections, according to which line is selected 
- in the Debug View window.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Console View - Will display 
+	<li class=p-TableText><p class=TableText><a HREF="Expressions_View.htm">Expressions 
+ View</a> - Displays the progress of selected variables. The view will 
+ only be displayed if you have selected to watch a variable.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Editor - Displays the 
+ code at the relevant sections, according to which line is selected in 
+ the Debug View window.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Console View - Displays 
  any error and warning messages.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Tasks - If you had added 
- any tasks to your script, these would be displayed here.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Tasks - Displays tasks 
+ that were added to your script (if applicable).</p></li>
 </ul>
 <p class=Note>Note:</p>
 <p class=NoteText>By default, a dialog will appear asking whether you want 
@@ -140,35 +144,36 @@ if (window.writeIntopicBar)
  this behavior, open the Perspectives Preferences dialog by going to Window 
  | Preferences | Run/Debug | Perspectives and select Always, Never or Prompt 
  in the 'Open the associated perspective when launching' category.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
-<col class="whs3">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <col class="whs4">
+<col class="whs5">
 
-<tr valign="top" class="whs5"><td colspan="1" rowspan="1" width="7.093%" class="whs6">
-<p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<tr valign="top" class="whs6"><td colspan="1" rowspan="1" width="7.093%" class="whs7">
+<p class="whs8">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs9">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs9"><td width="7.093%" class="whs10">
-<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs11"></td>
-<td width="92.907%" class="whs12">
+<tr valign="top" class="whs10"><td width="7.093%" class="whs11">
+<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs12"></td>
+<td width="92.907%" class="whs13">
 <p><span style="font-weight: bold;"><B>Related Links:</B></span><a HREF="Debug_View.htm"><br>
 Debug View</a></p>
 <p><a HREF="Variables_View.htm">Variables View</a></p>
 <p><a HREF="Breakpoints_View.htm">Breakpoints View</a></p>
 <p><a HREF="Parameter_Stack.htm">Parameter Stack View</a></p>
 <p><a HREF="Debug_Output_View.htm">Debug Output View</a></p>
-<p><a HREF="Browser_Output_View.htm">Browser Output View</a></td></tr>
-<tr valign="top" class="whs13"><td colspan="1" rowspan="1" width="7.093%" class="whs10">
-<p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs12">
+<p><a HREF="Browser_Output_View.htm">Browser Output View</a></p>
+<p class=TableText><a HREF="Expressions_View.htm">Expressions View</a></td></tr>
+<tr valign="top" class="whs14"><td colspan="1" rowspan="1" width="7.093%" class="whs11">
+<p class="whs8">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs13">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs14">
- <p align="right" class="whs15"><span><span 
+<div placeholder id="footer" class="whs15">
+ <p align="right" class="whs16"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs16">PHP Development 
+ <p align="center" class="whs17">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -178,9 +183,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Reference.htm\">Reference</a> &gt; <a href=\"PHP_Perspectives_and_Views.htm\">PHP Perspectives and Views</a> &gt; PHP Debug Perspective</p>");
 
 }
 //-->

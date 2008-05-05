@@ -13,7 +13,7 @@ H1 {
     border-bottom-style:None; 
     font-style:normal; 
     background-color:#ffffff; 
-    color:#47c333; 
+    color:#000000; 
     text-decoration:none;  }
 LI.H1 { 
        letter-spacing:0.1pt; 
@@ -22,7 +22,7 @@ LI.H1 {
        font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
        font-size:16pt; 
        font-style:normal; 
-       color:#47c333; 
+       color:#000000; 
        text-decoration:none;  }
 H2 { 
     font-weight:bold; 
@@ -41,23 +41,23 @@ H3 {
     font-size:10pt; 
     font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
     background-color:Transparent; 
-    color:#666666; 
+    color:#000000; 
     margin-bottom:5pt; 
     margin-top:9.5pt;  }
 LI.H3 { 
        font-weight:bold; 
        font-size:10pt; 
        font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-       color:#666666;  }
+       color:#000000;  }
 H4 { 
     font-weight:bold; 
     font-size:10pt; 
-    color:#848484; 
+    color:#000000; 
     font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif;  }
 LI.H4 { 
        font-weight:bold; 
        font-size:10pt; 
-       color:#848484; 
+       color:#000000; 
        font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif;  }
 H5 { 
     font-weight:bold; 
@@ -66,39 +66,39 @@ H5 {
     margin-top:6pt; 
     margin-bottom:6pt; 
     line-height:150%; 
-    color:#848484;  }
+    color:#000000;  }
 LI.H5 { 
        font-weight:bold; 
        font-size:10.0pt; 
        font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
        line-height:150%; 
-       color:#848484;  }
+       color:#000000;  }
 H6 { 
     font-weight:bold; 
     font-size:8.0pt; 
     font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
     margin-bottom:0.5pt; 
-    color:#848484; 
+    color:#000000; 
     margin-top:6pt; 
     line-height:150%;  }
 LI.H6 { 
        font-weight:bold; 
        font-size:8.0pt; 
        font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-       color:#848484; 
+       color:#000000; 
        line-height:150%;  }
 P { 
    margin-top:0pt; 
    margin-bottom:0pt; 
    font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-   color:#323232; 
+   color:#000000; 
    font-size:8pt; 
    line-height:150%; 
    x-next-class:TableText; 
    x-next-type:P;  }
 LI.P { 
       font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-      color:#323232; 
+      color:#000000; 
       font-size:8pt; 
       line-height:150%;  }
 A.expandspot { 

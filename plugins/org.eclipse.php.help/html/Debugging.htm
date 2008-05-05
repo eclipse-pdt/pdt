@@ -16,21 +16,23 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-table.whs1 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs2 { width:7.093%; }
-col.whs3 { width:92.907%; }
-tr.whs4 { x-cell-content-align:top; }
-td.whs5 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs6 { font-size:6pt; }
-td.whs7 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs8 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs9 { border:none; width:28px; height:18px; float:none; border-style:none; }
-td.whs10 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-p.whs11 { font-weight:bold; }
-p.whs12 { x-condition:Online; }
-div.whs13 { width:100%; }
-p.whs14 { text-align:right; x-condition:Online; }
-p.whs15 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+table.whs2 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs10 { border:none; width:28px; height:18px; float:none; border-style:none; }
+td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+p.whs12 { font-weight:bold; }
+p.whs13 { font-weight:normal; }
+p.whs14 { x-condition:Online; }
+div.whs15 { width:100%; }
+p.whs16 { text-align:right; x-condition:Online; }
+p.whs17 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -63,7 +65,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nTasks\nUsing the Debugger");
+	addTocInfo("PDT Help\nTasks\nUsing the Debugger");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Profiling_Using_the_Zend_Debugger_Toolbar.htm","Locally_Debugging_a_PHP_Script.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -72,10 +75,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; Using the Debugger</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -100,60 +100,64 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Using the Debugger</p>
-<p>The following Debug functionality is available in <span style="x-condition: PDT;">PDT</span>:</p>
+<h1>Using the Debugger</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p>The following Debug functionality is available in PDT:</p>
+<ul><li class=p-ListBullet1><p class=ListBullet1><a href="Locally_Debugging_a_PHP_Script.htm">Local 
+ PHP Script Debugging</a> - Debug files on your workspace using 's 
+ </span><span style="x-condition: PDT;">your </span>internal debugger.</p></li>
+</ul>
 <ul></ul>
-<ul></ul>
-<ul><li style="x-condition: PDT; " class=p-ListBullet1><p class=ListBullet1 
- style="x-condition: PDT;"><a HREF="Locally_Debugging_a_PHP_Script.htm" 
- style="x-condition: PDT;">PHP Script Debugging</a></p></li>
-	<li class=p-ListBullet1><p class=ListBullet1><a href="Debugging_a_PHP_Web_Page.htm">PHP 
- Web Page Debugging</a></p></li>
+<ul><li class=p-ListBullet1><p class=ListBullet1><a href="Debugging_a_PHP_Web_Page.htm">PHP 
+ Web Page Debugging</a> - Debug applications situated on a server.</p></li>
 	</ul>
-<p class=ListBullet1>Once a debug session has been launched, the PHP Debug 
- perspective is used to control the debugging process and to view and analyze 
- the results.</p>
-<p class=ListBullet1><a href="Analyzing_Debugger_Results.htm" style="x-condition: Online;"><br>
-Click here</a><span style="x-condition: Online;"> for more on Running and 
- Analyzing the debugging process.</span></p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs1">
-<col class="whs2">
+<p class=ListBullet1>Once a debug session has been launched, the <a HREF="PHP_Debug_Perspective.htm">PHP 
+ Debug perspective</a> is used to control the debugging process and to 
+ view and analyze the results.</p>
+<p class=ListBullet1>See the &quot;<a HREF="Analyzing_Debugger_Results.htm">Running 
+ and Analyzing Debugger results</a>&quot; topic for more information on 
+ controlling and monitoring the debugging process.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
+<col class="whs4">
 
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs5">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs7">
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs4">
-<td width="7.093%" class="whs8">
-<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs9"></td>
-<td width="92.907%" class="whs10">
-<p class="whs11">Related Links:</p>
-<p class="whs12"><a href="Working_with_the_Debugger.htm"><span 
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs9">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs10"></td>
+<td width="92.907%" class="whs11">
+<p class="whs12">Related Links:</p>
+<p class="whs13"><span style="font-weight: normal;">Setting 
+ Up Remote Debugging</span></p>
+<p class="whs13"><a HREF="Debugging_Concept.htm"><span style="font-weight: normal;">Debugging</span></a></p>
+<p class="whs14"><a href="Working_with_the_Debugger.htm"><span 
  style="x-condition: Online;">Working with the Debugger</span></a></p>
-<p class="whs12"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
+<p class="whs14"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
  Preferences</span></a></p>
-<p class="whs12"><a href="Debugging_a_PHP_Web_Page.htm"><span 
+<p class="whs14"><a href="Debugging_a_PHP_Web_Page.htm"><span 
  style="x-condition: Online;">Debugging a PHP Web Page</span></a></p>
-<p class="whs12"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
+<p class="whs14"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
  style="x-condition: Online;">Locally Debugging a PHP Script</span></a></p>
-<p class="whs12"><a href="Analyzing_Debugger_Results.htm"><span 
- style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></p>
-<p class="whs12"><a href="Run.htm" style="x-condition: Online;">Run 
- Menu</a></td></tr>
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="7.093%" class="whs8">
-<p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs10">
+<p class="whs14"><a href="Analyzing_Debugger_Results.htm"><span 
+ style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></td></tr>
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs9">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs11">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs13">
- <p align="right" class="whs14"><span><span 
+<div placeholder id="footer" class="whs15">
+ <p align="right" class="whs16"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs15">PHP Development 
+ <p align="center" class="whs17">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -163,9 +167,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; Using the Debugger</p>");
 
 }
 //-->

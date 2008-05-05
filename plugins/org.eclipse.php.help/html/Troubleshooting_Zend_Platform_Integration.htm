@@ -1,0 +1,167 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Troubleshooting Zend Platform Integration</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+div.whs1 { float:none; }
+p.whs2 { font-weight:bold; }
+table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs4 { width:7.093%; }
+col.whs5 { width:92.907%; }
+tr.whs6 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs7 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs8 { font-size:6pt; }
+td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs10 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs11 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs12 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs14 { font-weight:normal; }
+tr.whs15 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs16 { width:100%; }
+p.whs17 { text-align:right; x-condition:Online; }
+p.whs18 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
+addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
+
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1>Troubleshooting Zend Platform Integration</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p class="whs2">Your Zend Platform Integration might not 
+ function correctly for one of the following reasons:</p>
+<ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1>Your 
+ Zend Platform server is not correctly configured in PDT.<br>
+	See Defining a Zend Platform 
+ Server in Studio for more information.</p></li>
+	<li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1>Zend 
+ Platform is situated behind a firewall or other security device.<br>
+	See Setting Up Tunneling for 
+ more information.</p></li>
+	<li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1>Your 
+ PDT 
+ Communication is not correctly configured in Zend Platform.<br>
+	See <a HREF="Configuring_Studio_Communication_Settings_in_Platform.htm">Configuring 
+ Studio Communication Settings in Platform</a> for more information.</p></li>
+	<li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1>Zend 
+ Platform is situated on an HTTPS Server. In this case, when trying to 
+ connect to your Platform server from the Platform Events view, you will 
+ receive the following message:<br>
+	&quot;Unable to verify the identity of 'https://&lt;MyServer/ZendPlatform' 
+ as a trusted site&quot;.<br>
+	See <a HREF="Troubleshooting_Platform_Integration_on_an_HTTPS_Server.htm">Troubleshooting 
+ Platform Integration on an HTTPS Server</a> for more information.</p></li>
+</ul>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
+<col class="whs4">
+<col class="whs5">
+
+<tr valign="top" class="whs6"><td colspan="1" rowspan="1" width="7.093%" class="whs7">
+<p class="whs8">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs9">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs10"><td width="7.093%" class="whs11">
+<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs12"></td>
+<td width="92.907%" class="whs13">
+<p class="whs2">Related Links:</p>
+<p class="whs14"><span style="font-weight: normal;">Zend Platform 
+ Integration</span></p>
+<p>Integrating with Zend Platform</p>
+<p>Setting Up Tunneling</td></tr>
+<tr valign="top" class="whs15"><td colspan="1" rowspan="1" width="7.093%" class="whs11">
+<p class="whs8">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs13">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs16">
+ <p align="right" class="whs17"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs18">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

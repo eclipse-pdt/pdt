@@ -16,30 +16,31 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-p.whs1 { font-weight:bold; }
-ol.whs2 { list-style:decimal; }
-img_whs3 { border:none; width:25px; height:24px; float:none; border-style:none; }
-img_whs4 { border:none; width:19px; height:17px; float:none; border-style:none; }
-img_whs5 { border:none; width:23px; height:20px; float:none; border-style:none; }
-img_whs6 { border:none; width:20px; height:22px; float:none; border-style:none; }
-img_whs7 { border:none; width:27px; height:24px; float:none; border-style:none; }
-img_whs8 { border:none; width:30px; height:28px; float:none; border-style:none; }
-img_whs9 { border:none; width:27px; height:25px; float:none; border-style:none; }
-p.whs10 { margin-left:24px; }
-table.whs11 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs12 { width:7.093%; }
-col.whs13 { width:92.907%; }
-tr.whs14 { x-cell-content-align:top; }
-td.whs15 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs16 { font-size:6pt; }
-td.whs17 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs19 { border:none; width:28px; height:18px; float:none; border-style:none; }
-td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-p.whs21 { x-condition:Online; }
-div.whs22 { width:100%; }
-p.whs23 { text-align:right; x-condition:Online; }
-p.whs24 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+p.whs2 { font-weight:bold; }
+ol.whs3 { list-style:decimal; }
+img_whs4 { border:none; width:25px; height:24px; float:none; border-style:none; }
+img_whs5 { border:none; width:19px; height:17px; float:none; border-style:none; }
+img_whs6 { border:none; width:23px; height:20px; float:none; border-style:none; }
+img_whs7 { border:none; width:20px; height:22px; float:none; border-style:none; }
+img_whs8 { border:none; width:27px; height:24px; float:none; border-style:none; }
+img_whs9 { border:none; width:30px; height:28px; float:none; border-style:none; }
+img_whs10 { border:none; width:27px; height:25px; float:none; border-style:none; }
+p.whs11 { margin-left:24px; }
+table.whs12 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs13 { width:7.093%; }
+col.whs14 { width:92.907%; }
+tr.whs15 { x-cell-content-align:top; }
+td.whs16 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+p.whs17 { font-size:6pt; }
+td.whs18 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs19 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
+td.whs21 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+p.whs22 { x-condition:Online; }
+div.whs23 { width:100%; }
+p.whs24 { text-align:right; x-condition:Online; }
+p.whs25 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -72,7 +73,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nTasks\nUsing the Debugger\nRunning and Analyzing Debugger Results");
+	addTocInfo("PDT Help\nTasks\nUsing the Debugger\nRunning and Analyzing Debugger Results");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Debugging_a_PHP_Web_Page.htm","Adding_a_Server_Path_Map.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -81,10 +83,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; <a href=\"Debugging.htm\">Using the Debugger</a> &gt; Running and Analyzing Debugger Results</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -109,109 +108,112 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Running and Analyzing Debugger Results</p>
+<h1>Running and Analyzing Debugger Results</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
 <p>Once you have launched one of the debug sessions (PHP Script, PHP Web 
  Page or URL), you can control and monitor the debugging process using 
  the views displayed in the debugging process.</p>
 <p>&nbsp;</p>
-<p class="whs1">Controlling the debugging process:</p>
+<p class="whs2">Controlling the debugging process:</p>
 <p>The debug process can be controlled using the various buttons in the 
  Debug view.</p>
-<ol type="1" class="whs2">
+<ol type="1" class="whs3">
 	<li class=p><p>The Debug process will automatically stop at each breakpoint.</p></li>
 	<li class=p><p>The various views will display information about the 
  debugging process up to that point only.</p></li>
 	<li class=p><p>You can use the various buttons in the debug view to 
  decide how to continue with the debugging process:</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Click the Resume button 
- <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs3"> 
+ <img src="resume_icon.png" x-maintain-ratio="TRUE" width="25px" height="24px" border="0" class="img_whs4"> 
  &nbsp;to continue the debugging process until the next 
  breakpoint, or until the end of the debugging process.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Click the Terminate button 
- <img src="terminate_debug_icojn.png" x-maintain-ratio="TRUE" width="19px" height="17px" border="0" class="img_whs4"> 
+ <img src="terminate_debug_icojn.png" x-maintain-ratio="TRUE" width="19px" height="17px" border="0" class="img_whs5"> 
  to stop the debugging process.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Click the Step Over <img src="step_over_icon.png" x-maintain-ratio="TRUE" width="23px" height="20px" border="0" class="img_whs5"> 
+	<li class=p-ListBullet1><p class=ListBullet1>Click the Step Over <img src="step_over_icon.png" x-maintain-ratio="TRUE" width="23px" height="20px" border="0" class="img_whs6"> 
  button to step over the next method call (without entering it) at the 
  currently executing line of code. The method will still be executed. </p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Click the Step Return 
- button <img src="step_return.png" x-maintain-ratio="TRUE" width="20px" height="22px" border="0" class="img_whs6"> &nbsp;to return from a method which has been 
+ button <img src="step_return.png" x-maintain-ratio="TRUE" width="20px" height="22px" border="0" class="img_whs7"> &nbsp;to return from a method which has been 
  stepped into. The remainder of the code that was skipped by returning 
  is still executed.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Click the Step Into button 
- <img src="step_into_icon.png" x-maintain-ratio="TRUE" width="27px" height="24px" border="0" class="img_whs7"> 
+ <img src="step_into_icon.png" x-maintain-ratio="TRUE" width="27px" height="24px" border="0" class="img_whs8"> 
  to step into the next method call at the currently executing line of code.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Click the Use Step Filters 
- button <img src="use_step_filters_icon.png" x-maintain-ratio="TRUE" width="30px" height="28px" border="0" class="img_whs8"> to change whether step filters should be used in the current 
+ button <img src="use_step_filters_icon.png" x-maintain-ratio="TRUE" width="30px" height="28px" border="0" class="img_whs9"> to change whether step filters should be used in the current 
  Debug View.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Once the debugging process 
- has terminated, you can click the Remove Terminated Launches button <img src="remove_terminated_launches_icon.png" x-maintain-ratio="TRUE" width="27px" height="25px" border="0" class="img_whs9"> 
+ has terminated, you can click the Remove Terminated Launches button <img src="remove_terminated_launches_icon.png" x-maintain-ratio="TRUE" width="27px" height="25px" border="0" class="img_whs10"> 
  to remove any terminated debug sessions from the list.</p></li>
 </ol>
 <p class=ListBullet1 style="font-weight: bold;">During the debugging process, 
  various views will provide the following information:</p>
-<ul><li style="list-style: square;" type=square class=p><p class="whs10">Debug 
+<ul><li style="list-style: square;" type=square class=p><p class="whs11">Debug 
  View &nbsp;- Here you can control (stop, pause, and resume) 
  the debugging process. You can also decide whether to step into, step 
  over or step return (step out off) certain functions.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Variables 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Variables 
  - Will display the various variables in your script.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Breakpoints 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Breakpoints 
  - Will display the breakpoints you have entered</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Parameter 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Parameter 
  Stack - Will display the parameters through which functions are reached.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Editor 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Editor 
  Window - Will display the code at the relevant sections, according to 
  which line is selected in the Debug View window.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Debug 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Debug 
  Output - Will show the textual output of the script. This will be updated 
  as the debugging process continues.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Browser 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Browser 
  output - Will show the output of the script to a browser. This will be 
  updated as the debugging process continues.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Console 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Console 
  View - Will display any error and warning messages.</p></li>
-	<li style="list-style: square;" type=square class=p><p class="whs10">Tasks 
+	<li style="list-style: square;" type=square class=p><p class="whs11">Tasks 
  - If you had added any tasks to your script, these would be displayed 
  here.</p></li>
 </ul>
 <p class=Note>Note:</p>
 <p class=NoteText>See '<a HREF="PHP_Debug_Perspective.htm">PHP Debug Perspective</a>' 
  for more on the views that will be displayed during Debugging.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs11">
-<col class="whs12">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs12">
 <col class="whs13">
+<col class="whs14">
 
-<tr valign="top" class="whs14">
-<td colspan="1" rowspan="1" width="7.093%" class="whs15">
-<p class="whs16">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs17">
+<tr valign="top" class="whs15">
+<td colspan="1" rowspan="1" width="7.093%" class="whs16">
+<p class="whs17">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs18">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs14">
-<td width="7.093%" class="whs18">
-<p class="whs16"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs19"></td>
-<td width="92.907%" class="whs20">
-<p class="whs1">Related Links:</p>
-<p class="whs21"><a HREF="PHP_Debug_Perspective.htm">PHP 
+<tr valign="top" class="whs15">
+<td width="7.093%" class="whs19">
+<p class="whs17"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs20"></td>
+<td width="92.907%" class="whs21">
+<p class="whs2">Related Links:</p>
+<p class="whs22"><a HREF="PHP_Debug_Perspective.htm">PHP 
  Debug Perspective</a></p>
-<p class="whs21"><a href="Working_with_the_Debugger.htm">Working 
+<p class="whs22"><a href="Working_with_the_Debugger.htm">Working 
  with the Debugger</a></p>
-<p class="whs21"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
-<p class="whs21"><a href="Debugging_a_PHP_Web_Page.htm"><span 
+<p class="whs22"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
+<p class="whs22"><a href="Debugging_a_PHP_Web_Page.htm"><span 
  style="x-condition: Online;">Debugging a PHP Web Page</span></a></p>
-<p class="whs21"><span><span style="x-condition: Online;"><a 
+<p class="whs22"><span><span style="x-condition: Online;"><a 
  href="Debug.htm"><span style="x-condition: Online;">D</span>ebug Preferences</a></span></span></td></tr>
-<tr valign="top" class="whs14">
-<td colspan="1" rowspan="1" width="7.093%" class="whs18">
-<p class="whs16">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs20">
+<tr valign="top" class="whs15">
+<td colspan="1" rowspan="1" width="7.093%" class="whs19">
+<p class="whs17">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs21">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs22">
- <p align="right" class="whs23"><span><span 
+<div placeholder id="footer" class="whs23">
+ <p align="right" class="whs24"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs24">PHP Development 
+ <p align="center" class="whs25">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -221,9 +223,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Tasks.htm\">Tasks</a> &gt; <a href=\"Debugging.htm\">Using the Debugger</a> &gt; Running and Analyzing Debugger Results</p>");
 
 }
 //-->

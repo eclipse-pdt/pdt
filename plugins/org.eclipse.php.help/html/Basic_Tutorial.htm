@@ -20,11 +20,10 @@ table.whs1 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs2 { width:50%; }
 tr.whs3 { x-cell-content-align:top; }
 td.whs4 { width:50%; padding-right:10px; padding-left:10px; }
-td.whs5 { width:50%; padding-right:10px; padding-left:10px; x-condition:Neon; }
-td.whs6 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-div.whs7 { width:100%; }
-p.whs8 { text-align:right; x-condition:Online; }
-p.whs9 { text-align:center; x-condition:PDT; text-decoration:underline; }
+td.whs5 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+div.whs6 { width:100%; }
+p.whs7 { text-align:right; x-condition:Online; }
+p.whs8 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -57,7 +56,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nGetting Started\nBasic Tutorials");
+	addTocInfo("PDT Help\nGetting Started\nBasic Tutorials");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Quick_Start.htm","Creating_and_Uploading_a_Project.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -66,10 +66,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Getting_Started.htm\">Getting Started</a> &gt; Basic Tutorials</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -94,11 +91,11 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: Online, PDT;">Basic Tutorials</p>
+<h1>Basic Tutorials</h1>
 <p>The Basic Tutorials section contains short tutorials on popular tasks 
- that can be performed with <span style="x-condition: PDT;">PDT</span>. Each tutorial 
- covers workflow issues from A-Z describing the processes and workflow 
- that should be followed in order to complete the tasks. </p>
+ that can be performed with PDT. Each tutorial covers workflow issues 
+ from A-Z describing the processes and workflow that should be followed 
+ in order to complete the tasks. </p>
 <p>&nbsp;</p>
 <p>Get up and running with one of these tutorials:</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
@@ -109,28 +106,22 @@ if (window.writeIntopicBar)
 <td width="50%" class="whs4">
 <p><a HREF="Creating_and_Uploading_a_Project.htm">Creating Projects and 
  Files</a></td>
-<td width="50%" discard="yes" class="whs5">
-</td></tr>
+</tr>
 <tr valign="top" class="whs3">
-<td width="50%" class="whs6">
+<td width="50%" class="whs5">
 <p><a href="Working_with_Code_Assist.htm">Working with Code Assist</a></td>
-<td width="50%" discard="yes" class="whs5">
-</td></tr>
+</tr>
 <tr valign="top" class="whs3">
-<td width="50%" class="whs6">
+<td width="50%" class="whs5">
 <p><a href="Working_with_the_Debugger.htm">Working with the Debugger</a></td>
-<td width="50%" discard="yes" class="whs5">
-</td></tr>
-<td width="50%" discard="yes" class="whs5">
-</td>
-<td width="50%" discard="yes" class="whs5">
-</td></table>
-<div placeholder id="footer" class="whs7">
- <p align="right" class="whs8"><span><span 
+</tr>
+</table>
+<div placeholder id="footer" class="whs6">
+ <p align="right" class="whs7"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs9">PHP Development 
+ <p align="center" class="whs8">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -140,9 +131,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Getting_Started.htm\">Getting Started</a> &gt; Basic Tutorials</p>");
 
 }
 //-->

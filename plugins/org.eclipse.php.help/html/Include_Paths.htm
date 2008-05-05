@@ -16,22 +16,23 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-ol.whs1 { list-style:lower-roman; }
-table.whs2 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs3 { width:7.093%; }
-col.whs4 { width:92.907%; }
-tr.whs5 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
-p.whs7 { font-size:6pt; }
-td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs9 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs11 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-tr.whs13 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs14 { width:100%; }
-p.whs15 { text-align:right; x-condition:Online; }
-p.whs16 { text-align:center; x-condition:PDT; text-decoration:underline; }
+div.whs1 { float:none; }
+ol.whs2 { list-style:lower-roman; }
+table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs4 { width:7.093%; }
+col.whs5 { width:92.907%; }
+tr.whs6 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs7 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs8 { font-size:6pt; }
+td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs10 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs11 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs12 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+tr.whs14 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs15 { width:100%; }
+p.whs16 { text-align:right; x-condition:Online; }
+p.whs17 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -64,7 +65,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nConcepts\nInclude Paths");
+	addTocInfo("PDT Help\nConcepts\nInclude Paths");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Path_Mapping.htm","Tasks.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -73,10 +75,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Include Paths</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -101,16 +100,19 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Include Paths</p>
+<h1>Include Paths</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
 <p>An Include Path is a location which connects elements created in external 
  projects/libraries to the active project.</p>
 <p>&nbsp;</p>
 <p>Projects/libraries added to a project's Include Path affect the following:</p>
-<ul><li class=p-ListBullet1><p class=ListBullet1><a HREF="Debugging.htm">Debugging</a> 
- - If a 'require'/'include' call calls a file that exists outside of the 
- active project and its location is specified in a 'Relative' way (see 
- below), you must add its location to the project's Include Path in order 
- for the correct file to be called during debugging.</p></li>
+<ul><li class=p-ListBullet1><p class=ListBullet1><a HREF="Debugging.htm">Debugging</a> - If a 'require'/'include' 
+ call calls a file that exists outside of the active project and its location 
+ is specified in a 'Relative' way (see below), you must add its location 
+ to the project's Include Path in order for the correct file to be called 
+ during debugging.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Using_Code_Assist.htm">Code 
  Assist</a> - Adding projects/libraries to a project's Include Path will 
  make elements defined within the included projects/libraries available 
@@ -119,7 +121,7 @@ if (window.writeIntopicBar)
 <p>&nbsp;</p>
 <p>In 'include'/'require' calls, file locations can be defined in three 
  ways:</p>
-<ol type="i" class="whs1">
+<ol type="i" class="whs2">
 	<li style="margin-left: -20px; list-style: lower-alpha;" type=a class=p><p><span 
  style="font-weight: bold;"><B>Absolute</B></span> <span style="font-weight: bold;"><B>Path</B></span>- 
  The exact file location is specified (e.g. C:\Documents and Settings\MyProject\myfolder\a.php).</p></li>
@@ -132,54 +134,54 @@ if (window.writeIntopicBar)
 	<li style="margin-left: -20px; list-style: lower-alpha;" type=a class=p><p><span 
  style="font-weight: bold;"><B>Relative</B></span> <span style="font-weight: bold;"><B>Path</B></span> 
  - Only the file name or partial path is specified (e.g. /myfolder/a.php). 
- In this case,<span 
- style="x-condition: PDT;"> PDT </span>&nbsp;will search 
- for the file's path in the project's Include Path and in the project itself.<br>
+ In this case, PDT 
+ will search for the file's path in the project's Include Path and then 
+ in the project itself, as explained below.<br>
 	If the path of the file being searched for exists in more than one 
- location, the file that is called will be the first one<span style="x-condition: PDT;"> PDT </span>encounters 
+ location, the file that is called will be the first one PDT encounters 
  during the search process.<br>
-	The order in which<span style="x-condition: PDT;"> PDT </span>searches for 
- the file's path is as follows:</p></li>
-	<ol type="i" class="whs1">
-		<li style="margin-left: -20px;" class=p><p>The order specified 
- in the &quot;debug target&quot; (the first file to be debugged) project's 
- Include Path. If a project specified in the Include Path refers to other 
- projects/libraries in its own Include Path, the file path will be searched 
- for there before the search process continues.<br>
+	The order in which PDT 
+ searches for the file's path is as follows:</p></li>
+	<ol type="i" class="whs2">
+		<li style="margin-left: -20px;" class=p><p>Projects in the &quot;debug 
+ target&quot; (the first file to be debugged) project's Include Path, according 
+ to the order in which they are listed. If a project specified in the Include 
+ Path refers to other projects/libraries in its own Include Path, the file 
+ path will be searched for there before the search process continues.<br>
 		See <a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm">Adding 
- Elements to a Project's Include Path</a> for more on defining the order 
- of projects / libraries in a project's Include Path.</p></li>
+ Elements to a Project's Include Path</a> for more on defining the projects 
+ / libraries in a project's Include Path.</p></li>
 		<li style="margin-left: -20px;" class=p><p>The &quot;debug target&quot; 
  file's project.</p></li>
 	</ol>
 </ol>
 <p>See <a href="http://il2.php.net/manual/en/function.include.php">http://il2.php.net/manual/en/function.include.php</a> 
  for more on PHP's search mechanism.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
-<col class="whs3">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <col class="whs4">
+<col class="whs5">
 
-<tr valign="top" class="whs5"><td colspan="1" rowspan="1" width="7.093%" class="whs6">
-<p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<tr valign="top" class="whs6"><td colspan="1" rowspan="1" width="7.093%" class="whs7">
+<p class="whs8">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs9">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs9"><td width="7.093%" class="whs10">
-<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs11"></td>
-<td width="92.907%" class="whs12">
+<tr valign="top" class="whs10"><td width="7.093%" class="whs11">
+<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs12"></td>
+<td width="92.907%" class="whs13">
 <p><span style="font-weight: bold;"><B>Related Links:</B></span><a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm"><br>
 Adding Elements to a Project's Include Path</a></p>
 <p><a href="Path_Variables.htm">Path Variables Preferences</a></td></tr>
-<tr valign="top" class="whs13"><td colspan="1" rowspan="1" width="7.093%" class="whs10">
-<p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs12">
+<tr valign="top" class="whs14"><td colspan="1" rowspan="1" width="7.093%" class="whs11">
+<p class="whs8">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs13">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs14">
- <p align="right" class="whs15"><span><span 
+<div placeholder id="footer" class="whs15">
+ <p align="right" class="whs16"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs16">PHP Development 
+ <p align="center" class="whs17">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
@@ -189,9 +191,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Include Paths</p>");
 
 }
 //-->

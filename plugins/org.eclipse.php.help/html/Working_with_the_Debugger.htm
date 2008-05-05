@@ -12,18 +12,18 @@ if (navigator.appName !="Netscape")
 </script>
 <style type="text/css">
 <!--
-p.whs1 { text-align:center; font-style:italic; }
-table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
-col.whs3 { width:50%; }
-tr.whs4 { x-cell-content-align:top; }
-td.whs5 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
-td.whs6 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs7 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-td.whs8 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; }
-td.whs9 { width:50%; padding-right:10px; padding-left:10px; }
-ul.whs10 { list-style:square; }
-p.whs11 { text-align:right; x-condition:Online; }
-div.whs12 { float:none; }
+div.whs1 { float:none; }
+p.whs2 { text-align:center; font-style:italic; }
+table.whs3 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs4 { width:50%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+td.whs7 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+td.whs8 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+td.whs9 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; }
+td.whs10 { width:50%; padding-right:10px; padding-left:10px; }
+ul.whs11 { list-style:square; }
+p.whs12 { text-align:right; x-condition:Online; }
 col.whs13 { width:7.093%; }
 col.whs14 { width:92.907%; }
 td.whs15 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
@@ -88,7 +88,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nGetting Started\nBasic Tutorials\nWorking with the Debugger");
+	addTocInfo("PDT Help\nGetting Started\nBasic Tutorials\nWorking with the Debugger");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Working_with_Code_Assist.htm","Concepts.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -97,10 +98,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Getting_Started.htm\">Getting Started</a> &gt; <a href=\"Basic_Tutorial.htm\">Basic Tutorials</a> &gt; Working with the Debugger</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -125,80 +123,79 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Working with the Debugger</p>
-<p align="center" class="whs1">The purpose 
+<h1>Working with the Debugger</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p align="center" class="whs2">The purpose 
  of this tutorial is to teach you how to debug files and applications both 
  remotely and locally in order to gain maximum efficiency and accuracy 
  from your files and projects.</p>
-<p class=Strong><a name=Contents>Contents</a></p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
-<col class="whs3">
-<col class="whs3">
+<p class=Strong><a name=Contents></a>Contents:</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
+<col class="whs4">
+<col class="whs4">
 
-<tr valign="top" class="whs4">
-<td width="50%" class="whs5">
-<p><a href="#Purpose_and_Usage">Purpose and Usage</a></td>
+<tr valign="top" class="whs5">
 <td width="50%" class="whs6">
+<p><a href="#Purpose_and_Usage">Purpose and Usage</a></td>
+<td width="50%" class="whs7">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="50%" class="whs7">
-<p><a href="#Debugging_PHP_Files">Debugging PHP Files (PHP Scripts)</a><span 
- style="color: #0000ff;"><font color=blue >:</font></span></td>
+<tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="50%" class="whs8">
-<p>&nbsp;</td></tr>
-<tr valign="top" class="whs4">
+<p><a href="#Debugging_PHP_Files">Debugging PHP Files (PHP Scripts)</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs9">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="50%" class="whs10">
 <p>&nbsp;</p></td>
-<td colspan="1" rowspan="1" width="50%" class="whs9">
-<p>&nbsp;</td></tr>
-<tr valign="top" class="whs4">
-<td colspan="1" rowspan="1" width="50%" class="whs9">
-<p>&nbsp;</td>
-<td colspan="1" rowspan="1" width="50%" class="whs9">
+<td colspan="1" rowspan="1" width="50%" class="whs10">
 <p>&nbsp;</td></tr>
 </table>
 &nbsp; 
-<h2><a name=Purpose_and_Usage>Purpose and Usage</a></h2>
-<p><span 
- style="x-condition: PDT;">PDT</span>'s Debugging feature can detect and 
- diagnose errors in PHP code situated locally or on remote servers. The 
- debugger allows you to control the execution of your program by setting 
- breakpoints, suspending launched programs, stepping through your code, 
- and examining the contents of variables.</p>
-<p>Debugging should be used at stages where your scripts and applications 
- are formed sufficiently to be tried and tested.</p>
-<p><span 
- style="x-condition: PDT;">PDT</span> includes <span 
- style="x-condition: PDT;">two</span> types of debugging:</p>
-<ul type="square" class="whs10">
+<h2><a name=Purpose_and_Usage></a>Purpose and Usage</h2>
+<p>PDT's 
+ Debugging feature can detect and diagnose errors in PHP code situated 
+ locally or on remote servers. The debugger allows you to control the execution 
+ of your program by setting breakpoints, suspending launched programs, 
+ stepping through your code, and examining the contents of variables.</p>
+<p>PDT 
+ includes several types of debugging:</p>
+<ul type="square" class="whs11">
 	<li class=p><p>Locally Debugging PHP Scripts - Debugging PHP files 
- using <span 
- style="x-condition: PDT;">PDT</span>'s internal PHP Executable debugger.</p></li>
+ using's</span><span 
+ style="x-condition: PDT;"> an</span>internal PHP Executable debugger.</p></li>
 	<li class=p><p>Debugging PHP Web Pages - Debugging files, applications 
  and projects on your server.</p></li>
 	</ul>
-<p align="right" class="whs11"><a href="#Contents" 
+<p align="right" class="whs12"><a href="#Contents" 
  style="x-condition: Online;">Back to Top</a></p>
-<h2><a name=Debugging_PHP_Files>Debugging PHP Files (PHP Scripts)</a></h2>
-<p>PHP files (PHP Scripts) on your workspace can be debugged <span 
- style="x-condition: PDT;">locally using PDT's internal debugger.</span></p>
-<div class="whs12">
+<h2><a name=Debugging_PHP_Files></a>Debugging PHP Files (PHP Scripts)</h2>
+<div class="whs1">
+</div>
+<p>PHP files (PHP Scripts) 
+ on your workspace can be debugged <span style="x-condition: PDT;">locally 
+ using PDT's internal debugger.</span></p>
+<div class="whs1">
  <p class=Note>Note:</p>
  <p class=NoteText>Your server must be running the Zend Debugger<span style="x-condition: PDT;"> 
- or XDebug</span> in order for remote debugging capabilities to function.<br>
-The Zend Debugger comes bundled with Zend Core and Zend Platform, but can 
- also be downloaded as a separate component from <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
+ or XDebug</span> in order for remote debugging<span style="x-condition: Neon;"> 
+ and profiling</span> capabilities to function.<br>
+The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/core/">Zend 
+ Core</a> and <a href="http://www.zend.com/en/products/platform/">Zend 
+ Platform</a>, but can also be downloaded as a separate component from 
+ <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
 </div>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <col class="whs13">
 <col class="whs14">
 
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs15">
 <p class="whs16">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs17">
 <p class="whs18">&nbsp;</td></tr>
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td width="7.093%" class="whs19">
 <p class="whs16"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs20"></td>
 <td width="92.907%" class="whs21">
@@ -216,7 +213,8 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 	<li style="margin-left: -20px;" class=p><p>Save the file.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Click the arrow next to 
  the debug button <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs23"> on the toolbar and select Open Debug dialog -or- select 
- Run | Open Debug dialog from the main menu.<br>
+ Run | Open Debug dialog from the main menu -or- right-click the file in 
+ PHP Explorer view and select Open Debug dialog.<br>
 	A Debug dialog will appear.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Double-click the PHP Script 
  option to create a new debug configuration.</p></li>
@@ -225,20 +223,9 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 <ol start="6" type="1" class="whs22">
 	<li style="margin-left: -20px;" class=p><p>Enter a name for the new 
  configuration.</p></li>
-	<li style="margin-left: -20px;" class=p><p>To debug the file using 
- <span style="x-condition: PDT;">PDT</span>s 
- PHP Executable debugger, select the PHP Executable option in the Debugger 
- Location category.<br>
-	-Or- To debug the file using your server's Debugger, select the PHP 
- Web Server option under the Debugger Location category and select your 
- server from the drop-down list.<br>
-	If you have not configured a server, click New and enter:</p></li>
-	<ol start="1" type="1" class="whs22">
-		<li style="list-style: lower-roman;" type=i class=p><p>Your server's 
- name.</p></li>
-		<li style="list-style: lower-roman;" type=i class=p><p>Tthe URL 
- of its document root. </p></li>
-	</ol>
+	<li style="margin-left: -20px;" class=p><p>To debug the file using<span style="x-condition: PDT;"> 
+ your</span> PHP Executable debugger, select the PHP Executable option 
+ in the Debugger Location category.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Under PHP File, click Browse 
  and select the &quot;debug&quot; file.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Ensure that the 'Break at 
@@ -251,7 +238,8 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 	<li style="margin-left: -20px;" class=p><p>A number of views will open 
  with information about your script.</p></li>
 	<li style="margin-left: -20px;" class=p><p>The Debug View is where 
- the debugging process can be monitored and controlled.</p></li>
+ the debug stack trace is displayed and the debugging process can be monitored 
+ and controlled.</p></li>
 </ol>
 <p class=picture><img src="debug_view.png" x-maintain-ratio="TRUE" width="315px" height="175px" border="0" class="img_whs25"></p>
 <p class="whs26">The debugging process will currently have 
@@ -291,37 +279,52 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 	<li style="margin-left: -20px;" class=p><p>To run the debugging process 
  again, click the arrow next to the debug icon <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs23"> on the toolbar and select your configuration 
  -or- select Open Debug Dialog and double-click your configuration from 
- the Debug dialog.</p></li>
+ the Debug dialog.<br>
+	Clicking the debug icon will debug the last executed launch configuration.</p></li>
 </ol></td></tr>
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td rowspan="1" colspan="2" width="100%" class="whs31">
 <p>&nbsp;</td>
 </tr>
 </table>
-<p align="right" class="whs11"><a href="#Contents" 
+<p align="right" class="whs12"><a href="#Contents" 
  style="x-condition: Online;">Back to Top</a></p>
-<div class="whs12">
+<div class="whs1">
  <p class=Note>Note:</p>
  <p class=NoteText>Your server must be running the Zend Debugger<span style="x-condition: PDT;"> 
- or XDebug</span> in order for remote debugging capabilities to function.<br>
-The Zend Debugger comes bundled with Zend Core and Zend Platform, but can 
- also be downloaded as a separate component from <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
+ or XDebug</span> in order for remote debugging<span style="x-condition: Neon;"> 
+ and profiling</span> capabilities to function.<br>
+The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/core/">Zend 
+ Core</a> and <a href="http://www.zend.com/en/products/platform/">Zend 
+ Platform</a>, but can also be downloaded as a separate component from 
+ <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
 </div>
-<h2><a name=Debugging_PHP_Applications>Debugging PHP Applications (PHP 
- Web Pages)</a></h2>
-<p><span 
- style="x-condition: PDT;">PDT </span>also allows you to debug applications, 
- projects or files that are already on the server. </p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<h2><a name=Debugging_PHP_Applications></a>Debugging PHP Applications (PHP 
+ Web Pages)</h2>
+<div class="whs1">
+</div>
+<p>PDT also allows you to debug 
+ applications, projects or files that are already on the server. </p>
+<div class="whs1">
+ <p class=Note>Note:</p>
+ <p class=NoteText>Your server must be running the Zend Debugger<span style="x-condition: PDT;"> 
+ or XDebug</span> in order for remote debugging<span style="x-condition: Neon;"> 
+ and profiling</span> capabilities to function.<br>
+The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/core/">Zend 
+ Core</a> and <a href="http://www.zend.com/en/products/platform/">Zend 
+ Platform</a>, but can also be downloaded as a separate component from 
+ <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
+</div>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <col class="whs13">
 <col class="whs14">
 
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs32">
 <p class="whs16">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs33">
 <p class="whs18">&nbsp;</td></tr>
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td width="7.093%" class="whs32">
 <p class="whs16"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs20"></td>
 <td width="92.907%" class="whs33">
@@ -357,8 +360,8 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 <p class=code style="margin-left: 0px;">&lt;/body&gt;</p>
 <p class=code style="margin-left: 0px;">&lt;/html&gt;</p>
 <ol start="3" type="1" class="whs22">
-	<li style="margin-left: -20px;" class=p><p>Save both files.</p></li>
-	<li style="margin-left: -20px;" class=p><p>Copy the files to your server.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Save both files and copy 
+ them to your server.</p></li>
 	<li style="margin-left: -20px;" class=p><p><a name=step_4></a>Click 
  the arrow next to the debug button <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs23"> &nbsp;on the toolbar and 
  select Open Debug dialog -or- right-click the file in PHP explorer or 
@@ -368,7 +371,7 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
  Web Page option to create a new debug configuration. </p></li>
 	<li style="margin-left: -20px;" class=p><p>Enter a name for the new 
  configuration.</p></li>
-	<li style="margin-left: -20px;" class=p><p>Select the Debugger to from the Server Debugger drop-down list. </p></li>
+	<li style="margin-left: -20px;" class=p><p>Select the Debugger from the Server Debugger drop-down list. </p></li>
 	<li style="margin-left: -20px;" class=p><p>Select your server from 
  the drop-down list.<br>
 	If you have not configured a server, click New and enter:</p></li>
@@ -376,8 +379,8 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
 <ol start="1" type="1" class="whs22">
 	<li style="list-style: lower-roman;" type=i class=p><p>Your server's 
  name.</p></li>
-	<li style="list-style: lower-roman;" type=i class=p><p>Tthe URL of 
- its document root. </p></li>
+	<li style="list-style: lower-roman;" type=i class=p><p>The URL of its 
+ document root. </p></li>
 </ol>
 <ol start="10" type="1" class="whs22">
 	<li style="margin-left: -20px;" class=p><p>Under the File/Project category, 
@@ -434,23 +437,23 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
  again, click the arrow next to the debug icon <img src="debug_icon.png" x-maintain-ratio="TRUE" width="39px" height="25px" border="0" class="img_whs23"> on the toolbar and select your debugging 
  configuration.</p></li>
 </ol></td></tr>
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td rowspan="1" colspan="2" width="100%" class="whs37">
 <p>&nbsp;</td>
 </tr>
 </table>
-<p align="right" class="whs11"><a href="#Contents" 
+<p align="right" class="whs12"><a href="#Contents" 
  style="x-condition: Online;">Back to Top</a></p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs38">
 <col class="whs13">
 <col class="whs14">
 
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs39">
 <p class="whs16">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs40">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td width="7.093%" class="whs19">
 <p class="whs16"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs41"></td>
 <td width="92.907%" class="whs21">
@@ -463,16 +466,16 @@ The Zend Debugger comes bundled with Zend Core and Zend Platform, but can
  href="Debug.htm"><span style="x-condition: Online;">D</span>ebug Preferences</a></span></span></p>
 <p class="whs42"><a href="Analyzing_Debugger_Results.htm">Running 
  and Analyzing Debugger Results</a></td></tr>
-<tr valign="top" class="whs4">
+<tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs19">
 <p class="whs16">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs21">
 <p>&nbsp;</td></tr>
 </table>
-<p align="right" class="whs11"><a href="#Contents" 
+<p align="right" class="whs12"><a href="#Contents" 
  style="x-condition: Online;">Back to Top</a></p>
 <div placeholder id="footer" class="whs43">
- <p align="right" class="whs11"><span><span 
+ <p align="right" class="whs12"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
@@ -486,9 +489,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Getting_Started.htm\">Getting Started</a> &gt; <a href=\"Basic_Tutorial.htm\">Basic Tutorials</a> &gt; Working with the Debugger</p>");
 
 }
 //-->

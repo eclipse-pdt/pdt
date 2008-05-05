@@ -60,7 +60,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT User Guide\nConcepts\nDebugging");
+	addTocInfo("PDT Help\nConcepts\nDebugging");
+addAvenueInfo("Zend Studio for Eclipse User Guide","Real_Time_Error_Detection.htm","Path_Mapping.htm");
 addButton("show",BTN_TEXT,"Show Table of Contents","","","","",0,0,"whd_show0.gif","whd_show2.gif","whd_show1.gif");
 addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gif","whd_hide2.gif","whd_hide1.gif");
 
@@ -69,10 +70,7 @@ addButton("hide",BTN_TEXT,"Hide Table of Contents","","","","",0,0,"whd_hide0.gi
 
 	if(1)
 	{
-	document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Debugging</p>");
-
+	
 	}
 
 	if (window.setRelStartPage)
@@ -97,33 +95,31 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<p class=PDThelp style="x-condition: PDT;">Debugging</p>
-<p><span 
- style="x-condition: PDT;">PDT</span>'s debugging function allows you to 
- test your files and applications and detect errors in your code. </p>
+<h1>Debugging</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p>PDT 
+ debugging function allows you to test your files and applications and 
+ detect errors in your code. </p>
 <p>The debugger allows you to control the execution of your program using 
  a variety of options including setting breakpoints, stepping through your 
  code, and inspecting your variables and parameters.</p>
 <p>&nbsp;</p>
-<p><span 
- style="x-condition: PDT;">PDT</span> includes <span 
- style="x-condition: PDT;">two</span> different debugging methods:</p>
+<p>PDT 
+ includes several different debugging methods:</p>
 <p>&nbsp;</p>
-<p class=Strong>PHP Script Local Debugging</p>
-<p class=ListBullet1>Allows you to debug files on your workspace using 
- <span style="x-condition: PDT;">PDT</span>'s 
- internal debugger.<br>
+<h3>PHP Script Local Debugging</h3>
+<p class=ListBullet1>Allows you to debug files on your workspace using's</span><span 
+ style="x-condition: PDT;"> your</span> internal debugger.<br>
 The Internal Debugger enables developers to locally validate freshly developed 
  code before deploying to a web server. The internal option means that 
- only files located in local directories can be debugged. When debugging 
- internal files the <span 
- style="x-condition: PDT;">PDT</span> Internal Debugger uses its own PHP 
- executable that was installed together with <span style="x-condition: PDT;">PDT</span>.</p>
+ files located on your workspace can be debugged. </p>
 <p>&nbsp;</p>
 <p>See <a HREF="Locally_Debugging_a_PHP_Script.htm">Locally Debugging a 
  PHP Script</a> for more information.</p>
 <p class=Strong>&nbsp;</p>
-<p class=Strong>PHP Web Page Debugging</p>
+<h3>PHP Web Page Debugging</h3>
 <p>Allows you to debug applications situated on a server. It allows you 
  to debug whole applications, including any required interactive user input. 
  </p>
@@ -135,9 +131,12 @@ The Internal Debugger enables developers to locally validate freshly developed
 <div class="whs1">
  <p class=Note>Note:</p>
  <p class=NoteText>Your server must be running the Zend Debugger<span style="x-condition: PDT;"> 
- or XDebug</span> in order for remote debugging capabilities to function.<br>
-The Zend Debugger comes bundled with Zend Core and Zend Platform, but can 
- also be downloaded as a separate component from <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
+ or XDebug</span> in order for remote debugging<span style="x-condition: Neon;"> 
+ and profiling</span> capabilities to function.<br>
+The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/core/">Zend 
+ Core</a> and <a href="http://www.zend.com/en/products/platform/">Zend 
+ Platform</a>, but can also be downloaded as a separate component from 
+ <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.</p>
 </div>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
@@ -174,9 +173,6 @@ if (window.writeIntopicBar)
 	writeIntopicBar(0);
 if(0)
 {
-document.write("<p style=\"text-align:left\"> ");
-AddMasterBreadcrumbs("IDE_Help.htm", "", "&gt;", "Home", "toc.htm");
-document.write("<a href=\"Welcome.htm\">PDT User Guide</a> &gt; <a href=\"Concepts.htm\">Concepts</a> &gt; Debugging</p>");
 
 }
 //-->
