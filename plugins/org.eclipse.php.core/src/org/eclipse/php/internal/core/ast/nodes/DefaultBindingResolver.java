@@ -127,13 +127,30 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	/**
 	 * Returns an {@link IModelElement} array according to the offset and the length.
-	 * <p>
-	 * The default implementation of this method returns <code>null</code>.
-	 * Subclasses may reimplement.
-	 * </p>
+	 * The result is filtered using the 'File-Network'.
+	 * @param offset
+	 * @param length
+	 * 
+	 * @see #getModelElements(int, int, boolean)
+	 * @see BindingUtility#getModelElement(int, int)
 	 */
 	public IModelElement[] getModelElements(int offset, int length) {
-		return bindingUtil.getModelElement(offset, length);
+		return getModelElements(offset, length, true);
+	}
+
+	/**
+	 * Returns an {@link IModelElement} array according to the offset and the length.
+	 * Use the filter flag to indicate whether the 'File-Network' should be used to filter the
+	 * results.
+	 * @param offset
+	 * @param length
+	 * @param filter Indicate whether to use the File-Network in order to filter the results.
+	 * 
+	 * @see #getModelElements(int, int)
+	 * @see BindingUtility#getModelElement(int, int, boolean)
+	 */
+	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
+		return bindingUtil.getModelElement(offset, length, filter);
 	}
 
 	/* (non-Javadoc)
@@ -168,9 +185,11 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/**
-	 * @return the resolved type of the given expression, null if can't evaluate
+	 * Returns the resolved type of the given expression. The results are NOT filtered by the
+	 * File-Network.
+	 * 
+	 * @return the resolved type of the given expression, null if can't evaluate.
 	 */
-	@Override
 	ITypeBinding resolveExpressionType(Expression expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException("Can not resolve null expression");
@@ -178,7 +197,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		int start = expression.getStart();
 		int length = expression.getLength();
 		IEvaluatedType type = getEvaluatedType(start, length);
-		IModelElement[] modelElement = getModelElements(start, length);
+		IModelElement[] modelElement = getModelElements(start, length, false);
 		return new TypeBinding(this, type, modelElement);
 		/*
 		 * TODO handle caching

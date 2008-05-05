@@ -764,12 +764,31 @@ class BindingResolver {
 
 	/**
 	 * Returns an {@link IModelElement} array according to the offset and the length.
+	 * The result is filtered using the 'File-Network'.
 	 * <p>
 	 * The default implementation of this method returns <code>null</code>.
 	 * Subclasses may reimplement.
 	 * </p>
+	 * @param offset
+	 * @param length
 	 */
 	public IModelElement[] getModelElements(int offset, int length) {
+		return null;
+	}
+
+	/**
+	 * Returns an {@link IModelElement} array according to the offset and the length.
+	 * Use the filter flag to indicate whether the 'File-Network' should be used to filter the
+	 * results.
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 * @param offset
+	 * @param length
+	 * @param filter Indicate whether to use the File-Network in order to filter the results.
+	 */
+	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
 		return null;
 	}
 
