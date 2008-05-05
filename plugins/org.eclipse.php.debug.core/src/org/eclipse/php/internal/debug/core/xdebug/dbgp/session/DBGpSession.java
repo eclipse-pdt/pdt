@@ -230,6 +230,8 @@ public class DBGpSession {
 									handleStopStatus(parsedResponse);
 								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_BREAK)) {
 									handleBreakStatus(parsedResponse);
+								} else if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPING)) {
+									handleStoppingStatus(parsedResponse);
 								}
 							} else if (respType == DBGpResponse.STREAM && 
 									   respErrorCode != DBGpResponse.ERROR_INVALID_RESPONSE) {
@@ -328,6 +330,18 @@ public class DBGpSession {
 			   doc.set(doc.get() + parsedResponse.getStreamData());
 			}
 			*/
+		}
+		
+		private void handleStoppingStatus(DBGpResponse parsedResponse) {
+			//For the moment we will ignore the reason and just stop.
+			DBGpResponse stoppedResponse = sendSyncCmdOnResponseThread(DBGpCommand.stop, null);
+			if (parsedResponse.getStatus().equals(DBGpResponse.STATUS_STOPPED)) {
+				handleStopStatus(stoppedResponse);
+			}
+			else {
+				// log a problem but still stop
+				handleStopStatus(stoppedResponse);				
+			}
 		}
 
 		/**
