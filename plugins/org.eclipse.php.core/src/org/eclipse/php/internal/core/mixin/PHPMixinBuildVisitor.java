@@ -15,12 +15,32 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IBuffer;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.CatchClause;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
+import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ListVariable;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 public class PHPMixinBuildVisitor extends ASTVisitor {
@@ -31,7 +51,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	private IMixinRequestor requestor;
 	private Stack<Scope> scopes = new Stack<Scope>();
 	private SourceModuleScope sourceModuleScope;
-//	private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
+	// private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
 
 	/** Global variables stack */
 	private Stack<Set<String>> globalVariables = new Stack<Set<String>>();
@@ -103,7 +123,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 			int i = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 			if (i >= 0) {
-				filePath = filePath.substring(i+1);
+				filePath = filePath.substring(i + 1);
 			}
 			return report(filePath + PHPMixinParser.INCLUDE_SUFFIX, PHPMixinElementInfo.createInclude(object));
 		}
@@ -216,7 +236,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		this.requestor = requestor;
 	}
 
-	private String report(String key, PHPMixinElementInfo object) {
+	protected String report(String key, PHPMixinElementInfo object) {
 		ElementInfo info = new IMixinRequestor.ElementInfo();
 		info.key = key;
 		info.object = object;
@@ -339,18 +359,18 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return visit((ListVariable) expr);
 		}
 		if (expr instanceof Include) {
-			return visit((Include)expr);
+			return visit((Include) expr);
 		}
 		return visitGeneral(expr);
 	}
 
 	public boolean visitGeneral(ASTNode node) throws Exception {
-//		nodesStack.push(node);
+		// nodesStack.push(node);
 		return true;
 	}
 
 	public void endvisitGeneral(ASTNode node) throws Exception {
-//		nodesStack.pop();
+		// nodesStack.pop();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -559,5 +579,35 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		endvisitGeneral(decl);
 		return true;
+	}
+
+	public static String restoreKeyByNode(ISourceModule sourceModule, ModuleDeclaration unit, final ASTNode node) {
+		final String elementKey[] = new String[1];
+		
+		PHPMixinBuildVisitor visitor = new PHPMixinBuildVisitor(unit, sourceModule, false, null) {
+			private String tmpKey;
+			
+			protected String report(String key, PHPMixinElementInfo object) {
+				tmpKey = key;
+				return super.report(key, object);
+			}
+
+			public boolean visitGeneral(ASTNode n) throws Exception {
+				if (elementKey[0] != null) {
+					return false;
+				}
+				if (node == n) {
+					elementKey[0] = tmpKey;
+				}
+				return super.visitGeneral(node);
+			}
+		};
+		try {
+			unit.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+
+		return elementKey[0];
 	}
 }

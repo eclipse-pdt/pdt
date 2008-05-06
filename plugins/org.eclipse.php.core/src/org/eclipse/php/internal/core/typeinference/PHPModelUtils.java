@@ -3,19 +3,57 @@ package org.eclipse.php.internal.core.typeinference;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.mixin.IMixinElement;
+import org.eclipse.dltk.core.search.IDLTKSearchConstants;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.core.search.SearchMatch;
+import org.eclipse.dltk.core.search.SearchParticipant;
+import org.eclipse.dltk.core.search.SearchPattern;
+import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
+import org.eclipse.php.internal.core.mixin.PHPMixinBuildVisitor;
+import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 
 public class PHPModelUtils {
+	
+	/**
+	 * Finds model element that corresponds to the given AST node
+	 * @param sourceModule Source module (file model element)
+	 * @param unit AST nodes root
+	 * @param node Requested node
+	 * @return model element or <code>null</code> in case of error
+	 */
+	public static IModelElement getModelElementByNode(ISourceModule sourceModule, ModuleDeclaration unit, ASTNode node) {
+		Assert.isNotNull(node);
+		
+		String key = PHPMixinBuildVisitor.restoreKeyByNode(sourceModule, unit, node);
+		if (key != null) {
+			IMixinElement[] elements = PHPMixinModel.getRawInstance().find(key);
+			if (elements.length > 0) {
+				Object[] allObjects = elements[0].getAllObjects();
+				if (allObjects.length > 0) {
+					return (IModelElement) ((PHPMixinElementInfo)allObjects[0]).getObject();
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Finds method by name in the class hierarchy
