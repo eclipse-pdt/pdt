@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -29,7 +30,6 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -172,7 +172,7 @@ class OverrideIndicatorManager implements IScriptReconcilingListener, IPhpScript
 						ITypeBinding definingType = definingMethod.getDeclaringClass();
 						String qualifiedMethodName = definingType.getName() + "." + binding.getName(); //$NON-NLS-1$ [TODO - Use definingType.getQualifiedName()]
 
-						boolean isImplements = Modifier.isAbstract(definingMethod.getModifiers());
+						boolean isImplements = (Modifiers.AccAbstract & definingMethod.getModifiers()) != 0;
 						String text;
 						if (isImplements)
 							text = Messages.format(PHPUIMessages.getString("OverrideIndicatorManager_implements"), qualifiedMethodName);
