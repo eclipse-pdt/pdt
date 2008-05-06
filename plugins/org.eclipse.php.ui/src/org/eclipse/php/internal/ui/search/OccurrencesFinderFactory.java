@@ -79,4 +79,8 @@ public class OccurrencesFinderFactory {
 	public static IOccurrencesFinder createImplementorsOccurrencesFinder() {
 		return new ImplementOccurrencesFinder();
 	}
+
+	public static IOccurrencesFinder createIncludeFinder() {
+		return new IncludeOccurrencesFinder();
+	}
 }

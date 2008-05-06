@@ -2713,6 +2713,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 
+		if (locations == null && fMarkImplementors) {
+			IOccurrencesFinder finder = OccurrencesFinderFactory.createIncludeFinder();
+			if (finder.initialize(astRoot, selectedNode) == null) {
+				locations = finder.getOccurrences();
+			}
+		}
+		
 		if (locations == null && fMarkBreakContinueTargets) {
 			IOccurrencesFinder finder = OccurrencesFinderFactory.createBreakContinueTargetFinder();
 			if (finder.initialize(astRoot, selectedNode) == null) {
