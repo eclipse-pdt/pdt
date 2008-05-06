@@ -108,7 +108,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 			try {
 				int n = rd.read(readBuffer);
-				while ( n > 0 ) {
+				while (n > 0) {
 					buffer.append(readBuffer, 0, n);
 					n = rd.read(readBuffer);
 				}
@@ -128,7 +128,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 				return text;
 
 			StringBuffer buffer = new StringBuffer();
-			while ( current > -1 ) {
+			while (current > -1) {
 				buffer.append(text.substring(previous, current));
 				buffer.append(s);
 				previous = current + 1;
@@ -189,7 +189,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 			StructuredTextLineBreakingReader reader = new StructuredTextLineBreakingReader(textReader, gc, getHoverWidth(display));
 			String line = reader.readLine();
-			while ( line != null ) {
+			while (line != null) {
 				if (buf.length() != 0) {
 					buf.append(lineDelim);
 				}
@@ -216,7 +216,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 
 		printer.startBulletList(buffer);
 		Iterator<String> e = messages.iterator();
-		while ( e.hasNext() )
+		while (e.hasNext())
 			printer.addBullet(buffer, printer.convertToHTMLContent(e.next()));
 		printer.endBulletList(buffer);
 
@@ -276,13 +276,18 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		}
 
 		Iterator e = model.getAnnotationIterator();
-		while ( e.hasNext() ) {
+		while (e.hasNext()) {
 			Object o = e.next();
-			if (o instanceof MarkerAnnotation) {
-				MarkerAnnotation a = (MarkerAnnotation) o;
+			if (o instanceof Annotation) {
+				Annotation a = (Annotation) o;
 				if (compareRulerLine(model.getPosition(a), document, line) == 1) {
-					IMarker marker = a.getMarker();
-					String text = marker.getAttribute(IMarker.MESSAGE, (String) null);
+					String text = null;
+					if (a instanceof MarkerAnnotation) {
+						IMarker marker = ((MarkerAnnotation) a).getMarker();
+						text = marker.getAttribute(IMarker.MESSAGE, (String) null);
+					} else {
+						text = a.getText();
+					}
 					if (text != null) {
 						messages.add(text);
 					}
@@ -306,7 +311,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 		List<ITemporaryAnnotation> annotations = new ArrayList<ITemporaryAnnotation>();
 
 		Iterator e = model.getAnnotationIterator();
-		while ( e.hasNext() ) {
+		while (e.hasNext()) {
 			Object o = e.next();
 			if (o instanceof ITemporaryAnnotation) {
 				ITemporaryAnnotation a = (ITemporaryAnnotation) o;
