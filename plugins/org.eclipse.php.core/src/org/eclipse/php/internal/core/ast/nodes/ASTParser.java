@@ -10,14 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.io.CharArrayReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 
 import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
@@ -26,7 +19,6 @@ import java_cup.runtime.lr_parser;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -74,11 +66,11 @@ public class ASTParser {
 		// set resolve binding property and the binding resolver 
 		if (sourceModule != null) {
 			this.ast.setFlag(AST.RESOLVED_BINDINGS);
-			try {
-				this.ast.setBindingResolver(new DefaultBindingResolver(sourceModule, sourceModule.getWorkingCopy(null).getOwner()));
-			} catch (ModelException e) {
-				throw new IOException("ModelException " + e.getMessage());
-			}
+//			try {
+				this.ast.setBindingResolver(new DefaultBindingResolver(sourceModule, sourceModule.getOwner()));
+//			} catch (ModelException e) {
+//				throw new IOException("ModelException " + e.getMessage());
+//			}
 		}
 	}
 	
