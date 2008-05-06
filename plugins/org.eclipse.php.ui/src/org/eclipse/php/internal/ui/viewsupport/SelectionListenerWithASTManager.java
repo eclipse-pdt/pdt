@@ -140,7 +140,7 @@ public class SelectionListenerWithASTManager {
 			final ISourceModule typeRoot= (ISourceModule) input;
 			
 			
-			fCurrentJob= new Job("Selection Job titile") { // TODO externenlize  
+			fCurrentJob= new Job("Selection Job titile") {   
 				public IStatus run(IProgressMonitor monitor) {
 					if (monitor == null) {
 						monitor= new NullProgressMonitor();
