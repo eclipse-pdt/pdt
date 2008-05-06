@@ -297,7 +297,33 @@
          textStylePreferenceValue="NONE"
          verticalRulerPreferenceKey="PHPWriteOccurrenceIndicationInVerticalRuler"
          verticalRulerPreferenceValue="false">
-	  </specification>	  
+	  </specification>	 
+	  <specification
+            annotationType="org.eclipse.php.ui.overrideIndicator"
+            label="%OverrideIndicator.label"
+            icon="icons/full/ovr16/over_co.gif"
+			annotationImageProvider ="org.eclipse.php.internal.ui.editor.OverrideIndicatorImageProvider"
+            textPreferenceKey="overrideIndicator"
+            textPreferenceValue="false"
+            highlightPreferenceKey="overrideIndicatorHighlighting"
+            highlightPreferenceValue="false"
+            contributesToHeader="false"
+            overviewRulerPreferenceKey="overrideIndicatorInOverviewRuler"
+            overviewRulerPreferenceValue="false"
+            verticalRulerPreferenceKey="overrideIndicatorInVerticalRuler"
+            verticalRulerPreferenceValue="true"
+            colorPreferenceKey="overrideIndicatorColor"
+            colorPreferenceValue="180,207,205"
+            presentationLayer="3"
+            showInNextPrevDropdownToolbarActionKey="showoverrideIndicatorInNextPrevDropdownToolbarAction"
+            showInNextPrevDropdownToolbarAction="false"
+            isGoToNextNavigationTargetKey="isOverrideIndicatorGoToNextNavigationTarget"
+	        isGoToNextNavigationTarget="false"
+            isGoToPreviousNavigationTargetKey="isOverrideIndicatorGoToPreviousNavigationTarget"
+	        isGoToPreviousNavigationTarget="false"
+            textStylePreferenceKey="overrideIndicatorTextStyle"
+            textStylePreferenceValue="SQUIGGLES">
+	  </specification> 
 	</extension>
 
 	<!--======================================================================================-->
@@ -1480,6 +1506,19 @@
          extensions="php" 
     /> 
     </extension>
+ <extension
+       point="org.eclipse.ui.editorActions">
+    <editorContribution
+          id="org.eclipse.php.editor.ruler.actions"
+          targetID="org.eclipse.php.editor">
+       <action
+             actionID="RulerClick"
+             class="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
+             id="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
+             label="%PhpSelectRulerAction.label">
+       </action>
+    </editorContribution>
+ </extension>
 	
 	
 </plugin>
