@@ -149,7 +149,7 @@ public class FileNetworkUtility {
 		}
 	}
 
-	private static ISourceModule findSourceModule(ISourceModule from, String path) {
+	public static ISourceModule findSourceModule(ISourceModule from, String path) {
 		ISourceModule sourceModule = null;
 
 		IProject currentProject = from.getScriptProject().getProject();

@@ -240,7 +240,7 @@ public class Include extends Expression {
 	 * @return the binding, or <code>null</code> if the binding cannot be 
 	 *    resolved
 	 */	
-	public ISourceBinding resolveSourceBinding() {
+	public IBinding resolveBinding() {
 		return this.ast.getBindingResolver().resolveInclude(this);
 	}
 

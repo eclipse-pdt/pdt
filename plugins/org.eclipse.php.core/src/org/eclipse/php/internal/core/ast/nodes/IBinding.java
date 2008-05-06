@@ -100,6 +100,17 @@ public interface IBinding {
 	public static final int SOURCE = 7;
 
 	/**
+	 * Kind constant (value ) indicating an include binding.
+	 * Bindings of this kind can be safely cast to <code>IIncludeBinding</code>.
+	 *
+	 * @see #getKind()
+	 * @see IIncludeBinding
+	 * @since 3.2
+	 */
+	public static final int INCLUDE = 8;
+	
+	
+	/**
 	 * Returns the kind of bindings this is. That is one of the kind constants:
 	 * 	<code>TYPE</code>,
 	 * 	<code>VARIABLE</code>,

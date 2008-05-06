@@ -207,31 +207,14 @@ public class DefaultBindingResolver extends BindingResolver {
 		IEvaluatedType type = getEvaluatedType(start, length);
 		IModelElement[] modelElement = getModelElements(start, length, false);
 		return new TypeBinding(this, type, modelElement);
-		/*
-		 * TODO handle caching
-			IModelElement element;
-			try {
-				element = this.sourceModule.getElementAt(expression.getStart());
-			} catch (ModelException e) {
-				// will throw an error, in next command
-				element = null;
-			}
-			if (element == null) {
-				element = this.sourceModule;
-			}
-			
-			final String handleIdentifier = element.getHandleIdentifier() + "_" +   ;
-			IBinding binding = this.bindingTables.bindingKeysToBindings.get(handleIdentifier);
-			
-			if (binding != null) {
-				return (ITypeBinding) binding;
-			}
-		
-			type = this.bindingUtil.getType(expression.getStart(), expression.getLength());
-			binding = new TypeBinding(type);
-			
-			this.bindingTables.bindingKeysToBindings.put(handleIdentifier, binding);
-			return (ITypeBinding) binding;
-		*/
+
 	}
+	
+	/**
+	 * @see BindingResolver#resolveInclude(Include)
+	 */ 
+	IBinding resolveInclude(Include includeDeclaration) {
+		return new IncludeBinding(sourceModule, includeDeclaration);
+	}
+	
 }

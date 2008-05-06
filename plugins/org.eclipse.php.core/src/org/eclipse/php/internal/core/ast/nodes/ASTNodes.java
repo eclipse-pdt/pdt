@@ -1,5 +1,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+
 ;
 
 
@@ -39,6 +41,26 @@ public class ASTNodes {
 		|| type == ASTNode.WHILE_STATEMENT
 		|| type == ASTNode.DO_STATEMENT
 		);
+	}
+	
+	/**
+	 * Aggregates the strings for a given node 
+	 * @param node
+	 * @return the aggregated strings for a given node 
+	 */
+	public static String getScalars(ASTNode node) {
+		final StringBuilder builder = new StringBuilder();
+		node.accept(new AbstractVisitor() {
+
+			@Override
+			public boolean visit(Scalar scalar) {
+				builder.append(scalar.getStringValue());
+				return true;
+			}
+				
+		});
+		
+		return builder.toString();
 	}
 	
 	
