@@ -207,6 +207,14 @@
           id="org.eclipse.php.core.LANGUAGE">
     </buildpathContainerInitializer>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.completionEngine">
+    <completionEngine
+          class="org.eclipse.php.core.codeassist.PHPCompletionEngine"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </completionEngine>
+ </extension>
 <!-- <extension
        point="org.eclipse.dltk.core.fileHierarchyResolvers">
     <fileHierarchyResolver
