@@ -278,7 +278,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	private boolean saveActionsEnabled = false;
 	private boolean saveActionsIgnoreEmptyLines = false;
-
+	
+	/**
+	 * The override and implements indicator manager for this editor.
+	 * @since 3.0
+	 */
+	protected OverrideIndicatorManager fOverrideIndicatorManager;
+	
 	/**
 	 * Internal implementation class for a change listener.
 	 * 
@@ -1049,6 +1055,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			fActivationListener = null;
 		}
 		uninstallOccurrencesFinder();
+		uninstallOverrideIndicator();
 		super.dispose();
 	}
 
@@ -2115,6 +2122,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (imageDescriptor != null) {
 			setTitleImage(JFaceResources.getResources().createImageWithDefault(imageDescriptor));
 		}
+		if (isShowingOverrideIndicators()) {
+			installOverrideIndicator(true); 
+		}
 	}
 
 	ISelectionChangedListener selectionListener;
@@ -2281,11 +2291,67 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				}
 				return;
 			}
+			if (affectsOverrideIndicatorAnnotations(event)) {
+				if (isShowingOverrideIndicators()) {
+					if (fOverrideIndicatorManager == null)
+						installOverrideIndicator(true);
+				} else {
+					if (fOverrideIndicatorManager != null)
+						uninstallOverrideIndicator();
+				}
+				return;
+			}
 		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
 	}
 
+	/**
+	 * Determines whether the preference change encoded by the given event
+	 * changes the override indication.
+	 *
+	 * @param event the event to be investigated
+	 * @return <code>true</code> if event causes a change
+	 */
+	protected boolean affectsOverrideIndicatorAnnotations(PropertyChangeEvent event) {
+		String key= event.getProperty();
+		AnnotationPreference preference= getAnnotationPreferenceLookup().getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
+		if (key == null || preference == null)
+			return false;
+
+		return key.equals(preference.getHighlightPreferenceKey())
+			|| key.equals(preference.getVerticalRulerPreferenceKey())
+			|| key.equals(preference.getOverviewRulerPreferenceKey())
+			|| key.equals(preference.getTextPreferenceKey());
+	}
+
+	/**
+	 * Tells whether override indicators are shown.
+	 *
+	 * @return <code>true</code> if the override indicators are shown
+	 * @since 3.0
+	 */
+	protected boolean isShowingOverrideIndicators() {
+		AnnotationPreference preference= getAnnotationPreferenceLookup().getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
+		IPreferenceStore store= getPreferenceStore();
+		return getBoolean(store, preference.getHighlightPreferenceKey())
+			|| getBoolean(store, preference.getVerticalRulerPreferenceKey())
+			|| getBoolean(store, preference.getOverviewRulerPreferenceKey())
+			|| getBoolean(store, preference.getTextPreferenceKey());
+	}
+	
+	/**
+	 * Returns the boolean preference for the given key.
+	 *
+	 * @param store the preference store
+	 * @param key the preference key
+	 * @return <code>true</code> if the key exists in the store and its value is <code>true</code>
+	 * @since 3.0
+	 */
+	private boolean getBoolean(IPreferenceStore store, String key) {
+		return key != null && store.getBoolean(key);
+	}
+	
 	@Override
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[] { "org.eclipse.php.ui.phpEditorScope" }); //$NON-NLS-1$
@@ -2688,6 +2754,38 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		fOccurrencesFinderJob.run(new NullProgressMonitor());
 	}
 
+	protected void uninstallOverrideIndicator() {
+		if (fOverrideIndicatorManager != null) {
+			removeReconcileListener(fOverrideIndicatorManager);
+			fOverrideIndicatorManager.removeAnnotations();
+			fOverrideIndicatorManager= null;
+		}
+	}
+
+	protected void installOverrideIndicator(boolean provideAST) {
+		uninstallOverrideIndicator();
+		if (getDocumentProvider() == null) {
+			return ;
+		}
+		IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
+		final IModelElement inputElement = getInputModelElement();
+		if (model == null || inputElement == null || inputElement.getElementType() != IModelElement.SOURCE_MODULE)
+			return;
+
+		fOverrideIndicatorManager = new OverrideIndicatorManager(model, inputElement, null);
+		addReconcileListener(fOverrideIndicatorManager);
+		if (provideAST) {
+			try {
+				Program ast = SharedASTProvider.getAST((ISourceModule) inputElement, SharedASTProvider.WAIT_ACTIVE_ONLY, getProgressMonitor());
+				fOverrideIndicatorManager.reconciled(ast, true, getProgressMonitor());
+			} catch (ModelException e) {
+				Logger.logException(e);
+			} catch (IOException e) {
+				Logger.logException(e);
+			}
+		}
+	}
+	
 	protected void installOccurrencesFinder(boolean forceUpdate) {
 		fMarkOccurrenceAnnotations = true;
 
@@ -2705,11 +2803,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					final Program ast = SharedASTProvider.getAST((ISourceModule) source, SharedASTProvider.WAIT_NO, getProgressMonitor());
 					updateOccurrenceAnnotations((ITextSelection) fForcedMarkOccurrencesSelection, ast);
 				} catch (ModelException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logger.logException(e);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Logger.logException(e);
 				}
 			}
 		}

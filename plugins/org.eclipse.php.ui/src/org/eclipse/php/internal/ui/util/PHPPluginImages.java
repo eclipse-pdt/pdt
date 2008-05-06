@@ -151,6 +151,9 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_OBJS_PHP_APP = createManaged(T_OBJ, IMG_OBJS_PHP_APP);
 	public static final ImageDescriptor DESC_OBJS_PHP_PROJECT = createManaged(T_OBJ, IMG_OBJS_PHP_PROJECT);
 
+	public static final ImageDescriptor DESC_OBJ_OVERRIDES= create(T_OBJ, "over_co.gif");  					//$NON-NLS-1$
+	public static final ImageDescriptor DESC_OBJ_IMPLEMENTS= create(T_OBJ, "implm_co.gif");  				//$NON-NLS-1$
+	
 	public static final ImageDescriptor DESC_ELCL_FILTER = create(T_ELCL, "filter_ps.gif"); //$NON-NLS-1$
 	public static final ImageDescriptor DESC_DLCL_FILTER = create(T_DLCL, "filter_ps.gif"); //$NON-NLS-1$
 
