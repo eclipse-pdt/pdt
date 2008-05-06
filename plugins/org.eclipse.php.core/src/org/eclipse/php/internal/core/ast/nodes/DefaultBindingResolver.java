@@ -6,10 +6,8 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;

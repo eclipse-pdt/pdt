@@ -247,6 +247,9 @@ public class Bindings {
 		}
 
 		ITypeBinding type = overriding.getDeclaringClass();
+		if (type == null) {
+			return null;
+		}
 		if (type.getSuperclass() != null) {
 			IMethodBinding res = findOverriddenMethodInHierarchy(type.getSuperclass(), overriding);
 			if (res != null && !Modifier.isPrivate(res.getModifiers())) {

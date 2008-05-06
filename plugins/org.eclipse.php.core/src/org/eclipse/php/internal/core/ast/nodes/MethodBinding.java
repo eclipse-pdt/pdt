@@ -34,8 +34,10 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 	 */
 	public ITypeBinding getDeclaringClass() {
 		if (declaringClassTypeBinding == null) {
-			IModelElement parent = modelElement.getParent();
-			declaringClassTypeBinding = resolver.getTypeBinding((IType) parent);
+			IModelElement parent = modelElement.getDeclaringType();
+			if (parent instanceof IType) {
+				declaringClassTypeBinding = resolver.getTypeBinding((IType) parent);
+			}
 		}
 		return declaringClassTypeBinding;
 	}
