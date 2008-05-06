@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.mixin.PHPMixinModel;
  */
 public class FunctionBinding implements IFunctionBinding {
 
-	protected static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate | Modifiers.AccDefault | Modifiers.AccStatic | Modifiers.AccFinal;
+	protected static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate | Modifiers.AccDefault | Modifiers.AccStatic | Modifiers.AccFinal | Modifiers.AccAbstract;
 	protected BindingResolver resolver;
 	protected IMethod modelElement;
 
