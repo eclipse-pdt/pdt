@@ -292,33 +292,24 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		}
 		stackFrames = null;
 		currentVariables = null;
-
 		superGlobalVars = null;
 		session.startSession();
-		// we are effectively suspended once the session has handshaked until we
-		// run
+		
+		// we are effectively suspended once the session has handshaked until we run
 		setState(STATE_STARTED_SUSPENDED);
-
-		try {
-			negotiateDBGpFeatures();
-			loadPredefinedBreakpoints();
-			if (!stopAtStart) {
-				// resume();
-
-				if (session != null) {
-					// set state before issuing a run otherwise a timing window occurs where
-					// a run could suspend, the thread sets state to suspend but then this
-					// thread sets it to running.
-					setState(STATE_STARTED_RUNNING);
-					session.sendAsyncCmd(DBGpCommand.run);
-				}
-
-			} else {
-				// try to say we have suspended, then do a step_into
-				suspended(DebugEvent.BREAKPOINT);
-				stepInto();
-			}
-		} catch (DebugException e) {
+		negotiateDBGpFeatures();
+		loadPredefinedBreakpoints();
+		if (!stopAtStart) {
+			// set state before issuing a run otherwise a timing window occurs where
+			// a run could suspend, the thread sets state to suspend but then this
+			// thread sets it to running.
+			setState(STATE_STARTED_RUNNING);
+			session.sendAsyncCmd(DBGpCommand.run);
+		} else {
+			// try to say we have suspended, then do a step_into
+			stepping = true;
+			setState(STATE_STARTED_RUNNING);				
+			session.sendAsyncCmd(DBGpCommand.stepInto);
 		}
 	}
 
