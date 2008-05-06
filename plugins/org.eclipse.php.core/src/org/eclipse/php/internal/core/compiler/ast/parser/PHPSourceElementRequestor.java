@@ -83,6 +83,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(MethodDeclaration method) throws Exception {
+		if (!declarations.empty() && declarations.peek() instanceof InterfaceDeclaration) {
+			method.setModifier(Modifiers.AccAbstract);
+		}
+
 		declarations.push(method);
 
 		for (SourceElementRequestVisitor visitor : extensions) {
