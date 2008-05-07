@@ -18,7 +18,7 @@ import java_cup.runtime.Scanner;
  * Description:   
  * @author moshe, 2006
  */
-public interface AstLexer extends Scanner{
+public interface AstLexer extends Scanner {
 
 	public void resetCommentList();
 
@@ -81,5 +81,7 @@ public interface AstLexer extends Scanner{
 	 * Returns the length of the matched text region.
 	 */
 	public int yylength();
+
+	public PDTSymbol __next_token() throws java.io.IOException;
 
 }
