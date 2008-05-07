@@ -14,6 +14,9 @@ public class ASTNodes {
 
 
 	public static ASTNode getParent(ASTNode node, Class parentClass) {
+		if (node == null) 
+			return null;
+		
 		do {
 			node= node.getParent();
 		} while (node != null && !parentClass.isInstance(node));
@@ -21,6 +24,9 @@ public class ASTNodes {
 	}
 	
 	public static ASTNode getParent(ASTNode node, int nodeType) {
+		if (node == null) 
+			return null;
+		
 		do {
 			node= node.getParent();
 		} while (node != null && node.getType() != nodeType);
