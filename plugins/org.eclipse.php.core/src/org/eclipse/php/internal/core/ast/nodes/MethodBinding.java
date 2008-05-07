@@ -95,13 +95,4 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 		}
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKey()
-	 */
-	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

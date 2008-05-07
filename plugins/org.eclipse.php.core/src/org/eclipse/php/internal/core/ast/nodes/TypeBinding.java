@@ -563,8 +563,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the key for this binding
 	 */
 	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return element.getHandleIdentifier();
 	}
 
 	/**

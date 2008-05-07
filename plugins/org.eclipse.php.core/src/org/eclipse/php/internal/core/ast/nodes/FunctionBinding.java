@@ -96,8 +96,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#getKey()
 	 */
 	public String getKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return modelElement.getHandleIdentifier();
 	}
 
 	/* (non-Javadoc)
