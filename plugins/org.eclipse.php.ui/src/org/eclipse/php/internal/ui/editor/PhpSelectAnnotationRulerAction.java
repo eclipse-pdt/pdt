@@ -157,13 +157,13 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 			if (key == null)
 				continue;
 
-			//			if (fStore.getBoolean(key)) {
-			fPosition = position;
-			fAnnotation = annotation;
-			fHasCorrection = false;
-			layer = annotationLayer;
-			//			}
-			//			}
+			// if (fStore.getBoolean(key)) {
+			if (annotation instanceof OverrideIndicatorManager.OverrideIndicator) {
+				fPosition = position;
+				fAnnotation = annotation;
+				fHasCorrection = false;
+				layer = annotationLayer;
+			}
 		}
 	}
 }

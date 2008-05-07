@@ -1066,7 +1066,7 @@ public class PreferenceConstants {
 
 		store.setDefault(EDITOR_CORRECTION_INDICATION, true);
 		store.setDefault(EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE, true);
-		store.setDefault(EDITOR_ANNOTATION_ROLL_OVER, true);
+		store.setDefault(EDITOR_ANNOTATION_ROLL_OVER, false);
 
 		// CodeAssistPreferencePage
 		PreferenceConverter.setDefault(store, CODEASSIST_PROPOSALS_BACKGROUND, new RGB(255, 255, 255));

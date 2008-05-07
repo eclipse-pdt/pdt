@@ -25,6 +25,10 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.core.IExternalSourceModule;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.*;
@@ -223,6 +227,10 @@ public class EditorUtility {
 			return getEditorInput((PHPCodeData) input, null, null);
 		}
 
+		if (input instanceof IModelElement) {
+			return getEditorInput((IModelElement) input);
+		}
+
 		if (input instanceof IFile)
 			return new FileEditorInput((IFile) input);
 
@@ -274,6 +282,27 @@ public class EditorUtility {
 			return new FileEditorInput((IFile) resource);
 
 		return null;
+	}
+
+	private static IEditorInput getEditorInput(IModelElement element) {
+		// [Taken from:  org.eclipse.dltk.internal.ui.editor.EditorUtility]
+		while (element != null) {
+			if (element instanceof IExternalSourceModule) {
+				ISourceModule unit = ((ISourceModule) element).getPrimary();
+				if (unit instanceof IStorage) {
+					return new ExternalStorageEditorInput((IStorage) unit);
+				}
+
+			} else if (element instanceof ISourceModule) {
+				ISourceModule unit = ((ISourceModule) element).getPrimary();
+				IResource resource = unit.getResource();
+				if (resource instanceof IFile)
+					return new FileEditorInput((IFile) resource);
+			}
+			element = element.getParent();
+		}
+		return null;
+		// TODO - Handle external model elements (for external files)
 	}
 
 	private static String getIncludeDirectory(TreeItem input) {
@@ -449,7 +478,7 @@ public class EditorUtility {
 
 		return null;
 	}
-	
+
 	public static IEditorPart revealInEditor(IEditorPart part, int lineNumber) {
 		if (lineNumber > 0) {
 			if (part instanceof ITextEditor) {
@@ -476,7 +505,7 @@ public class EditorUtility {
 
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
-		
+
 		try {
 			Path errorFilePath = new Path(fileName);
 			if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
