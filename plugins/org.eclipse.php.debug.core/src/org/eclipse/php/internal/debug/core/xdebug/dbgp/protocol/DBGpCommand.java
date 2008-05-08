@@ -161,8 +161,20 @@ public class DBGpCommand {
 
 		synchronized (socket) {
 			OutputStream os = socket.getOutputStream();
-			os.write(fullCmd.getBytes(encoding));
-			os.write(0);
+			// Bug: 226860			
+			// Want to avoid 2 writes as some tcpip implementations
+			// may delay waiting for a response from the 1st write
+			// we could set the tcpNoDelay option on the socket
+			// but given this is the only write we can accept the
+			// delay for a response to reduce bandwidth.
+			//
+			// implemented this way as we only want to send
+			// a single \0 byte to terminate the command whereas
+			// an encoding such as utf-16 would result in 2 bytes
+			byte[] cmdBytes = fullCmd.getBytes(encoding);
+			byte[] cmdWithTerm = new byte[cmdBytes.length + 1];
+			System.arraycopy(cmdBytes, 0, cmdWithTerm, 0, cmdBytes.length);
+			os.write(cmdWithTerm);
 			os.flush();
 
 			/*
