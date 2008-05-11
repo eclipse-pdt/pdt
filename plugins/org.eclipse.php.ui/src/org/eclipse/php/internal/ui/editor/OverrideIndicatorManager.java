@@ -235,7 +235,7 @@ class OverrideIndicatorManager implements IScriptReconcilingListener, IPhpScript
 	public void reconciled(ISourceModule sourceModule, boolean forced, IProgressMonitor progressMonitor) {
 		Program ast;
 		try {
-			ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_ACTIVE_ONLY, null);
+			ast = SharedASTProvider.getAST(sourceModule, SharedASTProvider.WAIT_YES, null);
 			if (ast != null) {
 				updateAnnotations(ast, progressMonitor);
 			}
