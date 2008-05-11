@@ -65,5 +65,5 @@ Provide-Package: java_cup,
  org.eclipse.php.internal.core.util.project.observer,
  org.eclipse.php.internal.core.util.text
 Bundle-Vendor: Eclipse.org
-Bundle-ClassPath: .,
- Resources/parserTools/javacup/java-cup-10k.jar
+Bundle-ClassPath: Resources/parserTools/javacup/java-cup-10k.jar,
+ .
