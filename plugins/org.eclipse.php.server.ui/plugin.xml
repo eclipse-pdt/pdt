@@ -128,4 +128,13 @@
            id="org.eclipse.php.server.internal.ui.PHPServersPreferencePage"
            name="%serversPreferencesPageName"/>
   </extension>
+  <extension
+        point="org.eclipse.php.debug.ui.debugServerConnectionTest">
+     <debugServerTest
+           class="org.eclipse.php.internal.server.ui.DefaultDebugServerConnectionTest"
+           debuggeTypeName="Zend Debugger"
+           debuggerTypeName="Zend Debugger"
+           id="org.eclipse.php.server.ui.defaultZendDebugServerTest">
+     </debugServerTest>
+  </extension>
 </plugin>
