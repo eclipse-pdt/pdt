@@ -4,6 +4,7 @@
    <extension-point id="launchConfigurationTabs" name="Launch Configuration Tabs" schema="schema/launchConfigurationTabs.exsd"/>
    <extension-point id="phpDebugModelPresentations" name="PHP Debug Model Presentations" schema="schema/phpDebugModelPresentations.exsd"/>
    <extension-point id="phpConsoleListeners" name="PHP Console Listener" schema="schema/phpConsoleListeners.exsd"/>
+   <extension-point id="debugServerConnectionTest" name="Debug Server Connection Test" schema="schema/debugServerConnectionTest.exsd"/>
      <extension
          point="org.eclipse.ui.commands">
         <command
