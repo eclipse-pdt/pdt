@@ -298,9 +298,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				}
 			}
 		});
-		
-		updateDebugServerTesters();
-		
+				
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		validateDebuggerBtn.setLayoutData(data);
 		validateDebuggerBtn.setText("Check Debug Server Connection");
@@ -790,6 +788,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
+		updateDebugServerTesters();
 	}
 
 	// In case this is a debug mode, display 'Break on first line' attribute checkbox.
