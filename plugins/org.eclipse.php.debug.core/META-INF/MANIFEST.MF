@@ -50,5 +50,6 @@ Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.internal.debug.core.zend.debugger.handlers,
  org.eclipse.php.internal.debug.core.zend.debugger.messages,
  org.eclipse.php.internal.debug.core.zend.debugger.parameters,
- org.eclipse.php.internal.debug.core.zend.model
+ org.eclipse.php.internal.debug.core.zend.model,
+ org.eclipse.php.internal.debug.core.zend.testConnection
 Bundle-Vendor: Eclipse.org

@@ -22,16 +22,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -61,11 +53,11 @@ import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageImpl;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
+import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestEvent;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 
@@ -826,18 +818,34 @@ public class DebugConnectionThread implements Runnable {
 					break;
 
 				try {
-					IDebugMessage newInputMessage = (IDebugMessage)inputMessageQueue.queueOut();
-					
+					IDebugMessage newInputMessage = (IDebugMessage) inputMessageQueue.queueOut();
+
 					if (isDebugMode) {
 						System.out.println("New message received: " + newInputMessage);
 					}
-					
+
 					// do not stop until the message is processed.
 					synchronized (this) {
 						try {
+							boolean isDebugConnectionTest = false;
 							// first debug message has received - create debug target
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
-								hookDebugSession((DebugSessionStartedNotification)newInputMessage);
+								// first debug message has received - create debug target
+								if (newInputMessage instanceof DebugSessionStartedNotification) {
+									DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) newInputMessage;
+									isDebugConnectionTest = isDebugConnectionTest(sessionStartedMessage);
+									if (isDebugConnectionTest) {//This is a test...
+										String url = "http://" + DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
+										//notify succcess
+										if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
+											DebugServerTestController.getInstance().notifyTestListeners(new DebugServerTestEvent(url, DebugServerTestEvent.TEST_SUCCEEDED));
+										} else {
+											DebugServerTestController.getInstance().notifyTestListeners(new DebugServerTestEvent(url, DebugServerTestEvent.TEST_FAILED, PHPDebugCoreMessages.DebugConnectionThread_oldDebuggerVersion));
+										}
+									} else {//Not a test - start debug
+										hookDebugSession((DebugSessionStartedNotification) newInputMessage);
+									}
+								}
 							}
 
 							// creation of debug session has succeeded
@@ -845,7 +853,7 @@ public class DebugConnectionThread implements Runnable {
 
 								// try to find relevant handler for the message:
 								IDebugMessageHandler messageHandler = createMessageHandler(newInputMessage);
-								
+
 								if (messageHandler != null) {
 									if (isDebugMode) {
 										System.out.println("Creating message handler: " + messageHandler.getClass().getName().replaceFirst(".*\\.", ""));
@@ -867,15 +875,13 @@ public class DebugConnectionThread implements Runnable {
 											out.flush();
 										}
 									}
-								}
-								else if (newInputMessage instanceof IDebugResponseMessage) {
+								} else if (newInputMessage instanceof IDebugResponseMessage) {
 									IDebugResponseMessage r = (IDebugResponseMessage) newInputMessage;
 									int requestId = r.getID(); // take the request ID from the response.
 									IDebugRequestMessage req = (IDebugRequestMessage) requestsTable.remove(requestId); // find the request.
 									ResponseHandler handler = responseHandlers.remove(new Integer(requestId)); // find the handler.
 									handler.handleResponse(req, r);
-								}
-								else if (newInputMessage == STOP_MSG) {
+								} else if (newInputMessage == STOP_MSG) {
 									synchronized (STOP_MSG) {
 										inWork = false;
 										STOP_MSG.notifyAll();
@@ -885,12 +891,10 @@ public class DebugConnectionThread implements Runnable {
 											//notifyAll();
 										}
 									}
-								}
-								else if (newInputMessage == CONNECTION_CLOSED_MSG) {
+								} else if (newInputMessage == CONNECTION_CLOSED_MSG) {
 									handleConnectionClosed();
 								}
-							}
-							else { // no debug target - probably creation of debug session hasn't succeeded
+							} else { // no debug target - probably creation of debug session hasn't succeeded
 								handleConnectionClosed();
 							}
 						} catch (Exception e) { // error processing the current message.
@@ -904,6 +908,17 @@ public class DebugConnectionThread implements Runnable {
 			}
 		}
 
+		private boolean verifyProtocolID(int serverProtocolID) {
+			if (serverProtocolID < RemoteDebugger.PROTOCOL_ID_LATEST) {
+				return detectProtocolID();
+			}
+			return true;
+		}
+
+		private boolean isDebugConnectionTest(DebugSessionStartedNotification inputMessage) {
+			return inputMessage.getQuery().indexOf("testConnection=true") != -1; //$NON-NLS-1$
+		}
+
 		private void handleConnectionClosed() {
 			resetCommunication();
 			if (getCommunicationAdministrator() != null) {
@@ -912,6 +927,51 @@ public class DebugConnectionThread implements Runnable {
 			terminate();
 			closeConnection();
 		}
+	}
+
+	//This method is used for detecting protocol version of Debugger
+	//return <code>true</code> if succeeded to detect, otherwise <code>false</code>
+	private boolean detectProtocolID() {
+		// check whether debugger is using the latest protocol ID:
+		if (setProtocol(RemoteDebugger.PROTOCOL_ID_LATEST)) {
+			return true;
+		}
+		// check whether debugger is using one of older protocol ID:
+		if (setProtocol(RemoteDebugger.PROTOCOL_ID_2006040703)) {
+			return true;
+		}
+		// check whether debugger is using one of older protocol ID:
+		if (setProtocol(RemoteDebugger.PROTOCOL_ID_2006040701)) {
+			return true;
+		}
+		return false;
+	}
+
+	private boolean setProtocol(int protocolID) {
+		SetProtocolRequest request = new SetProtocolRequest();
+		request.setProtocolID(protocolID);
+		IDebugResponseMessage response = sendCustomRequest(request);
+		if (response != null && response instanceof SetProtocolResponse) {
+			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
+			if (responceProtocolID == protocolID) {
+				//				currentProtocolId = protocolID;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
+		IDebugResponseMessage response = null;
+		try {
+			Object obj = sendRequest(request);
+			if (obj instanceof IDebugResponseMessage) {
+				response = (IDebugResponseMessage) obj;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
 	}
 
 	public String toString() {
@@ -1130,7 +1190,7 @@ public class DebugConnectionThread implements Runnable {
 					} // end of synchronized part.
 
 				} catch (IOException e) {
-//					PHPDebugPlugin.log(e);
+					//					PHPDebugPlugin.log(e);
 					shutDown();
 				} catch (Exception e) {
 					PHPDebugPlugin.log(e);
@@ -1150,7 +1210,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @author michael
 	 */
 	private class DummyDebugMessage extends DebugMessageImpl {
-		
+
 		public void deserialize(DataInputStream in) throws IOException {
 		}
 
