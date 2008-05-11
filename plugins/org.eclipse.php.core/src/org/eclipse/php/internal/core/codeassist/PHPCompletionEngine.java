@@ -51,6 +51,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
@@ -179,11 +180,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	public void complete(ISourceModule module, int position, int i) {
 		this.currentModule = module;
-		if (Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD).length > 0) {
-			// FIXIT, make more correct awaiting for building
-			this.requestor.completionFailure(new DefaultProblem(null, "Please wait until the build is finished", 0, null, IStatus.WARNING, startPosition, endPosition, -1));
-			return;
-		}
+//		if (Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD).length > 0) {
+//			// FIXIT, make more correct awaiting for building
+//			this.requestor.completionFailure(new DefaultProblem(null, "Please wait until the build is finished", 0, null, IStatus.WARNING, startPosition, endPosition, -1));
+//			return;
+//		}
 
 		completedNames.clear();
 		this.actualCompletionPosition = position;
@@ -232,7 +233,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							completeConstant(modelModule, moduleDeclaration, (ConstantReference) minimalNode, position);
 						} else if (minimalNode instanceof FieldAccess) {
 							completeFieldAccess(modelModule, moduleDeclaration, (FieldAccess) minimalNode, position);
-						} else if (minimalNode instanceof SimpleReference) {
+						} else if (minimalNode instanceof SimpleReference || minimalNode instanceof Scalar) {
 							completeSimpleRef(modelModule, moduleDeclaration, wordStarting, position);
 						} else { // worst case
 							if (wordStarting == null || wordStarting.length() == 0) {
@@ -327,7 +328,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			try {
 				SearchEngine engine = new SearchEngine();
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { module.getScriptProject() });
-				SearchPattern pattern = SearchPattern.createPattern(prefix + "*", IDLTKSearchConstants.DECLARATIONS, IDLTKSearchConstants.ALL_OCCURRENCES, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CAMELCASE_MATCH); //$NON-NLS-1$
+				SearchPattern pattern = SearchPattern.createPattern(prefix + "*", IDLTKSearchConstants.DECLARATIONS, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CAMELCASE_MATCH); //$NON-NLS-1$
 	
 				engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					

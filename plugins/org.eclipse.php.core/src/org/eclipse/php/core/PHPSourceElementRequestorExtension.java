@@ -1,21 +1,21 @@
 package org.eclipse.php.core;
 
+import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
-import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 
-public class PHPSourceElementRequestorExtension extends SourceElementRequestVisitor {
+public class PHPSourceElementRequestorExtension extends ASTVisitor {
 
 	private String filename;
 	private char[] contents;
+	protected ISourceElementRequestor fRequestor;
 
 	public PHPSourceElementRequestorExtension() {
-		super(null);
 	}
 
 	public void setRequestor(ISourceElementRequestor requesor) {
 		fRequestor = requesor;
 	}
-
+	
 	public void setContents(char[] contents) {
 		this.contents = contents;
 	}

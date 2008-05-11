@@ -67,7 +67,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		declarations.pop();
 
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(method);
 		}
 		return super.endvisit(method);
@@ -76,7 +76,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		declarations.pop();
 
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(type);
 		}
 		return super.endvisit(type);
@@ -89,7 +89,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 		declarations.push(method);
 
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(method);
 		}
 		return super.visit(method);
@@ -98,7 +98,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean visit(TypeDeclaration type) throws Exception {
 		declarations.push(type);
 
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(type);
 		}
 		return super.visit(type);
@@ -195,7 +195,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(Statement node) throws Exception {
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(node);
 		}
 
@@ -213,7 +213,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(Statement node) throws Exception {
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(node);
 		}
 
@@ -228,7 +228,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(Expression node) throws Exception {
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(node);
 		}
 
@@ -246,7 +246,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(Expression node) throws Exception {
-		for (SourceElementRequestVisitor visitor : extensions) {
+		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(node);
 		}
 
