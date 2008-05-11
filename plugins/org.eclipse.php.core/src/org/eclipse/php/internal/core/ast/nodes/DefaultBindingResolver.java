@@ -6,7 +6,6 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
@@ -15,9 +14,10 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 /**
  * @author Roy, 2008
- *
+ * TODO : caching is a must have for this resolver
  */
 public class DefaultBindingResolver extends BindingResolver {
+
 
 	/*
 	 * Holds on binding tables that can be shared by several ASTs.
@@ -36,7 +36,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		Map<Integer, org.eclipse.dltk.ast.ASTNode> compilerNodeToASTNode;
 
 		BindingTables() {
-			this.compilerNodeToASTNode = new HashMap<Integer, ASTNode>();
+			this.compilerNodeToASTNode = new HashMap<Integer, org.eclipse.dltk.ast.ASTNode>();
 			this.bindingKeysToBindings = new HashMap<String, IBinding>();
 		}
 
@@ -85,8 +85,18 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	ITypeBinding getTypeBinding(IType type) {
 		if (type != null) {
-			// Cache?
 			return new TypeBinding(this, new PHPClassType(type.getElementName()), type);
+		}
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.core.IType[])
+	 */
+	@Override
+	ITypeBinding getTypeBinding(IType[] types) {
+		if (types != null && types.length > 0) {
+			return new TypeBinding(this, new PHPClassType(types[0].getElementName()), types);
 		}
 		return null;
 	}
@@ -122,7 +132,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	/**
 	 * Returns the {@link IEvaluatedType} according to the offset and the length.
 	 */
-	public IEvaluatedType getEvaluatedType(int offset, int length) {
+	protected IEvaluatedType getEvaluatedType(int offset, int length) {
 		return bindingUtil.getType(offset, length);
 	}
 
@@ -210,11 +220,190 @@ public class DefaultBindingResolver extends BindingResolver {
 
 	}
 	
-	/**
+	/* (non-Javadoc) 
 	 * @see BindingResolver#resolveInclude(Include)
 	 */ 
 	IBinding resolveInclude(Include includeDeclaration) {
 		return new IncludeBinding(sourceModule, includeDeclaration);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#findDeclaringNode(org.eclipse.php.internal.core.ast.nodes.IBinding)
+	 */
+	@Override
+	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(IBinding binding) {
+		// TODO Auto-generated method stub
+		return super.findDeclaringNode(binding);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#findDeclaringNode(java.lang.String)
+	 */
+	@Override
+	org.eclipse.php.internal.core.ast.nodes.ASTNode findDeclaringNode(String bindingKey) {
+		// TODO Auto-generated method stub
+		return super.findDeclaringNode(bindingKey);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getMethodBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
+	 */
+	@Override
+	IMethodBinding getMethodBinding(IEvaluatedType methodBinding) {
+		// TODO Auto-generated method stub
+		return super.getMethodBinding(methodBinding);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
+	 */
+	@Override
+	ITypeBinding getTypeBinding(FieldsDeclaration variableDeclaration) {
+		// TODO Auto-generated method stub
+		return super.getTypeBinding(variableDeclaration);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
+	 */
+	@Override
+	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding) {
+		// TODO Auto-generated method stub
+		return super.getTypeBinding(referenceBinding);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstantExpressionValue(org.eclipse.php.internal.core.ast.nodes.Expression)
+	 */
+	@Override
+	Object resolveConstantExpressionValue(Expression expression) {
+		// TODO Auto-generated method stub
+		return super.resolveConstantExpressionValue(expression);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor(org.eclipse.php.internal.core.ast.nodes.ClassInstanceCreation)
+	 */
+	@Override
+	IMethodBinding resolveConstructor(ClassInstanceCreation expression) {
+		// TODO Auto-generated method stub		
+		return super.resolveConstructor(expression);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveConstructor(org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
+	 */
+	@Override
+	IMethodBinding resolveConstructor(MethodInvocation expression) {
+		// TODO Auto-generated method stub
+		return super.resolveConstructor(expression);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.FieldAccess)
+	 */
+	@Override
+	IVariableBinding resolveField(FieldAccess fieldAccess) {
+		// TODO Auto-generated method stub
+		return super.resolveField(fieldAccess);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess)
+	 */
+	@Override
+	Object resolveField(StaticConstantAccess constantAccess) {
+		// TODO Auto-generated method stub
+		return super.resolveField(constantAccess);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess)
+	 */
+	@Override
+	IVariableBinding resolveField(StaticFieldAccess fieldAccess) {
+		// TODO Auto-generated method stub
+		return super.resolveField(fieldAccess);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveFunction(org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration)
+	 */
+	@Override
+	IFunctionBinding resolveFunction(FunctionDeclaration function) {
+		// TODO Auto-generated method stub
+		return super.resolveFunction(function);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveFunction(org.eclipse.php.internal.core.ast.nodes.FunctionInvocation)
+	 */
+	@Override
+	IFunctionBinding resolveFunction(FunctionInvocation function) {
+		// TODO Auto-generated method stub
+		return super.resolveFunction(function);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveMethod(org.eclipse.php.internal.core.ast.nodes.MethodInvocation)
+	 */
+	@Override
+	IMethodBinding resolveMethod(MethodInvocation method) {
+		// TODO Auto-generated method stub
+		return super.resolveMethod(method);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveMethod(org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation)
+	 */
+	@Override
+	IMethodBinding resolveMethod(StaticMethodInvocation method) {
+		// TODO Auto-generated method stub
+		return super.resolveMethod(method);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveType(org.eclipse.php.internal.core.ast.nodes.TypeDeclaration)
+	 */
+	@Override
+	ITypeBinding resolveType(TypeDeclaration type) {
+		// TODO Auto-generated method stub
+		return super.resolveType(type);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveTypeParameter(org.eclipse.php.internal.core.ast.nodes.FormalParameter)
+	 */
+	@Override
+	ITypeBinding resolveTypeParameter(FormalParameter typeParameter) {
+		// TODO Auto-generated method stub
+		return super.resolveTypeParameter(typeParameter);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveVariable(org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
+	 */
+	@Override
+	IVariableBinding resolveVariable(FieldsDeclaration variable) {
+		// TODO Auto-generated method stub
+		return super.resolveVariable(variable);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveVariable(org.eclipse.php.internal.core.ast.nodes.Variable)
+	 */
+	@Override
+	IVariableBinding resolveVariable(Variable variable) {
+		// TODO Auto-generated method stub
+		return super.resolveVariable(variable);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveWellKnownType(java.lang.String)
+	 */
+	@Override
+	ITypeBinding resolveWellKnownType(String name) {
+		// TODO Auto-generated method stub
+		return super.resolveWellKnownType(name);
+	}
 }

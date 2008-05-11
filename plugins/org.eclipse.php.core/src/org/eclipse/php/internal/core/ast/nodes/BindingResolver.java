@@ -187,6 +187,23 @@ class BindingResolver {
 	}
 
 	/**
+	 * Returns the new type binding corresponding to given types, resulting in 
+	 * an ambiguous type binding.
+	 * 
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param types given types
+	 * @return the new type binding
+	 */
+	ITypeBinding getTypeBinding(IType[] types) {
+		return null;
+	}
+	
+	
+	/**
 	 * Returns the new variable binding corresponding to the given old variable binding.
 	 * <p>
 	 * The default implementation of this method returns <code>null</code>.
@@ -762,7 +779,7 @@ class BindingResolver {
 	 * Subclasses may reimplement.
 	 * </p>
 	 */
-	public IEvaluatedType getEvaluatedType(int offset, int length) {
+	protected IEvaluatedType getEvaluatedType(int offset, int length) {
 		return null;
 	}
 

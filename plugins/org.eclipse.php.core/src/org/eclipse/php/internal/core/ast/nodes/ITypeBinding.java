@@ -369,4 +369,23 @@ public interface ITypeBinding extends IBinding {
 	 * given type, and <code>false</code> otherwise
 	 */
 	public boolean isSubTypeCompatible(ITypeBinding type);
+	
+	/**
+	 * Returns whether this type is exact or ambiguous (may relate to two or more types) 
+	 * i.e. if there are 
+	 * 
+	 * @return <code>true</code> if this type is ambiguous and 
+	 * <code>false</code> otherwise
+	 */
+	public boolean isAmbiguous();
+
+	/**
+	 * Returns whether this type is known (found) by our binding engine
+	 * 
+	 * @return <code>true</code> if this type is known and 
+	 * <code>false</code> otherwise
+	 */
+	public boolean isUnknown();
+
+	
 }

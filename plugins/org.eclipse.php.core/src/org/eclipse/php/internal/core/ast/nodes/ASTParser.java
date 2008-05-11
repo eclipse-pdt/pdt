@@ -149,7 +149,7 @@ public class ASTParser {
 		progressMonitor.worked(2);
 		final Symbol symbol = phpParser.parse();
 		progressMonitor.done();
-		if (symbol == null) {
+		if (symbol == null || !(symbol.value instanceof Program)) {
 			return null;
 		}
 		Program p = (Program) symbol.value;

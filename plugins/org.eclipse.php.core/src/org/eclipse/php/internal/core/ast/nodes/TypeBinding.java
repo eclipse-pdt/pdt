@@ -1,12 +1,26 @@
+/*******************************************************************************
+ * Copyright (c) 2006 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.compiler.util.SimpleLookupTable;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -17,9 +31,8 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 public class TypeBinding implements ITypeBinding {
 
 	private IEvaluatedType type;
-	private IModelElement element;
+	private IModelElement[] elements;
 	private BindingResolver resolver;
-	private SimpleLookupTable compatibleCache;
 
 	/**
 	 * Constructs a new TypeBinding.
@@ -32,12 +45,9 @@ public class TypeBinding implements ITypeBinding {
 		this.resolver = resolver;
 		this.type = type;
 		if (elements != null) {
-			if (elements.length > 0) {
-				this.element = elements[0];
-			}
-			if (elements.length > 1) {
-				Logger.log(IStatus.WARNING, "TypeBinding: Found more then one model element");
-			}
+			final int length = elements.length;
+			this.elements = new IModelElement[length];
+			System.arraycopy(elements, 0, this.elements, 0, length);
 		}
 	}
 
@@ -51,7 +61,9 @@ public class TypeBinding implements ITypeBinding {
 	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement element) {
 		this.resolver = resolver;
 		this.type = type;
-		this.element = element;
+		if (element != null) {
+			this.elements = new IModelElement[] { element };
+		}
 	}
 
 	/**
@@ -87,10 +99,10 @@ public class TypeBinding implements ITypeBinding {
 	 * if the binary name is unknown
 	 */
 	public String getBinaryName() {
-		if (element == null) {
+		if (isUnknown() || isAmbiguous()) {
 			return null;
 		}
-		return this.element.getHandleIdentifier();
+		return this.elements[0].getHandleIdentifier();
 	}
 
 	/**
@@ -129,23 +141,29 @@ public class TypeBinding implements ITypeBinding {
 	 *   or the empty list if this type does not have field members
 	 */
 	public IVariableBinding[] getDeclaredFields() {
-		if (element == null) {
+		if (isUnknown()) {
 			return new IVariableBinding[0];
 		}
 		if (isClass()) {
-			IType type = (IType) element;
-			try {
-				IField[] fields = type.getFields();
-				IVariableBinding[] variableBindings = new IVariableBinding[fields.length];
-				for (int i = 0; i < fields.length; i++) {
-					variableBindings[i] = resolver.getVariableBinding(fields[i]);
+			List<IVariableBinding> variableBindings = new ArrayList<IVariableBinding>();
+
+			for (IModelElement element : this.elements) {
+				IType type = (IType) element;
+				try {
+					IField[] fields = type.getFields();
+					for (int i = 0; i < fields.length; i++) {
+						IVariableBinding variableBinding = resolver.getVariableBinding(fields[i]);
+						if (variableBinding != null) {
+							variableBindings.add(variableBinding);
+						}
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
 				}
-				return variableBindings;
-			} catch (ModelException e) {
-				Logger.logException(e);
 			}
+			return variableBindings.toArray(new IVariableBinding[variableBindings.size()]);
 		}
-		return new IVariableBinding[0]; // TODO - Implement IVariableBinding
+		return new IVariableBinding[0];
 	}
 
 	/**
@@ -166,23 +184,26 @@ public class TypeBinding implements ITypeBinding {
 	 *   or the empty list if this type does not declare any methods or constructors
 	 */
 	public IMethodBinding[] getDeclaredMethods() {
-		if (element == null) {
+		if (isUnknown()) {
 			return new IMethodBinding[0];
 		}
 		if (isClass()) {
-			IType type = (IType) element;
-			try {
-				IMethod[] methods = type.getMethods();
-				if (methods != null) {
-					IMethodBinding[] methodBinding = new IMethodBinding[methods.length];
-					for (int i = 0; i < methods.length; i++) {
-						methodBinding[i] = resolver.getMethodBinding(methods[i]);
+			List<IMethodBinding> methodBindings = new ArrayList<IMethodBinding>();
+			for (IModelElement element : this.elements) {
+				IType type = (IType) element;
+				try {
+					IMethod[] methods = type.getMethods();
+					if (methods != null) {
+						for (int i = 0; i < methods.length; i++) {
+							IMethodBinding methodBinding = resolver.getMethodBinding(methods[i]);
+							methodBindings.add(methodBinding);
+						}
 					}
-					return methodBinding;
+				} catch (ModelException e) {
+					Logger.logException(e);
 				}
-			} catch (ModelException e) {
-				Logger.logException(e);
 			}
+			return methodBindings.toArray(new IMethodBinding[methodBindings.size()]);
 		}
 		return new IMethodBinding[0]; // TODO - Implement IMethodBinding
 	}
@@ -262,25 +283,29 @@ public class TypeBinding implements ITypeBinding {
 	 *   the empty list
 	 */
 	public ITypeBinding[] getInterfaces() {
-		if (element != null && element instanceof IType) {
+		if (isUnknown()) {
+			return new ITypeBinding[0];
+		}
+
+		ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
+		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
 				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 				IType[] superTypes = supertypeHierarchy.getSupertypes(type);
 				if (superTypes != null) {
-					ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
 					for (IType superType : superTypes) {
 						if ((superType.getFlags() & Modifiers.AccInterface) != 0) {
 							interfaces.add(resolver.getTypeBinding(superType));
 						}
 					}
-					return interfaces.toArray(new ITypeBinding[interfaces.size()]);
 				}
 			} catch (ModelException e) {
 				Logger.logException(e);
 			}
+
 		}
-		return new ITypeBinding[0];
+		return interfaces.toArray(new ITypeBinding[interfaces.size()]);
 	}
 
 	/**
@@ -360,7 +385,12 @@ public class TypeBinding implements ITypeBinding {
 	 * @see AST#resolveWellKnownType(String)
 	 */
 	public ITypeBinding getSuperclass() {
-		if (element != null && element instanceof IType) {
+		if (isUnknown()) {
+			return null;
+		}
+
+		List<IType> superClasses = new ArrayList<IType>(elements.length);
+		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
 				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
@@ -368,7 +398,7 @@ public class TypeBinding implements ITypeBinding {
 				if (superclasses != null) {
 					for (IType superClass : superclasses) {
 						if ((superClass.getFlags() & Modifiers.AccInterface) == 0) {
-							return resolver.getTypeBinding(superClass);
+							superClasses.add(superClass);
 						}
 					}
 				}
@@ -376,7 +406,7 @@ public class TypeBinding implements ITypeBinding {
 				Logger.logException(e);
 			}
 		}
-		return null;
+		return resolver.getTypeBinding(superClasses.toArray(new IType[superClasses.size()]));
 	}
 
 	/**
@@ -431,16 +461,20 @@ public class TypeBinding implements ITypeBinding {
 	 *    and <code>false</code> otherwise
 	 */
 	public boolean isInterface() {
-		if (element instanceof IMember) {
-			IMember member = (IMember) element;
+		if (!isUnknown()) {
+			return false;
+		}
+
+		boolean result = true;
+		for (IModelElement element : elements) {
+			IType member = (IType) element;
 			try {
-				return (member.getFlags() & Modifiers.AccInterface) != 0;
+				result &= (member.getFlags() & Modifiers.AccInterface) != 0;
 			} catch (ModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
-		return false;
+		return result;
 	}
 
 	/**
@@ -483,20 +517,26 @@ public class TypeBinding implements ITypeBinding {
 	 * given type, and <code>false</code> otherwise
 	 */
 	public boolean isSubTypeCompatible(ITypeBinding otherType) {
-		if (otherType instanceof TypeBinding) {
-			if (element instanceof IType) {
-				try {
-					IModelElement otherElement = ((TypeBinding) otherType).element;
-					if (otherElement instanceof IType) {
-						ITypeHierarchy supertypeHierarchy = ((IType) element).newSupertypeHierarchy(new NullProgressMonitor());
-						return supertypeHierarchy.contains((IType) otherElement);
+		if (otherType == null) {
+			return false;
+		}
+
+		boolean result = true;
+		for (IModelElement element : elements) {
+			try {
+				ITypeHierarchy supertypeHierarchy = ((IType) element).newSupertypeHierarchy(new NullProgressMonitor());
+				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
+				for (IModelElement modelElement : otherElements) {
+					if (modelElement instanceof IType) {
+						result &= supertypeHierarchy.contains((IType) modelElement);
 					}
-				} catch (ModelException e) {
-					Logger.logException(e);
 				}
+			} catch (ModelException e) {
+				Logger.logException(e);
 			}
 		}
-		return false;
+		
+		return result;
 	}
 
 	/**
@@ -563,7 +603,10 @@ public class TypeBinding implements ITypeBinding {
 	 * @return the key for this binding
 	 */
 	public String getKey() {
-		return element.getHandleIdentifier();
+		if (isUnknown() || isAmbiguous()) {
+			return null;
+		}
+		return elements[0].getHandleIdentifier();
 	}
 
 	/**
@@ -616,7 +659,10 @@ public class TypeBinding implements ITypeBinding {
 	 * @since 3.1
 	 */
 	public IModelElement getPHPElement() {
-		return element;
+		if (isUnknown() || isAmbiguous()) {
+			return null;
+		}
+		return elements[0];
 	}
 
 	/**
@@ -661,30 +707,35 @@ public class TypeBinding implements ITypeBinding {
 		if (!this.type.equals(otherBinding.type)) {
 			return false;
 		}
-		if (this.element == null) {
-			return otherBinding.element == null;
+		if (this.elements == null) {
+			return otherBinding.elements == null;
 		}
-		return this.element.equals(otherBinding.element);
+		return this.elements.equals(otherBinding.elements);
 
 	}
 
-	/**
-	 * Returns whether this binding is synthetic. A synthetic binding is one that
-	 * was made up by the compiler, rather than something declared in the
-	 * source code. Note that default constructors (the 0-argument constructor that
-	 * the compiler generates for class declarations with no explicit constructors
-	 * declarations) are not generally considered synthetic (although they
-	 * may be if the class itself is synthetic).
-	 * But see {@link IMethodBinding#isDefaultConstructor() IMethodBinding.isDefaultConstructor}
-	 * for cases where the compiled-generated default constructor can be recognized
-	 * instead.
-	 *
-	 * @return <code>true</code> if this binding is synthetic, and
-	 *    <code>false</code> otherwise
-	 * @see IMethodBinding#isDefaultConstructor()
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isSynthetic()
 	 */
 	public boolean isSynthetic() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/*
+	 * (non-Java)
+	 * @see ITypeBinding#isAmbiguous()
+	 */
+	public boolean isAmbiguous() {
+		return !isUnknown() && elements.length > 1;
+	}
+
+	/*
+	 * (non-Java)
+	 * @see ITypeBinding#isAmbiguous()
+	 */
+	public boolean isUnknown() {
+		return this.elements == null;
 	}
 }

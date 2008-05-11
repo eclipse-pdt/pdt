@@ -27,8 +27,8 @@ import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
  * @see ITypeBinding
  * @see IVariableBinding
  * @see IMethodBinding
- * @see IAnnotationBinding
  * @see IMemberValuePairBinding
+ * @see IIncludeBinding
  * @since 2.0
  */
 public interface IBinding {
