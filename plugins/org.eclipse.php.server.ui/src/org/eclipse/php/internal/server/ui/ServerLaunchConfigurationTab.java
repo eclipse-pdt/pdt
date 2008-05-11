@@ -298,9 +298,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				}
 			}
 		});
-		
-		updateDebugServerTesters();
-		
+				
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		validateDebuggerBtn.setLayoutData(data);
 		validateDebuggerBtn.setText("Check Debug Server Connection");
@@ -787,6 +785,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			debuggerID = configuration.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
 			configuration.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
+			updateDebugServerTesters();
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
