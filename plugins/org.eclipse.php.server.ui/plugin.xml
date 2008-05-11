@@ -32,11 +32,12 @@
   <extension
         point="org.eclipse.debug.ui.launchShortcuts">
      <shortcut
-            class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchShortcut"
-            icon="icons/full/obj16/server_run.gif"
-            id="org.eclipse.php.server.ui.phpServerShortcut"
-            label="%phpServerShortcut.label"
-            modes="run, debug, profile">
+           class="org.eclipse.php.internal.server.ui.launching.PHPWebPageLaunchShortcut"
+           description="%WebLaunch.description"
+           icon="icons/full/obj16/server_run.gif"
+           id="org.eclipse.php.server.ui.phpServerShortcut"
+           label="%phpServerShortcut.label"
+           modes="run, debug, profile">
             <contextualLaunch>
 		 	<contextLabel mode="run" label="%phpServerShortcut.label"/>
 		 	<enablement>
@@ -111,6 +112,13 @@
            fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
            id="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory"
            name="Basic Factory"/>
+     <wizardAndCompositeFragment
+           class="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
+           fragmentsGroupID="org.eclipse.php.server.ui.serverWizardAndComposite"
+           id="org.eclipse.php.internal.server.ui.PathMapperFragmentFactory"
+           name="Path Mapper Fragment"
+           placeAfter="org.eclipse.php.server.ui.wizard.BasicCompositeFragmentFactory">
+     </wizardAndCompositeFragment>
   </extension>
   <extension
         point="org.eclipse.ui.preferencePages">
@@ -119,5 +127,14 @@
            class="org.eclipse.php.internal.server.ui.PHPServersPreferencePage"
            id="org.eclipse.php.server.internal.ui.PHPServersPreferencePage"
            name="%serversPreferencesPageName"/>
+  </extension>
+  <extension
+        point="org.eclipse.php.debug.ui.debugServerConnectionTest">
+     <debugServerTest
+           class="org.eclipse.php.internal.server.ui.DefaultDebugServerConnectionTest"
+           debuggeTypeName="Zend Debugger"
+           debuggerTypeName="Zend Debugger"
+           id="org.eclipse.php.server.ui.defaultZendDebugServerTest">
+     </debugServerTest>
   </extension>
 </plugin>
