@@ -97,11 +97,11 @@ class OverrideIndicatorManager implements IScriptReconcilingListener, IPhpScript
 					}
 				}
 			} catch (Exception e) {
-				ExceptionHandler.handle(new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Exception occurred", e)), PHPUIMessages.getString("OverrideIndicatorManager_open_error_title"), PHPUIMessages.getString("OverrideIndicatorManager_open_error_messageHasLogEntry"));
+				ExceptionHandler.handle(new CoreException(new Status(IStatus.ERROR, PHPUiPlugin.ID, 0, "Exception occurred", e)), PHPUIMessages.getString("OverrideIndicatorManager_open_error_title"), PHPUIMessages.getString("OverrideIndicatorManager_open_error_messageHasLogEntry"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				return;
 			}
-			String title = PHPUIMessages.getString("OverrideIndicatorManager_open_error_title");
-			String message = PHPUIMessages.getString("OverrideIndicatorManager_open_error_message");
+			String title = PHPUIMessages.getString("OverrideIndicatorManager_open_error_title");//$NON-NLS-1$
+			String message = PHPUIMessages.getString("OverrideIndicatorManager_open_error_message");//$NON-NLS-1$
 			MessageDialog.openError(PHPUiPlugin.getActiveWorkbenchShell(), title, message);
 		}
 	}
