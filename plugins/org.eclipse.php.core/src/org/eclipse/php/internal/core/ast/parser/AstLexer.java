@@ -81,5 +81,9 @@ public interface AstLexer extends Scanner {
 	 * Returns the length of the matched text region.
 	 */
 	public int yylength();
+	
+	
+	  public PDTSymbol __next_token() throws java.io.IOException;  
+
 
 }
