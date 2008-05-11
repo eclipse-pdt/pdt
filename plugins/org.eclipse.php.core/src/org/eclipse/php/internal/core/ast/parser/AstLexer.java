@@ -82,6 +82,4 @@ public interface AstLexer extends Scanner {
 	 */
 	public int yylength();
 
-	public PDTSymbol __next_token() throws java.io.IOException;
-
 }
