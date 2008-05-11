@@ -785,10 +785,10 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			debuggerID = configuration.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
 			AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(debuggerID);
 			configuration.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getWebLaunchDelegateClass());
-			updateDebugServerTesters();
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
+		updateDebugServerTesters();
 	}
 
 	// In case this is a debug mode, display 'Break on first line' attribute checkbox.
