@@ -6,23 +6,21 @@ Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.debug.core.PHPDebugPlugin
 Bundle-Localization: plugin
 Eclipse-BuddyPolicy: registered
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
+Require-Bundle: org.eclipse.php.server.core,
  org.eclipse.php.core,
- org.eclipse.debug.core,
- org.eclipse.debug.ui,
- org.eclipse.ui.console,
- org.eclipse.php.server.core,
- org.eclipse.jface,
- org.eclipse.wst.sse.ui,
  org.eclipse.php.debug.daemon,
  org.eclipse.php.ui,
- org.eclipse.ui.workbench,
- org.eclipse.core.filesystem,
- org.eclipse.ui.ide,
- org.eclipse.core.variables,
- org.eclipse.ui.browser
-Eclipse-LazyStart: true
+ org.eclipse.wst.sse.ui;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.debug.ui;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.ui.console;bundle-version="[3.3.0,4.0.0)",
+ org.eclipse.jface;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.ui.ide;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.ui.workbench;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.core.filesystem;bundle-version="[1.2.0,2.0.0)",
+ org.eclipse.core.variables;bundle-version="[3.2.100,4.0.0)",
+ org.eclipse.ui.browser;bundle-version="[3.2.200,4.0.0)"
+Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.debug.core.debugger.handlers,
  org.eclipse.php.debug.core.debugger.messages,
@@ -53,3 +51,4 @@ Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.internal.debug.core.zend.model,
  org.eclipse.php.internal.debug.core.zend.testConnection
 Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
