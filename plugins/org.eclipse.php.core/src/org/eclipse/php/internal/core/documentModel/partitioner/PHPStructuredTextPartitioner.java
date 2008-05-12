@@ -62,7 +62,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		// in case we are in the end of document
 		// we return the partition of last region
 		int docLength = fStructuredDocument.getLength();
-		if (offset == docLength) {
+		if (offset == docLength && offset > 0) {
 			return super.getPartition(offset - 1);
 		}
 		return super.getPartition(offset);

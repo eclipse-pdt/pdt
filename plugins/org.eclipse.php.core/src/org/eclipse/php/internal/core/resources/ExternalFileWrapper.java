@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
+import java.util.Map;
 
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.WorkspaceRoot;
@@ -1113,5 +1114,16 @@ public class ExternalFileWrapper implements IFile, IAdaptable, IResource,
 
 	public void setHidden(boolean isHidden) throws CoreException {
 		file.setHidden(isHidden);
+	}
+
+	/**
+	 * TODO: validate with Yaron about the new changes
+	 */
+	public Map getPersistentProperties() throws CoreException {
+		return file.getPersistentProperties();
+	}
+
+	public Map getSessionProperties() throws CoreException {
+		return file.getSessionProperties();
 	}
 }
