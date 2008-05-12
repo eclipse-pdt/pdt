@@ -11,10 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -22,6 +21,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.ui.IDebugServerConnectionTest;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.zend.communication.DebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
@@ -48,29 +48,17 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		// 2. dummy.php exists 
 		// 3. check debugger communication
 		// 4. debugger version
-
 		IRunnableWithProgress runnableWithProgress = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				monitor.beginTask(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testingConnectivity"), IProgressMonitor.UNKNOWN);  //$NON-NLS-1$
+				monitor.beginTask(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testingConnectivity"), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+				InputStream inputStream = null;
 				try {
 					//1. check base URL (http://HOST_NAME)
 					//2.check dummy file existence
 					final URL checkURL = new URL(fURL + "/dummy.php"); //$NON-NLS-1$
 					URLConnection connection = checkURL.openConnection();
 
-					InputStream inputStream = null;
-
-					Timer timer = new Timer();
-					TimerTask task = new TimerTask() {
-
-						@Override
-						public void run() {
-							if (!isFinished) {
-								DebugServerTestController.getInstance().notifyTestListeners(new DebugServerTestEvent(fURL, DebugServerTestEvent.TEST_TIMEOUT));
-							}
-						}
-					};
-					timer.schedule(task, DEFAULT_TIMEOUT);
+					connection.setReadTimeout(DEFAULT_TIMEOUT);
 					inputStream = connection.getInputStream();//this will fail when host not found and/or dummy.php not found (2 different exception
 					inputStream.close();
 
@@ -87,23 +75,33 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 
 					//Calling the debugger
 					URL checkDebugURL = new URL(urlToDebug);
-					URLConnection debugConnection = checkDebugURL.openConnection();
+					final URLConnection debugConnection = checkDebugURL.openConnection();
 					DebugServerTestController.getInstance().addListener(DefaultDebugServerConnectionTest.this);
-					debugConnection.getInputStream();//this should activate the debugger
-
-					synchronized (isFinished) {
-						if (!isFinished) {
-							isFinished.wait();
-						}
-					}
-
+					debugConnection.setReadTimeout(DEFAULT_TIMEOUT);
+					inputStream = debugConnection.getInputStream();
 				} catch (FileNotFoundException fnfe) {//dummy.php was not found
 					showErrorDialog(NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_theURLCouldNotBeFound"), fURL)); //$NON-NLS-1$
+					removeThisListener();
+				} catch (SocketTimeoutException ste) {
+					if (!isFinished) {
+						showErrorDialog(NLS.bind(PHPDebugCoreMessages.DebugServerTestEvent_timeOutMessage, fURL)); //$NON-NLS-1$
+						removeThisListener();
+					}
 				} catch (IOException er) {//server not found / server is down
 					showErrorDialog(NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_webServerConnectionFailed"), fURL)); //$NON-NLS-1$
+					removeThisListener();
+				} finally {
+					if (inputStream != null) {
+						try {
+							inputStream.close();
+						} catch (IOException ioe) {
+							//nothing to do
+						}
+					}
 				}
 
 			}
+
 		};
 		progressDialog = new ProgressMonitorDialog(fShell);
 		progressDialog.setBlockOnOpen(false);
@@ -116,6 +114,10 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		}
 	}
 
+	private void removeThisListener() {
+		DebugServerTestController.getInstance().removeListener(this);
+	}
+
 	protected void showErrorDialog(final String message) {
 		fShell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
@@ -125,13 +127,10 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	}
 
 	public void testEventReceived(final DebugServerTestEvent e) {
-		synchronized (isFinished) {
-			isFinished.notifyAll();
-			isFinished = true;
-		}
+		isFinished = true;
 		fShell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				DebugServerTestController.getInstance().removeListener(DefaultDebugServerConnectionTest.this);
+				removeThisListener();
 				if (e.getEventType() == DebugServerTestEvent.TEST_SUCCEEDED) {
 					MessageDialog.openInformation(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), e.getEventMessage()); //$NON-NLS-1$
 				} else {
