@@ -131,7 +131,7 @@
   <extension
         point="org.eclipse.php.debug.ui.debugServerConnectionTest">
      <debugServerTest
-           class="org.eclipse.php.internal.server.ui.DefaultDebugServerConnectionTest"
+           class="org.eclipse.php.internal.server.ui.launching.zend.DefaultDebugServerConnectionTest"
            debuggeTypeName="Zend Debugger"
            debuggerTypeName="Zend Debugger"
            id="org.eclipse.php.server.ui.defaultZendDebugServerTest">
