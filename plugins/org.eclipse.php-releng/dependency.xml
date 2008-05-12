@@ -18,6 +18,12 @@
 			<param name="groupId" value="emf" />
 		</antcall>
 		<antcall target="getAndInstall">
+			<param name="groupId" value="emfSource" />
+		</antcall>
+		<antcall target="getAndInstall">
+			<param name="groupId" value="xsd" />
+		</antcall>
+		<antcall target="getAndInstall">
 			<param name="groupId" value="gef" />
 		</antcall>
 		<antcall target="getAndInstall">
@@ -41,7 +47,7 @@
 			<param name="groupId" value="wtpRuntime" />
 		</antcall>
 		<antcall target="getAndInstall">
-			<param name="groupId" value="emfSdoRuntime" />
+			<param name="groupId" value="emfRuntime" />
 		</antcall>
 		<antcall target="getAndInstall">
 			<param name="groupId" value="xsdRuntime" />
