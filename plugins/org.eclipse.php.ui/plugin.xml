@@ -329,45 +329,28 @@
 	<!--======================================================================================-->
 	<!-- Workbench validation                                       						  -->
 	<!--======================================================================================-->
-	<extension
-		id="HTMLValidatorForPHP"
-		name="HTML Syntax Validator (for PHP Files)"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php4">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.inc">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.php5">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.tpl">
-			</filter>
-         	<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource"/>			
-			<projectNature id="org.eclipse.php.core.PHPNature"/>
-			<enablement></enablement>
-			<helper class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper"/>
-			<run
-				async="true"
-				fullBuild="true"
-				incremental="true"
-				enabled="true"
-				class="org.eclipse.wst.html.internal.validation.HTMLValidator:org.eclipse.php.core.phpsource"/>
-		</validator>
-	</extension>
-
-
+   <extension id="HTMLValidatorForPHP" name="HTML Syntax Validator (for PHP Files)" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.wst.html.internal.validation.HTMLValidator"
+            manual="true"
+            sourceid="org.eclipse.php.core.phpsource"
+            version="1"
+            markerId="org.eclipse.wst.html.core.validationMarker">
+         <include>
+            <rules>
+               <contentType id="org.eclipse.wst.html.core.htmlsource"></contentType>
+               <fileext caseSensitive="false" ext="php"/>
+               <fileext caseSensitive="false" ext="php4"/>
+               <fileext caseSensitive="false" ext="inc"/>
+               <fileext caseSensitive="false" ext="php5"/>
+               <fileext caseSensitive="false" ext="tpl"/>
+            </rules>
+         </include>
+         <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
+      </validator>
+   </extension>
+   
 	<!--======================================================================================-->
 	<!-- custom PHP source (as you type) validation					   						  -->
 	<!--======================================================================================-->

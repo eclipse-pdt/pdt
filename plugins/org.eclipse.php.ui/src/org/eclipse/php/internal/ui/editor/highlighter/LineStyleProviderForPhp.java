@@ -12,40 +12,21 @@ package org.eclipse.php.internal.ui.editor.highlighter;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.DocumentPartitioningChangedEvent;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.IDocumentPartitioningListener;
-import org.eclipse.jface.text.IDocumentPartitioningListenerExtension;
-import org.eclipse.jface.text.IDocumentPartitioningListenerExtension2;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextInputListener;
-import org.eclipse.jface.text.ITextListener;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.TextEvent;
-import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -54,22 +35,17 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
+ * Coloring mechanism for PHP partitions
  */
-public class LineStyleProviderForPhp implements LineStyleProvider {
-	private IStructuredDocument fDocument;
-	private Highlighter fHighlighter;
-	private boolean fInitialized;
-	private final PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
-	private Map<String, TextAttribute> fTextAttributes;
-	private IPreferenceStore fColorPreferences;
+public class LineStyleProviderForPhp extends AbstractLineStyleProvider implements LineStyleProvider  {
 
-	/** The internal listener. */
-	private InternalListener fInternalListener;
+	private IPreferenceStore fColorPreferences;
 	
 	/** Contains region to style mapping */
 	protected static final Map<String, String> fColorTypes = new HashMap<String, String>(); // String (token type), String (color)
@@ -213,221 +189,6 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 
 		fColorTypes.put(PHPRegionTypes.TASK, PreferenceConstants.EDITOR_TASK_COLOR);
 	}
-	
-	/**
-	 * Internal listener class.
-	 */
-	class InternalListener implements
-			ITextInputListener, IDocumentListener, ITextListener,
-			IDocumentPartitioningListener, IDocumentPartitioningListenerExtension, IDocumentPartitioningListenerExtension2 {
-
-		private ITextViewer fViewer;
-
-		public InternalListener() {
-			super();
-			fViewer = fHighlighter.getTextViewer();
-		}
-
-		/** Set to <code>true</code> if between a document about to be changed and a changed event. */
-		private boolean fDocumentChanging= false;
-		/**
-		 * The cached redraw state of the text viewer.
-		 * @since 3.0
-		 */
-		private boolean fCachedRedrawState= true;
-
-		/*
-		 * @see ITextInputListener#inputDocumentAboutToBeChanged(IDocument, IDocument)
-		 */
-		public void inputDocumentAboutToBeChanged(IDocument oldDocument, IDocument newDocument) {
-			if (oldDocument != null) {
-				fViewer.removeTextListener(this);
-				oldDocument.removeDocumentListener(this);
-				oldDocument.removeDocumentPartitioningListener(this);
-			}
-		}
-
-		/*
-		 * @see ITextInputListener#inputDocumenChanged(IDocument, IDocument)
-		 */
-		public void inputDocumentChanged(IDocument oldDocument, IDocument newDocument) {
-
-			fDocumentChanging= false;
-			fCachedRedrawState= true;
-
-			if (newDocument != null) {
-
-				newDocument.addDocumentPartitioningListener(this);
-				newDocument.addDocumentListener(this);
-				fViewer.addTextListener(this);
-
-				processDamage(new Region(0, newDocument.getLength()), newDocument);
-			}
-		}
-
-		/*
-		 * @see IDocumentPartitioningListener#documentPartitioningChanged(IDocument)
-		 */
-		public void documentPartitioningChanged(IDocument document) {
-			if (!fDocumentChanging && fCachedRedrawState)
-				processDamage(new Region(0, document.getLength()), document);
-		}
-
-		/*
-		 * @see IDocumentPartitioningListenerExtension#documentPartitioningChanged(IDocument, IRegion)
-		 * @since 2.0
-		 */
-		public void documentPartitioningChanged(IDocument document, IRegion changedRegion) {
-			if (!fDocumentChanging && fCachedRedrawState) {
-				processDamage(new Region(changedRegion.getOffset(), changedRegion.getLength()), document);
-			} 
-		}
-
-		/*
-		 * @see org.eclipse.jface.text.IDocumentPartitioningListenerExtension2#documentPartitioningChanged(org.eclipse.jface.text.DocumentPartitioningChangedEvent)
-		 * @since 3.0
-		 */
-		public void documentPartitioningChanged(DocumentPartitioningChangedEvent event) {
-			IRegion changedRegion= event.getChangedRegion(PHPPartitionTypes.PHP_DEFAULT);
-			if (changedRegion != null)
-				documentPartitioningChanged(event.getDocument(), changedRegion);
-		}
-
-		/*
-		 * @see IDocumentListener#documentAboutToBeChanged(DocumentEvent)
-		 */
-		public void documentAboutToBeChanged(DocumentEvent e) {
-			fDocumentChanging= true;
-		}
-
-		/*
-		 * @see IDocumentListener#documentChanged(DocumentEvent)
-		 */
-		public void documentChanged(DocumentEvent e) {
-			fDocumentChanging= false;
-		}
-
-		/*
-		 * @see ITextListener#textChanged(TextEvent)
-		 */
-		public void textChanged(TextEvent e) {
-
-			fCachedRedrawState= e.getViewerRedrawState();
-	 		if (!fCachedRedrawState)
-	 			return;
-
-	 		IRegion damage= null;
-	 		IDocument document= null;
-
-		 	if (e.getDocumentEvent() == null) {
-		 		document= fViewer.getDocument();
-		 		if (document != null)  {
-			 		if (e.getOffset() == 0 && e.getLength() == 0 && e.getText() == null) {
-						// redraw state change, damage the whole document
-						damage= new Region(0, document.getLength());
-			 		} else {
-						damage= new Region(e.getOffset(), e.getLength());
-			 		}
-		 		}
-		 	} 
-
-			if (damage != null && document != null)
-				processDamage(damage, document);
-		}
-
-		/**
-		 * Translates the given text event into the corresponding range of the viewer's document.
-		 *
-		 * @param e the text event
-		 * @return the widget region corresponding the region of the given event
-		 * @since 2.1
-		 */
-		protected IRegion widgetRegion2ModelRegion(TextEvent e) {
-
-			String text= e.getText();
-			int length= text == null ? 0 : text.length();
-
-			if (fViewer instanceof ITextViewerExtension5) {
-				ITextViewerExtension5 extension= (ITextViewerExtension5) fViewer;
-				return extension.widgetRange2ModelRange(new Region(e.getOffset(), length));
-			}
-
-			IRegion visible= fViewer.getVisibleRegion();
-			IRegion region= new Region(e.getOffset() + visible.getOffset(), length);
-			return region;
-		}
-	}	
-
-
-	/**
-	 * Processes the given damage.
-	 * @param damage the damage to be repaired
-	 * @param document the document whose presentation must be repaired
-	 */
-	private void processDamage(IRegion damage, IDocument document) {
-		if (damage != null && damage.getLength() > 0) {
-			fHighlighter.refreshDisplay(damage.getOffset(), damage.getLength());
-		}
-	}
-	
-	/*
-	 * @see IPresentationReconciler#install(ITextViewer)
-	 */
-	public void install(ITextViewer viewer) {
-		Assert.isNotNull(viewer);
-
-		fInternalListener = new InternalListener();
-		viewer.addTextInputListener(fInternalListener);
-		
-		IDocument document= viewer.getDocument();
-		if (document != null)
-			fInternalListener.inputDocumentChanged(null, document);
-	}
-
-	/*
-	 * @see IPresentationReconciler#uninstall()
-	 */
-	public void uninstall(ITextViewer viewer) {
-		viewer.removeTextInputListener(fInternalListener);
-
-		// Ensure we uninstall all listeners
-		fInternalListener.inputDocumentAboutToBeChanged(viewer.getDocument(), null);
-	}
-	
-	
-	public void init(IStructuredDocument structuredDocument, Highlighter highlighter) {
-		commonInit(structuredDocument, highlighter);
-
-		if (isInitialized())
-			return;
-
-		registerPreferenceManager();
-
-		setInitialized(true);
-		
-		install(fHighlighter.getTextViewer());
-	}
-
-	public void release() {
-		unRegisterPreferenceManager();
-		
-		uninstall(fHighlighter.getTextViewer());
-	}
-
-	/**
-	 * Returns the hashtable containing all the text attributes for this line
-	 * style provider. Lazily creates a hashtable if one has not already been
-	 * created.
-	 * 
-	 * @return
-	 */
-	protected Map<String, TextAttribute> getTextAttributes() {
-		if (fTextAttributes == null) {
-			fTextAttributes = new HashMap<String, TextAttribute>();
-			loadColors();
-		}
-		return fTextAttributes;
-	}
 
 	/**
 	 * Returns the attribute for simple php regions (open /close)
@@ -451,7 +212,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 
 		//return the defalt attributes if there is not highlight color for the region
 		if (result == null) {
-			result = getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
+			result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NORMAL_COLOR);
 		}
 		return result;
 	}
@@ -464,7 +225,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @return
 	 */
 	protected TextAttribute getAttributeFor(String type) {
-		return getTextAttributes().get(fColorTypes.get(type));
+		return (TextAttribute) getTextAttributes().get(fColorTypes.get(type));
 	}
 
 	/**
@@ -504,7 +265,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	}
 
 	public TextAttribute getTextAttributeForColor(String colorKey) {
-		return getTextAttributes().get(colorKey);
+		return (TextAttribute) getTextAttributes().get(colorKey);
 	}
 
 	/**
@@ -531,53 +292,14 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		return result;
 	}
 
-	/**
-	 * Prepares the regions for coloring by analyzing the tokens
-	 */
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
 		final int partitionStartOffset = typedRegion.getOffset();
 		final int partitionLength = typedRegion.getLength();
 		IStructuredDocumentRegion structuredDocumentRegion = getDocument().getRegionAtCharacterOffset(partitionStartOffset);
 		final boolean prepareTextRegions = prepareTextRegions(structuredDocumentRegion, partitionStartOffset, partitionLength, holdResults);
-		
-		// update text presentation listeners about the change
-		if (prepareTextRegions) {
-			Region damage = new Region(partitionStartOffset, partitionLength);
-			StyleRange[] array = (StyleRange[]) holdResults.toArray(new StyleRange[holdResults.size()]);
-			final TextPresentation presentation = createPresentation(damage, array);
-			fHighlighter.getTextViewer().changeTextPresentation(presentation, false);
-			completeStyleRanges(holdResults, presentation);
-		}		
 		return prepareTextRegions;
 	}
 
-	private void completeStyleRanges(Collection holdResults, TextPresentation presentation) {
-		holdResults.clear();
-		Iterator allStyleRangeIterator = presentation.getAllStyleRangeIterator();
-		while (allStyleRangeIterator.hasNext()) {
-			Object next = allStyleRangeIterator.next();
-			holdResults.add(next);
-		}
-	}
-
-	/**
-	 * Constructs a "repair description" for the given damage and returns this
-	 * description as a text presentation. For this, it queries the partitioning
-	 * of the damage region and asks the appropriate presentation repairer for
-	 * each partition to construct the "repair description" for this partition.
-	 *
-	 * @param damage the damage to be repaired
-	 * @param document the document whose presentation must be repaired
-	 * @return the presentation repair description as text presentation or
-	 *         <code>null</code> if the partitioning could not be computed
-	 */
-	protected TextPresentation createPresentation(IRegion damage, StyleRange[] ranges) {
-		TextPresentation presentation= new TextPresentation(damage, 1000);
-		presentation.mergeStyleRanges(ranges);
-		return presentation;
-	}
-	
-	
 	/**
 	 * @param region
 	 * @param start
@@ -585,7 +307,7 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 	 * @param holdResults
 	 * @return
 	 */
-	protected boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength, Collection<StyleRange> holdResults) {
+	public boolean prepareTextRegion(ITextRegionCollection blockedRegion, int partitionStartOffset, int partitionLength, Collection<StyleRange> holdResults) {
 		boolean handled = false;
 		final int partitionEndOffset = partitionStartOffset + partitionLength - 1;
 		ITextRegion region = null;
@@ -748,7 +470,15 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 					styleRange.length += element.getTextLength();
 				} else {
 					// create new styleRange
-					styleRange = createPhpStyleRange(regionStart, attr, element);
+					styleRange = new StyleRange(regionStart + element.getStart(), element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+						styleRange.underline = true;
+						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
+					}
+					if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+						styleRange.strikeout = true;
+						styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
+					}
 					holdResults.add(styleRange);
 					// technically speaking, we don't need to update
 					// previousAttr
@@ -765,44 +495,11 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		}
 	}
 
-	/**
-	 * @return the created region style for the given token 
-	 */
-	private final StyleRange createPhpStyleRange(int regionStart, TextAttribute attr, ITextRegion element) {
-		final StyleRange styleRange = new StyleRange(regionStart + element.getStart(), attr.getBackground() != null ? element.getTextLength() : element.getLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
-		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
-			styleRange.underline = true;
-			styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
-		}
-		if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
-			styleRange.strikeout = true;
-			styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
-		}
-		return styleRange;
-	}
-
 	/*
 	 * Returns hash of color attributes
 	 */
 	public Map<String, String> getColorTypesMap() {
 		return fColorTypes;
-	}
-
-	/*
-	 * Handle changes to the preferences
-	 */
-	protected void handlePropertyChange(PropertyChangeEvent event) {
-		if (event != null) {
-			String prefKey = event.getProperty();
-			if (PreferenceConstants.EDITOR_NORMAL_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_KEYWORD_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_VARIABLE_COLOR.equals(prefKey)
-				|| PreferenceConstants.EDITOR_STRING_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_COMMENT_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_PHPDOC_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_NUMBER_COLOR.equals(prefKey)
-				|| PreferenceConstants.EDITOR_HEREDOC_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_TASK_COLOR.equals(prefKey)) {
-				addTextAttribute(prefKey);
-			}
-		} else {
-			loadColors();
-		}
-		fHighlighter.refreshDisplay();
 	}
 
 	public void loadColors() {
@@ -842,58 +539,6 @@ public class LineStyleProviderForPhp implements LineStyleProvider {
 		public void propertyChange(PropertyChangeEvent event) {
 			// have to do it this way so others can override the method
 			handlePropertyChange(event);
-		}
-	}
-
-	protected void commonInit(IStructuredDocument document, Highlighter highlighter) {
-		fDocument = document;
-		fHighlighter = highlighter;
-	}
-
-	protected TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
-		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
-	}
-
-	protected IStructuredDocument getDocument() {
-		return fDocument;
-	}
-
-	/**
-	 */
-	protected Highlighter getHighlighter() {
-		return fHighlighter;
-	}
-
-	/**
-	 * Returns the initialized.
-	 * 
-	 * @return boolean
-	 */
-	public boolean isInitialized() {
-		return fInitialized;
-	}
-
-	private void registerPreferenceManager() {
-		IPreferenceStore pref = getColorPreferences();
-		if (pref != null) {
-			pref.addPropertyChangeListener(fPreferenceListener);
-		}
-	}
-
-	/**
-	 * Sets the initialized.
-	 * 
-	 * @param initialized
-	 *            The initialized to set
-	 */
-	private void setInitialized(boolean initialized) {
-		this.fInitialized = initialized;
-	}
-
-	private void unRegisterPreferenceManager() {
-		IPreferenceStore pref = getColorPreferences();
-		if (pref != null) {
-			pref.removePropertyChangeListener(fPreferenceListener);
 		}
 	}
 }

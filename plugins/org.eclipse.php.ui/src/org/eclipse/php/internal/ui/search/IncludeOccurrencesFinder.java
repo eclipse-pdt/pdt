@@ -7,13 +7,18 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTNodes;
+import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.ClassName;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
+import org.eclipse.php.internal.core.ast.nodes.FormalParameter;
+import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
 import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
 import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Include;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
+import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
 
 public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 
@@ -116,6 +121,21 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean visit(Identifier className) {
+		final StructuralPropertyDescriptor location = className.getLocationInParent();
+		if (location == ClassDeclaration.SUPER_CLASS_PROPERTY || location == ClassDeclaration.INTERFACES_PROPERTY || location == StaticMethodInvocation.CLASS_NAME_PROPERTY || location == FormalParameter.PARAMETER_TYPE_PROPERTY) {
+			String name = className.getName();
+			for (IType type : types) {
+				if (type.getElementName().equals(name))
+					fResult.add(new OccurrenceLocation(className.getStart(), className.getLength(), getOccurrenceType(null), fDescription));
+			}
+		}
+		return false;
+	}
+	
+	
 
 	@Override
 	public boolean visit(FunctionInvocation functionInvocation) {
