@@ -21,4 +21,5 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.php.internal.server.ui,
  org.eclipse.php.internal.server.ui.launching,
+ org.eclipse.php.internal.server.ui.launching.zend,
  org.eclipse.php.internal.server.ui.wizard

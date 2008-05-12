@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
-package org.eclipse.php.internal.server.ui;
+package org.eclipse.php.internal.server.ui.launching.zend;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestCo
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestEvent;
 import org.eclipse.php.internal.debug.core.zend.testConnection.IDebugServerTestListener;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.server.ui.Logger;
 import org.eclipse.swt.widgets.Shell;
 
 public class DefaultDebugServerConnectionTest implements IDebugServerConnectionTest, IDebugServerTestListener {
