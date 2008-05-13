@@ -32,8 +32,7 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -102,7 +101,11 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			selectionChanged((ITextSelection) selection);
 		} else if (selection instanceof ITreeSelection) {
 			Object firstElement = selection.getFirstElement();
-			setEnabled(firstElement instanceof PHPClassData || firstElement instanceof PHPSuperClassNameData || firstElement instanceof PHPInterfaceNameData);
+			if (firstElement instanceof PHPFunctionData) {
+				setEnabled(((PHPFunctionData) firstElement).getContainer() instanceof PHPClassData);
+			} else {
+				setEnabled(firstElement instanceof PHPClassData || firstElement instanceof PHPSuperClassNameData || firstElement instanceof PHPInterfaceNameData || firstElement instanceof PHPClassVarData || firstElement instanceof PHPClassConstData);
+			}
 		}
 	}
 
