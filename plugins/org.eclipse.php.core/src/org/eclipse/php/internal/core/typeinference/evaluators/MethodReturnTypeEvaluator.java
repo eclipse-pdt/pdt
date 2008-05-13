@@ -1,25 +1,25 @@
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.InstanceContext;
-import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 
@@ -71,56 +71,10 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 			}
 		}
 
-		final List<IGoal> subGoals = new LinkedList<IGoal>();
-
+		final List<IGoal> subGoals = new ArrayList<IGoal>(methods.size());
 		for (IMethod method : methods) {
-			ISourceModule sourceModule = method.getSourceModule();
-			ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-			MethodDeclaration decl = null;
-
-			try {
-				decl = PHPModelUtils.getNodeByMethod(module, method);
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-
-			if (decl != null) {
-				String[] parameters;
-				try {
-					parameters = method.getParameters();
-				} catch (ModelException e) {
-					Logger.logException(e);
-					parameters = new String[0];
-				}
-
-				final IContext innerContext = new MethodContext(goal.getContext(), sourceModule, module, decl, parameters, typedGoal.getArguments());
-
-				ASTVisitor visitor = new ASTVisitor() {
-					public boolean visitGeneral(ASTNode node) throws Exception {
-						if (node instanceof ReturnStatement) {
-							ReturnStatement statement = (ReturnStatement) node;
-							Expression expr = statement.getExpr();
-							if (expr == null) {
-								evaluated.add(PHPSimpleTypes.VOID);
-							} else {
-								subGoals.add(new ExpressionTypeGoal(innerContext, expr));
-							}
-						}
-						return super.visitGeneral(node);
-					}
-				};
-
-				try {
-					decl.traverse(visitor);
-				} catch (Exception e) {
-					Logger.logException(e);
-				}
-				if (decl.getBody() != null) {
-					subGoals.add(new ExpressionTypeGoal(innerContext, decl.getBody()));
-				}
-			}
+			subGoals.add(new MethodElementReturnTypeGoal(method));
 		}
-
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}
 

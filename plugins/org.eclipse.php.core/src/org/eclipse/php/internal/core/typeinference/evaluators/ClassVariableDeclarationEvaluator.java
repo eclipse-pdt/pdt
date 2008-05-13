@@ -22,6 +22,7 @@ import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
@@ -77,7 +78,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			};
 			try {
 				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-				SearchPattern pattern = SearchPattern.createPattern(variableName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
+				SearchPattern pattern = SearchPattern.createPattern(variableName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 				searchEngine.search(pattern, participants, scope, requestor, null);
 			} catch (CoreException e) {
 				Logger.logException(e);
