@@ -45,6 +45,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	protected RetargetTextEditorAction fFormatDocument = null;
 	private RetargetTextEditorAction fGotoMatchingBracket;
 	private RetargetTextEditorAction fOpenDeclaration;
+	private RetargetTextEditorAction fOpenTypeHierarchy;
 	private RetargetTextEditorAction fRename;
 	private RetargetTextEditorAction fMove;
 	private ToggleMarkOccurrencesAction fMarkOccurrences; // Registers as a global action
@@ -58,7 +59,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$ //$NON-NLS-2$
-		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "FormatActiveElements", //$NON-NLS-1$
+		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, "FormatActiveElements", //$NON-NLS-1$
 		IPHPEditorActionDefinitionIds.RENAME_ELEMENT, IPHPEditorActionDefinitionIds.MOVE_ELEMENT
 
 	}; //$NON-NLS-1$
@@ -88,6 +89,9 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		fOpenDeclaration = new RetargetTextEditorAction(b, "OpenAction_declaration_"); //$NON-NLS-1$
 		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
+		
+		fOpenTypeHierarchy = new RetargetTextEditorAction(b, "OpenTypeHierarchy"); //$NON-NLS-1$
+		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 
 		fRename = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
 		fRename.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
@@ -151,6 +155,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fFormatDocument.setAction(getAction(editor, "FormatDocument")); //$NON-NLS-1$
 		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements")); //$NON-NLS-1$
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
+		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
 		fMarkOccurrences.setEditor(editor);
 		if (part instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;

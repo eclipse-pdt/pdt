@@ -1098,6 +1098,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
+			action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+			if (action != null)
+				menu.appendToGroup(openGroup, action);
 
 		}
 	}
@@ -1737,7 +1740,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration"); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true);
-
+		
+		action = new OpenTypeHierarchyAction(this);
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY); //$NON-NLS-1$
+		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
+		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
+		
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);

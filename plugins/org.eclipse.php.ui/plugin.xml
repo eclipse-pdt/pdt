@@ -563,6 +563,14 @@
 			visible="false"
 			id="org.eclipse.php.ui.PHPActionSet">
 			<action
+         		class="org.eclipse.php.internal.ui.actions.OpenTypeInHierarchyAction"
+         		definitionId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
+         		id="openTypeInHierarchy"
+         		label="%OpenTypeInHierarchyAction.label"
+        		menubarPath="navigate/open.ext2"
+         		tooltip="%OpenTypeInHierarchyAction.tooltip">
+         	</action>
+			<action
 				class="org.eclipse.php.internal.ui.actions.OpenPhpElementAction"
 				definitionId="org.eclipse.php.ui.navigate.open.type"
 				disabledIcon="icons/full/dtool16/opentype.gif"
@@ -593,6 +601,12 @@
 				menubarPath="navigate/open.ext"
 				allowLabelUpdate="true"
 				id="org.eclipse.php.ui.actions.Open" />
+			<action
+               definitionId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
+               label="%OpenTypeHierarchyAction.label"
+               retarget="true"
+               menubarPath="navigate/open.ext"
+               id="org.eclipse.php.ui.actions.OpenTypeHierarchy" />
 		</actionSet>
 		<actionSet
 			label="%CodingActionSet.label"
@@ -857,7 +871,20 @@
   		<command
         	id="org.eclipse.php.ui.NewUntitledPHPDocumentAction"
         	name="%command.name.1" />
-
+		
+		<!-- navigate -->
+		<command
+            name="%ActionDefinition.openTypeHierarchy.name"
+            description="%ActionDefinition.openTypeHierarchy.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.php.ui.edit.text.php.open.type.hierarchy">
+      	</command>
+		<command
+            name="%ActionDefinition.openTypeInHierarchy.name"
+            description="%ActionDefinition.openTypeInHierarchy.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.php.ui.navigate.open.type.in.hierarchy">
+      	</command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -985,10 +1012,30 @@
 			commandId="org.eclipse.php.ui.navigate.open.type"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
+            sequence="M1+M2+H"
+            commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
+            contextId="org.eclipse.php.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+            sequence="M1+M2+H"
+            commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
 			sequence="M2+F2"
 			commandId="org.eclipse.php.ui.edit.OpenFunctionsManualAction"
 			contextId="org.eclipse.php.ui.phpEditorScope"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+		<key
+            sequence="F4"
+            commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
+            contextId="org.eclipse.php.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+            sequence="F4"
+            commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 		<key
 			sequence="M1+M2+F"
 			contextId="org.eclipse.php.ui.phpEditorScope"

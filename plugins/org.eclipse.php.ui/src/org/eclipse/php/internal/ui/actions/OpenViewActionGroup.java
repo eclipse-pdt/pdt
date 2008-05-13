@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,8 +31,11 @@ public class OpenViewActionGroup extends ActionGroup {
 
 	private boolean fEditorIsOwner;
 	private IWorkbenchSite fSite;
+	private OpenTypeHierarchyAction fOpenTypeHierarchy;
 
 	private PropertyDialogAction fOpenPropertiesDialog;
+	private boolean fIsTypeHiararchyViewerOwner;
+	private ISelectionProvider fSelectionProvider;
 
 	/**
 	 * Creates a new <code>OpenActionGroup</code>. The group requires
@@ -53,7 +57,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	 */
 	public OpenViewActionGroup(IViewPart part) {
 		createSiteActions(part.getSite());
-		//	fIsTypeHiararchyViewerOwner= part instanceof TypeHierarchyViewPart;
+		fIsTypeHiararchyViewerOwner = part instanceof TypeHierarchyViewPart;
 		//   fIsCallHiararchyViewerOwner= part instanceof ICallHierarchyViewPart;
 	}
 
@@ -63,7 +67,9 @@ public class OpenViewActionGroup extends ActionGroup {
 	 */
 	public OpenViewActionGroup(PHPStructuredEditor part) {
 		fEditorIsOwner = true;
-
+		fOpenTypeHierarchy = new OpenTypeHierarchyAction(part);
+		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		part.setAction("OpenTypeHierarchy", fOpenTypeHierarchy); //$NON-NLS-1$
 		initialize(part.getEditorSite());
 	}
 
@@ -72,13 +78,17 @@ public class OpenViewActionGroup extends ActionGroup {
 		fOpenPropertiesDialog = new PropertyDialogAction(site, site.getSelectionProvider());
 		fOpenPropertiesDialog.setActionDefinitionId(IWorkbenchActionDefinitionIds.PROPERTIES);
 
+		fOpenTypeHierarchy = new OpenTypeHierarchyAction(site);
+		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+
 		initialize(site);
 	}
 
 	private void initialize(IWorkbenchSite site) {
 		fSite = site;
-		ISelectionProvider provider = fSite.getSelectionProvider();
-		ISelection selection = provider.getSelection();
+		fSelectionProvider = fSite.getSelectionProvider();
+		ISelection selection = fSelectionProvider.getSelection();
+		fOpenTypeHierarchy.update(selection);
 		if (!fEditorIsOwner) {
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection ss = (IStructuredSelection) selection;
@@ -86,6 +96,7 @@ public class OpenViewActionGroup extends ActionGroup {
 			} else {
 				fOpenPropertiesDialog.selectionChanged(selection);
 			}
+			fSelectionProvider.addSelectionChangedListener(fOpenTypeHierarchy);
 			// no need to register the open properties dialog action since it registers itself
 		}
 	}
@@ -103,6 +114,8 @@ public class OpenViewActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
+		if (!fIsTypeHiararchyViewerOwner)
+			appendToGroup(menu, fOpenTypeHierarchy);
 		IStructuredSelection selection = getStructuredSelection();
 		if (fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled() && selection != null && fOpenPropertiesDialog.isApplicableForSelection(selection))
 			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, fOpenPropertiesDialog);
@@ -112,12 +125,12 @@ public class OpenViewActionGroup extends ActionGroup {
 	 * @see ActionGroup#dispose()
 	 */
 	public void dispose() {
-		ISelectionProvider provider = fSite.getSelectionProvider();
+		fSelectionProvider.removeSelectionChangedListener(fOpenTypeHierarchy);
 		super.dispose();
 	}
 
 	private void setGlobalActionHandlers(IActionBars actionBars) {
-
+		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
 		if (!fEditorIsOwner)
 			actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), fOpenPropertiesDialog);
 	}

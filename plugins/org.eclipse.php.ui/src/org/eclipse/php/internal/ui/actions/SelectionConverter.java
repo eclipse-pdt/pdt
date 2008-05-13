@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -29,6 +33,7 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 
 public class SelectionConverter {
 
@@ -249,5 +254,31 @@ public class SelectionConverter {
 		if (editor == null)
 			return null;
 		return org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInputModelElement(editor, primaryOnly);
+	}
+	
+	public static IModelElement[] codeResolveOrInputForked(PHPStructuredEditor editor) throws InvocationTargetException, InterruptedException {
+		IModelElement input= editor.getInputModelElement();
+		ITextSelection selection= (ITextSelection)editor.getSelectionProvider().getSelection();
+		IModelElement[] result= performForkedCodeResolve(input, selection);
+		if (result.length == 0) {
+			result= new IModelElement[] {input};
+		}
+		return result;
+	}
+	
+	private static IModelElement[] performForkedCodeResolve(final IModelElement input, final ITextSelection selection) throws InvocationTargetException, InterruptedException {
+		final class CodeResolveRunnable implements IRunnableWithProgress {
+			IModelElement[] result;
+			public void run(IProgressMonitor monitor) throws InvocationTargetException {
+				try {
+					result= org.eclipse.dltk.internal.ui.actions.SelectionConverter.codeResolve(input, selection);
+				} catch (ModelException e) {
+					throw new InvocationTargetException(e);
+				}
+			}
+		}
+		CodeResolveRunnable runnable= new CodeResolveRunnable();
+		PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
+		return runnable.result;
 	}
 }
