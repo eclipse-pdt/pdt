@@ -1,0 +1,238 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Creating a Zend View Helper File</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style>
+<!--
+body { border-left-style:None; border-right-style:None; border-bottom-style:None; background-color:Transparent; border-top-style:None; }
+-->
+</style><style type="text/css">
+<!--
+h1.whs1 { color:#00709e; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+li.whs14 { margin-left:-20px; }
+td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+img_whs16 { border:none; border-style:none; width:546px; height:228px; float:none; }
+img_whs17 { border:none; width:586px; height:175px; float:none; }
+table.whs18 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs19 { x-cell-content-align:top; x-condition:Online; }
+td.whs20 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs21 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs23 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs24 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs25 { font-weight:bold; x-condition:Online; }
+p.whs26 { x-condition:Online; }
+div.whs27 { width:100%; }
+p.whs28 { text-align:right; x-condition:Online; }
+p.whs29 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript">
+<!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
+{
+  var strNSS = "<style type='text/css'>";
+  strNSS += "li.whs14 {margin-left:1pt; }";
+  strNSS +="</style>";
+  document.write(strNSS);
+}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1 class="whs1">Creating a Zend View Helper File</h1>
+<p>This procedure describes how to create a new Zend View Helper File. 
+ Zend View Helpers, when attached to a view object, can call the helper 
+ as if it were a method of the view object itself. The View object retains 
+ helper instances, which means that they retain states between calls. </p>
+<p>See <a href="http://framework.zend.com/manual/en/zend.view.helpers.html">http://framework.zend.com/manual/en/zend.view.helpers.html</a> 
+ for more on Zend View Helpers.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To create a new Zend View Helper file:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>In PHP Explorer view, right-click 
+ the relevant helpers folder in your Zend Framework Project and select 
+ New | Zend Framework Item | Zend View Helper.<br>
+	The New Zend View Helper Wizard will be displayed.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Ensure the source folder 
+ is correct or click Browse to change.</p></li>
+	<li class="whs14">Enter the Helper's Prefix. </li>
+	<li class="whs14">Enter the Helper's name. This will 
+ be the name of the Helper file.<br>
+	The Helper's class name will be automatically created in the format 
+ &lt;Helper's_Prefix&gt;_&lt;Helper's_Name&gt;.</li>
+	<li style="margin-left: -20px;" class=p><p>Click Next.</p></li>
+	<li style="margin-left: -20px;" class=p><p>In the Select PHP Template 
+ dialog, ensure the New Zend View Helper template is selected.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Finish.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs15">
+<p>A new Zend View Helper file will be created with the relevant template. 
+ This includes phpDoc block comments which help PDT to recognize that the 
+ element is a Zend View Helper.</p>
+<p class=Note>Note:</p>
+<p class=NoteText>Zend View Helper phpDoc block comments must be in the 
+ format:</p>
+<p class=code style="text-indent: 24px;">/**</p>
+<p class=code style="text-indent: 24px;">* &lt;Helper's_Name&gt; helper</p>
+<p class=code style="text-indent: 24px;">*</p>
+<p class=code style="text-indent: 24px;">* @uses helper &lt;Helper's_Prefix&gt;</p>
+<p class=code style="text-indent: 24px;"><span style="text-indent: 24px;">*/</span></p>
+<p>All Zend View Helpers in your project which are correctly commented 
+ will be available in the Code Assist list in a Zend View file. This includes 
+ the default Zend View Helpers included in Zend Framework's libraries.</p>
+<p class=picture><img src="zend_view_helper_code_assist.png" x-maintain-ratio="TRUE" width="546px" height="228px" border="0" class="img_whs16"></p>
+<p>In addition, pressing Ctrl and clicking on a Zend View Helper defined 
+ in a View file will take you to the Zend View Helper's declaration.</p>
+<p class=picture><img src="zend_view_helper_goto.png" x-maintain-ratio="TRUE" width="586px" height="175px" border="0" class="img_whs17"></p>
+</td>
+</tr>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs18">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs19">
+<td colspan="1" rowspan="1" width="7.093%" class="whs20">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs21">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs19">
+<td width="7.093%" class="whs22">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs23"></td>
+<td width="92.907%" class="whs24">
+<p class="whs25">Related Links:</p>
+<p class="whs26"><span style="font-weight: bold;"><B><a HREF="Creating_a_Zend_View_File.htm">C</B></span>reating 
+ a Zend View File</a><br>
+Zend Framework Integration</p>
+<p class="whs26"><a href="Using_Zend_Framework_Integration.htm">Integrating 
+ with Zend Framework</a></p>
+<p class="whs26"><a href="Creating_MVC_Files.htm">Creating 
+ Zend Framework Elements</a></p>
+<p class="whs26">Creating 
+ Zend Framework Projects</p>
+<p class="whs26"><a href="Creating_a_Zend_Module_File.htm">Creating 
+ a Zend Module File</a></p>
+<p class="whs26"><a href="Creating_a_Zend_Model_File.htm">Creating 
+ a Zend Model File</a></p>
+<p class="whs26"><a href="Creating_a_Zend_Controller_File.htm">Creating 
+ a Zend Controller File</a></td></tr>
+<tr valign="top" class="whs19">
+<td colspan="1" rowspan="1" width="7.093%" class="whs22">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs24">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs27">
+ <p align="right" class="whs28"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs29">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

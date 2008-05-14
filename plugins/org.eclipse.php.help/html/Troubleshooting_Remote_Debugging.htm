@@ -1,0 +1,203 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Setting Up Remote Debugging</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style type="text/css">
+<!--
+div.whs1 { float:none; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+td.whs14 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs15 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs16 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs17 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs18 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs19 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs20 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs21 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs22 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs23 { font-weight:normal; }
+tr.whs24 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs25 { width:100%; }
+p.whs26 { text-align:right; x-condition:Online; }
+p.whs27 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addTocInfo("PDT Help\nTasks\nUsing the Debugger\nSetting Up Remote Debugging");
+
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1>Setting Up Remote Debugging</h1>
+<div class="whs1">
+</div>
+<p>&nbsp;</p>
+<p>Before debugging on a server using PHP Web Page debugging, certain settings need to be configured to ensure that PDT can 
+ communicate with your server.</p>
+<p class=Note style="x-condition: PDT;">Note:</p>
+<p class=NoteText style="x-condition: PDT;">The following instructions 
+ explain how to set up Remote Debugging with the Zend Debugger.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To set up communication between Studio and 
+ the server on which you are debugging:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Ensure 
+ the Zend Debugger is installed on your server.<br>
+	The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/core/">Zend 
+ Core</a> and <a href="http://www.zend.com/en/products/platform/">Zend 
+ Platform</a>, but can also be downloaded as a separate component from 
+ <a href="http://www.zend.com/en/products/studio/downloads">http://www.zend.com/en/products/studio/downloads</a>.<br>
+	</p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Ensure 
+ the machine on which your PDT is installed is an allowed host for 
+ your debugger.<br>
+	<span style="x-condition: PDT;">See </span><a HREF="Setting_your_Zend_Studio_for_Eclipse_to_be_an_Allowed_Host.htm" 
+ style="x-condition: PDT;">Setting your PDT to be an Allowed Host</a><span 
+ style="x-condition: PDT;"> for more information.</span></p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>In 
+ PDT, 
+ configure your server according to the instructions under <a href="PHP_Servers.htm#Adding_servers">Adding 
+ Servers</a> in the <a href="PHP_Servers.htm">PHP Servers Preferences</a>.</p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Ensure 
+ the correct settings are configured in your <a HREF="Debug.htm">Debug 
+ Preferences</a> and <a HREF="Installed_Debuggers.htm">Installed Debuggers 
+ Preferences</a> pages.</p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p><a 
+ href="Ensuring_the_Placement_of_dummy.php.htm">Ensure you have a dummy.php 
+ file</a> in your remote server's document root.</p></li>
+	</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs14">
+<p>&nbsp;</td>
+</tr>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs15">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs16"><td colspan="1" rowspan="1" width="7.093%" class="whs17">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs18">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs19"><td width="7.093%" class="whs20">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs21"></td>
+<td width="92.907%" class="whs22">
+<p class="whs9">Related Links:</p>
+<p class="whs23">Zend 
+ PHP Web Server</p>
+<p><a HREF="Debugging.htm">Using the Debugger</a></p>
+<p><a HREF="Debugging_a_PHP_Web_Page.htm">Debugging a PHP Web Page</a></p>
+</td></tr>
+<tr valign="top" class="whs24"><td colspan="1" rowspan="1" width="7.093%" class="whs20">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs22">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs25">
+ <p align="right" class="whs26"><span><span 
+ style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
+ <p align="center" class="whs27">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

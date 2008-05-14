@@ -90,17 +90,17 @@ LI.H6 {
 P { 
    margin-top:0pt; 
    margin-bottom:0pt; 
-   font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-   color:#000000; 
-   font-size:8pt; 
    line-height:150%; 
-   x-next-class:TableText; 
-   x-next-type:P;  }
+   font-weight:normal; 
+   font-style:normal; 
+   font-size:10pt; 
+   font-family:Arial, sans-serif;  }
 LI.P { 
-      font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-      color:#000000; 
-      font-size:8pt; 
-      line-height:150%;  }
+      line-height:150%; 
+      font-weight:normal; 
+      font-style:normal; 
+      font-size:10pt; 
+      font-family:Arial, sans-serif;  }
 A.expandspot { 
               cursor:hand; 
               font-style:italic; 
@@ -203,27 +203,27 @@ LI.P-Hyperlinkintopic {
                        text-align:Right; 
                        text-decoration:none;  }
 A:active { 
-          font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
-          font-size:8pt; 
           color:#0000ff; 
+          font-size:10pt; 
+          font-family:Arial, sans-serif; 
           text-decoration:underline;  }
 A:hover { 
-         font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
          background-color:Transparent; 
          color:#800080; 
-         font-size:8pt; 
+         font-size:10pt; 
+         font-family:Arial, sans-serif; 
          text-decoration:underline;  }
 A:link { 
-        font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
         background-color:Transparent; 
-        font-size:8pt; 
         color:#0000ff; 
+        font-size:10pt; 
+        font-family:Arial, sans-serif; 
         text-decoration:underline;  }
 A:visited { 
-           font-family:Verdana, Arial, "Lucida Sans Unicode" , sans-serif; 
            background-color:Transparent; 
-           font-size:8pt; 
            color:#0000ff; 
+           font-size:10pt; 
+           font-family:Arial, sans-serif; 
            text-decoration:underline;  }
 A.popupspot { 
              font-size:10pt; 
@@ -333,10 +333,28 @@ LI.P-PartTitle {
                 color:#848484; 
                 text-transform:uppercase;  }
 P.PDThelp { 
-           font-weight:bold; 
+           font-family:"Myriad Pro" , "Myriad Pro Black" , "Myriad Pro Light" , sans-serif; 
+           color:#00709e; 
+           font-weight:normal; 
            font-style:normal; 
-           font-size:16pt;  }
+           font-size:28pt;  }
 LI.P-PDThelp { 
-              font-weight:bold; 
+              font-family:"Myriad Pro" , "Myriad Pro Black" , "Myriad Pro Light" , sans-serif; 
+              color:#00709e; 
+              font-weight:normal; 
               font-style:normal; 
-              font-size:16pt;  }
+              font-size:28pt;  }
+P.NUMBERS { 
+           list-style:decimal; 
+           margin-top:6pt;  }
+LI.P-NUMBERS { 
+              list-style:decimal;  }
+P.NUmbers2 { 
+            list-style:lower-alpha;  }
+LI.P-NUmbers2 { 
+               list-style:lower-alpha;  }
+P.Numbers3 { 
+            list-style:lower-roman; 
+            margin-left:18pt;  }
+LI.P-Numbers3 { 
+               list-style:lower-roman;  }

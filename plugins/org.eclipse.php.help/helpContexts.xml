@@ -156,6 +156,18 @@
 	<context id="running_and_analyzing_debugger_results">
 		<description>Running and Analyzing Debugger Results Help</description>
 		<topic href="html/Analyzing_Debugger_Results.htm" label="Running and Analyzing Debugger Results"/>
+	</context>	
+	<context id="setting_up_remote_debugging">
+		<description>Setting Up Remote Debugging Help</description>
+		<topic href="html/Troubleshooting_Remote_Debugging.htm" label="Setting Up Remote Debugging"/>
+	</context>
+	<context id="setting_your_zend_studio_for_eclipse_to_be_an_allowed_host">
+		<description>Setting your PDT to be an Allowed Host Help</description>
+		<topic href="html/Setting_your_Zend_Studio_for_Eclipse_to_be_an_Allowed_Host.htm" label="Setting your PDT to be an Allowed Host"/>
+	</context>
+	<context id="ensuring_the_placement_of_dummy.php">
+		<description>Ensuring the Placement of dummy.php Help</description>
+		<topic href="html/Ensuring_the_Placement_of_dummy.php.htm" label="Ensuring the Placement of dummy.php"/>
 	</context>
 	<context id="adding_a_server_location_path_map">
 		<description>Adding a Server Location Path Map Help</description>

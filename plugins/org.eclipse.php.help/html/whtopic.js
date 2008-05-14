@@ -1350,9 +1350,7 @@ if(window.gbWhUtil&&window.gbWhMsg&&window.gbWhVer&&window.gbWhProxy)
 				whtopic_foldUnload=window.onunload;
 	}
 	window.onunload=unRegisterListener;
-	setButtonFont("show","","","","","","");
-setButtonFont("hide","","","","","","");
-
+	
 	gbWhTopic=true;
 }
 else
