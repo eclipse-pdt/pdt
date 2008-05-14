@@ -15,13 +15,16 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
+import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 
 /**
  * A PHP debugger threaded.
  */
 public class PHPThread extends PHPDebugElement implements IThread {
 
-    /**
+    private static final Expression[] NO_VARIABLES = {};
+
+	/**
      * Breakpoints this thread is suspended at or <code>null</code> if none.
      */
     private IBreakpoint[] fBreakpoints;
@@ -41,17 +44,16 @@ public class PHPThread extends PHPDebugElement implements IThread {
         super(target);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.debug.core.model.IThread#getStackFrames()
-     */
-    public IStackFrame[] getStackFrames() throws DebugException {
+    protected IStackFrame[] getStackFrames(boolean fetchVariables) throws DebugException {
         if (isSuspended()) {
-            return ((PHPDebugTarget) getDebugTarget()).getStackFrames();
+            return ((PHPDebugTarget) getDebugTarget()).getStackFrames(fetchVariables);
         } else {
             return new IStackFrame[0];
         }
+    }
+    
+    public IStackFrame[] getStackFrames() throws DebugException {
+    	return getStackFrames(false);
     }
 
     /*
@@ -71,6 +73,14 @@ public class PHPThread extends PHPDebugElement implements IThread {
     public int getPriority() throws DebugException {
         return 0;
     }
+    
+    protected IStackFrame getTopStackFrame(boolean fetchVariables) throws DebugException {
+    	IStackFrame[] frames = getStackFrames(fetchVariables);
+        if (frames.length > 0) {
+            return frames[0];
+        }
+        return null;
+    }
 
     /*
      * (non-Javadoc)
@@ -78,11 +88,7 @@ public class PHPThread extends PHPDebugElement implements IThread {
      * @see org.eclipse.debug.core.model.IThread#getTopStackFrame()
      */
     public IStackFrame getTopStackFrame() throws DebugException {
-        IStackFrame[] frames = getStackFrames();
-        if ((frames != null) && (frames.length > 0)) {
-            return frames[0];
-        }
-        return null;
+       return getTopStackFrame(false); 
     }
 
     /*
@@ -271,5 +277,17 @@ public class PHPThread extends PHPDebugElement implements IThread {
     // Future method for desplaying error from the debugger client.
     public Object getError() {
         return null;
+    }
+    
+    public Expression[] getStackVariables() throws DebugException {
+    	IStackFrame frame = getTopStackFrame(true);
+    	if (frame == null) {
+    		return NO_VARIABLES;
+    	}
+    	Expression[] stackVariables = ((PHPStackFrame) frame).getStackVariables();
+    	if (stackVariables == null) {
+    		return NO_VARIABLES;
+    	}
+    	return stackVariables;
     }
 }

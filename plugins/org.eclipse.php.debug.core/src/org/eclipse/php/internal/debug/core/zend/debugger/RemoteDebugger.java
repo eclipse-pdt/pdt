@@ -957,12 +957,19 @@ public class RemoteDebugger implements IRemoteDebugger {
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Synchronic getCallStack Returns the Stack layer.
+	 * Synchronic getCallStack Returns the Stack layer with no variables information.
 	 */
 	public PHPstack getCallStack() {
-		if (canDo(GET_CALL_STACK_LITE)) {
+		return getCallStack(false);
+	}
+
+	/**
+	 * Synchronic getCallStack Returns the Stack layer including variables information (if requested)
+	 */
+	public PHPstack getCallStack(boolean fetchVariables) {
+		if (!fetchVariables && canDo(GET_CALL_STACK_LITE)) {
 			return getCallStackLite();
 		}
 		return getCallStackHeavy();

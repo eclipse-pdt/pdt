@@ -77,11 +77,12 @@ public class ContextManager {
 	}
 
 	public IStackFrame[] getStackFrames() throws DebugException {
+		return getStackFrames(false);
+	}
+	
+	public IStackFrame[] getStackFrames(boolean fetchVariables) throws DebugException {
 		// check to see if eclipse is getting the same stack frames again.
-		PHPstack stack = fDebugger.getCallStack();
-		if (stack == null) {
-			return new PHPStackFrame[0];
-		}
+		PHPstack stack = fDebugger.getCallStack(fetchVariables);
 		PHPThread thread = (PHPThread) fTarget.getThreads()[0];
 		StackLayer[] layers = stack.getLayers();
 		boolean main = false;
@@ -98,6 +99,9 @@ public class ContextManager {
 		}
 
 		if (fSuspendCount == fTarget.getSuspendCount()) {
+			if (fetchVariables) {
+				createStackVariables(layers);
+			}
 			return fPreviousFrames;
 		}
 

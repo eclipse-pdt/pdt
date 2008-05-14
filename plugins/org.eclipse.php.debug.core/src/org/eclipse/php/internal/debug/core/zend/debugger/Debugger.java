@@ -188,6 +188,11 @@ public interface Debugger {
      * Synchronic getCallStack Returns the PHPstack;
      */
     public PHPstack getCallStack();
+    
+    /**
+     * Synchronic getCallStack Returns the PHPstack;
+     */
+    public PHPstack getCallStack(boolean fetchVariables);
 
     /**
      * Asynchronic getStackVariableValue Returns true if successed sending the
