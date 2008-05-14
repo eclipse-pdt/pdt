@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugElement;
 import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.DebugUITools;
@@ -45,6 +44,7 @@ import org.eclipse.ui.IWorkbenchPart;
 public class PHPStackView extends AbstractDebugView implements ISelectionListener {
 
     private PHPDebugTarget fTarget;
+    private boolean isVisible;
 
     class StackViewContentProvider implements ITreeContentProvider {
 
@@ -57,31 +57,13 @@ public class PHPStackView extends AbstractDebugView implements ISelectionListene
                     IThread[] threads = ((PHPDebugTarget) element).getThreads();
                     if (threads != null) {
                         if (threads[0] != null) {
-                            IStackFrame frame = threads[0].getTopStackFrame();
-                            if (frame == null)
-                                return new Expression[0];
-                            Expression[] variables = ((PHPStackFrame) frame).getStackVariables();
-                            if (variables == null) {
-                            	return new Expression[0];
-                            }
-                            return variables;
+                            return ((PHPThread)threads[0]).getStackVariables();
                         }
                     }
                 } else if (element instanceof PHPThread) {
-                    IStackFrame frame = ((PHPThread) element).getTopStackFrame();
-                    if (frame == null)
-                        return new Expression[0];
-                    Expression[] variables = ((PHPStackFrame) frame).getStackVariables();
-                    if (variables == null) {
-                    	return new Expression[0];
-                    }
-                    return variables;
+                    return ((PHPThread) element).getStackVariables();
                 } else if (element instanceof PHPStackFrame) {
-                	Expression[] variables = ((PHPStackFrame) element).getStackVariables();
-                	if (variables == null) {
-                    	return new Expression[0];
-                    }
-                    return variables;
+                	return ((PHPThread)((PHPStackFrame) element).getThread()).getStackVariables();
                 } else if (element instanceof Expression) {
                     Expression eExp = (Expression) element;
                     ExpressionValue value = eExp.getValue();
@@ -199,11 +181,25 @@ public class PHPStackView extends AbstractDebugView implements ISelectionListene
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         update();
     }
+    
+	protected void becomesHidden() {
+		isVisible = false;
+		super.becomesHidden();
+	}
 
-    /**
+	protected void becomesVisible() {
+		isVisible = true;
+		update();
+		super.becomesVisible();
+	}
+
+	/**
      * Updates the view for the selected target (if suspended)
      */
     private synchronized void update() {
+    	if (!isVisible) {
+    		return;
+    	}
         IAdaptable adaptable = DebugUITools.getDebugContext();
         fTarget = null;
         IDebugElement element = null;

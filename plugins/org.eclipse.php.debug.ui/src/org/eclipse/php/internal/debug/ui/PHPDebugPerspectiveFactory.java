@@ -11,8 +11,6 @@
 package org.eclipse.php.internal.debug.ui;
 
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -56,7 +54,7 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout toolsFolder= layout.createFolder(ID_TOOLS_FOLDER_VIEW, IPageLayout.RIGHT, (float) 0.50, ID_NAVIGATOR_FOLDER_VIEW);
 		toolsFolder.addView(IDebugUIConstants.ID_VARIABLE_VIEW);
 		toolsFolder.addView(IDebugUIConstants.ID_BREAKPOINT_VIEW);
-        toolsFolder.addView("org.eclipse.debug.ui.PHPStackView");
+        toolsFolder.addPlaceholder("org.eclipse.debug.ui.PHPStackView");
 		toolsFolder.addPlaceholder(IDebugUIConstants.ID_EXPRESSION_VIEW);
 		toolsFolder.addPlaceholder(IDebugUIConstants.ID_REGISTER_VIEW);
 		
