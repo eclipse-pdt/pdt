@@ -71,6 +71,8 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 				PathEntry pathEntry = debugTarget.mapFirstDebugFile(remoteFileName);
 				if (pathEntry != null) {
 					localPath = pathEntry.getResolvedPath();
+				} else {
+					localPath = remoteFileName;
 				}
 
 				// set current working directory to the current script directory on debugger side
