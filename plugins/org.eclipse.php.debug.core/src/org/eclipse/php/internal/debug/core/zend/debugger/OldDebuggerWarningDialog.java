@@ -31,11 +31,15 @@ public class OldDebuggerWarningDialog extends Dialog {
 		getShell().setText("Old Zend Debugger Protocol ID");
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("The Zend Debugger protocol ID is older than the one you are using.\nSome debugging features may not work properly!\n");
+		label.setText(
+			"The Zend Debugger component on your server is an older version than the\n"
+			+ "one expected by Zend Studio.  You should update the debugger component\n"
+			+ "on your server or some debugging features may not work properly!"
+		);
 		
 		Link link = new Link(composite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		link.setText("To download the latest Zend Debugger version click <a>here</a>."); //$NON-NLS-1$
+		link.setText("To download the latest version of Zend Debugger click <a>here</a>.");
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
@@ -48,13 +52,16 @@ public class OldDebuggerWarningDialog extends Dialog {
 		});
 		link = new Link(composite, SWT.NONE);
 		link.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		link.setText("To download a PHP web server (includes Zend Debugger) click <a>here</a>.\n"); //$NON-NLS-1$
+		link.setText(
+			"To download a complete PHP Web Application Server that includes the\n"
+			+ "Zend Debugger and other useful functionality click <a>here</a>.\n"
+		);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
 					IWebBrowser browser = browserSupport.getExternalBrowser();
-					browser.openURL(new URL("http://www.zend.com/en/products/php-web-server-from-studio"));
+					browser.openURL(new URL("http://www.zend.com/app-server/downloads"));
 				} catch (Exception e) {
 				}
 			}
