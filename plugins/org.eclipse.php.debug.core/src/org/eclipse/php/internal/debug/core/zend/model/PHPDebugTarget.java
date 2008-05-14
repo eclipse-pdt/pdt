@@ -784,7 +784,19 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 *             if unable to perform the request
 	 */
 	protected IStackFrame[] getStackFrames() throws DebugException {
-		return fContextManager.getStackFrames();
+		return getStackFrames(false);
+	}
+	
+	/**
+	 * Returns the current stack frames in the target.
+	 *
+	 * @param fetchVariables Whether to fetch variables also 
+	 * @return the current stack frames in the target
+	 * @throws DebugException
+	 *             if unable to perform the request
+	 */
+	protected IStackFrame[] getStackFrames(boolean fetchVariables) throws DebugException {
+		return fContextManager.getStackFrames(fetchVariables);
 	}
 
 	/**
