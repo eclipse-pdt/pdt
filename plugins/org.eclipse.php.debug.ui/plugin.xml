@@ -326,7 +326,7 @@
                 id="org.eclipse.debug.ui.PHPStackView"
                 relationship="stack"
                 relative="org.eclipse.debug.ui.VariableView"
-                visible="true">
+                visible="false">
           </view>
           <actionSet
                 id="org.eclipse.ui.NavigateActionSet">

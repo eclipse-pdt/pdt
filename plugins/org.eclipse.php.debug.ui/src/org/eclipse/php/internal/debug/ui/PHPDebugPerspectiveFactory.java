@@ -11,8 +11,6 @@
 package org.eclipse.php.internal.debug.ui;
 
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
@@ -56,7 +54,7 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout toolsFolder= layout.createFolder(ID_TOOLS_FOLDER_VIEW, IPageLayout.RIGHT, (float) 0.50, ID_NAVIGATOR_FOLDER_VIEW);
 		toolsFolder.addView(IDebugUIConstants.ID_VARIABLE_VIEW);
 		toolsFolder.addView(IDebugUIConstants.ID_BREAKPOINT_VIEW);
-        toolsFolder.addView("org.eclipse.debug.ui.PHPStackView");
+        toolsFolder.addPlaceholder("org.eclipse.debug.ui.PHPStackView");
 		toolsFolder.addPlaceholder(IDebugUIConstants.ID_EXPRESSION_VIEW);
 		toolsFolder.addPlaceholder(IDebugUIConstants.ID_REGISTER_VIEW);
 		
@@ -72,23 +70,6 @@ public class PHPDebugPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut(ID_PHPDebugOutput);
 		layout.addShowViewShortcut(ID_PHPBrowserOutput);
 		layout.addShowViewShortcut("org.eclipse.debug.ui.PHPStackView"); //$NON-NLS-N$
-		
-		// add extension shortcuts
-		String phpPerspectiveShortcut = "org.eclipse.php.ui.phpPerspectiveShortcut"; //$NON-NLS-N$
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(phpPerspectiveShortcut);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			String perspectiveId = element.getAttribute("perspectiveId"); //$NON-NLS-N$
-			if (PERSPECTIVE_ID.equals(perspectiveId)) {
-				String type = element.getAttribute("type"); //$NON-NLS-N$
-				String additionId = element.getAttribute("additionId"); //$NON-NLS-N$
-				if (type.equals("Show View")) { //$NON-NLS-N$
-					layout.addShowViewShortcut(additionId);
-				} else if (type.equals("Open Perspective")) { //$NON-NLS-N$
-					layout.addPerspectiveShortcut(additionId);
-				}
-			}
-		}
 		
 		setContentsOfShowViewMenu(layout);
 	}
