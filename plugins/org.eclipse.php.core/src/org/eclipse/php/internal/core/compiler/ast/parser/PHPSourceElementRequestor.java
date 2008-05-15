@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -127,7 +128,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (args != null && args.getChilds() != null) {
 			argsCount = args.getChilds().size();
 		}
-		fRequestor.acceptMethodReference(call.getName().toCharArray(), argsCount, call.sourceStart(), call.sourceEnd());
+		String name = call.getName();
+		if ("define".equals(name)) {//$NON-NLS-0$
+			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+			info.modifiers = Modifiers.AccConstant;
+			Argument argument = (Argument) call.getArgs().getChilds().get(0);
+			info.name = argument.getName();
+			info.nameSourceEnd = argument.sourceEnd() - 1;
+			info.nameSourceStart = argument.sourceStart();
+			info.declarationStart = call.sourceStart();
+			fRequestor.enterField(info);
+		} else {
+			fRequestor.acceptMethodReference(call.getName().toCharArray(), argsCount, call.sourceStart(), call.sourceEnd());
+		}
 		return true;
 	}
 
