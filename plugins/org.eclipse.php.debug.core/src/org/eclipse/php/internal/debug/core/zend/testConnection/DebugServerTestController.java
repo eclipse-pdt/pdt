@@ -12,13 +12,12 @@ import java.util.List;
 
 /**
  * A singleton controller to be the central point to notify of Debug Server tests results.
- * All interested listeners must be registered to it
  * @author yaronm
  */
 public class DebugServerTestController {
 
 	private static DebugServerTestController instance = null;
-	private List<IDebugServerTestListener> listeners = new ArrayList<IDebugServerTestListener>();
+	private List<IDebugServerTestListener> listeners = new ArrayList<IDebugServerTestListener>(1);
 
 	private DebugServerTestController() {
 	}
@@ -30,7 +29,7 @@ public class DebugServerTestController {
 		return instance;
 	}
 
-	public synchronized void notifyTestListeners(DebugServerTestEvent event) {
+	public synchronized void notifyTestListener(DebugServerTestEvent event) {
 		for (IDebugServerTestListener listener : listeners) {
 			listener.testEventReceived(event);
 		}
