@@ -75,21 +75,7 @@ public class ASTParser {
 	}
 
 	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, String phpVersion, final int offset, final int length) throws Exception {
-		final Reader reader = new InputStreamReader(new InputStream() {
-			private int index = offset;
-			private final int size = offset + length;
-
-			public int read() throws IOException {
-				try {
-					if (index < size) {
-						return phpDocument.getChar(index++);
-					}
-					return -1;
-				} catch (BadLocationException e) {
-					throw new IOException(e.getMessage());
-				}
-			}
-		});
+		final Reader reader = new DocumentReader(phpDocument, offset, length);
 		return parse(reader, aspTagsAsPhp, phpVersion);
 	}
 
