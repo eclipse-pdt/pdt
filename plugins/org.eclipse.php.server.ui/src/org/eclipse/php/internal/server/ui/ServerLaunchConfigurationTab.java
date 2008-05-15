@@ -291,10 +291,9 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				updateDebugServerTesters();
 				int selectedServerIndex = serverCombo.getSelectionIndex();
 				Server server = servers.get(selectedServerIndex);
-				final String baseURL = server.getBaseURL();
 				final Shell shell = getShell();
 				for (IDebugServerConnectionTest debugServerTester : debugTesters) {
-					debugServerTester.testConnection(baseURL, shell);
+					debugServerTester.testConnection(server, shell);
 				}
 			}
 		});
@@ -345,8 +344,8 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 			}
 		}
 		Collection<IDebugServerConnectionTest> l = filtersMap.values();
-		l.remove(null); // remove null elements
-		debugTesters = l.toArray(new IDebugServerConnectionTest[filtersMap.size()]);
+		while (l.remove(null)); // remove null elements
+		debugTesters = l.toArray(new IDebugServerConnectionTest[l.size()]);
 		return debugTesters;
 	}
 
