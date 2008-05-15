@@ -7,6 +7,7 @@
  *******************************************************************************/
 package org.eclipse.php.debug.ui;
 
+import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -19,8 +20,8 @@ public interface IDebugServerConnectionTest {
 	/**
 	 * Performs a connection test on a Debug Server.
 	 * Implementors should handle and display messages using the received shell object.
-	 * @param url - The url of the debug server
+	 * @param server - The Server object of the debug server
 	 * @param shell - The given shell in order to display result messages to the user
 	 */
-	public void testConnection(String url, Shell shell);
+	public void testConnection(Server server, Shell shell);
 }
