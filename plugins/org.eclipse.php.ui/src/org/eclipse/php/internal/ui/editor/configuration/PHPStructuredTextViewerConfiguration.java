@@ -17,14 +17,9 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -50,6 +45,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
+import org.eclipse.php.internal.ui.text.PHPInformationElementProvider;
 import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
@@ -69,22 +65,22 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
 public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerConfigurationHTML {
 
 	private HashMap<String, ArrayList<IContentAssistProcessor>> processorsCache = new HashMap<String, ArrayList<IContentAssistProcessor>>();
-    private static final String PHP_CONTENT_ASSISTANT_EXT = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
-    private static final String CONTENT_ASSIST_PROCESSOR_EXT = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
-    private static final String HYPERLINK_DETECTOR_EXT = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
-    private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
-    private static final String SHOW_OUTLINE_PREF_KEY = "org.eclipse.php.ui.edit.text.php.show.outline"; //$NON-NLS-1$
-    private static final String EMPTY = ""; //$NON-NLS-1$
-    private static final String[] DEFAULT_PREFIXES = new String[] { "//", "#", EMPTY }; //$NON-NLS-1$
-    private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
-    private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
-    private static final IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
+	private static final String PHP_CONTENT_ASSISTANT_EXT = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
+	private static final String CONTENT_ASSIST_PROCESSOR_EXT = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
+	private static final String HYPERLINK_DETECTOR_EXT = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
+	private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
+	private static final String SHOW_OUTLINE_PREF_KEY = "org.eclipse.php.ui.edit.text.php.show.outline"; //$NON-NLS-1$
+	private static final String EMPTY = ""; //$NON-NLS-1$
+	private static final String[] DEFAULT_PREFIXES = new String[] { "//", "#", EMPTY }; //$NON-NLS-1$
+	private static final IAutoEditStrategy mainAutoEditStrategy = new MainAutoEditStrategy();
+	private static final IAutoEditStrategy closeTagAutoEditStrategy = new CloseTagAutoEditStrategyPHP();
+	private static final IAutoEditStrategy[] phpStrategies = new IAutoEditStrategy[] { mainAutoEditStrategy };
 
-    private String[] configuredContentTypes;
-    private LineStyleProvider fLineStyleProvider;
-    private final List<IHyperlinkDetectorForPHP> detectors;
-    private StructuredContentAssistant fContentAssistant = null;
-    
+	private String[] configuredContentTypes;
+	private LineStyleProvider fLineStyleProvider;
+	private final List<IHyperlinkDetectorForPHP> detectors;
+	private StructuredContentAssistant fContentAssistant = null;
+
 	public PHPStructuredTextViewerConfiguration() {
 		detectors = new ArrayList<IHyperlinkDetectorForPHP>();
 		detectors.add(new PHPCodeHyperlinkDetector());
@@ -428,6 +424,44 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
 		presenter.setSizeConstraints(50, 20, true, false);
 		return presenter;
+	}
+
+	/**
+	 * Returns the hierarchy presenter which will determine and shown type hierarchy
+	 * information requested for the current cursor position.
+	 *
+	 * @param sourceViewer the source viewer to be configured by this configuration
+	 * @param doCodeResolve a boolean which specifies whether code resolve should be used to compute the PHP element
+	 * @return an information presenter
+	 * @since 3.4
+	 */
+	public IInformationPresenter getHierarchyPresenter(PHPStructuredTextViewer viewer, boolean doCodeResolve) {
+
+		// Do not create hierarchy presenter if there's no CU.
+		if (viewer.getTextEditor() == null || viewer.getTextEditor().getEditorInput() == null) {
+			return null;
+		}
+		InformationPresenter presenter = new InformationPresenter(getHierarchyPresenterControlCreator());
+		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
+		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
+		IInformationProvider provider = new PHPInformationElementProvider(viewer.getTextEditor(), doCodeResolve);
+		presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
+		presenter.setSizeConstraints(50, 20, true, false);
+		return presenter;
+	}
+
+	private IInformationControlCreator getHierarchyPresenterControlCreator() {
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				int shellStyle = SWT.RESIZE;
+				int treeStyle = SWT.V_SCROLL | SWT.H_SCROLL;
+				return new HierarchyInformationControl(parent, shellStyle, treeStyle) {
+					protected IPreferenceStore getPreferenceStore() {
+						return PHPUiPlugin.getDefault().getPreferenceStore();
+					}
+				};
+			}
+		};
 	}
 
 	/**

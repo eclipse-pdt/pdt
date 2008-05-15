@@ -885,6 +885,12 @@
             categoryId="org.eclipse.ui.category.navigate"
             id="org.eclipse.php.ui.navigate.open.type.in.hierarchy">
       	</command>
+      	<command
+            name="%ActionDefinition.open.hierarchy.name"
+            description="%ActionDefinition.open.hierarchy.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.dltk.ui.edit.text.script.open.hierarchy">
+      </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -1035,6 +1041,11 @@
             sequence="F4"
             commandId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
             contextId="org.eclipse.php.ui.phpEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+        <key
+            sequence="M1+T"
+            contextId="org.eclipse.php.ui.phpEditorScope"
+            commandId="org.eclipse.dltk.ui.edit.text.script.open.hierarchy"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 		<key
 			sequence="M1+M2+F"

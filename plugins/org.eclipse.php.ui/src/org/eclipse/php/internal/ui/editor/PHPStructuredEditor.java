@@ -26,12 +26,14 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ISavePolicy;
 import org.eclipse.dltk.internal.ui.editor.ISourceModuleDocumentProvider;
 import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -278,13 +280,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	private boolean saveActionsEnabled = false;
 	private boolean saveActionsIgnoreEmptyLines = false;
-	
+
 	/**
 	 * The override and implements indicator manager for this editor.
 	 * @since 3.0
 	 */
 	protected OverrideIndicatorManager fOverrideIndicatorManager;
-	
+
 	/**
 	 * Internal implementation class for a change listener.
 	 * 
@@ -1101,7 +1103,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
-
+			action = getAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
+			if (action != null)
+				menu.appendToGroup(openGroup, action);
 		}
 	}
 
@@ -1740,12 +1744,17 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration"); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true);
-		
+
 		action = new OpenTypeHierarchyAction(this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
-		
+
+		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
+		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
+		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
+		markAsCursorDependentAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);
+
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
@@ -2131,7 +2140,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			setTitleImage(JFaceResources.getResources().createImageWithDefault(imageDescriptor));
 		}
 		if (isShowingOverrideIndicators()) {
-			installOverrideIndicator(true); 
+			installOverrideIndicator(true);
 		}
 	}
 
@@ -2322,15 +2331,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * @return <code>true</code> if event causes a change
 	 */
 	protected boolean affectsOverrideIndicatorAnnotations(PropertyChangeEvent event) {
-		String key= event.getProperty();
-		AnnotationPreference preference= getAnnotationPreferenceLookup().getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
+		String key = event.getProperty();
+		AnnotationPreference preference = getAnnotationPreferenceLookup().getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
 		if (key == null || preference == null)
 			return false;
 
-		return key.equals(preference.getHighlightPreferenceKey())
-			|| key.equals(preference.getVerticalRulerPreferenceKey())
-			|| key.equals(preference.getOverviewRulerPreferenceKey())
-			|| key.equals(preference.getTextPreferenceKey());
+		return key.equals(preference.getHighlightPreferenceKey()) || key.equals(preference.getVerticalRulerPreferenceKey()) || key.equals(preference.getOverviewRulerPreferenceKey()) || key.equals(preference.getTextPreferenceKey());
 	}
 
 	/**
@@ -2347,7 +2353,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			|| getBoolean(store, preference.getOverviewRulerPreferenceKey())
 			|| getBoolean(store, preference.getTextPreferenceKey());
 	}
-	
+
 	/**
 	 * Returns the boolean preference for the given key.
 	 *
@@ -2359,7 +2365,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private boolean getBoolean(IPreferenceStore store, String key) {
 		return key != null && store.getBoolean(key);
 	}
-	
+
 	@Override
 	protected void initializeKeyBindingScopes() {
 		setKeyBindingScopes(new String[] { "org.eclipse.php.ui.phpEditorScope" }); //$NON-NLS-1$
@@ -2727,7 +2733,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				locations = finder.getOccurrences();
 			}
 		}
-		
+
 		if (locations == null && fMarkBreakContinueTargets) {
 			IOccurrencesFinder finder = OccurrencesFinderFactory.createBreakContinueTargetFinder();
 			if (finder.initialize(astRoot, selectedNode) == null) {
@@ -2736,7 +2742,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (locations == null && fMarkImplementors) {
-			IOccurrencesFinder finder= OccurrencesFinderFactory.createImplementorsOccurrencesFinder();
+			IOccurrencesFinder finder = OccurrencesFinderFactory.createImplementorsOccurrencesFinder();
 			if (finder.initialize(astRoot, selectedNode) == null) {
 				locations = finder.getOccurrences();
 			}
@@ -2773,14 +2779,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (fOverrideIndicatorManager != null) {
 			removeReconcileListener(fOverrideIndicatorManager);
 			fOverrideIndicatorManager.removeAnnotations();
-			fOverrideIndicatorManager= null;
+			fOverrideIndicatorManager = null;
 		}
 	}
 
 	protected void installOverrideIndicator(boolean provideAST) {
 		uninstallOverrideIndicator();
 		if (getDocumentProvider() == null) {
-			return ;
+			return;
 		}
 		IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
 		final IModelElement inputElement = getInputModelElement();
@@ -2800,7 +2806,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 	}
-	
+
 	protected void installOccurrencesFinder(boolean forceUpdate) {
 		fMarkOccurrenceAnnotations = true;
 

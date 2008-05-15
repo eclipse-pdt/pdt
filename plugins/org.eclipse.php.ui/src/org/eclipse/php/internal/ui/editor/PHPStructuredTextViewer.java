@@ -1,10 +1,5 @@
 package org.eclipse.php.internal.ui.editor;
 
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.ScriptModelUtil;
-import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
@@ -16,7 +11,6 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
@@ -44,10 +38,16 @@ import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
+	/**
+	 * Text operation code for requesting the hierarchy for the current input.
+	 */
+	public static final int SHOW_HIERARCHY = 53;
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
+
 	private SourceViewerConfiguration config;
 	private ITextEditor textEditor;
 	private IInformationPresenter fOutlinePresenter;
+	private IInformationPresenter fHierarchyPresenter;
 
 	private IAnnotationHover fProjectionAnnotationHover;
 	public boolean isUndoOperation;
@@ -160,11 +160,25 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				isUndoOperation = true;
 				super.doOperation(operation);
 			} finally {
-				isUndoOperation = false;			
+				isUndoOperation = false;
+			}
+		} else if (operation == SHOW_HIERARCHY) {
+			if (fHierarchyPresenter != null) {
+				fHierarchyPresenter.showInformation();
 			}
 		} else {
 			super.doOperation(operation);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#canDoOperation(int)
+	 */
+	public boolean canDoOperation(int operation) {
+		if (operation == SHOW_HIERARCHY) {
+			return fHierarchyPresenter != null;
+		}
+		return super.canDoOperation(operation);
 	}
 
 	private void beginRecording(String label, String description, int cursorPosition, int selectionLength) {
@@ -278,10 +292,31 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// 248036 - disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
 		}
-		
+
 		fOutlinePresenter = phpConfiguration.getOutlinePresenter(this);
-		if (fOutlinePresenter != null)
+		if (fOutlinePresenter != null) {
 			fOutlinePresenter.install(this);
+		}
+
+		fHierarchyPresenter = phpConfiguration.getHierarchyPresenter(this, true);
+		if (fHierarchyPresenter != null) {
+			fHierarchyPresenter.install(this);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer#unconfigure()
+	 */
+	public void unconfigure() {
+		if (fHierarchyPresenter != null) {
+			fHierarchyPresenter.uninstall();
+			fHierarchyPresenter = null;
+		}
+		if (fOutlinePresenter != null) {
+			fOutlinePresenter.uninstall();
+			fOutlinePresenter = null;
+		}
+		super.unconfigure();
 	}
 
 	/**
@@ -329,7 +364,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		((StructuredRegionProcessor) fReconciler).processDirtyRegion(new DirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT, getDocument().get()));
 
 	}
-	
+
 	/**
 	 * Sets the given reconciler.
 	 * 
