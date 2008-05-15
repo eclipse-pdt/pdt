@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.List;
@@ -21,17 +25,33 @@ import java.util.zip.ZipInputStream;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.internal.resources.ICoreConstants;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.IExternalSourceModule;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
@@ -56,7 +76,21 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
@@ -802,5 +836,26 @@ public class EditorUtility {
 
 		return resource;
 	}
+	
+	/**
+	 * Returns the given editor's input as PHP element.
+	 *
+	 * @param editor the editor
+	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
+	 * @return the given editor's input as <code>ITypeRoot</code> or <code>null</code> if none
+	 * @since 3.2
+	 */
+	public static IModelElement getEditorInputPhpElement(IEditorPart editor, boolean primaryOnly) {
+		Assert.isNotNull(editor);
+		IEditorInput editorInput= editor.getEditorInput();
+		if (editorInput == null)
+			return null;
+		
+		IModelElement je= DLTKUIPlugin.getEditorInputModelElement(editorInput);
+		if (je != null || primaryOnly)
+			return je;
+
+		return  DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput, false);
+	}	
 
 }
