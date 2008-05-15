@@ -9,14 +9,16 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwareDeclaration {
 
+	private int declStart;
 	private Expression initializer;
 	private PHPDocBlock phpDoc;
 
-	public PHPFieldDeclaration(VariableReference variable, Expression initializer, int start, int end, int modifiers, PHPDocBlock phpDoc) {
+	public PHPFieldDeclaration(VariableReference variable, Expression initializer, int start, int end, int modifiers, int declStart, PHPDocBlock phpDoc) {
 		super(variable.getName(), variable.sourceStart(), variable.sourceEnd(), start, end);
 
 		setModifiers(modifiers);
 
+		this.declStart = declStart;
 		this.initializer = initializer;
 		this.phpDoc = phpDoc;
 	}
@@ -42,6 +44,10 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 
 	public Expression getVariableValue() {
 		return initializer;
+	}
+	
+	public int getDeclarationStart() {
+		return declStart;
 	}
 
 	/**

@@ -112,7 +112,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		SimpleReference var = declaration.getRef();
 		info.nameSourceEnd = var.sourceEnd() - 1;
 		info.nameSourceStart = var.sourceStart();
-		info.declarationStart = declaration.sourceStart();
+		info.declarationStart = declaration.getDeclarationStart();
 		fRequestor.enterField(info);
 		return true;
 	}
