@@ -772,7 +772,7 @@ public class DebugConnectionThread implements Runnable {
 			queueIn(CONNECTION_CLOSED_MSG);
 		}
 
-		@SuppressWarnings("unchecked") //$NON-NLS-1$
+		@SuppressWarnings("unchecked")//$NON-NLS-1$
 		private synchronized void resetCommunication() {
 			// Now we can stop the input manager.
 			if (inputManager != null)
@@ -833,13 +833,13 @@ public class DebugConnectionThread implements Runnable {
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
 								DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) newInputMessage;
 								isDebugConnectionTest = isDebugConnectionTest(sessionStartedMessage);
-								if (isDebugConnectionTest) {//This is a test...
-									String url = "http://" + DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
+								if (isDebugConnectionTest) {//This is a test...									
+									String sourceHost = DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
 									//notify succcess
 									if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
-										DebugServerTestController.getInstance().notifyTestListeners(new DebugServerTestEvent(url, DebugServerTestEvent.TEST_SUCCEEDED));
+										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_SUCCEEDED));
 									} else {
-										DebugServerTestController.getInstance().notifyTestListeners(new DebugServerTestEvent(url, DebugServerTestEvent.TEST_FAILED, PHPDebugCoreMessages.DebugConnectionThread_oldDebuggerVersion));
+										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
 									}
 								} else {//Not a test - start debug
 									hookDebugSession(sessionStartedMessage);
