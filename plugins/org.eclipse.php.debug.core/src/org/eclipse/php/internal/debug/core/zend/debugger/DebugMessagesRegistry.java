@@ -66,7 +66,7 @@ public class DebugMessagesRegistry {
 		}
 
 		Collection<IConfigurationElement> configElements = configElementsMap.values();
-		configElements.remove(null);
+		while (configElements.remove(null)); // remove null elements
 
 		for (final IConfigurationElement element : configElements) {
 			final IDebugMessage messages[] = new IDebugMessage[1];
