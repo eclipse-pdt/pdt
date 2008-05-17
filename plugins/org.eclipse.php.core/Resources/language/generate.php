@@ -1,6 +1,6 @@
 <?php
 /**
- * This script can be used for generiting PHP model for PDT.
+ * This script can be used for generating PHP model for PDT.
  * It builds PHP functions according to the loaded extensions in running PHP,
  * using complementary information gathered from PHP.net documentation
  *
