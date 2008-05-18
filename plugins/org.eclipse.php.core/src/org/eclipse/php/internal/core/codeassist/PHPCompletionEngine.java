@@ -1068,6 +1068,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					if (k != 0) {
 						prefix = prefix.substring(k);
 					}
+					
+					this.setSourceRange(offset - prefix.length(), offset);
 
 					for (IModelElement type : classes) {
 						reportType((IType) type, RELEVANCE_FREE_SPACE);
@@ -1103,6 +1105,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return true;
 		}
 		*/
+		
+		this.setSourceRange(offset, offset);
 
 		for (String magicMethod : magicFunctions) {
 			FakeMethod fakeMagicMethod = new FakeMethod((ModelElement) classData, magicMethod);
@@ -1150,7 +1154,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int endPosition = text.length();
 		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, false);
 		String lastWord = text.subSequence(startPosition, endPosition).toString();
-
+		
 		Matcher extendsMatcher = extendsPattern.matcher(text);
 		Matcher implementsMatcher = implementsPattern.matcher(text);
 		boolean foundExtends = extendsMatcher.find();
@@ -1224,6 +1228,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
+		this.setSourceRange(offset - startWith.length(), offset);
+		
 		if (isPHP5) {
 			reportKeyword("extends");
 			reportKeyword("implements");
@@ -1237,6 +1243,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		if (isPHP5) {
+			this.setSourceRange(offset - startWith.length(), offset);
 			reportKeyword("implements");
 		}
 	}
@@ -1245,6 +1252,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
+		this.setSourceRange(offset - startWith.length(), offset);
 		reportKeyword("extends");
 	}
 
@@ -1256,6 +1264,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
+		
+		this.setSourceRange(offset - startWith.length(), offset);
 
 		IType[] classes = getOnlyClasses(startWith);
 		for (IType type : classes) {
@@ -1319,6 +1329,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
+		
+		this.setSourceRange(offset - startWith.length(), offset);
 
 		// get the class data for "self". In case of null, the self function will not be added
 		IType selfClassData = getSelfClassData(offset);
