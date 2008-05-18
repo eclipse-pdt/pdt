@@ -87,7 +87,16 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 
 		fIncludePathsBlock.createControl(top);
 
+		setHelpContext(parent);
+
 		return top;
+	}
+
+	/**
+	 * Set the Help context throw here
+	 * @param parent 
+	 */
+	protected void setHelpContext(Composite parent) {
 	}
 
 	public IncludePathBlock getIncludePathsBlock() {

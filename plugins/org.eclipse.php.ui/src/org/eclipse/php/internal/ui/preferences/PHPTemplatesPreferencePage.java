@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 
 public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
@@ -21,7 +25,11 @@ public class PHPTemplatesPreferencePage extends TemplatePreferencePage {
 		setTemplateStore(PHPUiPlugin.getDefault().getTemplateStore());
 		setContextTypeRegistry(PHPUiPlugin.getDefault().getTemplateContextRegistry());
 	}
-	
+	public void performHelp() {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.TEMPLATES_PREFERENCES);
+		getControl().notifyListeners(SWT.Help, new Event());
+    }
+
 	protected boolean isShowFormatterSetting() {
 		return false;
 	}

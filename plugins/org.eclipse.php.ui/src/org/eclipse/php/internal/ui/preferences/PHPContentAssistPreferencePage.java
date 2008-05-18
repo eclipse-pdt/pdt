@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiConstants;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * 
@@ -30,5 +34,10 @@ public class PHPContentAssistPreferencePage extends AbstractMultiBlockPreference
 	protected String getPreferencePageID() {
 		return PHPUiConstants.CONTENT_ASSIST_PROFERENCE_PAGE;
 	}
+	
+	public void performHelp() {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.CODE_ASSIST_PREFERENCES);
+		getControl().notifyListeners(SWT.Help, new Event());
+    }
 
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.PHPVersionConfigurationBlock;
 import org.eclipse.swt.SWT;
@@ -72,8 +73,12 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 
 		createProjectOptionsGroup(top);
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(top, "com.ibm.etools.webtools.wizards.basic.webw1450"); //$NON-NLS-1$
+		setHelpContext(top);
 		return top;
+	}
+	
+	protected void setHelpContext(Composite top) {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(top, IPHPHelpContextIds.CREATING_PROJECTS_AND_FILES); //$NON-NLS-1$
 	}
 
 	protected void createProjectNameGroup(Composite parent) {

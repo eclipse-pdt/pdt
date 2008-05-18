@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.OpenAction;
@@ -108,8 +109,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 		// Sends the object through the given filters
 		private Object filter(final Object object, final Object parent, final ViewerFilter[] filters) {
-			for (int i = 0; i < filters.length; i++) {
-				final ViewerFilter filter = filters[i];
+			for (final ViewerFilter filter : filters) {
 				if (!filter.select(fViewer, parent, object))
 					return null;
 			}
@@ -130,8 +130,8 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 			for (int i = 0; i < elements.length; i++) {
 				boolean add = true;
 				if (!isEssential(elements[i]))
-					for (int j = 0; j < filters.length; j++) {
-						add = filters[j].select(this, root, elements[i]);
+					for (ViewerFilter element : filters) {
+						add = element.select(this, root, elements[i]);
 						if (!add)
 							break;
 					}
@@ -190,8 +190,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 			final TreeItem[] selection = tree.getSelection();
 			final List result = new ArrayList(selection.length);
 			final List treePaths = new ArrayList();
-			for (int i = 0; i < selection.length; i++) {
-				final TreeItem item = selection[i];
+			for (final TreeItem item : selection) {
 				final Object element = getElement(item);
 				if (element == null)
 					continue;
@@ -253,9 +252,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		public boolean isExpandable(final Object parent) {
 			final ViewerFilter[] filters = fViewer.getFilters();
 			final Object[] children = ((ITreeContentProvider) fViewer.getContentProvider()).getChildren(parent);
-			for (int i = 0; i < children.length; i++) {
-				Object object = children[i];
-
+			for (Object object : children) {
 				if (isEssential(object))
 					return true;
 
@@ -300,6 +297,9 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	private boolean fLinkingEnabled;
 	private final IPartListener fPartListener = new IPartListener() {
 		public void partActivated(IWorkbenchPart part) {
+			if (part == ProjectOutlinePart.this) {
+				return;
+			}
 			final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(part);
 			if (getViewer().getTree().getVisible() && structuredEditor != null)
 				updateInputForCurrentEditor(structuredEditor);
@@ -415,12 +415,12 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 	public void createPartControl(final Composite parent) {
 		getSite().getPage().addPartListener(fPartListener);
 		fViewer = createViewer(parent);
-		
+
 		PHPElementSorter sorter = new PHPElementSorter();
 		sorter.setUsingCategories(false);
 		sorter.setUsingLocation(true);
 		fViewer.setSorter(sorter);
-		
+
 		fViewer.getControl().addFocusListener(this);
 		fSelectionListener.setViewer(getViewer());
 		fSelectionListener.setResetEmptySelection(false);
@@ -464,6 +464,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
 		fViewer.refresh();
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_PROJECT_OUTLINE_VIEW);
 	}
 
 	private PHPTreeViewer createViewer(final Composite composite) {
@@ -542,7 +543,12 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 		IProject project = null;
 
 		if (editorPart != null) {
-			final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+			final PHPStructuredEditor phpEditor;
+			if (editorPart instanceof PHPStructuredEditor) {
+				phpEditor = (PHPStructuredEditor) editorPart;
+			} else {
+				phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+			}
 			if (phpEditor != null) {
 				PHPFileData fileData = phpEditor.getPHPFileData();
 				project = PHPWorkspaceModelManager.getInstance().getProjectForFileData(fileData, currentProject);

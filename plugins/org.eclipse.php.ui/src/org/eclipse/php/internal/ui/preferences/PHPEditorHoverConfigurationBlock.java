@@ -320,6 +320,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		initialize();
 
 		Dialog.applyDialogFont(hoverComposite);
+		//HELP - 
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.HOVERS_PREFERENCES);
 		return hoverComposite;
 	}
 

@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.wizards;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -27,6 +28,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.SWT;
@@ -40,6 +42,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
 /**
@@ -50,12 +53,14 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	protected Text containerText;
 	protected Text fileText;
 	private ISelection selection;
+	protected IProject project;
 	//	private Combo templatesCombo;
 	//	private Combo encodingCombo;
 	//	EncodingSettings encodingSettings;
 
 	protected static final String UTF_8 = "UTF 8"; //$NON-NLS-1$
 	protected static final String NO_TEMPLATE = "-- none -- "; //$NON-NLS-1$
+	protected Label targetResourceLabel;
 
 	/**
 	 * Constructor for SampleNewWizardPage.
@@ -99,8 +104,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			}
 		});
 
-		label = new Label(container, SWT.NULL);
-		label.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
+		targetResourceLabel = new Label(container, SWT.NULL);
+		targetResourceLabel.setText(PHPUIMessages.getString("PHPFileCreationWizardPage.7")); //$NON-NLS-1$
 
 		fileText = new Text(container, SWT.BORDER | SWT.SINGLE);
 		fileText.setFocus();
@@ -155,6 +160,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		initialize();
 		dialogChanged();
 		setControl(container);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.CREATING_A_PHP_FILE_WITHIN_A_PROJECT);
 	}
 
 	/**
@@ -184,8 +190,11 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			} else if (obj instanceof PHPProjectModel)
 				container = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) obj);
 
-			if (container != null)
+			if (container != null) {
 				containerText.setText(container.getFullPath().toString());
+				this.project = container.getProject();
+			}
+			
 			//				IProject project = container.getProject();
 			//				PHPProjectOptions options = PHPProjectOptions.forProject(project);
 			//				if (options != null) {
@@ -277,7 +286,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 		updateStatus(null);
 	}
 
-	IContainer getContainer(final String text) {
+	protected IContainer getContainer(final String text) {
 		final Path path = new Path(text);
 
 		final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
@@ -285,7 +294,7 @@ public class PHPFileCreationWizardPage extends WizardPage {
 
 	}
 
-	private void updateStatus(final String message) {
+	protected void updateStatus(final String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
@@ -293,8 +302,16 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	public String getContainerName() {
 		return containerText.getText();
 	}
+	
+	public void setContainerName(String containerPath) {
+		containerText.setText(containerPath);
+	}
 
 	public String getFileName() {
 		return fileText.getText();
+	}
+
+	public IProject getProject() {
+		return project;
 	}
 }

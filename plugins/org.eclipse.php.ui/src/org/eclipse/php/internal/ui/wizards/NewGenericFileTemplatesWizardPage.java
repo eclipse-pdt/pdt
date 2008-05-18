@@ -16,6 +16,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
@@ -24,10 +25,12 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -51,7 +54,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 /**
  * Templates page in new file wizard. Allows users to select a new file
  * template to be applied in new file.
- * 
+ *
  */
 public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
@@ -116,7 +119,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	}
 
 	/** Last selected template name */
-	private String fLastSelectedTemplateName;
+	protected String fLastSelectedTemplateName;
 	/** The viewer displays the pattern of selected template. */
 	private SourceViewer fPatternViewer;
 	/** The table presenting the templates. */
@@ -124,7 +127,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/** Template store used by this wizard page */
 	private TemplateStore fTemplateStore;
 	/** Checkbox for using templates. */
-	private Button fUseTemplateButton;
+	protected Button fUseTemplateButton;
 
 	public NewGenericFileTemplatesWizardPage(String title, String description) {
 		super("NewGenericTemplatesWizardPage", title, null); //$NON-NLS-1$
@@ -133,7 +136,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Correctly resizes the table so no phantom columns appear
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @param buttons
@@ -248,7 +251,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 		fTableViewer.setSorter(new ViewerSorter() {
 			@Override
 			public int compare(Viewer viewer, Object object1, Object object2) {
-				if ((object1 instanceof Template) && (object2 instanceof Template)) {
+				if (object1 instanceof Template && object2 instanceof Template) {
 					Template left = (Template) object1;
 					Template right = (Template) object2;
 					int result = left.getName().compareToIgnoreCase(right.getName());
@@ -285,6 +288,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpId);
 		}
 		Dialog.applyDialogFont(parent);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.NEW);
 		setControl(parent);
 	}
 
@@ -294,7 +298,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Creates, configures and returns a source viewer to present the template
 	 * pattern on the preference page. Clients may override to provide a
 	 * custom source viewer featuring e.g. syntax coloring.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent control
 	 * @return a configured source viewer
@@ -345,7 +349,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Enable/disable controls in page based on fUseTemplateButton's current
 	 * state.
 	 */
-	void enableTemplates() {
+	protected void enableTemplates() {
 		boolean enabled = fUseTemplateButton.getSelection();
 
 		if (!enabled) {
@@ -367,14 +371,14 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Return the template preference page id
-	 * 
+	 *
 	 * @return
 	 */
 	protected abstract String getPreferencePageId();
 
 	/**
 	 * Get the currently selected template.
-	 * 
+	 *
 	 * @return
 	 */
 	private Template getSelectedTemplate() {
@@ -389,26 +393,24 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 
 	/**
 	 * Returns template string to insert.
-	 * 
+	 *
 	 * @return String to insert or null if none is to be inserted
 	 */
-	public String getTemplateString() {
-		String templateString = null;
+	public CompiledTemplate compileTemplate() {
+		Template template = getSelectedTemplate();
+		return PHPTemplateStore.compileTemplate(getTemplatesContextTypeRegistry(), template);
+	}
 
+	public TemplateProposal createTemplateProposal() {
+		TemplateProposal proposal = null;
 		Template template = getSelectedTemplate();
 		if (template != null) {
 			TemplateContextType contextType = getTemplatesContextTypeRegistry().getContextType(getTemplateContextTypeId());
-			IDocument document = new Document();
-			TemplateContext context = new DocumentTemplateContext(contextType, document, 0, 0);
-			try {
-				TemplateBuffer buffer = context.evaluate(template);
-				templateString = buffer.getString();
-			} catch (Exception e) {
-				Logger.log(Logger.WARNING_DEBUG, "Could not create template for new PHP", e); //$NON-NLS-1$
-			}
+			TemplateContext context = new DocumentTemplateContext(contextType, new Document(), 0, 0);
+			proposal = new TemplateProposal(template, context, new Region(0, 0), null);
 		}
 
-		return templateString;
+		return proposal;
 	}
 
 	void linkClicked() {
@@ -421,7 +423,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	/**
 	 * Load the last template name used in New HTML File wizard.
 	 */
-	private void loadLastSavedPreferences() {
+	protected void loadLastSavedPreferences() {
 		String templateName = getPreferenceStore().getString(PreferenceConstants.NEW_PHP_FILE_TEMPLATE);
 		if (templateName == null || templateName.length() == 0) {
 			fLastSelectedTemplateName = ""; //$NON-NLS-1$
@@ -453,7 +455,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 	 * Select a template in the table viewer given the template name. If
 	 * template name cannot be found or templateName is null, just select
 	 * first item in table. If no items in table select nothing.
-	 * 
+	 *
 	 * @param templateName
 	 */
 	private void setSelectedTemplate(String templateName) {

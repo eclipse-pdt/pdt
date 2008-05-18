@@ -33,6 +33,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.LinkingSelectionListener;
@@ -438,6 +439,8 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 				editorActivated(editor);
 			}
 		}
+		//HELP
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_EXPLORER_VIEW);
 
 	}
 
@@ -778,7 +781,7 @@ public class ExplorerPart extends ViewPart implements IMenuListener, FocusListen
 		} finally {
 			fViewer.getControl().setRedraw(true);
 		}
-		if (isRootInputChange && fWorkingSetModel.needsConfiguration()) {
+		if (isRootInputChange && fWorkingSetModel!= null && fWorkingSetModel.needsConfiguration()) {
 			ConfigureWorkingSetAction action = new ConfigureWorkingSetAction(getSite());
 			action.setWorkingSetModel(fWorkingSetModel);
 			action.run();

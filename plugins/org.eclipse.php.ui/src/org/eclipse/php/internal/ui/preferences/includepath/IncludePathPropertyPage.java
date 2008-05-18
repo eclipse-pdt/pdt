@@ -66,6 +66,7 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 			result = createWithPHP(parent, project);
 		}
 		Dialog.applyDialogFont(result);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 		return result;
 	}
 
@@ -74,7 +75,8 @@ public class IncludePathPropertyPage extends PropertyPage implements IStatusChan
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.INCLUDE_PATHS);
+		//HELP
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
 	}
 
 	private IDialogSettings getSettings() {

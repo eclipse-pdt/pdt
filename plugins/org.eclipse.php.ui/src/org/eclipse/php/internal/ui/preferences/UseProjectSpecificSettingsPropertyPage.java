@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -31,6 +32,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -152,6 +154,8 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends PropertyPag
 			selectionAdapter.widgetSelected(null);
 			fEnableProjectSettings.addSelectionListener(selectionAdapter);
 		}
+		//HELP - Waiting for Keren
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.???);
 		return composite;
 	}
 

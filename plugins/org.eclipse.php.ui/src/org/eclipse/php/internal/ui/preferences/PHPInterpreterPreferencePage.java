@@ -12,10 +12,12 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
@@ -41,12 +43,7 @@ public class PHPInterpreterPreferencePage extends PropertyAndPreferencePage {
 
 		super.createControl(parent);
 
-		// TODO - Set the Help context ID
-		//		if (isProjectPreferencePage()) {
-		//			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPVERSION_PROPERTY_PAGE);
-		//		} else {
-		//			PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHPVERSION_PREFERENCE_PAGE);
-		//		}
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_INTERPRETER_PREFERENCES);
 	}
 
 	/* (non-Javadoc)
