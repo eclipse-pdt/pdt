@@ -16,6 +16,7 @@ import org.eclipse.debug.ui.StringVariableSelectionDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.actions.ControlAccessibleListener;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -25,6 +26,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * A launch configuration tab that displays and edits program arguments.
@@ -98,6 +100,8 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 			}
 
 		});
+		//HELP
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
 
 	}
 

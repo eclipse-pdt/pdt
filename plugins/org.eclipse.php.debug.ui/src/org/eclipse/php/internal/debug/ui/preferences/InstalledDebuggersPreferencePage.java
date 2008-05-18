@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.debug.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -9,6 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 public class InstalledDebuggersPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -27,7 +29,8 @@ public class InstalledDebuggersPreferencePage extends PreferencePage implements 
 
 		// Add the debuggers table
 		createDebuggersTable(comp);
-
+		
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.INSTALLED_DEBUGGERS);
 		return comp;
 	}
 

@@ -22,6 +22,7 @@ import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.AbstractPreferencePage;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,10 +30,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The Installed PHPs preference page.
- * 
+ *
  * @since 3.0
  */
 public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkbenchPreferencePage {
@@ -45,9 +47,9 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		super();
 
 		// only used when page is shown programatically
-		setTitle(PHPDebugUIMessages.PHPsPreferencePage_1); //$NON-NLS-1$
+		setTitle(PHPDebugUIMessages.PHPsPreferencePage_1); 
 
-		setDescription(PHPDebugUIMessages.PHPsPreferencePage_2); //$NON-NLS-1$
+		setDescription(PHPDebugUIMessages.PHPsPreferencePage_2); 
 	}
 
 	/* (non-Javadoc)
@@ -97,6 +99,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		//			}
 		//		});
 		applyDialogFont(ancestor);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(ancestor, IPHPHelpContextIds.PHP_PREFERENCES);
 		return ancestor;
 	}
 
@@ -115,12 +118,12 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 
 	private void verifyDefaultPHP(PHPexeItem php) {
 		if (php != null) {
-			boolean exist = php.getLocation().exists();
+			boolean exist = php.getExecutable().exists();
 			// If all library locations exist, check the corresponding entry in the list,
 			// otherwise remove the PHP setting
 			if (!exist) {
 				fPHPBlock.removePHPs(new PHPexeItem[] { php });
-				ErrorDialog.openError(getControl().getShell(), PHPDebugUIMessages.PHPsPreferencePage_1, PHPDebugUIMessages.PHPsPreferencePage_10, new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, PHPDebugUIPlugin.INTERNAL_ERROR, PHPDebugUIMessages.PHPsPreferencePage_11, null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				ErrorDialog.openError(getControl().getShell(), PHPDebugUIMessages.PHPsPreferencePage_1, PHPDebugUIMessages.PHPsPreferencePage_10, new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, PHPDebugUIPlugin.INTERNAL_ERROR, PHPDebugUIMessages.PHPsPreferencePage_11, null)); 
 				return;
 			}
 		}
@@ -130,8 +133,7 @@ public class PHPsPreferencePage extends AbstractPreferencePage implements IWorkb
 		PHPexeItem realDefault = PHPexes.getInstance().getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 		if (realDefault != null) {
 			PHPexeItem[] phps = fPHPBlock.getPHPs();
-			for (int i = 0; i < phps.length; i++) {
-				PHPexeItem fakePHP = phps[i];
+			for (PHPexeItem fakePHP : phps) {
 				if (fakePHP.equals(realDefault)) {
 					verifyDefaultPHP(fakePHP);
 					break;
