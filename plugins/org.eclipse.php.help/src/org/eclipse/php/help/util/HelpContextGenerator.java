@@ -3,7 +3,12 @@
  */
 package org.eclipse.php.help.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -16,8 +21,6 @@ import org.eclipse.help.ITopic;
 import org.eclipse.help.IUAElement;
 import org.eclipse.help.internal.Topic;
 import org.eclipse.help.internal.toc.TocFileProvider;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * Generate the Help context.
@@ -43,7 +46,9 @@ public class HelpContextGenerator {
 
 	private LinkedHashSet<String> topics = new LinkedHashSet<String>();
 
-	@Test
+	/*
+	 *@Test
+	 */ 
 	public void run() {
 		TocFileProvider tocProvider = new TocFileProvider();
 		ITocContribution[] tocContributions = tocProvider.getTocContributions(null);
@@ -57,7 +62,7 @@ public class HelpContextGenerator {
 		try {
 			generateFiles(phpTocs);
 		} catch (Exception e) {
-			Assert.assertFalse(true);
+			//Assert.assertFalse(true);
 		}
 	}
 
@@ -188,7 +193,7 @@ public class HelpContextGenerator {
 		}
 		String srcFilePath = javaTemplateFile.toString().replace(File.separatorChar + "bin" + File.separatorChar, File.separatorChar + "src" + File.separatorChar); //$NON-NLS-1$ //$NON-NLS-2$
 		javaTemplateFile = new File(srcFilePath);
-		Assert.assertTrue("Could not locate the Java template file", javaTemplateFile.exists()); //$NON-NLS-1$
+//		Assert.assertTrue("Could not locate the Java template file", javaTemplateFile.exists()); //$NON-NLS-1$
 		return javaTemplateFile;
 	}
 }
