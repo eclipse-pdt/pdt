@@ -43,6 +43,7 @@ import org.eclipse.php.internal.debug.ui.launching.LaunchUtilities;
 import org.eclipse.php.internal.server.PHPServerUIMessages;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.internal.ui.wizards.WizardModel;
@@ -124,6 +125,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 		Point size = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 		scrolledComposite.setMinSize(size.x, size.y);
 
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.DEBUGGING_A_PHP_WEB_PAGE);		
 		setControl(scrolledComposite);
 	}
 
