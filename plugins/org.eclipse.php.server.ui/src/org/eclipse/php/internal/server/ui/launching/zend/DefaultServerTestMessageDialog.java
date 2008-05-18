@@ -32,12 +32,10 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 		}
 		// create message
 		if (message != null) {
-
 			Composite labelComposite = new Composite(composite, SWT.NULL);
 			labelComposite.setLayout(new GridLayout(1, true));
 			messageLabel = new Label(labelComposite, getMessageLabelStyle());
 			messageLabel.setText(message);
-			GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).grab(true, false).hint(convertHorizontalDLUsToPixels(IDialogConstants.MINIMUM_MESSAGE_AREA_WIDTH), SWT.DEFAULT).applyTo(labelComposite);
 
 			addLinksToMessage(labelComposite);
 		}

@@ -302,7 +302,7 @@ public class ServerLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 				
 		data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		validateDebuggerBtn.setLayoutData(data);
-		validateDebuggerBtn.setText("Check Debug Server Connection");
+		validateDebuggerBtn.setText("Test Debugger");
 	}
 
 	private void updateDebugServerTesters() {
