@@ -383,7 +383,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 				ASTNode firstArg = (ASTNode) args.get(0);
 				if (firstArg instanceof Scalar) {
 					Scalar constant = (Scalar) firstArg;
-					String name = constant.getValue();
+					String name = stripQuotes(constant.getValue());
 					if (sourceModule != null) {
 						obj = new FakeField((ModelElement) sourceModule, name, constant.sourceStart(), constant.sourceEnd() - constant.sourceStart());
 					}
