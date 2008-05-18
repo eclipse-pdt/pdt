@@ -152,7 +152,9 @@ public abstract class UseProjectSpecificSettingsPropertyPage extends PropertyPag
 			selectionAdapter.widgetSelected(null);
 			fEnableProjectSettings.addSelectionListener(selectionAdapter);
 		}
-		return composite;
+	//HELP - Waiting for Keren
+	//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.???);
+	return composite;
 	}
 
 

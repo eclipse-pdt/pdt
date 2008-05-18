@@ -13,6 +13,7 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 
@@ -29,7 +30,7 @@ public class PHPEditorHoverPreferencePage extends AbstractConfigurationBlockPref
 	 * @see org.eclipse.ui.internal.editors.text.AbstractConfigureationBlockPreferencePage#getHelpId()
 	 */
 	protected String getHelpId() {
-		return IPHPHelpContextIds.EDITOR_PREFERENCES;
+		return IPHPHelpContextIds.HOVERS_PREFERENCES;
 	}
 
 	/*

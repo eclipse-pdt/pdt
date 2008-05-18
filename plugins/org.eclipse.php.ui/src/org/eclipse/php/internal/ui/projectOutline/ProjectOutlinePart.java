@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.OpenAction;
@@ -463,6 +464,7 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 
 		PHPWorkspaceModelManager.getInstance().addModelListener(fContentProvider);
 		fViewer.refresh();
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_PROJECT_OUTLINE_VIEW);
 	}
 
 	private PHPTreeViewer createViewer(final Composite composite) {

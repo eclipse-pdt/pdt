@@ -25,6 +25,7 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
@@ -287,6 +288,7 @@ public abstract class NewGenericFileTemplatesWizardPage extends WizardPage {
 			PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, helpId);
 		}
 		Dialog.applyDialogFont(parent);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.NEW);
 		setControl(parent);
 	}
 

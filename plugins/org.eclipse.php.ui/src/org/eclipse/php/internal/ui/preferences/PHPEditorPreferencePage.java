@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
@@ -19,6 +20,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 public class PHPEditorPreferencePage extends AbstractPreferencePage {
@@ -31,7 +33,8 @@ public class PHPEditorPreferencePage extends AbstractPreferencePage {
         createHeader(parent);
         createMainComposite(parent);
         initValues();
-        return super.createContents(parent);
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.EDITOR_PREFERENCES);
+		return super.createContents(parent);
     }
 
     private void createMainComposite(Composite parent) {

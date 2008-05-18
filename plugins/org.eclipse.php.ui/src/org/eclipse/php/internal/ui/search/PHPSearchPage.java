@@ -27,6 +27,7 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SelectionConverter;
@@ -118,8 +119,7 @@ public class PHPSearchPage extends DialogPage implements ISearchPage, IPHPSearch
 		setControl(result);
 
 		Dialog.applyDialogFont(result);
-		// TODO - Attach the help
-		//		PlatformUI.getWorkbench().getHelpSystem().setHelp(result, IJavaHelpContextIds.JAVA_SEARCH_PAGE);	
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(result, IPHPHelpContextIds.SEARCHING_FOR_PHP_ELEMENTS);	
 	}
 
 	private static class SearchPatternData {

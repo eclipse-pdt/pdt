@@ -60,6 +60,7 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 	protected Control createContents(Composite parent) {
 		Control result = fVariableBlock.createContents(parent);
 		Dialog.applyDialogFont(result);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PATH_VARIABLES_PREFERENCES);
 		return result;
 	}
 

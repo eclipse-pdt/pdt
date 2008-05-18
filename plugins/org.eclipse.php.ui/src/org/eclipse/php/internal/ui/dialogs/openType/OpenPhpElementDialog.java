@@ -28,6 +28,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.dialogs.openType.generic.BasicSelector;
@@ -38,6 +39,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 public class OpenPhpElementDialog extends Dialog {
 
@@ -82,6 +84,7 @@ public class OpenPhpElementDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.OPENING_PHP_ELEMENTS);
 		Composite composite = (Composite) super.createDialogArea(parent);
 		CompositeFactory phpTypeFilterCompositeFactory = new CompositeFactory() {
 

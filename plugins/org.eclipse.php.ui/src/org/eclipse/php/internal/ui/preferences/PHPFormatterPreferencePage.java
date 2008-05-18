@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
@@ -21,6 +22,7 @@ import org.eclipse.php.ui.preferences.IPHPFormatterConfigurationBlockWrapper;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -47,6 +49,7 @@ public class PHPFormatterPreferencePage extends PropertyAndPreferencePage {
 		fConfigurationBlock.init(getNewStatusChangedListener(), getProject(), container);
 		setDescription(fConfigurationBlock.getDescription());
 		super.createControl(parent);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.FORMATTER_PREFERENCES);
 	}
 
 	private IPHPFormatterConfigurationBlockWrapper getFormatterPreferencesBlock() {
