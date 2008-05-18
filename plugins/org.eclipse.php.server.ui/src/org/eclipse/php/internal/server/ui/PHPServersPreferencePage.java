@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.server.ui;
 
 import org.eclipse.php.internal.server.PHPServerUIMessages;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.AbstractConfigurationBlockPreferencePage;
 import org.eclipse.php.internal.ui.preferences.IPreferenceConfigurationBlock;
@@ -27,7 +28,8 @@ public class PHPServersPreferencePage extends AbstractConfigurationBlockPreferen
 	}
 
 	protected String getHelpId() {
-		return null;
+		//HELP
+		return  IPHPHelpContextIds.PHP_SERVERS_PREFERENCES;
 	}
 
 	protected void setDescription() {
