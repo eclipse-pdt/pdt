@@ -64,6 +64,19 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return null;
 	}
+	
+	/**
+	 * Strips single or double quotes from the start and from the end of the given string
+	 * @param name String
+	 * @return
+	 */
+	private static String stripQuotes(String name) {
+		int len = name.length();
+		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
+			name = name.substring(1, len - 1);
+		}
+		return name;
+	}
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		declarations.pop();
@@ -133,7 +146,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 			info.modifiers = Modifiers.AccConstant;
 			Argument argument = (Argument) call.getArgs().getChilds().get(0);
-			info.name = argument.getName();
+			info.name = stripQuotes(argument.getName());
 			info.nameSourceEnd = argument.sourceEnd() - 1;
 			info.nameSourceStart = argument.sourceStart();
 			info.declarationStart = call.sourceStart();
@@ -157,7 +170,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 		info.modifiers = Modifiers.AccConstant;
 		ConstantReference constantName = declaration.getConstantName();
-		info.name = constantName.getName();
+		info.name = stripQuotes(constantName.getName());
 		info.nameSourceEnd = constantName.sourceEnd() - 1;
 		info.nameSourceStart = constantName.sourceStart();
 		info.declarationStart = declaration.sourceStart();
