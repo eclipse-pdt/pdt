@@ -82,7 +82,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 							activateTestDebug(monitor, clientHost, debugQuery);
 						} catch (SocketTimeoutException ste) {//debugger caused timeout
 							if (!isFinished) {
-								String generalTimeout = NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_timeOutMessage"), fURL);
+								String generalTimeout = NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_timeOutMessage"), fURL); //$NON-NLS-1$
 								showCustomErrorDialog(generalTimeout); //$NON-NLS-1$
 								return;
 							}
@@ -100,7 +100,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 						}
 					}
 					if (!isFinished) {
-						showCustomErrorDialog(addTimeOutsMessage("")); //$NON-NLS-1$
+						showCustomErrorDialog(addTimeOutsMessage("A timeout occurred when the debug server attempted to connect to the following client hosts/IPs:\n")); //$NON-NLS-1$
 					}
 				} catch (FileNotFoundException fnfe) {//dummy.php was not found
 					showCustomErrorDialog(NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_theURLCouldNotBeFound"), fURL)); //$NON-NLS-1$
@@ -121,8 +121,8 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 				}
 			}
 
-			private void activateTestDebug(IProgressMonitor monitor, String sourceHost, String debugQuery) throws IOException {
-				monitor.subTask("Testing communication with client host/IP: '" + sourceHost + "'...");
+			private void activateTestDebug(IProgressMonitor monitor, String clientHost, String debugQuery) throws IOException {
+				monitor.subTask(NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testingCommunication"), clientHost)); //$NON-NLS-1$
 				InputStream inputStream = null;
 				try {
 					URL checkDebugURL = new URL(debugQuery);
@@ -173,7 +173,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	protected void showCustomErrorDialog(final String message) {
 		fShell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				DefaultServerTestMessageDialog dialog = new DefaultServerTestMessageDialog(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), null, // accept
+				DefaultServerTestMessageDialog dialog = new DefaultServerTestMessageDialog(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), null, // accept //$NON-NLS-1$
 					message, MessageDialog.ERROR, new String[] { IDialogConstants.OK_LABEL }, 0);
 				dialog.open();
 			}
@@ -181,7 +181,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	}
 
 	protected String generateDebugQuery(String host) {
-		String urlToDebug = "";
+		String urlToDebug = ""; //$NON-NLS-1$
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(fURL);
 		queryBuilder.append("/dummy.php?start_debug=1&debug_port="); //$NON-NLS-1$
@@ -198,7 +198,7 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	private String[] getAllLocalHostsAddresses() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
 		String hosts = prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP);
-		StringTokenizer tokenizer = new StringTokenizer(hosts, ", ");
+		StringTokenizer tokenizer = new StringTokenizer(hosts, ", "); //$NON-NLS-1$
 		List<String> list = new ArrayList<String>();
 		while (tokenizer.hasMoreTokens()) {
 			list.add(tokenizer.nextToken());
@@ -208,8 +208,17 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 	}
 
 	private void showSuccessMessage() {
-		String message = addTimeOutsMessage(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_success"));
-		MessageDialog.openInformation(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), message); //$NON-NLS-1$
+		String message = PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_success"); //$NON-NLS-1$
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(message);
+
+		if (timeoutServerList.size() > 0) {
+			stringBuilder.append("\n"); //$NON-NLS-1$
+			stringBuilder.append(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_however")); //$NON-NLS-1$
+			stringBuilder.append(addTimeOutsMessage("")); //$NON-NLS-1$
+		}
+
+		MessageDialog.openInformation(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), stringBuilder.toString()); //$NON-NLS-1$
 	}
 
 	private String addTimeOutsMessage(String message) {
@@ -217,11 +226,10 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 		if (timeoutServerList.size() > 0) {
 			Iterator<String> iter = timeoutServerList.iterator();
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append("A timeout occurred when the debug server attempted to connect to the following client hosts/IPs\n");
 			while (iter.hasNext()) {
 				stringBuilder.append('-' + iter.next() + '\n');
 			}
-			stringBuilder.append("\nThe client hosts/IPs to which your debug server will attempt a connection can be configured from:\nWindow | Preferences | PHP | Debug | Installed Debuggers");
+			stringBuilder.append(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_theClientHostIPs")); //$NON-NLS-1$
 			result = result + stringBuilder.toString();
 		}
 		return result;
@@ -237,10 +245,10 @@ public class DefaultDebugServerConnectionTest implements IDebugServerConnectionT
 				} else {
 					switch (e.getEventType()) {
 						case DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION:
-							MessageDialog.openError(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_oldDebuggerVersion"));
+							MessageDialog.openError(fShell, PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_testDebugServer"), PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_oldDebuggerVersion")); //$NON-NLS-1$ //$NON-NLS-2$
 							break;
 						case DebugServerTestEvent.TEST_TIMEOUT:
-							showCustomErrorDialog(NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_timeOutMessage"), fURL));
+							showCustomErrorDialog(NLS.bind(PHPServerUIMessages.getString("DefaultDebugServerConnectionTest_timeOutMessage"), fURL)); //$NON-NLS-1$
 							break;
 					}
 				}
