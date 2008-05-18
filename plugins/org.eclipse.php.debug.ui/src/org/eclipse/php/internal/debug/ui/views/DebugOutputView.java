@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -107,7 +108,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.debug.ui.AbstractDebugView#getHelpContextId()
      */
     protected String getHelpContextId() {
-        return null;
+        return IPHPHelpContextIds.DEBUG_OUTPUT_VIEW;
     }
 
     /* (non-Javadoc)

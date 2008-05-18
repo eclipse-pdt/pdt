@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.wizards;
 
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.wizards.CompositeFragment;
 import org.eclipse.php.internal.ui.wizards.IControlHandler;
 import org.eclipse.php.internal.ui.wizards.WizardFragment;
 import org.eclipse.php.ui.wizards.ICompositeFragmentFactory;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author michael
@@ -22,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 public class PathMapperFragmentFactory implements ICompositeFragmentFactory {
 
 	public CompositeFragment createComposite(Composite parent, IControlHandler controlHandler) {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.ADDING_A_SERVER_LOCATION_PATH_MAP);
 		return new PathMapperCompositeFragment(parent, controlHandler, true);
 	}
 

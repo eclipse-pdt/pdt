@@ -43,6 +43,7 @@ import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPexeDescriptor;
 import org.eclipse.php.internal.debug.ui.preferences.phps.PHPsComboBlock;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
@@ -54,6 +55,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * PHP executable launch tab is a launch configuration tab for the PHP Script launching.
@@ -222,6 +224,9 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		createVerticalSpacer(mainComposite, 1);
 
 		Dialog.applyDialogFont(parent);
+
+		//HELP
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.LOCALLY_DEBUGGING_A_PHP_SCRIPT);
 	}
 
 	/**

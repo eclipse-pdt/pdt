@@ -1,6 +1,7 @@
 package org.eclipse.php.internal.debug.ui.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -8,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 public class WorkbenchOptionsPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -27,6 +29,8 @@ public class WorkbenchOptionsPreferencePage extends PreferencePage implements IW
 		workbenchOptionsBlock.setCompositeAddon(comp);
 		workbenchOptionsBlock.initializeValues(this);
 
+		//HELP
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.WORKBENCH_OPTIONS);
 		return comp;
 	}
 

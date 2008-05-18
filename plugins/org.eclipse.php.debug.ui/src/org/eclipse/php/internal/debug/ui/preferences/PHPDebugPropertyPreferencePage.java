@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.ui.preferences;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPropertyPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The main PHP | Debug preferences page.
@@ -72,6 +74,7 @@ public class PHPDebugPropertyPreferencePage extends AbstractPHPPropertyPreferenc
 		debugPreferencesBlock.setCompositeAddon(comp);
 		debugPreferencesBlock.initializeValues(this);
 
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.DEBUG_PREFERENCES);
 		return comp;
 	}
 

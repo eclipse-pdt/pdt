@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
@@ -34,9 +35,9 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
-
 
 public class DebugBrowserView extends ViewPart implements ISelectionListener{
 
@@ -119,6 +120,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
             fPartListener= new DebugViewPartListener();
             getSite().getPage().addPartListener(fPartListener);
         }
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.BROWSER_OUTPUT_VIEW);
 	}
 
 	/* (non-Javadoc)

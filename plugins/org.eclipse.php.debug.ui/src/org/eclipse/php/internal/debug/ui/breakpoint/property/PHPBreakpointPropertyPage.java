@@ -74,6 +74,8 @@ public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenc
 			}
 
 		});
+		//HELP - waiting for keren
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IStudioHelpContextIds.???);
 		return parent;
 	}
 
