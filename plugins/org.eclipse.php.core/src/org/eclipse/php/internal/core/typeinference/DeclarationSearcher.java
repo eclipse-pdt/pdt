@@ -7,13 +7,14 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
 
 class DeclarationSearcher extends ASTVisitor {
 
-	enum DeclarationType { METHOD, CLASS };
+	enum DeclarationType { METHOD, CLASS, FIELD };
 
 	private int bestScore = Integer.MAX_VALUE;
 	private int modelStart;
@@ -66,6 +67,16 @@ class DeclarationSearcher extends ASTVisitor {
 	public boolean visit(Expression s) throws Exception {
 		if (!interesting(s)) {
 			return false;
+		}
+		return true;
+	}
+	
+	public boolean visit(Statement s) throws Exception {
+		if (!interesting(s)) {
+			return false;
+		}
+		if (declarationType == DeclarationType.FIELD && s instanceof Declaration) {
+			checkElementDeclaration((Declaration)s);
 		}
 		return true;
 	}

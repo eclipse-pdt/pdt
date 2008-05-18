@@ -212,4 +212,87 @@ public class ASTUtils {
 
 		return visitor.getContext();
 	}
+
+	/**
+	 * Finds type inference context for the given offset.
+	 * 
+	 * @param sourceModule Source module element
+	 * @param unit Module decalaration AST node 
+	 * @param offset Offset in the filetarget
+	 */
+	public static IContext findContext(final ISourceModule sourceModule, final ModuleDeclaration unit, final int offset) {
+
+		class Visitor extends ASTVisitor {
+
+			private IContext context;
+			private Stack<IContext> contextStack = new Stack<IContext>();
+
+			/**
+			 * Returns found context
+			 * @return found context
+			 */
+			public IContext getContext() {
+				return context;
+			}
+
+			public boolean visitGeneral(ASTNode node) throws Exception {
+				if (node.sourceStart() <= offset && node.sourceEnd() >= offset && node.getChilds().size() == 0) {
+					context = contextStack.peek();
+					return false;
+				}
+				return context == null;
+			}
+
+			public boolean visit(ModuleDeclaration node) throws Exception {
+				contextStack.push(new BasicContext(sourceModule, node));
+				return visitGeneral(node);
+			}
+
+			public boolean visit(TypeDeclaration node) throws Exception {
+				contextStack.push(new InstanceContext((ISourceModuleContext) contextStack.peek(), new PHPClassType(node.getName())));
+				return visitGeneral(node);
+			}
+
+			@SuppressWarnings("unchecked")
+			public boolean visit(MethodDeclaration node) throws Exception {
+				List<String> argumentsList = new LinkedList<String>();
+				List<IEvaluatedType> argTypes = new LinkedList<IEvaluatedType>();
+				List<Argument> args = node.getArguments();
+				for (Argument a : args) {
+					argumentsList.add(a.getName());
+					argTypes.add(UnknownType.INSTANCE);
+				}
+				IContext parent = contextStack.peek();
+				ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
+				contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
+				return visitGeneral(node);
+			}
+
+			public boolean endvisit(ModuleDeclaration node) throws Exception {
+				contextStack.pop();
+				return visitGeneral(node);
+			}
+
+			public boolean endvisit(TypeDeclaration node) throws Exception {
+				contextStack.pop();
+				return visitGeneral(node);
+			}
+
+			public boolean endvisit(MethodDeclaration node) throws Exception {
+				contextStack.pop();
+				endvisitGeneral(node);
+				return true;
+			}
+		}
+
+		Visitor visitor = new Visitor();
+
+		try {
+			unit.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+
+		return visitor.getContext();
+	}
 }

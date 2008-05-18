@@ -18,6 +18,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -27,7 +30,7 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProje
 
 public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
-	public static final String CONTAINER_PATH = "org.eclipse.php.core.LANGUAGE";
+	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
 
 	public LanguageModelInitializer() {
@@ -37,9 +40,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
 				if (isPHPProject(project)) {
-					DLTKCore.setBuildpathContainer(containerPath,
-						new IScriptProject[] { project },
-						new IBuildpathContainer[] { getBuildpathContainer(project, containerPath) }, null);
+					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { project }, new IBuildpathContainer[] { getBuildpathContainer(project, containerPath) }, null);
 				}
 			} catch (Exception e) {
 				Logger.logException(e);
@@ -121,17 +122,22 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 
 		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
+			IEnvironment environment = EnvironmentManager.getEnvironment(project);
+			IPath path = libraryPath;
+			if (environment != null) {
+				path = EnvironmentPathUtils.getFullPath(environment, path);
+			}
 			return new IBuildpathEntry[] {
-				DLTKCore.newLibraryEntry(libraryPath, BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES,
+				DLTKCore.newLibraryEntry(path, BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES,
 					BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true)
 			};
 		}
 
-		public IBuiltinModuleProvider getBuiltinProvider(/*IScriptProject project*/) {
+		public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
 			return null;
 		}
 
-		public String getDescription(/*IScriptProject project*/) {
+		public String getDescription(IScriptProject project) {
 			return "PHP Language Library";
 		}
 

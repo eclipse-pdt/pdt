@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.mixin.IncludeField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
@@ -122,9 +123,9 @@ public class FileNetworkUtility {
 		final IBuffer buffer = sourceModule.getBuffer();
 
 		if (buffer != null) {
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { sourceModule });
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule);
 			SearchEngine engine = new SearchEngine();
-			SearchPattern pattern = SearchPattern.createPattern("include", IDLTKSearchConstants.METHOD, IDLTKSearchConstants.REFERENCES, SearchPattern.R_EXACT_MATCH);
+			SearchPattern pattern = SearchPattern.createPattern("include", IDLTKSearchConstants.METHOD, IDLTKSearchConstants.REFERENCES, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 			engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					String text = buffer.getText(match.getOffset(), match.getLength());

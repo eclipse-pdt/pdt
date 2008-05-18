@@ -46,11 +46,17 @@ public class PHPMixinModel {
 	}
 
 	public IModelElement[] getMethod(String className, String methodName) {
+		if (className == null) {
+			return getFunction(methodName);
+		}
 		IMixinElement[] elements = model.find(className + PHPMixinParser.CLASS_SUFFIX + MixinModel.SEPARATOR + methodName);
 		return filterElements(elements, PHPMixinElementInfo.K_METHOD);
 	}
 
 	public IModelElement[] getMethodDoc(String className, String methodName) {
+		if (className == null) {
+			return getFunctionDoc(methodName);
+		}
 		IMixinElement[] elements = model.find(className + PHPMixinParser.CLASS_SUFFIX + MixinModel.SEPARATOR + methodName);
 		return filterElements(elements, PHPMixinElementInfo.K_PHPDOC);
 	}

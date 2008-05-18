@@ -10,8 +10,10 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -24,6 +26,7 @@ import org.eclipse.dltk.core.search.SearchParticipant;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinBuildVisitor;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
@@ -31,7 +34,7 @@ import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 
 public class PHPModelUtils {
-	
+
 	/**
 	 * Finds model element that corresponds to the given AST node
 	 * @param sourceModule Source module (file model element)
@@ -41,14 +44,14 @@ public class PHPModelUtils {
 	 */
 	public static IModelElement getModelElementByNode(ISourceModule sourceModule, ModuleDeclaration unit, ASTNode node) {
 		Assert.isNotNull(node);
-		
+
 		String key = PHPMixinBuildVisitor.restoreKeyByNode(sourceModule, unit, node);
 		if (key != null) {
 			IMixinElement[] elements = PHPMixinModel.getRawInstance().find(key);
 			if (elements.length > 0) {
 				Object[] allObjects = elements[0].getAllObjects();
 				if (allObjects.length > 0) {
-					return (IModelElement) ((PHPMixinElementInfo)allObjects[0]).getObject();
+					return (IModelElement) ((PHPMixinElementInfo) allObjects[0]).getObject();
 				}
 			}
 		}
@@ -69,7 +72,7 @@ public class PHPModelUtils {
 		}
 
 		IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
+		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
 		final List<IMethod> methods = new LinkedList<IMethod>();
 		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
@@ -95,7 +98,7 @@ public class PHPModelUtils {
 		}
 
 		IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
+		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
 		final List<PHPDocField> docs = new LinkedList<PHPDocField>();
 		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
@@ -130,5 +133,19 @@ public class PHPModelUtils {
 		}
 		return (TypeDeclaration) visitor.getResult();
 	};
+	
+	public static ASTNode getNodeByField(ModuleDeclaration rootNode, IField field) throws ModelException {
+		DeclarationSearcher visitor = new DeclarationSearcher(rootNode, field, DeclarationType.FIELD);
+		try {
+			rootNode.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return (ASTNode) visitor.getResult();
+	};
 
+	public static IDLTKSearchScope createProjectSearchScope(IScriptProject project) {
+		int includeMask = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES | IDLTKSearchScope.REFERENCED_PROJECTS | IDLTKSearchScope.SYSTEM_LIBRARIES;
+		return SearchEngine.createSearchScope(project, includeMask);
+	}
 }
