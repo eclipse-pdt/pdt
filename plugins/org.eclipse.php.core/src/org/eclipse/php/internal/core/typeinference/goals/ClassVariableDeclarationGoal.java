@@ -1,18 +1,37 @@
 package org.eclipse.php.internal.core.typeinference.goals;
 
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 
 public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements IGoal {
 
+	private IType[] types;
 	private String variableName;
 
 	public ClassVariableDeclarationGoal(InstanceContext context, String variableName) {
 		super(context);
 		this.variableName = variableName;
 	}
+	
+	/**
+	 * Use this constructor when containing classes are already known
+	 * @param context
+	 * @param types
+	 * @param variableName
+	 */
+	public ClassVariableDeclarationGoal(IContext context, IType[] types, String variableName) {
+		super(context);
+		this.types = types;
+		this.variableName = variableName;
+	}
 
+	public IType[] getTypes() {
+		return types;
+	}
+	
 	public String getVariableName() {
 		return variableName;
 	}

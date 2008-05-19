@@ -44,16 +44,18 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 	public IGoal[] init() {
 		ClassVariableDeclarationGoal typedGoal = (ClassVariableDeclarationGoal) goal;
-		InstanceContext context = (InstanceContext) typedGoal.getContext();
+		IType[] types = typedGoal.getTypes();
 
-		final List<IGoal> subGoals = new LinkedList<IGoal>();
-
-		IType[] types = getTypes(context.getInstanceType(), context.getSourceModule());
+		if (types == null) {
+			InstanceContext context = (InstanceContext) typedGoal.getContext();
+			types = getTypes(context.getInstanceType(), context.getSourceModule());
+		}
 
 		String variableName = typedGoal.getVariableName();
 		SearchEngine searchEngine = new SearchEngine();
 		SearchParticipant[] participants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
 
+		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (IType type : types) {
 			final ISourceModule sourceModule = type.getSourceModule();
 			final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
@@ -77,8 +79,11 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				}
 			};
 			try {
-				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
 				SearchPattern pattern = SearchPattern.createPattern(variableName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+				searchEngine.search(pattern, participants, scope, requestor, null);
+				
+				scope = SearchEngine.createSearchScope(type);
 				searchEngine.search(pattern, participants, scope, requestor, null);
 			} catch (CoreException e) {
 				Logger.logException(e);
