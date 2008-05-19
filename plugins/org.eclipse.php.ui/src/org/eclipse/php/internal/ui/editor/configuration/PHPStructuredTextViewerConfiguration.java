@@ -19,7 +19,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.AbstractInformationControlManager;
+import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -141,11 +147,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		IContentAssistProcessor[] processors = null;
 
 		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
-			ArrayList<IContentAssistProcessor> processorsList = getPHPProcessors(partitionType);
+			ArrayList<IContentAssistProcessor> processorsList = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
 			processors = new IContentAssistProcessor[processorsList.size()];
 			processorsList.toArray(processors);
 		} else {
-			ArrayList<IContentAssistProcessor> phpDocProcessors = getPHPProcessors(partitionType);
+			ArrayList<IContentAssistProcessor> phpDocProcessors = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
 			IContentAssistProcessor[] superProcessors = super.getContentAssistProcessors(sourceViewer, partitionType);
 			if (superProcessors != null) {
 				for (IContentAssistProcessor processor : superProcessors) {
@@ -158,12 +164,13 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		return processors;
 	}
 
-	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType) {
+	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType, PHPStructuredTextViewer viewer) {
 		if (processorsCache.get(partitionType) != null) {
 			return processorsCache.get(partitionType);
 		}
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
 		processors.add(new PHPContentAssistProcessor());
+//		processors.add(new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT));
 		processors.add(new PHPDocContentAssistProcessor());
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTENT_ASSIST_PROCESSOR_EXT);

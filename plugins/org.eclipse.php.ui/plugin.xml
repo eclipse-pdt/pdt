@@ -1561,6 +1561,18 @@
     </editorContribution>
  </extension>
  <extension
+       id="PHPCompletionProposalComputer"
+       point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
+    <scriptCompletionProposalComputer
+          categoryId="org.eclipse.dltk.ui.scriptTypeProposalCategory"
+          class="org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProposalComputer"
+          toolkitId="org.eclipse.php.core.PHPNature">
+       <partition
+             type="org.eclipse.php.PHP_DEFAULT">
+       </partition>
+    </scriptCompletionProposalComputer>
+ </extension>
+ <extension
        point="org.eclipse.dltk.ui.language">
     <language
           class="org.eclipse.php.internal.ui.PHPUILanguageToolkit"
@@ -1568,6 +1580,5 @@
           priority="1">
     </language>
  </extension>
-	
 	
 </plugin>
