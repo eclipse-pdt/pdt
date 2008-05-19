@@ -715,6 +715,24 @@ public abstract class ASTNode implements Visitable {
 	}
 
 	/**
+	 * Returns the root node at or above this node; returns this node if 
+	 * it is a root.
+	 * 
+	 * @return the root node at or above this node
+	 */ 
+	public final ASTNode getRoot() {
+		ASTNode candidate = this;
+		while (true) {
+			ASTNode p = candidate.getParent();
+			if (p == null) {
+				// candidate has no parent - that's the guy
+				return candidate;
+			}
+			candidate = p;
+		}
+	}
+	
+	/**
 	 * Sets the source range of the original source file where the source
 	 * fragment corresponding to this node was found.
 	 * <p>
