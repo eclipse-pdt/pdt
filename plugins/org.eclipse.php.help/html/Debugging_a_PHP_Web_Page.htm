@@ -30,18 +30,19 @@ img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs13 { list-style:decimal; }
 img_whs14 { border:none; width:39px; height:25px; float:none; border-style:none; }
-img_whs15 { border:none; width:543px; height:401px; float:none; border-style:none; }
+img_whs15 { border:none; border-style:none; width:429px; height:336px; float:none; }
 img_whs16 { border:none; width:424px; height:216px; float:none; border-style:none; }
-td.whs17 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-table.whs18 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-td.whs19 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-img_whs21 { border:none; width:28px; height:18px; float:none; border-style:none; }
-p.whs22 { font-weight:normal; }
-p.whs23 { x-condition:Online; }
-div.whs24 { width:100%; }
-p.whs25 { text-align:right; x-condition:Online; }
-p.whs26 { text-align:center; x-condition:PDT; text-decoration:underline; }
+ul.whs17 { list-style:decimal; }
+td.whs18 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs19 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs20 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs21 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs22 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs23 { font-weight:normal; }
+p.whs24 { x-condition:Online; }
+div.whs25 { width:100%; }
+p.whs26 { text-align:right; x-condition:Online; }
+p.whs27 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -145,7 +146,7 @@ The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/co
 	<li style="margin-left: -20px;" class=p><p>Double-click the PHP Web 
  Page option to create a new debug configuration.</p></li>
 </ol>
-<p class=picture>&nbsp;<img src="debug_new_phpwebpage_config.png" x-maintain-ratio="TRUE" width="543px" height="401px" border="0" class="img_whs15"></p>
+<p class=picture>&nbsp;<img src="debug_configuration_webpage.png" x-maintain-ratio="TRUE" width="429px" height="336px" border="0" class="img_whs15"></p>
 <ol start="3" type="1" class="whs13">
 	<li style="margin-left: -20px;" class=p><p>Enter a name for the new 
  configuration.</p></li>
@@ -153,12 +154,15 @@ The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/co
  to be used. <span style="x-condition: PDT;">PDT </span><span 
  style="x-condition: PDT;">supports both the Zend Debugger and XDebug.</span></p></li>
 	<li style="margin-left: -20px;" class=p><p>Select your server from 
- the list.<br>
-	If you have not yet configured your server, click New. The PHP Server 
- Creation Wizard will open.<br>
+ the PHP Server list.<br>
+	If you have not yet configured your server, click New.<br>
+	The PHP Server Creation Wizard will open.<br>
 	Configure your server by following the instructions on '<a href="PHP_Servers.htm#Adding_servers">adding 
  a new server</a>' under the <a HREF="PHP_Servers.htm">PHP Servers Preferences</a> 
  page.</p></li>
+	<li style="margin-left: -20px;" class=p><p>To check whether your server 
+ connection is correctly configured, and that PDT can communicate with 
+ your server debugger, click the 'Check Debug Server Connection' button.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Under PHP File, click Browse 
  and select your 'debug target' file (the file from which the debugging 
  process will start.)</p></li>
@@ -173,7 +177,7 @@ The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/co
  select the Advanced tab, which has the following options:</p></li>
 </ol>
 <p class=picture style="x-condition: PDT;"><img src="debug_new_phpwebpage_advanced_config_pdt.png" x-maintain-ratio="TRUE" width="424px" height="216px" border="0" class="img_whs16"></p>
-<ol start="10" type="1" class="whs13">
+<ul start="10" type="1" class="whs17">
 	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Open 
  in Browser - Mark if you would like the application to be displayed in 
  PDT's 
@@ -190,14 +194,14 @@ The Zend Debugger comes bundled with <a href="http://www.zend.com/en/products/co
 	<li class=p-ListBullet2><p class=ListBullet2>Continue Debug from this 
  Page - Selecting this option will result in all <span style="text-align: left;">the 
  pages linked to the URL being debugged.</span></p></li>
-	</ol>
+	</ul>
 <ol start="10" type="1" class="whs13">
 	<li style="margin-left: -20px;" class=p><p>Click Apply and then Debug.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Click Yes if asked whether 
  to open the PHP Debug Perspective.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs5">
-<td rowspan="1" colspan="2" width="100%" class="whs17">
+<td rowspan="1" colspan="2" width="100%" class="whs18">
 <p>See the &quot;<a href="Analyzing_Debugger_Results.htm">Running and Analyzing 
  Debugger results</a>&quot; topic for more information on the outcome of 
  a debugging process.</td>
@@ -214,45 +218,43 @@ In addition, if a file defined with an absolute path to a server location
  file locations) is called, a Path Mapping dialog will appear. See <a HREF="Path_Mapping.htm">Path 
  Mapping</a> for more information.</p>
 </div>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs18">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs19">
 <col class="whs3">
 <col class="whs4">
 
 <tr valign="top" class="whs5">
-<td colspan="1" rowspan="1" width="7.093%" class="whs19">
+<td colspan="1" rowspan="1" width="7.093%" class="whs20">
 <p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs20">
+<td colspan="1" rowspan="1" width="92.907%" class="whs21">
 <p>&nbsp;</td></tr>
 <tr valign="top" class="whs5">
 <td width="7.093%" class="whs10">
-<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs21"></td>
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
 <td width="92.907%" class="whs12">
 <p class="whs9">Related Links:</p>
-<p class="whs22"><a HREF="Troubleshooting_Remote_Debugging.htm"><span 
+<p class="whs23"><a HREF="Troubleshooting_Remote_Debugging.htm"><span 
  style="font-weight: normal;">Setting Up Remote Debugging</span></a></p>
-<p class="whs23"><a href="Working_with_the_Debugger.htm"><span 
+<p class="whs24"><a href="Working_with_the_Debugger.htm"><span 
  style="x-condition: Online;">Working with the Debugger</span></a></p>
-<p class="whs23"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
-<p class="whs23"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
+<p class="whs24"><a href="Debugging.htm"><span style="x-condition: Online;">Debugging</span></a></p>
+<p class="whs24"><a href="Debug.htm"><span style="x-condition: Online;">Debug 
  Preferences</span></a></p>
-<p class="whs23"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
+<p class="whs24"><a href="Locally_Debugging_a_PHP_Script.htm"><span 
  style="x-condition: Online;">Locally Debugging a PHP Script</span></a></p>
-<p class="whs23"><a href="Analyzing_Debugger_Results.htm"><span 
- style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></p>
-<p class="whs23"><a href="Run.htm" style="x-condition: Online;">Run 
- Menu</a></td></tr>
+<p class="whs24"><a href="Analyzing_Debugger_Results.htm"><span 
+ style="x-condition: Online;">Running and Analyzing Debugger Results</span></a></td></tr>
 <tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs10">
 <p class="whs7">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs12">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs24">
- <p align="right" class="whs25"><span><span 
+<div placeholder id="footer" class="whs25">
+ <p align="right" class="whs26"><span><span 
  style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs26">PHP Development 
+ <p align="center" class="whs27">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
