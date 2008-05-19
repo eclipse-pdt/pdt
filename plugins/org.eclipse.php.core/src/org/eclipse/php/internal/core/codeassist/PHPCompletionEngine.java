@@ -38,9 +38,7 @@ import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.internal.core.util.WeakHashSet;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
-import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
@@ -54,7 +52,6 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.phpModel.PHPKeywords;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.FakeField;
@@ -77,11 +74,17 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPCompletionEngine extends ScriptCompletionEngine {
 
+	private static final String CLASS = "class"; //$NON-NLS-1$
+	private static final String FUNCTION = "function"; //$NON-NLS-1$
+	private static final String DESTRUCTOR = "__destruct"; //$NON-NLS-1$
+	private static final String CONSTRUCTOR = "__construct"; //$NON-NLS-1$
+	private static final String DOLLAR = "$"; //$NON-NLS-1$
+	private static final String BRACKETS_SUFFIX = "()"; //$NON-NLS-1$
+	private static final String EMPTY = ""; //$NON-NLS-1$
+	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private final static int RELEVANCE_FREE_SPACE = 10000000;
 	private final static int RELEVANCE_KEYWORD = 1000000;
 	private final static int RELEVANCE_METHODS = 100000;
-
-	private static final String WILDCARD = "*";
 
 	protected final static String[] phpVariables = { "$_COOKIE", "$_ENV", "$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", "$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", "$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", "$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", };
 
@@ -112,7 +115,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final Pattern catchPattern = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
 
-	private static String[] CLASS_KEYWORDS = { "abstract", "const", "function", "private", "protected", "public", "static", "var" }; // must be ordered!
+	private static String[] CLASS_KEYWORDS = { "abstract", "const", FUNCTION, "private", "protected", "public", "static", "var" }; // must be ordered!
 
 	protected HashSet<String> completedNames = new HashSet<String>();
 	protected WeakHashSet intresting = new WeakHashSet();
@@ -238,7 +241,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
 			IStructuredDocumentRegion preSdRegion = null;
 			if (preTextRegion != null || (preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null) {
-				if (preTextRegion.getType() == "") { //$NON-NLS-1$
+				if (preTextRegion.getType() == EMPTY) { //$NON-NLS-1$
 					// FIXME needs to be fixed. The problem is what to do if the cursor is exatly between problematic regions, e.g. single line comment and quoted string??
 				}
 			}
@@ -304,7 +307,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
-		if (haveSpacesAtEnd && isNewOrInstanceofStatement(lastWord, "", offset, explicit, type)) { //$NON-NLS-1$
+		if (haveSpacesAtEnd && isNewOrInstanceofStatement(lastWord, EMPTY, offset, explicit, type)) { //$NON-NLS-1$
 			// the current position is inside new or instanceof statement.
 			return;
 		}
@@ -321,9 +324,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (!haveSpacesAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, explicit, type)) {
 			// the current position is inside new or instanceof statement.
-			if (lastWord.startsWith("$")) {
+			if (lastWord.startsWith(DOLLAR)) {
 				if (haveSpacesAtEnd) {
-					getRegularCompletion("", offset, explicit, container, phpScriptRegion, internalPHPRegion, document); //$NON-NLS-1$
+					getRegularCompletion(EMPTY, offset, explicit, container, phpScriptRegion, internalPHPRegion, document); //$NON-NLS-1$
 				} else {
 					getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
 				}
@@ -347,7 +350,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (haveSpacesAtEnd) {
-			getRegularCompletion("", offset, explicit, container, phpScriptRegion, internalPHPRegion, document); //$NON-NLS-1$
+			getRegularCompletion(EMPTY, offset, explicit, container, phpScriptRegion, internalPHPRegion, document); //$NON-NLS-1$
 		} else {
 			getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
 		}
@@ -388,18 +391,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return false;
 	}
 
-	protected void reportVariables(String[] variables, String prefix, int relevance) {
+	protected void reportVariables(String[] variables, String prefix, int relevance, boolean removeDollar) {
 		for (String var : variables) {
 			if (var.startsWith(prefix)) {
-				reportField(new FakeField((ModelElement) sourceModule, var, 0, 0), relevance--);
-			}
-		}
-	}
-
-	protected void reportVariablesWithoutDollar(String[] variables, String prefix, int relevance) {
-		for (String var : variables) {
-			if (var.startsWith(prefix)) {
-				reportField(new FakeField((ModelElement) sourceModule, var.substring(1), 0, 0), relevance--);
+				reportField(new FakeField((ModelElement) sourceModule, var, 0, 0), relevance--, removeDollar);
 			}
 		}
 	}
@@ -409,25 +404,21 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int relevance = 424242;
 		if (arrayName.equals("$_SERVER") || arrayName.equals("$HTTP_SERVER_VARS")) { //$NON-NLS-1$ //$NON-NLS-2$
-			reportVariablesWithoutDollar(serverVaraibles, prefix, relevance);
+			reportVariables(serverVaraibles, prefix, relevance, true);
 			return;
 		}
 		if (arrayName.equals("$_SESSION") || arrayName.equals("$HTTP_SESSION_VARS")) { //$NON-NLS-1$ //$NON-NLS-2$
-			reportVariablesWithoutDollar(sessionVariables, prefix, relevance);
+			reportVariables(sessionVariables, prefix, relevance, true);
 			return;
 		}
 		if (arrayName.equals("$GLOBALS")) { //$NON-NLS-1$
 			IModelElement[] elements = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
-				try {
-					FakeField fakeField = new FakeField((ModelElement) field.getParent(), field.getElementName().substring(1), field.getSourceRange().getOffset(), field.getSourceRange().getLength());
-					reportField(fakeField, relevance--);
-				} catch (ModelException e) {
-				}
+				reportField(field, relevance--, true);
 			}
 
-			reportVariablesWithoutDollar(phpVariables, prefix, relevance);
+			reportVariables(phpVariables, prefix, relevance, true);
 			return;
 		}
 	}
@@ -486,12 +477,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (internalPhpRegion != null) {
 			final String type = internalPhpRegion.getType();
 
-			if (prefix.startsWith("$") && !inClass) { //$NON-NLS-1$
+			if (prefix.startsWith(DOLLAR) && !inClass) { //$NON-NLS-1$
 				if (!explicit && !autoShowVariables)
 					return;
 				try {
 					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name.
-					if (!explicit && prefix.equals("$") && document.getLength() != offset && Character.isLetter(document.getChar(offset))) { //$NON-NLS-1$
+					if (!explicit && prefix.equals(DOLLAR) && document.getLength() != offset && Character.isLetter(document.getChar(offset))) { //$NON-NLS-1$
 						return;
 					}
 				} catch (BadLocationException e) {
@@ -508,11 +499,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 
 				int relevance = 424242;
-				reportVariables(phpVariables, prefix, relevance--);
+				reportVariables(phpVariables, prefix, relevance--, false);
 
 				IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null);
 				for (IModelElement var : variables) {
-					reportField((IField) var, relevance--);
+					reportField((IField) var, relevance--, false);
 				}
 				return;
 			}
@@ -541,7 +532,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				int relevance = 4242;
 				IModelElement[] constants = PHPMixinModel.getInstance().getConstant(prefix + WILDCARD, null);
 				for (IModelElement constant : constants) {
-					reportField((IField) constant, relevance--);
+					reportField((IField) constant, relevance--, false);
 				}
 			}
 		}
@@ -552,7 +543,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					int relevance = 424242;
 					IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
 					for (IModelElement type : classes) {
-						reportType((IType) type, relevance--);
+						reportType((IType) type, relevance--, EMPTY);
 					}
 				}
 			}
@@ -560,7 +551,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return;
 	}
 
-	private String[] filterClassKeywords(String[] keywords) {
+	private static String[] filterClassKeywords(String[] keywords) {
 		List<String> filteredKeywords = new LinkedList<String>();
 		for (int i = 0, j = 0; i < keywords.length && j < CLASS_KEYWORDS.length;) {
 			int compared = keywords[i].compareTo(CLASS_KEYWORDS[j]);
@@ -576,7 +567,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 		return filteredKeywords.toArray(new String[filteredKeywords.size()]);
 	}
-
+	
+	private static boolean startsWithIgnoreCase(String word, String prefix) {
+		return word.toLowerCase().startsWith(prefix.toLowerCase());
+	}
+	
 	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit) {
 		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition);
 		if (startFunctionPosition <= 2) {
@@ -598,32 +593,32 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 
-		IType[] className = getClassName(sourceModule, statementText, startFunctionPosition, offset, line);
+		IType[] types = getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line);
 
 		if (haveSpacesAtEnd && functionName.length() > 0) {
 			// check if current position is between the end of a function call and open bracket.
-			return isClassFunctionCall(sourceModule, className, functionName);
+			return isClassFunctionCall(sourceModule, types, functionName);
 		}
 
 		if (isClassTriger) {
 			if (isParent) {
-				if (className != null) { //$NON-NLS-1$
-					showClassStaticCall(offset, className, functionName, explicit);
+				if (types != null) { //$NON-NLS-1$
+					showClassStaticCall(offset, types, functionName, explicit);
 				}
 			} else {
-				showClassStaticCall(offset, className, functionName, explicit);
+				showClassStaticCall(offset, types, functionName, explicit);
 			}
 		} else {
 			String parent = statementText.toString().substring(0, statementText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
 			boolean isInstanceOf = !parent.equals("$this"); //$NON-NLS-1$
 			//boolean addVariableDollar = parent.endsWith("()");
 			boolean addVariableDollar = false;
-			showClassCall(offset, className, functionName, isInstanceOf, addVariableDollar, explicit);
+			showClassCall(offset, types, functionName, isInstanceOf, addVariableDollar, explicit);
 		}
 		return true;
 	}
 
-	protected IType[] getClassName(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line) {
+	protected IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read whitespace
 
 		boolean isClassTriger = false;
@@ -646,27 +641,27 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, lastObjectOperator + 2);
 		String propertyName = statementText.subSequence(propertyStartPosition, propertyEndPosition).toString();
-		IType[] className = getClassName(sourceModule, statementText, propertyStartPosition, offset, line);
+		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset, line);
 
 		int bracketIndex = propertyName.indexOf('(');
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVariableType(className, propertyName, offset, line);
+			return getVariableType(types, propertyName, offset, line);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
-		Set<IType> types = new HashSet<IType>();
-		for (IType type : className) {
+		Set<IType> result = new HashSet<IType>();
+		for (IType type : types) {
 			IType[] returnTypes = getFunctionReturnType(type, functionName);
-			types.addAll(Arrays.asList(returnTypes));
+			result.addAll(Arrays.asList(returnTypes));
 		}
-		return types.toArray(new IType[types.size()]);
+		return result.toArray(new IType[result.size()]);
 	}
 
-	protected IType[] getVariableType(IType[] className, String propertyName, int offset, int line) {
+	protected IType[] getVariableType(IType[] types, String propertyName, int offset, int line) {
 		try {
-			for (IType type : className) {
+			for (IType type : types) {
 				IField[] fields = type.getFields();
 				for (IField field : fields) {
 					if (field.getElementName().startsWith(propertyName)) {
@@ -703,27 +698,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return null;
 	}
 
-	protected IType[] getFunctionReturnType(String className, String functionName, int offset) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
-		InstanceContext context = new InstanceContext((SourceModule) sourceModule, moduleDeclaration, new PHPClassType(className));
-		if (context != null) {
-			MethodReturnTypeGoal goal = new MethodReturnTypeGoal(context, functionName, new IEvaluatedType[0]);
-			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-			IEvaluatedType type = typeInferencer.evaluateType(goal);
-			IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(type.getTypeName());
-			return modelElementsToTypes(modelElements);
-		}
-		return null;
-	}
-
-	protected IType[] getFunctionReturnType(IType className, String functionName) {
+	protected IType[] getFunctionReturnType(IType type, String functionName) {
 		try {
-			IMethod[] classMethod = PHPModelUtils.getClassMethod(className, functionName, null);
+			IMethod[] classMethod = PHPModelUtils.getClassMethod(type, functionName, null);
 			if (classMethod.length > 0) {
 				MethodElementReturnTypeGoal goal = new MethodElementReturnTypeGoal(classMethod[0]);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-				IEvaluatedType type = typeInferencer.evaluateType(goal);
-				IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(type.getTypeName());
+				IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
+				IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(evaluatedType.getTypeName());
 				return modelElementsToTypes(modelElements);
 			}
 		} catch (CoreException e) {
@@ -776,7 +758,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				// $GLOBALS['myVar'] => 'myVar'
 				String quotedVarName = testedVar.substring(testedVar.indexOf('[') + 1, testedVar.indexOf(']')).trim();
 				// 'myVar' => $myVar
-				className = "$" + quotedVarName.substring(1, quotedVarName.length() - 1); //$NON-NLS-1$
+				className = DOLLAR + quotedVarName.substring(1, quotedVarName.length() - 1); //$NON-NLS-1$
 			}
 		}
 		// if its object call calc the object type.
@@ -818,84 +800,47 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return false;
 	}
 
-	protected void showClassCall(int offset, String className, String startWith, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
-		this.setSourceRange(offset - startWith.length(), offset);
-
-		// collecting multiple classes in case class name has string separated by "|", which may be used in doc-block
-		String[] classNames = className.split(PHPModelUtil.PHPDOC_CLASS_NAME_SEPARATOR);
-		for (String realClassName : classNames) {
-			realClassName = realClassName.trim();
-			if (explicit || autoShowFunctionsKeywordsConstants) {
-				IModelElement[] methods = PHPMixinModel.getInstance().getMethod(realClassName, startWith + WILDCARD);
-				for (IModelElement method : methods) {
-					reportMethod((IMethod) method, RELEVANCE_METHODS);
-				}
-			}
-			if (explicit || autoShowVariables) {
-				IModelElement[] variables = PHPMixinModel.getInstance().getVariable(WILDCARD, null, realClassName);
-				int relevance = 424242;
-				for (IModelElement var : variables) {
-					IField variable = (IField) var;
-					try {
-						if ((variable.getFlags() & Modifiers.AccStatic) != 0) {
-							reportField(variable, relevance--);
-						}
-					} catch (ModelException e) {
-						Logger.logException(e);
-					}
-				}
-
-			}
-		}
-	}
-
-	protected void showClassCall(int offset, IType[] className, String startWith, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
+	protected void showClassCall(int offset, IType[] className, String prefix, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
 		if (className == null) {
 			return;
 		}
 
-		this.setSourceRange(offset - startWith.length(), offset);
+		this.setSourceRange(offset - prefix.length(), offset);
 
 		for (IType type : className) {
 			if (explicit || autoShowFunctionsKeywordsConstants) {
-				IMethod[] methods = getClassMethods(type, startWith);
+				IMethod[] methods = getClassMethods(type, prefix);
 				for (IModelElement method : methods) {
 					reportMethod((IMethod) method, RELEVANCE_METHODS);
 				}
 			}
 			if (explicit || autoShowVariables) {
-				IModelElement[] variables = getClassFields(type, startWith);
-				int relevance = 4242;
-				for (IModelElement var : variables) {
-					IField variable = (IField) var;
-					try {
-						if ((variable.getFlags() & Modifiers.AccStatic) != 0) {
-							reportField(variable, relevance--);
-						}
-					} catch (ModelException e) {
-						Logger.logException(e);
-					}
+				IModelElement[] fields = getClassFields(type, prefix);
+				int relevance = 424242;
+				for (IModelElement element : fields) {
+					IField field = (IField) element;
+					reportField(field, relevance--, true);
 				}
 
 			}
 		}
 	}
 
-	protected static IMethod[] getClassMethods(IType type, String startsWith) {
+	protected static IMethod[] getClassMethods(IType type, String prefix) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
 			IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-			SearchPattern pattern = SearchPattern.createPattern(startsWith + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+			SearchPattern pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
 
 			new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					methods.add((IMethod) match.getElement());
 				}
 			}, null);
-			
+
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
-				if (typeMethod.getElementName().startsWith(startsWith)) {
+				if (startsWithIgnoreCase(typeMethod.getElementName(), prefix)) {
 					methods.add(typeMethod);
 				}
 			}
@@ -905,21 +850,32 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
-	protected static IField[] getClassFields(IType type, String startsWith) {
+	protected static IField[] getClassFields(IType type, String prefix) {
 		final Set<IField> fields = new HashSet<IField>();
 		try {
 			IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-			SearchPattern pattern = SearchPattern.createPattern(startsWith + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
 
+			// search for constants
+			SearchPattern pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
 			new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					fields.add((IField) match.getElement());
 				}
 			}, null);
 			
+			// search for variables
+			pattern = SearchPattern.createPattern(DOLLAR + prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+			new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					fields.add((IField) match.getElement());
+				}
+			}, null);
+
+			// search for all fields
 			IField[] typeFields = type.getFields();
 			for (IField typeField : typeFields) {
-				if (typeField.getElementName().startsWith(startsWith)) {
+				String elementName = typeField.getElementName();
+				if (elementName.startsWith(prefix) || (elementName.startsWith(DOLLAR) && elementName.substring(1).startsWith(prefix))) {
 					fields.add(typeField);
 				}
 			}
@@ -929,10 +885,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return fields.toArray(new IField[fields.size()]);
 	}
 
-	protected void showClassStaticCall(int offset, IType[] className, String startWith, boolean explicit) {
+	protected void showClassStaticCall(int offset, IType[] className, String prefix, boolean explicit) {
+		this.setSourceRange(offset - prefix.length(), offset);
+		
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			for (IType type : className) {
-				IMethod[] classMethods = getClassMethods(type, startWith);
+				IMethod[] classMethods = getClassMethods(type, prefix);
 
 				for (IMethod method : classMethods) {
 					try {
@@ -949,17 +907,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (explicit || autoShowVariables) {
 			int relevance = 4242;
 			for (IType type : className) {
-				IField[] classFields = getClassFields(type, startWith);
+				IField[] classFields = getClassFields(type, prefix);
 				for (IField field : classFields) {
-					reportField(field, relevance--);
+					reportField(field, relevance--, true);
 				}
 			}
 		}
 	}
 
-	protected void showParentCall(ISourceModule sourceModule, int offset, String className, String startWith, boolean explicit) {
+	protected void showParentCall(ISourceModule sourceModule, int offset, String className, String prefix, boolean explicit) {
 		if (explicit || autoShowFunctionsKeywordsConstants) {
-			IModelElement[] methods = PHPMixinModel.getInstance().getMethod(className, startWith + WILDCARD);
+			IModelElement[] methods = PHPMixinModel.getInstance().getMethod(className, prefix + WILDCARD);
 			for (IModelElement method : methods) {
 				IMethod methodElement = (IMethod) method;
 				try {
@@ -1068,11 +1026,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					if (k != 0) {
 						prefix = prefix.substring(k);
 					}
-					
+
 					this.setSourceRange(offset - prefix.length(), offset);
 
 					for (IModelElement type : classes) {
-						reportType((IType) type, RELEVANCE_FREE_SPACE);
+						reportType((IType) type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
 					}
 				}
 				return true;
@@ -1087,14 +1045,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return true;
 		}
 
-		/*
+		
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(text, text.length());
 		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(text, wordEnd, false);
 		String word = text.subSequence(wordStart, wordEnd).toString();
 		
 		String functionNameStart;
-		if (word.equals("function")) { //$NON-NLS-1$
-			functionNameStart = ""; //$NON-NLS-1$
+		if (word.equals(FUNCTION)) { //$NON-NLS-1$
+			functionNameStart = EMPTY;
 		} else if (wordEnd == text.length()) {
 			functionNameStart = word;
 		} else {
@@ -1104,25 +1062,28 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!explicit && functionNameStart.length() == 0) {
 			return true;
 		}
-		*/
 		
-		this.setSourceRange(offset, offset);
 
-		for (String magicMethod : magicFunctions) {
-			FakeMethod fakeMagicMethod = new FakeMethod((ModelElement) classData, magicMethod);
-			reportMethod(fakeMagicMethod, RELEVANCE_METHODS);
-		}
+		this.setSourceRange(offset - functionNameStart.length(), offset);
+
+		List<String> functions = new LinkedList<String>();
+		functions.addAll(Arrays.asList(magicFunctions));
 		if (isPHP5) {
-			for (String magicMethod : magicFunctionsPhp5) {
-				FakeMethod fakeMagicMethod = new FakeMethod((ModelElement) classData, magicMethod);
+			functions.addAll(Arrays.asList(magicFunctionsPhp5));
+		}
+		functions.add(classData.getElementName());
+		if (isPHP5) {
+			functions.add(CONSTRUCTOR);
+			functions.add(DESTRUCTOR);
+		}
+		
+		for (String function : functions) {
+			if (startsWithIgnoreCase(function, functionNameStart)) {
+				FakeMethod fakeMagicMethod = new FakeMethod((ModelElement) classData, function);
 				reportMethod(fakeMagicMethod, RELEVANCE_METHODS);
 			}
 		}
-		reportMethod(new FakeMethod((ModelElement) classData, classData.getElementName()), RELEVANCE_METHODS); // constructor
-		if (isPHP5) {
-			reportMethod(new FakeMethod((ModelElement) classData, "__construct"), RELEVANCE_METHODS);
-			reportMethod(new FakeMethod((ModelElement) classData, "__destruct"), RELEVANCE_METHODS);
-		}
+		
 		return true;
 	}
 
@@ -1134,7 +1095,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		boolean isClassDeclaration = true;
 		if (classEnd >= 6) {
 			String classString = text.subSequence(classEnd - 6, classEnd - 1).toString();
-			isClassDeclaration = classString.equals("class"); //$NON-NLS-1$
+			isClassDeclaration = classString.equals(CLASS); //$NON-NLS-1$
 		}
 		text = text.subTextSequence(classEnd, text.length());
 
@@ -1154,7 +1115,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int endPosition = text.length();
 		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, false);
 		String lastWord = text.subSequence(startPosition, endPosition).toString();
-		
+
 		Matcher extendsMatcher = extendsPattern.matcher(text);
 		Matcher implementsMatcher = implementsPattern.matcher(text);
 		boolean foundExtends = extendsMatcher.find();
@@ -1207,16 +1168,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	protected void showInterfaceList(String startWith, int offset, boolean explicit) {
+	protected void showInterfaceList(String prefix, int offset, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
 		try {
-			IModelElement[] classes = PHPMixinModel.getInstance().getClass(startWith + WILDCARD);
+			IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
 			for (IModelElement c : classes) {
 				IType type = (IType) c;
 				if ((type.getFlags() & Modifiers.AccInterface) != 0) {
-					reportType(type, RELEVANCE_FREE_SPACE);
+					reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
 				}
 			}
 		} catch (ModelException e) {
@@ -1224,12 +1185,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void showExtendsImplementsList(String startWith, int offset, boolean explicit) {
+	protected void showExtendsImplementsList(String prefix, int offset, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
-		this.setSourceRange(offset - startWith.length(), offset);
-		
+		this.setSourceRange(offset - prefix.length(), offset);
+
 		if (isPHP5) {
 			reportKeyword("extends");
 			reportKeyword("implements");
@@ -1238,43 +1199,43 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void showImplementsList(String startWith, int offset, boolean explicit) {
+	protected void showImplementsList(String prefix, int offset, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
 		if (isPHP5) {
-			this.setSourceRange(offset - startWith.length(), offset);
+			this.setSourceRange(offset - prefix.length(), offset);
 			reportKeyword("implements");
 		}
 	}
 
-	private void showExtendsList(String startWith, int offset, boolean explicit) {
+	private void showExtendsList(String prefix, int offset, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
-		this.setSourceRange(offset - startWith.length(), offset);
+		this.setSourceRange(offset - prefix.length(), offset);
 		reportKeyword("extends");
 	}
 
-	private void showBaseClassList(String startWith, int offset, boolean isClassDecleration, boolean explicit) {
+	private void showBaseClassList(String prefix, int offset, boolean isClassDecleration, boolean explicit) {
 		if (!isClassDecleration) {
-			showInterfaceList(startWith, offset, explicit);
+			showInterfaceList(prefix, offset, explicit);
 			return;
 		}
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
-		
-		this.setSourceRange(offset - startWith.length(), offset);
 
-		IType[] classes = getOnlyClasses(startWith);
+		this.setSourceRange(offset - prefix.length(), offset);
+
+		IType[] classes = getOnlyClasses(prefix);
 		for (IType type : classes) {
-			reportType(type, RELEVANCE_FREE_SPACE);
+			reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
 		}
 	}
 
-	private static IType[] getOnlyClasses(String startsWith) {
-		IModelElement[] classes = PHPMixinModel.getInstance().getClass(startsWith + WILDCARD);
+	private static IType[] getOnlyClasses(String prefix) {
+		IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
 		List<IType> onlyClasses = new LinkedList<IType>();
 		for (IModelElement c : classes) {
 			IType type = (IType) c;
@@ -1325,39 +1286,39 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	protected void showClassList(String startWith, int offset, States state, boolean explicit) {
+	protected void showClassList(String prefix, int offset, States state, boolean explicit) {
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
-		
-		this.setSourceRange(offset - startWith.length(), offset);
+
+		this.setSourceRange(offset - prefix.length(), offset);
 
 		// get the class data for "self". In case of null, the self function will not be added
 		IType selfClassData = getSelfClassData(offset);
 
 		switch (state) {
 			case NEW:
-				IType[] types = getOnlyClasses(startWith);
+				IType[] types = getOnlyClasses(prefix);
 				for (IType type : types) {
-					reportType(type, RELEVANCE_FREE_SPACE);
+					reportType(type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
 				}
 				if (selfClassData != null) {
 					addSelfFunctionToProposals(selfClassData);
 				}
 				break;
 			case INSTANCEOF:
-				IModelElement[] typeElements = PHPMixinModel.getInstance().getClass(startWith + WILDCARD);
+				IModelElement[] typeElements = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
 				for (IModelElement typeElement : typeElements) {
-					reportType((IType) typeElement, RELEVANCE_FREE_SPACE);
+					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
 				}
 				if (selfClassData != null) {
 					addSelfFunctionToProposals(selfClassData);
 				}
 				break;
 			case CATCH:
-				typeElements = PHPMixinModel.getInstance().getClass(startWith + WILDCARD);
+				typeElements = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
 				for (IModelElement typeElement : typeElements) {
-					reportType((IType) typeElement, RELEVANCE_FREE_SPACE);
+					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
 				}
 				break;
 			default:
@@ -1400,20 +1361,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		reportMethod(new FakeMethod((ModelElement) type, "self"), RELEVANCE_METHODS);
 	}
 
-	protected boolean isNewOrInstanceofStatement(String keyword, String startWith, int offset, boolean explicit, String type) {
+	protected boolean isNewOrInstanceofStatement(String keyword, String prefix, int offset, boolean explicit, String type) {
 		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return false;
 		}
 
 		if (keyword.equalsIgnoreCase("instanceof")) { //$NON-NLS-1$
-			this.setSourceRange(offset - startWith.length(), offset);
-			showClassList(startWith, offset, States.INSTANCEOF, explicit);
+			this.setSourceRange(offset - prefix.length(), offset);
+			showClassList(prefix, offset, States.INSTANCEOF, explicit);
 			return true;
 		}
 
 		if (keyword.equalsIgnoreCase("new")) { //$NON-NLS-1$
-			this.setSourceRange(offset - startWith.length(), offset);
-			showClassList(startWith, offset, States.NEW, explicit);
+			this.setSourceRange(offset - prefix.length(), offset);
+			showClassList(prefix, offset, States.NEW, explicit);
 			return true;
 		}
 
@@ -1425,7 +1386,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 		boolean isArrayOption = false;
-		if (startPosition > 0 && !lastWord.startsWith("$")) { //$NON-NLS-1$
+		if (startPosition > 0 && !lastWord.startsWith(DOLLAR)) { //$NON-NLS-1$
 			if (haveSpacesAtEnd) {
 				if (lastWord.length() == 0 && firstWord.length() == 0) {
 					if (text.charAt(startPosition - 1) == '[') {
@@ -1449,10 +1410,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String variableName = text.subSequence(startPosition, endPosition).toString();
 
-		//		if (variableName.startsWith("$")) { //$NON-NLS-1$
-		//			variableName = variableName.substring(1);
-		//		}
-
 		reportArrayVariables(variableName, offset, lastWord, determineObjectTypeFromOtherFile);
 
 		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(lastWord + WILDCARD);
@@ -1465,7 +1422,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			int relevance = 4242;
 			for (IModelElement constant : constants) {
 				IField field = (IField) constant;
-				reportField(field, relevance--);
+				reportField(field, relevance--, false);
 			}
 		}
 		return true;
@@ -1510,6 +1467,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			proposal.setName(name);
 			proposal.setCompletion(compl);
 			try {
+				proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
@@ -1524,7 +1482,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	}
 
-	private void reportType(IType type, int rel) {
+	private void reportType(IType type, int rel, String suffix) {
 		this.intresting.add(type);
 		String elementName = type.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1545,8 +1503,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			proposal.setModelElement(type);
 			proposal.setName(name);
-			proposal.setCompletion(elementName.toCharArray());
-			// proposal.setFlags(Flags.AccDefault);
+			proposal.setCompletion((elementName + suffix).toCharArray());
 			try {
 				proposal.setFlags(type.getFlags());
 			} catch (ModelException e) {
@@ -1561,7 +1518,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	}
 
-	private void reportField(IField field, int rel) {
+	private void reportField(IField field, int rel, boolean removeDollar) {
 		this.intresting.add(field);
 		String elementName = field.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1582,8 +1539,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			proposal.setModelElement(field);
 			proposal.setName(name);
-			proposal.setCompletion(elementName.toCharArray());
-			// proposal.setFlags(Flags.AccDefault);
+			
+			String completion = elementName;
+			if (removeDollar && completion.startsWith(DOLLAR)) {
+				completion = completion.substring(1);
+			}
+			proposal.setCompletion(completion.toCharArray());
+			try {
+				proposal.setFlags(field.getFlags());
+			} catch (ModelException e) {
+			}
 			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
