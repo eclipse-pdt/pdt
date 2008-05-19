@@ -1,5 +1,6 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.Modifiers;
@@ -21,6 +22,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration {
 
+	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<FormalParameter>();
 	private final boolean isReference;
 	private PHPDocBlock phpDoc;
 
@@ -28,7 +30,7 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 		super(functionName, nameStart, nameEnd, start, end);
 
 		setModifiers(modifiers);
-		acceptArguments(formalParameters);
+		acceptArguments(formalParameters == null ? EMPTY_PARAMETERS : formalParameters);
 		acceptBody(body);
 
 		this.isReference = isReference;
