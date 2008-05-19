@@ -24,11 +24,19 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InterfaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.wst.xml.core.internal.Logger;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
+	private static final String CONSTRUCTOR_NAME = "__construct";
 	/*
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
@@ -95,9 +103,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return super.endvisit(type);
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	public boolean visit(MethodDeclaration method) throws Exception {
-		if (!declarations.empty() && declarations.peek() instanceof InterfaceDeclaration) {
+		Declaration parentDeclaration = null;
+		if (!declarations.empty()) {
+			parentDeclaration = declarations.peek();
+		}
+				
+		if (parentDeclaration instanceof InterfaceDeclaration) {
 			method.setModifier(Modifiers.AccAbstract);
 		}
 
@@ -106,7 +120,33 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(method);
 		}
-		return super.visit(method);
+		
+		// The rest is copied from the super implementation just for setting isConstructor flag:
+		this.fNodes.push(method);
+		List args = method.getArguments();
+
+		String[] parameter = new String[args.size()];
+		for (int a = 0; a < args.size(); a++) {
+			Argument arg = (Argument) args.get(a);
+			parameter[a] = arg.getName();
+		}
+
+		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+		mi.parameterNames = parameter;
+		mi.name = method.getName();
+		mi.modifiers = method.getModifiers();
+		mi.nameSourceStart = method.getNameStart();
+		mi.nameSourceEnd = method.getNameEnd() - 1;
+		mi.declarationStart = method.sourceStart();
+		
+		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME) || (parentDeclaration instanceof ClassDeclaration && 
+				mi.name.equalsIgnoreCase(((ClassDeclaration)parentDeclaration).getName()));
+
+		this.fRequestor.enterMethod(mi);
+
+		this.fInMethod = true;
+		this.fCurrentMethod = method;
+		return true;
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
