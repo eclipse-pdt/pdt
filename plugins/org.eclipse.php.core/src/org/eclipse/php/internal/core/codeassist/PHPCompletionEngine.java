@@ -74,6 +74,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPCompletionEngine extends ScriptCompletionEngine {
 
+	private static final String IMPLEMENTS = "implements"; //$NON-NLS-1$
+	private static final String EXTENDS = "extends"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final String CLASS = "class"; //$NON-NLS-1$
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
@@ -1221,12 +1223,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String firstWord = text.subSequence(startPosition, endPosition).toString();
 
-		if (firstWord.equalsIgnoreCase("extends")) { //$NON-NLS-1$
+		if (firstWord.equalsIgnoreCase(EXTENDS)) { //$NON-NLS-1$
 			showBaseClassList(lastWord, offset, isClassDeclaration, explicit);
 			return true;
 		}
 
-		if (firstWord.equalsIgnoreCase("implements")) { //$NON-NLS-1$
+		if (firstWord.equalsIgnoreCase(IMPLEMENTS)) { //$NON-NLS-1$
 			showInterfaceList(lastWord, offset, explicit);
 			return true;
 		}
@@ -1278,10 +1280,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		if (isPHP5) {
-			reportKeyword("extends");
-			reportKeyword("implements");
+			if (EXTENDS.startsWith(prefix)) {
+				reportKeyword(EXTENDS);
+			}
+			if (IMPLEMENTS.startsWith(prefix)) {
+				reportKeyword(IMPLEMENTS);
+			}
 		} else {
-			reportKeyword("extends");
+			if (EXTENDS.startsWith(prefix)) {
+				reportKeyword(EXTENDS);
+			}
 		}
 	}
 
@@ -1291,7 +1299,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 		if (isPHP5) {
 			this.setSourceRange(offset - prefix.length(), offset);
-			reportKeyword("implements");
+			
+			if (IMPLEMENTS.startsWith(prefix)) {
+				reportKeyword(IMPLEMENTS);
+			}
 		}
 	}
 
@@ -1300,7 +1311,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		this.setSourceRange(offset - prefix.length(), offset);
-		reportKeyword("extends");
+		
+		if (EXTENDS.startsWith(prefix)) {
+			reportKeyword(EXTENDS);
+		}
 	}
 
 	private void showBaseClassList(String prefix, int offset, boolean isClassDecleration, boolean explicit) {
