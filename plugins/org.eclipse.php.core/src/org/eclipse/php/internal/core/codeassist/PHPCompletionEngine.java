@@ -826,14 +826,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected static IMethod[] getClassMethods(IType type, String prefix) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
-			IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-			SearchPattern pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-
-			new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					methods.add((IMethod) match.getElement());
-				}
-			}, null);
+			if (type.getSuperClasses() != null) {
+				SearchEngine searchEngine = new SearchEngine();
+				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+				SearchPattern pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+	
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						methods.add((IMethod) match.getElement());
+					}
+				}, null);
+			}
 
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
@@ -850,23 +853,26 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected static IField[] getClassProperties(IType type, String propertyName) {
 		final Set<IField> fields = new HashSet<IField>();
 		try {
-			IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
 			SearchEngine searchEngine = new SearchEngine();
+			IDLTKSearchScope scope;
 			SearchPattern pattern;
 
-			// search for constants
-			pattern = SearchPattern.createPattern(DOLLAR + propertyName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					fields.add((IField) match.getElement());
-				}
-			}, null);
+			if (type.getSuperClasses() != null) {
+				// search in hierarchy
+				scope = SearchEngine.createHierarchyScope(type);
+				pattern = SearchPattern.createPattern(DOLLAR + propertyName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						fields.add((IField) match.getElement());
+					}
+				}, null);
+			}
 
-			// search for all fields
+			// search in class itself
 			IField[] typeFields = type.getFields();
 			for (IField typeField : typeFields) {
 				String elementName = typeField.getElementName();
-				if (elementName.equals(propertyName)) {
+				if (elementName.equals(DOLLAR + propertyName)) {
 					fields.add(typeField);
 				}
 			}
@@ -879,27 +885,30 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected static IField[] getClassFields(IType type, String prefix) {
 		final Set<IField> fields = new HashSet<IField>();
 		try {
-			IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
 			SearchEngine searchEngine = new SearchEngine();
+			IDLTKSearchScope scope;
 			SearchPattern pattern;
 
-			// search for constants
-			pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					fields.add((IField) match.getElement());
-				}
-			}, null);
+			if (type.getSuperClasses() != null) {
+				scope = SearchEngine.createHierarchyScope(type);
+				// search for constants in hierarchy
+				pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						fields.add((IField) match.getElement());
+					}
+				}, null);
+	
+				// search for variables in hierarchy
+				pattern = SearchPattern.createPattern(DOLLAR + prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						fields.add((IField) match.getElement());
+					}
+				}, null);
+			}
 
-			// search for variables
-			pattern = SearchPattern.createPattern(DOLLAR + prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					fields.add((IField) match.getElement());
-				}
-			}, null);
-
-			// search for all fields
+			// search for all fields in the class itself
 			IField[] typeFields = type.getFields();
 			for (IField typeField : typeFields) {
 				String elementName = typeField.getElementName();

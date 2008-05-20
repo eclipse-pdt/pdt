@@ -79,12 +79,16 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				}
 			};
 			try {
+				IDLTKSearchScope scope;
 				SearchPattern pattern = SearchPattern.createPattern(variableName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-				searchEngine.search(pattern, participants, scope, requestor, null);
 				
 				scope = SearchEngine.createSearchScope(type);
 				searchEngine.search(pattern, participants, scope, requestor, null);
+
+				if (type.getSuperClasses() != null) {
+					scope = SearchEngine.createHierarchyScope(type);
+					searchEngine.search(pattern, participants, scope, requestor, null);
+				}
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}

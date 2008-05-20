@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.12 2008/05/15 15:53:17 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.13 2008/05/20 09:04:10 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1393,7 +1393,7 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		Expression initializer = (Expression)decl[1];
 		int start = variable.sourceStart();
 		int end = (initializer == null ? variable.sourceEnd() : initializer.sourceEnd());
-		parser.addDeclarationStatement(new PHPFieldDeclaration(variable, initializer, start, end, modifier.modifier, modifierleft, modifier.doc));
+		parser.addDeclarationStatement(new PHPFieldDeclaration(variable, initializer, start, end, modifier.modifier, decListleft, modifier.doc));
 	}
 :}
 
