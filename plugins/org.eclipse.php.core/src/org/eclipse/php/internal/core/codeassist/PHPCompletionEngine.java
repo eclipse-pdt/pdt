@@ -661,15 +661,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		Set<IType> result = new HashSet<IType>();
 		for (IType type : types) {
 			IType[] returnTypes = getFunctionReturnType(type, functionName);
-			result.addAll(Arrays.asList(returnTypes));
+			if (returnTypes != null) {
+				result.addAll(Arrays.asList(returnTypes));
+			}
 		}
 		return result.toArray(new IType[result.size()]);
 	}
 
 	protected IType[] getVariableType(IType[] types, String propertyName, int offset, int line) {
 		for (IType type : types) {
-			IField[] fields = getClassProperties(type, propertyName);
+			IField[] fields = getClassFields(type, propertyName, true, false);
+
+			Set<String> processedFields = new HashSet<String>();
 			for (IField field : fields) {
+				if (processedFields.contains(field.getElementName())) {
+					continue;
+				}
+				processedFields.add(field.getElementName());
+
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
 				BasicContext context = new BasicContext(field.getSourceModule(), moduleDeclaration);
 				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(context, types, field.getElementName());
@@ -701,19 +710,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected IType[] getFunctionReturnType(IType type, String functionName) {
-		try {
-			IMethod[] classMethod = PHPModelUtils.getClassMethod(type, functionName, null);
-			if (classMethod.length > 0) {
-				MethodElementReturnTypeGoal goal = new MethodElementReturnTypeGoal(classMethod[0]);
-				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-				IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-				if (evaluatedType != null) {
-					IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(evaluatedType.getTypeName());
-					return modelElementsToTypes(modelElements);
-				}
-			}
-		} catch (CoreException e) {
-			Logger.logException(e);
+		IMethod[] classMethod = getClassMethods(type, functionName, true);
+		if (classMethod.length > 0) {
+			return getFunctionReturnType(classMethod[0]);
+		}
+		return null;
+	}
+	
+	protected IType[] getFunctionReturnType(IMethod method) {
+		MethodElementReturnTypeGoal goal = new MethodElementReturnTypeGoal(method);
+		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+		IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
+		if (evaluatedType != null) {
+			IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(evaluatedType.getTypeName());
+			return modelElementsToTypes(modelElements);
 		}
 		return null;
 	}
@@ -780,11 +790,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (classData != null) { //if its a clss function
 				return getFunctionReturnType(classData, functionName);
 			}
+			
 			// if its a non class function
+			Set<IType> returnTypes = new HashSet<IType>();
 			IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
 			for (IModelElement function : functions) {
-				reportMethod((IMethod) function, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+				IType[] types = getFunctionReturnType((IMethod) function);
+				if (types != null) {
+					returnTypes.addAll(Arrays.asList(types));
+				}
 			}
+			return returnTypes.toArray(new IType[returnTypes.size()]);
 		}
 		return null;
 	}
@@ -813,13 +829,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		for (IType type : className) {
 			if (explicit || autoShowFunctionsKeywordsConstants) {
-				IMethod[] methods = getClassMethods(type, prefix);
+				IMethod[] methods = getClassMethods(type, prefix, false);
 				for (IModelElement method : methods) {
 					reportMethod((IMethod) method, RELEVANCE_METHODS, BRACKETS_SUFFIX);
 				}
 			}
 			if (explicit || autoShowVariables) {
-				IModelElement[] fields = getClassFields(type, prefix);
+				IModelElement[] fields = getClassFields(type, prefix, false, true);
 				int relevance = 424242;
 				for (IModelElement element : fields) {
 					IField field = (IField) element;
@@ -829,15 +845,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 	}
-	
-	protected static IMethod[] getSuperClassMethods(IType type, String prefix) {
+
+	protected static IMethod[] getSuperClassMethods(IType type, String prefix, boolean exactName) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
 			if (type.getSuperClasses() != null) {
 				SearchEngine searchEngine = new SearchEngine();
 				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-				SearchPattern pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-	
+				SearchPattern pattern;
+				if (exactName) {
+					pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+				} else {
+					pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+				}
+
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
 						methods.add((IMethod) match.getElement());
@@ -850,14 +871,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
-	protected static IMethod[] getClassMethods(IType type, String prefix) {
+	protected static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
-			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix)));
+			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix, exactName)));
 
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
-				if (startsWithIgnoreCase(typeMethod.getElementName(), prefix)) {
+				String methodName = typeMethod.getElementName();
+				if ((exactName && methodName.equalsIgnoreCase(prefix)) || startsWithIgnoreCase(methodName, prefix)) {
 					methods.add(typeMethod);
 				}
 			}
@@ -867,7 +889,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
-	protected static IField[] getClassProperties(IType type, String propertyName) {
+	protected static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
 		final Set<IField> fields = new HashSet<IField>();
 		try {
 			SearchEngine searchEngine = new SearchEngine();
@@ -875,49 +897,29 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			SearchPattern pattern;
 
 			if (type.getSuperClasses() != null) {
-				// search in hierarchy
 				scope = SearchEngine.createHierarchyScope(type);
-				pattern = SearchPattern.createPattern(DOLLAR + propertyName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-						fields.add((IField) match.getElement());
+				
+				if (searchConstants) {
+					// search for constants in hierarchy
+					if (exactName) {
+						pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+					} else {
+						pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
 					}
-				}, null);
-			}
-
-			// search in class itself
-			IField[] typeFields = type.getFields();
-			for (IField typeField : typeFields) {
-				String elementName = typeField.getElementName();
-				if (elementName.equals(DOLLAR + propertyName)) {
-					fields.add(typeField);
+					
+					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+							fields.add((IField) match.getElement());
+						}
+					}, null);
 				}
-			}
-		} catch (Exception e) {
-			Logger.logException(e);
-		}
-		return fields.toArray(new IField[fields.size()]);
-	}
 
-	protected static IField[] getClassFields(IType type, String prefix) {
-		final Set<IField> fields = new HashSet<IField>();
-		try {
-			SearchEngine searchEngine = new SearchEngine();
-			IDLTKSearchScope scope;
-			SearchPattern pattern;
-
-			if (type.getSuperClasses() != null) {
-				scope = SearchEngine.createHierarchyScope(type);
-				// search for constants in hierarchy
-				pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-						fields.add((IField) match.getElement());
-					}
-				}, null);
-	
 				// search for variables in hierarchy
-				pattern = SearchPattern.createPattern(DOLLAR + prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+				if (exactName) {
+					pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+				} else {
+					pattern = SearchPattern.createPattern(DOLLAR + prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+				}
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
 						fields.add((IField) match.getElement());
@@ -928,9 +930,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			// search for all fields in the class itself
 			IField[] typeFields = type.getFields();
 			for (IField typeField : typeFields) {
+				
 				String elementName = typeField.getElementName();
-				if (elementName.startsWith(prefix) || (elementName.startsWith(DOLLAR) && elementName.substring(1).startsWith(prefix))) {
-					fields.add(typeField);
+				
+				int flags = typeField.getFlags();
+				if ((flags & Modifiers.AccConstant) != 0) {
+					if (exactName && elementName.equals(prefix) || elementName.startsWith(prefix)) {
+						fields.add (typeField);
+					}
+				} else { // variable
+					String tmp = prefix;
+					if (!tmp.startsWith(DOLLAR)) {
+						tmp = DOLLAR + tmp;
+					}
+					if (exactName && elementName.equals(tmp) || elementName.startsWith(tmp)) {
+						fields.add (typeField);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -944,7 +959,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			for (IType type : className) {
-				IMethod[] classMethods = getClassMethods(type, prefix);
+				IMethod[] classMethods = getClassMethods(type, prefix, false);
 
 				for (IMethod method : classMethods) {
 					try {
@@ -961,7 +976,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (explicit || autoShowVariables) {
 			int relevance = 4242;
 			for (IType type : className) {
-				IField[] classFields = getClassFields(type, prefix);
+				IField[] classFields = getClassFields(type, prefix, false, true);
 				for (IField field : classFields) {
 					try {
 						int flags = field.getFlags();
@@ -1124,8 +1139,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		this.setSourceRange(offset - functionNameStart.length(), offset);
-		
-		IMethod[] superClassMethods = getSuperClassMethods(classData, functionNameStart);
+
+		IMethod[] superClassMethods = getSuperClassMethods(classData, functionNameStart, false);
 		for (IMethod superMethod : superClassMethods) {
 			try {
 				int flags = superMethod.getFlags();
@@ -1136,7 +1151,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				Logger.logException(e);
 			}
 		}
-		
+
 		List<String> functions = new LinkedList<String>();
 		functions.addAll(Arrays.asList(magicFunctions));
 		if (isPHP5) {
