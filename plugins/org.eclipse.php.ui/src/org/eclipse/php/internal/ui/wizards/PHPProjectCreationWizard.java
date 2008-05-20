@@ -26,6 +26,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -118,7 +119,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle(PHPUIMessages.getString("PHPProjectCreationWizard_PageTile"));
+		setWindowTitle(PHPUIMessages.getString("PHPProjectCreationWizard_PageTile")); //$NON-NLS-1$
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
 	}
 
@@ -131,7 +132,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 			LocationVerificationDialog dialog = new LocationVerificationDialog(getShell(), (String)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT_NAME), location);
 			dialog.open();
 			if(dialog.getCreateInNewLocation()){
-				getDataModel().setProperty(IProjectCreationPropertiesNew.USER_DEFINED_LOCATION, location + System.getProperty("file.separator") + createdProject.getName());
+				getDataModel().setProperty(IProjectCreationPropertiesNew.USER_DEFINED_LOCATION, location + System.getProperty("file.separator") + createdProject.getName()); //$NON-NLS-1$
 			}
 		}
 
@@ -153,7 +154,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 		private Button radio2;
 
 		LocationVerificationDialog(Shell parentShell, String project, String location) {
-			super(parentShell, "Project Location verification", null, "The location " + location + " already exists and contains files", MessageDialog.QUESTION, new String[] { IDialogConstants.OK_LABEL}, 0);
+			super(parentShell, PHPUIMessages.getString("PHPProjectCreationWizard.title"), null, NLS.bind(PHPUIMessages.getString("PHPProjectCreationWizard.message"),location), MessageDialog.QUESTION, new String[] { IDialogConstants.OK_LABEL}, 0); //$NON-NLS-1$ //$NON-NLS-2$
 			this.projectName = project;
 			this.location = location;
 		}
@@ -173,14 +174,14 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 			radio1 = new Button(composite, SWT.RADIO);
 			radio1.addSelectionListener(selectionListener);
 
-			radio1.setText("Create project in " + location + ".");
+			radio1.setText(PHPUIMessages.getString("PHPProjectCreationWizard.createProjectIn") + location + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			radio1.setFont(parent.getFont());
 
 			// Add explanatory label that the action cannot be undone.
 			// We can't put multi-line formatted text in a radio button,
 			// so we have to create a separate label.
 			Label detailsLabel = new Label(composite, SWT.LEFT);
-			detailsLabel.setText("(Deleting the project will delete the entire " + location + " folder)");
+			detailsLabel.setText(PHPUIMessages.getString("PHPProjectCreationWizard.details") + location + PHPUIMessages.getString("PHPProjectCreationWizard.folder")); //$NON-NLS-1$ //$NON-NLS-2$
 			detailsLabel.setFont(parent.getFont());
 			// indent the explanatory label
 			GC gc = new GC(detailsLabel);
@@ -196,8 +197,8 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 			detailsLabel.addMouseListener(new MouseAdapter() {
 				public void mouseUp(MouseEvent e) {
 					createInNewLocation = false;
-					radio1.setSelection(createInNewLocation);
-					radio2.setSelection(!createInNewLocation);
+					radio1.setSelection(!createInNewLocation);
+					radio2.setSelection(createInNewLocation);
 				}
 			});
 			// Add a spacer label
@@ -205,7 +206,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 
 			radio2 = new Button(composite, SWT.RADIO);
 			radio2.addSelectionListener(selectionListener);
-			radio2.setText("Create project in " + location + System.getProperty("file.separator") + projectName + ".");
+			radio2.setText(PHPUIMessages.getString("PHPProjectCreationWizard.createProjectIn") + location + System.getProperty("file.separator") + projectName + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			radio2.setFont(parent.getFont());
 
 			// set initial state
