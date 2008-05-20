@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,9 +18,12 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.internal.core.Logger;
@@ -28,8 +32,18 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.wizards.operations.PHPCreationDataModelProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
@@ -61,10 +75,10 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	}
 
 	/**
-	 * This operation is called after the Wizard  is created (and before the doAddPages) 
+	 * This operation is called after the Wizard  is created (and before the doAddPages)
 	 * and it is used to define all the properties that the wizard pages will set
 	 * (not necessarly store as properties).
-	 * All the wizard pages may access these properties.  
+	 * All the wizard pages may access these properties.
 	 */
 	protected IDataModelProvider getDefaultProvider() {
 		return new PHPCreationDataModelProvider(wizardPageFactories);
@@ -72,12 +86,14 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	public void doAddPages() {
-		addDeafaultPages();
-		addContributedPages();
+		// if we succeeded adding the default pages, add the contributed pages
+		if (addDeafaultPages()) {
+			addContributedPages();
+		}
 
 	}
 
@@ -91,9 +107,10 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 		}
 	}
 
-	protected void addDeafaultPages() {
+	protected boolean addDeafaultPages() {
 		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
 		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
+		return true;
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
@@ -107,6 +124,16 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 
 	protected boolean prePerformFinish() {
 		createdProject = (IProject) getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
+		
+		String location = (String) getDataModel().getProperty(IProjectCreationPropertiesNew.USER_DEFINED_LOCATION);
+		File projectLocation = new File(location);
+		if (projectLocation.exists() && projectLocation.isDirectory() && projectLocation.listFiles().length != 0) {
+			LocationVerificationDialog dialog = new LocationVerificationDialog(getShell(), (String)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT_NAME), location);
+			dialog.open();
+			if(dialog.getCreateInNewLocation()){
+				getDataModel().setProperty(IProjectCreationPropertiesNew.USER_DEFINED_LOCATION, location + System.getProperty("file.separator") + createdProject.getName());
+			}
+		}
 
 		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathPage.getIncludePathsBlock().getIncludepathEntries());
 		basePage.setProjectOptionInModel(getDataModel());
@@ -114,26 +141,136 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 		return super.prePerformFinish();
 	}
 
-	protected void postPerformFinish() throws InvocationTargetException {
-		BasicNewProjectResourceWizard.updatePerspective(configElement);
+	static class LocationVerificationDialog extends MessageDialog {
 
+		private String projectName;
+		private String location;
+
+		private boolean createInNewLocation = true;
+
+		private Button radio1;
+
+		private Button radio2;
+
+		LocationVerificationDialog(Shell parentShell, String project, String location) {
+			super(parentShell, "Project Location verification", null, "The location " + location + " already exists and contains files", MessageDialog.QUESTION, new String[] { IDialogConstants.OK_LABEL}, 0);
+			this.projectName = project;
+			this.location = location;
+		}
+
+		
+		/*
+		 * (non-Javadoc) Method declared on Window.
+		 */
+		protected void configureShell(Shell newShell) {
+			super.configureShell(newShell);
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IIDEHelpContextIds.DELETE_PROJECT_DIALOG);
+		}
+
+		protected Control createCustomArea(Composite parent) {
+			Composite composite = new Composite(parent, SWT.NONE);
+			composite.setLayout(new GridLayout());
+			radio1 = new Button(composite, SWT.RADIO);
+			radio1.addSelectionListener(selectionListener);
+
+			radio1.setText("Create project in " + location + ".");
+			radio1.setFont(parent.getFont());
+
+			// Add explanatory label that the action cannot be undone.
+			// We can't put multi-line formatted text in a radio button,
+			// so we have to create a separate label.
+			Label detailsLabel = new Label(composite, SWT.LEFT);
+			detailsLabel.setText("(Deleting the project will delete the entire " + location + " folder)");
+			detailsLabel.setFont(parent.getFont());
+			// indent the explanatory label
+			GC gc = new GC(detailsLabel);
+			gc.setFont(detailsLabel.getParent().getFont());
+			FontMetrics fontMetrics = gc.getFontMetrics();
+			gc.dispose();
+			GridData data = new GridData();
+			data.horizontalIndent = Dialog.convertHorizontalDLUsToPixels(fontMetrics, IDialogConstants.INDENT);
+			detailsLabel.setLayoutData(data);
+			// add a listener so that clicking on the label selects the
+			// corresponding radio button.
+			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=172574
+			detailsLabel.addMouseListener(new MouseAdapter() {
+				public void mouseUp(MouseEvent e) {
+					createInNewLocation = false;
+					radio1.setSelection(createInNewLocation);
+					radio2.setSelection(!createInNewLocation);
+				}
+			});
+			// Add a spacer label
+			new Label(composite, SWT.LEFT);
+
+			radio2 = new Button(composite, SWT.RADIO);
+			radio2.addSelectionListener(selectionListener);
+			radio2.setText("Create project in " + location + System.getProperty("file.separator") + projectName + ".");
+			radio2.setFont(parent.getFont());
+
+			// set initial state
+			radio1.setSelection(!createInNewLocation);
+			radio2.setSelection(createInNewLocation);
+
+			return composite;
+		}
+
+		private SelectionListener selectionListener = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				Button button = (Button) e.widget;
+				if (button.getSelection()) {
+					createInNewLocation = (button == radio2);
+				}
+			}
+		};
+
+		boolean getCreateInNewLocation() {
+			return createInNewLocation;
+		}
+		
+		protected Control createButtonBar(Composite parent) {
+			Composite composite = new Composite(parent, SWT.NONE);
+			GridLayoutFactory.fillDefaults().numColumns(0) // this is incremented
+															// by createButton
+					.equalWidth(true).applyTo(composite);
+
+			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(
+					2, 1).applyTo(composite);
+			composite.setFont(parent.getFont());
+			// Add the buttons to the button bar.
+			createButtonsForButtonBar(composite);
+			return composite;
+		}
+	}
+
+	protected void postPerformFinish() throws InvocationTargetException {
 		if (createdProject != null) {
-			//			 Save any project-specific data (Fix Bug# 143406)
+			// Save any project-specific data (Fix Bug# 143406)
 			try {
 				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
 			} catch (BackingStoreException e) {
 				Logger.logException(e);
 			}
 		}
+
+		UIJob j = new UIJob("") { //$NON-NLS-1$
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				BasicNewProjectResourceWizard.updatePerspective(configElement);
+				return Status.OK_STATUS;
+			}
+		};
+		j.setUser(false);
+		j.schedule();
 	}
 
 	private void populateWizardFactoryList() {
 		IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
 		if (pageGenerators != null) {
-			for (int i = 0; i < pageGenerators.length; i++) {
-				WizardPageFactory pageFactory = (WizardPageFactory) pageGenerators[i];
+			for (IWizardPage element : pageGenerators) {
+				WizardPageFactory pageFactory = (WizardPageFactory) element;
 				wizardPageFactories.add(pageFactory);
 			}
 		}
 	}
+
 }
