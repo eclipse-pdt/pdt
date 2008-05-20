@@ -74,6 +74,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPCompletionEngine extends ScriptCompletionEngine {
 
+	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	private static final String CLASS = "class"; //$NON-NLS-1$
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final String DESTRUCTOR = "__destruct"; //$NON-NLS-1$
@@ -107,7 +108,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected static final String[] magicFunctionsPhp5 = { "__isset", "__unset", "__toString", "__set_state", "__clone", "__autoload", };
 
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
-	protected static final String CLASS_FUNCTIONS_TRIGGER = "::"; //$NON-NLS-1$
+	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 
 	private static final Pattern extendsPattern = Pattern.compile("\\Wextends\\W", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
@@ -549,7 +550,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					int relevance = 424242;
 					IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
 					for (IModelElement type : classes) {
-						reportType((IType) type, relevance--, EMPTY);
+						reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
 					}
 				}
 			}
