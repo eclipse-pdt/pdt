@@ -23,9 +23,11 @@
    </topic>
     <topic label="Bookmarks" href="html/Bookmarks.htm"/>
     <topic label="Hover Support" href="html/Hover_Support.htm"/>
+    <topic label="PHP Working Sets" href="html/PHP_Working_Sets.htm"/>
     <topic label="PHP Manual Integration" href="html/PHP_Manual_Integration.htm"/>
     <topic label="Real Time Error Detection" href="html/Real_Time_Error_Detection.htm"/>
     <topic label="Debugging" href="html/Debugging_Concept.htm"/>
+    <topic label="Breakpoints" href="html/Breakpoints.htm"/>
     <topic label="Include Paths" href="html/Include_Paths.htm"/>
     <topic label="Path Mapping" href="html/Path_Mapping.htm"/>
   </topic>
@@ -42,12 +44,14 @@
     <topic label="Opening PHP Elements" href="html/Opening_PHP_Elements.htm"/>
     <topic label="Searching for PHP Elements" href="html/Searching_for_PHP_Elements.htm"/>
     <topic label="Using Smart Goto Source" href="html/Using_Smart_Goto_Source.htm"/>
+    <topic label="Creating PHP Working Sets" href="html/Creating_PHP_Working_Sets.htm"/>
    <topic label="Adding Comments" href="html/How_to_Comment_and_Uncomment_PHP_Code.htm">
      <topic label="Adding PHP DocBlock Comments" href="html/Commenting_PHP_DocBlocks.htm"/>
    </topic>
     <topic label="Adding a Server Location Path Map" href="html/Adding_a_Server_Path_Map.htm"/>
     <topic label="Adding Elements to a Project's Include Path" href="html/Adding_Elements_to_a_Project_s_Include_Path.htm"/>
    <topic label="Using the Debugger" href="html/Debugging.htm">
+     <topic label="Setting Breakpoints" href="html/Setting_Breakpoints.htm"/>
      <topic label="Locally Debugging a PHP Script" href="html/Locally_Debugging_a_PHP_Script.htm"/>
      <topic label="Debugging a PHP Web Page" href="html/Debugging_a_PHP_Web_Page.htm"/>
      <topic label="Running and Analyzing Debugger Results" href="html/Analyzing_Debugger_Results.htm"/>

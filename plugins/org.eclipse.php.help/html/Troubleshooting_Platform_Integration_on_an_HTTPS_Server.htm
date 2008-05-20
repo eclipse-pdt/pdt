@@ -188,12 +188,16 @@ if (window.writeIntopicBar)
 	The certificate will be exported to the specified destination.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Run the following command 
  in your CLI:<br>
-	&lt;JVM_Directory&gt;/bin/keytool -import -trustcacerts -alias &lt;anyuniquename&gt; 
+	&lt;JVM_Directory&gt;/bin/keytool -import -trustcacerts -alias &lt;any_unique_name&gt; 
  -file &lt;JVM_Directory&gt;/MyServer.cert -keystore &lt;JVM_Directory&gt;/lib/security/cacerts</p></li>
 </ol>
 <p class=Note style="margin-left: 24px;">Note:</p>
 <p class=NoteText style="margin-left: 24px;">On Linux/Mac, run the command 
  with ‘sudo’.</p>
+<p class=Note style="margin-left: 24px;">Note:</p>
+<p class=NoteText style="margin-left: 24px;">If you saved MyServer.cert 
+ to a location other than the JVM Directory, edit the &lt;JVM_Directory&gt;/MyServer.cert 
+ -keystore command accordingly.</p>
 <ol start="14" type="1" class="whs13">
 	<li style="margin-left: -20px;" class=p><p>When asked for a password 
  for the JVM certificate store, enter 'changeit'. &nbsp;</p></li>

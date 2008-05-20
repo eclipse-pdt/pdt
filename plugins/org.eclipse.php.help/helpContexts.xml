@@ -381,4 +381,11 @@
 		<description>Keymap Help</description>
 		<topic href="html/Keymap.htm" label="Keymap"/>
 	</context>
+	<context id="creating_php_working_sets">
+		<description>Creating PHP Working Sets</description>
+		<topic href="html/Creating_PHP_Working_Sets.htm" label="Creating PHP Working Sets"/>
+	<context id="setting_breakpoints">
+		<description>Setting Breakpoints</description>
+		<topic href="html/Setting_Breakpoints.htm" label="Setting Breakpoints"/>	
+	</context>
 </contexts>
