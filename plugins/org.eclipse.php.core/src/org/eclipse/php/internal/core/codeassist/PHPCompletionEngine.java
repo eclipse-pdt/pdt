@@ -829,8 +829,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 	}
-
-	protected static IMethod[] getClassMethods(IType type, String prefix) {
+	
+	protected static IMethod[] getSuperClassMethods(IType type, String prefix) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
 			if (type.getSuperClasses() != null) {
@@ -844,6 +844,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					}
 				}, null);
 			}
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return methods.toArray(new IMethod[methods.size()]);
+	}
+
+	protected static IMethod[] getClassMethods(IType type, String prefix) {
+		final Set<IMethod> methods = new HashSet<IMethod>();
+		try {
+			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix)));
 
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
@@ -1114,7 +1124,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		this.setSourceRange(offset - functionNameStart.length(), offset);
-
+		
+		IMethod[] superClassMethods = getSuperClassMethods(classData, functionNameStart);
+		for (IMethod superMethod : superClassMethods) {
+			try {
+				int flags = superMethod.getFlags();
+				if ((flags & Modifiers.AccPrivate) == 0) {
+					reportMethod(superMethod, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		
 		List<String> functions = new LinkedList<String>();
 		functions.addAll(Arrays.asList(magicFunctions));
 		if (isPHP5) {
