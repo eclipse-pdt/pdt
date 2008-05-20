@@ -166,18 +166,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	public void complete(ISourceModule module, int position, int i) {
-		IStructuredModel existingModelForRead = null;
+		IStructuredModel structuredModel = null;
+		boolean isUnmanaged = false;
 		try {
-			existingModelForRead = StructuredModelManager.getModelManager().getExistingModelForRead((IFile) module.getModelElement().getResource());
-			if (existingModelForRead instanceof DOMModelForPHP) {
-				DOMModelForPHP domModelForPHP = (DOMModelForPHP) existingModelForRead;
+			IFile file = (IFile) module.getModelElement().getResource();
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+			if (structuredModel == null) {
+				structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+				isUnmanaged = true;
+			}
+			if (structuredModel instanceof DOMModelForPHP) {
+				DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
 				calcCompletionOption(domModelForPHP, position, module, true);
 			}
-		} catch (BadLocationException e) {
+		} catch (Exception e) {
 			Logger.logException(e);
 		} finally {
-			if (existingModelForRead != null) {
-				existingModelForRead.releaseFromRead();
+			if (structuredModel != null && !isUnmanaged) {
+				structuredModel.releaseFromRead();
 			}
 		}
 	}
@@ -946,7 +952,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			for (IType type : className) {
 				IField[] classFields = getClassFields(type, prefix);
 				for (IField field : classFields) {
-					reportField(field, relevance--, true);
+					try {
+						int flags = field.getFlags();
+						if ((flags & Modifiers.AccConstant) != 0 || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
+							reportField(field, relevance--, true);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 			}
 		}
