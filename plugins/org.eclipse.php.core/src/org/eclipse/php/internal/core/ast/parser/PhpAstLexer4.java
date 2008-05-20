@@ -2528,9 +2528,5 @@ yybegin(ST_DOCBLOCK);
       }
     }
   }
-  public PDTSymbol __next_token() throws java.io.IOException {
-		return new PDTSymbol(next_token());
-}   
-
 
 }
