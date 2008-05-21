@@ -234,8 +234,6 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		Block body = typeDeclaration.getBody();
 
 		// definitions of the class property
-		// TODO - Change this naive implementation to support real binded occurrences (using the Binding mechanism)		
-		//		if (className.getName().equalsIgnoreCase(typeDeclarationName)) {
 		List<Statement> statements = body.statements();
 		for (Statement statement : statements) {
 			if (statement.getType() == ASTNode.METHOD_DECLARATION) {
