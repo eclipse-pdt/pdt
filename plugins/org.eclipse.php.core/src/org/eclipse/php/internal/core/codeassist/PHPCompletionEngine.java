@@ -1567,7 +1567,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			proposal.setName(name);
 			proposal.setCompletion(compl);
 			try {
-				proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
+				//proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
