@@ -1,8 +1,12 @@
 package org.eclipse.php.internal.ui.editor;
 
+import java.util.ArrayList;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextPresentationListener;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -385,4 +389,24 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	IReconciler getReconciler() {
 		return fReconciler;
 	}
+	
+	/**
+	 * Prepends the text presentation listener at the beginning of the viewer's
+	 * list of text presentation listeners.  If the listener is already registered
+	 * with the viewer this call moves the listener to the beginning of
+	 * the list.
+	 *
+	 * @param listener the text presentation listener
+	 * @since 3.0
+	 */
+	public void prependTextPresentationListener(ITextPresentationListener listener) {
+
+		Assert.isNotNull(listener);
+
+		if (fTextPresentationListeners == null)
+			fTextPresentationListeners= new ArrayList();
+
+		fTextPresentationListeners.remove(listener);
+		fTextPresentationListeners.add(0, listener);
+	}	
 }

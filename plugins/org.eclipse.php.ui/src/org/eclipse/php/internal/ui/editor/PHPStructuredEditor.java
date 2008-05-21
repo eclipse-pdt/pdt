@@ -288,6 +288,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected OverrideIndicatorManager fOverrideIndicatorManager;
 
 	/**
+	 * Semantic highlighting manager
+	 * @since 3.0, protected as of 3.3
+	 */
+	protected SemanticHighlightingManager fSemanticManager;
+	
+	/**
 	 * Internal implementation class for a change listener.
 	 * 
 	 * @since 3.0
@@ -1058,6 +1064,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
+		uninstallSemanticHighlighting();
+		
 		super.dispose();
 	}
 
@@ -1913,6 +1921,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (isMarkingOccurrences())
 			installOccurrencesFinder(true);
 
+		if (isSemanticHighlightingEnabled())
+			installSemanticHighlighting();
+		
 		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
 
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
@@ -2308,6 +2319,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				}
 				return;
 			}
+
+			if (SemanticHighlightings.affectsEnablement(getPreferenceStore(), event)) {
+				if (isSemanticHighlightingEnabled())
+					installSemanticHighlighting();
+				else
+					uninstallSemanticHighlighting();
+				return;
+			}
+			
 			if (affectsOverrideIndicatorAnnotations(event)) {
 				if (isShowingOverrideIndicators()) {
 					if (fOverrideIndicatorManager == null)
@@ -2321,6 +2341,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
+	}
+
+	/**
+	 * @return <code>true</code> if Semantic Highlighting is enabled.
+	 *
+	 * @since 3.0
+	 */
+	private boolean isSemanticHighlightingEnabled() {
+		return SemanticHighlightings.isEnabled(getPreferenceStore());
 	}
 
 	/**
@@ -2543,13 +2572,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
 
-	public void addReconcileListener(IScriptReconcilingListener reconcileListener) {
+	public void addReconcileListener(IPhpScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
 			fReconcilingListeners.add(reconcileListener);
 		}
 	}
 
-	public void removeReconcileListener(IScriptReconcilingListener reconcileListener) {
+	public void removeReconcileListener(IPhpScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
 			fReconcilingListeners.remove(reconcileListener);
 		}
@@ -2586,7 +2615,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
 		for (int i = 0, length = listeners.length; i < length; ++i)
-			((IScriptReconcilingListener) listeners[i]).reconciled(inputModelElement, forced, progressMonitor);
+			((IPhpScriptReconcilingListener) listeners[i]).reconciled(ast, forced, progressMonitor);
 	}
 
 	/**
@@ -2662,6 +2691,30 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 		return annotationModel;
 	}
+	
+	/**
+	 * Install Semantic Highlighting.
+	 *
+	 * @since 3.0
+	 */
+	private void installSemanticHighlighting() {
+		if (fSemanticManager == null) {
+			fSemanticManager= new SemanticHighlightingManager();
+			fSemanticManager.install(this, (PHPStructuredTextViewer) getSourceViewer(), PHPUiPlugin.getDefault().getColorManager(), getPreferenceStore());
+		}
+	}
+
+	/**
+	 * Uninstall Semantic Highlighting.
+	 *
+	 * @since 3.0
+	 */
+	private void uninstallSemanticHighlighting() {
+		if (fSemanticManager != null) {
+			fSemanticManager.uninstall();
+			fSemanticManager= null;
+		}
+	}	
 
 	/**
 	 * Updates the occurrences annotations based on the current selection.

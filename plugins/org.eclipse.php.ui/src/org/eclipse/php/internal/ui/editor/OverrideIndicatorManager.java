@@ -16,17 +16,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ISynchronizable;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelExtension;
-import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.ast.nodes.Bindings;
+import org.eclipse.php.internal.core.ast.nodes.IMethodBinding;
+import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
+import org.eclipse.php.internal.core.ast.nodes.Identifier;
+import org.eclipse.php.internal.core.ast.nodes.MethodDeclaration;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -43,7 +56,7 @@ import org.eclipse.ui.IEditorPart;
  *
  * @since 3.0
  */
-class OverrideIndicatorManager implements IScriptReconcilingListener, IPhpScriptReconcilingListener {
+class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 
 	/**
 	 * Overwrite and override indicator annotation.

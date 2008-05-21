@@ -94,6 +94,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	private ASTProvider fASTProvider;
 
+	private ColorManager fColorManager;
+
 	/**
 	 * The constructor.
 	 */
@@ -333,6 +335,21 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 		return fASTProvider;
 	}
+	
+	/**
+	 * Returns the AST provider.
+	 * 
+	 * @return the AST provider
+	 * @since 3.0
+	 */
+	public synchronized ColorManager getColorManager() {
+		if (fColorManager == null)
+			fColorManager = new ColorManager();
+
+		return fColorManager;
+	}
+	
+		
 
 	/**
 	 * Returns the {@link ITypeRoot} wrapped by the given editor input.
