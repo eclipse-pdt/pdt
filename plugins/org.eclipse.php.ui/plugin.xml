@@ -1580,5 +1580,13 @@
           priority="1">
     </language>
  </extension>
+ <extension
+       point="org.eclipse.dltk.ui.scriptDocumentationProviders">
+    <provider
+          class="org.eclipse.php.internal.ui.documentation.PHPDocumentationProvider"
+          id="org.eclipse.php.internal.ui.documentation.PHPDocumentationProvider"
+          nature="org.eclipse.php.core.PHPNature">
+    </provider>
+ </extension>
 	
 </plugin>
