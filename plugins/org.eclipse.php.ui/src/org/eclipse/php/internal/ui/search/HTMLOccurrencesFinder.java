@@ -9,6 +9,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
 /**
@@ -57,7 +58,11 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 	protected void findOccurrences() {
 		IStructuredDocument structuredDocument = ((IStructuredDocument) document);
 		IStructuredDocumentRegion region = structuredDocument.getRegionAtCharacterOffset(offset);
-		htmlTag = region.getFullText();
+		if (region.getRegions().size() > 0) {
+			htmlTag = region.getText(region.getRegions().get(1));
+		} else {
+			htmlTag = region.getFullText();
+		}
 		if (region.isEnded()) {
 			IStructuredModel existingModelForRead = null;
 			try {
@@ -69,11 +74,13 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 						IDOMElement domElement = (IDOMElement) indexedRegion;
 						IStructuredDocumentRegion endStructuredDocumentRegion = domElement.getEndStructuredDocumentRegion();
 						IStructuredDocumentRegion startStructuredDocumentRegion = domElement.getStartStructuredDocumentRegion();
-						if (endStructuredDocumentRegion != null && startStructuredDocumentRegion != null) {
+						if (endStructuredDocumentRegion != null && startStructuredDocumentRegion != null && endStructuredDocumentRegion.getRegions().size() > 0 && startStructuredDocumentRegion.getRegions().size() > 0) {
+							ITextRegion innerEndTag = endStructuredDocumentRegion.getRegions().get(1);
+							ITextRegion innerStartTag = startStructuredDocumentRegion.getRegions().get(1);
 							// mark the occurrences only when the HTML tag has a closing tag
 							fDescription = Messages.format(BASE_DESCRIPTION, startStructuredDocumentRegion.getFullText());
-							fResult.add(new OccurrenceLocation(startStructuredDocumentRegion.getStart(), startStructuredDocumentRegion.getLength(), getOccurrenceType(null), fDescription));
-							fResult.add(new OccurrenceLocation(endStructuredDocumentRegion.getStart(), endStructuredDocumentRegion.getLength(), getOccurrenceType(null), fDescription));
+							fResult.add(new OccurrenceLocation(startStructuredDocumentRegion.getStart() + innerStartTag.getStart(), innerStartTag.getTextLength(), getOccurrenceType(null), fDescription));
+							fResult.add(new OccurrenceLocation(endStructuredDocumentRegion.getStart() + innerEndTag.getStart(), innerEndTag.getTextLength(), getOccurrenceType(null), fDescription));
 						}
 					}
 
