@@ -2,25 +2,7 @@ package org.eclipse.php.internal.ui.search;
 
 import java.util.List;
 
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
-import org.eclipse.php.internal.core.ast.nodes.FunctionName;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.InterfaceDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.MethodDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.MethodInvocation;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.Statement;
-import org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess;
-import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
-import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.ast.nodes.TypeDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.Variable;
+import org.eclipse.php.internal.core.ast.nodes.*;
 
 /**
  * Class members occurrences finder.
@@ -28,7 +10,7 @@ import org.eclipse.php.internal.core.ast.nodes.Variable;
  * @author shalom
  */
 public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
-	
+
 	public static final String ID = "ClassMembersOccurrencesFinder"; //$NON-NLS-1$
 	private String classMemberName; // The member's name
 	private String typeDeclarationName; // Class or Interface name // TODO - use Binding
@@ -99,7 +81,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(MethodInvocation methodInvocation) {
 		if (isMethod) {
-			checkDispatch(methodInvocation.getMethod().getFunctionName().getName());			
+			checkDispatch(methodInvocation.getMethod().getFunctionName().getName());
 		}
 		return super.visit(methodInvocation);
 	}
@@ -109,7 +91,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(FieldAccess fieldAccess) {
 		if (!isMethod) {
-			checkDispatch(fieldAccess.getField().getName());		
+			checkDispatch(fieldAccess.getField().getName());
 		}
 		return super.visit(fieldAccess);
 	}
@@ -142,12 +124,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Mark var on: MyClass::var;
 	 */
 	public boolean visit(StaticFieldAccess fieldAccess) {
-		int start = fieldAccess.getMember().getStart();
-		if (fieldAccess.getField().isDollared()) {
-			start++;
-		}
 		if (!isMethod) {
-			checkDispatch(fieldAccess.getField().getName());			
+			checkDispatch(fieldAccess.getField().getName());
 		}
 
 		return super.visit(fieldAccess);
@@ -161,15 +139,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier id = (Identifier) node;
 			if (id.getName().equalsIgnoreCase(classMemberName)) {
-				fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));	
+				fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
 			}
-		} 
+		}
 		if (node.getType() == ASTNode.VARIABLE) {
 			Variable id = (Variable) node;
 			checkDispatch(id.getName());
-		} 
-		
-		
+		}
 	}
 
 	private void checkTypeDeclaration(TypeDeclaration typeDeclaration) {
@@ -224,10 +200,29 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
-		if (node.getParent().getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
+		if (node.getParent().getType() == ASTNode.CLASS_CONSTANT_DECLARATION || isInAssignment(node)) {
 			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 		}
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
+	}
+
+	/**
+	 * Check if the given node is a variable in a field access that exists in an assignment expression.
+	 * 
+	 * @param node
+	 * @return
+	 */
+	protected boolean isInAssignment(ASTNode node) {
+		if (node.getParent().getType() == ASTNode.VARIABLE) {
+			Variable var = (Variable) node.getParent();
+			if (var.getParent().getType() == ASTNode.FIELD_ACCESS) {
+				FieldAccess fAccess = (FieldAccess) var.getParent();
+				if (fAccess.getLocationInParent() == Assignment.LEFT_HAND_SIDE_PROPERTY) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/*
