@@ -2,7 +2,9 @@ package org.eclipse.php.internal.ui.search;
 
 import java.util.List;
 
+import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.ui.Logger;
 
 /**
  * Class members occurrences finder.
@@ -15,6 +17,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	private String classMemberName; // The member's name
 	private String typeDeclarationName; // Class or Interface name // TODO - use Binding
 	private boolean isMethod;
+	private IType dispatcherType; // might be null 
 
 	/**
 	 * @param root the AST root
@@ -27,6 +30,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		isMethod = false;
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) node;
+			dispatcherType = resolveDispatcherType(identifier);
 			classMemberName = identifier.getName();
 			// IBinding binding = identifier.resolveBinding(); // FIXME - This should be implemented...
 			ASTNode parent = identifier.getParent();
@@ -44,6 +48,72 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		}
 		fDescription = "OccurrencesFinder_occurrence_description";
 		return fDescription;
+	}
+
+	/*
+	 * Tries to resolve the type of the dispatcher.
+	 */
+	private IType resolveDispatcherType(Identifier identifier) {
+		ITypeBinding typeBinding = null;
+		ASTNode parent = identifier.getParent();
+		if (parent.getType() == ASTNode.VARIABLE) {
+			Variable var = (Variable) parent;
+			if (var.getParent().getType() == ASTNode.FIELD_ACCESS) {
+				typeBinding = ((FieldAccess) var.getParent()).getDispatcher().resolveTypeBinding();
+			} else if (var.getParent().getType() == ASTNode.FUNCTION_NAME) {
+				FunctionName fn = (FunctionName) var.getParent();
+				if (fn.getParent().getType() == ASTNode.FUNCTION_INVOCATION) {
+					FunctionInvocation fi = (FunctionInvocation) fn.getParent();
+					if (fi.getParent().getType() == ASTNode.METHOD_INVOCATION) {
+						typeBinding = ((MethodInvocation) fi.getParent()).getDispatcher().resolveTypeBinding();
+					}
+				}
+			} else if (var.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
+				return resolveDeclaringClassType(var.getParent());
+			}
+		} else if (parent.getType() == ASTNode.STATIC_CONSTANT_ACCESS) {
+			StaticConstantAccess sca = (StaticConstantAccess) parent;
+			typeBinding = sca.getClassName().resolveTypeBinding();
+		} else if (parent.getType() == ASTNode.STATIC_FIELD_ACCESS) {
+			StaticFieldAccess sfa = (StaticFieldAccess) parent;
+			typeBinding = sfa.getClassName().resolveTypeBinding();
+		} else if (parent.getType() == ASTNode.METHOD_DECLARATION) {
+			MethodDeclaration md = (MethodDeclaration) parent;
+			return resolveDeclaringClassType(md);
+		} else if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
+			FunctionDeclaration fd = (FunctionDeclaration) parent;
+			return resolveDeclaringClassType(fd);
+		} else if (parent.getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
+			ClassConstantDeclaration ccd = (ClassConstantDeclaration) parent;
+			return resolveDeclaringClassType(ccd);
+		}
+		if (typeBinding != null && typeBinding.isClass()) {
+			return (IType) typeBinding.getPHPElement();
+		}
+		return null;
+	}
+
+	/*
+	 * Resolve the class declaration type for the given node.
+	 * This method traverse upward to find a defining ClassDeclaration and then resolves its IType.
+	 */
+	protected IType resolveDeclaringClassType(ASTNode node) {
+		ASTNode parent = node.getParent();
+		ClassDeclaration declaration = null;
+		while (declaration == null && parent != null) {
+			if (parent.getType() == ASTNode.CLASS_DECLARATION) {
+				declaration = (ClassDeclaration) parent;
+			}
+			parent = parent.getParent();
+		}
+		if (declaration != null) {
+			try {
+				return (IType) declaration.getProgramRoot().getSourceModule().getType(declaration.getName().getName());
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
+		}
+		return null;
 	}
 
 	/*
@@ -100,11 +170,15 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * Mark CON on: MyClass::CON;
 	 */
 	public boolean visit(StaticConstantAccess classConstantAccess) {
-		// TODO - Change this naive implementation to support real binded occurrences (using the Binding mechanism)
-		// if (classConstantAccess.getClassName().getName().equals(typeDeclarationName)) {
 		Identifier constant = classConstantAccess.getConstant();
 		if (classMemberName.equals(constant.getName())) {
-			fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
+			if (dispatcherType != null) {
+				if (dispatcherType.equals(resolveDispatcherType(constant))) {
+					fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
+				}
+			} else {
+				fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
+			}
 		}
 		// }
 		return true;
@@ -139,7 +213,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier id = (Identifier) node;
 			if (id.getName().equalsIgnoreCase(classMemberName)) {
-				fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
+				if (dispatcherType != null) {
+					if (dispatcherType.equals(resolveDispatcherType(id))) {
+						fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
+					}
+				} else {
+					fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
+				}
 			}
 		}
 		if (node.getType() == ASTNode.VARIABLE) {
@@ -163,7 +243,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				if (isMethod) {
 					final Identifier functionName = classMethodDeclaration.getFunction().getFunctionName();
 					if (classMemberName.equalsIgnoreCase(functionName.getName())) {
-						fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
+						if (dispatcherType != null) {
+							if (dispatcherType.equals(resolveDispatcherType(functionName))) {
+								fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
+							}
+						} else {
+							fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
+						}
 					}
 				}
 			} else if (statement.getType() == ASTNode.FIELD_DECLARATION) {
@@ -176,7 +262,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 
 						final Identifier variable = (Identifier) variableNames[j].getName();
 						if (classMemberName.equals(variable.getName())) {
-							fResult.add(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
+							if (dispatcherType != null) {
+								if (dispatcherType.equals(resolveDispatcherType(variable))) {
+									fResult.add(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
+								}
+							} else {
+								fResult.add(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
+							}
 						}
 					}
 				}
@@ -185,7 +277,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				List<Identifier> variableNames = classVariableDeclaration.names();
 				for (Identifier name : variableNames) {
 					if (classMemberName.equals(name.getName())) {
-						fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
+						if (dispatcherType != null) {
+							if (dispatcherType.equals(resolveDispatcherType(name))) {
+								fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
+							}
+						} else {
+							fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
+						}
 					}
 				}
 			}
