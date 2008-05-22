@@ -4,10 +4,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.ISourceModule;
@@ -15,6 +17,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
@@ -23,6 +26,12 @@ import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	
+	private static final String DL_END = "</dl>"; //$NON-NLS-1$
+	private static final String DL_START = "<dl>"; //$NON-NLS-1$
+	private static final String DD_END = "</dd>"; //$NON-NLS-1$
+	private static final String DD_START = "<dd>"; //$NON-NLS-1$
+	private static final String DT_START = "<dt>"; //$NON-NLS-1$
+	private static final String DT_END = "</dt>"; //$NON-NLS-1$
 	private static final String FIELD_LOCATION = "Location";
 	private static final String FIELD_AUTHOR = "Author";
 	private static final String FIELD_CLASS = "Class";
@@ -32,43 +41,65 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	private static final String FIELD_THROWS = "Throws";
 	private static final String FIELD_DEPRECATED = "Deprecated";
 	private static final String FIELD_SEEALSO = "See Also";
-	private static final String EMPTY = "";
-	private static Pattern DOLLAR_PATTERN = Pattern.compile("\\$"); //$NON-NLS-1$
-	private static Pattern UNKNOWN_TYPE_PATTERN = Pattern.compile("unknown_type\\ "); //$NON-NLS-1$
+	private static final String FIELD_EXTENDS = "Extends";
+	private static final String FIELD_IMPLEMENTS = "Implements";
 
 	public Reader getInfo(IMember element, boolean lookIntoParents, boolean lookIntoExternal) {
-		StringBuilder buf = new StringBuilder("<dl>");
+		StringBuilder buf = new StringBuilder(DL_START);
 		try {
-			if (element instanceof IMethod) {
-				IMethod method = (IMethod) element;
-				if (method.exists()) {
-					appendMethodInfo(method, buf);
+			if (!appendBuiltinDoc(element, buf)) {
+				if (element instanceof IMethod) {
+					appendMethodInfo((IMethod)element, buf);
+				} else if (element instanceof IType) {
+					appendTypeInfo((IType) element, buf);
+				} else if (element instanceof IField) {
+					appendFieldInfo((IField) element, buf);
 				}
 			}
-			
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
-		buf.append("</dl>");
+		buf.append(DL_END);
 		return new StringReader(buf.toString());
 	}
 
 	public Reader getInfo(String content) {
 		return null;
 	}
+	
+	private boolean appendBuiltinDoc(IMember element, StringBuilder buf) {
+		String builtinDoc = BuiltinDoc.getString(element.getElementName());
+		if (builtinDoc.length() > 0) {
+			ISourceModule sourceModule = element.getSourceModule();
+			String fileName = sourceModule.getElementName();
 
-	protected void appendMethodInfo(IMethod method, StringBuilder buf) throws ModelException {
+			// append the file name
+			appendDefinitionRow(FIELD_LOCATION, fileName, buf);
+			
+			// append the class name if it exists
+			IType declaringType = element.getDeclaringType();
+			if (declaringType != null) {
+				appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
+			}
+			
+			buf.append(builtinDoc);
+			return true;
+		}
+		return false;
+	}
+
+	private void appendMethodInfo(IMethod method, StringBuilder buf) throws ModelException {
 		
 		ISourceModule sourceModule = method.getSourceModule();
 		String fileName = sourceModule.getElementName();
 
 		// append the file name
-		appendTableRow(FIELD_LOCATION, fileName, buf);
+		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
 		
 		// append the class name if it exists
 		IType declaringType = method.getDeclaringType();
 		if (declaringType != null) {
-			appendTableRow(FIELD_CLASS, declaringType.getElementName(), buf);
+			appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
 		}
 		
 		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
@@ -83,13 +114,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 		
 		// append description if it exists
-		String desc = doc.getShortDescription();
-		if (desc != null && desc.length() > 0) {
-			appendTableRow(FIELD_DESC, nl2br(desc), buf);
-		}
+		appendShortDescription(doc, buf);
 		
-		// append tags info
-		appendParamInfo(doc, buf);
+		// append parameters info
+		appendTagInfo(doc, PHPDocTag.PARAM, FIELD_PARAMETERS, buf);
 		
 		// append return type
 		appendTagInfo(doc, PHPDocTag.RETURN, FIELD_RETURNS, buf);
@@ -107,36 +135,113 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		appendTagInfo(doc, PHPDocTag.AUTHOR, FIELD_AUTHOR, buf);
 	}
 	
+	private void appendTypeInfo(IType type, StringBuilder buf) throws ModelException {
+		
+		ISourceModule sourceModule = type.getSourceModule();
+		String fileName = sourceModule.getElementName();
+		
+		// append the file name
+		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
+
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(module, type);
+		
+		if (typeDeclaration instanceof ClassDeclaration) {
+			ClassDeclaration classDeclaration = (ClassDeclaration) typeDeclaration;
+			String superClassName = classDeclaration.getSuperClassName();
+			if (superClassName != null) {
+				appendDefinitionRow(FIELD_EXTENDS, superClassName, buf);
+			}
+			String[] interfaceNames = classDeclaration.getInterfaceNames();
+			if (interfaceNames != null) {
+				appendDefinitionRows(FIELD_IMPLEMENTS, interfaceNames, buf);
+			}
+		} else {
+			String[] superClassNames = type.getSuperClasses();
+			if (superClassNames != null) {
+				appendDefinitionRows(FIELD_EXTENDS, superClassNames, buf);
+			}
+		}
+		
+		if (!(typeDeclaration instanceof IPHPDocAwareDeclaration)) {
+			return;
+		}
+		PHPDocBlock doc = ((IPHPDocAwareDeclaration)typeDeclaration).getPHPDoc();
+		if (doc == null) {
+			return;
+		}
+		
+		// append description if it exists
+		appendShortDescription(doc, buf);
+		
+		// append see also info
+		appendTagInfo(doc, PHPDocTag.SEE, FIELD_SEEALSO, buf);
+			
+		// append deprecated info
+		appendTagInfo(doc, PHPDocTag.DEPRECATED, FIELD_DEPRECATED, buf);
+		
+		// append author info
+		appendTagInfo(doc, PHPDocTag.AUTHOR, FIELD_AUTHOR, buf);
+	}
+	
+	private void appendFieldInfo(IField field, StringBuilder buf) throws ModelException {
+		
+		ISourceModule sourceModule = field.getSourceModule();
+		String fileName = sourceModule.getElementName();
+
+		// append the file name
+		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
+		
+		// append the class name if it exists
+		IType declaringType = field.getDeclaringType();
+		if (declaringType != null) {
+			appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
+		}
+		
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ASTNode node = PHPModelUtils.getNodeByField(module, field);
+		
+		if (!(node instanceof IPHPDocAwareDeclaration)) {
+			return;
+		}
+		PHPDocBlock doc = ((IPHPDocAwareDeclaration)node).getPHPDoc();
+		if (doc == null) {
+			return;
+		}
+		
+		// append description if it exists
+		appendShortDescription(doc, buf);
+	}
+	
 	private static String nl2br(String str) {
 		return str.replaceAll("\\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
-	private static void appendTableRow(String field, String data, StringBuilder buf) {
-		buf.append("<dt>").append(field).append("</dt>");
-		buf.append("<dd>").append(data).append("</dd>");
+	private static void appendDefinitionRow(String field, String data, StringBuilder buf) {
+		buf.append(DT_START).append(field).append(DT_END);
+		buf.append(DD_START).append(data).append(DD_END);
 	}
 	
-	private static void appendParamInfo(PHPDocBlock doc, StringBuilder buf) {
-		PHPDocTag[] paramTags = getTags(doc, PHPDocTag.PARAM);
-		if (paramTags.length > 0) {
-			buf.append("<dt>").append(FIELD_PARAMETERS).append("</dt>");
-			for (PHPDocTag tag : paramTags) {
-				String arg = tag.getValue();
-				arg = DOLLAR_PATTERN.matcher(arg).replaceAll(EMPTY);
-				arg = UNKNOWN_TYPE_PATTERN.matcher(arg).replaceAll(EMPTY);
-				if (arg.split(" ").length > 1) {
-					buf.append("<dd>").append(arg).append("</dd>");
-				}
-			}
+	private static void appendDefinitionRows(String field, String[] data, StringBuilder buf) {
+		buf.append(DT_START).append(field).append(DT_END);
+		for (String row : data) {
+			buf.append(DD_START).append(row).append(DD_END);
+		}
+	}
+	
+	private static void appendShortDescription(PHPDocBlock doc, StringBuilder buf) {
+		String desc = doc.getShortDescription();
+		if (desc != null && desc.length() > 0) {
+			appendDefinitionRow(FIELD_DESC, nl2br(desc), buf);
 		}
 	}
 	
 	private static void appendTagInfo(PHPDocBlock doc, int tagKind, String field, StringBuilder buf) {
-		PHPDocTag[] returnTags = getTags(doc, tagKind);
-		if (returnTags.length > 0) {
-			buf.append("<dt>").append(field).append("</dt>");
-			for (PHPDocTag tag : returnTags) {
-				buf.append("<dd>").append(tag.getValue()).append("</dd>");
+		PHPDocTag[] tags = getTags(doc, tagKind);
+		if (tags.length > 0) {
+			buf.append(DT_START).append(field).append(DT_END);
+			for (PHPDocTag tag : tags) {
+				buf.append(DD_START).append(tag.getValue()).append(DD_END);
 			}
 		}
 	}

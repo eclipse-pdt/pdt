@@ -34,7 +34,13 @@ public class PHPOverrideCompletionProposal extends ScriptTypeCompletionProposal 
 		StringBuffer buffer= new StringBuffer();
 		buffer.append(completionProposal);		
 		
-		setReplacementString(buffer.toString());		
+		String replacementString = buffer.toString();
+		setReplacementString(replacementString);
+	}
+	
+	public void apply(IDocument document, char trigger, int offset) {
+		super.apply(document, trigger, offset);
+		setCursorPosition(getReplacementString().length() - 1);
 	}
 
 	public CharSequence getPrefixCompletionText(IDocument document, int completionOffset) {
@@ -55,7 +61,19 @@ public class PHPOverrideCompletionProposal extends ScriptTypeCompletionProposal 
 		return false;
 	}
 	
-	public IContextInformation getContextInformation() {		
-		return new ContextInformation(getDisplayString(), getDisplayString());
+	public IContextInformation getContextInformation() {
+		String displayString = getDisplayString();
+		String infoDisplayString = displayString;
+		
+		int i = infoDisplayString.indexOf('(');
+		if (i != -1) {
+			infoDisplayString = infoDisplayString.substring(i+1);
+		}
+		i = infoDisplayString.indexOf(')');
+		if (i != -1) {
+			infoDisplayString = infoDisplayString.substring(0, i);
+		}
+		
+		return new ContextInformation(displayString, infoDisplayString);
 	}
 }

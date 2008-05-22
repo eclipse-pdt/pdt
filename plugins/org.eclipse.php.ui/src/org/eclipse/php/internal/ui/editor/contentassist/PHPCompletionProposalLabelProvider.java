@@ -8,6 +8,8 @@ import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 
 public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider {
 
+	private static final String ENCLOSING_TYPE_SEPARATOR = "::"; //$NON-NLS-1$
+
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
 
@@ -25,7 +27,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName("::")); //$NON-NLS-1$
+			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}
@@ -50,7 +52,7 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		IModelElement parent = method.getParent();
 		if (parent instanceof IType) {
 			IType type = (IType) parent;
-			nameBuffer.append(type.getTypeQualifiedName("::")); //$NON-NLS-1$
+			nameBuffer.append(type.getTypeQualifiedName(ENCLOSING_TYPE_SEPARATOR)); //$NON-NLS-1$
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}

@@ -26,6 +26,7 @@ import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -45,7 +46,7 @@ import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistProcessor;
+import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPDocContentAssistProcessor;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
@@ -169,8 +170,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return processorsCache.get(partitionType);
 		}
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
-		processors.add(new PHPContentAssistProcessor());
-//		processors.add(new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT));
+		processors.add(new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT));
 		processors.add(new PHPDocContentAssistProcessor());
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTENT_ASSIST_PROCESSOR_EXT);
