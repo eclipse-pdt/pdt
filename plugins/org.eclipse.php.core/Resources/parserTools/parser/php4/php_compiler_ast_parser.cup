@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.10 2008/05/22 11:52:05 rganor Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.11 2008/05/22 12:58:46 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -654,12 +654,9 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 extends_from:superClass errorOrNot
 {:
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.peek();
-	ASTListNode parentsList = new ASTListNode();
 	if (superClass != null) {
-		parentsList.addNode(superClass);
+		classDeclaration.setSuperClass(superClass);
 	}
-
-	classDeclaration.setSuperClasses(parentsList);
 	classDeclaration.setEnd(superClassright);
 	classDeclaration.getBody().setStart(superClassright);
 	classDeclaration.getBody().setEnd(superClassright);

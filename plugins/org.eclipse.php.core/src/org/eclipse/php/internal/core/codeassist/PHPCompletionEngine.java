@@ -74,6 +74,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPCompletionEngine extends ScriptCompletionEngine {
 
+	private static final String NEW = "new"; //$NON-NLS-1$
+	private static final String INSTANCEOF = "instanceof"; //$NON-NLS-1$
+	private static final String SELF = "self"; //$NON-NLS-1$
 	private static final String IMPLEMENTS = "implements"; //$NON-NLS-1$
 	private static final String EXTENDS = "extends"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
@@ -534,7 +537,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if ((explicit || autoShowFunctionsKeywordsConstants) && !inClass) {
 			IModelElement[] functions = PHPMixinModel.getInstance().getMethod(null, prefix + WILDCARD);
 			for (IModelElement function : functions) {
-				reportMethod((IMethod) function, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+				reportMethod((IMethod) function, RELEVANCE_METHODS);
 			}
 
 			if (!disableConstants) {
@@ -746,7 +749,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
-			if (className.equals("self")) { //$NON-NLS-1$
+			if (className.equals(SELF)) { //$NON-NLS-1$
 				IType classData = getContainerClassData(offset - 6); //the offset before self::
 				if (classData != null) {
 					return new IType[] { classData };
@@ -833,7 +836,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (explicit || autoShowFunctionsKeywordsConstants) {
 				IMethod[] methods = getClassMethods(type, prefix, false);
 				for (IModelElement method : methods) {
-					reportMethod((IMethod) method, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+					reportMethod((IMethod) method, RELEVANCE_METHODS);
 				}
 			}
 			if (explicit || autoShowVariables) {
@@ -966,7 +969,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				for (IMethod method : classMethods) {
 					try {
 						if (!isPHP5 || showNonStrictOptions || (method.getFlags() & Modifiers.AccStatic) != 0) {
-							reportMethod(method, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+							reportMethod(method, RELEVANCE_METHODS);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -1001,7 +1004,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				try {
 					int flags = methodElement.getFlags();
 					if ((flags & Modifiers.AccPrivate) == 0) {
-						reportMethod(methodElement, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+						reportMethod(methodElement, RELEVANCE_METHODS);
 					}
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -1147,7 +1150,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			try {
 				int flags = superMethod.getFlags();
 				if ((flags & Modifiers.AccPrivate) == 0) {
-					reportMethod(superMethod, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+					reportMethod(superMethod, RELEVANCE_METHODS);
 				}
 			} catch (ModelException e) {
 				Logger.logException(e);
@@ -1168,7 +1171,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		for (String function : functions) {
 			if (startsWithIgnoreCase(function, functionNameStart)) {
 				FakeMethod fakeMagicMethod = new FakeMethod((ModelElement) classData, function);
-				reportMethod(fakeMagicMethod, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+				reportMethod(fakeMagicMethod, RELEVANCE_METHODS);
 			}
 		}
 
@@ -1458,7 +1461,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	 * @param classData
 	 */
 	private void addSelfFunctionToProposals(IType type) {
-		reportMethod(new FakeMethod((ModelElement) type, "self"), RELEVANCE_METHODS, BRACKETS_SUFFIX);
+		reportMethod(new FakeMethod((ModelElement) type, SELF), RELEVANCE_METHODS);
 	}
 
 	protected boolean isNewOrInstanceofStatement(String keyword, String prefix, int offset, boolean explicit, String type) {
@@ -1466,13 +1469,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 
-		if (keyword.equalsIgnoreCase("instanceof")) { //$NON-NLS-1$
+		if (keyword.equalsIgnoreCase(INSTANCEOF)) { //$NON-NLS-1$
 			this.setSourceRange(offset - prefix.length(), offset);
 			showClassList(prefix, offset, States.INSTANCEOF, explicit);
 			return true;
 		}
 
-		if (keyword.equalsIgnoreCase("new")) { //$NON-NLS-1$
+		if (keyword.equalsIgnoreCase(NEW)) { //$NON-NLS-1$
 			this.setSourceRange(offset - prefix.length(), offset);
 			showClassList(prefix, offset, States.NEW, explicit);
 			return true;
@@ -1514,7 +1517,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(lastWord + WILDCARD);
 		for (IModelElement function : functions) {
-			reportMethod((IMethod) function, RELEVANCE_METHODS, BRACKETS_SUFFIX);
+			reportMethod((IMethod) function, RELEVANCE_METHODS);
 		}
 
 		if (!disableConstants) {
@@ -1528,7 +1531,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	private void reportMethod(IMethod method, int rel, String suffix) {
+	private void reportMethod(IMethod method, int rel) {
 		this.intresting.add(method);
 		String elementName = method.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1539,7 +1542,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			elementName = elementName.substring(elementName.indexOf('.') + 1);
 		}
 		char[] name = elementName.toCharArray();
-		char[] compl = (elementName + suffix).toCharArray();
 
 		int relevance = rel;
 
@@ -1565,9 +1567,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			proposal.setModelElement(method);
 			proposal.setName(name);
-			proposal.setCompletion(compl);
+			proposal.setCompletion((elementName + BRACKETS_SUFFIX).toCharArray());
 			try {
-				//proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
+//				proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);

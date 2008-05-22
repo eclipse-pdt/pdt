@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.14 2008/05/22 11:52:05 rganor Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.15 2008/05/22 12:58:45 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -761,19 +761,15 @@ class_entry_type:modifier T_STRING:className
 extends_from:superClass errorOrNot implements_list:interfaces
 {:
 	ClassDeclaration classDeclaration = (ClassDeclaration)parser.declarations.peek();
-	ASTListNode parentsList = new ASTListNode();
-		if (superClass != null) {
-			parentsList.addNode(superClass);
-		}
-		if (interfaces != null) {
-			for (TypeReference intface: (List<TypeReference>)interfaces) {
-				parentsList.addNode(intface);
-			}
-		}
-		classDeclaration.setSuperClasses(parentsList);
-		classDeclaration.setEnd(interfacesright);
-		classDeclaration.getBody().setStart(interfacesright);
-		classDeclaration.getBody().setEnd(interfacesright);
+	if (superClass != null) {
+		classDeclaration.setSuperClass(superClass);
+	}
+	if (interfaces != null) {
+		classDeclaration.setInterfaceList(interfaces);
+	}
+	classDeclaration.setEnd(interfacesright);
+	classDeclaration.getBody().setStart(interfacesright);
+	classDeclaration.getBody().setEnd(interfacesright);
 :}
 T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
 {:
