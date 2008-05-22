@@ -12,7 +12,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	public PHPCompletionProposal(String replacementString, int replacementOffset, int replacementLength, Image image, String displayString, int relevance, boolean indoc) {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
-
+	
 	protected boolean isSmartTrigger(char trigger) {
 		return trigger == '$';
 	}
