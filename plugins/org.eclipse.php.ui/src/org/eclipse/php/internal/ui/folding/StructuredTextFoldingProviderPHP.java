@@ -51,12 +51,24 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
+import org.eclipse.php.internal.ui.folding.html.ProjectionModelNodeAdapterFactoryHTML;
+import org.eclipse.php.internal.ui.folding.html.ProjectionModelNodeAdapterHTML;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Node;
 
 /**
  * Updates the projection model of a structured model for JSP.
@@ -763,6 +775,18 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	
 	private volatile int fUpdatingCount= 0;
 	private PHPStructuredTextViewer viewer;
+	private IDocument fDocument;
+	private boolean fProjectionNeedsToBeEnabled = false;	
+	/**
+	 * Maximum number of child nodes to add adapters to (limit for performance
+	 * sake)
+	 */
+	private static final int MAX_CHILDREN = 10;
+	/**
+	 * Maximum number of sibling nodes to add adapters to (limit for
+	 * performance sake)
+	 */
+	private static final int MAX_SIBLINGS = 1000;
 
 	/**
 	 * Creates a new folding provider. It must be
@@ -872,8 +896,81 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			DLTKCore.removeElementChangedListener(fElementListener);
 			fElementListener= null;
 		}
+		
+		final ProjectionModelNodeAdapterFactoryHTML factory2 = getAdapterFactoryHTML(false);
+		if (factory2 != null) {
+			factory2.removeProjectionViewer(viewer);
+		}
+
+		// clear out all annotations
+		if (viewer.getProjectionAnnotationModel() != null) {
+			viewer.getProjectionAnnotationModel().removeAllAnnotations();
+		}
+
+		removeAllAdapters();
+
+		fDocument = null;
+		fProjectionNeedsToBeEnabled = false;		
 	}
 
+	/**
+	 * Goes through every node and removes adapter from each for cleanup
+	 * purposes
+	 */
+	private void removeAllAdapters() {
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					final int startOffset = 0;
+					final IndexedRegion startNode = sModel.getIndexedRegion(startOffset);
+					if (startNode instanceof Node) {
+						Node nextSibling = (Node) startNode;
+						while (nextSibling != null) {
+							final Node currentNode = nextSibling;
+							nextSibling = currentNode.getNextSibling();
+
+							removeAdapterFromNodeAndChildren(currentNode, 0);
+						}
+					}
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Removes an adapter from node and its children
+	 *
+	 * @param node
+	 * @param level
+	 */
+	private void removeAdapterFromNodeAndChildren(Node node, int level) {
+		if (node instanceof INodeNotifier) {
+			final INodeNotifier notifier = (INodeNotifier) node;
+
+			// try and get the adapter for the current node and remove it
+			final INodeAdapter adapter2 = notifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
+			if (adapter2 != null) {
+				notifier.removeAdapter(adapter2);
+			}
+
+			Node nextChild = node.getFirstChild();
+			while (nextChild != null) {
+				final Node childNode = nextChild;
+				nextChild = childNode.getNextSibling();
+
+				removeAdapterFromNodeAndChildren(childNode, level + 1);
+			}
+		}
+	}
+	
+	
 	/*
 	 * @see org.eclipse.jdt.ui.text.folding.IJavaFoldingStructureProvider#initialize()
 	 */
@@ -884,8 +981,147 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		} finally {
 			fUpdatingCount--;
 		}
+		
+		if (viewer != null) {
+			fDocument = viewer.getDocument();
+
+			// set projection viewer on new document's adapter factory
+			if (viewer.getProjectionAnnotationModel() != null) {
+				final ProjectionModelNodeAdapterFactoryHTML factory2 = getAdapterFactoryHTML(true);
+				if (factory2 != null) {
+					factory2.addProjectionViewer(viewer);
+				}
+
+				addAllAdapters();
+			}
+			fProjectionNeedsToBeEnabled = false;
+		}
 	}
 
+	/**
+	 * Goes through every node and adds an adapter onto each for tracking
+	 * purposes
+	 */
+	private void addAllAdapters() {
+		final long start = System.currentTimeMillis();
+
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					IndexedRegion startNode = sModel.getIndexedRegion(0);
+					if (startNode == null) {
+						assert sModel instanceof IDOMModel;
+						startNode = ((IDOMModel) sModel).getDocument();
+					}
+
+					if (startNode instanceof Node) {
+						int siblingLevel = 0;
+						Node nextSibling = (Node) startNode;
+
+						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
+							final Node currentNode = nextSibling;
+							nextSibling = currentNode.getNextSibling();
+
+							addAdapterToNodeAndChildrenHTML(currentNode, 0);
+							++siblingLevel;
+						}
+					}
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+	}
+
+	
+	/**
+	 * Adds an adapter to node and its children
+	 *
+	 * @param node
+	 * @param childLevel
+	 */
+	private void addAdapterToNodeAndChildrenHTML(Node node, int childLevel) {
+		// stop adding initial adapters MAX_CHILDREN levels deep for
+		// performance sake
+		if (node instanceof INodeNotifier && childLevel < MAX_CHILDREN) {
+			final INodeNotifier notifier = (INodeNotifier) node;
+
+			// try and get the adapter for the current node and update the
+			// adapter with projection information
+			final ProjectionModelNodeAdapterHTML adapter2 = (ProjectionModelNodeAdapterHTML) notifier.getExistingAdapter(ProjectionModelNodeAdapterHTML.class);
+			if (adapter2 != null) {
+				adapter2.updateAdapter(node);
+			} else {
+				// just call getadapter so the adapter is created and
+				// automatically initialized
+				notifier.getAdapterFor(ProjectionModelNodeAdapterHTML.class);
+			}
+			int siblingLevel = 0;
+			Node nextChild = node.getFirstChild();
+			while (nextChild != null && siblingLevel < MAX_SIBLINGS) {
+				final Node childNode = nextChild;
+				nextChild = childNode.getNextSibling();
+
+				addAdapterToNodeAndChildrenHTML(childNode, childLevel + 1);
+				++siblingLevel;
+			}
+		}
+	}
+	
+
+	/**
+	 * Get the ProjectionModelNodeAdapterFactoryHTML to use with this
+	 * provider.
+	 *
+	 * @return ProjectionModelNodeAdapterFactoryHTML
+	 */
+	private ProjectionModelNodeAdapterFactoryHTML getAdapterFactoryHTML(boolean createIfNeeded) {
+		final long start = System.currentTimeMillis();
+
+		ProjectionModelNodeAdapterFactoryHTML factory = null;
+		if (fDocument != null) {
+			IStructuredModel sModel = null;
+			try {
+				sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
+				if (sModel != null) {
+					final FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
+
+					// getting the projectionmodelnodeadapter for the first
+					// time
+					// so do some initializing
+					if (!factoryRegistry.contains(ProjectionModelNodeAdapterHTML.class) && createIfNeeded) {
+						final ProjectionModelNodeAdapterFactoryHTML newFactory = new ProjectionModelNodeAdapterFactoryHTML();
+
+						// add factory to factory registry
+						factoryRegistry.addFactory(newFactory);
+
+						// add factory to propogating adapter
+						final IDOMModel domModel = (IDOMModel) sModel;
+						final IDOMDocument document = domModel.getDocument();
+						final PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
+						if (propagatingAdapter != null) {
+							propagatingAdapter.addAdaptOnCreateFactory(newFactory);
+						}
+					}
+
+					// try and get the factory
+					factory = (ProjectionModelNodeAdapterFactoryHTML) factoryRegistry.getFactoryFor(ProjectionModelNodeAdapterHTML.class);
+				}
+			} finally {
+				if (sModel != null) {
+					sModel.releaseFromRead();
+				}
+			}
+		}
+
+		return factory;
+	}
+	
+	
 	private FoldingStructureComputationContext createInitialContext() {
 		initializePreferences();
 		fInput= getInputElement();

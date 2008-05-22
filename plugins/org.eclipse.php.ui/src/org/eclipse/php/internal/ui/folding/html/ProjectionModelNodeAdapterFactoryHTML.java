@@ -7,9 +7,9 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Tom Turrell-Croft, left@ultrasis.com - [174307] Enable folding for div tags in JSP and HTML files
+ *     Tom Turrell-Croft, left@ultrasis.com - [174307] Enable folding for div tags in JSP and HTML files     
  *******************************************************************************/
-package org.eclipse.php.internal.ui.folding.projection;
+package org.eclipse.php.internal.ui.folding.html;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +32,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * List of projection viewers currently associated with this projection
 	 * model node adapter factory.
 	 */
-	protected Map<ProjectionViewer, ProjectionViewerInformation> fProjectionViewers;
+	private HashMap fProjectionViewers;
 
 	public ProjectionModelNodeAdapterFactoryHTML(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
@@ -51,7 +51,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * "adapt-able" node
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
-		if (isActive() && target instanceof Node && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
+		if ((isActive()) && (target instanceof Node) && ((Node) target).getNodeType() == Node.ELEMENT_NODE) {
 			Node node = (Node) target;
 			if (isNodeProjectable(node)) {
 
@@ -78,7 +78,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 
 	/**
 	 * Returns true if node is a node type able to fold
-	 *
+	 * 
 	 * @param node
 	 * @return boolean true if node is projectable, false otherwise
 	 */
@@ -86,7 +86,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			String tagName = node.getNodeName();
 			// node is only projectable if it is head, body, script, style,
-			// table, ul, ol and div tags
+			// table, ul, ol, and div tags
 			if (HTML40Namespace.ElementName.HEAD.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.BODY.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.SCRIPT.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.STYLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.TABLE.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.UL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.OL.equalsIgnoreCase(tagName) || HTML40Namespace.ElementName.DIV.equalsIgnoreCase(tagName))
 				return true;
 		}
@@ -95,23 +95,23 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 
 	/**
 	 * Return true if this factory is currently actively managing projection
-	 *
+	 * 
 	 * @return
 	 */
 	boolean isActive() {
-		return fProjectionViewers != null && !fProjectionViewers.isEmpty();
+		return (fProjectionViewers != null && !fProjectionViewers.isEmpty());
 	}
 
 	/**
 	 * Updates projection annotation model if document is not in flux.
 	 * Otherwise, queues up the changes to be applied when document is ready.
-	 *
+	 * 
 	 * @param node
 	 * @param deletions
 	 * @param additions
 	 * @param modifications
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Map modifications) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
 		queueAnnotationModelChanges(node, deletions, additions, modifications, null);
 	}
 
@@ -119,19 +119,19 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	 * Updates projection annotation model for a specific projection viewer if
 	 * document is not in flux. Otherwise, queues up the changes to be applied
 	 * when document is ready.
-	 *
+	 * 
 	 * @param node
 	 * @param deletions
 	 * @param additions
 	 * @param modifications
 	 * @param viewer
 	 */
-	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Map modifications, ProjectionViewer viewer) {
+	void queueAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications, ProjectionViewer viewer) {
 		// create a change object for latest change and add to queue
 		ProjectionAnnotationModelChanges newChange = new ProjectionAnnotationModelChanges(node, deletions, additions, modifications);
 		if (fProjectionViewers != null) {
 			if (viewer != null) {
-				ProjectionViewerInformation info = fProjectionViewers.get(viewer);
+				ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers.get(viewer);
 				if (info != null) {
 					info.queueAnnotationModelChanges(newChange);
 				}
@@ -144,10 +144,6 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 				}
 			}
 		}
-	}
-
-	ProjectionViewerInformation getProjectionInformation(ProjectionViewer viewer) {
-		return fProjectionViewers.get(viewer);
 	}
 
 	public void release() {
@@ -168,7 +164,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	/**
 	 * Adds viewer to list of projection viewers this factory is associated
 	 * with
-	 *
+	 * 
 	 * @param viewer -
 	 *            assumes viewer's document and projection annotation model
 	 *            are not null
@@ -178,7 +174,7 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 		removeProjectionViewer(viewer);
 
 		if (fProjectionViewers == null) {
-			fProjectionViewers = new HashMap<ProjectionViewer, ProjectionViewerInformation>();
+			fProjectionViewers = new HashMap();
 		}
 
 		// create new object containing projection viewer and its info
@@ -190,13 +186,13 @@ public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactor
 	/**
 	 * Removes the given viewer from the list of projection viewers this
 	 * factor is associated with
-	 *
+	 * 
 	 * @param viewer
 	 */
 	public void removeProjectionViewer(ProjectionViewer viewer) {
 		if (fProjectionViewers != null) {
 			// remove entry from list of viewers
-			ProjectionViewerInformation info = fProjectionViewers.remove(viewer);
+			ProjectionViewerInformation info = (ProjectionViewerInformation) fProjectionViewers.remove(viewer);
 			if (info != null) {
 				info.dispose();
 			}

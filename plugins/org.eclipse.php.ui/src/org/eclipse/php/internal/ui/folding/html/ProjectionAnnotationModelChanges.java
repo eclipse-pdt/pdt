@@ -4,11 +4,11 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.folding.projection;
+package org.eclipse.php.internal.ui.folding.html;
 
 import java.util.Map;
 
@@ -24,14 +24,12 @@ class ProjectionAnnotationModelChanges {
 	// org.eclipse.wst.css.ui.internal.projection
 	// org.eclipse.wst.html.ui.internal.projection
 	// org.eclipse.jst.jsp.ui.internal.projection
-	// org.eclipse.php.internal.ui.projection
+	private Node fNode;
+	private Annotation[] fDeletions;
+	private Map fAdditions;
+	private Annotation[] fModifications;
 
-	private final Node fNode;
-	private final Annotation[] fDeletions;
-	private final Map fAdditions;
-	private final Map fModifications;
-
-	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Map modifications) {
+	public ProjectionAnnotationModelChanges(Node node, Annotation[] deletions, Map additions, Annotation[] modifications) {
 		fNode = node;
 		fDeletions = deletions;
 		fAdditions = additions;
@@ -46,7 +44,7 @@ class ProjectionAnnotationModelChanges {
 		return fDeletions;
 	}
 
-	public Map getModifications() {
+	public Annotation[] getModifications() {
 		return fModifications;
 	}
 

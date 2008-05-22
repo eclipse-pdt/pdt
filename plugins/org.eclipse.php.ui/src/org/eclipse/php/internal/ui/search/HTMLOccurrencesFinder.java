@@ -58,7 +58,7 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 	protected void findOccurrences() {
 		IStructuredDocument structuredDocument = ((IStructuredDocument) document);
 		IStructuredDocumentRegion region = structuredDocument.getRegionAtCharacterOffset(offset);
-		if (region.getRegions().size() > 0) {
+		if (region.getRegions().size() > 1) {
 			htmlTag = region.getText(region.getRegions().get(1));
 		} else {
 			htmlTag = region.getFullText();

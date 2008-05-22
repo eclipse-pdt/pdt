@@ -7,9 +7,9 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *
+ *     
  *******************************************************************************/
-package org.eclipse.php.internal.ui.folding.projection;
+package org.eclipse.php.internal.ui.folding.html;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +31,6 @@ import org.w3c.dom.Node;
 /**
  * Updates projection annotation model with projection annotations for this
  * adapter node's children
- * @improtedFrom org.eclipse.wst.html.ui.internal.projection
  */
 public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// copies of this class located in:
@@ -39,7 +38,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// org.eclipse.jst.jsp.ui.internal.projection
 	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.html.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static class TagProjectionAnnotation extends ProjectionAnnotation {
+	private class TagProjectionAnnotation extends ProjectionAnnotation {
 		private boolean fIsVisible = false; /* workaround for BUG85874 */
 		private Node fNode;
 
@@ -59,12 +58,11 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 		/**
 		 * Does not paint hidden annotations. Annotations are hidden when they
 		 * only span one line.
-		 *
+		 * 
 		 * @see ProjectionAnnotation#paint(org.eclipse.swt.graphics.GC,
 		 *      org.eclipse.swt.widgets.Canvas,
 		 *      org.eclipse.swt.graphics.Rectangle)
 		 */
-		@Override
 		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
 			/* workaround for BUG85874 */
 			/*
@@ -78,7 +76,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 				if (metrics != null) {
 					// do not draw annotations that only span one line and
 					// mark them as not visible
-					if (rectangle.height / metrics.getHeight() <= 1) {
+					if ((rectangle.height / metrics.getHeight()) <= 1) {
 						fIsVisible = false;
 						return;
 					}
@@ -90,10 +88,9 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 
 		/*
 		 * (non-Javadoc)
-		 *
+		 * 
 		 * @see org.eclipse.jface.text.source.projection.ProjectionAnnotation#markCollapsed()
 		 */
-		@Override
 		public void markCollapsed() {
 			/* workaround for BUG85874 */
 			// do not mark collapsed if annotation is not visible
@@ -107,7 +104,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	// org.eclipse.jst.jsp.ui.internal.projection
 
 	ProjectionModelNodeAdapterFactoryHTML fAdapterFactory;
-	protected Map<ProjectionAnnotation, Position> previousAnnotations = new HashMap<ProjectionAnnotation, Position>();
+	private Map fTagAnnotations = new HashMap();
 
 	public ProjectionModelNodeAdapterHTML(ProjectionModelNodeAdapterFactoryHTML factory) {
 		fAdapterFactory = factory;
@@ -116,7 +113,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	/**
 	 * Create a projection position from the given node. Able to get
 	 * projection position if node isNodeProjectable.
-	 *
+	 * 
 	 * @param node
 	 * @return null if no projection position possible, a Position otherwise
 	 */
@@ -173,15 +170,15 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	/**
 	 * Find TagProjectionAnnotation for node in the current list of projection
 	 * annotations for this adapter
-	 *
+	 * 
 	 * @param node
 	 * @return TagProjectionAnnotation
 	 */
 	private TagProjectionAnnotation getExistingAnnotation(Node node) {
 		TagProjectionAnnotation anno = null;
 
-		if (node != null && !previousAnnotations.isEmpty()) {
-			Iterator it = previousAnnotations.keySet().iterator();
+		if ((node != null) && (!fTagAnnotations.isEmpty())) {
+			Iterator it = fTagAnnotations.keySet().iterator();
 			while (it.hasNext() && anno == null) {
 				TagProjectionAnnotation a = (TagProjectionAnnotation) it.next();
 				Node n = a.getNode();
@@ -204,7 +201,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			return;
 		}
 
-		if (eventType == INodeNotifier.STRUCTURE_CHANGED && notifier instanceof Node) {
+		if ((eventType == INodeNotifier.STRUCTURE_CHANGED) && (notifier instanceof Node)) {
 			updateAdapter((Node) notifier);
 		}
 	}
@@ -212,7 +209,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	/**
 	 * Update the projection annotation of all the nodes that are children of
 	 * node
-	 *
+	 * 
 	 * @param node
 	 */
 	public void updateAdapter(Node node) {
@@ -223,7 +220,7 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 	 * Update the projection annotation of all the nodes that are children of
 	 * node and adds all projection annotations to viewer (for newly added
 	 * viewers)
-	 *
+	 * 
 	 * @param node
 	 * @param viewer
 	 */
@@ -248,12 +245,13 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 						projectionAnnotations.put(newAnnotation, newPos);
 						// add to map containing annotations to add
 						additions.put(newAnnotation, newPos);
-					} else {
+					}
+					else {
 						// add to map containing all annotations for this
 						// adapter
 						projectionAnnotations.put(existing, newPos);
 						// remove from map containing annotations to delete
-						previousAnnotations.remove(existing);
+						fTagAnnotations.remove(existing);
 					}
 				}
 				childNode = childNode.getNextSibling();
@@ -263,13 +261,12 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			// everything in additions, and update everything in
 			// projectionAnnotations
 			ProjectionAnnotation[] oldList = null;
-			if (!previousAnnotations.isEmpty()) {
-				oldList = previousAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
+			if (!fTagAnnotations.isEmpty()) {
+				oldList = (ProjectionAnnotation[]) fTagAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 			ProjectionAnnotation[] modifyList = null;
 			if (!projectionAnnotations.isEmpty()) {
-			// this line causes PHP folding to flash, when editing an HTML tag which is a sibling to PHP element (bug #202740)
-			// modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
+				modifyList = (ProjectionAnnotation[]) projectionAnnotations.keySet().toArray(new ProjectionAnnotation[0]);
 			}
 
 			// specifically add all annotations to viewer
@@ -278,12 +275,12 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			}
 
 			// only update when there is something to update
-			if (oldList != null && oldList.length > 0 || !additions.isEmpty())
-				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, new HashMap());
+			if ((oldList != null && oldList.length > 0) || (!additions.isEmpty()) || (modifyList != null && modifyList.length > 0))
+				fAdapterFactory.queueAnnotationModelChanges(node, oldList, additions, modifyList);
 		}
 
 		// save new list of annotations
-		previousAnnotations = projectionAnnotations;
+		fTagAnnotations = projectionAnnotations;
 
 		if (debugProjectionPerf) {
 			long end = System.currentTimeMillis();
