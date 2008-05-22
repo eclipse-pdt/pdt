@@ -74,7 +74,7 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 						IDOMElement domElement = (IDOMElement) indexedRegion;
 						IStructuredDocumentRegion endStructuredDocumentRegion = domElement.getEndStructuredDocumentRegion();
 						IStructuredDocumentRegion startStructuredDocumentRegion = domElement.getStartStructuredDocumentRegion();
-						if (endStructuredDocumentRegion != null && startStructuredDocumentRegion != null && endStructuredDocumentRegion.getRegions().size() > 0 && startStructuredDocumentRegion.getRegions().size() > 0) {
+						if (endStructuredDocumentRegion != null && startStructuredDocumentRegion != null && endStructuredDocumentRegion.getRegions().size() > 1 && startStructuredDocumentRegion.getRegions().size() > 1) {
 							ITextRegion innerEndTag = endStructuredDocumentRegion.getRegions().get(1);
 							ITextRegion innerStartTag = startStructuredDocumentRegion.getRegions().get(1);
 							// mark the occurrences only when the HTML tag has a closing tag
