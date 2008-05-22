@@ -51,6 +51,7 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.phpModel.PHPKeywords;
+import org.eclipse.php.internal.core.phpModel.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.FakeField;
@@ -120,8 +121,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern catchPattern = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
-
-	private static String[] CLASS_KEYWORDS = { "abstract", "const", FUNCTION, "private", "protected", "public", "static", "var" }; // must be ordered!
 
 	protected HashSet<String> completedNames = new HashSet<String>();
 	protected WeakHashSet intresting = new WeakHashSet();
@@ -525,13 +524,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		Collection<String> keywordsList = PHPKeywords.findNamesByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
-		String[] keywords = keywordsList.toArray(new String[keywordsList.size()]);
+		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
 		if (inClass) {
-			keywords = filterClassKeywords(keywords);
+			keywordsList = filterClassKeywords(keywordsList);
 		}
-		for (String keyword : keywords) {
-			reportKeyword(keyword);
+		for (KeywordData k : keywordsList) {
+			reportKeyword(k.name, k.suffix);
 		}
 
 		if ((explicit || autoShowFunctionsKeywordsConstants) && !inClass) {
@@ -563,21 +561,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return;
 	}
 
-	private static String[] filterClassKeywords(String[] keywords) {
-		List<String> filteredKeywords = new LinkedList<String>();
-		for (int i = 0, j = 0; i < keywords.length && j < CLASS_KEYWORDS.length;) {
-			int compared = keywords[i].compareTo(CLASS_KEYWORDS[j]);
-			if (compared < 0) {
-				i++;
-			} else if (compared > 0) {
-				j++;
-			} else {
-				filteredKeywords.add(keywords[i]);
-				i++;
-				j++;
+	private static Collection<KeywordData> filterClassKeywords(Collection<KeywordData> keywords) {
+		List<KeywordData> filteredKeywords = new LinkedList<KeywordData>();
+		for (KeywordData k : keywords) {
+			if (k.isClassKeyword) {
+				filteredKeywords.add(k);
 			}
 		}
-		return filteredKeywords.toArray(new String[filteredKeywords.size()]);
+		return filteredKeywords;
 	}
 
 	private static boolean startsWithIgnoreCase(String word, String prefix) {
@@ -1284,14 +1275,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (isPHP5) {
 			if (EXTENDS.startsWith(prefix)) {
-				reportKeyword(EXTENDS);
+				reportKeyword(EXTENDS, EMPTY);
 			}
 			if (IMPLEMENTS.startsWith(prefix)) {
-				reportKeyword(IMPLEMENTS);
+				reportKeyword(IMPLEMENTS, EMPTY);
 			}
 		} else {
 			if (EXTENDS.startsWith(prefix)) {
-				reportKeyword(EXTENDS);
+				reportKeyword(EXTENDS, EMPTY);
 			}
 		}
 	}
@@ -1304,7 +1295,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			this.setSourceRange(offset - prefix.length(), offset);
 			
 			if (IMPLEMENTS.startsWith(prefix)) {
-				reportKeyword(IMPLEMENTS);
+				reportKeyword(IMPLEMENTS, EMPTY);
 			}
 		}
 	}
@@ -1316,7 +1307,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		this.setSourceRange(offset - prefix.length(), offset);
 		
 		if (EXTENDS.startsWith(prefix)) {
-			reportKeyword(EXTENDS);
+			reportKeyword(EXTENDS, EMPTY);
 		}
 	}
 
@@ -1396,17 +1387,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		this.setSourceRange(offset - prefix.length(), offset);
 
-		// get the class data for "self". In case of null, the self function will not be added
-		IType selfClassData = getSelfClassData(offset);
-
 		switch (state) {
 			case NEW:
 				IType[] types = getOnlyClasses(prefix);
 				for (IType type : types) {
 					reportType(type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
 				}
-				if (selfClassData != null) {
-					addSelfFunctionToProposals(selfClassData);
+				if (startsWithIgnoreCase(SELF, prefix)) {
+					// get the class data for "self". In case of null, the self function will not be added
+					IType selfClassData = getSelfClassData(offset);
+					if (selfClassData != null) {
+						addSelfFunctionToProposals(selfClassData);
+					}
 				}
 				break;
 			case INSTANCEOF:
@@ -1414,8 +1406,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				for (IModelElement typeElement : typeElements) {
 					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
 				}
-				if (selfClassData != null) {
-					addSelfFunctionToProposals(selfClassData);
+				if (startsWithIgnoreCase(SELF, prefix)) {
+					// get the class data for "self". In case of null, the self function will not be added
+					IType selfClassData = getSelfClassData(offset);
+					if (selfClassData != null) {
+						addSelfFunctionToProposals(selfClassData);
+					}
 				}
 				break;
 			case CATCH:
@@ -1661,14 +1657,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	}
 
-	private void reportKeyword(String name) {
+	private void reportKeyword(String name, String suffix) {
 		// accept result
 		noProposal = false;
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 
 			proposal.setName(name.toCharArray());
-			proposal.setCompletion(name.toCharArray());
+			proposal.setCompletion((name + suffix).toCharArray());
 			// proposal.setFlags(Flags.AccDefault);
 			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
 			proposal.setRelevance(RELEVANCE_KEYWORD);

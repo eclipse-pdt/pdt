@@ -34,14 +34,22 @@ public class PHPKeywords {
 	private static final String PARENTESES_SUFFIX = "()";
 
 	public static class KeywordData {
-		String name;
-		String suffix;
-		int suffixOffset;
+		public String name;
+		public String suffix;
+		public int suffixOffset;
+		public boolean isClassKeyword;
 
 		public KeywordData(String name, String suffix, int suffixOffset) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
+		}
+		
+		public KeywordData(String name, String suffix, int suffixOffset, boolean isClassKeyword) {
+			this.name = name;
+			this.suffix = suffix;
+			this.suffixOffset = suffixOffset;
+			this.isClassKeyword = isClassKeyword;
 		}
 
 		public int hashCode() {
@@ -80,7 +88,7 @@ public class PHPKeywords {
 		new KeywordData("break", EMPTY_SUFFIX, 0),
 		new KeywordData("case", WHITESPACE_COLON_SUFFIX, 2),
 		new KeywordData("class", WHITESPACE_SUFFIX, 1),
-		new KeywordData("const", WHITESPACE_SUFFIX, 1),
+		new KeywordData("const", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("continue", EMPTY_SUFFIX, 0),
 		new KeywordData("declare", PARENTESES_SUFFIX, 1),
 		new KeywordData("default", COLON_SUFFIX, 1),
@@ -102,7 +110,7 @@ public class PHPKeywords {
 		new KeywordData("false", EMPTY_SUFFIX, 0),
 		new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("function", WHITESPACE_SUFFIX, 1),
+		new KeywordData("function", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("global", WHITESPACE_SUFFIX, 1),
 		new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("include_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
@@ -118,11 +126,11 @@ public class PHPKeywords {
 		new KeywordData("require_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
 		new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2),
 		new KeywordData("return", WHITESPACE_SUFFIX, 1),
-		new KeywordData("static", WHITESPACE_SUFFIX, 1),
+		new KeywordData("static", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("true", EMPTY_SUFFIX, 0),
 		new KeywordData("unset", PARENTESES_SUFFIX, 1),
-		new KeywordData("var", WHITESPACE_SUFFIX, 1),
+		new KeywordData("var", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("while", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("xor", WHITESPACE_SUFFIX, 1),
 	};
@@ -131,7 +139,7 @@ public class PHPKeywords {
 	 * Sorted array of PHP5 keywords and their auto-complete information.
 	 */
 	private static final KeywordData[] keywordsPhp5 = {
-		new KeywordData("abstract", WHITESPACE_SUFFIX, 1),
+		new KeywordData("abstract", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("and", WHITESPACE_SUFFIX, 1),
 		new KeywordData("array", PARENTESES_SUFFIX, 1),
 		new KeywordData("as", WHITESPACE_SUFFIX, 1),
@@ -140,7 +148,7 @@ public class PHPKeywords {
 		new KeywordData("catch", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("class", WHITESPACE_SUFFIX, 1),
 		new KeywordData("clone", WHITESPACE_SUFFIX, 1),
-		new KeywordData("const", WHITESPACE_SUFFIX, 1),
+		new KeywordData("const", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("continue", EMPTY_SUFFIX, 0),
 		new KeywordData("declare", PARENTESES_SUFFIX, 1),
 		new KeywordData("default", COLON_SUFFIX, 1),
@@ -163,7 +171,7 @@ public class PHPKeywords {
 		new KeywordData("final", WHITESPACE_SUFFIX, 1),
 		new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("function", WHITESPACE_SUFFIX, 1),
+		new KeywordData("function", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("global", WHITESPACE_SUFFIX, 1),
 		new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("implements", WHITESPACE_SUFFIX, 1),
@@ -178,20 +186,20 @@ public class PHPKeywords {
 		new KeywordData("or", WHITESPACE_SUFFIX, 1),
 		new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
 		new KeywordData("print", WHITESPACE_SUFFIX, 1),
-		new KeywordData("private", WHITESPACE_SUFFIX, 1),
-		new KeywordData("protected", WHITESPACE_SUFFIX, 1),
-		new KeywordData("public", WHITESPACE_SUFFIX, 1),
+		new KeywordData("private", WHITESPACE_SUFFIX, 1, true),
+		new KeywordData("protected", WHITESPACE_SUFFIX, 1, true),
+		new KeywordData("public", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("require_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
 		new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2),
 		new KeywordData("return", WHITESPACE_SUFFIX, 1),
 		new KeywordData("self", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
-		new KeywordData("static", WHITESPACE_SUFFIX, 1),
+		new KeywordData("static", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("throw", WHITESPACE_SUFFIX, 1),
 		new KeywordData("true", EMPTY_SUFFIX, 0),
 		new KeywordData("try", OPEN_BLOCK_SUFFIX, 2),
 		new KeywordData("unset", PARENTESES_SUFFIX, 1),
-		new KeywordData("var", WHITESPACE_SUFFIX, 1),
+		new KeywordData("var", WHITESPACE_SUFFIX, 1, true),
 		new KeywordData("while", WHITESPACE_PARENTESES_SUFFIX, 2),
 		new KeywordData("xor", WHITESPACE_SUFFIX, 1),
 	};
