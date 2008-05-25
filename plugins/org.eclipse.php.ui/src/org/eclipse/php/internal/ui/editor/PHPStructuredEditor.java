@@ -526,6 +526,10 @@ public class PHPStructuredEditor extends StructuredTextEditor {
 			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
 			phpVersionListener = null;
 		}
+		if (fBracketMatcher != null) {
+			fBracketMatcher.dispose();
+			fBracketMatcher = null;
+		}
 		super.dispose();
 	}
 
