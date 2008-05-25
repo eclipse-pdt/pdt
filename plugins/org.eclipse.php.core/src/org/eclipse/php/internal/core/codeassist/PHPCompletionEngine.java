@@ -824,7 +824,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		for (IType type : className) {
-			if (explicit || autoShowFunctionsKeywordsConstants) {
+			if (!prefix.startsWith(DOLLAR) && (explicit || autoShowFunctionsKeywordsConstants)) {
 				IMethod[] methods = getClassMethods(type, prefix, false);
 				for (IModelElement method : methods) {
 					reportMethod((IMethod) method, RELEVANCE_METHODS);
@@ -953,7 +953,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void showClassStaticCall(int offset, IType[] className, String prefix, boolean explicit) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
-		if (explicit || autoShowFunctionsKeywordsConstants) {
+		if (!prefix.startsWith(DOLLAR) && (explicit || autoShowFunctionsKeywordsConstants)) {
 			for (IType type : className) {
 				IMethod[] classMethods = getClassMethods(type, prefix, false);
 
@@ -977,7 +977,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					try {
 						int flags = field.getFlags();
 						if ((flags & Modifiers.AccConstant) != 0 || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
-							reportField(field, relevance--, true);
+							reportField(field, relevance--, false);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
