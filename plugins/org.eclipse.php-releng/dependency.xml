@@ -21,7 +21,7 @@
 			<param name="groupId" value="emfSource" />
 		</antcall>
 		<antcall target="getAndInstall">
-			<param name="groupId" value="xsd" />
+			<param name="groupId" value="xsdRuntime" />
 		</antcall>
 		<antcall target="getAndInstall">
 			<param name="groupId" value="gef" />
