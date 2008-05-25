@@ -54,7 +54,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IInformationPresenter fHierarchyPresenter;
 
 	private IAnnotationHover fProjectionAnnotationHover;
-	public boolean isUndoOperation;
 
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
@@ -159,13 +158,6 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			}
 		} else if (operation == SHIFT_LEFT) {
 			shift(false, false, true);
-		} else if (operation == UNDO) {
-			try {
-				isUndoOperation = true;
-				super.doOperation(operation);
-			} finally {
-				isUndoOperation = false;
-			}
 		} else if (operation == SHOW_HIERARCHY) {
 			if (fHierarchyPresenter != null) {
 				fHierarchyPresenter.showInformation();
