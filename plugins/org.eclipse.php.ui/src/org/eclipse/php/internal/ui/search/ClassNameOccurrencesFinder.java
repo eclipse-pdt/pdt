@@ -127,7 +127,7 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	private boolean checkForNameEquality(Identifier identifier) {
-		return identifier != null && className.equalsIgnoreCase(identifier.getName());
+		return identifier != null && className != null && className.equalsIgnoreCase(identifier.getName());
 	}
 
 	/*
