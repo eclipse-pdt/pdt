@@ -107,7 +107,13 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 						PHPConditionalBreakpoint phpBP = (PHPConditionalBreakpoint) bp;
 						Breakpoint runtimeBreakpoint = phpBP.getRuntimeBreakpoint();
 						int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
+						
 						Breakpoint tempBreakpoint = new Breakpoint(remoteFileName, lineNumber);
+						boolean conditionEnabled = phpBP.isConditionEnabled();
+						if (conditionEnabled) {
+							tempBreakpoint.setConditionalFlag(conditionEnabled);
+							tempBreakpoint.setExpression(phpBP.getCondition());
+						}
 						debugTarget.getRemoteDebugger().addBreakpoint(tempBreakpoint);
 						runtimeBreakpoint.setID(tempBreakpoint.getID());
 					}
