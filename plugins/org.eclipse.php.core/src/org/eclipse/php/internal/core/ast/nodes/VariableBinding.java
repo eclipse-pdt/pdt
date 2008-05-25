@@ -6,6 +6,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
@@ -26,14 +27,15 @@ public class VariableBinding implements IVariableBinding {
 	private static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate | Modifiers.AccDefault | Modifiers.AccConst | Modifiers.AccStatic | Modifiers.AccGlobal;
 
 	private final BindingResolver resolver;
-	private final IModelElement modelElement;
-	private ITypeBinding declaringClass;
+	private final IField modelElement;
 	private boolean isFakeField;
+
+	private ITypeBinding declaringClassTypeBinding;
 
 	/**
 	 * 
 	 */
-	public VariableBinding(BindingResolver resolver, IModelElement modelElement) {
+	public VariableBinding(BindingResolver resolver, IField modelElement) {
 		this.resolver = resolver;
 		this.modelElement = modelElement;
 		this.isFakeField = modelElement instanceof FakeField;
@@ -65,21 +67,13 @@ public class VariableBinding implements IVariableBinding {
 	 *   or <code>null</code> if none
 	 */
 	public ITypeBinding getDeclaringClass() {
-		//				if (isField()) {
-		//					if (declaringClass == null) {
-		//						//	 FieldBinding fieldBinding = (FieldBinding) this.binding;
-		//						declaringClass = ((IField)modelElement).getDeclaringType();
-		//					}
-		//					return declaringClass;
-		//				} else {
-		return null;
-		//		}
-		//		IType declaringType = field.getDeclaringType();
-		//		IModelElement parent = field.getParent();
-		//		if (declaringType != null) {
-		//			resolver.getTypeBinding(declaringType);
-		//		}
-		//		return null;
+		if (declaringClassTypeBinding == null) {
+			IModelElement parent = modelElement.getDeclaringType();
+			if (parent instanceof IType) {
+				declaringClassTypeBinding = resolver.getTypeBinding((IType) parent);
+			}
+		}
+		return declaringClassTypeBinding;
 	}
 
 	/* (non-Javadoc)
@@ -94,8 +88,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getName()
 	 */
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return modelElement.getElementName();
 	}
 
 	/* (non-Javadoc)
@@ -189,12 +182,4 @@ public class VariableBinding implements IVariableBinding {
 	public boolean isDeprecated() {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isSynthetic()
-	 */
-	public boolean isSynthetic() {
-		return false;
-	}
-
 }

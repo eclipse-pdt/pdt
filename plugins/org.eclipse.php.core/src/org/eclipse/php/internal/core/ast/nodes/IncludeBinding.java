@@ -62,8 +62,4 @@ public class IncludeBinding implements IIncludeBinding {
 	public boolean isDeprecated() {
 		return false;
 	}
-
-	public boolean isSynthetic() {
-		return false;
-	}
 }

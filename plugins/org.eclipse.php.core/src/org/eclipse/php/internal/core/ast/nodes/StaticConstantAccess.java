@@ -187,7 +187,7 @@ public class StaticConstantAccess extends StaticDispatch {
 	 * @return the binding, or <code>null</code> if the binding cannot be 
 	 *    resolved
 	 */		 
-	public Object resolveFieldBinding() {
+	public IVariableBinding resolveFieldBinding() {
 		return this.ast.getBindingResolver().resolveField(this);
 	}
 }

@@ -107,6 +107,7 @@ public class Bindings {
 		IVariableBinding[] fields = type.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			IVariableBinding field = fields[i];
+			// TODO see if we can remove the dollar sign from here
 			if (field.getName().equals(fieldName))
 				return field;
 		}

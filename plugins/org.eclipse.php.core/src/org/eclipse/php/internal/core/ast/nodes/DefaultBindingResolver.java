@@ -9,6 +9,7 @@ import java.util.Map;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -246,23 +247,22 @@ public class DefaultBindingResolver extends BindingResolver {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getMethodBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
-	 */
-	@Override
-	IMethodBinding getMethodBinding(IEvaluatedType methodBinding) {
-		// TODO Auto-generated method stub
-		return super.getMethodBinding(methodBinding);
-	}
-
-	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration)
 	 */
 	@Override
-	ITypeBinding getTypeBinding(FieldsDeclaration variableDeclaration) {
-		// TODO Auto-generated method stub
-		return super.getTypeBinding(variableDeclaration);
-	}
+	ITypeBinding getTypeBinding(SingleFieldDeclaration fieldDeclaration) {
+		final IModelElement[] modelElements = this.bindingUtil.getModelElement(fieldDeclaration.getStart(), fieldDeclaration.getLength());
 
+		if (modelElements.length > 0) {
+			for (IModelElement type : modelElements) {
+				if (type.getElementType() == IModelElement.TYPE) {
+					return new TypeBinding(this, new PHPClassType(type.getElementName()), modelElements);
+				}
+			}
+		}
+		return super.getTypeBinding(fieldDeclaration);
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
@@ -304,17 +304,27 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	IVariableBinding resolveField(FieldAccess fieldAccess) {
-		// TODO Auto-generated method stub
-		return super.resolveField(fieldAccess);
+		final VariableBase member = fieldAccess.getMember();
+		if (member.getType() == ASTNode.VARIABLE) {
+			Variable var = (Variable) member;
+			if (!var.isDollared() && var.getName().getType() == ASTNode.IDENTIFIER) {
+				Identifier id = (Identifier) var.getName();
+				final String fieldName = "$" + id.getName();
+				final ITypeBinding type = fieldAccess.getDispatcher().resolveTypeBinding();
+				return Bindings.findFieldInHierarchy(type, fieldName);
+			}
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveField(org.eclipse.php.internal.core.ast.nodes.StaticConstantAccess)
 	 */
 	@Override
-	Object resolveField(StaticConstantAccess constantAccess) {
-		// TODO Auto-generated method stub
-		return super.resolveField(constantAccess);
+	IVariableBinding resolveField(StaticConstantAccess constantAccess) {
+		final Identifier constName = constantAccess.getConstant();
+		final ITypeBinding type = constantAccess.getClassName().resolveTypeBinding();
+		return Bindings.findFieldInHierarchy(type, constName.getName());
 	}
 
 	/* (non-Javadoc)
@@ -322,8 +332,17 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	IVariableBinding resolveField(StaticFieldAccess fieldAccess) {
-		// TODO Auto-generated method stub
-		return super.resolveField(fieldAccess);
+		final VariableBase member = fieldAccess.getField();
+		if (member.getType() == ASTNode.VARIABLE) {
+			Variable var = (Variable) member;
+			if (var.isDollared() && var.getName().getType() == ASTNode.IDENTIFIER) {
+				Identifier id = (Identifier) var.getName();
+				final String fieldName = "$" + id.getName();
+				final ITypeBinding type = fieldAccess.getClassName().resolveTypeBinding();
+				return Bindings.findFieldInHierarchy(type, fieldName);
+			}
+		}
+		return null;
 	}
 
 	/* (non-Javadoc)

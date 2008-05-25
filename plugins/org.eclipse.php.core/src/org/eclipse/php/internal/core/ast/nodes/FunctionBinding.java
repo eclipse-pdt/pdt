@@ -131,12 +131,4 @@ public class FunctionBinding implements IFunctionBinding {
 	public boolean isDeprecated() {
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isSynthetic()
-	 */
-	public boolean isSynthetic() {
-		return false;
-	}
-
 }

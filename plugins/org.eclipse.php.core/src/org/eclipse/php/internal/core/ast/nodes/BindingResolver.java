@@ -115,20 +115,6 @@ class BindingResolver {
 	}
 
 	/**
-	 * Returns the new method binding corresponding to the given old method binding.
-	 * <p>
-	 * The default implementation of this method returns <code>null</code>.
-	 * Subclasses may reimplement.
-	 * </p>
-	 *
-	 * @param methodBinding the old method binding
-	 * @return the new method binding
-	 */
-	IMethodBinding getMethodBinding(IEvaluatedType methodBinding) {
-		return null;
-	}
-
-	/**
 	 * Returns the new package binding corresponding to the given old package binding.
 	 * <p>
 	 * The default implementation of this method returns <code>null</code>.
@@ -153,21 +139,6 @@ class BindingResolver {
 	 * @return the new type binding
 	 */
 	ITypeBinding getTypeBinding(IEvaluatedType referenceBinding) {
-		return null;
-	}
-
-	/**
-	 * Returns the new type binding corresponding to the given variableDeclaration.
-	 * This is used for recovered binding only.
-	 * <p>
-	 * The default implementation of this method returns <code>null</code>.
-	 * Subclasses may reimplement.
-	 * </p>
-	 *
-	 * @param variableDeclaration the given variable declaration
-	 * @return the new type binding
-	 */
-	ITypeBinding getTypeBinding(FieldsDeclaration variableDeclaration) {
 		return null;
 	}
 
@@ -423,7 +394,7 @@ class BindingResolver {
 	 * @return the binding for the given field access, or
 	 *    <code>null</code> if no binding is available
 	 */
-	Object resolveField(StaticConstantAccess constantAccess) {
+	IVariableBinding resolveField(StaticConstantAccess constantAccess) {
 		return null;
 	}
 
@@ -593,6 +564,21 @@ class BindingResolver {
 		return null;
 	}
 
+	/**
+	 * Resolves the given fields and returns the type binding for it.
+	 * <p>
+	 * The default implementation of this method returns <code>null</code>.
+	 * Subclasses may reimplement.
+	 * </p>
+	 *
+	 * @param the field declaration
+	 * @return the binding for the field declaration, or <code>null</code> if no binding is
+	 *    available
+	 */
+	ITypeBinding getTypeBinding(SingleFieldDeclaration fieldDeclaration) {
+		return null;
+	}	
+	
 	/**
 	 * TODO : For PHP 5.3 ??? 
 	 * Resolves the given package declaration and returns the binding for it.
