@@ -139,8 +139,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		mi.nameSourceEnd = method.getNameEnd() - 1;
 		mi.declarationStart = method.sourceStart();
 		
-//		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME) || (parentDeclaration instanceof ClassDeclaration && 
-//				mi.name.equalsIgnoreCase(((ClassDeclaration)parentDeclaration).getName()));
+		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME) || (parentDeclaration instanceof ClassDeclaration && 
+				mi.name.equalsIgnoreCase(((ClassDeclaration)parentDeclaration).getName()));
 
 		this.fRequestor.enterMethod(mi);
 
