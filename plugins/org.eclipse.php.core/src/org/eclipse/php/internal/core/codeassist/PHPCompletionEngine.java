@@ -1085,8 +1085,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 				if (showClassCompletion) {
-					IModelElement[] classes = PHPMixinModel.getInstance().getClass(WILDCARD);
-
 					String prefix = text.subTextSequence(j + 1, text.length()).toString();
 					//remove leading white spaces
 					int k = 0;
@@ -1099,10 +1097,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						prefix = prefix.substring(k);
 					}
 
+					IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
+
 					this.setSourceRange(offset - prefix.length(), offset);
 
 					for (IModelElement type : classes) {
-						reportType((IType) type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
+						reportType((IType) type, RELEVANCE_FREE_SPACE, " ");
 					}
 				}
 				return true;
