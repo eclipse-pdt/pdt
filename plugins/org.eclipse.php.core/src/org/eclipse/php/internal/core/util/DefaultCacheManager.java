@@ -17,6 +17,7 @@ import java.util.HashMap;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -35,7 +36,7 @@ public class DefaultCacheManager {
 	private static final String DATA_MODEL_FILE_NAME = ".dataModel";//$NON-NLS-1$
 	private static final String CACHE_DIR_NAME = ".cache";//$NON-NLS-1$
 	public static final int DEFAULT_CACHE_POLICY = 0;
-	public static final int VERSION_IDENTIFIER = 210607; //DDMMYY
+	public static final int VERSION_IDENTIFIER = 181107; //DDMMYY
 	private HashMap projectToCacheDir;
 	private File sharedCacheDir;
 	private PreferencesSupport preferencesSupport;
@@ -46,7 +47,7 @@ public class DefaultCacheManager {
 
 	/**
 	 * Returns a DefaultCacheManager shared instance.
-	 * 
+	 *
 	 * @return
 	 */
 	public static DefaultCacheManager instance() {
@@ -69,7 +70,7 @@ public class DefaultCacheManager {
 
 	/**
 	 * Returns an IncludeCacheManager.
-	 * 
+	 *
 	 * @return IncludeCacheManager
 	 */
 	public IncludeCacheManager getIncludeCacheManager() {
@@ -77,10 +78,10 @@ public class DefaultCacheManager {
 	}
 
 	/**
-	 * Phisically delete a cache file according to it's key. 
-	 * This method is needed when the project is being run over with another 
+	 * Phisically delete a cache file according to it's key.
+	 * This method is needed when the project is being run over with another
 	 * project that has an identical name.
-	 * 
+	 *
 	 * @param key   The project name.
 	 */
 	public void deleteCacheFromDisk(IProject project) {
@@ -93,7 +94,7 @@ public class DefaultCacheManager {
 
 	/**
 	 * Retunrs the cache directory (.caches) for the given project.
-	 * 
+	 *
 	 * @param project An IProject
 	 * @return	The cache directory for the project.
 	 */
@@ -119,7 +120,7 @@ public class DefaultCacheManager {
 	/**
 	 * Returns the last modification time stamp for the cached file defined for the given project and model.
 	 * Zero is returned if the cache file does not exists.
-	 * 
+	 *
 	 * @param project An IProject
 	 * @param model An IPhpModel
 	 * @return The last modification time stamp for the cached file.
@@ -131,7 +132,7 @@ public class DefaultCacheManager {
 
 	/**
 	 * Returns the shared cache directory.
-	 * 
+	 *
 	 * @return The shared directory used for caching include-paths and variables models.
 	 */
 	public File getSharedCacheDirectory() {
@@ -140,9 +141,9 @@ public class DefaultCacheManager {
 
 	/**
 	 * Returns the shared cache directory for the given project and model.
-	 * The returned file name is composed from the model id (the library/zip path) hash, separated 
+	 * The returned file name is composed from the model id (the library/zip path) hash, separated
 	 * with a '_' mark and ends with the php version.
-	 * 
+	 *
 	 * @param project An IProject
 	 * @param model	An IPhpModel (PHPUserModel is the only supported model)
 	 * @return The shared cache directory for the given project and model.
@@ -153,9 +154,9 @@ public class DefaultCacheManager {
 
 	/**
 	 * Returns the shared cache directory for the given project and model.
-	 * The returned file name is composed from the library path hash, separated 
+	 * The returned file name is composed from the library path hash, separated
 	 * with a '_' mark and ends with the php version.
-	 * 
+	 *
 	 * @param project An IProject
 	 * @param libraryPath	The library (directory / zip) path.
 	 * @return The shared cache directory for the given project and model.
@@ -167,16 +168,16 @@ public class DefaultCacheManager {
 
 	/**
 	 * Returns the shared cache directory for the given php version and model.
-	 * The returned file name is composed from the library path hash, separated 
+	 * The returned file name is composed from the library path hash, separated
 	 * with a '_' mark and ends with the php version.
-	 * 
+	 *
 	 * @param phpVersion A PHP version string
 	 * @param libraryPath	The library (directory / zip) path.
 	 * @return The shared cache directory for the given project and model.
 	 */
 	public File getSharedCacheFile(String phpVersion, String libraryPath) {
 		String pathHash = String.valueOf(libraryPath.hashCode());
-		String fileName = pathHash + '_' + ((phpVersion != null) ? phpVersion : "");//$NON-NLS-1$
+		String fileName = pathHash + '_' + (phpVersion != null ? phpVersion : "");//$NON-NLS-1$
 		return new File(sharedCacheDir, fileName);
 	}
 
@@ -184,7 +185,7 @@ public class DefaultCacheManager {
 	 * Loads a cached IPhpModel to the given model.
 	 * If no such model can be resolved by the project and file, nothing will be added to the model.
 	 * The only supported model for this class is PHPUserModel.
-	 * 
+	 *
 	 * @param project An IProject
 	 * @param model	A IPhpModel (PHPUserModel)
 	 * @param isShared Indicate if the model is shared with other projects.
@@ -206,7 +207,7 @@ public class DefaultCacheManager {
 
 	/**
 	 *  Load the model from the disk.
-	 *  
+	 *
 	 *  @return true if model was loaded successfully
 	 */
 	private boolean innerLoadModel(PHPUserModel userModel, File cacheFile) {
@@ -214,7 +215,7 @@ public class DefaultCacheManager {
 			return false;
 		}
 		boolean invalidCache = false;
-		Runtime.getRuntime().gc();
+//		Runtime.getRuntime().gc();
 		FileInputStream in = null;
 		BufferedInputStream bufin = null;
 		DataInputStream din = null;
@@ -227,8 +228,15 @@ public class DefaultCacheManager {
 
 			if (version == VERSION_IDENTIFIER) {
 				PHPFileData[] datas = SerializationUtil.deserializePHPFileDataArray(din);
-				for (int i = 0; i < datas.length; i++) {
-					PHPFileData data = datas[i];
+			
+				if(datas.length > 0){
+					Path path = new Path(datas[0].getName());
+					String projectName = cacheFile.getParentFile().getParentFile().getName();
+					if(!projectName.equals(path.segment(0))){
+						return false;
+					}
+				}
+				for (PHPFileData data : datas) {
 					userModel.insert(data);
 				}
 				Runtime.getRuntime().gc();
@@ -259,7 +267,7 @@ public class DefaultCacheManager {
 	/**
 	 * Saves a cache of a given IPhpModel.
 	 * The only supported model for this class is PHPUserModel.
-	 * 
+	 *
 	 * @param project An IProject
 	 * @param model	A IPhpModel (PHPUserModel)
 	 * @param isShared Indicate if the model is shared with other projects.
@@ -295,7 +303,7 @@ public class DefaultCacheManager {
 		DataOutputStream dout = null;
 		try {
 			CodeData[] files = userModel.getFileDatas();
-			ICachable[] toSave = (ICachable[]) Arrays.asList(files).toArray(new ICachable[files.length]);
+			ICachable[] toSave = Arrays.asList(files).toArray(new ICachable[files.length]);
 			out = new FileOutputStream(cacheFile);
 			bufout = new BufferedOutputStream(out, 2048);
 			dout = new DataOutputStream(bufout);
