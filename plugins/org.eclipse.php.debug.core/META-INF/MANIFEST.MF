@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.core.variables,
  org.eclipse.ui.browser
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.debug.core.debugger.handlers,
  org.eclipse.php.debug.core.debugger.messages,
