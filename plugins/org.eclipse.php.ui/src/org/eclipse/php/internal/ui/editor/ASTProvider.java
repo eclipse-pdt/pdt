@@ -520,7 +520,6 @@ public final class ASTProvider {
 		// parser.setResolveBindings(true);
 		// parser.setStatementsRecovery(SHARED_AST_STATEMENT_RECOVERY);
 		// parser.setBindingsRecovery(SHARED_BINDING_RECOVERY);
-		parser.setSource(input.getSourceAsCharArray());
 
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
