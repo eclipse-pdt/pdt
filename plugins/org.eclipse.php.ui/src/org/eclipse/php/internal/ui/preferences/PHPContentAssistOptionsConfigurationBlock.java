@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
+import org.eclipse.dltk.ui.PreferencesAdapter;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -44,7 +48,7 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 		completionInsertRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
 		completionInsertRadioButton.setText(PHPUIMessages.getString("CodeAssistPreferencePage_completionInserts"));
 		completionInsertRadioButton.setLayoutData(new GridData());
-		completionInsertRadioButton.setData(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
+		completionInsertRadioButton.setData(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
 		add(completionInsertRadioButton);
 
 		completionOverrideRadioButton = new Button(radioButtonsComposite, SWT.RADIO | SWT.LEFT);
@@ -53,9 +57,9 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 
 		add(completionOverrideRadioButton);
 
-		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_insertSignleProposals"), PreferenceConstants.CODEASSIST_AUTOINSERT, 0);
-		showVariableFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"), PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
-		determineObjTypeFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_determineObjTypeFromOtherFiles"), PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, 0);
+		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_insertSignleProposals"), PHPCoreConstants.CODEASSIST_AUTOINSERT, 0);
+		showVariableFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"), PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
+		determineObjTypeFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_determineObjTypeFromOtherFiles"), PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, 0);
 
 	}
 
@@ -68,5 +72,9 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected void restoreDefaultButtonValues() {
 		super.restoreDefaultButtonValues();
 		completionOverrideRadioButton.setSelection(!completionInsertRadioButton.getSelection());
+	}
+	
+	protected IPreferenceStore getPreferenceStore() {
+		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
 	}
 }

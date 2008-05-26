@@ -12,11 +12,13 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.Locale;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightings;
@@ -92,279 +94,6 @@ public class PreferenceConstants {
 	 */
 	public static final String APPEARANCE_METHOD_TYPEPARAMETERS = "methodtypeparametesr";//$NON-NLS-1$
 
-	/**
-	 * A named preference that controls if the PHP code assist adds import
-	 * statements.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_ADDIMPORT = "contentAssistAddImport"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if the PHP code assist gets auto activated.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION = "contentAssistAutoactivation"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the autoactivation proposals limit.
-	 * <p>
-	 * Value is of type <code>Integer</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_SIZE_LIMIT = "contentAssistAutoactivationSizeLimit"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation delay time in milliseconds.
-	 * <p>
-	 * Value is of type <code>Integer</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_DELAY = "contentAssistAutoactivationDelay"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation triggers for PHP code
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP = "contentAssistAutoactivationTriggersPHP"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation triggers for PHPDOC
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC = "contentAssistAutoactivationTriggersPHPDoc"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES = "contentAssistAutoactivationForClassNames"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_VARIABLES = "contentAssistAutoactivationForVariables"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS = "contentAssistAutoactivationForFunctionsKeyWordsConstants"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if the php code assist inserts a
-	 * proposal automatically if only one proposal is available.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOINSERT = "contentAssistAutoinsert"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether code assist proposals filtering is case sensitive or not.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CASE_SENSITIVITY = "contentAssistCaseSensitivity"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist for constants should be case sensitive
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> code assist for constants should be case sensitive. If
-	 * <code>false</code> case insensitive.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CONSTANTS_CASE_SENSITIVE = "contentAssistConstantsCaseSensitive"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist determines object type from other files
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> code assist will try to determine object type
-	 * from other files. If <code>false</code> it will determine object type only from current scope.
-	 * </p>
-	 */
-	public final static String CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES = "contentAssistDetermineObjTypeFromOtherFiles"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if argument names are filled in when a method is selected from as list
-	 * of code assist proposal.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_FILL_ARGUMENT_NAMES = "contentAssistFillMethodArguments"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if method arguments are guessed when a
-	 * method is selected from as list of code assist proposal.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_GUESS_METHOD_ARGUMENTS = "contentAssistGuessMethodArguments"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if the PHP code assist only inserts
-	 * completions. If set to false the proposals can also _replace_ code.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_INSERT_COMPLETION = "contentAssistInsertCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that defines if code assist proposals are sorted in alphabetical order.
-	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> that are sorted in alphabetical
-	 * order. If <code>false</code> that are unsorted.
-	 * </p>
-	 */
-	public final static String CODEASSIST_ORDER_PROPOSALS = "contentAssistOrderProposals"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the background color used for parameter hints.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the foreground color used in the code assist selection dialog.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
-
-	public final static String CODEASSIST_PREFIX_COMPLETION = "contentAssistPrefixCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the background color used in the code assist selection dialog.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the foreground color used in the code assist selection dialog.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the background color used in the code
-	 * assist selection dialog to mark replaced code.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that holds the foreground color used in the code
-	 * assist selection dialog to mark replaced code.
-	 * <p>
-	 * Value is of type <code>String</code>. A RGB color value encoded as a string
-	 * using class <code>PreferenceConverter</code>
-	 * </p>
-	 *
-	 * @see org.eclipse.jface.resource.StringConverter
-	 * @see org.eclipse.jface.preference.PreferenceConverter
-	 */
-	public final static String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show class names in Global Completion list
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> class names in Global Completion list will be shown
-	 * <code>false</code> they will not be shown.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION = "contentAssistShowClassNamesInGlobalCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show constants assist
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_CONSTANTS_ASSIST = "contentAssistShowConstantsAssist"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show options that are restricted by PHP
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_NON_STRICT_OPTIONS = "contentAssistShowNonStrictOptions"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to group options
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_GROUP_OPTIONS = "contentAssistGroupOptions"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to cut common prefix
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CUT_COMMON_PREFIX = "contentAssistCutPrefix"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist also contains proposals from other files
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>false<code> code assist only contains visible members. If
-	 * <code>true</code> all members are included.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES = "contentAssistShowVariablesFromOtherFiles"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls the behavior when double clicking on a container in the folders view.
@@ -1066,6 +795,80 @@ public class PreferenceConstants {
 	 * @since 3.0
 	 */
 	public static final String SEARCH_USE_REDUCED_MENU= "Search.usereducemenu"; //$NON-NLS-1$
+	
+	/**
+	 * A named preference that holds the background color used for parameter hints.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
+	 * </p>
+	 *
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PARAMETERS_BACKGROUND = "contentAssistParametersBackground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the foreground color used in the code assist selection dialog.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
+	 * </p>
+	 *
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
+	
+	/**
+	 * A named preference that holds the background color used in the code assist selection dialog.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
+	 * </p>
+	 *
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PROPOSALS_BACKGROUND = "contentAssistProposalsBackground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the foreground color used in the code assist selection dialog.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
+	 * </p>
+	 *
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_PROPOSALS_FOREGROUND = "contentAssistProposalsForeground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the background color used in the code
+	 * assist selection dialog to mark replaced code.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
+	 * </p>
+	 *
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_REPLACEMENT_BACKGROUND = "contentAssistCompletionReplacementBackground"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that holds the foreground color used in the code
+	 * assist selection dialog to mark replaced code.
+	 * <p>
+	 * Value is of type <code>String</code>. A RGB color value encoded as a string
+	 * using class <code>PreferenceConverter</code>
+	 * </p>
+	 *
+	 * @see org.eclipse.jface.resource.StringConverter
+	 * @see org.eclipse.jface.preference.PreferenceConverter
+	 */
+	public final static String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
 
 	/**
 	 * some constants for auto-ident Smart Tab
@@ -1160,31 +963,33 @@ public class PreferenceConstants {
 		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
 		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
-		store.setDefault(CODEASSIST_CASE_SENSITIVITY, false);
-		store.setDefault(CODEASSIST_ORDER_PROPOSALS, false);
-		store.setDefault(CODEASSIST_ADDIMPORT, true);
-		store.setDefault(CODEASSIST_FILL_ARGUMENT_NAMES, false);
-		store.setDefault(CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
-		store.setDefault(CODEASSIST_PREFIX_COMPLETION, false);
+		
+		Preferences corePreferences = PHPCorePlugin.getDefault().getPluginPreferences();
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, false);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_ORDER_PROPOSALS, false);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, false);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_PREFIX_COMPLETION, false);
 		// implemented:
-		store.setDefault(CODEASSIST_AUTOINSERT, true);
-		store.setDefault(CODEASSIST_INSERT_COMPLETION, true);
-		store.setDefault(CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, true);
-		store.setDefault(CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
-		store.setDefault(CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
-		store.setDefault(CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
-		store.setDefault(CODEASSIST_GROUP_OPTIONS, false);
-		store.setDefault(CODEASSIST_CUT_COMMON_PREFIX, false);
-		store.setDefault(CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
-		store.setDefault(CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 500);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_DELAY, 200);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true);
-		store.setDefault(CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, false);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 500);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true);
+		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true);
 
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);

@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.AbstractInformationControlManager;
@@ -36,6 +37,8 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
 import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
@@ -50,7 +53,6 @@ import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPDocContentAssistProcessor;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
 import org.eclipse.php.internal.ui.text.PHPInformationElementProvider;
 import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
@@ -208,14 +210,15 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				fContentAssistant = new StructuredContentAssistant();
 			}
 			// content assistant configurations
-			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			fContentAssistant.enableAutoActivation(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
-			fContentAssistant.setAutoActivationDelay(preferenceStore.getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
-			fContentAssistant.enableAutoInsert(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+			
+			Preferences preferences = PHPCorePlugin.getDefault().getPluginPreferences();
+			fContentAssistant.enableAutoActivation(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION));
+			fContentAssistant.setAutoActivationDelay(preferences.getInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY));
+			fContentAssistant.enableAutoInsert(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT));
 
 			// add content assist processors for each partition type
 			String[] types = getConfiguredContentTypes(sourceViewer);
@@ -231,6 +234,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				}
 			}
 		}
+		
 		return fContentAssistant;
 	}
 

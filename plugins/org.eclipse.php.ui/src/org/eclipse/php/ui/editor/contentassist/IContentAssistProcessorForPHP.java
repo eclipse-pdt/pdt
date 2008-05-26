@@ -13,6 +13,4 @@ public interface IContentAssistProcessorForPHP extends IContentAssistProcessor {
 	public void explicitActivationRequest();
 	
 	public IContentAssistSupport createContentAssistSupport();
-	
-	public void handlePreferenceStoreChanged(PropertyChangeEvent event);
 }

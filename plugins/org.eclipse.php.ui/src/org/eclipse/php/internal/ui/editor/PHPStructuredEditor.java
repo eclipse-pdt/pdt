@@ -13,7 +13,13 @@ package org.eclipse.php.internal.ui.editor;
 import java.io.IOException;
 import java.text.BreakIterator;
 import java.text.CharacterIterator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.IFileBufferStatusCodes;
@@ -22,10 +28,33 @@ import org.eclipse.core.filebuffers.manipulation.MultiTextEditWithProgress;
 import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperation;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.filebuffers.Progress;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IMember;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.ScriptModelUtil;
 import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ISavePolicy;
@@ -34,21 +63,66 @@ import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.AbstractInformationControlManager;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
+import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ISelectionValidator;
+import org.eclipse.jface.text.ISynchronizable;
+import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.ITextInputListener;
+import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.ITextViewerExtension4;
+import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.LinkedModeModel;
-import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationHover;
+import org.eclipse.jface.text.source.IAnnotationHoverExtension;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelExtension;
+import org.eclipse.jface.text.source.ICharacterPairMatcher;
+import org.eclipse.jface.text.source.ILineRange;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.ISourceViewerExtension3;
+import org.eclipse.jface.text.source.IVerticalRuler;
+import org.eclipse.jface.text.source.IVerticalRulerInfo;
+import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
@@ -76,7 +150,20 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
+import org.eclipse.php.internal.ui.actions.BlockCommentAction;
+import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
+import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
+import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
+import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
+import org.eclipse.php.internal.ui.actions.OpenTypeHierarchyAction;
+import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
+import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
+import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
+import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
@@ -97,18 +184,47 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.*;
+import org.eclipse.swt.custom.ST;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.TextChangeListener;
+import org.eclipse.swt.custom.TextChangedEvent;
+import org.eclipse.swt.custom.TextChangingEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.text.edits.DeleteEdit;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IPartService;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener2;
+import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IURIEditorInput;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.internal.WorkbenchPage;
-import org.eclipse.ui.texteditor.*;
+import org.eclipse.ui.texteditor.AnnotationPreference;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.IUpdate;
+import org.eclipse.ui.texteditor.ResourceAction;
+import org.eclipse.ui.texteditor.TextEditorAction;
+import org.eclipse.ui.texteditor.TextNavigationAction;
+import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -292,7 +408,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * @since 3.0, protected as of 3.3
 	 */
 	protected SemanticHighlightingManager fSemanticManager;
-	
+
 	/**
 	 * Internal implementation class for a change listener.
 	 * 
@@ -363,6 +479,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
 	private IPreferencesPropagatorListener phpVersionListener;
 	private IResourceChangeListener fResourceChangeListener;
+	private IPropertyChangeListener propertyChangeListener;
 
 	private final class OutlineSelectionListener implements ISelectionChangedListener {
 		private final ConfigurableContentOutlinePage outlinePage;
@@ -933,6 +1050,27 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		};
 
 		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
+		
+		propertyChangeListener = new IPropertyChangeListener() {
+			public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
+				String property = event.getProperty();
+				if (PHPCoreConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property) || PHPCoreConstants.CODEASSIST_AUTOINSERT.equals(property)) {
+					ISourceViewer sourceViewer = getSourceViewer();
+					if (sourceViewer != null) {
+						PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
+						if (configuration != null) {
+							StructuredContentAssistant contentAssistant = (StructuredContentAssistant) configuration.getPHPContentAssistant(sourceViewer);
+							Preferences preferences = PHPCorePlugin.getDefault().getPluginPreferences();
+							contentAssistant.enableAutoActivation(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION));
+							contentAssistant.setAutoActivationDelay(preferences.getInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY));
+							contentAssistant.enableAutoInsert(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT));
+						}
+					}
+				}
+			}
+		};
+		
+		PHPCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(propertyChangeListener);
 	}
 
 	private void initResourceChangeListener() {
@@ -1057,6 +1195,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
 			phpVersionListener = null;
 		}
+		if (propertyChangeListener != null) {
+			PHPCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(propertyChangeListener);
+		}
 
 		if (fActivationListener != null) {
 			PlatformUI.getWorkbench().removeWindowListener(fActivationListener);
@@ -1065,7 +1206,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
 		uninstallSemanticHighlighting();
-		
+
 		super.dispose();
 	}
 
@@ -1923,7 +2064,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 		if (isSemanticHighlightingEnabled())
 			installSemanticHighlighting();
-		
+
 		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
 
 			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
@@ -2304,22 +2445,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				fMarkHTMLTags = newBooleanValue;
 				return;
 			}
-			if (PreferenceConstants.CODEASSIST_AUTOINSERT.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property)) {
-				ISourceViewer sourceViewer = getSourceViewer();
-				if (sourceViewer != null) {
-					PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
-					if (configuration != null) {
-						StructuredContentAssistant contentAssistant = (StructuredContentAssistant) configuration.getPHPContentAssistant(sourceViewer);
-
-						IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
-						contentAssistant.enableAutoInsert(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOINSERT));
-						contentAssistant.enableAutoActivation(preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION));
-						contentAssistant.setAutoActivationDelay(preferenceStore.getInt(PreferenceConstants.CODEASSIST_AUTOACTIVATION_DELAY));
-					}
-				}
-				return;
-			}
-
 			if (SemanticHighlightings.affectsEnablement(getPreferenceStore(), event)) {
 				if (isSemanticHighlightingEnabled())
 					installSemanticHighlighting();
@@ -2327,7 +2452,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					uninstallSemanticHighlighting();
 				return;
 			}
-			
+
 			if (affectsOverrideIndicatorAnnotations(event)) {
 				if (isShowingOverrideIndicators()) {
 					if (fOverrideIndicatorManager == null)
@@ -2375,12 +2500,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * @since 3.0
 	 */
 	protected boolean isShowingOverrideIndicators() {
-		AnnotationPreference preference= getAnnotationPreferenceLookup().getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
-		IPreferenceStore store= getPreferenceStore();
-		return getBoolean(store, preference.getHighlightPreferenceKey())
-			|| getBoolean(store, preference.getVerticalRulerPreferenceKey())
-			|| getBoolean(store, preference.getOverviewRulerPreferenceKey())
-			|| getBoolean(store, preference.getTextPreferenceKey());
+		AnnotationPreference preference = getAnnotationPreferenceLookup().getAnnotationPreference(OverrideIndicatorManager.ANNOTATION_TYPE);
+		IPreferenceStore store = getPreferenceStore();
+		return getBoolean(store, preference.getHighlightPreferenceKey()) || getBoolean(store, preference.getVerticalRulerPreferenceKey()) || getBoolean(store, preference.getOverviewRulerPreferenceKey()) || getBoolean(store, preference.getTextPreferenceKey());
 	}
 
 	/**
@@ -2691,7 +2813,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 		return annotationModel;
 	}
-	
+
 	/**
 	 * Install Semantic Highlighting.
 	 *
@@ -2699,7 +2821,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private void installSemanticHighlighting() {
 		if (fSemanticManager == null) {
-			fSemanticManager= new SemanticHighlightingManager();
+			fSemanticManager = new SemanticHighlightingManager();
 			fSemanticManager.install(this, (PHPStructuredTextViewer) getSourceViewer(), PHPUiPlugin.getDefault().getColorManager(), getPreferenceStore());
 		}
 	}
@@ -2712,9 +2834,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private void uninstallSemanticHighlighting() {
 		if (fSemanticManager != null) {
 			fSemanticManager.uninstall();
-			fSemanticManager= null;
+			fSemanticManager = null;
 		}
-	}	
+	}
 
 	/**
 	 * Updates the occurrences annotations based on the current selection.

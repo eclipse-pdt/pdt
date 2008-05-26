@@ -14,7 +14,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistProcessorForPHP;
@@ -89,9 +88,5 @@ public class PHPDocContentAssistProcessor implements IContentAssistProcessorForP
 
 	public void explicitActivationRequest() {
 		isExplicitRequest = true;
-	}
-
-	public void handlePreferenceStoreChanged(PropertyChangeEvent event) {
-		support.handlePreferenceStoreChanged(event);
 	}
 }

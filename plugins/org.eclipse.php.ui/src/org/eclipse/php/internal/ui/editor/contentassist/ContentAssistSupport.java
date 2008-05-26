@@ -17,13 +17,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.Utils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -31,8 +32,28 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegi
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.*;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.parser.CodeDataFilter;
+import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
+import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
+import org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -40,11 +61,13 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.preferences.util.WeakPropertyChangeListener;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class ContentAssistSupport implements IContentAssistSupport {
@@ -67,47 +90,11 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	private static String[] CLASS_KEYWORDS = { "abstract", "const", "function", "private", "protected", "public", "static", "var" }; // must be ordered!
 
-	protected boolean showVariablesFromOtherFiles;
-	protected boolean groupCompletionOptions;
-	protected boolean cutCommonPrefix;
-	public boolean determineObjectTypeFromOtherFile;
-	protected boolean disableConstants;
-	protected boolean showClassNamesInGlobalList;
-	protected boolean showNonStrictOptions;
-	protected boolean constantCaseSensitive;
-	protected boolean autoShowVariables;
-	protected boolean autoShowFunctionsKeywordsConstants;
-	protected boolean autoShowClassNames;
-	protected char[] autoActivationTriggers;
-
 	private PHPTemplateCompletionProcessor templateCompletionProcessor;
 
 	enum States {
 		CATCH, NEW, INSTANCEOF
 	};
-
-	protected void initPreferences(String prefKey) {
-		if (prefKey == null || PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST.equals(prefKey) || PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS.equals(prefKey)
-			|| PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION.equals(prefKey) || PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE.equals(prefKey) || PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES.equals(prefKey)
-			|| PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES.equals(prefKey)
-			|| PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX.equals(prefKey) || PreferenceConstants.CODEASSIST_GROUP_OPTIONS.equals(prefKey) || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP.equals(prefKey)) {
-
-			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
-			
-			showVariablesFromOtherFiles = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
-			groupCompletionOptions = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_GROUP_OPTIONS);
-			cutCommonPrefix = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_CUT_COMMON_PREFIX);
-			disableConstants = !preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
-			showClassNamesInGlobalList = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
-			showNonStrictOptions = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
-			constantCaseSensitive = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
-			determineObjectTypeFromOtherFile = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
-			autoShowClassNames = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-			autoShowFunctionsKeywordsConstants = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
-			autoShowVariables = preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
-			autoActivationTriggers = preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
-		}
-	}
 
 	protected CompletionProposalGroup completionProposalGroup;
 	protected ICompletionProposal[] templateProposals;
@@ -119,16 +106,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	protected CompletionProposalGroup arrayCompletionProposalGroup = new ArrayCompletionProposalGroup();
 	protected CompletionProposalGroup classStaticCallCompletionProposalGroup = new ClassStaticCallCompletionProposalGroup();
 	protected CompletionProposalGroup classVariableCallCompletionProposalGroup = new ClassVariableCallCompletionProposalGroup();
+	protected Preferences preferences;
 
 	public ContentAssistSupport() {
-		// Initialize all preferences
-		initPreferences(null);
+		preferences = PHPCorePlugin.getDefault().getPluginPreferences();
 	}
 	
-	public void handlePreferenceStoreChanged(PropertyChangeEvent event) {
-		initPreferences(event.getProperty());
-	}
-
 	public ICompletionProposal[] getCompletionOption(ITextViewer viewer, DOMModelForPHP phpDOMModel, int offset, boolean explicit) throws BadLocationException {
 		ICompletionProposal[] codeCompletionOptions = getCodeCompletionOptions(viewer, phpDOMModel, offset, explicit);
 		if (codeCompletionOptions == null) {
@@ -144,6 +127,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (completionProposalGroup == null) {
 			return templateProposals;
 		}
+		boolean groupCompletionOptions = preferences.getBoolean(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS);
+		boolean cutCommonPrefix = preferences.getBoolean(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX);
 		completionProposalGroup.setGroupOptions(groupCompletionOptions);
 		completionProposalGroup.setCutCommonPrefix(cutCommonPrefix);
 		return merg(completionProposalGroup.getCompletionProposals(getProjectModel(phpEditorModel)), templateProposals);
@@ -169,7 +154,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	public char[] getAutoactivationTriggers() {
-		return autoActivationTriggers;
+		return preferences.getString(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
 	}
 
 	protected void calcCompletionOption(DOMModelForPHP editorModel, int offset, ITextViewer viewer, boolean explicit) throws BadLocationException {
@@ -429,6 +414,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (variableName.startsWith("$")) { //$NON-NLS-1$
 			variableName = variableName.substring(1);
 		}
+		boolean determineObjectTypeFromOtherFile = preferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
 		CodeData[] result = projectModel.getArrayVariables(fileName, variableName, startWith, determineObjectTypeFromOtherFile);
 
 		completionProposalGroup = arrayCompletionProposalGroup;
@@ -457,6 +443,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			final String type = internalPhpRegion.getType();
 
 			if (startsWith.startsWith("$") && !inClass) { //$NON-NLS-1$
+				boolean autoShowVariables = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
 				if (!explicit && !autoShowVariables)
 					return;
 				try {
@@ -479,6 +466,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				final PHPCodeContext context = getContext(projectModel, fileName, offset - startsWith.length());
 
 				startsWith = startsWith.substring(1);
+				boolean showVariablesFromOtherFiles = preferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
 				CodeData[] variables = projectModel.getVariables(fileName, context, startsWith, showVariablesFromOtherFiles);
 				completionProposalGroup = phpCompletionProposalGroup;
 				completionProposalGroup.setData(offset, variables, startsWith, selectionLength, isStrict);
@@ -496,6 +484,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] constants = null;
 		CodeData[] keywords = null;
 
+		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		if ((explicit || autoShowFunctionsKeywordsConstants) && !inClass) {
 			if (startsWith.length() == 0)
 				functions = projectModel.getFunctions();
@@ -503,10 +492,12 @@ public class ContentAssistSupport implements IContentAssistSupport {
 				functions = projectModel.getFunctions(startsWith);
 			}
 
+			boolean disableConstants = !preferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
 			if (!disableConstants)
 				if (startsWith.length() == 0)
 					constants = projectModel.getConstants();
 				else {
+					boolean constantCaseSensitive = preferences.getBoolean(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
 					constants = projectModel.getConstants(startsWith, constantCaseSensitive);
 				}
 		}
@@ -518,10 +509,13 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		CodeData[] classes = null;
 		if (!inClass) {
-			if (showClassNamesInGlobalList)
-				if (explicit || autoShowClassNames)
+			boolean showClassNamesInGlobalList = preferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
+			if (showClassNamesInGlobalList) {
+				boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+				if (explicit || autoShowClassNames) {
 					classes = projectModel.getClasses();
-
+				}
+			}
 		}
 		CodeData[] mergeData = null;
 		if (shouldAddPHPTag(document, offset, startsWith))
@@ -679,6 +673,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		if (bracketIndex == -1) {
 			//meaning its a class variable and not a function
+			boolean determineObjectTypeFromOtherFile = preferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
 			return PHPModelUtil.getVarType(projectModel, fileName, className, propertyName, offset, line, determineObjectTypeFromOtherFile);
 		}
 
@@ -726,6 +721,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			int statementStart = offset - statementText.length();
+			boolean determineObjectTypeFromOtherFile = preferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
 			return PHPFileDataUtilities.getVariableType(fileName, className, statementStart, line, projectModel.getPHPUserModel(), determineObjectTypeFromOtherFile);
 		}
 		// if its function call calc the return type.
@@ -761,6 +757,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		// collecting multiple classes in case class name has string separated by "|", which may be used in doc-block
 		String[] classNames = className.split(PHPModelUtil.PHPDOC_CLASS_NAME_SEPARATOR);
+		boolean autoShowVariables = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		for (String realClassName : classNames) {
 			realClassName = realClassName.trim();
 			if (explicit || autoShowFunctionsKeywordsConstants) {
@@ -784,15 +782,18 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected void showClassStaticCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit) {
 		CodeData[] functions = null;
+		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, ""); //$NON-NLS-1$
 			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
 			boolean isPHP5 = phpVersion.equals(PHPVersion.PHP5);
+			boolean showNonStrictOptions = preferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
 			if (isPHP5 && !showNonStrictOptions) {
 				functions = ModelSupport.getFilteredCodeData(functions, ModelSupport.STATIC_FUNCTIONS_FILTER);
 			}
 		}
 		CodeData[] classVariables = null;
+		boolean autoShowVariables = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
 		if (explicit || autoShowVariables) {
 			classVariables = ModelSupport.merge(projectModel.getClassVariables(fileName, className, ""), projectModel.getClassConsts(fileName, className, "")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -803,6 +804,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected void showParentCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit, boolean isStrict) {
 		CodeData[] functions = null;
+		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, startWith.length() == 0 ? "" : startWith); //$NON-NLS-1$
 		}
@@ -1071,6 +1073,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showInterfaceList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1092,6 +1095,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showExtendsImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1127,6 +1131,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1158,6 +1163,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private void showExtendsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
+		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1190,6 +1196,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			showInterfaceList(projectModel, startWith, offset, selectionLength, explicit);
 			return;
 		}
+		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1259,6 +1266,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showClassList(PHPProjectModel projectModel, PHPFileData fileData, String startWith, int offset, int selectionLength, States state, boolean explicit) {
+		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1410,14 +1418,17 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (variableName.startsWith("$")) { //$NON-NLS-1$
 			variableName = variableName.substring(1);
 		}
+		boolean determineObjectTypeFromOtherFile = preferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
 		CodeData[] arrayResult = projectModel.getArrayVariables(fileName, variableName, lastWord, determineObjectTypeFromOtherFile);
 		CodeData[] functions;
 		CodeData[] constans;
+		boolean disableConstants = !preferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
 		if (lastWord.length() == 0) {
 			functions = projectModel.getFunctions();
 			constans = disableConstants ? null : projectModel.getConstants();
 		} else {
 			functions = projectModel.getFunctions(lastWord);
+			boolean constantCaseSensitive = preferences.getBoolean(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
 			constans = disableConstants ? null : projectModel.getConstants(lastWord, constantCaseSensitive);
 		}
 		CodeData[] result = ModelSupport.merge(functions, ModelSupport.merge(arrayResult, constans));
@@ -1549,7 +1560,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			@Override
 			public void apply(IDocument document) {
 				try {
-					boolean insertCompletion = PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.CODEASSIST_INSERT_COMPLETION);
+					boolean insertCompletion = PHPCorePlugin.getDefault().getPluginPreferences().getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
 					if (!insertCompletion) { //need to override the text after the cursor
 						removeTrailingCharacters(document);
 					}

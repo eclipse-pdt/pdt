@@ -10,10 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -32,7 +33,6 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -43,19 +43,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 	private static final char TAG_SIGN = '@';
 
-	private char[] autoActivationTriggers;
-
 	private final CompletionProposalGroup phpDocCompletionProposalGroup = new PHPCompletionProposalGroup();
-
-	@Override
-	protected void initPreferences(String prefKey) {
-		super.initPreferences(prefKey);
-		
-		if (prefKey == null || PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC.equals(prefKey)) {
-			IPreferenceStore preferenceStore = PreferenceConstants.getPreferenceStore();
-			autoActivationTriggers = preferenceStore.getString(PreferenceConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
-		}
-	}
 
 	public PHPDocContentAssistSupport() {
 		super();
@@ -63,7 +51,7 @@ public class PHPDocContentAssistSupport extends ContentAssistSupport {
 
 	@Override
 	public char[] getAutoactivationTriggers() {
-		return autoActivationTriggers;
+		return PHPCorePlugin.getDefault().getPluginPreferences().getString(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC).trim().toCharArray();
 	}
 
 	@Override
