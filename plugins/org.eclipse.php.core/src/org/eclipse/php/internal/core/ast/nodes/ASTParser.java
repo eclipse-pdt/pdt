@@ -19,6 +19,7 @@ import java_cup.runtime.lr_parser;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -92,11 +93,16 @@ public class ASTParser {
 	* Factory methods for ASTParser
 	*/
 	public static ASTParser newParser(String version, ISourceModule sourceModule) {
+		if (sourceModule == null) {
+			throw new IllegalStateException("ASTParser - Can't parser with null ISourceModule");  
+		}
 		try {
-			return new ASTParser(EMPTY_STRING_READER, version, false, sourceModule);
+			final ASTParser parser = new ASTParser(EMPTY_STRING_READER, version, false, sourceModule);
+			parser.setSource(sourceModule.getSourceAsCharArray());
+			return parser;
 		} catch (IOException e) {
-			assert false;
-			// Since we use empty reader we cannot have an IOException here
+			return null;
+		} catch (ModelException e) {
 			return null;
 		}
 	}
