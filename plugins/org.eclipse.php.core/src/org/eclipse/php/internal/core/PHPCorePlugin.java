@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core;
 
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -42,8 +43,15 @@ public class PHPCorePlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
-		PHPWorkspaceModelManager.getInstance().startup();
-		IncludePathVariableManager.instance().startUp();
+		Job delayedJob = new Job("Initializing PHP Toolkit") {
+			protected IStatus run(IProgressMonitor monitor) {
+				PHPWorkspaceModelManager.getInstance().startup();
+				IncludePathVariableManager.instance().startUp();
+				return Status.OK_STATUS;
+			}			
+		};
+		delayedJob.setPriority(Job.LONG);
+		delayedJob.schedule();
 	}
 
 	/**
