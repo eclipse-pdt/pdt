@@ -461,7 +461,7 @@ public class TypeBinding implements ITypeBinding {
 	 *    and <code>false</code> otherwise
 	 */
 	public boolean isInterface() {
-		if (!isUnknown()) {
+		if (isUnknown()) {
 			return false;
 		}
 
