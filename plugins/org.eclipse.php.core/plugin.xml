@@ -215,6 +215,14 @@
           priority="0">
     </completionEngine>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.selectionEngine">
+    <selectionEngine
+          class="org.eclipse.php.core.codeassist.PHPSelectionEngine"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </selectionEngine>
+ </extension>
 <!-- <extension
        point="org.eclipse.dltk.core.fileHierarchyResolvers">
     <fileHierarchyResolver

@@ -131,6 +131,47 @@ public class ASTUtils {
 	}
 
 	/**
+	 * This method builds list of AST nodes which enclose the given AST node.
+	 * @param module
+	 * @param node
+	 * @return
+	 */
+	public static ASTNode[] restoreWayToNode(ModuleDeclaration module, final ASTNode node) {
+		
+		final Stack<ASTNode> stack = new Stack<ASTNode>();
+
+		ASTVisitor visitor = new ASTVisitor() {
+			boolean found = false;
+
+			public boolean visitGeneral(ASTNode n) throws Exception {
+				if (found) {
+					return super.visitGeneral(n);
+				}
+				stack.push(n);
+				if (n.equals(node)) {
+					found = true;
+				}
+				return super.visitGeneral(n);
+			}
+
+			public void endvisitGeneral(ASTNode n) throws Exception {
+				super.endvisitGeneral(n);
+				if (found) {
+					return;
+				}
+				stack.pop();
+			}
+		};
+
+		try {
+			module.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return (ASTNode[]) stack.toArray(new ASTNode[stack.size()]);
+	}
+
+	/**
 	 * Finds type inference context for the given AST node.
 	 * 
 	 * @param sourceModule Source module element

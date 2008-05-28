@@ -13,6 +13,8 @@ package org.eclipse.php.internal.core.util.text;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -220,7 +222,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int readIdentifierStartIndex(TextSequence textSequence, int startPosition, boolean includeDolar) {
+	public static int readIdentifierStartIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
 			if (!Character.isLetterOrDigit(ch) && ch != '_') {
@@ -234,7 +236,7 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 
-	public static int readIdentifierEndIndex(TextSequence textSequence, int startPosition, boolean includeDolar) {
+	public static int readIdentifierEndIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
 		int length = textSequence.length();
 		if (includeDolar && startPosition < length && textSequence.charAt(startPosition) == '$') {
 			startPosition++;
@@ -248,7 +250,26 @@ public class PHPTextSequenceUtilities {
 		}
 		return startPosition;
 	}
-
+	
+	/**
+	 * Tries to find identifier enclosing given position.
+	 * @param contents
+	 * @param pos
+	 * @return
+	 */
+	public static ISourceRange getEnclosingIdentifier (CharSequence textSequence, int pos) {
+		if (pos < 0 || pos >= textSequence.length())
+			return null;
+		
+		int start = readIdentifierStartIndex(textSequence, pos, true);
+		int end = readIdentifierEndIndex(textSequence, pos, true);
+		
+		if (start > end)
+			return null;
+		
+		return new SourceRange(start, end - start + 1);
+	}
+	
 	public static int readBackwardSpaces(TextSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv > 0; rv--) {
