@@ -69,7 +69,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 			if (structuredModel instanceof DOMModelForPHP) {
 				DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
-				internalResolve(domModelForPHP, sourceUnit, offset, end);
+				return internalResolve(domModelForPHP, sourceUnit, offset, end);
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
