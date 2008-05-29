@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
@@ -48,9 +49,16 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
-		PHPWorkspaceModelManager.getInstance().startup();
-		IncludePathVariableManager.instance().startUp();
+		
+		Job delayedJob = new Job("Initializing PHP Toolkit") {
+			protected IStatus run(IProgressMonitor monitor) {
+				PHPWorkspaceModelManager.getInstance().startup();
+				IncludePathVariableManager.instance().startUp();
+				return Status.OK_STATUS;
+			}			
+		};
+		delayedJob.setPriority(Job.LONG);
+		delayedJob.schedule();
 	}
 
 	/**
