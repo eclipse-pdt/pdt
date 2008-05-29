@@ -100,11 +100,10 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 			PHPDocBlock docBlock = doc.getDocBlock();
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.RETURN) {
-					SimpleReference[] references = tag.getReferences();
-					if (references.length == 1) {
-						IEvaluatedType type = PHPSimpleTypes.fromString(references[0].getName());
+					for (SimpleReference reference : tag.getReferences()) {
+						IEvaluatedType type = PHPSimpleTypes.fromString(reference.getName());
 						if (type == null) {
-							type = new PHPClassType(references[0].getName());
+							type = new PHPClassType(reference.getName());
 						}
 						evaluated.add(type);
 					}

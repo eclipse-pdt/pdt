@@ -100,7 +100,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
     }
 
     private void setTagValue(){
-        String value = sBuffer.toString().trim();
+        String value = sBuffer.toString();
         // special case for backward compatibility
         if (currTagId == PHPDocTagKinds.DESC) {
             shortDesc = shortDesc + value;

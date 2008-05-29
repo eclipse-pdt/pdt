@@ -189,8 +189,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							elementName = elementName.substring(1);
-
 							// If we are in var definition:
 							if (containerClass != null) {
 								if (VAR.equalsIgnoreCase(prevWord) || PRIVATE.equalsIgnoreCase(prevWord) || STATIC.equalsIgnoreCase(prevWord) 
@@ -218,11 +216,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return PHPMixinModel.getInstance().getClass(elementName);
 						}
 
-						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset, sDoc.getLineOfOffset(offset), true);
+						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, endPosition, offset, sDoc.getLineOfOffset(offset), true);
 
 						// Is it function or method:
 						if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
-							if (types.length > 0) {
+							if (types != null && types.length > 0) {
 								List<IMethod> methods = new LinkedList<IMethod>();
 								for (IType t : types) {
 									methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(t, elementName, true)));
@@ -232,7 +230,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return PHPMixinModel.getInstance().getFunction(elementName);
 						}
 
-						if (types.length > 0) {
+						if (types != null && types.length > 0) {
 							// Check whether this is a class constant:
 							if (startPosition > 0) {
 								if (PAAMAYIM_NEKUDOTAIM.equals(trigger) && elementName.charAt(0) != '$') { //$NON-NLS-1$

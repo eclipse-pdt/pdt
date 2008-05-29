@@ -14,14 +14,29 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVaria
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.VarCommentVariableGoal;
 
+@SuppressWarnings("deprecation")
 public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 	public PHPTypeInferencer() {
 		super(new PHPGoalEvaluatorFactory());
 	}
 
+	/**
+	 * Evaluates PHP Doc goal
+	 * @param goal
+	 * @return evaluated type
+	 */
 	public IEvaluatedType evaluateTypePHPDoc(AbstractTypeGoal goal, int timeout) {
 		return super.evaluateType(goal, new HeavyGoalsPruner(timeout));
+	}
+	
+	/**
+	 * Evaluates PHP Doc goal with default timeout (3000 ms)
+	 * @param goal
+	 * @return evaluated type
+	 */
+	public IEvaluatedType evaluateTypePHPDoc(AbstractTypeGoal goal) {
+		return evaluateTypePHPDoc(goal, 3000);
 	}
 
 	public IEvaluatedType evaluateTypeHeavy(AbstractTypeGoal goal, int timeout) {

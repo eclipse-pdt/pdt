@@ -1,5 +1,8 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -8,6 +11,38 @@ import org.eclipse.dltk.ast.references.VariableReference;
 
 public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 
+	private static final String ERROR = "ERROR!!!"; //$NON-NLS-1$
+	private static final String THROWS_NAME = "throws"; //$NON-NLS-1$
+	private static final String VERSION_NAME = "version"; //$NON-NLS-1$
+	private static final String USES_NAME = "uses"; //$NON-NLS-1$
+	private static final String TUTORIAL_NAME = "tutorial"; //$NON-NLS-1$
+	private static final String SUBPACKAGE_NAME = "subpackage"; //$NON-NLS-1$
+	private static final String SINCE_NAME = "since"; //$NON-NLS-1$
+	private static final String LINK_NAME = "link"; //$NON-NLS-1$
+	private static final String LICENSE_NAME = "license"; //$NON-NLS-1$
+	private static final String INTERNAL_NAME = "internal"; //$NON-NLS-1$
+	private static final String IGNORE_NAME = "ignore"; //$NON-NLS-1$
+	private static final String FILESOURCE_NAME = "filesource"; //$NON-NLS-1$
+	private static final String EXAMPLE_NAME = "example"; //$NON-NLS-1$
+	private static final String DESC_NAME = "desc"; //$NON-NLS-1$
+	private static final String COPYRIGHT_NAME = "copyright"; //$NON-NLS-1$
+	private static final String CATEGORY_NAME = "category"; //$NON-NLS-1$
+	private static final String ACCESS_NAME = "access"; //$NON-NLS-1$
+	private static final String PACKAGE_NAME = "package"; //$NON-NLS-1$
+	private static final String VAR_NAME = "var"; //$NON-NLS-1$
+	private static final String TODO_NAME = "todo"; //$NON-NLS-1$
+	private static final String STATICVAR_NAME = "staticvar"; //$NON-NLS-1$
+	private static final String STATIC_NAME = "static"; //$NON-NLS-1$
+	private static final String SEE_NAME = "see"; //$NON-NLS-1$
+	private static final String PARAM_NAME = "param"; //$NON-NLS-1$
+	private static final String RETURN_NAME = "return"; //$NON-NLS-1$
+	private static final String NAME_NAME = "name"; //$NON-NLS-1$
+	private static final String GLOBAL_NAME = "global"; //$NON-NLS-1$
+	private static final String FINAL_NAME = "final"; //$NON-NLS-1$
+	private static final String DEPRECATED_NAME = "deprecated"; //$NON-NLS-1$
+	private static final String AUTHOR_NAME = "author"; //$NON-NLS-1$
+	private static final String ABSTRACT_NAME = "abstract"; //$NON-NLS-1$
+	private static final SimpleReference[] EMPTY = {};
 	private final int tagKind;
 	private String value;
 	private SimpleReference[] references;
@@ -19,33 +54,112 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		updateReferences(start, end);
 	}
 
+	private static int getNonWhitespaceIndex(String line, int startIndex) {
+		int i = startIndex;
+		for (; i < line.length(); ++i) {
+			if (!Character.isWhitespace(line.charAt(i))) {
+				return i;
+			}
+		}
+		return i;
+	}
+
+	private static int getWhitespaceIndex(String line, int startIndex) {
+		int i = startIndex;
+		for (; i < line.length(); ++i) {
+			if (Character.isWhitespace(line.charAt(i))) {
+				return i;
+			}
+		}
+		return i;
+	}
+	
+	private static int getClassStartIndex(String line, int startIndex) {
+		int i = startIndex;
+		for (; i < line.length(); ++i) {
+			if (line.charAt(i) != '|') {
+				return i;
+			}
+		}
+		return i;
+	}
+	
+	private static int getClassEndIndex(String line, int startIndex) {
+		int i = startIndex;
+		for (; i < line.length(); ++i) {
+			if (line.charAt(i) == '|') {
+				return i;
+			}
+		}
+		return i;
+	}
+
 	private void updateReferences(int start, int end) {
-		if (tagKind == RETURN || tagKind == PARAM || tagKind == VAR || tagKind == THROWS) {
-			String[] parts = value.split(" ");
-			if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS) {
-				if (parts.length != 0) {
-					references = new SimpleReference[1];
-					int firstWordPosition = start + value.indexOf(parts[0]);
-					references[0] = new TypeReference(firstWordPosition, firstWordPosition + parts[0].length(), parts[0]);
+		
+		int valueStart = start + getTagKind(tagKind).length() + 1;
+		
+		if (tagKind == RETURN) {
+			
+			int wordStart = getNonWhitespaceIndex(value, 0);
+			int wordEnd = getWhitespaceIndex(value, wordStart);
+			if (wordStart < wordEnd) {
+				
+				String word = value.substring(wordStart, wordEnd);
+
+				int classStart = getClassStartIndex(word, 0);
+				int classEnd = getClassEndIndex(word, classStart);
+				List<TypeReference> types = new LinkedList<TypeReference>();
+				
+				while (classStart < classEnd) {
+					String className = word.substring(classStart, classEnd);
+					types.add(new TypeReference(valueStart + wordStart + classStart, valueStart + wordStart + classEnd, className));
+					
+					classStart = getClassStartIndex(word, classEnd);
+					classEnd = getClassEndIndex(word, classStart);
 				}
-			} else {
-				if (parts.length >= 2) {
-					int firstWordPosition = start + value.indexOf(parts[0]);
-					int secondWordPosition = start + value.indexOf(parts[1]);
-					if (parts[0].charAt(0) == '$') {
+				if (types.size() > 0) {
+					references = types.toArray(new TypeReference[types.size()]);
+				}
+			}
+			
+		} else if (tagKind == VAR || tagKind == THROWS) {
+			
+			int wordStart = getNonWhitespaceIndex(value, 0);
+			int wordEnd = getWhitespaceIndex(value, wordStart);
+			if (wordStart < wordEnd) {
+			
+				references = new SimpleReference[1];
+				int sourceStart = valueStart + wordStart;
+				int sourceEnd = valueStart + wordEnd;
+				references[0] = new TypeReference(sourceStart, sourceEnd, value.substring(wordStart, wordEnd));
+			}
+			
+		} else if (tagKind == PARAM) {
+			
+			int firstWordStart = getNonWhitespaceIndex(value, 0);
+			int firstWordEnd = getWhitespaceIndex(value, firstWordStart);
+			if (firstWordStart < firstWordEnd) {
+				
+				int secondWordStart = getNonWhitespaceIndex(value, firstWordEnd);
+				int secondWordEnd = getWhitespaceIndex(value, secondWordStart);
+				if (secondWordStart < secondWordEnd) {
+
+					String firstWord = value.substring(firstWordStart, firstWordEnd);
+					String secondWord = value.substring(secondWordStart, secondWordEnd);
+					if (firstWord.charAt(0) == '$') {
 						references = new SimpleReference[2];
-						references[0] = new VariableReference(firstWordPosition, firstWordPosition + parts[0].length(), parts[0]);
-						references[1] = new TypeReference(secondWordPosition, secondWordPosition + parts[1].length(), parts[1]);
-					} else if (parts[1].charAt(0) == '$') {
+						references[0] = new VariableReference(valueStart + firstWordStart, valueStart + firstWordEnd, firstWord);
+						references[1] = new TypeReference(valueStart + secondWordStart, valueStart + secondWordEnd, secondWord);
+					} else if (secondWord.charAt(0) == '$') {
 						references = new SimpleReference[2];
-						references[0] = new VariableReference(firstWordPosition, firstWordPosition + parts[1].length(), parts[1]);
-						references[1] = new TypeReference(secondWordPosition, secondWordPosition + parts[0].length(), parts[0]);
+						references[0] = new VariableReference(valueStart + secondWordStart, valueStart + secondWordEnd, secondWord);
+						references[1] = new TypeReference(valueStart + firstWordStart, valueStart + firstWordEnd, firstWord);
 					}
 				}
 			}
 		}
 		if (references == null) {
-			references = new SimpleReference[0];
+			references = EMPTY;
 		}
 	}
 
@@ -83,96 +197,66 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	public static String getTagKind(int kind) {
 		switch (kind) {
 			case ABSTRACT:
-				return "abstract";
-
+				return ABSTRACT_NAME;
 			case AUTHOR:
-				return "author";
-
+				return AUTHOR_NAME;
 			case DEPRECATED:
-				return "deprecated";
-
+				return DEPRECATED_NAME;
 			case FINAL:
-				return "final";
-
+				return FINAL_NAME;
 			case GLOBAL:
-				return "global";
-
+				return GLOBAL_NAME;
 			case NAME:
-				return "name";
-
+				return NAME_NAME;
 			case RETURN:
-				return "return";
-
+				return RETURN_NAME;
 			case PARAM:
-				return "param";
-
+				return PARAM_NAME;
 			case SEE:
-				return "see";
-
+				return SEE_NAME;
 			case STATIC:
-				return "static";
-
+				return STATIC_NAME;
 			case STATICVAR:
-				return "staticvar";
-
+				return STATICVAR_NAME;
 			case TODO:
-				return "todo";
-
+				return TODO_NAME;
 			case VAR:
-				return "var";
-
+				return VAR_NAME;
 			case PACKAGE:
-				return "package";
-
+				return PACKAGE_NAME;
 			case ACCESS:
-				return "access";
-
+				return ACCESS_NAME;
 			case CATEGORY:
-				return "category";
-
+				return CATEGORY_NAME;
 			case COPYRIGHT:
-				return "copyright";
-
+				return COPYRIGHT_NAME;
 			case DESC:
-				return "desc";
-
+				return DESC_NAME;
 			case EXAMPLE:
-				return "example";
-
+				return EXAMPLE_NAME;
 			case FILESOURCE:
-				return "filesource";
-
+				return FILESOURCE_NAME;
 			case IGNORE:
-				return "ignore";
-
+				return IGNORE_NAME;
 			case INTERNAL:
-				return "internal";
-
+				return INTERNAL_NAME;
 			case LICENSE:
-				return "license";
-
+				return LICENSE_NAME;
 			case LINK:
-				return "link";
-
+				return LINK_NAME;
 			case SINCE:
-				return "since";
-
+				return SINCE_NAME;
 			case SUBPACKAGE:
-				return "subpackage";
-
+				return SUBPACKAGE_NAME;
 			case TUTORIAL:
-				return "tutorial";
-
+				return TUTORIAL_NAME;
 			case USES:
-				return "uses";
-
+				return USES_NAME;
 			case VERSION:
-				return "version";
-
+				return VERSION_NAME;
 			case THROWS:
-				return "throws";
-
+				return THROWS_NAME;
 		}
-		return "ERROR!!!";
+		return ERROR;
 	}
 }

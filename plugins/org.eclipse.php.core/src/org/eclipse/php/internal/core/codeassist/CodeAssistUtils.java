@@ -30,6 +30,8 @@ import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
@@ -42,6 +44,7 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -167,7 +170,7 @@ public class CodeAssistUtils {
 		return fields.toArray(new IField[fields.size()]);
 	}
 	
-	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line) {
+	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line, boolean determineObjectFromOtherFile) {
 		for (IType type : types) {
 			IField[] fields = getClassFields(type, propertyName, true, false);
 
@@ -179,12 +182,13 @@ public class CodeAssistUtils {
 				processedFields.add(field.getElementName());
 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
-				BasicContext context = new BasicContext(field.getSourceModule(), moduleDeclaration);
-				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(context, types, field.getElementName());
+				BasicContext sourceModuleContext = new BasicContext(field.getSourceModule(), moduleDeclaration);
+				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, field.getElementName());
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 				IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-				if (evaluatedType != null) {
-					IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(evaluatedType.getTypeName());
+				
+				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+				if (modelElements != null) {
 					return modelElementsToTypes(modelElements);
 				}
 			}
@@ -192,7 +196,7 @@ public class CodeAssistUtils {
 		return null;
 	}
 
-	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line, boolean showObjectsFromOtherFiles) {
+	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line, boolean determineObjectFromOtherFile) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
 		IContext context = ASTUtils.findContext((SourceModule) sourceModule, moduleDeclaration, position);
 		if (context != null) {
@@ -200,8 +204,9 @@ public class CodeAssistUtils {
 			ExpressionTypeGoal goal = new ExpressionTypeGoal(context, varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-			if (evaluatedType != null) {
-				IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(evaluatedType.getTypeName());
+			
+			IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, !determineObjectFromOtherFile);
+			if (modelElements != null) {
 				return modelElementsToTypes(modelElements);
 			}
 		}
@@ -216,20 +221,38 @@ public class CodeAssistUtils {
 		return types.toArray(new IType[types.size()]);
 	}
 	
-	public static IType[] getFunctionReturnType(IType type, String functionName) {
+	public static IType[] getFunctionReturnType(IType type, String functionName, boolean determineObjectFromOtherFile) {
 		IMethod[] classMethod = getClassMethods(type, functionName, true);
 		if (classMethod.length > 0) {
-			return getFunctionReturnType(classMethod[0]);
+			return getFunctionReturnType(classMethod[0], determineObjectFromOtherFile);
 		}
 		return null;
 	}
 	
-	public static IType[] getFunctionReturnType(IMethod method) {
-		MethodElementReturnTypeGoal goal = new MethodElementReturnTypeGoal(method);
+	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-		IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-		if (evaluatedType != null) {
-			IModelElement[] modelElements = PHPMixinModel.getInstance().getClass(evaluatedType.getTypeName());
+		
+		IEvaluatedType classType = null;
+		if (method.getDeclaringType() != null) {
+			classType = new PHPClassType(method.getDeclaringType().getElementName());
+		}
+		org.eclipse.dltk.core.ISourceModule sourceModule = method.getSourceModule();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		BasicContext sourceModuleContext = new BasicContext(sourceModule, moduleDeclaration);
+		
+		InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
+		PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
+		IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
+		
+		IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+		if (modelElements != null) {
+			return modelElementsToTypes(modelElements);
+		}
+		
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(method);
+		evaluatedType = typeInferencer.evaluateType(methodGoal);
+		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+		if (modelElements != null) {
 			return modelElementsToTypes(modelElements);
 		}
 		return null;
@@ -387,13 +410,13 @@ public class CodeAssistUtils {
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVariableType(types, propertyName, offset, line);
+			return getVariableType(types, propertyName, offset, line, determineObjectFromOtherFile);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 		Set<IType> result = new HashSet<IType>();
 		for (IType type : types) {
-			IType[] returnTypes = getFunctionReturnType(type, functionName);
+			IType[] returnTypes = getFunctionReturnType(type, functionName, determineObjectFromOtherFile);
 			if (returnTypes != null) {
 				result.addAll(Arrays.asList(returnTypes));
 			}
@@ -405,7 +428,7 @@ public class CodeAssistUtils {
 	/**
 	 * getting an instance and finding its type.
 	 */
-	public static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line, boolean determineObjectTypeFromOtherFile) {
+	public static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line, boolean determineObjectFromOtherFile) {
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
@@ -426,7 +449,7 @@ public class CodeAssistUtils {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
 				BasicContext context = new BasicContext((SourceModule) sourceModule, moduleDeclaration);
 				IEvaluatedType type = new PHPClassType(className);
-				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context, !determineObjectTypeFromOtherFile));
+				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context, !determineObjectFromOtherFile));
 			}
 		}
 		//check for $GLOBALS['myVar'] scenario
@@ -444,7 +467,7 @@ public class CodeAssistUtils {
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			int statementStart = offset - statementText.length();
-			return getVariableType(sourceModule, className, statementStart, line, determineObjectTypeFromOtherFile);
+			return getVariableType(sourceModule, className, statementStart, line, determineObjectFromOtherFile);
 		}
 		// if its function call calc the return type.
 		if (statementText.charAt(propertyEndPosition - 1) == ')') {
@@ -454,14 +477,14 @@ public class CodeAssistUtils {
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			IType classData = getContainerClassData(sourceModule, offset);
 			if (classData != null) { //if its a clss function
-				return getFunctionReturnType(classData, functionName);
+				return getFunctionReturnType(classData, functionName, determineObjectFromOtherFile);
 			}
 			
 			// if its a non class function
 			Set<IType> returnTypes = new HashSet<IType>();
 			IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
 			for (IModelElement function : functions) {
-				IType[] types = getFunctionReturnType((IMethod) function);
+				IType[] types = getFunctionReturnType((IMethod) function, determineObjectFromOtherFile);
 				if (types != null) {
 					returnTypes.addAll(Arrays.asList(types));
 				}

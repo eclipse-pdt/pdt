@@ -1,9 +1,9 @@
 package org.eclipse.php.internal.core.typeinference.goals.phpdoc;
 
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.goals.AbstractGoal;
+import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 
-public class PHPDocMethodReturnTypeGoal extends AbstractGoal {
+public class PHPDocMethodReturnTypeGoal extends AbstractTypeGoal {
 
 	private String methodName;
 
