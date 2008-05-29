@@ -302,11 +302,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!haveSpacesAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, explicit, type)) {
 			// the current position is inside new or instanceof statement.
 			if (lastWord.startsWith(DOLLAR)) {
-				if (haveSpacesAtEnd) {
-					getRegularCompletion(EMPTY, offset, explicit, container, phpScriptRegion, internalPHPRegion, document); //$NON-NLS-1$
-				} else {
-					getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
-				}
+				getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
 			}
 			return;
 		}
@@ -326,9 +322,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 
-		if (haveSpacesAtEnd) {
-			getRegularCompletion(EMPTY, offset, explicit, container, phpScriptRegion, internalPHPRegion, document); //$NON-NLS-1$
-		} else {
+		if (lastWord.length() > 0) {
 			getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
 		}
 
@@ -425,10 +419,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String variableName = text.subSequence(startPosition, endPosition).toString();
 
-		//		if (variableName.startsWith("$")) { //$NON-NLS-1$
-		//			variableName = variableName.substring(1);
-		//		}
-
 		reportArrayVariables(variableName, offset, prefix);
 		return true;
 	}
@@ -441,9 +431,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		boolean inClass = false;
-
-		if (CodeAssistUtils.getContainerClassData(sourceModule, offset) != null) {
-			inClass = true;
+		try {
+			if (((SourceModule)sourceModule.getModelElement()).getElementAt(offset) instanceof IType) {
+				inClass = true;
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
 		}
 
 		if (internalPhpRegion != null) {
@@ -774,7 +767,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				reportMethod(fakeMagicMethod, RELEVANCE_METHODS);
 			}
 		}
-
 		return true;
 	}
 
