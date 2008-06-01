@@ -1,9 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Zend Corporation and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators.phpdoc;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
@@ -27,8 +38,22 @@ import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
+/**
+ * This Evaluator process the phpdoc of a method to determine its 
+ * returned type(s)
+ *   
+ * @see the PHPCodumentor spec at {@link http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.return.pkg.html}  
+ */
 public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
+	/**
+	 * Used for splitting the data types list of the returned tag
+	 */
+	private final static Pattern PIPE_PATTERN = Pattern.compile("\\|");
+
+	/**
+	 * Holds the result of evaluated types that this evaluator resolved
+	 */
 	private final List<IEvaluatedType> evaluated = new LinkedList<IEvaluatedType>();
 
 	public PHPDocMethodReturnTypeEvaluator(IGoal goal) {
@@ -100,12 +125,16 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 			PHPDocBlock docBlock = doc.getDocBlock();
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.RETURN) {
+					// @return datatype1|datatype2|...
 					for (SimpleReference reference : tag.getReferences()) {
-						IEvaluatedType type = PHPSimpleTypes.fromString(reference.getName());
-						if (type == null) {
-							type = new PHPClassType(reference.getName());
+						final String[] types = PIPE_PATTERN.split(reference.getName());
+						for (String typeName : types) {
+							IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
+							if (type == null) {
+								type = new PHPClassType(typeName);
+							}
+							evaluated.add(type);
 						}
-						evaluated.add(type);
 					}
 				}
 			}
@@ -113,6 +142,9 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 		return IGoal.NO_GOALS;
 	}
+	
+
+
 
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);
