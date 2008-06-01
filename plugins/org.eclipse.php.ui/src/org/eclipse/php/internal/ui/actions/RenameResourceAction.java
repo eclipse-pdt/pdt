@@ -160,6 +160,10 @@ public class RenameResourceAction extends SelectionDispatchAction {
 				@Override
 				public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 					synchronized (this) {
+						if ( null == resource || IResource.FOLDER == resource.getType() || IResource.PROJECT == resource.getType()){
+							return Status.CANCEL_STATUS;
+						}
+						
 						if (resource.isAccessible()) { // in case the old file exists (fast undo-redo)
 							return Status.CANCEL_STATUS;
 
