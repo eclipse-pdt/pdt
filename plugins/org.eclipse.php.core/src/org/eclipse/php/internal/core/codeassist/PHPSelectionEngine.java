@@ -7,7 +7,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
@@ -24,7 +26,11 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.internal.core.compiler.ast.nodes.StaticConstantAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.StaticDispatch;
+import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -143,6 +149,65 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 					} else {
 						return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getFunction(callExpression.getName()));
+					}
+				}
+				// Static field or constant access:
+				else if (node instanceof StaticDispatch) {
+					StaticDispatch dispatch = (StaticDispatch) node;
+					String fieldName = null;
+					if (dispatch instanceof StaticConstantAccess) {
+						fieldName = ((StaticConstantAccess)dispatch).getConstant().getName();
+					} else if (dispatch instanceof StaticFieldAccess) {
+						ASTNode field = ((StaticFieldAccess)dispatch).getField();
+						if (field instanceof VariableReference) {
+							fieldName = ((VariableReference)field).getName();
+						}
+					}
+					if (fieldName != null && dispatch.getDispatcher() != null) {
+						IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, dispatch.getDispatcher());
+						if (dispatcherType != null) {
+							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context);
+							List<IModelElement> fields = new LinkedList<IModelElement>();
+							for (IModelElement element : elements) {
+								if (element instanceof IType) {
+									IType type = (IType) element;
+									try {
+										fields.addAll(Arrays.asList(getClassField(type, fieldName)));
+									} catch (ModelException e) {
+										Logger.logException(e);
+									}
+								}
+							}
+							return fields.toArray(new IModelElement[fields.size()]);
+						}
+					}
+				}
+				// Dynamic field access:
+				else if (node instanceof FieldAccess) {
+					FieldAccess fieldAccess = (FieldAccess) node;
+					ASTNode field = fieldAccess.getField();
+					String fieldName = null;
+					if (field instanceof SimpleReference) {
+						fieldName = ((SimpleReference)field).getName();
+					}
+					if (fieldName != null && fieldAccess.getDispatcher() != null) {
+						IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, fieldAccess.getDispatcher());
+						if (dispatcherType != null) {
+							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context);
+							List<IModelElement> fields = new LinkedList<IModelElement>();
+							for (IModelElement element : elements) {
+								if (element instanceof IType) {
+									IType type = (IType) element;
+									try {
+										fields.addAll(Arrays.asList(getClassField(type, fieldName)));
+										fields.addAll(Arrays.asList(getClassField(type, '$' + fieldName)));
+									} catch (ModelException e) {
+										Logger.logException(e);
+									}
+								}
+							}
+							return fields.toArray(new IModelElement[fields.size()]);
+						}
 					}
 				}
 				// Class/Interface reference:
