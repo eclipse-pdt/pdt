@@ -7,17 +7,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
-import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
-import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 
 public class PHPTypeInferenceUtils {
@@ -61,6 +64,20 @@ public class PHPTypeInferenceUtils {
 		return new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 	}
 	
+	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ASTNode expression) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, expression);
+		return resolveExpression(sourceModule, moduleDeclaration, context, expression);
+	}
+	
+	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, IContext context, ASTNode expression) {
+		if (context != null) {
+			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+			return typeInferencer.evaluateType(new ExpressionTypeGoal(context, expression));
+		}
+		return null;
+	}
+	
 	/**
 	 * Converts IEvaluatedType to IModelElement, if found. This method filters elements using file network dependencies.
 	 * @param evaluatedType Evaluated type
@@ -98,16 +115,8 @@ public class PHPTypeInferenceUtils {
 		}
 
 		// Filter model elements using file network:
-		if (filter && elements != null && elements.length > 0) {
-			ISourceModule sourceModule = context.getSourceModule();
-			ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
-			List<IModelElement> filteredElements = new LinkedList<IModelElement>();
-			for (IModelElement element : elements) {
-				if (referenceTree.find(((ModelElement)element).getSourceModule())) {
-					filteredElements.add(element);
-				}
-			}
-			elements = filteredElements.toArray(new IModelElement[filteredElements.size()]);
+		if (filter) {
+			elements = PHPModelUtils.fileNetworkFilter(context.getSourceModule(), elements);
 		}
 
 		return elements;

@@ -153,6 +153,25 @@ public class PHPTextSequenceUtilities {
 		}
 		return -1;
 	}
+	
+	public static int getMethodEndIndex(CharSequence textSequence, int offset) {
+		int length = textSequence.length();
+		while (offset < length && Character.isWhitespace(textSequence.charAt(offset))) {
+			++offset;
+		}
+		if (offset < length && textSequence.charAt(offset) == '(') {
+			++offset;
+		} else {
+			return -1;
+		}
+		while (offset < length && textSequence.charAt(offset) != ')') {
+			++offset;
+		}
+		if (textSequence.charAt(offset) == ')') {
+			return offset + 1;
+		}
+		return -1;
+	}
 
 	/**
 	 * Checks if we are inside function declaration statement.

@@ -28,6 +28,8 @@ import org.eclipse.dltk.core.IBuildpathContainer;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IBuiltinModuleProvider;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
@@ -57,7 +59,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	private void initializeListener(final IPath containerPath, final IScriptProject project) {
-		
+
 		if (phpVersionListener != null) {
 			return;
 		}
@@ -91,13 +93,10 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
 				if (isPHPProject(project)) {
-					
+
 					phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
-					
-					DLTKCore.setBuildpathContainer(containerPath, 
-						new IScriptProject[] { project }, 
-						new IBuildpathContainer[] { new LanguageModelContainer(containerPath) }, 
-						null);
+
+					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { project }, new IBuildpathContainer[] { new LanguageModelContainer(containerPath) }, null);
 
 					initializeListener(containerPath, project);
 				}
@@ -107,8 +106,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 	}
 
-	private IPath getContainerPath(IScriptProject project, IPath containerPath) throws IOException {
-		String libraryPath = getLanguageLibraryPath(project);
+	private static IPath getContainerPath(IScriptProject project, String phpVersion) throws IOException {
+		String libraryPath = getLanguageLibraryPath(project, phpVersion);
 
 		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(), new Path(libraryPath), null);
 		URL resolved = FileLocator.resolve(url);
@@ -117,7 +116,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return path;
 	}
 
-	private String getLanguageLibraryPath(IScriptProject project) {
+	private static String getLanguageLibraryPath(IScriptProject project, String phpVersion) {
 		return String.format(LANGUAGE_LIBRARY_PATH, PHPVersion.PHP4.equals(phpVersion) ? 4 : 5);
 	}
 
@@ -132,6 +131,25 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			return languageToolkit.getNatureId();
 		}
 		return null;
+	}
+
+	public static boolean isLanguageModelElement(IModelElement element) {
+		IProjectFragment fragment = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
+		if (fragment != null) {
+		
+			IScriptProject project = element.getScriptProject();
+			if (project != null) {
+			
+				String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
+				try {
+					IPath containerPath = getContainerPath(project, phpVersion);
+					return EnvironmentPathUtils.getLocalPath(fragment.getPath()).equals(containerPath);
+				} catch (IOException e) {
+					Logger.logException(e);
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -178,14 +196,11 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			if (buildPathEntries == null) {
 				IEnvironment environment = EnvironmentManager.getEnvironment(project);
 				try {
-					IPath path = getContainerPath(project, containerPath);
+					IPath path = getContainerPath(project, phpVersion);
 					if (environment != null) {
 						path = EnvironmentPathUtils.getFullPath(environment, path);
 					}
-					buildPathEntries = new IBuildpathEntry[] {
-						DLTKCore.newLibraryEntry(path, BuildpathEntry.NO_ACCESS_RULES,
-							BuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true) 
-					};
+					buildPathEntries = new IBuildpathEntry[] { DLTKCore.newLibraryEntry(path, BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true) };
 				} catch (Exception e) {
 					Logger.logException(e);
 				}

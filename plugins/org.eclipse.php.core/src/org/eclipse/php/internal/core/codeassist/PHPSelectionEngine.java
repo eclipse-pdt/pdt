@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
@@ -13,16 +16,25 @@ import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.core.SourceModule;
+import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -51,13 +63,20 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String CLASS = "class";
 	private static final String FUNCTION = "function";
 	private static final IModelElement[] EMPTY = {};
-	
+
 	public IAssistParser getParser() {
 		return null;
 	}
 
 	public IModelElement[] select(ISourceModule sourceUnit, int offset, int end) {
-		
+
+		// First, try to resolve using AST (if we have parsed it well):
+		IModelElement[] elements = internalASTResolve(sourceUnit, offset, end);
+		if (elements != null) {
+			return elements;
+		}
+
+		// Use the old way by playing with document & buffer:
 		IStructuredModel structuredModel = null;
 		boolean isUnmanaged = false;
 		try {
@@ -78,14 +97,70 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				structuredModel.releaseFromRead();
 			}
 		}
-		
+
 		return EMPTY;
 	}
-	
-	private IModelElement[] internalResolve(DOMModelForPHP domModel, ISourceModule sourceModule, int offset, int end) {
+
+	private IModelElement[] internalASTResolve(ISourceModule sourceUnit, int offset, int end) {
+
+		String source = sourceUnit.getSourceContents();
+		offset = PHPTextSequenceUtilities.readIdentifierStartIndex(source, offset, true);
+		end = PHPTextSequenceUtilities.readIdentifierEndIndex(source, end, true);
+
+		int methodEnd = PHPTextSequenceUtilities.getMethodEndIndex(source, end);
+		if (methodEnd != -1) {
+			end = methodEnd;
+		}
+
+		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit.getModelElement();
+		ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+
+		ASTNode node = ASTUtils.findMinimalNode(parsedUnit, offset, end);
+		if (node != null) {
+			
+			IContext context = ASTUtils.findContext(sourceModule, parsedUnit, node);
+			if (context != null) {
+
+				// Function call:
+				if (node instanceof PHPCallExpression) {
+					PHPCallExpression callExpression = (PHPCallExpression) node;
+					if (callExpression.getReceiver() != null) {
+						IEvaluatedType receiverType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, callExpression.getReceiver());
+						if (receiverType != null) {
+							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) context);
+							List<IModelElement> methods = new LinkedList<IModelElement>();
+							for (IModelElement element : elements) {
+								if (element instanceof IType) {
+									IType type = (IType) element;
+									try {
+										methods.addAll(Arrays.asList(getClassMethod(type, callExpression.getName())));
+									} catch (ModelException e) {
+										Logger.logException(e);
+									}
+								}
+							}
+							return methods.toArray(new IModelElement[methods.size()]);
+						}
+					} else {
+						return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getFunction(callExpression.getName()));
+					}
+				}
+				// Class/Interface reference:
+				else if (node instanceof TypeReference) {
+					return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((TypeReference) node).getName()), (ISourceModuleContext) context);
+				}
+			}
+		}
+		return null;
+	}
+
+	private IModelElement[] internalResolve(DOMModelForPHP domModel, ISourceModule sourceUnit, int offset, int end) {
+		
+		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit.getModelElement();
+		
 		try {
 			IStructuredDocument sDoc = (IStructuredDocument) domModel.getDocument().getStructuredDocument();
-			
+
 			IStructuredDocumentRegion sRegion = sDoc.getRegionAtCharacterOffset(offset);
 			if (sRegion != null) {
 				ITextRegion tRegion = sRegion.getRegionAtCharacterOffset(offset);
@@ -120,23 +195,23 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							break;
 						}
 					} while (nextRegion.getEnd() < phpScriptRegion.getLength());
-					
+
 					String nextWord = sDoc.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
 
 					if (elementName.length() > 0) {
-						IType containerClass = CodeAssistUtils.getContainerClassData(sourceModule, offset);
+						IType containerClass = CodeAssistUtils.getContainerClassData(sourceUnit, offset);
 
 						// If we are in function declaration:
 						if (FUNCTION.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							if (containerClass != null) {
 								return getClassMethod(containerClass, elementName);
 							}
-							return getFunction(sourceModule, elementName);
+							return getFunction(sourceUnit, elementName);
 						}
 
 						// If we are in class declaration:
 						if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$
-							return getClass(sourceModule, elementName);
+							return getClass(sourceUnit, elementName);
 						}
 
 						// Class instantiation:
@@ -147,8 +222,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// Handle extends and implements:
 						// Check that the statement suites the condition. If class or interface keywords don't appear in the beginning of the statement or they are alone there.
 						boolean isClassDeclaration = false;
-						if (statement.length() > 6 && (CLASS.equals(statement.subSequence(0, 5).toString()) && (isClassDeclaration = true)
-								|| statement.length() > 10 && INTERFACE.equals(statement.subSequence(0, 9).toString()))) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (statement.length() > 6 && (CLASS.equals(statement.subSequence(0, 5).toString()) && (isClassDeclaration = true) || statement.length() > 10 && INTERFACE.equals(statement.subSequence(0, 9).toString()))) { //$NON-NLS-1$ //$NON-NLS-2$
 
 							IModelElement[] generalizationTypes = getGeneralizationTypes(isClassDeclaration, prevWord, elementName);
 							if (generalizationTypes != null) {
@@ -191,9 +265,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 							// If we are in var definition:
 							if (containerClass != null) {
-								if (VAR.equalsIgnoreCase(prevWord) || PRIVATE.equalsIgnoreCase(prevWord) || STATIC.equalsIgnoreCase(prevWord) 
-										|| PUBLIC.equalsIgnoreCase(prevWord) || PROTECTED.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-									
+								if (VAR.equalsIgnoreCase(prevWord) || PRIVATE.equalsIgnoreCase(prevWord) || STATIC.equalsIgnoreCase(prevWord) || PUBLIC.equalsIgnoreCase(prevWord) || PROTECTED.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
 									return getClassField(containerClass, elementName);
 								}
 								if (THIS.equalsIgnoreCase(elementName)) { //$NON-NLS-1$
@@ -201,7 +274,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							return PHPMixinModel.getInstance().getVariable(elementName, null, null);
+							return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getVariable(elementName, null, null));
 						}
 
 						// If we are at class constant definition:
@@ -213,10 +286,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							return PHPMixinModel.getInstance().getClass(elementName);
+							PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getClass(elementName));
 						}
 
-						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, endPosition, offset, sDoc.getLineOfOffset(offset), true);
+						IType[] types = CodeAssistUtils.getTypesFor(sourceUnit, statement, endPosition, offset, sDoc.getLineOfOffset(offset), true);
 
 						// Is it function or method:
 						if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
@@ -227,7 +300,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							return PHPMixinModel.getInstance().getFunction(elementName);
+							return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getFunction(elementName));
 						}
 
 						if (types != null && types.length > 0) {
@@ -251,13 +324,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// This can be only global constant, if we've reached here:
-						IModelElement[] constants = PHPMixinModel.getInstance().getConstant(elementName, null);
+						IModelElement[] constants = PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getConstant(elementName, null));
 						if (constants.length > 0) {
 							return constants;
 						}
 
 						// Return class if nothing else found.
-						return PHPMixinModel.getInstance().getClass(elementName);
+						return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getClass(elementName));
 					}
 				}
 			}
@@ -266,7 +339,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		return EMPTY;
 	}
-	
+
 	private static IModelElement[] getGeneralizationTypes(boolean isClassDeclaration, String generalization, String elementName) {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
@@ -279,7 +352,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		return null;
 	}
-	
+
 	private static IModelElement[] getClassField(IType type, String elementName) throws ModelException {
 		IField[] fields = type.getFields();
 		for (IField field : fields) {
@@ -289,30 +362,30 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 		return EMPTY;
 	}
-	
+
 	private static IModelElement[] getClassMethod(IType type, String elementName) throws ModelException {
 		IMethod[] methods = type.getMethods();
-		for (IMethod method: methods) {
+		for (IMethod method : methods) {
 			if (method.getElementName().equalsIgnoreCase(elementName)) {
 				return new IModelElement[] { method };
 			}
 		}
 		return EMPTY;
 	}
-	
+
 	private static IModelElement[] getFunction(ISourceModule sourceModule, String elementName) throws ModelException {
-		IMethod[] methods = ((SourceModule)sourceModule.getModelElement()).getMethods();
-		for (IMethod method: methods) {
+		IMethod[] methods = ((SourceModule) sourceModule.getModelElement()).getMethods();
+		for (IMethod method : methods) {
 			if (method.getElementName().equalsIgnoreCase(elementName)) {
 				return new IModelElement[] { method };
 			}
 		}
 		return EMPTY;
 	}
-	
+
 	private static IModelElement[] getClass(ISourceModule sourceModule, String elementName) throws ModelException {
-		IType[] types = ((SourceModule)sourceModule.getModelElement()).getTypes();
-		for (IType type: types) {
+		IType[] types = ((SourceModule) sourceModule.getModelElement()).getTypes();
+		for (IType type : types) {
 			if (type.getElementName().equalsIgnoreCase(elementName)) {
 				return new IModelElement[] { type };
 			}

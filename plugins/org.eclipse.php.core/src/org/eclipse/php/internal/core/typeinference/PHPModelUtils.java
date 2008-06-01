@@ -25,12 +25,16 @@ import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.SearchParticipant;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
+import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinBuildVisitor;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.phpModel.LanguageModelInitializer;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 
 public class PHPModelUtils {
@@ -147,5 +151,26 @@ public class PHPModelUtils {
 	public static IDLTKSearchScope createProjectSearchScope(IScriptProject project) {
 		int includeMask = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES | IDLTKSearchScope.REFERENCED_PROJECTS | IDLTKSearchScope.SYSTEM_LIBRARIES;
 		return SearchEngine.createSearchScope(project, includeMask);
+	}
+	
+	/**
+	 * Filters model elements using file network.
+	 * @param sourceModule
+	 * @param elements
+	 * @return
+	 */
+	public static IModelElement[] fileNetworkFilter(ISourceModule sourceModule, IModelElement[] elements) {
+		
+		if (elements != null && elements.length > 0) {
+			ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
+			List<IModelElement> filteredElements = new LinkedList<IModelElement>();
+			for (IModelElement element : elements) {
+				if (LanguageModelInitializer.isLanguageModelElement(element) || referenceTree.find(((ModelElement)element).getSourceModule())) {
+					filteredElements.add(element);
+				}
+			}
+			elements = filteredElements.toArray(new IModelElement[filteredElements.size()]);
+		}
+		return elements;
 	}
 }
