@@ -44,7 +44,7 @@ public class TypeBinding implements ITypeBinding {
 	public TypeBinding(BindingResolver resolver, IEvaluatedType type, IModelElement[] elements) {
 		this.resolver = resolver;
 		this.type = type;
-		if (elements != null) {
+		if (elements != null && elements.length > 0) {
 			final int length = elements.length;
 			this.elements = new IModelElement[length];
 			System.arraycopy(elements, 0, this.elements, 0, length);
@@ -354,7 +354,7 @@ public class TypeBinding implements ITypeBinding {
 	 * @see #getQualifiedName()
 	 */
 	public String getName() {
-		return this.type.getTypeName();
+		return isUnknown() ? null : this.type.getTypeName();
 	}
 
 	/**
@@ -712,15 +712,6 @@ public class TypeBinding implements ITypeBinding {
 		}
 		return this.elements.equals(otherBinding.elements);
 
-	}
-
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isSynthetic()
-	 */
-	public boolean isSynthetic() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	/*
