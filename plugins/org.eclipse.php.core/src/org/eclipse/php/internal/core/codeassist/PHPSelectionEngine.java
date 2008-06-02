@@ -37,7 +37,6 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -148,7 +147,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return methods.toArray(new IModelElement[methods.size()]);
 						}
 					} else {
-						return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getFunction(callExpression.getName()));
+						return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceMethods(callExpression.getName(), true));
 					}
 				}
 				// Static field or constant access:
@@ -339,7 +338,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getVariable(elementName, null, null));
+							return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
 						}
 
 						// If we are at class constant definition:
@@ -351,7 +350,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getClass(elementName));
+							PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(sourceUnit, statement, endPosition, offset, sDoc.getLineOfOffset(offset), true);
@@ -365,7 +364,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getFunction(elementName));
+							return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceMethods(elementName, true));
 						}
 
 						if (types != null && types.length > 0) {
@@ -389,13 +388,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// This can be only global constant, if we've reached here:
-						IModelElement[] constants = PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getConstant(elementName, null));
+						IModelElement[] constants = PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
 						if (constants.length > 0) {
 							return constants;
 						}
 
 						// Return class if nothing else found.
-						return PHPModelUtils.fileNetworkFilter(sourceModule, PHPMixinModel.getInstance().getClass(elementName));
+						return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
 					}
 				}
 			}

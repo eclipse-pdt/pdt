@@ -43,6 +43,9 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 						locator.match(decl, getNodeSet());
 					}
 				}
+			} else if (left instanceof VariableReference) {
+				FieldDeclaration decl = new FieldDeclaration(((VariableReference)left).getName(), left.sourceStart(), left.sourceEnd(), node.sourceStart(), node.sourceEnd());
+				locator.match(decl, getNodeSet());
 			}
 		} else if (node instanceof TypeReference) {
 			locator.match((TypeReference)node, getNodeSet());

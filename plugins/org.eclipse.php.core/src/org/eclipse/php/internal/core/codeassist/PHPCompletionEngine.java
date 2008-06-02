@@ -32,7 +32,6 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.phpModel.PHPKeywords;
 import org.eclipse.php.internal.core.phpModel.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
@@ -65,7 +64,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String BRACKETS_SUFFIX = "()"; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
-	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private final static int RELEVANCE_FREE_SPACE = 10000000;
 	private final static int RELEVANCE_KEYWORD = 1000000;
 	private final static int RELEVANCE_METHODS = 100000;
@@ -93,6 +91,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
+	protected static final char[] DEFAULT_AUTOACTIVATION_TRIGGERS = {'$', ':', '>'};
 
 	private static final Pattern extendsPattern = Pattern.compile("\\Wextends\\W", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
@@ -113,7 +112,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 	
 	public char[] getAutoactivationTriggers() {
-		return pluginPreferences.getString(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP)) {
+			return pluginPreferences.getString(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
+		}
+		return DEFAULT_AUTOACTIVATION_TRIGGERS;
 	}
 
 	protected int getEndOfEmptyToken() {
@@ -322,9 +324,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 
-		if (lastWord.length() > 0) {
-			getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
-		}
+		getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
 
 		return;
 	}
@@ -378,7 +378,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		if (arrayName.equals("$GLOBALS")) { //$NON-NLS-1$
-			IModelElement[] elements = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null);
+			IModelElement[] elements = CodeAssistUtils.getWorkspaceFields(prefix, false);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
 				reportField(field, relevance--, true);
@@ -424,10 +424,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void getRegularCompletion(String prefix, int offset, boolean explicit, ITextRegionCollection sdRegion, ITextRegion tRegion, ContextRegion internalPhpRegion, IStructuredDocument document) {
-		if (!explicit && prefix.length() == 0) {
-			return;
-		}
-
+		
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		boolean inClass = false;
@@ -438,13 +435,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		} catch (ModelException e) {
 			Logger.logException(e);
 		}
+		
+		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
+		if (inClass) {
+			keywordsList = filterClassKeywords(keywordsList);
+		}
+		for (KeywordData k : keywordsList) {
+			reportKeyword(k.name, k.suffix);
+		}
+		
+		if (prefix.length() == 0) {
+			return;
+		}
 
 		if (internalPhpRegion != null) {
 			final String type = internalPhpRegion.getType();
 
 			if (prefix.startsWith(DOLLAR) && !inClass) { //$NON-NLS-1$
-				boolean autoactivateVariables = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
-				if (!explicit && !autoactivateVariables)
+				if (!explicit && !autoactivateForVariables())
 					return;
 				try {
 					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name.
@@ -467,7 +475,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				int relevance = 424242;
 				reportVariables(phpVariables, prefix, relevance--, false);
 
-				IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null);
+				IModelElement[] variables = CodeAssistUtils.getWorkspaceFields(prefix, false);
 				for (IModelElement var : variables) {
 					reportField((IField) var, relevance--, false);
 				}
@@ -479,37 +487,32 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
-		if (inClass) {
-			keywordsList = filterClassKeywords(keywordsList);
-		}
-		for (KeywordData k : keywordsList) {
-			reportKeyword(k.name, k.suffix);
-		}
-
-		boolean autoactivateKeywordsConstants = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
-		if ((explicit || autoactivateKeywordsConstants) && !inClass) {
-			IModelElement[] functions = PHPMixinModel.getInstance().getMethod(null, prefix + WILDCARD);
+		if ((explicit || autoactivateForFunctionsKeywordsConstants()) && !inClass) {
+			IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(prefix, false);
 			for (IModelElement function : functions) {
 				reportMethod((IMethod) function, RELEVANCE_METHODS);
 			}
 
-			if (pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST)) {
+			if (showConstantAssist()) {
 				int relevance = 4242;
-				IModelElement[] constants = PHPMixinModel.getInstance().getConstant(prefix + WILDCARD, null);
+				IModelElement[] constants = CodeAssistUtils.getWorkspaceFields(prefix, false);
 				for (IModelElement constant : constants) {
-					reportField((IField) constant, relevance--, false);
+					try {
+						if ((((IField)constant).getFlags() & Modifiers.AccConstant) != 0) {
+							reportField((IField) constant, relevance--, false);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 			}
 		}
 
 		if (!inClass) {
-			boolean showClasses = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
-			if (showClasses) {
-				boolean autoactivateClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-				if (explicit || autoactivateClassNames) {
+			if (showClassNamesInGlobalCompletion()) {
+				if (explicit || autoactivateForClassnames()) {
 					int relevance = 424242;
-					IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
+					IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 					for (IModelElement type : classes) {
 						reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
 					}
@@ -550,8 +553,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 
-		boolean determineObjectTypeFromOtherFile = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
-		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line, determineObjectTypeFromOtherFile);
+		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line, determineObjsFromOtherFiles());
 
 		if (haveSpacesAtEnd && functionName.length() > 0) {
 			// check if current position is between the end of a function call and open bracket.
@@ -583,8 +585,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		this.setSourceRange(offset - prefix.length(), offset);
 
-		boolean autoactivateKeywordsConstants = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
-		boolean autoactivateVariables = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+		boolean autoactivateKeywordsConstants = autoactivateForFunctionsKeywordsConstants();
+		boolean autoactivateVariables = autoactivateForVariables();
 		
 		for (IType type : className) {
 			if (!prefix.startsWith(DOLLAR) && (explicit || autoactivateKeywordsConstants)) {
@@ -608,8 +610,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void showClassStaticCall(int offset, IType[] className, String prefix, boolean explicit) {
 		this.setSourceRange(offset - prefix.length(), offset);
 		
-		boolean showNonStrictOptions = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
-		boolean autoactivateKeywordsConstants = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+		boolean showNonStrictOptions = showNonStrictOptions();
+		boolean autoactivateKeywordsConstants = autoactivateForFunctionsKeywordsConstants();
 
 		if (!prefix.startsWith(DOLLAR) && (explicit || autoactivateKeywordsConstants)) {
 			for (IType type : className) {
@@ -627,8 +629,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		boolean autoactivateVariables = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
-		if (explicit || autoactivateVariables) {
+		if (explicit || autoactivateForVariables()) {
 			int relevance = 4242;
 			for (IType type : className) {
 				IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, false, true);
@@ -641,24 +642,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					} catch (ModelException e) {
 						Logger.logException(e);
 					}
-				}
-			}
-		}
-	}
-
-	protected void showParentCall(ISourceModule sourceModule, int offset, String className, String prefix, boolean explicit) {
-		boolean autoactivateKeywordsConstants = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
-		if (explicit || autoactivateKeywordsConstants) {
-			IModelElement[] methods = PHPMixinModel.getInstance().getMethod(className, prefix + WILDCARD);
-			for (IModelElement method : methods) {
-				IMethod methodElement = (IMethod) method;
-				try {
-					int flags = methodElement.getFlags();
-					if ((flags & Modifiers.AccPrivate) == 0) {
-						reportMethod(methodElement, RELEVANCE_METHODS);
-					}
-				} catch (ModelException e) {
-					Logger.logException(e);
 				}
 			}
 		}
@@ -699,10 +682,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						prefix = prefix.substring(k);
 					}
 
-					IModelElement[] classes = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
-
 					this.setSourceRange(offset - prefix.length(), offset);
 
+					IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 					for (IModelElement type : classes) {
 						reportType((IType) type, RELEVANCE_FREE_SPACE, " ");
 					}
@@ -852,8 +834,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showInterfaceList(String prefix, int offset, boolean explicit) {
-		boolean autoactivateForClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		if (!explicit && !autoactivateForClassNames) {
+		if (!explicit && !autoactivateForClassnames()) {
 			return;
 		}
 		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(prefix, false);
@@ -863,8 +844,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showExtendsImplementsList(String prefix, int offset, boolean explicit) {
-		boolean autoactivateForClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		if (!explicit && !autoactivateForClassNames) {
+		if (!explicit && !autoactivateForClassnames()) {
 			return;
 		}
 		this.setSourceRange(offset - prefix.length(), offset);
@@ -884,8 +864,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showImplementsList(String prefix, int offset, boolean explicit) {
-		boolean autoactivateForClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		if (!explicit && !autoactivateForClassNames) {
+		if (!explicit && !autoactivateForClassnames()) {
 			return;
 		}
 		if (isPHP5) {
@@ -898,8 +877,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void showExtendsList(String prefix, int offset, boolean explicit) {
-		boolean autoactivateForClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		if (!explicit && !autoactivateForClassNames) {
+		if (!explicit && !autoactivateForClassnames()) {
 			return;
 		}
 		this.setSourceRange(offset - prefix.length(), offset);
@@ -914,8 +892,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			showInterfaceList(prefix, offset, explicit);
 			return;
 		}
-		boolean autoactivateForClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		if (!explicit && !autoactivateForClassNames) {
+		if (!explicit && !autoactivateForClassnames()) {
 			return;
 		}
 
@@ -964,8 +941,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showClassList(String prefix, int offset, States state, boolean explicit) {
-		boolean autoactivateForClassNames = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		if (!explicit && !autoactivateForClassNames) {
+		if (!explicit && !autoactivateForClassnames()) {
 			return;
 		}
 
@@ -986,7 +962,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 				break;
 			case INSTANCEOF:
-				IModelElement[] typeElements = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
+				IModelElement[] typeElements = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 				for (IModelElement typeElement : typeElements) {
 					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
 				}
@@ -999,7 +975,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 				break;
 			case CATCH:
-				typeElements = PHPMixinModel.getInstance().getClass(prefix + WILDCARD);
+				typeElements = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 				for (IModelElement typeElement : typeElements) {
 					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
 				}
@@ -1068,18 +1044,23 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		reportArrayVariables(variableName, offset, lastWord);
 
-		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(lastWord + WILDCARD);
+		IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(lastWord, false);
 		for (IModelElement function : functions) {
 			reportMethod((IMethod) function, RELEVANCE_METHODS);
 		}
 
-		boolean showConstants = pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
-		if (showConstants) {
-			IModelElement[] constants = PHPMixinModel.getInstance().getConstant(lastWord + WILDCARD, null);
+		if (showConstantAssist()) {
+			IModelElement[] constants = CodeAssistUtils.getWorkspaceFields(lastWord, false);
 			int relevance = 4242;
 			for (IModelElement constant : constants) {
 				IField field = (IField) constant;
-				reportField(field, relevance--, false);
+				try {
+					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+						reportField(field, relevance--, false);
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
 			}
 		}
 		return true;
@@ -1232,5 +1213,54 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
+	}
+	
+	private boolean showClassNamesInGlobalCompletion() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION)) {
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
+		}
+		return true;
+	}
+	
+	private boolean autoactivateForVariables() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES)) {
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+		}
+		return true;
+	}
+	
+	private boolean autoactivateForClassnames() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES)) {
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		}
+		return true;
+	}
+	
+	private boolean autoactivateForFunctionsKeywordsConstants() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS)) {
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+		}
+		return true;
+	}
+	
+	private boolean determineObjsFromOtherFiles() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES)) {
+			pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
+		}
+		return true;
+	}
+	
+	private boolean showConstantAssist() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST)) {
+			pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
+		}
+		return true;
+	}
+	
+	private boolean showNonStrictOptions() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS)) {
+			pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
+		}
+		return false;
 	}
 }

@@ -243,6 +243,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					fNodes.push(assignment);
 				}
 			}
+		} else if (left instanceof VariableReference) {
+			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+			info.modifiers = Modifiers.AccDefault;
+			info.name = ((VariableReference)left).getName();
+			info.nameSourceEnd = left.sourceEnd() - 1;
+			info.nameSourceStart = left.sourceStart();
+			info.declarationStart = assignment.sourceStart();
+			fRequestor.enterField(info);
+			fNodes.push(assignment);
 		}
 		return true;
 	}

@@ -14,6 +14,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -52,7 +53,6 @@ public class CodeAssistUtils {
 	
 	private static final String SELF = "self"; //$NON-NLS-1$
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
-	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
@@ -62,18 +62,22 @@ public class CodeAssistUtils {
 		return word.toLowerCase().startsWith(prefix.toLowerCase());
 	}
 	
+	/**
+	 * This method finds all ancestor methods that match the given prefix.
+	 * @param type
+	 * @param prefix
+	 * @param exactName
+	 * @return
+	 */
 	public static IMethod[] getSuperClassMethods(IType type, String prefix, boolean exactName) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
 			if (type.getSuperClasses() != null) {
 				SearchEngine searchEngine = new SearchEngine();
 				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-				SearchPattern pattern;
-				if (exactName) {
-					pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-				} else {
-					pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-				}
+				
+				int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+				SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -87,6 +91,13 @@ public class CodeAssistUtils {
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
+	/**
+	 * This method finds all class methods that match the given prefix.
+	 * @param type
+	 * @param prefix
+	 * @param exactName
+	 * @return
+	 */
 	public static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
@@ -105,24 +116,29 @@ public class CodeAssistUtils {
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
+	/**
+	 * This method finds all class fields that match the given prefix.
+	 * @param type
+	 * @param prefix
+	 * @param exactName
+	 * @param searchConstants
+	 * @return
+	 */
 	public static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
 		final Set<IField> fields = new HashSet<IField>();
 		try {
 			SearchEngine searchEngine = new SearchEngine();
 			IDLTKSearchScope scope;
 			SearchPattern pattern;
+			int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 
 			if (type.getSuperClasses() != null) {
 				scope = SearchEngine.createHierarchyScope(type);
 				
 				if (searchConstants) {
 					// search for constants in hierarchy
-					if (exactName) {
-						pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-					} else {
-						pattern = SearchPattern.createPattern(prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-					}
-					
+					pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
 							fields.add((IField) match.getElement());
@@ -131,11 +147,8 @@ public class CodeAssistUtils {
 				}
 
 				// search for variables in hierarchy
-				if (exactName) {
-					pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-				} else {
-					pattern = SearchPattern.createPattern(DOLLAR + prefix + WILDCARD, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-				}
+				pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
 						fields.add((IField) match.getElement());
@@ -170,6 +183,15 @@ public class CodeAssistUtils {
 		return fields.toArray(new IField[fields.size()]);
 	}
 	
+	/**
+	 * Returns type of a class field defined by name.
+	 * @param types
+	 * @param propertyName
+	 * @param offset
+	 * @param line
+	 * @param determineObjectFromOtherFile
+	 * @return
+	 */
 	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line, boolean determineObjectFromOtherFile) {
 		for (IType type : types) {
 			IField[] fields = getClassFields(type, propertyName, true, false);
@@ -196,6 +218,15 @@ public class CodeAssistUtils {
 		return null;
 	}
 
+	/**
+	 * Returns type of a variable defined by name.
+	 * @param sourceModule
+	 * @param variableName
+	 * @param position
+	 * @param line
+	 * @param determineObjectFromOtherFile
+	 * @return
+	 */
 	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line, boolean determineObjectFromOtherFile) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
 		IContext context = ASTUtils.findContext((SourceModule) sourceModule, moduleDeclaration, position);
@@ -213,6 +244,11 @@ public class CodeAssistUtils {
 		return null;
 	}
 	
+	/**
+	 * Converts model elements array to IType elements array
+	 * @param elements
+	 * @return
+	 */
 	public static IType[] modelElementsToTypes(IModelElement[] elements) {
 		List<IType> types = new ArrayList<IType>(elements.length);
 		for (IModelElement element : elements) {
@@ -221,6 +257,13 @@ public class CodeAssistUtils {
 		return types.toArray(new IType[types.size()]);
 	}
 	
+	/**
+	 * Determines the return type of the method defined by type element and method name.
+	 * @param type
+	 * @param functionName
+	 * @param determineObjectFromOtherFile
+	 * @return
+	 */
 	public static IType[] getFunctionReturnType(IType type, String functionName, boolean determineObjectFromOtherFile) {
 		IMethod[] classMethod = getClassMethods(type, functionName, true);
 		if (classMethod.length > 0) {
@@ -229,6 +272,12 @@ public class CodeAssistUtils {
 		return null;
 	}
 	
+	/**
+	 * Determines the return type of the given method element.
+	 * @param method
+	 * @param determineObjectFromOtherFile
+	 * @return
+	 */
 	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 		
@@ -258,6 +307,12 @@ public class CodeAssistUtils {
 		return null;
 	}
 	
+	/**
+	 * Returns enclosing class for the given offset.
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
 	public static IType getContainerClassData(ISourceModule sourceModule, int offset) {
 		IModelElement type = null;
 		try {
@@ -271,6 +326,12 @@ public class CodeAssistUtils {
 		return (IType) type;
 	}
 
+	/**
+	 * Returns enclosing function or method for the given offset.
+	 * @param sourceModule
+	 * @param offset
+	 * @return
+	 */
 	public static IMethod getContainerMethodData(ISourceModule sourceModule, int offset) {
 		try {
 			IModelElement method = ((SourceModule) sourceModule).getElementAt(offset);
@@ -344,13 +405,24 @@ public class CodeAssistUtils {
 		return null;
 	}
 	
+	/**
+	 * Checks whether function with given name exists.
+	 * @param functionName
+	 * @return
+	 */
 	public static boolean isFunctionCall(String functionName) {
 		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
 		return functions.length > 0;
 	}
 	
+	/**
+	 * Retrieves all classes from the global scope by the given prefix.
+	 * @param prefix
+	 * @param exactName
+	 * @return
+	 */
 	public static IType[] getOnlyClasses(String prefix, boolean exactName) {
-		IModelElement[] classes = PHPMixinModel.getInstance().getClass(exactName ? prefix : prefix + WILDCARD);
+		IModelElement[] classes = getWorkspaceClasses(prefix, exactName);
 		List<IType> onlyClasses = new LinkedList<IType>();
 		for (IModelElement c : classes) {
 			IType type = (IType) c;
@@ -365,10 +437,16 @@ public class CodeAssistUtils {
 		return onlyClasses.toArray(new IType[onlyClasses.size()]);
 	}
 	
+	/**
+	 * Retrieves all interfaces from the global scope by the given prefix.
+	 * @param prefix
+	 * @param exactName
+	 * @return
+	 */
 	public static IType[] getOnlyInterfaces(String prefix, boolean exactName) {
-		IModelElement[] interfaces = PHPMixinModel.getInstance().getClass(exactName ? prefix : prefix + WILDCARD);
+		IModelElement[] classes = getWorkspaceClasses(prefix, exactName);
 		List<IType> onlyInterfaces = new LinkedList<IType>();
-		for (IModelElement i : interfaces) {
+		for (IModelElement i : classes) {
 			IType type = (IType) i;
 			try {
 				if ((type.getFlags() & Modifiers.AccInterface) != 0) {
@@ -381,6 +459,16 @@ public class CodeAssistUtils {
 		return onlyInterfaces.toArray(new IType[onlyInterfaces.size()]);
 	}
 
+	/**
+	 * This method finds types for the receiver in the statement text.
+	 * @param sourceModule
+	 * @param statementText
+	 * @param endPosition
+	 * @param offset
+	 * @param line
+	 * @param determineObjectFromOtherFile
+	 * @return
+	 */
 	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line, boolean determineObjectFromOtherFile) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read whitespace
 
@@ -426,9 +514,9 @@ public class CodeAssistUtils {
 
 
 	/**
-	 * getting an instance and finding its type.
+	 * Getting an instance and finding its type.
 	 */
-	public static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line, boolean determineObjectFromOtherFile) {
+	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line, boolean determineObjectFromOtherFile) {
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
@@ -482,7 +570,7 @@ public class CodeAssistUtils {
 			
 			// if its a non class function
 			Set<IType> returnTypes = new HashSet<IType>();
-			IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
+			IModelElement[] functions = getWorkspaceMethods(functionName, true);
 			for (IModelElement function : functions) {
 				IType[] types = getFunctionReturnType((IMethod) function, determineObjectFromOtherFile);
 				if (types != null) {
@@ -494,6 +582,13 @@ public class CodeAssistUtils {
 		return null;
 	}
 
+	/**
+	 * This method checks whether the specified function name refers to existing method in the given list of classes.
+	 * @param sourceModule
+	 * @param className
+	 * @param functionName
+	 * @return
+	 */
 	public static boolean isClassFunctionCall(ISourceModule sourceModule, IType[] className, String functionName) {
 		for (IType type : className) {
 			IMethod[] classMethod;
@@ -507,5 +602,57 @@ public class CodeAssistUtils {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * This method searches for all classes in the workspace scope that match the given prefix
+	 * @param prefix Class name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 */
+	public static IModelElement[] getWorkspaceClasses(String prefix, boolean exactName) {
+		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.TYPE);
+	}
+	
+	/**
+	 * This method searches for all methods in the workspace scope that match the given prefix
+	 * @param prefix Class name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 */
+	public static IModelElement[] getWorkspaceMethods(String prefix, boolean exactName) {
+		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.METHOD);
+	}
+	
+	/**
+	 * This method searches for all fields in the workspace scope that match the given prefix
+	 * @param prefix Class name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 */
+	public static IModelElement[] getWorkspaceFields(String prefix, boolean exactName) {
+		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.FIELD);
+	}
+	
+	private static IModelElement[] getWorkspaceElements(String prefix, boolean exactName, int elementType) {
+		SearchEngine searchEngine = new SearchEngine();
+		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
+		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
+		
+		int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+
+		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
+				
+		final List<IModelElement> elements = new LinkedList<IModelElement>();
+		try {
+			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					IModelElement element = (IModelElement) match.getElement();
+					if (element.getParent() instanceof ISourceModule) {
+						elements.add(element);
+					}
+				}
+			}, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return elements.toArray(new IModelElement[elements.size()]);
 	}
 }
