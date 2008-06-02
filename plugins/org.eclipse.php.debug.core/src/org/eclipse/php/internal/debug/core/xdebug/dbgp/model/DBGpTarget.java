@@ -306,12 +306,13 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			setState(STATE_STARTED_RUNNING);
 			session.sendAsyncCmd(DBGpCommand.run);
 		} else {
-			// try to say we have suspended, then do a step_into
-			//suspended(DebugEvent.BREAKPOINT);
-			//stepInto();
-			stepping = true;
-			setState(STATE_STARTED_RUNNING);				
-			session.sendAsyncCmd(DBGpCommand.stepInto);
+			//first say we are suspended on a breakpoint to trigger a perspective switch
+			//then do an initial step into to step onto the 1st line
+			suspended(DebugEvent.BREAKPOINT);
+			try {
+				stepInto();
+			} catch (DebugException e) {
+			}
 		}
 	}
 
