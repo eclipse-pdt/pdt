@@ -689,13 +689,6 @@
 				<separator name="occurencesActionsGroup" />
 				<separator name="extraSearchGroup" />
 			</menu>
-			<action
-				class="org.eclipse.php.internal.ui.search.OpenPHPSearchPageAction"
-				helpContextId="php_search_action_context"
-				icon="icons/full/obj16/php_search_obj.gif"
-				id="org.eclipse.php.ui.actions.OpenPHPSearchPage"
-				label="%openPHPSearchPageAction.label"
-				menubarPath="org.eclipse.search.menu/dialogGroup" />
 	         <action
                definitionId="org.eclipse.php.ui.edit.text.search.method.exits"
                label="MethodExitOccurrences.label"
