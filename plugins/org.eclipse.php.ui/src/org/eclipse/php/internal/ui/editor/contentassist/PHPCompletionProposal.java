@@ -39,4 +39,8 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		}
 		return replacementString.length();
 	}
+	
+	protected boolean isCamelCaseMatching() {
+		return true;
+	}
 }

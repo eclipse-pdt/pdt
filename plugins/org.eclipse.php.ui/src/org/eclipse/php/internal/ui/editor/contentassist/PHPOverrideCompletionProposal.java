@@ -76,4 +76,8 @@ public class PHPOverrideCompletionProposal extends ScriptTypeCompletionProposal 
 		
 		return new ContextInformation(displayString, infoDisplayString);
 	}
+
+	protected boolean isCamelCaseMatching() {
+		return true;
+	}
 }
