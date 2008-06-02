@@ -711,9 +711,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		IMethod[] superClassMethods = CodeAssistUtils.getSuperClassMethods(classData, functionNameStart, false);
 		for (IMethod superMethod : superClassMethods) {
+			if (classData.getMethod(superMethod.getElementName()).exists()) {
+				continue;
+			}
 			try {
 				int flags = superMethod.getFlags();
-				if ((flags & Modifiers.AccPrivate) == 0) {
+				if ((flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0) {
 					reportMethod(superMethod, RELEVANCE_METHODS);
 				}
 			} catch (ModelException e) {
