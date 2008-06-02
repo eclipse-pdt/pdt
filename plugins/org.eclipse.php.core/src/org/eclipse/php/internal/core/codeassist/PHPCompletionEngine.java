@@ -472,6 +472,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 
 				int relevance = 424242;
+				IMethod containerMethodData = CodeAssistUtils.getContainerMethodData(sourceModule, offset);
+				if (containerMethodData != null && containerMethodData.getDeclaringType() != null) {
+					reportVariables(classVariables, prefix, relevance--, false);
+				}
+				
 				reportVariables(phpVariables, prefix, relevance--, false);
 
 				IModelElement[] variables = CodeAssistUtils.getWorkspaceFields(prefix, false);
