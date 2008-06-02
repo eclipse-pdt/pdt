@@ -1343,13 +1343,6 @@
 			sizeHint="460,160" />
 	</extension>
 
-	<extension point="org.eclipse.search.searchResultViewPages">
-		<viewPage
-			class="org.eclipse.php.internal.ui.search.PHPSearchResultPage"
-			id="org.eclipse.php.ui.PHPSearchResultPage"
-			searchResultClass="org.eclipse.php.internal.ui.search.PHPSearchResult" />
-	</extension>
-
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			id="org.eclipse.php.ui.PHPStructuredEditorPopupActions"
