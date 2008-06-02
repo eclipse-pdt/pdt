@@ -53,6 +53,10 @@ public class ClassConstantDeclaration extends Declaration implements IPHPDocAwar
 	public ConstantReference getConstantName() {
 		return constant;
 	}
+	
+	public String getName() {
+		return constant.getName();
+	}
 
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
