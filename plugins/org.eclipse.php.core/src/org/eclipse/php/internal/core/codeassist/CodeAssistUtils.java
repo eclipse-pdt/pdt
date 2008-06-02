@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
@@ -50,18 +51,18 @@ import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 public class CodeAssistUtils {
-	
+
 	private static final String SELF = "self"; //$NON-NLS-1$
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
-	
+
 	public static boolean startsWithIgnoreCase(String word, String prefix) {
 		return word.toLowerCase().startsWith(prefix.toLowerCase());
 	}
-	
+
 	/**
 	 * This method finds all ancestor methods that match the given prefix.
 	 * @param type
@@ -73,17 +74,27 @@ public class CodeAssistUtils {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 		try {
 			if (type.getSuperClasses() != null) {
-				SearchEngine searchEngine = new SearchEngine();
-				IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
-				
-				int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-				SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-						methods.add((IMethod) match.getElement());
+				if (prefix.length() == 0) {
+					ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
+					IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
+					for (IType superClass : allSuperclasses) {
+						for (IMethod method : superClass.getMethods()) {
+							methods.add(method);
+						}
 					}
-				}, null);
+				} else {
+					SearchEngine searchEngine = new SearchEngine();
+					IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+
+					int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+					SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+
+					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+							methods.add((IMethod) match.getElement());
+						}
+					}, null);
+				}
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -127,17 +138,35 @@ public class CodeAssistUtils {
 	public static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
 		final Set<IField> fields = new HashSet<IField>();
 		try {
-			SearchEngine searchEngine = new SearchEngine();
-			IDLTKSearchScope scope;
-			SearchPattern pattern;
-			int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+			List<IType> searchTypes = new LinkedList<IType>();
+			searchTypes.add(type);
+			
+			if (prefix.length() == 0) {
+				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
+				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
+				searchTypes.addAll(Arrays.asList(allSuperclasses));
+			} else {
+				SearchEngine searchEngine = new SearchEngine();
+				IDLTKSearchScope scope;
+				SearchPattern pattern;
+				int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 
-			if (type.getSuperClasses() != null) {
-				scope = SearchEngine.createHierarchyScope(type);
-				
-				if (searchConstants) {
-					// search for constants in hierarchy
-					pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+				if (type.getSuperClasses() != null) {
+					scope = SearchEngine.createHierarchyScope(type);
+
+					if (searchConstants) {
+						// search for constants in hierarchy
+						pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+
+						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
+								fields.add((IField) match.getElement());
+							}
+						}, null);
+					}
+
+					// search for variables in hierarchy
+					pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -145,35 +174,27 @@ public class CodeAssistUtils {
 						}
 					}, null);
 				}
-
-				// search for variables in hierarchy
-				pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-						fields.add((IField) match.getElement());
-					}
-				}, null);
 			}
+			
+			for (IType searchType : searchTypes) {
+				IField[] typeFields = searchType.getFields();
+				for (IField typeField : typeFields) {
 
-			// search for all fields in the class itself
-			IField[] typeFields = type.getFields();
-			for (IField typeField : typeFields) {
-				
-				String elementName = typeField.getElementName();
-				
-				int flags = typeField.getFlags();
-				if ((flags & Modifiers.AccConstant) != 0) {
-					if (exactName && elementName.equals(prefix) || elementName.startsWith(prefix)) {
-						fields.add (typeField);
-					}
-				} else { // variable
-					String tmp = prefix;
-					if (!tmp.startsWith(DOLLAR)) {
-						tmp = DOLLAR + tmp;
-					}
-					if (exactName && elementName.equals(tmp) || elementName.startsWith(tmp)) {
-						fields.add (typeField);
+					String elementName = typeField.getElementName();
+
+					int flags = typeField.getFlags();
+					if ((flags & Modifiers.AccConstant) != 0) {
+						if (exactName && elementName.equals(prefix) || elementName.startsWith(prefix)) {
+							fields.add(typeField);
+						}
+					} else { // variable
+						String tmp = prefix;
+						if (!tmp.startsWith(DOLLAR)) {
+							tmp = DOLLAR + tmp;
+						}
+						if (exactName && elementName.equals(tmp) || elementName.startsWith(tmp)) {
+							fields.add(typeField);
+						}
 					}
 				}
 			}
@@ -182,7 +203,7 @@ public class CodeAssistUtils {
 		}
 		return fields.toArray(new IField[fields.size()]);
 	}
-	
+
 	/**
 	 * Returns type of a class field defined by name.
 	 * @param types
@@ -208,7 +229,7 @@ public class CodeAssistUtils {
 				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, field.getElementName());
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 				IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-				
+
 				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
 				if (modelElements != null) {
 					return modelElementsToTypes(modelElements);
@@ -235,7 +256,7 @@ public class CodeAssistUtils {
 			ExpressionTypeGoal goal = new ExpressionTypeGoal(context, varReference);
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-			
+
 			IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, !determineObjectFromOtherFile);
 			if (modelElements != null) {
 				return modelElementsToTypes(modelElements);
@@ -243,7 +264,7 @@ public class CodeAssistUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Converts model elements array to IType elements array
 	 * @param elements
@@ -256,7 +277,7 @@ public class CodeAssistUtils {
 		}
 		return types.toArray(new IType[types.size()]);
 	}
-	
+
 	/**
 	 * Determines the return type of the method defined by type element and method name.
 	 * @param type
@@ -271,7 +292,7 @@ public class CodeAssistUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Determines the return type of the given method element.
 	 * @param method
@@ -280,7 +301,7 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-		
+
 		IEvaluatedType classType = null;
 		if (method.getDeclaringType() != null) {
 			classType = new PHPClassType(method.getDeclaringType().getElementName());
@@ -288,16 +309,16 @@ public class CodeAssistUtils {
 		org.eclipse.dltk.core.ISourceModule sourceModule = method.getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 		BasicContext sourceModuleContext = new BasicContext(sourceModule, moduleDeclaration);
-		
+
 		InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
 		PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
 		IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
-		
+
 		IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
 		if (modelElements != null) {
 			return modelElementsToTypes(modelElements);
 		}
-		
+
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
@@ -306,7 +327,7 @@ public class CodeAssistUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns enclosing class for the given offset.
 	 * @param sourceModule
@@ -376,7 +397,6 @@ public class CodeAssistUtils {
 		}
 		return currChar;
 	}
-	
 
 	/**
 	 * The "self" function needs to be added only if we are in a class method
@@ -404,7 +424,7 @@ public class CodeAssistUtils {
 
 		return null;
 	}
-	
+
 	/**
 	 * Checks whether function with given name exists.
 	 * @param functionName
@@ -414,7 +434,7 @@ public class CodeAssistUtils {
 		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
 		return functions.length > 0;
 	}
-	
+
 	/**
 	 * Retrieves all classes from the global scope by the given prefix.
 	 * @param prefix
@@ -436,7 +456,7 @@ public class CodeAssistUtils {
 		}
 		return onlyClasses.toArray(new IType[onlyClasses.size()]);
 	}
-	
+
 	/**
 	 * Retrieves all interfaces from the global scope by the given prefix.
 	 * @param prefix
@@ -512,7 +532,6 @@ public class CodeAssistUtils {
 		return result.toArray(new IType[result.size()]);
 	}
 
-
 	/**
 	 * Getting an instance and finding its type.
 	 */
@@ -567,7 +586,7 @@ public class CodeAssistUtils {
 			if (classData != null) { //if its a clss function
 				return getFunctionReturnType(classData, functionName, determineObjectFromOtherFile);
 			}
-			
+
 			// if its a non class function
 			Set<IType> returnTypes = new HashSet<IType>();
 			IModelElement[] functions = getWorkspaceMethods(functionName, true);
@@ -603,7 +622,7 @@ public class CodeAssistUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method searches for all classes in the workspace scope that match the given prefix
 	 * @param prefix Class name
@@ -612,7 +631,7 @@ public class CodeAssistUtils {
 	public static IModelElement[] getWorkspaceClasses(String prefix, boolean exactName) {
 		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.TYPE);
 	}
-	
+
 	/**
 	 * This method searches for all methods in the workspace scope that match the given prefix
 	 * @param prefix Class name
@@ -621,7 +640,7 @@ public class CodeAssistUtils {
 	public static IModelElement[] getWorkspaceMethods(String prefix, boolean exactName) {
 		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.METHOD);
 	}
-	
+
 	/**
 	 * This method searches for all fields in the workspace scope that match the given prefix
 	 * @param prefix Class name
@@ -630,16 +649,16 @@ public class CodeAssistUtils {
 	public static IModelElement[] getWorkspaceFields(String prefix, boolean exactName) {
 		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.FIELD);
 	}
-	
+
 	private static IModelElement[] getWorkspaceElements(String prefix, boolean exactName, int elementType) {
 		SearchEngine searchEngine = new SearchEngine();
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
-		
+
 		int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 
 		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
-				
+
 		final List<IModelElement> elements = new LinkedList<IModelElement>();
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
