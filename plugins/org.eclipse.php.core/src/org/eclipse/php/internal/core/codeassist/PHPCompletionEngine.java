@@ -437,11 +437,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 		
 		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
-		if (inClass) {
-			keywordsList = filterClassKeywords(keywordsList);
-		}
 		for (KeywordData k : keywordsList) {
-			reportKeyword(k.name, k.suffix);
+			if (inClass == k.isClassKeyword) {
+				reportKeyword(k.name, k.suffix);
+			}
 		}
 		
 		if (prefix.length() == 0) {
@@ -520,16 +519,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 		return;
-	}
-
-	private static Collection<KeywordData> filterClassKeywords(Collection<KeywordData> keywords) {
-		List<KeywordData> filteredKeywords = new LinkedList<KeywordData>();
-		for (KeywordData k : keywords) {
-			if (k.isClassKeyword) {
-				filteredKeywords.add(k);
-			}
-		}
-		return filteredKeywords;
 	}
 
 	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit) {
