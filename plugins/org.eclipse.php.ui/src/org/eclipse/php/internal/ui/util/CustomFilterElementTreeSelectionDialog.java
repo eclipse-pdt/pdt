@@ -4,10 +4,10 @@
  */
 package org.eclipse.php.internal.ui.util;
 
+import org.eclipse.dltk.ui.actions.CustomFiltersActionGroup;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.php.internal.ui.actions.CustomFiltersActionGroup;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;

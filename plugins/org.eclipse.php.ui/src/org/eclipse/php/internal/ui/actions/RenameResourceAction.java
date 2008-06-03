@@ -17,11 +17,22 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.commands.operations.TriggeredOperations;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -30,7 +41,6 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.explorer.ExplorerPart;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
@@ -48,9 +58,9 @@ public class RenameResourceAction extends SelectionDispatchAction {
 		if (site instanceof ViewSite) {
 			ViewSite viewSite = (ViewSite) site;
 			IWorkbenchPart part = viewSite.getPart();
-			if (part instanceof ExplorerPart) {
-				ExplorerPart explorer = (ExplorerPart) part;
-				treeViewer = explorer.getViewer();
+			if (part instanceof ScriptExplorerPart) {
+				ScriptExplorerPart explorer = (ScriptExplorerPart) part;
+				treeViewer = explorer.getTreeViewer();
 			}
 		}
 	}

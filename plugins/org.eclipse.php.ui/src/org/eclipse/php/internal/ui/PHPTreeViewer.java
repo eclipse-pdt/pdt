@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.explorer;
+package org.eclipse.php.internal.ui;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;

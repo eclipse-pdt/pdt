@@ -23,9 +23,9 @@ import org.eclipse.php.internal.core.phpModel.parser.ModelListener;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.ui.PHPTreeViewer;
 import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
 import org.eclipse.php.internal.ui.SuperClassTreeContentProvider;
-import org.eclipse.php.internal.ui.explorer.PHPTreeViewer;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.swt.widgets.Control;
 
