@@ -319,7 +319,9 @@ public class ProjectOutlineContentProvider extends StandardPHPElementContentProv
 		timer = new Timer(true);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				fViewer.getControl().getDisplay().asyncExec(runnable);
+				if (!fViewer.getControl().isDisposed()) {
+					fViewer.getControl().getDisplay().asyncExec(runnable);
+				}
 			}
 		}, 1000);
 	}
