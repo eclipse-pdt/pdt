@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
 import org.eclipse.php.internal.core.compiler.ast.nodes.InterfaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.wst.xml.core.internal.Logger;
@@ -281,9 +282,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return visit((ClassConstantDeclaration) node);
 		}
-		if (clasName.equals(CallExpression.class.getName())) {
-			return visit((CallExpression) node);
-		}
 		return true;
 	}
 
@@ -316,6 +314,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (clasName.equals(Include.class.getName())) {
 			return visit((Include) node);
+		}
+		if (clasName.equals(PHPCallExpression.class.getName())) {
+			return visit((PHPCallExpression) node);
 		}
 		return true;
 	}

@@ -223,6 +223,14 @@
           priority="0">
     </selectionEngine>
  </extension>
+ <extension
+       point="org.eclipse.dltk.core.callHierarchy">
+    <callHerarchiesFactory
+          class="org.eclipse.php.internal.core.callhierarchy.PHPCallHierarchyFactory"
+          nature="org.eclipse.php.core.PHPNature"
+          priority="0">
+    </callHerarchiesFactory>
+ </extension>
 <!-- <extension
        point="org.eclipse.dltk.core.fileHierarchyResolvers">
     <fileHierarchyResolver
