@@ -68,9 +68,9 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	 */
 	public OpenTypeHierarchyAction(IWorkbenchSite site) {
 		super(site);
-		setText("Open Type Hierarchy");
-		setToolTipText("Open Type Hierarchy");
-		setDescription("Open Type Hierarchy");
+		setText("Open &Type Hierarchy");
+		setToolTipText("Open &Type Hierarchy");
+		setDescription("Open &Type Hierarchy");
 		//		HELP - PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OPEN_TYPE_HIERARCHY_ACTION);
 	}
 

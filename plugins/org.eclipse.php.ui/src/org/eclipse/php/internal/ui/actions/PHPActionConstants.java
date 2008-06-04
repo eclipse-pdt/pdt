@@ -31,6 +31,12 @@ public class PHPActionConstants {
 	 * (value <code>"org.eclipse.php.ui.actions.OpenTypeHierarchy"</code>).
 	 */
 	public static final String OPEN_TYPE_HIERARCHY= "org.eclipse.php.ui.actions.OpenTypeHierarchy"; //$NON-NLS-1$
+	
+	/**
+	 * Navigate menu: name of standard Open Type Hierarchy global action
+	 * (value <code>"org.eclipse.php.ui.actions.OpenTypeHierarchy"</code>).
+	 */
+	public static final String OPEN_CALL_HIERARCHY= "org.eclipse.php.ui.actions.OpenCallHierarchy"; //$NON-NLS-1$
 
 	/**
 	 * Navigate menu: name of standard Show in Navigator View global action

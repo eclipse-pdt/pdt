@@ -157,6 +157,7 @@ import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
 import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
 import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
 import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.OpenCallHierarchyAction;
 import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
 import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
 import org.eclipse.php.internal.ui.actions.OpenTypeHierarchyAction;
@@ -1255,6 +1256,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			action = getAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
+			action = getAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+			if (action != null)
+				menu.appendToGroup(openGroup, action);
 		}
 	}
 
@@ -1898,6 +1902,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, true);
+		
+		action = new OpenCallHierarchyAction(this);
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY); //$NON-NLS-1$
+		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
+		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 
 		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);

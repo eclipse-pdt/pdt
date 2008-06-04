@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.dltk.internal.ui.callhierarchy.ICallHierarchyViewPart;
 import org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,9 +33,12 @@ public class OpenViewActionGroup extends ActionGroup {
 	private boolean fEditorIsOwner;
 	private IWorkbenchSite fSite;
 	private OpenTypeHierarchyAction fOpenTypeHierarchy;
+	private OpenCallHierarchyAction fOpenCallHierarchy;
 
 	private PropertyDialogAction fOpenPropertiesDialog;
 	private boolean fIsTypeHiararchyViewerOwner;
+	private boolean fIsCallHiararchyViewerOwner;
+	
 	private ISelectionProvider fSelectionProvider;
 
 	/**
@@ -58,7 +62,7 @@ public class OpenViewActionGroup extends ActionGroup {
 	public OpenViewActionGroup(IViewPart part) {
 		createSiteActions(part.getSite());
 		fIsTypeHiararchyViewerOwner = part instanceof TypeHierarchyViewPart;
-		//   fIsCallHiararchyViewerOwner= part instanceof ICallHierarchyViewPart;
+		fIsCallHiararchyViewerOwner= part instanceof ICallHierarchyViewPart;
 	}
 
 	/**
@@ -70,6 +74,11 @@ public class OpenViewActionGroup extends ActionGroup {
 		fOpenTypeHierarchy = new OpenTypeHierarchyAction(part);
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 		part.setAction("OpenTypeHierarchy", fOpenTypeHierarchy); //$NON-NLS-1$
+		
+		fOpenCallHierarchy= new OpenCallHierarchyAction(part);
+		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
+		part.setAction("OpenCallHierarchy", fOpenCallHierarchy); //$NON-NLS-1$
+		
 		initialize(part.getEditorSite());
 	}
 
@@ -80,6 +89,9 @@ public class OpenViewActionGroup extends ActionGroup {
 
 		fOpenTypeHierarchy = new OpenTypeHierarchyAction(site);
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		
+		fOpenCallHierarchy= new OpenCallHierarchyAction(site);
+		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 
 		initialize(site);
 	}
@@ -89,6 +101,7 @@ public class OpenViewActionGroup extends ActionGroup {
 		fSelectionProvider = fSite.getSelectionProvider();
 		ISelection selection = fSelectionProvider.getSelection();
 		fOpenTypeHierarchy.update(selection);
+		fOpenCallHierarchy.update(selection);
 		if (!fEditorIsOwner) {
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection ss = (IStructuredSelection) selection;
@@ -97,6 +110,7 @@ public class OpenViewActionGroup extends ActionGroup {
 				fOpenPropertiesDialog.selectionChanged(selection);
 			}
 			fSelectionProvider.addSelectionChangedListener(fOpenTypeHierarchy);
+			fSelectionProvider.addSelectionChangedListener(fOpenCallHierarchy);
 			// no need to register the open properties dialog action since it registers itself
 		}
 	}
@@ -116,6 +130,8 @@ public class OpenViewActionGroup extends ActionGroup {
 		super.fillContextMenu(menu);
 		if (!fIsTypeHiararchyViewerOwner)
 			appendToGroup(menu, fOpenTypeHierarchy);
+		if (!fIsCallHiararchyViewerOwner)
+			appendToGroup(menu, fOpenCallHierarchy);
 		IStructuredSelection selection = getStructuredSelection();
 		if (fOpenPropertiesDialog != null && fOpenPropertiesDialog.isEnabled() && selection != null && fOpenPropertiesDialog.isApplicableForSelection(selection))
 			menu.appendToGroup(IContextMenuConstants.GROUP_PROPERTIES, fOpenPropertiesDialog);
@@ -126,11 +142,13 @@ public class OpenViewActionGroup extends ActionGroup {
 	 */
 	public void dispose() {
 		fSelectionProvider.removeSelectionChangedListener(fOpenTypeHierarchy);
+		fSelectionProvider.removeSelectionChangedListener(fOpenCallHierarchy);
 		super.dispose();
 	}
 
 	private void setGlobalActionHandlers(IActionBars actionBars) {
 		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_TYPE_HIERARCHY, fOpenTypeHierarchy);
+		actionBars.setGlobalActionHandler(PHPActionConstants.OPEN_CALL_HIERARCHY, fOpenCallHierarchy);
 		if (!fEditorIsOwner)
 			actionBars.setGlobalActionHandler(ActionFactory.PROPERTIES.getId(), fOpenPropertiesDialog);
 	}

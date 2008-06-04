@@ -49,6 +49,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private RetargetTextEditorAction fGotoMatchingBracket;
 	private RetargetTextEditorAction fOpenDeclaration;
 	private RetargetTextEditorAction fOpenTypeHierarchy;
+	private RetargetTextEditorAction fOpenCallHierarchy;
 	private RetargetTextEditorAction fOpenHierarchy;
 	private RetargetTextEditorAction fRename;
 	private RetargetTextEditorAction fMove;
@@ -63,7 +64,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$ //$NON-NLS-2$
-		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, "FormatActiveElements", //$NON-NLS-1$
+		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, "FormatActiveElements", //$NON-NLS-1$
 		IPHPEditorActionDefinitionIds.RENAME_ELEMENT, IPHPEditorActionDefinitionIds.MOVE_ELEMENT
 
 	}; //$NON-NLS-1$
@@ -96,6 +97,9 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		fOpenTypeHierarchy = new RetargetTextEditorAction(b, "OpenTypeHierarchy"); //$NON-NLS-1$
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
+		
+		fOpenCallHierarchy = new RetargetTextEditorAction(b, "OpenCallHierarchy"); //$NON-NLS-1$
+		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 
 		fOpenHierarchy = new RetargetTextEditorAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy."); //$NON-NLS-1$
 		fOpenHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
@@ -168,6 +172,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
 		fOpenHierarchy.setAction(getAction(editor, IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
+		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
 		fMarkOccurrences.setEditor(editor);
 		if (part instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;
