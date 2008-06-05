@@ -42,6 +42,10 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 	private static final String DEPRECATED_NAME = "deprecated"; //$NON-NLS-1$
 	private static final String AUTHOR_NAME = "author"; //$NON-NLS-1$
 	private static final String ABSTRACT_NAME = "abstract"; //$NON-NLS-1$
+	private static final String PROPERTY_NAME = "property"; //$NON-NLS-1$
+	private static final String PROPERTY_READ_NAME = "property-read"; //$NON-NLS-1$
+	private static final String PROPERTY_WRITE_NAME = "property-write"; //$NON-NLS-1$
+	
 	private static final SimpleReference[] EMPTY = {};
 	private final int tagKind;
 	private String value;
@@ -256,6 +260,12 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 				return VERSION_NAME;
 			case THROWS:
 				return THROWS_NAME;
+			case PROPERTY:
+				return PROPERTY_NAME;
+			case PROPERTY_READ:
+				return PROPERTY_READ_NAME;
+			case PROPERTY_WRITE:
+				return PROPERTY_WRITE_NAME;
 		}
 		return ERROR;
 	}

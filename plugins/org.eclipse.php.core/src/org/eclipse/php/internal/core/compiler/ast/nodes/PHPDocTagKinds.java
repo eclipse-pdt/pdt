@@ -62,5 +62,11 @@ public interface PHPDocTagKinds {
 	public static final int VERSION = 28;
 	
 	public static final int THROWS  = 29;
+	
+	public static final int PROPERTY = 30;
+	
+	public static final int PROPERTY_READ = 31;
+	
+	public static final int PROPERTY_WRITE = 32;
 
 }

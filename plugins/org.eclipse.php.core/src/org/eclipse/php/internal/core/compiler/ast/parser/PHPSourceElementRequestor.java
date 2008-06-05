@@ -23,17 +23,9 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InterfaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
@@ -48,7 +40,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, char[] contents, char[] filename) {
 		super(requestor);
 
-		// Load PHP source element requestor extensions
+		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, "phpSourceElementRequestors");
 		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(elements.length);
 		for (IConfigurationElement element : elements) {
@@ -98,10 +90,14 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		declarations.pop();
-
+		
+		// resolve more type member declarations
+		resolveMagicMembers(type); 
+		
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(type);
 		}
+		
 		return super.endvisit(type);
 	}
 	
@@ -157,6 +153,38 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(type);
 		}
 		return super.visit(type);
+	}
+
+	/**
+	 * Resolve class members that were defined using the @property tag  
+	 * @param type declaration for wich we add the magic variables
+	 */
+	private void resolveMagicMembers(TypeDeclaration type) {
+		if (type instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration declaration = (IPHPDocAwareDeclaration) type;
+			final PHPDocBlock doc = declaration.getPHPDoc();
+			if (doc != null) {
+				final PHPDocTag[] tags = doc.getTags();
+				for (PHPDocTag docTag : tags) {
+					final int tagKind = docTag.getTagKind();
+					if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ || tagKind == PHPDocTag.PROPERTY_WRITE) {
+						final String[] split = docTag.getValue().trim().split("\\s+");
+						if (split.length < 2) {
+							break;
+						}
+						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+						info.modifiers = Modifiers.AccPublic;
+						info.name = split[1];
+						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 9, split[1]);
+						info.nameSourceEnd = var.sourceEnd() - 1;
+						info.nameSourceStart = var.sourceStart();
+						info.declarationStart = info.nameSourceStart;
+						fRequestor.enterField(info);
+						fRequestor.exitField(info.nameSourceEnd);
+					}
+				}
+			}
+		}
 	}
 
 	public boolean visit(PHPFieldDeclaration declaration) throws Exception {
