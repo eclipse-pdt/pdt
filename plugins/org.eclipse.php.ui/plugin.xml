@@ -428,8 +428,11 @@
 		<page
 			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
-			name="%phpInterpreterPreferenceName"
-			objectClass="org.eclipse.core.resources.IProject">
+			name="%phpInterpreterPreferenceName">
+			<enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
 			<filter
 				name="nature"
 				value="org.eclipse.php.core.PHPNature" />
@@ -437,44 +440,62 @@
 		<page
 			class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.TodoTaskPreferencePage"
-			name="%todoPageName"
-			objectClass="org.eclipse.core.resources.IProject">
+			name="%todoPageName">
+			<enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
 			<filter
 				name="nature"
 				value="org.eclipse.php.core.PHPNature" />
-			<keywordReference id="org.eclipse.php.ui.todo" />
 		</page>
 		<page
 			class="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.PHPFormatterPreferencePage"
-			name="%formatterPreferencePageName"
-			objectClass="org.eclipse.core.resources.IProject" />
+			name="%formatterPreferencePageName">
+			<enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
+         	<filter
+				name="nature"
+				value="org.eclipse.php.core.PHPNature" />
+        </page>
 		<page
-			objectClass="org.eclipse.core.resources.IProject"
 			name="%page.name.0"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathPropertyPage"
 			id="org.eclipse.php.ui.propertyPages.IncludePathPropertyPage">
-			<filter
-				name="nature"
-				value="org.eclipse.php.core.PHPNature" />
+    		<enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
+      		<filter
+            	name="nature"
+            	value="org.eclipse.php.core.PHPNature">
+      		</filter>
 		</page>
 		<page
 			class="org.eclipse.php.internal.ui.preferences.IncludePathInfoPage"
 			id="org.eclipse.php.ui.preferences.PreferencePages.IncludePathInfoPage"
-			name="%phpIncludepathPreferenceName"
-			objectClass="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel">
+			name="%phpIncludepathPreferenceName">
+			<enabledWhen>
+		     <adapt type="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel">
+		     </adapt>         
+         	</enabledWhen>
 		</page>
 		<page
             class="org.eclipse.php.internal.ui.preferences.SaveActionsPreferencePage"
             id="org.eclipse.php.ui.propertyPages.PHPEditorSaveActionsPreferencePage"
-            name="%saveActionsPreferencePageName"
-            objectClass="org.eclipse.core.resources.IProject">
+            name="%saveActionsPreferencePageName">
+            <enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
          	<filter
                name="nature"
                value="org.eclipse.php.core.PHPNature"/>
       	</page>
 	</extension>
-	
 	<extension point="org.eclipse.dltk.ui.dltkElementFilters">
 	<!-- Script Explorer -->
       <filter
@@ -1248,7 +1269,6 @@
 			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
 			name="%phpInterpreterPreferenceName">
-			<keywordReference id="org.eclipse.php.ui.phpInterpreter" />
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
@@ -1265,14 +1285,12 @@
 			class="org.eclipse.php.internal.ui.preferences.PHPFoldingPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPFoldingPreferencePage"
 			name="%editorFoldingPageName">
-			<keywordReference id="org.eclipse.php.ui.folding" />
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PhpTypingPreferencePage"
 			id="org.eclipse.php.ui.preferences.PhpTypingPreferencePage"
 			name="%editorTypingPageName">
-			<keywordReference id="org.eclipse.php.ui.typing" />
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
@@ -1284,14 +1302,12 @@
 			class="org.eclipse.php.internal.ui.preferences.PHPEditorHoverPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPEditorHoverPreferencePage"
 			name="%editorTextHoverPageName">
-			<keywordReference id="org.eclipse.php.ui.hover" />
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.MarkOccurrencesPreferencePage"
 			id="org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage"
 			name="%editorMarkOccurrencesPageName">
-			<keywordReference id="org.eclipse.php.ui.markOccurrences" />
 		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
@@ -1538,14 +1554,19 @@
 	</extension>
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
-        adaptable="true"
-        class="org.eclipse.php.internal.ui.util.ProblemsLabelDecorator"
-        id="org.eclipse.php.ui.problemsDecorator"
-        label="%decorator.label.0"
-        lightweight="true"
-        location="BOTTOM_LEFT"
-        objectClass="org.eclipse.core.resources.IResource"
-        state="true"/>
+    	    adaptable="true"
+       		class="org.eclipse.php.internal.ui.util.ProblemsLabelDecorator"
+        	id="org.eclipse.php.ui.problemsDecorator"
+        	label="%decorator.label.0"
+        	lightweight="true"
+        	location="BOTTOM_LEFT"
+        	state="true">
+     		<enablement>
+        		<objectClass
+              		name="org.eclipse.core.resources.IResource">
+        		</objectClass>
+     		</enablement>
+  		</decorator>
 	</extension>
 	<extension point="org.eclipse.ui.ide.markerSupport">
 		<markerTypeCategory name="%PhpProblemFilterCategory.name">
@@ -1636,5 +1657,4 @@
           nature="org.eclipse.php.core.PHPNature">
     </provider>
  </extension>
-	
 </plugin>
