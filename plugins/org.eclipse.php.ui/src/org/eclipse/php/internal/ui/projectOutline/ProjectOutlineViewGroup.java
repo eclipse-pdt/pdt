@@ -10,16 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projectOutline;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.php.internal.ui.actions.OpenEditorActionGroup;
-import org.eclipse.php.internal.ui.workingset.ViewActionGroup;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.ActionGroup;
 
-public class ProjectOutlineViewGroup extends ViewActionGroup {
+public class ProjectOutlineViewGroup extends ActionGroup {
 
 	public static final int PHP4 = 1;
 	public static final int PHP5 = 2;
@@ -32,7 +32,7 @@ public class ProjectOutlineViewGroup extends ViewActionGroup {
 
 	public class ToggleAllAction extends Action {
 
-		public ToggleAllAction(ViewActionGroup group) {
+		public ToggleAllAction(ActionGroup group) {
 			super("", AS_CHECK_BOX); //$NON-NLS-1$
 			Assert.isNotNull(group);
 		}

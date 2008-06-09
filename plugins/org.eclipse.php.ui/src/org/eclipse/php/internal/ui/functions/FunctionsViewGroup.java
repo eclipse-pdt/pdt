@@ -8,20 +8,21 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.ui.workingset;
+package org.eclipse.php.internal.ui.functions;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.functions.PHPFunctionsPart;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.actions.ActionGroup;
 
-public class FunctionsViewGroup extends ViewActionGroup {
+public class FunctionsViewGroup extends ActionGroup {
 
 	public static final int PHP4 = 1;
 	public static final int PHP5 = 2;
@@ -45,9 +46,9 @@ public class FunctionsViewGroup extends ViewActionGroup {
 
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		showPHP4FunctionsAction = new ViewAction(this, PHP4); //$NON-NLS-1$
+		showPHP4FunctionsAction = new ViewAction(PHP4); //$NON-NLS-1$
 		showPHP4FunctionsAction.setText("PHP 4"); //$NON-NLS-1$
-		showPHP5FunctionsAction = new ViewAction(this, PHP5); //$NON-NLS-1$
+		showPHP5FunctionsAction = new ViewAction(PHP5); //$NON-NLS-1$
 		showPHP5FunctionsAction.setText("PHP 5"); //$NON-NLS-1$
 
 		menu.add(showPHP4FunctionsAction);
@@ -95,5 +96,23 @@ public class FunctionsViewGroup extends ViewActionGroup {
 		}
 
 		return PHP5;
+	}
+	
+	class ViewAction extends Action {
+
+		private final int fMode;
+
+		public ViewAction(int mode) {
+			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
+			fMode= mode;
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public void run() {
+			if (isChecked())
+				setMode(fMode);
+		}
 	}
 }
