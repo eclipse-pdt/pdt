@@ -14,11 +14,10 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,7 +40,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
-import org.eclipse.wst.xml.ui.internal.Logger;
 
 /**
  * This class allows for the creation of a PHP file.
@@ -173,12 +171,8 @@ public class PHPFileCreationWizardPage extends WizardPage {
 			}
 
 			Object obj = ssel.getFirstElement();
-			if (obj instanceof IModelElement) {
-				try {
-					obj = ((IModelElement)obj).getCorrespondingResource();
-				} catch (ModelException e) {
-					Logger.logException(e);
-				}
+			if (obj instanceof IAdaptable) {
+				obj = ((IAdaptable)obj).getAdapter(IResource.class);
 			}
 
 			IContainer container = null;
