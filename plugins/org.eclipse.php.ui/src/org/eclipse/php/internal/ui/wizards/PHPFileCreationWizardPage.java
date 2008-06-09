@@ -17,17 +17,14 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -44,6 +41,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+import org.eclipse.wst.xml.ui.internal.Logger;
 
 /**
  * This class allows for the creation of a PHP file.
@@ -170,37 +168,32 @@ public class PHPFileCreationWizardPage extends WizardPage {
 	private void initialize() {
 		if (selection != null && selection.isEmpty() == false && selection instanceof IStructuredSelection) {
 			final IStructuredSelection ssel = (IStructuredSelection) selection;
-			if (ssel.size() > 1)
+			if (ssel.size() > 1) {
 				return;
+			}
+
 			Object obj = ssel.getFirstElement();
+			if (obj instanceof IModelElement) {
+				try {
+					obj = ((IModelElement)obj).getCorrespondingResource();
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+			}
+
 			IContainer container = null;
-			if (obj instanceof PHPCodeData)
-				obj = PHPModelUtil.getResource(obj);
-			else if (obj instanceof PHPNature)
-				obj = ((PHPNature) obj).getProject();
-			else if (obj instanceof PHPProjectModel)
-				obj = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) obj);
-
 			if (obj instanceof IResource) {
-				if (obj instanceof IContainer)
+				if (obj instanceof IContainer) {
 					container = (IContainer) obj;
-				else
+				} else {
 					container = ((IResource) obj).getParent();
-
-			} else if (obj instanceof PHPProjectModel)
-				container = PHPWorkspaceModelManager.getInstance().getProjectForModel((PHPProjectModel) obj);
-
+				}
+			}
+			
 			if (container != null) {
 				containerText.setText(container.getFullPath().toString());
 				this.project = container.getProject();
 			}
-			
-			//				IProject project = container.getProject();
-			//				PHPProjectOptions options = PHPProjectOptions.forProject(project);
-			//				if (options != null) {
-			//					String defaultEncoding = (String) options.getOption(PHPCoreConstants.PHPOPTION_DEFAULT_ENCODING);
-			//					encodingSettings.setIANATag(defaultEncoding);
-			//				}
 		}
 		setInitialFileName(PHPUIMessages.getString("PHPFileCreationWizardPage.8")); //$NON-NLS-1$
 	}
