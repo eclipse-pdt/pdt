@@ -664,7 +664,8 @@ public class CodeAssistUtils {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IModelElement element = (IModelElement) match.getElement();
-					if (element.getParent() instanceof ISourceModule) {
+					// Global scope elements in PHP are those, which are not defined in class body:
+					if (!(element.getParent() instanceof IType)) {
 						elements.add(element);
 					}
 				}
