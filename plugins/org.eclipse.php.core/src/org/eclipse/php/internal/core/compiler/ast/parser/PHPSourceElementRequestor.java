@@ -58,7 +58,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		extensions = requestors.toArray(new PHPSourceElementRequestorExtension[requestors.size()]);
 	}
 
-	protected MethodDeclaration getCurrentMethod() {
+	public MethodDeclaration getCurrentMethod() {
 		Declaration currDecleration = declarations.peek();
 		if (currDecleration instanceof MethodDeclaration) {
 			return (MethodDeclaration) currDecleration;
