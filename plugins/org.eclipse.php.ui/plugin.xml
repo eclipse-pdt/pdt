@@ -525,7 +525,7 @@
       <filter
             targetId="org.eclipse.php.ui.explorer"
             name="%HideEmptyInnerPackages.label"
-            enabled="true"
+            enabled="false"
             description="%HideEmptyInnerPackages.description"
             class="org.eclipse.dltk.internal.ui.filters.EmptyInnerPackageFilter"
             id="org.eclipse.php.ui.explorer.EmptyInnerPackageFilter">
