@@ -50,7 +50,6 @@ import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
-import org.eclipse.php.internal.ui.editor.contentassist.PHPDocContentAssistProcessor;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
@@ -173,7 +172,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		}
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
 		processors.add(new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT));
-		processors.add(new PHPDocContentAssistProcessor());
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTENT_ASSIST_PROCESSOR_EXT);
 		for (int i = 0; i < elements.length; i++) {
