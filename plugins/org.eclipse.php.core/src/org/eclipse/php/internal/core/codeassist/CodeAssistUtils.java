@@ -3,6 +3,7 @@ package org.eclipse.php.core.codeassist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IMethod[] getSuperClassMethods(IType type, String prefix, boolean exactName) {
-		final Set<IMethod> methods = new HashSet<IMethod>();
+		final Set<IMethod> methods = new LinkedHashSet<IMethod>();
 		try {
 			if (type.getSuperClasses() != null) {
 				if (prefix.length() == 0) {
@@ -110,7 +111,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
-		final Set<IMethod> methods = new HashSet<IMethod>();
+		final Set<IMethod> methods = new LinkedHashSet<IMethod>();
 		try {
 			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix, exactName)));
 
@@ -136,7 +137,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
-		final Set<IField> fields = new HashSet<IField>();
+		final Set<IField> fields = new LinkedHashSet<IField>();
 		try {
 			List<IType> searchTypes = new LinkedList<IType>();
 			searchTypes.add(type);
@@ -522,7 +523,7 @@ public class CodeAssistUtils {
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
-		Set<IType> result = new HashSet<IType>();
+		Set<IType> result = new LinkedHashSet<IType>();
 		for (IType type : types) {
 			IType[] returnTypes = getFunctionReturnType(type, functionName, determineObjectFromOtherFile);
 			if (returnTypes != null) {
@@ -588,7 +589,7 @@ public class CodeAssistUtils {
 			}
 
 			// if its a non class function
-			Set<IType> returnTypes = new HashSet<IType>();
+			Set<IType> returnTypes = new LinkedHashSet<IType>();
 			IModelElement[] functions = getWorkspaceMethods(functionName, true);
 			for (IModelElement function : functions) {
 				IType[] types = getFunctionReturnType((IMethod) function, determineObjectFromOtherFile);
