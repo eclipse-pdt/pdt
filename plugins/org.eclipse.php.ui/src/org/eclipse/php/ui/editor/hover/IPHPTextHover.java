@@ -10,29 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.ui.editor.hover;
 
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.dltk.ui.text.hover.IScriptEditorTextHover;
 
 /**
  * An extention of the ITextHover which has the ability to attach an IEditorPart to the implementing class.
  * 
  * @author shalom
  */
-public interface IPHPTextHover extends ITextHover {
-
-	/**
-	 * Sets the IEditorPart for this decorator. 
-	 * 
-	 * @param editorPart
-	 */
-	public void setEditorPart(IEditorPart editorPart);
-
-	/**
-	 * Returns the IEditorPart that is assigned to this decorator.
-	 * 
-	 * @return An IEditorPart.
-	 */
-	public IEditorPart getEditorPart();
+public interface IPHPTextHover extends IScriptEditorTextHover {
 
 	/**
 	 * Returns the text hover message decorator.

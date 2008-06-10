@@ -10,14 +10,23 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
+import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.AbstractReusableInformationControlCreator;
+import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHoverExtension;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
-import org.eclipse.swt.SWT;
+import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
+import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 
-public class ProblemHover extends AbstractPHPTextHover implements IInformationProviderExtension2, ITextHoverExtension {
+public class ProblemHover extends AbstractScriptEditorTextHover implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
 
 	private static final AnnotationHoverProcessor annotationHover = new AnnotationHoverProcessor();
 
@@ -48,9 +57,7 @@ public class ProblemHover extends AbstractPHPTextHover implements IInformationPr
 				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
 				public IInformationControl doCreateInformationControl(Shell parent) {
-					int shellStyle = SWT.RESIZE | SWT.TOOL;
-					int style = SWT.V_SCROLL | SWT.H_SCROLL;
-					return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
+					return new DefaultInformationControl(parent, new HTMLTextPresenter(false));
 				}
 			};
 		}
@@ -68,7 +75,7 @@ public class ProblemHover extends AbstractPHPTextHover implements IInformationPr
 				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
 				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true), getTooltipAffordanceString());
+					return new DefaultInformationControl(parent, EditorsUI.getTooltipAffordanceString(), new HTMLTextPresenter(true));
 				}
 			};
 		}
@@ -83,4 +90,7 @@ public class ProblemHover extends AbstractPHPTextHover implements IInformationPr
 		return annotationHover.getHoverRegion(textViewer, offset);
 	}
 
+	public IHoverMessageDecorator getMessageDecorator() {
+		return null;
+	}
 }

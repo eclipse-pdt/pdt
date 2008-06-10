@@ -1533,6 +1533,13 @@
 			id="org.eclipse.php.ui.editor.hover.PHPSourceTextHover"
 			label="%sourceHover"
 			priority="300" />
+  <hover
+        class="org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover"
+        description="%documentationHoverDescription"
+        id="org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover"
+        label="%documentationHover"
+        priority="200">
+  </hover>
 	</extension>
 
 	<!--PHP Working Set:-->

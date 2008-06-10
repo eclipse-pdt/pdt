@@ -301,7 +301,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		int i = 0;
 		while (i < hoverDescs.length) {
 			if (hoverDescs[i].isEnabled() && hoverDescs[i].getStateMask() == stateMask) {
-				return new PHPTextHoverProxy(hoverDescs[i], null);
+				return new PHPTextHoverProxy(hoverDescs[i], ((PHPStructuredTextViewer) sourceViewer).getTextEditor(), fPreferenceStore);
 			}
 			i++;
 		}

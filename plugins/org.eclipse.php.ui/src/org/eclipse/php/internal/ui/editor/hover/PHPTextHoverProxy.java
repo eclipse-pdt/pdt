@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
+import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHoverExtension;
@@ -20,25 +22,29 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.ui.IEditorPart;
 
-public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHoverExtension, IInformationProviderExtension2 {
+public class PHPTextHoverProxy extends AbstractScriptEditorTextHover implements IPHPTextHover, ITextHoverExtension, IInformationProviderExtension2 {
+
 	private PHPEditorTextHoverDescriptor fHoverDescriptor;
 	private IPHPTextHover fHover;
 
-	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor, IEditorPart editor) {
+	public PHPTextHoverProxy(PHPEditorTextHoverDescriptor descriptor, IEditorPart editor, IPreferenceStore store) {
 		fHoverDescriptor = descriptor;
-		if (editor != null) {
-			setEditorPart(editor);
-		}
+		setEditor(editor);
+		setPreferenceStore(store);
 	}
 
-	/*
-	 * @see IPHPEditorTextHover#setEditor(IEditorPart)
-	 */
-	public void setEditorPart(IEditorPart editor) {
-		super.setEditorPart(editor);
+	public void setPreferenceStore(IPreferenceStore store) {
+		super.setPreferenceStore(store);
 
-		if (fHover != null && getEditorPart() != null)
-			fHover.setEditorPart(getEditorPart());
+		if (fHover != null)
+			fHover.setPreferenceStore(getPreferenceStore());
+	}
+
+	public void setEditor(IEditorPart editor) {
+		super.setEditor(editor);
+		if (fHover != null && getEditor() != null) {
+			fHover.setEditor(getEditor());
+		}
 	}
 
 	public boolean isEnabled() {
@@ -49,20 +55,20 @@ public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHove
 	 * @see ITextHover#getHoverRegion(ITextViewer, int)
 	 */
 	public IRegion getHoverRegion(ITextViewer textViewer, int offset) {
-		if (ensureHoverCreated())
+		if (ensureHoverCreated()) {
 			return fHover.getHoverRegion(textViewer, offset);
-
+		}
 		return null;
 	}
 
 	/*
 	 * @see ITextHover#getHoverInfo(ITextViewer, IRegion)
 	 */
+	@SuppressWarnings("deprecation")
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (ensureHoverCreated()) {
 			return fHover.getHoverInfo(textViewer, hoverRegion);
 		}
-
 		return null;
 	}
 
@@ -78,8 +84,9 @@ public class PHPTextHoverProxy extends AbstractPHPTextHover implements ITextHove
 
 	private boolean createHover() {
 		fHover = fHoverDescriptor.createTextHover();
-		if (fHover != null && getEditorPart() != null)
-			fHover.setEditorPart(getEditorPart());
+		if (fHover != null && getEditor() != null) {
+			fHover.setEditor(getEditor());
+		}
 		return isCreated();
 	}
 

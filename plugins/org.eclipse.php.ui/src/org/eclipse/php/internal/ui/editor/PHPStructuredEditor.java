@@ -168,7 +168,7 @@ import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
-import org.eclipse.php.internal.ui.editor.hover.SourceViewerInformationControl;
+import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
 import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
@@ -632,7 +632,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 						public IInformationControl createInformationControl(final Shell shell) {
 							final int shellStyle = SWT.RESIZE | SWT.TOOL | getOrientation();
 							final int style = SWT.V_SCROLL | SWT.H_SCROLL;
-							return new SourceViewerInformationControl(shell, shellStyle, style);
+							return new PHPSourceViewerInformationControl(shell, shellStyle, style);
 						}
 					};
 				else if (annotationHover instanceof IInformationProviderExtension2)

@@ -10,31 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.hover;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.text.*;
+import org.eclipse.dltk.internal.ui.text.hover.ScriptSourceHover;
+import org.eclipse.jface.text.AbstractReusableInformationControlCreator;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.ITextHoverExtension;
 import org.eclipse.jface.text.information.IInformationProviderExtension2;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.core.util.CodeDataResolver;
-import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
+import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.ui.editors.text.EditorsUI;
 
-public class PHPSourceTextHover extends AbstractPHPTextHover implements IInformationProviderExtension2, ITextHoverExtension {
+public class PHPSourceTextHover extends ScriptSourceHover implements IPHPTextHover, IInformationProviderExtension2, ITextHoverExtension {
+
 	/**
 	 * The hover control creator.
 	 * 
@@ -82,139 +71,14 @@ public class PHPSourceTextHover extends AbstractPHPTextHover implements IInforma
 				 * @see org.eclipse.jdt.internal.ui.text.java.hover.AbstractReusableInformationControlCreator#doCreateInformationControl(org.eclipse.swt.widgets.Shell)
 				 */
 				public IInformationControl doCreateInformationControl(Shell parent) {
-					return new PHPSourceViewerInformationControl(parent, SWT.NONE, getTooltipAffordanceString());
+					return new PHPSourceViewerInformationControl(parent, SWT.NONE, EditorsUI.getTooltipAffordanceString());
 				}
 			};
 		}
 		return fHoverControlCreator;
 	}
 
-	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
-		IDocument document = textViewer.getDocument();
-		if (document instanceof IStructuredDocument) {
-			IStructuredDocument sDoc = (IStructuredDocument) document;
-			try {
-				final CodeData[] codeDatas = CodeDataResolver.getInstance().resolve(sDoc, hoverRegion.getOffset());
-				if (codeDatas.length != 0) {
-					List hoverInfos = new ArrayList(codeDatas.length);
-					for (int i = 0; i < codeDatas.length; ++i) {
-						CodeData codeData = codeDatas[i];
-						String hoverInfo = ""; //$NON-NLS-1$
-						if (!(codeData instanceof PHPVariableData)) {
-							UserData userData = codeData.getUserData();
-							if (userData != null) {
-								// if this is an open resource get the data from the document
-								// else get the file from disk
-								// REMARK: since the editor is accessiable ONLY from the Display thread
-								// we need to use Display.sync() to get the actual data from the file
-								final FindText findText = new FindText(codeData);
-								Display.getDefault().syncExec(findText);
-								final String text = findText.getText();
-
-								// if the text is in one of the editors - fetch it from the editor source
-								if (text != null) {
-									hoverInfo = formatHoverInfo(text);
-								} else { // else just go to the resource and find it
-									IFile file = (IFile) PHPModelUtil.getResource(codeData);// ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(userData.getFileName()));
-									if (file != null) {
-										BufferedReader r = new BufferedReader(new InputStreamReader(file.getContents()));
-										int startPosition = userData.getStartPosition();
-										int len = userData.getEndPosition() - startPosition;
-										char[] buf = new char[len];
-										r.skip(startPosition);
-										r.read(buf, 0, len);
-										r.close();
-										hoverInfo = formatHoverInfo(new String(buf));
-									}
-								}
-							}
-						}
-						if (hoverInfo.length() != 0) {
-							hoverInfos.add(hoverInfo);
-						}
-					}
-					return concatenateHoverInfos(hoverInfos);
-				}
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
-		}
+	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
-	}
-
-	/**
-	 * @param hoverInfos
-	 * @return concatenated infos
-	 */
-	private String concatenateHoverInfos(List/*<String>*/hoverInfos) {
-		StringBuffer concatenatedInfo = new StringBuffer();
-		for (Iterator i = hoverInfos.iterator(); i.hasNext();) {
-			concatenatedInfo.append(i.next());
-			if (i.hasNext())
-				concatenatedInfo.append("\n"); //$NON-NLS-1$
-		}
-		return concatenatedInfo.toString();
-	}
-
-	private static class FindText implements Runnable {
-
-		final CodeData codeData;
-		private String text = null;
-
-		public FindText(CodeData codeData) {
-			this.codeData = codeData;
-		}
-
-		public void run() {
-			final IEditorPart openInEditor = EditorUtility.isOpenInEditor(codeData);
-			if (openInEditor == null || !(openInEditor instanceof PHPStructuredEditor)) {
-				return;
-			}
-			final StructuredTextViewer textViewer = ((PHPStructuredEditor) openInEditor).getTextViewer();
-			final IDocument document = textViewer.getDocument();
-			final UserData userData = codeData.getUserData();
-			if (userData == null || document == null) {
-				return;
-			}
-			int startPosition = userData.getStartPosition();
-			int len = userData.getEndPosition() - startPosition;
-
-			try {
-				this.text = document.get(startPosition, len);
-			} catch (BadLocationException e) {
-				this.text = null;
-			}
-		}
-
-		public String getText() {
-			return text;
-		}
-	}
-
-	public String formatHoverInfo(String info) {
-		info = info.trim();
-		String[] lines = info.split("[\r\n]+"); //$NON-NLS-1$
-		if (lines.length > 0) {
-			String lastLine = lines[lines.length - 1];
-			int numCharsToStrip = 0;
-			while (Character.isWhitespace(lastLine.charAt(numCharsToStrip))) {
-				numCharsToStrip++;
-			}
-			StringBuffer buf = new StringBuffer();
-			for (int i = 0; i < lines.length; ++i) {
-				int actuallyStrip = 0;
-				while (actuallyStrip < numCharsToStrip && actuallyStrip < lines[i].length()) {
-					if (!Character.isWhitespace(lines[i].charAt(actuallyStrip))) {
-						break;
-					}
-					actuallyStrip++;
-				}
-				buf.append(lines[i].substring(actuallyStrip));
-				if (lines[i] != lastLine)
-					buf.append("\n"); //$NON-NLS-1$
-			}
-			info = buf.toString();
-		}
-		return info;
 	}
 }
