@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.ui.hovers;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -25,20 +26,25 @@ import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPStackFrame;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
-import org.eclipse.php.internal.ui.editor.hover.AbstractPHPTextHover;
+import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
+import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
-public class PHPDebugTextHover extends AbstractPHPTextHover {
+public class PHPDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (textViewer == null || textViewer.getDocument() == null) {
 			return null;
 		}
 		if (textViewer instanceof PHPStructuredTextViewer) {
-			setEditorPart(((PHPStructuredTextViewer) textViewer).getTextEditor());
+			setEditor(((PHPStructuredTextViewer) textViewer).getTextEditor());
 		}
 
 		PHPDebugTarget debugTarget = getDebugTarget();
@@ -164,7 +170,7 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		}
 
 		if (value != null) {
-			tab.matcher(value).replaceAll("    ");
+			value.replaceAll("\t", "    ");
 		}
 
 		return value;
@@ -176,9 +182,9 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 		IAdaptable adaptable = DebugUITools.getDebugContext();
 		if (adaptable instanceof PHPStackFrame) {
 			PHPStackFrame stackFrame = (PHPStackFrame) adaptable;
-			IEditorInput ei = getEditorPart().getEditorInput();
+			IEditorInput ei = getEditor().getEditorInput();
 			if (ei instanceof FileEditorInput) {
-				FileEditorInput fi = (FileEditorInput) getEditorPart().getEditorInput();
+				FileEditorInput fi = (FileEditorInput) ei;
 
 				// Check for the file path within the project
 				String fileInDebug = stackFrame.getSourceName();
@@ -193,6 +199,10 @@ public class PHPDebugTextHover extends AbstractPHPTextHover {
 				return debugTarget;
 			}
 		}
+		return null;
+	}
+
+	public IHoverMessageDecorator getMessageDecorator() {
 		return null;
 	}
 }

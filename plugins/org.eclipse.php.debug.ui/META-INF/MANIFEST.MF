@@ -26,7 +26,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.debug.core,
  org.eclipse.php.core,
  org.eclipse.ui.forms,
- org.eclipse.core.filesystem
+ org.eclipse.core.filesystem,
+ org.eclipse.dltk.core,
+ org.eclipse.dltk.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.debug.ui,
  org.eclipse.php.internal.debug.ui,

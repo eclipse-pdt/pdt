@@ -12,6 +12,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.dltk.internal.ui.text.hover.AbstractScriptEditorTextHover;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -22,11 +23,16 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.ui.Logger;
-import org.eclipse.php.internal.ui.editor.hover.AbstractPHPTextHover;
-import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
+import org.eclipse.php.ui.editor.hover.IPHPTextHover;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.w3c.dom.Node;
 
-public class XDebugTextHover extends AbstractPHPTextHover {
+public class XDebugTextHover extends AbstractScriptEditorTextHover implements IPHPTextHover {
 
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		if (hoverRegion == null || textViewer == null || textViewer.getDocument() == null) {
@@ -109,7 +115,7 @@ public class XDebugTextHover extends AbstractPHPTextHover {
 		}
 
 		if (value != null) {
-			tab.matcher(value).replaceAll("    ");
+			value.replaceAll("\t", "    ");
 		}
 
 		return value;
@@ -140,8 +146,13 @@ public class XDebugTextHover extends AbstractPHPTextHover {
 		}
 
 		if (value != null) {
-			tab.matcher(value).replaceAll("    ");
+			value.replaceAll("\t", "    ");
 		}
 		return value;
+	}
+
+	public IHoverMessageDecorator getMessageDecorator() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
