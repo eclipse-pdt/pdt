@@ -64,10 +64,10 @@
 	<target name="php.test.bare" description="Runs bare tests">
 		<antcall target="runtests">
 			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="classname" value="org.eclipse.test.BareTestSuite" />
+			<param name="classname" value="org.eclipse.php.test.BareTestSuite" />
 			<param name="report" value="BareTestSuite" />
 			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.php.test.coretestapplication" />
+			<param name="application" value="org.eclipse.test.coretestapplication" />
 			<param name="testTarget" value="BareTestSuite" />
 			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
 		</antcall>
