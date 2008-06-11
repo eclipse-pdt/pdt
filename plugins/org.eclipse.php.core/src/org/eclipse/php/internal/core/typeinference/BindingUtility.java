@@ -18,7 +18,6 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.wst.sse.core.internal.Logger;
 
 /**
  * This utility allows to determine types of expressions represented in AST tree.
@@ -241,6 +240,10 @@ public class BindingUtility {
 			this(node.sourceStart(), node.sourceEnd() - node.sourceStart());
 		}
 
+		public int getEnd() {
+			return length + offset;
+		}
+		
 		public int getLength() {
 			return length;
 		}
@@ -313,7 +316,7 @@ public class BindingUtility {
 		}
 
 		public boolean visitGeneral(ASTNode node) throws Exception {
-			if (node.sourceStart() == sourceRange.offset && node.sourceEnd() - node.sourceStart() == sourceRange.getLength()) {
+			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
 				context = contextStack.peek();
 				this.node = node;
 				return false;
