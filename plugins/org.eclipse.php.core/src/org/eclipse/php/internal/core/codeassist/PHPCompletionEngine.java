@@ -162,7 +162,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 			if (structuredModel instanceof DOMModelForPHP) {
 				DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
-				calcCompletionOption(domModelForPHP, position, module, true);
+				calcCompletionOption(domModelForPHP, position, module);
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -173,7 +173,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void calcCompletionOption(DOMModelForPHP domModelForPHP, int offset, ISourceModule sourceModule, boolean explicit) throws BadLocationException {
+	protected void calcCompletionOption(DOMModelForPHP domModelForPHP, int offset, ISourceModule sourceModule) throws BadLocationException {
 
 		this.sourceModule = sourceModule;
 
@@ -280,11 +280,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		boolean haveSpacesAtEnd = totalLength != endPosition;
 
 		if (inPHPDoc) {
-			if (isInPhpDocCompletion(statementText, offset, lastWord, haveSpacesAtEnd, explicit)) {
+			if (isInPhpDocCompletion(statementText, offset, lastWord, haveSpacesAtEnd)) {
 				// the current position is php doc block.
 				return;
 			}
-			
+
 			int tagStart = startPosition - 1;
 			while (tagStart > 0 && statementText.charAt(tagStart) != TAG_SIGN) {
 				--tagStart;
@@ -293,13 +293,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				++tagStart;
 				int tagEnd = PHPTextSequenceUtilities.readIdentifierEndIndex(statementText, tagStart, false);
 				String tagName = statementText.subSequence(tagStart, tagEnd).toString();
-			
+
 				if (isVariableCompletion(offset, tagName, lastWord, haveSpacesAtEnd)) {
 					// the current position is a variable in a php doc block.
 					return;
 				}
 			}
-			
+
 		} else { // not inside of PHPDoc
 
 			if (isInArrayOptionQuotes(type, offset, statementText)) {
@@ -312,23 +312,23 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			if (isInFunctionDeclaration(statementText, offset, explicit)) {
+			if (isInFunctionDeclaration(statementText, offset)) {
 				// the current position is inside function declaration.
 				return;
 			}
 
-			if (isInCatchStatement(statementText, offset, explicit)) {
+			if (isInCatchStatement(statementText, offset)) {
 				// the current position is inside catch statement.
 				return;
 			}
 
-			if (haveSpacesAtEnd && isNewOrInstanceofStatement(lastWord, EMPTY, offset, explicit, type)) { //$NON-NLS-1$
+			if (haveSpacesAtEnd && isNewOrInstanceofStatement(lastWord, EMPTY, offset, type)) { //$NON-NLS-1$
 				// the current position is inside new or instanceof statement.
 				return;
 			}
 
 			int line = document.getLineOfOffset(offset);
-			if (isClassFunctionCompletion(statementText, offset, line, lastWord, startPosition, haveSpacesAtEnd, explicit)) {
+			if (isClassFunctionCompletion(statementText, offset, line, lastWord, startPosition, haveSpacesAtEnd)) {
 				// the current position is in class function.
 				return;
 			}
@@ -337,10 +337,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 			String firstWord = statementText.subSequence(startPosition, endPosition).toString();
 
-			if (!haveSpacesAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, explicit, type)) {
+			if (!haveSpacesAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
 				// the current position is inside new or instanceof statement.
 				if (lastWord.startsWith(DOLLAR)) {
-					getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
+					getRegularCompletion(lastWord, offset, container, phpScriptRegion, internalPHPRegion, document);
 				}
 				return;
 			}
@@ -355,16 +355,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			if (isInClassDeclaration(statementText, offset, explicit)) {
+			if (isInClassDeclaration(statementText, offset)) {
 				// the current position is inside class declaration.
 				return;
 			}
 
-			getRegularCompletion(lastWord, offset, explicit, container, phpScriptRegion, internalPHPRegion, document);
+			getRegularCompletion(lastWord, offset, container, phpScriptRegion, internalPHPRegion, document);
 		}
 	}
 
-	private boolean isInPhpDocCompletion(CharSequence statementText, int offset, String tagName, boolean hasSpacesAtEnd, boolean explicit) {
+	private boolean isInPhpDocCompletion(CharSequence statementText, int offset, String tagName, boolean hasSpacesAtEnd) {
 		if (hasSpacesAtEnd) {
 			return false;
 		}
@@ -403,14 +403,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 		if (varName.startsWith(DOLLAR)) { //$NON-NLS-1$
 			if (PHPDocTag.PARAM_NAME.equals(tagName)) {
-				
+
 				// find function arguments
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) sourceModule.getModelElement(), null);
 				final List<String> variables = new LinkedList<String>();
-				
+
 				ASTVisitor visitor = new ASTVisitor() {
 					boolean found = false;
-					
+
 					@SuppressWarnings("unchecked")
 					public boolean visit(MethodDeclaration m) {
 						if (!found && m.sourceStart() > offset) {
@@ -437,7 +437,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
-				
+
 				int relevance = 424242;
 				this.setSourceRange(offset - varName.length(), offset);
 				reportVariables(variables.toArray(new String[variables.size()]), varName, relevance, false);
@@ -541,8 +541,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	protected void getRegularCompletion(String prefix, int offset, boolean explicit, ITextRegionCollection sdRegion, ITextRegion tRegion, ContextRegion internalPhpRegion, IStructuredDocument document) {
-
+	protected void getRegularCompletion(String prefix, int offset, ITextRegionCollection sdRegion, ITextRegion tRegion, ContextRegion internalPhpRegion, IStructuredDocument document) {
+		if (prefix.length() == 0) {
+			return;
+		}
+		
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		boolean inClass = false;
@@ -561,23 +564,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		if (prefix.length() == 0) {
-			return;
-		}
-
 		if (internalPhpRegion != null) {
 			final String type = internalPhpRegion.getType();
 
 			if (prefix.startsWith(DOLLAR) && !inClass) { //$NON-NLS-1$
-				if (!explicit && !autoactivateForVariables())
-					return;
-				try {
-					//if we're right next to a letter, in an implicit scenario, we don't want it to complete the variables name.
-					if (!explicit && prefix.equals(DOLLAR) && document.getLength() != offset && Character.isLetter(document.getChar(offset))) { //$NON-NLS-1$
-						return;
-					}
-				} catch (BadLocationException e) {
-				}
 				if (PHPPartitionTypes.isPHPQuotesState(type)) {
 					final IStructuredDocument doc = document;
 					try {
@@ -609,7 +599,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		if ((explicit || autoactivateForFunctionsKeywordsConstants()) && !inClass) {
+		if (!inClass) {
 			IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(prefix, false);
 			for (IModelElement function : functions) {
 				reportMethod((IMethod) function, RELEVANCE_METHODS);
@@ -632,19 +622,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (!inClass) {
 			if (showClassNamesInGlobalCompletion()) {
-				if (explicit || autoactivateForClassnames()) {
-					int relevance = 424242;
-					IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
-					for (IModelElement type : classes) {
-						reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
-					}
+				int relevance = 424242;
+				IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
+				for (IModelElement type : classes) {
+					reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
 				}
 			}
 		}
 		return;
 	}
 
-	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd, boolean explicit) {
+	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd) {
 		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition);
 		if (startFunctionPosition <= 2) {
 			return false;
@@ -675,57 +663,51 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (isClassTriger) {
 			if (isParent) {
 				if (types != null) { //$NON-NLS-1$
-					showClassStaticCall(offset, types, functionName, explicit);
+					showClassStaticCall(offset, types, functionName);
 				}
 			} else {
-				showClassStaticCall(offset, types, functionName, explicit);
+				showClassStaticCall(offset, types, functionName);
 			}
 		} else {
 			String parent = statementText.toString().substring(0, statementText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
 			boolean isInstanceOf = !parent.equals("$this"); //$NON-NLS-1$
 			//boolean addVariableDollar = parent.endsWith("()");
 			boolean addVariableDollar = false;
-			showClassCall(offset, types, functionName, isInstanceOf, addVariableDollar, explicit);
+			showClassCall(offset, types, functionName, isInstanceOf, addVariableDollar);
 		}
 		return true;
 	}
 
-	protected void showClassCall(int offset, IType[] className, String prefix, boolean isInstanceOf, boolean addVariableDollar, boolean explicit) {
+	protected void showClassCall(int offset, IType[] className, String prefix, boolean isInstanceOf, boolean addVariableDollar) {
 		if (className == null) {
 			return;
 		}
 
 		this.setSourceRange(offset - prefix.length(), offset);
 
-		boolean autoactivateKeywordsConstants = autoactivateForFunctionsKeywordsConstants();
-		boolean autoactivateVariables = autoactivateForVariables();
-
 		for (IType type : className) {
-			if (!prefix.startsWith(DOLLAR) && (explicit || autoactivateKeywordsConstants)) {
+			if (!prefix.startsWith(DOLLAR)) {
 				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, false);
 				for (IModelElement method : methods) {
 					reportMethod((IMethod) method, RELEVANCE_METHODS);
 				}
 			}
-			if (explicit || autoactivateVariables) {
-				IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, false, true);
-				int relevance = 424242;
-				for (IModelElement element : fields) {
-					IField field = (IField) element;
-					reportField(field, relevance--, true);
-				}
 
+			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, false, true);
+			int relevance = 424242;
+			for (IModelElement element : fields) {
+				IField field = (IField) element;
+				reportField(field, relevance--, true);
 			}
 		}
 	}
 
-	protected void showClassStaticCall(int offset, IType[] className, String prefix, boolean explicit) {
+	protected void showClassStaticCall(int offset, IType[] className, String prefix) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		boolean showNonStrictOptions = showNonStrictOptions();
-		boolean autoactivateKeywordsConstants = autoactivateForFunctionsKeywordsConstants();
 
-		if (!prefix.startsWith(DOLLAR) && (explicit || autoactivateKeywordsConstants)) {
+		if (!prefix.startsWith(DOLLAR)) {
 			for (IType type : className) {
 				IMethod[] classMethods = CodeAssistUtils.getClassMethods(type, prefix, false);
 
@@ -741,25 +723,23 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		if (explicit || autoactivateForVariables()) {
-			int relevance = 4242;
-			for (IType type : className) {
-				IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, false, true);
-				for (IField field : classFields) {
-					try {
-						int flags = field.getFlags();
-						if ((flags & Modifiers.AccConstant) != 0 || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
-							reportField(field, relevance--, false);
-						}
-					} catch (ModelException e) {
-						Logger.logException(e);
+		int relevance = 4242;
+		for (IType type : className) {
+			IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, false, true);
+			for (IField field : classFields) {
+				try {
+					int flags = field.getFlags();
+					if ((flags & Modifiers.AccConstant) != 0 || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
+						reportField(field, relevance--, false);
 					}
+				} catch (ModelException e) {
+					Logger.logException(e);
 				}
 			}
 		}
 	}
 
-	protected boolean isInFunctionDeclaration(TextSequence text, int offset, boolean explicit) {
+	protected boolean isInFunctionDeclaration(TextSequence text, int offset) {
 		// are we inside function declaration statement
 		int functionStart = PHPTextSequenceUtilities.isInFunctionDeclaration(text);
 		if (functionStart == -1) {
@@ -826,10 +806,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return true;
 		}
 
-		if (!explicit && functionNameStart.length() == 0) {
-			return true;
-		}
-
 		this.setSourceRange(offset - functionNameStart.length(), offset);
 
 		IMethod[] superClassMethods = CodeAssistUtils.getSuperClassMethods(classData, functionNameStart, false);
@@ -867,7 +843,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	protected boolean isInClassDeclaration(TextSequence text, int offset, boolean explicit) {
+	protected boolean isInClassDeclaration(TextSequence text, int offset) {
 		int classEnd = PHPTextSequenceUtilities.isInClassDeclaration(text);
 		if (classEnd == -1) {
 			return false;
@@ -901,12 +877,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		boolean foundExtends = extendsMatcher.find();
 		boolean foundImplements = implementsMatcher.find();
 		if (!foundExtends && !foundImplements) {
-			if (explicit || lastWord.length() > 0) {
-				if (isClassDeclaration) {
-					showExtendsImplementsList(lastWord, offset, explicit);
-				} else {
-					showExtendsList(lastWord, offset, explicit);
-				}
+			if (isClassDeclaration) {
+				showExtendsImplementsList(lastWord, offset);
+			} else {
+				showExtendsList(lastWord, offset);
 			}
 			return true;
 		}
@@ -916,52 +890,42 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		String firstWord = text.subSequence(startPosition, endPosition).toString();
 
 		if (firstWord.equalsIgnoreCase(EXTENDS)) { //$NON-NLS-1$
-			showBaseClassList(lastWord, offset, isClassDeclaration, explicit);
+			showBaseClassList(lastWord, offset, isClassDeclaration);
 			return true;
 		}
 
 		if (firstWord.equalsIgnoreCase(IMPLEMENTS)) { //$NON-NLS-1$
-			showInterfaceList(lastWord, offset, explicit);
+			showInterfaceList(lastWord, offset);
 			return true;
 		}
 
 		if (foundExtends && foundImplements) {
-			if (explicit || lastWord.length() > 0) {
-				if (extendsMatcher.start() < implementsMatcher.start()) {
-					showInterfaceList(lastWord, offset, explicit);
-				} else {
-					showBaseClassList(lastWord, offset, isClassDeclaration, explicit);
-				}
+			if (extendsMatcher.start() < implementsMatcher.start()) {
+				showInterfaceList(lastWord, offset);
+			} else {
+				showBaseClassList(lastWord, offset, isClassDeclaration);
 			}
 			return true;
 		}
 
 		if (foundImplements || !isClassDeclaration) {
-			if (explicit) {
-				showInterfaceList(lastWord, offset, explicit);
-			}
+			showInterfaceList(lastWord, offset);
 			return true;
 		}
-		if ((explicit || lastWord.length() > 0) && isClassDeclaration) {
-			showImplementsList(lastWord, offset, explicit);
+		if (isClassDeclaration) {
+			showImplementsList(lastWord, offset);
 		}
 		return true;
 	}
 
-	protected void showInterfaceList(String prefix, int offset, boolean explicit) {
-		if (!explicit && !autoactivateForClassnames()) {
-			return;
-		}
+	protected void showInterfaceList(String prefix, int offset) {
 		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(prefix, false);
 		for (IModelElement i : interfaces) {
 			reportType((IType) i, RELEVANCE_FREE_SPACE, EMPTY);
 		}
 	}
 
-	protected void showExtendsImplementsList(String prefix, int offset, boolean explicit) {
-		if (!explicit && !autoactivateForClassnames()) {
-			return;
-		}
+	protected void showExtendsImplementsList(String prefix, int offset) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		if (isPHP5) {
@@ -978,10 +942,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void showImplementsList(String prefix, int offset, boolean explicit) {
-		if (!explicit && !autoactivateForClassnames()) {
-			return;
-		}
+	protected void showImplementsList(String prefix, int offset) {
 		if (isPHP5) {
 			this.setSourceRange(offset - prefix.length(), offset);
 
@@ -991,10 +952,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	private void showExtendsList(String prefix, int offset, boolean explicit) {
-		if (!explicit && !autoactivateForClassnames()) {
-			return;
-		}
+	private void showExtendsList(String prefix, int offset) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		if (EXTENDS.startsWith(prefix)) {
@@ -1002,15 +960,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	private void showBaseClassList(String prefix, int offset, boolean isClassDecleration, boolean explicit) {
+	private void showBaseClassList(String prefix, int offset, boolean isClassDecleration) {
 		if (!isClassDecleration) {
-			showInterfaceList(prefix, offset, explicit);
+			showInterfaceList(prefix, offset);
 			return;
 		}
-		if (!explicit && !autoactivateForClassnames()) {
-			return;
-		}
-
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		IType[] classes = CodeAssistUtils.getOnlyClasses(prefix, false);
@@ -1019,7 +973,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected boolean isInCatchStatement(TextSequence text, int offset, boolean explicit) {
+	protected boolean isInCatchStatement(TextSequence text, int offset) {
 		Matcher matcher = catchPattern.matcher(text);
 		int catchStart = text.length();
 		while (matcher.find()) {
@@ -1050,16 +1004,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		String className = text.subSequence(startPosition, endPosition).toString();
 
 		if (endPosition == text.length()) {
-			showClassList(className, offset, States.CATCH, explicit);
+			showClassList(className, offset, States.CATCH);
 		}
 		return true;
 	}
 
-	protected void showClassList(String prefix, int offset, States state, boolean explicit) {
-		if (!explicit && !autoactivateForClassnames()) {
-			return;
-		}
-
+	protected void showClassList(String prefix, int offset, States state) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		switch (state) {
@@ -1108,20 +1058,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		reportMethod(new FakeMethod((ModelElement) type, SELF), RELEVANCE_METHODS);
 	}
 
-	protected boolean isNewOrInstanceofStatement(String keyword, String prefix, int offset, boolean explicit, String type) {
+	protected boolean isNewOrInstanceofStatement(String keyword, String prefix, int offset, String type) {
 		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return false;
 		}
 
 		if (keyword.equalsIgnoreCase(INSTANCEOF)) { //$NON-NLS-1$
 			this.setSourceRange(offset - prefix.length(), offset);
-			showClassList(prefix, offset, States.INSTANCEOF, explicit);
+			showClassList(prefix, offset, States.INSTANCEOF);
 			return true;
 		}
 
 		if (keyword.equalsIgnoreCase(NEW)) { //$NON-NLS-1$
 			this.setSourceRange(offset - prefix.length(), offset);
-			showClassList(prefix, offset, States.NEW, explicit);
+			showClassList(prefix, offset, States.NEW);
 			return true;
 		}
 
@@ -1333,27 +1283,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private boolean showClassNamesInGlobalCompletion() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION)) {
 			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
-		}
-		return true;
-	}
-
-	private boolean autoactivateForVariables() {
-		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES)) {
-			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
-		}
-		return true;
-	}
-
-	private boolean autoactivateForClassnames() {
-		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES)) {
-			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
-		}
-		return true;
-	}
-
-	private boolean autoactivateForFunctionsKeywordsConstants() {
-		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS)) {
-			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		}
 		return true;
 	}

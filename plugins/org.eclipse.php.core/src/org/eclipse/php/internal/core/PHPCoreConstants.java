@@ -83,14 +83,6 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_AUTOACTIVATION = "contentAssistAutoactivation"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that holds the autoactivation proposals limit.
-	 * <p>
-	 * Value is of type <code>Integer</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_SIZE_LIMIT = "contentAssistAutoactivationSizeLimit"; //$NON-NLS-1$
-
-	/**
 	 * A name preference that holds the auto activation delay time in milliseconds.
 	 * <p>
 	 * Value is of type <code>Integer</code>.
@@ -114,30 +106,7 @@ public interface PHPCoreConstants {
 	 */
 	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC = "contentAssistAutoactivationTriggersPHPDoc"; //$NON-NLS-1$
 
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES = "contentAssistAutoactivationForClassNames"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_VARIABLES = "contentAssistAutoactivationForVariables"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to start actiactivation on class names
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS = "contentAssistAutoactivationForFunctionsKeyWordsConstants"; //$NON-NLS-1$
-
+	
 	/**
 	 * A named preference that controls if the php code assist inserts a
 	 * proposal automatically if only one proposal is available.
