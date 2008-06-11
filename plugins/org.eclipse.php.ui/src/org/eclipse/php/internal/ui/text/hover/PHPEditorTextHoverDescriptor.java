@@ -52,11 +52,8 @@ public class PHPEditorTextHoverDescriptor {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHP_EDITOR_TEXT_HOVER_EXTENSION_POINT);
 
-		Arrays.sort(elements, new Comparator() {
-			public int compare(Object o1, Object o2) {
-				IConfigurationElement e1 = (IConfigurationElement)o1;
-				IConfigurationElement e2 = (IConfigurationElement)o2;
-
+		Arrays.sort(elements, new Comparator<IConfigurationElement>() {
+			public int compare(IConfigurationElement e1, IConfigurationElement e2) {
 				int p1 = 0;
 				int p2 = 0;
 				try {

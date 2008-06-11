@@ -1527,19 +1527,18 @@
 			id="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
 			label="%annotationHover"
 			priority="400" />
+  		<hover
+        	class="org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover"
+        	description="%documentationHoverDescription"
+        	id="org.eclipse.php.ui.editor.hover.PHPDocumentationHover"
+        	label="%documentationHover"
+        	priority="300" />
 		<hover
 			class="org.eclipse.php.internal.ui.editor.hover.PHPSourceTextHover"
 			description="%sourceHoverDescription"
 			id="org.eclipse.php.ui.editor.hover.PHPSourceTextHover"
 			label="%sourceHover"
-			priority="300" />
-  <hover
-        class="org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover"
-        description="%documentationHoverDescription"
-        id="org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover"
-        label="%documentationHover"
-        priority="200">
-  </hover>
+			priority="200" />
 	</extension>
 
 	<!--PHP Working Set:-->
