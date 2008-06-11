@@ -14,12 +14,15 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPTreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -92,7 +95,13 @@ public class OpenAction extends SelectionDispatchAction {
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
-		PHPCodeData element = SelectionConverter.codeResolve(fEditor, getShell(), getDialogTitle(), PHPUIMessages.getString("OpenAction_select_element"));
+		// TODO open in a dialog ? with these parameters: getShell(), getDialogTitle(), PHPUIMessages.getString("OpenAction_select_element")
+		IModelElement[] element = null;
+		try {
+			element = SelectionConverter.codeResolve(fEditor);
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
 		if (element == null) {
 			IEditorStatusLine statusLine = (IEditorStatusLine) fEditor.getAdapter(IEditorStatusLine.class);
 			if (statusLine != null)

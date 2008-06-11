@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -22,6 +23,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.actions.IRenamePHPElementActionFactory;
@@ -141,9 +143,13 @@ public class RenameAction extends SelectionDispatchAction {
 	public void run(ITextSelection selection) {
 		if (!ActionUtils.isProcessable(getShell(), fEditor))
 			return;
-		if (fRenamePHPElement.canRun())
-			fRenamePHPElement.run(selection);
-		else
-			MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenameAction_rename"), PHPUIMessages.getString("RenameAction_unavailable"));
+		try {
+			if (fRenamePHPElement.canRun())
+				fRenamePHPElement.run(selection);
+			else
+				MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenameAction_rename"), PHPUIMessages.getString("RenameAction_unavailable"));
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
 	}
 }

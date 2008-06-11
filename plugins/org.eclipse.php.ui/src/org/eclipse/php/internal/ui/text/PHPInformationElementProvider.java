@@ -73,7 +73,7 @@ public class PHPInformationElementProvider implements IInformationProvider, IInf
 			if (fUseCodeResolve) {
 				IStructuredSelection sel = SelectionConverter.getStructuredSelection(fEditor);
 				if (!sel.isEmpty()) {
-					IModelElement inputModelElement = fEditor.getInputModelElement();
+					IModelElement inputModelElement = fEditor.getModelElement();
 					if (inputModelElement instanceof ISourceModule && sel instanceof ITextSelection) {
 						IModelElement modelElement = getSelectionModelElement(((ITextSelection) sel).getOffset(), 1, (ISourceModule) inputModelElement);
 						if (modelElement != null) {

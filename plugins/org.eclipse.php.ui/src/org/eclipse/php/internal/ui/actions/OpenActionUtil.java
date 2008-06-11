@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPElementLabelProvider;
@@ -52,7 +53,7 @@ public class OpenActionUtil {
 	 * Shows a dialog for resolving an ambiguous php element.
 	 * Utility method that can be called by subclasses.
 	 */
-	public static PHPCodeData selectPHPElement(PHPCodeData[] elements, Shell shell, String title, String message) {
+	public static IModelElement selectPHPElement(IModelElement[] elements, Shell shell, String title, String message) {
 
 		int nResults = elements.length;
 
@@ -76,7 +77,7 @@ public class OpenActionUtil {
 				for (int i = 0; i < nResults; i++) {
 					Object current = selection[i];
 					if (current instanceof PHPCodeData)
-						return (PHPCodeData) current;
+						return (IModelElement) current;
 				}
 			}
 		}

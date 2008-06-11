@@ -115,8 +115,8 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	private boolean isEnabled(ITextSelection selection) {
 		if (fEditor == null || selection == null)
 			return false;
-		if (fEditor.getInputModelElement() instanceof ISourceModule) {
-			ISourceModule sourceModule = (ISourceModule) fEditor.getInputModelElement();
+		if (fEditor.getModelElement() instanceof ISourceModule) {
+			ISourceModule sourceModule = (ISourceModule) fEditor.getModelElement();
 			IModelElement element = getSelectionModelElement(selection.getOffset(), selection.getLength(), sourceModule);
 			if (element == null) {
 				lastSelectedElement = null;

@@ -11,34 +11,28 @@
 package org.eclipse.php.internal.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 public class SelectionConverter {
-
-	private static final PHPCodeData[] EMPTY_RESULT = new PHPCodeData[0];
-
+	private static final IModelElement[] EMPTY_RESULT= new IModelElement[0];
+	
 	private SelectionConverter() {
 		// no instance
 	}
@@ -53,34 +47,39 @@ public class SelectionConverter {
 	 * 	if it is a structured selection.</li>
 	 * <li><code>default</code>: returns an empty structured selection.</li>
 	 * </ul>
+	 * @param part the part
+	 * @return the selection
+	 * @throws ModelException 
 	 */
-	public static IStructuredSelection getStructuredSelection(IWorkbenchPart part) {
-		final PHPStructuredEditor structuredEditor = EditorUtility.getPHPStructuredEditor(part);
-		if (structuredEditor != null)
-			return new StructuredSelection(codeResolve(structuredEditor));
-		ISelectionProvider provider = part.getSite().getSelectionProvider();
+	public static IStructuredSelection getStructuredSelection(IWorkbenchPart part) throws ModelException {
+		if (part instanceof PHPStructuredEditor)
+			return new StructuredSelection(codeResolve((PHPStructuredEditor)part));
+		ISelectionProvider provider= part.getSite().getSelectionProvider();
 		if (provider != null) {
-			ISelection selection = provider.getSelection();
+			ISelection selection= provider.getSelection();
 			if (selection instanceof IStructuredSelection)
-				return (IStructuredSelection) selection;
+				return (IStructuredSelection)selection;
 		}
 		return StructuredSelection.EMPTY;
 	}
 
+	
 	/**
-	 * Converts the given structured selection into an array of PHP elements.
+	 * Converts the given structured selection into an array of Java elements.
 	 * An empty array is returned if one of the elements stored in the structured
-	 * selection is not of tupe <code>PHPCodeData</code>
+	 * selection is not of type <code>IModelElement</code>
+	 * @param selection the selection
+	 * @return the Java element contained in the selection
 	 */
-	public static PHPCodeData[] getElements(IStructuredSelection selection) {
+	public static IModelElement[] getElements(IStructuredSelection selection) {
 		if (!selection.isEmpty()) {
-			PHPCodeData[] result = new PHPCodeData[selection.size()];
-			int i = 0;
-			for (Iterator iter = selection.iterator(); iter.hasNext(); i++) {
-				Object element = iter.next();
-				if (!(element instanceof PHPCodeData))
+			IModelElement[] result= new IModelElement[selection.size()];
+			int i= 0;
+			for (Iterator iter= selection.iterator(); iter.hasNext(); i++) {
+				Object element= iter.next();
+				if (!(element instanceof IModelElement))
 					return EMPTY_RESULT;
-				result[i] = (PHPCodeData) element;
+				result[i]= (IModelElement)element;
 			}
 			return result;
 		}
@@ -91,173 +90,14 @@ public class SelectionConverter {
 		if (editor == null)
 			return false;
 		return getInput(editor) != null;
-
+		
 	}
-
-	/**
-	 * Converts the text selection provided by the given editor into an array of
-	 * PHP elements. If the selection doesn't cover a PHP element and the selection's
-	 * length is greater than 0 the methods returns the editor's input element.
-	 */
-	public static PHPCodeData[] codeResolveOrInput(PHPStructuredEditor editor) {
-		PHPCodeData input = getInput(editor);
-		ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
-		PHPCodeData[] result = codeResolve(input, selection);
-		if (result.length == 0) {
-			result = new PHPCodeData[] { input };
-		}
-		return result;
-	}
-
-	public static PHPCodeData[] codeResolveOrInputHandled(PHPStructuredEditor editor, Shell shell, String title) {
-		return codeResolveOrInput(editor);
-	}
-
-	/**
-	 * Converts the text selection provided by the given editor a PHP element by
-	 * asking the user if code reolve returned more than one result. If the selection 
-	 * doesn't cover a PHP element and the selection's length is greater than 0 the 
-	 * methods returns the editor's input element.
-	 */
-	public static PHPCodeData codeResolveOrInput(PHPStructuredEditor editor, Shell shell, String title, String message) {
-		PHPCodeData[] elements = codeResolveOrInput(editor);
-		if (elements == null || elements.length == 0)
-			return null;
-		PHPCodeData candidate = elements[0];
-		if (elements.length > 1) {
-			candidate = OpenActionUtil.selectPHPElement(elements, shell, title, message);
-		}
-		return candidate;
-	}
-
-	public static PHPCodeData codeResolveOrInputHandled(PHPStructuredEditor editor, Shell shell, String title, String message) {
-		return codeResolveOrInput(editor, shell, title, message);
-	}
-
-	public static PHPCodeData[] codeResolve(PHPStructuredEditor editor) {
-		return codeResolve(getInput(editor), (ITextSelection) editor.getSelectionProvider().getSelection());
-	}
-
-	/**
-	 * Converts the text selection provided by the given editor a PHP element by
-	 * asking the user if code reolve returned more than one result. If the selection 
-	 * doesn't cover a PHP element <code>null</code> is returned.
-	 */
-	public static PHPCodeData codeResolve(PHPStructuredEditor editor, Shell shell, String title, String message) {
-		PHPCodeData[] elements = codeResolve(editor);
-		if (elements == null || elements.length == 0)
-			return null;
-		PHPCodeData candidate = elements[0];
-		if (elements.length > 1) {
-			candidate = OpenActionUtil.selectPHPElement(elements, shell, title, message);
-		}
-		return candidate;
-	}
-
-	public static PHPCodeData[] codeResolveHandled(PHPStructuredEditor editor, Shell shell, String title) {
-		return codeResolve(editor);
-	}
-
-	public static PHPCodeData getElementAtOffset(PHPStructuredEditor editor) {
-		return getElementAtOffset(getInput(editor), (ITextSelection) editor.getSelectionProvider().getSelection());
-	}
-
-	public static PHPFileData getInput(PHPStructuredEditor editor) {
-		if (editor == null)
-			return null;
-		return editor.getPHPFileData();
-	}
-
-	public static PHPFileData getInputAsCompilationUnit(PHPStructuredEditor editor) {
-		Object editorInput = SelectionConverter.getInput(editor);
-		if (editorInput instanceof PHPFileData)
-			return (PHPFileData) editorInput;
-		else
-			return null;
-	}
-
-	public static PHPCodeData[] codeResolve(PHPCodeData input, ITextSelection selection) {
-		// a workaround:
-		String text = selection.getText();
-		if (text == null) {
-			return EMPTY_RESULT;
-		}
-		text = text.trim();
-		if ("".equals(text)) { //$NON-NLS-1$
-			return EMPTY_RESULT;
-		}
-
-		ArrayList codeDatas = new ArrayList();
-
-		if (input instanceof PHPFileData && text.matches("^[\\w]+$")) { //$NON-NLS-1$
-			PHPWorkspaceModelManager modelManager = PHPWorkspaceModelManager.getInstance();
-			IProject project = modelManager.getProjectForFileData((PHPFileData) input, null);
-			PHPProjectModel model = modelManager.getModelForProject(project);
-			PHPClassData classData = model.getClass(input.getName(), text);
-			if (classData != null) {
-				codeDatas.add(classData);
-			}
-			PHPFunctionData functionData = model.getFunction(input.getName(), text);
-			if (functionData != null) {
-				codeDatas.add(functionData);
-			}
-			PHPConstantData constantData = model.getConstant(input.getName(), text);
-			if (constantData != null) {
-				codeDatas.add(constantData);
-			}
-			return (PHPCodeData[]) codeDatas.toArray(new PHPCodeData[codeDatas.size()]);
-
-		}
-		return EMPTY_RESULT;
-	}
-
-	public static PHPCodeData getElementAtOffset(PHPCodeData input, ITextSelection selection) {
-		if (input instanceof PHPFileData) {
-			PHPFileData cunit = (PHPFileData) input;
-			PHPCodeData ref = PHPModelUtil.getElementAt(cunit, selection.getOffset());
-			if (ref == null)
-				return input;
-			else
-				return ref;
-		}
-		return null;
-	}
-
-	public static PHPCodeData resolveEnclosingElement(PHPStructuredEditor editor, ITextSelection selection) {
-		return resolveEnclosingElement(getInput(editor), selection);
-	}
-
-	public static PHPCodeData resolveEnclosingElement(PHPCodeData input, ITextSelection selection) {
-		PHPCodeData atOffset = null;
-		if (input instanceof PHPFileData) {
-			PHPFileData cunit = (PHPFileData) input;
-			atOffset = PHPModelUtil.getElementAt(cunit, selection.getOffset());
-		} else {
-			return null;
-		}
-		if (atOffset == null) {
-			return input;
-		}
-		return atOffset;
-
-	}
-	
-	public static IModelElement getModelInput(PHPStructuredEditor editor) {
-		return getModelInput(editor, true);
-	}
-
-	/**
-	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
-	 *
-	 */
-	private static IModelElement getModelInput(PHPStructuredEditor editor, boolean primaryOnly) {
-		if (editor == null)
-			return null;
-		return org.eclipse.dltk.internal.ui.editor.EditorUtility.getEditorInputModelElement(editor, primaryOnly);
-	}
-	
+		
 	public static IModelElement[] codeResolveOrInputForked(PHPStructuredEditor editor) throws InvocationTargetException, InterruptedException {
-		IModelElement input= editor.getInputModelElement();
+		ISourceModule input= getInput(editor);
+		if (input == null)
+			return EMPTY_RESULT;
+		
 		ITextSelection selection= (ITextSelection)editor.getSelectionProvider().getSelection();
 		IModelElement[] result= performForkedCodeResolve(input, selection);
 		if (result.length == 0) {
@@ -265,13 +105,115 @@ public class SelectionConverter {
 		}
 		return result;
 	}
+				
+	public static IModelElement[] codeResolve(PHPStructuredEditor editor) throws ModelException {
+		return codeResolve(editor, true);
+	}
+		
+	/**
+	 * Perform a code resolve at the current selection of an editor
+	 * 
+	 * @param editor the editor
+	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
+	 * @return the resolved elements
+	 * @throws ModelException 
+	 * @since 3.2
+	 */
+	public static IModelElement[] codeResolve(PHPStructuredEditor editor, boolean primaryOnly) throws ModelException {
+		ISourceModule input= getInput(editor, primaryOnly);
+		if (input != null)
+			return codeResolve(input, (ITextSelection) editor.getSelectionProvider().getSelection());
+		return EMPTY_RESULT;
+	}
 	
-	private static IModelElement[] performForkedCodeResolve(final IModelElement input, final ITextSelection selection) throws InvocationTargetException, InterruptedException {
+	/**
+	 * Perform a code resolve in a separate thread.
+	 * 
+	 * @param editor the editor
+	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
+	 * @return the resolved elements
+	 * @throws InterruptedException 
+	 * @throws InvocationTargetException 
+	 * @since 3.2
+	 */
+	public static IModelElement[] codeResolveForked(PHPStructuredEditor editor, boolean primaryOnly) throws InvocationTargetException, InterruptedException {
+		ISourceModule input= getInput(editor, primaryOnly);
+		if (input != null)
+			return performForkedCodeResolve(input, (ITextSelection) editor.getSelectionProvider().getSelection());
+		return EMPTY_RESULT;
+	}
+			
+	public static IModelElement getElementAtOffset(PHPStructuredEditor editor) throws ModelException {
+		return getElementAtOffset(editor, true);
+	}
+	
+	/**
+	 * Returns the element surrounding the selection of the given editor.
+	 * 
+	 * @param editor the editor
+	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
+	 * @return the element surrounding the current selection
+	 * @throws ModelException 
+	 * @since 3.2
+	 */
+	private static IModelElement getElementAtOffset(PHPStructuredEditor editor, boolean primaryOnly) throws ModelException {
+		ISourceModule input= getInput(editor, primaryOnly);
+		if (input != null)
+			return getElementAtOffset(input, (ITextSelection) editor.getSelectionProvider().getSelection());
+		return null;
+	}
+	
+	public static IType getTypeAtOffset(PHPStructuredEditor editor) throws ModelException {
+		IModelElement element= SelectionConverter.getElementAtOffset(editor);
+		IType type= (IType)element.getAncestor(IModelElement.TYPE);
+		if (type == null) {
+			ISourceModule unit= SelectionConverter.getInputAsCompilationUnit(editor);
+			if (unit != null) {
+				final IType[] allTypes = unit.getAllTypes();
+				if (allTypes != null && allTypes.length > 0) {
+					type= allTypes[0];
+				}
+			}
+				
+		}
+		return type;
+	}
+	
+	public static ISourceModule getInput(PHPStructuredEditor editor) {
+		return getInput(editor, true);
+	}
+	
+	/**
+	 * Returns the input element of the given editor
+	 * 
+	 * @param editor the Java editor
+	 * @param primaryOnly if <code>true</code> only primary working copies will be returned
+	 * @return the type root which is the editor input
+	 * @since 3.2
+	 */
+	private static ISourceModule getInput(PHPStructuredEditor editor, boolean primaryOnly) {
+		if (editor == null)
+			return null;
+		return (ISourceModule) EditorUtility.getEditorInputPhpElement(editor, primaryOnly);
+	}
+	
+	public static ISourceModule getInputAsTypeRoot(PHPStructuredEditor editor) {
+		return SelectionConverter.getInput(editor);
+	}
+	
+	public static ISourceModule getInputAsCompilationUnit(PHPStructuredEditor editor) {
+		Object editorInput= SelectionConverter.getInput(editor);
+		if (editorInput instanceof ISourceModule)
+			return (ISourceModule)editorInput;
+		return null;
+	}
+
+	private static IModelElement[] performForkedCodeResolve(final ISourceModule input, final ITextSelection selection) throws InvocationTargetException, InterruptedException {
 		final class CodeResolveRunnable implements IRunnableWithProgress {
 			IModelElement[] result;
 			public void run(IProgressMonitor monitor) throws InvocationTargetException {
 				try {
-					result= org.eclipse.dltk.internal.ui.actions.SelectionConverter.codeResolve(input, selection);
+					result= codeResolve(input, selection);
 				} catch (ModelException e) {
 					throw new InvocationTargetException(e);
 				}
@@ -280,5 +222,104 @@ public class SelectionConverter {
 		CodeResolveRunnable runnable= new CodeResolveRunnable();
 		PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
 		return runnable.result;
+	}
+
+	public static IModelElement[] codeResolve(IModelElement input, ITextSelection selection) throws ModelException {
+			if (input instanceof ICodeAssist) {
+				if (input instanceof ISourceModule) {
+					ScriptModelUtil.reconcile((ISourceModule) input);
+				}
+				IModelElement[] elements= ((ICodeAssist)input).codeSelect(selection.getOffset() + selection.getLength(), 0);
+				if (elements.length > 0) {
+					return elements;
+				}
+			}
+			return EMPTY_RESULT;
+	}
+	
+	public static IModelElement getElementAtOffset(ISourceModule input, ITextSelection selection) throws ModelException {
+		if (input instanceof ISourceModule) {
+			ScriptModelUtil.reconcile((ISourceModule) input);
+		}
+		IModelElement ref= input.getElementAt(selection.getOffset());
+		if (ref == null)
+			return input;
+		return ref;
+	}
+	
+//	public static IModelElement[] resolveSelectedElements(IModelElement input, ITextSelection selection) throws ModelException {
+//		IModelElement enclosing= resolveEnclosingElement(input, selection);
+//		if (enclosing == null)
+//			return EMPTY_RESULT;
+//		if (!(enclosing instanceof ISourceReference))
+//			return EMPTY_RESULT;
+//		ISourceRange sr= ((ISourceReference)enclosing).getSourceRange();
+//		if (selection.getOffset() == sr.getOffset() && selection.getLength() == sr.getLength())
+//			return new IModelElement[] {enclosing};
+//	}
+	
+	public static IModelElement resolveEnclosingElement(PHPStructuredEditor editor, ITextSelection selection) throws ModelException {
+		ISourceModule input= getInput(editor);
+		if (input != null)
+			return resolveEnclosingElement(input, selection);
+		return null;
+	}
+	
+	public static IModelElement resolveEnclosingElement(IModelElement input, ITextSelection selection) throws ModelException {
+		IModelElement atOffset= null;
+		if (input instanceof ISourceModule) {
+			ISourceModule cunit= (ISourceModule)input;
+			ScriptModelUtil.reconcile(cunit);
+			atOffset= cunit.getElementAt(selection.getOffset());
+		} else {
+			return null;
+		}
+		if (atOffset == null) {
+			return input;
+		} else {
+			int selectionEnd= selection.getOffset() + selection.getLength();
+			IModelElement result= atOffset;
+			if (atOffset instanceof ISourceReference) {
+				ISourceRange range= ((ISourceReference)atOffset).getSourceRange();
+				while (range.getOffset() + range.getLength() < selectionEnd) {
+					result= result.getParent();
+					if (! (result instanceof ISourceReference)) {
+						result= input;
+						break;
+					}
+					range= ((ISourceReference)result).getSourceRange();
+				}
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * Shows a dialog for resolving an ambiguous Java element. Utility method that can be called by subclasses.
+	 * 
+	 * @param elements the elements to select from
+	 * @param shell the parent shell
+	 * @param title the title of the selection dialog
+	 * @param message the message of the selection dialog
+	 * @return returns the selected element or <code>null</code> if the dialog has been cancelled
+	 */
+	public static IModelElement selectJavaElement(IModelElement[] elements, Shell shell, String title, String message) {
+		int nResults= elements.length;
+		if (nResults == 0)
+			return null;
+		if (nResults == 1)
+			return elements[0];
+		
+		int flags= ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED | ModelElementLabelProvider.SHOW_ROOT;
+						
+		ElementListSelectionDialog dialog= new ElementListSelectionDialog(shell, new ModelElementLabelProvider(flags));
+		dialog.setTitle(title);
+		dialog.setMessage(message);
+		dialog.setElements(elements);
+		
+		if (dialog.open() == Window.OK) {
+			return (IModelElement) dialog.getFirstResult();
+		}		
+		return null;
 	}
 }

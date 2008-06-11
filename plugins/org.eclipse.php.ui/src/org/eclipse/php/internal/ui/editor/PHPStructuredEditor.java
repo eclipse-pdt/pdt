@@ -762,7 +762,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		public void windowActivated(IWorkbenchWindow window) {
 			if (window == getEditorSite().getWorkbenchWindow() && fMarkOccurrenceAnnotations && isActivePart()) {
 				fForcedMarkOccurrencesSelection = getSelectionProvider().getSelection();
-				IModelElement sourceModule = getInputModelElement();
+				IModelElement sourceModule = getModelElement();
 				if (sourceModule != null && sourceModule.getElementType() == IModelElement.SOURCE_MODULE) {
 					try {
 						updateOccurrenceAnnotations((ITextSelection) fForcedMarkOccurrencesSelection, SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_NO, getProgressMonitor()));
@@ -2718,7 +2718,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	public void aboutToBeReconciled() {
 
 		// Notify AST provider
-		PHPUiPlugin.getDefault().getASTProvider().aboutToBeReconciled((ISourceModule) getInputModelElement());
+		PHPUiPlugin.getDefault().getASTProvider().aboutToBeReconciled((ISourceModule) getModelElement());
 
 		// Notify listeners
 		Object[] listeners = fReconcilingListeners.getListeners();
@@ -2739,7 +2739,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			return;
 
 		// Always notify AST provider
-		ISourceModule inputModelElement = (ISourceModule) getInputModelElement();
+		ISourceModule inputModelElement = (ISourceModule) getModelElement();
 		// TODO: notify AST provider
 		phpPlugin.getASTProvider().reconciled(ast, inputModelElement, progressMonitor);
 
@@ -2750,12 +2750,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	/**
-	 * Returns the model element wrapped by this editors input.
+	 * Returns the model element wrapped by this editors input. 
+	 * Most likely to be the relevant source module
 	 * 
 	 * @return the model element wrapped by this editors input.
 	 * 
 	 */
-	public IModelElement getInputModelElement() {
+	public IModelElement getModelElement() {
 		return EditorUtility.getEditorInputModelElement(this, false);
 	}
 
@@ -2784,7 +2785,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * @return the most narrow element which includes the given offset
 	 */
 	protected IModelElement getElementAt(int offset, boolean reconcile) {
-		ISourceModule unit = (ISourceModule) getInputModelElement();
+		ISourceModule unit = (ISourceModule) getModelElement();
 		if (unit != null) {
 			try {
 				if (reconcile) {
@@ -2973,7 +2974,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			return;
 		}
 		IAnnotationModel model = getDocumentProvider().getAnnotationModel(getEditorInput());
-		final IModelElement inputElement = getInputModelElement();
+		final IModelElement inputElement = getModelElement();
 		if (model == null || inputElement == null || inputElement.getElementType() != IModelElement.SOURCE_MODULE)
 			return;
 
@@ -3002,7 +3003,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		SelectionListenerWithASTManager.getDefault().addListener(this, fPostSelectionListenerWithAST);
 		if (forceUpdate && getSelectionProvider() != null) {
 			fForcedMarkOccurrencesSelection = getSelectionProvider().getSelection();
-			IModelElement source = getInputModelElement();
+			IModelElement source = getModelElement();
 			if ((source != null) && source.getElementType() == IModelElement.SOURCE_MODULE) {
 				try {
 					final Program ast = SharedASTProvider.getAST((ISourceModule) source, SharedASTProvider.WAIT_NO, getProgressMonitor());

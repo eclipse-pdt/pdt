@@ -133,7 +133,7 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
      * Method declared on SelectionDispatchAction.
      */
 	public void run(ITextSelection selection) {
-        IModelElement input= SelectionConverter.getModelInput(fEditor);
+		ISourceModule input= SelectionConverter.getInput(fEditor);
         if (!ActionUtil.isProcessable(getShell(), input))
             return;     
         

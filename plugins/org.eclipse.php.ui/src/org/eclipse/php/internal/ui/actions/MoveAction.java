@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -167,7 +169,12 @@ public class MoveAction extends SelectionDispatchAction {
 	}
 
 	private boolean tryReorgMove(ITextSelection selection) {
-		PHPCodeData element = SelectionConverter.getElementAtOffset(fEditor);
+		IModelElement element;
+		try {
+			element = SelectionConverter.getElementAtOffset(fEditor);
+		} catch (ModelException e) {
+			return false;
+		}
 		if (element == null)
 			return false;
 		IStructuredSelection mockStructuredSelection = new StructuredSelection(element);

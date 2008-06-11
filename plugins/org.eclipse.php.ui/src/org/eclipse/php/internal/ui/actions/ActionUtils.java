@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
@@ -125,8 +126,8 @@ public class ActionUtils {
 		return resources.toArray();
 	}
 
-	public static boolean isPHPSource(PHPCodeData element) {
-		IResource resource = PHPModelUtil.getResource(element);
+	public static boolean isPHPSource(ISourceModule element) {
+		IResource resource = element.getResource();
 		if (resource == null) {
 			return false;
 		} else if (resource instanceof IFile && ExternalFilesRegistry.getInstance().isEntryExist((IFile) resource)) {
@@ -146,10 +147,10 @@ public class ActionUtils {
 	}
 
 	public static boolean isProcessable(Shell shell, Object element) {
-		if (!(element instanceof PHPCodeData))
+		if (!(element instanceof ISourceModule))
 			return true;
 
-		if (isPHPSource((PHPCodeData) element))
+		if (isPHPSource((ISourceModule) element))
 			return true;
 
 		return false;
@@ -158,11 +159,10 @@ public class ActionUtils {
 	public static boolean isProcessable(Shell shell, PHPStructuredEditor editor) {
 		if (editor == null)
 			return true;
-		PHPFileData input = SelectionConverter.getInput(editor);
+		ISourceModule input = SelectionConverter.getInput(editor);
 		// if a PHP editor doesn't have an input of type PHP element
 		// then it is for sure not on the build path
 		if (input == null) {
-
 			return false;
 		}
 		return isProcessable(shell, input);

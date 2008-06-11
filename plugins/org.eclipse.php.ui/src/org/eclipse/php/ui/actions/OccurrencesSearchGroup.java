@@ -180,7 +180,7 @@ public class OccurrencesSearchGroup extends ActionGroup  {
 		if (fEditor == null)
 			return;
 		
-		IModelElement element= SelectionConverter.getModelInput(fEditor);
+		IModelElement element= SelectionConverter.getInput(fEditor);
 		if (element == null)
 			return;
 

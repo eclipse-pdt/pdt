@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -211,7 +212,7 @@ public class RefactorActionGroup extends ActionGroup {
 		if (refactorSubmenu == null)
 			refactorSubmenu = new MenuManager(menuText, MENU_ID);
 		if (fEditor != null) {
-			PHPFileData element = SelectionConverter.getInput(fEditor);
+			ISourceModule element = SelectionConverter.getInput(fEditor);
 			if (element != null && ActionUtils.isPHPSource(element)) {
 				refactorSubmenu.addMenuListener(new IMenuListener() {
 					public void menuAboutToShow(IMenuManager manager) {

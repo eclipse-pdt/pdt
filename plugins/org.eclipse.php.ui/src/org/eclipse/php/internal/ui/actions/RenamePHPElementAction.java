@@ -11,16 +11,16 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
 import org.eclipse.ui.IWorkbenchSite;
-
 
 public class RenamePHPElementAction extends SelectionDispatchAction {
 
@@ -51,23 +51,23 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 	}
 
 	private static boolean canEnable(IStructuredSelection selection) throws CoreException {
-		PHPCodeData element = getPHPElement(selection);
+		IModelElement element = getPHPElement(selection);
 		if (element == null)
 			return false;
 		return isRenameAvailable(element);
 	}
 
-	private static PHPCodeData getPHPElement(IStructuredSelection selection) {
+	private static IModelElement getPHPElement(IStructuredSelection selection) {
 		if (selection.size() != 1)
 			return null;
 		Object first = selection.getFirstElement();
-		if (!(first instanceof PHPCodeData))
+		if (!(first instanceof IModelElement))
 			return null;
-		return (PHPCodeData) first;
+		return (IModelElement) first;
 	}
 
 	public void run(IStructuredSelection selection) {
-		PHPCodeData element = getPHPElement(selection);
+		IModelElement element = getPHPElement(selection);
 		if (element == null) {
 			super.run(selection);
 			return;
@@ -87,7 +87,7 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	public void run(ITextSelection selection) {
 		try {
-			PHPCodeData element = getPHPElement();
+			IModelElement element = getPHPElement();
 			if (element != null && isRenameAvailable(element)) {
 				run(element);
 				return;
@@ -98,8 +98,8 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		MessageDialog.openInformation(getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"), PHPUIMessages.getString("RenamePHPElementAction_not_available"));
 	}
 
-	public boolean canRun() {
-		PHPCodeData element = getPHPElement();
+	public boolean canRun() throws ModelException {
+		IModelElement element = getPHPElement();
 		if (element == null)
 			return false;
 		try {
@@ -110,8 +110,8 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 		return false;
 	}
 
-	private PHPCodeData getPHPElement() {
-		PHPCodeData[] elements = SelectionConverter.codeResolveHandled(fEditor, getShell(), PHPUIMessages.getString("RenamePHPElementAction_name"));
+	private IModelElement getPHPElement() throws ModelException {
+		IModelElement[] elements = SelectionConverter.codeResolve(fEditor);
 		if (elements == null || elements.length != 1)
 			return null;
 		return elements[0];
@@ -119,14 +119,14 @@ public class RenamePHPElementAction extends SelectionDispatchAction {
 
 	//---- helper methods -------------------------------------------------------------------
 
-	private void run(PHPCodeData element) throws CoreException {
+	private void run(IModelElement element) throws CoreException {
 		if (!ActionUtils.isProcessable(getShell(), element))
 			return;
 		throw new RuntimeException(PHPUIMessages.getString("RenamePHPElementAction.0")); //$NON-NLS-1$
 	}
 
-	private static boolean isRenameAvailable(PHPCodeData element) throws CoreException {
-		// do something here
+	private static boolean isRenameAvailable(IModelElement element) throws CoreException {
+		// TODO do something here
 		return false;
 	}
 

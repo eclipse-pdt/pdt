@@ -376,7 +376,7 @@ public class SemanticHighlightingReconciler implements IPhpScriptReconcilingList
 	 * Schedule a background job for retrieving the AST and reconciling the Semantic Highlighting model.
 	 */
 	private void scheduleJob() {
-		final ISourceModule element= (ISourceModule) fEditor.getInputModelElement();
+		final ISourceModule element= (ISourceModule) fEditor.getModelElement();
 
 		synchronized (fJobLock) {
 			final Job oldJob= fJob;
