@@ -22,8 +22,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -74,10 +72,6 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 				IProject project = null;
 				Object obj = search[i];
 
-				//TODO: if IProject, offer choices?
-				if (obj instanceof PHPCodeData) {
-					obj = PHPModelUtil.getResource(obj);
-				}
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
 					project = file.getProject();
