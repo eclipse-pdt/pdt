@@ -11,7 +11,9 @@
 package org.eclipse.php.internal.ui.editor.configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -47,11 +49,11 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.autoEdit.CloseTagAutoEditStrategyPHP;
 import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
-import org.eclipse.php.internal.ui.editor.PHPCodeHyperlinkDetector;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
+import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
 import org.eclipse.php.internal.ui.text.PHPInformationElementProvider;
 import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
@@ -86,23 +88,9 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private String[] configuredContentTypes;
 	private LineStyleProvider fLineStyleProvider;
-	private final List<IHyperlinkDetectorForPHP> detectors;
 	private StructuredContentAssistant fContentAssistant = null;
 
 	public PHPStructuredTextViewerConfiguration() {
-		detectors = new ArrayList<IHyperlinkDetectorForPHP>();
-		detectors.add(new PHPCodeHyperlinkDetector());
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(HYPERLINK_DETECTOR_EXT);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("detector")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, HYPERLINK_DETECTOR_EXT);
-				IHyperlinkDetectorForPHP detector = (IHyperlinkDetectorForPHP) ecProxy.getObject();
-				if (detector != null) {
-					detectors.add(detector);
-				}
-			}
-		}
 	}
 
 	/*
@@ -322,14 +310,26 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		if (!fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
 
+		List<IHyperlinkDetector> detectors = new LinkedList<IHyperlinkDetector>();
 		IHyperlinkDetector[] inheritedDetectors = super.getHyperlinkDetectors(sourceViewer);
+		if (inheritedDetectors != null) {
+			detectors.addAll(Arrays.asList(inheritedDetectors));
+		}
 
-		int inheritedDetectorsLength = inheritedDetectors != null ? inheritedDetectors.length : 0;
-		IHyperlinkDetector[] detectors = new IHyperlinkDetector[inheritedDetectorsLength + this.detectors.size()];
-		this.detectors.toArray(detectors);
-		System.arraycopy(inheritedDetectors, 0, detectors, this.detectors.size(), inheritedDetectorsLength);
-
-		return detectors;
+		detectors.add(new PHPHyperlinkDetector(((PHPStructuredTextViewer)sourceViewer).getTextEditor()));
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(HYPERLINK_DETECTOR_EXT);
+		for (int i = 0; i < elements.length; i++) {
+			IConfigurationElement element = elements[i];
+			if (element.getName().equals("detector")) { //$NON-NLS-1$
+				ElementCreationProxy ecProxy = new ElementCreationProxy(element, HYPERLINK_DETECTOR_EXT);
+				IHyperlinkDetectorForPHP detector = (IHyperlinkDetectorForPHP) ecProxy.getObject();
+				if (detector != null) {
+					detectors.add(detector);
+				}
+			}
+		}
+		
+		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
 	@Override

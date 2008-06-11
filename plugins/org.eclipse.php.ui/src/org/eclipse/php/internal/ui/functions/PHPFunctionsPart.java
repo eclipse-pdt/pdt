@@ -111,7 +111,8 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				ISelection selection = fViewer.getSelection();
 				if (!selection.isEmpty()) {
 					IStructuredSelection s = (IStructuredSelection) selection;
-					String url = PHPManualFactory.getManual().getURLForManual((PHPCodeData)s.getFirstElement());
+					// XXX: uncomment this when functions view will be moved to DLTK format
+					String url = null; //PHPManualFactory.getManual().getURLForManual((PHPCodeData)s.getFirstElement());
 					if (url != null) {
 						showFunctionHelpAction.setURL(url);
 						mgr.add(showFunctionHelpAction);
