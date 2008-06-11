@@ -35,8 +35,6 @@ import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -167,10 +165,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				IProject project = null;
 				Object obj = search[i];
 
-				//TODO: if IProject, offer choices?
-				if (obj instanceof PHPCodeData) {
-					obj = PHPModelUtil.getResource(obj);
-				}
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
 					project = file.getProject();
