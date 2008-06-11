@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 /**
  * 
  */
@@ -6,10 +16,10 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -134,7 +144,12 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * Returns the {@link IEvaluatedType} according to the offset and the length.
 	 */
 	protected IEvaluatedType getEvaluatedType(int offset, int length) {
-		return bindingUtil.getType(offset, length);
+		try {
+			return bindingUtil.getType(offset, length);
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
 	}
 
 	/**
@@ -162,7 +177,12 @@ public class DefaultBindingResolver extends BindingResolver {
 	 * @see BindingUtility#getModelElement(int, int, boolean)
 	 */
 	public IModelElement[] getModelElements(int offset, int length, boolean filter) {
-		return bindingUtil.getModelElement(offset, length, filter);
+		try {
+			return bindingUtil.getModelElement(offset, length, filter);
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -251,7 +271,13 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	ITypeBinding getTypeBinding(SingleFieldDeclaration fieldDeclaration) {
-		final IModelElement[] modelElements = this.bindingUtil.getModelElement(fieldDeclaration.getStart(), fieldDeclaration.getLength());
+		IModelElement[] modelElements;
+		try {
+			modelElements = this.bindingUtil.getModelElement(fieldDeclaration.getStart(), fieldDeclaration.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
 
 		if (modelElements.length > 0) {
 			for (IModelElement type : modelElements) {

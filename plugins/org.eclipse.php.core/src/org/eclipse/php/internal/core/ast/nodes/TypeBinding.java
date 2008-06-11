@@ -448,6 +448,9 @@ public class TypeBinding implements ITypeBinding {
 	 *    and <code>false</code> otherwise
 	 */
 	public boolean isClass() {
+		if (isUnknown()) {
+			return false;
+		}
 		return type.getClass() == PHPClassType.class;
 	}
 

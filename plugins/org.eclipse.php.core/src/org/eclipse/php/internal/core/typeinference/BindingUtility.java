@@ -2,6 +2,7 @@ package org.eclipse.php.internal.core.typeinference;
 
 import java.util.*;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -66,11 +67,12 @@ public class BindingUtility {
 	 *
 	 * @param node AST node that needs to be evaluated.
 	 * @return evaluated type.
+	 * @throws ModelException 
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
 	 * @throws NullPointerException if the given node is <code>null</code>.
 	 */
-	public IEvaluatedType getType(ASTNode node) {
+	public IEvaluatedType getType(ASTNode node) throws ModelException {
 		if (node == null) {
 			throw new NullPointerException();
 		}
@@ -109,7 +111,7 @@ public class BindingUtility {
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
 	 */
-	public IEvaluatedType getType(int startOffset, int length) {
+	public IEvaluatedType getType(int startOffset, int length) throws ModelException {
 		return getType(new SourceRange(startOffset, length));
 	}
 
@@ -118,21 +120,20 @@ public class BindingUtility {
 		return typeInferencer.evaluateType(new ExpressionTypeGoal(context, node), timeLimit);
 	}
 
-	protected ContextFinder getContext(SourceRange sourceRange) {
+	protected ContextFinder getContext(SourceRange sourceRange) throws ModelException {
 		ContextFinder contextFinder = new ContextFinder(sourceRange);
 		try {
 			rootNode.traverse(contextFinder);
 		} catch (Exception e) {
-			Logger.logException(e);
-			return null;
+			throw new ModelException(e, IStatus.ERROR);
 		}
 		if (contextFinder.getNode() == null) {
-			throw new IllegalArgumentException("AST node can not be found for the given source range: " + sourceRange);
+			throw new ModelException(new IllegalArgumentException("AST node can not be found for the given source range: " + sourceRange), IStatus.ERROR);
 		}
 		return contextFinder;
 	}
 
-	protected IEvaluatedType getType(SourceRange sourceRange) {
+	protected IEvaluatedType getType(SourceRange sourceRange) throws ModelException {
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			ContextFinder contextFinder = getContext(sourceRange);
 			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
@@ -146,11 +147,12 @@ public class BindingUtility {
 	 *
 	 * @param node AST node that needs to be evaluated.
 	 * @return model element or <code>null</code> in case it couldn't be found
+	 * @throws ModelException 
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
 	 * @throws NullPointerException if the given node is <code>null</code>.
 	 */
-	public IModelElement[] getModelElement(ASTNode node) {
+	public IModelElement[] getModelElement(ASTNode node) throws ModelException {
 		if (node == null) {
 			throw new NullPointerException();
 		}
@@ -187,11 +189,12 @@ public class BindingUtility {
 	 * @param startOffset Starting offset of the expression.
 	 * @param length Length of the expression.
 	 * @return model element or <code>null</code> in case it couldn't be found
+	 * @throws ModelException 
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
 	 * @see #getModelElement(int, int, boolean)
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length) {
+	public IModelElement[] getModelElement(int startOffset, int length) throws ModelException {
 		return getModelElement(startOffset, length, true);
 	}
 
@@ -203,14 +206,15 @@ public class BindingUtility {
 	 * @param length Length of the expression.
 	 * @param filter Filter the results using the 'File-Network'.
 	 * @return model element or <code>null</code> in case it couldn't be found
+	 * @throws ModelException 
 	 *
 	 * @throws IllegalArgumentException in case if context cannot be found for the given node.
 	 */
-	public IModelElement[] getModelElement(int startOffset, int length, boolean filter) {
+	public IModelElement[] getModelElement(int startOffset, int length, boolean filter) throws ModelException {
 		return getModelElement(new SourceRange(startOffset, length), filter);
 	}
 
-	protected IModelElement[] getModelElement(SourceRange sourceRange, boolean filter) {
+	protected IModelElement[] getModelElement(SourceRange sourceRange, boolean filter) throws ModelException {
 		ContextFinder contextFinder = getContext(sourceRange);
 		if (!evaluatedTypesCache.containsKey(sourceRange)) {
 			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
