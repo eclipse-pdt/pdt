@@ -13,8 +13,10 @@ package org.eclipse.php.internal.ui.wizards;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.php.internal.ui.preferences.IStatusChangeListener;
-import org.eclipse.php.internal.ui.preferences.includepath.IncludePathBlock;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.ui.util.IStatusChangeListener;
+import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,7 +29,7 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 
 public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimpleWebModuleCreationDataModelProperties,*/IStatusChangeListener {
 
-	protected IncludePathBlock fIncludePathsBlock;
+	protected PHPBuildPathsBlock fIncludePathsBlock;
 
 	public PHPIncludePathPage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
@@ -39,12 +41,13 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 	}
 
 	protected void createIncludePathsBlock() {
-		fIncludePathsBlock = new IncludePathBlock(new BusyIndicatorRunnableContext(), this, 1, false, null);
+		fIncludePathsBlock = new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), this, 1, false, null);
 		fIncludePathsBlock.init(getDummyProject(), null);
 	}
 
-	public IProject getDummyProject() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
+	public IScriptProject getDummyProject() {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
+		return DLTKCore.create(project);
 	}
 
 	protected void setSize(Composite composite) {
@@ -98,7 +101,7 @@ public class PHPIncludePathPage extends DataModelWizardPage implements /*ISimple
 	protected void setHelpContext(Composite parent) {
 	}
 
-	public IncludePathBlock getIncludePathsBlock() {
+	public PHPBuildPathsBlock getIncludePathsBlock() {
 		return fIncludePathsBlock;
 	}
 

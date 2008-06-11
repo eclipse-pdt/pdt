@@ -136,7 +136,7 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 			}
 		}
 
-		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathPage.getIncludePathsBlock().getIncludepathEntries());
+		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathPage.getIncludePathsBlock().getRawBuildPath());
 		basePage.setProjectOptionInModel(getDataModel());
 
 		return super.prePerformFinish();

@@ -463,8 +463,8 @@
         </page>
 		<page
 			name="%page.name.0"
-			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathPropertyPage"
-			id="org.eclipse.php.ui.propertyPages.IncludePathPropertyPage">
+			class="org.eclipse.php.internal.ui.preferences.includepath.BuildpathProperties"
+			id="org.eclipse.php.ui.propertyPages.BuildpathProperties">
     		<enabledWhen>
 		     <adapt type="org.eclipse.core.resources.IProject">
 		     </adapt>         
