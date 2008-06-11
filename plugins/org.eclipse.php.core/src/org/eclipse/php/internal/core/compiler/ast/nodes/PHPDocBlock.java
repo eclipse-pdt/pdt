@@ -1,5 +1,8 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTVisitor;
 
 public class PHPDocBlock extends Comment {
@@ -33,6 +36,18 @@ public class PHPDocBlock extends Comment {
 
 	public PHPDocTag[] getTags() {
 		return tags;
+	}
+	
+	public PHPDocTag[] getTags(int kind) {
+		List<PHPDocTag> res = new LinkedList<PHPDocTag>();
+		if (tags != null) {
+			for (PHPDocTag tag : tags) {
+				if (tag.getTagKind() == kind) {
+					res.add(tag);
+				}
+			}
+		}
+		return res.toArray(new PHPDocTag[res.size()]);
 	}
 
 	public void adjustStart(int start){
