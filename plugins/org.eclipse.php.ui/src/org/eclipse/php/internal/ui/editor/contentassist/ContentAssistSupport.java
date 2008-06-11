@@ -443,7 +443,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			final String type = internalPhpRegion.getType();
 
 			if (startsWith.startsWith("$") && !inClass) { //$NON-NLS-1$
-				boolean autoShowVariables = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+				boolean autoShowVariables = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
 				if (!explicit && !autoShowVariables)
 					return;
 				try {
@@ -484,7 +484,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		CodeData[] constants = null;
 		CodeData[] keywords = null;
 
-		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+		boolean autoShowFunctionsKeywordsConstants = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		if ((explicit || autoShowFunctionsKeywordsConstants) && !inClass) {
 			if (startsWith.length() == 0)
 				functions = projectModel.getFunctions();
@@ -511,7 +511,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 		if (!inClass) {
 			boolean showClassNamesInGlobalList = preferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION);
 			if (showClassNamesInGlobalList) {
-				boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+				boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 				if (explicit || autoShowClassNames) {
 					classes = projectModel.getClasses();
 				}
@@ -757,8 +757,8 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 		// collecting multiple classes in case class name has string separated by "|", which may be used in doc-block
 		String[] classNames = className.split(PHPModelUtil.PHPDOC_CLASS_NAME_SEPARATOR);
-		boolean autoShowVariables = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
-		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+		boolean autoShowVariables = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+		boolean autoShowFunctionsKeywordsConstants = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		for (String realClassName : classNames) {
 			realClassName = realClassName.trim();
 			if (explicit || autoShowFunctionsKeywordsConstants) {
@@ -782,7 +782,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected void showClassStaticCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit) {
 		CodeData[] functions = null;
-		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+		boolean autoShowFunctionsKeywordsConstants = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, ""); //$NON-NLS-1$
 			String phpVersion = projectModel.getPHPLanguageModel().getPHPVersion();
@@ -793,7 +793,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			}
 		}
 		CodeData[] classVariables = null;
-		boolean autoShowVariables = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
+		boolean autoShowVariables = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES);
 		if (explicit || autoShowVariables) {
 			classVariables = ModelSupport.merge(projectModel.getClassVariables(fileName, className, ""), projectModel.getClassConsts(fileName, className, "")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -804,7 +804,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	protected void showParentCall(PHPProjectModel projectModel, String fileName, int offset, String className, String startWith, int selectionLength, boolean explicit, boolean isStrict) {
 		CodeData[] functions = null;
-		boolean autoShowFunctionsKeywordsConstants = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
+		boolean autoShowFunctionsKeywordsConstants = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS);
 		if (explicit || autoShowFunctionsKeywordsConstants) {
 			functions = projectModel.getClassFunctions(fileName, className, startWith.length() == 0 ? "" : startWith); //$NON-NLS-1$
 		}
@@ -1073,7 +1073,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showInterfaceList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
-		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1095,7 +1095,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showExtendsImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
-		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1131,7 +1131,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showImplementsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
-		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1163,7 +1163,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	private void showExtendsList(PHPProjectModel projectModel, String startWith, int offset, int selectionLength, boolean explicit) {
-		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1196,7 +1196,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 			showInterfaceList(projectModel, startWith, offset, selectionLength, explicit);
 			return;
 		}
-		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}
@@ -1266,7 +1266,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected void showClassList(PHPProjectModel projectModel, PHPFileData fileData, String startWith, int offset, int selectionLength, States state, boolean explicit) {
-		boolean autoShowClassNames = preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
+		boolean autoShowClassNames = true; //preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES);
 		if (!explicit && !autoShowClassNames) {
 			return;
 		}

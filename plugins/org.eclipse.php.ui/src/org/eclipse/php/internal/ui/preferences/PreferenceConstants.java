@@ -983,13 +983,9 @@ public class PreferenceConstants {
 		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
 		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
 		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_SIZE_LIMIT, 500);
 		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
 		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
 		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, true);
 
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);

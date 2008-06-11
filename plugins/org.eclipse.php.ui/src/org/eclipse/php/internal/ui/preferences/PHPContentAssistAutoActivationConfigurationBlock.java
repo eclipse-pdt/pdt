@@ -45,11 +45,8 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 			public void widgetSelected(SelectionEvent e) {
 				boolean autoActivateSectionEnabled = ((Button) e.widget).getSelection();
 				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
-				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_CLASS_NAMES, autoActivateSectionEnabled);
-				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_VARIABLES, autoActivateSectionEnabled);
-				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_FOR_FUNCTIONS_KEYWORDS_CONSTANTS, autoActivateSectionEnabled);
 				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, autoActivateSectionEnabled);
-//				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
+				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 			}
 		});
 
