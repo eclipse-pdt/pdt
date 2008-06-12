@@ -74,6 +74,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	public IModelElement[] select(ISourceModule sourceUnit, int offset, int end) {
+		
+		if (end < offset) {
+			end = offset + 1;
+		}
 
 		// First, try to resolve using AST (if we have parsed it well):
 		IModelElement[] elements = internalASTResolve(sourceUnit, offset, end);
