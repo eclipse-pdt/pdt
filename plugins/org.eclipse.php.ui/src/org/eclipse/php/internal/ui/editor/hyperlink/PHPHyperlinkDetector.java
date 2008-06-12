@@ -59,15 +59,16 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 
 			IModelElement[] elements = null;
 			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
-			if (elements != null && elements.length > 0) {
-				final IHyperlink link;
-				if (elements.length == 1) {
-					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(fEditor));
-				} else {
-					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements), new OpenAction(fEditor));
-				}
-				return new IHyperlink[] { link };
-			}
+			// TODO: uncomment when new DLTK nightly build releases
+//			if (elements != null && elements.length > 0) {
+//				final IHyperlink link;
+//				if (elements.length == 1) {
+//					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(fEditor));
+//				} else {
+//					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements), new OpenAction(fEditor));
+//				}
+//				return new IHyperlink[] { link };
+//			}
 		} catch (ModelException e) {
 			return null;
 		}
