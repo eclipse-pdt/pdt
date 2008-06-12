@@ -41,6 +41,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ListVariable;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 public class PHPMixinBuildVisitor extends ASTVisitor {
@@ -309,19 +310,6 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		report(key, PHPMixinElementInfo.createPHPDocForConstant(phpDocField));
 	}
 
-	/**
-	 * Strips single or double quotes from the start and from the end of the given string
-	 * @param name String
-	 * @return
-	 */
-	private static String stripQuotes(String name) {
-		int len = name.length();
-		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
-			name = name.substring(1, len - 1);
-		}
-		return name;
-	}
-
 	protected IModelElement findModelElementFor(ASTNode decl) throws ModelException {
 		return sourceModule.getElementAt(decl.sourceStart() + 1);
 	}
@@ -383,12 +371,12 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 				ASTNode firstArg = (ASTNode) args.get(0);
 				if (firstArg instanceof Scalar) {
 					Scalar constant = (Scalar) firstArg;
-					String name = stripQuotes(constant.getValue());
+					String name = ASTUtils.stripQuotes(constant.getValue());
 					if (sourceModule != null) {
 						obj = new FakeField((ModelElement) sourceModule, name, constant.sourceStart(), constant.sourceEnd() - constant.sourceStart());
 					}
 					Scope scope = scopes.peek();
-					scope.reportConstant(stripQuotes(name), obj);
+					scope.reportConstant(ASTUtils.stripQuotes(name), obj);
 				}
 			}
 		}
@@ -434,7 +422,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			obj = (IField) element;
 		}
 		Scope scope = scopes.peek();
-		String newKey = scope.reportConstant(stripQuotes(name), obj);
+		String newKey = scope.reportConstant(ASTUtils.stripQuotes(name), obj);
 
 		PHPDocBlock doc = decl.getPHPDoc();
 		if (doc != null) {
@@ -496,7 +484,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			if (buffer != null) {
 				String text = buffer.getText(expr.sourceStart(), expr.sourceEnd() - expr.sourceStart());
 				Scope scope = scopes.peek();
-				scope.reportInclude(stripQuotes(text));
+				scope.reportInclude(ASTUtils.stripQuotes(text));
 			}
 		}
 		return visitGeneral(include);
