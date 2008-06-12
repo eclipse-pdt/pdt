@@ -24,6 +24,19 @@ import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class ASTUtils {
+	
+	/**
+	 * Strips single or double quotes from the start and from the end of the given string
+	 * @param name String
+	 * @return
+	 */
+	public static String stripQuotes(String name) {
+		int len = name.length();
+		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
+			name = name.substring(1, len - 1);
+		}
+		return name;
+	}
 
 	/**
 	 * Finds minimal ast node, that covers given position
@@ -335,10 +348,5 @@ public class ASTUtils {
 		}
 
 		return visitor.getContext();
-	}
-
-	public static String stripQuotes(String text) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
