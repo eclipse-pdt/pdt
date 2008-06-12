@@ -336,4 +336,9 @@ public class ASTUtils {
 
 		return visitor.getContext();
 	}
+
+	public static String stripQuotes(String text) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
