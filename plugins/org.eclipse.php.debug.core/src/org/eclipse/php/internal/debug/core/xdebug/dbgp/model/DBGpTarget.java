@@ -51,6 +51,8 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	private String ideKey;
 
 	private boolean webLaunch = false;
+	
+	private boolean multiSessionManaged = false;
 
 	// required for EXE target support
 	private IProcess process;
@@ -306,10 +308,13 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			setState(STATE_STARTED_RUNNING);
 			session.sendAsyncCmd(DBGpCommand.run);
 		} else {
-			// try to say we have suspended, then do a step_into
-			stepping = true;
-			setState(STATE_STARTED_RUNNING);				
-			session.sendAsyncCmd(DBGpCommand.stepInto);
+			//first say we are suspended on a breakpoint to trigger a perspective switch
+			//then do an initial step into to step onto the 1st line
+			suspended(DebugEvent.BREAKPOINT);
+			try {
+				stepInto();
+			} catch (DebugException e) {
+			}
 		}
 	}
 
@@ -356,7 +361,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getName()
 	 */
 	public String getName() throws DebugException {
-		if (webLaunch) {
+		if (isWebLaunch() || multiSessionManaged) {
 			return "Remote Launch";
 		} else {
 			if (scriptName == null) {
@@ -780,9 +785,15 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			// makes no difference, we should stop it
 			setState(STATE_DISCONNECTED);
 			if (session != null) {
-				if (!webLaunch) {
-					// not a web launch, we can just detach.
-					session.sendAsyncCmd(DBGpCommand.detach);
+				if (!isWebLaunch()) {
+					// not a web launch, but could be multi session so we 
+					// can't just detach
+					if (multiSessionManaged && session.getEngineType() == EngineTypes.Xdebug && versionCheckLT(session.getEngineVersion(), "2.0.2")) {
+						// we have to do a stop if xdebug and < 2.0.2
+						session.sendSyncCmd(DBGpCommand.stop);
+					} else {
+						session.sendAsyncCmd(DBGpCommand.detach);
+					}
 					terminateDebugTarget(false);
 				} else {
 					// detaching xdebug on apache prior to version 2.0.2
@@ -1990,5 +2001,13 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	public boolean isRunning() {
 		boolean isRunning = (STATE_STARTED_RUNNING == targetState);
 		return isRunning;
+	}
+
+	public boolean isMultiSessionManaged() {
+		return multiSessionManaged;
+	}
+
+	public void setMultiSessionManaged(boolean multiSessionManaged) {
+		this.multiSessionManaged = multiSessionManaged;
 	}	
 }

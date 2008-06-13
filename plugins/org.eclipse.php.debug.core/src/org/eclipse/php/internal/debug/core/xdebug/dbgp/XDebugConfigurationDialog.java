@@ -65,18 +65,18 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 	protected Control createDialogArea(Composite parent) {
 		parent = (Composite) super.createDialogArea(parent);
 		setTitle(PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings);
-		Composite composite = createSubsection(parent, PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings);		
-		addLabelControl(composite, PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort, XDebugUIAttributeConstants.XDEBUG_PREF_PORT); //$NON-NLS-1$
-		portTextBox = addNumTextField(composite, XDebugUIAttributeConstants.XDEBUG_PREF_PORT, 5, 2, false);
-		showGlobals = addCheckBox(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_showSuperGlobals, XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, 0);
-		addLabelControl(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_maxArrayDepth, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH);
-		variableDepth = addVariableLevel(composite, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, 1, 150, 2);		
-		useMultiSession = addCheckBox(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_useMultisession, XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, 0);
+		Composite[] subsections = createSubsections(parent, PHPDebugCoreMessages.XDebugConfigurationDialog_xdebugSettings,
+														PHPDebugCoreMessages.XDebugConfigurationDialog_proxyGroup);
 		
-		Composite proxySubSection = createSubsection(composite, PHPDebugCoreMessages.XDebugConfigurationDialog_proxyGroup);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;		
-		proxySubSection.setLayout(layout);
+		Composite mainSubSection = subsections[0];		
+		addLabelControl(mainSubSection, PHPDebugCoreMessages.DebuggerConfigurationDialog_debugPort, XDebugUIAttributeConstants.XDEBUG_PREF_PORT); //$NON-NLS-1$
+		portTextBox = addNumTextField(mainSubSection, XDebugUIAttributeConstants.XDEBUG_PREF_PORT, 5, 2, false);
+		showGlobals = addCheckBox(mainSubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_showSuperGlobals, XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, 0);
+		addLabelControl(mainSubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_maxArrayDepth, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH);
+		variableDepth = addVariableLevel(mainSubSection, XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, 1, 150, 2);		
+		useMultiSession = addCheckBox(mainSubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_useMultisession, XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, 0);
+		
+		Composite proxySubSection = subsections[1];
 		useProxy = addCheckBox(proxySubSection, PHPDebugCoreMessages.XDebugConfigurationDialog_useProxy, XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY, 0);
 		useProxy.addSelectionListener(new SelectionListener() {
 		public void widgetSelected(SelectionEvent e) {
@@ -94,7 +94,7 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		proxyTextBox = addATextField(proxySubSection, XDebugUIAttributeConstants.XDEBUG_PREF_PROXY, 100, 2);
 		
 		internalInitializeValues(); // Initialize the dialog's values.
-		return composite;
+		return parent;
 	}
 
 	private Text addNumTextField(Composite parent, String key, int textLimit, int horizontalIndent, boolean isTimeout) {
@@ -110,10 +110,42 @@ public class XDebugConfigurationDialog extends AbstractDebuggerConfigurationDial
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = horizontalIndent;
 		data.horizontalSpan = 2;
-		data.grabExcessHorizontalSpace = false;
+		data.grabExcessHorizontalSpace = true;
 		data.minimumWidth = minWidth;
 		textBox.setLayoutData(data);
 		return textBox;
+	}	
+	
+	/**
+	 * Creates a subsection group.
+	 * 
+	 * @param parent
+	 * @param label
+	 * @return
+	 */
+	protected Composite[] createSubsections(Composite parent, String label, String label2) {
+		// A cosmetic composite that will add a basic indent
+		parent = new Composite(parent, SWT.NONE);
+		parent.setLayout(new GridLayout(1, true));
+		GridData data = new GridData(GridData.FILL_BOTH);
+		parent.setLayoutData(data);
+
+		Group group = new Group(parent, SWT.SHADOW_NONE);
+		group.setText(label);
+		data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		group.setLayoutData(data);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 3;
+		group.setLayout(layout);
+		
+		Group group2 = new Group(parent, SWT.SHADOW_NONE);
+		group2.setText(label2);
+		data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		group2.setLayoutData(data);
+		GridLayout layout2 = new GridLayout();
+		layout2.numColumns = 2;
+		group2.setLayout(layout2);
+		return new Group[] {group, group2};
 	}	
 
 	/* (non-Javadoc)

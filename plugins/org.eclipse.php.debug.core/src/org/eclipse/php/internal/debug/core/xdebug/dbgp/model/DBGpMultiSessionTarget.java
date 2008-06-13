@@ -353,6 +353,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 			// they terminate when complete and don't hang around waiting for
 			// another session they won't receive.
 			DBGpTarget target = new DBGpTarget(this.launch, this.scriptName, this.ideKey, this.sessionID, this.stopAtStart);
+			target.setMultiSessionManaged(true);
 			target.setPathMapper(pathMapper);
 			target.SessionCreated(session);
 			// need to make sure bpFacade is thread safe.
