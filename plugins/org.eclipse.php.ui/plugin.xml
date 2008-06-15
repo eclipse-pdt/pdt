@@ -737,7 +737,7 @@
          		tooltip="%OpenTypeInHierarchyAction.tooltip">
          	</action>
 			<action
-				class="org.eclipse.php.internal.ui.actions.OpenPhpElementAction"
+				class="org.eclipse.php.internal.ui.actions.OpenTypeAction"
 				definitionId="org.eclipse.php.ui.navigate.open.type"
 				disabledIcon="icons/full/dtool16/opentype.gif"
 				icon="icons/full/etool16/opentype.gif"
@@ -1043,6 +1043,12 @@
             id="org.eclipse.php.ui.navigate.open.type.in.hierarchy">
       	</command>
       	<command
+      	    name="%ActionDefinition.openType.name"
+            description="%ActionDefinition.openType.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="ActionDefinition.openType.name">
+      	</command>
+      	<command
             name="%ActionDefinition.open.hierarchy.name"
             description="%ActionDefinition.open.hierarchy.description"
             categoryId="org.eclipse.ui.category.navigate"
@@ -1170,9 +1176,15 @@
 			sequence="COMMAND+ALT+Q P"
 			commandId="org.eclipse.php.ui.explorer"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key
-			sequence="M3+M2+G"
+		<key	
+			sequence="M1+M2+T"
 			commandId="org.eclipse.php.ui.navigate.open.type"
+			contextId="org.eclipse.php.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /> 
+		<key
+			sequence="M1+M2+T"
+			commandId="org.eclipse.php.ui.navigate.open.type"
+			contextId="org.eclipse.php.ui.phpEditorScope"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
             sequence="M1+M2+H"
