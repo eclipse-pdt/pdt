@@ -20,7 +20,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 	@Override
 	protected boolean supportZips() {
-		return true;
+		return false;
 	}
 
 }
