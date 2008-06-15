@@ -908,13 +908,6 @@ public class DebugConnectionThread implements Runnable {
 			}
 		}
 
-		private boolean verifyProtocolID(int serverProtocolID) {
-			if (serverProtocolID < RemoteDebugger.PROTOCOL_ID_LATEST) {
-				return detectProtocolID();
-			}
-			return true;
-		}
-
 		private boolean isDebugConnectionTest(DebugSessionStartedNotification inputMessage) {
 			return inputMessage.getQuery().indexOf("testConnection=true") != -1; //$NON-NLS-1$
 		}
@@ -928,33 +921,25 @@ public class DebugConnectionThread implements Runnable {
 			closeConnection();
 		}
 	}
-
-	//This method is used for detecting protocol version of Debugger
-	//return <code>true</code> if succeeded to detect, otherwise <code>false</code>
-	private boolean detectProtocolID() {
-		// check whether debugger is using the latest protocol ID:
-		if (setProtocol(RemoteDebugger.PROTOCOL_ID_LATEST)) {
-			return true;
+	
+	/**
+	 * This method checks whether the server protocol is older than the latest Studio protocol. 
+	 * @return <code>true</code> if debugger protocol matches the Studio protocol, otherwise <code>false</code>
+	 */
+	protected boolean verifyProtocolID(int serverProtocolID) {
+		if (serverProtocolID < RemoteDebugger.PROTOCOL_ID_LATEST) {
+			return setProtocol(RemoteDebugger.PROTOCOL_ID_LATEST);
 		}
-		// check whether debugger is using one of older protocol ID:
-		if (setProtocol(RemoteDebugger.PROTOCOL_ID_2006040703)) {
-			return true;
-		}
-		// check whether debugger is using one of older protocol ID:
-		if (setProtocol(RemoteDebugger.PROTOCOL_ID_2006040701)) {
-			return true;
-		}
-		return false;
+		return true;
 	}
 
-	private boolean setProtocol(int protocolID) {
+	protected boolean setProtocol(int protocolID) {
 		SetProtocolRequest request = new SetProtocolRequest();
 		request.setProtocolID(protocolID);
 		IDebugResponseMessage response = sendCustomRequest(request);
 		if (response != null && response instanceof SetProtocolResponse) {
 			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
 			if (responceProtocolID == protocolID) {
-				//				currentProtocolId = protocolID;
 				return true;
 			}
 		}
