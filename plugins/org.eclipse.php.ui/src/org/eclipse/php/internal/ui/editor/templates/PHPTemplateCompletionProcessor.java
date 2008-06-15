@@ -18,52 +18,110 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.templates.*;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
+import org.eclipse.jface.text.templates.TemplateContext;
+import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 
+	private static final ICompletionProposal[] EMPTY = {};
 	private String contextTypeId = PHPTemplateContextTypeIds.PHP;
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
+		if (isInDocOrComment(viewer, offset)) {
+			return EMPTY;
+		}
 		ICompletionProposal[] completionProposals = super.computeCompletionProposals(viewer, offset);
 		if (completionProposals == null) {
-			return null;
+			return EMPTY;
 		}
 		return filterUsingPrefix(completionProposals, extractPrefix(viewer, offset));
 	}
-	
+
+	private boolean isInDocOrComment(ITextViewer viewer, int offset) {
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		if (modelManager != null) {
+			IStructuredModel structuredModel = null;
+			structuredModel = modelManager.getExistingModelForRead(viewer.getDocument());
+			if (structuredModel != null) {
+				try {
+					DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
+					try {
+						// Find the structured document region:
+						IStructuredDocument document = (IStructuredDocument) domModelForPHP.getDocument().getStructuredDocument();
+						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
+
+						ITextRegionCollection container = sdRegion;
+
+						if (textRegion instanceof ITextRegionContainer) {
+							container = (ITextRegionContainer) textRegion;
+							textRegion = container.getRegionAtCharacterOffset(offset);
+						}
+
+						if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+							IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+							textRegion = phpScriptRegion.getPhpToken(offset - container.getStartOffset() - phpScriptRegion.getStart());
+							String type = textRegion.getType();
+							if (PHPPartitionTypes.isPHPMultiLineCommentState(type) || PHPPartitionTypes.isPHPDocState(type) || PHPPartitionTypes.isPHPLineCommentState(type)) {
+								return true;
+							}
+						}
+					} catch (Exception e) {
+						Logger.logException(e);
+					}
+				} finally {
+					structuredModel.releaseFromRead();
+				}
+			}
+		}
+		return false;
+	}
+
 	private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[] completionProposals, String prefix) {
 		if (prefix.length() == 0) { // no templats should be offered if there is no prefix.
 			return new ICompletionProposal[0];
 		}
-		List matches= new ArrayList();
-		for (int i= 0; i < completionProposals.length; i++) {
-			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal)completionProposals[i];
+		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
+		for (int i = 0; i < completionProposals.length; i++) {
+			PhpTemplateProposal phpTemplateProposal = (PhpTemplateProposal) completionProposals[i];
 			Template template = phpTemplateProposal.getTemplateNew();
 			if (template.getName().startsWith(prefix)) {
 				matches.add(phpTemplateProposal);
 			}
 		}
-		
+
 		return (ICompletionProposal[]) matches.toArray(new ICompletionProposal[matches.size()]);
 	}
 
-	/**
-	 * 
-	 */
 	protected String extractPrefix(ITextViewer viewer, int offset) {
-		int i= offset;
-		IDocument document= viewer.getDocument();
+		int i = offset;
+		IDocument document = viewer.getDocument();
 		if (i > document.getLength())
 			return ""; //$NON-NLS-1$
 
 		try {
 			while (i > 0) {
-				char ch= document.getChar(i - 1);
+				char ch = document.getChar(i - 1);
 				if (!(Character.isLetterOrDigit(ch))) {
 					if (!('@' == ch || '_' == ch)) {
 						break;
@@ -77,7 +135,6 @@ public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor 
 			return ""; //$NON-NLS-1$
 		}
 	}
-
 
 	protected Template[] getTemplates(String contextTypeId) {
 		Template templates[] = null;
@@ -121,9 +178,9 @@ public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor 
 	}
 
 	protected TemplateContext createContext(ITextViewer viewer, IRegion region) {
-		PHPTemplateContextType contextType= (PHPTemplateContextType)getContextType(viewer, region);
+		PHPTemplateContextType contextType = (PHPTemplateContextType) getContextType(viewer, region);
 		if (contextType != null) {
-			IDocument document= viewer.getDocument();
+			IDocument document = viewer.getDocument();
 			return new PhpTemplateContext(contextType, document, region.getOffset(), region.getLength());
 		}
 		return null;
