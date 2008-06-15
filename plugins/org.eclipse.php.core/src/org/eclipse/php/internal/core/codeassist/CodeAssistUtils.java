@@ -495,6 +495,9 @@ public class CodeAssistUtils {
 
 		boolean isClassTriger = false;
 
+		if (endPosition < 2) {
+			return null;
+		}
 		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
