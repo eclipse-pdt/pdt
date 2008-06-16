@@ -1,6 +1,18 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Zend Technologies and IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
@@ -24,15 +36,23 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
+import org.eclipse.php.internal.core.mixin.PHPDocField;
+import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.wst.xml.core.internal.Logger;
 
 /**
- * This evaluator finds class field declartion either using "var" or in method body using field access.
+ * This evaluator finds class field declaration either using :
+ * 1. @var php doc hint 
+ * 2. in method body using field access.
+ * 3. Magic declaration using the @property, @property-read, @property-write
  */
 public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator {
 
@@ -81,7 +101,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			try {
 				IDLTKSearchScope scope;
 				SearchPattern pattern = SearchPattern.createPattern(variableName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-				
+
 				scope = SearchEngine.createSearchScope(type);
 				searchEngine.search(pattern, participants, scope, requestor, null);
 
@@ -94,7 +114,50 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 			}
 		}
 
+		resolveMagicClassVariableDeclaration(types, variableName);
+
 		return subGoals.toArray(new IGoal[subGoals.size()]);
+	}
+
+	/**
+	 * Search for magic variables using the @property tag
+	 * @param types
+	 * @param variableName
+	 */
+	private void resolveMagicClassVariableDeclaration(IType[] types, String variableName) {
+		for (IType type : types) {
+			final IModelElement[] elements = PHPMixinModel.getInstance().getClassDoc(type.getElementName());
+			for (IModelElement e : elements) {
+				final PHPDocBlock docBlock = ((PHPDocField) e).getDocBlock();
+				for (PHPDocTag tag : docBlock.getTags()) {
+					final int tagKind = tag.getTagKind();
+					if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ || tagKind == PHPDocTag.PROPERTY_WRITE) {
+						final String typeName = getTypeBinding(variableName, tag);
+						if (typeName != null) {
+							IEvaluatedType resolved = PHPSimpleTypes.fromString(typeName);
+							if (resolved == null) {
+								resolved = new PHPClassType(typeName);
+							}
+							evaluated.add(resolved);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Resolves the type from the @property tag
+	 * @param variableName
+	 * @param docTag
+	 * @return the type of the given variable
+	 */
+	private String getTypeBinding(String variableName, PHPDocTag docTag) {
+		final String[] split = docTag.getValue().trim().split("\\s+");
+		if (split.length < 2) {
+			return null;
+		}	
+		return split[1].equals(variableName) ? split[0] : null;
 	}
 
 	public Object produceResult() {
@@ -136,7 +199,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		public boolean visit(Statement e) throws Exception {
 			if (e instanceof PHPFieldDeclaration) {
 				if (e.sourceStart() == offset && e.sourceEnd() - e.sourceStart() == length) {
-					result = ((PHPFieldDeclaration)e).getVariableValue();
+					result = ((PHPFieldDeclaration) e).getVariableValue();
 					context = contextStack.peek();
 				}
 			}
@@ -146,7 +209,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		public boolean visit(Expression e) throws Exception {
 			if (e instanceof Assignment) {
 				if (e.sourceStart() == offset && e.sourceEnd() - e.sourceStart() == length) {
-					result = ((Assignment)e).getValue();
+					result = ((Assignment) e).getValue();
 					context = contextStack.peek();
 				}
 			}
