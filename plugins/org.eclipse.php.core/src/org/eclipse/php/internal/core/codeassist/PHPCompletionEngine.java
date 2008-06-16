@@ -10,10 +10,9 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Argument;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.codeassist.IAssistParser;
@@ -34,6 +33,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -45,6 +45,7 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -295,7 +296,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				String tagName = statementText.subSequence(tagStart, tagEnd).toString();
 
 				if (isVariableCompletion(offset, tagName, lastWord, haveSpacesAtEnd)) {
-					// the current position is a variable in a php doc block.
+					// the current position is a variable completion after @param PHP-doc tag
+					return;
+				}
+				if (tagStart == startPosition && isReturnTypeCompletion(offset, tagName, haveSpacesAtEnd)) {
+					// the current position is a class completion after @return PHP-doc tag
 					return;
 				}
 			}
@@ -397,53 +402,61 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	private boolean isVariableCompletion(final int offset, String tagName, String varName, boolean haveSpacesAtEnd) {
+	@SuppressWarnings("unchecked")
+	private boolean isVariableCompletion(int offset, String tagName, String varName, boolean haveSpacesAtEnd) {
 		if (haveSpacesAtEnd) {
 			return false;
 		}
+		if (!PHPDocTag.PARAM_NAME.equals(tagName)) {
+			return false;
+		}
 		if (varName.startsWith(DOLLAR)) { //$NON-NLS-1$
-			if (PHPDocTag.PARAM_NAME.equals(tagName)) {
+			// find function arguments
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) sourceModule.getModelElement(), null);
+			
+			Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(moduleDeclaration, offset);
+			if (declaration instanceof MethodDeclaration) {
 
-				// find function arguments
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) sourceModule.getModelElement(), null);
-				final List<String> variables = new LinkedList<String>();
-
-				ASTVisitor visitor = new ASTVisitor() {
-					boolean found = false;
-
-					@SuppressWarnings("unchecked")
-					public boolean visit(MethodDeclaration m) {
-						if (!found && m.sourceStart() > offset) {
-							found = true;
-							List<Argument> arguments = m.getArguments();
-							for (Argument arg : arguments) {
-								variables.add(arg.getName());
-							}
-							return false;
-						}
-						return !found;
-					}
-
-					public boolean visitGeneral(ASTNode n) {
-						if (!found && n.sourceStart() > offset) {
-							found = true;
-							return false;
-						}
-						return !found;
-					}
-				};
-				try {
-					moduleDeclaration.traverse(visitor);
-				} catch (Exception e) {
-					Logger.logException(e);
+				List<String> variables = new LinkedList<String>();
+				List<Argument> arguments = ((MethodDeclaration)declaration).getArguments();
+				for (Argument arg : arguments) {
+					variables.add(arg.getName());
 				}
-
+				
 				int relevance = 424242;
 				this.setSourceRange(offset - varName.length(), offset);
 				reportVariables(variables.toArray(new String[variables.size()]), varName, relevance, false);
+				return true;
 			}
-			return true;
 		}
+		return false;
+	}
+	
+	private boolean isReturnTypeCompletion(final int offset, String tagName, boolean haveSpacesAtEnd) {
+		if (!haveSpacesAtEnd) {
+			return false;
+		}
+		if (!PHPDocTag.RETURN_NAME.equals(tagName)) {
+			return false;
+		}
+		
+		// find function return types
+		org.eclipse.dltk.core.ISourceModule module = (org.eclipse.dltk.core.ISourceModule) sourceModule.getModelElement();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module, null);
+		
+		Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(moduleDeclaration, offset);
+		if (declaration instanceof MethodDeclaration) {
+			IMethod method = (IMethod) PHPModelUtils.getModelElementByNode(module, moduleDeclaration, declaration);
+			if (method != null) {
+				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true);
+				if (returnTypes != null) {
+					for (IType type : returnTypes) {
+						reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+					}
+				}
+			}
+		}
+		
 		return false;
 	}
 
@@ -545,7 +558,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (prefix.length() == 0) {
 			return;
 		}
-		
+
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		boolean inClass = false;

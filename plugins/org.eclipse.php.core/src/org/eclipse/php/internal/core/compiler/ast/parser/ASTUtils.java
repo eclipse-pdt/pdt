@@ -7,6 +7,7 @@ import java.util.Stack;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Argument;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -348,5 +349,53 @@ public class ASTUtils {
 		}
 
 		return visitor.getContext();
+	}
+	
+	/**
+	 * Finds next declaration after the PHP-doc block
+	 * @param moduleDeclaration AST root node
+	 * @param offset Offset somewhere in the PHP-doc block
+	 * @return declaration after the PHP-doc block or <code>null</code> if first coming statement is not declaration.
+	 */
+	public static Declaration findDeclarationAfterPHPdoc(ModuleDeclaration moduleDeclaration, final int offset) {
+		
+		final Declaration[] decl = new Declaration[1];
+
+		ASTVisitor visitor = new ASTVisitor() {
+			boolean found = false;
+
+			public boolean visit(MethodDeclaration m) {
+				if (!found && m.sourceStart() > offset) {
+					decl[0] = m;
+					found = true;
+					return false;
+				}
+				return !found;
+			}
+			
+			public boolean visit(TypeDeclaration t) {
+				if (!found && t.sourceStart() > offset) {
+					decl[0] = t;
+					found = true;
+					return false;
+				}
+				return !found;
+			}
+			
+			public boolean visitGeneral(ASTNode n) {
+				if (!found && n.sourceStart() > offset) {
+					found = true;
+					return false;
+				}
+				return !found;
+			}
+		};
+		try {
+			moduleDeclaration.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+
+		return decl[0];
 	}
 }
