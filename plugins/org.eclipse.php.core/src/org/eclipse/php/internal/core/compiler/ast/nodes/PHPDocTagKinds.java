@@ -68,5 +68,7 @@ public interface PHPDocTagKinds {
 	public static final int PROPERTY_READ = 31;
 	
 	public static final int PROPERTY_WRITE = 32;
+	
+	public static final int METHOD = 33;
 
 }

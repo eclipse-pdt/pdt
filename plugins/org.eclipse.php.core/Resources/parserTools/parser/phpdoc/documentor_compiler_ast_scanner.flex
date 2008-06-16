@@ -266,6 +266,7 @@ EMPTYLINE=({LINESTART}{TABS_AND_SPACES}{NEWLINE})
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@internal")     	{startTagsState(PHPDocTagKinds.INTERNAL);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@license")      	{startTagsState(PHPDocTagKinds.LICENSE);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@link")         	{startTagsState(PHPDocTagKinds.LINK);}
+<ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@method")         	{startTagsState(PHPDocTagKinds.METHOD);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@name")         	{startTagsState(PHPDocTagKinds.NAME);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@package")      	{startTagsState(PHPDocTagKinds.PACKAGE);}
 <ST_IN_SHORT_DESC,ST_IN_LONG_DESC>^{LINESTART}("@param")        	{startTagsState(PHPDocTagKinds.PARAM);}
@@ -310,6 +311,7 @@ EMPTYLINE=({LINESTART}{TABS_AND_SPACES}{NEWLINE})
 <ST_IN_TAGS>^{LINESTART}("@internal")   	{setNewTag(PHPDocTagKinds.INTERNAL);}
 <ST_IN_TAGS>^{LINESTART}("@license")    	{setNewTag(PHPDocTagKinds.LICENSE);}
 <ST_IN_TAGS>^{LINESTART}("@link")       	{setNewTag(PHPDocTagKinds.LINK);}
+<ST_IN_TAGS>^{LINESTART}("@method")       	{setNewTag(PHPDocTagKinds.METHOD);}
 <ST_IN_TAGS>^{LINESTART}("@name")       	{setNewTag(PHPDocTagKinds.NAME);}
 <ST_IN_TAGS>^{LINESTART}("@package")    	{setNewTag(PHPDocTagKinds.PACKAGE);}
 <ST_IN_TAGS>^{LINESTART}("@param")      	{setNewTag(PHPDocTagKinds.PARAM);}

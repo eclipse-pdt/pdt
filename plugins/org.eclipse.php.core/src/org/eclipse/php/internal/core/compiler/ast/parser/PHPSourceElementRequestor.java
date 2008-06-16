@@ -3,6 +3,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -36,6 +37,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
+	
+	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, char[] contents, char[] filename) {
 		super(requestor);
@@ -155,23 +158,49 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				for (PHPDocTag docTag : tags) {
 					final int tagKind = docTag.getTagKind();
 					if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ || tagKind == PHPDocTag.PROPERTY_WRITE) {
-						final String[] split = docTag.getValue().trim().split("\\s+");
+						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.property.pkg.html
+						final String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
 							break;
 						}
 						ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 						info.modifiers = Modifiers.AccPublic;
 						info.name = split[1];
-						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 9, split[1]);
+						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 9, removeParenthesis(split));
 						info.nameSourceEnd = var.sourceEnd() - 1;
 						info.nameSourceStart = var.sourceStart();
 						info.declarationStart = info.nameSourceStart;
 						fRequestor.enterField(info);
 						fRequestor.exitField(info.nameSourceEnd);
+					
+					} else if (tagKind == PHPDocTag.METHOD) {
+						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
+						final String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
+						if (split.length < 2) {
+							break;
+						}
+						
+						ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
+						mi.parameterNames = null;
+						mi.name = removeParenthesis(split);
+						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 5, removeParenthesis(split));
+						mi.modifiers = Modifiers.AccPublic;
+						mi.nameSourceStart = var.sourceEnd() - 1;
+						mi.nameSourceEnd = var.sourceStart();
+						mi.declarationStart = mi.nameSourceStart;
+						mi.isConstructor = false;
+
+						this.fRequestor.enterMethod(mi);
+						this.fRequestor.exitMethod(mi.nameSourceEnd);
 					}
 				}
 			}
 		}
+	}
+
+	private String removeParenthesis(final String[] split) {
+		final String name = split[1];
+		return name.endsWith("()") ? name.substring(0, name.length() - 2) : name;
 	}
 
 	public boolean visit(PHPFieldDeclaration declaration) throws Exception {
@@ -347,4 +376,5 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return true;
 	}
+
 }
