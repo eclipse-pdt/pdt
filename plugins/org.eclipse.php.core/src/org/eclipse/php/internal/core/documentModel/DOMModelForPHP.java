@@ -166,7 +166,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	 * Resolves the source module of the given DOM module
 	 * @return source module element
 	 */
-	public IModelElement getSourceModule() {
+	public IModelElement getModelElement() {
 		final IFile file = getIFile();
 		
 		return file != null ? DLTKCore.create(file) : null;
