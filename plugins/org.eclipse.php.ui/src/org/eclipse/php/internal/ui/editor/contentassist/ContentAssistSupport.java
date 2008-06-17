@@ -32,42 +32,18 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegi
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.CodeDataFilter;
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeDataFactory;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlock;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocBlockImp;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPDocTag;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.core.util.Visitor;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
-import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateCompletionProcessor;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.ui.editor.contentassist.IContentAssistSupport;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 
 public class ContentAssistSupport implements IContentAssistSupport {
@@ -90,7 +66,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 
 	private static String[] CLASS_KEYWORDS = { "abstract", "const", "function", "private", "protected", "public", "static", "var" }; // must be ordered!
 
-	private PHPTemplateCompletionProcessor templateCompletionProcessor;
+	private PhpTemplateCompletionProcessor templateCompletionProcessor;
 
 	enum States {
 		CATCH, NEW, INSTANCEOF
@@ -135,14 +111,14 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected ICompletionProposal[] getTemplates(ITextViewer viewer, int offset) {
-		PHPTemplateCompletionProcessor templateCompletionProcessor = getTemplateCompletionProcessor();
+		PhpTemplateCompletionProcessor templateCompletionProcessor = getTemplateCompletionProcessor();
 		ICompletionProposal[] templatesCompletionProposals = templateCompletionProcessor.computeCompletionProposals(viewer, offset);
 		return templatesCompletionProposals;
 	}
 
-	private PHPTemplateCompletionProcessor getTemplateCompletionProcessor() {
+	private PhpTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (templateCompletionProcessor == null) {
-			templateCompletionProcessor = new PHPTemplateCompletionProcessor();
+			templateCompletionProcessor = new PhpTemplateCompletionProcessor(null);
 			String context = getTemplateContext();
 			templateCompletionProcessor.setContextTypeId(context);
 		}
@@ -150,7 +126,7 @@ public class ContentAssistSupport implements IContentAssistSupport {
 	}
 
 	protected String getTemplateContext() {
-		return PHPTemplateContextTypeIds.PHP;
+		return PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
 	}
 
 	public char[] getAutoactivationTriggers() {

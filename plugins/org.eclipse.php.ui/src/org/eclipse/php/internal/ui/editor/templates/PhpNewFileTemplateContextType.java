@@ -10,15 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.templates;
 
-import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.GlobalTemplateVariables;
-import org.eclipse.jface.text.templates.TemplateBuffer;
-import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.wst.xml.ui.internal.templates.EncodingTemplateVariableResolverXML;
 
-public class PhpNewFileTemplateContextType extends TemplateContextType {
+public class PhpNewFileTemplateContextType extends ScriptTemplateContextType {
 
 	public PhpNewFileTemplateContextType() {
 		super();
@@ -31,8 +30,9 @@ public class PhpNewFileTemplateContextType extends TemplateContextType {
 		addResolver(new EncodingTemplateVariableResolverXML());
 	}
 
-	public void resolve(TemplateBuffer buffer, TemplateContext context) throws MalformedTreeException, BadLocationException {
-		super.resolve(buffer, context);
+	@Override
+	public ScriptTemplateContext createContext(IDocument document, int completionPosition, int length, ISourceModule sourceModule) {
+		return new PhpTemplateContext(this, document, completionPosition, length, sourceModule);
 	}
 
 }

@@ -4,7 +4,7 @@ import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalComputer;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
-import org.eclipse.php.internal.ui.editor.templates.PHPTemplateCompletionProcessor;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateCompletionProcessor;
 
 public class PHPCompletionProposalComputer extends ScriptCompletionProposalComputer {
 
@@ -12,7 +12,7 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 	}
 
 	protected TemplateCompletionProcessor createTemplateProposalComputer(ScriptContentAssistInvocationContext context) {
-		return new PHPTemplateCompletionProcessor();
+		return new PhpTemplateCompletionProcessor(context);
 	}
 
 	protected ScriptCompletionProposalCollector createCollector(ScriptContentAssistInvocationContext context) {

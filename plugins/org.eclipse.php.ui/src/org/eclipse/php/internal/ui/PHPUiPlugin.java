@@ -32,7 +32,7 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
-import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.MembersOrderPreferenceCache;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
@@ -235,9 +235,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (contentTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
-			registry.addContextType(PHPTemplateContextTypeIds.PHP);
-			registry.addContextType(PHPTemplateContextTypeIds.PHPDOC);
-			registry.addContextType(PHPTemplateContextTypeIds.NEW_PHP);
+			registry.addContextType(PhpTemplateContextType.PHP_CONTEXT_TYPE_ID);
+			registry.addContextType(PhpTemplateContextType.NEW_PHP_CONTEXT_TYPE_ID);
 			contentTypeRegistry = registry;
 		}
 

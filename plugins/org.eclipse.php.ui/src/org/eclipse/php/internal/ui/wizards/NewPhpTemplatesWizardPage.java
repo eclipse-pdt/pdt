@@ -16,7 +16,7 @@ import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextTypeIds;
+import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 
 public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage {
@@ -26,7 +26,7 @@ public class NewPhpTemplatesWizardPage extends NewGenericFileTemplatesWizardPage
 	}
 
 	protected String getTemplateContextTypeId() {
-		return PHPTemplateContextTypeIds.NEW_PHP;
+		return PhpTemplateContextType.NEW_PHP_CONTEXT_TYPE_ID;
 	}
 
 	protected String getUseTemplateMessage() {

@@ -13,6 +13,11 @@ package org.eclipse.php.internal.ui.editor.templates;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.templates.ScriptTemplateAccess;
+import org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
+import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -20,7 +25,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
@@ -35,16 +39,19 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor {
+public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProcessor {
 
+	private static final ICompletionProposal[] EMPTY_ICOMPLETION_PROPOSAL = new ICompletionProposal[0];
 	private static final ICompletionProposal[] EMPTY = {};
-	private String contextTypeId = PHPTemplateContextTypeIds.PHP;
+	private String contextTypeId = PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
+
+	private static char[] IGNORE = new char[] {'.', ':', '@', '$'};	
+	
+	public PhpTemplateCompletionProcessor(ScriptContentAssistInvocationContext context) {
+		super(context);
+	}
 
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
 		if (isInDocOrComment(viewer, offset)) {
@@ -99,7 +106,7 @@ public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor 
 
 	private ICompletionProposal[] filterUsingPrefix(ICompletionProposal[] completionProposals, String prefix) {
 		if (prefix.length() == 0) { // no templats should be offered if there is no prefix.
-			return new ICompletionProposal[0];
+			return EMPTY_ICOMPLETION_PROPOSAL;
 		}
 		List<PhpTemplateProposal> matches = new ArrayList<PhpTemplateProposal>();
 		for (int i = 0; i < completionProposals.length; i++) {
@@ -177,12 +184,27 @@ public class PHPTemplateCompletionProcessor extends TemplateCompletionProcessor 
 		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
-	protected TemplateContext createContext(ITextViewer viewer, IRegion region) {
-		PHPTemplateContextType contextType = (PHPTemplateContextType) getContextType(viewer, region);
-		if (contextType != null) {
-			IDocument document = viewer.getDocument();
-			return new PhpTemplateContext(contextType, document, region.getOffset(), region.getLength());
-		}
-		return null;
+	/*
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getContextTypeId()
+	 */
+	protected String getContextTypeId() {
+		return PhpTemplateContextType.PHP_CONTEXT_TYPE_ID;
 	}
+
+	/*
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getIgnore()
+	 */
+	protected char[] getIgnore() {
+		return IGNORE;
+	}
+	
+	/*
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor#getTemplateAccess()
+	 */
+	protected ScriptTemplateAccess getTemplateAccess() {
+		return PhpTemplateAccess.getInstance();
+	}	
+	
+	
+	
 }

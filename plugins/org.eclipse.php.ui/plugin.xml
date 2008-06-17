@@ -406,12 +406,8 @@
 
 		<contextType
 			name="%templates.php.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
+			class="org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType"
 			id="php" />
-		<contextType
-			name="%templates.phpdoc.contextType.name"
-			class="org.eclipse.php.internal.ui.editor.templates.PHPTemplateContextType"
-			id="phpdoc" />
 		<contextType
 			name="%templates.newphp.contextType.name"
 			class="org.eclipse.php.internal.ui.editor.templates.PhpNewFileTemplateContextType"
@@ -422,7 +418,7 @@
 			translations="$nl$/templates/phpdefault-templates.properties" />
 
 	</extension>
-
+	
 	<!--Property Pages:-->
 	<extension point="org.eclipse.ui.propertyPages">
 		<page

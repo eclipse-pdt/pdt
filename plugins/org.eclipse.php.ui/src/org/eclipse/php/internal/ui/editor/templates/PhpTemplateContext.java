@@ -10,15 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.templates;
 
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
+import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.templates.DocumentTemplateContext;
 
-public class PhpTemplateContext extends DocumentTemplateContext {
+/**
+ * The template's context 
+ */
+public class PhpTemplateContext extends ScriptTemplateContext {
 	
-	public PhpTemplateContext(PHPTemplateContextType phpTemplateContextType, IDocument document, int offset, int length) {
-		super(phpTemplateContextType, document, offset, length);
+	public PhpTemplateContext(ScriptTemplateContextType phpTemplateContextType, IDocument document, int offset, int length, ISourceModule sourceModule) {
+		super(phpTemplateContextType, document, offset, length, sourceModule);
 	}
-	
-	
-
 }
