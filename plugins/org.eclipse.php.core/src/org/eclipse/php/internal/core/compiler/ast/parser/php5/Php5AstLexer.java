@@ -1,4 +1,4 @@
-package org.eclipse.php.internal.core.compiler.ast.parser;
+package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 import java.io.InputStream;
 import java.util.regex.Matcher;
@@ -13,18 +13,19 @@ import org.eclipse.php.internal.core.ast.scanner.ParserConstants5;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
+import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
-public class PhpAstLexer5 extends org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5 {
+public class Php5AstLexer extends org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5 {
 
 	private static final Pattern VAR_COMMENT_PATTERN = Pattern.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
 	private PHPDocBlock latestDocBlock;
 	private VarComment latestVarComment;
 
-	public PhpAstLexer5(InputStream in) {
+	public Php5AstLexer(InputStream in) {
 		super(in);
 	}
 
-	public PhpAstLexer5(java.io.Reader in) {
+	public Php5AstLexer(java.io.Reader in) {
 		super(in);
 	}
 

@@ -6,20 +6,20 @@
 			<arg value="-expect" />
 			<arg value="4" />
 			<arg value="-parser" />
-			<arg value="PhpAstParser5" />
+			<arg value="Php5AstParser" />
 			<arg value="-symbols" />
-			<arg value="ParserConstants5" />
+			<arg value="Php5ParserConstants" />
 			<arg value="-interface" />
 		</java>
 		
 		<replace
-			file="PhpAstParser5.java"
+			file="Php5AstParser.java"
 			token="extends java_cup.runtime.lr_parser"
 			value="extends AbstractASTParser"/>
 
-		<move file="PhpAstParser5.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser" />
+		<move file="Php5AstParser.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/" />
 
-		<move file="ParserConstants5.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser" />
+		<move file="Php5ParserConstants.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5" />
 
 	</target>
 </project>

@@ -1,4 +1,4 @@
-package org.eclipse.php.internal.core.compiler.ast.parser;
+package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 
 import java.io.InputStream;
 import java.util.regex.Matcher;
@@ -12,18 +12,19 @@ import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
+import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
-public class PhpAstLexer4 extends org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4 {
+public class Php4AstLexer extends org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4 {
 
 	private static final Pattern VAR_COMMENT_PATTERN = Pattern.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
 	private PHPDocBlock latestDocBlock;
 	private VarComment latestVarComment;
 
-	public PhpAstLexer4(InputStream in) {
+	public Php4AstLexer(InputStream in) {
 		super(in);
 	}
 
-	public PhpAstLexer4(java.io.Reader in) {
+	public Php4AstLexer(java.io.Reader in) {
 		super(in);
 	}
 
@@ -74,14 +75,14 @@ public class PhpAstLexer4 extends org.eclipse.php.internal.core.ast.scanner.PhpA
 		Symbol symbol = super.createSymbol(symbolNumber);
 
 		switch (symbolNumber) {
-			case ParserConstants4.T_FUNCTION:
-			case ParserConstants4.T_CONST:
-			case ParserConstants4.T_VAR:
-			case ParserConstants4.T_CLASS:
-			case ParserConstants4.T_STATIC:
+			case Php4ParserConstants.T_FUNCTION:
+			case Php4ParserConstants.T_CONST:
+			case Php4ParserConstants.T_VAR:
+			case Php4ParserConstants.T_CLASS:
+			case Php4ParserConstants.T_STATIC:
 				symbol.value = latestDocBlock;
 				break;
-			case ParserConstants4.T_EQUAL:
+			case Php4ParserConstants.T_EQUAL:
 				symbol.value = latestVarComment;
 				latestVarComment = null;
 				break;

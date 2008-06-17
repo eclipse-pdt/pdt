@@ -10,25 +10,25 @@
 			<arg value="-expect"/>
 			<arg value="4"/>
 			<arg value="-parser"/>
-			<arg value="PhpAstParser4"/>
+			<arg value="Php4AstParser"/>
 			<arg value="-symbols"/>
-			<arg value="ParserConstants4"/>
+			<arg value="Php4ParserConstants"/>
 			<arg value="-interface"/>
 		</java>
 
 		
 		<replace
-			file="PhpAstParser4.java"
+			file="Php4AstParser.java"
 			token="extends java_cup.runtime.lr_parser"
 			value="extends AbstractASTParser"/>
 
 		<move
-			file="PhpAstParser4.java"
-			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser"/>
+			file="Php4AstParser.java"
+			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4"/>
 
 		<move
-			file="ParserConstants4.java"
-			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser"/>
+			file="Php4ParserConstants.java"
+			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4"/>
 
 	</target>
 

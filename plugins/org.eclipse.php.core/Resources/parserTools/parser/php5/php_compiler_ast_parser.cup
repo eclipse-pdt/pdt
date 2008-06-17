@@ -1,8 +1,8 @@
-package org.eclipse.php.internal.core.compiler.ast.parser;
+package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.15 2008/05/22 12:58:45 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.16 2008/06/17 09:21:24 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -14,6 +14,7 @@ import org.eclipse.dltk.ast.expressions.*;
 import org.eclipse.dltk.ast.references.*;
 import org.eclipse.dltk.ast.statements.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.parser.*;
 
 parser code {:
 
@@ -223,10 +224,10 @@ non terminal Expression w_variable;
 non terminal TypeReference fully_qualified_class_name;
 non terminal List class_variable_declaration;
 non terminal List class_constant_declaration;
-non terminal PhpAstParser5.ModifierDocPair method_modifiers;
+non terminal Php5AstParser.ModifierDocPair method_modifiers;
 non terminal Statement method_body;
 non terminal List non_empty_member_modifiers;
-non terminal PhpAstParser5.ModifierDocPair member_modifier;
+non terminal Php5AstParser.ModifierDocPair member_modifier;
 non terminal PHPCallArgumentsList method_or_not;
 non terminal List variable_properties;
 non terminal PHPMethodDeclaration function_declaration_statement;
@@ -237,13 +238,13 @@ non terminal List non_empty_additional_catches;
 non terminal CatchClause additional_catch;
 non terminal PHPMethodDeclaration unticked_function_declaration_statement;
 non terminal Statement unticked_class_declaration_statement;
-non terminal PhpAstParser5.ModifierDocPair class_entry_type;
+non terminal Php5AstParser.ModifierDocPair class_entry_type;
 non terminal TypeReference extends_from;
 non terminal List implements_list;
 non terminal List interface_list;
 non terminal TypeReference optional_class_type;
 non terminal Expression r_variable;
-non terminal PhpAstParser5.ModifierDocPair variable_modifiers;
+non terminal Php5AstParser.ModifierDocPair variable_modifiers;
 non terminal Expression rw_variable;
 non terminal Expression variable_without_objects;
 non terminal Expression variable_property;
@@ -1484,7 +1485,7 @@ non_empty_member_modifiers:list
 	int result = 0;
 	PHPDocBlock docBlock = null;
 	for (Iterator it = list.iterator(); it.hasNext() ; ) {
-		PhpAstParser5.ModifierDocPair modifier = (PhpAstParser5.ModifierDocPair)it.next();
+		Php5AstParser.ModifierDocPair modifier = (Php5AstParser.ModifierDocPair)it.next();
 		if (modifier.doc != null) {
 			docBlock = modifier.doc;
 		}
@@ -1510,7 +1511,7 @@ method_modifiers ::=
 	int result = 0;
 	PHPDocBlock docBlock = null;
 	for (Iterator it = list.iterator(); it.hasNext() ; ) {
-		PhpAstParser5.ModifierDocPair modifier = (PhpAstParser5.ModifierDocPair)it.next();
+		Php5AstParser.ModifierDocPair modifier = (Php5AstParser.ModifierDocPair)it.next();
 		if (modifier.doc != null) {
 			docBlock = modifier.doc;
 		}

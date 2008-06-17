@@ -27,14 +27,14 @@ abstract public class AbstractASTParser extends lr_parser {
 		super(s);
 	}
 
-	List<ASTError> getErrors() {
+	protected List<ASTError> getErrors() {
 		return program.getErrors();
 	}
 
 	/**
-	 * tReport on errors that will be added to the AST as statements
+	 * Report on errors that will be added to the AST as statements
 	 */
-	void reportError() {
+	public void reportError() {
 		program.setHasErros(true);
 	}
 
@@ -42,24 +42,25 @@ abstract public class AbstractASTParser extends lr_parser {
 	 * Reporting an error that cannot be added as a statement and has to be in a separated list.
 	 * @param error
 	 */
-	void reportError(ASTError error) {
+	public void reportError(ASTError error) {
 		getErrors().add(error);
 		reportError();
 	}
 
-	List<Statement> getStatements() {
+	@SuppressWarnings("unchecked")
+	public List<Statement> getStatements() {
 		return program.getStatements();
 	}
 
-	void addStatement(Statement s) {
+	public void addStatement(Statement s) {
 		getStatements().add(s);
 	}
 
-	PHPModuleDeclaration getModuleDeclaration() {
+	public PHPModuleDeclaration getModuleDeclaration() {
 		return program;
 	}
 
-	Stack<Statement> declarations = new Stack<Statement>();
+	public Stack<Statement> declarations = new Stack<Statement>();
 
 	public void report_error(String message, Object info) {
 		if (info instanceof Symbol) {
@@ -72,6 +73,7 @@ abstract public class AbstractASTParser extends lr_parser {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
 		//in case 
 		int start = 0;
@@ -102,6 +104,15 @@ abstract public class AbstractASTParser extends lr_parser {
 
 		super.unrecovered_syntax_error(cur_token);
 	}
+	
+	
+	public void syntax_error(Symbol cur_token) {
+		super.syntax_error(cur_token);
+		
+		int state = ((Symbol) stack.peek()).parse_state;
+        if (action_tab[state].length > 0) {
+        }
+	}
 
 	public void report_fatal_error(String message, Object info) throws java.lang.Exception {
 		/* stop parsing (not really necessary since we throw an exception, but) */
@@ -114,9 +125,9 @@ abstract public class AbstractASTParser extends lr_parser {
 	}
 
 	/* This is a place holder for statements that were found after unclosed classes */
-	Statement pendingStatement = null;
+	public Statement pendingStatement = null;
 
-	void addDeclarationStatement(Statement s) {
+	public void addDeclarationStatement(Statement s) {
 		if (declarations.isEmpty()) { // no need to add the declaration to the ModuleDeclaration at this point.
 			return;
 		}

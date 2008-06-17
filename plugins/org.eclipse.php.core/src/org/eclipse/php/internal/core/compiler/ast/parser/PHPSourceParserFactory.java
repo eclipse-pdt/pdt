@@ -29,10 +29,10 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 			if (project.isAccessible()) {
 				String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
 				if (PHPCoreConstants.PHP4.equals(phpVersion)) {
-					return new PHPSourceParser4();
+					return new org.eclipse.php.internal.core.compiler.ast.parser.php4.Php4SourceParser();
 				}
 			}
 		}
-		return new PHPSourceParser5();
+		return new org.eclipse.php.internal.core.compiler.ast.parser.php5.Php5SourceParser();
 	}
 }
