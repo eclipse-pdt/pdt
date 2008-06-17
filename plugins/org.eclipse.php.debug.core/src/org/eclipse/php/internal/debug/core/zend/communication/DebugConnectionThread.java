@@ -828,23 +828,27 @@ public class DebugConnectionThread implements Runnable {
 					synchronized (this) {
 						try {
 							boolean isDebugConnectionTest = false;
-							// first debug message has received - create debug target
+							// first debug message has received
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
-								// first debug message has received - create debug target
-								if (newInputMessage instanceof DebugSessionStartedNotification) {
-									DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) newInputMessage;
-									isDebugConnectionTest = isDebugConnectionTest(sessionStartedMessage);
-									if (isDebugConnectionTest) {//This is a test...									
-										String sourceHost = DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
-										//notify succcess
-										if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
-											DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_SUCCEEDED));
-										} else {
-											DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
-										}
-									} else {//Not a test - start debug
-										hookDebugSession((DebugSessionStartedNotification) newInputMessage);
+
+								DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) newInputMessage;
+								isDebugConnectionTest = isDebugConnectionTest(sessionStartedMessage);
+								
+								if (isDebugConnectionTest) {// This is a test...
+									
+									String sourceHost = DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
+									// Notify succcess
+									if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
+										
+										sendRequest(new StartRequest());
+										
+										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_SUCCEEDED));
+									} else {
+										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
 									}
+
+								} else {// Not a test - start debug (create debug target)
+									hookDebugSession((DebugSessionStartedNotification) newInputMessage);
 								}
 							}
 
@@ -921,7 +925,7 @@ public class DebugConnectionThread implements Runnable {
 			closeConnection();
 		}
 	}
-	
+
 	/**
 	 * This method checks whether the server protocol is older than the latest Studio protocol. 
 	 * @return <code>true</code> if debugger protocol matches the Studio protocol, otherwise <code>false</code>
@@ -936,27 +940,18 @@ public class DebugConnectionThread implements Runnable {
 	protected boolean setProtocol(int protocolID) {
 		SetProtocolRequest request = new SetProtocolRequest();
 		request.setProtocolID(protocolID);
-		IDebugResponseMessage response = sendCustomRequest(request);
-		if (response != null && response instanceof SetProtocolResponse) {
-			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
-			if (responceProtocolID == protocolID) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
-		IDebugResponseMessage response = null;
 		try {
-			Object obj = sendRequest(request);
-			if (obj instanceof IDebugResponseMessage) {
-				response = (IDebugResponseMessage) obj;
+			Object response = sendRequest(request);
+			if (response != null && response instanceof SetProtocolResponse) {
+				int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
+				if (responceProtocolID == protocolID) {
+					return true;
+				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
-		return response;
+		return false;
 	}
 
 	public String toString() {
