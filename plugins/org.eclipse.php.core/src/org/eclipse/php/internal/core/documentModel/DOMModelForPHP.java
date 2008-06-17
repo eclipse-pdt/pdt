@@ -11,6 +11,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelUpdater;
@@ -159,4 +161,9 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		}
 		return result;
 	}
+	
+	public IModelElement getSourceModule() {
+		return DLTKCore.create(getIFile());
+	}
+	
 }
