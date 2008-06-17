@@ -50,9 +50,9 @@ import org.eclipse.wst.xml.core.internal.Logger;
 
 /**
  * This evaluator finds class field declaration either using :
- * 1. @var php doc hint 
+ * 1. @var hint 
  * 2. in method body using field access.
- * 3. Magic declaration using the @property, @property-read, @property-write
+ * 3. magic declaration using the @property, @property-read, @property-write
  */
 public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator {
 
