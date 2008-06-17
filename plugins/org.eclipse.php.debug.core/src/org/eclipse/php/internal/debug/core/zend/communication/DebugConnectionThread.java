@@ -199,7 +199,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public Object sendRequest(Object request) throws Exception {
 		if (isDebugMode) {
-			System.out.println("Sending syncrhonic request: " + request); //$NON-NLS-1$
+			System.out.println("Sending syncrhonic request: " + request);
 		}
 		try {
 			IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -280,7 +280,7 @@ public class DebugConnectionThread implements Runnable {
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
 		if (isDebugMode) {
-			System.out.println("Sending asynchronic request: " + request); //$NON-NLS-1$
+			System.out.println("Sending asynchronic request: " + request);
 		}
 		int msgId = lastRequestID++;
 		IDebugRequestMessage theMsg = (IDebugRequestMessage) request;
@@ -772,7 +772,7 @@ public class DebugConnectionThread implements Runnable {
 			queueIn(CONNECTION_CLOSED_MSG);
 		}
 
-		@SuppressWarnings("unchecked")//$NON-NLS-1$
+		@SuppressWarnings("unchecked")
 		private synchronized void resetCommunication() {
 			// Now we can stop the input manager.
 			if (inputManager != null)
@@ -821,28 +821,34 @@ public class DebugConnectionThread implements Runnable {
 					IDebugMessage newInputMessage = (IDebugMessage) inputMessageQueue.queueOut();
 
 					if (isDebugMode) {
-						System.out.println("New message received: " + newInputMessage); //$NON-NLS-1$
+						System.out.println("New message received: " + newInputMessage);
 					}
 
 					// do not stop until the message is processed.
 					synchronized (this) {
 						try {
-
 							boolean isDebugConnectionTest = false;
-							// first debug message has received - create debug target
+							// first debug message has received
 							if (newInputMessage instanceof DebugSessionStartedNotification) {
+
 								DebugSessionStartedNotification sessionStartedMessage = (DebugSessionStartedNotification) newInputMessage;
 								isDebugConnectionTest = isDebugConnectionTest(sessionStartedMessage);
-								if (isDebugConnectionTest) {//This is a test...									
+								
+								if (isDebugConnectionTest) {// This is a test...
+									
 									String sourceHost = DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
-									//notify succcess
+									// Notify succcess
 									if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
+										
+										sendRequest(new StartRequest());
+										
 										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_SUCCEEDED));
 									} else {
 										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
 									}
-								} else {//Not a test - start debug
-									hookDebugSession(sessionStartedMessage);
+
+								} else {// Not a test - start debug (create debug target)
+									hookDebugSession((DebugSessionStartedNotification) newInputMessage);
 								}
 							}
 
@@ -854,7 +860,7 @@ public class DebugConnectionThread implements Runnable {
 
 								if (messageHandler != null) {
 									if (isDebugMode) {
-										System.out.println("Creating message handler: " + messageHandler.getClass().getName().replaceFirst(".*\\.", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+										System.out.println("Creating message handler: " + messageHandler.getClass().getName().replaceFirst(".*\\.", ""));
 									}
 									// handle the request
 									messageHandler.handle(newInputMessage, debugTarget);
@@ -919,7 +925,7 @@ public class DebugConnectionThread implements Runnable {
 			closeConnection();
 		}
 	}
-	
+
 	/**
 	 * This method checks whether the server protocol is older than the latest Studio protocol. 
 	 * @return <code>true</code> if debugger protocol matches the Studio protocol, otherwise <code>false</code>
@@ -934,27 +940,18 @@ public class DebugConnectionThread implements Runnable {
 	protected boolean setProtocol(int protocolID) {
 		SetProtocolRequest request = new SetProtocolRequest();
 		request.setProtocolID(protocolID);
-		IDebugResponseMessage response = sendCustomRequest(request);
-		if (response != null && response instanceof SetProtocolResponse) {
-			int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
-			if (responceProtocolID == protocolID) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private IDebugResponseMessage sendCustomRequest(IDebugRequestMessage request) {
-		IDebugResponseMessage response = null;
 		try {
-			Object obj = sendRequest(request);
-			if (obj instanceof IDebugResponseMessage) {
-				response = (IDebugResponseMessage) obj;
+			Object response = sendRequest(request);
+			if (response != null && response instanceof SetProtocolResponse) {
+				int responceProtocolID = ((SetProtocolResponse) response).getProtocolID();
+				if (responceProtocolID == protocolID) {
+					return true;
+				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
-		return response;
+		return false;
 	}
 
 	public String toString() {
