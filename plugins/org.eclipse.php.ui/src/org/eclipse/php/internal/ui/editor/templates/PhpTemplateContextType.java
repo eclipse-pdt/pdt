@@ -22,14 +22,6 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 	
 	public static final String PHP_CONTEXT_TYPE_ID = "php"; //$NON-NLS-1$
 	
-	public PhpTemplateContextType(String id) {
-		super(id);
-	}
-
-	public PhpTemplateContextType(String id, String name) {
-		super(id, name);
-	}
-
 	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, offset, length, sourceModule);
 	}
@@ -50,6 +42,4 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 		addResolver(new PhpTemplateClassResolver());
 		addResolver(new PhpTemplateFileResolver());
 	}
-	
-	
 }

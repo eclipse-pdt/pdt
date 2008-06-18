@@ -14,9 +14,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.php.internal.ui.editor.templates.resolver.*;
-import org.eclipse.wst.xml.ui.internal.templates.EncodingTemplateVariableResolverXML;
 
 /**
  * 

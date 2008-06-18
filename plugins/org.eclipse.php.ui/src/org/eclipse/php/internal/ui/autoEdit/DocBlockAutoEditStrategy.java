@@ -53,6 +53,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 
 	private static final String lineStart = "* "; //$NON-NLS-1$
+	
+	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
+	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		if (TypingPreferences.closePhpdoc && command.text != null && TextUtilities.endsWith(document.getLegalLineDelimiters(), command.text) != -1) {
@@ -218,9 +221,6 @@ public class DocBlockAutoEditStrategy implements IAutoEditStrategy {
 		command.text += document.getLineDelimiter() + blanks + "*/"; //$NON-NLS-1$
 		return rvPosition;
 	}
-
-	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
-	private static final PreferencesSupport preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 
 	private PHPFileData updateFileData(IStructuredDocument document, int commentStart, int commentEnd, PHPFileData fileData) {
 		String fileName = fileData.getName();
