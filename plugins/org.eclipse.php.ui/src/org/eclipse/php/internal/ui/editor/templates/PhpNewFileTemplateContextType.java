@@ -15,24 +15,35 @@ import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.GlobalTemplateVariables;
+import org.eclipse.php.internal.ui.editor.templates.resolver.*;
 import org.eclipse.wst.xml.ui.internal.templates.EncodingTemplateVariableResolverXML;
 
+/**
+ * 
+ */
 public class PhpNewFileTemplateContextType extends ScriptTemplateContextType {
 
-	public PhpNewFileTemplateContextType() {
-		super();
-		addResolver(new GlobalTemplateVariables.Cursor());
-		addResolver(new GlobalTemplateVariables.Date());
-		addResolver(new GlobalTemplateVariables.Dollar());
-		addResolver(new GlobalTemplateVariables.Time());
-		addResolver(new GlobalTemplateVariables.User());
-		addResolver(new GlobalTemplateVariables.Year());
-		addResolver(new EncodingTemplateVariableResolverXML());
-	}
+	public static final String NEW_PHP_CONTEXT_TYPE_ID = "newPhp"; //$NON-NLS-1$
 
 	@Override
 	public ScriptTemplateContext createContext(IDocument document, int completionPosition, int length, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, completionPosition, length, sourceModule);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateContextType#addScriptResolvers()
+	 */
+	@Override
+	protected void addScriptResolvers() {
+		super.addScriptResolvers();
+		
+		// empty constructor
+		addResolver(new PhpTemplateVariableResolver());
+		addResolver(new PhpTemplateFunctionContainerResolver());
+		addResolver(new PhpTemplateClassContainerResolver());
+		addResolver(new PhpTemplateNumberVariableResolver());
+		addResolver(new PhpTemplateArrayVariableResolver());
+		addResolver(new PhpTemplateClassResolver());
+		addResolver(new PhpTemplateFileResolver());
+	}	
 }

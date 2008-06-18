@@ -21,19 +21,7 @@ import org.eclipse.php.internal.ui.editor.templates.resolver.*;
 public class PhpTemplateContextType extends ScriptTemplateContextType {
 	
 	public static final String PHP_CONTEXT_TYPE_ID = "php"; //$NON-NLS-1$
-	public static final String NEW_PHP_CONTEXT_TYPE_ID = "newPhp"; //$NON-NLS-1$
-
-	public PhpTemplateContextType() {
-		// empty constructor
-		addResolver(new PhpTemplateVariableResolver());
-		addResolver(new PhpTemplateFunctionContainerResolver());
-		addResolver(new PhpTemplateClassContainerResolver());
-		addResolver(new PhpTemplateNumberVariableResolver());
-		addResolver(new PhpTemplateArrayVariableResolver());
-		addResolver(new PhpTemplateClassResolver());
-		addResolver(new PhpTemplateFileResolver());
-	}
-
+	
 	public PhpTemplateContextType(String id) {
 		super(id);
 	}
@@ -45,4 +33,23 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 	public ScriptTemplateContext createContext(IDocument document, int offset, int length, ISourceModule sourceModule) {
 		return new PhpTemplateContext(this, document, offset, length, sourceModule);
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.ui.templates.ScriptTemplateContextType#addScriptResolvers()
+	 */
+	@Override
+	protected void addScriptResolvers() {
+		super.addScriptResolvers();
+		
+		// empty constructor
+		addResolver(new PhpTemplateVariableResolver());
+		addResolver(new PhpTemplateFunctionContainerResolver());
+		addResolver(new PhpTemplateClassContainerResolver());
+		addResolver(new PhpTemplateNumberVariableResolver());
+		addResolver(new PhpTemplateArrayVariableResolver());
+		addResolver(new PhpTemplateClassResolver());
+		addResolver(new PhpTemplateFileResolver());
+	}
+	
+	
 }
