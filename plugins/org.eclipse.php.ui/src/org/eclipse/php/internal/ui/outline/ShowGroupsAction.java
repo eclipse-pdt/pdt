@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
 public class ShowGroupsAction extends Action {
@@ -35,7 +36,7 @@ public class ShowGroupsAction extends Action {
 		propertyChangeListener = new IPropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent event) {
-				if (event.getProperty().equals(ChangeOutlineModeAction.PREF_OUTLINEMODE)) {
+				if (event.getProperty().equals(PreferenceConstants.PREF_OUTLINEMODE)) {
 					setEnabled(isEnabled());
 				}
 
@@ -54,7 +55,7 @@ public class ShowGroupsAction extends Action {
 		IContentProvider contentProvider = treeViewer.getContentProvider();
 		if (contentProvider instanceof PHPOutlineContentProvider) {
 			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
-			phpContentProvider.setShowGroups(isChecked());
+//			phpContentProvider.setShowGroups(isChecked());
 			treeViewer.refresh(false);
 			treeViewer.expandToLevel(2);
 			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_SHOW_GROUPS, isChecked());
@@ -62,11 +63,11 @@ public class ShowGroupsAction extends Action {
 	}
 
 	public boolean isEnabled() {
-		IContentProvider contentProvider = treeViewer.getContentProvider();
-		if (contentProvider instanceof PHPOutlineContentProvider) {
-			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
-			return PHPOutlineContentProvider.MODE_PHP == phpContentProvider.getMode();
-		}
+//		IContentProvider contentProvider = treeViewer.getContentProvider();
+//		if (contentProvider instanceof PHPOutlineContentProvider) {
+//			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
+//			return PHPOutlineContentProvider.MODE_PHP == phpContentProvider.getMode();
+//		}
 		return super.isEnabled();
 	}
 

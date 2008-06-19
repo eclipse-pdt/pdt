@@ -26,7 +26,6 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData.PHPFunctionParameter;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.internal.ui.preferences.MembersOrderPreferenceCache;
 import org.eclipse.php.internal.ui.projectOutline.ProjectOutlineContentProvider.OutlineNode;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -150,9 +149,9 @@ public class PHPElementSorter extends ViewerSorter {
 		if (element instanceof IStorage) {
 			return STORAGE;
 		}
-		if (element instanceof OutlineNode || element instanceof GroupNode) {
+		/*if (element instanceof OutlineNode || element instanceof GroupNode) {
 			return OUTLINE_NODES;
-		}
+		}*/
 		if (element instanceof Node) {
 			return DOM_NODES;
 		}

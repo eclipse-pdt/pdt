@@ -11,35 +11,32 @@
 package org.eclipse.php.internal.ui.outline;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 
 public class ChangeOutlineModeAction extends Action {
 
-	public static final String PREF_OUTLINEMODE="ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
-
-	
 	private int mode;
-	private TreeViewer treeViewer;
+	private PHPContentOutlineConfiguration contentOutlineConfiguration;
+	private TreeViewer viewer;
 	
-	public ChangeOutlineModeAction(String label,int mode, TreeViewer treeViewer)
+	public ChangeOutlineModeAction(String label,int mode, PHPContentOutlineConfiguration contentOutlineConfiguration, TreeViewer viewer)
 	{
 		super(label, AS_RADIO_BUTTON); //$NON-NLS-1$
 		this.mode=mode;
-		this.treeViewer=treeViewer;
-		int prefMode= PHPUiPlugin.getDefault().getPreferenceStore().getInt(PREF_OUTLINEMODE); //$NON-NLS-1$
+		this.contentOutlineConfiguration=contentOutlineConfiguration;
+		this.viewer=viewer;
+		int prefMode= PHPUiPlugin.getDefault().getPreferenceStore().getInt(PreferenceConstants.PREF_OUTLINEMODE); //$NON-NLS-1$
 		setChecked(prefMode==mode);
 	}
 	
 	public void run() {
-		IContentProvider contentProvider = treeViewer.getContentProvider();
-		if (contentProvider instanceof PHPOutlineContentProvider) {
-			PHPOutlineContentProvider phpContentProvider = (PHPOutlineContentProvider) contentProvider;
-			phpContentProvider.setMode(mode);
-			treeViewer.refresh(false);
-			PHPUiPlugin.getDefault().getPreferenceStore().setValue(PREF_OUTLINEMODE,mode);
-		}
+		
+		contentOutlineConfiguration.setMode(mode);
+		contentOutlineConfiguration.getContentProvider(viewer);
+		viewer.refresh(false);
+		PHPUiPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.PREF_OUTLINEMODE, mode);
 	}
 	
 }

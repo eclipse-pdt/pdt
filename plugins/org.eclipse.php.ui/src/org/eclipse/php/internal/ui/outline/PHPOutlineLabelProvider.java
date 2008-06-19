@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.SuperClassLabelProvider;
-import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.GroupNode;
 import org.eclipse.php.internal.ui.treecontent.PHPTreeNode;
 import org.eclipse.php.internal.ui.util.AppearanceAwareLabelProvider;
 import org.eclipse.php.internal.ui.util.PHPElementLabels;
@@ -45,8 +44,8 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 				return image;
 			}
 			return super.getImage(element);
-		} else if (element instanceof GroupNode) {
-			return ((GroupNode) element).getImage();
+		/*} else if (element instanceof GroupNode) {
+			return ((GroupNode) element).getImage();*/
 		} else if (element instanceof PHPTreeNode) {
 			return ((PHPTreeNode) element).getImage();
 		}
@@ -60,8 +59,8 @@ public class PHPOutlineLabelProvider extends AppearanceAwareLabelProvider {
 				return text;
 			}
 			return super.getText(element);
-		} else if (element instanceof GroupNode) {
-			return ((GroupNode) element).getText();
+		/*} else if (element instanceof GroupNode) {
+			return ((GroupNode) element).getText();*/
 		} else if (element instanceof PHPTreeNode) {
 			return ((PHPTreeNode) element).getText();
 		}

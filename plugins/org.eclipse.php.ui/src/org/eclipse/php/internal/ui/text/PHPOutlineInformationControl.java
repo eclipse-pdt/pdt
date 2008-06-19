@@ -53,7 +53,7 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 
 	private class OutlineContentProvider extends PHPOutlineContentProvider {
 		public OutlineContentProvider(TreeViewer viewer, PHPOutlineLabelProvider labelProvider) {
-			super(viewer, labelProvider);
+			super(viewer);
 		}
 	}
 

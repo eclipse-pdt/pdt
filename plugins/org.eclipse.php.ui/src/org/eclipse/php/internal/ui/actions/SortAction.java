@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
+import org.eclipse.dltk.ui.ModelElementSorter;
+import org.eclipse.dltk.ui.viewsupport.SourcePositionSorter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -24,14 +26,11 @@ public class SortAction extends Action {
 
 	public static final String PREF_IS_SORTED = "SortingAction.isChecked"; //$NON-NLS-1$
 	private TreeViewer treeViewer;
-	private PHPElementSorter fSorter;
+	private ModelElementSorter fComparator = new ModelElementSorter();
+	private SourcePositionSorter fSourcePositonComparator = new SourcePositionSorter();
 
 	public SortAction(TreeViewer treeViewer) {
 		super();
-
-		fSorter = new PHPElementSorter();
-		fSorter.setUsingCategories(false);
-		fSorter.setUsingLocation(true);
 
 		this.treeViewer = treeViewer;
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IPHPHelpContextIds.OUTLINE_VIEW);
@@ -39,7 +38,6 @@ public class SortAction extends Action {
 		PHPPluginImages.setLocalImageDescriptors(this, "alphab_sort_co.gif"); //$NON-NLS-1$
 		setToolTipText(PHPUIMessages.getString("PHPOutlinePage_Sort_tooltip"));
 		setDescription(PHPUIMessages.getString("PHPOutlinePage_Sort_description"));
-		treeViewer.setSorter(fSorter);
 
 		boolean checked = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PREF_IS_SORTED); //$NON-NLS-1$
 		valueChanged(checked, false);
@@ -53,9 +51,13 @@ public class SortAction extends Action {
 		setChecked(on);
 		BusyIndicator.showWhile(treeViewer.getControl().getDisplay(), new Runnable() {
 			public void run() {
-				fSorter.setUsingLocation(!on);
-				treeViewer.refresh();
-				treeViewer.expandToLevel(2);
+				if (on) {
+					treeViewer.setComparator(fComparator);
+					//							fDropSupport.setFeedbackEnabled(false);
+				} else {
+					treeViewer.setComparator(fSourcePositonComparator);
+					//							fDropSupport.setFeedbackEnabled(true);
+				}
 			}
 		});
 
