@@ -839,13 +839,12 @@ public class DebugConnectionThread implements Runnable {
 									String sourceHost = DebugConnectionThread.this.socket.getInetAddress().getHostAddress(); //$NON-NLS-1$
 									// Notify succcess
 									if (verifyProtocolID(sessionStartedMessage.getServerProtocolID())) {
-										
 										sendRequest(new StartRequest());
-										
 										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_SUCCEEDED));
 									} else {
 										DebugServerTestController.getInstance().notifyTestListener(new DebugServerTestEvent(sourceHost, DebugServerTestEvent.TEST_FAILED_DEBUGER_VERSION));
 									}
+//									sendNotification(new DebugSessionClosedNotification());
 
 								} else {// Not a test - start debug (create debug target)
 									hookDebugSession((DebugSessionStartedNotification) newInputMessage);
