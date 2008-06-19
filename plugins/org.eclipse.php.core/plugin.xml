@@ -231,7 +231,7 @@
           priority="0">
     </callHerarchiesFactory>
  </extension>
-<!-- <extension
+ <extension
        point="org.eclipse.dltk.core.fileHierarchyResolvers">
     <fileHierarchyResolver
           class="org.eclipse.php.internal.core.filenetwork.PHPFileHierarchyResolver"
@@ -239,5 +239,5 @@
           priority="0">
     </fileHierarchyResolver>
  </extension>
--->
+
 </plugin>

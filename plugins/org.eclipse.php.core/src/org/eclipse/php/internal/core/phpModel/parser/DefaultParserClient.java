@@ -788,7 +788,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 	}
 
 	public void handleSyntaxError(int currToken, String currText, short[] rowOfProbe, int startPosition, int endPosition, int lineNumber) {
-		String unexpectedString = "";
+		/*String unexpectedString = "";
 		boolean addUnexpected;
 
 		if (currToken == getEOFTag()) {
@@ -857,7 +857,7 @@ public abstract class DefaultParserClient extends ContextParserClient {
 		}
 
 		UserData userData = PHPCodeDataFactory.createUserData(workingFileName, startPosition, endPosition, startPosition, lineNumber);
-		markers.add(new PHPMarker(IPHPMarker.ERROR, description, userData));
+		markers.add(new PHPMarker(IPHPMarker.ERROR, description, userData));*/
 	}
 
 	public void handleTask(String taskName, String description, int startPosition, int endPosition, int lineNumber) {
