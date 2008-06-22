@@ -35,6 +35,7 @@ public class ChangeOutlineModeAction extends Action {
 		
 		contentOutlineConfiguration.setMode(mode);
 		contentOutlineConfiguration.getContentProvider(viewer);
+		contentOutlineConfiguration.getLabelProvider(viewer);
 		viewer.refresh(false);
 		PHPUiPlugin.getDefault().getPreferenceStore().setValue(PreferenceConstants.PREF_OUTLINEMODE, mode);
 	}

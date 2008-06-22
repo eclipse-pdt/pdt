@@ -47,6 +47,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected PHPOutlineContentProvider fContentProvider = null;
 	protected JFaceNodeContentProvider fContentProviderHTML = null;
 	protected DecoratingModelLabelProvider fLabelProvider = null;
+	protected PHPOutlineLabelProvider fLabelProviderHTML = null;
 	IPHPTreeContentProvider[] treeProviders;
 	private IPropertyChangeListener propertyChangeListener;
 	private ChangeOutlineModeAction changeOutlineModeActionPHP;
@@ -108,46 +109,14 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return items;
 	}
 
-	public static class DoubleClickListener implements IDoubleClickListener {
-
-		private boolean enabled;
-
-		public void doubleClick(DoubleClickEvent event) {
-			ISelection selection = event.getSelection();
-			if (!(selection instanceof IStructuredSelection)) {
-				return;
-			}
-			Object element = ((IStructuredSelection) selection).getFirstElement();
-			if (!(element instanceof IModelElement)) {
-				return;
-			}
-			try {
-				IEditorPart editor = EditorUtility.openInEditor(element, true);
-				if (editor != null) {
-					EditorUtility.revealInEditor(editor, (PHPCodeData) element);
-				}
-			} catch (PartInitException e) {
-			}
-		}
-
-		public void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-
-		public boolean isEnabled() {
-			return enabled;
-		}
-	}
-
-	DoubleClickListener doubleClickListener = new DoubleClickListener();
 	private SortAction sortAction;
 	private JFaceNodeLabelProvider fSimpleLabelProvider;
 	//	private ShowGroupsAction fShowGroupsAction;
 	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
-	public DoubleClickListener getDoubleClickListener() {
-		return doubleClickListener;
-	}
+//	public DoubleClickListener getDoubleClickListener() {
+//		return doubleClickListener;
+//	}
 
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
@@ -200,17 +169,25 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 				fContentProviderHTML = new JFaceNodeContentProvider();
 			}
 			viewer.setContentProvider(fContentProviderHTML);
+//			viewer.refresh();
 		}
 		return viewer.getContentProvider();
 	}
 
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
-		if (fLabelProvider == null) {
-			AppearanceAwareLabelProvider lprovider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, fStore);
-			fLabelProvider = new DecoratingModelLabelProvider(lprovider);
-			// fLabelProvider.setTreeProviders(getTreeProviders());
+		if (MODE_PHP == mode) {
+			if (fLabelProvider == null) {
+				AppearanceAwareLabelProvider lprovider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, fStore);
+				fLabelProvider = new DecoratingModelLabelProvider(lprovider);
+			}
+			viewer.setLabelProvider(fLabelProvider);
+		} else if (MODE_HTML == mode) {
+			if (fLabelProviderHTML == null) {
+				fLabelProviderHTML = new PHPOutlineLabelProvider();
+			}
+			viewer.setLabelProvider(fLabelProviderHTML);
 		}
-		return fLabelProvider;
+		return (ILabelProvider) viewer.getLabelProvider();
 	}
 
 	public ISelection getSelection(final TreeViewer viewer, final ISelection selection) {

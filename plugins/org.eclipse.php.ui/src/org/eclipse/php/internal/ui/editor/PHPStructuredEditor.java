@@ -86,8 +86,6 @@ import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerC
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
-import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration;
-import org.eclipse.php.internal.ui.outline.PHPContentOutlineConfiguration.DoubleClickListener;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder;
 import org.eclipse.php.internal.ui.search.OccurrencesFinderFactory;
@@ -361,6 +359,22 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	/**
+	 * Updates the selection in the editor's widget with the selection of the
+	 * outline page.
+	 */
+	class OutlineSelectionChangedListener extends AbstractSelectionChangedListener implements IDoubleClickListener {
+		
+		public void selectionChanged(SelectionChangedEvent event) {
+			doSelectionChanged(event);
+		}
+
+		public void doubleClick(DoubleClickEvent event) {
+			doSelectionChanged(event);			
+		}
+
+	}
+
+	/**
 	 * The editor selection changed listener.
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
@@ -368,47 +382,32 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private IResourceChangeListener fResourceChangeListener;
 	private IPropertyChangeListener propertyChangeListener;
 
-	private final class OutlineSelectionListener implements ISelectionChangedListener {
-		private final ConfigurableContentOutlinePage outlinePage;
-		boolean selecting = false;
-
-		private OutlineSelectionListener(ConfigurableContentOutlinePage outlinePage) {
-			this.outlinePage = outlinePage;
-		}
-
-		public void selectionChanged(final SelectionChangedEvent event) {
-			if (!outlinePage.getConfiguration().isLinkedWithEditor(null)) {
-				return;
+	
+	
+	private void doSelectionChanged(ISelection selection) {
+		ISourceReference reference = null;
+		Iterator iter = ((IStructuredSelection) selection).iterator();
+		while (iter.hasNext()) {
+			Object o = iter.next();
+			if (o instanceof ISourceReference) {
+				reference = (ISourceReference) o;
+				break;
 			}
-			/*
-			 * The isFiringSelection check only works if a selection listener
-			 */
-			if (event.getSelection().isEmpty() || selecting)
-				return;
-
-			if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() /*&& getSite().getPage().getActivePart() != getEditorPart()*/)
-				if (event.getSelection() instanceof IStructuredSelection) {
-					final ISelection current = getSelectionProvider().getSelection();
-					if (current instanceof IStructuredSelection) {
-						final Object[] currentSelection = ((IStructuredSelection) current).toArray();
-						final Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
-						if (!Arrays.equals(currentSelection, newSelection))
-							if (newSelection.length > 0) {
-								/*
-								 * No ordering is guaranteed for multiple
-								 * selection
-								 */
-								final Object o = newSelection[0];
-								selecting = true;
-								if (o instanceof ISourceReference) {
-									setSelection((ISourceReference) o, true);
-								}
-								selecting = false;
-							}
-					}
-				}
-			clearStatusLine();
 		}
+		if (!isActivePart() && PHPUiPlugin.getActivePage() != null)
+			PHPUiPlugin.getActivePage().bringToTop(this);
+		setSelection(reference, !isActivePart());
+		
+	}
+
+	protected void doSelectionChanged(SelectionChangedEvent event) {
+		ISelection selection = event.getSelection();
+		doSelectionChanged(selection);
+	}
+
+	protected void doSelectionChanged(DoubleClickEvent event) {
+		ISelection selection = event.getSelection();
+		doSelectionChanged(selection);
 	}
 
 	/**
@@ -2192,7 +2191,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
-	ISelectionChangedListener selectionListener;
+	OutlineSelectionChangedListener selectionListener;
 
 	@Override
 	public Object getAdapter(final Class required) {
@@ -2202,15 +2201,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		// so that if outline selects codedata, editor selects correct item
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
-			DoubleClickListener doubleClickListener = ((PHPContentOutlineConfiguration) outlinePage.getConfiguration()).getDoubleClickListener();
-			if (!doubleClickListener.isEnabled()) {
-				outlinePage.addDoubleClickListener(doubleClickListener);
-				doubleClickListener.setEnabled(true);
-			}
 			if (selectionListener == null) {
-				selectionListener = new OutlineSelectionListener(outlinePage);
+				selectionListener = new OutlineSelectionChangedListener();
+				outlinePage.addDoubleClickListener(selectionListener);
 			}
-			outlinePage.addSelectionChangedListener(selectionListener);
+			selectionListener.install(getSelectionProvider());
 		}
 		return adapter;
 	}
