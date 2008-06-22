@@ -28,7 +28,7 @@ public class MainAutoEditStrategy implements IAutoEditStrategy {
 	private static IAutoEditStrategy matchingBracketAutoEditStrategy = new MatchingBracketAutoEditStrategy();
 	private static IAutoEditStrategy quotesAutoEditStrategy = new QuotesAutoEditStrategy();
 	private static IAutoEditStrategy caseDefaultAutoEditStrategy = new CaseDefaultAutoEditStrategy();
-	private static IAutoEditStrategy docBlockAutoEditStrategy = new DocBlockAutoEditStrategy();
+	private static IAutoEditStrategy docBlockAutoEditStrategy = new PhpDocAutoIndentStrategy();
 	private static IAutoEditStrategy tabAutoEditStrategy = new TabAutoEditStrategy();
 
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
