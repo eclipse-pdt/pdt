@@ -363,6 +363,7 @@ public class DebugConnectionThread implements Runnable {
 	protected void restartInputMessageHandler(DataOutputStream out) {
 		if (inputMessageHandler == null) {
 			inputMessageHandler = new InputMessageHandler(out);
+			inputMessageHandler.start();
 		} else {
 			inputMessageHandler.waitForStart(out, true);
 		}
@@ -376,6 +377,7 @@ public class DebugConnectionThread implements Runnable {
 		try {
 			if (inputManager == null) {
 				inputManager = new InputManager(in);
+				inputManager.start();
 			} else {
 				inputManager.waitForStart(in);
 			}
@@ -690,9 +692,12 @@ public class DebugConnectionThread implements Runnable {
 			isAlive = true;
 			inWork = true;
 			shouldExit = false;
+		}
+		
+		public void start() {
 			theThread = new Thread(this);
 			// This makes the printing much faster.
-			theThread.setPriority(1);//theThread.getPriority()+1);
+			theThread.setPriority(1);
 			theThread.start();
 		}
 
@@ -1003,6 +1008,9 @@ public class DebugConnectionThread implements Runnable {
 			this.in = in;
 			inWork = true;
 			isAlive = true;
+		}
+		
+		public void start() {
 			theThread = new Thread(this);
 			theThread.start();
 			//Log.writeLog("Input Manager is started");
