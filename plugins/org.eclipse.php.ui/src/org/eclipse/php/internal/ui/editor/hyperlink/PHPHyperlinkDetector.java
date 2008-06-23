@@ -18,12 +18,14 @@ import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.actions.OpenAction;
 import org.eclipse.dltk.ui.infoviews.ModelElementArray;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.wst.xml.core.internal.Logger;
 
 public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 
@@ -44,15 +46,22 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 			return null;
 		}
 
-		int offset = region.getOffset();
-
 		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, false);
 		if (input == null) {
 			return null;
 		}
+		
+		IDocument document = textViewer.getDocument();
+		int offset = region.getOffset();
+		try {
+			while (offset > 0 && !Character.isJavaIdentifierPart(document.getChar(offset))) {
+				--offset;
+			}
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
 
 		try {
-			IDocument document = textViewer.getDocument();
 			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
 			if (wordRegion == null)
 				return null;
