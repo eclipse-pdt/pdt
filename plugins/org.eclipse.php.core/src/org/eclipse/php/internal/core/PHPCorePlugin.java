@@ -12,16 +12,11 @@ package org.eclipse.php.internal.core;
 
 import java.util.Hashtable;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.osgi.framework.BundleContext;
  
 /**
@@ -49,29 +44,14 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		Job delayedJob = new Job("Initializing PHP Toolkit") {
-			protected IStatus run(IProgressMonitor monitor) {
-				PHPWorkspaceModelManager.getInstance().startup();
-				IncludePathVariableManager.instance().startUp();
-				return Status.OK_STATUS;
-			}			
-		};
-		delayedJob.setPriority(Job.LONG);
-		delayedJob.schedule();
 	}
 
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
-
-		try {
-			PHPWorkspaceModelManager.getInstance().shutdown();
-		} finally {
-			super.stop(context);
-			plugin = null;
-		}
+		super.stop(context);
+		plugin = null;
 	}
 
 	/**
@@ -97,10 +77,6 @@ public class PHPCorePlugin extends Plugin {
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.core/debug"); //$NON-NLS-1$
 		isDebugMode = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
-
-	public static void setIncludePathVariable(String name, IPath path, IProgressMonitor monitor) {
-		IncludePathVariableManager.instance().putVariable(name, path);
 	}
 
 	public static String getPluginId() {

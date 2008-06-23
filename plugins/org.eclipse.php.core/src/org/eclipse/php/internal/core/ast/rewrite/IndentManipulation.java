@@ -21,7 +21,6 @@ import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.IRegion;
 
-import org.eclipse.php.internal.core.project.build.DefaultPHPBuilderExtension;
 import org.eclipse.text.edits.ReplaceEdit;
 
 /**

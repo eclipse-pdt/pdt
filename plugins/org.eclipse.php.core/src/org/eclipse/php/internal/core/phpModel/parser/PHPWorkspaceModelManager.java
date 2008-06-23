@@ -10,36 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
@@ -50,7 +24,6 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.build.FullPhpProjectBuildVisitor;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -518,14 +491,14 @@ public class PHPWorkspaceModelManager implements ModelListener {
 	}
 
 	private void buildModel(IProgressMonitor monitor, IProject project) {
-		try {
+		/*try {
 			project.accept(new FullPhpProjectBuildVisitor(monitor));
 			fireProjectModelChanged(project);
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {
 			monitor.done();
-		}
+		}*/
 
 	}
 

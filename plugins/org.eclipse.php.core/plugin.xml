@@ -82,28 +82,6 @@
 		  </runtime>
 	</extension>
 
-	<extension point="org.eclipse.core.resources.builders" 
-		id="PhpIncrementalProjectBuilder"
-		name="PHP Project Builder">
-	  <builder>
-    	 <run class="org.eclipse.php.internal.core.project.build.PHPIncrementalProjectBuilder"/>
-	  </builder>
-	</extension>
-	
-	<extension point="org.eclipse.php.core.phpBuilderExtensions">
-	    <builder 
-	        class="org.eclipse.php.internal.core.project.build.DefaultPHPBuilderExtension"
-    	    id="org.eclipse.php.core.project.build.DefaultPHPBuilderExtension"/>
-	</extension>
-
- <!--  <extension
-         point="org.eclipse.wst.common.frameworks.ExtendableOperation">
-      <extendableOperation
-            class="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation"
-            id="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation">
-      </extendableOperation> 
-   </extension> -->
-
    <extension
          id="PhpDocumentSetupParticipant"
          name="PhpDocumentSetupParticipant"
@@ -114,14 +92,6 @@
       </participant>
    </extension>
    
-<!--   <extension
-         point="org.eclipse.php.core.phpModel">
-      <phpModel
-            class="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModelManager"
-            id="org.eclipse.php.core.phpModel.parser.PHPIncludePathModelManager"
-            name="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModelManager"/>
-   </extension>
--->
    <!-- initialize php ui preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.php.internal.core.preferences.PHPCorePreferenceInitializer"/>
