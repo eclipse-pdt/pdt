@@ -13,10 +13,20 @@ package org.eclipse.php.internal.debug.ui;
 import java.util.List;
 
 import org.eclipse.core.internal.runtime.AdapterManager;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.IDebugEventSetListener;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchesListener2;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
@@ -28,10 +38,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistryListener;
-import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
@@ -39,7 +45,12 @@ import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterF
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -70,6 +81,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 	/**
 	 * This method is called upon plug-in activation
 	 */
+	@SuppressWarnings("unchecked")
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		showViewListener = new ShowViewListener();
@@ -97,9 +109,6 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 			list.remove(propertiesFactory);
 			list.add(0, propertiesFactory);
 		}
-
-		// Listen to external php files launches.
-		ExternalFilesRegistry.getInstance().addListener(new ExternalFilesLaunchesListener());
 	}
 
 	/**
@@ -212,7 +221,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 								e.getMessage(), e.getStatus());
 						}
 					} else {
-						//                    page.bringToTop(part);
+						//  page.bringToTop(part);
 					}
 				}
 			}
@@ -376,112 +385,6 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 		}
 
 		public void launchesRemoved(ILaunch[] launches) {
-		}
-	}
-
-	/*
-	 * The external files launches listener is responsible of removing launches and markers (bookmarks, breakpoints etc.)
-	 * that are related to the removed file / launch.
-	 */
-	private static class ExternalFilesLaunchesListener implements ExternalFilesRegistryListener {
-
-		private ILaunchConfigurationType configType;
-
-		/*
-		 * Contructs a new ExternalFilesLaunchesListener.
-		 */
-		public ExternalFilesLaunchesListener() {
-			configType = DebugPlugin.getDefault().getLaunchManager().getLaunchConfigurationType(IPHPDebugConstants.PHPEXELaunchType);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileAdded(java.lang.String, java.lang.String)
-		 */
-		public void externalFileAdded(String localPath) {
-			// Empty
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see org.eclipse.php.internal.core.phpModel.ExternalPHPFilesListener#externalFileRemoved(java.lang.String, java.lang.String)
-		 */
-		public void externalFileRemoved(final String localPath) {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					handleExternalFileRemoval(localPath);
-				}
-			});
-		}
-
-		private void handleExternalFileRemoval(String localPath) {
-			ILaunchManager launchManager = DebugPlugin.getDefault().getLaunchManager();
-			// Remove all the launches that are related to the removed local path.
-			try {
-				ILaunch[] launchs = launchManager.getLaunches();
-				for (int i = 0; i < launchs.length; i++) {
-					if (localPath.equals(launchs[i].getLaunchConfiguration().getAttribute(PHPCoreConstants.ATTR_FILE, (String) null))) {
-						// Terminate the launch in case that the file was closed during the debug session.
-						if (!launchs[i].isTerminated()) {
-							launchs[i].terminate();
-						}
-						launchManager.removeLaunch(launchs[i]);
-					}
-				}
-			} catch (CoreException e) {
-				Logger.logException(e);
-			}
-			// Check if there is a launch for this file.
-			try {
-				ILaunchConfiguration[] configs = launchManager.getLaunchConfigurations(configType);
-				int numConfigs = configs == null ? 0 : configs.length;
-				for (int i = 0; i < numConfigs; i++) {
-					String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-					if (localPath.equals(fileName)) {
-						deleteLaunchConfiguration(configs[i]);
-						break;
-					}
-				}
-			} catch (CoreException e) {
-				Logger.logException(e);
-			}
-
-			// Check for any marker that we have of the file and remove it when this file is closed.
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			try {
-				IMarker[] allMarkers = workspace.getRoot().findMarkers(null, true, IResource.DEPTH_INFINITE);
-				for (IMarker element : allMarkers) {
-					String storageType = element.getAttribute(IPHPDebugConstants.STORAGE_TYPE, "");
-					if (storageType.equals(IPHPDebugConstants.STORAGE_TYPE_EXTERNAL) || storageType.equals(IPHPDebugConstants.STORAGE_TYPE_REMOTE)) {
-						String fileName = element.getAttribute(IPHPDebugConstants.STORAGE_FILE, "");
-						if (localPath.equals(fileName)) {
-							element.delete();
-						}
-					}
-				}
-			} catch (CoreException e) {
-				Logger.logException(e);
-			}
-		}
-
-		// Deletes a launch configuration
-		private void deleteLaunchConfiguration(final ILaunchConfiguration launchConfig) throws CoreException {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					ILaunchConfiguration config = launchConfig;
-					try {
-						if (config instanceof ILaunchConfigurationWorkingCopy) {
-							config = ((ILaunchConfigurationWorkingCopy) config).getOriginal();
-						}
-						if (config != null) {
-							config.delete();
-						}
-					} catch (CoreException ce) {
-						Logger.logException(ce);
-					}
-				}
-			});
-
 		}
 	}
 }

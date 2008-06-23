@@ -25,10 +25,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -54,7 +51,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -320,11 +322,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	private void handleChangeFileToDebug(final Text textField) {
 		final IResource resource = LaunchUtilities.getFileFromDialog(null, getShell(), LaunchUtil.getFileExtensions(), LaunchUtil.getRequiredNatures(), true);
 		if (resource instanceof IFile) {
-			if (resource instanceof ExternalFileWrapper) {
-				textField.setText(resource.getFullPath().toOSString());
-			} else {
-				textField.setText(resource.getFullPath().toString());
-			}
+			textField.setText(resource.getFullPath().toString());
+
 			String fileLocation = ""; //$NON-NLS-1$
 			IPath location = resource.getLocation();
 			if (location != null) {
@@ -363,7 +362,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	public boolean isValid(final ILaunchConfiguration launchConfig) {
 		setErrorMessage(null);
 		try {
-			final String phpExe = launchConfig.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			final String phpExe = launchConfig.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
 			boolean phpExeExists = true;
 			try {
 				final File file = new File(phpExe);
@@ -378,13 +377,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 			}
 
 			if (enableFileSelection) {
-				final String phpFile = launchConfig.getAttribute(PHPCoreConstants.ATTR_FILE, ""); //$NON-NLS-1$
+				final String phpFile = launchConfig.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
 				if (!FileUtils.resourceExists(phpFile)) {
-					if (ExternalFilesRegistry.getInstance().isEntryExist(phpFile)) {
-						// Allow external files that are open in the editor.
-						debugFileTextField.setData(phpFile);
-						return true;
-					}
 					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
 					return false;
 				} else {//resource DOES exist
@@ -421,27 +415,27 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		// Set the executable path
 		final String selectedExecutable = phpsComboBlock.getSelectedExecutablePath();
 		if (selectedExecutable.length() == 0) {
-			configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		} else {
-			configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, selectedExecutable);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, selectedExecutable);
 		}
 		// Set the PHP ini path
 		final String iniPath = phpsComboBlock.getSelectedIniPath();
 		if (iniPath.length() == 0) {
-			configuration.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
 		} else {
-			configuration.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 		}
 
 		configuration.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, debuggerID);
 
 		String arguments = null;
 		if (!enableFileSelection || (arguments = debugFileTextField.getText().trim()).length() == 0) {
-			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, (String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
 		} else {
-			configuration.setAttribute(PHPCoreConstants.ATTR_FILE, arguments);
-			configuration.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, debugFileTextField.getData().toString());
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE, arguments);
+			configuration.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, debugFileTextField.getData().toString());
 		}
 		final boolean debugInfo = enableDebugInfoOption ? runWithDebugInfo != null && runWithDebugInfo.getSelection() : true;
 		configuration.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, debugInfo);
@@ -474,17 +468,17 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 	 */
 	public void setDefaults(final ILaunchConfigurationWorkingCopy configuration) {
 		try {
-			String executableLocation = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			String executableLocation = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
 			if (executableLocation.equals("")) { //$NON-NLS-1$
 				PHPexes phpExes = PHPexes.getInstance();
 				final PHPexeItem phpExeItem = phpExes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId());
 				if (phpExeItem == null)
 					return;
 				executableLocation = phpExeItem.getExecutable().toString();
-				configuration.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, executableLocation);
+				configuration.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, executableLocation);
 
 				String iniPath = phpExeItem.getINILocation() != null ? phpExeItem.getINILocation().toString() : null;
-				configuration.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
+				configuration.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 
 				configuration.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPDebugPlugin.getStopAtFirstLine());
 				applyLaunchDelegateConfiguration(configuration);
@@ -546,8 +540,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		String arguments = ""; //$NON-NLS-1$
 		String fullPath = ""; //$NON-NLS-1$
 		try {
-			arguments = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, ""); //$NON-NLS-1$
-			fullPath = configuration.getAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
+			arguments = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
+			fullPath = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, ""); //$NON-NLS-1$
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$
 		}
@@ -582,8 +576,8 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 		String iniPath = ""; //$NON-NLS-1$
 		String debuggerID = ""; //$NON-NLS-1$
 		try {
-			location = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
-			iniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, ""); //$NON-NLS-1$
+			location = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, ""); //$NON-NLS-1$
+			iniPath = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, ""); //$NON-NLS-1$
 			debuggerID = configuration.getAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, PHPDebugPlugin.getCurrentDebuggerId());
 		} catch (final CoreException ce) {
 			Logger.log(Logger.ERROR, "Error reading configuration", ce); //$NON-NLS-1$

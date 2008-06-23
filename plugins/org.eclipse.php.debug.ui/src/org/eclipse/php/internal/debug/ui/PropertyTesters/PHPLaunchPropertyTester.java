@@ -13,20 +13,11 @@ package org.eclipse.php.internal.debug.ui.PropertyTesters;
 import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
-import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
-import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * A property tester for the launch shortcuts.
@@ -36,7 +27,6 @@ import org.eclipse.ui.part.FileEditorInput;
 public class PHPLaunchPropertyTester extends PropertyTester {
 
 	private static final Object PHP_SOURCE_ID = "org.eclipse.php.core.phpsource";
-	private static final String SCRIPT_ID = "script";
 
 	/**
 	 * Executes the property test determined by the parameter <code>property</code>. 
@@ -55,52 +45,20 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 */
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof List) {
-			List list = (List) receiver;
+			List<?> list = (List<?>) receiver;
 			if (list.size() > 0) {
-				String launchType = args.length > 0 ? args[0].toString() : "";
-				// Test only the first element
-				IFile file = null;
 				Object obj = list.get(0);
-				if (obj instanceof FileEditorInput) {
-					FileEditorInput editorInput = (FileEditorInput) list.get(0);
-					file = editorInput.getFile();
-				} else if (obj instanceof IFile) {
-					file = (IFile) obj;
-				} else if (SCRIPT_ID.equalsIgnoreCase(launchType)) {
-					if (obj instanceof LocalFileStorageEditorInput) {
-						// In this case, the editor input is probably an external file. 
-						// Allow only script run/debug on this kind of file (internal executable launch).
-						LocalFileStorageEditorInput editorInput = (LocalFileStorageEditorInput) obj;
-						// Try to get it first from the external files registry.
-						IPath fullPath = editorInput.getStorage().getFullPath();
-						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toOSString());
-						if (file == null) {
-							return false; //if the files are not in the ExternalFilesRegistry then this 
-							//means they are coming from include path and we don't want to allow debugging those files directly only through user's files.
+				if (obj instanceof IAdaptable) {
+					IResource resource = (IResource)((IAdaptable)obj).getAdapter(IResource.class);
+					if (resource instanceof IFile) {
+						IFile file = (IFile) resource;
+						try {
+							return file.getContentDescription().getContentType().getId().equals(PHP_SOURCE_ID);
+						} catch (ResourceException re) {
+							return PHPModelUtil.isPhpFile(file);
+						} catch (Exception e) {
 						}
-					} else if (obj instanceof IURIEditorInput || obj instanceof NonExistingPHPFileEditorInput) {
-						IPath fullPath = null;
-						if (obj instanceof IURIEditorInput) {
-							fullPath = URIUtil.toPath(((IURIEditorInput) obj).getURI());
-						} else {
-							fullPath = ((NonExistingPHPFileEditorInput) obj).getPath();
-						}
-
-						file = ExternalFilesRegistry.getInstance().getFileEntry(fullPath.toOSString());
 					}
-				}
-				try {
-					//  Allow only a PHP Script launch shortcut in case the file is part of a non-PHP project.
-					if (file != null && file.getProject() != null && !file.getProject().hasNature(PHPNature.ID) && !SCRIPT_ID.equalsIgnoreCase(launchType)) {
-						return false;
-					}
-				} catch (CoreException ce) {
-				}
-				try {
-					return file.getContentDescription().getContentType().getId().equals(PHP_SOURCE_ID);
-				} catch (ResourceException re) {
-					return PHPModelUtil.isPhpFile(file);
-				} catch (Exception e) {
 				}
 			}
 		}

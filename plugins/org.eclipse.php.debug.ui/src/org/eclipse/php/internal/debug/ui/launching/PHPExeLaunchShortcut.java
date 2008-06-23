@@ -15,14 +15,27 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
@@ -32,16 +45,17 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
-import org.eclipse.php.internal.debug.core.preferences.*;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
+import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
+import org.eclipse.php.internal.debug.core.preferences.PHPexes;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
@@ -110,14 +124,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 					Logger.logException(e);
 				}
 				path = ((NonExistingPHPFileEditorInput) input).getPath();//Untitled dummy path
-			}
-
-			if (path != null) {
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-					file = ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
-				} else {
-					file = ExternalFileWrapper.createFile(path.toOSString());
-				}
 			}
 		}
 		if (file != null) {
@@ -275,9 +281,9 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 
 			int numConfigs = configs == null ? 0 : configs.length;
 			for (int i = 0; i < numConfigs; i++) {
-				String fileName = configs[i].getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
-				String exeName = configs[i].getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-				String iniPath = configs[i].getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
+				String fileName = configs[i].getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+				String exeName = configs[i].getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+				String iniPath = configs[i].getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
 				PHPexeItem item = PHPexes.getInstance().getItemForFile(exeName, iniPath);
 
 				if (phpPathString.equals(fileName) && defaultEXE.equals(item)) {
@@ -306,11 +312,11 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(PHPDebugCorePreferenceNames.PHP_DEBUGGER_ID, defaultEXE.getDebuggerID());
 		AbstractDebuggerConfiguration debuggerConfiguration = PHPDebuggersRegistry.getDebuggerConfiguration(defaultEXE.getDebuggerID());
 		wc.setAttribute(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, debuggerConfiguration.getScriptLaunchDelegateClass());
-		wc.setAttribute(PHPCoreConstants.ATTR_FILE, phpPathString);
-		wc.setAttribute(PHPCoreConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
-		wc.setAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getExecutable().getAbsolutePath().toString());
+		wc.setAttribute(IPHPDebugConstants.ATTR_FILE, phpPathString);
+		wc.setAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, phpFileFullLocation);
+		wc.setAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, defaultEXE.getExecutable().getAbsolutePath().toString());
 		String iniPath = defaultEXE.getINILocation() != null ? defaultEXE.getINILocation().toString() : null;
-		wc.setAttribute(PHPCoreConstants.ATTR_INI_LOCATION, iniPath);
+		wc.setAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, iniPath);
 		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(phpProject));
 

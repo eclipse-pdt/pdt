@@ -11,17 +11,25 @@
 package org.eclipse.php.internal.debug.ui.breakpoint.adapter;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ISuspendResume;
 import org.eclipse.debug.ui.actions.IRunToLineTarget;
 import org.eclipse.debug.ui.actions.RunToLineHandler;
-import org.eclipse.jface.text.*;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
@@ -31,9 +39,10 @@ import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
-import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.util.StatusLineMessageTimerManager;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -116,13 +125,6 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 		throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.actions.IRunToLineTarget#canRunToLine(org.eclipse.ui.IWorkbenchPart,
-	 *      org.eclipse.jface.viewers.ISelection,
-	 *      org.eclipse.debug.core.model.ISuspendResume)
-	 */
 	public boolean canRunToLine(IWorkbenchPart part, ISelection selection, ISuspendResume target) {
 		//TODO: PHP Debug elements should have a shared marker and test for here
 		//This will be an enhancement to the generic debug API.
@@ -139,25 +141,13 @@ public class PHPRunToLineAdapter implements IRunToLineTarget {
 	 * @return the IFile that this strategy is operating on
 	 */
 	protected IFile getFile(ITextEditor textEditor) {
-		if (textEditor == null)
-			return null;
-		IEditorInput input = textEditor.getEditorInput();
-		if (input instanceof IFileEditorInput) {
-			return ((IFileEditorInput) input).getFile();
-		}
-		if (input instanceof IURIEditorInput) {
-			String filePath = new Path(((IURIEditorInput)input).getURI().getPath()).toOSString();
-			IFile result = ExternalFilesRegistry.getInstance().getFileEntry(filePath);
-			if (result == null && filePath.length() > 0 && filePath.charAt(0) == '/') {
-				return ExternalFilesRegistry.getInstance().getFileEntry(filePath.substring(1));
+		if (textEditor != null) {
+			IModelElement modelElement =  EditorUtility.getEditorInputModelElement(textEditor, false);
+			if (modelElement != null) {
+				return (IFile) modelElement.getResource();
 			}
-			return result;
-		}
-		if (input instanceof NonExistingPHPFileEditorInput) {
-			return (IFile)((NonExistingPHPFileEditorInput)input).getAdapter(IResource.class);
 		}
 		return null;
-		
 	}
 
 	/**

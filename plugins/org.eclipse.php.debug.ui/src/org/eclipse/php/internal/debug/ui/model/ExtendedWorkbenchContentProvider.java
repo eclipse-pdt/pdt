@@ -13,11 +13,7 @@
  */
 package org.eclipse.php.internal.debug.ui.model;
 
-import java.util.ArrayList;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 
 /**
@@ -73,34 +69,8 @@ public class ExtendedWorkbenchContentProvider extends BaseWorkbenchContentProvid
 	public Object[] getChildren(Object element) {
 		Object[] children = super.getChildren(element);
 		if (isProvidingExternals && element instanceof IWorkspaceRoot) {
-			// Add the external files as IFiles
-			IFile[] externalFiles = ExternalFilesRegistry.getInstance().getAllAsIFiles();
-			externalFiles = filterNonExistingFiles(externalFiles);
-			if (externalFiles.length > 0) {
-				if (children.length == 0) {
-					return externalFiles;
-				}
-				Object[] combinedChildren = new Object[children.length + externalFiles.length];
-				System.arraycopy(children, 0, combinedChildren, 0, children.length);
-				System.arraycopy(externalFiles, 0, combinedChildren, children.length, externalFiles.length);
-				return combinedChildren;
-			}
+			// TODO: combine children with external files
 		}
 		return children;
-	}
-
-	/*
-	 * Filter out any non-existing files.
-	 */
-	private IFile[] filterNonExistingFiles(IFile[] files) {
-		ArrayList existingFiles = new ArrayList(files.length);
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].getFullPath().toFile().exists()) {
-				existingFiles.add(files[i]);
-			}
-		}
-		IFile[] existing = new IFile[existingFiles.size()];
-		existingFiles.toArray(existing);
-		return existing;
 	}
 }
