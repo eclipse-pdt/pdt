@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
-import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
@@ -22,19 +21,16 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.treecontent.TreeProvider;
-import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.internal.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -114,10 +110,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	//	private ShowGroupsAction fShowGroupsAction;
 	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
-//	public DoubleClickListener getDoubleClickListener() {
-//		return doubleClickListener;
-//	}
-
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
 		//		fShowGroupsAction = new ShowGroupsAction("Show Groups", viewer);
@@ -169,7 +161,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 				fContentProviderHTML = new JFaceNodeContentProvider();
 			}
 			viewer.setContentProvider(fContentProviderHTML);
-//			viewer.refresh();
 		}
 		return viewer.getContentProvider();
 	}

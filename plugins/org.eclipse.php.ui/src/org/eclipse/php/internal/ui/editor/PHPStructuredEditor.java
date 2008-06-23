@@ -135,6 +135,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
 
+	private IContentOutlinePage fPHPOutlinePage;
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
 	private CompositeActionGroup fActionGroups;
@@ -1089,6 +1090,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (fActivationListener != null) {
 			PlatformUI.getWorkbench().removeWindowListener(fActivationListener);
 			fActivationListener = null;
+		}
+		// some things in the configuration need to clean
+		// up after themselves
+		if (fPHPOutlinePage != null) {
+			if (fPHPOutlinePage instanceof ConfigurableContentOutlinePage && fPHPOutlinePageListener != null) {
+				((ConfigurableContentOutlinePage) fPHPOutlinePage).removeDoubleClickListener(fPHPOutlinePageListener);
+			}
+			if (fPHPOutlinePageListener != null) {
+				fPHPOutlinePageListener.uninstall(fPHPOutlinePage);
+			}
 		}
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
@@ -2191,7 +2202,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
-	OutlineSelectionChangedListener selectionListener;
+	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
 	@Override
 	public Object getAdapter(final Class required) {
@@ -2201,11 +2212,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		// so that if outline selects codedata, editor selects correct item
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
-			if (selectionListener == null) {
-				selectionListener = new OutlineSelectionChangedListener();
-				outlinePage.addDoubleClickListener(selectionListener);
+			if (fPHPOutlinePageListener == null) {
+				fPHPOutlinePageListener = new OutlineSelectionChangedListener();
+				outlinePage.addDoubleClickListener(fPHPOutlinePageListener);
+//				outlinePage.addSelectionChangedListener(fOutlinePageListener);
 			}
-			selectionListener.install(getSelectionProvider());
+			fPHPOutlinePageListener.install(outlinePage);
+			fPHPOutlinePage = outlinePage;
 		}
 		return adapter;
 	}
