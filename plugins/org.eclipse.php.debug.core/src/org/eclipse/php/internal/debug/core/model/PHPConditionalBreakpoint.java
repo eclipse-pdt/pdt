@@ -47,15 +47,6 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
         IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
             public void run(IProgressMonitor monitor) throws CoreException {
                 IMarker marker = resource.createMarker("org.eclipse.php.debug.core.PHPConditionalBreakpointMarker");
-/*                marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
-                marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
-                marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));
-                marker.setAttribute(IPHPConstants.ConditionEnabled, Boolean.FALSE);
-                marker.setAttribute(IPHPConstants.Condition, "");
-                marker.setAttribute(IBreakpoint.PERSISTED, true);
-                marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);*/
-
-
                 attributes.put(IBreakpoint.ENABLED, Boolean.TRUE);
                 attributes.put(IBreakpoint.ID, getModelIdentifier());
                 attributes.put(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));
@@ -64,12 +55,6 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
                 attributes.put(IBreakpoint.PERSISTED, Boolean.FALSE);
                 attributes.put(IMarker.LINE_NUMBER, new Integer(lineNumber));
                 marker.setAttributes(attributes);
-//                if (attributes != null) {
-//                    Object attribute = attributes.get(IPHPConstants.Include_Storage);
-//                    marker.setAttribute(IPHPConstants.Include_Storage, attribute);
-//                    attribute = attributes.get("org.eclipse.wst.sse.ui.extensions.breakpoint.path");
-//                    marker.setAttribute("org.eclipse.wst.sse.ui.extensions.breakpoint.path", attribute);
-//                }
                 setMarker(marker);
                 setEnabled(true);
                 register(true);

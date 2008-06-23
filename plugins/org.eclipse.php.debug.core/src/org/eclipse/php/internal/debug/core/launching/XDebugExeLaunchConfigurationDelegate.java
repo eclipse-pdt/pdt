@@ -34,7 +34,6 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -62,9 +61,9 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 
 		// get the launch info: php exe, php ini
-		final String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		final String phpIniString = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
-		final String phpScriptString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+		final String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+		final String phpIniString = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+		final String phpScriptString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			displayErrorMessage("No script specified");

@@ -40,8 +40,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -115,10 +113,10 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			return;
 		}
 
-		String phpExeString = configuration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		String phpIniPath = configuration.getAttribute(PHPCoreConstants.ATTR_INI_LOCATION, (String) null);
-		String projectName = configuration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
-		String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+		String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+		String phpIniPath = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
+		String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_WORKING_DIRECTORY, (String) null);
+		String fileNameString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		boolean runWithDebugInfo = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 
 		if (monitor.isCanceled()) {
@@ -142,18 +140,9 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String absolutePath = null;
 		if (projectName == null) {
 			IResource res = workspaceRoot.findMember(filePath);
-			//Fix bug #202741
-			if (res == null && (!WINDOWS || ExternalFilesRegistry.getInstance().isEntryExist(filePath.toOSString())/*|| filePath.getDevice() != null*/)) {
-				// Get a dummy project because we are probably executing a file that is located out
-				// of the workspace.
-				dummyProject = ExternalFilesRegistry.getInstance().getExternalFilesProject();
-				project = dummyProject;
-				absolutePath = filePath.makeAbsolute().toOSString();
-			} else {
-				if (res == null || !res.isAccessible()) {
-					displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
-					return;
-				}
+			if (res == null || !res.isAccessible()) {
+				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
+				return;
 			}
 			if (project == null) {
 				project = res.getProject();
@@ -362,7 +351,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	}
 
 	protected boolean saveBeforeLaunch(ILaunchConfiguration configuration, String mode, IProgressMonitor monitor) throws CoreException {
-		String filePath = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, "");
+		String filePath = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, "");
 		if ("".equals(filePath)) {
 			return super.saveBeforeLaunch(configuration, mode, monitor);
 		}

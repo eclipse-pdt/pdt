@@ -18,6 +18,12 @@ import org.eclipse.ui.IURIEditorInput;
  */
 public interface IPHPDebugConstants {
 
+	public static final String ATTR_WORKING_DIRECTORY = "ATTR_WORKING_DIRECTORY"; //$NON-NLS-1$
+	public static final String ATTR_EXECUTABLE_LOCATION = "ATTR_LOCATION"; //$NON-NLS-1$
+	public static final String ATTR_INI_LOCATION = "ATTR_INI_LOCATION"; //$NON-NLS-1$
+	public static final String ATTR_FILE = "ATTR_FILE"; //$NON-NLS-1$
+	public static final String ATTR_FILE_FULL_PATH = "ATTR_FILE_FULL_PATH"; //$NON-NLS-1$
+	
 	/**
 	 * Unique identifier for the PHP debug model (value 
 	 */

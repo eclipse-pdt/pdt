@@ -20,9 +20,17 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.variables.VariablesPlugin;
-import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
@@ -34,7 +42,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -53,7 +60,14 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveRegistry;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 
 /**
  * Utilities that are shared to all the PHP launches.
@@ -684,7 +698,7 @@ public class PHPLaunchUtilities {
 	 */
 	private static IProject getProject(ILaunchConfiguration configuration) {
 		try {
-			String fileNameString = configuration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+			String fileNameString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 			final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 			final IPath filePath = new Path(fileNameString);
 			IResource res = workspaceRoot.findMember(filePath);
