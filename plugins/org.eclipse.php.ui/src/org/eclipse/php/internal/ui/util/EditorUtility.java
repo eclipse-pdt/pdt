@@ -23,7 +23,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.filesystem.URIUtil;
-import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -64,8 +63,6 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
@@ -92,7 +89,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
@@ -284,13 +280,13 @@ public class EditorUtility {
 				Path path = new Path(externalSource.getPath());
 
 				// If this is external file:
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-					//first check maybe it is an untitled PHP document
-					if ((path.segmentCount() > 1) && path.segment(path.segmentCount() - 2).equals("Untitled_Documents")) { //$NON-NLS-1$
-						return new NonExistingPHPFileEditorInput(path);
-					}
-					return new FileStoreEditorInput(new LocalFile(externalSource));
-				}
+//				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+//					//first check maybe it is an untitled PHP document
+//					if ((path.segmentCount() > 1) && path.segment(path.segmentCount() - 2).equals("Untitled_Documents")) { //$NON-NLS-1$
+//						return new NonExistingPHPFileEditorInput(path);
+//					}
+//					return new FileStoreEditorInput(new LocalFile(externalSource));
+//				}
 
 				LocalFileStorage fileStorage = new LocalFileStorage((File) source);
 				fileStorage.setProject(project);
@@ -302,15 +298,15 @@ public class EditorUtility {
 		}
 
 		//Another test whether this external file test is an UNTITLED DOCUMENT ,i.e the file does not really exist
-		if (resource instanceof ExternalFileWrapper) {
-			File untitledDocumentDummyFile = resource.getFullPath().toFile();
-			//this file should not exist
-			if (untitledDocumentDummyFile.exists()) {
-				return null;
-			}
-
-			return new NonExistingPHPFileEditorInput(resource.getFullPath());
-		}
+//		if (resource instanceof ExternalFileWrapper) {
+//			File untitledDocumentDummyFile = resource.getFullPath().toFile();
+//			//this file should not exist
+//			if (untitledDocumentDummyFile.exists()) {
+//				return null;
+//			}
+//
+//			return new NonExistingPHPFileEditorInput(resource.getFullPath());
+//		}
 
 		if (resource instanceof IFile)
 			return new FileEditorInput((IFile) resource);
@@ -578,31 +574,31 @@ public class EditorUtility {
 				IEditorInput editorInput = null;
 
 				// If this file is external - put it into the external files registry
-				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-					if (!localIFile.exists()) {
-						IFile externalFile = ExternalFileWrapper.createFile(fileName);
-						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
-					}
-				}
+//				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+//					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+//					if (!localIFile.exists()) {
+//						IFile externalFile = ExternalFileWrapper.createFile(fileName);
+//						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
+//					}
+//				}
 
 				// If this is external file:
-				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
-				} else {
+//				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+//					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
+//				} else {
 					LocalFileStorage fileStorage = new LocalFileStorage(localFile);
 					fileStorage.setProject(file.getProject());
 					editorInput = new LocalFileStorageEditorInput(fileStorage);
-				}
+//				}
 
-				if (editorInput != null) {
+//				if (editorInput != null) {
 					final IWorkbenchPage p = PHPUiPlugin.getActivePage();
 					if (p != null) {
 						IEditorPart part = openInEditor(editorInput, getEditorID(editorInput), true);
 						return revealInEditor(part, lineNumber);
 					}
 					return null;
-				}
+//				}
 			}
 		}
 
@@ -818,7 +814,7 @@ public class EditorUtility {
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
-				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+//				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 			}
 		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			// External file editor input. It's usually used when opening PHP file
@@ -831,7 +827,7 @@ public class EditorUtility {
 			} else {
 				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			}
-			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+//			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 		}
 
 		return resource;

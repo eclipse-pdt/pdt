@@ -14,13 +14,11 @@ import java.io.File;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.editors.text.ILocationProvider;
@@ -103,9 +101,9 @@ public class NonExistingPHPFileEditorInput implements IEditorInput, ILocationPro
 		if (ILocationProvider.class == adapter) {
 			return this;
 		}
-		if (IResource.class == adapter) {			
-			return ExternalFilesRegistry.getInstance().getFileEntry(getPath().toOSString());
-		}
+//		if (IResource.class == adapter) {			
+//			return ExternalFilesRegistry.getInstance().getFileEntry(getPath().toOSString());
+//		}
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 

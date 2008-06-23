@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -29,7 +30,6 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Shell;
@@ -127,21 +127,17 @@ public class ActionUtils {
 	}
 
 	public static boolean isPHPSource(ISourceModule element) {
-		IResource resource = element.getResource();
-		if (resource == null) {
-			return false;
-		} else if (resource instanceof IFile && ExternalFilesRegistry.getInstance().isEntryExist((IFile) resource)) {
-			return true;
-		}
-		IProject resourceProject = resource.getProject();
-		if (resourceProject == null)
-			return false;
-		IProjectNature nature;
-		try {
-			nature = resourceProject.getNature(PHPNature.ID);
-			if (nature != null)
-				return true;
-		} catch (CoreException e) {
+		IScriptProject scriptProject = element.getScriptProject();
+		if (scriptProject != null) {
+			IProject project = scriptProject.getProject();
+			if (project != null) {
+				try {
+					IProjectNature nature = project.getNature(PHPNature.ID);
+					if (nature != null)
+						return true;
+				} catch (CoreException e) {
+				}
+			}
 		}
 		return false;
 	}

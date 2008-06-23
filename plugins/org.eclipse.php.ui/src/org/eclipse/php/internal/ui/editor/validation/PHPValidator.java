@@ -22,7 +22,6 @@ import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.IPHPMarker;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.internal.validation.HTMLValidationReporter;
@@ -110,9 +109,9 @@ public class PHPValidator implements IValidator, ISourceValidator {
 
 		// get project model (or external one)
 		PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
-		if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
-			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
-		}
+//		if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
+//			projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+//		}
 
 		// ignore the case wbefore the project is created - exit
 		if (projectModel == null) {

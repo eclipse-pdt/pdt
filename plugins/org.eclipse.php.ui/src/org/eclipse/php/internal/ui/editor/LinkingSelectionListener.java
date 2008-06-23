@@ -5,7 +5,6 @@
 package org.eclipse.php.internal.ui.editor;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -17,7 +16,6 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xml.core.internal.document.NodeImpl;
@@ -87,9 +85,9 @@ public class LinkingSelectionListener implements ISelectionListener {
 			//Check if PHPCodeData since selection can be FileData, FunctionData etc...
 			if (selectedElement instanceof PHPCodeData) {
 				UserData userData = ((PHPCodeData) selectedElement).getUserData();
-				if (userData != null && ExternalFilesRegistry.getInstance().isEntryExist(new Path(userData.getFileName()).toOSString())) {
-					return;
-				}
+//				if (userData != null && ExternalFilesRegistry.getInstance().isEntryExist(new Path(userData.getFileName()).toOSString())) {
+//					return;
+//				}
 			}
 
 			Object oldSelectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();

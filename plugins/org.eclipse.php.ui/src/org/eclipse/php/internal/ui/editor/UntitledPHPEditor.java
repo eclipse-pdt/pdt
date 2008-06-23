@@ -20,23 +20,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveAsDialog;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
-import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.editors.text.TextFileDocumentProvider;
-import org.eclipse.ui.internal.WorkbenchPage;
 import org.eclipse.ui.internal.editors.text.NLSUtility;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -68,7 +59,7 @@ public class UntitledPHPEditor extends PHPStructuredEditor {
 	 */
 	public IFile getFile() {
 		NonExistingPHPFileEditorInput editorInput = (NonExistingPHPFileEditorInput) getEditorInput();
-		return ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getPath().toOSString());
+		return null; //ExternalFilesRegistry.getInstance().getFileEntry(editorInput.getPath().toOSString());
 	}
 
 	/**
