@@ -11,9 +11,19 @@
 package org.eclipse.php.internal.core.phpModel;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -21,14 +31,29 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModelManager;
+import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
+import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel.IncludePathModelType;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassConstData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassVarData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPConstantData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileDataUtilities;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPIncludeFileData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPKeywordData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPModifier;
+import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
+import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.text.StringUtils;
 
 public class PHPModelUtil {
@@ -357,9 +382,6 @@ public class PHPModelUtil {
 			if (path.segmentCount() < 2) // path doesnt include project name, return null
 				return null;
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-			if (resource == null && ExternalFilesRegistry.getInstance().isEntryExist(new Path(filename).toOSString())) {
-				resource = ExternalFilesRegistry.getInstance().getFileEntry(new Path(filename).toOSString());
-			}
 			return resource;
 		} else if (element instanceof PHPProjectModel) {
 			final PHPProjectModel projectModel = (PHPProjectModel) element;
@@ -527,14 +549,6 @@ public class PHPModelUtil {
 			return false;
 		}
 		String extension = fileName.substring(index + 1);
-
-		// handle SVN external file extension (e.g sample.php:12358)
-		// fixed bug 186064
-		if (file instanceof ExternalFileWrapper) {
-			int position = extension.indexOf(':');
-			extension = position > 0 ? extension.substring(0, position) : extension;
-		}
-
 		final IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForPHP.ContentTypeID_PHP);
 		final String[] validExtensions = type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		for (String validExtension : validExtensions) {

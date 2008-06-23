@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core;
 import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
 
 public interface PHPCoreConstants {
+	
 	public static final String PLUGIN_ID = PHPCorePlugin.ID;
 	public static final String IP_VARIABLE_INITIALIZER_EXTPOINT_ID = "includePathVariables"; //$NON-NLS-1$
 
@@ -27,13 +28,6 @@ public interface PHPCoreConstants {
 	//
 	public static final String PHP4 = PHPVersion.PHP4;
 	public static final String PHP5 = PHPVersion.PHP5;
-
-	public static final String ATTR_WORKING_DIRECTORY = "ATTR_WORKING_DIRECTORY"; //$NON-NLS-1$
-	public static final String ATTR_EXECUTABLE_LOCATION = "ATTR_LOCATION"; //$NON-NLS-1$
-	public static final String ATTR_INI_LOCATION = "ATTR_INI_LOCATION"; //$NON-NLS-1$
-	public static final String ATTR_TOOL_ARGUMENTS = "ATTR_TOOL_ARGUMENTS"; //$NON-NLS-1$
-	public static final String ATTR_FILE = "ATTR_FILE"; //$NON-NLS-1$
-	public static final String ATTR_FILE_FULL_PATH = "ATTR_FILE_FULL_PATH"; //$NON-NLS-1$
 
 	public static final String TASK_PRIORITIES = PLUGIN_ID + ".taskPriorities"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_HIGH = "HIGH"; //$NON-NLS-1$

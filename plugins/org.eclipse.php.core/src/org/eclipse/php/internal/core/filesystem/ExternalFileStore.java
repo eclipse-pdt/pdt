@@ -24,7 +24,6 @@ import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.resources.ExternalFileWrapper;
 
 /**
  * An IFileStore that handles non-existing files (externals).

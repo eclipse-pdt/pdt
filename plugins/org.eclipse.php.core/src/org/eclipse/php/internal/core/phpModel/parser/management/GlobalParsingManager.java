@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 
@@ -60,7 +59,7 @@ public class GlobalParsingManager {
 			ProjectParsingManager projectParsingManager = new ProjectParsingManager(project);
 			project2ParsingManagerMap.put(project, projectParsingManager);
 			PHPProjectModel projectModel = null;
-			if (project != null && !ExternalFilesRegistry.getInstance().getExternalFilesProject().equals(project)) {
+			if (project != null/* && !ExternalFilesRegistry.getInstance().getExternalFilesProject().equals(project)*/) {
 				register2RemoveManagerWhenProjectCloses(project);
 				projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(project);
 			} else {

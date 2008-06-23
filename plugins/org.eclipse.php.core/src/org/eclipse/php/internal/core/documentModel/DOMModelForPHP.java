@@ -20,7 +20,6 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
@@ -90,18 +89,18 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (fileData == null) {
 			IFile file = getIFile();
 			// external file
-			if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
-				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
-			}
+//			if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
+//				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
+//			}
 		}
 		return fileData;
 	}
 
 	public PHPProjectModel getProjectModel() {
 		IFile iFile = getIFile();
-		if (iFile != null && ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
-			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
-		}
+//		if (iFile != null && ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
+//			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+//		}
 
 		PHPFileData fileData = internalGetFileData(false);
 		return fileData != null ? PHPModelUtil.getProjectModelForFile(fileData) : null;
@@ -119,10 +118,10 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			}
 
 			// external file
-			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
-				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
-				projectModel.fileWasChanged(file, getStructuredDocument());
-			}
+//			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
+//				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
+//				projectModel.fileWasChanged(file, getStructuredDocument());
+//			}
 		}
 	}
 
@@ -147,9 +146,9 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (result != null) {
 			return result;
 		}
-		if (ExternalFilesRegistry.getInstance().isEntryExist(new Path(path).toOSString())) {
-			result = ExternalFilesRegistry.getInstance().getFileEntry(new Path(path).toOSString());
-		}
+//		if (ExternalFilesRegistry.getInstance().isEntryExist(new Path(path).toOSString())) {
+//			result = ExternalFilesRegistry.getInstance().getFileEntry(new Path(path).toOSString());
+//		}
 		if (result == null) {
 			if (Platform.getOS() != Platform.OS_WIN32) {
 				path = path.replace('\\', '/');

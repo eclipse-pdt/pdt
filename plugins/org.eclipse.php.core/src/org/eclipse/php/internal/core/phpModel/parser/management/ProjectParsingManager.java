@@ -10,7 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel.parser.management;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,14 +28,19 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.*;
+import org.eclipse.php.internal.core.phpModel.parser.IParserClientFactory;
+import org.eclipse.php.internal.core.phpModel.parser.IProjectModelListener;
+import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManager;
+import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageManagerProvider;
+import org.eclipse.php.internal.core.phpModel.parser.PHPParserManager;
+import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
+import org.eclipse.php.internal.core.phpModel.parser.ParserClientComposite;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.TaskPatternsProvider;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 
 class ProjectParsingManager implements IProjectModelListener {
@@ -149,9 +160,9 @@ class ProjectParsingManager implements IProjectModelListener {
 				project = file.getProject();
 			}
 			//external file
-			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
-				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
-			}
+//			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
+//				project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
+//			}
 			if (project == null) { // XXX very quick change on a real resource (undo-redo-undo-redo)!
 				return;
 			}
