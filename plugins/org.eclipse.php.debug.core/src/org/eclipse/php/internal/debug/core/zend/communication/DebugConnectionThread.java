@@ -22,8 +22,16 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -39,8 +47,6 @@ import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugRequestMessage;
 import org.eclipse.php.debug.core.debugger.messages.IDebugResponseMessage;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.resources.ExternalFilesRegistry;
 import org.eclipse.php.internal.core.util.BlockingQueue;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -53,7 +59,12 @@ import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageImpl;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
@@ -607,8 +618,8 @@ public class DebugConnectionThread implements Runnable {
 	 *
 	 * @throws CoreException
 	 */
-	protected IDebugTarget createDebugTarget(DebugConnectionThread thread, ILaunch launch, String phpExeString, String debugFileName, String workspaceRootPath, int requestPort, PHPProcess process, boolean runWithDebugInfo, boolean stopAtFirstLine, IProject project) throws CoreException {
-		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
+	protected IDebugTarget createDebugTarget(DebugConnectionThread thread, ILaunch launch, String phpExeString, String debugFileName, int requestPort, PHPProcess process, boolean runWithDebugInfo, boolean stopAtFirstLine, IProject project) throws CoreException {
+		return new PHPDebugTarget(thread, launch, phpExeString, debugFileName, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
 	}
 
 	/**
@@ -621,18 +632,18 @@ public class DebugConnectionThread implements Runnable {
 		ILaunchConfiguration launchConfiguration = launch.getLaunchConfiguration();
 		inputManager.setTransferEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.TRANSFER_ENCODING, "")); //$NON-NLS-1$
 		inputManager.setOutputEncoding(launchConfiguration.getAttribute(IDebugParametersKeys.OUTPUT_ENCODING, "")); //$NON-NLS-1$
-		String phpExeString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
-		String fileNameString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_FILE, (String) null);
+		String phpExeString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
+		String fileNameString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
-		String projectString = launchConfiguration.getAttribute(PHPCoreConstants.ATTR_WORKING_DIRECTORY, (String) null);
+		String projectString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_WORKING_DIRECTORY, (String) null);
 
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebugInfo = false;
 		}
 
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project;
-		String debugFileName;
+		IProject project = null;
+		String debugFileName = fileNameString;
 
 		IPath filePath = new Path(fileNameString);
 		IResource res = workspaceRoot.findMember(filePath);
@@ -642,19 +653,15 @@ public class DebugConnectionThread implements Runnable {
 			project = fileToDebug.getProject();
 		} else if (projectString != null) {
 			project = workspaceRoot.getProject(projectString);
-			debugFileName = fileNameString;
-		} else {
-			project = ExternalFilesRegistry.getInstance().getExternalFilesProject();
-			debugFileName = fileNameString;
 		}
-		String workspaceRootPath = PHPDebugTarget.getWorkspaceRootPath(project.getWorkspace());
+		
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
 		int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
 		IPath phpExe = new Path(phpExeString);
 		PHPProcess process = new PHPProcess(launch, phpExe.toOSString());
 
-		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, phpExeString, debugFileName, workspaceRootPath, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
+		debugTarget = (PHPDebugTarget) createDebugTarget(this, launch, phpExeString, debugFileName, requestPort, process, runWithDebugInfo, stopAtFirstLine, project);
 		launch.addDebugTarget(debugTarget);
 		// A fix for Linux display problem.
 		// This code will auto-expand the debugger view tree.
