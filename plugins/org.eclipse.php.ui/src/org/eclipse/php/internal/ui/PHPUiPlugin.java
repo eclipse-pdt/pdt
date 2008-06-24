@@ -32,6 +32,7 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.templates.PhpNewFileTemplateContextType;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
@@ -45,6 +46,7 @@ import org.eclipse.php.internal.ui.util.PHPManualSiteDescriptor;
 import org.eclipse.php.internal.ui.util.ProblemMarkerManager;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -187,6 +189,14 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	public static IWorkbenchPage getActivePage() {
 		return getDefault().internalGetActivePage();
+	}
+	
+	public static IEditorPart getActiveEditor() {
+		IWorkbenchPage activePage = getActivePage();
+		if (activePage != null) {
+			return activePage.getActiveEditor();
+		}
+		return null;
 	}
 
 	private IWorkbenchPage internalGetActivePage() {
@@ -348,8 +358,6 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 		return fColorManager;
 	}
-	
-		
 
 	/**
 	 * Returns the {@link ITypeRoot} wrapped by the given editor input.

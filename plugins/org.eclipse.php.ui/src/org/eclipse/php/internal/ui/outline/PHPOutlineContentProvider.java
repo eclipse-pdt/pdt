@@ -12,13 +12,17 @@ package org.eclipse.php.internal.ui.outline;
 
 import java.util.Vector;
 
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.core.SourceType;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ElementChangedEvent;
+import org.eclipse.dltk.core.IElementChangedListener;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IModelElementDelta;
+import org.eclipse.dltk.core.IParent;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -59,7 +63,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			return children;
 		}
 
-		Vector v = new Vector();
+		Vector<IModelElement> v = new Vector<IModelElement>();
 		for (int i = 0; i < children.length; i++) {
 			if (matches(children[i])) {
 				continue;
@@ -73,16 +77,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getChildren(Object parent) {
-		IModelElement sourceModule = null;
-		if (parent instanceof DOMModelForPHP) {
-			DOMModelForPHP model = (DOMModelForPHP) parent;
-			sourceModule = model.getModelElement();
-		}
-		if (parent instanceof SourceType) {
-			sourceModule = (IModelElement) parent;
-		}
-		if (sourceModule instanceof IParent) {
-			IParent c = (IParent) sourceModule;
+		if (parent instanceof IParent) {
+			IParent c = (IParent) parent;
 			try {
 				return filter(c.getChildren());
 			} catch (ModelException x) {
@@ -134,7 +130,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-		boolean isCU = (newInput instanceof ISourceModule);
+//		boolean isCU = (newInput instanceof ISourceModule);
 
 		if (/*isCU &&*/fListener == null) {
 			fListener = new ElementChangedListener();

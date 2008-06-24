@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.ui.actions.SelectionConverter;
+import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
@@ -24,17 +28,10 @@ import org.eclipse.ui.IEditorPart;
 public class PHPElementProvider implements IInformationProvider, IInformationProviderExtension {
 
 	private PHPStructuredEditor fEditor;
-	private boolean fUseCodeResolve;
 
 	public PHPElementProvider(IEditorPart editor) {
-		fUseCodeResolve = false;
 		if (editor instanceof PHPStructuredEditor)
 			fEditor = (PHPStructuredEditor) editor;
-	}
-
-	public PHPElementProvider(IEditorPart editor, boolean useCodeResolve) {
-		this(editor);
-		fUseCodeResolve = useCodeResolve;
 	}
 
 	/*
@@ -42,7 +39,7 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	 */
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
-			IRegion region = PHPWordFinder.findWord(textViewer.getDocument(), offset);
+			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
 			if (region != null)
 				return region;
 			else
@@ -62,18 +59,18 @@ public class PHPElementProvider implements IInformationProvider, IInformationPro
 	 * @see IInformationProviderExtension#getElement(ITextViewer, IRegion)
 	 */
 	public Object getInformation2(ITextViewer textViewer, IRegion subject) {
-		if (fEditor == null)
+		if (fEditor == null) {
 			return null;
+		}
 
-//		if (fUseCodeResolve) {
-//			IStructuredSelection sel = SelectionConverter.getStructuredSelection(fEditor);
-//			if (!sel.isEmpty())
-//				return sel.getFirstElement();
-//		}
-//		PHPCodeData element = SelectionConverter.getElementAtOffset(fEditor);
-//		if (element != null)
-//			return element;
+		try {
+			IModelElement element = SelectionConverter.getElementAtOffset(fEditor);
+			if (element != null) {
+				return element;
+			}
+		} catch (ModelException e) {
+		}
 
-		return fEditor.getPHPFileData();
+		return fEditor.getModelElement();
 	}
 }

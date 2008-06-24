@@ -690,7 +690,7 @@ public class EditorUtility {
 
 		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(part);
 		if (phpEditor != null) {
-			phpEditor.setSelection(element, true);
+//			phpEditor.setSelection(element, true);
 			return;
 		}
 

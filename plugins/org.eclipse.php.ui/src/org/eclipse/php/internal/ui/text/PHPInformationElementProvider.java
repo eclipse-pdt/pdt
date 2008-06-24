@@ -16,6 +16,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.actions.SelectionConverter;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
@@ -56,7 +57,7 @@ public class PHPInformationElementProvider implements IInformationProvider, IInf
 	 */
 	public IRegion getSubject(ITextViewer textViewer, int offset) {
 		if (textViewer != null && fEditor != null) {
-			IRegion region = PHPWordFinder.findWord(textViewer.getDocument(), offset);
+			IRegion region = ScriptWordFinder.findWord(textViewer.getDocument(), offset);
 			if (region != null)
 				return region;
 			else

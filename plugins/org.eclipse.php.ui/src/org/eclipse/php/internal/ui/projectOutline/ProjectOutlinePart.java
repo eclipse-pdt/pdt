@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -46,7 +47,6 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFunctionData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPTreeViewer;
@@ -583,8 +583,10 @@ public class ProjectOutlinePart extends ViewPart implements IMenuListener, Focus
 				phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 			}
 			if (phpEditor != null) {
-				PHPFileData fileData = phpEditor.getPHPFileData();
-				project = PHPWorkspaceModelManager.getInstance().getProjectForFileData(fileData, currentProject);
+				IScriptProject scriptProject = phpEditor.getProject();
+				if (scriptProject != null) {
+					project = scriptProject.getProject();
+				}
 			} else {
 				final IEditorInput editorInput = editorPart.getEditorInput();
 				if (editorInput instanceof FileEditorInput) {

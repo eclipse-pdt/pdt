@@ -13,6 +13,8 @@ package org.eclipse.php.internal.ui.text;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.ui.actions.CustomFiltersActionGroup;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -32,7 +34,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.internal.ui.util.StringMatcher;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -429,8 +430,8 @@ public abstract class AbstractInformationControl extends PopupDialog implements 
 			try {
 				dispose();
 				IEditorPart part = EditorUtility.openInEditor(selectedElement, true);
-				if (part != null && selectedElement instanceof PHPCodeData)
-					EditorUtility.revealInEditor(part, (PHPCodeData) selectedElement);
+				if (part != null && selectedElement instanceof IModelElement)
+					EditorUtility.revealInEditor(part, (IModelElement) selectedElement);
 			} catch (CoreException ex) {
 				PHPUiPlugin.log(ex);
 			}

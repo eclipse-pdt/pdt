@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
@@ -20,7 +21,12 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SortAction;
@@ -31,9 +37,9 @@ import org.eclipse.php.internal.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
@@ -158,7 +164,18 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			viewer.setContentProvider(fContentProvider);
 		} else if (MODE_HTML == mode) {
 			if (fContentProviderHTML == null) {
-				fContentProviderHTML = new JFaceNodeContentProvider();
+				fContentProviderHTML = new JFaceNodeContentProvider() {
+					public Object[] getElements(Object object) {
+						if (object instanceof ISourceModule) {
+							IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
+							if (activeEditor instanceof StructuredTextEditor) {
+								StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
+								object = editor.getModel();
+							}
+						}
+						return super.getElements(object);
+					}
+				};
 			}
 			viewer.setContentProvider(fContentProviderHTML);
 		}
@@ -188,7 +205,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			if (MODE_PHP == mode) {
 				if (selection instanceof IStructuredSelection && selection instanceof TextSelection) {
 					final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-					IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+					IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 					if (activeEditor instanceof PHPStructuredEditor) {
 						ISourceReference computedSourceReference = ((PHPStructuredEditor) activeEditor).computeHighlightRangeSourceReference();
 						if (computedSourceReference != null) {
@@ -236,6 +253,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	@Override
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		super.enableShowAttributes(showAttributes, treeViewer);
-		//		((PHPOutlineLabelProvider) getLabelProvider(treeViewer)).setShowAttributes(showAttributes);
+		((PHPOutlineLabelProvider) getLabelProvider(treeViewer)).setShowAttributes(showAttributes);
 	}
 }

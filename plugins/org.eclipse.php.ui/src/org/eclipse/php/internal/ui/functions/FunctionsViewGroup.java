@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.functions;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
@@ -82,11 +82,11 @@ public class FunctionsViewGroup extends ActionGroup {
 
 		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 		if (phpEditor != null) {
-			final IFile file = phpEditor.getFile();
-			if(file == null)
-				return;
-			final String version = PhpVersionProjectPropertyHandler.getVersion(file.getProject());
-			setMode(getVersion(version));
+			IScriptProject project = phpEditor.getProject();
+			if (project != null) {
+				final String version = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
+				setMode(getVersion(version));
+			}
 		}
 	}
 

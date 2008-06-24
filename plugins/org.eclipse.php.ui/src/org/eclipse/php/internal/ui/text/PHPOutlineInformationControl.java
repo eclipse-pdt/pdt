@@ -10,14 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dltk.ui.ScriptElementLabels;
+import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
+import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider;
-import org.eclipse.php.internal.ui.outline.PHPOutlineLabelProvider;
 import org.eclipse.php.internal.ui.util.StringMatcher;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -27,35 +28,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IDecoratorManager;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.keys.KeySequence;
 import org.eclipse.ui.keys.SWTKeySupport;
 
 public class PHPOutlineInformationControl extends AbstractInformationControl {
 	
 	private KeyAdapter fKeyAdapter;
-	private OutlineContentProvider fOutlineContentProvider;
-	private PHPCodeData fInput= null;
-	private OutlineLabelProvider fInnerLabelProvider;
-	private String fPattern;
-
-	private class OutlineLabelProvider extends PHPOutlineLabelProvider {
-	}
-
-	private class OutlineTreeViewer extends TreeViewer {
-		public OutlineTreeViewer(Tree tree) {
-			super(tree);
-		}
-	}
-
-	private class OutlineContentProvider extends PHPOutlineContentProvider {
-		public OutlineContentProvider(TreeViewer viewer, PHPOutlineLabelProvider labelProvider) {
-			super(viewer);
-		}
-	}
+	private PHPOutlineContentProvider fOutlineContentProvider;
+	private Object fInput = null;
+	private DecoratingModelLabelProvider fInnerLabelProvider;
 
 	/**
 	 * Creates a new PHP outline information control.
@@ -87,17 +68,17 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 		gd.heightHint= tree.getItemHeight() * 12;
 		tree.setLayoutData(gd);
 
-		final TreeViewer treeViewer= new OutlineTreeViewer(tree);
+		final TreeViewer treeViewer= new TreeViewer(tree);
 
 		// Hard-coded filters
 		treeViewer.addFilter(new NamePatternFilter());
 
-		fInnerLabelProvider= new OutlineLabelProvider();
-		IDecoratorManager decoratorMgr= PlatformUI.getWorkbench().getDecoratorManager();
-
+		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		AppearanceAwareLabelProvider lprovider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, store);
+		fInnerLabelProvider = new DecoratingModelLabelProvider(lprovider);
 		treeViewer.setLabelProvider(fInnerLabelProvider);
 
-		fOutlineContentProvider= new OutlineContentProvider(treeViewer, fInnerLabelProvider);
+		fOutlineContentProvider= new PHPOutlineContentProvider(treeViewer);
 		treeViewer.setContentProvider(fOutlineContentProvider);
 		
 		treeViewer.setAutoExpandLevel(AbstractTreeViewer.ALL_LEVELS);
@@ -115,7 +96,7 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 		if (sequences == null || sequences.length == 0)
 			return ""; //$NON-NLS-1$
 
-		String keySequence= sequences[0].format();
+//		String keySequence= sequences[0].format();
 
 		return ""; //$NON-NLS-1$
 	}
@@ -136,7 +117,7 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 			inputChanged(null, null);
 			return;
 		}
-		fInput = (PHPCodeData)information;
+		fInput = information;
 		inputChanged(fInput, information);
 	}
 
@@ -173,7 +154,6 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 	 * @since 3.2
 	 */
 	protected void setMatcherString(String pattern, boolean update) {
-		fPattern = pattern;
 		if (pattern.length() == 0) {
 			super.setMatcherString(pattern, update);
 			return;
@@ -188,18 +168,6 @@ public class PHPOutlineInformationControl extends AbstractInformationControl {
 		
 	}
 
-	private IProgressMonitor getProgressMonitor() {
-		IWorkbenchPage wbPage= PHPUiPlugin.getActivePage();
-		if (wbPage == null)
-			return null;
-
-		IEditorPart editor= wbPage.getActiveEditor();
-		if (editor == null)
-			return null;
-
-		return editor.getEditorSite().getActionBars().getStatusLineManager().getProgressMonitor();
-	}
-	
 	/**
 	 * String matcher that can match two patterns.
 	 * 

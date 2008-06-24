@@ -34,7 +34,6 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -42,13 +41,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ISourceReference;
@@ -131,16 +130,11 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
-import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -197,14 +191,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartService;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveListener2;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -222,7 +212,6 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.ui.texteditor.TextNavigationAction;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -1041,10 +1030,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 
 			public IProject getProject() {
-				IFile file = getFile();
-				if (file == null)
-					return null;
-				return file.getProject();
+				IScriptProject scriptProject = PHPStructuredEditor.this.getProject();
+				if (scriptProject != null) {
+					return scriptProject.getProject();
+				}
+				return null;
 			}
 		};
 
@@ -2082,100 +2072,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (isSemanticHighlightingEnabled())
 			installSemanticHighlighting();
 
-		getSite().getWorkbenchWindow().addPerspectiveListener(new IPerspectiveListener2() {
-
-			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, IWorkbenchPartReference partRef, String changeId) {
-				if (changeId == IWorkbenchPage.CHANGE_EDITOR_CLOSE) {
-					if (partRef.getPart(false) == getEditorPart()) {
-						final IFile file = getFile();
-						if (file != null) {
-//							final ExternalFilesRegistry externalRegistry = ExternalFilesRegistry.getInstance();
-							if (file.exists()) {
-								IProject proj = file.getProject();
-								try {
-									// remove the file from project
-									// model when it is an RSE project.
-									// this is to prevent display of the
-									// completion from this file
-									// when it is closed
-									if (proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
-										PHPWorkspaceModelManager.getInstance().getModelForProject(proj).removeFileFromModel(file);
-									} else {
-										// parse the file in case the
-										// editor was closed without
-										// saving
-
-										// making sure the project model
-										// exists (in case the editor
-										// closing is during PDT
-										// startup)
-										if (PHPWorkspaceModelManager.getInstance().getModelForProject(proj) != null) {
-											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
-												@Override
-												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-													PHPWorkspaceModelManager.getInstance().addFileToModel(file);
-													return Status.OK_STATUS;
-												}
-											};
-											job.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
-											job.schedule();
-										}
-									}
-
-								} catch (CoreException ce) {
-									Logger.logException(ce);
-									return;
-								}
-							}
-							// external php file
-							else {
-								IStructuredModel model = getModel();
-								if (model != null) {
-									final String fileName = new Path(model.getBaseLocation()).toOSString();
-//									if (externalRegistry.isEntryExist(fileName)) {
-//										// if there are more than one
-//										// editor opening the external
-//										// file using "New Editor", do
-//										// not remove it from model and
-//										// registry
-//										IEditorReference[] existingEditors = null;
-//										WorkbenchPage activePage = (WorkbenchPage) PHPStructuredEditor.this.getSite().getWorkbenchWindow().getActivePage();
-//										if (activePage != null) {
-//											existingEditors = activePage.getEditorManager().findEditors(getEditorInput(), null, IWorkbenchPage.MATCH_INPUT);
-//										}
-//										// Make sure that the file has a
-//										// full path before we try to
-//										// remove it from the model.
-//										if (existingEditors == null || existingEditors.length == 1) { // a
-//											// single
-//											// editor
-//											final IFile fileWrapper = ExternalFilesRegistry.getInstance().getFileEntry(fileName);
-//											WorkspaceJob job = new WorkspaceJob("") { //$NON-NLS-1$
-//												@Override
-//												public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-//													PHPWorkspaceModelManager.getInstance().removeFileFromModel(fileWrapper);
-//													externalRegistry.removeFileEntry(fileName);
-//													return Status.OK_STATUS;
-//												}
-//											};
-//											job.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
-//											job.schedule();
-//										}
-//									}
-								}
-							}
-						}
-						getSite().getWorkbenchWindow().removePerspectiveListener(this);
-					}
-				}
-			}
-
-			public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-			}
-
-			public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
-			}
-		});
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell shell) {
 				boolean cutDown = false;
@@ -2320,16 +2216,17 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		final Object adapter = super.getAdapter(required);
 
 		// add selection listener to outline page
-		// so that if outline selects codedata, editor selects correct item
+		// so that if outline selects model element, editor selects correct item
 		if (adapter instanceof ConfigurableContentOutlinePage && IContentOutlinePage.class.equals(required)) {
 			final ConfigurableContentOutlinePage outlinePage = (ConfigurableContentOutlinePage) adapter;
 			if (fPHPOutlinePageListener == null) {
 				fPHPOutlinePageListener = new OutlineSelectionChangedListener();
 				outlinePage.addDoubleClickListener(fPHPOutlinePageListener);
-//				outlinePage.addSelectionChangedListener(fOutlinePageListener);
 			}
 			fPHPOutlinePageListener.install(outlinePage);
 			fPHPOutlinePage = outlinePage;
+			
+			outlinePage.setInput(getModelElement());
 		}
 		return adapter;
 	}
@@ -2337,41 +2234,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected void clearStatusLine() {
 		setStatusLineErrorMessage(null);
 		setStatusLineMessage(null);
-	}
-
-	public IFile getFile() {
-		// when a file with no content type associated with it is opened with
-		// this editor
-		// there will be no model for it. If it has a FileEditorInput we'll
-		// return the IFile from it
-		// else, null.
-		if (getModel() == null) {
-			if (getEditorInput() instanceof IFileEditorInput) {
-				return ((IFileEditorInput) getEditorInput()).getFile();
-			} else {
-				return null;
-			}
-		}
-		IPath path = new Path(getModel().getBaseLocation());
-//		if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-//			return ExternalFilesRegistry.getInstance().getFileEntry(path.toOSString());
-//		}
-		// could be that it is an external file BUT was already removed !, check
-		// :
-//		else if (path.segmentCount() == 1) {
-//			return ExternalFileWrapper.createFile(path.toOSString());
-//		}
-
-		// handle case of workspace file AND/OR an external file with more than
-		// 1 segment
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-	}
-
-	public PHPFileData getPHPFileData() {
-		if (getModel() == null) {
-			return null;
-		}
-		return PHPWorkspaceModelManager.getInstance().getModelForFile(getModel().getBaseLocation());
 	}
 
 	public SourceViewerConfiguration getSourceViwerConfiguration() {
@@ -2557,60 +2419,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	public IDocument getDocument() {
 		return getSourceViewer().getDocument();
-	}
-
-	public void setSelection(final PHPCodeData element, boolean reveal) {
-		if (element != null) {
-			final UserData userData = element.getUserData();
-			PHPFileData fileData = getPHPFileData();
-			if (userData == null || fileData == null || !userData.getFileName().equals(fileData.getUserData().getFileName())) {
-				return;
-			}
-			int start = userData.getStartPosition();
-			int length = userData.getEndPosition() - userData.getStartPosition() + 1;
-
-			final IDocument document = getSourceViewer().getDocument();
-			if (document instanceof IStructuredDocument) {
-				final IStructuredDocument sDocument = (IStructuredDocument) document;
-				final IStructuredDocumentRegion sdRegion = sDocument.getRegionAtCharacterOffset(start);
-				if (sdRegion != null) {
-					// Need it in case the php document doesn't start at the
-					// first
-					// line of the page
-					final int sdRegionStart = sdRegion.getStartOffset();
-
-					ITextRegion region = sdRegion.getRegionAtCharacterOffset(start);
-					if (region.getType() == PHPRegionContext.PHP_CONTENT) {
-						IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) region;
-						try {
-							region = phpScriptRegion.getPhpToken(start - sdRegionStart - phpScriptRegion.getStart());
-
-							String elementName = element.getName();
-							if (element instanceof PHPVariableData) {
-								elementName = "$" + elementName; //$NON-NLS-1$
-							}
-
-							while (region.getEnd() != phpScriptRegion.getLength()) {
-								final String text = document.get(sdRegionStart + phpScriptRegion.getStart() + region.getStart(), region.getTextLength()).trim().replaceAll("[\"']+", ""); //$NON-NLS-1$ //$NON-NLS-2$
-								if (elementName.equals(text)) {
-									start = sdRegionStart + phpScriptRegion.getStart() + region.getStart();
-									length = region.getTextLength();
-									break;
-								}
-								region = phpScriptRegion.getPhpToken(region.getEnd());
-							}
-						} catch (BadLocationException e) {
-							PHPUiPlugin.log(e);
-						}
-					}
-				}
-			}
-
-			if (!reveal)
-				getSourceViewer().setSelectedRange(start, length);
-			else
-				selectAndReveal(start, length);
-		}
 	}
 
 	/**
@@ -2805,6 +2613,19 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					System.err.println(x.getStatus());
 				// nothing found, be tolerant and go on
 			}
+		}
+		return null;
+	}
+	
+
+	/**
+	 * Returns project that holds the edited file (if any)
+	 * @return project or <code>null</code> if there's no one 
+	 */
+	public IScriptProject getProject() {
+		IModelElement modelElement = getModelElement();
+		if (modelElement != null) {
+			return modelElement.getScriptProject();
 		}
 		return null;
 	}
@@ -3245,7 +3066,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
-		updateSaveActionsState(getFile().getProject());
+		
+		IScriptProject project = getProject();
+		if (project != null) {
+			updateSaveActionsState(project.getProject());
+		}
+		
 		if (saveActionsEnabled) {
 			RemoveTrailingWhitespaceOperation op = new ExtendedRemoveTrailingWhitespaceOperation(saveActionsIgnoreEmptyLines);
 			try {
