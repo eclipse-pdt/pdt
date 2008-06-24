@@ -14,6 +14,8 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.ui.ModelElementLabelProvider;
+import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -26,7 +28,8 @@ import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.util.*;
+import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.php.internal.ui.util.PHPManualFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -34,11 +37,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
@@ -48,7 +47,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 	private TreeViewer fViewer;
 	private PHPFunctionsContentProvider fContentProvider;
-	private PHPFunctionsLabelProvider fLabelProvider;
+	private ModelElementLabelProvider  fLabelProvider;
 
 	private Menu fContextMenu;
 	private String fWorkingSetName;
@@ -149,7 +148,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				if (item != null) {
 					Object o = item.getData();
 					if (o instanceof PHPCodeData) {
-						tree.setToolTipText(fLabelProvider.getTooltipText(o));
+						tree.setToolTipText(fLabelProvider.getText(o));
 					}
 				}
 			}
@@ -219,8 +218,9 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		return new PHPFunctionsContentProvider();
 	}
 
-	private PHPFunctionsLabelProvider createLabelProvider() {
-		return new PHPFunctionsLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | PHPElementLabels.M_PARAMETER_NAMES, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS | PHPElementImageProvider.SMALL_ICONS | PHPElementImageProvider.OVERLAY_ICONS, fContentProvider);
+	private ModelElementLabelProvider createLabelProvider() {
+		final int flags= ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED | ModelElementLabelProvider.SHOW_ROOT;
+		return new ModelElementLabelProvider(flags);
 	}
 
 	public void dispose() {
@@ -308,8 +308,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		if (!(element instanceof IResource)) {
 			if (element instanceof PHPWorkspaceModelManager) {
 				result = PHPUIMessages.getString("PHPExplorerPart_workspace");
-			} else if (element instanceof PHPCodeData) {
-				result = PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
 			} else {
 				result = fLabelProvider.getText(element);
 			}
@@ -337,7 +335,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			setContentDescription(""); //$NON-NLS-1$
 			setTitleToolTip(""); //$NON-NLS-1$
 		} else {
-			String inputText = PHPElementLabels.getTextLabel(input, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
+			String inputText = fLabelProvider.getText(input);;
 			setContentDescription(inputText);
 			setTitleToolTip(getToolTipText(input));
 		}

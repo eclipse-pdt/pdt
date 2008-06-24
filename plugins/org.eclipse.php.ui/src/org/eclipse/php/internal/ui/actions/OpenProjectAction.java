@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
-import org.eclipse.php.internal.ui.PHPElementLabelProvider;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.ExceptionHandler;
@@ -128,7 +127,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private void internalRun() {
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new PHPElementLabelProvider());
+		ElementListSelectionDialog dialog = null; // new ElementListSelectionDialog(getShell(), new PHPElementLabelProvider());
 		dialog.setTitle(PHPUIMessages.getString("OpenProjectAction_dialog_title"));
 		dialog.setMessage(PHPUIMessages.getString("OpenProjectAction_dialog_message"));
 		dialog.setElements(getClosedProjects());

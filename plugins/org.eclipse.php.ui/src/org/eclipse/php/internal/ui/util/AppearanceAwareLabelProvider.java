@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
+import org.eclipse.dltk.ui.ScriptElementImageProvider;
+import org.eclipse.dltk.ui.ScriptElementLabels;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -22,10 +25,10 @@ import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
  * PHPUILabelProvider that respects settings from the Appearance preference page.
  * Triggers a viewer update when a preference changes.
  */
-public class AppearanceAwareLabelProvider extends PHPUILabelProvider implements IPropertyChangeListener {
+public class AppearanceAwareLabelProvider extends ScriptUILabelProvider implements IPropertyChangeListener {
 
-	public final static int DEFAULT_TEXTFLAGS = PHPElementLabels.ROOT_VARIABLE | PHPElementLabels.M_PARAMETER_TYPES  | PHPElementLabels.M_PARAMETER_NAMES| PHPElementLabels.M_APP_RETURNTYPE | PHPElementLabels.REFERENCED_ROOT_POST_QUALIFIED;
-	public final static int DEFAULT_IMAGEFLAGS = PHPElementImageProvider.OVERLAY_ICONS;
+	public final static long DEFAULT_TEXTFLAGS = ScriptElementLabels.ROOT_VARIABLE | ScriptElementLabels.M_PARAMETER_TYPES  | ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.REFERENCED_ROOT_POST_QUALIFIED;
+	public final static int DEFAULT_IMAGEFLAGS = ScriptElementImageProvider.OVERLAY_ICONS;
 
 	private int fTextFlagMask;
 	private int fImageFlagMask;
@@ -33,7 +36,7 @@ public class AppearanceAwareLabelProvider extends PHPUILabelProvider implements 
 	/**
 	 * Constructor for AppearanceAwareLabelProvider.
 	 */
-	public AppearanceAwareLabelProvider(int textFlags, int imageFlags) {
+	public AppearanceAwareLabelProvider(long textFlags, int imageFlags) {
 		super(textFlags, imageFlags);
 		initMasks();
 		PreferenceConstants.getPreferenceStore().addPropertyChangeListener(this);
@@ -50,7 +53,7 @@ public class AppearanceAwareLabelProvider extends PHPUILabelProvider implements 
 		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
 		fTextFlagMask = -1;
 		if (!store.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE)) {
-			fTextFlagMask ^= PHPElementLabels.M_APP_RETURNTYPE;
+			fTextFlagMask ^= ScriptElementLabels.M_APP_RETURNTYPE;
 		}
 
 		fImageFlagMask = -1;
@@ -86,7 +89,7 @@ public class AppearanceAwareLabelProvider extends PHPUILabelProvider implements 
 	/*
 	 * @see PHPUILabelProvider#evaluateTextFlags()
 	 */
-	protected int evaluateTextFlags(Object element) {
+	protected long evaluateTextFlags(Object element) {
 		return getTextFlags() & fTextFlagMask;
 	}
 

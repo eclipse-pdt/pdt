@@ -10,25 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.AbstractInformationControlManager;
-import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.ITextDoubleClickStrategy;
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;

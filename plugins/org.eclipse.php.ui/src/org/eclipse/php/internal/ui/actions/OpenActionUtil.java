@@ -11,9 +11,9 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.ui.PHPElementLabelProvider;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
@@ -63,9 +63,9 @@ public class OpenActionUtil {
 		if (nResults == 1)
 			return elements[0];
 
-		int flags = PHPElementLabelProvider.SHOW_DEFAULT | PHPElementLabelProvider.SHOW_QUALIFIED | PHPElementLabelProvider.SHOW_ROOT;
+		int flags = ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED | ModelElementLabelProvider.SHOW_ROOT;
 
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new PHPElementLabelProvider(flags));
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(shell, new ModelElementLabelProvider(flags));
 		dialog.setTitle(title);
 		dialog.setMessage(message);
 		dialog.setElements(elements);

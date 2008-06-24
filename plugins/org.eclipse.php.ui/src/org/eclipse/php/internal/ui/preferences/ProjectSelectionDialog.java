@@ -13,15 +13,15 @@ package org.eclipse.php.internal.ui.preferences;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dltk.ui.ModelElementLabelProvider;
+import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.ui.PHPElementLabelProvider;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.StandardPHPElementContentProvider;
-import org.eclipse.php.internal.ui.util.PHPElementSorter;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -93,9 +93,9 @@ public class ProjectSelectionDialog extends SelectionStatusDialog {
 		data.widthHint = SIZING_SELECTION_WIDGET_WIDTH;
 		fTableViewer.getTable().setLayoutData(data);
 
-		fTableViewer.setLabelProvider(new PHPElementLabelProvider());
+		fTableViewer.setLabelProvider(new ModelElementLabelProvider());
 		fTableViewer.setContentProvider(new StandardPHPElementContentProvider());
-		fTableViewer.setSorter(new PHPElementSorter());
+		fTableViewer.setSorter(new ModelElementSorter());
 		fTableViewer.getControl().setFont(font);
 
 		Button checkbox = new Button(composite, SWT.CHECK);

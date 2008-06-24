@@ -33,7 +33,6 @@ import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.treecontent.TreeProvider;
-import org.eclipse.php.internal.ui.util.PHPElementLabels;
 import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPageLayout;
@@ -44,6 +43,9 @@ import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
+/**
+ * Configuration holder for the PHP outline at the WST outline 
+ */
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
 
 	protected PHPOutlineContentProvider fContentProvider = null;
@@ -226,37 +228,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
-			fSimpleLabelProvider = new StatusLineLabelProvider(treeViewer);
+			getLabelProvider(treeViewer);
 		}
 		return fSimpleLabelProvider;
 	}
 
-	private class StatusLineLabelProvider extends JFaceNodeLabelProvider {
-		TreeViewer treeViewer = null;
-
-		public StatusLineLabelProvider(TreeViewer viewer) {
-			treeViewer = viewer;
-		}
-
-		public String getText(Object element) {
-			if (element == null)
-				return null;
-
-			return PHPElementLabels.getTextLabel(element, AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS);
-		}
-	}
-
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		return new PHPNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
-	}
-
-	@Override
-	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
-		super.enableShowAttributes(showAttributes, treeViewer);
-		
-		ILabelProvider labelProvider = getLabelProvider(treeViewer);
-		if (labelProvider instanceof PHPOutlineLabelProvider) {
-			((PHPOutlineLabelProvider) labelProvider).setShowAttributes(showAttributes);
-		}
 	}
 }

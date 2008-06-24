@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.util.PHPElementSorter;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.PlatformUI;
