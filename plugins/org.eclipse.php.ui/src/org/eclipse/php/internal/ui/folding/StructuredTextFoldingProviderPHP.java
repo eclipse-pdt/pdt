@@ -536,7 +536,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 
 			IRegion preRegion;
 			if (firstLine < captionLine) {
-//				preRegion= new Region(offset + prefixEnd, contentStart - prefixEnd);
 				int preOffset= document.getLineOffset(firstLine);
 				IRegion preEndLineInfo= document.getLineInformation(captionLine);
 				int preEnd= preEndLineInfo.getOffset();
@@ -579,38 +578,11 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			return 0;
 		}
 
-//		/**
-//		 * Finds the offset of the first identifier part within <code>content</code>.
-//		 * Returns 0 if none is found.
-//		 *
-//		 * @param content the content to search
-//		 * @return the first index of a unicode identifier part, or zero if none can
-//		 *         be found
-//		 */
-//		private int findPrefixEnd(final CharSequence content) {
-//			// return the index after the leading '/*' or '/**'
-//			int len= content.length();
-//			int i= 0;
-//			while (i < len && isWhiteSpace(content.charAt(i)))
-//				i++;
-//			if (len >= i + 2 && content.charAt(i) == '/' && content.charAt(i + 1) == '*')
-//				if (len >= i + 3 && content.charAt(i + 2) == '*')
-//					return i + 3;
-//				else
-//					return i + 2;
-//			else
-//				return i;
-//		}
-//
-//		private boolean isWhiteSpace(char c) {
-//			return c == ' ' || c == '\t';
-//		}
 
 		/*
 		 * @see org.eclipse.jface.text.source.projection.IProjectionPosition#computeCaptionOffset(org.eclipse.jface.text.IDocument)
 		 */
 		public int computeCaptionOffset(IDocument document) {
-//			return 0;
 			DocumentCharacterIterator sequence= new DocumentCharacterIterator(document, offset, offset + length);
 			return findFirstContent(sequence, 0);
 		}
@@ -776,7 +748,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	private volatile int fUpdatingCount= 0;
 	private PHPStructuredTextViewer viewer;
 	private IDocument fDocument;
-	private boolean fProjectionNeedsToBeEnabled = false;	
 	/**
 	 * Maximum number of child nodes to add adapters to (limit for performance
 	 * sake)
@@ -909,8 +880,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 
 		removeAllAdapters();
 
-		fDocument = null;
-		fProjectionNeedsToBeEnabled = false;		
+		fDocument = null;		
 	}
 
 	/**
@@ -994,7 +964,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 
 				addAllAdapters();
 			}
-			fProjectionNeedsToBeEnabled = false;
 		}
 	}
 
@@ -1289,10 +1258,10 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		boolean collapseCode= true;
 		switch (element.getElementType()) {
 
-// TODO : ask DLTK to have include container			
-//			case IModelElement.IMPORT_CONTAINER:
-//				collapse= ctx.collapseImportContainer();
-//				break;
+			// TODO : ask DLTK to have include container			
+			//			case IModelElement.IMPORT_CONTAINER:
+			//				collapse= ctx.collapseImportContainer();
+			//				break;
 			case IModelElement.TYPE:
 				collapse= ctx.collapseTypes();
 				break;
@@ -1395,46 +1364,45 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	}
 
 	private IRegion computeHeaderComment(FoldingStructureComputationContext ctx) throws ModelException {
+		// TODO folding of the file comment 
 		// search at most up to the first type
-//		ISourceRange range= ctx.getFirstType().getSourceRange();
-//		if (range == null)
-//			return null;
-//		int start= 0;
-//		int end= range.getOffset();
-
-
+		//		ISourceRange range= ctx.getFirstType().getSourceRange();
+		//		if (range == null)
+		//			return null;
+		//		int start= 0;
+		//		int end= range.getOffset();
 		/* code adapted from CommentFormattingStrategy:
 		 * scan the header content up to the first type. Once a comment is
 		 * found, accumulate any additional comments up to the stop condition.
 		 * The stop condition is reaching a package declaration, import container,
 		 * or the end of the input.
 		 */
-//		IScanner scanner= ctx.getScanner();
-//		scanner.resetTo(start, end);
-//
-//		int headerStart= -1;
-//		int headerEnd= -1;
-//		try {
-//			boolean foundComment= false;
-//			int terminal= scanner.getNextToken();
-//			while (terminal != ITerminalSymbols.TokenNameEOF && !(terminal == ITerminalSymbols.TokenNameclass || terminal == ITerminalSymbols.TokenNameinterface || terminal == ITerminalSymbols.TokenNameenum || (foundComment && (terminal == ITerminalSymbols.TokenNameimport || terminal == ITerminalSymbols.TokenNamepackage)))) {
-//
-//				if (terminal == ITerminalSymbols.TokenNameCOMMENT_JAVADOC || terminal == ITerminalSymbols.TokenNameCOMMENT_BLOCK || terminal == ITerminalSymbols.TokenNameCOMMENT_LINE) {
-//					if (!foundComment)
-//						headerStart= scanner.getCurrentTokenStartPosition();
-//					headerEnd= scanner.getCurrentTokenEndPosition();
-//					foundComment= true;
-//				}
-//				terminal= scanner.getNextToken();
-//			}
-//
-//
-//		} catch (InvalidInputException ex) {
-//			return null;
-//		}
-//		if (end != -1) {
-//			return new Region(start, end - start);
-//		}
+		//		IScanner scanner= ctx.getScanner();
+		//		scanner.resetTo(start, end);
+		//
+		//		int headerStart= -1;
+		//		int headerEnd= -1;
+		//		try {
+		//			boolean foundComment= false;
+		//			int terminal= scanner.getNextToken();
+		//			while (terminal != ITerminalSymbols.TokenNameEOF && !(terminal == ITerminalSymbols.TokenNameclass || terminal == ITerminalSymbols.TokenNameinterface || terminal == ITerminalSymbols.TokenNameenum || (foundComment && (terminal == ITerminalSymbols.TokenNameimport || terminal == ITerminalSymbols.TokenNamepackage)))) {
+		//
+		//				if (terminal == ITerminalSymbols.TokenNameCOMMENT_JAVADOC || terminal == ITerminalSymbols.TokenNameCOMMENT_BLOCK || terminal == ITerminalSymbols.TokenNameCOMMENT_LINE) {
+		//					if (!foundComment)
+		//						headerStart= scanner.getCurrentTokenStartPosition();
+		//					headerEnd= scanner.getCurrentTokenEndPosition();
+		//					foundComment= true;
+		//				}
+		//				terminal= scanner.getNextToken();
+		//			}
+		//
+		//
+		//		} catch (InvalidInputException ex) {
+		//			return null;
+		//		}
+		//		if (end != -1) {
+		//			return new Region(start, end - start);
+		//		}
 		return null;
 	}
 	
