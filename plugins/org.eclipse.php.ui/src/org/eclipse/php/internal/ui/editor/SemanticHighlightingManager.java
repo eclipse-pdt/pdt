@@ -13,6 +13,14 @@ package org.eclipse.php.internal.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.resource.StringConverter;
+import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.ui.ColorManager;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.swt.SWT;
@@ -20,17 +28,6 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
-
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.resource.StringConverter;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-
-import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.Region;
-import org.eclipse.jface.text.TextAttribute;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 /**
  * Semantic highlighting manager
@@ -413,7 +410,9 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	 * @return <code>true</code> iff semantic highlighting is enabled in the preferences
 	 */
 	private boolean isEnabled() {
-		return SemanticHighlightings.isEnabled(fPreferenceStore);
+		return false;
+		// TODO enable semantic highlighting first
+		/*return SemanticHighlightings.isEnabled(fPreferenceStore)*/
 	}
 
 	/**
@@ -432,7 +431,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 			int style= fPreferenceStore.getBoolean(boldKey) ? SWT.BOLD : SWT.NORMAL;
 
 			String italicKey= SemanticHighlightings.getItalicPreferenceKey(semanticHighlighting);
-			if (fPreferenceStore.getBoolean(italicKey))
+			if (true/*fPreferenceStore.getBoolean(italicKey)*/)
 				style |= SWT.ITALIC;
 
 			String strikethroughKey= SemanticHighlightings.getStrikethroughPreferenceKey(semanticHighlighting);
