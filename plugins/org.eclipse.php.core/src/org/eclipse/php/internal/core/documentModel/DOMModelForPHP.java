@@ -156,9 +156,7 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 		if (result != null) {
 			return result;
 		}
-//		if (ExternalFilesRegistry.getInstance().isEntryExist(new Path(path).toOSString())) {
-//			result = ExternalFilesRegistry.getInstance().getFileEntry(new Path(path).toOSString());
-//		}
+		
 		// Try to fix the path and then try again to look into workspace:
 		if (result == null) {
 			if (Platform.getOS() != Platform.OS_WIN32) {
@@ -182,13 +180,6 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 			return DLTKCore.create(file);
 		}
 		
-		IScriptModel scriptModel = DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot());
-		IScriptProject scriptProject = scriptModel.getScriptProject(ExternalScriptProject.EXTERNAL_PROJECT_NAME);
-		if (scriptProject.exists()) {
-			
-		}
-		
 		return null;
 	}
-	
 }
