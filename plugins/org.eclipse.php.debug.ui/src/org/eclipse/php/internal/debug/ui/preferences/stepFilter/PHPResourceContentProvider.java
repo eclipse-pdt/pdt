@@ -21,6 +21,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.IBuildpathAttribute;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -29,7 +32,6 @@ import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
 import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -181,17 +183,19 @@ class IncPathFile {
 	}
 }
 
-class PHPResLabelProvider extends PHPUILabelProvider {
+class PHPResLabelProvider extends ScriptUILabelProvider {
 
 	public Image getImage(Object element) {
-		if (element instanceof IIncludePathEntry) {
-			IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
-			if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+		if (element instanceof IBuildpathEntry) {
+			IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+			// TODO : should fix once DLTK expose variable mechanism 
+/*			if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 			} else {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
-		}
+*/		}
 		if (element instanceof IncPathFile) {
 			IncPathFile currentFile = (IncPathFile) element;
 			if (currentFile.file.isDirectory()) {

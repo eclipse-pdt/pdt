@@ -14,6 +14,8 @@ import java.util.*;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
@@ -28,7 +30,6 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -396,18 +397,19 @@ public class PathEntrySelectionDialog extends TrayDialog {
 	/**
 	 * Path entries label provider
 	 */
-	class LabelProvider extends PHPUILabelProvider {
+	class LabelProvider extends ScriptUILabelProvider {
 
 		public Image getImage(Object element) {
 
-			if (element instanceof IIncludePathEntry) {
-				IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
-				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+			if (element instanceof IBuildpathEntry) {
+				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+/*				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				} else {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
-			}
+*/			}
 
 			if (element instanceof PathEntry) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT);

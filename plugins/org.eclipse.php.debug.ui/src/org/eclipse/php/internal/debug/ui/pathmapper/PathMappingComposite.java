@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -24,7 +25,6 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
 import org.eclipse.php.internal.ui.preferences.ScrolledCompositeImpl;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.util.PHPUILabelProvider;
 import org.eclipse.php.internal.ui.util.PixelConverter;
 import org.eclipse.php.internal.ui.wizards.fields.IListAdapter;
 import org.eclipse.php.internal.ui.wizards.fields.ListDialogField;
@@ -167,7 +167,7 @@ public class PathMappingComposite extends Composite {
 	}
 
 	class LabelProvider extends org.eclipse.jface.viewers.LabelProvider implements ITableLabelProvider {
-		private PHPUILabelProvider phpLabelProvider = new PHPUILabelProvider();
+		private ScriptUILabelProvider phpLabelProvider = new ScriptUILabelProvider();
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			if (columnIndex == 1) { // local path
