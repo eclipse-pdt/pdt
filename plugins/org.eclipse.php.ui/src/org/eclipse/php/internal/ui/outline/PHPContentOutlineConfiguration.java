@@ -253,6 +253,10 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	@Override
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		super.enableShowAttributes(showAttributes, treeViewer);
-		((PHPOutlineLabelProvider) getLabelProvider(treeViewer)).setShowAttributes(showAttributes);
+		
+		ILabelProvider labelProvider = getLabelProvider(treeViewer);
+		if (labelProvider instanceof PHPOutlineLabelProvider) {
+			((PHPOutlineLabelProvider) labelProvider).setShowAttributes(showAttributes);
+		}
 	}
 }
