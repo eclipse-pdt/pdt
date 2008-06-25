@@ -26,9 +26,6 @@ import org.eclipse.php.internal.core.documentModel.dom.DOMDocumentForPHP;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelParser;
 import org.eclipse.php.internal.core.documentModel.dom.PHPDOMModelUpdater;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.xml.core.internal.Logger;
@@ -59,80 +56,6 @@ public class DOMModelForPHP extends DOMStyleModelImpl {
 	@Override
 	protected XMLModelUpdater createModelUpdater() {
 		return new PHPDOMModelUpdater(this);
-	}
-
-	/**
-	 * Always get the latest version of FileData
-	 */
-	public PHPFileData getFileData() {
-		return getFileData(false);
-
-	}
-
-	/**
-	 * Getting the latest fileData
-	 * 
-	 * @param forceCreation - if we want to create a model project as well
-	 * @return fileData
-	 * 
-	 * IMPORTANT: The fileData will not be created if the projectModel was not initiated first.
-	 */
-	public PHPFileData getFileData(boolean forceCreation) {
-		PHPFileData fileData = null;
-		IFile file = getIFile();
-		
-		if (file != null) {
-			PHPProjectModel projectModel = getProjectModel();
-			if (projectModel != null) {
-				fileData = projectModel.getFileData(file.getFullPath().toString());
-			}
-		}
-		if (fileData == null) {
-			PHPProjectModel projectModel = getProjectModel();
-			fileData = internalGetFileData(projectModel != null && forceCreation);
-		}
-		return fileData;
-	}
-	
-	protected PHPFileData internalGetFileData(boolean forceCreation) {
-		PHPFileData fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(getBaseLocation(), forceCreation);
-		if (fileData == null) {
-			IFile file = getIFile();
-			// external file
-//			if ((file != null) && ExternalFilesRegistry.getInstance().isEntryExist(file.getFullPath().toOSString())) {
-//				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(new Path(getBaseLocation()).toOSString());
-//			}
-		}
-		return fileData;
-	}
-
-	public PHPProjectModel getProjectModel() {
-		IFile iFile = getIFile();
-//		if (iFile != null && ExternalFilesRegistry.getInstance().isEntryExist(iFile.getFullPath().toOSString())) {
-//			return PHPWorkspaceModelManager.getDefaultPHPProjectModel();
-//		}
-
-		PHPFileData fileData = internalGetFileData(false);
-		return fileData != null ? PHPModelUtil.getProjectModelForFile(fileData) : null;
-	}
-
-	public void updateFileData() {
-
-		IFile file = getIFile();
-
-		if (file != null) {
-			PHPProjectModel projectModel = PHPWorkspaceModelManager.getInstance().getModelForProject(file.getProject());
-
-			if (projectModel != null && file.exists()) {
-				projectModel.fileWasChanged(file, getStructuredDocument());
-			}
-
-			// external file
-//			else if (ExternalFilesRegistry.getInstance().isEntryExist(file)) {
-//				projectModel = PHPWorkspaceModelManager.getDefaultPHPProjectModel();
-//				projectModel.fileWasChanged(file, getStructuredDocument());
-//			}
-		}
 	}
 
 	// returns the IFile corresponding with this model

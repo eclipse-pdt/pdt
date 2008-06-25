@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.format;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.preferences.*;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
@@ -88,10 +87,10 @@ public class FormatPreferencesSupport {
 			DOMModelForPHP editorModel = null;
 			try {
 				editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getExistingModelForRead(document);
-				PHPProjectModel projectModel = editorModel.getProjectModel();
-				if (projectModel == null)
+				final IFile file = editorModel.getIFile();
+				if (file == null)
 					return;
-				IProject project = PHPWorkspaceModelManager.getInstance().getProjectForModel(projectModel);
+				IProject project = file.getProject();
 				if (fLastProject != project) {
 					fLastProject = project;
 					verifyListening();

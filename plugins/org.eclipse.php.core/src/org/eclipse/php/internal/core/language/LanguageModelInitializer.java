@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.phpModel;
+package org.eclipse.php.internal.core.language;
 
 import java.io.IOException;
 import java.net.URL;

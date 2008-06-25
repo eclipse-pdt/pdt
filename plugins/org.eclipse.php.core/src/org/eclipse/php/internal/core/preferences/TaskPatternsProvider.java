@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 
 public class TaskPatternsProvider {
@@ -31,7 +30,6 @@ public class TaskPatternsProvider {
 		provider = TaskTagsProvider.getInstance();
 		projectsPatterns = new HashMap();
 		projectToListener = new HashMap();
-		initPatternsDB();
 	}
 
 	public static TaskPatternsProvider getInstance() {
@@ -69,15 +67,6 @@ public class TaskPatternsProvider {
 			ITaskTagsListener tagsListener = new TaskTagsListener();
 			provider.addTaskTagsListener(tagsListener, project);
 			projectToListener.put(project, tagsListener);
-		}
-	}
-
-	private void initPatternsDB() {
-		workspacePatterns = createPatterns(provider.getWorkspaceTaskTags(), provider.isWorkspaceTagsCaseSensitive());
-		IProject[] projects = PHPWorkspaceModelManager.getInstance().listProjects();
-		for (int i = 0; i < projects.length; i++) {
-			IProject project = projects[i];
-			registerProject(project);
 		}
 	}
 

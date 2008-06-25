@@ -16,13 +16,10 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.php.core.documentModel.IWorkspaceModelListener;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.preferences.*;
-import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 
-public class PhpVersionChangedHandler implements IWorkspaceModelListener {
+public class PhpVersionChangedHandler {
 
 	private HashMap projectListeners = new HashMap();
 	private HashMap preferencesPropagatorListeners = new HashMap();
@@ -38,28 +35,6 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 
 	public static PhpVersionChangedHandler getInstance() {
 		return instance;
-	}
-
-	public synchronized void projectModelAdded(IProject project) {
-		if (project == null || projectListeners.get(project) != null) {
-			return;
-		}
-		PHPWorkspaceModelManager.getInstance().addWorkspaceModelListener(project.getName(), instance);
-		projectListeners.put(project, new HashSet());
-
-		//register as a listener to the PP on this project
-		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(project);
-		preferencesPropagatorListeners.put(project, listener);
-		preferencesPropagator.addPropagatorListener(listener, Keys.PHP_VERSION);
-	}
-
-	public synchronized void projectModelRemoved(IProject project) {
-		PreferencesPropagatorListener listener = (PreferencesPropagatorListener) preferencesPropagatorListeners.get(project);
-		preferencesPropagator.removePropagatorListener(listener, Keys.PHP_VERSION);
-		preferencesPropagatorListeners.remove(project);
-
-		projectListeners.remove(project);
-		PHPWorkspaceModelManager.getInstance().removeWorkspaceModelListener(project.getName(), instance);
 	}
 
 	public void projectModelChanged(IProject project) {
@@ -113,7 +88,6 @@ public class PhpVersionChangedHandler implements IWorkspaceModelListener {
 		IProject project = listener.getProject();
 		HashSet listeners = (HashSet) projectListeners.get(project);
 		if (listeners == null) {
-			projectModelAdded(project);
 			listeners = (HashSet) projectListeners.get(project);
 		}
 		listeners.add(listener);

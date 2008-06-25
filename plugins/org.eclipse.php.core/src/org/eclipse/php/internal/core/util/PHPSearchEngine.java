@@ -18,9 +18,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ModelException;
 
 /**
  * This utility implements internal PHP mechanism for searching included files.
@@ -71,26 +72,25 @@ public class PHPSearchEngine {
 				if (resource instanceof IFile) {
 					return new ResourceResult((IFile) resource);
 				}
-			} else if (includePath instanceof IIncludePathEntry) {
-				IIncludePathEntry entry = (IIncludePathEntry) includePath;
+			} else if (includePath instanceof IBuildpathEntry) {
+				IBuildpathEntry entry = (IBuildpathEntry) includePath;
 				IPath entryPath = entry.getPath();
-				if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-					if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
-						File entryDir = entryPath.toFile();
-						file = new File(entryDir, path);
-						if (file.exists()) {
-							return new IncludedFileResult(entry, file);
-						}
-					}
-				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+					// We don't support lookup in archive
+					// update the phar case when time arrives 
+						
+/*				TODO: fix when DLTK has variable support
+                } else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
 					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
 					File entryDir = entryPath.toFile();
 					file = new File(entryDir, path);
 					if (file.exists()) {
 						return new IncludedFileResult(entry, file);
 					}
-				} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-					IProject project = (IProject) entry.getResource();
+*/				
+				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+					IProject project = workspaceRoot.getProject(entry.getPath().segment(0));
 					if (project.isAccessible()) {
 						IResource resource = project.findMember(path);
 						if (resource instanceof IFile) {
@@ -161,11 +161,16 @@ public class PHPSearchEngine {
 			return;
 		}
 		// Collect include paths:
-		PHPProjectOptions projectOptions = PHPProjectOptions.forProject(project);
-		if (projectOptions != null) {
-			IIncludePathEntry[] includePath = projectOptions.readRawIncludePath();
-			for (IIncludePathEntry entry : includePath) {
-				results.add(entry);
+		final IScriptProject scriptProject = DLTKCore.create(project);
+		if (scriptProject != null) {
+			IBuildpathEntry[] rawBuildpath;
+			try {
+				rawBuildpath = scriptProject.getRawBuildpath();
+				for (IBuildpathEntry entry : rawBuildpath) {
+					results.add(entry);
+				}
+			} catch (ModelException e) {
+				return;
 			}
 		}
 		// Add current project:
@@ -205,8 +210,8 @@ public class PHPSearchEngine {
 	/**
 	 * Result for included file (from Include Path)
 	 */
-	public static class IncludedFileResult extends Result<IIncludePathEntry, File> {
-		public IncludedFileResult(IIncludePathEntry container, File file) {
+	public static class IncludedFileResult extends Result<IBuildpathEntry, File> {
+		public IncludedFileResult(IBuildpathEntry container, File file) {
 			super(container, file);
 		}
 	}

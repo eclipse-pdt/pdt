@@ -40,11 +40,11 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinBuildVisitor;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.phpModel.LanguageModelInitializer;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 
 public class PHPModelUtils {

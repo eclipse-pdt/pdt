@@ -173,7 +173,7 @@
  <extension
        point="org.eclipse.dltk.core.buildpathContainerInitializer">
     <buildpathContainerInitializer
-          class="org.eclipse.php.internal.core.phpModel.LanguageModelInitializer"
+          class="org.eclipse.php.internal.core.language.LanguageModelInitializer"
           id="org.eclipse.php.core.LANGUAGE">
     </buildpathContainerInitializer>
  </extension>

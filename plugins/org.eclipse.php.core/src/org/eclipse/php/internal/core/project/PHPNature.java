@@ -13,15 +13,7 @@ package org.eclipse.php.internal.core.project;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.eclipse.core.resources.ICommand;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -29,8 +21,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ScriptNature;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.LanguageModelInitializer;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
 public class PHPNature extends ScriptNature {
@@ -46,8 +37,6 @@ public class PHPNature extends ScriptNature {
 	//protected WebSettings fWebSettings;
 
 	protected IProject project;
-	protected PHPProjectOptions options;
-
 	//	private static final String LINKS_BUILDER_ID = "com.ibm.etools.webtools.additions.linksbuilder"; //$NON-NLS-1$
 
 	public static int getInstanceCount() {
@@ -123,13 +112,11 @@ public class PHPNature extends ScriptNature {
 	 */
 	public void deconfigure() throws CoreException {
 		removeFromBuildSpec(DLTKCore.BUILDER_ID);
-		removeFromBuildSpec(PHPProjectOptions.BUILDER_ID);
 		removeFromBuildSpec(VALIDATION_BUILDER_ID);
 		clean();
 	}
 
 	private void clean() {
-		options = null;
 		project = null;
 	}
 
@@ -178,7 +165,6 @@ public class PHPNature extends ScriptNature {
 		// enable workspace validation for this nature
 		addToFrontOfBuildSpec(DLTKCore.BUILDER_ID);
 		addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
-		addToFrontOfBuildSpec(PHPProjectOptions.BUILDER_ID);
 
 		IScriptProject scriptProject = DLTKCore.create(project);
 		LanguageModelInitializer.enableLanguageModelFor(scriptProject);
@@ -252,19 +238,4 @@ public class PHPNature extends ScriptNature {
 	public IWorkspace getWorkspace() {
 		return getProject().getWorkspace();
 	}
-
-	public PHPProjectOptions getOptions() {
-		if (options == null) {
-			options = new PHPProjectOptions(project);
-			//			boolean useProjectSpecificSettings = new ProjectScope(project).getNode(PhpOptionsPreferenceKeys.PHP_OPTION_NODE).getBoolean(PhpOptionsPreferenceKeys.PHP_OPTIONS_PER_PROJECT, false);
-			//			if (!useProjectSpecificSettings) {
-			//				PhpVerionsProjectOptionAdapter.setVersion(options, CorePreferenceConstants.getPreferenceStore().getString(CorePreferenceConstants.Keys.PHP_VERSION));
-			//			}
-			//			IEclipsePreferences projectProperties = new ProjectScope(project).getNode(PhpOptionsPreferenceKeys.PHP_OPTION_NODE);
-			//			projectProperties.put
-			//			projectProperties
-		}
-		return options;
-	}
-
 }
