@@ -28,7 +28,7 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 		if (resource.getType() != IResource.FILE) {
 			return null;
 		}
-		if (!PHPModelUtil.isPhpFile((IFile) resource)) {
+		if (!PHPModelUtil.hasPhpExtention((IFile) resource)) {
 			return null;
 		}
 		if (adapterType.equals(IRunToLineTarget.class)) {

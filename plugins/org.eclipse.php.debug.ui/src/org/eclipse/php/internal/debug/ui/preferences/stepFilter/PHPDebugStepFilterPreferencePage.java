@@ -15,19 +15,35 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.preferences.stepFilters.*;
+import org.eclipse.php.internal.debug.core.preferences.stepFilters.DebugStepFilter;
+import org.eclipse.php.internal.debug.core.preferences.stepFilters.DebugStepFilterController;
+import org.eclipse.php.internal.debug.core.preferences.stepFilters.DebugStepFilterEvent;
+import org.eclipse.php.internal.debug.core.preferences.stepFilters.IDebugStepFilterPrefListener;
+import org.eclipse.php.internal.debug.core.preferences.stepFilters.IStepFilterTypes;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
@@ -37,7 +53,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
@@ -299,29 +321,32 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 				} else if (resourceToFilter instanceof IFile) {
 					addFilter(filteredPath, true, IStepFilterTypes.PHP_PROJECT_FILE);
 				}
-			} else if (resourceToFilter instanceof IncludePathEntry) {
-				IncludePathEntry entry = (IncludePathEntry) resourceToFilter;
+			} else if (resourceToFilter instanceof IBuildpathEntry) {
+				IBuildpathEntry entry = (IBuildpathEntry) resourceToFilter;
 				filteredPath = entry.getPath().toOSString();
-				if (entry.getEntryKind() == IncludePathEntry.IPE_VARIABLE) {//variable
+				// TODO : fix once DLTK exposes variables
+				/*if (entry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {//variable
 					addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR);
-				} else if (entry.getEntryKind() == IncludePathEntry.IPE_LIBRARY) {//library = folder
+				} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {//library = folder
 					addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY);
 				}
 
 			} else if (resourceToFilter instanceof IncPathFile) {
-				IncludePathEntry entry = ((IncPathFile) resourceToFilter).getIncludePathEntry();
+				IBuildpathEntry entry = ((IncPathFile) resourceToFilter).getBuildpathEntry();
 				File file = ((IncPathFile) resourceToFilter).file;
 				filteredPath = file.getAbsolutePath();
 				if (file.isDirectory()) {
-					if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					// TODO : fix once DLTK exposes variables
+					/*if (entry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER);
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+					} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FOLDER);
 					}
 				} else {
-					if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					// TODO : fix once DLTK exposes variables
+					/*if (entry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FILE);
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+					} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FILE);
 					}
 				}

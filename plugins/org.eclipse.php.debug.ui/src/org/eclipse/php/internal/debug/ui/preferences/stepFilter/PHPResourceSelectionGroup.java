@@ -19,9 +19,19 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
+import org.eclipse.jface.viewers.ContentViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -233,8 +243,8 @@ public class PHPResourceSelectionGroup extends Composite {
 		IPath result = null;
 		if (selectedResource instanceof IResource) {
 			result = ((IResource) selectedResource).getFullPath();
-		} else if (selectedResource instanceof IncludePathEntry) {
-			result = ((IncludePathEntry) selectedResource).getPath();
+		} else if (selectedResource instanceof IBuildpathEntry) {
+			result = ((IBuildpathEntry) selectedResource).getPath();
 		} else if (selectedResource instanceof IncPathFile) {
 			result = new Path(((IncPathFile) selectedResource).file.getAbsolutePath());
 		}

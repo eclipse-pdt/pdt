@@ -21,16 +21,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.IBuildpathAttribute;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -57,20 +56,22 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 					}
 				}
 				return r.toArray();
-			} else if (parentElement instanceof IncludePathEntry) {
-				IncludePathEntry includePathEntry = (IncludePathEntry) parentElement;
-				IPath path = includePathEntry.getPath();
+			} else if (parentElement instanceof IBuildpathEntry) {
+				IBuildpathEntry IBuildpathEntry = (IBuildpathEntry) parentElement;
+				IPath path = IBuildpathEntry.getPath();
 				File file = null;
-				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
+				if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 					file = path.toFile();
-				} else if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+				}
+				// TODO : should fix once DLTK expose variable mechanism 
+				/* else if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 					path = IncludePathVariableManager.instance().resolveVariablePath(path.toString());
 					if (path != null) {
 						file = path.toFile();
 					}
-				}
+				}*/
 				if (file != null) {
-					return getChildren(new IncPathFile(includePathEntry, file));
+					return getChildren(new IncPathFile(IBuildpathEntry, file));
 				}
 			} else if (parentElement instanceof IncPathFile) {
 				IncPathFile ipFile = (IncPathFile) parentElement;
@@ -79,7 +80,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 					File files[] = file.listFiles();
 					List<Object> r = new ArrayList<Object>(files.length);
 					for (File currentFile : files) {
-						r.add(new IncPathFile(ipFile.includePathEntry, currentFile));
+						r.add(new IncPathFile(ipFile.IBuildpathEntry, currentFile));
 					}
 					return r.toArray();
 				}
@@ -94,14 +95,16 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 		// Add include paths:
 		if (parentElement instanceof IProject) {
 			IProject project = (IProject) parentElement;
-			PHPProjectOptions options = PHPProjectOptions.forProject(project);
-			if (options != null) {
-				IIncludePathEntry[] includePaths = options.readRawIncludePath();
-				for (IIncludePathEntry entry : includePaths) {
-					if (entry.getEntryKind() != IncludePathEntry.IPE_PROJECT) {
+			IScriptProject scriptProject = DLTKCore.create(project);
+			try {
+				IBuildpathEntry[] includePaths = scriptProject.getRawBuildpath();
+				for (IBuildpathEntry entry : includePaths) {
+					if (entry.getEntryKind() != IBuildpathEntry.BPE_PROJECT) {
 						r.add(entry);
 					}
 				}
+			} catch (ModelException e) {
+				Logger.logException(e);
 			}
 		}
 		return r.toArray();
@@ -110,7 +113,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 	//filter out non PHP files
 	private boolean isResourceFiltered(IResource member) {
 		if (member instanceof IFile) {
-			return !PHPModelUtil.isPhpFile((IFile) member);
+			return !PHPModelUtil.hasPhpExtention((IFile) member);
 		}
 		return false;
 	}
@@ -121,7 +124,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 		}
 		if (element instanceof IncPathFile) {
 			IncPathFile ipFile = (IncPathFile) element;
-			return new IncPathFile(ipFile.includePathEntry, ipFile.file.getParentFile());
+			return new IncPathFile(ipFile.IBuildpathEntry, ipFile.file.getParentFile());
 		}
 		return null;
 	}
@@ -158,20 +161,20 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 }
 
 class IncPathFile {
-	IncludePathEntry includePathEntry;
+	IBuildpathEntry IBuildpathEntry;
 	File file;
 
-	IncPathFile(IncludePathEntry includePathEntry, File file) {
-		this.includePathEntry = includePathEntry;
+	IncPathFile(IBuildpathEntry IBuildpathEntry, File file) {
+		this.IBuildpathEntry = IBuildpathEntry;
 		this.file = file;
 	}
 
-	public IncludePathEntry getIncludePathEntry() {
-		return includePathEntry;
+	public IBuildpathEntry getBuildpathEntry() {
+		return IBuildpathEntry;
 	}
 
 	public int hashCode() {
-		return file.hashCode() + 13 * includePathEntry.hashCode();
+		return file.hashCode() + 13 * IBuildpathEntry.hashCode();
 	}
 
 	public boolean equals(Object obj) {
@@ -179,7 +182,7 @@ class IncPathFile {
 			return false;
 		}
 		IncPathFile other = (IncPathFile) obj;
-		return other.file.equals(file) && other.includePathEntry.equals(includePathEntry);
+		return other.file.equals(file) && other.IBuildpathEntry.equals(IBuildpathEntry);
 	}
 }
 
@@ -187,10 +190,10 @@ class PHPResLabelProvider extends ScriptUILabelProvider {
 
 	public Image getImage(Object element) {
 		if (element instanceof IBuildpathEntry) {
-			IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
+			IBuildpathEntry IBuildpathEntry = (IBuildpathEntry) element;
 			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			// TODO : should fix once DLTK expose variable mechanism 
-/*			if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+/*			if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 			} else {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
@@ -208,9 +211,9 @@ class PHPResLabelProvider extends ScriptUILabelProvider {
 	}
 
 	public String getText(Object element) {
-		if (element instanceof IIncludePathEntry) {
-			IIncludePathEntry includePathEntry = (IIncludePathEntry) element;
-			return includePathEntry.getPath().toOSString();
+		if (element instanceof IBuildpathEntry) {
+			IBuildpathEntry IBuildpathEntry = (IBuildpathEntry) element;
+			return IBuildpathEntry.getPath().toOSString();
 		}
 		if (element instanceof IncPathFile) {
 			return ((IncPathFile) element).file.getName();

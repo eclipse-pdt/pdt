@@ -55,7 +55,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						try {
 							return file.getContentDescription().getContentType().getId().equals(PHP_SOURCE_ID);
 						} catch (ResourceException re) {
-							return PHPModelUtil.isPhpFile(file);
+							return PHPModelUtil.hasPhpExtention(file);
 						} catch (Exception e) {
 						}
 					}
