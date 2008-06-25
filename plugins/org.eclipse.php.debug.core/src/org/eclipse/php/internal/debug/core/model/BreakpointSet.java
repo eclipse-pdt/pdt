@@ -13,12 +13,16 @@ package org.eclipse.php.internal.debug.core.model;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 
 public class BreakpointSet {
@@ -34,32 +38,34 @@ public class BreakpointSet {
 		fProjects = new ArrayList<IProject>();
 
 		if (project != null) {
-			PHPProjectOptions options = PHPProjectOptions.forProject(project);
-			if (options != null) {
-				IIncludePathEntry[] entries = options.readRawIncludePath();
-
-				if (entries != null) {
-					for (IIncludePathEntry element : entries) {
-						if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-							IPath path = element.getPath();
-							File file = new File(path.toOSString());
-							fDirectories.add(file.getAbsolutePath());
-						} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-							IResource includeResource = element.getResource();
-							if (includeResource instanceof IContainer) {
-								fProjects.add(includeResource.getProject());
-							}
-						} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-							IPath path = element.getPath();
-							String variableName = path.toOSString();
-							File file = getVariableFile(variableName);
-							if (file != null) {
-								if (file.isDirectory()) {
-									fDirectories.add(file.getAbsolutePath());
-								}
-							}
+			IBuildpathEntry[] entries = null;
+			try {
+				entries = DLTKCore.create(project).getRawBuildpath();
+			} catch (ModelException e) {
+			}
+			if (entries != null) {
+				for (IBuildpathEntry element : entries) {
+					if (element.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+						IPath path = element.getPath();
+						File file = new File(path.toOSString());
+						fDirectories.add(file.getAbsolutePath());
+					} else if (element.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+						IResource includeResource = ResourcesPlugin.getWorkspace().getRoot().findMember(element.getPath().lastSegment());
+						if (includeResource instanceof IProject) {
+							fProjects.add((IProject) includeResource);
 						}
 					}
+					// TODO : should fix once DLTK expose variable mechanism
+					/* else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+						IPath path = element.getPath();
+						String variableName = path.toOSString();
+						File file = getVariableFile(variableName);
+						if (file != null) {
+							if (file.isDirectory()) {
+								fDirectories.add(file.getAbsolutePath());
+							}
+						}
+					}*/
 				}
 			}
 		}
@@ -97,9 +103,6 @@ public class BreakpointSet {
 			return true;
 		} else {
 			IProject project = resource.getProject();
-			if (fProject.equals(project) || fProject.equals(PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject())) {
-				return true;
-			}
 			return fProjects.contains(project);
 		}
 	}
@@ -113,7 +116,8 @@ public class BreakpointSet {
 			}
 			variableName = variableName.substring(0, index);
 		}
-		IPath path = PHPProjectOptions.getIncludePathVariable(variableName);
+		// TODO : should fix once DLTK expose variable mechanism
+		IPath path = null; // PHPProjectOptions.getIncludePathVariable(variableName);
 		if (path == null) {
 			return null;
 		}

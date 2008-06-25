@@ -13,7 +13,6 @@ package org.eclipse.php.internal.debug.core.sourcelookup.containers;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -24,8 +23,9 @@ import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer;
 import org.eclipse.debug.core.sourcelookup.containers.ProjectSourceContainer;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IProjectFragment;
 
 public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 
@@ -40,30 +40,29 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 
 		ISourceContainer projectContainer = new ProjectSourceContainer(project, false);
 		containers.add(projectContainer);
-		PHPProjectOptions options = PHPProjectOptions.forProject(project);
-		if (options != null) {
-			IIncludePathEntry[] entries = options.readRawIncludePath();
-			if (entries != null) {
-				for (IIncludePathEntry element : entries) {
-					if (element.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-						IPath path = element.getPath();
-						File file = new File(path.toOSString());
-						if (element.getContentKind() == IIncludePathEntry.K_BINARY) {
-							containers.add(new PHPExternalArchiveSourceContainer(file.getAbsolutePath(), false, project));
-						} else {
-							containers.add(new PHPDirectorySourceContainer(file, false, project));
-						}
-					} else if (element.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IResource resource = element.getResource();
-						if (resource instanceof IContainer) {
-							IProject includeProject = element.getResource().getProject();
-							containers.add(new ProjectSourceContainer(includeProject, false));
-						}
-					} else if (element.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-						IPath path = element.getPath();
-						containers.add(new PHPVariableSourceContainer(path, project));
+		IBuildpathEntry[] entries = DLTKCore.create(project).getRawBuildpath();
+		if (entries != null) {
+			for (IBuildpathEntry element : entries) {
+				if (element.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+					IPath path = element.getPath();
+					File file = new File(path.toOSString());
+					if (element.getContentKind() == IProjectFragment.K_BINARY) {
+						containers.add(new PHPExternalArchiveSourceContainer(file.getAbsolutePath(), false, project));
+					} else {
+						containers.add(new PHPDirectorySourceContainer(file, false, project));
+					}
+				} else if (element.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(element.getPath().lastSegment());
+					if (resource instanceof IProject) {
+						IProject includeProject = (IProject) resource;
+						containers.add(new ProjectSourceContainer(includeProject, false));
 					}
 				}
+				// TODO : should fix once DLTK expose variable mechanism
+//				else if (element.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
+//					IPath path = element.getPath();
+//					containers.add(new PHPVariableSourceContainer(path, project));
+//				}
 			}
 		}
 

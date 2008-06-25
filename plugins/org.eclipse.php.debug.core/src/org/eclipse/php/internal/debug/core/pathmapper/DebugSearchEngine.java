@@ -12,21 +12,43 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager.ContentTypeChangeEvent;
 import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
@@ -109,8 +131,9 @@ public class DebugSearchEngine {
 				}
 				if (result instanceof IncludedFileResult) {
 					IncludedFileResult incFileResult = (IncludedFileResult) result;
-					IIncludePathEntry container = incFileResult.getContainer();
-					Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+					IBuildpathEntry container = incFileResult.getContainer();
+					// TODO : should fix once DLTK expose variable mechanism
+					Type type = /*(container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER;
 					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
 				}
 				if (result != null) {
@@ -201,14 +224,15 @@ public class DebugSearchEngine {
 				File file = new File(remoteFile);
 				if (file.exists()) {
 					for (Object includePath : includePaths) {
-						if (includePath instanceof IIncludePathEntry) {
-							IIncludePathEntry entry = (IIncludePathEntry) includePath;
+						if (includePath instanceof IBuildpathEntry) {
+							IBuildpathEntry entry = (IBuildpathEntry) includePath;
 							IPath entryPath = entry.getPath();
-							if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-								entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-							}
+							// TODO : should fix once DLTK expose variable mechanism
+//							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+//								entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+//							}
 							if (entryPath != null && entryPath.isPrefixOf(Path.fromOSString(remoteFile))) {
-								Type type = (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+								Type type = /*(entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER;
 								localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
 								pathMapper.addEntry(remoteFile, localFile[0]);
 								PathMapperRegistry.storeToPreferences();
@@ -226,30 +250,34 @@ public class DebugSearchEngine {
 						} catch (InterruptedException e) {
 							PHPDebugPlugin.log(e);
 						}
-					} else if (includePath instanceof IIncludePathEntry) {
-						IIncludePathEntry entry = (IIncludePathEntry) includePath;
+					} else if (includePath instanceof IBuildpathEntry) {
+						IBuildpathEntry entry = (IBuildpathEntry) includePath;
 						IPath entryPath = entry.getPath();
-						if (entry.getEntryKind() == IIncludePathEntry.IPE_LIBRARY) {
-							if (entry.getContentKind() != IIncludePathEntry.K_BINARY) { // We don't support lookup in archive
-								File entryDir = entryPath.toFile();
-								find(entryDir, abstractPath, entry, results);
-							}
-						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-							IProject project = (IProject) entry.getResource();
-							if (project.isOpen() && project.isAccessible()) {
-								try {
-									find(project, abstractPath, results);
-								} catch (InterruptedException e) {
-									PHPDebugPlugin.log(e);
+						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+							// We don't support lookup in archive
+							File entryDir = entryPath.toFile();
+							find(entryDir, abstractPath, entry, results);
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+							IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(entry.getPath().lastSegment());
+							if (res instanceof IProject) {
+								IProject project = (IProject) res;
+								if (project.isOpen() && project.isAccessible()) {
+									try {
+										find(project, abstractPath, results);
+									} catch (InterruptedException e) {
+										PHPDebugPlugin.log(e);
+									}
 								}
 							}
-						} else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+						}
+						// TODO : should fix once DLTK expose variable mechanism
+						/*else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 							entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
 							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
 							}
-						}
+						}*/
 					}
 				}
 
@@ -361,9 +389,10 @@ public class DebugSearchEngine {
 	 * @param results List of results to return
 	 * @throws InterruptedException
 	 */
-	private static void find(final File file, final VirtualPath path, final IIncludePathEntry container, final List<PathEntry> results) {
+	private static void find(final File file, final VirtualPath path, final IBuildpathEntry container, final List<PathEntry> results) {
 		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
-			Type type = (container.getEntryKind() == IncludePathEntry.IPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
+			// TODO : should fix once DLTK expose variable mechanism
+			Type type = /*(container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER;
 			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
 			results.add(pathEntry);
 			return;

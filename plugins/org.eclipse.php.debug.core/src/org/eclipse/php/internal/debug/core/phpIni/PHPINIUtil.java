@@ -24,8 +24,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
@@ -89,13 +89,15 @@ public class PHPINIUtil {
 			Object[] path = PHPSearchEngine.buildIncludePath(project);
 			List<String> includePath = new ArrayList<String>(path.length);
 			for (Object pathObject : path) {
-				if (pathObject instanceof IIncludePathEntry) {
-					IIncludePathEntry entry = (IIncludePathEntry) pathObject;
+				if (pathObject instanceof IBuildpathEntry) {
+					IBuildpathEntry entry = (IBuildpathEntry) pathObject;
 					IPath entryPath = entry.getPath();
-					if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+					
+					// TODO : should fix once DLTK expose variable mechanism
+					/*if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 						entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-					} else if (entry.getEntryKind() == IIncludePathEntry.IPE_PROJECT) {
-						IPath containerPath = entry.getResource().getLocation();
+					} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+						IPath containerPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 						if (containerPath != null) {
 							entryPath = containerPath;
 						} else {
