@@ -15,12 +15,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IMember;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -51,20 +51,20 @@ public class PhpTemplateNumberVariableResolver extends TemplateVariableResolver 
 
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
-			PHPFileData fileData = phpDOMModel.getFileData();
+			IFile fileData = phpDOMModel.getIFile();
 			if (fileData == null) {
 				return new String[] { DEFAULT_VAR };
 			}
 			
 			final PHPCodeContext phpCodeContext = ModelSupport.createContext(fileData, phpTemplateContext.getStart());
 			final PHPVariablesTypeManager variablesTypeManager = fileData.getVariableTypeManager();
-			PHPVariableData[] phpVariableDatas = variablesTypeManager.getVariables(phpCodeContext);
+			IField[] phpVariableDatas = variablesTypeManager.getVariables(phpCodeContext);
 			if (phpVariableDatas == null) {
 				return new String[] { DEFAULT_VAR };
 			}
 			ArrayList arrayList = new ArrayList();
 			for (int i = 0; i < phpVariableDatas.length; i++) {
-				PHPVariableData phpVariableData = phpVariableDatas[i];
+				IField phpVariableData = phpVariableDatas[i];
 				PHPVariableTypeData variableTypeData = variablesTypeManager.getVariableTypeDataByPosition(phpCodeContext, phpVariableData.getName(), phpTemplateContext.getStart());
 				if (variableTypeData == null) {
 					continue;
@@ -72,20 +72,20 @@ public class PhpTemplateNumberVariableResolver extends TemplateVariableResolver 
 				arrayList.add(phpVariableData);
 			}
 			Collections.sort(arrayList, new Comparator() {
-				public int compare(Object o0, Object o1) {
-					PHPVariableData phpVariableData0 = (PHPVariableData)o0;
-					PHPVariableData phpVariableData1 = (PHPVariableData)o1;
+				public int compare(Object obj0, Object obj1) {
+					IField iField0 = (IField)obj0;
+					IField iField1 = (IField)obj1;
 					
-					PHPVariableTypeData variableTypeData0 = variablesTypeManager.getVariableTypeDataByPosition(phpCodeContext, phpVariableData0.getName(), phpTemplateContext.getStart());
+					PHPVariableTypeData variableTypeData0 = variablesTypeManager.getVariableTypeDataByPosition(phpCodeContext, iField0.getName(), phpTemplateContext.getStart());
 					String variableType0 = getVariableType(variableTypeData0);
 					boolean variableType0IsNumber = PhpVariableTypeUtil.isNumber(variableType0);
 
-					PHPVariableTypeData variableTypeData1 = variablesTypeManager.getVariableTypeDataByPosition(phpCodeContext, phpVariableData1.getName(), phpTemplateContext.getStart());
+					PHPVariableTypeData variableTypeData1 = variablesTypeManager.getVariableTypeDataByPosition(phpCodeContext, iField1.getName(), phpTemplateContext.getStart());
 					String variableType1 = getVariableType(variableTypeData1);
 					boolean variableType1IsNumber = PhpVariableTypeUtil.isNumber(variableType1);
 					
 					if (variableType0IsNumber && variableType1IsNumber) {
-						return phpVariableData0.getName().compareToIgnoreCase(phpVariableData1.getName());
+						return iField0.getName().compareToIgnoreCase(iField1.getName());
 					}
 
 					if (variableType0IsNumber) {
@@ -96,7 +96,7 @@ public class PhpTemplateNumberVariableResolver extends TemplateVariableResolver 
 						return 1;
 					}
 					if (variableType0 == null && variableType1 == null) {
-						return phpVariableData0.getName().compareToIgnoreCase(phpVariableData1.getName());
+						return iField0.getName().compareToIgnoreCase(iField1.getName());
 					}
 					
 					if (variableType0 == null) {
@@ -107,7 +107,7 @@ public class PhpTemplateNumberVariableResolver extends TemplateVariableResolver 
 						return 1;
 					}
 										
-					return phpVariableData0.getName().compareToIgnoreCase(phpVariableData1.getName());
+					return iField0.getName().compareToIgnoreCase(iField1.getName());
 				}
 
 				private String getVariableType(PHPVariableTypeData variableTypeData) {
@@ -115,9 +115,9 @@ public class PhpTemplateNumberVariableResolver extends TemplateVariableResolver 
 				}
 			});
 			
-			for (Iterator PHPVariableDataIterator = arrayList.iterator(); PHPVariableDataIterator.hasNext();) {
-				PHPVariableData phpVariableData = (PHPVariableData) PHPVariableDataIterator.next();
-				variablesNames.add(phpVariableData.getName());
+			for (Iterator iFieldIterator = arrayList.iterator(); iFieldIterator.hasNext();) {
+				IField iField = (IField) iFieldIterator.next();
+				variablesNames.add(iField.getElementName() );
 			}
 		} finally {
 			structuredModel.releaseFromRead();

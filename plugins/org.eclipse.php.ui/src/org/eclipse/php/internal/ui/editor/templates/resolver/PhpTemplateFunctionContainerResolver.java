@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.templates.resolver;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -25,6 +23,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 public class PhpTemplateFunctionContainerResolver extends TemplateVariableResolver {
 
 	public static final String NO_FUNCTION = "no_function_scope"; //$NON-NLS-1$
+
 	public PhpTemplateFunctionContainerResolver() {
 		super("function_container", PHPUIMessages.getString("PhpTemplateFunctionContainerResolver.2")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
@@ -44,7 +43,7 @@ public class PhpTemplateFunctionContainerResolver extends TemplateVariableResolv
 
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
-			PHPFileData fileData = phpDOMModel.getFileData();
+			IFile fileData = phpDOMModel.getIFile();
 			if (fileData == null) {
 				return null;
 			}
@@ -53,12 +52,11 @@ public class PhpTemplateFunctionContainerResolver extends TemplateVariableResolv
 			if (functionName == null || functionName.equals("")) { //$NON-NLS-1$
 				return NO_FUNCTION;
 			}
-			
+
 			return functionName;
 		} finally {
 			structuredModel.releaseFromRead();
 		}
 	}
 
-	
 }

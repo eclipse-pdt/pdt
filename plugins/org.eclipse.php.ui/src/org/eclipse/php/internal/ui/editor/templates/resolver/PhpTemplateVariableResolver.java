@@ -12,15 +12,11 @@ package org.eclipse.php.internal.ui.editor.templates.resolver;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.parser.ModelSupport;
-import org.eclipse.php.internal.core.phpModel.parser.PHPCodeContext;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariableTypeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPVariablesTypeManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -51,12 +47,12 @@ public class PhpTemplateVariableResolver extends TemplateVariableResolver {
 
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
-			PHPFileData fileData = phpDOMModel.getFileData();
-			if (fileData == null) {
+			IFile iFile = phpDOMModel.getIFile();
+			if (iFile == null) {
 				return new String[] { DEFAULT_VAR };
 			}
-			PHPCodeContext phpCodeContext = ModelSupport.createContext(fileData, phpTemplateContext.getStart());
-			PHPVariablesTypeManager variablesTypeManager = fileData.getVariableTypeManager();
+			PHPCodeContext phpCodeContext = ModelSupport.createContext(iFile, phpTemplateContext.getStart());
+			PHPVariablesTypeManager variablesTypeManager = iFile.getVariableTypeManager();
 			PHPVariableData[] phpVariableDatas = variablesTypeManager.getVariables(phpCodeContext);
 			if (phpVariableDatas == null) {
 				return new String[] { DEFAULT_VAR };

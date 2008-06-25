@@ -4,10 +4,10 @@
  */
 package org.eclipse.php.internal.ui.editor.templates.resolver;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -38,11 +38,11 @@ public class PhpTemplateFileResolver extends TemplateVariableResolver {
 
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
-			PHPFileData fileData = phpDOMModel.getFileData();
-			if (fileData == null) {
+			IFile iFile = phpDOMModel.getIFile();
+			if (iFile == null) {
 				return null;
 			}
-			String fileName = fileData.getName();
+			String fileName = iFile.getName();
 			if (fileName == null || fileName.equals("")) { //$NON-NLS-1$
 				return null;
 			}

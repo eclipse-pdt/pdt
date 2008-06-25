@@ -39,9 +39,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IExternalSourceModule;
+import org.eclipse.dltk.core.IMember;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
-import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -54,14 +59,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel.IncludePathModelType;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.UserData;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
@@ -115,7 +112,7 @@ public class EditorUtility {
 		return MessageFormat.format(PHPUIMessages.getString("EditorUtility_concatModifierStrings"), new String[] { modifierString, newModifierString });
 	}
 
-	private static ZipEntryStorageEditorInput createZipEntryStorageEditorInput(final ZipFile zipFile, final PHPCodeData element, final IProject project) {
+	private static ZipEntryStorageEditorInput createZipEntryStorageEditorInput(final ZipFile zipFile, final IModelElement element, final IProject project) {
 		ZipInputStream is = null;
 		ZipEntry ze = null;
 
@@ -123,9 +120,9 @@ public class EditorUtility {
 			final File f = new File(zipFile.getName());
 			is = new ZipInputStream(new FileInputStream(f));
 			ze = is.getNextEntry();
-			PHPFileData fileData = null;
-			if (element instanceof PHPFileData)
-				fileData = (PHPFileData) element;
+			IFile fileData = null;
+			if (element instanceof IFile)
+				fileData = (IFile) element;
 			else
 				fileData = PHPModelUtil.getPHPFileContainer(element);
 			String phpFileName = fileData.getName();
@@ -176,14 +173,14 @@ public class EditorUtility {
 	 * If the current active editor edits a php element return it, else
 	 * return null
 	 */
-	public static PHPCodeData getActiveEditorPHPInput() {
+	public static IModelElement getActiveEditorPHPInput() {
 		final IWorkbenchPage page = PHPUiPlugin.getActivePage();
 		if (page != null) {
 			final IEditorPart part = page.getActiveEditor();
 			if (part != null) {
 				final IEditorInput editorInput = part.getEditorInput();
 				if (editorInput != null)
-					return (PHPCodeData) editorInput.getAdapter(PHPCodeData.class);
+					return (IModelElement) editorInput.getAdapter(IModelElement.class);
 			}
 		}
 		return null;
@@ -249,11 +246,11 @@ public class EditorUtility {
 		if (input instanceof TreeItem) {
 			IProject project = getProject((TreeItem) input);
 			final String incDir = getIncludeDirectory((TreeItem) input);
-			return getEditorInput((PHPCodeData) ((TreeItem) input).getData(), project, incDir);
+			return getEditorInput((IModelElement) ((TreeItem) input).getData(), project, incDir);
 		}
 
-		if (input instanceof PHPCodeData) {
-			return getEditorInput((PHPCodeData) input, null, null);
+		if (input instanceof IModelElement) {
+			return getEditorInput((IModelElement) input, null, null);
 		}
 
 		if (input instanceof IModelElement) {
@@ -269,11 +266,11 @@ public class EditorUtility {
 		return null;
 	}
 
-	private static IEditorInput getEditorInput(final PHPCodeData element, final IProject project, final String incDir) {
+	private static IEditorInput getEditorInput(final IModelElement element, final IProject project, final String incDir) {
 
-		final IResource resource = PHPModelUtil.getResource(element);
+		final IResource resource = element.getResource();
 		if (resource == null || !resource.exists()) {
-			final Object source = PHPModelUtil.getExternalResource(element, project);
+			final Object source =  PHPModelUtil.getExternalResource(element, project);
 			if (source instanceof File) {
 				File externalSource = (File) source;
 				Path path = new Path(externalSource.getPath());
@@ -335,9 +332,9 @@ public class EditorUtility {
 	}
 
 	private static String getIncludeDirectory(TreeItem input) {
-		if (!(input.getData() instanceof PHPCodeData))
+		if (!(input.getData() instanceof IModelElement))
 			return null;
-		PHPCodeData codeData = (PHPCodeData) input.getData();
+		IModelElement codeData = (IModelElement) input.getData();
 		while (codeData != null && !(codeData instanceof PHPFileData)) {
 			codeData = codeData.getContainer();
 			input = input.getParentItem();
@@ -388,9 +385,9 @@ public class EditorUtility {
 	}
 
 	private static IProject getProject(TreeItem input) {
-		if (!(input.getData() instanceof PHPCodeData))
+		if (!(input.getData() instanceof IModelElement))
 			return null;
-		PHPCodeData codeData = (PHPCodeData) input.getData();
+		IModelElement codeData = (IModelElement) input.getData();
 		while (codeData != null && !(codeData instanceof PHPFileData)) {
 			codeData = codeData.getContainer();
 			input = input.getParentItem();
@@ -475,7 +472,7 @@ public class EditorUtility {
 	}
 
 	/**
-	 * Opens a PHP editor for an element such as <code>PHPCodeData</code>, <code>IFile</code>, <code>IStorage</code> or <code>IEditorInput</code>.
+	 * Opens a PHP editor for an element such as <code>IModelElement</code>, <code>IFile</code>, <code>IStorage</code> or <code>IEditorInput</code>.
 	 * The editor is activated by default.
 	 * @return the IEditorPart or null if wrong element type or opening failed
 	 */
@@ -484,7 +481,7 @@ public class EditorUtility {
 	}
 
 	/**
-	 * Opens a PHP editor for an element (PHPCodeData, IFile, IStorage...)
+	 * Opens a PHP editor for an element (IModelElement, IFile, IStorage...)
 	 * @return the IEditorPart or null if wrong element type or opening failed
 	 */
 	public static IEditorPart openInEditor(final Object inputElement, final boolean activate) throws PartInitException {
@@ -722,31 +719,7 @@ public class EditorUtility {
 	
 	/**
 	 * Selects a PHP Element in an editor
-	 */
-	public static void revealInEditor(final IEditorPart part, final PHPCodeData element) {
-		if (element == null)
-			return;
-
-		final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(part);
-		if (phpEditor != null) {
-//			phpEditor.setSelection(element, true);
-			return;
-		}
-
-		int offset = -1;
-		int length = 0;
-		//		if (element instanceof PHPCodeData) {
-		final UserData userData = /*(PHPCodeData)*/element.getUserData();
-		if (userData != null) {
-			offset = userData.getStartPosition();
-			length = userData.getEndPosition() - userData.getStartPosition() + 1;
-		}
-		//		}
-		if (offset >= 0)
-			revealInEditor(part, offset, length);
-	}
-
-	/**
+	 * 
 	 * @param editor
 	 * @return the php editor (if exists) from the given editor
 	 * NOTE: editors that wants to work with PHP editor actions must implement the getAdapter() method

@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.openType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -21,13 +26,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.php.internal.core.phpModel.IPHPLanguageModel;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.IPhpModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -48,7 +47,7 @@ public class OpenPhpElementDialog extends Dialog {
 
 	private BasicSelector basicSelector;
 
-	private CodeData[] initialElements;
+	private IModelElement[] initialElements;
 
 	private String initFilterText;
 
@@ -71,7 +70,7 @@ public class OpenPhpElementDialog extends Dialog {
 		return getShell().computeSize(500, 400, true);
 	}
 
-	public void setInitialElements(CodeData[] initialElements) {
+	public void setInitialElements(IModelElement[] initialElements) {
 		this.initialElements = initialElements;
 	}
 
@@ -120,10 +119,10 @@ public class OpenPhpElementDialog extends Dialog {
 
 	private Object[] getElements() {
 
-		CodeData[] elements = initialElements;
+		IModelElement[] elements = initialElements;
 
 		if (elements == null) {
-			LinkedHashSet<CodeData> arrayList = new LinkedHashSet<CodeData>();
+			LinkedHashSet<IModelElement> arrayList = new LinkedHashSet<IModelElement>();
 			// traverse over all the php projects and get the model for each
 			// one.
 			IProject[] projects = PHPUiPlugin.getWorkspace().getRoot().getProjects();
@@ -151,7 +150,7 @@ public class OpenPhpElementDialog extends Dialog {
 					}
 				}
 			}
-			elements = arrayList.toArray(new CodeData[arrayList.size()]);
+			elements = arrayList.toArray(new IModelElement[arrayList.size()]);
 		}
 		return sortAndremoveDuplicates(elements);
 	}
@@ -160,23 +159,23 @@ public class OpenPhpElementDialog extends Dialog {
 	 * Sorts and removes duplicate elements
 	 * @param elements
 	 */
-	private Object[] sortAndremoveDuplicates(CodeData[] elements) {
+	private Object[] sortAndremoveDuplicates(IModelElement[] elements) {
 		// sort
 		if (elements.length == 0) {
 			return new Object[0];
 		}
-		Comparator<CodeData> comparator = new Comparator<CodeData>() {
-			public int compare(CodeData arg0, CodeData arg1) {
+		Comparator<IModelElement> comparator = new Comparator<IModelElement>() {
+			public int compare(IModelElement arg0, IModelElement arg1) {
 				return arg0.toString().compareToIgnoreCase(arg1.toString());
 			}
 		};
 		Arrays.sort(elements, comparator);
 
 		// remove redundant elements
-		CodeData last = elements[0];
+		IModelElement last = elements[0];
 		final List<Object> result = new ArrayList<Object>();
 		result.add(last);
-		for (CodeData codeData : elements) {
+		for (IModelElement codeData : elements) {
 			if (!equals(last, codeData)) {
 				result.add(codeData);
 			}
@@ -185,7 +184,7 @@ public class OpenPhpElementDialog extends Dialog {
 		return result.toArray();
 	}
 
-	private boolean equals(CodeData o1, CodeData o2) {
+	private boolean equals(IModelElement o1, IModelElement o2) {
 
 		if (o1.getClass() != o2.getClass()) {
 			return false;
@@ -201,8 +200,8 @@ public class OpenPhpElementDialog extends Dialog {
 		return fileName1.equals(fileName2);
 	}
 
-	private void addData(CodeData[] classes, Collection arrayList) {
-		for (CodeData codeData : classes) {
+	private void addData(IModelElement[] classes, Collection arrayList) {
+		for (IModelElement codeData : classes) {
 			arrayList.add(codeData);
 		}
 	}

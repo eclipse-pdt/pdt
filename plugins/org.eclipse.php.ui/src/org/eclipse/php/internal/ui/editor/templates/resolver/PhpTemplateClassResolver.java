@@ -12,8 +12,6 @@ package org.eclipse.php.internal.ui.editor.templates.resolver;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceModule;
@@ -50,7 +48,7 @@ public class PhpTemplateClassResolver extends TemplateVariableResolver {
 
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
-			IType[] types = ((SourceModule)(phpDOMModel.getModelElement())).getAllTypes() ;//getProjectModel().getClasses();
+			IType[] types = ((SourceModule) (phpDOMModel.getModelElement())).getAllTypes();//getProjectModel().getClasses();
 			for (int i = 0; i < types.length; i++) {
 				IType type = types[i];
 				classNames.add(type.getElementName());
