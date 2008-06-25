@@ -39,10 +39,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.IExternalSourceModule;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
+import org.eclipse.dltk.internal.ui.editor.ScriptEditor;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -680,7 +679,47 @@ public class EditorUtility {
 		if (part != null && region != null)
 			revealInEditor(part, region.getOffset(), region.getLength());
 	}
+	/**
+	 * Selects a PHP Element in an editor
+	 * (based on DLTK model)
+	 */
+	public static void revealInEditor(IEditorPart part, IModelElement element) {
+		if (element == null)
+			return;
+/*		if (part instanceof ScriptEditor) {
+			((ScriptEditor) part).setSelection(element);
+			if (DLTKCore.DEBUG) {
+				System.err.println("Add revealInEditor set selection"); //$NON-NLS-1$
+			}
+			return;
+		}*/
+		// Support for non-Script editor
+		try {
+			ISourceRange range = null;
+			if (element instanceof IExternalSourceModule) {
 
+			} else if (element instanceof ISourceModule) {
+				range = null;
+			}
+			// else if (element instanceof IClassFile)
+			// range= null;
+			// else if (element instanceof ILocalVariable)
+			// range= ((ILocalVariable)element).getNameRange();
+			else if (element instanceof IMember)
+				range = ((IMember) element).getNameRange();
+			// else if (element instanceof ITypeParameter)
+			// range= ((ITypeParameter)element).getNameRange();
+			else if (element instanceof ISourceReference)
+				range = ((ISourceReference) element).getSourceRange();
+			if (range != null)
+				revealInEditor(part, range.getOffset(), range.getLength());
+		} catch (ModelException e) {
+			// don't reveal
+		}
+	}
+
+
+	
 	/**
 	 * Selects a PHP Element in an editor
 	 */

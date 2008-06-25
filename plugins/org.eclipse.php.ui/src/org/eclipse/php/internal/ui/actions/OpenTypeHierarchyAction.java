@@ -25,10 +25,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
@@ -42,9 +39,6 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPInterfaceNameData;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPClassData.PHPSuperClassNameData;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -111,10 +105,10 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			selectionChanged((ITextSelection) selection);
 		} else if (selection instanceof ITreeSelection) {
 			Object firstElement = selection.getFirstElement();
-			if (firstElement instanceof PHPFunctionData) {
-				setEnabled(((PHPFunctionData) firstElement).getContainer() instanceof PHPClassData);
+			if (firstElement instanceof IMethod) {
+				setEnabled(((IMethod) firstElement).getParent() instanceof IType);
 			} else {
-				setEnabled(firstElement instanceof PHPClassData || firstElement instanceof PHPSuperClassNameData || firstElement instanceof PHPInterfaceNameData || firstElement instanceof PHPClassVarData || firstElement instanceof PHPClassConstData);
+				setEnabled(firstElement instanceof IType ||  firstElement instanceof IField) ;
 			}
 		}
 	}
@@ -202,16 +196,22 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 				return;
 			Object input = selection.getFirstElement();
 			//|| firstElement instanceof PHPSuperClassNameData || firstElement instanceof PHPInterfaceNameData
-			if (!(input instanceof PHPCodeData)) {
+			if (!(input instanceof ISourceModule)) {
 				IStatus status = createStatus("A PHP element must be selected.");
 				ErrorDialog.openError(getShell(), getDialogTitle(), "Cannot create type hierarchy", status);
 				return;
 			}
-			PHPCodeData codeData = (PHPCodeData) input;
-			String fileName = codeData.getUserData().getFileName();
+			ISourceModule sourceModule = (ISourceModule) input;
+			String fileName = sourceModule.getElementName();
 			IModelElement element = DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(fileName)));
 			if (element instanceof ISourceModule) {
-				int offset = codeData.getUserData().getStopPosition();
+				int offset = 0;
+				try {
+					offset = sourceModule.getSourceRange().getOffset();
+				} catch (ModelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				IModelElement modelElement = getSelectionModelElement(offset, 1, (ISourceModule) element);
 				if (modelElement != null) {
 					if (!ActionUtil.isProcessable(getShell(), modelElement)) {

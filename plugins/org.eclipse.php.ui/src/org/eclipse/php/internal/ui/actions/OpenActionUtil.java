@@ -11,9 +11,9 @@
 package org.eclipse.php.internal.ui.actions;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
@@ -40,12 +40,12 @@ public class OpenActionUtil {
 	 */
 	public static void open(Object element, boolean activate) throws PartInitException {
 		IEditorPart part = EditorUtility.openInEditor(element, activate);
-		if (element instanceof PHPCodeData)
-			EditorUtility.revealInEditor(part, (PHPCodeData) element);
+		if (element instanceof IModelElement)
+			EditorUtility.revealInEditor(part, ((IModelElement) element).getElementType() );
 		if(element instanceof TreeItem){
 			TreeItem item = (TreeItem)element;
-			if(item.getData() instanceof PHPCodeData)
-			EditorUtility.revealInEditor(part, (PHPCodeData) item.getData());
+			if(item.getData() instanceof IModelElement)
+			EditorUtility.revealInEditor(part, ((IModelElement)(item.getData())).getElementType() );
 		}
 	}
 
@@ -76,7 +76,7 @@ public class OpenActionUtil {
 				nResults = selection.length;
 				for (int i = 0; i < nResults; i++) {
 					Object current = selection[i];
-					if (current instanceof PHPCodeData)
+					if (current instanceof ISourceModule)
 						return (IModelElement) current;
 				}
 			}

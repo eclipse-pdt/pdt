@@ -15,13 +15,15 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.ui.actions.ActionMessages;
+import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.OpenStrategy;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPTreeViewer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -49,6 +51,19 @@ public class OpenAction extends SelectionDispatchAction {
 		setToolTipText(PHPUIMessages.getString("OpenAction_tooltip"));
 		setDescription(PHPUIMessages.getString("OpenAction_description"));
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_RESOURCE_ACTION);
+	}
+	
+	/**
+	 * Note: This constructor is for internal use only. Clients should not call
+	 * this constructor.
+	 * 
+	 * @param editor
+	 *            the Script editor
+	 */
+	public OpenAction(PHPStructuredEditor editor) {
+		this(editor.getEditorSite());
+		fEditor = editor;
+		setEnabled(EditorUtility.getEditorInputModelElement(fEditor, false) != null);
 	}
 
 	/* 
@@ -78,7 +93,7 @@ public class OpenAction extends SelectionDispatchAction {
 			return false;
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			Object element = iter.next();
-			if (element instanceof PHPCodeData)
+			if (element instanceof ISourceModule)
 				continue;
 			if (element instanceof IFile)
 				continue;
@@ -135,7 +150,7 @@ public class OpenAction extends SelectionDispatchAction {
 			try {
 				element = getElementToOpen(element);
 				boolean activateOnOpen = fEditor != null ? true : OpenStrategy.activateOnOpen();
-				if (element instanceof PHPCodeData && treeNodes != null) {
+				if (element instanceof ISourceModule && treeNodes != null) {
 					OpenActionUtil.open(treeNodes[i], activateOnOpen);
 				} else {
 					OpenActionUtil.open(element, activateOnOpen);

@@ -24,6 +24,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.internal.ui.IDLTKStatusConstants;
 import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
@@ -39,7 +40,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -229,16 +229,22 @@ public class OpenCallHierarchyAction extends SelectionDispatchAction {
         if (selection.size() != 1)
             return;
         Object input= selection.getFirstElement();
-        if (!(input instanceof PHPCodeData)) {
+        if (!(input instanceof IModelElement)) {
 			IStatus status = createStatus("A PHP element must be selected.");
 			ErrorDialog.openError(getShell(), getErrorDialogTitle(), CallHierarchyMessages.OpenCallHierarchyAction_messages_title, status);
 			return;
 		}
-		PHPCodeData codeData = (PHPCodeData) input;
-		String fileName = codeData.getUserData().getFileName();
+        ISourceModule sourceModule = (ISourceModule) input;
+		String fileName = sourceModule.getElementName();
 		IModelElement element = DLTKCore.create(ResourcesPlugin.getWorkspace().getRoot().getFile(Path.fromOSString(fileName)));
 		if (element instanceof ISourceModule) {
-			int offset = codeData.getUserData().getStopPosition();
+			int offset = 0;
+			try {
+				offset = sourceModule.getSourceRange().getOffset();
+			} catch (ModelException e){
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}// getUserData().getStopPosition();
 			IModelElement modelElement = getSelectionModelElement(offset, 1, (ISourceModule) element);
 			if (modelElement != null) {
 				if (!ActionUtil.isProcessable(getShell(), modelElement)) {

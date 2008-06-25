@@ -13,7 +13,7 @@ package org.eclipse.php.internal.ui.actions;
 import java.util.ResourceBundle;
 
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.php.internal.core.phpModel.LanguageModelInitializer;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.PHPManualFactory;
 import org.eclipse.ui.texteditor.IUpdate;

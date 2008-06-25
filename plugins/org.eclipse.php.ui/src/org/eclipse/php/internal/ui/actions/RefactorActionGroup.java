@@ -17,12 +17,12 @@ import java.util.List;
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.actions.SelectionDispatchAction;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -65,8 +65,8 @@ public class RefactorActionGroup extends ActionGroup {
 	private PHPStructuredEditor fEditor;
 	private String fGroupName = IContextMenuConstants.GROUP_REORGANIZE;
 
-	private SelectionDispatchAction fMoveAction;
-	private SelectionDispatchAction fRenameAction;
+	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fMoveAction;
+	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fRenameAction;
 
 	private UndoRedoActionGroup fUndoRedoActionGroup;
 
@@ -123,14 +123,14 @@ public class RefactorActionGroup extends ActionGroup {
 		ISelection selection = provider.getSelection();
 		fEditorActions = new ArrayList();
 
-		fRenameAction = new RenameAction(editor);
+		fRenameAction = new org.eclipse.dltk.internal.ui.actions.refactoring.RenameAction(editor.getEditorSite());
 		fRenameAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
 		fRenameAction.update(selection);
 		initAction(fRenameAction, provider, selection);
 		editor.setAction("RenameElement", fRenameAction); //$NON-NLS-1$		
 		fEditorActions.add(fRenameAction);
 
-		fMoveAction = new MoveAction(editor);
+		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(editor.getEditorSite());
 		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		fMoveAction.update(selection);
 		initAction(fMoveAction, provider, selection);
@@ -146,22 +146,27 @@ public class RefactorActionGroup extends ActionGroup {
 		ISelectionProvider provider = fSite.getSelectionProvider();
 		ISelection selection = provider.getSelection();
 
-		fMoveAction = new MoveAction(site);
+		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(site);
 		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		initAction(fMoveAction, provider, selection);
 
-		fRenameAction = new RenameAction(site);
+		fRenameAction = new org.eclipse.dltk.internal.ui.actions.refactoring.RenameAction(site);
 		fRenameAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
 		initAction(fRenameAction, provider, selection);
 
 		fKeyBindingService = keyBindingService;
 	}
 
+
 	private static void initAction(SelectionDispatchAction action, ISelectionProvider provider, ISelection selection) {
 		action.update(selection);
 		provider.addSelectionChangedListener(action);
 	}
 
+/*	private static void initAction(SelectionDispatchAction action, ISelectionProvider provider, ISelection selection) {
+		action.update(selection);
+		provider.addSelectionChangedListener(action);
+	}*/
 	/*
 	 * (non-Javadoc) Method declared in ActionGroup
 	 */

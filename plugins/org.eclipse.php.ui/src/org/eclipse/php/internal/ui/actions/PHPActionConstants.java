@@ -53,9 +53,19 @@ public class PHPActionConstants {
 	// Source menu	
 
 	/**
+	 * Source menu: name of standard Block Comment global action
+	 * (value <code>"org.eclipse.php.ui.actions.AddBlockComment"</code>).
+	 * 
+	 * @since 3.0
+	 */
+	public static final String ADD_DECRIPTION = "org.eclipse.php.ui.actions.AddDescriptionAction"; //$NON-NLS-1$
+
+	
+	/**
 	 * Source menu: name of standard Comment global action
 	 * (value <code>"org.eclipse.php.ui.actions.Comment"</code>).
 	 */
+	
 	public static final String COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
 
 	/**

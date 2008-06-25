@@ -1420,9 +1420,9 @@
 			id="org.eclipse.php.ui.PHPStructuredEditorPopupActions"
 			targetID="org.eclipse.php.core.phpsource.source.RulerContext">
 			<action
-				class="org.eclipse.php.internal.ui.actions.PHPTaskRulerAction"
+				class="org.eclipse.ui.texteditor.TaskRulerAction"
 				helpContextId="org.eclipse.ui.AddTask_action_context"
-				id="org.eclipse.ui.texteditor.TaskRulerAction"
+				id="org.eclipse.php.ui.texteditor.TaskRulerAction"
 				label="%AddTask.label"
 				menubarPath="add"
 				tooltip="%AddTask.tooltip" />
@@ -1434,36 +1434,25 @@
 				menubarPath="add"
 				tooltip="%AddBookmark.tooltip" />
 		</viewerContribution>
+		
+		<!-- Add Description menue option-->
 		<objectContribution
-			objectClass="org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData"
-			id="org.eclipse.php.ui.codeDataContribution">
-			<filter
-				name="actionFilterContributorId"
-				value="org.eclipse.php.ui.phpCodeData.CodeDataActionFilterContributor" />
-			<menu
-				label="%Source"
-				path="additions"
-				id="source">
-				<groupMarker name="sourceGroup" />
+			objectClass="org.eclipse.dltk.core.IModelElement"
+			id="org.eclipse.php.ui.modelElementContribution">
+			<menu label="%Source" path="additions" id="source">
 			</menu>
 			<action
 				label="%action.addDescription.name"
 				class="org.eclipse.php.internal.ui.actions.AddDescriptionAction"
-				menubarPath="source/sourceGroup"
+				menubarPath="source/addDescriptionGroup"
 				id="org.eclipse.php.ui.actions.AddDescriptionAction">
-				<enablement>
-       <and>
-          <objectState
-                name="actionFilterContributorId"
-                value="org.eclipse.php.ui.phpCodeData.AddPHPDocActionFilterContributor">
-          </objectState>
-          <objectState
-                name="actionFilterContributorId"
-                value="org.eclipse.php.ui.actions.filters.SourceActionFilterNotInEFS">
-          </objectState>
-       </and>
-				</enablement>
 			</action>
+			<visibility>
+				<or>
+					<objectClass name="org.eclipse.dltk.core.ISourceModule"/>
+					<objectClass name="org.eclipse.dltk.core.IMember"/>
+				</or>
+			</visibility>			
 		</objectContribution>
 	</extension>
 

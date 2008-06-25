@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IWorkbenchSite;
 
@@ -85,7 +84,6 @@ public class ConvertToPDTProjectAction extends SelectionDispatchAction {
 						newBuildSpec.add(command);
 						
 						command = projectDescription.newCommand();
-						command.setBuilderName(PHPProjectOptions.BUILDER_ID);
 						newBuildSpec.add(command);
 
 						projectDescription.setBuildSpec((ICommand[]) newBuildSpec.toArray(new ICommand[newBuildSpec.size()]));

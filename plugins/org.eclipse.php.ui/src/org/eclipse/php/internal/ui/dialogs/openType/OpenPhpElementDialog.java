@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -43,7 +44,7 @@ import org.eclipse.ui.PlatformUI;
 
 public class OpenPhpElementDialog extends Dialog {
 
-	private PHPCodeData selectedElement = null;
+	private IModelElement selectedElement = null;
 
 	private BasicSelector basicSelector;
 
@@ -212,13 +213,13 @@ public class OpenPhpElementDialog extends Dialog {
 		newShell.setText(title != null ? title : PHPUIMessages.getString("OpenType_DialogTitle"));
 	}
 
-	public PHPCodeData getSelectedElement() {
+	public IModelElement getSelectedElement() {
 		return selectedElement;
 	}
 
 	@Override
 	protected void okPressed() {
-		selectedElement = (PHPCodeData) basicSelector.getSelectedElement();
+		selectedElement = (IModelElement) basicSelector.getSelectedElement();
 		super.okPressed();
 	}
 

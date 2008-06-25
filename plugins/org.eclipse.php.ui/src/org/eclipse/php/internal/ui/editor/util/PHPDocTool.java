@@ -14,6 +14,8 @@ package org.eclipse.php.internal.ui.editor.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.php.internal.core.phpModel.phpElementData.*;
 
 /**
@@ -22,41 +24,77 @@ import org.eclipse.php.internal.core.phpModel.phpElementData.*;
  */
 public class PHPDocTool {
 
-	public static PHPDocBlock createPhpDoc(CodeData codeData) {
-		return createPhpDoc(codeData, null);
+	public static PHPDocBlock createPhpDoc(IModelElement modelElem) {
+		return createPhpDoc(modelElem, null);
 	}
 
-	public static PHPDocBlock createPhpDoc(CodeData codeData, String shortDescription) {
-		PHPDocBlock block = createDocBlock(codeData);
+	public static PHPDocBlock createPhpDoc(PHPCodeData modelElem, String shortDescription) {
+		PHPDocBlock block = createDocBlock(modelElem);
+		if(shortDescription != null){
+			block.setShortDescription(shortDescription);
+		}
+		return block;
+	}
+	
+	public static PHPDocBlock createPhpDoc(IModelElement modelElem, String shortDescription) {
+		PHPDocBlock block = createDocBlock(modelElem);
 		if(shortDescription != null){
 			block.setShortDescription(shortDescription);
 		}
 		return block;
 	}
 
-	private static PHPDocBlock createDocBlock(CodeData codeData) {
-		if (codeData instanceof PHPFunctionData) {
-			return createFunctionDocBlock((PHPFunctionData) codeData);
+	private static PHPDocBlock createDocBlock(IModelElement modelElem) {
+		if (modelElem instanceof PHPFunctionData) {
+			return createFunctionDocBlock((PHPFunctionData) modelElem);
 		}
-		if (codeData instanceof PHPClassData) {
+		if (modelElem instanceof PHPClassData) {
 			return createClassDocBlock();
 		}
-		if (codeData instanceof PHPFileData) {
+		if (modelElem instanceof PHPFileData) {
 			return createFileDocBlock();
 		}
-		if (codeData instanceof PHPClassVarData) {
+		if (modelElem instanceof PHPClassVarData) {
 			return createClassVarDocBlock();
 		}
-		if (codeData instanceof PHPVariableData) {
-			return createVarDocBlock((PHPVariableData) codeData);
+		if (modelElem instanceof PHPVariableData) {
+			return createVarDocBlock((PHPVariableData) modelElem);
 		}
-		if (codeData instanceof PHPConstantData) {
+		if (modelElem instanceof PHPConstantData) {
 			return createConstantDocBlock();
 		}
-		if (codeData instanceof PHPIncludeFileData) {
+		if (modelElem instanceof PHPIncludeFileData) {
 			return createIncludeDocBlock();
 		}
-		if (codeData instanceof PHPClassConstData) {
+		if (modelElem instanceof PHPClassConstData) {
+			return createClassConstantDocBlock();
+		}
+		return null;
+	}
+	
+	private static PHPDocBlock createDocBlock(PHPCodeData modelElem) {
+		if (modelElem instanceof PHPFunctionData) {
+			return createFunctionDocBlock((PHPFunctionData) modelElem);
+		}
+		if (modelElem instanceof PHPClassData) {
+			return createClassDocBlock();
+		}
+		if (modelElem instanceof PHPFileData) {
+			return createFileDocBlock();
+		}
+		if (modelElem instanceof PHPClassVarData) {
+			return createClassVarDocBlock();
+		}
+		if (modelElem instanceof PHPVariableData) {
+			return createVarDocBlock((PHPVariableData) modelElem);
+		}
+		if (modelElem instanceof PHPConstantData) {
+			return createConstantDocBlock();
+		}
+		if (modelElem instanceof PHPIncludeFileData) {
+			return createIncludeDocBlock();
+		}
+		if (modelElem instanceof PHPClassConstData) {
 			return createClassConstantDocBlock();
 		}
 		return null;
