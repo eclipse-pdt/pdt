@@ -12,10 +12,14 @@ package org.eclipse.php.internal.ui.editor.templates.resolver;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.phpModel.phpElementData.CodeData;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContext;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -46,12 +50,14 @@ public class PhpTemplateClassResolver extends TemplateVariableResolver {
 
 		try {
 			DOMModelForPHP phpDOMModel = (DOMModelForPHP) structuredModel;
-			CodeData[] codeDatas = phpDOMModel.getProjectModel().getClasses();
-			for (int i = 0; i < codeDatas.length; i++) {
-				CodeData codeData = codeDatas[i];
-				classNames.add(codeData.getName());
+			IType[] types = ((SourceModule)(phpDOMModel.getModelElement())).getAllTypes() ;//getProjectModel().getClasses();
+			for (int i = 0; i < types.length; i++) {
+				IType type = types[i];
+				classNames.add(type.getElementName());
 			}
-
+		} catch (ModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			structuredModel.releaseFromRead();
 		}
