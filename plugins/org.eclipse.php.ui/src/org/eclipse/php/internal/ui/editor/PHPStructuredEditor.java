@@ -134,7 +134,6 @@ import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -2129,13 +2128,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
 			resource = fileInput.getFile();
-
-			// we add this test to provide model for PHP files opened from RSE
-			// (temp) project
-			IProject proj = resource.getProject();
-			if (proj.isAccessible() && proj.hasNature(PHPUiConstants.RSE_TEMP_PROJECT_NATURE_ID)) {
-				PHPWorkspaceModelManager.getInstance().getModelForProject(proj, true);
-			}
 		} else if (input instanceof IStorageEditorInput) {
 			// This kind of editor input usually means non-workspace file, like
 			// PHP file which comes from include path, remote file which comes
