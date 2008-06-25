@@ -16,9 +16,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
@@ -111,17 +108,6 @@ public class Server implements IXMLPreferencesStorable {
 	 */
 	public void removeAttribute(String attributeName) {
 		helper.removeAttribute(attributeName);
-	}
-
-	public String getContextRoot(IProject project) {
-		PHPProjectOptions options = PHPProjectOptions.forProject(project);
-		String contextRoot = (String) options.getOption(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
-
-		if (contextRoot == null || contextRoot.equals("")) {
-			contextRoot = project.getFullPath().toString();
-		}
-
-		return contextRoot;
 	}
 
 	public String getName() {
