@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
 

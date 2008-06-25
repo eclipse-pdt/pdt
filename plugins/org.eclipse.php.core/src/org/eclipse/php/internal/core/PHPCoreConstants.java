@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 
 public interface PHPCoreConstants {
 	

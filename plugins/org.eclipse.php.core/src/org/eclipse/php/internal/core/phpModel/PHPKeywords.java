@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 

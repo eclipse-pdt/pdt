@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 
 /**
  * Represents a function formal parameter

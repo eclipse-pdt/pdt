@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInf
 import org.eclipse.php.internal.core.ast.rewrite.TargetSourceRangeComputer.SourceRange;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.text.edits.*;
 
 /**

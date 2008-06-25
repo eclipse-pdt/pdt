@@ -85,3 +85,4 @@ Provide-Package: java_cup,
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: Resources/parserTools/javacup/java-cup-10k.jar,
  .
+Export-Package: org.eclipse.php.internal.core.language

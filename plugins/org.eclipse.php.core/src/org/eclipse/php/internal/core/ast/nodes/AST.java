@@ -23,7 +23,7 @@ import java_cup.runtime.lr_parser;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.ast.scanner.*;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.text.edits.TextEdit;
 
 /**

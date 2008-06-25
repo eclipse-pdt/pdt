@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4;
 import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5;
 import org.eclipse.php.internal.core.ast.scanner.PhpAstParser4;
 import org.eclipse.php.internal.core.ast.scanner.PhpAstParser5;
-import org.eclipse.php.internal.core.phpModel.parser.PHPVersion;
+import org.eclipse.php.internal.core.language.PHPVersion;
 
 /**
 * A PHP language parser for creating abstract syntax trees (ASTs).<p>
