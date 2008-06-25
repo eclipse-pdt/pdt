@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.internal.ui.actions.StatusInfo;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.StatusDialog;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -97,7 +96,8 @@ public class VariableCreationDialog extends StatusDialog {
 	}
 
 	public IPVariableElement getIncludePathElement() {
-		return new IPVariableElement(fNameField.getText(), new Path(fPathField.getText()), IncludePathVariableManager.instance().isReserved(fNameField.getText()));
+		return null;
+		// return new IPVariableElement(fNameField.getText(), new Path(fPathField.getText()), IncludePathVariableManager.instance().isReserved(fNameField.getText()));
 	}
 
 	/*

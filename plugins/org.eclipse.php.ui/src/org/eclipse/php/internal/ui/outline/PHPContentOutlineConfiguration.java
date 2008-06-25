@@ -21,21 +21,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
-import org.eclipse.php.internal.ui.treecontent.TreeProvider;
-import org.eclipse.php.ui.treecontent.IPHPTreeContentProvider;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPageLayout;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -52,7 +44,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	protected JFaceNodeContentProvider fContentProviderHTML = null;
 	protected DecoratingModelLabelProvider fLabelProvider = null;
 	protected PHPOutlineLabelProvider fLabelProviderHTML = null;
-	IPHPTreeContentProvider[] treeProviders;
 	private IPropertyChangeListener propertyChangeListener;
 	private ChangeOutlineModeAction changeOutlineModeActionPHP;
 	private ChangeOutlineModeAction changeOutlineModeActionHTML;
@@ -218,12 +209,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			}
 		}
 		return super.getSelection(viewer, selection);
-	}
-
-	protected IPHPTreeContentProvider[] getTreeProviders() {
-		if (treeProviders == null)
-			treeProviders = TreeProvider.getTreeProviders(IPageLayout.ID_OUTLINE);
-		return treeProviders;
 	}
 
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {

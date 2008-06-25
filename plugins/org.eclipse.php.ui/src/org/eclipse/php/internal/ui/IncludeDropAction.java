@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
@@ -26,9 +25,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPFileData;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.php.internal.core.util.text.TextSequenceUtilities;
@@ -54,17 +50,10 @@ public class IncludeDropAction extends FileDropAction {
 			return false;
 		}
 
-		List/* <String> */phpFileNames = new ArrayList();
+		List<IFile> phpFileNames = new ArrayList<IFile>();
 		for (int i = 0; i < fileNames.length; ++i) {
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileNames[i]));
-			PHPFileData fileData = null;
-			if (file != null)
-				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(file, false);
-			else
-				fileData = PHPWorkspaceModelManager.getInstance().getModelForFile(fileNames[i], false);
-			if (fileData != null) {
-				phpFileNames.add(fileData.getName());
-			}
+			phpFileNames.add(file);
 		}
 		if (phpFileNames.size() != 0 && insert(phpFileNames, phpEditor)) {
 			return true;
@@ -90,7 +79,7 @@ public class IncludeDropAction extends FileDropAction {
 		return partitionType;
 	}
 
-	protected boolean insert(List phpFiles, PHPStructuredEditor targetEditor) {
+	protected boolean insert(List<IFile> phpFiles, PHPStructuredEditor targetEditor) {
 		ISelection selection = targetEditor.getSelectionProvider().getSelection();
 		if (!(selection instanceof ITextSelection))
 			return false;
@@ -129,17 +118,11 @@ public class IncludeDropAction extends FileDropAction {
 		return true;
 	}
 
-	private void insert(List phpFileNames, IStructuredDocument document, int insertionOffset, DOMModelForPHP model) {
-		PHPFileData currentFileData = model.getFileData();
-		IFile file = (IFile) PHPModelUtil.getResource(currentFileData);
-		boolean shrinkPaths = file != null && file.exists();
-		IProject project = file.getProject();
+	private void insert(List<IFile> phpFileNames, IStructuredDocument document, int insertionOffset, DOMModelForPHP model) {
 		StringBuffer string = new StringBuffer();
-		for (Iterator i = phpFileNames.iterator(); i.hasNext();) {
-			String fileName = (String) i.next();
-			if (shrinkPaths) {
-				fileName = PHPModelUtil.getRelativeLocation(project, fileName);
-			}
+		for (Iterator<IFile> i = phpFileNames.iterator(); i.hasNext();) {
+			IFile drop = (IFile) i.next();
+			String fileName = drop.getName();
 			string.append(MessageFormat.format("include_once ''{0}'';", new Object[] { fileName })); //$NON-NLS-1$
 			string.append(document.getLineDelimiter());
 		}

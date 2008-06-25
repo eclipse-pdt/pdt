@@ -27,10 +27,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.project.IIncludePathEntry;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
-import org.eclipse.php.internal.core.project.options.includepath.IncludePathVariableManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.wizards.fields.*;
@@ -39,6 +35,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * TODO adapt into DLTK's mechanism 
+ */
 public class VariableBlock {
 
 	private ListDialogField fVariablesList;
@@ -213,7 +212,7 @@ public class VariableBlock {
 
 	public void performDefaults() {
 		fVariablesList.removeAllElements();
-		String[] reservedName = IncludePathVariableManager.instance().getReservedVariables();
+		String[] reservedName = { } ; // IncludePathVariableManager.instance().getReservedVariables();
 		for (int i = 0; i < reservedName.length; i++) {
 			IPVariableElement elem = new IPVariableElement(reservedName[i], Path.EMPTY, true);
 			elem.setReserved(true);
@@ -225,7 +224,7 @@ public class VariableBlock {
 	public boolean performOk() {
 		ArrayList removedVariables = new ArrayList();
 		ArrayList changedVariables = new ArrayList();		
-		removedVariables.addAll(Arrays.asList(PHPProjectOptions.getIncludePathVariableNames()));
+		// removedVariables.addAll(Arrays.asList(PHPProjectOptions.getIncludePathVariableNames()));
 
 		// remove all unchanged
 		List changedElements = fVariablesList.getElements();
@@ -237,7 +236,7 @@ public class VariableBlock {
 				changedElements.remove(curr);
 			} else {
 				IPath path = curr.getPath();
-				IPath prevPath = PHPProjectOptions.getIncludePathVariable(curr.getName());
+				IPath prevPath = null; // PHPProjectOptions.getIncludePathVariable(curr.getName());
 				if (prevPath != null && prevPath.equals(path)) {
 					changedElements.remove(curr);					
 				} else {
@@ -299,7 +298,8 @@ public class VariableBlock {
 	}
 
 	private boolean doesChangeRequireFullBuild(List removed, List changed) {
-		IProject[] projects = PHPWorkspaceModelManager.getInstance().listProjects();
+		
+/*		IProject[] projects = PHPWorkspaceModelManager.getInstance().listProjects();
 		for (int i = 0; i < projects.length; i++) {
 			PHPProjectOptions options = PHPProjectOptions.forProject(projects[i]);
 			IIncludePathEntry[] entries = options.readRawIncludePath();
@@ -313,7 +313,7 @@ public class VariableBlock {
 				}
 			}
 		}
-		return false;
+*/		return false;
 	}
 
 	private class VariableBlockRunnable implements IRunnableWithProgress {
@@ -371,7 +371,7 @@ public class VariableBlock {
 				paths[k] = null;
 				k++;
 			}
-			PHPProjectOptions.setIncludePathVariables(names, paths, new SubProgressMonitor(monitor, 1));
+			// PHPProjectOptions.setIncludePathVariables(names, paths, new SubProgressMonitor(monitor, 1));
 
 			if (fDoBuild) {
 				ResourcesPlugin.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, new SubProgressMonitor(monitor, 1));
@@ -393,7 +393,7 @@ public class VariableBlock {
 	public void refresh(String initSelection) {
 		IPVariableElement initSelectedElement = null;
 
-		String[] reservedName = IncludePathVariableManager.instance().getReservedVariables();
+/*		String[] reservedName = IncludePathVariableManager.instance().getReservedVariables();
 		ArrayList reserved = new ArrayList(reservedName.length);
 		addAll(reservedName, reserved);
 
@@ -413,9 +413,8 @@ public class VariableBlock {
 				PHPCorePlugin.logErrorMessage("VariableBlock: IncludePath variable with null value: " + name); //$NON-NLS-1$
 			}
 		}
-
 		fVariablesList.setElements(elements);
-
+*/
 		if (initSelectedElement != null) {
 			ISelection sel = new StructuredSelection(initSelectedElement);
 			fVariablesList.selectElements(sel);

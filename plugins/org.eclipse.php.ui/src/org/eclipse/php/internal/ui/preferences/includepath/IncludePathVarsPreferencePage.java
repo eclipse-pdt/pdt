@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferencePage;
-import org.eclipse.php.internal.core.project.options.PHPProjectOptions;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -109,13 +108,17 @@ public class IncludePathVarsPreferencePage extends PreferencePage implements IWo
 		super.setVisible(visible);
 	}
 
+	/**
+	 * TODO should adapt this mechaism into DLTK
+	 * @return
+	 */
 	private String getCurrentSettings() {
 		StringBuffer buf = new StringBuffer();
-		String[] names = PHPProjectOptions.getIncludePathVariableNames();
+		String[] names = { };
 		for (int i = 0; i < names.length; i++) {
 			String curr = names[i];
 			buf.append(curr).append('\0');
-			IPath val = PHPProjectOptions.getIncludePathVariable(curr);
+			IPath val = null;
 			if (val != null) {
 				buf.append(val.toString());
 			}

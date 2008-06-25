@@ -623,21 +623,6 @@
 	<!--Adapters:-->
 	<extension point="org.eclipse.core.runtime.adapters">
 		<factory
-			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory"
-			adaptableType="org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData">
-			<adapter type="org.eclipse.core.resources.IResource" />
-			<adapter type="org.eclipse.ui.IContributorResourceAdapter" />
-			<adapter type="org.eclipse.ui.ide.IContributorResourceAdapter2" />
-			<adapter type="org.eclipse.ui.IContainmentAdapter" />
-			<adapter type="org.eclipse.ui.model.IWorkbenchAdapter" />
-			<adapter type="org.eclipse.ui.views.properties.IPropertySource" />
-		</factory>
-		<factory
-			adaptableType="org.eclipse.php.internal.core.phpModel.parser.IPhpModel"
-			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
-			<adapter type="org.eclipse.ui.model.IWorkbenchAdapter" />
-		</factory>
-		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
 			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
@@ -646,26 +631,6 @@
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
 			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
-		</factory>
-		<factory
-			class="org.eclipse.php.internal.ui.PHPProjectAdapterFactory"
-			adaptableType="org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel">
-			<adapter type="org.eclipse.core.resources.IProject" />
-		</factory>
-		<factory
-			class="org.eclipse.core.internal.resources.mapping.ResourceAdapterFactory"
-			adaptableType="org.eclipse.core.resources.IResource">
-			<adapter type="org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel" />
-		</factory>
-		<factory
-			adaptableType="org.eclipse.php.internal.core.phpModel.phpElementData.CodeData"
-			class="org.eclipse.php.internal.ui.CodeDataAdapterFactory">
-			<adapter type="org.eclipse.core.resources.IResource" />
-		</factory>
-		<factory
-			adaptableType="org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData"
-			class="org.eclipse.php.internal.ui.phpCodeData.PhpCodeDataAdapterFactory">
-			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
@@ -1369,8 +1334,8 @@
 			id="org.eclipse.php.ui.OthersWorkingSet" /-->
 		<workingSet
 			name="%PHPWorkingSetPage.name"
-			pageClass="org.eclipse.php.internal.ui.workingset.PHPWorkingSetPage"
-			updaterClass="org.eclipse.php.internal.ui.workingset.PHPWorkingSetUpdater"
+			pageClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetPage"
+			updaterClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetUpdater"
 			icon="icons/full/obj16/php_project_obj.gif"
 			id="org.eclipse.php.ui.workingset.PHPWorkingSetPage" />
 	</extension>
