@@ -13,7 +13,6 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContext;
 import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.ui.editor.templates.resolver.*;
 
 /**
  * Context Type id for PHP 
@@ -34,12 +33,6 @@ public class PhpTemplateContextType extends ScriptTemplateContextType {
 		super.addScriptResolvers();
 		
 		// empty constructor
-		addResolver(new PhpTemplateVariableResolver());
-		addResolver(new PhpTemplateFunctionContainerResolver());
-		addResolver(new PhpTemplateClassContainerResolver());
-		addResolver(new PhpTemplateNumberVariableResolver());
-		addResolver(new PhpTemplateArrayVariableResolver());
-		addResolver(new PhpTemplateClassResolver());
-		addResolver(new PhpTemplateFileResolver());
+		// TODO should add php specific resolvers?
 	}
 }
