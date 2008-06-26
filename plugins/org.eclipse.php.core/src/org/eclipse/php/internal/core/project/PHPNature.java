@@ -31,26 +31,7 @@ public class PHPNature extends ScriptNature {
 	public static final String PROJECTTYPE_VALUE = "PHP"; //$NON-NLS-1$
 	public static final String VALIDATION_BUILDER_ID = ValidationPlugin.VALIDATION_BUILDER_ID;
 
-	private static int instanceCount = 0;
-	public int instanceStamp;
-
-	//protected WebSettings fWebSettings;
-
 	protected IProject project;
-	//	private static final String LINKS_BUILDER_ID = "com.ibm.etools.webtools.additions.linksbuilder"; //$NON-NLS-1$
-
-	public static int getInstanceCount() {
-		return instanceCount;
-	}
-
-	/**
-	 * WebNatureRuntime constructor comment.
-	 */
-	public PHPNature() {
-		super();
-		++instanceCount;
-		instanceStamp = instanceCount;
-	}
 
 	/**
 	 * Adds a builder to the build spec for the given project.
