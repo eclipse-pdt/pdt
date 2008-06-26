@@ -21,12 +21,15 @@ import org.eclipse.php.internal.core.preferences.*;
 
 public class PhpVersionChangedHandler {
 
-	private HashMap projectListeners = new HashMap();
-	private HashMap preferencesPropagatorListeners = new HashMap();
+	private static final String PHP_VERSION = "php.version.change";
+	
+	private HashMap<IProject, HashSet> projectListeners = new HashMap<IProject, HashSet>();
+	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();
 
 	private PreferencesPropagator preferencesPropagator;
 	private static final String NODES_QUALIFIER = PHPCorePlugin.ID;
 	private static final Preferences store = PHPCorePlugin.getDefault().getPluginPreferences();
+	
 	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 
 	private PhpVersionChangedHandler() {
@@ -41,7 +44,7 @@ public class PhpVersionChangedHandler {
 	}
 
 	private void projectVersionChanged(IProject project, PreferencesPropagatorEvent event) {
-		HashSet listeners = (HashSet) projectListeners.get(project);
+		HashSet listeners = projectListeners.get(project);
 		if (listeners != null) {
 			for (Iterator iter = listeners.iterator(); iter.hasNext();) {
 				IPreferencesPropagatorListener listener = (IPreferencesPropagatorListener) iter.next();
@@ -86,9 +89,9 @@ public class PhpVersionChangedHandler {
 
 	public void addPhpVersionChangedListener(IPreferencesPropagatorListener listener) {
 		IProject project = listener.getProject();
-		HashSet listeners = (HashSet) projectListeners.get(project);
+		HashSet<IPreferencesPropagatorListener> listeners = projectListeners.get(project);
 		if (listeners == null) {
-			listeners = (HashSet) projectListeners.get(project);
+			return;
 		}
 		listeners.add(listener);
 	}
@@ -98,10 +101,31 @@ public class PhpVersionChangedHandler {
 			return;
 		}
 		IProject project = listener.getProject();
-		HashSet listeners = (HashSet) projectListeners.get(project);
+		HashSet listeners = projectListeners.get(project);
 		if (listeners != null) {
 			listeners.remove(listener);
 		}
 	}
+	
+	public void projectAdded(IProject project) {
+		if (project == null || projectListeners.get(project) != null) {
+			return;
+		}
+		projectListeners.put(project, new HashSet());
+
+		//register as a listener to the PP on this project
+		PreferencesPropagatorListener listener = new PreferencesPropagatorListener(project);
+		preferencesPropagatorListeners.put(project, listener);
+		preferencesPropagator.addPropagatorListener(listener, PHP_VERSION);
+	}
+
+	public void projectRemoved(IProject project) {
+		PreferencesPropagatorListener listener = preferencesPropagatorListeners.get(project);
+		preferencesPropagator.removePropagatorListener(listener, PHP_VERSION);
+		preferencesPropagatorListeners.remove(project);
+
+		projectListeners.remove(project);
+	}
+	
 
 }
