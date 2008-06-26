@@ -15,6 +15,7 @@ import java.text.MessageFormat;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.jface.action.*;
@@ -127,7 +128,11 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				actionGroup.handleUpdateInput(editorPart);
+				try {
+					actionGroup.handleUpdateInput(editorPart);
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
 			}
 		});
 	}
@@ -287,8 +292,8 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	String getFrameName(Object element) {
-		if (element instanceof PHPCodeData) {
-			return ((PHPCodeData) element).getName();
+		if (element instanceof IModelElement) {
+			return ((IModelElement) element).getElementName();
 		} else {
 			return fLabelProvider.getText(element);
 		}
@@ -297,11 +302,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	String getToolTipText(Object element) {
 		String result;
 		if (!(element instanceof IResource)) {
-			if (element instanceof PHPWorkspaceModelManager) {
-				result = PHPUIMessages.getString("PHPExplorerPart_workspace");
-			} else {
-				result = fLabelProvider.getText(element);
-			}
+			result = fLabelProvider.getText(element);
 		} else {
 			IPath path = ((IResource) element).getFullPath();
 			if (path.isRoot()) {
@@ -322,7 +323,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 	void updateTitle() {
 		Object input = fViewer.getInput();
-		if (input == null || (input instanceof PHPWorkspaceModelManager)) {
+		if (input == null) {
 			setContentDescription(""); //$NON-NLS-1$
 			setTitleToolTip(""); //$NON-NLS-1$
 		} else {

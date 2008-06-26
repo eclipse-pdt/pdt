@@ -11,120 +11,38 @@
 package org.eclipse.php.internal.ui.functions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
-import org.eclipse.php.internal.core.phpModel.parser.PHPLanguageModel;
-import org.eclipse.php.internal.core.phpModel.parser.PHPProjectModel;
-import org.eclipse.php.internal.core.phpModel.phpElementData.*;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 
-public class PHPFunctionsContentProvider implements ITreeContentProvider {
+public class PHPFunctionsContentProvider extends StandardModelElementContentProvider {
 
 	public static final String CONSTANTS_NODE_NAME = "constants"; //$NON-NLS-1$
 	protected static final Object[] NO_CHILDREN = new Object[0];
-	private PHPLanguageModel model;
 
 	public PHPFunctionsContentProvider() {
+		super();
 	}
 
-	public Object[] getElements(Object parent) {
-		return getChildren(parent);
-	}
-
-	public boolean hasChildren(Object element) {
-		// assume CUs and class files are never empty
-		if (element instanceof PHPFileData) {
-			return true;
-		}
-		if (element instanceof PHPProjectModel) {
-			return true;
-		}
-
-		if (element instanceof PHPCodeData) {
-			PHPCodeData codeData = (PHPCodeData) element;
-			return PHPModelUtil.hasChildren(codeData);
-		}
-		Object[] children = getChildren(element);
-		return (children != null) && children.length > 0;
-	}
-
-	public Object getParent(Object element) {
-		return null;
-	}
-
-	protected boolean exists(Object element) {
-		if (element == null) {
-			return false;
-		}
-		if (element instanceof IResource) {
-			return ((IResource) element).exists();
-		}
-
-		return true;
-	}
-
-	protected Object internalGetParent(Object element) {
-		return PHPModelUtil.getParent(element);
-	}
-
-	private Object[] getClassChildren(PHPClassData classData) {
-		ArrayList list = new ArrayList();
-		PHPClassConstData[] consts = classData.getConsts();
-		if (consts != null)
-			for (int i = 0; i < consts.length; ++i) {
-				list.add(consts[i]);
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.internal.ui.StandardModelElementContentProvider#getChildren(java.lang.Object)
+	 */
+	@Override
+	public Object[] getChildren(Object element) {
+		List<Object> children = new ArrayList<Object>();
+		
+		if (element instanceof IBuildpathEntry[]) {
+			IBuildpathEntry[] entries = (IBuildpathEntry[]) element;
+			for (IBuildpathEntry buildpathEntry : entries) {
+				final Object[] child = super.getChildren(buildpathEntry);
+				children.addAll(Arrays.asList(child));
 			}
-		PHPVariableData[] vars = classData.getVars();
-		if (vars != null)
-			for (int i = 0; i < vars.length; i++) {
-				list.add(vars[i]);
-			}
-		PHPFunctionData[] functions = classData.getFunctions();
-		if (functions != null)
-			for (int i = 0; i < functions.length; i++) {
-				list.add(functions[i]);
-			}
-		return list.toArray();
+		}
+		
+		return children.toArray(new Object[children.size()]);
 	}
-
-	public Object[] getChildren(Object parentElement) {
-		if (!exists(parentElement)) {
-			return NO_CHILDREN;
-		}
-		if (parentElement instanceof PHPLanguageModel) {
-			//			PHPLanguageModel model = (PHPLanguageModel) parentElement;
-			CodeData[] functions = model.getFunctions();
-			CodeData[] classes = model.getClasses();
-			//			CodeData[] constants = model.getConstants();
-			Object[] rootsChildren = NO_CHILDREN;
-			if (functions.length > 0 && classes.length > 0 /*&& constants.length > 0*/) {
-				rootsChildren = new Object[classes.length + functions.length + 1];
-				rootsChildren[0] = CONSTANTS_NODE_NAME;
-				System.arraycopy(classes, 0, rootsChildren, 1, classes.length);
-				System.arraycopy(functions, 0, rootsChildren, classes.length + 1, functions.length);
-			}
-			return rootsChildren;
-		}
-		if (parentElement instanceof PHPClassData) {
-			return getClassChildren((PHPClassData) parentElement);
-		}
-		if (parentElement.equals(CONSTANTS_NODE_NAME)) {
-			return model.getConstants();
-		}
-		return NO_CHILDREN;
-	}
-
-	public void dispose() {
-		//        PHPModelManager.getInstance().removeModelListener(this);
-	}
-
-	public void inputChanged(final Viewer viewer, Object oldInput, Object newInput) {
-		if (newInput == null) {
-			return;
-		}
-		model = (PHPLanguageModel) newInput;
-	}
-
+	
+	
 }
