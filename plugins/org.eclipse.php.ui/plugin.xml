@@ -166,18 +166,26 @@
 			name="%wizard.name.0"
 			icon="icons/full/obj16/add_php_file.gif" />
 		<primaryWizard id="org.eclipse.ui.wizards.new.folder" />
-  <wizard
-        canFinishEarly="true"
-        category="org.eclipse.php.project.ui"
-        class="org.eclipse.php.internal.ui.wizards.UntitledPHPDocumentWizard"
-        hasPages="false"
-        icon="icons/full/obj16/add_php_file.gif"
-        id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard"
-        name="%wizard.name.1">
-  </wizard>
 	</extension>
 
-	<!-- the following are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
+
+      <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            name="%NewUntitledTextFile.label"
+            icon="$nl$/icons/full/etool16/new_untitled_text_file.gif"
+            category="org.eclipse.ui.Basic"
+            class="org.eclipse.ui.internal.editors.text.UntitledTextFileWizard"
+            canFinishEarly="true"
+            hasPages="false"
+            id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard">
+         <description>
+            %NewUntitledTextFile.description
+         </description>
+      </wizard>
+   </extension>
+   
+ 	<!-- the following are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
 	<extension point="org.eclipse.wst.server.core.moduleTypes">
 		<moduleType
 			id="PHP"
@@ -1516,7 +1524,7 @@
 	<extension point="org.eclipse.ui.decorators">
 		<decorator
     	    adaptable="true"
-       		class="org.eclipse.php.internal.ui.util.ProblemsLabelDecorator"
+       		class="org.eclipse.dltk.ui.ProblemsLabelDecorator"
         	id="org.eclipse.php.ui.problemsDecorator"
         	label="%decorator.label.0"
         	lightweight="true"

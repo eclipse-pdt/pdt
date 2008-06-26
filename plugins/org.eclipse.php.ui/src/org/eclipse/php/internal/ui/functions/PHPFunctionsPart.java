@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.jface.action.*;
@@ -22,8 +23,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
-import org.eclipse.php.internal.core.phpModel.phpElementData.PHPCodeData;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -147,7 +146,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				TreeItem item = tree.getItem(new Point(e.x, e.y));
 				if (item != null) {
 					Object o = item.getData();
-					if (o instanceof PHPCodeData) {
+					if (o instanceof IModelElement) {
 						tree.setToolTipText(fLabelProvider.getText(o));
 					}
 				}
@@ -162,26 +161,18 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 				IEditorPart editor =  EditorUtility.getPHPStructuredEditor(getViewSite().getPage().getActiveEditor());
 				StructuredSelection selection = (StructuredSelection) fViewer.getSelection();
 				if (editor != null && editor instanceof ITextEditor && selection != null && !selection.isEmpty()) {
-					if (selection.getFirstElement() instanceof PHPCodeData) {
-						PHPCodeData codeData = (PHPCodeData) selection.getFirstElement();
+					if (selection.getFirstElement() instanceof IModelElement) {
+						IModelElement codeData = (IModelElement) selection.getFirstElement();
 						ITextEditor textEditor = (ITextEditor) editor;
 						int caretPosition = ((ITextSelection) textEditor.getSelectionProvider().getSelection()).getOffset();
 						IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 						try {
-							document.replace(caretPosition, 0, codeData.getName());
+							document.replace(caretPosition, 0, codeData.getElementName());
 						} catch (BadLocationException e) {
 							Logger.logException(e);
 						}
 						textEditor.setFocus();
-						textEditor.getSelectionProvider().setSelection(new TextSelection(document, caretPosition + codeData.getName().length(), 0));
-						// TODO: 
-						// show codeData completion/description/param list
-						//                        ContentAssistant ca = new ContentAssistant();
-						//                        ca.setContentAssistProcessor(new PHPContentAssistProcessor(), IDocument.DEFAULT_CONTENT_TYPE);
-						//                        ca.install(((PHPStructuredEditor) editor).getTextViewer());
-						//                        ca.setAutoActivationDelay(0);
-						//                        ca.showPossibleCompletions();
-
+						textEditor.getSelectionProvider().setSelection(new TextSelection(document, caretPosition + codeData.getElementName().length(), 0));
 					}
 				}
 			}

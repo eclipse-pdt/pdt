@@ -12,78 +12,37 @@ package org.eclipse.php.internal.ui.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.resources.ICoreConstants;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IStorage;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.IExternalSourceModule;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.editor.ExternalStorageEditorInput;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
-import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
@@ -110,39 +69,6 @@ public class EditorUtility {
 		if (modifierString.length() == 0)
 			return newModifierString;
 		return MessageFormat.format(PHPUIMessages.getString("EditorUtility_concatModifierStrings"), new String[] { modifierString, newModifierString });
-	}
-
-	private static ZipEntryStorageEditorInput createZipEntryStorageEditorInput(final ZipFile zipFile, final IModelElement element, final IProject project) {
-		ZipInputStream is = null;
-		ZipEntry ze = null;
-
-		try {
-			final File f = new File(zipFile.getName());
-			is = new ZipInputStream(new FileInputStream(f));
-			ze = is.getNextEntry();
-			IFile fileData = null;
-			if (element instanceof IFile)
-				fileData = (IFile) element;
-			else
-				fileData = PHPModelUtil.getPHPFileContainer(element);
-			String phpFileName = fileData.getName();
-			phpFileName = phpFileName.substring(phpFileName.indexOf(File.separatorChar) + 1); // removing the name of the zip file from the file name
-
-			while (ze != null && !ze.getName().equals(phpFileName))
-				ze = is.getNextEntry();
-			if (ze == null)
-				return null;
-
-			final ZipEntryStorage zipEntryStorage = new ZipEntryStorage(zipFile, ze);
-			zipEntryStorage.setProject(project);
-			return new ZipEntryStorageEditorInput(zipEntryStorage);
-		} catch (final FileNotFoundException e) {
-			Logger.logException(e);
-			return null;
-		} catch (final IOException io) {
-			Logger.logException(io);
-			return null;
-		}
 	}
 
 	/**
@@ -243,18 +169,8 @@ public class EditorUtility {
 	}
 
 	public static IEditorInput getEditorInput(final Object input) {
-		if (input instanceof TreeItem) {
-			IProject project = getProject((TreeItem) input);
-			final String incDir = getIncludeDirectory((TreeItem) input);
-			return getEditorInput((IModelElement) ((TreeItem) input).getData(), project, incDir);
-		}
-
 		if (input instanceof IModelElement) {
 			return getEditorInput((IModelElement) input, null, null);
-		}
-
-		if (input instanceof IModelElement) {
-			return getEditorInput((IModelElement) input);
 		}
 
 		if (input instanceof IFile)
@@ -267,43 +183,7 @@ public class EditorUtility {
 	}
 
 	private static IEditorInput getEditorInput(final IModelElement element, final IProject project, final String incDir) {
-
 		final IResource resource = element.getResource();
-		if (resource == null || !resource.exists()) {
-			final Object source =  PHPModelUtil.getExternalResource(element, project);
-			if (source instanceof File) {
-				File externalSource = (File) source;
-				Path path = new Path(externalSource.getPath());
-
-				// If this is external file:
-//				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-//					//first check maybe it is an untitled PHP document
-//					if ((path.segmentCount() > 1) && path.segment(path.segmentCount() - 2).equals("Untitled_Documents")) { //$NON-NLS-1$
-//						return new NonExistingPHPFileEditorInput(path);
-//					}
-//					return new FileStoreEditorInput(new LocalFile(externalSource));
-//				}
-
-				LocalFileStorage fileStorage = new LocalFileStorage((File) source);
-				fileStorage.setProject(project);
-				fileStorage.setIncBaseDirName(incDir);
-				return new LocalFileStorageEditorInput(fileStorage);
-			}
-			if (source instanceof ZipFile)
-				return createZipEntryStorageEditorInput((ZipFile) source, element, project);
-		}
-
-		//Another test whether this external file test is an UNTITLED DOCUMENT ,i.e the file does not really exist
-//		if (resource instanceof ExternalFileWrapper) {
-//			File untitledDocumentDummyFile = resource.getFullPath().toFile();
-//			//this file should not exist
-//			if (untitledDocumentDummyFile.exists()) {
-//				return null;
-//			}
-//
-//			return new NonExistingPHPFileEditorInput(resource.getFullPath());
-//		}
-
 		if (resource instanceof IFile)
 			return new FileEditorInput((IFile) resource);
 
@@ -331,28 +211,6 @@ public class EditorUtility {
 		// TODO - Handle external model elements (for external files)
 	}
 
-	private static String getIncludeDirectory(TreeItem input) {
-		if (!(input.getData() instanceof IModelElement))
-			return null;
-		IModelElement codeData = (IModelElement) input.getData();
-		while (codeData != null && !(codeData instanceof PHPFileData)) {
-			codeData = codeData.getContainer();
-			input = input.getParentItem();
-		}
-		while (input != null && !(input.getData() instanceof PHPIncludePathModel))
-			input = input.getParentItem();
-
-		if (input == null)
-			return null;
-
-		PHPIncludePathModel includePathModel = (PHPIncludePathModel) input.getData();
-		if (includePathModel.getType() == IncludePathModelType.VARIABLE) {
-			IPath includePath = IncludePathVariableManager.instance().getIncludePathVariable(includePathModel.getID());
-			return includePath.toOSString();
-		}
-		return new Path(includePathModel.getID()).toOSString();
-	}
-
 	/**
 	 * Returns the modifier string for the given SWT modifier
 	 * modifier bits.
@@ -373,31 +231,6 @@ public class EditorUtility {
 			modifierString = appendModifierString(modifierString, SWT.COMMAND);
 
 		return modifierString;
-	}
-
-	public static PHPProjectModel getPHPProject(final IEditorInput input) {
-		if (input instanceof IFileEditorInput) {
-			final IProject project = ((IFileEditorInput) input).getFile().getProject();
-			if (project != null)
-				return PHPWorkspaceModelManager.getInstance().getModelForProject(project);
-		}
-		return null;
-	}
-
-	private static IProject getProject(TreeItem input) {
-		if (!(input.getData() instanceof IModelElement))
-			return null;
-		IModelElement codeData = (IModelElement) input.getData();
-		while (codeData != null && !(codeData instanceof PHPFileData)) {
-			codeData = codeData.getContainer();
-			input = input.getParentItem();
-		}
-		while (input != null && !(input.getData() instanceof IProject))
-			input = input.getParentItem();
-
-		if (input == null)
-			return null;
-		return (IProject) input.getData();
 	}
 
 	private static void initializeHighlightRange(final IEditorPart editorPart) {

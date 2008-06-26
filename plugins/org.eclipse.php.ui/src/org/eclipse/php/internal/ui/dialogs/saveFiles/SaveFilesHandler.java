@@ -13,11 +13,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.*;
-import org.eclipse.ui.ide.FileStoreEditorInput;
 
 /**
  * @author seva
@@ -74,24 +72,11 @@ public class SaveFilesHandler {
 							continue;
 						}
 						result.add(ep);
-					} else
-						
-					if (isExternalFileInput(project, input)) {
-						result.add(ep);
 					}
 				}
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * @param project current project
-	 * @param input editor input
-	 * @return true if the input is of external file
-	 */
-	private static boolean isExternalFileInput(IProject project, IEditorInput input) {
-		return project == PHPWorkspaceModelManager.getDefaultPHPProjectModel().getProject() && input instanceof FileStoreEditorInput;
 	}
 
 	protected static class SaveFilesRunnable implements Runnable {

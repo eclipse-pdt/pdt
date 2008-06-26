@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.util;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.ui.ProblemsLabelDecorator;
 
 /**
  * Special problem decorator for hierarchical Folder layout.
