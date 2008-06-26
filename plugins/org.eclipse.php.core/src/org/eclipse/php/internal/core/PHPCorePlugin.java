@@ -10,26 +10,37 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.ICommand;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.osgi.framework.BundleContext;
- 
+
 /**
  * The main plugin class to be used in the desktop.
  */
 public class PHPCorePlugin extends Plugin {
-
+	private static PHPNature phpNature;
 	public static final String ID = "org.eclipse.php.core"; //$NON-NLS-1$
 
 	public static final int INTERNAL_ERROR = 10001;
 
 	//The shared instance.
 	private static PHPCorePlugin plugin;
+
+	// Script Builder ID
+	private String builderID = DLTKCore.BUILDER_ID;
 
 	/**
 	 * The constructor.
@@ -44,6 +55,36 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		for (IProject project : projects) {
+			IProjectDescription oldDescription = project.getDescription();
+			ICommand[] commands = oldDescription.getBuildSpec();
+			boolean found = false;
+			// check if the Script Builder is installed
+			for (int i = 0; i < commands.length; ++i) {
+				if (commands[i].getBuilderName().equals(builderID)) {
+					found = true;
+					break;
+				}
+			}
+			// perform modifications only if the builder is not installed
+			if (!found) {
+				if (phpNature==null) {
+					phpNature = new PHPNature();
+				}
+				// add the required builders and build paths as defined in the new PHP nature
+				phpNature.setProject(project);
+				phpNature.configure();
+
+				IScriptProject scriptProject = DLTKCore.create(project);
+				// merge the project build path with the old include path
+				IBuildpathEntry[] existingPath = scriptProject.getRawBuildpath();
+				ArrayList<IBuildpathEntry> newPath = new ArrayList<IBuildpathEntry>();
+				newPath.addAll(Arrays.asList(existingPath));
+				newPath.addAll(Arrays.asList(IncludePathToBuildpathImporter.convertIncludePathForProject(project)));
+				scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
+			}
+		}
 	}
 
 	/**
@@ -82,7 +123,7 @@ public class PHPCorePlugin extends Plugin {
 	public static String getPluginId() {
 		return ID;
 	}
-	
+
 	/**
 	 * Helper method for returning one option value only. Equivalent to <code>(String)PhpCore.getOptions().get(optionName)</code>
 	 * Note that it may answer <code>null</code> if this option does not exist.
