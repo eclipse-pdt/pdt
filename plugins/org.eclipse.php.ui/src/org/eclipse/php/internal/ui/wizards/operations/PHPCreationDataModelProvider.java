@@ -37,7 +37,6 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 
 	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
 
-//	 List of WizardPageFactory(s) added trough the phpWizardPages extention point
 	private List /* WizardPageFactory */ wizardPageFactories = new ArrayList();
 
 
