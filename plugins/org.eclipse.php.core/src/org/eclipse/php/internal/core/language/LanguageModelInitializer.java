@@ -38,7 +38,13 @@ import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserve
 
 public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
+	public static final String PHP_LANGUAGE_LIBRARY = "PHP Language Library";
+
+	/**
+	 * Path of the language model for php projects
+	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
+	
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
 	private IPreferencesPropagatorListener phpVersionListener;
 	private String phpVersion;
@@ -202,7 +208,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 
 		public String getDescription(IScriptProject project) {
-			return "PHP Language Library";
+			return PHP_LANGUAGE_LIBRARY;
 		}
 
 		public int getKind() {
