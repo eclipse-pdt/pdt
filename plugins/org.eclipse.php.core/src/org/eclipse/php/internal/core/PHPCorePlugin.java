@@ -22,16 +22,17 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelManager;
-import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
 public class PHPCorePlugin extends Plugin {
-	private static PHPNature phpNature;
+	private PHPNature phpNature;
 	public static final String ID = "org.eclipse.php.core"; //$NON-NLS-1$
 
 	public static final int INTERNAL_ERROR = 10001;
@@ -55,43 +56,55 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
-		// TODO : extract method 
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		for (IProject project : projects) {
-			IProjectDescription oldDescription = project.getDescription();
-			ICommand[] commands = oldDescription.getBuildSpec();
-			
-			// TODO unnecessary variable - "found" 
-			boolean found = false;
-			// check if the Script Builder is installed
-			for (int i = 0; i < commands.length; ++i) {
-				if (commands[i].getBuilderName().equals(builderID)) {
-					found = true;
-					break;
-				}
-			}
-			// perform modifications only if the builder is not installed
-			if (!found) {
-				// TODO why phpNature is static field, don't hold a field if you don't need it
-				if (phpNature==null) {
-					phpNature = new PHPNature();
-				}
-				// add the required builders and build paths as defined in the new PHP nature
-				phpNature.setProject(project);
-				phpNature.configure();
+		convertProjects();
+	}
 
-				IScriptProject scriptProject = DLTKCore.create(project);
-				// merge the project build path with the old include path
-				IBuildpathEntry[] existingPath = scriptProject.getRawBuildpath();
-				// TODO check if existingPath is null
-				
-				ArrayList<IBuildpathEntry> newPath = new ArrayList<IBuildpathEntry>();
-				newPath.addAll(Arrays.asList(existingPath));
-				newPath.addAll(Arrays.asList(IncludePathToBuildpathImporter.convertIncludePathForProject(project)));
-				scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
+	private void convertProjects() throws CoreException, ModelException {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		ProjectsIterate: for (IProject project : projects) {
+			IProjectDescription projectDescription = project.getDescription();
+			ICommand[] commands = projectDescription.getBuildSpec();
+			String[] natureIds = projectDescription.getNatureIds();
+
+			for (String nature : natureIds) {
+				// verify that the project is a PHP project
+				if (PHPNature.ID.equalsIgnoreCase(nature)) {
+					// check if the Script Builder is installed
+					for (int i = 0; i < commands.length; ++i) {
+						if (commands[i].getBuilderName().equals(builderID)) {
+							// when the builder exists - continue to the next project
+							continue ProjectsIterate;
+						}
+					}
+					// perform modifications only if the builder is not installed
+					modifyProject(project);
+				}
 			}
+
 		}
+	}
+
+	private void modifyProject(IProject project) throws CoreException, ModelException {
+		if (phpNature == null) {
+			phpNature = new PHPNature();
+		}
+		// add the required builders and build paths as defined in the new PHP nature
+		phpNature.setProject(project);
+		phpNature.configure();
+
+		IScriptProject scriptProject = DLTKCore.create(project);
+		// merge the project build path with the old include path
+		IBuildpathEntry[] existingPath = scriptProject.getRawBuildpath();
+
+		ArrayList<IBuildpathEntry> newPath = new ArrayList<IBuildpathEntry>();
+		if (existingPath != null) {
+			newPath.addAll(Arrays.asList(existingPath));
+		}
+		IBuildpathEntry[] oldIncludePath = ProjectBackwardCompatibilityUtil.convertIncludePathForProject(project);
+		if (oldIncludePath != null) {
+			newPath.addAll(Arrays.asList(oldIncludePath));
+		}
+		scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
 	}
 
 	/**

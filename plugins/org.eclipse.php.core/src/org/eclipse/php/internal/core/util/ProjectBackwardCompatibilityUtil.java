@@ -1,4 +1,4 @@
-package org.eclipse.php.internal.core;
+package org.eclipse.php.internal.core.util;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -19,17 +19,20 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.php.internal.core.CoreMessages;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
- * TODO description  
- * TODO: rename this class, to have all utilities for backward compatibility in here
- * TODO move this class to the util package
+ * This class contains utility methods for converting PDT 1.0.x projects into PDT 1.1.x projects
+ * Old model include path entries are converted here into the new build path entries of the new model.
+ * Further conversion utilities should be added here.
  */
-public class IncludePathToBuildpathImporter {
+public class ProjectBackwardCompatibilityUtil {
 	public static final String TAG_INCLUDEPATHENTRY = "includepathentry"; //$NON-NLS-1$
 	public static final String TAG_ENTRY_KIND = "kind"; //$NON-NLS-1$
 	public static final String TAG_PATH = "path"; //$NON-NLS-1$
