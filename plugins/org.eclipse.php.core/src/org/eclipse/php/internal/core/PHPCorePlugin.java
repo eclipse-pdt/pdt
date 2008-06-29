@@ -32,7 +32,7 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class PHPCorePlugin extends Plugin {
-	private PHPNature phpNature;
+
 	public static final String ID = "org.eclipse.php.core"; //$NON-NLS-1$
 
 	public static final int INTERNAL_ERROR = 10001;
@@ -85,9 +85,8 @@ public class PHPCorePlugin extends Plugin {
 	}
 
 	private void modifyProject(IProject project) throws CoreException, ModelException {
-		if (phpNature == null) {
-			phpNature = new PHPNature();
-		}
+		final PHPNature phpNature = new PHPNature();
+		
 		// add the required builders and build paths as defined in the new PHP nature
 		phpNature.setProject(project);
 		phpNature.configure();

@@ -31,8 +31,6 @@ public class PHPNature extends ScriptNature {
 	public static final String PROJECTTYPE_VALUE = "PHP"; //$NON-NLS-1$
 	public static final String VALIDATION_BUILDER_ID = ValidationPlugin.VALIDATION_BUILDER_ID;
 
-	protected IProject project;
-
 	/**
 	 * Adds a builder to the build spec for the given project.
 	 */
@@ -72,7 +70,7 @@ public class PHPNature extends ScriptNature {
 	 */
 	public void createFile(IPath newFilePath, String newFileContents) throws CoreException {
 
-		IPath projectPath = project.getFullPath();
+		IPath projectPath = getProject().getFullPath();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
 		createFolder(newFilePath.removeLastSegments(1).toString());
@@ -98,7 +96,7 @@ public class PHPNature extends ScriptNature {
 	}
 
 	private void clean() {
-		project = null;
+		setProject(null);
 	}
 
 	/**
@@ -143,34 +141,13 @@ public class PHPNature extends ScriptNature {
 	 *                if this method fails.
 	 */
 	public void configure() throws org.eclipse.core.runtime.CoreException {
+		super.configure();
+
 		// enable workspace validation for this nature
-		addToFrontOfBuildSpec(DLTKCore.BUILDER_ID);
 		addToFrontOfBuildSpec(VALIDATION_BUILDER_ID);
 
-		IScriptProject scriptProject = DLTKCore.create(project);
+		IScriptProject scriptProject = DLTKCore.create(getProject());
 		LanguageModelInitializer.enableLanguageModelFor(scriptProject);
-	}
-
-	/**
-	 * Returns the project to which this project nature applies.
-	 *
-	 * @return the project handle
-	 */
-	public org.eclipse.core.resources.IProject getProject() {
-		return project;
-	}
-
-	/**
-	 * Sets the project to which this nature applies. Used when instantiating this project nature
-	 * runtime. This is called by <code>IProject.addNature</code> and should not be called
-	 * directly by clients.
-	 *
-	 * @param project
-	 *            the project to which this nature applies
-	 */
-	public void setProject(org.eclipse.core.resources.IProject newProject) {
-		clean();
-		project = newProject;
 	}
 
 	/**
