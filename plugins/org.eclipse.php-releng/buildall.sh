@@ -127,7 +127,7 @@ fi
 
 if [ ! -r ../org.eclipse.releng.basebuilder ]
   then
-    cvs -d :pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse export -r RC4_33 org.eclipse.releng.basebuilder
+    cvs -d :pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse export -r RC2_34 org.eclipse.releng.basebuilder
     mv org.eclipse.releng.basebuilder ../
 fi
 
