@@ -24,6 +24,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+/**
+ * TODO description  
+ * TODO: rename this class, to have all utilities for backward compatibility in here
+ * TODO move this class to the util package
+ */
 public class IncludePathToBuildpathImporter {
 	public static final String TAG_INCLUDEPATHENTRY = "includepathentry"; //$NON-NLS-1$
 	public static final String TAG_ENTRY_KIND = "kind"; //$NON-NLS-1$

@@ -55,10 +55,14 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		// TODO : extract method 
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		for (IProject project : projects) {
 			IProjectDescription oldDescription = project.getDescription();
 			ICommand[] commands = oldDescription.getBuildSpec();
+			
+			// TODO unnecessary variable - "found" 
 			boolean found = false;
 			// check if the Script Builder is installed
 			for (int i = 0; i < commands.length; ++i) {
@@ -69,6 +73,7 @@ public class PHPCorePlugin extends Plugin {
 			}
 			// perform modifications only if the builder is not installed
 			if (!found) {
+				// TODO why phpNature is static field, don't hold a field if you don't need it
 				if (phpNature==null) {
 					phpNature = new PHPNature();
 				}
@@ -79,6 +84,8 @@ public class PHPCorePlugin extends Plugin {
 				IScriptProject scriptProject = DLTKCore.create(project);
 				// merge the project build path with the old include path
 				IBuildpathEntry[] existingPath = scriptProject.getRawBuildpath();
+				// TODO check if existingPath is null
+				
 				ArrayList<IBuildpathEntry> newPath = new ArrayList<IBuildpathEntry>();
 				newPath.addAll(Arrays.asList(existingPath));
 				newPath.addAll(Arrays.asList(IncludePathToBuildpathImporter.convertIncludePathForProject(project)));
