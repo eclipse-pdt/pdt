@@ -149,11 +149,11 @@
 			<replacefilter token="@gefMirrorURL@" value="${gefMirrorURL}" />
 			<replacefilter token="@gefZipURL@" value="${gefZipURL}" />
 
-			<!--  Insert url for supported JEM -->
-			<replacefilter token="@jemBuildID@" value="${jemBuildID}" />
-			<replacefilter token="@jemIndexURL@" value="${jemDirectURL}${gemFolder}" />
-			<replacefilter token="@jemMirrorURL@" value="${jemMirrorURL}" />
-			<replacefilter token="@jemZipURL@" value="${jemZipURL}" />
+			<!--  Insert url for supported XSD -->
+			<replacefilter token="@xsdBuildID@" value="${xsdBuildID}" />
+			<replacefilter token="@xsdIndexURL@" value="${xsdDirectURL}${xsdFolder}" />
+			<replacefilter token="@xsdMirrorURL@" value="${xsdMirrorURL}" />
+			<replacefilter token="@xsdZipURL@" value="${xsdZipURL}" />
 
 			<!--  Insert url for supported WTP -->
 			<replacefilter token="@wstBuildID@" value="${wstBuildID}" />
@@ -219,7 +219,7 @@
 		<antcall target="pushupdatesite" />
 	</target>
 
-	<property name="eclipse.version" value="3.3.0" />
+	<property name="eclipse.version" value="3.4.0" />
 	<path id="osgi.jar">
 		<fileset dir="${eclipse.home}/plugins">
 			<include name="org.eclipse.osgi_${eclipse.version}*.jar" />
