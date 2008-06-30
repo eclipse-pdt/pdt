@@ -113,7 +113,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 	//filter out non PHP files
 	private boolean isResourceFiltered(IResource member) {
 		if (member instanceof IFile) {
-			return !PHPModelUtil.hasPhpExtention((IFile) member);
+			return !PHPModelUtil.isPhpFile((IFile) member);
 		}
 		return false;
 	}

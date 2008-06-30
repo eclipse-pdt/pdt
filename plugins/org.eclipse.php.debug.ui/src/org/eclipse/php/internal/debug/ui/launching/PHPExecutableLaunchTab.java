@@ -384,7 +384,7 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 				} else {//resource DOES exist
 					IResource fileToData = ResourcesPlugin.getWorkspace().getRoot().findMember(phpFile);
 					//check if not a file (project, folder etc.)
-					if ((fileToData.getType() != IResource.FILE) || !PHPModelUtil.hasPhpExtention((IFile) fileToData)) {
+					if ((fileToData.getType() != IResource.FILE) || !PHPModelUtil.isPhpFile((IFile) fileToData)) {
 						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
 						return false;
 					}
