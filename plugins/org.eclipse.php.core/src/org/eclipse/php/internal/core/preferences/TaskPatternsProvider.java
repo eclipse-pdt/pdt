@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 
 public class TaskPatternsProvider {
@@ -30,6 +32,7 @@ public class TaskPatternsProvider {
 		provider = TaskTagsProvider.getInstance();
 		projectsPatterns = new HashMap();
 		projectToListener = new HashMap();
+		initPatternsDB();
 	}
 
 	public static TaskPatternsProvider getInstance() {
@@ -49,6 +52,21 @@ public class TaskPatternsProvider {
 		return patterns;
 	}
 
+	private void initPatternsDB() {
+		workspacePatterns = createPatterns(provider.getWorkspaceTaskTags(), provider.isWorkspaceTagsCaseSensitive());
+		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		
+		if (projects == null) {
+			return;
+		}
+		
+		for (int i = 0; i < projects.length; i++) {
+			IProject project = projects[i];
+			registerProject(project);
+		}
+	}
+	
+	
 	public Pattern[] getPetternsForWorkspace() {
 		return workspacePatterns;
 	}
