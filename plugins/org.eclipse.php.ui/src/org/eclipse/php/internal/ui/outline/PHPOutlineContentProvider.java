@@ -163,7 +163,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		public void elementChanged(final ElementChangedEvent e) {
 
 			Control control = fOutlineViewer.getControl();
-			if (control == null) {
+			if (control == null || control.isDisposed()) {
 				return;
 			}
 
