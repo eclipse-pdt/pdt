@@ -1376,20 +1376,6 @@
 				tooltip="%AddBookmark.tooltip" />
 		</viewerContribution>
 
-		<!-- Add Description menu option
-		<viewerContribution 
-      		id="org.eclipse.php.ui.modelElementContribution"
-   			targetID="org.eclipse.php.editor"> 
-   			<menu label="%Source" path="additions" id="source"/>
-			<action
-				id="org.eclipse.php.ui.actions.AddDescriptionAction" 
-				label="XXXX"
-				menubarPath="source/addDescriptionGroup" 
-				class="org.eclipse.php.internal.ui.actions.AddDescriptionAction"> 
-      		</action> 
-   		</viewerContribution> 
-		-->
-		
 		<objectContribution
 			objectClass="org.eclipse.dltk.core.IModelElement"
 			id="org.eclipse.php.ui.modelElementContribution">
