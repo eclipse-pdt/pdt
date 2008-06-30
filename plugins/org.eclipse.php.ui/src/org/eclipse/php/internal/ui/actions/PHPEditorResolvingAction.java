@@ -70,6 +70,10 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
 			if (wordRegion == null)
 				return null;
+			
+			if (wordRegion.getOffset() < 0 || wordRegion.getLength() < 0) {
+				return null;
+			}
 
 			IModelElement[] elements = null;
 			elements = ((ICodeAssist) input).codeSelect(wordRegion.getOffset(), wordRegion.getLength());
