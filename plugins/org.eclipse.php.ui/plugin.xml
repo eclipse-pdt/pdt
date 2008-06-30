@@ -100,6 +100,7 @@
    <viewShortcut
          id="org.eclipse.ui.views.ResourceNavigator">
    </viewShortcut>
+
    <actionSet
          id="org.eclipse.php.ui.text.php.actionSet.presentation">
    </actionSet>
@@ -181,7 +182,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
         class="org.eclipse.php.internal.ui.editor.PHPStructuredEditor"
-        contributorClass="org.eclipse.php.internal.ui.editor.PHPEditorActionBarContributor"
+        contributorClass="org.eclipse.php.internal.ui.editor.ActionContributorForPhp"
         default="true"
         icon="icons/full/obj16/phpfile.gif"
         id="org.eclipse.php.editor"
@@ -224,10 +225,19 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, PHP_CONTENT, XML_CONTENT"
 			target="org.eclipse.php.core.phpsource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.php.core.phpsource, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
+        	target="org.eclipse.php.core.phpsource" />
 	</extension>
 
-	<extension point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
-		<adapterFactoryDescription class="org.eclipse.php.internal.ui.editor.adapter.PHPAdapterFactoryProvider">
+	<!--======================================================================================-->
+	<!-- PHP UI Adapter factories					   						  				  -->
+	<!--======================================================================================-->
+	<extension
+		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+		<adapterFactoryDescription
+			class="org.eclipse.php.internal.ui.editor.adapter.AdapterFactoryProviderForPhp">
 			<contentType id="org.eclipse.php.core.phpsource" />
 		</adapterFactoryDescription>
 	</extension>
@@ -603,22 +613,19 @@
             targetID="org.eclipse.dltk.ui.ScriptCodingActionSet">
 	     	<part id="org.eclipse.php.ui.explorer"/>
       </actionSetPartAssociation>
-      <actionSetPartAssociation targetID="org.eclipse.php.ui.CodingActionSet">
-			<part id="org.eclipse.php.editor" />
-	  </actionSetPartAssociation>
-	  <actionSetPartAssociation targetID="org.eclipse.php.ui.RefactoringingActionSet">
-			<part id="org.eclipse.php.ui.explorer" />
-			<part id="org.eclipse.php.editor" />
-   			<part id="org.eclipse.php.ui.projectOutline" />
-	  </actionSetPartAssociation>
-	<!-- nirc -->
-	<actionSetPartAssociation targetID="org.eclipse.php.ui.CodingActionSet">
-			<part id="org.eclipse.php.ui.explorer" />
-			<part id="org.eclipse.php.editor" />
-   			<part id="org.eclipse.php.ui.projectOutline" />
-	  </actionSetPartAssociation> 
-
  	</extension>
+
+	<!-- Set up a definition for PHP Content Types -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.jsp.ui.jspContentType.definition">
+			<iterate ifEmpty="false">
+				<adapt type="org.eclipse.core.resources.IFile">
+					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
+						value="org.eclipse.jst.jsp.core.jspsource"/>
+				</adapt>
+			</iterate>
+		</definition>
+	</extension>
 
 	<!--Adapters:-->
 	<extension point="org.eclipse.core.runtime.adapters">
@@ -678,6 +685,19 @@
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 	</extension>
+	
+	<!-- Editor actionsets -->
+	<extension point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+			<part id="org.eclipse.php.core.phpsource" />
+		</actionSetPartAssociation>
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.NavigateActionSet">
+			<part id="org.eclipse.php.core.phpsource" />
+		</actionSetPartAssociation>
+	</extension>
+	
 
 	<!--Actions:-->
 	<extension
@@ -760,76 +780,6 @@
                id="org.eclipse.php.ui.actions.OpenCallHierarchy" />
 		</actionSet>
 		<actionSet
-			label="%CodingActionSet.label"
-			description="%CodingActionSet.description"
-			visible="false"
-			id="org.eclipse.php.ui.CodingActionSet">
-			<!--Source Menu:-->
-			<menu
-				label="%SourceMenu.label"
-				path="edit"
-				id="org.eclipse.php.ui.source.menu">
-				<separator name="editGroup" />
-				<separator name="importGroup" />
-				<separator name="generateGroup" />
-				<separator name="codeGroup" />
-				<separator name="convertGroup" />
-				<separator name="formatGroup" />
-			</menu>
-			<action
-				definitionId="org.eclipse.wst.sse.ui.format.active.elements"
-				id="FormatActiveElements"
-				label="%action.label.0"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.source.menu/formatGroup" />
-			<action
-				definitionId="org.eclipse.wst.sse.ui.format.document"
-				id="FormatDocument"
-				label="%action.label.1"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.source.menu/formatGroup" />
-			<!-- nirc - Addind 'Add PHP Doc' action to uppen menu-->
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.add.description"
-				label="%AddDescriptionAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.source.menu/editGroup"
-				id="org.eclipse.php.ui.actions.AddDescriptionAction" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.remove.block.comment"
-				label="%RemoveBlockCommentAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.source.menu/editGroup"
-				id="org.eclipse.php.ui.actions.RemoveBlockComment" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.add.block.comment"
-				label="%AddBlockCommentAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.source.menu/editGroup"
-				id="org.eclipse.php.ui.actions.AddBlockComment" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.toggle.comment"
-				id="org.eclipse.php.ui.actions.ToggleCommentAction"
-				label="%ToggleCommentAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.source.menu/editGroup" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.uncomment"
-				label="%UncommentAction.label"
-				retarget="true"
-				id="org.eclipse.php.ui.actions.Uncomment" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.comment"
-				label="%CommentAction.label"
-				retarget="true"
-				id="org.eclipse.php.ui.actions.Comment" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.OpenFunctionsManualAction"
-				label="%action.label.2"
-				retarget="true"
-				id="org.eclipse.php.ui.actions.OpenFunctionsManualAction" />
-		</actionSet>
-		<actionSet
 			id="org.eclipse.php.ui.SearchActionSet"
 			label="%PHPSearchActionSet.label"
 			visible="false">
@@ -853,33 +803,6 @@
                retarget="true"
                id="org.eclipse.php.ui.actions.MethodExitOccurrences"/>
 		</actionSet>
-  		<actionSet
-        		description="%RefactoringActionSet.description"
-        		id="org.eclipse.php.ui.RefactoringingActionSet"
-        		label="%RefactoringActionSet.label"
-        		visible="false">
-        		<!--Refactoring Menu:-->
-	   		<menu
-	   			label="%Refactoring.menu.label"
-				path="edit"
-				id="org.eclipse.php.ui.refactoring.menu">
-				<separator name="reorgGroup" />
-				<separator name="typeGroup" />
-	   		</menu>
-	   		<!--Reorganization group:-->
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.move.element"
-				label="%Refactoring.moveAction.label"
-				retarget="true"
-				menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
-				id="org.eclipse.php.ui.actions.Move" />
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.rename.element"
-         		id="org.eclipse.php.ui.actions.Rename"
-         		label="%Refactoring.renameAction.label"
-         		menubarPath="org.eclipse.php.ui.refactoring.menu/reorgGroup"
-         		retarget="true"/>
-  		</actionSet>
 	</extension>
 
 	<!--Commands:-->
@@ -887,8 +810,14 @@
 		<context
 			name="%context.editingPhpSource.name"
 			description="%context.editingPhpSource.description"
-			parentId="org.eclipse.ui.textEditorScope"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			id="org.eclipse.php.ui.phpEditorScope" />
+		<context
+			name="scope.php.core.phpsource.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="scope.php.core.phpsource.description"
+			id="org.eclipse.php.core.phpsource">
+		</context>
 		<context
 			name="%context.window.name"
 			description="%context.window.description"
@@ -1636,18 +1565,23 @@
          extensions="php" 
     /> 
     </extension>
- <extension
-       point="org.eclipse.ui.editorActions">
-    <editorContribution
+    
+ 	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+			id="org.eclipse.php.core.phpsource.source.editorActions"
+			targetID="org.eclipse.php.editor">
+		</editorContribution>
+
+    	<editorContribution
           id="org.eclipse.php.editor.ruler.actions"
           targetID="org.eclipse.php.editor">
-       <action
+       	  <action
              actionID="RulerClick"
              class="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
              id="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
              label="%PhpSelectRulerAction.label">
-       </action>
-    </editorContribution>
+       	  </action>
+    	</editorContribution>
  </extension>
  <extension
        id="PHPCompletionProposalComputer"

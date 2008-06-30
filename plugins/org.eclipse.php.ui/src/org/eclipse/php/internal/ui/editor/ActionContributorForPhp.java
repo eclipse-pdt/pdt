@@ -21,31 +21,35 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.PHPActionConstants;
-import org.eclipse.php.internal.ui.actions.ToggleMarkOccurrencesAction;
-import org.eclipse.ui.IActionBars;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.RetargetAction;
-import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
+import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extension for
  * BasicTextEditorActionContributor.
+ * This class should not be used inside multi page editor's
+ * ActionBarContributor, since cascaded init() call from the
+ * ActionBarContributor will causes exception and it leads to lose whole
+ * toolbars.
+ * 
+ * Instead, use SourcePageActionContributor for source page contributor of
+ * multi page editor.
+ * 
+ * Note that this class is still valid for single page editor.
  */
-public class PHPEditorActionBarContributor extends TextEditorActionContributor {
+public class ActionContributorForPhp extends ActionContributorHTML {
 
+	private static final String[] EDITOR_IDS = {"org.eclipse.php.core.phpsource", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
+	
 	private RetargetAction fRetargetShowPHPDoc;
 	private List fPartListeners = new ArrayList();
 	private RetargetTextEditorAction fShowPHPDoc;
 
-	protected RetargetTextEditorAction fFormatActiveElements = null;
-	protected RetargetTextEditorAction fFormatDocument = null;
 	private RetargetTextEditorAction fGotoMatchingBracket;
 	private RetargetTextEditorAction fOpenDeclaration;
 	private RetargetTextEditorAction fOpenTypeHierarchy;
@@ -57,37 +61,19 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 	protected MenuManager fFormatMenu = null;
 
-	public final static String FORMAT_ACTIVE_ELEMENTS = "org.eclipse.wst.sse.ui.format.active.elements";//$NON-NLS-1$
-	public final static String FORMAT_DOCUMENT = "org.eclipse.wst.sse.ui.format.document";//$NON-NLS-1$
+	private MenuManager refactorMenu;
 
-	/** The global actions to be connected with PHP editor actions */
-	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
-		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
-		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$ //$NON-NLS-2$
-		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "org.eclipse.php.ui.actions.AddDescriptionAction" ,IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, "FormatActiveElements", //$NON-NLS-1$
-		IPHPEditorActionDefinitionIds.RENAME_ELEMENT, IPHPEditorActionDefinitionIds.MOVE_ELEMENT
-
-	}; //$NON-NLS-1$
-
-	// private ToggleCommentAction fToggleCommentAction;
-
-	public PHPEditorActionBarContributor() {
+	public ActionContributorForPhp() {
 		super();
 
 		ResourceBundle b = PHPUIMessages.getBundleForConstructedKeys();
 
 		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.getString("ShowPHPDoc_label"));
 		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
-		markAsPartListener(fRetargetShowPHPDoc);
+		fPartListeners.add(fRetargetShowPHPDoc);
 
 		fShowPHPDoc = new RetargetTextEditorAction(b, "ShowPHPDoc."); //$NON-NLS-1$
 		fShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
-
-		fFormatDocument = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
-		fFormatDocument.setActionDefinitionId(FORMAT_DOCUMENT);
-
-		fFormatActiveElements = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
-		fFormatActiveElements.setActionDefinitionId(FORMAT_ACTIVE_ELEMENTS);
 
 		fGotoMatchingBracket = new RetargetTextEditorAction(b, "GotoMatchingBracket."); //$NON-NLS-1$
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
@@ -113,11 +99,18 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		fMarkOccurrences = new ToggleMarkOccurrencesAction(b);
 		fMarkOccurrences.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES);
 
-		//		fFormatMenu = new MenuManager("Format");
-		//		fFormatMenu.add(fFormatDocument);
-		//		fFormatMenu.add(fFormatActiveElements);
-
+		// the refactor menu, add the menu itself to add all refactor actions
+		this.refactorMenu = new MenuManager(PHPUIMessages.getString("ActionContributorJSP_0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
+		refactorMenu.add(this.fRename);
+		refactorMenu.add(this.fMove);
 	}
+	
+	protected void addToMenu(IMenuManager menu) {
+		super.addToMenu(menu);
+
+		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, this.refactorMenu);
+	}
+	
 
 	/*
 	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(org.eclipse.jface.action.IMenuManager)
@@ -137,24 +130,6 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		}
 	}
 
-	protected final void markAsPartListener(RetargetAction action) {
-		fPartListeners.add(action);
-	}
-
-	/*
-	 * @see IEditorActionBarContributor#init(IActionBars, IWorkbenchPage)
-	 */
-	public void init(IActionBars bars, IWorkbenchPage page) {
-		Iterator e = fPartListeners.iterator();
-		while (e.hasNext())
-			page.addPartListener((RetargetAction) e.next());
-
-		super.init(bars, page);
-
-		bars.setGlobalActionHandler(PHPActionConstants.SHOW_PHP_DOC, fShowPHPDoc);
-		bars.setGlobalActionHandler(PHPActionConstants.TOGGLE_MARK_OCCURRENCES, fMarkOccurrences);
-	}
-
 	/*
 	 * @see EditorActionBarContributor#setActiveEditor(IEditorPart)
 	 */
@@ -167,8 +142,6 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc")); //$NON-NLS-1$
 		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
-		fFormatDocument.setAction(getAction(editor, "FormatDocument")); //$NON-NLS-1$
-		fFormatActiveElements.setAction(getAction(editor, "FormatActiveElements")); //$NON-NLS-1$
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
 		fOpenHierarchy.setAction(getAction(editor, IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
@@ -178,20 +151,18 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;
 			phpEditor.getActionGroup().fillActionBars(getActionBars());
 		}
-
-		IActionBars actionBars = getActionBars();
-		if (actionBars == null)
-			return;
-
-		for (int i = 0; i < PHPEDITOR_ACTIONS.length; i++)
-			actionBars.setGlobalActionHandler(PHPEDITOR_ACTIONS[i], getAction(editor, PHPEDITOR_ACTIONS[i]));
 	}
 
+	public void setViewerSpecificContributionsEnabled(boolean enabled) {
+		super.setViewerSpecificContributionsEnabled(enabled);
+		this.fRename.setEnabled(enabled);
+		this.fMove.setEnabled(enabled);
+	}	
+	
 	/*
 	 * @see IEditorActionBarContributor#dispose()
 	 */
 	public void dispose() {
-
 		Iterator e = fPartListeners.iterator();
 		while (e.hasNext())
 			getPage().removePartListener((RetargetAction) e.next());
@@ -205,4 +176,9 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 		setActiveEditor(null);
 		super.dispose();
 	}
+
+
+	protected String[] getExtensionIDs() {
+		return EDITOR_IDS;
+	}	
 }
