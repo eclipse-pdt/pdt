@@ -17,7 +17,7 @@
 	</tstamp>
 	<property name="junitreport-html-file" value="../src/results/TEST-php.html" />
 	<property name="junitreport-xml-file" value="../src/results/TEST-php.xml" />
-	<property name="dependencies" value="../src/eclipse/maps/org.eclipse.php-releng/maps/dependencies.properties" />	
+	<property name="dependencies" value="../src/eclipse/maps/org.eclipse.pdt/plugins/org.eclipse.php-releng/maps/dependencies.properties" />	
 	
 	<property name="buildDirectory" location="${basedir}/../src/eclipse" />
 	<property file="${buildDirectory}/label.properties"/>
