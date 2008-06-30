@@ -87,9 +87,11 @@
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard" />
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPFileCreationWizard" />
 			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder" />
+			<newWizardShortcut id="org.eclipse.ui.wizards.new.file" />
 			<newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard" />
 			<newWizardShortcut id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard" />
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
+   			<newWizardShortcut id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard" />
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
 			<showInPart
@@ -168,23 +170,6 @@
 		<primaryWizard id="org.eclipse.ui.wizards.new.folder" />
 	</extension>
 
-
-      <extension
-         point="org.eclipse.ui.newWizards">
-      <wizard
-            name="%NewUntitledTextFile.label"
-            icon="$nl$/icons/full/etool16/new_untitled_text_file.gif"
-            category="org.eclipse.ui.Basic"
-            class="org.eclipse.ui.internal.editors.text.UntitledTextFileWizard"
-            canFinishEarly="true"
-            hasPages="false"
-            id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard">
-         <description>
-            %NewUntitledTextFile.description
-         </description>
-      </wizard>
-   </extension>
-   
  	<!-- the following are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
 	<extension point="org.eclipse.wst.server.core.moduleTypes">
 		<moduleType
