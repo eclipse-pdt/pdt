@@ -13,12 +13,14 @@ package org.eclipse.php.internal.ui.actions;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -33,12 +35,22 @@ import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.ui.*;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-public class AddDescriptionAction implements IObjectActionDelegate {
+public class AddDescriptionAction extends TextEditorAction implements IObjectActionDelegate,IEditorActionDelegate  {
+
+	/*public AddDescriptionAction() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	*/
+	public AddDescriptionAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+		super(bundle, prefix,editor);
+	}
 
 	private IModelElement[] fmodelElement;
 	private int startPosition = 0;
@@ -310,6 +322,11 @@ public class AddDescriptionAction implements IObjectActionDelegate {
 			assert false; // we never supposed to get here
 			return 0;
 		}
+	}
+
+	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

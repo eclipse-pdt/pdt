@@ -142,21 +142,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.BlockCommentAction;
-import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
-import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
-import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
-import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
-import org.eclipse.php.internal.ui.actions.OpenCallHierarchyAction;
-import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
-import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
-import org.eclipse.php.internal.ui.actions.OpenTypeHierarchyAction;
-import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
-import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
-import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
-import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.*;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
@@ -233,6 +219,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_DESCRIPTION = "org.eclipse.php.ui.actions.AddDescriptionAction"; //$NON-NLS-1$
 
 	private IContentOutlinePage fPHPOutlinePage;
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
@@ -1234,6 +1221,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			addAction(subMenu, "org.eclipse.php.ui.actions.ToggleCommentAction"); //$NON-NLS-1$
 			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT);
 			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT);
+			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_DESCRIPTION);
+			
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
 
 			final String openGroup = "group.open"; //$NON-NLS-1$
@@ -1862,6 +1851,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		action = new GotoMatchingBracketAction(this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
+
+		//nirc - adding 'Add PHP Doc' action to right-click menu
+		action = new AddDescriptionAction(resourceBundle, "AddDescriptionAction_", this); //$NON-NLS-1$
+		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.description"); //$NON-NLS-1$
+		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_DESCRIPTION, action);
+		markAsSelectionDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_DESCRIPTION, true);
+		//((BlockCommentAction) action).configure(sourceViewer, configuration);
 
 		action = new AddBlockCommentActionDelegate(resourceBundle, "AddBlockCommentAction_", this); //$NON-NLS-1$
 		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.add.block.comment"); //$NON-NLS-1$

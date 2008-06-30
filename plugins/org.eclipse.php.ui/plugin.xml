@@ -611,6 +611,13 @@
 			<part id="org.eclipse.php.editor" />
    			<part id="org.eclipse.php.ui.projectOutline" />
 	  </actionSetPartAssociation>
+	<!-- nirc -->
+	<actionSetPartAssociation targetID="org.eclipse.php.ui.CodingActionSet">
+			<part id="org.eclipse.php.ui.explorer" />
+			<part id="org.eclipse.php.editor" />
+   			<part id="org.eclipse.php.ui.projectOutline" />
+	  </actionSetPartAssociation> 
+
  	</extension>
 
 	<!--Adapters:-->
@@ -746,6 +753,13 @@
 				label="%action.label.1"
 				retarget="true"
 				menubarPath="org.eclipse.php.ui.source.menu/formatGroup" />
+			<!-- nirc - Addind 'Add PHP Doc' action to uppen menu-->
+			<action
+				definitionId="org.eclipse.php.ui.edit.text.add.description"
+				label="%AddDescriptionAction.label"
+				retarget="true"
+				menubarPath="org.eclipse.php.ui.source.menu/editGroup"
+				id="org.eclipse.php.ui.actions.AddDescriptionAction" />
 			<action
 				definitionId="org.eclipse.php.ui.edit.text.remove.block.comment"
 				label="%RemoveBlockCommentAction.label"
@@ -891,6 +905,11 @@
 			description="%ActionDefinition.addBlockComment.description"
 			categoryId="org.eclipse.php.ui.category.source"
 			id="org.eclipse.php.ui.edit.text.add.block.comment" />
+		<command
+			name="%action.addDescription.name"
+			description="%action.addDescription.description"
+			categoryId="org.eclipse.php.ui.category.source"
+			id="org.eclipse.php.ui.edit.text.add.description" />
 		<command
 			name="%ActionDefinition.removeBlockComment.name"
 			description="%ActionDefinition.removeBlockComment.description"
@@ -1392,18 +1411,30 @@
 				menubarPath="add"
 				tooltip="%AddBookmark.tooltip" />
 		</viewerContribution>
+
+		<!-- Add Description menu option
+		<viewerContribution 
+      		id="org.eclipse.php.ui.modelElementContribution"
+   			targetID="org.eclipse.php.editor"> 
+   			<menu label="%Source" path="additions" id="source"/>
+			<action
+				id="org.eclipse.php.ui.actions.AddDescriptionAction" 
+				label="XXXX"
+				menubarPath="source/addDescriptionGroup" 
+				class="org.eclipse.php.internal.ui.actions.AddDescriptionAction"> 
+      		</action> 
+   		</viewerContribution> 
+		-->
 		
-		<!-- Add Description menue option-->
 		<objectContribution
 			objectClass="org.eclipse.dltk.core.IModelElement"
 			id="org.eclipse.php.ui.modelElementContribution">
-			<menu label="%Source" path="additions" id="source">
-			</menu>
+			<menu label="%Source" path="additions" id="source"/>
 			<action
 				label="%action.addDescription.name"
 				class="org.eclipse.php.internal.ui.actions.AddDescriptionAction"
 				menubarPath="source/addDescriptionGroup"
-				id="org.eclipse.php.ui.actions.AddDescriptionAction">
+				id="org.eclipse.php.ui.actions.AddDescriptionAction2">
 			</action>
 			<visibility>
 				<or>

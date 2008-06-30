@@ -64,7 +64,7 @@ public class PHPEditorActionBarContributor extends TextEditorActionContributor {
 	private final static String[] PHPEDITOR_ACTIONS = { "org.eclipse.php.ui.actions.RemoveBlockComment", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.ToggleCommentAction", //$NON-NLS-1$
 		"org.eclipse.php.ui.actions.AddBlockComment", "FormatDocument", //$NON-NLS-1$ //$NON-NLS-2$
-		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, "FormatActiveElements", //$NON-NLS-1$
+		IPHPEditorActionDefinitionIds.OPEN_DECLARATION, "org.eclipse.php.ui.actions.AddDescriptionAction" ,IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, "FormatActiveElements", //$NON-NLS-1$
 		IPHPEditorActionDefinitionIds.RENAME_ELEMENT, IPHPEditorActionDefinitionIds.MOVE_ELEMENT
 
 	}; //$NON-NLS-1$
