@@ -25,7 +25,6 @@ import org.eclipse.core.filebuffers.IFileBufferStatusCodes;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.manipulation.MultiTextEditWithProgress;
 import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperation;
-import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.internal.filebuffers.Progress;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -35,7 +34,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
@@ -128,7 +126,6 @@ import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -140,14 +137,27 @@ import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.php.internal.ui.actions.AddBlockCommentActionDelegate;
+import org.eclipse.php.internal.ui.actions.AddDescriptionAction;
+import org.eclipse.php.internal.ui.actions.BlockCommentAction;
+import org.eclipse.php.internal.ui.actions.CompositeActionGroup;
+import org.eclipse.php.internal.ui.actions.EditExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
+import org.eclipse.php.internal.ui.actions.ManageExternalBreakpointAction;
+import org.eclipse.php.internal.ui.actions.OpenCallHierarchyAction;
+import org.eclipse.php.internal.ui.actions.OpenDeclarationAction;
+import org.eclipse.php.internal.ui.actions.OpenFunctionsManualAction;
+import org.eclipse.php.internal.ui.actions.OpenTypeHierarchyAction;
+import org.eclipse.php.internal.ui.actions.RefactorActionGroup;
+import org.eclipse.php.internal.ui.actions.RemoveBlockCommentActionDelegate;
+import org.eclipse.php.internal.ui.actions.ToggleCommentAction;
+import org.eclipse.php.internal.ui.actions.ToggleExternalBreakpointAction;
 import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
-import org.eclipse.php.internal.ui.editor.input.NonExistingPHPFileEditorInput;
 import org.eclipse.php.internal.ui.explorer.PHPSearchActionGroup;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder;
@@ -177,7 +187,6 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -2118,8 +2127,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		IResource resource = null;
-		IPath externalPath = null;
 		isExternal = false;
+		
 		if (input instanceof IFileEditorInput) {
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
@@ -2135,56 +2144,23 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 			if (storage instanceof ZipEntryStorage) {
 				resource = ((ZipEntryStorage) storage).getProject();
-			} else if (storage instanceof LocalFileStorage) {
-				// don't create external resource, it's wrong! Include paths
-				// should not have a resource.
-			} else {
-				// This is, probably, a remote storage:
-				externalPath = storage.getFullPath();
-//				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 			}
-		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
-			// External file editor input. It's usually used when opening PHP
-			// file
-			// via "File -> Open File" menu option, or using D&D:
-			// OR
-			// When we are dealing with an Untitled PHP document and the
-			// underlying PHP file
-			// does not really exist, but is still considered as an "External"
-			// file.
-			if (input instanceof NonExistingPHPFileEditorInput) {
-				externalPath = ((NonExistingPHPFileEditorInput) input).getPath();
-			} else {
-				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
-			}
-//			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 		}
 
 		if (resource instanceof IFile) {
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
-				// Add file decorator entry to the list of external files:
-//				if (externalPath != null && resource instanceof ExternalFileWrapper) {
-//					ExternalFilesRegistry.getInstance().addFileEntry(externalPath.toOSString(), (ExternalFileWrapper) resource);
-//					isExternal = true;
-//				}
-				// Remove an older record from the external files registry in
-				// case this editor
-				// is being reused to display a new content.
-				IEditorInput oldInput = getEditorInput();
-//				if (oldInput != null && oldInput instanceof IStorageEditorInput) {
-//					String storagePath = ((IStorageEditorInput) oldInput).getStorage().getFullPath().toOSString();
-//					ExternalFilesRegistry.getInstance().removeFileEntry(storagePath);
-//				}
+
 				PhpSourceParser.editFile.set(resource);
+				
 				super.doSetInput(input);
 
 				initPHPVersionsListener();
 
 			} else {
 				super.doSetInput(input);
-				// close(false);
 			}
 		} else {
+			isExternal = true;
 			super.doSetInput(input);
 		}
 
