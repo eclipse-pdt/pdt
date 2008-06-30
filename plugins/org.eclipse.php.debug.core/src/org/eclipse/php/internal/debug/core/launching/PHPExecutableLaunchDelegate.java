@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -37,7 +36,6 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
 import org.eclipse.debug.ui.RefreshTab;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -116,14 +114,14 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String phpIniPath = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
 		String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_WORKING_DIRECTORY, (String) null);
-		String fileNameString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+		String fileName = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
 		boolean runWithDebugInfo = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
 
 		if (monitor.isCanceled()) {
 			return;
 		}
 
-		if (fileNameString == null || fileNameString.equals("")) {
+		if (fileName == null || fileName.equals("")) {
 			displayErrorMessage("Please set a valid PHP file for this launch.");
 			return;
 		}
@@ -134,42 +132,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IPath filePath = new Path(fileNameString);
-		IProject project = null;
-		IProject dummyProject = null;
-		String absolutePath = null;
-		if (projectName == null) {
-			IResource res = workspaceRoot.findMember(filePath);
-			if (res == null || !res.isAccessible()) {
-				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_ResourceNotFound, filePath));
-				return;
-			}
-			if (project == null) {
-				project = res.getProject();
-				IPath location = res.getLocation();
-				if (location != null) {
-					absolutePath = location.toOSString();
-				} else {
-					absolutePath = res.getFullPath().toString();
-				}
-			}
-			if (project == null) {
-				displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
-				return;
-			}
-		} else {
-			try {
-				IPath projectPath = new Path(projectName);
-				project = workspaceRoot.getProject(projectPath.lastSegment());
-				absolutePath = filePath.makeAbsolute().toString();
-			} catch (Exception e) {
-			}
-		}
-
-		if (project == null || (!project.isAccessible() && project != dummyProject)) {
-			displayErrorMessage(NLS.bind(PHPDebugCoreMessages.Debugger_InvalidDebugResource, filePath));
-			return;
-		}
+		IProject project = projectName == null ? null : workspaceRoot.getProject(projectName);
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
 
@@ -182,16 +145,17 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			boolean stopAtFirstLine = configuration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
 			int requestPort = PHPDebugPlugin.getDebugPort(DebuggerCommunicationDaemon.ZEND_DEBUGGER_ID);
 
-			// Set Project Name
-			String projectString = project.getFullPath().toString();
-
 			ILaunchConfigurationWorkingCopy wc;
 			if (configuration.isWorkingCopy()) {
 				wc = (ILaunchConfigurationWorkingCopy) configuration;
 			} else {
 				wc = configuration.getWorkingCopy();
 			}
-			wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
+			
+			// Set Project Name
+			if (project != null) {
+				wc.setAttribute(IPHPDebugConstants.PHP_Project, project.getFullPath().toString());
+			}
 
 			// Set transfer encoding:
 			wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
@@ -213,20 +177,11 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			launch.setAttribute(IDebugParametersKeys.SESSION_ID, Integer.toString(sessionID));
 
 			// Trigger the debug session by initiating a debug requset to the php.exe
-			debugPHPExecutable(launch, phpExeString, absolutePath);
+			debugPHPExecutable(launch, phpExeString, fileName);
 
 		} else {
 			// resolve location
 			IPath phpExe = new Path(phpExeString);
-			IPath projectLocation = project.getRawLocation();
-			if (projectLocation == null) {
-				projectLocation = project.getLocation();
-			}
-
-			IPath phpFile = new Path(fileNameString);
-			if (fileNameString.startsWith("/")) {
-				phpFile = phpFile.removeFirstSegments(1);
-			}
 
 			String[] envp = DebugPlugin.getDefault().getLaunchManager().getEnvironment(configuration);
 			File phpExeFile = new File(phpExeString);
@@ -236,14 +191,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			String phpConfigDir = phpExeFile.getParent();
 			if (phpIniLocation != null && !phpIniLocation.equals("")) {
 				phpConfigDir = new File(phpIniLocation).getParent();
-			}
-
-			IResource res = workspaceRoot.findMember(filePath);
-			String fileName = null;
-			if (res != null) {
-				fileName = res.getLocation().toOSString();
-			} else {
-				fileName = filePath.toString();
 			}
 
 			// Detect PHP SAPI type:
@@ -257,7 +204,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			}
 
 			String[] args = PHPLaunchUtilities.getProgramArguments(launch.getLaunchConfiguration());
-			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExe.toOSString(), phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
+			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExeString, phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
 
 			// Set library search path:
 			if (!WINDOWS) {
@@ -311,7 +258,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 				}
 				subMonitor.done();
 			}
-			process.setAttribute(IProcess.ATTR_CMDLINE, fileNameString);
+			process.setAttribute(IProcess.ATTR_CMDLINE, fileName);
 
 			if (CommonTab.isLaunchInBackground(configuration)) {
 				// refresh resources after process finishes
