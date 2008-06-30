@@ -12,14 +12,11 @@
 package org.eclipse.php.internal.debug.ui.launching;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -36,7 +33,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -50,13 +46,11 @@ import org.eclipse.php.internal.core.documentModel.provisional.contenttype.Conte
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
-import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
@@ -97,7 +91,6 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 		IFile file = (IFile) input.getAdapter(IFile.class);
 		if (file == null) {
 			IPath path = null;
-
 			if (input instanceof IStorageEditorInput) {
 				IStorageEditorInput editorInput = (IStorageEditorInput) input;
 				try {
@@ -125,37 +118,42 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				}
 				path = ((NonExistingPHPFileEditorInput) input).getPath();//Untitled dummy path
 			}
-		}
-		if (file != null) {
+			if (path != null) {
+				File systemFile = new File(path.toOSString());
+				if (systemFile.exists()) {
+					searchAndLaunch(new Object[] { systemFile }, mode, getPHPExeLaunchConfigType());
+				}
+			}
+		} else {
 			searchAndLaunch(new Object[] { file }, mode, getPHPExeLaunchConfigType());
 		}
 	}
 
 	//copy the given line breakpoints to the file of the given path
-	private void copyBreakPoints(IPath newPath, int[] lineNumbers) throws CoreException {
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
-		for (int i = 0; i < lineNumbers.length; i++) {
-			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(PHPDebugTarget.createBreakpoint(resource, lineNumbers[i]));
-		}
-	}
+//	private void copyBreakPoints(IPath newPath, int[] lineNumbers) throws CoreException {
+//		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
+//		for (int i = 0; i < lineNumbers.length; i++) {
+//			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(PHPDebugTarget.createBreakpoint(resource, lineNumbers[i]));
+//		}
+//	}
 
 	//reteive all the line numbers of breakpoints that exist within the file in the given path 
-	private int[] getBreakpointLines(IPath path) throws CoreException {
-		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < breakpoints.length; i++) {
-			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
-			if (breakPoint.getRuntimeBreakpoint().getFileName().equals(path.toString())) {
-				list.add(breakPoint.getLineNumber());
-
-			}
-		}
-		int[] result = new int[list.size()];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = list.get(i);
-		}
-		return result;
-	}
+//	private int[] getBreakpointLines(IPath path) throws CoreException {
+//		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
+//		ArrayList<Integer> list = new ArrayList<Integer>();
+//		for (int i = 0; i < breakpoints.length; i++) {
+//			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
+//			if (breakPoint.getRuntimeBreakpoint().getFileName().equals(path.toString())) {
+//				list.add(breakPoint.getLineNumber());
+//
+//			}
+//		}
+//		int[] result = new int[list.size()];
+//		for (int i = 0; i < result.length; i++) {
+//			result[i] = list.get(i);
+//		}
+//		return result;
+//	}
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
@@ -189,6 +187,10 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 							phpFileLocation = file.getFullPath().toString();
 						}
 					}
+				} else if (obj instanceof File) {
+					File systemFile = (File)obj;
+					phpPathString = systemFile.getAbsolutePath();
+					phpFileLocation = phpPathString;
 				}
 
 				if (phpPathString == null) {
