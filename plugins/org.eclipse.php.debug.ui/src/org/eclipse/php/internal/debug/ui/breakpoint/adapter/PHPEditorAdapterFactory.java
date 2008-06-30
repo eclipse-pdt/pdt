@@ -14,33 +14,36 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.debug.ui.actions.IRunToLineTarget;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class PHPEditorAdapterFactory implements IAdapterFactory {
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		ITextEditor editorPart = (ITextEditor) adaptableObject;
-		IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
-		if (resource == null) {
-			return null;
+		
+		boolean isPHPFile = false;
+		
+		if (editorPart instanceof PHPStructuredEditor) {
+			IModelElement modelElement = ((PHPStructuredEditor)editorPart).getModelElement();
+			isPHPFile = PHPModelUtil.isPhpElement(modelElement);
+		} else {
+			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
+			if (resource instanceof IFile) {
+				isPHPFile = PHPModelUtil.isPhpFile((IFile) resource);
+			}
 		}
-		if (resource.getType() != IResource.FILE) {
-			return null;
-		}
-		if (!PHPModelUtil.isPhpFile((IFile) resource)) {
-			return null;
-		}
-		if (adapterType.equals(IRunToLineTarget.class)) {
+		
+		if (isPHPFile && adapterType == IRunToLineTarget.class) {
 			return new PHPRunToLineAdapter();
 		}
 		return null;
-
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
-	 */
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
 		return new Class[] { IRunToLineTarget.class };
 	}

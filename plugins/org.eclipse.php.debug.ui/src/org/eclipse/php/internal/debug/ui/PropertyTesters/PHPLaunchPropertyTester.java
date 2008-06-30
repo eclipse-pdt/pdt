@@ -13,11 +13,13 @@ package org.eclipse.php.internal.debug.ui.PropertyTesters;
 import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.ui.IEditorInput;
 
 /**
  * A property tester for the launch shortcuts.
@@ -25,8 +27,8 @@ import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
  * @author shalom
  */
 public class PHPLaunchPropertyTester extends PropertyTester {
-
-	private static final Object PHP_SOURCE_ID = "org.eclipse.php.core.phpsource";
+	
+	private static final String PROPERTY = "launchablePHP"; //$NON-NLS-1$
 
 	/**
 	 * Executes the property test determined by the parameter <code>property</code>. 
@@ -48,15 +50,22 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			List<?> list = (List<?>) receiver;
 			if (list.size() > 0) {
 				Object obj = list.get(0);
-				if (obj instanceof IAdaptable) {
-					IResource resource = (IResource)((IAdaptable)obj).getAdapter(IResource.class);
-					if (resource instanceof IFile) {
-						IFile file = (IFile) resource;
-						try {
-							return file.getContentDescription().getContentType().getId().equals(PHP_SOURCE_ID);
-						} catch (ResourceException re) {
-							return PHPModelUtil.isPhpFile(file);
-						} catch (Exception e) {
+				
+				if (PROPERTY.equals(property)) {
+					if (obj instanceof IEditorInput) {
+						IModelElement modelElement = DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj);
+						if (modelElement != null) {
+							return PHPModelUtil.isPhpElement(modelElement);
+						}
+					}
+					else if (obj instanceof IAdaptable) {
+						IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+						if (resource instanceof IFile) {
+							return PHPModelUtil.isPhpFile((IFile)resource);
+						}
+						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
+						if (modelElement != null) {
+							return PHPModelUtil.isPhpElement(modelElement);
 						}
 					}
 				}
