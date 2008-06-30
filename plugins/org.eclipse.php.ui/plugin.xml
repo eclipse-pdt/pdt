@@ -622,14 +622,49 @@
 
 	<!--Adapters:-->
 	<extension point="org.eclipse.core.runtime.adapters">
+      <factory adaptableType="org.eclipse.dltk.core.IScriptProject"
+            class="org.eclipse.dltk.internal.ui.ScriptProjectAdapterFactory">
+         <adapter type="org.eclipse.core.resources.IProject"/>
+      </factory>
+      <factory adaptableType="org.eclipse.dltk.core.IModelElement"
+            class="org.eclipse.dltk.internal.ui.ModelElementAdapterFactory">
+            
+            <adapter type="org.eclipse.core.resources.IResource"/>
+            
+            <adapter type="org.eclipse.ui.IPersistableElement"/>
+            <adapter type="org.eclipse.ui.IContributorResourceAdapter"/>
+            <adapter type="org.eclipse.ui.ide.IContributorResourceAdapter2"/>
+            <adapter type="org.eclipse.ui.IContainmentAdapter"/>
+            
+            <adapter type="org.eclipse.search.ui.ISearchPageScoreComputer"/>
+            
+            <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+            <adapter type="org.eclipse.ui.views.properties.IPropertySource"/>
+            <adapter type="org.eclipse.ui.views.tasklist.ITaskListResourceAdapter"/>
+            
+            <adapter type="org.eclipse.dltk.internal.ui.IResourceLocator"/>
+            <adapter
+                  type="org.eclipse.ui.IActionFilter">
+            </adapter>
+      </factory>
+      <factory 
+            class="org.eclipse.dltk.internal.ui.ResourceAdapterFactory" 
+            adaptableType="org.eclipse.core.resources.IResource">
+            <adapter type="org.eclipse.dltk.core.IModelElement"/>
+	  </factory>
+	  <factory 
+            class="org.eclipse.dltk.internal.ui.MarkerAdapterFactory" 
+            adaptableType="org.eclipse.core.resources.IMarker">
+            <adapter type="org.eclipse.search.ui.ISearchPageScoreComputer"/>
+		</factory>	  
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
-			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
-			class="org.eclipse.php.internal.ui.PHPElementAdapterFactory">
+			class="PHPElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
