@@ -24,7 +24,7 @@ import org.eclipse.ui.IActionFilter;
  */
 public class PhpElementAdapterFactory implements IAdapterFactory {
 
-	private static Map adapterType2Object = new HashMap(4);
+	private static Map<Class<?>, Object> adapterType2Object = new HashMap<Class<?>, Object>(4);
 	static {
 		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
 	}
@@ -32,10 +32,12 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 	public PhpElementAdapterFactory() {
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		return adapterType2Object.get(adapterType);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Class[] getAdapterList() {
 		Class[] classArray = new Class[adapterType2Object.size()];
 		adapterType2Object.entrySet().toArray(classArray);

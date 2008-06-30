@@ -2175,9 +2175,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	OutlineSelectionChangedListener fPHPOutlinePageListener;
 
-	@Override
-	public Object getAdapter(final Class required) {
-		final Object adapter = super.getAdapter(required);
+	@SuppressWarnings("unchecked")
+	public Object getAdapter(Class required) {
+		
+		Object adapter = super.getAdapter(required);
 
 		// add selection listener to outline page
 		// so that if outline selects model element, editor selects correct item
