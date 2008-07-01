@@ -632,23 +632,6 @@
 	         	</reference>
 	         </enabledWhen>
 	   </handler>
-	   
-       <handler
-             class="org.eclipse.jst.jsp.ui.internal.handlers.JSPFindOccurrencesHandler"
-             commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
-             <activeWhen>
-             	<reference
-                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
-             	</reference>
-             </activeWhen>
-             <enabledWhen>
-             	<reference
-                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
-             	</reference>
-             </enabledWhen>
-       </handler>
-	   
-	    	
 	</extension>
 
 	<!--Adapters:-->
