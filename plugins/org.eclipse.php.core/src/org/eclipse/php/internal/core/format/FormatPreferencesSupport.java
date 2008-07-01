@@ -12,12 +12,19 @@ package org.eclipse.php.internal.core.format;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
-import org.eclipse.php.internal.core.preferences.*;
+import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
+import org.eclipse.php.internal.core.preferences.PreferencePropagatorFactory;
+import org.eclipse.php.internal.core.preferences.PreferencesPropagator;
+import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
+import org.eclipse.php.internal.core.preferences.PreferencesSupport;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**
@@ -87,9 +94,23 @@ public class FormatPreferencesSupport {
 			DOMModelForPHP editorModel = null;
 			try {
 				editorModel = (DOMModelForPHP) StructuredModelManager.getModelManager().getExistingModelForRead(document);
-				final IFile file = editorModel.getIFile();
-				if (file == null)
+				
+				String baseLocation = editorModel.getBaseLocation();
+				// The baseLocation may be a path on disk or relative to the
+				// workspace root. Don't translate on-disk paths to
+				// in-workspace resources.
+				IPath basePath = new Path(baseLocation);
+				IFile file = null;
+				if (basePath.segmentCount() > 1) {
+					file = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath);
+					if (!file.exists()) {
+						file = null;
+					}
+				}
+				if (file == null) {
 					return;
+				}
+
 				IProject project = file.getProject();
 				if (fLastProject != project) {
 					fLastProject = project;
