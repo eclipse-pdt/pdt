@@ -82,6 +82,14 @@ public class PHPActionConstants {
 	public static final String ADD_DESCRIPTION = "org.eclipse.php.ui.actions.AddDescriptionAction"; //$NON-NLS-1$
 
 	/**
+	 * Source menu: name of standard Add PHP Doc global action
+	 * (value <code>"AddDescription"</code>).
+	 * 
+	 * @since 3.0
+	 */
+	public static final String ADD_DESCRIPTION_NAME = "AddDescription"; //$NON-NLS-1$
+	
+	/**
 	 * Source menu: name of standard Block Comment global action
 	 * (value <code>"org.eclipse.php.ui.actions.AddBlockComment"</code>).
 	 * 

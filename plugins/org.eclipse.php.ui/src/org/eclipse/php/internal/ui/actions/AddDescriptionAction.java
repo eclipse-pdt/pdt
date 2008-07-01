@@ -41,7 +41,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class AddDescriptionAction extends Action implements IObjectActionDelegate  {
 
-	private IModelElement[] fmodelElement;
+	private IModelElement[] fModelElement;
 	private int startPosition = 0;
 	String docBlock;
 	
@@ -49,18 +49,19 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	}
 
 	public void run(IAction action) {
-		if (fmodelElement == null) {
+		final IModelElement[] modelElement = getModelElement();
+		if (modelElement == null) {
 			return;
 		}
 
 		// Sorting the PHP code elements array by "first-line" position.
 		// this will enable "right" order of iteration
 
-		Arrays.sort(fmodelElement, new modelElementComparatorImplementation());
+		Arrays.sort(modelElement, new modelElementComparatorImplementation());
 
 		// iterating the functions that need to add 'PHP Doc' bottoms-up - to eliminate mutual interference
-		for (int i = fmodelElement.length - 1; i >= 0; i--) {
-			IModelElement modelElem = fmodelElement[i];
+		for (int i = modelElement.length - 1; i >= 0; i--) {
+			IModelElement modelElem = modelElement[i];
 			if (null == modelElem) {
 				continue; // if we got to null pointer, skipping it
 			}
@@ -202,11 +203,12 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		}
 
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		fmodelElement = new IModelElement[structuredSelection.size()];
+		setModelElement(new IModelElement[structuredSelection.size()]);
 		Iterator i = structuredSelection.iterator();
 		int idx = 0;
+		final IModelElement[] modelElement = getModelElement();		
 		while (i.hasNext()) {
-			fmodelElement[idx++] = (IModelElement) i.next();
+			modelElement[idx++] = (IModelElement) i.next();
 		}
 	}
 
@@ -313,9 +315,18 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		}
 	}
 
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * @param fmodelElement the fmodelElement to set
+	 */
+	public void setModelElement(IModelElement[] fmodelElement) {
+		this.fModelElement = fmodelElement;
+	}
+
+	/**
+	 * @return the fmodelElement
+	 */
+	public IModelElement[] getModelElement() {
+		return fModelElement;
 	}
 	
 	

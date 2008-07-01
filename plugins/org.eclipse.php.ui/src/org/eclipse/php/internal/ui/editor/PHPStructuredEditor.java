@@ -34,7 +34,10 @@ import org.eclipse.dltk.internal.ui.text.IScriptReconcilingListener;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
-import org.eclipse.jface.action.*;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.internal.text.html.HTMLTextPresenter;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -106,10 +109,8 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
-import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
-import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -118,11 +119,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_UNCOMMENT = "org.eclipse.php.ui.actions.Uncomment"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_COMMENT = "org.eclipse.php.ui.actions.Comment"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.actions.RemoveBlockComment"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT = "org.eclipse.php.ui.actions.AddBlockComment"; //$NON-NLS-1$
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_DESCRIPTION = "org.eclipse.php.ui.actions.AddDescriptionAction"; //$NON-NLS-1$
 
 	private IContentOutlinePage fPHPOutlinePage;
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
@@ -1118,16 +1114,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		super.addContextMenuActions(menu);
 
 		if (getSourceViewer().isEditable()) {
-			final String label = PHPUIMessages.getString("PHPStructuredEditor_Source");
-			final MenuManager subMenu = new MenuManager(label, "org.eclipse.php.ui.source.menu"); //$NON-NLS-1$
-			subMenu.add(new GroupMarker("editGroup")); //$NON-NLS-1$
-			addAction(subMenu, "org.eclipse.php.ui.actions.ToggleCommentAction"); //$NON-NLS-1$
-			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_BLOCK_COMMENT);
-			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_REMOVE_BLOCK_COMMENT);
-			addAction(subMenu, PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_ADD_DESCRIPTION);
-			
-			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
-
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
 			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN);
@@ -1775,11 +1761,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
 		markAsCursorDependentAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);
 
-		action = new AddDescriptionAction(); //$NON-NLS-1$
-		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
-		setAction(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION, action);
-		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION, true);
-		
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);

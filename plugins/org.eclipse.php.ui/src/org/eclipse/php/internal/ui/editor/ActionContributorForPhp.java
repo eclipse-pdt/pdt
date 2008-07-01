@@ -28,7 +28,6 @@ import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
-import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extension for
@@ -48,8 +47,9 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	private static final String[] EDITOR_IDS = {"org.eclipse.php.core.phpsource", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	private RetargetAction fRetargetShowPHPDoc;
-	private List fPartListeners = new ArrayList();
+	private List<RetargetAction> fPartListeners = new ArrayList<RetargetAction>();
 	private RetargetTextEditorAction fShowPHPDoc;
+
 	private RetargetTextEditorAction fGotoMatchingBracket;
 	private RetargetTextEditorAction fOpenDeclaration;
 	private RetargetTextEditorAction fOpenTypeHierarchy;
@@ -57,65 +57,63 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	private RetargetTextEditorAction fOpenHierarchy;
 	private RetargetTextEditorAction fRename;
 	private RetargetTextEditorAction fMove;
-	private RetargetTextEditorAction fAddPHPDoc;
 	private ToggleMarkOccurrencesAction fMarkOccurrences; // Registers as a global action
 
 	protected MenuManager fFormatMenu = null;
 
 	private MenuManager refactorMenu;
-	private MenuManager sourceMenu ;
-	
+
+	protected RetargetTextEditorAction fAddDescription;
+
 	public ActionContributorForPhp() {
 		super();
 
-		ResourceBundle b = PHPUIMessages.getBundleForConstructedKeys();
+		ResourceBundle resourceBundle = PHPUIMessages.getBundleForConstructedKeys();
 
 		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.getString("ShowPHPDoc_label"));
 		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		fPartListeners.add(fRetargetShowPHPDoc);
 
-		fShowPHPDoc = new RetargetTextEditorAction(b, "ShowPHPDoc."); //$NON-NLS-1$
+		fShowPHPDoc = new RetargetTextEditorAction(resourceBundle, "ShowPHPDoc."); //$NON-NLS-1$
 		fShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 
-		fGotoMatchingBracket = new RetargetTextEditorAction(b, "GotoMatchingBracket."); //$NON-NLS-1$
+		fAddDescription = new RetargetTextEditorAction(resourceBundle, PHPActionConstants.ADD_DESCRIPTION_NAME + "_"); //$NON-NLS-1$
+		fAddDescription.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
+		
+		fGotoMatchingBracket = new RetargetTextEditorAction(resourceBundle, "GotoMatchingBracket."); //$NON-NLS-1$
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
-		fOpenDeclaration = new RetargetTextEditorAction(b, "OpenAction_declaration_"); //$NON-NLS-1$
+		fOpenDeclaration = new RetargetTextEditorAction(resourceBundle, "OpenAction_declaration_"); //$NON-NLS-1$
 		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 
-		fOpenTypeHierarchy = new RetargetTextEditorAction(b, "OpenTypeHierarchy"); //$NON-NLS-1$
+		fOpenTypeHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenTypeHierarchy"); //$NON-NLS-1$
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 		
-		fOpenCallHierarchy = new RetargetTextEditorAction(b, "OpenCallHierarchy"); //$NON-NLS-1$
+		fOpenCallHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenCallHierarchy"); //$NON-NLS-1$
 		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 
 		fOpenHierarchy = new RetargetTextEditorAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy."); //$NON-NLS-1$
 		fOpenHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 
-		fRename = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
+		fRename = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fRename.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
 
-		fMove = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
+		fMove = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 
-		fAddPHPDoc = new RetargetTextEditorAction(b, "AddPHPDoc."); //$NON-NLS-1$
-		fAddPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_PHP_DOC);
-		
-		fMarkOccurrences = new ToggleMarkOccurrencesAction(b);
+		fMarkOccurrences = new ToggleMarkOccurrencesAction(resourceBundle);
 		fMarkOccurrences.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES);
 
 		// the refactor menu, add the menu itself to add all refactor actions
 		this.refactorMenu = new MenuManager(PHPUIMessages.getString("ActionContributorJSP_0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
 		refactorMenu.add(this.fRename);
 		refactorMenu.add(this.fMove);
-		
 	}
 	
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
+
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, this.refactorMenu);
-		
-		
 	}
 	
 
@@ -126,7 +124,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		super.contributeToMenu(menu);
 
 		IMenuManager gotoMenu = menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
-		
+		menu.findMenuUsingPath("source"); //$NON-NLS-1$
 		if (gotoMenu != null) {
 			gotoMenu.add(new Separator("additions2")); //$NON-NLS-1$
 			gotoMenu.appendToGroup("additions2", fGotoMatchingBracket); //$NON-NLS-1$
@@ -134,11 +132,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		IMenuManager navigateMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
 		if (navigateMenu != null) {
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fOpenHierarchy);
-		}
-		//FIXME - need to add to the right menue and fix label/text issue.
-		IMenuManager sourceMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE); //$NON-NLS-1$
-		if (sourceMenu != null) {
-			sourceMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fAddPHPDoc);
 		}
 	}
 
@@ -151,8 +144,10 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		ITextEditor editor = null;
 		if (part instanceof ITextEditor)
 			editor = (ITextEditor) part;
-
-		fAddPHPDoc.setAction(getAction(editor, IPHPEditorActionDefinitionIds.ADD_DESCRIPTION )); //$NON-NLS-1$
+		
+		fAddDescription.setAction(getAction(editor, PHPActionConstants.ADD_DESCRIPTION_NAME));
+		fAddDescription.setEnabled((editor != null) && editor.isEditable());
+		
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc")); //$NON-NLS-1$
 		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
@@ -170,16 +165,15 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		super.setViewerSpecificContributionsEnabled(enabled);
 		this.fRename.setEnabled(enabled);
 		this.fMove.setEnabled(enabled);
-		this.fAddPHPDoc.setEnabled(enabled);
 	}	
 	
 	/*
 	 * @see IEditorActionBarContributor#dispose()
 	 */
 	public void dispose() {
-		Iterator e = fPartListeners.iterator();
+		Iterator<RetargetAction> e = fPartListeners.iterator();
 		while (e.hasNext())
-			getPage().removePartListener((RetargetAction) e.next());
+			getPage().removePartListener(e.next());
 		fPartListeners.clear();
 
 		if (fRetargetShowPHPDoc != null) {

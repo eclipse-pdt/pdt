@@ -457,15 +457,6 @@
       		</filter>
 		</page>
 		<page
-			class="org.eclipse.php.internal.ui.preferences.IncludePathInfoPage"
-			id="org.eclipse.php.ui.preferences.PreferencePages.IncludePathInfoPage"
-			name="%phpIncludepathPreferenceName">
-			<enabledWhen>
-		     <adapt type="org.eclipse.php.internal.core.phpModel.parser.PHPIncludePathModel">
-		     </adapt>         
-         	</enabledWhen>
-		</page>
-		<page
             class="org.eclipse.php.internal.ui.preferences.SaveActionsPreferencePage"
             id="org.eclipse.php.ui.propertyPages.PHPEditorSaveActionsPreferencePage"
             name="%saveActionsPreferencePageName">
@@ -617,14 +608,30 @@
 
 	<!-- Set up a definition for PHP Content Types -->
 	<extension point="org.eclipse.core.expressions.definitions">
-		<definition id="org.eclipse.wst.jsp.ui.jspContentType.definition">
-			<iterate ifEmpty="false">
-				<adapt type="org.eclipse.core.resources.IFile">
-					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
-						value="org.eclipse.jst.jsp.core.jspsource"/>
-				</adapt>
-			</iterate>
+		<definition id="org.eclipse.php.ui.phpContentType.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.php.ui.phpEditorScope"/>
+	           </iterate>
+            </with>
 		</definition>
+	</extension>	
+ 	
+	<extension point="org.eclipse.ui.handlers">
+	   <handler
+	         class="org.eclipse.php.internal.ui.actions.AddDescriptionHandler"
+	         commandId="org.eclipse.php.ui.edit.text.add.description">
+	         <activeWhen>
+	         	<reference
+	                definitionId="org.eclipse.php.ui.phpContentType.definition">
+	         	</reference>
+	         </activeWhen>
+	         <enabledWhen>
+	         	<reference
+	                definitionId="org.eclipse.php.ui.phpContentType.definition">
+	         	</reference>
+	         </enabledWhen>
+	   </handler> 	
 	</extension>
 
 	<!--Adapters:-->
@@ -671,7 +678,7 @@
 		</factory>
 		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
-			class="PHPElementAdapterFactory">
+			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
@@ -805,6 +812,29 @@
 		</actionSet>
 	</extension>
 
+	<extension point="org.eclipse.ui.menus"> 
+		<menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
+			<command commandId="org.eclipse.php.ui.edit.text.add.description"
+		       id="AddDescription"
+		       mnemonic="A"
+		        style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>	
+	
+		<menuContribution locationURI="popup:sourcePopupMenuId?before=sourceBegin">
+		    <command commandId="org.eclipse.php.ui.edit.text.add.description" 
+	                       id="AddDescription" style="push">
+	   		   <visibleWhen checkEnabled="false">
+	  		       <reference definitionId="org.eclipse.php.ui.phpContentType.definition"></reference>
+	  		    </visibleWhen>
+	  	    </command>
+		</menuContribution>
+</extension>
+
+
 	<!--Commands:-->
 	<extension point="org.eclipse.ui.contexts">
 		<context
@@ -850,6 +880,11 @@
 		
 		<!-- source -->
 		<command
+			name="%action.addDescription.name"
+			description="%action.addDescription.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.php.ui.edit.text.add.description" />
+		<command
 			name="%ActionDefinition.comment.name"
 			description="%ActionDefinition.comment.description"
 			categoryId="org.eclipse.php.ui.category.source"
@@ -869,11 +904,6 @@
 			description="%ActionDefinition.addBlockComment.description"
 			categoryId="org.eclipse.php.ui.category.source"
 			id="org.eclipse.php.ui.edit.text.add.block.comment" />
-		<command
-			name="%action.addDescription.name"
-			description="%action.addDescription.description"
-			categoryId="org.eclipse.php.ui.category.source"
-			id="org.eclipse.php.ui.edit.text.add.description" />
 		<command
 			name="%ActionDefinition.removeBlockComment.name"
 			description="%ActionDefinition.removeBlockComment.description"
@@ -1008,7 +1038,12 @@
             contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.pdt.ui.edit.text.php.show.outline"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-
+		<!-- source -->
+		<key
+			sequence="M1+M2+J"
+			contextId="org.eclipse.php.ui.phpEditorScope"
+			commandId="org.eclipse.php.ui.edit.text.add.description"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 
 		<!-- refactoring -->
 		<key
@@ -1181,7 +1216,7 @@
 		<key
             platform="carbon"
             sequence="COMMAND+ALT+O"
-            contextId="org.eclipse.php.ui.javaEditorScope"
+            contextId="org.eclipse.php.ui.phpEditorScope"
             commandId="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
@@ -1298,16 +1333,6 @@
 
 	<!--History & Others Working Set:-->
 	<extension point="org.eclipse.ui.workingSets">
-		<!--workingSet
-			name="%HistoryWorkingSetWizardPage.name"
-			icon="icons/full/obj16/php_project_obj.gif"
-			updaterClass="org.eclipse.php.internal.ui.workingset.HistoryWorkingSetUpdater"
-			id="org.eclipse.php.ui.HistoryWorkingSet" />
-		<workingSet
-			name="%OthersWorkingSetWizardPage.name"
-			icon="icons/full/obj16/php_project_obj.gif"
-			updaterClass="org.eclipse.php.internal.ui.workingset.OthersWorkingSetUpdater"
-			id="org.eclipse.php.ui.OthersWorkingSet" /-->
 		<workingSet
 			name="%PHPWorkingSetPage.name"
 			pageClass="org.eclipse.dltk.internal.ui.workingsets.ScriptWorkingSetPage"
@@ -1379,7 +1404,7 @@
 		<objectContribution
 			objectClass="org.eclipse.dltk.core.IModelElement"
 			id="org.eclipse.php.ui.modelElementContribution">
-			<menu label="%Source" path="additions" id="source"/>
+			<menu label="%category.source.name" path="additions" id="source"/>
 			<action
 				label="%action.addDescription.name"
 				class="org.eclipse.php.internal.ui.actions.AddDescriptionAction"
@@ -1394,6 +1419,7 @@
 			</visibility>			
 		</objectContribution>
 	</extension>
+
 
 	<extension point="org.eclipse.php.ui.actionFilterContributors">
 		<contributor
@@ -1418,12 +1444,6 @@
 
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer class="org.eclipse.php.internal.ui.preferences.PHPUIPreferenceInitializer" />
-	</extension>
-
-	<extension point="org.eclipse.php.ui.phpTreeContentProviders">
-		<provider
-			class="org.eclipse.php.internal.ui.treecontent.IncludePathTreeContent"
-			targetId="org.eclipse.php.ui.explorer" />
 	</extension>
 
 	<!--PHP Editor Text Hovers:-->
