@@ -10,50 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions;
 
-import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
  * Handler class for the add description action, 
  * It acts as a delegate to the AddDescription action 
  * @author Roy, 2008
  */
-public class AddDescriptionHandler extends AbstractHandler implements IHandler {
+public class AddDescriptionHandler extends SelectionHandler implements IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
-		final PHPStructuredEditor editor = getEditor(event);
-		
-		if (editor != null) {
+		final IModelElement element = getCurrentModelElement(event);
+		if (element != null) {
 			final AddDescriptionAction addDescriptionAction = new AddDescriptionAction();
-			final IModelElement modelElement = editor.getModelElement();
-			addDescriptionAction.setModelElement(new IModelElement[] { modelElement } );
+			addDescriptionAction.setModelElement(new IModelElement[] { element } );
 			addDescriptionAction.run(null);
 		}
 		
-		return null;
-	}
-
-	private PHPStructuredEditor getEditor(ExecutionEvent event) {
-		IEditorPart editorPart = HandlerUtil.getActiveEditor(event);
-		PHPStructuredEditor textEditor = null;
-		if (editorPart instanceof PHPStructuredEditor)
-			textEditor = (PHPStructuredEditor) editorPart;
-		else {
-			Object o = editorPart.getAdapter(ITextEditor.class);
-			if (o != null)
-				textEditor = (PHPStructuredEditor) o;
-		}
-		if (textEditor != null) {
-			return textEditor;
-		}
 		return null;
 	}
 }
