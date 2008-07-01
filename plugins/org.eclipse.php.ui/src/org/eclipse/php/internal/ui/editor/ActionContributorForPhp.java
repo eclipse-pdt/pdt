@@ -28,6 +28,7 @@ import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * A PHPEditorActionBarContributor, which is a simple extension for
@@ -49,7 +50,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	private RetargetAction fRetargetShowPHPDoc;
 	private List fPartListeners = new ArrayList();
 	private RetargetTextEditorAction fShowPHPDoc;
-
 	private RetargetTextEditorAction fGotoMatchingBracket;
 	private RetargetTextEditorAction fOpenDeclaration;
 	private RetargetTextEditorAction fOpenTypeHierarchy;
@@ -57,12 +57,14 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	private RetargetTextEditorAction fOpenHierarchy;
 	private RetargetTextEditorAction fRename;
 	private RetargetTextEditorAction fMove;
+	private RetargetTextEditorAction fAddPHPDoc;
 	private ToggleMarkOccurrencesAction fMarkOccurrences; // Registers as a global action
 
 	protected MenuManager fFormatMenu = null;
 
 	private MenuManager refactorMenu;
-
+	private MenuManager sourceMenu ;
+	
 	public ActionContributorForPhp() {
 		super();
 
@@ -96,6 +98,9 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fMove = new RetargetTextEditorAction(b, ""); //$NON-NLS-1$
 		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 
+		fAddPHPDoc = new RetargetTextEditorAction(b, "AddPHPDoc."); //$NON-NLS-1$
+		fAddPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_PHP_DOC);
+		
 		fMarkOccurrences = new ToggleMarkOccurrencesAction(b);
 		fMarkOccurrences.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES);
 
@@ -103,12 +108,14 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		this.refactorMenu = new MenuManager(PHPUIMessages.getString("ActionContributorJSP_0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
 		refactorMenu.add(this.fRename);
 		refactorMenu.add(this.fMove);
+		
 	}
 	
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
-
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, this.refactorMenu);
+		
+		
 	}
 	
 
@@ -119,7 +126,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		super.contributeToMenu(menu);
 
 		IMenuManager gotoMenu = menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
-		menu.findMenuUsingPath("source"); //$NON-NLS-1$
+		
 		if (gotoMenu != null) {
 			gotoMenu.add(new Separator("additions2")); //$NON-NLS-1$
 			gotoMenu.appendToGroup("additions2", fGotoMatchingBracket); //$NON-NLS-1$
@@ -127,6 +134,11 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		IMenuManager navigateMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
 		if (navigateMenu != null) {
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fOpenHierarchy);
+		}
+		//FIXME - need to add to the right menue and fix label/text issue.
+		IMenuManager sourceMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE); //$NON-NLS-1$
+		if (sourceMenu != null) {
+			sourceMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fAddPHPDoc);
 		}
 	}
 
@@ -140,6 +152,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		if (part instanceof ITextEditor)
 			editor = (ITextEditor) part;
 
+		fAddPHPDoc.setAction(getAction(editor, IPHPEditorActionDefinitionIds.ADD_DESCRIPTION )); //$NON-NLS-1$
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc")); //$NON-NLS-1$
 		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
@@ -157,6 +170,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		super.setViewerSpecificContributionsEnabled(enabled);
 		this.fRename.setEnabled(enabled);
 		this.fMove.setEnabled(enabled);
+		this.fAddPHPDoc.setEnabled(enabled);
 	}	
 	
 	/*

@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -38,7 +39,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-public class AddDescriptionAction implements IObjectActionDelegate  {
+public class AddDescriptionAction extends Action implements IObjectActionDelegate  {
 
 	private IModelElement[] fmodelElement;
 	private int startPosition = 0;

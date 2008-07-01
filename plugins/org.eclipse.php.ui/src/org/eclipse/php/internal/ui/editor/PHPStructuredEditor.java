@@ -1775,6 +1775,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
 		markAsCursorDependentAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, true);
 
+		action = new AddDescriptionAction(); //$NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
+		setAction(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION, action);
+		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION, true);
+		
 		ResourceAction resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", this, ISourceViewer.INFORMATION, true); //$NON-NLS-1$
 		resAction = new InformationDispatchAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowPHPDoc.", (TextOperationAction) resAction); //$NON-NLS-1$
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
