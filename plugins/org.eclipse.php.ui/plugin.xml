@@ -631,7 +631,24 @@
 	                definitionId="org.eclipse.php.ui.phpContentType.definition">
 	         	</reference>
 	         </enabledWhen>
-	   </handler> 	
+	   </handler>
+	   
+       <handler
+             class="org.eclipse.jst.jsp.ui.internal.handlers.JSPFindOccurrencesHandler"
+             commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+	   
+	    	
 	</extension>
 
 	<!--Adapters:-->
@@ -1022,17 +1039,6 @@
 			contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.toggle.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key
-			sequence="M1+M2+/"
-			contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.php.ui.edit.text.add.block.comment"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key
-			sequence="M1+M2+\"
-			contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.php.ui.edit.text.remove.block.comment"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-
 		<key
             sequence="M1+O"
             contextId="org.eclipse.php.ui.phpEditorScope"
