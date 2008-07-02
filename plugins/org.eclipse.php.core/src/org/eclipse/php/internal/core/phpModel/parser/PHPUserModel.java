@@ -14,6 +14,8 @@ import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.CodeDataDB;
 import org.eclipse.php.internal.core.phpModel.parser.codeDataDB.FilesCodeDataDB;
@@ -32,6 +34,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	private CodeDataDB functionsDB;
 	private CodeDataDB constantsDB;
 	private CodeDataDB globalsVariablesDB;
+	private ILock lock;
 
 	private List listeners = Collections.synchronizedList(new ArrayList(2));
 
@@ -43,19 +46,27 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		functionsDB = new TreeCodeDataDB();
 		constantsDB = new TreeCodeDataDB();
 		globalsVariablesDB = new GlobalVariablesCodeDataDB();
+		lock = Job.getJobManager().newLock();
 	}
 
 	public String getID() {
 		return ID;
 	}
 
-	public synchronized void clear() {
-		phpFileDataDB.clear();
-		classesDB.clear();
-		functionsDB.clear();
-		constantsDB.clear();
-		globalsVariablesDB.clear();
-		fireDataCleared();
+	public void clear() {
+		try {
+			lock.acquire();
+
+			phpFileDataDB.clear();
+			classesDB.clear();
+			functionsDB.clear();
+			constantsDB.clear();
+			globalsVariablesDB.clear();
+			fireDataCleared();
+
+		} finally {
+			lock.release();
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,84 +82,102 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 		return (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
 	}
 
-	public synchronized void insert(PHPFileData fileData) {
-		String fileName = fileData.getName();
-		PHPFileData oldData = (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
-		boolean oldExists = oldData != null;
-		if (oldExists) {
-			delete(oldData);
-		}
+	public void insert(PHPFileData fileData) {
+		try {
+			lock.acquire();
 
-		phpFileDataDB.addCodeData(fileData);
-
-		// add classes
-		PHPClassData[] classes = fileData.getClasses();
-		for (int i = 0; i < classes.length; i++) {
-			classesDB.addCodeData(classes[i]);
-		}
-
-		// add functions
-		PHPFunctionData[] functions = fileData.getFunctions();
-		for (int i = 0; i < functions.length; i++) {
-			functionsDB.addCodeData(functions[i]);
-		}
-
-		PHPConstantData[] constans = fileData.getConstants();
-		for (int i = 0; i < constans.length; i++) {
-			constantsDB.addCodeData(constans[i]);
-		}
-
-		// add global variables
-		PHPVariableData[] globalsVariables = fileData.getVariableTypeManager().getVariables(ModelSupport.EMPTY_CONTEXT);
-		if (globalsVariables != null) {
-			for (int i = 0; i < globalsVariables.length; i++) {
-				globalsVariablesDB.addCodeData(globalsVariables[i]);
+			String fileName = fileData.getName();
+			PHPFileData oldData = (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
+			boolean oldExists = oldData != null;
+			if (oldExists) {
+				delete(oldData);
 			}
-		}
 
-		if (oldExists) {
-			fireFileDataChanged(fileData);
-		} else {
-			fireFileDataAdded(fileData);
+			phpFileDataDB.addCodeData(fileData);
+
+			// add classes
+			PHPClassData[] classes = fileData.getClasses();
+			for (int i = 0; i < classes.length; i++) {
+				classesDB.addCodeData(classes[i]);
+			}
+
+			// add functions
+			PHPFunctionData[] functions = fileData.getFunctions();
+			for (int i = 0; i < functions.length; i++) {
+				functionsDB.addCodeData(functions[i]);
+			}
+
+			PHPConstantData[] constans = fileData.getConstants();
+			for (int i = 0; i < constans.length; i++) {
+				constantsDB.addCodeData(constans[i]);
+			}
+
+			// add global variables
+			PHPVariableData[] globalsVariables = fileData.getVariableTypeManager().getVariables(ModelSupport.EMPTY_CONTEXT);
+			if (globalsVariables != null) {
+				for (int i = 0; i < globalsVariables.length; i++) {
+					globalsVariablesDB.addCodeData(globalsVariables[i]);
+				}
+			}
+
+			if (oldExists) {
+				fireFileDataChanged(fileData);
+			} else {
+				fireFileDataAdded(fileData);
+			}
+
+		} finally {
+			lock.release();
 		}
 	}
 
-	public synchronized void delete(String fileName) {
-		PHPFileData fileData = (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
-		if (fileData != null) {
-			delete(fileData);
-			fireFileDataRemoved(fileData);
+	public void delete(String fileName) {
+		try {
+			lock.acquire();
+			PHPFileData fileData = (PHPFileData) phpFileDataDB.getUniqCodeData(fileName);
+			if (fileData != null) {
+				delete(fileData);
+				fireFileDataRemoved(fileData);
+			}
+		} finally {
+			lock.release();
 		}
 	}
 
-	protected synchronized void delete(PHPFileData fileData) {
-		// remove classes
-		PHPClassData[] classData = fileData.getClasses();
-		for (int i = 0; i < classData.length; i++) {
-			classesDB.removeCodeData(classData[i]);
-		}
-
-		// remove functions
-		PHPFunctionData[] functionData = fileData.getFunctions();
-		for (int i = 0; i < functionData.length; i++) {
-			functionsDB.removeCodeData(functionData[i]);
-		}
-
-		// remove functions
-		PHPConstantData[] constans = fileData.getConstants();
-		for (int i = 0; i < constans.length; i++) {
-			constantsDB.removeCodeData(constans[i]);
-		}
-
-		// remove globalVariables
-		PHPVariableData[] globalsVariables = fileData.getVariableTypeManager().getVariables(ModelSupport.EMPTY_CONTEXT);
-		if (globalsVariables != null) {
-			for (int i = 0; i < globalsVariables.length; i++) {
-				globalsVariablesDB.removeCodeData(globalsVariables[i]);
+	protected void delete(PHPFileData fileData) {
+		try {
+			lock.acquire();
+			// remove classes
+			PHPClassData[] classData = fileData.getClasses();
+			for (int i = 0; i < classData.length; i++) {
+				classesDB.removeCodeData(classData[i]);
 			}
-		}
 
-		phpFileDataDB.removeCodeData(fileData);
+			// remove functions
+			PHPFunctionData[] functionData = fileData.getFunctions();
+			for (int i = 0; i < functionData.length; i++) {
+				functionsDB.removeCodeData(functionData[i]);
+			}
+
+			// remove functions
+			PHPConstantData[] constans = fileData.getConstants();
+			for (int i = 0; i < constans.length; i++) {
+				constantsDB.removeCodeData(constans[i]);
+			}
+
+			// remove globalVariables
+			PHPVariableData[] globalsVariables = fileData.getVariableTypeManager().getVariables(ModelSupport.EMPTY_CONTEXT);
+			if (globalsVariables != null) {
+				for (int i = 0; i < globalsVariables.length; i++) {
+					globalsVariablesDB.removeCodeData(globalsVariables[i]);
+				}
+			}
+
+			phpFileDataDB.removeCodeData(fileData);
+			
+		} finally {
+			lock.release();
+		}
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,7 +288,7 @@ public class PHPUserModel implements IPhpModel, IProjectModelListener {
 	private String getClassVariableType(PHPClassData classData, String variableName, int line) {
 		return innerGetClassVariableType(classData, variableName, line, new LinkedList<String>());
 	}
-	
+
 	/**
 	 * This is an internal function please use getClassVariableType().
 	 * @param checkedClasses is for internal use - making sure there is no cyclic in the class hierarchy 

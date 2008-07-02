@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.internal.core.Logger;
 
 /**
@@ -23,7 +25,7 @@ import org.eclipse.php.internal.core.Logger;
 public final class ParserExecuter implements Runnable {
 
 	// we want that the executor will run exclusively
-	private final static Object mutex = new Object();
+	private final static ILock parserClientLock = Job.getJobManager().newLock();
 
 	public final PHPParserManager parserManager;
 	public final ParserClient client;
@@ -50,45 +52,46 @@ public final class ParserExecuter implements Runnable {
 	 * The mutex keeps that only one parsing will be performed  
 	 */
 	public final void run() {
-		synchronized (mutex) {
+		try {
+			parserClientLock.acquire();
+
+			final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
+			lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
+			lexer.setParserClient(client);
+			lexer.setTasksPatterns(tasksPatterns);
+
+			if (phpParser == null) {
+				phpParser = parserManager.createPhpParser();
+			}
+			phpParser.setScanner(lexer);
+			phpParser.setParserClient(client);
+
+			client.startParsing(filename);
+
+			phpParser.parse();
+
+		} catch (Exception e) {
+			Logger.logException(e);
+
+		} finally {
+
 			try {
-
-				final CompletionLexer lexer = parserManager.createCompletionLexer(reader);
-				lexer.setUseAspTagsAsPhp(useAspTagsAsPhp);
-				lexer.setParserClient(client);
-				lexer.setTasksPatterns(tasksPatterns);
-
-				if (phpParser == null) {
-					phpParser = parserManager.createPhpParser();
+				if (client != null && phpParser != null) {
+					client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
 				}
-				phpParser.setScanner(lexer);
-				phpParser.setParserClient(client);
 
-				client.startParsing(filename);
-
-				phpParser.parse();
-
-			} catch (Exception e) {
-				Logger.logException(e);
+			} catch (Exception ex) {
+				Logger.logException(ex);
 
 			} finally {
-
 				try {
-					if (client != null && phpParser != null) {
-						client.finishParsing(phpParser.getLength(), phpParser.getCurrentLine(), lastModified);
-					}
-
-				} catch (Exception ex) {
-					Logger.logException(ex);
-
-				} finally {
-					try {
-						reader.close();
-					} catch (IOException exception) {
-						Logger.logException(exception);
-					}
+					reader.close();
+				} catch (IOException exception) {
+					Logger.logException(exception);
 				}
 			}
+
+			parserClientLock.release();
 		}
 	}
 }
