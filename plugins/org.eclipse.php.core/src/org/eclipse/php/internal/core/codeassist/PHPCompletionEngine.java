@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -39,12 +40,12 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.internal.core.util.WeakHashSet;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -162,29 +163,41 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	public void complete(ISourceModule module, int position, int i) {
-		IStructuredModel structuredModel = null;
-		boolean isUnmanaged = false;
-		try {
-			IFile file = (IFile) module.getModelElement().getResource();
-			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-			if (structuredModel == null) {
-				structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
-				isUnmanaged = true;
+		
+		IStructuredDocument document = null;
+		
+		if (requestor instanceof IAdaptable) {
+			IDocument d = (IDocument) ((IAdaptable)requestor).getAdapter(IDocument.class);
+			if (d instanceof IStructuredDocument) {
+				document = (IStructuredDocument) d;
 			}
-			if (structuredModel instanceof DOMModelForPHP) {
-				DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
-				calcCompletionOption(domModelForPHP, position, module);
+		}
+		if (document == null) {
+			IStructuredModel structuredModel = null;
+			try {
+				IFile file = (IFile) module.getModelElement().getResource();
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+				if (structuredModel != null) {
+					document = structuredModel.getStructuredDocument();
+				}
+			} finally {
+				if (structuredModel != null) {
+					structuredModel.releaseFromRead();
+				}
 			}
-		} catch (Exception e) {
-			Logger.logException(e);
-		} finally {
-			if (structuredModel != null && !isUnmanaged) {
-				structuredModel.releaseFromRead();
+		}
+		
+		if (document != null) {
+			try {
+				calcCompletionOption(document, position, module);
+			} catch (BadLocationException e) {
+				Logger.logException(e);
+	
 			}
 		}
 	}
 
-	protected void calcCompletionOption(DOMModelForPHP domModelForPHP, int offset, ISourceModule sourceModule) throws BadLocationException {
+	protected void calcCompletionOption(IStructuredDocument document, int offset, ISourceModule sourceModule) throws BadLocationException {
 
 		this.sourceModule = sourceModule;
 
@@ -192,17 +205,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		isPHP5 = phpVersion.equals(PHPVersion.PHP5);
 
 		// Find the structured document region:
-		IStructuredDocument document = (IStructuredDocument) domModelForPHP.getDocument().getStructuredDocument();
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
 		int lastOffset = offset;
 		while (sdRegion == null && lastOffset >= 0) {
 			lastOffset--;
 			sdRegion = document.getRegionAtCharacterOffset(lastOffset);
 		}
+		
+		if (sdRegion == null) {
+			return;
+		}
 
 		ITextRegion textRegion = null;
 		// 	in case we are at the end of the document, asking for completion
-		if (offset == domModelForPHP.getStructuredDocument().getLength()) {
+		if (offset == document.getLength()) {
 			textRegion = sdRegion.getLastRegion();
 		} else {
 			textRegion = sdRegion.getRegionAtCharacterOffset(offset);

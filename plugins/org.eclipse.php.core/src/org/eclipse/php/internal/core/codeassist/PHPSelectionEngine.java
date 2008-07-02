@@ -42,7 +42,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.StaticConstantAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.StaticDispatch;
 import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -53,6 +52,7 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -84,7 +84,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	public IModelElement[] select(ISourceModule sourceUnit, int offset, int end) {
-		
+
 		if (end < offset) {
 			end = offset + 1;
 		}
@@ -96,6 +96,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		// Use the old way by playing with document & buffer:
+		IStructuredDocument document = null;
 		IStructuredModel structuredModel = null;
 		boolean isUnmanaged = false;
 		try {
@@ -105,9 +106,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 				isUnmanaged = true;
 			}
-			if (structuredModel instanceof DOMModelForPHP) {
-				DOMModelForPHP domModelForPHP = (DOMModelForPHP) structuredModel;
-				return internalResolve(domModelForPHP, sourceUnit, offset, end);
+			if (structuredModel instanceof AbstractStructuredModel) {
+				document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -115,6 +115,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (structuredModel != null && !isUnmanaged) {
 				structuredModel.releaseFromRead();
 			}
+		}
+
+		if (document != null) {
+			return internalResolve(document, sourceUnit, offset, end);
 		}
 
 		return EMPTY;
@@ -136,7 +140,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 		ASTNode node = ASTUtils.findMinimalNode(parsedUnit, offset, end);
 		if (node != null) {
-			
+
 			IContext context = ASTUtils.findContext(sourceModule, parsedUnit, node);
 			if (context != null) {
 
@@ -169,11 +173,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					StaticDispatch dispatch = (StaticDispatch) node;
 					String fieldName = null;
 					if (dispatch instanceof StaticConstantAccess) {
-						fieldName = ((StaticConstantAccess)dispatch).getConstant().getName();
+						fieldName = ((StaticConstantAccess) dispatch).getConstant().getName();
 					} else if (dispatch instanceof StaticFieldAccess) {
-						ASTNode field = ((StaticFieldAccess)dispatch).getField();
+						ASTNode field = ((StaticFieldAccess) dispatch).getField();
 						if (field instanceof VariableReference) {
-							fieldName = ((VariableReference)field).getName();
+							fieldName = ((VariableReference) field).getName();
 						}
 					}
 					if (fieldName != null && dispatch.getDispatcher() != null) {
@@ -201,7 +205,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					ASTNode field = fieldAccess.getField();
 					String fieldName = null;
 					if (field instanceof SimpleReference) {
-						fieldName = ((SimpleReference)field).getName();
+						fieldName = ((SimpleReference) field).getName();
 					}
 					if (fieldName != null && fieldAccess.getDispatcher() != null) {
 						IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, fieldAccess.getDispatcher());
@@ -232,13 +236,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return null;
 	}
 
-	private IModelElement[] internalResolve(DOMModelForPHP domModel, ISourceModule sourceUnit, int offset, int end) {
-		
-		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit.getModelElement();
-		
-		try {
-			IStructuredDocument sDoc = (IStructuredDocument) domModel.getDocument().getStructuredDocument();
+	private IModelElement[] internalResolve(IStructuredDocument sDoc, ISourceModule sourceUnit, int offset, int end) {
 
+		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit.getModelElement();
+
+		try {
 			IStructuredDocumentRegion sRegion = sDoc.getRegionAtCharacterOffset(offset);
 			if (sRegion != null) {
 				ITextRegion tRegion = sRegion.getRegionAtCharacterOffset(offset);
