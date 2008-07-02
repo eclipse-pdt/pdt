@@ -23,6 +23,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -39,12 +40,18 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-public class AddDescriptionAction extends Action implements IObjectActionDelegate  {
+public class AddDescriptionAction extends Action implements IObjectActionDelegate {
 
+	private static final String PHP_COMMENT_BLOCK_END = " */";
+	private static final String PHP_COMMENT_BLOCK_MID = " *";
+	private static final String PHP_COMMENT_BLOCK_START = "/**";
+	private final String PHP_BLOCK_OPEN_TAG = "<?php";
+	private final String PHP_BLOCK_CLOSE_TAG = "?>";
 	private IModelElement[] fModelElement;
 	private int startPosition = 0;
 	String docBlock;
-	
+	String lineDelim;
+
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
@@ -77,18 +84,19 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
 			IEditorInput editorInput = editorPart.getEditorInput();
 			IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
-			
+			this.lineDelim = TextUtilities.getDefaultLineDelimiter(document);
+
 			String docBlockText = handleElement(modelElem, document);
 			if (docBlockText == null) {
 				assert false;
 				return;
 			}
-			
+
 			EditorUtility.revealInEditor(textEditor, startPosition, docBlock.length());
 		}
 	}
 
-	public String handleElement (IModelElement modelElem, IDocument document){
+	public String handleElement(IModelElement modelElem, IDocument document) {
 		if (modelElem instanceof ISourceModule) {
 			handleFileDocBlock((ISourceModule) modelElem, (IStructuredDocument) document);
 			return null;
@@ -113,7 +121,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		docBlock = createDocBlock(document, indentString);
 
 		String docBlockText = insertDocBlock((IStructuredDocument) document, startPosition, docBlock);
-		
+
 		return docBlockText;
 	}
 
@@ -130,6 +138,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 
 	/**
 	 * Calculates and returns the desired docBlock (with the relevant indentation)
+	 *  (for code reference : org.eclipse.jdt.internal.corext.codemanipulation.AddJavaDocStubOperation)
 	 *  
 	 * @param document - The IStructuredDocument that we are working on
 	 * @param indentString - indentation prefix to be used
@@ -137,12 +146,16 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	 * @return String to be used as leading indentation
 	 */
 	public String createDocBlock(IDocument document, String indentString) {
-		String lineDelimiter = document.getLegalLineDelimiters()[0];
+
 		if (indentString == null) {
-			return "/**" + lineDelimiter + " *" + lineDelimiter + " */" + lineDelimiter;
+			indentString = "";
 		}
-		//else...
-		return "/**" + lineDelimiter + indentString + " *" + lineDelimiter + indentString + " */" + lineDelimiter + indentString;
+
+		StringBuffer buf = new StringBuffer();
+		buf.append(PHP_COMMENT_BLOCK_START).append(lineDelim).append(indentString); //$NON-NLS-1$
+		buf.append(PHP_COMMENT_BLOCK_MID).append(lineDelim).append(indentString); //$NON-NLS-1$
+		buf.append(PHP_COMMENT_BLOCK_END).append(lineDelim).append(indentString); //$NON-NLS-1$
+		return buf.toString();
 	}
 
 	/**
@@ -154,9 +167,14 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	 * @return String to be used as leading indentation
 	 */
 	public String createPHPScopeDocBlock(IStructuredDocument document) {
-		String lineDelimiter = document.getLegalLineDelimiters()[0];
-		String phpScopeDocBlock = "<?php" + lineDelimiter + createDocBlock(document) + "?>" + lineDelimiter;
-		return phpScopeDocBlock;
+
+		StringBuffer buf = new StringBuffer();
+		buf.append(PHP_BLOCK_OPEN_TAG).append(lineDelim); //$NON-NLS-1$
+		buf.append(PHP_COMMENT_BLOCK_START).append(lineDelim); //$NON-NLS-1$
+		buf.append(PHP_COMMENT_BLOCK_MID).append(lineDelim); //$NON-NLS-1$
+		buf.append(PHP_COMMENT_BLOCK_END).append(lineDelim); //$NON-NLS-1$
+		buf.append(PHP_BLOCK_CLOSE_TAG).append(lineDelim); //$NON-NLS-1$
+		return buf.toString();
 	}
 
 	/**
@@ -206,7 +224,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		setModelElement(new IModelElement[structuredSelection.size()]);
 		Iterator i = structuredSelection.iterator();
 		int idx = 0;
-		final IModelElement[] modelElement = getModelElement();		
+		final IModelElement[] modelElement = getModelElement();
 		while (i.hasNext()) {
 			modelElement[idx++] = (IModelElement) i.next();
 		}
@@ -258,9 +276,10 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					// File's content starts with HTML code
 					offset = 0;
 				} else if (phpScriptRegion != null) {
-					// File's content starts with '<?PHP' tag
+					// File's content starts with '<?php' tag
 					textRegion = phpScriptRegion.getPhpToken(0);
-					offset = textRegion.getStart() + sdRegion.getStartOffset() + phpScriptRegion.getStart() + 1;
+					int lineDelimiterLength = document.getLineDelimiter(document.getLineOfOffset(textRegion.getStart())).length();
+					offset = textRegion.getStart() + sdRegion.getStartOffset() + phpScriptRegion.getStart() + lineDelimiterLength;
 				} else {
 					assert false;//we shouldn't get here ...
 				}
@@ -328,7 +347,5 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	public IModelElement[] getModelElement() {
 		return fModelElement;
 	}
-	
-	
 
 }
