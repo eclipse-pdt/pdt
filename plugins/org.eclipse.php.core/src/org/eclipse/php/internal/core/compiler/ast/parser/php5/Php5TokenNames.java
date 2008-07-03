@@ -128,6 +128,7 @@ public abstract class Php5TokenNames {
 		token2Name.put(Php5ParserConstants.T_DOLLAR_OPEN_CURLY_BRACES, "${"); //$NON-NLS-1$
 		token2Name.put(Php5ParserConstants.T_STRING, "identifier"); //$NON-NLS-1$
 		token2Name.put(Php5ParserConstants.T_VARIABLE, "variable"); //$NON-NLS-1$
+		token2Name.put(Php5ParserConstants.EOF, "EOF"); //$NON-NLS-1$
 	}
 	
 	/**

@@ -157,20 +157,29 @@ abstract public class AbstractASTParser extends lr_parser {
 		int endPosition = cur_token.right;
 		int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
 
-		StringBuilder errorMessage = new StringBuilder("syntax error, ");
-		if (currentText != null && currentText.length() > 0) {
-			endPosition = startPosition + currentText.length();
-			errorMessage.append("unexpected '").append(currentText).append("', ");
+		StringBuilder errorMessage = new StringBuilder("syntax error");
+		
+		if (currentText == null || currentText.length() == 0) {
+			currentText = getTokenName(cur_token.sym);
 		}
-		errorMessage.append("expecting ");
-
-		for (int probe = 0; probe < rowOfProbe.length; probe += 2) {
-			String tokenName = getTokenName(rowOfProbe[probe]);
-			if (tokenName != null) {
-				if (probe > 0) {
-					errorMessage.append(" or ");
+		if (currentText != null && currentText.length() > 0) {
+			if (currentText.equals(";")) { // This means EOF, since it's substituted by the lexer explicitly.
+				currentText = "EOF"; //$NON-NLS-1$
+			}
+			endPosition = startPosition + currentText.length();
+			errorMessage.append(", unexpected '").append(currentText).append('\'');
+		}
+		
+		if (rowOfProbe.length <= 6) {
+			errorMessage.append(", expecting ");
+			for (int probe = 0; probe < rowOfProbe.length; probe += 2) {
+				String tokenName = getTokenName(rowOfProbe[probe]);
+				if (tokenName != null) {
+					if (probe > 0) {
+						errorMessage.append(" or ");
+					}
+					errorMessage.append('\'').append(tokenName).append('\'');
 				}
-				errorMessage.append('\'').append(tokenName).append('\'');
 			}
 		}
 
