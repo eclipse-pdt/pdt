@@ -10,9 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.mixin;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.compiler.problem.IProblemFactory;
+import org.eclipse.dltk.compiler.problem.IProblemReporter;
+import org.eclipse.dltk.core.DLTKLanguageManager;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.core.mixin.IMixinParser;
@@ -20,6 +25,7 @@ import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.php.core.PHPMixinBuildVisitorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.project.PHPNature;
 
 public class PHPMixinParser implements IMixinParser {
 
@@ -36,7 +42,17 @@ public class PHPMixinParser implements IMixinParser {
 
 	public void parserSourceModule(boolean signature, ISourceModule module) {
 
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module, null);
+		IProblemReporter problemReporter = null;
+		try {
+			IResource resource = module.getCorrespondingResource();
+			if (resource != null) {
+				IProblemFactory problemFactory = DLTKLanguageManager.getProblemFactory(PHPNature.ID);
+				problemReporter = problemFactory.createReporter(resource);
+			}
+		} catch (CoreException e) {
+		}
+		
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module, problemReporter);
 		PHPMixinBuildVisitor visitor = new PHPMixinBuildVisitor(moduleDeclaration, module, signature, requestor);
 		try {
 			moduleDeclaration.traverse(visitor);
