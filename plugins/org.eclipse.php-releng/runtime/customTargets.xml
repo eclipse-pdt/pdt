@@ -60,7 +60,7 @@
 	<!-- ===================================================================== -->
 	<target name="postSetup">
 		<ant antfile="${builder}/../dependency.xml">
-			<property name="dependency.properties" value="${buildDirectory}/maps/org.eclipse.php-releng/maps/dependencies.properties" />
+			<property name="dependency.properties" value="${buildDirectory}/maps/org.eclipse.pdt/plugins/org.eclipse.php-releng/maps/dependencies.properties" />
 			<property name="base.install.dir" value="${buildDirectory}/../" />
 			<property name="dependencyTargets" value="${builder}/../dependency/build.xml" />
 			<property name="local.cache.dir" value="${buildDirectory}/../" />
@@ -151,8 +151,8 @@
 	<!-- ===================================================================== -->
 	<target name="test">
 
-		<antcall target="runTest" />
 		<!--
+		<antcall target="runTest" />
 
 
                 <mkdir dir="/eclipse-testing" />

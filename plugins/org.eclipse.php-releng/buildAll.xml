@@ -128,7 +128,7 @@
 		</ant>
 
 		<!--  Get the build map over for the results to point to. -->
-		<copy file="${buildDirectory}/maps/org.eclipse.php-releng/maps/php-feature.map" tofile="${result}/directory.txt" />
+		<copy file="${buildDirectory}/maps/org.eclipse.pdt/plugins/org.eclipse.php-releng/maps/php-feature.map" tofile="${result}/directory.txt" />
 
 		<replace file="${result}/${indexFileName}">
 			<!--  Insert url for supported eclipse drop-->
