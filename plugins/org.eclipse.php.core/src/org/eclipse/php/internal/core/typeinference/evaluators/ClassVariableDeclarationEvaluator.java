@@ -198,7 +198,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		public boolean visit(Statement e) throws Exception {
 			if (e instanceof PHPFieldDeclaration) {
-				if (e.sourceStart() == offset && e.sourceEnd() - e.sourceStart() == length) {
+				PHPFieldDeclaration phpFieldDecl = (PHPFieldDeclaration)e;
+				if (phpFieldDecl.getDeclarationStart() == offset && phpFieldDecl.sourceEnd() - phpFieldDecl.getDeclarationStart() == length) {
 					result = ((PHPFieldDeclaration) e).getVariableValue();
 					context = contextStack.peek();
 				}

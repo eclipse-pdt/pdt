@@ -10,7 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.Stack;
+import java.util.TreeSet;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -22,16 +30,31 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.evaluation.types.UnknownType;
-import org.eclipse.dltk.ti.*;
+import org.eclipse.dltk.internal.core.SourceField;
+import org.eclipse.dltk.ti.BasicContext;
+import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.CatchClause;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ConditionalExpression;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ForStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IfStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.SwitchCase;
+import org.eclipse.php.internal.core.compiler.ast.nodes.WhileStatement;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.FakeField;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -73,14 +96,14 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		};
 
 		for (IModelElement element : elements) {
-			if (element instanceof FakeField) {
-				FakeField fakeField = (FakeField) element;
-				ISourceModule sourceModule = fakeField.getSourceModule();
+			if (element instanceof SourceField) {
+				SourceField sourceField = (SourceField) element;
+				ISourceModule sourceModule = sourceField.getSourceModule();
 				if (!offsets.containsKey(sourceModule)) {
 					offsets.put(sourceModule, new TreeSet<ISourceRange>(sourceRangeComparator));
 				}
 				try {
-					offsets.get(sourceModule).add(fakeField.getSourceRange());
+					offsets.get(sourceModule).add(sourceField.getSourceRange());
 				} catch (ModelException e) {
 					Logger.logException(e);
 				}

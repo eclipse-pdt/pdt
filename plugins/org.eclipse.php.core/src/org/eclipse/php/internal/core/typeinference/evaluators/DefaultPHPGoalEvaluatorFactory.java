@@ -135,6 +135,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (expressionClass == FormalParameter.class) {
 			return new FormalParameterEvaluator(exprGoal);
 		}
+		if (expressionClass == CatchClause.class) {
+			return new CatchClauseEvaluator(exprGoal);
+		}
 
 		return null;
 	}

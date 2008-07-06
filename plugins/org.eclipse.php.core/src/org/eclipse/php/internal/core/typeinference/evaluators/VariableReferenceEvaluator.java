@@ -199,6 +199,14 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					return visitGeneral(s);
 				}
 			}
+			else if (s instanceof CatchClause) {
+				CatchClause catchClause = (CatchClause) s;
+				if (catchClause.getVariable().getName().equals(variableName)) {
+					declarations.clear();
+					declarations.addLast(catchClause);
+					return visitGeneral(s);
+				}
+			}
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
 				increaseConditionalLevel();
