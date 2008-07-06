@@ -11,9 +11,9 @@
 package org.eclipse.php.internal.core.typeinference.goals.phpdoc;
 
 import org.eclipse.dltk.ti.InstanceContext;
-import org.eclipse.dltk.ti.goals.AbstractGoal;
+import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 
-public class PHPDocClassVariableGoal extends AbstractGoal {
+public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 
 	private String variableName;
 

@@ -23,8 +23,18 @@ import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.search.IDLTKSearchConstants;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.core.search.SearchMatch;
+import org.eclipse.dltk.core.search.SearchParticipant;
+import org.eclipse.dltk.core.search.SearchPattern;
+import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.BasicContext;
@@ -76,10 +86,10 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		SearchParticipant[] participants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
-		for (IType type : types) {
+		for (final IType type : types) {
 			final ISourceModule sourceModule = type.getSourceModule();
 			final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-
+			
 			SearchRequestor requestor = new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					Object element = match.getElement();
@@ -156,7 +166,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		final String[] split = docTag.getValue().trim().split("\\s+");
 		if (split.length < 2) {
 			return null;
-		}	
+		}
 		return split[1].equals(variableName) ? split[0] : null;
 	}
 
@@ -198,7 +208,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		public boolean visit(Statement e) throws Exception {
 			if (e instanceof PHPFieldDeclaration) {
-				PHPFieldDeclaration phpFieldDecl = (PHPFieldDeclaration)e;
+				PHPFieldDeclaration phpFieldDecl = (PHPFieldDeclaration) e;
 				if (phpFieldDecl.getDeclarationStart() == offset && phpFieldDecl.sourceEnd() - phpFieldDecl.getDeclarationStart() == length) {
 					result = ((PHPFieldDeclaration) e).getVariableValue();
 					context = contextStack.peek();

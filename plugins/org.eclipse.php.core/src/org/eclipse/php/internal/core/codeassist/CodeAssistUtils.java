@@ -57,6 +57,7 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
+import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -226,22 +227,37 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line, boolean determineObjectFromOtherFile) {
 		for (IType type : types) {
+			
+			PHPClassType classType = new PHPClassType(type.getElementName());
+
 			IField[] fields = getClassFields(type, propertyName, true, false);
 
 			Set<String> processedFields = new HashSet<String>();
 			for (IField field : fields) {
-				if (processedFields.contains(field.getElementName())) {
+				
+				String variableName = field.getElementName();
+				if (processedFields.contains(variableName)) {
 					continue;
 				}
-				processedFields.add(field.getElementName());
-
+				processedFields.add(variableName);
+				
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
 				BasicContext sourceModuleContext = new BasicContext(field.getSourceModule(), moduleDeclaration);
-				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, field.getElementName());
+				InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-				IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
-
+				
+				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(instanceContext, variableName);
+				IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
+				
 				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+				if (modelElements != null) {
+					return modelElementsToTypes(modelElements);
+				}
+
+				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, variableName);
+				evaluatedType = typeInferencer.evaluateType(goal);
+
+				modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
 				if (modelElements != null) {
 					return modelElementsToTypes(modelElements);
 				}
