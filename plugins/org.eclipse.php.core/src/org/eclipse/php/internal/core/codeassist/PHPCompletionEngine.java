@@ -535,6 +535,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		if (arrayName.equals("$GLOBALS")) { //$NON-NLS-1$
+			if (prefix.length() == 0) {
+				prefix = DOLLAR;
+			}
 			IModelElement[] elements = CodeAssistUtils.getWorkspaceFields(prefix, false);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
