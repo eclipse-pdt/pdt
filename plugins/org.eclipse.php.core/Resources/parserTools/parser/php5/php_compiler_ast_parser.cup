@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.17 2008/06/19 07:28:05 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.18 2008/07/06 12:08:10 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -778,7 +778,7 @@ extends_from:superClass errorOrNot implements_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
 {:
 	if(blockEnd != null) {
-		parser.reportError(new ASTError(statementListright - 1, statementListright));
+		parser.reportError(new ASTError(statementListright - 1, statementListright), "syntax error, unfinished class declaration");
 		parser.pendingStatement = blockEnd;
 	}
 
@@ -799,7 +799,7 @@ interface_extends_list:interfaces
 T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEnd
 {:
 	if(blockEnd != null) {
-		parser.reportError(new ASTError(statementListright - 1, statementListright));
+		parser.reportError(new ASTError(statementListright - 1, statementListright), "syntax error, unfinished class declaration");
 		parser.pendingStatement = blockEnd;
 	}
 
@@ -1184,7 +1184,7 @@ parameter:parameter
 :}
 | non_empty_parameter_list:list T_COMMA:comma /* error recovery */
 {:
-	parser.reportError(new ASTError(commaleft, commaright));
+	parser.reportError(new ASTError(commaleft, commaright), "syntax error, unexpected ','");
 	RESULT = list;
 :}
 ;
@@ -1437,7 +1437,7 @@ method_body:body
 {:
 	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.pop();
 	if(body instanceof ASTError) {
-		parser.reportError(new ASTError(methodDeclaration.sourceEnd() - 1, methodDeclaration.sourceEnd()));
+		parser.reportError(new ASTError(methodDeclaration.sourceEnd() - 1, methodDeclaration.sourceEnd()), "syntax error, unfinished method declaration");
 	}
 	TypeDeclaration type = (TypeDeclaration)parser.declarations.peek();
 	methodDeclaration.setDeclaringTypeName(type.getName());

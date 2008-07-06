@@ -65,6 +65,15 @@ abstract public class AbstractASTParser extends lr_parser {
 	protected List<ASTError> getErrors() {
 		return program.getErrors();
 	}
+	
+	protected void reportError(IProblemReporter problemReporter, String fileName, int start, int end, int lineNumber, String message) {
+		DefaultProblem problem = new DefaultProblem(fileName, message, IProblem.Syntax, new String[0], ProblemSeverities.Error, start, end, lineNumber);
+		try {
+			problemReporter.reportProblem(problem);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+	}
 
 	/**
 	 * Report on errors that will be added to the AST as statements
@@ -72,14 +81,23 @@ abstract public class AbstractASTParser extends lr_parser {
 	public void reportError() {
 		program.setHasErros(true);
 	}
+	
+	public void reportError(ASTError error) {
+		reportError(error, null);
+	}
 
 	/**
 	 * Reporting an error that cannot be added as a statement and has to be in a separated list.
 	 * @param error
 	 */
-	public void reportError(ASTError error) {
+	public void reportError(ASTError error, String message) {
 		getErrors().add(error);
 		reportError();
+		
+		if (message != null && problemReporter != null && fileName != null) {
+			int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
+			reportError(problemReporter, fileName, error.sourceStart(), error.sourceEnd(), lineNumber, message);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -143,8 +161,6 @@ abstract public class AbstractASTParser extends lr_parser {
 	public void syntax_error(Symbol cur_token) {
 		super.syntax_error(cur_token);
 		
-		String fileName = getFileName();
-		IProblemReporter problemReporter = getProblemReporter();
 		if (fileName == null || problemReporter == null) {
 			return;
 		}
@@ -172,23 +188,20 @@ abstract public class AbstractASTParser extends lr_parser {
 		
 		if (rowOfProbe.length <= 6) {
 			errorMessage.append(", expecting ");
+			boolean first = true;
 			for (int probe = 0; probe < rowOfProbe.length; probe += 2) {
 				String tokenName = getTokenName(rowOfProbe[probe]);
 				if (tokenName != null) {
-					if (probe > 0) {
+					if (!first) {
 						errorMessage.append(" or ");
 					}
 					errorMessage.append('\'').append(tokenName).append('\'');
+					first = false;
 				}
 			}
 		}
-
-		DefaultProblem problem = new DefaultProblem(fileName, errorMessage.toString(), IProblem.Syntax, new String[0], ProblemSeverities.Error, startPosition, endPosition, lineNumber);
-		try {
-			problemReporter.reportProblem(problem);
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
+		
+		reportError(problemReporter, fileName, startPosition, endPosition, lineNumber, errorMessage.toString());
 	}
 
 	protected abstract String getTokenName(int token);
