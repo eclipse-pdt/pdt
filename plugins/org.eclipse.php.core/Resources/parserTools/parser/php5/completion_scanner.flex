@@ -13,6 +13,8 @@ package org.eclipse.php.internal.core.phpModel.parser.php5;
 
 import java_cup.runtime.Symbol;
 import java_cup.sym;
+
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 import org.eclipse.php.internal.core.phpModel.parser.CompletionLexer;
 import org.eclipse.php.internal.core.phpModel.parser.ParserClient;
@@ -343,28 +345,32 @@ import java.util.regex.Pattern;
     }
 
     public String createString(int startOffset, int endOffset) {
-        int startPosition = startOffset + yy_pushbackPos;
-        int length =  endOffset - startOffset;
-        if(startPosition < 0){
-            startPosition = startOffset + yy_old_pushbackPos;
-            if(startPosition + length < yy_old_buffer.length){
-            	if(startPosition < 0 || startPosition + length > yy_old_buffer.length){
-                	return "";
-                }
-                return new String(yy_old_buffer, startPosition, length);
-            }
-            // meaning the string was splited between the two buffers
-            int remainder = startPosition + length  + duplicated_string_length - yy_old_buffer.length;
-            length -= remainder;
-            if(startPosition < 0 || startPosition + length > yy_old_buffer.length || remainder > yy_buffer.length){
-            	return "";
-            }
-            return (new String(yy_old_buffer, startPosition, length) + new String(yy_buffer, 0, remainder));
+    	try{
+	        int startPosition = startOffset + yy_pushbackPos;
+	        int length =  endOffset - startOffset;
+	        if(startPosition < 0){
+	            startPosition = startOffset + yy_old_pushbackPos;
+	            if(startPosition + length < yy_old_buffer.length){
+	            	if(startPosition < 0 || startPosition + length > yy_old_buffer.length){
+	                	return "";
+	                }
+	                return new String(yy_old_buffer, startPosition, length);
+	            }
+	            // meaning the string was splited between the two buffers
+	            int remainder = startPosition + length  + duplicated_string_length - yy_old_buffer.length;
+	            length -= remainder;
+	            if(startPosition < 0 || startPosition + length > yy_old_buffer.length || remainder > yy_buffer.length){
+	            	return "";
+	            }
+	            return (new String(yy_old_buffer, startPosition, length) + new String(yy_buffer, 0, remainder));
+	        }
+	    	if(startPosition < 0 || startPosition + length > yy_buffer.length){
+	        	return "";
+	        }
+	        return new String(yy_buffer, startPosition, length);
+        } catch (Exception e) { //short term solution for bug 239705
+        	Logger.logException(e);
         }
-    	if(startPosition < 0 || startPosition + length > yy_buffer.length){
-        	return "";
-        }
-        return new String(yy_buffer, startPosition, length);
     }
 
 %}
