@@ -655,7 +655,7 @@ public class CodeAssistUtils {
 
 	/**
 	 * This method searches for all classes in the workspace scope that match the given prefix
-	 * @param prefix Class name
+	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
 	public static IModelElement[] getWorkspaceClasses(String prefix, boolean exactName) {
@@ -664,7 +664,7 @@ public class CodeAssistUtils {
 
 	/**
 	 * This method searches for all methods in the workspace scope that match the given prefix
-	 * @param prefix Class name
+	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
 	public static IModelElement[] getWorkspaceMethods(String prefix, boolean exactName) {
@@ -673,11 +673,40 @@ public class CodeAssistUtils {
 
 	/**
 	 * This method searches for all fields in the workspace scope that match the given prefix
-	 * @param prefix Class name
+	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
 	public static IModelElement[] getWorkspaceFields(String prefix, boolean exactName) {
 		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.FIELD);
+	}
+	
+	/**
+	 * This method searches for all fields that where declared in the specified method
+	 * @param method Method to look at
+	 * @param prefix Field name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 */
+	public static IModelElement[] getMethodFields(IMethod method, String prefix, boolean exactName) {
+		SearchEngine searchEngine = new SearchEngine();
+		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { method }, toolkit);
+
+		int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+
+		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
+
+		final List<IModelElement> elements = new LinkedList<IModelElement>();
+		try {
+			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					IModelElement element = (IModelElement) match.getElement();
+					elements.add(element);
+				}
+			}, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
 	private static IModelElement[] getWorkspaceElements(String prefix, boolean exactName, int elementType) {
