@@ -14,10 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-import org.eclipse.core.resources.ICommand;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
@@ -32,6 +29,9 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class PHPCorePlugin extends Plugin {
+
+	// listener used for converting 1.0.x projects into 2.0.x projects
+	private ProjectConversionListener fProjectConvertListener = new ProjectConversionListener();
 
 	public static final String ID = "org.eclipse.php.core"; //$NON-NLS-1$
 
@@ -53,11 +53,55 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		// register the listener in charge of converting the projects - applies for projects being opened during work
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(fProjectConvertListener, IResourceChangeEvent.PRE_BUILD);
+		// run the conversion over all the projects in the workspace - all open projects will be converted
 		convertProjects();
 	}
 
+	/*
+	 * Listener on changed projects, used for converting them into PDT 2.0.x projects if needed
+	 */
+	private class ProjectConversionListener implements IResourceChangeListener {
+
+		/*
+		 * Gathers all the projects that changed in the workspace and sends them to the conversion method
+		 * 
+		 * (non-Javadoc)
+		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+		 */
+		public void resourceChanged(IResourceChangeEvent event) {
+			IResourceDelta delta = event.getDelta();
+			IResourceDelta[] affectedChildren = delta.getAffectedChildren();
+			IProject[] projects = new IProject[affectedChildren.length];
+			for (int i = 0; i < affectedChildren.length; i++) {
+				projects[i]=affectedChildren[i].getResource().getProject();
+			}
+			
+			try {
+				processProjects(projects);
+			} catch (ModelException e) {
+				Logger.logException(e);
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+
+	}
+
+	/*
+	 * Gathers all the projects in the workspace and sends them to the conversion method
+	 */
 	private void convertProjects() throws CoreException, ModelException {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		processProjects(projects);
+	}
+
+	
+	/*
+	 * Goes over the given projects and converts them
+	 */
+	private void processProjects(final IProject[] projects) throws CoreException, ModelException {
 		ProjectsIterate: for (IProject project : projects) {
 			// skip unaccessible projects
 			if (!project.isAccessible()) {
@@ -85,9 +129,12 @@ public class PHPCorePlugin extends Plugin {
 		}
 	}
 
+	/*
+	 * Do the actual modifications on the project
+	 */
 	private void modifyProject(IProject project) throws CoreException, ModelException {
 		final PHPNature phpNature = new PHPNature();
-		
+
 		// add the required builders and build paths as defined in the new PHP nature
 		phpNature.setProject(project);
 		phpNature.configure();
@@ -112,6 +159,7 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(fProjectConvertListener);
 		plugin = null;
 	}
 
