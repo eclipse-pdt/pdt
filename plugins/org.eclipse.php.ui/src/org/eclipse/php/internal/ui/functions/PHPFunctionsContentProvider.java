@@ -14,16 +14,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
+import org.eclipse.php.internal.ui.Logger;
 
 public class PHPFunctionsContentProvider extends StandardModelElementContentProvider {
 
-	public static final String CONSTANTS_NODE_NAME = "constants"; //$NON-NLS-1$
-	protected static final Object[] NO_CHILDREN = new Object[0];
-
 	public PHPFunctionsContentProvider() {
-		super();
+		super(true);
 	}
 
 	/* (non-Javadoc)
@@ -32,17 +34,25 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 	@Override
 	public Object[] getChildren(Object element) {
 		List<Object> children = new ArrayList<Object>();
-		
-		if (element instanceof IBuildpathEntry[]) {
-			IBuildpathEntry[] entries = (IBuildpathEntry[]) element;
-			for (IBuildpathEntry buildpathEntry : entries) {
-				final Object[] child = super.getChildren(buildpathEntry);
-				children.addAll(Arrays.asList(child));
+		// handle the project fragment used for containing the language model
+		if (element instanceof IProjectFragment) {
+			try {
+				IModelElement[] projectFragmentContent = (IModelElement[]) getProjectFragmentContent((IProjectFragment) element);
+				for (IModelElement modelElement : projectFragmentContent) {
+					if (modelElement instanceof ExternalSourceModule) {
+						children.addAll(Arrays.asList(((ExternalSourceModule) modelElement).getChildren()));
+					}
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
 			}
+			// handle all method references
+		} else if (element instanceof ISourceReference) {
+			ISourceReference source = ((ISourceReference) element);
+			return super.getChildren(source);
 		}
-		
-		return children.toArray(new Object[children.size()]);
+
+		Object[] array = children.toArray(new Object[children.size()]);
+		return array;
 	}
-	
-	
 }

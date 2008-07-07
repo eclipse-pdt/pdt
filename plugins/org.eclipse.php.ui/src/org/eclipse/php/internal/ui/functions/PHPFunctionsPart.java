@@ -14,20 +14,24 @@ import java.text.MessageFormat;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.ui.ModelElementLabelProvider;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.ui.ModelElementSorter;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.jface.action.*;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.util.EditorUtility;
 import org.eclipse.php.internal.ui.util.PHPManualFactory;
 import org.eclipse.swt.SWT;
@@ -43,17 +47,17 @@ import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartListener {
+public class PHPFunctionsPart extends ViewPart implements IPartListener {
+	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
 	private TreeViewer fViewer;
 	private PHPFunctionsContentProvider fContentProvider;
-	private ModelElementLabelProvider  fLabelProvider;
+	private ScriptUILabelProvider fLabelProvider;
 
 	private Menu fContextMenu;
 	private String fWorkingSetName;
 
 	private ShowFunctionHelpAction showFunctionHelpAction;
-	private FunctionsViewGroup actionGroup;
 
 	private boolean shouldRefresh = true;
 
@@ -63,10 +67,11 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	public void createPartControl(Composite parent) {
 		fViewer = createViewer(parent);
 		fViewer.setUseHashlookup(true);
+		// sort entries alphabetically
+		fViewer.setSorter(new ModelElementSorter());
 		setProviders();
 
 		setUpPopupMenu();
-		actionGroup = new FunctionsViewGroup(this);
 
 		addDoubleClickListener();
 		addMouseTrackListener();
@@ -103,15 +108,13 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(this);
 		fContextMenu = menuMgr.createContextMenu(fViewer.getTree());
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager mgr) {
 				ISelection selection = fViewer.getSelection();
 				if (!selection.isEmpty()) {
 					IStructuredSelection s = (IStructuredSelection) selection;
-					// XXX: uncomment this when functions view will be moved to DLTK format
-					String url = null; //PHPManualFactory.getManual().getURLForManual((PHPCodeData)s.getFirstElement());
+					String url = PHPManualFactory.getManual().getURLForManual((IModelElement) s.getFirstElement());
 					if (url != null) {
 						showFunctionHelpAction.setURL(url);
 						mgr.add(showFunctionHelpAction);
@@ -129,7 +132,20 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
 				try {
-					actionGroup.handleUpdateInput(editorPart);
+					final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+					if (phpEditor != null) {
+						IScriptProject project = phpEditor.getProject();
+						Object currentInput = fViewer.getInput();
+						if (project != null) {
+							IPath languagePath = new Path(LanguageModelInitializer.CONTAINER_PATH);
+							final IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(languagePath, project);
+							IProjectFragment[] projectFragments = project.getProjectFragments();
+							Object newInput = projectFragments[1];
+							if (!newInput.equals(currentInput)) {
+								fViewer.setInput(newInput);
+							}
+						}
+					}
 				} catch (ModelException e) {
 					Logger.logException(e);
 				}
@@ -139,8 +155,8 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 	private TreeViewer createViewer(Composite composite) {
 		PatternFilter patternFilter = new PatternFilter();
-//        patternFilter.setIncludeLeadingWildcard(true);
-        FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
+		//        patternFilter.setIncludeLeadingWildcard(true);
+		FilteredTree filteredTree = new FilteredTree(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, patternFilter);
 		return filteredTree.getViewer();
 	}
 
@@ -163,7 +179,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	private void addDoubleClickListener() {
 		fViewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IEditorPart editor =  EditorUtility.getPHPStructuredEditor(getViewSite().getPage().getActiveEditor());
+				IEditorPart editor = EditorUtility.getPHPStructuredEditor(getViewSite().getPage().getActiveEditor());
 				StructuredSelection selection = (StructuredSelection) fViewer.getSelection();
 				if (editor != null && editor instanceof ITextEditor && selection != null && !selection.isEmpty()) {
 					if (selection.getFirstElement() instanceof IModelElement) {
@@ -191,38 +207,28 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 	}
 
 	private void setProviders() {
-		fContentProvider = createContentProvider();
-		fViewer.setContentProvider(fContentProvider);
-
-		fLabelProvider = createLabelProvider();
-		fViewer.setLabelProvider(fLabelProvider);
-	}
-
-	void projectStateChanged(Object root) {
-		Control ctrl = fViewer.getControl();
-		if (ctrl != null && !ctrl.isDisposed()) {
-			fViewer.refresh(root, true);
-			// trigger a syntetic selection change so that action refresh their
-			// enable state.
-			fViewer.setSelection(fViewer.getSelection());
+		if (fContentProvider == null) {
+			fContentProvider = new PHPFunctionsContentProvider();
+			fViewer.setContentProvider(fContentProvider);
 		}
-	}
 
-	public PHPFunctionsContentProvider createContentProvider() {
-		//		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
-		//		boolean showCUChildren = store.getBoolean(PreferenceConstants.SHOW_CU_CHILDREN);
-		return new PHPFunctionsContentProvider();
-	}
+		if (fLabelProvider == null) {
+			fLabelProvider = new ScriptUILabelProvider();
+			fViewer.setLabelProvider(fLabelProvider);
 
-	private ModelElementLabelProvider createLabelProvider() {
-		final int flags= ModelElementLabelProvider.SHOW_DEFAULT | ModelElementLabelProvider.SHOW_QUALIFIED | ModelElementLabelProvider.SHOW_ROOT;
-		return new ModelElementLabelProvider(flags);
+		}
 	}
 
 	public void dispose() {
 		getSite().getPage().removePartListener(this);
 		if (fContextMenu != null && !fContextMenu.isDisposed()) {
 			fContextMenu.dispose();
+		}
+		if (fContentProvider != null) {
+			fContentProvider.dispose();
+		}
+		if (fLabelProvider != null) {
+			fLabelProvider.dispose();
 		}
 		super.dispose();
 	}
@@ -236,7 +242,7 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 			});
 		}
-		
+
 		part = EditorUtility.getPHPStructuredEditor(part);
 		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
 			updateInputForCurrentEditor((IEditorPart) part);
@@ -262,13 +268,6 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 		if (PHPFunctionsPart.this.getViewer().getTree().getVisible() && part != null) {
 			updateInputForCurrentEditor((IEditorPart) part);
 		}*/
-	}
-
-	public void menuAboutToShow(IMenuManager menu) {
-		PHPUiPlugin.createStandardGroups(menu);
-	}
-
-	void editorActivated(IEditorPart editor) {
 	}
 
 	public TreeViewer getViewer() {
@@ -327,7 +326,8 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 			setContentDescription(""); //$NON-NLS-1$
 			setTitleToolTip(""); //$NON-NLS-1$
 		} else {
-			String inputText = fLabelProvider.getText(input);;
+			String inputText = fLabelProvider.getText(input);
+			;
 			setContentDescription(inputText);
 			setTitleToolTip(getToolTipText(input));
 		}
@@ -335,11 +335,11 @@ public class PHPFunctionsPart extends ViewPart implements IMenuListener, IPartLi
 
 	class ShowFunctionHelpAction extends Action {
 		private String url;
-		
+
 		public ShowFunctionHelpAction() {
 			super(PHPUIMessages.getString("PHPFunctionsPart.0")); //$NON-NLS-1$
 		}
-		
+
 		public void setURL(String url) {
 			this.url = url;
 		}
