@@ -127,7 +127,7 @@
 		<view
 			name="%view.name.2"
 			category="org.eclipse.php.ui.views"
-			class="org.eclipse.php.internal.ui.projectOutline.ProjectOutlinePart"
+			class="org.eclipse.php.internal.ui.projectview.ProjectExplorerPart"
 			id="org.eclipse.php.ui.projectOutline"
 			icon="icons/full/obj16/php_project_outline.gif" />
 	</extension>
@@ -773,6 +773,16 @@
 				menubarPath="navigate/open.ext2"
 				toolbarPath="org.eclipse.search.searchActionSet/Search"
 				tooltip="%OpenTypeAction.tooltip" />
+		   <!--action
+				class="org.eclipse.php.internal.ui.actions.OpenMethodAction"
+				definitionId="org.eclipse.php.ui.navigate.open.method"
+				disabledIcon="icons/full/dtool16/opentype.gif"
+				icon="icons/full/etool16/opentype.gif"
+				id="openMethod"
+				label="%OpenMethodAction.label"
+				menubarPath="navigate/open.ext2"
+				toolbarPath="org.eclipse.search.searchActionSet/Search"
+				tooltip="%OpenMethodAction.tooltip"-->
 			<action
 				allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration"
@@ -951,6 +961,11 @@
 			description="%command.openType.description"
 			categoryId="org.eclipse.ui.category.navigate"
 			id="org.eclipse.php.ui.navigate.open.type" />
+		<!--command
+			name="%command.openMethod.name"
+			description="%command.openMethod.description"
+			categoryId="org.eclipse.ui.category.navigate"
+			id="org.eclipse.php.ui.navigate.open.method" /-->
 		<command
 			name="%command.openFunctionsManual.name"
 			description="%command.openFunctionsManual.description"
@@ -1127,6 +1142,16 @@
 			commandId="org.eclipse.php.ui.navigate.open.type"
 			contextId="org.eclipse.php.ui.phpEditorScope"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+		<!--key	
+			sequence="M1+M2+M"
+			commandId="org.eclipse.php.ui.navigate.open.method"
+			contextId="org.eclipse.php.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /> 
+		<key
+			sequence="M1+M2+M"
+			commandId="org.eclipse.php.ui.navigate.open.method"
+			contextId="org.eclipse.php.ui.phpEditorScope"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /-->
 		<key
             sequence="M1+M2+H"
             commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
