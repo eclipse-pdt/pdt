@@ -62,14 +62,7 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	 * (value <code>"org.eclipse.php.ui.edit.text.uncomment"</code>).
 	 */
 	public static final String UNCOMMENT = "org.eclipse.php.ui.edit.text.uncomment"; //$NON-NLS-1$
-
-	/**
-	 * Action definition ID of the source -> toggle comment action
-	 * (value <code>"org.eclipse.php.ui.edit.text.toggle.comment"</code>).
-	 * @since 3.0
-	 */
-	public static final String TOGGLE_COMMENT = "org.eclipse.php.ui.edit.text.toggle.comment"; //$NON-NLS-1$
-
+	
 	/**
 	 * Action definition ID of the source -> add PHP Doc
 	 * (value <code>"org.eclipse.php.ui.edit.text.add.description"</code>).
@@ -78,18 +71,25 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	public static final String ADD_DESCRIPTION = "org.eclipse.php.ui.edit.text.add.description"; //$NON-NLS-1$
 
 	/**
+	 * Action definition ID of the source -> toggle comment action
+	 * (value <code>"org.eclipse.php.ui.edit.text.toggle.comment"</code>).
+	 * @since 3.0
+	 */
+	public static final String TOGGLE_COMMENT = "org.eclipse.wst.sse.ui.toggle.comment"; //$NON-NLS-1$
+
+	/**
 	 * Action definition ID of the source -> add block comment action
 	 * (value <code>"org.eclipse.php.ui.edit.text.add.block.comment"</code>).
 	 * @since 3.0
 	 */
-	public static final String ADD_BLOCK_COMMENT = "org.eclipse.php.ui.edit.text.add.block.comment"; //$NON-NLS-1$
+	public static final String ADD_BLOCK_COMMENT = "org.eclipse.wst.sse.ui.add.block.comment"; //$NON-NLS-1$
 
 	/**
 	 * Action definition ID of the source -> remove block comment action
 	 * (value <code>"org.eclipse.php.ui.edit.text.remove.block.comment"</code>).
 	 * @since 3.0
 	 */
-	public static final String REMOVE_BLOCK_COMMENT = "org.eclipse.php.ui.edit.text.remove.block.comment"; //$NON-NLS-1$
+	public static final String REMOVE_BLOCK_COMMENT = "org.eclipse.wst.sse.ui.remove.block.comment"; //$NON-NLS-1$
 
 	/**
 	 * Action definition ID of the source -> indent action

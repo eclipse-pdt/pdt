@@ -29,7 +29,7 @@ import org.eclipse.ui.texteditor.TextEditorAction;
  * 
  * @since 3.0
  */
-public abstract class BlockCommentAction extends TextEditorAction {
+public abstract class ToBeRemoved_BlockCommentAction extends TextEditorAction {
 	
 	/** The document partitioning */
 	public String fDocumentPartitioning;
@@ -40,7 +40,7 @@ public abstract class BlockCommentAction extends TextEditorAction {
 	 * @param prefix
 	 * @param editor
 	 */
-	public BlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public ToBeRemoved_BlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 	}
 

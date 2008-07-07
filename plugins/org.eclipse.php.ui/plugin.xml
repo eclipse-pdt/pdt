@@ -219,9 +219,11 @@
 			target="org.eclipse.php.core.phpsource" />
 		<provisionalDefinition
 			type="activecontexts"
-			value="org.eclipse.php.core.phpsource, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
+			value="org.eclipse.php.core.phpsource"  
         	target="org.eclipse.php.core.phpsource" />
 	</extension>
+	
+	<!-- value="org.eclipse.php.core.phpsource" ,"org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection -->
 
 	<!--======================================================================================-->
 	<!-- PHP UI Adapter factories					   						  				  -->
@@ -603,7 +605,7 @@
 		<definition id="org.eclipse.php.ui.phpContentType.definition">
             <with variable="activeContexts">
 	           <iterate operator="or">
-	              <equals value="org.eclipse.php.ui.phpEditorScope"/>
+	              <equals value="org.eclipse.php.core.phpsource"/>
 	           </iterate>
             </with>
 		</definition>
@@ -614,16 +616,43 @@
 	         class="org.eclipse.php.internal.ui.actions.AddDescriptionHandler"
 	         commandId="org.eclipse.php.ui.edit.text.add.description">
 	         <activeWhen>
-	         	<reference
-	                definitionId="org.eclipse.php.ui.phpContentType.definition">
-	         	</reference>
+	         	<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
 	         </activeWhen>
 	         <enabledWhen>
-	         	<reference
-	                definitionId="org.eclipse.php.ui.phpContentType.definition">
-	         	</reference>
+	         	<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
 	         </enabledWhen>
 	   </handler>
+	  <!-- overriding WST's Handlers with the same 'commanId' -->
+	   <handler
+			class="org.eclipse.php.internal.ui.actions.ToggleCommentHandler"
+			commandId="org.eclipse.wst.sse.ui.toggle.comment">
+			<activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="org.eclipse.php.internal.ui.actions.AddBlockCommentHandler"
+			commandId="org.eclipse.wst.sse.ui.add.block.comment">
+			<activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="org.eclipse.php.internal.ui.actions.RemoveBlockCommentHandler"
+			commandId="org.eclipse.wst.sse.ui.remove.block.comment">
+			<activeWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.php.ui.phpContentType.definition"/>
+			</enabledWhen>
+		</handler>
 	</extension>
 
 	<!--Adapters:-->
@@ -805,6 +834,7 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.menus"> 
+	<!-- Contributing Actions/handlers to WST's Editor source menus -->
 		<menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
 			<command commandId="org.eclipse.php.ui.edit.text.add.description"
 		       id="AddDescription"
@@ -876,31 +906,6 @@
 			description="%action.addDescription.description"
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.php.ui.edit.text.add.description" />
-		<command
-			name="%ActionDefinition.comment.name"
-			description="%ActionDefinition.comment.description"
-			categoryId="org.eclipse.php.ui.category.source"
-			id="org.eclipse.php.ui.edit.text.comment" />
-		<command
-			name="%ActionDefinition.uncomment.name"
-			description="%ActionDefinition.uncomment.description"
-			categoryId="org.eclipse.php.ui.category.source"
-			id="org.eclipse.php.ui.edit.text.uncomment" />
-		<command
-			name="%ActionDefinition.toggleComment.name"
-			description="%ActionDefinition.toggleComment.description"
-			categoryId="org.eclipse.php.ui.category.source"
-			id="org.eclipse.php.ui.edit.text.toggle.comment" />
-		<command
-			name="%ActionDefinition.addBlockComment.name"
-			description="%ActionDefinition.addBlockComment.description"
-			categoryId="org.eclipse.php.ui.category.source"
-			id="org.eclipse.php.ui.edit.text.add.block.comment" />
-		<command
-			name="%ActionDefinition.removeBlockComment.name"
-			description="%ActionDefinition.removeBlockComment.description"
-			categoryId="org.eclipse.php.ui.category.source"
-			id="org.eclipse.php.ui.edit.text.remove.block.comment" />
 		<command
 	        name="%toggleMarkOccurrences.label"
 	        description="%toggleMarkOccurrences.description"
@@ -1006,13 +1011,13 @@
 		<key
 			sequence="M1+/"
 			contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.php.ui.edit.text.toggle.comment"
+			commandId="org.eclipse.wst.sse.ui.toggle.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
 			platform="gtk"
 			sequence="ESC CTRL+C"
 			contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.php.ui.edit.text.toggle.comment"
+			commandId="org.eclipse.wst.sse.ui.toggle.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key
             sequence="M1+O"

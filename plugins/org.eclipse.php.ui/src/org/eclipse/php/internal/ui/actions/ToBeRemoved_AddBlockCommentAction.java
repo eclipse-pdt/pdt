@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
  * Action that encloses the editor's current selection with PHP block comment terminators
  * (<code>&#47;&#42;</code> and <code>&#42;&#47;</code>).
  */
-public class AddBlockCommentAction extends BlockCommentAction {
+public class ToBeRemoved_AddBlockCommentAction extends ToBeRemoved_BlockCommentAction {
 
 	/**
 	 * Creates a new instance.
@@ -39,7 +39,7 @@ public class AddBlockCommentAction extends BlockCommentAction {
 	 *   <code>null</code> if none
 	 * @param editor the text editor
 	 */
-	public AddBlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public ToBeRemoved_AddBlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 	}
 

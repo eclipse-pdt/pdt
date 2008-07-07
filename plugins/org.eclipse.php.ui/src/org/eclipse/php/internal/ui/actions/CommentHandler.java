@@ -1,0 +1,181 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.ui.actions;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.text.*;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xml.core.internal.document.CommentImpl;
+import org.eclipse.wst.xml.core.internal.document.DocumentTypeImpl;
+import org.eclipse.wst.xml.core.internal.document.NodeImpl;
+import org.eclipse.wst.xml.ui.internal.Logger;
+
+/**
+ * Handler class for the Comment Handlers 
+ * @author NirC, 2008
+ */
+
+public class CommentHandler extends AbstractHandler implements IHandler {
+	static final String SINGLE_LINE_COMMENT = "//"; //$NON-NLS-1$
+	static final String OPEN_COMMENT = "/*"; //$NON-NLS-1$
+	static final String CLOSE_COMMENT = "*/"; //$NON-NLS-1$
+	
+
+	public CommentHandler() {
+		super();
+	}
+
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
+		}
+		if (textEditor != null) {
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			if (document != null) {
+				// get current text selection
+				ITextSelection textSelection = getCurrentSelection(textEditor);
+				if (textSelection.isEmpty()) {
+					return null;
+				}
+
+				processAction(textEditor, document, textSelection);
+			}
+		}
+
+		return null;
+	}
+
+	protected ITextSelection getCurrentSelection(ITextEditor textEditor) {
+		ISelectionProvider provider = textEditor.getSelectionProvider();
+		if (provider != null) {
+			ISelection selection = provider.getSelection();
+			if (selection instanceof ITextSelection) {
+				return (ITextSelection) selection;
+			}
+		}
+		return TextSelection.emptySelection();
+	}
+
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
+		// Implementations to over ride.
+	}
+
+	protected void removeOpenCloseComments(IDocument document, int offset, int length) {
+		try {
+			int adjusted_length = length;
+			
+			// remove open comments
+			String string = document.get(offset, length);
+			int index = string.lastIndexOf(OPEN_COMMENT);
+			while (index != -1) {
+				document.replace(offset + index, OPEN_COMMENT.length(), ""); //$NON-NLS-1$
+				index = string.lastIndexOf(OPEN_COMMENT, index - 1);
+				adjusted_length -= OPEN_COMMENT.length();
+			}
+			
+			// remove close comments
+			string = document.get(offset, adjusted_length);
+			index = string.lastIndexOf(CLOSE_COMMENT);
+			while (index != -1) {
+				document.replace(offset + index, CLOSE_COMMENT.length(), ""); //$NON-NLS-1$
+				index = string.lastIndexOf(CLOSE_COMMENT, index - 1);
+			}
+
+
+		} catch (BadLocationException e) {
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		}
+	}
+	
+	protected boolean isCommentLine(IDocument document, int line) {
+		boolean isComment = false;
+
+		try {
+			IRegion region = document.getLineInformation(line);
+			String string = document.get(region.getOffset(), region.getLength()).trim();
+			isComment = (string.length() >= OPEN_COMMENT.length()  && string.startsWith(OPEN_COMMENT)) || (string.length() >= SINGLE_LINE_COMMENT.length()  && string.startsWith(SINGLE_LINE_COMMENT));
+		}
+		catch (BadLocationException e) {
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		}
+		return isComment;
+	}
+	
+	protected void commentSingleLine(IDocument document, int openCommentOffset) {
+		try {
+			document.replace(openCommentOffset, 0, SINGLE_LINE_COMMENT);
+		}
+		catch (BadLocationException e) {
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		}
+	}
+
+	protected void uncommentSingleLine(IDocument document, int openCommentOffset) {
+		try {
+			document.replace(openCommentOffset, SINGLE_LINE_COMMENT.length(), ""); //$NON-NLS-1$
+			}
+		catch (BadLocationException e) {
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+		}
+	}
+	
+	protected boolean isMoreThenOneContextBlockSelected (IStructuredModel model, ITextSelection textSelection) {
+		IndexedRegion selectionStartIndexedRegion = model.getIndexedRegion(textSelection.getOffset());
+	
+		int regionEndOffset = 0 ;
+		int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
+		
+		if (selectionStartIndexedRegion instanceof NodeImpl){ 
+			regionEndOffset  = ((NodeImpl)selectionStartIndexedRegion).getEndOffset();
+			if (selectionEndOffset < regionEndOffset){
+				return false;
+			}
+		}else{
+			assert false;
+			return true;
+		}
+		// searching for PHP open/close tags within the selected text for oh content start/end.
+		while (selectionStartIndexedRegion != null && (regionEndOffset < selectionEndOffset) ){
+			regionEndOffset = ((NodeImpl)selectionStartIndexedRegion).getEndOffset();
+			String regionAsString = selectionStartIndexedRegion.toString();
+			if(regionAsString.contains("<?PHP") || regionAsString.contains("<?") || regionAsString.contains("?>") ){
+				return true;
+			}
+			selectionStartIndexedRegion = model.getIndexedRegion(selectionStartIndexedRegion.getEndOffset());
+
+		}	
+					
+		return false;
+	}
+	
+	protected void displayCommentActinosErrorDialog(IEditorPart editor) {
+		MessageDialog.openError(editor.getSite().getShell(), PHPUIMessages.getString("AddBlockComment_error_title"), PHPUIMessages.getString("AddBlockComment_error_messageBadSelection")); //$NON-NLS-1$
+	}
+}

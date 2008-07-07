@@ -23,12 +23,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.ui.internal.actions.RemoveBlockCommentActionXMLDelegate;
 
-public class RemoveBlockCommentActionDelegate extends RemoveBlockCommentAction {
+public class ToBeRemoved_RemoveBlockCommentActionDelegate extends ToBeRemoved_RemoveBlockCommentAction {
 
 	private RemoveBlockCommentActionXMLDelegate xmlBlockCommentAction;
 	private boolean isPHPSelection;
 	
-	public RemoveBlockCommentActionDelegate(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public ToBeRemoved_RemoveBlockCommentActionDelegate(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 		
 		xmlBlockCommentAction = new RemoveBlockCommentActionXMLDelegate();

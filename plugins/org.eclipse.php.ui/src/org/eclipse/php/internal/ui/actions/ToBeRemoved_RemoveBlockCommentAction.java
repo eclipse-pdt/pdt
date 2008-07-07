@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
  * 
  * @since 3.0
  */
-public class RemoveBlockCommentAction extends BlockCommentAction {
+public class ToBeRemoved_RemoveBlockCommentAction extends ToBeRemoved_BlockCommentAction {
 
 	/**
 	 * Creates a new instance.
@@ -42,7 +42,7 @@ public class RemoveBlockCommentAction extends BlockCommentAction {
 	 *   <code>null</code> if none
 	 * @param editor the text editor
 	 */
-	public RemoveBlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public ToBeRemoved_RemoveBlockCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 	}
 

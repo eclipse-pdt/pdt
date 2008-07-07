@@ -28,7 +28,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ResourceAction;
 import org.eclipse.ui.texteditor.TextEditorAction;
 
-public class ToggleCommentAction extends TextEditorAction {
+public class ToBeRemoved_ToggleCommentAction extends TextEditorAction {
 
 	/** The text operation target */
 	private ITextOperationTarget fOperationTarget;
@@ -50,7 +50,7 @@ public class ToggleCommentAction extends TextEditorAction {
 	 * @param editor the text editor
 	 * @see ResourceAction#ResourceAction(ResourceBundle, String, int)
 	 */
-	public ToggleCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
+	public ToBeRemoved_ToggleCommentAction(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 	}
 
