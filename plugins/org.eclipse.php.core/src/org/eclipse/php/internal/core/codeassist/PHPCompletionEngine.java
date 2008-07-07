@@ -176,9 +176,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			IStructuredModel structuredModel = null;
 			try {
 				IFile file = (IFile) module.getModelElement().getResource();
-				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-				if (structuredModel != null) {
-					document = structuredModel.getStructuredDocument();
+				if (file != null && file.exists()) {
+					structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+					if (structuredModel != null) {
+						document = structuredModel.getStructuredDocument();
+					} else {
+						try {
+							document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
+						} catch (Exception e) {
+						}
+					}
 				}
 			} finally {
 				if (structuredModel != null) {

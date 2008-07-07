@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchMatch;
@@ -27,6 +28,8 @@ import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
+import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
 
 public class PHPMatchLocator extends MatchLocator {
@@ -35,11 +38,13 @@ public class PHPMatchLocator extends MatchLocator {
 	* An ast visitor that visits local type declarations.
 	*/
 	public class LocalDeclarationVisitor extends ASTVisitor {
-		
+
+		IModelElement parent;
 		MatchingNodeSet nodeSet;
 		HashtableOfIntValues occurrencesCounts = new HashtableOfIntValues();
 
-		public LocalDeclarationVisitor(MatchingNodeSet nodeSet) {
+		public LocalDeclarationVisitor(IModelElement parent, MatchingNodeSet nodeSet) {
+			this.parent = parent;
 			this.nodeSet = nodeSet;
 		}
 
@@ -54,7 +59,7 @@ public class PHPMatchLocator extends MatchLocator {
 				}
 				occurrencesCounts.put(simpleName, occurrenceCount);
 				Integer level = (Integer) nodeSet.matchingNodes.removeKey(typeDeclaration);
-				reportMatching(typeDeclaration, null, level != null ? level.intValue() : -1, nodeSet, occurrenceCount);
+				reportMatching(typeDeclaration, parent, level != null ? level.intValue() : -1, nodeSet, occurrenceCount);
 				return false; // don't visit members as this was done during
 			} catch (CoreException e) {
 				throw new WrappedCoreException(e);
@@ -64,7 +69,7 @@ public class PHPMatchLocator extends MatchLocator {
 		public boolean visit(MethodDeclaration method) {
 			try {
 				Integer level = (Integer) nodeSet.matchingNodes.removeKey(method);
-				reportMatching(null, method, null, level != null ? level.intValue() : -1, nodeSet);
+				reportMatching(null, method, parent, level != null ? level.intValue() : -1, nodeSet);
 				return false; // don't visit members as this was done during
 			} catch (CoreException e) {
 				throw new WrappedCoreException(e);
@@ -77,31 +82,28 @@ public class PHPMatchLocator extends MatchLocator {
 	}
 
 	protected void reportMatching(ModuleDeclaration module, MethodDeclaration method, IModelElement parent, int accuracy, MatchingNodeSet nodeSet) throws CoreException {
-		IModelElement enclosingElement = null;
-		if (accuracy > -1) {
-			if (parent == null) {
-				parent = createSourceModuleHandle();
-			}
-			enclosingElement = createHandle(method, parent);
-			if (enclosingElement == null) {
-				enclosingElement = createMethodHandle(method.getName());
-			}
-			if (enclosingElement != null) { // skip if unable to find method
-				if (encloses(enclosingElement)) {
-					SearchMatch match = null;
-					if (DLTKCore.DEBUG) {
-						System.out.println("TODO: AST Add constructor support."); //$NON-NLS-1$
-					}
-					match = this.patternLocator.newDeclarationMatch(method, enclosingElement, accuracy, this);
-					if (match != null) {
-						report(match);
-					}
+		if (parent == null) {
+			parent = createSourceModuleHandle();
+		}
+		IModelElement enclosingElement = createHandle(method, parent);
+		if (enclosingElement == null) {
+			enclosingElement = createMethodHandle(method.getName());
+		}
+		if (accuracy > -1 && enclosingElement != null) { // skip if unable to find method
+			if (encloses(enclosingElement)) {
+				SearchMatch match = null;
+				if (DLTKCore.DEBUG) {
+					System.out.println("TODO: AST Add constructor support."); //$NON-NLS-1$
+				}
+				match = this.patternLocator.newDeclarationMatch(method, enclosingElement, accuracy, this);
+				if (match != null) {
+					report(match);
 				}
 			}
 		}
 
 		// handle nodes for the local type first
-		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(nodeSet);
+		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(enclosingElement, nodeSet);
 		try {
 			method.getBody().traverse(localDeclarationVisitor);
 		} catch (Exception e) {
@@ -137,25 +139,22 @@ public class PHPMatchLocator extends MatchLocator {
 	}
 
 	protected void reportMatching(TypeDeclaration type, MethodDeclaration method, IModelElement parent, int accuracy, boolean typeInHierarchy, MatchingNodeSet nodeSet) throws CoreException {
-		IModelElement enclosingElement = null;
-		if (accuracy > -1) {
-			enclosingElement = createHandle(method, parent);
-			if (enclosingElement != null) { // skip if unable to find method
-				if (encloses(enclosingElement)) {
-					SearchMatch match = null;
-					if (DLTKCore.DEBUG) {
-						System.out.println("TODO: AST Add constructor support."); //$NON-NLS-1$
-					}
-					match = this.patternLocator.newDeclarationMatch(method, enclosingElement, accuracy, this);
-					if (match != null) {
-						report(match);
-					}
+		IModelElement enclosingElement = createHandle(method, parent);
+		if (accuracy > -1 && enclosingElement != null) { // skip if unable to find method
+			if (encloses(enclosingElement)) {
+				SearchMatch match = null;
+				if (DLTKCore.DEBUG) {
+					System.out.println("TODO: AST Add constructor support."); //$NON-NLS-1$
+				}
+				match = this.patternLocator.newDeclarationMatch(method, enclosingElement, accuracy, this);
+				if (match != null) {
+					report(match);
 				}
 			}
 		}
-		
+
 		// handle nodes for the local type first
-		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(nodeSet);
+		LocalDeclarationVisitor localDeclarationVisitor = new LocalDeclarationVisitor(enclosingElement, nodeSet);
 		try {
 			method.getBody().traverse(localDeclarationVisitor);
 		} catch (Exception e) {
@@ -187,5 +186,18 @@ public class PHPMatchLocator extends MatchLocator {
 					nodeSet.matchingNodes.removeKey(nodes[i]);
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected IModelElement createHandle(MethodDeclaration method, IModelElement parent) {
+		if (parent instanceof IMethod) {
+			IModelElement methodHandle = new SourceMethod((ModelElement)parent, method.getName());
+			while (this.methodHandles.contains(methodHandle)) {
+				((SourceMethod) methodHandle).occurrenceCount++;
+			}
+			this.methodHandles.add(methodHandle);
+			return methodHandle;
+		}
+		return super.createHandle(method, parent);
 	}
 }

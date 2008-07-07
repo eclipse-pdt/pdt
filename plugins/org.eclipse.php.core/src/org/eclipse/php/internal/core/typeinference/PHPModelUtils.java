@@ -64,8 +64,11 @@ public class PHPModelUtils {
 			IMixinElement[] elements = PHPMixinModel.getRawInstance().find(key);
 			if (elements.length > 0) {
 				Object[] allObjects = elements[0].getAllObjects();
-				if (allObjects.length > 0) {
-					return (IModelElement) ((PHPMixinElementInfo) allObjects[0]).getObject();
+				for (Object obj : allObjects) {
+					IModelElement element =  (IModelElement) ((PHPMixinElementInfo) obj).getObject();
+					if (!(element instanceof PHPDocField)) { // skip PHPDoc fields
+						return element;
+					}
 				}
 			}
 		}
