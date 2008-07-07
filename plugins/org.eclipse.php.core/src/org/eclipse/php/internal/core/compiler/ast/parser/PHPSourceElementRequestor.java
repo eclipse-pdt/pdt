@@ -33,6 +33,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
+import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -47,7 +48,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
-	
+
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, char[] contents, char[] filename) {
@@ -78,7 +79,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return null;
 	}
-	
+
 	public boolean endvisit(MethodDeclaration method) throws Exception {
 		declarations.pop();
 
@@ -90,24 +91,23 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		declarations.pop();
-		
+
 		// resolve more type member declarations
-		resolveMagicMembers(type); 
-		
+		resolveMagicMembers(type);
+
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.endvisit(type);
 		}
-		
+
 		return super.endvisit(type);
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public boolean visit(MethodDeclaration method) throws Exception {
 		Declaration parentDeclaration = null;
 		if (!declarations.empty()) {
 			parentDeclaration = declarations.peek();
 		}
-				
+
 		if (parentDeclaration instanceof InterfaceDeclaration) {
 			method.setModifier(Modifiers.AccAbstract);
 		}
@@ -117,33 +117,31 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(method);
 		}
-		
-		// The rest is copied from the super implementation just for setting isConstructor flag:
-		this.fNodes.push(method);
-		List args = method.getArguments();
 
-		String[] parameter = new String[args.size()];
-		for (int a = 0; a < args.size(); a++) {
-			Argument arg = (Argument) args.get(a);
-			parameter[a] = arg.getName();
+		return super.visit(method);
+	}
+
+	protected void modifyMethodInfo(MethodDeclaration methodDeclaration, ISourceElementRequestor.MethodInfo mi) {
+		Declaration parentDeclaration = null;
+
+		// find declaration that was before this method:
+		declarations.pop();
+		if (!declarations.empty()) {
+			parentDeclaration = declarations.peek();
 		}
-
-		ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
-		mi.parameterNames = parameter;
-		mi.name = method.getName();
-		mi.modifiers = method.getModifiers();
-		mi.nameSourceStart = method.getNameStart();
-		mi.nameSourceEnd = method.getNameEnd() - 1;
-		mi.declarationStart = method.sourceStart();
+		declarations.push(methodDeclaration);
 		
-		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME) || (parentDeclaration instanceof ClassDeclaration && 
-				mi.name.equalsIgnoreCase(((ClassDeclaration)parentDeclaration).getName()));
-
-		this.fRequestor.enterMethod(mi);
-
-		this.fInMethod = true;
-		this.fCurrentMethod = method;
-		return true;
+		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME)
+			|| (parentDeclaration instanceof ClassDeclaration && mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
+		
+		// Check whether this method is marked as @internal
+		if (methodDeclaration instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) methodDeclaration;
+			PHPDocBlock phpDoc = phpDocAwareDeclaration.getPHPDoc();
+			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
+				mi.modifiers |= IPHPModifiers.Internal;
+			}
+		}
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
@@ -153,6 +151,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(type);
 		}
 		return super.visit(type);
+	}
+	
+	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
+		// Check whether this class is marked as @internal
+		if (typeDeclaration instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) typeDeclaration;
+			PHPDocBlock phpDoc = phpDocAwareDeclaration.getPHPDoc();
+			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
+				ti.modifiers |= IPHPModifiers.Internal;
+			}
+		}
 	}
 
 	/**
@@ -182,14 +191,14 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						info.declarationStart = info.nameSourceStart;
 						fRequestor.enterField(info);
 						fRequestor.exitField(info.nameSourceEnd);
-					
+
 					} else if (tagKind == PHPDocTag.METHOD) {
 						// http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.method.pkg.html
 						final String[] split = WHITESPACE_SEPERATOR.split(docTag.getValue().trim());
 						if (split.length < 2) {
 							break;
 						}
-						
+
 						ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 						mi.parameterNames = null;
 						mi.name = removeParenthesis(split);
@@ -301,7 +310,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		} else if (left instanceof VariableReference) {
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 			info.modifiers = Modifiers.AccDefault;
-			info.name = ((VariableReference)left).getName();
+			info.name = ((VariableReference) left).getName();
 			info.nameSourceEnd = left.sourceEnd() - 1;
 			info.nameSourceStart = left.sourceStart();
 			info.declarationStart = assignment.sourceStart();

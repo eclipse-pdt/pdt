@@ -44,6 +44,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -484,7 +485,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true);
 				if (returnTypes != null) {
 					for (IType type : returnTypes) {
-						reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+						try {
+							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+								reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+							}
+						} catch (ModelException e) {
+							Logger.logException(e);
+						}
 					}
 				}
 			}
@@ -651,7 +658,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!inClass) {
 			IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(prefix, false);
 			for (IModelElement function : functions) {
-				reportMethod((IMethod) function, RELEVANCE_METHODS);
+				try {
+					if ((((IMethod)function).getFlags() & IPHPModifiers.Internal) == 0) {
+						reportMethod((IMethod) function, RELEVANCE_METHODS);
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
 			}
 
 			if (showConstantAssist()) {
@@ -674,7 +687,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				int relevance = 424242;
 				IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 				for (IModelElement type : classes) {
-					reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
+					try {
+						if ((((IType)type).getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 			}
 		}
@@ -738,7 +757,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (!prefix.startsWith(DOLLAR)) {
 				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, false);
 				for (IModelElement method : methods) {
-					reportMethod((IMethod) method, RELEVANCE_METHODS);
+					try {
+						if ((((IMethod)method).getFlags() & IPHPModifiers.Internal) == 0) {
+							reportMethod((IMethod) method, RELEVANCE_METHODS);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 			}
 
@@ -762,7 +787,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 				for (IMethod method : classMethods) {
 					try {
-						if (!isPHP5 || showNonStrictOptions || (method.getFlags() & Modifiers.AccStatic) != 0) {
+						if ((!isPHP5 || showNonStrictOptions || (method.getFlags() & Modifiers.AccStatic) != 0)
+								&& (method.getFlags() & IPHPModifiers.Internal) == 0) {
 							reportMethod(method, RELEVANCE_METHODS);
 						}
 					} catch (ModelException e) {
@@ -827,7 +853,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 					IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 					for (IModelElement type : classes) {
-						reportType((IType) type, RELEVANCE_FREE_SPACE, WHITESPACE_SUFFIX);
+						try {
+							if ((((IType)type).getFlags() & IPHPModifiers.Internal) == 0) {
+								reportType((IType) type, RELEVANCE_FREE_SPACE, WHITESPACE_SUFFIX);
+							}
+						} catch (ModelException e) {
+							Logger.logException(e);
+						}
 					}
 				}
 				return true;
@@ -864,7 +896,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 			try {
 				int flags = superMethod.getFlags();
-				if ((flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0) {
+				if ((flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0 && (flags & IPHPModifiers.Internal) == 0) {
 					reportMethod(superMethod, RELEVANCE_METHODS);
 				}
 			} catch (ModelException e) {
@@ -970,7 +1002,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void showInterfaceList(String prefix, int offset) {
 		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(prefix, false);
 		for (IModelElement i : interfaces) {
-			reportType((IType) i, RELEVANCE_FREE_SPACE, EMPTY);
+			try {
+				if ((((IType)i).getFlags() & IPHPModifiers.Internal) == 0) {
+					reportType((IType) i, RELEVANCE_FREE_SPACE, EMPTY);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 
@@ -1018,7 +1056,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		IType[] classes = CodeAssistUtils.getOnlyClasses(prefix, false);
 		for (IType type : classes) {
-			reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+			try {
+				if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+					reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 
@@ -1065,7 +1109,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			case NEW:
 				IType[] types = CodeAssistUtils.getOnlyClasses(prefix, false);
 				for (IType type : types) {
-					reportType(type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
+					try {
+						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType(type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 				if (CodeAssistUtils.startsWithIgnoreCase(SELF, prefix)) {
 					// get the class data for "self". In case of null, the self function will not be added
@@ -1078,7 +1128,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			case INSTANCEOF:
 				IModelElement[] typeElements = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 				for (IModelElement typeElement : typeElements) {
-					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
+					try {
+						if ((((IType)typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 				if (CodeAssistUtils.startsWithIgnoreCase(SELF, prefix)) {
 					// get the class data for "self". In case of null, the self function will not be added
@@ -1091,7 +1147,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			case CATCH:
 				typeElements = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 				for (IModelElement typeElement : typeElements) {
-					reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
+					try {
+						if ((((IType)typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
 				break;
 			default:
@@ -1160,7 +1222,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(lastWord, false);
 		for (IModelElement function : functions) {
-			reportMethod((IMethod) function, RELEVANCE_METHODS);
+			try {
+				if ((((IMethod)function).getFlags() & IPHPModifiers.Internal) == 0) {
+					reportMethod((IMethod) function, RELEVANCE_METHODS);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 		}
 
 		if (showConstantAssist()) {
