@@ -694,8 +694,12 @@ public class CodeAssistUtils {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IModelElement element = (IModelElement) match.getElement();
-					// Global scope elements in PHP are those, which are not defined in class body:
-					if (!(element.getParent() instanceof IType)) {
+					IModelElement parent = element.getParent();
+					
+					// Global scope elements in PHP are those, which are not defined in class body,
+					// or it is a variable, and its parent - source module
+					if ((element instanceof IField && parent instanceof org.eclipse.dltk.core.ISourceModule)
+							|| (!(element instanceof IField) && !(parent instanceof IType))) {
 						elements.add(element);
 					}
 				}
