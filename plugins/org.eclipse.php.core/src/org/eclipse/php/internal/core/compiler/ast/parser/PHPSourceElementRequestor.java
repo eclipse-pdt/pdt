@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
@@ -19,10 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.ast.declarations.Argument;
-import org.eclipse.dltk.ast.declarations.Declaration;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -48,7 +46,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
-
+	
+	/**
+	 * Deferred elements that are 
+	 */
+	protected List<Declaration> deferredDeclarations = new LinkedList<Declaration>();
+	
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, char[] contents, char[] filename) {
@@ -108,6 +111,13 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			parentDeclaration = declarations.peek();
 		}
 
+		// In case we are entering a nested element - just add to the deferred list
+		// and get out of the nested element visiting process
+		if (parentDeclaration instanceof MethodDeclaration) {
+			deferredDeclarations.add(method);
+			return false;
+		}
+		
 		if (parentDeclaration instanceof InterfaceDeclaration) {
 			method.setModifier(Modifiers.AccAbstract);
 		}
@@ -145,6 +155,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {
+		// In case we are entering a nested element 
+		if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
+			deferredDeclarations.add(type);
+			return false;
+		}
+		
 		declarations.push(type);
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
@@ -395,5 +411,23 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return true;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.compiler.SourceElementRequestVisitor#endvisit(org.eclipse.dltk.ast.declarations.ModuleDeclaration)
+	 */
+	@Override
+	public boolean endvisit(ModuleDeclaration declaration) throws Exception {
+		while (deferredDeclarations != null && !deferredDeclarations.isEmpty()) {
+			final Declaration[] declarations = deferredDeclarations.toArray(new Declaration[deferredDeclarations.size()]);
+			deferredDeclarations.clear();
+			
+			for (Declaration deferred : declarations) {
+				deferred.traverse(this);
+			}
+		}
+		
+		return super.endvisit(declaration);
+	}
+	
 
 }
