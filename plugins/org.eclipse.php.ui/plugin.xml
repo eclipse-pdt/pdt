@@ -22,10 +22,6 @@
 		name="PHP Manual URL"
 		schema="schema/phpManualSites.exsd" />
 	<extension-point
-		id="phpContentAssistProcessor"
-		name="PHP Content Assist Processor"
-		schema="schema/phpContentAssistProcessor.exsd" />
-	<extension-point
 		id="phpHyperlinkDetector"
 		name="PHP Hyperlink Detector"
 		schema="schema/phpHyperlinkDetector.exsd" />
@@ -49,10 +45,6 @@
 		id="wizardAndCompositeFragments"
 		name="Wizard and Composite Fragments"
 		schema="schema/wizardAndCompositeFragments.exsd" />
-	<extension-point
-		id="phpContentAssistant"
-		name="phpContentAssistant"
-		schema="schema/phpContentAssistant.exsd" />
 	<extension-point
 		id="phpActionDelegator"
 		name="PHP Action Delegator"

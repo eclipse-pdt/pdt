@@ -23,6 +23,7 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 	
 	protected PHPContextInformationValidator contextInformationValidator = new PHPContextInformationValidator();
 	protected static final char[] contextInformationActivationChars = { '(', ',' };
+	private boolean explicit;
 
 	public PHPCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
 		super(editor, assistant, partition);
@@ -46,5 +47,9 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 	
 	public char[] getContextInformationAutoActivationCharacters() {
 		return contextInformationActivationChars;
+	}
+	
+	public void setExplicitRequest(boolean explicit) {
+		this.explicit = explicit;
 	}
 }
