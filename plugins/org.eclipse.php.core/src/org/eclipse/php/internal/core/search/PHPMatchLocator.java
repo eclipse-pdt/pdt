@@ -20,7 +20,6 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchMatch;
@@ -28,8 +27,6 @@ import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
-import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
 
 public class PHPMatchLocator extends MatchLocator {
@@ -188,12 +185,10 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.core.search.matching.MatchLocator#reportMatching(org.eclipse.dltk.ast.declarations.TypeDeclaration, org.eclipse.dltk.core.IModelElement, int, org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet, int)
-	 */
-	@Override
 	protected void reportMatching(TypeDeclaration type, IModelElement parent, int accuracy, MatchingNodeSet nodeSet, int occurrenceCount) throws CoreException {
 		if (parent != null && parent.getElementType() == IModelElement.METHOD) {
+			// All PHP elements declared inside of function are automatically belonging
+			// to the global scope. When parent = null parent implementation uses source module: 
 			parent = null;
 		}
 		super.reportMatching(type, parent, accuracy, nodeSet, occurrenceCount);
