@@ -19,7 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Argument;
@@ -119,7 +118,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
-	protected static final char[] DEFAULT_AUTOACTIVATION_TRIGGERS = { '$', ':', '>' };
 
 	private static final Pattern extendsPattern = Pattern.compile("\\Wextends\\W", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
@@ -129,6 +127,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected WeakHashSet intresting = new WeakHashSet();
 	protected boolean isPHP5;
 	protected ISourceModule sourceModule;
+	protected boolean explicit;
 	private Preferences pluginPreferences;
 
 	enum States {
@@ -137,13 +136,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	public PHPCompletionEngine() {
 		pluginPreferences = PHPCorePlugin.getDefault().getPluginPreferences();
-	}
-
-	public char[] getAutoactivationTriggers() {
-		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP)) {
-			return pluginPreferences.getString(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
-		}
-		return DEFAULT_AUTOACTIVATION_TRIGGERS;
 	}
 
 	protected int getEndOfEmptyToken() {
@@ -170,12 +162,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		IStructuredDocument document = null;
 
-		if (requestor instanceof IAdaptable) {
-			IDocument d = (IDocument) ((IAdaptable) requestor).getAdapter(IDocument.class);
+		if (requestor instanceof IPHPCompletionRequestor) {
+			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
+			
+			IDocument d = phpCompletionRequestor.getDocument();
 			if (d instanceof IStructuredDocument) {
 				document = (IStructuredDocument) d;
 			}
+			
+			explicit = phpCompletionRequestor.isExplicit();
 		}
+		
 		if (document == null) {
 			IStructuredModel structuredModel = null;
 			try {
@@ -608,7 +605,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void getRegularCompletion(String prefix, int offset, ITextRegionCollection sdRegion, ITextRegion tRegion, ContextRegion internalPhpRegion, IStructuredDocument document) {
-		if (prefix.length() == 0) {
+		if (!explicit && prefix.length() == 0) {
 			return;
 		}
 
