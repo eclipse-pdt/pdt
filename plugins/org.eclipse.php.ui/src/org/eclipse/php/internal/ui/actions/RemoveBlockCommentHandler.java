@@ -13,22 +13,16 @@ package org.eclipse.php.internal.ui.actions;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.actions.CommentHandler;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
-import org.eclipse.wst.xml.core.internal.document.CommentImpl;
-import org.eclipse.wst.xml.ui.internal.Logger;
-//import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * Handler class for the add description action, 
@@ -41,8 +35,8 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 	public RemoveBlockCommentHandler() {
 		super();
 	}
-	
-	public Object execute(ExecutionEvent event) throws ExecutionException {	
+
+	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
 		ITextEditor textEditor = null;
 		if (editor instanceof ITextEditor)
@@ -54,23 +48,24 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 		}
 		if (textEditor != null) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
-			
-			
+
 			if (document != null) {
 				// get current text selection
 				ITextSelection textSelection = getCurrentSelection(textEditor);
-				
+
 				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-				
+
 				if (model != null) {
 					// If there is alternating or more then one block in the text selection, action is aborted !
-					if(isMoreThenOneContextBlockSelected(model, textSelection)){
-						displayCommentActinosErrorDialog(editor);
-						return null;
+					if (isMoreThenOneContextBlockSelected(model, textSelection)) {
+						//						displayCommentActinosErrorDialog(editor);
+						//						return null;
+						org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+						return removeBlockCommentHandlerWST.execute(event);
 					}
 				}
-				
-				if (textSelection.isEmpty() ){
+
+				if (textSelection.isEmpty()) {
 					return null;
 				}
 				if (document instanceof IStructuredDocument) {
@@ -87,7 +82,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 					}
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						processAction(textEditor, document, textSelection);
-					}else{
+					} else {
 						org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();
 						return removeBlockCommentHandlerWST.execute(event);
 					}
@@ -96,26 +91,27 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 		}
 		return null;
 	}
+
 	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
-		
+
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-		
+
 		int selectionOffset = textSelection.getOffset();
 		int selectionLength = textSelection.getLength();
-		
+
 		if (textSelection.getLength() == 0) {
 			return;
 		}
-		
+
 		model.beginRecording(this, PHPUIMessages.getString("RemoveBlockComment_tooltip"));
 		model.aboutToChangeModel();
-		
+
 		try {
 			removeOpenCloseComments(document, selectionOffset, selectionLength);
-		}finally {
+		} finally {
 			model.changedModel();
 			model.endRecording(this);
 		}
 	}
-		
+
 }

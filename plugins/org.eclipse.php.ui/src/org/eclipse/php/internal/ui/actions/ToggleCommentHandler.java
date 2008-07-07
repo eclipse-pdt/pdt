@@ -16,6 +16,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -23,7 +24,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * Handler class for the add description action, 
@@ -58,15 +58,15 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 					int selectionOffset = textSelection.getOffset();
 					IStructuredDocument sDoc = (IStructuredDocument) document;
 					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-					
+
 					if (model != null) {
 						// If there is alternating or more then one block in the text selection, action is aborted !
-						if(isMoreThenOneContextBlockSelected(model, textSelection)){
-							displayCommentActinosErrorDialog(editor);
-							return null;
+						if (isMoreThenOneContextBlockSelected(model, textSelection)) {
+							org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+							return addBlockCommentHandlerWST.execute(event);
 						}
 					}
-					
+
 					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
 					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 
@@ -76,12 +76,11 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 						container = (ITextRegionContainer) textRegion;
 						textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 					}
-					
-					
+
 					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
 						processAction(textEditor, document, textSelection);
-					}else{
-						org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler toggleCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler() ;//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+					} else {
+						org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler toggleCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
 						return toggleCommentHandlerWST.execute(event);
 					}
 				}
@@ -103,8 +102,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 				selectionEndLine--;
 			}
 
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 
@@ -120,8 +118,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			if ((textSelection.getLength() > 0) && (selectionStartLineOffset == textSelection.getOffset()) && !isCommentLine(document, selectionStartLine)) {
 				updateStartOffset = true;
 			}
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 
@@ -134,7 +131,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
-				model.beginRecording(this, XMLUIMessages.ToggleComment_tooltip);
+				model.beginRecording(this, PHPUIMessages.getString("ToggleComment_tooltip"));
 				model.aboutToChangeModel();
 
 				for (int i = selectionStartLine; i <= selectionEndLine; i++) {
@@ -146,26 +143,21 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 								String string = document.get(region.getOffset(), region.getLength());
 								int openCommentOffset = lineOffset + string.indexOf(SINGLE_LINE_COMMENT);
 								uncommentSingleLine(document, openCommentOffset);
-							}
-							else {
+							} else {
 								int openCommentOffset = document.getLineOffset(i);
 								commentSingleLine(document, openCommentOffset);
 							}
 						}
-					}
-					catch (BadLocationException e) {
+					} catch (BadLocationException e) {
 						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 					}
 				}
-			}
-			finally {
+			} finally {
 				model.changedModel();
 				model.endRecording(this);
-				model.releaseFromEdit();
 			}
 		}
 	}
-
 
 	private void updateCurrentSelection(ITextEditor textEditor, Position selectionPosition, IDocument document, boolean updateStartOffset) {
 		// update the selection if text selection changed
@@ -173,8 +165,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			ITextSelection selection = null;
 			if (updateStartOffset) {
 				selection = new TextSelection(document, selectionPosition.getOffset() - SINGLE_LINE_COMMENT.length(), selectionPosition.getLength() + OPEN_COMMENT.length());
-			}
-			else {
+			} else {
 				selection = new TextSelection(document, selectionPosition.getOffset(), selectionPosition.getLength());
 			}
 			ISelectionProvider provider = textEditor.getSelectionProvider();

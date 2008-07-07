@@ -18,17 +18,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
+import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.internal.document.CommentImpl;
-import org.eclipse.wst.xml.core.internal.document.DocumentTypeImpl;
-import org.eclipse.wst.xml.core.internal.document.NodeImpl;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.ui.internal.Logger;
 
 /**
@@ -36,11 +33,10 @@ import org.eclipse.wst.xml.ui.internal.Logger;
  * @author NirC, 2008
  */
 
-public class CommentHandler extends AbstractHandler implements IHandler {
+public abstract class CommentHandler extends AbstractHandler implements IHandler {
 	static final String SINGLE_LINE_COMMENT = "//"; //$NON-NLS-1$
 	static final String OPEN_COMMENT = "/*"; //$NON-NLS-1$
 	static final String CLOSE_COMMENT = "*/"; //$NON-NLS-1$
-	
 
 	public CommentHandler() {
 		super();
@@ -84,13 +80,13 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 	}
 
 	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
-		// Implementations to over ride.
+		// Implementations to override.
 	}
 
 	protected void removeOpenCloseComments(IDocument document, int offset, int length) {
 		try {
 			int adjusted_length = length;
-			
+
 			// remove open comments
 			String string = document.get(offset, length);
 			int index = string.lastIndexOf(OPEN_COMMENT);
@@ -99,7 +95,7 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 				index = string.lastIndexOf(OPEN_COMMENT, index - 1);
 				adjusted_length -= OPEN_COMMENT.length();
 			}
-			
+
 			// remove close comments
 			string = document.get(offset, adjusted_length);
 			index = string.lastIndexOf(CLOSE_COMMENT);
@@ -108,31 +104,28 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 				index = string.lastIndexOf(CLOSE_COMMENT, index - 1);
 			}
 
-
 		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 	}
-	
+
 	protected boolean isCommentLine(IDocument document, int line) {
 		boolean isComment = false;
 
 		try {
 			IRegion region = document.getLineInformation(line);
 			String string = document.get(region.getOffset(), region.getLength()).trim();
-			isComment = (string.length() >= OPEN_COMMENT.length()  && string.startsWith(OPEN_COMMENT)) || (string.length() >= SINGLE_LINE_COMMENT.length()  && string.startsWith(SINGLE_LINE_COMMENT));
-		}
-		catch (BadLocationException e) {
+			isComment = (string.length() >= OPEN_COMMENT.length() && string.startsWith(OPEN_COMMENT)) || (string.length() >= SINGLE_LINE_COMMENT.length() && string.startsWith(SINGLE_LINE_COMMENT));
+		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 		return isComment;
 	}
-	
+
 	protected void commentSingleLine(IDocument document, int openCommentOffset) {
 		try {
 			document.replace(openCommentOffset, 0, SINGLE_LINE_COMMENT);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 	}
@@ -140,41 +133,45 @@ public class CommentHandler extends AbstractHandler implements IHandler {
 	protected void uncommentSingleLine(IDocument document, int openCommentOffset) {
 		try {
 			document.replace(openCommentOffset, SINGLE_LINE_COMMENT.length(), ""); //$NON-NLS-1$
-			}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 	}
-	
-	protected boolean isMoreThenOneContextBlockSelected (IStructuredModel model, ITextSelection textSelection) {
-		IndexedRegion selectionStartIndexedRegion = model.getIndexedRegion(textSelection.getOffset());
-	
-		int regionEndOffset = 0 ;
-		int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
-		
-		if (selectionStartIndexedRegion instanceof NodeImpl){ 
-			regionEndOffset  = ((NodeImpl)selectionStartIndexedRegion).getEndOffset();
-			if (selectionEndOffset < regionEndOffset){
-				return false;
-			}
-		}else{
+
+	protected boolean isMoreThenOneContextBlockSelected(IStructuredModel model, ITextSelection textSelection) {
+		IStructuredDocument structuredDocument = model.getStructuredDocument();
+		if (structuredDocument == null) {
 			assert false;
 			return true;
 		}
-		// searching for PHP open/close tags within the selected text for oh content start/end.
-		while (selectionStartIndexedRegion != null && (regionEndOffset < selectionEndOffset) ){
-			regionEndOffset = ((NodeImpl)selectionStartIndexedRegion).getEndOffset();
-			String regionAsString = selectionStartIndexedRegion.toString();
-			if(regionAsString.contains("<?PHP") || regionAsString.contains("<?") || regionAsString.contains("?>") ){
+
+		IStructuredDocumentRegion[] structuredDocumentRegions = structuredDocument.getStructuredDocumentRegions(textSelection.getOffset(), textSelection.getLength());
+		if (structuredDocumentRegions == null || structuredDocumentRegions.length == 0) {
+			assert false;
+			return true;
+		}
+
+		if (structuredDocumentRegions.length == 1 && isPhpDocumentRegion(structuredDocumentRegions[0])) {
+			//single PHP element and the selection is inside the element boundaries
+			return false;
+		}
+
+		// Handling case there is more then 1 region within the selection,
+		// if we encounter PHP open/close Tag - it means we are not only within HTML context
+		for (IStructuredDocumentRegion structuredDocumentRegion : structuredDocumentRegions) {
+			if (isPhpDocumentRegion(structuredDocumentRegion)) {
 				return true;
 			}
-			selectionStartIndexedRegion = model.getIndexedRegion(selectionStartIndexedRegion.getEndOffset());
+		}
 
-		}	
-					
+		// all regions are !PHP
 		return false;
 	}
-	
+
+	private boolean isPhpDocumentRegion(IStructuredDocumentRegion structuredDocumentRegion) {
+		return structuredDocumentRegion.getFirstRegion().getType() == PHPRegionContext.PHP_OPEN;
+	}
+
 	protected void displayCommentActinosErrorDialog(IEditorPart editor) {
 		MessageDialog.openError(editor.getSite().getShell(), PHPUIMessages.getString("AddBlockComment_error_title"), PHPUIMessages.getString("AddBlockComment_error_messageBadSelection")); //$NON-NLS-1$
 	}
