@@ -27,9 +27,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
 import org.eclipse.wst.xml.ui.internal.Logger;
 
 /**
- * Handler class for the add description action, 
- * It acts as a delegate to the AddDescription action 
- * @author Roy, 2008
+ * Handler class for adding comment tags to selected text
+ * Operates as router which decides which context comment to be applied (XML or PHP)
+ * @author NirC, 2008
  */
 
 public class AddBlockCommentHandler extends CommentHandler implements IHandler {
