@@ -40,9 +40,6 @@ public class PHPCorePlugin extends Plugin {
 	//The shared instance.
 	private static PHPCorePlugin plugin;
 
-	// Script Builder ID
-	private String builderID = DLTKCore.BUILDER_ID;
-
 	/**
 	 * The constructor.
 	 */
@@ -62,6 +59,10 @@ public class PHPCorePlugin extends Plugin {
 	private void convertProjects() throws CoreException, ModelException {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		ProjectsIterate: for (IProject project : projects) {
+			// skip unaccessible projects
+			if (!project.isAccessible()) {
+				continue ProjectsIterate;
+			}
 			IProjectDescription projectDescription = project.getDescription();
 			ICommand[] commands = projectDescription.getBuildSpec();
 			String[] natureIds = projectDescription.getNatureIds();
@@ -71,7 +72,7 @@ public class PHPCorePlugin extends Plugin {
 				if (PHPNature.ID.equalsIgnoreCase(nature)) {
 					// check if the Script Builder is installed
 					for (int i = 0; i < commands.length; ++i) {
-						if (commands[i].getBuilderName().equals(builderID)) {
+						if (commands[i].getBuilderName().equals(DLTKCore.BUILDER_ID)) {
 							// when the builder exists - continue to the next project
 							continue ProjectsIterate;
 						}
