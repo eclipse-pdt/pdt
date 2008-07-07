@@ -86,9 +86,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final String BRACKETS_SUFFIX = "()"; //$NON-NLS-1$
 	private static final String WHITESPACE_SUFFIX = " "; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
-	private final static int RELEVANCE_FREE_SPACE = 10000000;
-	private final static int RELEVANCE_KEYWORD = 1000000;
-	private final static int RELEVANCE_METHODS = 100000;
+	
+	private final static int RELEVANCE_KEYWORD = 10000000;
+	private final static int RELEVANCE_METHOD = 1000000;
+	private final static int RELEVANCE_CLASS = 100000;
+	private final static int RELEVANCE_VAR = 10000;
+	private final static int RELEVANCE_CONST = 1000;
 
 	protected final static String[] phpVariables = { "$_COOKIE", "$_ENV", "$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", "$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", "$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", "$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", };
 
@@ -428,9 +431,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		this.setSourceRange(offset - tagName.length(), offset);
+		
+		int relevanceKeyword = RELEVANCE_KEYWORD;
 		for (String phpDocTag : phpDocTags) {
 			if (CodeAssistUtils.startsWithIgnoreCase(phpDocTag, tagName)) {
-				reportKeyword(phpDocTag, EMPTY);
+				reportKeyword(phpDocTag, EMPTY, relevanceKeyword--);
 			}
 		}
 		return true;
@@ -457,9 +462,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					variables.add(arg.getName());
 				}
 				
-				int relevance = 424242;
 				this.setSourceRange(offset - varName.length(), offset);
-				reportVariables(variables.toArray(new String[variables.size()]), varName, relevance, false);
+				
+				int relevanceVar = RELEVANCE_VAR;
+				String[] paramVars = variables.toArray(new String[variables.size()]);
+				reportVariables(paramVars, varName, relevanceVar, false);
+				
 				return true;
 			}
 		}
@@ -484,10 +492,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (method != null) {
 				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true);
 				if (returnTypes != null) {
+					int relevanceClass = RELEVANCE_CLASS;
 					for (IType type : returnTypes) {
 						try {
 							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
-								reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+								reportType(type, relevanceClass--, EMPTY);
 							}
 						} catch (ModelException e) {
 							Logger.logException(e);
@@ -539,13 +548,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void reportArrayVariables(String arrayName, int offset, String prefix) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
-		int relevance = 424242;
+		int relevanceVar = RELEVANCE_VAR;
+		
 		if (arrayName.equals("$_SERVER") || arrayName.equals("$HTTP_SERVER_VARS")) { //$NON-NLS-1$ //$NON-NLS-2$
-			reportVariables(serverVaraibles, prefix, relevance, true);
+			reportVariables(serverVaraibles, prefix, relevanceVar, true);
 			return;
 		}
 		if (arrayName.equals("$_SESSION") || arrayName.equals("$HTTP_SESSION_VARS")) { //$NON-NLS-1$ //$NON-NLS-2$
-			reportVariables(sessionVariables, prefix, relevance, true);
+			reportVariables(sessionVariables, prefix, relevanceVar, true);
 			return;
 		}
 		if (arrayName.equals("$GLOBALS")) { //$NON-NLS-1$
@@ -555,10 +565,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			IModelElement[] elements = CodeAssistUtils.getWorkspaceFields(prefix, false);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
-				reportField(field, relevance--, true);
+				reportField(field, relevanceVar--, true);
 			}
 
-			reportVariables(phpVariables, prefix, relevance, true);
+			reportVariables(phpVariables, prefix, relevanceVar, true);
 			return;
 		}
 	}
@@ -613,10 +623,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			Logger.logException(e);
 		}
 
+		int relevanceKeyword = RELEVANCE_KEYWORD;
+		int relevanceVar = RELEVANCE_VAR;
+		int relevanceConst = RELEVANCE_CONST;
+		int relevanceClass = RELEVANCE_CLASS;
+		int relevanceMethod = RELEVANCE_METHOD;
+		
 		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
 		for (KeywordData k : keywordsList) {
 			if (inClass == k.isClassKeyword) {
-				reportKeyword(k.name, k.suffix);
+				reportKeyword(k.name, k.suffix, relevanceKeyword--);
 			}
 		}
 
@@ -635,18 +651,28 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 
-				int relevance = 424242;
-				IMethod containerMethodData = CodeAssistUtils.getContainerMethodData(sourceModule, offset);
-				if (containerMethodData != null && containerMethodData.getDeclaringType() != null) {
-					reportVariables(classVariables, prefix, relevance--, false);
-				}
-
-				reportVariables(phpVariables, prefix, relevance--, false);
-
+				
 				IModelElement[] variables = CodeAssistUtils.getWorkspaceFields(prefix, false);
 				for (IModelElement var : variables) {
-					reportField((IField) var, relevance--, false);
+					IField field = (IField) var;
+					try {
+						if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+							reportField(field, relevanceConst--, false);
+						} else {
+							reportField(field, relevanceVar--, false);
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
 				}
+				
+				IMethod containerMethodData = CodeAssistUtils.getContainerMethodData(sourceModule, offset);
+				if (containerMethodData != null && containerMethodData.getDeclaringType() != null) {
+					reportVariables(classVariables, prefix, relevanceVar--, false);
+					relevanceVar -= classVariables.length;
+				}
+
+				reportVariables(phpVariables, prefix, relevanceVar--, false);
 				return;
 			}
 
@@ -660,7 +686,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			for (IModelElement function : functions) {
 				try {
 					if ((((IMethod)function).getFlags() & IPHPModifiers.Internal) == 0) {
-						reportMethod((IMethod) function, RELEVANCE_METHODS);
+						reportMethod((IMethod) function, relevanceMethod--);
 					}
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -668,12 +694,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			if (showConstantAssist()) {
-				int relevance = 4242;
 				IModelElement[] constants = CodeAssistUtils.getWorkspaceFields(prefix, false);
 				for (IModelElement constant : constants) {
 					try {
 						if ((((IField) constant).getFlags() & Modifiers.AccConstant) != 0) {
-							reportField((IField) constant, relevance--, false);
+							reportField((IField) constant, relevanceConst--, false);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -684,12 +709,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (!inClass) {
 			if (showClassNamesInGlobalCompletion()) {
-				int relevance = 424242;
 				IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 				for (IModelElement type : classes) {
 					try {
 						if ((((IType)type).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType((IType) type, relevance--, PAAMAYIM_NEKUDOTAIM);
+							reportType((IType) type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -752,6 +776,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		this.setSourceRange(offset - prefix.length(), offset);
+		
+		int relevanceMethod = RELEVANCE_METHOD;
 
 		for (IType type : className) {
 			if (!prefix.startsWith(DOLLAR)) {
@@ -759,7 +785,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				for (IModelElement method : methods) {
 					try {
 						if ((((IMethod)method).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportMethod((IMethod) method, RELEVANCE_METHODS);
+							reportMethod((IMethod) method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -768,10 +794,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, false, true);
-			int relevance = 424242;
+			int relevanceVar = RELEVANCE_VAR;
+			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement element : fields) {
 				IField field = (IField) element;
-				reportField(field, relevance--, true);
+				try {
+					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+						reportField(field, relevanceConst--, true);
+					} else {
+						reportField(field, relevanceVar--, true);
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
 			}
 		}
 	}
@@ -781,6 +816,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		boolean showNonStrictOptions = showNonStrictOptions();
 
+		int relevanceMethod = RELEVANCE_METHOD;
 		if (!prefix.startsWith(DOLLAR)) {
 			for (IType type : className) {
 				IMethod[] classMethods = CodeAssistUtils.getClassMethods(type, prefix, false);
@@ -789,7 +825,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					try {
 						if ((!isPHP5 || showNonStrictOptions || (method.getFlags() & Modifiers.AccStatic) != 0)
 								&& (method.getFlags() & IPHPModifiers.Internal) == 0) {
-							reportMethod(method, RELEVANCE_METHODS);
+							reportMethod(method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -798,14 +834,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		int relevance = 4242;
+		int relevanceConst = RELEVANCE_CONST;
+		int relevanceVar = RELEVANCE_VAR;
 		for (IType type : className) {
 			IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, false, true);
 			for (IField field : classFields) {
 				try {
 					int flags = field.getFlags();
-					if ((flags & Modifiers.AccConstant) != 0 || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
-						reportField(field, relevance--, false);
+					boolean isConstant = (flags & Modifiers.AccConstant) != 0;
+					if (isConstant || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
+						if (isConstant) {
+							reportField(field, relevanceConst--, false);
+						} else {
+							reportField(field, relevanceVar--, false);
+						}
 					}
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -851,11 +893,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 					this.setSourceRange(offset - prefix.length(), offset);
 
+					int relevanceClass = RELEVANCE_CLASS;
 					IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
 					for (IModelElement type : classes) {
 						try {
 							if ((((IType)type).getFlags() & IPHPModifiers.Internal) == 0) {
-								reportType((IType) type, RELEVANCE_FREE_SPACE, WHITESPACE_SUFFIX);
+								reportType((IType) type, relevanceClass--, WHITESPACE_SUFFIX);
 							}
 						} catch (ModelException e) {
 							Logger.logException(e);
@@ -888,6 +931,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		this.setSourceRange(offset - functionNameStart.length(), offset);
+		
+		int relevanceMethod = RELEVANCE_METHOD;
 
 		IMethod[] superClassMethods = CodeAssistUtils.getSuperClassMethods(classData, functionNameStart, false);
 		for (IMethod superMethod : superClassMethods) {
@@ -897,7 +942,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			try {
 				int flags = superMethod.getFlags();
 				if ((flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0 && (flags & IPHPModifiers.Internal) == 0) {
-					reportMethod(superMethod, RELEVANCE_METHODS);
+					reportMethod(superMethod, relevanceMethod--);
 				}
 			} catch (ModelException e) {
 				Logger.logException(e);
@@ -918,7 +963,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		for (String function : functions) {
 			if (CodeAssistUtils.startsWithIgnoreCase(function, functionNameStart)) {
 				FakeMethod fakeMagicMethod = new FakeMethod((ModelElement) classData, function);
-				reportMethod(fakeMagicMethod, RELEVANCE_METHODS);
+				reportMethod(fakeMagicMethod, relevanceMethod--);
 			}
 		}
 		return true;
@@ -1001,10 +1046,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	protected void showInterfaceList(String prefix, int offset) {
 		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(prefix, false);
+		int relevanceClass = RELEVANCE_CLASS;
 		for (IModelElement i : interfaces) {
 			try {
 				if ((((IType)i).getFlags() & IPHPModifiers.Internal) == 0) {
-					reportType((IType) i, RELEVANCE_FREE_SPACE, EMPTY);
+					reportType((IType) i, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
 				Logger.logException(e);
@@ -1015,16 +1061,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void showExtendsImplementsList(String prefix, int offset) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
+		int relevanceKeyword = RELEVANCE_KEYWORD;
+		
 		if (isPHP5) {
 			if (EXTENDS.startsWith(prefix)) {
-				reportKeyword(EXTENDS, EMPTY);
+				reportKeyword(EXTENDS, EMPTY, relevanceKeyword--);
 			}
 			if (IMPLEMENTS.startsWith(prefix)) {
-				reportKeyword(IMPLEMENTS, EMPTY);
+				reportKeyword(IMPLEMENTS, EMPTY, relevanceKeyword--);
 			}
 		} else {
 			if (EXTENDS.startsWith(prefix)) {
-				reportKeyword(EXTENDS, EMPTY);
+				reportKeyword(EXTENDS, EMPTY, relevanceKeyword--);
 			}
 		}
 	}
@@ -1033,8 +1081,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (isPHP5) {
 			this.setSourceRange(offset - prefix.length(), offset);
 
+			int relevanceKeyword = RELEVANCE_KEYWORD;
 			if (IMPLEMENTS.startsWith(prefix)) {
-				reportKeyword(IMPLEMENTS, EMPTY);
+				reportKeyword(IMPLEMENTS, EMPTY, relevanceKeyword--);
 			}
 		}
 	}
@@ -1042,8 +1091,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private void showExtendsList(String prefix, int offset) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
+		int relevanceKeyword = RELEVANCE_KEYWORD;
 		if (EXTENDS.startsWith(prefix)) {
-			reportKeyword(EXTENDS, EMPTY);
+			reportKeyword(EXTENDS, EMPTY, relevanceKeyword--);
 		}
 	}
 
@@ -1052,13 +1102,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			showInterfaceList(prefix, offset);
 			return;
 		}
+		
 		this.setSourceRange(offset - prefix.length(), offset);
+		
+		int relevanceClass = RELEVANCE_CLASS; 
 
 		IType[] classes = CodeAssistUtils.getOnlyClasses(prefix, false);
 		for (IType type : classes) {
 			try {
 				if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
-					reportType(type, RELEVANCE_FREE_SPACE, EMPTY);
+					reportType(type, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
 				Logger.logException(e);
@@ -1105,13 +1158,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void showClassList(String prefix, int offset, States state) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
+		int relevanceClass = RELEVANCE_CLASS;
+		
 		switch (state) {
 			case NEW:
 				IType[] types = CodeAssistUtils.getOnlyClasses(prefix, false);
 				for (IType type : types) {
 					try {
 						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType(type, RELEVANCE_FREE_SPACE, BRACKETS_SUFFIX);
+							reportType(type, relevanceClass--, BRACKETS_SUFFIX);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -1130,7 +1185,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				for (IModelElement typeElement : typeElements) {
 					try {
 						if ((((IType)typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
+							reportType((IType) typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -1149,7 +1204,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				for (IModelElement typeElement : typeElements) {
 					try {
 						if ((((IType)typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType((IType) typeElement, RELEVANCE_FREE_SPACE, EMPTY);
+							reportType((IType) typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
 						Logger.logException(e);
@@ -1166,7 +1221,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	 * @param classData
 	 */
 	private void addSelfFunctionToProposals(IType type) {
-		reportMethod(new FakeMethod((ModelElement) type, SELF), RELEVANCE_METHODS);
+		reportMethod(new FakeMethod((ModelElement) type, SELF), RELEVANCE_METHOD);
 	}
 
 	protected boolean isNewOrInstanceofStatement(String keyword, String prefix, int offset, String type) {
@@ -1220,11 +1275,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		reportArrayVariables(variableName, offset, lastWord);
 
+		int relevanceMethod = RELEVANCE_METHOD;
+		
 		IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(lastWord, false);
 		for (IModelElement function : functions) {
 			try {
 				if ((((IMethod)function).getFlags() & IPHPModifiers.Internal) == 0) {
-					reportMethod((IMethod) function, RELEVANCE_METHODS);
+					reportMethod((IMethod) function, relevanceMethod--);
 				}
 			} catch (ModelException e) {
 				Logger.logException(e);
@@ -1233,12 +1290,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (showConstantAssist()) {
 			IModelElement[] constants = CodeAssistUtils.getWorkspaceFields(lastWord, false);
-			int relevance = 4242;
+			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement constant : constants) {
 				IField field = (IField) constant;
 				try {
 					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-						reportField(field, relevance--, false);
+						reportField(field, relevanceConst--, false);
 					}
 				} catch (ModelException e) {
 					Logger.logException(e);
@@ -1248,7 +1305,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	private void reportMethod(IMethod method, int rel) {
+	private void reportMethod(IMethod method, int relevance) {
 		this.intresting.add(method);
 		String elementName = method.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1259,8 +1316,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			elementName = elementName.substring(elementName.indexOf('.') + 1);
 		}
 		char[] name = elementName.toCharArray();
-
-		int relevance = rel;
 
 		// accept result
 		noProposal = false;
@@ -1301,7 +1356,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	}
 
-	private void reportType(IType type, int rel, String suffix) {
+	private void reportType(IType type, int relevance, String suffix) {
 		this.intresting.add(type);
 		String elementName = type.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1312,8 +1367,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (name.length == 0) {
 			return;
 		}
-
-		int relevance = rel;
 
 		// accept result
 		noProposal = false;
@@ -1337,7 +1390,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	}
 
-	private void reportField(IField field, int rel, boolean removeDollar) {
+	private void reportField(IField field, int relevance, boolean removeDollar) {
 		this.intresting.add(field);
 		String elementName = field.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1348,8 +1401,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (name.length == 0) {
 			return;
 		}
-
-		int relevance = rel;
 
 		// accept result
 		noProposal = false;
@@ -1378,17 +1429,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	}
 
-	private void reportKeyword(String name, String suffix) {
+	private void reportKeyword(String name, String suffix, int relevance) {
 		// accept result
 		noProposal = false;
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
-
 			proposal.setName(name.toCharArray());
 			proposal.setCompletion((name + suffix).toCharArray());
 			// proposal.setFlags(Flags.AccDefault);
+			proposal.setRelevance(relevance);
 			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
-			proposal.setRelevance(RELEVANCE_KEYWORD);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
 				this.printDebug(proposal);
