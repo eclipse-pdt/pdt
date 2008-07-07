@@ -188,16 +188,16 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	protected IModelElement createHandle(MethodDeclaration method, IModelElement parent) {
-		if (parent instanceof IMethod) {
-			IModelElement methodHandle = new SourceMethod((ModelElement)parent, method.getName());
-			while (this.methodHandles.contains(methodHandle)) {
-				((SourceMethod) methodHandle).occurrenceCount++;
-			}
-			this.methodHandles.add(methodHandle);
-			return methodHandle;
+	/* (non-Javadoc)
+	 * @see org.eclipse.dltk.core.search.matching.MatchLocator#reportMatching(org.eclipse.dltk.ast.declarations.TypeDeclaration, org.eclipse.dltk.core.IModelElement, int, org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet, int)
+	 */
+	@Override
+	protected void reportMatching(TypeDeclaration type, IModelElement parent, int accuracy, MatchingNodeSet nodeSet, int occurrenceCount) throws CoreException {
+		if (parent != null && parent.getElementType() == IModelElement.METHOD) {
+			parent = null;
 		}
-		return super.createHandle(method, parent);
+		super.reportMatching(type, parent, accuracy, nodeSet, occurrenceCount);
 	}
+	
+	
 }
