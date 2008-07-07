@@ -2,11 +2,6 @@
 <?eclipse version="3.0"?>
 <plugin>
    <!--<extension-point id="phpModel" name="phpModel" schema="schema/phpModel.exsd"/>-->
-   <extension-point id="includePathVariables" name="Include Path Variable" schema="schema/includePathVariables.exsd"/>
-   <extension-point id="workspaceModelListener" name="workspaceModelListener" schema="schema/workspaceModelListener.exsd"/>
-   <extension-point id="phpBuilderExtensions" name="PHP Builder Extension" schema="schema/phpBuilderExtensions.exsd"/>
-   <extension-point id="modelFilter" name="PHP Model Filter" schema="schema/modelFilter.exsd"/>
-   <extension-point id="phpModelExtensions" name="PHP Model Extension" schema="schema/phpModelExtensions.exsd"/>
    <extension-point id="goalEvaluatorFactories" name="PHP Evaluator Factory" schema="schema/goalEvaluatorFactories.exsd"/>
    <extension-point id="phpSourceElementRequestors" name="PHP Source Element Requestor" schema="schema/phpSourceElementRequestors.exsd"/>
    <extension-point id="phpMixinBuildVisitors" name="PHP Mixin Build Visitor" schema="schema/phpMixinBuildVisitors.exsd"/>
