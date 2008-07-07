@@ -10,22 +10,23 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.swt.graphics.Image;
 
-public class PHPCompletionProposalCollector extends ScriptCompletionProposalCollector implements IAdaptable {
+public class PHPCompletionProposalCollector extends ScriptCompletionProposalCollector implements IPHPCompletionRequestor {
 
 	private IDocument document;
+	private boolean explicit;
 	
-	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu) {
+	public PHPCompletionProposalCollector(IDocument document, ISourceModule cu, boolean explicit) {
 		super(cu);
 		this.document = document;
+		this.explicit = explicit;
 	}
 
 	protected ScriptCompletionProposal createOverrideCompletionProposal(IScriptProject scriptProject, ISourceModule compilationUnit, String name, String[] paramTypes, int start, int length, String label, String string) {
@@ -48,12 +49,7 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return document;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object getAdapter(Class adapter) {
-
-		if (adapter == IDocument.class) {
-			return document;
-		}
-		return Platform.getAdapterManager().getAdapter(this, adapter);
+	public boolean isExplicit() {
+		return explicit;
 	}
 }

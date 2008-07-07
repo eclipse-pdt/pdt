@@ -155,7 +155,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
 				for (IContentAssistProcessor element : all) {
 					if (element instanceof PHPCompletionProcessor) {
-						((PHPCompletionProcessor) element).setExplicitRequest(true);
+						((PHPCompletionProcessor) element).setExplicit(true);
 					}
 				}
 			}

@@ -26,6 +26,12 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 	}
 
 	protected ScriptCompletionProposalCollector createCollector(ScriptContentAssistInvocationContext context) {
-		return new PHPCompletionProposalCollector(context.getDocument(), context.getSourceModule());
+		
+		boolean explicit = false;
+		if (context instanceof PHPContentAssistInvocationContext) {
+			explicit = ((PHPContentAssistInvocationContext)context).isExplicit();
+		}
+		
+		return new PHPCompletionProposalCollector(context.getDocument(), context.getSourceModule(), explicit);
 	}
 }
