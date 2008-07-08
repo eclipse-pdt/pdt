@@ -48,7 +48,6 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
 	private IPreferencesPropagatorListener phpVersionListener;
 	private String phpVersion;
-	private IBuildpathEntry[] buildPathEntries;
 
 	public LanguageModelInitializer() {
 	}
@@ -62,7 +61,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		phpVersionListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 				phpVersion = (String) event.getNewValue();
-				buildPathEntries = null;
+
 				try {
 					initialize(containerPath, project);
 				} catch (CoreException e) {
@@ -182,6 +181,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	class LanguageModelContainer implements IBuildpathContainer {
 
 		private IPath containerPath;
+		private IBuildpathEntry[] buildPathEntries;
 
 		public LanguageModelContainer(IPath containerPath) {
 			this.containerPath = containerPath;
