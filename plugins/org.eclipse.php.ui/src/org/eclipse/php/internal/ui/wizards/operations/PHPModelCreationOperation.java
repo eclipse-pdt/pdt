@@ -58,6 +58,14 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 			subMonitor = new SubProgressMonitor(monitor, IProgressMonitor.UNKNOWN);
 
 			project.open(subMonitor);
+			
+			// set project properties prior to any job execution
+			if (model.isPropertySet(Keys.PHP_VERSION)) {
+				String version = model.getStringProperty(Keys.PHP_VERSION);
+				PhpVersionProjectPropertyHandler.setVersion(version, project);
+				boolean useASPTags = model.getBooleanProperty(Keys.EDITOR_USE_ASP_TAGS);
+				UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, project);
+			}
 
 			// For every page added to the projectCreationWizard, call its execute method
 			// Here the project settings should be stored into the preferences
@@ -79,13 +87,6 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 					if (null != natureIds) {
 						desc.setNatureIds(natureIds);
 						project.setDescription(desc, monitor);
-					}
-
-					if (model.isPropertySet(Keys.PHP_VERSION)) {
-						String version = model.getStringProperty(Keys.PHP_VERSION);
-						PhpVersionProjectPropertyHandler.setVersion(version, project);
-						boolean useASPTags = model.getBooleanProperty(Keys.EDITOR_USE_ASP_TAGS);
-						UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, project);
 					}
 
 					return Status.OK_STATUS;
