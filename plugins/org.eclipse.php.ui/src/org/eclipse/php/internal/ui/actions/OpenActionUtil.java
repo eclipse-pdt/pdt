@@ -39,13 +39,13 @@ public class OpenActionUtil {
 	 * Opens the editor on the given element and subsequently selects it.
 	 */
 	public static void open(Object element, boolean activate) throws PartInitException {
-		IEditorPart part = EditorUtility.openInEditor(element, activate);
+ 		IEditorPart part = EditorUtility.openInEditor(element, activate);
 		if (element instanceof IModelElement)
-			EditorUtility.revealInEditor(part, ((IModelElement) element).getElementType() );
+			EditorUtility.revealInEditor(part, ((IModelElement) element) );
 		if(element instanceof TreeItem){
 			TreeItem item = (TreeItem)element;
 			if(item.getData() instanceof IModelElement)
-			EditorUtility.revealInEditor(part, ((IModelElement)(item.getData())).getElementType() );
+			EditorUtility.revealInEditor(part, ((IModelElement)(item.getData())));
 		}
 	}
 
