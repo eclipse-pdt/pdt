@@ -24,20 +24,20 @@ import org.eclipse.ui.console.IConsoleConstants;
  */
 public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
-	static final String TOP_LEFT_LOCATION = "topLeft"; //$NON-NLS-1$
-	static final String BOTTOM_LEFT_LOCATION = "bottomLeft"; //$NON-NLS-1$
-	static final String TOP_RIGHT_LOCATION = "topRight"; //$NON-NLS-1$
-	static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
+	private static final String TOP_LEFT_LOCATION = "topLeft"; //$NON-NLS-1$
+	private static final String BOTTOM_LEFT_LOCATION = "bottomLeft"; //$NON-NLS-1$
+	private static final String TOP_RIGHT_LOCATION = "right"; //$NON-NLS-1$
+	private static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
 
-	static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
+	private static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
 
 	//other view id's
-	static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
-	static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
-	static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
-	static final String ID_Debug_INFO_FOLDER = "org.eclipse.php.debug.ui.debugInfoFolder"; //$NON-NLS-1$
-	static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
-	static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
+	private static final String ID_EXPLORER = "org.eclipse.php.ui.explorer"; //$NON-NLS-1$
+	private static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
+	private static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
+	private static final String ID_Debug_INFO_FOLDER = "org.eclipse.php.debug.ui.debugInfoFolder"; //$NON-NLS-1$
+	private static final String ID_PHPDebugOutput = "org.eclipse.debug.ui.PHPDebugOutput"; //$NON-NLS-1$
+	private static final String ID_PHPBrowserOutput = "org.eclipse.debug.ui.PHPBrowserOutput"; //$NON-NLS-1$
 
 	public void createInitialLayout(IPageLayout layout) {
 
@@ -77,7 +77,6 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 
 		// Bottom left: Outline view
 		IFolderLayout bottomLeft = layout.createFolder(BOTTOM_LEFT_LOCATION, IPageLayout.BOTTOM, 0.50f, TOP_LEFT_LOCATION);
-		bottomLeft.addView(IPageLayout.ID_OUTLINE);
 		bottomLeft.addView(ID_PROJECT_OUTLINE);
 		bottomLeft.addView(ID_FUNCTIONS);
 
@@ -87,5 +86,9 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		bottom.addView(IPageLayout.ID_TASK_LIST);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
+
+		IFolderLayout outlineFolder = layout.createFolder(TOP_RIGHT_LOCATION, IPageLayout.RIGHT, (float)0.75, editorArea); //$NON-NLS-1$
+		outlineFolder.addView(IPageLayout.ID_OUTLINE);
+
 	}
 }
