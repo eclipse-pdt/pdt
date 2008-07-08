@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.filenetwork;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.dltk.core.IFileHierarchyInfo;
@@ -58,7 +58,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 
 		public void addChild(Node child) {
 			if (children == null) {
-				children = new HashSet<Node>();
+				children = new LinkedHashSet<Node>();
 			}
 			children.add(child);
 		}
