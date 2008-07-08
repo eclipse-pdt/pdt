@@ -10,21 +10,35 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.filenetwork;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
+import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuffer;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.mixin.IncludeField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
-import org.eclipse.php.internal.core.util.PHPSearchEngine.*;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 
 /**
  * This utility is used for resolving reference dependencies between files.
@@ -133,15 +147,29 @@ public class FileNetworkUtility {
 		final IBuffer buffer = sourceModule.getBuffer();
 
 		if (buffer != null) {
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule);
-			SearchEngine engine = new SearchEngine();
-			SearchPattern pattern = SearchPattern.createPattern("include", IDLTKSearchConstants.METHOD, IDLTKSearchConstants.REFERENCES, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-			engine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					String text = buffer.getText(match.getOffset(), match.getLength());
-					includes.add(stripQuotes(text));
+
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			
+			ASTVisitor visitor = new ASTVisitor() {
+				public boolean visit(Expression expr) throws ModelException {
+					if (expr instanceof Include) {
+						Expression fileExpr = ((Include) expr).getExpr();
+						if (fileExpr instanceof Scalar) {
+							int start = fileExpr.sourceStart();
+							int length = fileExpr.sourceEnd() - start;
+							String fileName = ASTUtils.stripQuotes(buffer.getText(start, length));
+							includes.add(fileName);
+						}
+					}
+					return true;
 				}
-			}, monitor);
+			};
+			
+			try {
+				moduleDeclaration.traverse(visitor);
+			} catch (Exception e) {
+				Logger.logException(e);
+			}
 		}
 
 		for (String filePath : includes) {
@@ -178,18 +206,5 @@ public class FileNetworkUtility {
 		}
 
 		return sourceModule;
-	}
-
-	/**
-	 * Strips single or double quotes from the start and from the end of the given string
-	 * @param name String
-	 * @return
-	 */
-	private static String stripQuotes(String name) {
-		int len = name.length();
-		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
-			name = name.substring(1, len - 1);
-		}
-		return name;
 	}
 }
