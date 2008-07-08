@@ -24,7 +24,6 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuffer;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
@@ -144,32 +143,26 @@ public class FileNetworkUtility {
 		ISourceModule sourceModule = root.getFile();
 
 		final List<String> includes = new LinkedList<String>();
-		final IBuffer buffer = sourceModule.getBuffer();
 
-		if (buffer != null) {
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
-			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-			
-			ASTVisitor visitor = new ASTVisitor() {
-				public boolean visit(Expression expr) throws ModelException {
-					if (expr instanceof Include) {
-						Expression fileExpr = ((Include) expr).getExpr();
-						if (fileExpr instanceof Scalar) {
-							int start = fileExpr.sourceStart();
-							int length = fileExpr.sourceEnd() - start;
-							String fileName = ASTUtils.stripQuotes(buffer.getText(start, length));
-							includes.add(fileName);
-						}
+		ASTVisitor visitor = new ASTVisitor() {
+			public boolean visit(Expression expr) throws ModelException {
+				if (expr instanceof Include) {
+					Expression fileExpr = ((Include) expr).getExpr();
+					if (fileExpr instanceof Scalar) {
+						String fileName = ASTUtils.stripQuotes(((Scalar) fileExpr).getValue());
+						includes.add(fileName);
 					}
-					return true;
 				}
-			};
-			
-			try {
-				moduleDeclaration.traverse(visitor);
-			} catch (Exception e) {
-				Logger.logException(e);
+				return true;
 			}
+		};
+
+		try {
+			moduleDeclaration.traverse(visitor);
+		} catch (Exception e) {
+			Logger.logException(e);
 		}
 
 		for (String filePath : includes) {

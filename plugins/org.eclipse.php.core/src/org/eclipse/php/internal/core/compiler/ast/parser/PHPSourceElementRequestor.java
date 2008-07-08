@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
@@ -263,14 +264,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		String name = call.getName();
 		if ("define".equals(name)) {//$NON-NLS-0$
-			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-			info.modifiers = Modifiers.AccConstant;
-			Argument argument = (Argument) call.getArgs().getChilds().get(0);
-			info.name = ASTUtils.stripQuotes(argument.getName());
-			info.nameSourceEnd = argument.sourceEnd() - 1;
-			info.nameSourceStart = argument.sourceStart();
-			info.declarationStart = call.sourceStart();
-			fRequestor.enterField(info);
+			ASTNode argument = (ASTNode) call.getArgs().getChilds().get(0);
+			if (argument instanceof Scalar) {
+				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+				info.modifiers = Modifiers.AccConstant;
+				info.name = ASTUtils.stripQuotes(((Scalar)argument).getValue());
+				info.nameSourceEnd = argument.sourceEnd() - 1;
+				info.nameSourceStart = argument.sourceStart();
+				info.declarationStart = call.sourceStart();
+				fRequestor.enterField(info);
+				fRequestor.exitField(call.sourceEnd() - 1);
+			}
 		} else {
 			fRequestor.acceptMethodReference(call.getName().toCharArray(), argsCount, call.sourceStart(), call.sourceEnd());
 		}

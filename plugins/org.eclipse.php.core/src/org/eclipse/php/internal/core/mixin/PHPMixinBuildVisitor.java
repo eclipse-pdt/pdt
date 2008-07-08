@@ -25,7 +25,6 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.IBuffer;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
@@ -490,12 +489,8 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	public boolean visit(Include include) throws Exception {
 		Expression expr = include.getExpr();
 		if (expr instanceof Scalar) {
-			IBuffer buffer = sourceModule.getBuffer();
-			if (buffer != null) {
-				String text = buffer.getText(expr.sourceStart(), expr.sourceEnd() - expr.sourceStart());
-				Scope scope = scopes.peek();
-				scope.reportInclude(ASTUtils.stripQuotes(text));
-			}
+			Scope scope = scopes.peek();
+			scope.reportInclude(ASTUtils.stripQuotes(((Scalar)expr).getValue()));
 		}
 		return visitGeneral(include);
 	}
