@@ -15,11 +15,9 @@
 			<param name="groupId" value="wtp" />
 		</antcall>
 		<antcall target="getAndInstall">
-			<param name="groupId" value="emf" />
+			<param name="groupId" value="emfRuntime" />
 		</antcall>
-		<antcall target="getAndInstall">
-			<param name="groupId" value="emfSource" />
-		</antcall>
+		
 		<antcall target="getAndInstall">
 			<param name="groupId" value="xsdRuntime" />
 		</antcall>
