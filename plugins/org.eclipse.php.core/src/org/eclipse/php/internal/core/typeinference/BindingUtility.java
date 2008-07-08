@@ -326,12 +326,16 @@ public class BindingUtility {
 		}
 
 		public boolean visitGeneral(ASTNode node) throws Exception {
-			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
-				context = contextStack.peek();
-				this.node = node;
+			if (node.sourceEnd() < sourceRange.offset || node.sourceStart() > sourceRange.getEnd()) {
 				return false;
 			}
-			return context == null;
+			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
+				if (!contextStack.isEmpty()) {
+					this.context = contextStack.peek();
+					this.node = node;
+				}
+			}
+			return true;
 		}
 
 		public boolean visit(ModuleDeclaration node) throws Exception {
@@ -361,12 +365,14 @@ public class BindingUtility {
 
 		public boolean endvisit(ModuleDeclaration node) throws Exception {
 			contextStack.pop();
-			return visitGeneral(node);
+			endvisitGeneral(node);
+			return true;
 		}
 
 		public boolean endvisit(TypeDeclaration node) throws Exception {
 			contextStack.pop();
-			return visitGeneral(node);
+			endvisitGeneral(node);
+			return true;
 		}
 
 		public boolean endvisit(MethodDeclaration node) throws Exception {
