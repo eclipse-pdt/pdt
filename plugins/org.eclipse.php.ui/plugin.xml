@@ -740,7 +740,7 @@
                disabledIcon="icons/full/dtool16/mark_occurrences.gif"
                helpContextId="toggle_mark_occurrences_action_context"
                icon="icons/full/etool16/mark_occurrences.gif"
-               id="org.eclipse.php.ui.actions.toggleMarkOccurrences"
+               id="org.eclipse.php.ui.edit.text.toggleMarkOccurrences"
                label="%toggleMarkOccurrences.label"
                retarget="true"
                style="toggle"
@@ -796,14 +796,6 @@
 			description="%OpenActionSet.description"
 			visible="false"
 			id="org.eclipse.php.ui.A_OpenActionSet">
-			<action
-				definitionId="org.eclipse.php.ui.edit.text.open.editor"
-				label="%OpenAction.label"
-				tooltip="%OpenAction.tooltip"
-				retarget="true"
-				menubarPath="navigate/open.ext"
-				allowLabelUpdate="true"
-				id="org.eclipse.php.ui.actions.Open" />
 			<action
                definitionId="org.eclipse.php.ui.edit.text.php.open.type.hierarchy"
                label="%OpenTypeHierarchyAction.label"
@@ -946,11 +938,6 @@
 			description="%ActionDefinition.moveElement.description"
 			categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
-		<command
-			name="%ActionDefinition.openEditor.name"
-			description="%ActionDefinition.openEditor.description"
-			categoryId="org.eclipse.ui.category.navigate"
-			id="org.eclipse.php.ui.edit.text.open.editor" />
 		<command
 			name="%OpenDeclaration.name"
 			description="%OpenDeclaration.description"
@@ -1104,11 +1091,16 @@
         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
         sequence="COMMAND+ALT+V">
   </key>
-		<key
+        <!--key
+            sequence="F3"
+            contextId="org.eclipse.php.ui.contexts.window"
+            commandId="org.eclipse.dltk.ui.edit.text.script.open.editor"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/-->
+		<!--key
 			sequence="F3"
-			commandId="org.eclipse.php.ui.edit.text.open.editor"
+			commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 			contextId="org.eclipse.php.ui.contexts.window"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /-->
 		<key
 			sequence="F3"
 			commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"

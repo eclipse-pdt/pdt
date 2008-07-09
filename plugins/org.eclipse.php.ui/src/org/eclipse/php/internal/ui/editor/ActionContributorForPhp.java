@@ -22,13 +22,14 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
-import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**
@@ -46,8 +47,8 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
  */
 public class ActionContributorForPhp extends ActionContributorHTML {
 
-	private static final String[] EDITOR_IDS = {"org.eclipse.php.core.phpsource", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
-	
+	private static final String[] EDITOR_IDS = { "org.eclipse.php.core.phpsource", "org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$ //$NON-NLS-2$
+
 	private RetargetAction fRetargetShowPHPDoc;
 	private List<RetargetAction> fPartListeners = new ArrayList<RetargetAction>();
 	private RetargetTextEditorAction fShowPHPDoc;
@@ -59,12 +60,12 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	private RetargetTextEditorAction fOpenHierarchy;
 	private RetargetTextEditorAction fRename;
 	private RetargetTextEditorAction fMove;
-	
+
 	private RetargetTextEditorAction fToggleComment = null;
 	private RetargetTextEditorAction fAddBlockComment = null;
 	private RetargetTextEditorAction fRemoveBlockComment = null;
-	
-	private ToggleMarkOccurrencesAction fMarkOccurrences; // Registers as a global action
+
+	private ToggleMarkOccurrencesAction fMarkOccurrencesAction = null;
 
 	protected MenuManager fFormatMenu = null;
 
@@ -86,7 +87,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 
 		//fAddDescription = new RetargetTextEditorAction(resourceBundle, PHPActionConstants.ADD_DESCRIPTION_NAME + "_"); //$NON-NLS-1$
 		//fAddDescription.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_DESCRIPTION);
-		
+
 		fGotoMatchingBracket = new RetargetTextEditorAction(resourceBundle, "GotoMatchingBracket."); //$NON-NLS-1$
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
@@ -95,7 +96,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 
 		fOpenTypeHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenTypeHierarchy"); //$NON-NLS-1$
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
-		
+
 		fOpenCallHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenCallHierarchy"); //$NON-NLS-1$
 		fOpenCallHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY);
 
@@ -107,7 +108,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 
 		fMove = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
-		
+
 		// source commands
 		fToggleComment = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fToggleComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_COMMENT);
@@ -115,16 +116,15 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fAddBlockComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.ADD_BLOCK_COMMENT);
 		fRemoveBlockComment = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fRemoveBlockComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.REMOVE_BLOCK_COMMENT);
-		
-		fMarkOccurrences = new ToggleMarkOccurrencesAction(resourceBundle);
-		fMarkOccurrences.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES);
+
+		fMarkOccurrencesAction = new ToggleMarkOccurrencesAction(resourceBundle);
 
 		// the refactor menu, add the menu itself to add all refactor actions
 		this.refactorMenu = new MenuManager(PHPUIMessages.getString("ActionContributorJSP_0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
 		refactorMenu.add(this.fRename);
 		refactorMenu.add(this.fMove);
 	}
-	
+
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
 		// source commands
@@ -132,13 +132,12 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
 		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
-		if (sourceMenu != null) {		
+		if (sourceMenu != null) {
 			sourceMenu.add(fToggleComment);
 			sourceMenu.add(fAddBlockComment);
 			sourceMenu.add(fRemoveBlockComment);
 		}
 	}
-	
 
 	/*
 	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(org.eclipse.jface.action.IMenuManager)
@@ -158,6 +157,13 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		}
 	}
 
+	@Override
+	public void init(IActionBars bars, IWorkbenchPage page) {
+		super.init(bars, page);
+
+		bars.setGlobalActionHandler(IPHPEditorActionDefinitionIds.TOGGLE_MARK_OCCURRENCES, fMarkOccurrencesAction);
+	}
+
 	/*
 	 * @see EditorActionBarContributor#setActiveEditor(IEditorPart)
 	 */
@@ -168,21 +174,22 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		if (part instanceof ITextEditor)
 			editor = (ITextEditor) part;
 
+		fMarkOccurrencesAction.setEditor(editor);
+
 		fShowPHPDoc.setAction(getAction(editor, "ShowPHPDoc")); //$NON-NLS-1$
 		fGotoMatchingBracket.setAction(getAction(editor, GotoMatchingBracketAction.GOTO_MATCHING_BRACKET));
 		fOpenDeclaration.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_DECLARATION));
 		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY));
 		fOpenHierarchy.setAction(getAction(editor, IScriptEditorActionDefinitionIds.OPEN_HIERARCHY));
 		fOpenTypeHierarchy.setAction(getAction(editor, IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY));
-		
+
 		fToggleComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT));
 		fAddBlockComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT));
 		fRemoveBlockComment.setAction(getAction(editor, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT));
 		fToggleComment.setEnabled(editor != null && editor.isEditable());
 		fAddBlockComment.setEnabled(editor != null && editor.isEditable());
 		fRemoveBlockComment.setEnabled(editor != null && editor.isEditable());
-		
-		fMarkOccurrences.setEditor(editor);
+
 		if (part instanceof PHPStructuredEditor) {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;
 			phpEditor.getActionGroup().fillActionBars(getActionBars());
@@ -193,8 +200,8 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		super.setViewerSpecificContributionsEnabled(enabled);
 		this.fRename.setEnabled(enabled);
 		this.fMove.setEnabled(enabled);
-	}	
-	
+	}
+
 	/*
 	 * @see IEditorActionBarContributor#dispose()
 	 */
@@ -213,8 +220,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		super.dispose();
 	}
 
-
 	protected String[] getExtensionIDs() {
 		return EDITOR_IDS;
-	}	
+	}
 }

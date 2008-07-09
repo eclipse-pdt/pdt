@@ -117,7 +117,6 @@ import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 
-	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN = "org.eclipse.php.ui.actions.Open"; //$NON-NLS-1$
 	private static final String ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION = "org.eclipse.php.ui.actions.OpenFunctionsManualAction"; //$NON-NLS-1$
 
 	private IContentOutlinePage fPHPOutlinePage;
@@ -1120,10 +1119,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (getSourceViewer().isEditable()) {
 			final String openGroup = "group.open"; //$NON-NLS-1$
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, new Separator(openGroup));
-			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN);
-			if (action != null)
-				menu.appendToGroup(openGroup, action);
-			action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION);
+			IAction action = getAction(PHPStructuredEditor.ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);

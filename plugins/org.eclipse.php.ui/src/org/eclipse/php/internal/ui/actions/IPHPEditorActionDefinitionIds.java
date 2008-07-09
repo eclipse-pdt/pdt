@@ -165,8 +165,8 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 	public static final String REMOVE_OCCURRENCE_ANNOTATIONS = "org.eclipse.php.ui.edit.text.remove.occurrence.annotations"; //$NON-NLS-1$
 
 	/**
-	 * Action definition id of toggle mark occurrences action
-	 * (value: <code>"org.eclipse.php.ui.edit.text.toggleMarkOccurrences"</code>).
+	 * Action definition id of addDescriptionAction
+	 * (value: <code>"org.eclipse.php.ui.edit.text.add.description"</code>).
 	 * @since 3.0
 	 */
 	public static final String ADD_PHP_DOC = "org.eclipse.php.ui.edit.text.add.description"; //$NON-NLS-1$
