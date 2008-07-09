@@ -176,13 +176,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (receiverType != null) {
 							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) context, fileNetwokFilter);
 							List<IModelElement> methods = new LinkedList<IModelElement>();
-							for (IModelElement element : elements) {
-								if (element instanceof IType) {
-									IType type = (IType) element;
-									try {
-										methods.addAll(Arrays.asList(getClassMethod(type, callExpression.getName())));
-									} catch (ModelException e) {
-										Logger.logException(e);
+							if (elements != null) {
+								for (IModelElement element : elements) {
+									if (element instanceof IType) {
+										IType type = (IType) element;
+										try {
+											methods.addAll(Arrays.asList(getClassMethod(type, callExpression.getName())));
+										} catch (ModelException e) {
+											Logger.logException(e);
+										}
 									}
 								}
 							}
@@ -209,13 +211,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (dispatcherType != null) {
 							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context, fileNetwokFilter);
 							List<IModelElement> fields = new LinkedList<IModelElement>();
-							for (IModelElement element : elements) {
-								if (element instanceof IType) {
-									IType type = (IType) element;
-									try {
-										fields.addAll(Arrays.asList(getClassField(type, fieldName)));
-									} catch (ModelException e) {
-										Logger.logException(e);
+							if (elements != null) {
+								for (IModelElement element : elements) {
+									if (element instanceof IType) {
+										IType type = (IType) element;
+										try {
+											fields.addAll(Arrays.asList(getClassField(type, fieldName)));
+										} catch (ModelException e) {
+											Logger.logException(e);
+										}
 									}
 								}
 							}
@@ -236,14 +240,16 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						if (dispatcherType != null) {
 							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context, fileNetwokFilter);
 							List<IModelElement> fields = new LinkedList<IModelElement>();
-							for (IModelElement element : elements) {
-								if (element instanceof IType) {
-									IType type = (IType) element;
-									try {
-										fields.addAll(Arrays.asList(getClassField(type, fieldName)));
-										fields.addAll(Arrays.asList(getClassField(type, '$' + fieldName)));
-									} catch (ModelException e) {
-										Logger.logException(e);
+							if (elements != null) {
+								for (IModelElement element : elements) {
+									if (element instanceof IType) {
+										IType type = (IType) element;
+										try {
+											fields.addAll(Arrays.asList(getClassField(type, fieldName)));
+											fields.addAll(Arrays.asList(getClassField(type, '$' + fieldName)));
+										} catch (ModelException e) {
+											Logger.logException(e);
+										}
 									}
 								}
 							}
