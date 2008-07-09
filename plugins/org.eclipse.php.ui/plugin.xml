@@ -474,6 +474,14 @@
             targetId="org.eclipse.php.ui.explorer">
       </filter>
       <filter
+            description="%HideSystemFiles.description"
+            enabled="true"
+            id="org.eclipse.php.ui.projectOutline.DotFilesFilter"
+            name="%HideSystemFiles.label"
+            class="org.eclipse.dltk.internal.ui.filters.DotFileFilter"
+            targetId="org.eclipse.php.ui.projectOutline">
+      </filter>
+      <filter
             description="%ContainMembers.description"
             enabled="false"
             id="org.eclipse.php.ui.explorer.ContainMembersFilter"
