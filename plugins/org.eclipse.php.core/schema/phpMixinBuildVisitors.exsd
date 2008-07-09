@@ -6,7 +6,7 @@
          <meta.schema plugin="org.eclipse.php.core" id="phpMixinBuildVisitors" name="PHP Mixin Build Visitor"/>
       </appinfo>
       <documentation>
-         This extension point allows providing additional visitors for Mixin Parser.
+         This extension point allows providing additional visitors for Mixin Parser Build Visitor. Mixin model represents global workspace-scope database for model elements that are stored in a special index, and can be easily accessed using special key (for more details refer to &lt;a href=&quot;http://wiki.eclipse.org/DLTK_Core_Architecture&quot;&gt;DLTK Core Architecture&lt;/a&gt;).
       </documentation>
    </annotation>
 

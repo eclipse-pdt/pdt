@@ -6,7 +6,9 @@
          <meta.schema plugin="org.eclipse.php.core" id="phpSourceElementRequestors" name="PHP Source Element Requestor"/>
       </appinfo>
       <documentation>
-         This extension point allows to provide additional source element requestors (&lt;code&gt;org.eclipse.dltk.compiler.SourceElementRequestVisitor&lt;/code&gt;) for PHP.
+         This extension point allows intervention into structured model build process for contribution additional model elements. Structured model (IModuleElement hierarchy) is used to present elements structure in script explorer, outline, search, code completion, code selection, etc...
+This model consists only from top level elements, like: IType, IMethod, IField. If additional element type is considered to be added - it must derive from one of those basic types.
+
       </documentation>
    </annotation>
 
