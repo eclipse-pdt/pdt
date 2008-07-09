@@ -1,14 +1,17 @@
 package org.eclipse.php.internal.ui.projectview;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.*;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
 /**
@@ -48,13 +51,13 @@ public class ProjectExplorerPart extends ScriptExplorerPart implements IPartList
 	}
 
 	private Object getInput() {
-		Object input = getSite().getPage().getActiveEditor();
-		if (input instanceof PHPStructuredEditor) {
-			PHPStructuredEditor editor = (PHPStructuredEditor) input;
-			final IModelElement modelElement = editor.getModelElement();
-			if (modelElement != null) {
-				return modelElement.getScriptProject();	
-			}		
+		IEditorPart input = getSite().getPage().getActiveEditor();
+		IEditorPart editor = (IEditorPart) input;
+		final IEditorInput editorInput = editor.getEditorInput();
+		final IFile file = (IFile) editorInput.getAdapter(IFile.class);
+		if (file != null) {
+			final IProject project = file.getProject();
+			return DLTKCore.create(project);
 		}
 		return null;
 	}

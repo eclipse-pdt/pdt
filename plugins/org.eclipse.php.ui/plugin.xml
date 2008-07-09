@@ -470,27 +470,16 @@
             enabled="true"
             id="org.eclipse.php.ui.explorer.DotFilesFilter"
             name="%HideSystemFiles.label"
-            class="org.eclipse.dltk.internal.ui.filters.DotFileFilter"
-            targetId="org.eclipse.php.ui.explorer">
-      </filter>
-      <filter
-            description="%HideSystemFiles.description"
-            enabled="true"
-            id="org.eclipse.php.ui.projectOutline.DotFilesFilter"
-            name="%HideSystemFiles.label"
-            class="org.eclipse.dltk.internal.ui.filters.DotFileFilter"
-            targetId="org.eclipse.php.ui.projectOutline">
+            class="org.eclipse.dltk.internal.ui.filters.DotFileFilter">
       </filter>
       <filter
             description="%ContainMembers.description"
             enabled="false"
             id="org.eclipse.php.ui.explorer.ContainMembersFilter"
             name="%ContainMembers.label"
-            class="org.eclipse.dltk.internal.ui.filters.ContainMembersFilter"
-            targetId="org.eclipse.php.ui.explorer">
+            class="org.eclipse.dltk.internal.ui.filters.ContainMembersFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideEmptyPackages.label"
             enabled="false"
             description="%HideEmptyPackages.description"
@@ -498,7 +487,6 @@
             id="org.eclipse.php.ui.explorer.EmptyPackageFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideEmptyInnerPackages.label"
             enabled="false"
             description="%HideEmptyInnerPackages.description"
@@ -506,7 +494,6 @@
             id="org.eclipse.php.ui.explorer.EmptyInnerPackageFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideNonScriptElements.label"
             enabled="false"
             description="%HideNonScriptElements.description"
@@ -514,7 +501,6 @@
             id="org.eclipse.php.ui.explorer.NonScriptElementFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideReferencedLibraries.label"
             enabled="false"
             description="%HideReferencedLibraries.description"
@@ -522,7 +508,6 @@
             id="org.eclipse.php.ui.explorer.LibraryFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideContainedLibraries.label"
             enabled="false"
             description="%HideContainedLibraries.description"
@@ -530,7 +515,6 @@
             id="org.eclipse.php.ui.explorer.ContainedLibraryFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideScriptFiles.label"
             enabled="false"
             description="%HideScriptFiles.description"
@@ -538,7 +522,6 @@
             id="org.eclipse.php.ui.explorer.SMFileFilter">
       </filter>      
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideNonScriptProjects.label"
             enabled="false"
             description="%HideNonScriptProjects.description"
@@ -546,7 +529,6 @@
             id="org.eclipse.php.ui.explorer.NonScriptProjectsFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideNonSharedProjects.label"
             enabled="false"
             description="%HideNonSharedProjects.description"
@@ -554,7 +536,6 @@
             id="org.eclipse.php.ui.explorer.NonSharedProjectsFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideClosedProjects.label"
             enabled="false"
             description="%HideClosedProjects.description"
@@ -562,7 +543,6 @@
             id="org.eclipse.php.ui.explorer.ClosedProjectsFilter">
       </filter>
       <filter
-            targetId="org.eclipse.php.ui.explorer"
             name="%HideFields.label"
             enabled="false"
             description="%HideFields.description"
@@ -570,27 +550,23 @@
             id="org.eclipse.php.ui.explorer.FieldsFilter">
       </filter>
       <filter
-			targetId="org.eclipse.php.ui.explorer"
 			name="%HideNonPublic.label"
 			enabled="false"
 			description="%HideNonPublic.description"
 			class="org.eclipse.php.internal.ui.filters.NonPublicFilter"
 			id="org.eclipse.php.ui.explorer.NonPublicFilter" />
-	  <!--<filter
-			targetId="org.eclipse.php.ui.explorer"
+      <filter
 			name="%HideHTMLFiles.label"
 			enabled="false"
 			description="%HideHTMLFiles.description"
 			class="org.eclipse.php.internal.ui.filters.PHPContentTypeFilter"
-			id="org.eclipse.php.ui.explorer.PHPHTMLFilter"
-			pattern="org.eclipse.wst.html.core.htmlsource" />-->
+			id="org.eclipse.php.ui.explorer.PHPHTMLFilter" />
 	  <filter
 	        class="org.eclipse.php.internal.ui.filters.RSEProjectFilter"
 	        description="%HideRSETempProject.description"
 	        enabled="true"
 	        id="org.eclipse.php.ui.explorer.RSEProjectFilter"
-	        name="%HideRSETempProject.label"
-	        targetId="org.eclipse.php.ui.explorer" />
+	        name="%HideRSETempProject.label"/>
     </extension>
       
     <extension point="org.eclipse.ui.actionSetPartAssociations">
