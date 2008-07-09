@@ -56,7 +56,7 @@ public class ProjectExplorerPart extends ScriptExplorerPart implements IPartList
 				return modelElement.getScriptProject();	
 			}		
 		}
-		return DLTKCore.create(DLTKUIPlugin.getWorkspace().getRoot());
+		return null;
 	}
 
 	public void partActivated(IWorkbenchPart part) {
