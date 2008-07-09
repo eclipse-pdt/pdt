@@ -52,3 +52,4 @@ Export-Package: org.eclipse.php.debug.core.debugger,
  org.eclipse.php.internal.debug.core.zend.model,
  org.eclipse.php.internal.debug.core.zend.testConnection
 Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
