@@ -110,8 +110,10 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
+import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
+import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -130,7 +132,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	public final ISourceViewer getSourceViewerPublic() {
 		return getSourceViewer();
 	}
-	
+
 	/** The editor's save policy */
 	protected ISavePolicy fSavePolicy = null;
 
@@ -353,13 +355,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * outline page.
 	 */
 	class OutlineSelectionChangedListener extends AbstractSelectionChangedListener implements IDoubleClickListener {
-		
+
 		public void selectionChanged(SelectionChangedEvent event) {
 			doSelectionChanged(event);
 		}
 
 		public void doubleClick(DoubleClickEvent event) {
-			doSelectionChanged(event);			
+			doSelectionChanged(event);
 		}
 
 	}
@@ -372,8 +374,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private IResourceChangeListener fResourceChangeListener;
 	private IPropertyChangeListener propertyChangeListener;
 
-	
-	
 	private void doSelectionChanged(ISelection selection) {
 		ISourceReference reference = null;
 		Iterator iter = ((IStructuredSelection) selection).iterator();
@@ -387,7 +387,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (!isActivePart() && PHPUiPlugin.getActivePage() != null)
 			PHPUiPlugin.getActivePage().bringToTop(this);
 		setSelection(reference, !isActivePart());
-		
+
 	}
 
 	protected void doSelectionChanged(SelectionChangedEvent event) {
@@ -1757,6 +1757,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 
+		action = new OpenDeclarationAction(resourceBundle, this);
+		//action = new OpenHyperlinkAction(resourceBundle, "OpenAction_declaration_", this, getSourceViewer());
+		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
+		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
+
 		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
@@ -1975,7 +1980,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		IResource resource = null;
 		isExternal = false;
-		
+
 		if (input instanceof IFileEditorInput) {
 			// This is the existing workspace file
 			final IFileEditorInput fileInput = (IFileEditorInput) input;
@@ -1998,7 +2003,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			if (PHPModelUtil.isPhpFile((IFile) resource)) {
 
 				PhpSourceParser.editFile.set(resource);
-				
+
 				super.doSetInput(input);
 
 				initPHPVersionsListener();
@@ -2024,7 +2029,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Class required) {
-		
+
 		Object adapter = super.getAdapter(required);
 
 		// add selection listener to outline page
@@ -2037,7 +2042,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 			fPHPOutlinePageListener.install(outlinePage);
 			fPHPOutlinePage = outlinePage;
-			
+
 			outlinePage.setInput(getModelElement());
 		}
 		return adapter;
@@ -2428,7 +2433,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 		return null;
 	}
-	
 
 	/**
 	 * Returns project that holds the edited file (if any)
@@ -2878,12 +2882,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	@Override
 	public void doSave(IProgressMonitor progressMonitor) {
-		
+
 		IScriptProject project = getProject();
 		if (project != null) {
 			updateSaveActionsState(project.getProject());
 		}
-		
+
 		if (saveActionsEnabled) {
 			RemoveTrailingWhitespaceOperation op = new ExtendedRemoveTrailingWhitespaceOperation(saveActionsIgnoreEmptyLines);
 			try {

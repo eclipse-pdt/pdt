@@ -783,13 +783,13 @@
 				menubarPath="navigate/open.ext2"
 				toolbarPath="org.eclipse.search.searchActionSet/Search"
 				tooltip="%OpenMethodAction.tooltip"-->
-			<action
+			<!--action
 				allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 				id="org.eclipse.php.ui.actions.OpenDeclaration"
 				label="%OpenDeclarationAction.label"
 				menubarPath="navigate/open.ext2"
-				retarget="true" />
+				retarget="true" /-->
 		</actionSet>
 		<actionSet
 			label="%OpenActionSet.label"
@@ -1091,16 +1091,6 @@
         schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
         sequence="COMMAND+ALT+V">
   </key>
-        <!--key
-            sequence="F3"
-            contextId="org.eclipse.php.ui.contexts.window"
-            commandId="org.eclipse.dltk.ui.edit.text.script.open.editor"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/-->
-		<!--key
-			sequence="F3"
-			commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"
-			contextId="org.eclipse.php.ui.contexts.window"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /-->
 		<key
 			sequence="F3"
 			commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"
