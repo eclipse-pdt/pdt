@@ -1122,7 +1122,7 @@ public class PhpLexer5 extends PhpLexer {
 	// A pool of states. To avoid creation of a new state on each createMemento.
 	private static final IntHashtable lexerStates = new IntHashtable(100);
 	
-	IntHashtable getLexerStates() {
+	protected IntHashtable getLexerStates() {
 		return lexerStates;
 	}
 

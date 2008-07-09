@@ -119,7 +119,7 @@ public abstract class PhpLexer implements Scanner, PHPRegionTypes {
 	}
 	
 	// A pool of states. To avoid creation of a new state on each createMemento.
-	abstract IntHashtable getLexerStates();
+	protected abstract IntHashtable getLexerStates();
 	
 	public boolean getAspTags() {
 		return asp_tags;
