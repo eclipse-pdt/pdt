@@ -29,7 +29,6 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -219,6 +218,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	}
 
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
-		return new PHPNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
+		IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
+		return new PHPNodeActionManager(((StructuredTextEditor) activeEditor).getModel(), treeViewer);
 	}
 }
