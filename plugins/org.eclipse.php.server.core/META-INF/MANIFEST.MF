@@ -14,3 +14,4 @@ Export-Package: org.eclipse.php.internal.server.core,
  org.eclipse.php.internal.server.core.deploy,
  org.eclipse.php.internal.server.core.manager,
  org.eclipse.php.internal.server.core.preferences
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
