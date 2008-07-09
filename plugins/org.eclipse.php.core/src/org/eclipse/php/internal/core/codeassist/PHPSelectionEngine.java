@@ -29,12 +29,14 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
@@ -78,12 +80,34 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String CLASS = "class";
 	private static final String FUNCTION = "function";
 	private static final IModelElement[] EMPTY = {};
+	
+	private boolean fileNetwokFilter;
 
 	public IAssistParser getParser() {
 		return null;
 	}
+	
+	protected IModelElement[] filterElements(org.eclipse.dltk.core.ISourceModule sourceModule, IModelElement[] elements) {
+		if (fileNetwokFilter) {
+			elements = PHPModelUtils.fileNetworkFilter(sourceModule, elements);
+		}
+		
+		// prefer elements from current module:
+		List<IModelElement> fromThisModule = new LinkedList<IModelElement>();
+		for (IModelElement element : elements) {
+			if (((ModelElement)element).getSourceModule().equals(sourceModule)) {
+				fromThisModule.add(element);
+			}
+		}
+		if (fromThisModule.size() > 0) {
+			return fromThisModule.toArray(new IModelElement[fromThisModule.size()]);
+		}
+		return elements;
+	}
 
 	public IModelElement[] select(ISourceModule sourceUnit, int offset, int end) {
+		
+		fileNetwokFilter = PHPCorePlugin.getDefault().getPluginPreferences().getBoolean(PHPCoreConstants.CODESELECT_FILE_NETWORK_FILTER);
 
 		if (end < offset) {
 			end = offset + 1;
@@ -150,7 +174,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					if (callExpression.getReceiver() != null) {
 						IEvaluatedType receiverType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, callExpression.getReceiver());
 						if (receiverType != null) {
-							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) context);
+							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) context, fileNetwokFilter);
 							List<IModelElement> methods = new LinkedList<IModelElement>();
 							for (IModelElement element : elements) {
 								if (element instanceof IType) {
@@ -165,7 +189,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return methods.toArray(new IModelElement[methods.size()]);
 						}
 					} else {
-						return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceMethods(callExpression.getName(), true));
+						return filterElements(sourceModule, CodeAssistUtils.getWorkspaceMethods(callExpression.getName(), true));
 					}
 				}
 				// Static field or constant access:
@@ -183,7 +207,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					if (fieldName != null && dispatch.getDispatcher() != null) {
 						IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, dispatch.getDispatcher());
 						if (dispatcherType != null) {
-							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context);
+							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context, fileNetwokFilter);
 							List<IModelElement> fields = new LinkedList<IModelElement>();
 							for (IModelElement element : elements) {
 								if (element instanceof IType) {
@@ -210,7 +234,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					if (fieldName != null && fieldAccess.getDispatcher() != null) {
 						IEvaluatedType dispatcherType = PHPTypeInferenceUtils.resolveExpression(sourceModule, parsedUnit, context, fieldAccess.getDispatcher());
 						if (dispatcherType != null) {
-							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context);
+							IModelElement[] elements = PHPTypeInferenceUtils.getModelElements(dispatcherType, (ISourceModuleContext) context, fileNetwokFilter);
 							List<IModelElement> fields = new LinkedList<IModelElement>();
 							for (IModelElement element : elements) {
 								if (element instanceof IType) {
@@ -229,7 +253,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
-					return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((TypeReference) node).getName()), (ISourceModuleContext) context);
+					return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((TypeReference) node).getName()), (ISourceModuleContext) context, fileNetwokFilter);
 				}
 			}
 		}
@@ -354,7 +378,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
+							return filterElements(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
 						}
 
 						// If we are at class constant definition:
@@ -366,7 +390,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
+							filterElements(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(sourceUnit, statement, endPosition, offset, sDoc.getLineOfOffset(offset), true);
@@ -380,7 +404,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceMethods(elementName, true));
+							return filterElements(sourceModule, CodeAssistUtils.getWorkspaceMethods(elementName, true));
 						}
 
 						if (types != null && types.length > 0) {
@@ -404,13 +428,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// This can be only global constant, if we've reached here:
-						IModelElement[] constants = PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
+						IModelElement[] constants = filterElements(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
 						if (constants.length > 0) {
 							return constants;
 						}
 
 						// Return class if nothing else found.
-						return PHPModelUtils.fileNetworkFilter(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
+						return filterElements(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
 					}
 				}
 			}

@@ -101,12 +101,17 @@ public class ModelElementResolver {
 		}
 
 		public boolean visitGeneral(ASTNode node) throws Exception {
-			if (node.sourceStart() <= offset &&node.sourceEnd() >= offset && node.getChilds().size() == 0) {
-				context = contextStack.peek();
-				this.node = node;
+			if (node.sourceEnd() < offset || node.sourceStart() > offset) {
 				return false;
 			}
-			return context == null;
+			if (node.sourceStart() <= offset &&node.sourceEnd() >= offset) {
+				if (!contextStack.isEmpty()) {
+					this.context = contextStack.peek();
+					this.node = node;
+				}
+			}
+			// search inside - we are looking for minimal node
+			return true;
 		}
 
 		public boolean visit(ModuleDeclaration node) throws Exception {
@@ -136,12 +141,14 @@ public class ModelElementResolver {
 
 		public boolean endvisit(ModuleDeclaration node) throws Exception {
 			contextStack.pop();
-			return visitGeneral(node);
+			endvisitGeneral(node);
+			return true;
 		}
 
 		public boolean endvisit(TypeDeclaration node) throws Exception {
 			contextStack.pop();
-			return visitGeneral(node);
+			endvisitGeneral(node);
+			return true;
 		}
 
 		public boolean endvisit(MethodDeclaration node) throws Exception {

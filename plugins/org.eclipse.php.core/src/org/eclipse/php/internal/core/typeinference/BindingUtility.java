@@ -335,6 +335,7 @@ public class BindingUtility {
 					this.node = node;
 				}
 			}
+			// search inside - we are looking for minimal node
 			return true;
 		}
 
