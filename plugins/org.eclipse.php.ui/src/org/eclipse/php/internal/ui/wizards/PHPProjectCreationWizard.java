@@ -60,9 +60,9 @@ public class PHPProjectCreationWizard extends DataModelWizard implements IExecut
 	protected PHPProjectWizardBasePage basePage;
 
 	protected final ArrayList wizardPagesList = new ArrayList();
-	private IProject createdProject = null;
+	protected IProject createdProject = null;
 	protected IConfigurationElement configElement;
-	private List /** WizardPageFactory */
+	protected List /** WizardPageFactory */
 	wizardPageFactories = new ArrayList();
 
 	public PHPProjectCreationWizard(IDataModel model) {
