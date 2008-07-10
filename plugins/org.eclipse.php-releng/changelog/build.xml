@@ -1,28 +1,19 @@
-<project name="Create changelog" default="run">
+<project name="Create ChangeLog" default="run">
 
 	<target name="init">
 		<property name="buildDirectory" location="${basedir}/../../src/eclipse" />
 		<property file="${buildDirectory}/label.properties" />
 		<property name="repos" value=":pserver:anonymous@dev.eclipse.org:/cvsroot/tools" />
 		<property name="logDir" value="${buildDirectory}/changelog" />
-		<property name="logTime" value="7" />
 	</target>
 
 	<target name="run" depends="init">
 
 		<!-- Must checkout modules in order to generate changes log -->
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.core" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.debug.core" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.debug.daemon" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.debug.ui" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.help" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.server.core" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.server.ui" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php.ui" />
-		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.php-feature" />
+		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.pdt/plugins" />
+		<cvs cvsRoot="${repos}" quiet="true" dest="${logDir}" package="org.eclipse.pdt/features" />
 
-		<cvschangelog dir="${logDir}" quiet="true" cvsRoot="${repos}" daysinpast="${logTime}" destfile="${logDir}/changelog.xml" />
+		<cvschangelog dir="${logDir}" quiet="true" cvsRoot="${repos}" start="${start}" end="${end}" destfile="${logDir}/changelog.xml" />
 
 		<exec executable="xsltproc">
 			<arg line="-o ${buildDirectory}/${buildLabel}/changelog.html ./changelog.xsl ${logDir}/changelog.xml" />
