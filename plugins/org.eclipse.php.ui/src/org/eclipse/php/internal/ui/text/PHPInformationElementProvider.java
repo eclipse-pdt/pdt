@@ -16,11 +16,9 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.actions.SelectionConverter;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
+import org.eclipse.dltk.internal.ui.editor.ModelTextSelection;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -82,26 +80,26 @@ public class PHPInformationElementProvider implements IInformationProvider, IInf
 
 		try {
 			if (fUseCodeResolve) {
-				IStructuredSelection sel = SelectionConverter.getStructuredSelection(fEditor);
-				if (!sel.isEmpty()) {
-					IModelElement inputModelElement = fEditor.getModelElement();
-					if (inputModelElement instanceof ISourceModule && sel instanceof ITextSelection) {
-						IModelElement modelElement = getSelectionModelElement(((ITextSelection) sel).getOffset(), 1, (ISourceModule) inputModelElement);
-						if (modelElement != null) {
-							return modelElement;
-						} else {
-							IType[] topLevelTypes = ((ISourceModule) inputModelElement).getTypes();
-							if (topLevelTypes != null && topLevelTypes.length > 0 && topLevelTypes[0] instanceof IModelElement) {
-								return topLevelTypes[0];
-							}
+				IModelElement inputModelElement = fEditor.getModelElement();
+				if (inputModelElement instanceof ISourceModule && subject != null) {
+					ISourceModule sourceModule = (ISourceModule) inputModelElement;
+					IModelElement modelElement = getSelectionModelElement(subject.getOffset(), subject.getLength(), sourceModule);
+					if (modelElement != null) {
+						return modelElement;
+					} else {
+						IType[] topLevelTypes = ((ISourceModule) inputModelElement).getTypes();
+						if (topLevelTypes != null && topLevelTypes.length > 0 && topLevelTypes[0] instanceof IModelElement) {
+							return topLevelTypes[0];
 						}
 					}
 				}
 			}
+
 			return EditorUtility.getEditorInputModelElement(fEditor, false);
 		} catch (ModelException e) {
 			return null;
 		}
+
 	}
 
 	/**
