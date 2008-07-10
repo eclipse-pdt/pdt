@@ -94,7 +94,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	}
 	
 	public ASTListNode getSuperClasses() {
-		ASTListNode listNode = new ASTListNode();
+		ASTListNode listNode = new ASTListNode(sourceStart(), sourceEnd());
 		if (superClass != null) {
 			listNode.addNode(superClass);
 		}
