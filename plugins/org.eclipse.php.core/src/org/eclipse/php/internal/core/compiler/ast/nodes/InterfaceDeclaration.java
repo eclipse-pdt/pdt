@@ -39,7 +39,7 @@ public class InterfaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 
 		this.phpDoc = phpDoc;
 
-		ASTListNode parentsList = new ASTListNode();
+		ASTListNode parentsList = new ASTListNode(start, end);
 		for (TypeReference intface: interfaces) {
 			parentsList.addNode(intface);
 		}
