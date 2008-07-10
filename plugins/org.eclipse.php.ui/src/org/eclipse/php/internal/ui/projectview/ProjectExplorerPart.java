@@ -53,6 +53,10 @@ public class ProjectExplorerPart extends ScriptExplorerPart implements IPartList
 	private Object getInput() {
 		IEditorPart input = getSite().getPage().getActiveEditor();
 		IEditorPart editor = (IEditorPart) input;
+		if (editor == null) {
+			return null;
+		}
+		
 		final IEditorInput editorInput = editor.getEditorInput();
 		final IFile file = (IFile) editorInput.getAdapter(IFile.class);
 		if (file != null) {
