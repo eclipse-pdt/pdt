@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.folding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,19 +24,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.ElementChangedEvent;
-import org.eclipse.dltk.core.IElementChangedListener;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IModelElementDelta;
-import org.eclipse.dltk.core.IParent;
-import org.eclipse.dltk.core.ISourceRange;
-import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.IProblem;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.corext.SourceRange;
+import org.eclipse.dltk.internal.core.ModelUpdater;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -48,7 +48,13 @@ import org.eclipse.jface.text.source.projection.IProjectionPosition;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.php.internal.core.ast.nodes.Comment;
+import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.actions.SelectionConverter;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.folding.html.ProjectionModelNodeAdapterFactoryHTML;
@@ -56,8 +62,10 @@ import org.eclipse.php.internal.ui.folding.html.ProjectionModelNodeAdapterHTML;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
@@ -65,6 +73,10 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -92,6 +104,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		private boolean fHasHeaderComment;
 		private LinkedHashMap<Object, Position> fMap= new LinkedHashMap<Object, Position>();
 		private ICommentScanner fScanner;
+		private boolean headerChecked = false;
 
 		private FoldingStructureComputationContext(IDocument document, ProjectionAnnotationModel model, boolean allowCollapsing) {
 			Assert.isNotNull(document);
@@ -211,6 +224,21 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		public boolean collapseMembers() {
 			return fAllowCollapsing && fCollapseMembers;
 		}
+
+		/**
+		 * @return true if the header was computed already
+		 */
+		public boolean isHeaderChecked() {
+			return headerChecked;
+		}
+
+		/**
+		 * set the header checked property
+		 */
+		public void setHeaderChecked() {
+			headerChecked = true;
+		}
+
 	}
 	
 	private interface ICommentScanner {
@@ -417,9 +445,8 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			IModelElementDelta delta= findElement(fInput, e.getDelta());
 			if (delta != null && (delta.getFlags() & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_CHILDREN)) != 0) {
 
-				// TODO
-//				if (shouldIgnoreDelta(e.getDelta().getCompilationUnitAST(), delta))
-//					return;
+				if (shouldIgnoreDelta(e.getDelta().getElement(), delta))
+					return;
 
 				fUpdatingCount++;
 				try {
@@ -441,29 +468,21 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		 * @param delta the Java element delta for the given AST element
 		 * @return <code>true</code> if the delta should be ignored
 		 * @since 3.3
-
-		private boolean shouldIgnoreDelta(CompilationUnit ast, IModelElementDelta delta) {
+		 */
+		private boolean shouldIgnoreDelta(IModelElement ast, IModelElementDelta delta) {
 			if (ast == null)
 				return false; // can't compute
 				
+			final IFile resource = (IFile) ast.getResource();
+			
 			IDocument document= getDocument();
 			if (document == null)
 				return false; // can't compute
 
-			JavaEditor editor= fEditor;
+			PHPStructuredEditor editor= fEditor;
 			if (editor == null || editor.getCachedSelectedRange() == null)
 				return false; // can't compute
 			
-			try {
-				if (delta.getAffectedChildren().length == 1 && delta.getAffectedChildren()[0].getElement() instanceof IImportContainer) {
-					IModelElement elem= SelectionConverter.getElementAtOffset(ast.getTypeRoot(), new TextSelection(editor.getCachedSelectedRange().x, editor.getCachedSelectedRange().y));
-					if (!(elem instanceof IImportDeclaration))
-						return false;
-					
-				}
-			} catch (ModelException e) {
-				return false; // can't compute
-			}
 			
 			int caretLine= 0;
 			try {
@@ -473,16 +492,28 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			}
 			
 			if (caretLine > 0) {
-				IProblem[] problems= ast.getProblems();
-				for (int i= 0; i < problems.length; i++) {
-					if (problems[i].isError() && caretLine == problems[i].getSourceLineNumber())
-						return true;
+				try {
+					IMarker[] problems = resource.findMarkers( DefaultProblem.MARKER_TYPE_PROBLEM, false, IResource.DEPTH_INFINITE);
+					for (int i = 0; i < problems.length; i++) {
+						final IMarker marker = problems[i];
+						final boolean isInCaret = isCaretLine(caretLine, IMarker.LINE_NUMBER, marker);
+						final boolean isSyntaxError = isCaretLine(IMarker.SEVERITY_ERROR, IMarker.SEVERITY, marker);
+						if (isSyntaxError && isInCaret) {
+							return true;
+						}
+					}
+					
+				} catch (CoreException e) {
+					return false;
 				}
 			}
-			
 			return false;
 		}
-		 */		
+
+		private final boolean isCaretLine(int expected, String attribute, final IMarker marker) throws CoreException {
+			final Object res = marker.getAttribute(attribute); // IMarker.LINE_NUMBER
+			return res != null && res instanceof Integer && (Integer) res == expected;
+		}
 
 		private IModelElementDelta findElement(IModelElement target, IModelElementDelta delta) {
 
@@ -1328,8 +1359,8 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 				return new IRegion[0];
 
 			List<IRegion> regions= new ArrayList<IRegion>();
-			
-			if (!ctx.hasHeaderComment()) {
+			if (!ctx.isHeaderChecked()) {
+				ctx.setHeaderChecked();
 				IRegion headerComment= computeHeaderComment(ctx);
 				if (headerComment != null) {
 					regions.add(headerComment);
@@ -1364,8 +1395,48 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 	}
 
 	private IRegion computeHeaderComment(FoldingStructureComputationContext ctx) throws ModelException {
-		// TODO folding of the file comment 
-		// search at most up to the first type
+		final IStructuredDocument document = (IStructuredDocument) ctx.getDocument();
+		IStructuredDocumentRegion sdRegion = document.getFirstStructuredDocumentRegion();
+		int i = 0;
+		while (sdRegion != null && sdRegion.getType() != PHPRegionTypes.PHP_CONTENT && i++ < 40) {
+			sdRegion = sdRegion.getNext();
+		}
+		
+		if (sdRegion.getType() != PHPRegionTypes.PHP_CONTENT || sdRegion.getRegions().size() < 2) {
+			return null;
+		}
+		
+		final IPhpScriptRegion textRegion = (IPhpScriptRegion) sdRegion.getRegions().get(1);
+		try {
+			ITextRegion phpToken = textRegion.getPhpToken(0);
+			i = 0;
+			while (phpToken != null && phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START && i++ < 3) {
+				phpToken = textRegion.getPhpToken(phpToken.getEnd() + 1);
+			}
+			if (phpToken == null || phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_START) {
+				return null;
+			}
+			int start = phpToken.getStart();
+			ITextRegion lastToken = null;
+			while (lastToken != phpToken && phpToken != null && phpToken.getType() != PHPRegionTypes.PHPDOC_COMMENT_END) {
+				phpToken = textRegion.getPhpToken(phpToken.getEnd() + 1);
+			}
+
+			if (phpToken != null && phpToken.getType() == PHPRegionTypes.PHPDOC_COMMENT_END) {
+				int end = phpToken.getEnd();
+				return new Region(sdRegion.getStartOffset() + textRegion.getStart() + start, end - start); 
+			}
+			return null; 
+			
+		} catch (BadLocationException e) {
+			return null;
+		}
+		
+		
+		
+		
+
+		
 		//		ISourceRange range= ctx.getFirstType().getSourceRange();
 		//		if (range == null)
 		//			return null;
@@ -1403,7 +1474,6 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 		//		if (end != -1) {
 		//			return new Region(start, end - start);
 		//		}
-		return null;
 	}
 	
 	/**
