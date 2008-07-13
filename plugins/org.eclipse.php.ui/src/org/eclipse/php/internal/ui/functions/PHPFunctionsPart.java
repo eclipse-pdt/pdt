@@ -12,10 +12,15 @@ package org.eclipse.php.internal.ui.functions;
 
 import java.text.MessageFormat;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.*;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
@@ -26,7 +31,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.*;
-import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -45,9 +50,14 @@ import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/**
+ * Function composite for functions 
+ */
 public class PHPFunctionsPart extends ViewPart implements IPartListener {
+
 	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
 	private TreeViewer fViewer;
@@ -129,28 +139,63 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 	}
 
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
+		Job updateInput = new UIJob("Loading functions") { //$NON-NLS-1$ 
+
+			@Override
+			public IStatus runInUIThread(IProgressMonitor monitor) {
+				monitor.beginTask(getName(), 1);
+				
 				try {
-					final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
-					if (phpEditor != null) {
-						IScriptProject project = phpEditor.getProject();
-						Object currentInput = fViewer.getInput();
-						if (project != null) {
-							IPath languagePath = new Path(LanguageModelInitializer.CONTAINER_PATH);
-							final IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(languagePath, project);
-							IProjectFragment[] projectFragments = project.getProjectFragments();
-							Object newInput = projectFragments[1];
-							if (!newInput.equals(currentInput)) {
-								fViewer.setInput(newInput);
-							}
-						}
+					// retrieves the project and the content 
+					IScriptProject project = getCurrentScriptProject();
+					if (project == null) {
+						return Status.CANCEL_STATUS;
 					}
-				} catch (ModelException e) {
+					Object currentInput = fViewer.getInput();
+					IProjectFragment[] projectFragments = project.getProjectFragments();
+
+					if (projectFragments == null || projectFragments.length == 0) {
+						return Status.CANCEL_STATUS;
+					}
+
+					// set the language settings as input to the content provider
+					Object newInput = projectFragments[1];
+					if (!newInput.equals(currentInput) && fViewer.getContentProvider() != null) {
+						fViewer.setInput(newInput);
+					}
+					return Status.OK_STATUS; 
+
+				} catch (Exception e) {
 					Logger.logException(e);
+					return Status.CANCEL_STATUS;
+				} finally {
+					monitor.done();
 				}
 			}
-		});
+			
+			/**
+			 * Gets the project: either by searching the current open editor or (if there is no open editor) 
+			 * by searching for the first opened php project 
+			 * @return the selected project 
+			 * @throws CoreException
+			 */
+			private final IScriptProject getCurrentScriptProject() throws CoreException {
+				final PHPStructuredEditor phpEditor = EditorUtility.getPHPStructuredEditor(editorPart);
+				if (phpEditor != null) {
+					return phpEditor.getProject();
+				}
+
+				final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+				for (IProject project : projects) {
+					if (PHPModelUtil.isPhpProject(project)) {
+						return DLTKCore.create(project);
+					}
+				}
+				return null;
+			}
+
+		};
+		updateInput.schedule();
 	}
 
 	private TreeViewer createViewer(Composite composite) {
