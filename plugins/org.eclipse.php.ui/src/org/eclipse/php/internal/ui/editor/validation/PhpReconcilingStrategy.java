@@ -157,8 +157,8 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 			if (isASTNeeded) {
 				ASTParser newParser = ASTParser.newParser(ASTParser.VERSION_PHP5, unit);
 				Program createdAST = newParser.createAST(null);
-				createdAST.setSourceModule(unit);
-				if (document != null) {
+				if (createdAST != null && document != null) {
+					createdAST.setSourceModule(unit);
 					createdAST.setLineEndTable(lineEndTable(document));
 				}
 				return createdAST;
