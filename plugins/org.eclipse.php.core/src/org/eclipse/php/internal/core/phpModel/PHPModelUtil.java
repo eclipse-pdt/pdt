@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
@@ -26,6 +27,7 @@ import org.eclipse.php.internal.core.project.PHPNature;
 public class PHPModelUtil {
 	
 	public static boolean isPhpElement(final IModelElement modelElement) {
+		Assert.isNotNull(modelElement);
 		IModelElement sourceModule = modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 		if (sourceModule != null) {
 			return isPhpFile((ISourceModule) sourceModule);
