@@ -58,7 +58,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	/** Constant value indicating if the current platform is Windows */
 	private static final boolean WINDOWS = java.io.File.separatorChar == '\\';
 	public static final String SAVE_AUTOMATICALLY = "save_automatically";
-	private final static String UNTITLED_FOLDER_PATH = "Untitled_Documents";
 
 	protected Map<String, String> envVariables = null;
 
@@ -151,7 +150,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			} else {
 				wc = configuration.getWorkingCopy();
 			}
-			
+
 			// Set Project Name
 			if (project != null) {
 				wc.setAttribute(IPHPDebugConstants.PHP_Project, project.getFullPath().toString());
@@ -304,12 +303,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		}
 		IPath path = Path.fromOSString(filePath);
 
+		// TODO - check if bug isn't reopened due to the change 
 		// find if the file is under UNTITLED_FOLDER_PATH always look like .../Untitled_Documents/filename.php
 		// note that if segment count == 1, no need to check since there's no parent folder
-		if ((path.segmentCount() > 1) && UNTITLED_FOLDER_PATH.equals(path.segment(path.segmentCount() - 2))) {
-			// means this is untitled file no need for save before launch
-			return true;
-		}
+		//		if ((path.segmentCount() > 1) && UNTITLED_FOLDER_PATH.equals(path.segment(path.segmentCount() - 2))) {
+		//			// means this is untitled file no need for save before launch
+		//			return true;
+		//		}
 		return super.saveBeforeLaunch(configuration, mode, monitor);
 	}
 
