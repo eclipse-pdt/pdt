@@ -330,7 +330,7 @@ public class EditorUtility {
 
 		if (input != null) {
 			if (input instanceof NonExistingPHPFileEditorInput) {
-				return openInEditor(input, PHPUiConstants.PHP_UNTITLED_EDITOR_ID, activate);
+				return openInEditor(input, PHPUiConstants.PHP_EDITOR_ID, activate);
 			}
 			return openInEditor(input, getEditorID(input), activate);
 		}
@@ -365,14 +365,15 @@ public class EditorUtility {
 		final IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IWorkspaceRoot root = workspace.getRoot();
 
-		try {
-			Path errorFilePath = new Path(fileName);
-			if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
-				IEditorPart editor = openInEditor(new NonExistingPHPFileEditorInput(errorFilePath), PHPUiConstants.PHP_UNTITLED_EDITOR_ID, true);
-				return revealInEditor(editor, lineNumber);
-			}
-		} catch (RuntimeException e) { // if new Path() fails - do nothing
-		}
+		// TODO - check if no error occurs with untitled php files
+		//		try {
+		//			Path errorFilePath = new Path(fileName);
+		//			if (errorFilePath.segmentCount() > 1 && errorFilePath.segment(errorFilePath.segmentCount() - 2).equalsIgnoreCase("Untitled_Documents")) {
+		//				IEditorPart editor = openInEditor(new NonExistingPHPFileEditorInput(errorFilePath), PHPUiConstants.PHP_UNTITLED_EDITOR_ID, true);
+		//				return revealInEditor(editor, lineNumber);
+		//			}
+		//		} catch (RuntimeException e) { // if new Path() fails - do nothing
+		//		}
 
 		IPath path = new Path(fileName);
 		IFile file = root.getFileForLocation(path);
@@ -403,31 +404,31 @@ public class EditorUtility {
 				IEditorInput editorInput = null;
 
 				// If this file is external - put it into the external files registry
-//				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-//					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-//					if (!localIFile.exists()) {
-//						IFile externalFile = ExternalFileWrapper.createFile(fileName);
-//						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
-//					}
-//				}
+				//				if (!ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+				//					IFile localIFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				//					if (!localIFile.exists()) {
+				//						IFile externalFile = ExternalFileWrapper.createFile(fileName);
+				//						ExternalFilesRegistry.getInstance().addFileEntry(fileName, externalFile);
+				//					}
+				//				}
 
 				// If this is external file:
-//				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
-//					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
-//				} else {
-					LocalFileStorage fileStorage = new LocalFileStorage(localFile);
-					fileStorage.setProject(file.getProject());
-					editorInput = new LocalFileStorageEditorInput(fileStorage);
-//				}
+				//				if (ExternalFilesRegistry.getInstance().isEntryExist(path.toOSString())) {
+				//					editorInput = new FileStoreEditorInput(new LocalFile(localFile));
+				//				} else {
+				LocalFileStorage fileStorage = new LocalFileStorage(localFile);
+				fileStorage.setProject(file.getProject());
+				editorInput = new LocalFileStorageEditorInput(fileStorage);
+				//				}
 
-//				if (editorInput != null) {
-					final IWorkbenchPage p = PHPUiPlugin.getActivePage();
-					if (p != null) {
-						IEditorPart part = openInEditor(editorInput, getEditorID(editorInput), true);
-						return revealInEditor(part, lineNumber);
-					}
-					return null;
-//				}
+				//				if (editorInput != null) {
+				final IWorkbenchPage p = PHPUiPlugin.getActivePage();
+				if (p != null) {
+					IEditorPart part = openInEditor(editorInput, getEditorID(editorInput), true);
+					return revealInEditor(part, lineNumber);
+				}
+				return null;
+				//				}
 			}
 		}
 
@@ -509,6 +510,7 @@ public class EditorUtility {
 		if (part != null && region != null)
 			revealInEditor(part, region.getOffset(), region.getLength());
 	}
+
 	/**
 	 * Selects a PHP Element in an editor
 	 * (based on DLTK model)
@@ -516,13 +518,13 @@ public class EditorUtility {
 	public static void revealInEditor(IEditorPart part, IModelElement element) {
 		if (element == null)
 			return;
-/*		if (part instanceof ScriptEditor) {
-			((ScriptEditor) part).setSelection(element);
-			if (DLTKCore.DEBUG) {
-				System.err.println("Add revealInEditor set selection"); //$NON-NLS-1$
-			}
-			return;
-		}*/
+		/*		if (part instanceof ScriptEditor) {
+					((ScriptEditor) part).setSelection(element);
+					if (DLTKCore.DEBUG) {
+						System.err.println("Add revealInEditor set selection"); //$NON-NLS-1$
+					}
+					return;
+				}*/
 		// Support for non-Script editor
 		try {
 			ISourceRange range = null;
@@ -548,8 +550,6 @@ public class EditorUtility {
 		}
 	}
 
-
-	
 	/**
 	 * Selects a PHP Element in an editor
 	 * 
@@ -659,7 +659,7 @@ public class EditorUtility {
 			} else {
 				// This is, probably, a remote storage:
 				externalPath = storage.getFullPath();
-//				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+				//				resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 			}
 		} else if (input instanceof IURIEditorInput || input instanceof NonExistingPHPFileEditorInput) {
 			// External file editor input. It's usually used when opening PHP file
@@ -668,16 +668,16 @@ public class EditorUtility {
 			// When we are dealing with an Untitled PHP document and the underlying PHP file
 			// does not really exist, but is still considered as an "External" file.
 			if (input instanceof NonExistingPHPFileEditorInput) {
-				externalPath = ((NonExistingPHPFileEditorInput) input).getPath();
+				externalPath = ((NonExistingPHPFileEditorInput) input).getPath(input);
 			} else {
 				externalPath = URIUtil.toPath(((IURIEditorInput) input).getURI());
 			}
-//			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
+			//			resource = ExternalFileWrapper.createFile(externalPath.toOSString());
 		}
 
 		return resource;
 	}
-	
+
 	/**
 	 * Returns the given editor's input as PHP element.
 	 *
@@ -688,15 +688,15 @@ public class EditorUtility {
 	 */
 	public static IModelElement getEditorInputPhpElement(IEditorPart editor, boolean primaryOnly) {
 		Assert.isNotNull(editor);
-		IEditorInput editorInput= editor.getEditorInput();
+		IEditorInput editorInput = editor.getEditorInput();
 		if (editorInput == null)
 			return null;
-		
-		IModelElement je= DLTKUIPlugin.getEditorInputModelElement(editorInput);
+
+		IModelElement je = DLTKUIPlugin.getEditorInputModelElement(editorInput);
 		if (je != null || primaryOnly)
 			return je;
 
-		return  DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput, false);
-	}	
+		return DLTKUIPlugin.getDefault().getWorkingCopyManager().getWorkingCopy(editorInput, false);
+	}
 
 }

@@ -36,6 +36,7 @@ import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.UIPlugin;
@@ -79,7 +80,7 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	}
 	
 	public void install(IValidationContext helper) {
-		FileEditorInput fEditorInput = findEditor(helper);
+		IEditorInput fEditorInput = findEditor(helper);
 		if (fEditorInput == null) {
 			return;
 		}
@@ -96,14 +97,14 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		
 	}
 
-	private IEditorPart getEditor(FileEditorInput fEditorInput) {
+	private IEditorPart getEditor(IEditorInput fEditorInput) {
 		IWorkbenchWindow[] workbenchWindows = UIPlugin.getDefault().getWorkbench().getWorkbenchWindows();
 		IEditorPart findEditor = workbenchWindows[0].getActivePage().findEditor(fEditorInput);
 
 		return findEditor;
 	}
 
-	private FileEditorInput findEditor(IValidationContext helper) {
+	private IEditorInput findEditor(IValidationContext helper) {
 		String[] delta = helper.getURIs();
 		if (delta.length > 0) {
 			// get the file, model and document:
