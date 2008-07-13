@@ -90,7 +90,7 @@ public class PHPBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				} else if (input instanceof IURIEditorInput) {
 					pathName = URIUtil.toPath(((IURIEditorInput) input).getURI()).toOSString();
 				} else {
-					pathName = ((NonExistingPHPFileEditorInput) input).getPath().toString();
+					pathName = ((NonExistingPHPFileEditorInput) input).getPath(input).toString();
 				}
 				if (res instanceof IWorkspaceRoot) {
 					// We are dealing with remote

@@ -116,7 +116,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				} catch (Exception e) {
 					Logger.logException(e);
 				}
-				path = ((NonExistingPHPFileEditorInput) input).getPath();//Untitled dummy path
+				path = ((NonExistingPHPFileEditorInput) input).getPath(input);//Untitled dummy path
 			}
 			if (path != null) {
 				File systemFile = new File(path.toOSString());
