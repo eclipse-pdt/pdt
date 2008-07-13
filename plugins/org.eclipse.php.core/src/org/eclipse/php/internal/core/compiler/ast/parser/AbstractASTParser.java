@@ -168,13 +168,14 @@ abstract public class AbstractASTParser extends lr_parser {
 		int state = ((Symbol) stack.peek()).parse_state;
 
 		short[] rowOfProbe = action_tab[state];
-		String currentText = (String) cur_token.value;
 		int startPosition = cur_token.left;
 		int endPosition = cur_token.right;
 		int lineNumber = ((AstLexer) getScanner()).getCurrentLine();
 
 		StringBuilder errorMessage = new StringBuilder("syntax error");
 		
+		// current token can be either null, string or phpdoc - according to this resolve:  
+		String currentText = cur_token.value instanceof String ? (String) cur_token.value : null;
 		if (currentText == null || currentText.length() == 0) {
 			currentText = getTokenName(cur_token.sym);
 		}
