@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
@@ -75,9 +76,9 @@ public class PHPCorePlugin extends Plugin {
 			IResourceDelta[] affectedChildren = delta.getAffectedChildren();
 			IProject[] projects = new IProject[affectedChildren.length];
 			for (int i = 0; i < affectedChildren.length; i++) {
-				projects[i]=affectedChildren[i].getResource().getProject();
+				projects[i] = affectedChildren[i].getResource().getProject();
 			}
-			
+
 			try {
 				processProjects(projects);
 			} catch (ModelException e) {
@@ -97,7 +98,6 @@ public class PHPCorePlugin extends Plugin {
 		processProjects(projects);
 	}
 
-	
 	/*
 	 * Goes over the given projects and converts them
 	 */
@@ -107,25 +107,20 @@ public class PHPCorePlugin extends Plugin {
 			if (!project.isAccessible()) {
 				continue ProjectsIterate;
 			}
-			IProjectDescription projectDescription = project.getDescription();
-			ICommand[] commands = projectDescription.getBuildSpec();
-			String[] natureIds = projectDescription.getNatureIds();
-
-			for (String nature : natureIds) {
-				// verify that the project is a PHP project
-				if (PHPNature.ID.equalsIgnoreCase(nature)) {
-					// check if the Script Builder is installed
-					for (int i = 0; i < commands.length; ++i) {
-						if (commands[i].getBuilderName().equals(DLTKCore.BUILDER_ID)) {
-							// when the builder exists - continue to the next project
-							continue ProjectsIterate;
-						}
+			// verify that the project is a PHP project
+			if (PHPModelUtil.isPhpProject(project)) {
+				IProjectDescription projectDescription = project.getDescription();
+				ICommand[] commands = projectDescription.getBuildSpec();
+				// check if the Script Builder is installed
+				for (int i = 0; i < commands.length; ++i) {
+					if (commands[i].getBuilderName().equals(DLTKCore.BUILDER_ID)) {
+						// when the builder exists - continue to the next project
+						continue ProjectsIterate;
 					}
-					// perform modifications only if the builder is not installed
-					modifyProject(project);
 				}
+				// perform modifications only if the builder is not installed
+				modifyProject(project);
 			}
-
 		}
 	}
 
