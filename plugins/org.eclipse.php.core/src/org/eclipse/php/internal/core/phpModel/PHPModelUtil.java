@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.core.phpModel;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -19,6 +21,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.internal.core.project.PHPNature;
 
 public class PHPModelUtil {
 	
@@ -98,6 +101,19 @@ public class PHPModelUtil {
 		}
 		return false;
 	}
-	
-	
+
+	/**
+	 * Checks weather the given project is a php project 
+	 * @param project
+	 * @return true for php projects
+	 * @throws CoreException
+	 */
+	public static boolean isPhpProject(IProject project) throws CoreException {
+		if (project == null || !project.isAccessible()) {
+			return false;
+		}
+		
+		final IProjectNature nature = project.getNature(PHPNature.ID);
+		return nature != null;
+	}	
 }
