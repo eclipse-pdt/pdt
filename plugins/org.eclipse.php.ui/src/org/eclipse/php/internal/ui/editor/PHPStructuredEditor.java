@@ -148,6 +148,14 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	private OccurrencesFinderJobCanceler fOccurrencesFinderJobCanceler;
 
 	/**
+	 * The cached selected range.
+	 * 
+	 * @see ITextViewer#getSelectedRange()
+	 * @since 3.3
+	 */	
+	private Point fCachedSelectedRange;
+	
+	/**
 	 * The selection used when forcing occurrence marking through code.
 	 * 
 	 * @since 3.4
@@ -2057,6 +2065,20 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		return super.getSourceViewerConfiguration();
 	}
 
+	/**
+	 * Returns the cached selected range, which allows
+	 * to query it from a non-UI thread.
+	 * <p>
+	 * The result might be outdated if queried from a non-UI thread.</em></p>
+	 *
+	 * @return the caret offset in the master document
+	 * @see ITextViewer#getSelectedRange()
+	 * @since 3.3
+	 */
+	public Point getCachedSelectedRange() {
+		return fCachedSelectedRange;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2065,6 +2087,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	protected void handleCursorPositionChanged() {
 		updateCursorDependentActions();
+		fCachedSelectedRange= getTextViewer().getSelectedRange();		
 		super.handleCursorPositionChanged();
 	}
 
