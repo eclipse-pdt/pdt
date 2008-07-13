@@ -21,22 +21,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.internal.ui.editor.EditorUtility;
-import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.dltk.core.IMember;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
-//import org.eclipse.php.internal.core.phpModel.parser.PHPWorkspaceModelManager;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiConstants;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.xml.core.internal.Logger;
-
 
 public class ActionUtils {
 
@@ -64,7 +57,7 @@ public class ActionUtils {
 	}
 
 	public static boolean isProject(Object element) {
-		return element instanceof IScriptProject/*PHPProjectModel*/ || element instanceof IProject;
+		return element instanceof IScriptProject/*PHPProjectModel*/|| element instanceof IProject;
 	}
 
 	public static IResource[] getResources(List elements) {
@@ -78,7 +71,7 @@ public class ActionUtils {
 			if (element instanceof IResource)
 				resources.add(element);
 			else if (includePHPFileData && element instanceof ISourceModule) {
-				resources.add(((ISourceModule)element).getResource()) ;
+				resources.add(((ISourceModule) element).getResource());
 			}
 		}
 		return (IResource[]) resources.toArray(new IResource[resources.size()]);
@@ -114,7 +107,7 @@ public class ActionUtils {
 	public static Object[] getPHPElements(List elements, boolean phpFileDataIsResource) {
 		List phpElements = new ArrayList(elements.size());
 		for (Object element : elements) {
-			if (element instanceof IModelElement || element instanceof IScriptProject )/*PHPProjectModel*/ //|| element instanceof PHPWorkspaceModelManager)
+			if (element instanceof IModelElement || element instanceof IScriptProject)/*PHPProjectModel*///|| element instanceof PHPWorkspaceModelManager)
 				if (!phpFileDataIsResource || !(element instanceof ISourceModule))
 					phpElements.add(element);
 		}
@@ -124,7 +117,7 @@ public class ActionUtils {
 	public static Object[] getPHPElements(final Object[] elements) {
 		List resources = new ArrayList(elements.length);
 		for (Object element : elements) {
-			if (element instanceof ISourceModule || element instanceof IScriptProject )/*PHPProjectModel*/ //|| element instanceof PHPWorkspaceModelManager)
+			if (element instanceof ISourceModule || element instanceof IScriptProject)/*PHPProjectModel*///|| element instanceof PHPWorkspaceModelManager)
 				resources.add(element);
 		}
 		return resources.toArray();
@@ -188,7 +181,7 @@ public class ActionUtils {
 
 	public static boolean isDeleteAvailable(final Object element) {
 
-		if (/*element instanceof PHPWorkspaceModelManager ||*/ element instanceof IScriptProject /*PHPProjectModel*/)
+		if (/*element instanceof PHPWorkspaceModelManager ||*/element instanceof IScriptProject /*PHPProjectModel*/)
 			return false;
 
 		if (PHPUiConstants.DISABLE_ELEMENT_REFACTORING && !(element instanceof ISourceModule))
@@ -218,7 +211,7 @@ public class ActionUtils {
 	public static boolean arePHPElements(final Object[] elements) {
 		if (elements != null) {
 			for (int index = 0; index < elements.length; index++) {
-				if (elements[index] instanceof  IMember && !(elements[index] instanceof ISourceModule))
+				if (elements[index] instanceof IMember && !(elements[index] instanceof ISourceModule))
 					return true;
 			}
 		}
