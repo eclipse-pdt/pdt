@@ -82,8 +82,11 @@ public class PhpTokenContainer {
 		result.add(token);
 
 		while (tokensIterator.hasNext() && token.getEnd() <= offset + length) {
-			token = tokensIterator.next();
-			result.add(token);
+			final ContextRegion newtoken = tokensIterator.next();
+			if (newtoken != token) {
+				result.add(newtoken);
+			}
+			token = newtoken;
 		}
 
 		return result.toArray(new ITextRegion[result.size()]);
@@ -161,7 +164,7 @@ public class PhpTokenContainer {
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
 		
 		// goto the previous before adding
-		if (oldIterator.hasNext() && oldIterator.nextIndex() != 1) {
+		if (oldIterator.nextIndex() != 1) {
 			oldIterator.previous();
 		}
 		while (newIterator.hasNext()) {
