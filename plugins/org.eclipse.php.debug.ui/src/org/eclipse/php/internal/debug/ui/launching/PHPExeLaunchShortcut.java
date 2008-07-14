@@ -16,6 +16,7 @@ import java.io.File;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -35,6 +36,10 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
@@ -130,30 +135,30 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 	}
 
 	//copy the given line breakpoints to the file of the given path
-//	private void copyBreakPoints(IPath newPath, int[] lineNumbers) throws CoreException {
-//		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
-//		for (int i = 0; i < lineNumbers.length; i++) {
-//			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(PHPDebugTarget.createBreakpoint(resource, lineNumbers[i]));
-//		}
-//	}
+	//	private void copyBreakPoints(IPath newPath, int[] lineNumbers) throws CoreException {
+	//		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFile(newPath);
+	//		for (int i = 0; i < lineNumbers.length; i++) {
+	//			DebugPlugin.getDefault().getBreakpointManager().addBreakpoint(PHPDebugTarget.createBreakpoint(resource, lineNumbers[i]));
+	//		}
+	//	}
 
 	//reteive all the line numbers of breakpoints that exist within the file in the given path 
-//	private int[] getBreakpointLines(IPath path) throws CoreException {
-//		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
-//		ArrayList<Integer> list = new ArrayList<Integer>();
-//		for (int i = 0; i < breakpoints.length; i++) {
-//			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
-//			if (breakPoint.getRuntimeBreakpoint().getFileName().equals(path.toString())) {
-//				list.add(breakPoint.getLineNumber());
-//
-//			}
-//		}
-//		int[] result = new int[list.size()];
-//		for (int i = 0; i < result.length; i++) {
-//			result[i] = list.get(i);
-//		}
-//		return result;
-//	}
+	//	private int[] getBreakpointLines(IPath path) throws CoreException {
+	//		IBreakpoint[] breakpoints = DebugPlugin.getDefault().getBreakpointManager().getBreakpoints(IPHPDebugConstants.ID_PHP_DEBUG_CORE);
+	//		ArrayList<Integer> list = new ArrayList<Integer>();
+	//		for (int i = 0; i < breakpoints.length; i++) {
+	//			PHPConditionalBreakpoint breakPoint = (PHPConditionalBreakpoint) breakpoints[i];
+	//			if (breakPoint.getRuntimeBreakpoint().getFileName().equals(path.toString())) {
+	//				list.add(breakPoint.getLineNumber());
+	//
+	//			}
+	//		}
+	//		int[] result = new int[list.size()];
+	//		for (int i = 0; i < result.length; i++) {
+	//			result[i] = list.get(i);
+	//		}
+	//		return result;
+	//	}
 
 	protected ILaunchConfigurationType getPHPExeLaunchConfigType() {
 		ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
@@ -169,6 +174,20 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 				IProject project = null;
 				Object obj = search[i];
 
+				if (obj instanceof IModelElement) {
+					IModelElement elem = (IModelElement) obj;
+					IResource res = null;
+					if (elem instanceof ISourceModule) {
+						res = ((ISourceModule) elem).getCorrespondingResource();
+					} else if (elem instanceof IType) {
+						res = ((IType) elem).getUnderlyingResource();
+					} else if (elem instanceof IMethod) {
+						res = ((IMethod) elem).getUnderlyingResource();
+					}
+					if (res instanceof IFile) {
+						obj = (IFile) res;
+					}
+				}
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
 					project = file.getProject();
@@ -188,7 +207,7 @@ public class PHPExeLaunchShortcut implements ILaunchShortcut {
 						}
 					}
 				} else if (obj instanceof File) {
-					File systemFile = (File)obj;
+					File systemFile = (File) obj;
 					phpPathString = systemFile.getAbsolutePath();
 					phpFileLocation = phpPathString;
 				}
