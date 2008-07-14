@@ -59,8 +59,8 @@ public class ASTParser {
 	private ASTParser(Reader reader, String version, boolean useASPTags, ISourceModule sourceModule) throws IOException {
 
 		this.sourceModule = sourceModule;
-		if (version != VERSION_PHP4 && version != VERSION_PHP5) {
-			throw new IllegalArgumentException("Invalid version in ASTParser");
+		if (!VERSION_PHP4.equals(version) && !VERSION_PHP5.equals(version)) {
+			throw new IllegalArgumentException("Invalid PHP version in ASTParser: " + version);
 		}
 		this.ast = new AST(reader, version, useASPTags);
 		this.ast.setDefaultNodeFlag(ASTNode.ORIGINAL);
