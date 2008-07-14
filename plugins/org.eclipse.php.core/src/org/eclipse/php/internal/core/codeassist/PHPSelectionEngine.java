@@ -124,12 +124,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		IStructuredModel structuredModel = null;
 		try {
 			IFile file = (IFile) sourceUnit.getModelElement().getResource();
-			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-			if (structuredModel == null) {
-				structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
-			}
-			if (structuredModel instanceof AbstractStructuredModel) {
-				document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
+			if (file != null) {
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+				if (structuredModel == null) {
+					structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+				}
+				if (structuredModel instanceof AbstractStructuredModel) {
+					document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
+				}
 			}
 		} catch (Exception e) {
 			Logger.logException(e);
@@ -397,7 +399,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							filterElements(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
 						}
 
-						IType[] types = CodeAssistUtils.getTypesFor(sourceUnit, statement, endPosition, offset, sDoc.getLineOfOffset(offset), true);
+						IType[] types = CodeAssistUtils.getTypesFor(sourceUnit, statement, startPosition, offset, sDoc.getLineOfOffset(offset), true);
 
 						// Is it function or method:
 						if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$

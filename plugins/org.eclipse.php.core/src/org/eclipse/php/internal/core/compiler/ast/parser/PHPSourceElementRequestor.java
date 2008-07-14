@@ -263,8 +263,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			argsCount = args.getChilds().size();
 		}
 		String name = call.getName();
-		if ("define".equals(name)) {//$NON-NLS-0$
-			ASTNode argument = (ASTNode) call.getArgs().getChilds().get(0);
+		if (args != null && args.getChilds() != null && "define".equalsIgnoreCase(name)) {//$NON-NLS-0$
+			ASTNode argument = (ASTNode) args.getChilds().get(0);
 			if (argument instanceof Scalar) {
 				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 				info.modifiers = Modifiers.AccConstant;

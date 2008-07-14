@@ -381,11 +381,17 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 				if (firstArg instanceof Scalar) {
 					Scalar constant = (Scalar) firstArg;
 					String name = ASTUtils.stripQuotes(constant.getValue());
+					if (moduleAvailable) {
+						IModelElement element = findModelElementFor(constant);
+						if (element instanceof IField) {
+							obj = (IField) element;
+						}
+					}
 					if (sourceModule != null) {
 						obj = new FakeField((ModelElement) sourceModule, name, constant.sourceStart(), constant.sourceEnd() - constant.sourceStart());
 					}
 					Scope scope = scopes.peek();
-					scope.reportConstant(ASTUtils.stripQuotes(name), obj);
+					scope.reportConstant(name, obj);
 				}
 			}
 		}

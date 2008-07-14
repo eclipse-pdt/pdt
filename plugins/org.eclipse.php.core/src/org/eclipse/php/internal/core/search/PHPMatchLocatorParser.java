@@ -23,7 +23,12 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.MatchLocatorParser;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocatorParser extends MatchLocatorParser {
 
@@ -34,13 +39,15 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 	protected void processStatement(ASTNode node, PatternLocator locator) {
 		if (node instanceof FieldDeclaration) {
 			locator.match((FieldDeclaration) node, getNodeSet());
-		} else if (node instanceof ClassConstantDeclaration) {
+		}
+		else if (node instanceof ClassConstantDeclaration) {
 			ClassConstantDeclaration constDecl = (ClassConstantDeclaration) node;
 			ConstantReference constantName = constDecl.getConstantName();
 			FieldDeclaration decl = new FieldDeclaration(constantName.getName(), constantName.sourceStart(), constantName.sourceEnd(), constDecl.sourceStart(), constDecl.sourceEnd());
 			decl.setModifiers(Modifiers.AccConstant);
 			locator.match(decl, getNodeSet());
-		} else if(node instanceof Assignment){
+		}
+		else if(node instanceof Assignment){
 			Expression left = ((Assignment)node).getVariable();
 			if (left instanceof FieldAccess) { // class variable ($this->a = .)
 				FieldAccess fieldAccess = (FieldAccess) left;
@@ -57,10 +64,29 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 				FieldDeclaration decl = new FieldDeclaration(((VariableReference)left).getName(), left.sourceStart(), left.sourceEnd(), node.sourceStart(), node.sourceEnd());
 				locator.match(decl, getNodeSet());
 			}
-		} else if (node instanceof TypeReference) {
+		}
+		else if (node instanceof TypeReference) {
 			locator.match((TypeReference)node, getNodeSet());
-		} else if (node instanceof CallExpression) {
-			locator.match((CallExpression)node, getNodeSet());
+		}
+		else if (node instanceof VariableReference) {
+			locator.match((VariableReference)node, getNodeSet());
+		}
+		else if (node instanceof CallExpression) {
+			CallExpression call = (CallExpression) node;
+			String name = call.getName();
+			if ("define".equalsIgnoreCase(name)) {//$NON-NLS-0$
+				CallArgumentsList args = call.getArgs();
+				if (args != null && args.getChilds() != null) {
+					ASTNode argument = (ASTNode) args.getChilds().get(0);
+					if (argument instanceof Scalar) {
+						String constant = ASTUtils.stripQuotes(((Scalar)argument).getValue());
+						FieldDeclaration decl = new FieldDeclaration(constant, argument.sourceStart(), argument.sourceEnd(), call.sourceStart(), call.sourceEnd());
+						locator.match(decl, getNodeSet());
+					}
+				}
+			} else {
+				locator.match((CallExpression)node, getNodeSet());
+			}
 		} else if (node instanceof Include) {
 			Include include = (Include) node;
 			if (include.getExpr() instanceof Scalar) {

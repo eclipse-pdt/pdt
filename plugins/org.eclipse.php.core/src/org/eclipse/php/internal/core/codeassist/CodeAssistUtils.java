@@ -96,7 +96,7 @@ public class CodeAssistUtils {
 					}
 				} else {
 					SearchEngine searchEngine = new SearchEngine();
-					IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+					IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 
 					int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 					SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
@@ -164,7 +164,7 @@ public class CodeAssistUtils {
 				int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 
 				if (type.getSuperClasses() != null) {
-					scope = SearchEngine.createHierarchyScope(type);
+					scope = SearchEngine.createSuperHierarchyScope(type);
 
 					if (searchConstants) {
 						// search for constants in hierarchy

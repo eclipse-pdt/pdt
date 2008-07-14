@@ -88,7 +88,7 @@ public class PHPModelUtils {
 			throw new NullPointerException();
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+		IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
 		final List<IMethod> methods = new LinkedList<IMethod>();
@@ -114,7 +114,7 @@ public class PHPModelUtils {
 			throw new NullPointerException();
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createHierarchyScope(type);
+		IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
 		final List<PHPDocField> docs = new LinkedList<PHPDocField>();
