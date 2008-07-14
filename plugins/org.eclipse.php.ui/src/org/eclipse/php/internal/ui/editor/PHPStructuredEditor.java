@@ -2593,9 +2593,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 
-		// if this is a global variable re-select the node to be the global entry
-		final int nodetype = selectedNode.getType();
-		if (nodetype == ASTNode.VARIABLE) {
+		if (selectedNode != null && selectedNode.getType() == ASTNode.VARIABLE) {
 			final Expression name = ((Variable) selectedNode).getName();
 			if (name.getType() == ASTNode.IDENTIFIER) {
 				selectedNode = name;
