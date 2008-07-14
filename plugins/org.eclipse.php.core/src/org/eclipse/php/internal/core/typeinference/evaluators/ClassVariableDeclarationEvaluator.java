@@ -116,7 +116,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				searchEngine.search(pattern, participants, scope, requestor, null);
 
 				if (type.getSuperClasses() != null) {
-					scope = SearchEngine.createSuperHierarchyScope(type);
+					// TODO: replace with createSuperHierarchyScope with new DLTK version
+					scope = SearchEngine.createHierarchyScope(type);
 					searchEngine.search(pattern, participants, scope, requestor, null);
 				}
 			} catch (CoreException e) {
