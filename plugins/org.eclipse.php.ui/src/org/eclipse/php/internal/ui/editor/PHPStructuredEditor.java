@@ -56,10 +56,7 @@ import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -651,12 +648,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					try {
 						updateOccurrenceAnnotations((ITextSelection) fForcedMarkOccurrencesSelection, SharedASTProvider.getAST((ISourceModule) sourceModule, SharedASTProvider.WAIT_NO, getProgressMonitor()));
 					} catch (ModelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Logger.logException(e);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+						Logger.logException(e);					}
 				}
 			}
 		}
@@ -2599,7 +2593,16 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 
-		if (locations == null && (selectedNode instanceof Identifier || selectedNode instanceof Scalar)) {
+		// if this is a global variable re-select the node to be the global entry
+		final int nodetype = selectedNode.getType();
+		if (nodetype == ASTNode.VARIABLE) {
+			final Expression name = ((Variable) selectedNode).getName();
+			if (name.getType() == ASTNode.IDENTIFIER) {
+				selectedNode = name;
+			}
+		}
+		
+		if (locations == null && (selectedNode.getType() == ASTNode.IDENTIFIER || selectedNode.getType() == ASTNode.SCALAR)) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
