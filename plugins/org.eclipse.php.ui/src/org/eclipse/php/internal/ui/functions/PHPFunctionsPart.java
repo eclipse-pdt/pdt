@@ -46,7 +46,10 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
@@ -117,8 +120,8 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		showFunctionHelpAction = new ShowFunctionHelpAction();
 
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
 		fContextMenu = menuMgr.createContextMenu(fViewer.getTree());
+		menuMgr.add(showFunctionHelpAction);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager mgr) {
 				ISelection selection = fViewer.getSelection();
@@ -126,16 +129,21 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 					IStructuredSelection s = (IStructuredSelection) selection;
 					String url = PHPManualFactory.getManual().getURLForManual((IModelElement) s.getFirstElement());
 					if (url != null) {
+						showFunctionHelpAction.setEnabled(true);
 						showFunctionHelpAction.setURL(url);
-						mgr.add(showFunctionHelpAction);
+					} else {
+						showFunctionHelpAction.setEnabled(false);
 					}
 				}
 			}
 		});
+
 		fViewer.getTree().setMenu(fContextMenu);
-		IWorkbenchPartSite site = getSite();
-		site.registerContextMenu(menuMgr, fViewer);
-		site.setSelectionProvider(fViewer);
+		// Do not register the context menu - no extra entries contributed will be added
+		// fixes bug #239764
+		//		IWorkbenchPartSite site = getSite();
+		//		site.registerContextMenu(menuMgr, fViewer);
+		//		site.setSelectionProvider(fViewer);
 	}
 
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
@@ -144,7 +152,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 			@Override
 			public IStatus runInUIThread(IProgressMonitor monitor) {
 				monitor.beginTask(getName(), 1);
-				
+
 				try {
 					// retrieves the project and the content 
 					IScriptProject project = getCurrentScriptProject();
@@ -163,7 +171,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 					if (!newInput.equals(currentInput) && fViewer.getContentProvider() != null) {
 						fViewer.setInput(newInput);
 					}
-					return Status.OK_STATUS; 
+					return Status.OK_STATUS;
 
 				} catch (Exception e) {
 					Logger.logException(e);
@@ -172,7 +180,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 					monitor.done();
 				}
 			}
-			
+
 			/**
 			 * Gets the project: either by searching the current open editor or (if there is no open editor) 
 			 * by searching for the first opened php project 
