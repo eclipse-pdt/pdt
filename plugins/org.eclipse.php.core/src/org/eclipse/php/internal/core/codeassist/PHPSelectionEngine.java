@@ -122,13 +122,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		// Use the old way by playing with document & buffer:
 		IStructuredDocument document = null;
 		IStructuredModel structuredModel = null;
-		boolean isUnmanaged = false;
 		try {
 			IFile file = (IFile) sourceUnit.getModelElement().getResource();
 			structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
 			if (structuredModel == null) {
 				structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
-				isUnmanaged = true;
 			}
 			if (structuredModel instanceof AbstractStructuredModel) {
 				document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
@@ -136,7 +134,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		} catch (Exception e) {
 			Logger.logException(e);
 		} finally {
-			if (structuredModel != null && !isUnmanaged) {
+			if (structuredModel != null && structuredModel.isSharedForRead()) {
 				structuredModel.releaseFromRead();
 			}
 		}
