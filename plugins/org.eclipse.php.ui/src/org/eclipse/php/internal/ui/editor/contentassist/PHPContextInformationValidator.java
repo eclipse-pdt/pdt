@@ -145,9 +145,22 @@ public class PHPContextInformationValidator implements IContextInformationValida
 
 	public boolean updatePresentation(int offset, TextPresentation presentation) {
 		int currentParameter = -1;
-
+		
+		IDocument document = fViewer.getDocument();
+		
+		int parameterStartPosition = fPosition;
 		try {
-			currentParameter = getCharCount(fViewer.getDocument(), fPosition, offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
+			for (; parameterStartPosition < offset; ++parameterStartPosition) {
+				if (document.getChar(parameterStartPosition) == '(') {
+					++parameterStartPosition;
+					break;
+				}
+			}
+		} catch (BadLocationException x) {
+		}
+		
+		try {
+			currentParameter = getCharCount(document, parameterStartPosition, offset, ",", "", true); //$NON-NLS-1$//$NON-NLS-2$
 		} catch (BadLocationException x) {
 			return false;
 		}

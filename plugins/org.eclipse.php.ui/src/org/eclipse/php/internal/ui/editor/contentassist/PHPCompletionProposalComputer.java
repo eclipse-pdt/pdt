@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import org.eclipse.dltk.ui.text.completion.ContentAssistInvocationContext;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalComputer;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
 import org.eclipse.php.internal.ui.editor.templates.PhpTemplateCompletionProcessor;
 
@@ -33,5 +36,21 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 		}
 		
 		return new PHPCompletionProposalCollector(context.getDocument(), context.getSourceModule(), explicit);
+	}
+
+	protected int guessContextInformationPosition(ContentAssistInvocationContext context) {
+		
+		IDocument document = context.getDocument();
+		int offset = context.getInvocationOffset();
+		try {
+			for (; offset > 0; --offset) {
+				if (document.getChar(offset) == '(') {
+					return offset;
+				}
+			}
+		} catch (BadLocationException e) {
+		}
+		
+		return super.guessContextInformationPosition(context);
 	}
 }
