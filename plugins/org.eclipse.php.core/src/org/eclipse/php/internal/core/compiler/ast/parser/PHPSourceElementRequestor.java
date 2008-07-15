@@ -154,8 +154,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			for (Argument arg : arguments) {
 				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 				info.name = arg.getName();
-				info.nameSourceStart = arg.getNameStart();
-				info.nameSourceEnd = arg.getNameEnd() - 1;
+				info.nameSourceStart = arg.sourceStart();
+				info.nameSourceEnd = arg.sourceEnd() - 1;
 				info.declarationStart = arg.sourceStart();
 				fRequestor.enterField(info);
 				fRequestor.exitField(arg.sourceEnd() - 1);
