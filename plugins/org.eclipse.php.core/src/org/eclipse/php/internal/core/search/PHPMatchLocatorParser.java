@@ -90,7 +90,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		}
 		else if (node instanceof Argument) {
 			SimpleReference ref = ((Argument)node).getRef();
-			FieldDeclaration decl = new FieldDeclaration(ref.getName(), node.sourceStart(), node.sourceEnd(), node.sourceStart(), node.sourceEnd());
+			FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
 			locator.match(decl, getNodeSet());
 		}
 	}

@@ -33,6 +33,12 @@ public class FormalParameter extends Argument {
 
 	private FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName, Expression defaultValue, boolean isMandatory) {
 		super(parameterName, start, end, defaultValue, 0);
+		
+		SimpleReference ref = getRef();
+		if (ref != null) {
+			ref.setStart(parameterName.sourceStart());
+			ref.setEnd(parameterName.sourceEnd());
+		}
 
 		assert parameterName != null;
 
