@@ -27,16 +27,15 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
-import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.CompletionProposal;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.internal.core.util.WeakHashSet;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -157,22 +156,22 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	public IAssistParser getParser() {
 		return null;
 	}
-
-	public void complete(ISourceModule module, int position, int i) {
+	
+	public void complete(org.eclipse.dltk.compiler.env.ISourceModule module, int position, int i) {
 
 		IStructuredDocument document = null;
 
 		if (requestor instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
-			
+
 			IDocument d = phpCompletionRequestor.getDocument();
 			if (d instanceof IStructuredDocument) {
 				document = (IStructuredDocument) d;
 			}
-			
+
 			explicit = phpCompletionRequestor.isExplicit();
 		}
-		
+
 		if (document == null) {
 			IStructuredModel structuredModel = null;
 			try {
@@ -197,7 +196,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (document != null) {
 			try {
-				calcCompletionOption(document, position, module);
+				calcCompletionOption(document, position, (ISourceModule)module.getModelElement());
 			} catch (BadLocationException e) {
 				Logger.logException(e);
 
@@ -209,7 +208,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		this.sourceModule = sourceModule;
 
-		String phpVersion = PhpVersionProjectPropertyHandler.getVersion(((SourceModule) sourceModule).getScriptProject().getProject());
+		String phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
 		isPHP5 = phpVersion.equals(PHPVersion.PHP5);
 
 		// Find the structured document region:
@@ -448,7 +447,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 		if (varName.startsWith(DOLLAR)) { //$NON-NLS-1$
 			// find function arguments
-			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((org.eclipse.dltk.core.ISourceModule) sourceModule.getModelElement(), null);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
 			Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(moduleDeclaration, offset);
 			if (declaration instanceof MethodDeclaration) {
@@ -480,12 +479,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		// find function return types
-		org.eclipse.dltk.core.ISourceModule module = (org.eclipse.dltk.core.ISourceModule) sourceModule.getModelElement();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
 		Declaration declaration = ASTUtils.findDeclarationAfterPHPdoc(moduleDeclaration, offset);
 		if (declaration instanceof MethodDeclaration) {
-			IMethod method = (IMethod) PHPModelUtils.getModelElementByNode(module, moduleDeclaration, declaration);
+			IMethod method = (IMethod) PHPModelUtils.getModelElementByNode(sourceModule, moduleDeclaration, declaration);
 			if (method != null) {
 				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true);
 				if (returnTypes != null) {
@@ -613,7 +611,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		boolean inClass = false;
 		try {
-			IModelElement enclosingElement = ((SourceModule) sourceModule.getModelElement()).getElementAt(offset);
+			IModelElement enclosingElement = sourceModule.getElementAt(offset);
 			if (enclosingElement instanceof IType) {
 				inClass = true;
 			}
@@ -627,7 +625,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int relevanceClass = RELEVANCE_CLASS;
 		int relevanceMethod = RELEVANCE_METHOD;
 
-		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(((SourceModule) sourceModule).getScriptProject().getProject(), prefix);
+		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(sourceModule.getScriptProject().getProject(), prefix);
 		for (KeywordData k : keywordsList) {
 			if (inClass == k.isClassKeyword) {
 				reportKeyword(k.name, k.suffix, relevanceKeyword--);
@@ -651,7 +649,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 				// Complete local scope variables:
 				try {
-					IModelElement enclosingElement = ((SourceModule) sourceModule.getModelElement()).getElementAt(offset);
+					IModelElement enclosingElement = sourceModule.getElementAt(offset);
 					if (enclosingElement instanceof IMethod) {
 						IMethod method = (IMethod) enclosingElement;
 						IModelElement[] variables = CodeAssistUtils.getMethodFields(method, prefix, false);

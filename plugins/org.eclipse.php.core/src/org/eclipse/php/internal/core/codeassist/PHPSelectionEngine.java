@@ -22,15 +22,15 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
-import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -80,22 +80,22 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String CLASS = "class";
 	private static final String FUNCTION = "function";
 	private static final IModelElement[] EMPTY = {};
-	
+
 	private boolean fileNetwokFilter;
 
 	public IAssistParser getParser() {
 		return null;
 	}
-	
+
 	protected IModelElement[] filterElements(org.eclipse.dltk.core.ISourceModule sourceModule, IModelElement[] elements) {
 		if (fileNetwokFilter) {
 			elements = PHPModelUtils.fileNetworkFilter(sourceModule, elements);
 		}
-		
+
 		// prefer elements from current module:
 		List<IModelElement> fromThisModule = new LinkedList<IModelElement>();
 		for (IModelElement element : elements) {
-			if (((ModelElement)element).getSourceModule().equals(sourceModule)) {
+			if (((ModelElement) element).getSourceModule().equals(sourceModule)) {
 				fromThisModule.add(element);
 			}
 		}
@@ -105,18 +105,24 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return elements;
 	}
 
-	public IModelElement[] select(ISourceModule sourceUnit, int offset, int end) {
-		
+	public IModelElement[] select(org.eclipse.dltk.compiler.env.ISourceModule sourceUnit, int offset, int end) {
+
 		fileNetwokFilter = PHPCorePlugin.getDefault().getPluginPreferences().getBoolean(PHPCoreConstants.CODESELECT_FILE_NETWORK_FILTER);
 
 		if (end < offset) {
 			end = offset + 1;
 		}
 
+		ISourceModule sourceModule = (ISourceModule) sourceUnit.getModelElement();
+
 		// First, try to resolve using AST (if we have parsed it well):
-		IModelElement[] elements = internalASTResolve(sourceUnit, offset, end);
-		if (elements != null) {
-			return elements;
+		try {
+			IModelElement[] elements = internalASTResolve(sourceModule, offset, end);
+			if (elements != null) {
+				return elements;
+			}
+		} catch (Exception e) {
+			Logger.logException(e);
 		}
 
 		// Use the old way by playing with document & buffer:
@@ -142,15 +148,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		if (document != null) {
-			return internalResolve(document, sourceUnit, offset, end);
+			return internalResolve(document, sourceModule, offset, end);
 		}
 
 		return EMPTY;
 	}
 
-	private IModelElement[] internalASTResolve(ISourceModule sourceUnit, int offset, int end) {
+	private IModelElement[] internalASTResolve(ISourceModule sourceModule, int offset, int end) throws ModelException {
 
-		String source = sourceUnit.getSourceContents();
+		String source = sourceModule.getSource();
 		offset = PHPTextSequenceUtilities.readIdentifierStartIndex(source, offset, true);
 		end = PHPTextSequenceUtilities.readIdentifierEndIndex(source, end, true);
 
@@ -159,7 +165,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			end = methodEnd;
 		}
 
-		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit.getModelElement();
 		ModuleDeclaration parsedUnit = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
 		ASTNode node = ASTUtils.findMinimalNode(parsedUnit, offset, end);
@@ -266,10 +271,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return null;
 	}
 
-	private IModelElement[] internalResolve(IStructuredDocument sDoc, ISourceModule sourceUnit, int offset, int end) {
-
-		org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) sourceUnit.getModelElement();
-
+	private IModelElement[] internalResolve(IStructuredDocument sDoc, ISourceModule sourceModule, int offset, int end) {
 		try {
 			IStructuredDocumentRegion sRegion = sDoc.getRegionAtCharacterOffset(offset);
 			if (sRegion != null) {
@@ -309,19 +311,19 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					String nextWord = sDoc.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
 
 					if (elementName.length() > 0) {
-						IType containerClass = CodeAssistUtils.getContainerClassData(sourceUnit, offset);
+						IType containerClass = CodeAssistUtils.getContainerClassData(sourceModule, offset);
 
 						// If we are in function declaration:
 						if (FUNCTION.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							if (containerClass != null) {
 								return getClassMethod(containerClass, elementName);
 							}
-							return getFunction(sourceUnit, elementName);
+							return getFunction(sourceModule, elementName);
 						}
 
 						// If we are in class declaration:
 						if (CLASS.equalsIgnoreCase(prevWord) || INTERFACE.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$
-							return getClass(sourceUnit, elementName);
+							return getClass(sourceModule, elementName);
 						}
 
 						// Class instantiation:
@@ -384,7 +386,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							return filterElements(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
+							IModelElement[] elements = CodeAssistUtils.getWorkspaceOrMethodFields(sourceModule, offset, elementName, true);
+							return filterElements(sourceModule, elements);
 						}
 
 						// If we are at class constant definition:
@@ -399,7 +402,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							filterElements(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
 						}
 
-						IType[] types = CodeAssistUtils.getTypesFor(sourceUnit, statement, startPosition, offset, sDoc.getLineOfOffset(offset), true);
+						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset, sDoc.getLineOfOffset(offset), true);
 
 						// Is it function or method:
 						if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
@@ -440,7 +443,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// Return class if nothing else found.
-						return filterElements(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
+						IModelElement[] elements = CodeAssistUtils.getWorkspaceOrMethodFields(sourceModule, offset, elementName, true);
+						return filterElements(sourceModule, elements);
 					}
 				}
 			}
@@ -484,7 +488,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private static IModelElement[] getFunction(ISourceModule sourceModule, String elementName) throws ModelException {
-		IMethod[] methods = ((SourceModule) sourceModule.getModelElement()).getMethods();
+		IMethod[] methods = ((AbstractSourceModule)sourceModule).getMethods();
 		for (IMethod method : methods) {
 			if (method.getElementName().equalsIgnoreCase(elementName)) {
 				return new IModelElement[] { method };
@@ -494,7 +498,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	private static IModelElement[] getClass(ISourceModule sourceModule, String elementName) throws ModelException {
-		IType[] types = ((SourceModule) sourceModule.getModelElement()).getTypes();
+		IType[] types = sourceModule.getTypes();
 		for (IType type : types) {
 			if (type.getElementName().equalsIgnoreCase(elementName)) {
 				return new IModelElement[] { type };

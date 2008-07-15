@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
@@ -121,6 +122,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return super.endvisit(type);
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean visit(MethodDeclaration method) throws Exception {
 		Declaration parentDeclaration = null;
 		if (!declarations.empty()) {
@@ -144,9 +146,24 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(method);
 		}
 
-		return super.visit(method);
+		boolean visit = super.visit(method);
+		
+		if (visit) {
+			// Process method argument (local variable) declarations:
+			List<Argument> arguments = method.getArguments();
+			for (Argument arg : arguments) {
+				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+				info.name = arg.getName();
+				info.nameSourceStart = arg.getNameStart();
+				info.nameSourceEnd = arg.getNameEnd() - 1;
+				info.declarationStart = arg.sourceStart();
+				fRequestor.enterField(info);
+				fRequestor.exitField(arg.sourceEnd() - 1);
+			}
+		}
+		return visit;
 	}
-
+	
 	protected void modifyMethodInfo(MethodDeclaration methodDeclaration, ISourceElementRequestor.MethodInfo mi) {
 		Declaration parentDeclaration = null;
 

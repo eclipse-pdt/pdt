@@ -24,11 +24,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.core.ModelException;
@@ -40,7 +40,6 @@ import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.SearchParticipant;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
-import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -278,8 +277,8 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line, boolean determineObjectFromOtherFile) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
-		IContext context = ASTUtils.findContext((SourceModule) sourceModule, moduleDeclaration, position);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, position);
 		if (context != null) {
 			VariableReference varReference = new VariableReference(position, position + variableName.length(), variableName);
 			ExpressionTypeGoal goal = new ExpressionTypeGoal(context, varReference);
@@ -366,7 +365,7 @@ public class CodeAssistUtils {
 	public static IType getContainerClassData(ISourceModule sourceModule, int offset) {
 		IModelElement type = null;
 		try {
-			type = ((SourceModule) sourceModule).getElementAt(offset);
+			type = sourceModule.getElementAt(offset);
 			while (type != null && !(type instanceof IType)) {
 				type = type.getParent();
 			}
@@ -384,7 +383,7 @@ public class CodeAssistUtils {
 	 */
 	public static IMethod getContainerMethodData(ISourceModule sourceModule, int offset) {
 		try {
-			IModelElement method = ((SourceModule) sourceModule).getElementAt(offset);
+			IModelElement method = sourceModule.getElementAt(offset);
 			if (method instanceof IMethod) {
 				return (IMethod) method;
 			}
@@ -585,8 +584,8 @@ public class CodeAssistUtils {
 			}
 
 			if (className.length() > 0) {
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((SourceModule) sourceModule, null);
-				BasicContext context = new BasicContext((SourceModule) sourceModule, moduleDeclaration);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+				BasicContext context = new BasicContext(sourceModule, moduleDeclaration);
 				IEvaluatedType type = new PHPClassType(className);
 				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context, !determineObjectFromOtherFile));
 			}
@@ -680,6 +679,27 @@ public class CodeAssistUtils {
 	 */
 	public static IModelElement[] getWorkspaceFields(String prefix, boolean exactName) {
 		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.FIELD);
+	}
+	
+	/**
+	 * Return workspace or method fields depending on current position: whether we are inside method or in global scope.
+	 * @param sourceModule
+	 * @param offset
+	 * @param prefix
+	 * @param exactName
+	 * @return
+	 */
+	public static IModelElement[] getWorkspaceOrMethodFields(ISourceModule sourceModule, int offset, String prefix, boolean exactName) {
+		try {
+			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			if (enclosingElement instanceof IMethod) {
+				IMethod method = (IMethod) enclosingElement;
+				return getMethodFields(method, prefix, exactName);
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return getWorkspaceFields(prefix, exactName);
 	}
 	
 	/**

@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.search;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
@@ -78,13 +79,19 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			} else {
 				locator.match((CallExpression)node, getNodeSet());
 			}
-		} else if (node instanceof Include) {
+		}
+		else if (node instanceof Include) {
 			Include include = (Include) node;
 			if (include.getExpr() instanceof Scalar) {
 				Scalar filePath = (Scalar) include.getExpr();
 				CallExpression callExpression = new CallExpression(filePath.sourceStart(), filePath.sourceEnd(), null, "include", new CallArgumentsList());
 				locator.match(callExpression, getNodeSet());
 			}
+		}
+		else if (node instanceof Argument) {
+			SimpleReference ref = ((Argument)node).getRef();
+			FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+			locator.match(decl, getNodeSet());
 		}
 	}
 }
