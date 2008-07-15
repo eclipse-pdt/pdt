@@ -89,7 +89,7 @@ public class ReferenceTree implements IFileHierarchyInfo {
 		}
 
 		private void toString(StringBuilder buf, int tabs) {
-			String fileName = file.getPath().toOSString();
+			String fileName = file.getPath().toString();
 
 			if (tabs > 0) {
 				for (int i = 0; i < tabs; ++i) {
