@@ -19,9 +19,12 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.ast.declarations.*;
+import org.eclipse.dltk.ast.declarations.Declaration;
+import org.eclipse.dltk.ast.declarations.FieldDeclaration;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -36,7 +39,19 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPModifiers;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InterfaceDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
@@ -239,7 +254,26 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return name.endsWith("()") ? name.substring(0, name.length() - 2) : name;
 	}
 
+	public boolean visit(FieldDeclaration declaration) throws Exception {
+		// This is constant declaration:
+		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+		info.modifiers = Modifiers.AccConstant;
+		info.name = declaration.getName();
+		info.nameSourceStart = declaration.getNameStart();
+		info.nameSourceEnd = declaration.getNameEnd() - 1;
+		info.declarationStart = declaration.sourceStart();
+		fRequestor.enterField(info);
+		fRequestor.exitField(declaration.sourceEnd() - 1);
+		return true;
+	}
+	
+	public boolean endvisit(FieldDeclaration declaration) throws Exception {
+		fRequestor.exitField(declaration.sourceEnd() - 1);
+		return true;
+	}
+	
 	public boolean visit(PHPFieldDeclaration declaration) throws Exception {
+		// This is variable declaration:
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 		info.modifiers = declaration.getModifiers();
 		info.name = declaration.getName();
@@ -257,25 +291,22 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean visit(CallExpression call) throws Exception {
-		int argsCount = 0;
-		CallArgumentsList args = call.getArgs();
-		if (args != null && args.getChilds() != null) {
-			argsCount = args.getChilds().size();
-		}
-		String name = call.getName();
-		if (args != null && args.getChilds() != null && "define".equalsIgnoreCase(name)) {//$NON-NLS-0$
-			ASTNode argument = (ASTNode) args.getChilds().get(0);
-			if (argument instanceof Scalar) {
-				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-				info.modifiers = Modifiers.AccConstant;
-				info.name = ASTUtils.stripQuotes(((Scalar)argument).getValue());
-				info.nameSourceEnd = argument.sourceEnd() - 1;
-				info.nameSourceStart = argument.sourceStart();
-				info.declarationStart = call.sourceStart();
-				fRequestor.enterField(info);
-				fRequestor.exitField(call.sourceEnd() - 1);
+		FieldDeclaration constantDecl = ASTUtils.getConstantDeclaration(call);
+		if (constantDecl != null) {
+			// In case we are entering a nested element 
+			if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
+				deferredDeclarations.add(constantDecl);
+				return false;
 			}
+			
+			visit((FieldDeclaration)constantDecl);
+			
 		} else {
+			int argsCount = 0;
+			CallArgumentsList args = call.getArgs();
+			if (args != null && args.getChilds() != null) {
+				argsCount = args.getChilds().size();
+			}
 			fRequestor.acceptMethodReference(call.getName().toCharArray(), argsCount, call.sourceStart(), call.sourceEnd());
 		}
 		return true;
@@ -362,6 +393,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
 			return visit((PHPFieldDeclaration) node);
 		}
+		if (clasName.equals(FieldDeclaration.class.getName())) {
+			return visit((FieldDeclaration) node);
+		}
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return visit((ClassConstantDeclaration) node);
 		}
@@ -376,6 +410,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		String clasName = node.getClass().getName();
 		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
 			return endvisit((PHPFieldDeclaration) node);
+		}
+		if (clasName.equals(FieldDeclaration.class.getName())) {
+			return endvisit((FieldDeclaration) node);
 		}
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return endvisit((ClassConstantDeclaration) node);

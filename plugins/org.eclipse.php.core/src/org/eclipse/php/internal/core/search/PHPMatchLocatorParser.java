@@ -72,18 +72,9 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			locator.match((VariableReference)node, getNodeSet());
 		}
 		else if (node instanceof CallExpression) {
-			CallExpression call = (CallExpression) node;
-			String name = call.getName();
-			if ("define".equalsIgnoreCase(name)) {//$NON-NLS-0$
-				CallArgumentsList args = call.getArgs();
-				if (args != null && args.getChilds() != null) {
-					ASTNode argument = (ASTNode) args.getChilds().get(0);
-					if (argument instanceof Scalar) {
-						String constant = ASTUtils.stripQuotes(((Scalar)argument).getValue());
-						FieldDeclaration decl = new FieldDeclaration(constant, argument.sourceStart(), argument.sourceEnd(), call.sourceStart(), call.sourceEnd());
-						locator.match(decl, getNodeSet());
-					}
-				}
+			FieldDeclaration constantDecl = ASTUtils.getConstantDeclaration((CallExpression) node);
+			if (constantDecl != null) {
+				locator.match(constantDecl, getNodeSet());
 			} else {
 				locator.match((CallExpression)node, getNodeSet());
 			}

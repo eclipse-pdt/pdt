@@ -18,9 +18,12 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.Declaration;
+import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallArgumentsList;
+import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
@@ -31,6 +34,7 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -416,5 +420,25 @@ public class ASTUtils {
 		}
 
 		return decl[0];
+	}
+	
+	/**
+	 * Creates declaration of constant for the given call expression in case if it represents define() call expression.
+	 * @param callExpression Call expression
+	 * @return constant declaration if the given call expression represents define() expression, otherwise <code>null</code>
+	 */
+	public static FieldDeclaration getConstantDeclaration(CallExpression callExpression) {
+		String name = callExpression.getName();
+		if ("define".equalsIgnoreCase(name)) {//$NON-NLS-0$
+			CallArgumentsList args = callExpression.getArgs();
+			if (args != null && args.getChilds() != null) {
+				ASTNode argument = (ASTNode) args.getChilds().get(0);
+				if (argument instanceof Scalar) {
+					String constant = ASTUtils.stripQuotes(((Scalar)argument).getValue());
+					return new FieldDeclaration(constant, argument.sourceStart(), argument.sourceEnd(), callExpression.sourceStart(), callExpression.sourceEnd());
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -14,9 +14,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.expressions.CallExpression;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.compiler.env.lookup.Scope;
 import org.eclipse.dltk.compiler.util.HashtableOfIntValues;
 import org.eclipse.dltk.core.DLTKCore;
@@ -28,6 +31,7 @@ import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocator extends MatchLocator {
 
@@ -43,6 +47,22 @@ public class PHPMatchLocator extends MatchLocator {
 		public LocalDeclarationVisitor(IModelElement parent, MatchingNodeSet nodeSet) {
 			this.parent = parent;
 			this.nodeSet = nodeSet;
+		}
+
+		public boolean visit(Expression expression) {
+			if (expression instanceof CallExpression) {
+				try {
+					FieldDeclaration constantDecl = ASTUtils.getConstantDeclaration((CallExpression) expression);
+					if (constantDecl != null) {
+						Integer level = (Integer) nodeSet.matchingNodes.removeKey(constantDecl);
+						reportMatching(null, constantDecl, parent, level != null ? level.intValue() : -1, nodeSet);
+						return false;
+					}
+				} catch (CoreException e) {
+					throw new WrappedCoreException(e);
+				}
+			}
+			return true;
 		}
 
 		public boolean visit(TypeDeclaration typeDeclaration) {
@@ -193,6 +213,5 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 		super.reportMatching(type, parent, accuracy, nodeSet, occurrenceCount);
 	}
-	
-	
+
 }
