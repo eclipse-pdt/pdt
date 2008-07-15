@@ -175,7 +175,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (state != GoalState.RECURSIVE) {
+		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);
 		}
 		return IGoal.NO_GOALS;

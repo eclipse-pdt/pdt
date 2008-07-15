@@ -97,7 +97,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (state != GoalState.RECURSIVE) {
+		if (state != GoalState.RECURSIVE && result != null) {
 			evaluatedTypes.add((IEvaluatedType) result);
 		}
 		return IGoal.NO_GOALS;
