@@ -285,7 +285,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 	
 	public boolean endvisit(FieldDeclaration declaration) throws Exception {
-		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
 	}
 	
