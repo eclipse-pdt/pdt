@@ -10,8 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.core.runtime.CoreException;
@@ -22,7 +24,10 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.TypeReference;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
+import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceRange;
@@ -49,10 +54,12 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
@@ -87,28 +94,37 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (final IType type : types) {
-			final ISourceModule sourceModule = type.getSourceModule();
-			final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-			
-			SearchRequestor requestor = new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					Object element = match.getElement();
-					if (element instanceof SourceRefElement) {
-						SourceRefElement sourceRefElement = (SourceRefElement) element;
-						ISourceRange sourceRange = sourceRefElement.getSourceRange();
-						ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(sourceModule, moduleDeclaration, sourceRange.getOffset(), sourceRange.getLength());
-						try {
-							moduleDeclaration.traverse(searcher);
-							if (searcher.getResult() != null) {
-								subGoals.add(new ExpressionTypeGoal(searcher.getContext(), searcher.getResult()));
+			try {
+				SearchRequestor requestor = new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						Object element = match.getElement();
+						if (element instanceof IMember) {
+							
+							IType declaringType = (IType) ((IMember) element).getAncestor(IModelElement.TYPE);
+							if (declaringType != null) {
+								
+								ISourceModule sourceModule = declaringType.getSourceModule();
+								ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+								TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, declaringType);
+	
+								if (typeDeclaration != null && element instanceof SourceRefElement) {
+									SourceRefElement sourceRefElement = (SourceRefElement) element;
+									ISourceRange sourceRange = sourceRefElement.getSourceRange();
+	
+									ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(sourceModule, moduleDeclaration, sourceRange.getOffset(), sourceRange.getLength(), null);
+									try {
+										typeDeclaration.traverse(searcher);
+										if (searcher.getResult() != null) {
+											subGoals.add(new ExpressionTypeGoal(searcher.getContext(), searcher.getResult()));
+										}
+									} catch (Exception e) {
+										Logger.logException(e);
+									}
+								}
 							}
-						} catch (Exception e) {
-							Logger.logException(e);
 						}
 					}
-				}
-			};
-			try {
+				};
 				IDLTKSearchScope scope;
 				SearchPattern pattern = SearchPattern.createPattern(variableName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
@@ -118,6 +134,24 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				if (type.getSuperClasses() != null) {
 					scope = SearchEngine.createSuperHierarchyScope(type);
 					searchEngine.search(pattern, participants, scope, requestor, null);
+				}
+
+				if (subGoals.size() == 0) {
+					ISourceModule sourceModule = type.getSourceModule();
+					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+					TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
+
+					// try to search declarations of type "self::$var ="
+					ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(sourceModule, moduleDeclaration, 0, 0, variableName);
+					try {
+						typeDeclaration.traverse(searcher);
+						Map<ASTNode, IContext> staticDeclarations = searcher.getStaticDeclarations();
+						for (ASTNode node : staticDeclarations.keySet()) {
+							subGoals.add(new ExpressionTypeGoal(staticDeclarations.get(node), node));
+						}
+					} catch (Exception e) {
+						Logger.logException(e);
+					}
 				}
 			} catch (CoreException e) {
 				Logger.logException(e);
@@ -181,6 +215,10 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		return IGoal.NO_GOALS;
 	}
 
+	/**
+	 * Searches for all class variable declarations using offset and length which is hold by model element 
+	 * @author michael
+	 */
 	class ClassDeclarationSearcher extends ASTVisitor {
 
 		private Stack<IContext> contextStack = new Stack<IContext>();
@@ -190,16 +228,24 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		private IContext context;
 		private int offset;
 		private int length;
+		private String variableName;
+		private Map<ASTNode, IContext> staticDeclarations;
 
-		public ClassDeclarationSearcher(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, int offset, int length) {
+		public ClassDeclarationSearcher(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, int offset, int length, String variableName) {
 			this.sourceModule = sourceModule;
 			this.moduleDeclaration = moduleDeclaration;
 			this.offset = offset;
 			this.length = length;
+			this.variableName = variableName;
+			this.staticDeclarations = new HashMap<ASTNode, IContext>();
 		}
 
 		public ASTNode getResult() {
 			return result;
+		}
+
+		public Map<ASTNode, IContext> getStaticDeclarations() {
+			return staticDeclarations;
 		}
 
 		public IContext getContext() {
@@ -222,13 +268,27 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				if (e.sourceStart() == offset && e.sourceEnd() - e.sourceStart() == length) {
 					result = ((Assignment) e).getValue();
 					context = contextStack.peek();
+				} else if (variableName != null) {
+					Assignment assignment = (Assignment) e;
+					Expression left = assignment.getVariable();
+					Expression right = assignment.getValue();
+					if (left instanceof StaticFieldAccess) {
+						StaticFieldAccess fieldAccess = (StaticFieldAccess) left;
+						Expression dispatcher = fieldAccess.getDispatcher();
+						if (dispatcher instanceof TypeReference && "self".equals(((TypeReference) dispatcher).getName())) { //$NON-NLS-1$
+							Expression field = fieldAccess.getField();
+							if (field instanceof VariableReference && variableName.equals(((VariableReference) field).getName())) {
+								staticDeclarations.put(right, contextStack.peek());
+							}
+						}
+					}
 				}
 			}
 			return visitGeneral(e);
 		}
 
 		public boolean visitGeneral(ASTNode e) throws Exception {
-			return e.sourceStart() <= offset;
+			return e.sourceStart() <= offset || variableName != null;
 		}
 
 		public boolean visit(TypeDeclaration node) throws Exception {
