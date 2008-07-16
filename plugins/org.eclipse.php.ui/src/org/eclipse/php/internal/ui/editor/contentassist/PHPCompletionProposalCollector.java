@@ -42,7 +42,9 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	}
 	
 	protected char[] getVarTrigger() {
-		return new char[] { '\t', ' ', '=', ';', '.' };
+		// variable proposal will be inserted automatically if one of these characters
+		// is being typed in showing proposal time:
+		return null;
 	}
 	
 	public IDocument getDocument() {
