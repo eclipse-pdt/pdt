@@ -192,13 +192,6 @@
         symbolicFontName="org.eclipse.wst.sse.ui.textfont">
 			<contentTypeBinding contentTypeId="org.eclipse.php.core.phpsource" />
 		</editor>
-  <editor
-        class="org.eclipse.php.internal.ui.editor.UntitledPHPEditor"
-        icon="icons/full/obj16/phpfile.gif"
-        id="org.eclipse.php.untitledPhpEditor"
-        name="%editor.name.1"
-        symbolicFontName="org.eclipse.wst.sse.ui.textfont">
-  </editor>
 	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
@@ -767,23 +760,23 @@
 				menubarPath="navigate/open.ext2"
 				toolbarPath="org.eclipse.search.searchActionSet/Search"
 				tooltip="%OpenTypeAction.tooltip" />
-		   <!--action
+		   <action
 				class="org.eclipse.php.internal.ui.actions.OpenMethodAction"
 				definitionId="org.eclipse.php.ui.navigate.open.method"
-				disabledIcon="icons/full/dtool16/opentype.gif"
-				icon="icons/full/etool16/opentype.gif"
+				disabledIcon="icons/full/dtool16/openmethod.gif"
+				icon="icons/full/etool16/openmethod.gif"
 				id="openMethod"
 				label="%OpenMethodAction.label"
 				menubarPath="navigate/open.ext2"
 				toolbarPath="org.eclipse.search.searchActionSet/Search"
-				tooltip="%OpenMethodAction.tooltip"-->
-			<!--action
+				tooltip="%OpenMethodAction.tooltip"/>
+			<action
 				allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 				id="org.eclipse.php.ui.actions.OpenDeclaration"
 				label="%OpenDeclarationAction.label"
 				menubarPath="navigate/open.ext2"
-				retarget="true" /-->
+				retarget="true" />
 		</actionSet>
 		<actionSet
 			label="%OpenActionSet.label"
@@ -942,11 +935,11 @@
 			description="%command.openType.description"
 			categoryId="org.eclipse.ui.category.navigate"
 			id="org.eclipse.php.ui.navigate.open.type" />
-		<!--command
+		<command
 			name="%command.openMethod.name"
 			description="%command.openMethod.description"
 			categoryId="org.eclipse.ui.category.navigate"
-			id="org.eclipse.php.ui.navigate.open.method" /-->
+			id="org.eclipse.php.ui.navigate.open.method" />
 		<command
 			name="%command.openFunctionsManual.name"
 			description="%command.openFunctionsManual.description"
@@ -1111,23 +1104,11 @@
 		<key	
 			sequence="M1+M2+T"
 			commandId="org.eclipse.php.ui.navigate.open.type"
-			contextId="org.eclipse.php.ui.contexts.window"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /> 
 		<key
-			sequence="M1+M2+T"
-			commandId="org.eclipse.php.ui.navigate.open.type"
-			contextId="org.eclipse.php.ui.phpEditorScope"
+			sequence="M1+M2+M"
+			commandId="org.eclipse.php.ui.navigate.open.method"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<!--key	
-			sequence="M1+M2+M"
-			commandId="org.eclipse.php.ui.navigate.open.method"
-			contextId="org.eclipse.php.ui.contexts.window"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /> 
-		<key
-			sequence="M1+M2+M"
-			commandId="org.eclipse.php.ui.navigate.open.method"
-			contextId="org.eclipse.php.ui.phpEditorScope"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /-->
 		<key
             sequence="M1+M2+H"
             commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
