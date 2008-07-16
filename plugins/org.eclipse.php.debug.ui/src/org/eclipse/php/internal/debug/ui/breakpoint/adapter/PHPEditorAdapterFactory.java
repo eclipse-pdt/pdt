@@ -29,7 +29,7 @@ public class PHPEditorAdapterFactory implements IAdapterFactory {
 		
 		if (editorPart instanceof PHPStructuredEditor) {
 			IModelElement modelElement = ((PHPStructuredEditor)editorPart).getModelElement();
-			isPHPFile = PHPModelUtil.isPhpElement(modelElement);
+			isPHPFile = modelElement != null && PHPModelUtil.isPhpElement(modelElement);
 		} else {
 			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
 			if (resource instanceof IFile) {
