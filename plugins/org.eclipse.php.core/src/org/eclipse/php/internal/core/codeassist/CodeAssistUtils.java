@@ -65,6 +65,7 @@ public class CodeAssistUtils {
 
 	private static final String SELF = "self"; //$NON-NLS-1$
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
+	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
@@ -97,7 +98,14 @@ public class CodeAssistUtils {
 					SearchEngine searchEngine = new SearchEngine();
 					IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 
-					int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+					int matchRule;
+					if (prefix.length() == 0) {
+						prefix = WILDCARD;
+						matchRule = SearchPattern.R_PATTERN_MATCH;
+					} else {
+						matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+					}
+					
 					SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
@@ -160,7 +168,14 @@ public class CodeAssistUtils {
 				SearchEngine searchEngine = new SearchEngine();
 				IDLTKSearchScope scope;
 				SearchPattern pattern;
-				int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+				
+				int matchRule;
+				if (prefix.length() == 0) {
+					prefix = WILDCARD;
+					matchRule = SearchPattern.R_PATTERN_MATCH;
+				} else {
+					matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+				}
 
 				if (type.getSuperClasses() != null) {
 					scope = SearchEngine.createSuperHierarchyScope(type);
@@ -711,7 +726,13 @@ public class CodeAssistUtils {
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { method }, toolkit);
 
-		int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+		int matchRule;
+		if (prefix.length() == 0) {
+			prefix = WILDCARD;
+			matchRule = SearchPattern.R_PATTERN_MATCH;
+		} else {
+			matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+		}
 
 		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
@@ -734,7 +755,13 @@ public class CodeAssistUtils {
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
 
-		int matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+		int matchRule;
+		if (prefix.length() == 0) {
+			prefix = WILDCARD;
+			matchRule = SearchPattern.R_PATTERN_MATCH;
+		} else {
+			matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+		}
 
 		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
