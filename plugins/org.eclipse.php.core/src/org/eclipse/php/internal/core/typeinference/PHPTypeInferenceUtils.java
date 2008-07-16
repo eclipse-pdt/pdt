@@ -75,7 +75,7 @@ public class PHPTypeInferenceUtils {
 	}
 	
 	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ASTNode expression) {
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, expression);
 		return resolveExpression(sourceModule, moduleDeclaration, context, expression);
 	}

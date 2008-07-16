@@ -88,7 +88,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 		for (final IType type : types) {
 			final ISourceModule sourceModule = type.getSourceModule();
-			final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			final ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 			
 			SearchRequestor requestor = new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {

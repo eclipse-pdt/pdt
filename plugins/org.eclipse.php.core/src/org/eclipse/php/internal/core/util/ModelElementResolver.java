@@ -52,7 +52,7 @@ public class ModelElementResolver {
 		IModelElement[] modelElements = null;
 
 		ContextFinder visitor = new ContextFinder(sourceModule, offset);
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		try {
 			moduleDeclaration.traverse(visitor);
 		} catch (Exception e) {

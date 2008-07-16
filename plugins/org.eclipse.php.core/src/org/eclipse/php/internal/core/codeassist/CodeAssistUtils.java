@@ -345,7 +345,7 @@ public class CodeAssistUtils {
 			return modelElementsToTypes(modelElements);
 		}
 
-		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(method);
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(instanceContext, method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
 		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
 		if (modelElements != null) {

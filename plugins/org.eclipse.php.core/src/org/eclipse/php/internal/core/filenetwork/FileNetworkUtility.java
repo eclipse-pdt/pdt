@@ -144,7 +144,7 @@ public class FileNetworkUtility {
 
 		final List<String> includes = new LinkedList<String>();
 
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 
 		ASTVisitor visitor = new ASTVisitor() {
 			public boolean visit(Expression expr) throws ModelException {

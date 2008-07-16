@@ -49,7 +49,7 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		final List<IGoal> subGoals = new LinkedList<IGoal>();
 
 		ISourceModule sourceModule = method.getSourceModule();
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		MethodDeclaration decl = null;
 
 		try {

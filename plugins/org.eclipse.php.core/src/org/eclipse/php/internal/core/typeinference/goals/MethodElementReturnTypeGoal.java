@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.typeinference.goals;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 
 public class MethodElementReturnTypeGoal extends AbstractTypeGoal {
@@ -22,8 +23,8 @@ public class MethodElementReturnTypeGoal extends AbstractTypeGoal {
 		return methodElement;
 	}
 
-	public MethodElementReturnTypeGoal(IMethod methodElement) {
-		super(null);
+	public MethodElementReturnTypeGoal(IContext context, IMethod methodElement) {
+		super(context);
 		Assert.isNotNull(methodElement);
 		this.methodElement = methodElement;
 	}

@@ -73,7 +73,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		Iterator<ISourceModule> sourceModuleIt = offsets.keySet().iterator();
 		while (sourceModuleIt.hasNext()) {
 			ISourceModule sourceModule = sourceModuleIt.next();
-			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 			SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 			if (!fileOffsets.isEmpty()) {

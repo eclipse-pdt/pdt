@@ -116,7 +116,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			ISourceModule sourceModule = sourceModuleIt.next();
 			if (exploreOtherFiles || (sourceModuleContext != null && sourceModuleContext.getSourceModule().equals(sourceModule))) {
 
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 				SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 				if (!fileOffsets.isEmpty()) {

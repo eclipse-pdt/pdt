@@ -83,7 +83,7 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 
 		final List<IGoal> subGoals = new ArrayList<IGoal>(methods.size());
 		for (IMethod method : methods) {
-			subGoals.add(new MethodElementReturnTypeGoal(method));
+			subGoals.add(new MethodElementReturnTypeGoal(typedContext, method));
 		}
 		return subGoals.toArray(new IGoal[subGoals.size()]);
 	}

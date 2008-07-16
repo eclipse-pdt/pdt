@@ -49,7 +49,7 @@ public class BindingUtility {
 	 */
 	public BindingUtility(ISourceModule sourceModule) {
 		this.sourceModule = sourceModule;
-		this.rootNode = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		this.rootNode = SourceParserUtil.getModuleDeclaration(sourceModule);
 	}
 
 	/**
