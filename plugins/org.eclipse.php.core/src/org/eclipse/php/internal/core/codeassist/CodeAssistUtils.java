@@ -99,7 +99,7 @@ public class CodeAssistUtils {
 					IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 
 					int matchRule;
-					if (prefix.length() == 0) {
+					if (prefix.length() == 0 && !exactName) {
 						prefix = WILDCARD;
 						matchRule = SearchPattern.R_PATTERN_MATCH;
 					} else {
@@ -170,7 +170,7 @@ public class CodeAssistUtils {
 				SearchPattern pattern;
 				
 				int matchRule;
-				if (prefix.length() == 0) {
+				if (prefix.length() == 0 && !exactName) {
 					prefix = WILDCARD;
 					matchRule = SearchPattern.R_PATTERN_MATCH;
 				} else {
@@ -727,7 +727,7 @@ public class CodeAssistUtils {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { method }, toolkit);
 
 		int matchRule;
-		if (prefix.length() == 0) {
+		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
 			matchRule = SearchPattern.R_PATTERN_MATCH;
 		} else {
@@ -756,7 +756,7 @@ public class CodeAssistUtils {
 		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
 
 		int matchRule;
-		if (prefix.length() == 0) {
+		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
 			matchRule = SearchPattern.R_PATTERN_MATCH;
 		} else {
