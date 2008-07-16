@@ -1320,6 +1320,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportMethod(IMethod method, int relevance) {
+		if (relevance < 1) {
+			relevance = 1;
+		}
+		
 		this.intresting.add(method);
 		String elementName = method.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1371,6 +1375,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportType(IType type, int relevance, String suffix) {
+		if (relevance < 1) {
+			relevance = 1;
+		}
+		
 		this.intresting.add(type);
 		String elementName = type.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1405,6 +1413,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportField(IField field, int relevance, boolean removeDollar) {
+		if (relevance < 1) {
+			relevance = 1;
+		}
+		
 		this.intresting.add(field);
 		String elementName = field.getElementName();
 		if (completedNames.contains(elementName)) {
@@ -1444,6 +1456,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportKeyword(String name, String suffix, int relevance) {
+		if (relevance < 1) {
+			relevance = 1;
+		}
+		
 		// accept result
 		noProposal = false;
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
