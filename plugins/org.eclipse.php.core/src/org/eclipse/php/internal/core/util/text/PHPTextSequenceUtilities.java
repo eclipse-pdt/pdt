@@ -357,7 +357,7 @@ public class PHPTextSequenceUtilities {
 			// The next block solves bug #205034:
 			// store state for whitespace before literals and if another literal comes before it - return 'not found'
 			if (Character.isLetterOrDigit(currChar) || currChar == '$') {
-				if (inWhiteSpaceBeforeLiteral) {
+				if (inWhiteSpaceBeforeLiteral && bracketsNum == 0) {
 					return -1;
 				}
 				inLiteral = true;
