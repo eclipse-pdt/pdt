@@ -130,7 +130,7 @@ public class PHPManual {
 
 		String path = null;
 		ISourceModule sourceModule = method.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
 
 		if (methodDeclaration instanceof IPHPDocAwareDeclaration) {

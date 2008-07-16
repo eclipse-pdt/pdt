@@ -119,7 +119,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
 		}
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(module, method);
 		if (!(methodDeclaration instanceof IPHPDocAwareDeclaration)) {
 			return;
@@ -160,7 +160,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		// append the file name
 		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(module, type);
 
 		if (typeDeclaration instanceof ClassDeclaration) {
@@ -215,7 +215,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
 		}
 
-		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule, null);
+		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		ASTNode node = PHPModelUtils.getNodeByField(module, field);
 
 		if (!(node instanceof IPHPDocAwareDeclaration)) {
