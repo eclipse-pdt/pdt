@@ -82,7 +82,7 @@
 				<contains string="${buildType}" substring="N" />
 			</not>
 		</condition>
-		<antcall target="createChangelog" />
+		<!--<antcall target="createChangelog" />-->
 	</target>
 
 	<target name="buildTest" depends="init, buildRuntime">
