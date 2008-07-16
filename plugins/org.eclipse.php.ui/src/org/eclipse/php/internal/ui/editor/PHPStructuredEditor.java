@@ -2600,7 +2600,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 		
-		if (locations == null && (selectedNode.getType() == ASTNode.IDENTIFIER || selectedNode.getType() == ASTNode.SCALAR)) {
+		if (locations == null && selectedNode != null && (selectedNode.getType() == ASTNode.IDENTIFIER || selectedNode.getType() == ASTNode.SCALAR)) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
