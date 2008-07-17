@@ -416,6 +416,48 @@
 				name="nature"
 				value="org.eclipse.php.core.PHPNature" />
 		</page>
+		
+		<!-- CodeStyle subtree pages-->
+		<page
+            name="%codeStylePreferencePageName"
+            class="org.eclipse.php.internal.ui.preferences.CodeStylePreferencePage"
+            id="org.eclipse.php.ui.propertyPages.CodeStylePreferencePage">
+         <enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
+			<filter
+				name="nature"
+				value="org.eclipse.php.core.PHPNature" />
+      </page>
+      <page
+			category="org.eclipse.php.ui.propertyPages.CodeStylePreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
+			id="org.eclipse.php.ui.propertyPages.PHPFormatterPreferencePage"
+			name="%formatterPreferencePageName">
+			<enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
+         	<filter
+				name="nature"
+				value="org.eclipse.php.core.PHPNature" />
+        </page>
+        <page
+			category="org.eclipse.php.ui.propertyPages.CodeStylePreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPCodeTemplatePreferencePage"
+			id="org.eclipse.php.ui.propertyPages.PHPCodeTemplatePreferencePage"
+			name="%codeTemplatePreferencePageName">
+			<enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     </adapt>         
+         	</enabledWhen>
+         	<filter
+				name="nature"
+				value="org.eclipse.php.core.PHPNature" />
+        </page>
+      
+        <!-- -->
 		<page
 			class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.TodoTaskPreferencePage"
@@ -428,18 +470,7 @@
 				name="nature"
 				value="org.eclipse.php.core.PHPNature" />
 		</page>
-		<page
-			class="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
-			id="org.eclipse.php.ui.propertyPages.PHPFormatterPreferencePage"
-			name="%formatterPreferencePageName">
-			<enabledWhen>
-		     <adapt type="org.eclipse.core.resources.IProject">
-		     </adapt>         
-         	</enabledWhen>
-         	<filter
-				name="nature"
-				value="org.eclipse.php.core.PHPNature" />
-        </page>
+		
 		<page
 			name="%page.name.0"
 			class="org.eclipse.php.internal.ui.preferences.includepath.BuildpathProperties"
@@ -1104,6 +1135,17 @@
 		<key	
 			sequence="M1+M2+T"
 			commandId="org.eclipse.php.ui.navigate.open.type"
+			contextId="org.eclipse.php.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /> 
+		<key
+			sequence="M1+M2+T"
+			commandId="org.eclipse.php.ui.navigate.open.type"
+			contextId="org.eclipse.php.ui.phpEditorScope"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+		<key	
+			sequence="M1+M2+M"
+			commandId="org.eclipse.php.ui.navigate.open.method"
+			contextId="org.eclipse.php.ui.contexts.window"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" /> 
 		<key
 			sequence="M1+M2+M"
@@ -1267,10 +1309,23 @@
 			<keywordReference id="org.eclipse.php.ui.functionsManual" />
 		</page>
 		<page
-			category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            name="%codeStylePreferencePageName"
+            category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+            class="org.eclipse.php.internal.ui.preferences.CodeStylePreferencePage"
+            id="org.eclipse.php.ui.preferences.CodeStylePreferencePage">
+		</page>
+		<page
+			category="org.eclipse.php.ui.preferences.CodeStylePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPFormatterPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPFormatterPreferencePage"
 			name="%formatterPreferencePageName" />
+		<page
+            name="%codeTemplatePreferencePageName"
+            category="org.eclipse.php.ui.preferences.CodeStylePreferencePage"
+            class="org.eclipse.php.internal.ui.preferences.PHPCodeTemplatePreferencePage"
+            id="org.eclipse.php.ui.preferences.PHPCodeTemplatePreferencePage">
+            <keywordReference id="org.eclipse.php.ui.phpcodetemplates"/>
+		</page>
 		<page
 			category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPAppearancePreferencePage"

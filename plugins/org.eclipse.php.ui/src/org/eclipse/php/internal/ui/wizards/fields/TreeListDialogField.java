@@ -39,7 +39,8 @@ public class TreeListDialogField extends DialogField {
 	protected TreeViewerAdapter fTreeViewerAdapter;
 	protected List fElements;
 	protected ViewerSorter fViewerSorter;
-
+	protected ViewerComparator fViewerComparator;
+	
 	protected String[] fButtonLabels;
 	private Button[] fButtonControls;
 
@@ -132,6 +133,10 @@ public class TreeListDialogField extends DialogField {
 	 */
 	public void setViewerSorter(ViewerSorter viewerSorter) {
 		fViewerSorter = viewerSorter;
+	}
+	
+	public void setViewerComparator(ViewerComparator viewerComparator) {
+		fViewerComparator= viewerComparator;
 	}
 
 	public void setTreeExpansionLevel(int level) {

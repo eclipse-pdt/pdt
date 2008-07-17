@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.dltk.internal.ui.text.DLTKColorManager;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 /**
  * Java color manager.
  */
-public class ColorManager  {
+public class ColorManager  extends DLTKColorManager{
 
 	protected Map<String, RGB> fKeyTable= new HashMap<String, RGB>(10);
 	protected Map<Display, Map> fDisplayTable= new HashMap<Display, Map>(2);
