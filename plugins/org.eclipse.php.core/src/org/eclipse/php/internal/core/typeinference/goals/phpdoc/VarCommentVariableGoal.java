@@ -15,6 +15,9 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.AbstractGoal;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 
+/**
+ * This goal purpose is to determine variable type from the attached to its declaration "@var" comment
+ */
 public class VarCommentVariableGoal extends AbstractGoal {
 
 	private VarComment varComment;
