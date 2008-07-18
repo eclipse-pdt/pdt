@@ -1303,13 +1303,12 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	/**
 	 * map the file on this file system to the external one expected by xdebug
 	 * 1. file is in the workspace
-	 *   a) use PDT Path mapper 
-	 *   b) if no mapping use Internal Path mapper
-	 *   c) send as is
+	 *   a) use PDT Path mapper workspace definition
+	 *   b) if no mapping found use external file name and PDT path mapper file system definition
+	 *   c) if no mapping found then send external file name
 	 * 2. file is outside of the workspace
-	 *   a) use PDT Path mapper
-	 *   b) send as is (cannot use Internal Path mapper here)
-	 * 
+	 *   a) use PDT Path mapper and PDT path mapper file system definition
+	 *   b) if no mapping found then send as is (cannot use Internal Path mapper here)
 	 * 
 	 * @param bp
 	 *            the breakpoint which references the file to be mapped to an
@@ -1318,18 +1317,21 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 */
 	private String mapToExternalFileIfRequired(DBGpBreakpoint bp) {
 		String internalFile = "";
-
-		if (bp.getIFile() == null) {
-			// file is not part of the workspace, so get fully qualified file
-			internalFile = bp.getFileName();
-		} else {
-			// get file relative to the workspace.
-			internalFile = bp.getIFile().getFullPath().toString();
-		}
-
 		String mappedFileName = null;
+		
 		if (pathMapper != null) {
-			mappedFileName = pathMapper.getRemoteFile(internalFile);
+			if (bp.getIFile() != null) {
+				// file is defined in the workspace so attempt to map it using the workspace definition
+				internalFile = bp.getIFile().getFullPath().toString();
+				mappedFileName = pathMapper.getRemoteFile(internalFile);
+			}
+			
+			if (mappedFileName == null) {
+				// file is not defined in the workspace or no mapping for workspace file exists
+				// so try to map the fully qualified file.
+				internalFile = bp.getFileName();
+				mappedFileName = pathMapper.getRemoteFile(internalFile);
+			}
 		}
 
 		if (mappedFileName == null) {
