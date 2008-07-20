@@ -18,7 +18,6 @@ import java_cup.runtime.Scanner;
 import java_cup.runtime.Symbol;
 import java_cup.runtime.lr_parser;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.statements.Block;
@@ -30,7 +29,6 @@ import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
-import org.eclipse.wst.xml.core.internal.Logger;
 
 abstract public class AbstractASTParser extends lr_parser {
 
@@ -68,11 +66,7 @@ abstract public class AbstractASTParser extends lr_parser {
 	
 	protected void reportError(IProblemReporter problemReporter, String fileName, int start, int end, int lineNumber, String message) {
 		DefaultProblem problem = new DefaultProblem(fileName, message, IProblem.Syntax, new String[0], ProblemSeverities.Error, start, end, lineNumber);
-		try {
-			problemReporter.reportProblem(problem);
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
+		problemReporter.reportProblem(problem);
 	}
 
 	/**
