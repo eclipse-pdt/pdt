@@ -28,6 +28,7 @@ import org.eclipse.dltk.core.IDLTKLanguageToolkit;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ITypeHierarchy;
@@ -478,12 +479,14 @@ public class CodeAssistUtils {
 
 	/**
 	 * Retrieves all classes from the global scope by the given prefix.
+	 * 
+	 * @param sourceModule Current source module
 	 * @param prefix
 	 * @param exactName
 	 * @return
 	 */
-	public static IType[] getOnlyClasses(String prefix, boolean exactName) {
-		IModelElement[] classes = getWorkspaceClasses(prefix, exactName);
+	public static IType[] getOnlyClasses(ISourceModule sourceModule, String prefix, boolean exactName) {
+		IModelElement[] classes = getGlobalClasses(sourceModule, prefix, exactName);
 		List<IType> onlyClasses = new LinkedList<IType>();
 		for (IModelElement c : classes) {
 			IType type = (IType) c;
@@ -500,12 +503,14 @@ public class CodeAssistUtils {
 
 	/**
 	 * Retrieves all interfaces from the global scope by the given prefix.
+	 * 
+	 * @param sourceModule Current source module
 	 * @param prefix
 	 * @param exactName
 	 * @return
 	 */
-	public static IType[] getOnlyInterfaces(String prefix, boolean exactName) {
-		IModelElement[] classes = getWorkspaceClasses(prefix, exactName);
+	public static IType[] getOnlyInterfaces(ISourceModule sourceModule, String prefix, boolean exactName) {
+		IModelElement[] classes = getGlobalClasses(sourceModule, prefix, exactName);
 		List<IType> onlyInterfaces = new LinkedList<IType>();
 		for (IModelElement i : classes) {
 			IType type = (IType) i;
@@ -633,7 +638,7 @@ public class CodeAssistUtils {
 
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
-			IModelElement[] functions = getWorkspaceMethods(functionName, true);
+			IModelElement[] functions = getGlobalMethods(sourceModule, functionName, true);
 			for (IModelElement function : functions) {
 				IType[] types = getFunctionReturnType((IMethod) function, determineObjectFromOtherFile);
 				if (types != null) {
@@ -668,30 +673,39 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * This method searches for all classes in the workspace scope that match the given prefix
+	 * This method searches for all classes in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
 	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
-	public static IModelElement[] getWorkspaceClasses(String prefix, boolean exactName) {
-		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.TYPE);
+	public static IModelElement[] getGlobalClasses(ISourceModule sourceModule, String prefix, boolean exactName) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.TYPE);
 	}
 
 	/**
-	 * This method searches for all methods in the workspace scope that match the given prefix
+	 * This method searches for all methods in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
 	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
-	public static IModelElement[] getWorkspaceMethods(String prefix, boolean exactName) {
-		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.METHOD);
+	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, boolean exactName) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.METHOD);
 	}
 
 	/**
-	 * This method searches for all fields in the workspace scope that match the given prefix
+	 * This method searches for all fields in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
 	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
-	public static IModelElement[] getWorkspaceFields(String prefix, boolean exactName) {
-		return getWorkspaceElements(prefix, exactName, IDLTKSearchConstants.FIELD);
+	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD);
 	}
 	
 	/**
@@ -702,7 +716,7 @@ public class CodeAssistUtils {
 	 * @param exactName
 	 * @return
 	 */
-	public static IModelElement[] getWorkspaceOrMethodFields(ISourceModule sourceModule, int offset, String prefix, boolean exactName) {
+	public static IModelElement[] getGlobalOrMethodFields(ISourceModule sourceModule, int offset, String prefix, boolean exactName) {
 		try {
 			IModelElement enclosingElement = sourceModule.getElementAt(offset);
 			if (enclosingElement instanceof IMethod) {
@@ -712,11 +726,12 @@ public class CodeAssistUtils {
 		} catch (ModelException e) {
 			Logger.logException(e);
 		}
-		return getWorkspaceFields(prefix, exactName);
+		return getGlobalFields(sourceModule, prefix, exactName);
 	}
 	
 	/**
 	 * This method searches for all fields that where declared in the specified method
+	 * 
 	 * @param method Method to look at
 	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
@@ -750,10 +765,22 @@ public class CodeAssistUtils {
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
-	private static IModelElement[] getWorkspaceElements(String prefix, boolean exactName, int elementType) {
+	/**
+	 * This method searches in the project scope for all elements of specified type that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Element name or prefix
+	 * @param exactName Whether the prefix is an exact name of the element
+	 * @param elementType Element type from {@link IDLTKSearchConstants}
+	 * @return
+	 */
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType) {
 		SearchEngine searchEngine = new SearchEngine();
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-		IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(toolkit);
+		
+		IScriptProject scriptProject = sourceModule.getScriptProject();
+		IDLTKSearchScope scope = scriptProject != null ? SearchEngine.createSearchScope(scriptProject) : SearchEngine.createWorkspaceScope(toolkit);
 
 		int matchRule;
 		if (prefix.length() == 0 && !exactName) {

@@ -557,7 +557,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (prefix.length() == 0) {
 				prefix = DOLLAR;
 			}
-			IModelElement[] elements = CodeAssistUtils.getWorkspaceFields(prefix, false);
+			IModelElement[] elements = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
 				reportField(field, relevanceVar--, true);
@@ -667,7 +667,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 
 				// Complete global scope variables:
-				IModelElement[] variables = CodeAssistUtils.getWorkspaceFields(prefix, false);
+				IModelElement[] variables = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false);
 				for (IModelElement var : variables) {
 					IField field = (IField) var;
 					try {
@@ -697,7 +697,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (!inClass) {
-			IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(prefix, false);
+			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, false);
 			for (IModelElement function : functions) {
 				try {
 					if ((((IMethod) function).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -709,7 +709,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			if (showConstantAssist()) {
-				IModelElement[] constants = CodeAssistUtils.getWorkspaceFields(prefix, false);
+				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false);
 				for (IModelElement constant : constants) {
 					try {
 						if ((((IField) constant).getFlags() & Modifiers.AccConstant) != 0) {
@@ -724,7 +724,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (!inClass) {
 			if (showClassNamesInGlobalCompletion()) {
-				IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
+				IModelElement[] classes = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, false);
 				for (IModelElement type : classes) {
 					try {
 						if ((((IType) type).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -908,7 +908,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					this.setSourceRange(offset - prefix.length(), offset);
 
 					int relevanceClass = RELEVANCE_CLASS;
-					IModelElement[] classes = CodeAssistUtils.getWorkspaceClasses(prefix, false);
+					IModelElement[] classes = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, false);
 					for (IModelElement type : classes) {
 						try {
 							if ((((IType) type).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1059,7 +1059,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showInterfaceList(String prefix, int offset) {
-		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(prefix, false);
+		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(sourceModule, prefix, false);
 		int relevanceClass = RELEVANCE_CLASS;
 		for (IModelElement i : interfaces) {
 			try {
@@ -1121,7 +1121,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int relevanceClass = RELEVANCE_CLASS;
 
-		IType[] classes = CodeAssistUtils.getOnlyClasses(prefix, false);
+		IType[] classes = CodeAssistUtils.getOnlyClasses(sourceModule, prefix, false);
 		for (IType type : classes) {
 			try {
 				if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1176,7 +1176,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		switch (state) {
 			case NEW:
-				IType[] types = CodeAssistUtils.getOnlyClasses(prefix, false);
+				IType[] types = CodeAssistUtils.getOnlyClasses(sourceModule, prefix, false);
 				for (IType type : types) {
 					try {
 						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1195,7 +1195,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 				break;
 			case INSTANCEOF:
-				IModelElement[] typeElements = CodeAssistUtils.getWorkspaceClasses(prefix, false);
+				IModelElement[] typeElements = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, false);
 				for (IModelElement typeElement : typeElements) {
 					try {
 						if ((((IType) typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1214,7 +1214,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 				break;
 			case CATCH:
-				typeElements = CodeAssistUtils.getWorkspaceClasses(prefix, false);
+				typeElements = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, false);
 				for (IModelElement typeElement : typeElements) {
 					try {
 						if ((((IType) typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1291,7 +1291,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int relevanceMethod = RELEVANCE_METHOD;
 
-		IModelElement[] functions = CodeAssistUtils.getWorkspaceMethods(lastWord, false);
+		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, lastWord, false);
 		for (IModelElement function : functions) {
 			try {
 				if ((((IMethod) function).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1303,7 +1303,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (showConstantAssist()) {
-			IModelElement[] constants = CodeAssistUtils.getWorkspaceFields(lastWord, false);
+			IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, lastWord, false);
 			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement constant : constants) {
 				IField field = (IField) constant;

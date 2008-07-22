@@ -196,7 +196,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return methods.toArray(new IModelElement[methods.size()]);
 						}
 					} else {
-						return filterElements(sourceModule, CodeAssistUtils.getWorkspaceMethods(callExpression.getName(), true));
+						return filterElements(sourceModule, CodeAssistUtils.getGlobalMethods(sourceModule, callExpression.getName(), true));
 					}
 				}
 				// Static field or constant access:
@@ -328,7 +328,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// Class instantiation:
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
-							return CodeAssistUtils.getOnlyClasses(elementName, true);
+							return CodeAssistUtils.getOnlyClasses(sourceModule, elementName, true);
 						}
 
 						// Handle extends and implements:
@@ -336,7 +336,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						boolean isClassDeclaration = false;
 						if (statement.length() > 6 && (CLASS.equals(statement.subSequence(0, 5).toString()) && (isClassDeclaration = true) || statement.length() > 10 && INTERFACE.equals(statement.subSequence(0, 9).toString()))) { //$NON-NLS-1$ //$NON-NLS-2$
 
-							IModelElement[] generalizationTypes = getGeneralizationTypes(isClassDeclaration, prevWord, elementName);
+							IModelElement[] generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration, prevWord, elementName);
 							if (generalizationTypes != null) {
 								return generalizationTypes;
 							}
@@ -349,7 +349,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							int preListWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, preListWordEnd, false);
 							String preListWord = statement.subSequence(preListWordStart, preListWordEnd).toString();
 
-							generalizationTypes = getGeneralizationTypes(isClassDeclaration, preListWord, elementName);
+							generalizationTypes = getGeneralizationTypes(sourceModule, isClassDeclaration, preListWord, elementName);
 							if (generalizationTypes != null) {
 								return generalizationTypes;
 							}
@@ -386,7 +386,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							IModelElement[] elements = CodeAssistUtils.getWorkspaceOrMethodFields(sourceModule, offset, elementName, true);
+							IModelElement[] elements = CodeAssistUtils.getGlobalOrMethodFields(sourceModule, offset, elementName, true);
 							return filterElements(sourceModule, elements);
 						}
 
@@ -399,7 +399,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							filterElements(sourceModule, CodeAssistUtils.getWorkspaceClasses(elementName, true));
+							filterElements(sourceModule, CodeAssistUtils.getGlobalClasses(sourceModule, elementName, true));
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset, sDoc.getLineOfOffset(offset), true);
@@ -413,7 +413,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							return filterElements(sourceModule, CodeAssistUtils.getWorkspaceMethods(elementName, true));
+							return filterElements(sourceModule, CodeAssistUtils.getGlobalMethods(sourceModule, elementName, true));
 						}
 
 						if (types != null && types.length > 0) {
@@ -437,13 +437,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// This can be only global constant, if we've reached here:
-						IModelElement[] constants = filterElements(sourceModule, CodeAssistUtils.getWorkspaceFields(elementName, true));
+						IModelElement[] constants = filterElements(sourceModule, CodeAssistUtils.getGlobalFields(sourceModule, elementName, true));
 						if (constants.length > 0) {
 							return constants;
 						}
 
 						// Return class if nothing else found.
-						IModelElement[] elements = CodeAssistUtils.getWorkspaceOrMethodFields(sourceModule, offset, elementName, true);
+						IModelElement[] elements = CodeAssistUtils.getGlobalOrMethodFields(sourceModule, offset, elementName, true);
 						return filterElements(sourceModule, elements);
 					}
 				}
@@ -454,15 +454,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		return EMPTY;
 	}
 
-	private static IModelElement[] getGeneralizationTypes(boolean isClassDeclaration, String generalization, String elementName) {
+	private static IModelElement[] getGeneralizationTypes(ISourceModule sourceModule, boolean isClassDeclaration, String generalization, String elementName) {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
-				return CodeAssistUtils.getOnlyClasses(elementName, true);
+				return CodeAssistUtils.getOnlyClasses(sourceModule, elementName, true);
 			}
-			return CodeAssistUtils.getOnlyInterfaces(elementName, true);
+			return CodeAssistUtils.getOnlyInterfaces(sourceModule, elementName, true);
 		}
 		if (IMPLEMENTS.equalsIgnoreCase(generalization)) { //$NON-NLS-1$ //$NON-NLS-2$
-			return CodeAssistUtils.getOnlyInterfaces(elementName, true);
+			return CodeAssistUtils.getOnlyInterfaces(sourceModule, elementName, true);
 		}
 		return null;
 	}
