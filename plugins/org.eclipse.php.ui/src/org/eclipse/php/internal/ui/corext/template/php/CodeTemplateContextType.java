@@ -11,14 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.corext.template.php;
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.TemplateException;
-import org.eclipse.jface.text.templates.TemplateVariable;
 import org.eclipse.jface.text.templates.TemplateVariableResolver;
 
 /**
@@ -48,7 +45,7 @@ public class CodeTemplateContextType extends TemplateContextType {
 
 	/* templates */
 	
-	private static final String CODETEMPLATES_PREFIX= "org.eclipse.jdt.ui.text.codetemplates."; //$NON-NLS-1$
+	private static final String CODETEMPLATES_PREFIX= "org.eclipse.php.ui.editor.templates.php.codetemplates."; //$NON-NLS-1$
 	public static final String COMMENT_SUFFIX= "comment"; //$NON-NLS-1$
 	
 	public static final String CATCHBLOCK_ID= CODETEMPLATES_PREFIX + "catchblock"; //$NON-NLS-1$

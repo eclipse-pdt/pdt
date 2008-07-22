@@ -37,7 +37,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
  */
 public final class ProjectTemplateStore {
 	
-	private static final String KEY= "org.eclipse.jdt.ui.text.custom_code_templates"; //$NON-NLS-1$
+	private static final String KEY= "org.eclipse.php.ui.text.custom_code_templates"; //$NON-NLS-1$
 
 	private final TemplateStore fInstanceStore;
 	private final TemplateStore fProjectStore;

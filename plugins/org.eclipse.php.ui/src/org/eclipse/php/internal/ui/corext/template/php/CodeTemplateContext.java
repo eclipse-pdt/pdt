@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.ILineTracker;
@@ -24,20 +25,20 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 public class CodeTemplateContext extends TemplateContext {
 
 	private String fLineDelimiter;
-	private IProject fProject;
+	private IScriptProject fProject;
 
-	public CodeTemplateContext(String contextTypeName, IProject project, String lineDelim) {
+	public CodeTemplateContext(String contextTypeName, IScriptProject sp, String lineDelim) {
 		super(getTemplateContextRegistry().getContextType(contextTypeName));
 
 		fLineDelimiter = lineDelim;
-		fProject = project;
+		fProject = sp;
 	}
 
 	protected static ContextTypeRegistry getTemplateContextRegistry() {
 		return PHPUiPlugin.getDefault().getTemplateContextRegistry();
 	}
 
-	public IProject getJavaProject() {
+	public IScriptProject getJavaProject() {
 		return fProject;
 	}
 

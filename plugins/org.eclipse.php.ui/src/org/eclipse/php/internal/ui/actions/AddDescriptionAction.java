@@ -14,25 +14,29 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceReference;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.php.internal.core.ast.util.Signature;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiConstants;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
 import org.eclipse.php.internal.ui.util.EditorUtility;
+import org.eclipse.php.ui.CodeGeneration;
 import org.eclipse.ui.*;
+import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -42,6 +46,8 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class AddDescriptionAction extends Action implements IObjectActionDelegate {
 
+	private IEditorPart fEditorPart;
+	
 	private static final String PHP_COMMENT_BLOCK_END = " */";
 	private static final String PHP_COMMENT_BLOCK_MID = " *";
 	private static final String PHP_COMMENT_BLOCK_START = "/**";
@@ -51,6 +57,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	private int startPosition = 0;
 	String docBlock;
 	String lineDelim;
+
+
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
@@ -72,17 +80,16 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			if (null == modelElem) {
 				continue; // if we got to null pointer, skipping it
 			}
-			IEditorPart editorPart;
 			IEditorInput input = EditorUtility.getEditorInput(modelElem);
 			IWorkbenchPage page = PHPUiPlugin.getActivePage();
 			try {
-				editorPart = IDE.openEditor(page, input, PHPUiConstants.PHP_EDITOR_ID);
+				fEditorPart = IDE.openEditor(page, input, PHPUiConstants.PHP_EDITOR_ID);
 			} catch (PartInitException e) {
 				Logger.logException(e);
 				return;
 			}
-			ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(editorPart);
-			IEditorInput editorInput = editorPart.getEditorInput();
+			ITextEditor textEditor = EditorUtility.getPHPStructuredEditor(fEditorPart);
+			IEditorInput editorInput = fEditorPart.getEditorInput();
 			IDocument document = textEditor.getDocumentProvider().getDocument(editorInput);
 			this.lineDelim = TextUtilities.getDefaultLineDelimiter(document);
 
@@ -117,14 +124,79 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			e.printStackTrace();
 			return null;
 		}
+		
+		// nirc
+		TextEditor textEditor = EditorUtility.getPHPStructuredEditor(fEditorPart);
+		if (!textEditor.isEditable()){
+			return null;
+		}
+		int type= modelElem != null ? modelElem.getElementType() : -1;
+		if (type != IModelElement.METHOD && type != IModelElement.TYPE && type != IModelElement.FIELD) {
+			assert false;
+			return null;
+		}
+		String comment= null;
+		try {
+			switch (modelElem.getElementType()) {
+				case IModelElement.TYPE:			
+					comment= createTypeComment((IType) modelElem, lineDelim);
+					break;
+				case IModelElement.FIELD:
+					comment= createFieldComment((IField) modelElem, lineDelim);
+					break;
+				case IModelElement.METHOD:
+					comment= createMethodComment((IMethod) modelElem, lineDelim);
+					break;
+				default:
+					comment = createDefaultComment(lineDelim);
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		docBlock = indentPattern(comment, indentString, lineDelim);
 
-		docBlock = createDocBlock(document, indentString);
 
 		String docBlockText = insertDocBlock((IStructuredDocument) document, startPosition, docBlock);
 
 		return docBlockText;
 	}
 
+	private String indentPattern (String originalPattern, String indentation, String lineDelim){	
+		String delimPlusIndent = lineDelim + indentation ;
+		String indentedPattern = originalPattern.replaceAll(lineDelim, delimPlusIndent) + delimPlusIndent;
+		
+		return indentedPattern;
+	}
+	
+	private String createDefaultComment(String lineDelimiter)  {
+		return PHP_COMMENT_BLOCK_START + lineDelim + PHP_COMMENT_BLOCK_MID + lineDelim + PHP_COMMENT_BLOCK_END ;
+}
+	private String createTypeComment(IType type, String lineDelimiter) throws CoreException {
+		//String[] typeParameterNames= StubUtility.getTypeParameterNames(type.getFields());
+		
+		return CodeGeneration.getTypeComment(type.getScriptProject() , type.getTypeQualifiedName(), /*typeParameterNames*/null, lineDelimiter);
+	}		
+	
+	private String createMethodComment(IMethod meth, String lineDelimiter) throws CoreException {
+		IType declaringType= meth.getDeclaringType();
+		
+		IMethod overridden= null;
+		if (!meth.isConstructor()) {
+			ITypeHierarchy hierarchy= SuperTypeHierarchyCache.getTypeHierarchy(declaringType);
+			MethodOverrideTester tester= new MethodOverrideTester(declaringType, hierarchy);
+			overridden= tester.findOverriddenMethod(meth, true);
+		}
+		return CodeGeneration.getMethodComment(meth, overridden, lineDelimiter);
+	}
+	
+	private String createFieldComment(IField field, String lineDelimiter) throws ModelException, CoreException {
+		String typeName= null ;//Signature.toString(Signature.createTypeSignature(field.getFullyQualifiedName(), true)) ;//getTypeSignature());
+		String fieldName= field.getElementName();
+		return CodeGeneration.getFieldComment(field.getScriptProject(), typeName, fieldName, lineDelimiter);
+	}		
+	
 	/**
 	 * Calculates and returns the desired docBlock (no indentation)
 	 *  
