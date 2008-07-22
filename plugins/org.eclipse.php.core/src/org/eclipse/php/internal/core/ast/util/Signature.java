@@ -2729,7 +2729,7 @@ public static String toQualifiedName(String[] segments) {
  *   correct
  */
 public static String toString(String signature) throws IllegalArgumentException {
-	return new String(toCharArray(signature.toCharArray()));
+	return new String(signature.toCharArray());
 }
 /**
  * Converts the given method signature to a readable string. The method signature is expected to
