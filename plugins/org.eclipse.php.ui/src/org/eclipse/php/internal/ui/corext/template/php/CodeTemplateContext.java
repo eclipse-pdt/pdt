@@ -12,7 +12,6 @@ package org.eclipse.php.internal.ui.corext.template.php;
 
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.text.BadLocationException;

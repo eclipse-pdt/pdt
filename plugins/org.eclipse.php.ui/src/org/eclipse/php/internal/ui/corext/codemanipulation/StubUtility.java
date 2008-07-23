@@ -176,10 +176,10 @@ public class StubUtility {
 			return null;
 		}
 
-		IScriptProject project = sp;
-		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), project, lineDelimiter);
+		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
 		//		context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.TYPENAME, sp.getElementName());
+		context.setVariable(CodeTemplateContextType.FILENAME , sp.getElementName());
+		//context.setVariable(CodeTemplateContextType.TYPENAME , sp.getElementName());
 		return evaluateTemplate(context, template);
 	}
 
@@ -432,14 +432,27 @@ public class StubUtility {
 	/*
 	 * Don't use this method directly, use CodeGeneration.
 	 */
-	public static String getFieldComment(IScriptProject sp, String typeName, String fieldName, String lineDelimiter) throws CoreException {
+	public static String getFieldComment(IScriptProject sp, String fieldType, String fieldName, String lineDelimiter) throws CoreException {
 		Template template = getCodeTemplate(CodeTemplateContextType.FIELDCOMMENT_ID, sp);
 		if (template == null) {
 			return null;
 		}
 		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
 		//context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.FIELD_TYPE, typeName);
+		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
+		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
+
+		return evaluateTemplate(context, template);
+	}
+
+	public static String getVarComment(IScriptProject sp, String fieldType, String fieldName, String lineDelimiter) throws CoreException {
+		Template template = getCodeTemplate(CodeTemplateContextType.VARCOMMENT_ID, sp);
+		if (template == null) {
+			return null;
+		}
+		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
+		//context.setCompilationUnitVariables(sp);
+		context.setVariable(CodeTemplateContextType.FIELD_TYPE, fieldType);
 		context.setVariable(CodeTemplateContextType.FIELD, fieldName);
 
 		return evaluateTemplate(context, template);

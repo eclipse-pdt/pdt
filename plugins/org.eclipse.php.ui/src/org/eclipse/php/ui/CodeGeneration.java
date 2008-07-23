@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -158,15 +159,62 @@ public class CodeGeneration {
 	/**
 	 * Returns the content for a new field comment using the 'field comment' code template. The returned content is unformatted and is not indented.
 	 * @param sp The compilation unit where the field is contained. The compilation unit does not need to exist.
-	 * @param typeName The name of the field declared type.
+	 * @param fieldType The name of the field declared type.
 	 * @param fieldName The name of the field to which the comment is added.
 	 * @param lineDelimiter The line delimiter to be used.
 	 * @return Returns the new content or <code>null</code> if the code template is undefined or empty. The returned content is unformatted and is not indented.
 	 * @throws CoreException Thrown when the evaluation of the code template fails.
 	 * @since 3.0
 	 */
-	public static String getFieldComment(IScriptProject sp, String typeName, String fieldName, String lineDelimiter) throws CoreException {
-		return StubUtility.getFieldComment(sp, typeName, fieldName, lineDelimiter);
+	public static String getFieldComment(IScriptProject sp, IField field, String lineDelimiter) throws CoreException {
+		String fieldName = field.getElementName();
+		String fieldType = "unknown_type";
+		Boolean isVar = false;
+
+		try {
+			Program program = SharedASTProvider.getAST(field.getSourceModule(), SharedASTProvider.WAIT_YES, new NullProgressMonitor());
+			ASTNode elementAt = program.getElementAt(field.getSourceRange().getOffset());
+			ITypeBinding varType = null;
+			IVariableBinding resolvedBinding = null;
+
+			if (elementAt instanceof FieldsDeclaration) {
+				FieldsDeclaration fieldDeclaration = (FieldsDeclaration) elementAt;
+				resolvedBinding = fieldDeclaration.resolveTypeBinding();
+
+				if (null != resolvedBinding) {
+					varType = resolvedBinding.getType();
+				}
+			} else if (elementAt instanceof Variable) {
+				isVar = true;
+
+				Variable varDeclaration = (Variable) elementAt;
+				if (varDeclaration.getParent() instanceof Assignment) {
+					Expression expression = ((Assignment) varDeclaration.getParent()).getRightHandSide();
+					varType = expression.resolveTypeBinding();
+					//FIXME - what happens when it is a simple type... (see bug #241807)
+
+				} else {
+					varType = varDeclaration.resolveTypeBinding();
+				}
+			}
+
+			if (null != varType) {
+				if (varType.isUnknown()) {
+					fieldType = "unknown_type";
+				} else if (varType.isAmbiguous()) {
+					fieldType = "Ambiguous";
+				} else {
+					fieldType = varType.getName();
+				}
+			}
+
+		} catch (IOException e) {
+			return null;
+		}
+		if (isVar) {
+			return StubUtility.getVarComment(sp, fieldType, fieldName, lineDelimiter);
+		}
+		return StubUtility.getFieldComment(sp, fieldType, fieldName, lineDelimiter);
 	}
 
 	/**
@@ -265,6 +313,7 @@ public class CodeGeneration {
 	 * @throws CoreException Thrown when the evaluation of the code template fails.
 	 */
 	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter) throws CoreException {
+		//FIXME - 'retType' should be initialized to null after the 'getReturnType will be functional, so void/c'tor will not have 'return' tag
 		String retType = "unknown_type";
 		String[] typeParameterNames = null;
 
@@ -288,7 +337,7 @@ public class CodeGeneration {
 					if (returnType.isUnknown()) {
 						retType = "unknown_type";
 					} else if (returnType.isAmbiguous()) {
-						retType = "Ambigues";
+						retType = "Ambiguous";
 					} else {
 						retType = returnType.getName();
 					}
@@ -296,7 +345,6 @@ public class CodeGeneration {
 
 				typeParametersTypes = resolvedBinding.getParameterTypes();
 
-				
 				if (null != returnType) {
 					int i = 0;
 					for (ITypeBinding type : typeParametersTypes) {
