@@ -18,8 +18,10 @@ import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
+import org.eclipse.php.ui.CodeGeneration;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -31,6 +33,10 @@ import org.eclipse.ui.texteditor.ITextEditorExtension3;
  * Auto indent strategy for Script doc comments.
  */
 public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy {
+	private static final String PHPDOC_COMMENT_BLOCK_START = "/**";
+	private static final String PHP_COMMENT_BLOCK_START = "/*";
+	private static final String PHP_COMMENT_BLOCK_MID = " *";
+	private static final String PHP_COMMENT_BLOCK_END = " */";
 
 	/** The partitioning that this strategy operates on. */
 	private final String fPartitioning;
@@ -84,9 +90,10 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 			if (firstNonWS < offset) {
 				if (d.getChar(firstNonWS) == '/') {
-					// Scriptdoc started on this line
+					// phpdoc started on this line
 					buf.append(" * "); //$NON-NLS-1$
-					boolean preference = true; // isPreferenceTrue(PreferenceConstants.EDITOR_CLOSE_ScriptdocS);	
+
+					boolean preference = true; //=isPreferenceTrue(PreferenceConstants.EDITOR_ADD_JAVADOC_TAGS);
 					if (preference && isNewComment(d, offset)) {
 						c.shiftsCaret = false;
 						c.caretOffset = c.offset + buf.length();
@@ -101,7 +108,6 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 						if (getCommentEnd(d, offset) > 0) {
 							endTag = "";
 						}
-						preference = true; // isPreferenceTrue(PreferenceConstants.EDITOR_ADD_Scriptdoc_TAGS);
 						if (preference) {
 							// we need to close the comment before computing
 							// the correct tags in order to get the method
@@ -119,7 +125,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 									if (string != null && !string.trim().equals("*")) //$NON-NLS-1$
 										buf.append(string);
 								} catch (CoreException e) {
-									// ignore
+									Logger.logException(e);
 								}
 							}
 						} else {
@@ -146,7 +152,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * Returns the value of the given boolean-typed preference.
 	 *
 	 * @param preference the preference to look up
-	 * @return the value of the given preference in the Java plug-in's default preference store
+	 * @return the value of the given preference in the PHP plug-in's default preference store
 	 */
 	private boolean isPreferenceTrue(String preference) {
 		return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(preference);
@@ -185,24 +191,64 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * @param lineDelimiter the line delimiter to use
 	 * @param unit the compilation unit shown in the editor
 	 * @return the tags to add to the document
-	 * @throws CoreException if accessing the Java model fails
+	 * @throws CoreException if accessing the PHP model fails
 	 * @throws BadLocationException if accessing the document fails
 	 */
+
 	private String createScriptdocTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, ISourceModule unit) throws CoreException, BadLocationException {
-		IModelElement element = unit.getElementAt(command.offset);
+		//searching for next element's start point
+		int nextElementOffset = getEndOfWhiteSpacesOffset(document, command.caretOffset, document.getLength());
+
+		IModelElement element = unit.getElementAt(nextElementOffset);
 		if (element == null)
 			return null;
 
-		switch (element.getElementType()) {
-			case IModelElement.TYPE:
-				return createTypeTags(document, command, indentation, lineDelimiter, (IType) element);
-
-			case IModelElement.METHOD:
-				return createMethodTags(document, command, indentation, lineDelimiter, (IMethod) element);
-
-			default:
-				return null;
+		// Calculating indentation need to be added
+		String indentString = null;
+		try {
+			indentString = getIndentString(document, element);
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+			return null;
 		}
+
+		int type = element != null ? element.getElementType() : -1;
+		if (type != IModelElement.METHOD && type != IModelElement.TYPE && type != IModelElement.FIELD) {
+			assert false;
+			return null;
+		}
+
+		String comment = null;
+		try {
+			switch (type) {
+				case IModelElement.TYPE:
+					comment = createTypeTags(document, command, indentation, lineDelimiter, (IType) element);
+					break;
+				case IModelElement.FIELD:
+					comment = creatFieldTags(document, command, indentation, lineDelimiter, (IField) element);
+					break;
+				case IModelElement.METHOD:
+					comment = createMethodTags(document, command, indentation, lineDelimiter, (IMethod) element);
+					break;
+				default:
+					comment = createDefaultComment(lineDelimiter);
+			}
+		} catch (CoreException e) {
+			comment = createDefaultComment(lineDelimiter);
+			Logger.logException(e);
+		}
+
+		return indentPattern(comment, indentString, lineDelimiter);
+	}
+
+	private int getEndOfWhiteSpacesOffset(IDocument document, int offset, int end) throws BadLocationException {
+		while (offset < end) {
+			if (!Character.isWhitespace(document.getChar(offset))) {
+				return offset;
+			}
+			offset++;
+		}
+		return -1;
 	}
 
 	/**
@@ -211,7 +257,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 *
 	 * @param comment the computed comment
 	 * @param indentation the base indentation
-	 * @param project the Java project for the formatter settings, or <code>null</code> for global preferences
+	 * @param project the PHP project for the formatter settings, or <code>null</code> for global preferences
 	 * @param lineDelimiter the line delimiter
 	 * @return a trimmed version of <code>comment</code>
 	 */
@@ -240,68 +286,31 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	}
 
 	private String createTypeTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IType type) throws CoreException, BadLocationException {
-		// TODO: add the stub utility
-		// String[] typeParamNames= StubUtility.getTypeParameterNames(type.getTypeParameters());
-		// String comment= CodeGeneration.getTypeComment(type.getCompilationUnit(), type.getTypeQualifiedName('.'), typeParamNames, lineDelimiter);
-
-		String[] typeParamNames = {};
-		String comment = "";
-
+		String comment = createTypeComment(type, lineDelimiter);
 		if (comment != null) {
-			boolean ScriptdocComment = comment.startsWith("/**"); //$NON-NLS-1$
-			if (!isFirstComment(document, command, type, ScriptdocComment))
-				return null;
+			comment = comment.trim();
 			return prepareTemplateComment(comment.trim(), indentation, type.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
 
-	private String createMethodTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IMethod method) throws CoreException, BadLocationException {
-		IRegion partition = TextUtilities.getPartition(document, fPartitioning, command.offset, false);
-		IMethod inheritedMethod = getInheritedMethod(method);
-		// TODO : should fix the comment stub content 
-		// String comment= CodeGeneration.getMethodComment(method, inheritedMethod, lineDelimiter);
-		String comment = "";
+	private String creatFieldTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IField field) throws CoreException, BadLocationException {
+		String comment = createFieldComment(field, lineDelimiter);
 		if (comment != null) {
 			comment = comment.trim();
-			boolean ScriptdocComment = comment.startsWith("/**"); //$NON-NLS-1$
-			if (!isFirstComment(document, command, method, ScriptdocComment))
-				return null;
-			boolean isScriptdoc = partition.getLength() >= 3 && document.get(partition.getOffset(), 3).equals("/**"); //$NON-NLS-1$
-			if (ScriptdocComment == isScriptdoc) {
-				return prepareTemplateComment(comment, indentation, method.getScriptProject(), lineDelimiter);
-			}
+			return prepareTemplateComment(comment.trim(), indentation, field.getScriptProject(), lineDelimiter);
 		}
 		return null;
 	}
 
-	/**
-	 * Returns <code>true</code> if the comment being inserted at
-	 * <code>command.offset</code> is the first comment (the first
-	 * Scriptdoc comment if <code>ignoreScriptdoc</code> is
-	 * <code>true</code>) of the given member.
-	 * <p>
-	 * see also https://bugs.eclipse.org/bugs/show_bug.cgi?id=55325 (don't add parameters if the member already has a comment)
-	 * </p>
-	 * @param document the document
-	 * @param command the document command
-	 * @param member the Java member
-	 * @param ignoreNonScriptdoc <code>true</code> if non Scriptdoc should be ignored
-	 * @return <code>true</code> if it is the first comment
-	 * @throws ModelException if accessing the Java model fails
-	 * @throws BadLocationException if accessing the document fails
-	 */
-	private boolean isFirstComment(IDocument document, DocumentCommand command, IMember member, boolean ignoreNonScriptdoc) throws BadLocationException, ModelException {
-		IRegion partition = TextUtilities.getPartition(document, fPartitioning, command.offset, false);
-		ISourceRange sourceRange = member.getSourceRange();
-		if (sourceRange == null || sourceRange.getOffset() != partition.getOffset())
-			return false;
-		int srcOffset = sourceRange.getOffset();
-		int srcLength = sourceRange.getLength();
-		int nameRelativeOffset = member.getNameRange().getOffset() - srcOffset;
-		int partitionRelativeOffset = partition.getOffset() - srcOffset;
-		String token = ignoreNonScriptdoc ? "/**" : "/*"; //$NON-NLS-1$ //$NON-NLS-2$
-		return document.get(srcOffset, srcLength).lastIndexOf(token, nameRelativeOffset) == partitionRelativeOffset;
+	private String createMethodTags(IDocument document, DocumentCommand command, String indentation, String lineDelimiter, IMethod method) throws CoreException, BadLocationException {
+		//IMethod inheritedMethod = getInheritedMethod(method);
+		String comment = createMethodComment(method, lineDelimiter);//CodeGeneration.getMethodComment(method, inheritedMethod, lineDelimiter);
+		if (comment != null) {
+			comment = comment.trim();
+			return prepareTemplateComment(comment, indentation, method.getScriptProject(), lineDelimiter);
+		}
+		return null;
 	}
 
 	/**
@@ -404,10 +413,12 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 	 * Returns the method inherited from, <code>null</code> if method is newly defined.
 	 * @param method the method being written
 	 * @return the ancestor method, or <code>null</code> if none
-	 * @throws ModelException if accessing the Java model fails
+	 * @throws ModelException if accessing the PHP model fails
 	 */
 	private static IMethod getInheritedMethod(IMethod method) throws ModelException {
 		IType declaringType = method.getDeclaringType();
+		if (null == declaringType)
+			return null;
 		MethodOverrideTester tester = SuperTypeHierarchyCache.getMethodOverrideTester(declaringType);
 		return tester.findOverriddenMethod(method, true);
 	}
@@ -459,5 +470,75 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			offset++;
 		}
 		return -2;
+	}
+
+	private String createTypeComment(IType type, String lineDelimiter) throws CoreException {
+		//String[] typeParameterNames= StubUtility.getTypeParameterNames(type.getFields());
+		return CodeGeneration.getTypeComment(type.getScriptProject(), type.getTypeQualifiedName(), /*typeParameterNames*/null, lineDelimiter);
+	}
+
+	private String createMethodComment(IMethod meth, String lineDelimiter) throws CoreException {
+		IType declaringType = meth.getDeclaringType();
+		IMethod overridden = null;
+
+		if (!meth.isConstructor() && null != declaringType) {
+			ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(declaringType);
+			MethodOverrideTester tester = new MethodOverrideTester(declaringType, hierarchy);
+			overridden = tester.findOverriddenMethod(meth, true);
+		}
+		return CodeGeneration.getMethodComment(meth, overridden, lineDelimiter);
+	}
+
+	private String createFieldComment(IField field, String lineDelimiter) throws ModelException, CoreException {
+		return CodeGeneration.getFieldComment(field.getScriptProject(), field, lineDelimiter);
+	}
+
+	private String createDefaultComment(String lineDelimiter) {
+		return PHPDOC_COMMENT_BLOCK_START + lineDelimiter + PHP_COMMENT_BLOCK_MID + lineDelimiter + PHP_COMMENT_BLOCK_END;
+	}
+
+	/**
+	 * Calculates the leading string to be used as indentation prefix 
+	 *  
+	 * @param document The IStructuredDocument that we are working on
+	 * @param modelElem	A PHPFileData that need to be documented
+	 * 
+	 * @return String to be used as leading indentation
+	 */
+	private String getIndentString(IDocument document, IModelElement modelElem) throws BadLocationException {
+		int elementOffset = 0;
+		String leadingString = null;
+		try {
+			elementOffset = getCodeDataOffset(modelElem);
+			int lineStartOffset = document.getLineInformationOfOffset(elementOffset).getOffset();
+			leadingString = document.get(lineStartOffset, elementOffset - lineStartOffset);
+		} catch (ModelException e) {
+			Logger.logException(e);
+			return null;
+		}
+		// replacing all non-spaces/tabs to single-space, in order to get "char-clean" prefix
+		leadingString = leadingString.replaceAll("[^\\s]", " ");
+
+		return leadingString;
+	}
+
+	private int getCodeDataOffset(IModelElement modelElem) throws ModelException {
+		if (modelElem instanceof ISourceModule) {
+			ISourceReference primaryModelElem = (ISourceReference) (((ISourceModule) modelElem).getPrimaryElement());// .getPHPBlocks();
+			return primaryModelElem != null ? primaryModelElem.getSourceRange().getOffset() + primaryModelElem.getSourceRange().getLength()/*getPHPStartTag().getEndPosition() */: -1;
+		}
+		if (modelElem instanceof ISourceReference) {
+			int dataOffset = ((ISourceReference) modelElem).getSourceRange().getOffset();
+			return dataOffset;
+		}
+		assert false;
+		return -1;
+	}
+
+	private String indentPattern(String originalPattern, String indentation, String lineDelim) {
+		String delimPlusIndent = lineDelim + indentation;
+		String indentedPattern = originalPattern.replaceAll(lineDelim, delimPlusIndent);
+
+		return indentedPattern;
 	}
 }

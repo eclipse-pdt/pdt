@@ -108,7 +108,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		try {
 			startPosition = getCodeDataOffset(modelElem);
 		} catch (ModelException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 			return null;
 		}
 
@@ -117,7 +117,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		try {
 			indentString = getIndentString(document, modelElem);
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 			return null;
 		}
 
@@ -133,7 +133,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		}
 		String comment = null;
 		try {
-			switch (modelElem.getElementType()) {
+			switch (type) {
 				case IModelElement.TYPE:
 					comment = createTypeComment((IType) modelElem, lineDelim);
 					break;
@@ -147,8 +147,8 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					comment = createDefaultComment(lineDelim);
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			comment = createDefaultComment(lineDelim);
+			Logger.logException(e);
 		}
 
 		docBlock = indentPattern(comment, indentString, lineDelim);
@@ -166,7 +166,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	}
 
 	private String createDefaultComment(String lineDelimiter) {
-		return PHP_COMMENT_BLOCK_START + lineDelim + PHP_COMMENT_BLOCK_MID + lineDelim + PHP_COMMENT_BLOCK_END;
+		return PHP_COMMENT_BLOCK_START + lineDelimiter + PHP_COMMENT_BLOCK_MID + lineDelimiter + PHP_COMMENT_BLOCK_END;
 	}
 
 	private String createTypeComment(IType type, String lineDelimiter) throws CoreException {
@@ -179,7 +179,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		IType declaringType = meth.getDeclaringType();
 		IMethod overridden = null;
 
-		if (!meth.isConstructor()) {
+		if (!meth.isConstructor() && null != declaringType) {
 			ITypeHierarchy hierarchy = SuperTypeHierarchyCache.getTypeHierarchy(declaringType);
 			MethodOverrideTester tester = new MethodOverrideTester(declaringType, hierarchy);
 			overridden = tester.findOverriddenMethod(meth, true);
@@ -191,7 +191,6 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 		return CodeGeneration.getFieldComment(field.getScriptProject(), field, lineDelimiter);
 	}
 
-
 	/**
 	 * Calculates and returns the desired docBlock surrounded by '<?php' and '?>' tags
 	 * (no indentation)
@@ -201,15 +200,15 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 	 * @return String to be used as leading indentation
 	 * @throws CoreException 
 	 */
-	public String createPHPScopeFileDocBlock(IScriptProject scriptProject) {	
+	public String createPHPScopeFileDocBlock(IScriptProject scriptProject) {
 		String fileComment;
 		try {
 			fileComment = CodeGeneration.getFileComment(scriptProject, lineDelim);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 			fileComment = createDefaultComment(lineDelim);
 		}
-		return PHP_BLOCK_OPEN_TAG + lineDelim + fileComment + PHP_BLOCK_CLOSE_TAG + lineDelim; 
+		return PHP_BLOCK_OPEN_TAG + lineDelim + fileComment + PHP_BLOCK_CLOSE_TAG + lineDelim;
 	}
 
 	/**
@@ -228,7 +227,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 			int lineStartOffset = document.getLineInformationOfOffset(elementOffset).getOffset();
 			leadingString = document.get(lineStartOffset, elementOffset - lineStartOffset);
 		} catch (ModelException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 			return null;
 		}
 		// replacing all non-spaces/tabs to single-space, in order to get "char-clean" prefix
@@ -288,9 +287,9 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 				if (region != null && region.getType() == PHPRegionContext.PHP_CONTENT) {
 					phpScriptRegion = (IPhpScriptRegion) region;
 					try {
-						docBlock = CodeGeneration.getFileComment(data.getScriptProject(), null) ;
+						docBlock = CodeGeneration.getFileComment(data.getScriptProject(), null);
 					} catch (CoreException e) {
-						// TODO Auto-generated catch block
+						Logger.logException("Generating default phpdoc comment", e);
 						docBlock = createDefaultComment(null);
 					}
 					break;
@@ -366,7 +365,7 @@ public class AddDescriptionAction extends Action implements IObjectActionDelegat
 					return sourceReference1.getSourceRange().getOffset() - sourceReference2.getSourceRange().getOffset();
 
 				} catch (ModelException e) {
-					e.printStackTrace();
+					Logger.logException(e);
 				}
 			}
 			assert false; // we never supposed to get here

@@ -18,7 +18,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -354,11 +356,15 @@ public class CodeGeneration {
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Logger.logException(e);
 		}
 		String[] paramNames = method.getParameters();// ParameterNames();
 
-		return StubUtility.getMethodComment(method.getScriptProject(), method.getDeclaringType().getElementName(), method.getElementName(), paramNames, retType, typeParameterNames, overridden, false, lineDelimiter);
+		IType declaringType = method.getDeclaringType();
+		if (null != declaringType) {
+			return StubUtility.getMethodComment(method.getScriptProject(), declaringType.getElementName(), method.getElementName(), paramNames, retType, typeParameterNames, overridden, false, lineDelimiter);
+		}
+		return StubUtility.getMethodComment(method.getScriptProject(), null, method.getElementName(), paramNames, retType, typeParameterNames, overridden, false, lineDelimiter);
 	}
 
 	/**
