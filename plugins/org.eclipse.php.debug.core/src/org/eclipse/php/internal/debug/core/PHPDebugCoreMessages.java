@@ -59,6 +59,7 @@ public class PHPDebugCoreMessages extends NLS {
 
 	public static String DebuggerConfigurationDialog_debugPort;
 	public static String DebuggerConfigurationDialog_invalidPort;
+	public static String DebuggerConfigurationDialog_invalidPortRange;
 
 	public static String ZendDebuggerConfigurationDialog_runWithDebugInfo;
 	public static String ZendDebuggerConfigurationDialog_zendDebugger;
