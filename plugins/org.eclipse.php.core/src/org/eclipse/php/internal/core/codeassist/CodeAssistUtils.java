@@ -776,20 +776,41 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType) {
-		SearchEngine searchEngine = new SearchEngine();
+		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
 		IScriptProject scriptProject = sourceModule.getScriptProject();
-		IDLTKSearchScope scope = scriptProject != null ? SearchEngine.createSearchScope(scriptProject) : SearchEngine.createWorkspaceScope(toolkit);
-
+		IDLTKSearchScope scope;
+		if (scriptProject != null) {
+			scope = SearchEngine.createSearchScope(scriptProject);
+		} else {
+			scope = SearchEngine.createWorkspaceScope(toolkit);
+		}
+		
 		int matchRule;
 		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
 			matchRule = SearchPattern.R_PATTERN_MATCH;
 		} else {
-			matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+			if (exactName) {
+				matchRule = SearchPattern.R_EXACT_MATCH;
+			} else {
+				if (prefix.startsWith("$")) { //$NON-NLS-1$
+					// search variables using mixin model:
+					List<IModelElement> result = new LinkedList<IModelElement>();
+					IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null);
+					for (IModelElement variable : variables) {
+						if (scope.encloses(variable)) {
+							result.add(variable);
+						}
+					}
+					return result.toArray(new IModelElement[result.size()]);
+				}
+				matchRule = SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+			}
 		}
-
+		
+		SearchEngine searchEngine = new SearchEngine();
 		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
 		final List<IModelElement> elements = new LinkedList<IModelElement>();
