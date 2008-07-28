@@ -185,11 +185,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								for (IModelElement element : elements) {
 									if (element instanceof IType) {
 										IType type = (IType) element;
-										try {
-											methods.addAll(Arrays.asList(getClassMethod(type, callExpression.getName())));
-										} catch (ModelException e) {
-											Logger.logException(e);
-										}
+										methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(type, callExpression.getName(), true)));
 									}
 								}
 							}
