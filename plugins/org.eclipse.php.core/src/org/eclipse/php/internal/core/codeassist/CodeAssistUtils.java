@@ -71,6 +71,7 @@ public class CodeAssistUtils {
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
+	private static final IModelElement[] EMPTY = new IModelElement[0];
 
 	public static boolean startsWithIgnoreCase(String word, String prefix) {
 		return word.toLowerCase().startsWith(prefix.toLowerCase());
@@ -797,14 +798,8 @@ public class CodeAssistUtils {
 			} else {
 				if (prefix.startsWith("$")) { //$NON-NLS-1$
 					// search variables using mixin model:
-					List<IModelElement> result = new LinkedList<IModelElement>();
-					IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null);
-					for (IModelElement variable : variables) {
-						if (scope.encloses(variable)) {
-							result.add(variable);
-						}
-					}
-					return result.toArray(new IModelElement[result.size()]);
+					IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null, scope);
+					return variables == null ? EMPTY : variables;
 				}
 				matchRule = SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 			}
