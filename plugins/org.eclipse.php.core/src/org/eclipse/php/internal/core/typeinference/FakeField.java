@@ -35,7 +35,7 @@ public class FakeField extends SourceField {
 	}
 
 	public boolean equals(Object o) {
-		if (super.equals(o)) {
+		if (super.equals(o) && o instanceof FakeField) {
 			FakeField other = (FakeField)o;
 			return other.offset == offset && other.length == length;
 		}
