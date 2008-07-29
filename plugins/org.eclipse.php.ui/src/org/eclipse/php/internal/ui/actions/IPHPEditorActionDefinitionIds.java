@@ -79,7 +79,7 @@ public interface IPHPEditorActionDefinitionIds extends ITextEditorActionDefiniti
 
 	/**
 	 * Action definition ID of the source -> add block comment action
-	 * (value <code>"org.eclipse.php.ui.edit.text.add.block.comment"</code>).
+	 * (value <code>"org.eclipse.wst.sse.ui.add.block.comment"</code>).
 	 * @since 3.0
 	 */
 	public static final String ADD_BLOCK_COMMENT = "org.eclipse.wst.sse.ui.add.block.comment"; //$NON-NLS-1$

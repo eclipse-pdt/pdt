@@ -58,8 +58,8 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 				if (model != null) {
 					// If there is alternating or more then one block in the text selection, action is aborted !
 					if (isMoreThenOneContextBlockSelected(model, textSelection)) {
-						//						displayCommentActinosErrorDialog(editor);
-						//						return null;
+						//	displayCommentActinosErrorDialog(editor);
+						//	return null;
 						org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
 						return removeBlockCommentHandlerWST.execute(event);
 					}

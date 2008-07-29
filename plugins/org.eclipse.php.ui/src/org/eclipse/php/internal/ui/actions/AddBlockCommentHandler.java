@@ -60,7 +60,8 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				if (model != null) {
 					// If there is alternating or more then one block in the text selection, action is aborted !
 					if (isMoreThenOneContextBlockSelected(model, textSelection)) {
-						displayCommentActinosErrorDialog(editor);
+//						displayCommentActinosErrorDialog(editor);
+//						return null;
 						org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
 						return addBlockCommentHandlerWST.execute(event);
 
