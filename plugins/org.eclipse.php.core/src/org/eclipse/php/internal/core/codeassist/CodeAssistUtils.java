@@ -41,6 +41,7 @@ import org.eclipse.dltk.core.search.SearchMatch;
 import org.eclipse.dltk.core.search.SearchParticipant;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -812,7 +813,14 @@ public class CodeAssistUtils {
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					
 					IModelElement element = (IModelElement) match.getElement();
+					
+					// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
+					if (element instanceof SourceModule) {
+						return;
+					}
+					
 					IModelElement parent = element.getParent();
 					
 					// Global scope elements in PHP are those, which are not defined in class body,
