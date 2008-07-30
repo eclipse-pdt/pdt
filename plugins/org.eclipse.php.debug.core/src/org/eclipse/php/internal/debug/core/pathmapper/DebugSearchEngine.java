@@ -160,7 +160,7 @@ public class DebugSearchEngine {
 	 * @param debugTarget Current debug target
 	 * @return path entry or <code>null</code> in case it could not be found
 	 */
-	private static PathEntry find(final PathMapper pathMapper, final String remoteFile, final IProject currentProject, final IDebugTarget debugTarget) {
+	public static PathEntry find(final PathMapper pathMapper, final String remoteFile, final IProject currentProject, final IDebugTarget debugTarget) {
 
 		final PathEntry[] localFile = new PathEntry[1];
 

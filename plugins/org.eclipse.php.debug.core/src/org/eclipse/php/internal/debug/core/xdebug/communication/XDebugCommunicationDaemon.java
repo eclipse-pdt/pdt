@@ -14,16 +14,46 @@
 package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.ISourceLocator;
+import org.eclipse.debug.internal.core.LaunchConfiguration;
+import org.eclipse.debug.internal.core.LaunchManager;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
+import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
+import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
+import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
+import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
+import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
+import org.eclipse.php.internal.ui.util.PerspectiveManager;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * XDebug communication daemon.
@@ -93,16 +123,272 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 	 * @param socket
 	 */
 	protected void startConnectionThread(Socket socket) {
+		// a socket has been accepted by the listener. This runs on the listener
+		// thread so we should make damn sure we don't throw an exception here
+		// otherwise it will abort that thread.
 		if (DBGpLogger.debugSession()) {
 			DBGpLogger.debug("Connection established: " + socket.toString());
 		}
-		DBGpSession session = new DBGpSession(socket);
-		if (session.isActive()) {
-			if (!DBGpSessionHandler.getInstance().fireSessionAdded(session)) {
-				// session was not taken, throw it away
-				session.endSession();
+		
+		try {
+			DBGpSession session = new DBGpSession(socket);
+			if (session.isActive()) {
+				if (!DBGpSessionHandler.getInstance().fireSessionAdded(session)) {
+					//Session not taken, we want to create a launch
+					//TODO: add config to preferences to enable, disable
+					createLaunch(session);
+				}
 			}
 		}
+		catch(Exception e) {
+			DBGpLogger.logException("Unexpected Exception: Listener thread still listening", this, e);
+		}
+	}
+
+	/**
+	 * create a launch and appropriate debug targets to automate launch
+	 * initiation. If any problems occurred, we can throw the session away using session.endSession();
+	 * @param session the DBGpSession.
+	 */
+	private void createLaunch(DBGpSession session) {
+		boolean stopAtFirstLine = true;
+		DBGpTarget target = null;
+		PathMapper p = null;
+		PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
+		srcLocator.initializeParticipants();
+		ILaunchConfiguration conf = new ILaunchConfiguration() {
+
+			public boolean contentsEqual(ILaunchConfiguration configuration) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public ILaunchConfigurationWorkingCopy copy(String name) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public void delete() throws CoreException {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public boolean exists() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public boolean getAttribute(String attributeName, boolean defaultValue) throws CoreException {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public int getAttribute(String attributeName, int defaultValue) throws CoreException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			public List getAttribute(String attributeName, List defaultValue) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Set getAttribute(String attributeName, Set defaultValue) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Map getAttribute(String attributeName, Map defaultValue) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String getAttribute(String attributeName, String defaultValue) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Map getAttributes() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String getCategory() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public IFile getFile() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public IPath getLocation() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public IResource[] getMappedResources() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String getMemento() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Set getModes() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String getName() {
+				// TODO Auto-generated method stub
+				return "JIT Launch";
+			}
+
+			public ILaunchDelegate getPreferredDelegate(Set modes) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public ILaunchConfigurationType getType() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public ILaunchConfigurationWorkingCopy getWorkingCopy() throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public boolean hasAttribute(String attributeName) throws CoreException {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public boolean isLocal() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public boolean isMigrationCandidate() throws CoreException {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public boolean isReadOnly() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public boolean isWorkingCopy() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public ILaunch launch(String mode, IProgressMonitor monitor) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build, boolean register) throws CoreException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public void migrate() throws CoreException {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public boolean supportsMode(String mode) throws CoreException {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			public Object getAdapter(Class adapter) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
+		
+		ILaunch la = new Launch(null, ILaunchManager.DEBUG_MODE, srcLocator);
+		IDELayer ide = IDELayerFactory.getIDELayer();
+		boolean multiSession = ide.getPrefs().getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION);
+
+		if (session.getSessionId() == null && !multiSession) {
+			// web launch
+			target = new DBGpTarget(la, null, null, session.getIdeKey(), stopAtFirstLine, null);						
+			Server server = null;
+			Server[] servers = ServersManager.getServers();
+			for (int i = 0; i < servers.length; i++) {
+				if (servers[i].getPort() == session.getRemotePort() && 
+					servers[i].getHost().equalsIgnoreCase(session.getRemoteHostname())) {
+					server = servers[i];
+					break;
+				}
+			}
+			if (server != null) {
+				p = PathMapperRegistry.getByServer(server);						
+			}
+			else {
+				p = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
+				// but they would be persisted. We may try and find one for the particular server or create a temporary one.						
+			}
+			// need to add ourselves as a session listener for future sessions
+			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);
+		}
+		else {
+			// cli launch or multisession launch create a single shot target
+			// The Launch Configuration, Source Locator.
+			target = new DBGpTarget(la, null /*no script name*/, session.getIdeKey(), session.getSessionId(), stopAtFirstLine);
+			//PathMapper p = PathMapperRegistry.getByPHPExe(null);
+			p = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
+			// but they currently would be persisted.
+		}
+
+		// if we are multisession and the session was not picked up then we need a 
+		// multisession target started and added to the launch and listening for more sessions. 
+		if (multiSession) {
+			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(la, null, null, session.getIdeKey(), stopAtFirstLine, null);
+			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)multiSessionTarget);			
+			multiSessionTarget.addDebugTarget(target);
+			la.addDebugTarget(multiSessionTarget);
+		}
+
+		target.setPathMapper(p);
+		target.setSession(session);
+		session.setDebugTarget(target);
+		la.addDebugTarget(target);
+		
+		DebugPlugin.getDefault().getLaunchManager().addLaunch(la);
+		target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences());
+		//probably could do waitForInitialSession as session has already been set.
+		
+		//org.eclipse.php.debug.ui.PHPDebugPerspective
+		//org.eclipse.debug.ui.DebugPerspective
+		//also look at the PHPLaunchUtilities
+		Display.getDefault().asyncExec(new Runnable() {
+
+			public void run() {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				//code the debug perspectives.
+				if (!PerspectiveManager.isCurrentPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective")) {
+					if(PerspectiveManager.shouldSwitchPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective")) {
+						PerspectiveManager.switchToPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective");
+					}
+				}
+			}
+			
+		});
 	}
 
 	/*

@@ -53,12 +53,7 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
-import org.eclipse.php.internal.debug.core.model.BreakpointSet;
-import org.eclipse.php.internal.debug.core.model.DebugOutput;
-import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
-import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
-import org.eclipse.php.internal.debug.core.model.PHPLineBreakpoint;
-import org.eclipse.php.internal.debug.core.model.PHPRunToLineBreakpoint;
+import org.eclipse.php.internal.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -84,7 +79,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 /**
  * PHP Debug Target
  */
-public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBreakpointManagerListener, IStepFilters {
+public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, IBreakpointManagerListener, IStepFilters {
 
 	private ContextManager fContextManager;
 
@@ -989,7 +984,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IDebugTarget, IBr
 	 *
 	 * @return the Output buffer for the target
 	 */
-	public DebugOutput getOutputBufffer() {
+	public DebugOutput getOutputBuffer() {
 		return fOutput;
 	}
 

@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.session;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -25,10 +26,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpCommand;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.EngineTypes;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
 import org.w3c.dom.Node;
 
 public class DBGpSession {
@@ -330,6 +328,11 @@ public class DBGpSession {
 			   doc.set(doc.get() + parsedResponse.getStreamData());
 			}
 			*/
+			String data = parsedResponse.getStreamData();
+			if (data != null) {
+				debugTarget.getOutputBuffer().append(Base64.decode(data, sessionEncoding ));
+				debugTarget.getOutputBuffer().incrementUpdateCount();
+			}
 		}
 		
 		private void handleStoppingStatus(DBGpResponse parsedResponse) {
@@ -587,5 +590,17 @@ public class DBGpSession {
 
 	public String getEngineVersion() {
 		return engineVersion;
+	}
+	
+	public int getRemotePort() {
+		return DBGpSocket.getPort();
+	}
+	
+	public InetAddress getRemoteAddress() {
+		return DBGpSocket.getInetAddress();
+	}
+	
+	public String getRemoteHostname() {
+		return DBGpSocket.getInetAddress().getHostName();
 	}
 }

@@ -23,6 +23,8 @@ import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.model.DebugOutput;
+import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -42,7 +44,7 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, IBreakpointManagerListener, IDBGpSessionListener {
+public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDebugTarget, IStep, IBreakpointManagerListener, IDBGpSessionListener {
 
 	// used to identify this debug target with the associated
 	// script being debugged.
@@ -85,7 +87,10 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	private static final int STATE_DISCONNECTED = 7; // disconnected
 
 	// the script being run, or initial web script
-	private String scriptName;
+	private String projectScript;
+	
+	//The name to return for this debug target.
+	private String name;
 
 	// launch object
 	private ILaunch launch;
@@ -128,6 +133,8 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	private int maxChildren = 0;
 
 	private PathMapper pathMapper = null;
+	
+	private DebugOutput debugOutput = new DebugOutput();
 
 	/**
 	 * Base constructor
@@ -155,7 +162,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
-		this.scriptName = projectRelativeScript;
+		this.projectScript = projectRelativeScript;
 		this.ideKey = ideKey;
 		this.webLaunch = false;
 		this.sessionID = sessionID;
@@ -177,7 +184,7 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		this();
 		this.stopAtStart = stopAtStart;
 		this.launch = launch;
-		this.scriptName = workspaceRelativeScript;
+		this.projectScript = workspaceRelativeScript;
 		this.ideKey = ideKey;
 		this.webLaunch = true;
 		this.sessionID = null; // in the web launch we have no need for the
@@ -207,31 +214,43 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				te.waitForEvent(XDebugPreferenceInit.getTimeoutDefault());
 			}
 
-			boolean launchIsCanceled = false;
-			if (session != null && session.isActive()) {
-				if (launchMonitor != null) {
-					launchIsCanceled = launchMonitor.isCanceled();
-				}
-
-				if (!isTerminating() && !launch.isTerminated() && !launchIsCanceled) {
-					langThread = new DBGpThread(this);
-					allThreads = new IThread[] { langThread };
-					langThread.fireCreationEvent();
-					DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
-
-					//Determine something about the initial script and path mapping
-					testInitialScriptLocating();
-					initiateSession();
-				} else {
-					session.endSession();
-					terminateDebugTarget(true);
-				}
-			} else {
-				terminateDebugTarget(true);
-			}
+			sessionReceived(launchMonitor);
 		} catch (Exception e) {
 			// cannot proceed any further as we will never be able to get a
 			// session. The exception doesn't need logging.
+			terminateDebugTarget(true);
+		}
+	}
+	
+	public void sessionReceived(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs) {
+		bpFacade = facade;
+		sessionPreferences = sessionPrefs;
+		setState(STATE_INIT_SESSION_WAIT);
+		sessionReceived(null);		
+	}
+
+
+	private void sessionReceived(IProgressMonitor launchMonitor) {
+		boolean launchIsCanceled = false;
+		if (session != null && session.isActive()) {
+			if (launchMonitor != null) {
+				launchIsCanceled = launchMonitor.isCanceled();
+			}
+
+			if (!isTerminating() && !launch.isTerminated() && !launchIsCanceled) {
+				langThread = new DBGpThread(this);
+				allThreads = new IThread[] { langThread };
+				langThread.fireCreationEvent();
+				DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+
+				//Determine something about the initial script and path mapping
+				testInitialScriptLocating();
+				initiateSession();
+			} else {
+				session.endSession();
+				terminateDebugTarget(true);
+			}
+		} else {
 			terminateDebugTarget(true);
 		}
 	}
@@ -256,25 +275,36 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 				// we could do a search or do an automatic path mapping
 				if (pathMapper != null) {
 					if (pathMapper.getLocalFile(initScript) == null) {
-						VirtualPath vpScr = new VirtualPath(scriptName);
-						VirtualPath vpInit = new VirtualPath(initScript);
-						//TODO: What happens if there is a difference in case ?
-						if (vpScr.getLastSegment().equals(vpInit.getLastSegment())) {
-							PathEntry pe = new PathEntry(scriptName, PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace().getRoot());
-							pathMapper.addEntry(initScript, pe);
-						} else {
-							// ok, the initial script doesn't match what was passed into
-							// the launch, need to locate the required script.
-							// it may be possible to determine it from the project name
-							// so long as the project name is part of the web server file
-							// structure, so we could try this.
-							//TODO see if the scriptName is part of the init structure, if
-							//so we could workout the local file.
-							try {
-								DebugSearchEngine.find(initScript, this);
-							} catch (Exception e) {
+						if (projectScript != null) {
+							VirtualPath vpScr = new VirtualPath(projectScript);
+							VirtualPath vpInit = new VirtualPath(initScript);
+							//TODO: What happens if there is a difference in case ?
+							if (vpScr.getLastSegment().equals(vpInit.getLastSegment())) {
+								PathEntry pe = new PathEntry(projectScript, PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace().getRoot());
+								pathMapper.addEntry(initScript, pe);
+							} else {
+								// ok, the initial script doesn't match what was passed into
+								// the launch, need to locate the required script.
+								// it may be possible to determine it from the project name
+								// so long as the project name is part of the web server file
+								// structure, so we could try this.
+								//TODO see if the scriptName is part of the init structure, if
+								//so we could workout the local file.
+								try {
+									DebugSearchEngine.find(initScript, this);
+								} catch (Exception e) {
+								}
 							}
 						}
+						else {
+							// this was a remotely initiated launch as we don't have a scriptName
+							try {
+								DebugSearchEngine.find(pathMapper, initScript, null, this);
+							} catch (Exception e) {
+							}
+							
+						}
+						
 					}
 				}
 			}
@@ -361,14 +391,21 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 	 * @see org.eclipse.debug.core.model.IDebugTarget#getName()
 	 */
 	public String getName() throws DebugException {
-		if (isWebLaunch() || multiSessionManaged) {
-			return "Remote Launch";
-		} else {
-			if (scriptName == null) {
-				return "Unknown PHP Program";
+		if (name == null) {
+			if (isWebLaunch() || multiSessionManaged) {
+				name = "Remote Launch";
+			} else {
+				if (projectScript == null) {
+					if (session != null) {
+						 name = session.getInitialScript();
+					}
+					else {
+						name = "Unknown PHP Program";
+					}
+				}
 			}
 		}
-		return scriptName;
+		return name;
 	}
 
 	/*
@@ -969,6 +1006,11 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 		 * if (multiSession) { resp = session.sendSyncCmd(DBGpCommand.stdout,
 		 * "-c 1"); DBGpUtils.isGoodDBGpResponse(this, resp); }
 		 */
+		resp = session.sendSyncCmd(DBGpCommand.stdout, "-c 1");
+		DBGpUtils.isGoodDBGpResponse(this, resp);
+		resp = session.sendSyncCmd(DBGpCommand.stderr, "-c 1");
+		DBGpUtils.isGoodDBGpResponse(this, resp);
+		
 	}
 
 	/**
@@ -1371,7 +1413,12 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 			// file doesn't exist so we must remap it, using the PDT path mapper
 			// which could end up prompting the user to create a mapping
 			try {
-				mappedPathEntry = DebugSearchEngine.find(decodedFile, this);
+				if (projectScript != null) {
+					mappedPathEntry = DebugSearchEngine.find(decodedFile, this);
+				}
+				else {
+					mappedPathEntry = DebugSearchEngine.find(pathMapper, decodedFile, null, this);
+				}
 			} catch (Exception e1) {
 			}
 		}
@@ -2011,5 +2058,17 @@ public class DBGpTarget extends DBGpElement implements IDBGpDebugTarget, IStep, 
 
 	public void setMultiSessionManaged(boolean multiSessionManaged) {
 		this.multiSessionManaged = multiSessionManaged;
+	}
+
+	public DBGpSession getSession() {
+		return session;
+	}
+
+	public void setSession(DBGpSession session) {
+		this.session = session;
+	}
+
+	public DebugOutput getOutputBuffer() {
+		return this.debugOutput;
 	}	
 }

@@ -371,6 +371,12 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 		}
 		return true;
 	}
+	
+	public void addDebugTarget(DBGpTarget target) {
+		synchronized (debugTargets) {
+			debugTargets.add(target);
+		}
+	}
 
 	public void breakpointAdded(IBreakpoint breakpoint) {
 		// Do nothing
