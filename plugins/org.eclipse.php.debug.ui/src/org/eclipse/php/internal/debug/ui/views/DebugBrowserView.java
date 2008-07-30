@@ -20,6 +20,7 @@ import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
+import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -43,7 +44,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 
 	private Browser swtBrowser;
 
-	private PHPDebugTarget fTarget;
+	private IPHPDebugTarget fTarget;
 	private int fUpdateCount;
 	private IDebugEventSetListener terminateListener;
 	private DebugViewHelper debugViewHelper;
@@ -88,18 +89,18 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 		debugViewHelper = new DebugViewHelper();
 
         terminateListener = new IDebugEventSetListener() {
-        	PHPDebugTarget target;
+        	IPHPDebugTarget target;
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if(!(obj instanceof PHPDebugTarget))
+						if(!(obj instanceof IPHPDebugTarget))
 							continue;
 
 						if ( events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (PHPDebugTarget)obj;
+							target = (IPHPDebugTarget)obj;
 							Job job = new UIJob("debug output") { //$NON-NLS-1$
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
@@ -145,22 +146,22 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-    	PHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
+    	IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
         update(target);
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
-    public void update(PHPDebugTarget target) {
+    public void update(IPHPDebugTarget target) {
     	if (swtBrowser != null && !swtBrowser.isDisposed()) {
-	        PHPDebugTarget oldTarget = fTarget;
+	        IPHPDebugTarget oldTarget = fTarget;
 	        int oldcount = fUpdateCount;
 	        fTarget = target;
 	        String output = ""; //$NON-NLS-1$
 	        if (fTarget != null ) {
 	           	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
-	           		DebugOutput outputBuffer = fTarget.getOutputBufffer();
+	           		DebugOutput outputBuffer = fTarget.getOutputBuffer();
 	           		fUpdateCount = outputBuffer.getUpdateCount();
 
 	           		// check if output hasn't been updated
@@ -200,7 +201,7 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
         public void partVisible(IWorkbenchPartReference ref) {
             IWorkbenchPart part= ref.getPart(false);
             if (part == DebugBrowserView.this) {
-                PHPDebugTarget target = debugViewHelper.getSelectionElement(null);
+                IPHPDebugTarget target = debugViewHelper.getSelectionElement(null);
                 update(target);
             }
         }

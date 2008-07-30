@@ -40,7 +40,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
+import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.views.variables.PHPDebugElementAdapterFactory;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.widgets.Display;
@@ -258,7 +258,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					if (event.getKind() == DebugEvent.CREATE) {
 						Object obj = events[i].getSource();
 
-						if (!(obj instanceof PHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget))
 							continue;
 						if (PHPDebugPlugin.getOpenDebugViewsOption()) {
 							Job job = new org.eclipse.ui.progress.UIJob("debug output") {
@@ -275,7 +275,7 @@ public class PHPDebugUIPlugin extends AbstractUIPlugin {
 					if (event.getKind() == DebugEvent.MODEL_SPECIFIC) {
 						Object obj = events[i].getSource();
 
-						if (!(obj instanceof PHPDebugTarget))
+						if (!(obj instanceof IPHPDebugTarget))
 							continue;
 						final Object data = events[i].getData();
 						if (data instanceof IStatus) {

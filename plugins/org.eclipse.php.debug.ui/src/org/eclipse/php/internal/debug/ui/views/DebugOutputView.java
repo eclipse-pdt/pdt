@@ -26,6 +26,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
+import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
@@ -51,7 +52,7 @@ import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
  */
 public class DebugOutputView extends AbstractDebugView implements ISelectionListener {
 
-    private PHPDebugTarget fTarget;
+    private IPHPDebugTarget fTarget;
     private int fUpdateCount;
     private IDebugEventSetListener terminateListener;
     private DebugViewHelper debugViewHelper;
@@ -73,18 +74,18 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
 
         terminateListener = new IDebugEventSetListener() {
-        	PHPDebugTarget target;
+        	IPHPDebugTarget target;
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if(!(obj instanceof PHPDebugTarget))
+						if(!(obj instanceof IPHPDebugTarget))
 							continue;
 
 						if ( events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (PHPDebugTarget)obj;
+							target = (IPHPDebugTarget)obj;
 							Job job = new UIJob("debug output") {
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
@@ -132,13 +133,12 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-
-    	PHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
+    	IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
         update(target);
     }
 
-    private synchronized void update(PHPDebugTarget target) {
-        PHPDebugTarget oldTarget = fTarget;
+    private synchronized void update(IPHPDebugTarget target) {
+        IPHPDebugTarget oldTarget = fTarget;
         int oldcount = fUpdateCount;
         fTarget = target;
         HTMLDocumentLoader ss = new HTMLDocumentLoader();
@@ -146,7 +146,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         Object input = dd;
         if (fTarget != null) {
         	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
-	        	DebugOutput outputBuffer = fTarget.getOutputBufffer();
+	        	DebugOutput outputBuffer = fTarget.getOutputBuffer();
 	        	fUpdateCount = outputBuffer.getUpdateCount();
 
 	        	// check if output hasn't been updated
@@ -215,7 +215,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
 
     protected void becomesVisible() {
         super.becomesVisible();
-        PHPDebugTarget target = debugViewHelper.getSelectionElement(null);
+        IPHPDebugTarget target = debugViewHelper.getSelectionElement(null);
         update(target);
     }
 
