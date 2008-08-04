@@ -37,7 +37,7 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 
 	private DBGpValue value;
 	private String name;
-	private String address;
+	//private String address;
 	private String type;
 
 	public DBGpVariable(DBGpTarget target, Node property, String level) {
@@ -57,7 +57,7 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 			name = getFullName();
 		}
 
-		address = DBGpResponse.getAttribute(property, "address");
+		setAddress(DBGpResponse.getAttribute(property, "address"));
 		type = DBGpResponse.getAttribute(property, "type");
 
 		if (type.equals(PHP_BOOL)) {
@@ -180,9 +180,9 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 		return verifyValue(xvalue.getValueString());
 	}
 
-	public String getAddress() {
-		return address;
-	}
+//	public String getAddress() {
+//		return address;
+//	}
 	
 	
 	/*

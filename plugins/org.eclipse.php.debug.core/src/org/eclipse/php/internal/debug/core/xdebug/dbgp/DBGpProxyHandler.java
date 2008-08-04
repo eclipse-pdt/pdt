@@ -23,7 +23,7 @@ import java.net.UnknownHostException;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 
@@ -134,18 +134,17 @@ public class DBGpProxyHandler {
 	 * configure the Proxy Handler from the preferences.
 	 */
 	public void configure() {
-		IDELayer layer = IDELayerFactory.getIDELayer();
-		Preferences prefs = layer.getPrefs();
+		Preferences prefs = XDebugPreferenceMgr.getPreferences();
 		
-		useProxy = prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY);
+		useProxy = prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY);
 		if (useProxy == false) {
 			unregister();
 		}
 		else {
-			int idePort = prefs.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_PORT);			
-			String ideKey = prefs.getString(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY);
-			boolean multisession = prefs.getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION); 
-			String proxy = prefs.getString(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY);
+			int idePort = prefs.getInt(XDebugPreferenceMgr.XDEBUG_PREF_PORT);			
+			String ideKey = prefs.getString(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY);
+			boolean multisession = prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION); 
+			String proxy = prefs.getString(XDebugPreferenceMgr.XDEBUG_PREF_PROXY);
 			String proxyHost = proxy;
 			int proxyPort = -1;
 			int split = proxy.indexOf(':');

@@ -14,16 +14,8 @@ import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
@@ -31,10 +23,8 @@ import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
-import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
@@ -103,7 +93,6 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		wc.doSave();
 
 		// determine stop at first line (first calc the default and then try to extract the configuration attribute).
-		IDELayer ide = IDELayerFactory.getIDELayer();
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(proj);
 		stopAtFirstLine = wc.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, stopAtFirstLine);
 
@@ -140,7 +129,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			String launchScript = configuration.getAttribute(Server.FILE_NAME, (String) null);
 
 			// determine if we should use the multisession manager or the single session manager
-			if (ide.getPrefs().getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION)) {
+			if (XDebugPreferenceMgr.useMultiSession() == true) {
 				target = new DBGpMultiSessionTarget(launch, launchScript, startStopURLs[1], ideKey, stopAtFirstLine, browser[0]);
 				target.setPathMapper(PathMapperRegistry.getByServer(server));
 				launch.addDebugTarget(target); //has to be added now, not later.
@@ -182,7 +171,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				launch.addDebugTarget(target);
 				subMonitor.subTask("waiting for XDebug session");
-				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences(), monitor);
+				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences(), monitor);
 			}
 			else {
 				// launched ok, so remove the launch from the debug view as we are not debugging.

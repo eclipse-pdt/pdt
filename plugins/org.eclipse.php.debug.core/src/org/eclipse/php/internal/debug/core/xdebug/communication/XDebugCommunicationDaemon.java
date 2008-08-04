@@ -27,24 +27,19 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.debug.core.*;
-import org.eclipse.debug.core.model.ISourceLocator;
-import org.eclipse.debug.internal.core.LaunchConfiguration;
-import org.eclipse.debug.internal.core.LaunchManager;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
-import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
-import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr.AcceptRemoteSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpMultiSessionTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.IDBGpDebugTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListener;
@@ -134,9 +129,22 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 			DBGpSession session = new DBGpSession(socket);
 			if (session.isActive()) {
 				if (!DBGpSessionHandler.getInstance().fireSessionAdded(session)) {
-					//Session not taken, we want to create a launch
-					//TODO: add config to preferences to enable, disable
-					createLaunch(session);
+					//Session not taken, we want to create a launch					
+					AcceptRemoteSession aSess = XDebugPreferenceMgr.getAcceptRemoteSession();
+					if (aSess != AcceptRemoteSession.off) {
+						if (aSess == AcceptRemoteSession.localhost && session.getRemoteAddress().isLoopbackAddress() == false) {
+							session.endSession();
+						}
+						else {
+							// session was either localhost or from any outside one and
+							// preferences allow it.
+							createLaunch(session);
+						}
+					}
+					else {
+						//reject the session
+						session.endSession();
+					}
 				}
 			}
 		}
@@ -156,173 +164,172 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 		PathMapper p = null;
 		PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
 		srcLocator.initializeParticipants();
-		ILaunchConfiguration conf = new ILaunchConfiguration() {
-
-			public boolean contentsEqual(ILaunchConfiguration configuration) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public ILaunchConfigurationWorkingCopy copy(String name) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void delete() throws CoreException {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public boolean exists() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean getAttribute(String attributeName, boolean defaultValue) throws CoreException {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public int getAttribute(String attributeName, int defaultValue) throws CoreException {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-
-			public List getAttribute(String attributeName, List defaultValue) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Set getAttribute(String attributeName, Set defaultValue) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Map getAttribute(String attributeName, Map defaultValue) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String getAttribute(String attributeName, String defaultValue) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Map getAttributes() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String getCategory() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public IFile getFile() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public IPath getLocation() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public IResource[] getMappedResources() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String getMemento() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Set getModes() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String getName() {
-				// TODO Auto-generated method stub
-				return "JIT Launch";
-			}
-
-			public ILaunchDelegate getPreferredDelegate(Set modes) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ILaunchConfigurationType getType() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ILaunchConfigurationWorkingCopy getWorkingCopy() throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public boolean hasAttribute(String attributeName) throws CoreException {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean isLocal() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean isMigrationCandidate() throws CoreException {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean isReadOnly() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public boolean isWorkingCopy() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public ILaunch launch(String mode, IProgressMonitor monitor) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build, boolean register) throws CoreException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public void migrate() throws CoreException {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public boolean supportsMode(String mode) throws CoreException {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			public Object getAdapter(Class adapter) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-		};
+//		ILaunchConfiguration conf = new ILaunchConfiguration() {
+//
+//			public boolean contentsEqual(ILaunchConfiguration configuration) {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public ILaunchConfigurationWorkingCopy copy(String name) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public void delete() throws CoreException {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			public boolean exists() {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public boolean getAttribute(String attributeName, boolean defaultValue) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public int getAttribute(String attributeName, int defaultValue) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return 0;
+//			}
+//
+//			public List getAttribute(String attributeName, List defaultValue) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public Set getAttribute(String attributeName, Set defaultValue) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public Map getAttribute(String attributeName, Map defaultValue) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public String getAttribute(String attributeName, String defaultValue) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public Map getAttributes() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public String getCategory() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public IFile getFile() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public IPath getLocation() {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public IResource[] getMappedResources() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public String getMemento() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public Set getModes() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public String getName() {
+//				// TODO Auto-generated method stub
+//				return "JIT Launch";
+//			}
+//
+//			public ILaunchDelegate getPreferredDelegate(Set modes) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public ILaunchConfigurationType getType() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public ILaunchConfigurationWorkingCopy getWorkingCopy() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public boolean hasAttribute(String attributeName) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public boolean isLocal() {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public boolean isMigrationCandidate() throws CoreException {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public boolean isReadOnly() {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public boolean isWorkingCopy() {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public ILaunch launch(String mode, IProgressMonitor monitor) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build, boolean register) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//
+//			public void migrate() throws CoreException {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			public boolean supportsMode(String mode) throws CoreException {
+//				// TODO Auto-generated method stub
+//				return false;
+//			}
+//
+//			public Object getAdapter(Class adapter) {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//			
+//		};
 		
 		ILaunch la = new Launch(null, ILaunchManager.DEBUG_MODE, srcLocator);
-		IDELayer ide = IDELayerFactory.getIDELayer();
-		boolean multiSession = ide.getPrefs().getBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION);
+		boolean multiSession = XDebugPreferenceMgr.useMultiSession();
 
 		if (session.getSessionId() == null && !multiSession) {
 			// web launch
@@ -370,7 +377,7 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 		la.addDebugTarget(target);
 		
 		DebugPlugin.getDefault().getLaunchManager().addLaunch(la);
-		target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences());
+		target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences());
 		//probably could do waitForInitialSession as session has already been set.
 		
 		//org.eclipse.php.debug.ui.PHPDebugPerspective
@@ -396,7 +403,7 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 	 */
 	private class PortChangeListener implements IPropertyChangeListener {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().equals(XDebugUIAttributeConstants.XDEBUG_PREF_PORT)) {
+			if (event.getProperty().equals(XDebugPreferenceMgr.XDEBUG_PREF_PORT)) {
 				resetSocket();
 			}
 		}

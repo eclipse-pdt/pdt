@@ -28,7 +28,7 @@ import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
@@ -335,7 +335,7 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 		sessionPreferences = sessionPrefs;
 		try {
 			while (debugTargets.size() == 0 && !launch.isTerminated() && !isTerminating() && !launchMonitor.isCanceled()) {
-				te.waitForEvent(XDebugPreferenceInit.getTimeoutDefault());
+				te.waitForEvent(DBGpPreferences.DBGP_TIMEOUT_DEFAULT);
 			}
 		} catch (InterruptedException e) {
 		}

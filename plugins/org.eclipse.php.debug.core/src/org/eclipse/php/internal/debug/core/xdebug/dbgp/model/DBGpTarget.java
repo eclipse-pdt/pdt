@@ -29,7 +29,6 @@ import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
@@ -130,7 +129,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 
 	private boolean stepping;
 
-	private int maxChildren = 0;
+	//private int maxChildren = 0;
 
 	private PathMapper pathMapper = null;
 	
@@ -211,7 +210,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 				// by the other thread yet, so wait. We wait for
 				// an event or a timeout. Even if we timeout we could
 				// still get the session before we re-enter the loop.
-				te.waitForEvent(XDebugPreferenceInit.getTimeoutDefault());
+				te.waitForEvent(DBGpPreferences.DBGP_TIMEOUT_DEFAULT);
 			}
 
 			sessionReceived(launchMonitor);
@@ -402,6 +401,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 					else {
 						name = "Unknown PHP Program";
 					}
+				}
+				else {
+					name = this.projectScript;
 				}
 			}
 		}
@@ -965,6 +967,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 		DBGpUtils.isGoodDBGpResponse(this, resp);
 		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_depth -v " + getMaxDepth());
 		DBGpUtils.isGoodDBGpResponse(this, resp);
+		resp = session.sendSyncCmd(DBGpCommand.featureSet, "-n max_children -v " + getMaxChildren());
+		DBGpUtils.isGoodDBGpResponse(this, resp);
+		
+		/*
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n max_children");
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			Node child = resp.getParentNode().getFirstChild();
@@ -977,6 +983,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 				}
 			}
 		}
+		*/
+		
 		resp = session.sendSyncCmd(DBGpCommand.featureGet, "-n encoding");
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
 			Node child = resp.getParentNode().getFirstChild();
@@ -1001,16 +1009,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 			}
 		}
 
-		// TODO: Improvement: add debug output support for remote debugging
-		/*
-		 * if (multiSession) { resp = session.sendSyncCmd(DBGpCommand.stdout,
-		 * "-c 1"); DBGpUtils.isGoodDBGpResponse(this, resp); }
-		 */
-		resp = session.sendSyncCmd(DBGpCommand.stdout, "-c 1");
+		resp = session.sendSyncCmd(DBGpCommand.stdout, "-c " + getCaptureStdout());
 		DBGpUtils.isGoodDBGpResponse(this, resp);
-		resp = session.sendSyncCmd(DBGpCommand.stderr, "-c 1");
-		DBGpUtils.isGoodDBGpResponse(this, resp);
-		
+		resp = session.sendSyncCmd(DBGpCommand.stderr, "-c " + getCaptureStderr());
+		DBGpUtils.isGoodDBGpResponse(this, resp);		
 	}
 
 	/**
@@ -1230,6 +1232,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 		return null;
 	}
 	
+	
 	/**
 	 * get a variable at a particular stack level and page number
 	 * 
@@ -1338,9 +1341,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 	/*
 	 * get the max number of children
 	 */
-	public int getMaxChildren() {
-		return maxChildren;
-	}
+//	public int getMaxChildren() {
+//		return maxChildren;
+//	}
 
 	/**
 	 * map the file on this file system to the external one expected by xdebug
@@ -2031,6 +2034,29 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 		}
 		return DBGpPreferences.DBGP_MAX_DEPTH_DEFAULT;
 	}
+	
+	
+	public int getMaxChildren() {
+		if (sessionPreferences != null) {
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_MAX_CHILDREN_PROPERTY, DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT);
+		}
+		return DBGpPreferences.DBGP_MAX_CHILDREN_DEFAULT;
+	}
+	
+	private int getCaptureStdout() {
+		if (sessionPreferences != null) {
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_CAPTURE_STDOUT_PROPERTY, DBGpPreferences.DBGP_CAPTURE_DEFAULT);
+		}
+		return DBGpPreferences.DBGP_CAPTURE_DEFAULT;
+	}
+
+	private int getCaptureStderr() {
+		if (sessionPreferences != null) {
+			return sessionPreferences.getInt(DBGpPreferences.DBGP_CAPTURE_STDERR_PROPERTY, DBGpPreferences.DBGP_CAPTURE_DEFAULT);
+		}
+		return DBGpPreferences.DBGP_CAPTURE_DEFAULT;
+	}
+	
 
 	private boolean showGLobals() {
 		if (sessionPreferences != null) {

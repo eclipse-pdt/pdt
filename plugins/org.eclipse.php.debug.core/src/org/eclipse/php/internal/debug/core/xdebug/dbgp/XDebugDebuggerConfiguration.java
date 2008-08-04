@@ -13,7 +13,7 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 import org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration;
 import org.eclipse.php.internal.debug.core.launching.XDebugExeLaunchConfigurationDelegate;
 import org.eclipse.php.internal.debug.core.launching.XDebugWebLaunchConfigurationDelegate;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugUIAttributeConstants;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -43,7 +43,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#getPort()
 	 */
 	public int getPort() {
-		return preferences.getInt(XDebugUIAttributeConstants.XDEBUG_PREF_PORT);
+		return XDebugPreferenceMgr.getPort(preferences);
 	}
 
 	/*
@@ -51,7 +51,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#setPort(int)
 	 */
 	public void setPort(int port) {
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_PORT, port);
+		XDebugPreferenceMgr.setPort(preferences, port);
 	}
 
 	/* (non-Javadoc)
@@ -72,13 +72,7 @@ public class XDebugDebuggerConfiguration extends AbstractDebuggerConfiguration {
 	 * @see org.eclipse.php.internal.debug.core.debugger.AbstractDebuggerConfiguration#applyDefaults()
 	 */
 	public void applyDefaults() {
-		setPort(preferences.getDefaultInt(XDebugUIAttributeConstants.XDEBUG_PREF_PORT));
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_SHOWSUPERGLOBALS));
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH, preferences.getDefaultInt(XDebugUIAttributeConstants.XDEBUG_PREF_ARRAYDEPTH));
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_MULTISESSION));
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_USEPROXY));		
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_IDEKEY));		
-		preferences.setValue(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY, preferences.getDefaultBoolean(XDebugUIAttributeConstants.XDEBUG_PREF_PROXY));				
+		XDebugPreferenceMgr.applyDefaults(preferences);
 		save();
 	}
 }

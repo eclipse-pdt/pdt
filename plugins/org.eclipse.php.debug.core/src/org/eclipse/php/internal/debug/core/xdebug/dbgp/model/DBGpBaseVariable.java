@@ -19,6 +19,7 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 
 	private String stackLevel;
 	private String fullName;
+	private String address;
 
 	public DBGpBaseVariable(IDebugTarget target, String stackLevel, String fullName) {
 		super(target);
@@ -99,4 +100,13 @@ public abstract class DBGpBaseVariable extends DBGpElement implements IVariable 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
 }

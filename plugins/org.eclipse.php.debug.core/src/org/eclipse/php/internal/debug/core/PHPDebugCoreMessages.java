@@ -65,17 +65,36 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String ZendDebuggerConfigurationDialog_zendDebugger;
 	public static String ZendDebuggerConfigurationDialog_zendDebuggerSettings;
 
+	//title and groups
+	public static String XDebugConfigurationDialog_mainTitle;
+	public static String XDebugConfigurationDialog_generalGroup;
+	public static String XDebugConfigurationDialog_captureGroup;
+	public static String XDebugConfigurationDialog_proxyGroup;
+	
+	//general
 	public static String XDebugConfigurationDialog_invalidTimeout;
 	public static String XDebugConfigurationDialog_invalidTimeoutValue;
 	public static String XDebugConfigurationDialog_maxArrayDepth;
+	public static String XDebugConfigurationDialog_maxChildren;
 	public static String XDebugConfigurationDialog_showSuperGlobals;
-	public static String XDebugConfigurationDialog_xdebugSettings;
 	public static String XDebugConfigurationDialog_invalidPortRange;
 	public static String XDebugConfigurationDialog_useMultisession;
+	public static String XDebugConfigurationDialog_remoteSession;	
+	public static String XDebugConfigurationDialog_remoteSessionOption_off;
+	public static String XDebugConfigurationDialog_remoteSessionOption_localhost;
+	public static String XDebugConfigurationDialog_remoteSessionOption_any;
+	
+	//capture output
+	public static String XDebugConfigurationDialog_captureStdout;
+	public static String XDebugConfigurationDialog_captureStderr;		
+	public static String XDebugConfigurationDialog_capture_off;
+	public static String XDebugConfigurationDialog_capture_copy;
+	public static String XDebugConfigurationDialog_capture_redirect;
+	
+	//proxy
 	public static String XDebugConfigurationDialog_useProxy;
 	public static String XDebugConfigurationDialog_idekey;
 	public static String XDebugConfigurationDialog_proxy;
-	public static String XDebugConfigurationDialog_proxyGroup;
 
 	
     static {

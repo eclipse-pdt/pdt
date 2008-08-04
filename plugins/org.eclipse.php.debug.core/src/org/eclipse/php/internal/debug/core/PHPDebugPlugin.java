@@ -26,7 +26,7 @@ import org.eclipse.php.internal.debug.core.launching.XDebugLaunchListener;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceInit;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
@@ -80,7 +80,7 @@ public class PHPDebugPlugin extends Plugin {
 
 		// TODO - XDebug - See if this can be removed and use a preferences initializer.
 		// It's important the the default setting will occur before loading the daemons.
-		XDebugPreferenceInit.setDefaults();
+		XDebugPreferenceMgr.setDefaults();
 
 		// Start all the daemons
 		DaemonPlugin.getDefault().startDaemons(null);

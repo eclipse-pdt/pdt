@@ -18,18 +18,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,8 +32,8 @@ import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.core.preferences.PHPexes;
-import org.eclipse.php.internal.debug.core.xdebug.GeneralUtils;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
@@ -241,7 +231,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
 				subMonitor.subTask("waiting for XDebug session");
-				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), GeneralUtils.createSessionPreferences(), monitor);
+				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences(), monitor);
 			}
 
 		} else {

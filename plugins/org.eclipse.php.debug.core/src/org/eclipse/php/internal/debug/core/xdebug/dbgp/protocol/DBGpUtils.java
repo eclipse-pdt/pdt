@@ -94,7 +94,7 @@ public class DBGpUtils {
 			return false;
 		}
 		
-		if (resp.getType() == DBGpResponse.RESPONSE) {
+		if (resp.getType() == DBGpResponse.RESPONSE  || resp.getType() == DBGpResponse.STREAM) {
 
 			// ok, or cannot get property are good responses really.
 			if (resp.getErrorCode() == DBGpResponse.ERROR_OK || resp.getErrorCode() == DBGpResponse.ERROR_CANT_GET_PROPERTY) {

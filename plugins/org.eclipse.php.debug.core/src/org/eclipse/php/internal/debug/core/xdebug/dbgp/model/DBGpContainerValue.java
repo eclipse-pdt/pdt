@@ -65,6 +65,7 @@ public class DBGpContainerValue extends DBGpValue {
 		String pageSizeStr = null;
 		pageStr = DBGpResponse.getAttribute(property, "page");
 		pageSizeStr = DBGpResponse.getAttribute(property, "pagesize");
+		//TODO: currently getMaxChildren returns 0, may need to look into this.
 		pageSize = ((DBGpTarget) getDebugTarget()).getMaxChildren();
 		if (pageSizeStr != null && pageSizeStr.trim().length() != 0) {
 			pageSize = Integer.parseInt(pageSizeStr);
@@ -101,10 +102,26 @@ public class DBGpContainerValue extends DBGpValue {
 			int subCount = roundUp((double) numChild / (double) pageSize);
 			childVariables = new DBGpContainerVariable[subCount];
 
-			// we can populate the 1st one, we assume page=0 here.
-			childVariables[0] = new DBGpContainerVariable(getDebugTarget(), page, pageSize, numChild, property, getOwner().getStackLevel(), getOwner().getFullName());
-			for (int i = 1; i < subCount; i++) {
-				childVariables[i] = new DBGpContainerVariable(getDebugTarget(), page + i, pageSize, numChild, null, getOwner().getStackLevel(), getOwner().getFullName());
+//			// we can populate the 1st one, we assume page=0 here.
+//			// TODO: xdebug appears to do strange things on the watch expression. For example
+//			// if I have expanded $a (array of 201 elements) then a watch doesn't get page 0, it could get page 4 for example.
+//			childVariables[0] = new DBGpContainerVariable(getDebugTarget(), page, pageSize, numChild, property, getOwner().getStackLevel(), getOwner().getFullName());
+//			for (int i = 1; i < subCount; i++) {
+//				childVariables[i] = new DBGpContainerVariable(getDebugTarget(), page + i, pageSize, numChild, null, getOwner().getStackLevel(), getOwner().getFullName());
+//			}
+			
+			for (int i = 0; i < subCount; i++) {
+				if (i == page) {
+					// we have data for this page so pass the property info to the container
+					childVariables[i] = new DBGpContainerVariable(getDebugTarget(), i, pageSize, numChild, property, getOwner().getStackLevel(), getOwner().getFullName());
+				}
+				else {
+					// we don't have data for this page so create a container with no info, could be fetched later.
+					childVariables[i] = new DBGpContainerVariable(getDebugTarget(), i, pageSize, numChild, null, getOwner().getStackLevel(), getOwner().getFullName());
+					//we copy the address from the original data as we could use it if we don't
+					//have a fullname from the variable, eg if an eval was done.
+					((DBGpContainerVariable)childVariables[i]).setAddress(getOwner().getAddress());
+				}
 			}
 		}
 	}
@@ -162,7 +179,9 @@ public class DBGpContainerValue extends DBGpValue {
 		if (var instanceof DBGpContainerVariable) {
 			page = ((DBGpContainerVariable) var).getPage();
 		}
-		Node property = target.getProperty(var.getFullName(), var.getStackLevel(), page);
+		Node property = null;
+		property = target.getProperty(var.getFullName(), var.getStackLevel(), page);
+		
 		if (property != null) {
 			parseData(property);
 		}
