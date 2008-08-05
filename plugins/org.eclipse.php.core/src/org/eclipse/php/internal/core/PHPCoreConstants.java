@@ -28,6 +28,7 @@ public interface PHPCoreConstants {
 	//
 	public static final String PHP4 = PHPVersion.PHP4;
 	public static final String PHP5 = PHPVersion.PHP5;
+	public static final String ADD_JS_NATURE = PLUGIN_ID + ".addJsNature"; //$NON-NLS-1$
 
 	public static final String TASK_PRIORITIES = PLUGIN_ID + ".taskPriorities"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_HIGH = "HIGH"; //$NON-NLS-1$
