@@ -61,6 +61,7 @@ public class PHPCreationDataModelProvider extends ProjectCreationDataModelProvid
 		propertyNames.add(PHPCoreConstants.PHPOPTION_CONTEXT_ROOT);
 		propertyNames.add(PHPCoreConstants.PHPOPTION_INCLUDE_PATH);
         propertyNames.add(Keys.EDITOR_USE_ASP_TAGS);
+        propertyNames.add(PHPCoreConstants.ADD_JS_NATURE);
 
 		//		propertyNames.add(IProjectCreationProperties.PROJECT_DESCRIPTION);
 

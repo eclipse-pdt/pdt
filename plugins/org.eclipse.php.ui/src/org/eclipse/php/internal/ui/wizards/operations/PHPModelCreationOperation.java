@@ -22,13 +22,13 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.php.internal.ui.wizards.WizardPageFactory;
 import org.eclipse.wst.common.frameworks.datamodel.AbstractDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 
 public class PHPModelCreationOperation extends AbstractDataModelOperation implements IProjectCreationPropertiesNew {
 
@@ -83,6 +83,15 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 						pageFactory.execute();
 					}
 
+					// add JS support if desired
+					if(model.getBooleanProperty(PHPCoreConstants.ADD_JS_NATURE)) {
+						String[] oldNatureIds = (String[])model.getProperty(PROJECT_NATURES);
+						String[] newNatureIds = new String[oldNatureIds.length+1];
+						newNatureIds[oldNatureIds.length]=JavaScriptCore.NATURE_ID;
+						System.arraycopy(oldNatureIds, 0, newNatureIds, 0, oldNatureIds.length);
+						model.setProperty(PROJECT_NATURES, newNatureIds);
+					}
+					
 					String[] natureIds = (String[]) model.getProperty(PROJECT_NATURES);
 					if (null != natureIds) {
 						desc.setNatureIds(natureIds);
