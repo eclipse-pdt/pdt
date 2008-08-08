@@ -83,6 +83,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_remoteSessionOption_off;
 	public static String XDebugConfigurationDialog_remoteSessionOption_localhost;
 	public static String XDebugConfigurationDialog_remoteSessionOption_any;
+	public static String XDebugConfigurationDialog_remoteSessionOption_prompt;
 	
 	//capture output
 	public static String XDebugConfigurationDialog_captureStdout;
@@ -96,6 +97,11 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_idekey;
 	public static String XDebugConfigurationDialog_proxy;
 
+	//messages
+	public static String XDebugMessage_debugError;	
+	public static String XDebugMessage_unexpectedTermination;
+	public static String XDebugMessage_remoteSessionTitle;	
+	public static String XDebugMessage_remoteSessionPrompt;
 	
     static {
         // load message values from bundle file

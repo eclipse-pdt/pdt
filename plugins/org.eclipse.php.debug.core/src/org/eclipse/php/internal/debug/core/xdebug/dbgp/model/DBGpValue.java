@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import java.io.UnsupportedEncodingException;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
@@ -23,6 +25,15 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	private IVariable[] variables = new IVariable[0];
 	private DBGpBaseVariable owner;
 	private String valueString = "";
+	private byte[] valueBytes = null;
+
+	public byte[] getValueBytes() {
+		return valueBytes;
+	}
+
+	public void setValueBytes(byte[] valueBytes) {
+		this.valueBytes = valueBytes;
+	}
 
 	private static final String ENCODING_BASE64 = "base64";
 
@@ -105,18 +116,22 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 	}
 
 	private String decodeValue(String valueData, String encoding) {
-		String res = valueData;
+		String resStr = valueData;
 		if (encoding != null && encoding.equalsIgnoreCase(ENCODING_BASE64)) {
 			if (valueData != null && valueData.trim().length() != 0) {
 				DBGpTarget target = (DBGpTarget)getDebugTarget();
-				res = Base64.decode(valueData.trim(), target.getSessionEncoding());
+				valueBytes = Base64.decode(valueData.trim());
+				resStr = new String(valueBytes, target.getBinaryCharset());
 			}
 		}
-		return res;
+		return resStr;
 	}
 
 	// override this definitely
 	abstract void genValueString(String data);
+	
+
+	
 
 	/*
 	// override these to enhance the way variables are displayed

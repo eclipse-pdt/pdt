@@ -89,6 +89,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			wc = configuration.getWorkingCopy();
 		}
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, projectString);
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(project));
+		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(project));
 		wc.doSave();
 
 		if (monitor.isCanceled()) {

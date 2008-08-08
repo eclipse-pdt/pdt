@@ -86,7 +86,7 @@ public class XDebugLaunchListener implements ILaunchesListener {
 			}
 			hasActiveLaunch |= !launch.isTerminated();
 		}
-		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" : "false");
+		System.setProperty(SYSTEM_DEBUG_PROPERTY, hasActiveLaunch ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public boolean isWebLaunchActive() {

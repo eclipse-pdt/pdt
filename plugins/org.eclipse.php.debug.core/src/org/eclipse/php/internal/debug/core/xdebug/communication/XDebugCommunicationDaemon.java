@@ -14,6 +14,7 @@
 package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,10 +28,13 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.debug.core.*;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.daemon.AbstractDebuggerCommunicationDaemon;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
@@ -135,6 +139,18 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 						if (aSess == AcceptRemoteSession.localhost && session.getRemoteAddress().isLoopbackAddress() == false) {
 							session.endSession();
 						}
+						else if (aSess == AcceptRemoteSession.prompt) {
+							PromptUser prompt = new PromptUser(session);
+							Display.getDefault().syncExec(prompt);
+							if (prompt.isResult()) {
+								createLaunch(session);
+							}
+							else {
+								session.endSession();
+							}
+							
+							
+						}
 						else {
 							// session was either localhost or from any outside one and
 							// preferences allow it.
@@ -159,181 +175,18 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 	 * @param session the DBGpSession.
 	 */
 	private void createLaunch(DBGpSession session) {
-		boolean stopAtFirstLine = true;
+		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(null);
 		DBGpTarget target = null;
-		PathMapper p = null;
+		PathMapper mapper = null;
 		PHPSourceLookupDirector srcLocator = new PHPSourceLookupDirector();
 		srcLocator.initializeParticipants();
-//		ILaunchConfiguration conf = new ILaunchConfiguration() {
-//
-//			public boolean contentsEqual(ILaunchConfiguration configuration) {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public ILaunchConfigurationWorkingCopy copy(String name) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public void delete() throws CoreException {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			public boolean exists() {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public boolean getAttribute(String attributeName, boolean defaultValue) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public int getAttribute(String attributeName, int defaultValue) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return 0;
-//			}
-//
-//			public List getAttribute(String attributeName, List defaultValue) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public Set getAttribute(String attributeName, Set defaultValue) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public Map getAttribute(String attributeName, Map defaultValue) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public String getAttribute(String attributeName, String defaultValue) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public Map getAttributes() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public String getCategory() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public IFile getFile() {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public IPath getLocation() {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public IResource[] getMappedResources() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public String getMemento() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public Set getModes() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public String getName() {
-//				// TODO Auto-generated method stub
-//				return "JIT Launch";
-//			}
-//
-//			public ILaunchDelegate getPreferredDelegate(Set modes) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public ILaunchConfigurationType getType() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public ILaunchConfigurationWorkingCopy getWorkingCopy() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public boolean hasAttribute(String attributeName) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public boolean isLocal() {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public boolean isMigrationCandidate() throws CoreException {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public boolean isReadOnly() {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public boolean isWorkingCopy() {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public ILaunch launch(String mode, IProgressMonitor monitor) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public ILaunch launch(String mode, IProgressMonitor monitor, boolean build, boolean register) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//
-//			public void migrate() throws CoreException {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			public boolean supportsMode(String mode) throws CoreException {
-//				// TODO Auto-generated method stub
-//				return false;
-//			}
-//
-//			public Object getAdapter(Class adapter) {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//			
-//		};
 		
-		ILaunch la = new Launch(null, ILaunchManager.DEBUG_MODE, srcLocator);
+		ILaunch remoteLaunch = new Launch(null, ILaunchManager.DEBUG_MODE, srcLocator);
 		boolean multiSession = XDebugPreferenceMgr.useMultiSession();
 
 		if (session.getSessionId() == null && !multiSession) {
 			// web launch
-			target = new DBGpTarget(la, null, null, session.getIdeKey(), stopAtFirstLine, null);						
+			target = new DBGpTarget(remoteLaunch, null, null, session.getIdeKey(), stopAtFirstLine, null);						
 			Server server = null;
 			Server[] servers = ServersManager.getServers();
 			for (int i = 0; i < servers.length; i++) {
@@ -344,10 +197,10 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 				}
 			}
 			if (server != null) {
-				p = PathMapperRegistry.getByServer(server);						
+				mapper = PathMapperRegistry.getByServer(server);						
 			}
 			else {
-				p = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
+				mapper = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
 				// but they would be persisted. We may try and find one for the particular server or create a temporary one.						
 			}
 			// need to add ourselves as a session listener for future sessions
@@ -356,27 +209,27 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 		else {
 			// cli launch or multisession launch create a single shot target
 			// The Launch Configuration, Source Locator.
-			target = new DBGpTarget(la, null /*no script name*/, session.getIdeKey(), session.getSessionId(), stopAtFirstLine);
+			target = new DBGpTarget(remoteLaunch, null /*no script name*/, session.getIdeKey(), session.getSessionId(), stopAtFirstLine);
 			//PathMapper p = PathMapperRegistry.getByPHPExe(null);
-			p = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
+			mapper = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
 			// but they currently would be persisted.
 		}
 
 		// if we are multisession and the session was not picked up then we need a 
 		// multisession target started and added to the launch and listening for more sessions. 
 		if (multiSession) {
-			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(la, null, null, session.getIdeKey(), stopAtFirstLine, null);
+			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(remoteLaunch, null, null, session.getIdeKey(), stopAtFirstLine, null);
 			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)multiSessionTarget);			
 			multiSessionTarget.addDebugTarget(target);
-			la.addDebugTarget(multiSessionTarget);
+			remoteLaunch.addDebugTarget(multiSessionTarget);
 		}
 
-		target.setPathMapper(p);
+		target.setPathMapper(mapper);
 		target.setSession(session);
 		session.setDebugTarget(target);
-		la.addDebugTarget(target);
+		remoteLaunch.addDebugTarget(target);
 		
-		DebugPlugin.getDefault().getLaunchManager().addLaunch(la);
+		DebugPlugin.getDefault().getLaunchManager().addLaunch(remoteLaunch);
 		target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences());
 		//probably could do waitForInitialSession as session has already been set.
 		
@@ -407,5 +260,26 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 				resetSocket();
 			}
 		}
+	}
+	
+	private class PromptUser implements Runnable {
+		private DBGpSession session;
+		private boolean result;
+		
+		public boolean isResult() {
+			return result;
+		}
+
+		public PromptUser(DBGpSession session) {
+			this.session = session;
+		}
+		
+		public void run() {
+			String insert = session.getRemoteAddress().getCanonicalHostName() + "/" + session.getRemoteAddress().getHostAddress();
+			String message = MessageFormat.format(PHPDebugCoreMessages.XDebugMessage_remoteSessionPrompt, new Object[] {insert});
+			result = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), 
+				PHPDebugCoreMessages.XDebugMessage_remoteSessionTitle,
+				message);
+		}		
 	}
 }

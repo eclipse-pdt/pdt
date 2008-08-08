@@ -176,6 +176,8 @@ public class DBGpCommand {
 			System.arraycopy(cmdBytes, 0, cmdWithTerm, 0, cmdBytes.length);
 			os.write(cmdWithTerm);
 			os.flush();
+			lastIdSent = cmdId;
+			lastCmdSent = fullCmd;
 
 			/*
 			System.out.print("streamed:");
@@ -194,13 +196,19 @@ public class DBGpCommand {
 			outStream.flush();
 			*/
 		}
-		lastIdSent = cmdId;
-		lastCmdSent = fullCmd;
 		return cmdId;
 	}
 
 	public int getLastIdSent() {
-		return lastIdSent;
+		int id;
+		// we need to synchronise on the socket to ensure that if we get called
+		// on a different thread, lastIdSent is at the latest value which occurs
+		// after the last part of the write and the update takes place and is 
+		// controlled by the syncing of the socket.
+		synchronized (socket) {
+			id = lastIdSent;
+		}
+		return id;
 	}
 
 }

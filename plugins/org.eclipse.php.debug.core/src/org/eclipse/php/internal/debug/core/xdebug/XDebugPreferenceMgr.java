@@ -37,12 +37,14 @@ public class XDebugPreferenceMgr {
 	public static final String XDEBUG_PREF_PROXY = PHPDebugPlugin.ID + ".xdebug_proxy";
 
 	public static enum AcceptRemoteSession {
-		off, localhost, any
+		off, localhost, any, prompt
 	}
 	
 	public static final String[] remoteSessionOptions = {PHPDebugCoreMessages.XDebugConfigurationDialog_remoteSessionOption_off, 
 		PHPDebugCoreMessages.XDebugConfigurationDialog_remoteSessionOption_localhost, 
-		PHPDebugCoreMessages.XDebugConfigurationDialog_remoteSessionOption_any};		
+		PHPDebugCoreMessages.XDebugConfigurationDialog_remoteSessionOption_any,
+		PHPDebugCoreMessages.XDebugConfigurationDialog_remoteSessionOption_prompt};		
+
 	
 	
 	//just happens to match DBGp values so no conversion to DBGp Preferences required.

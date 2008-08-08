@@ -13,6 +13,7 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -22,6 +23,7 @@ import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
@@ -590,12 +592,12 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 			if (savedSuspended) {
 				// we were suspended at the time and not terminating so we have
 				// received an unexpected termination from the server side
-				final String errorMessage = "Unexpected termination of script, debugging ended.";
+				final String errorMessage = PHPDebugCoreMessages.XDebugMessage_unexpectedTermination;
 				Status status = new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, null);
 				DebugPlugin.log(status);
 				Display.getDefault().asyncExec(new Runnable() {
 					public void run() {
-						MessageDialog.openError(Display.getDefault().getActiveShell(), "Debugger Error", errorMessage); //$NON-NLS-1$
+						MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.XDebugMessage_debugError, errorMessage); 
 					}
 				});
 
@@ -1169,7 +1171,10 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 	public boolean setProperty(DBGpVariable var, String data) {
 
 		// XDebug expects all data to be base64 encoded.
-		String encoded = Base64.encode(data, session.getSessionEncoding());
+		// In this case we don't use session encoding, we use transfer
+		// encoding as we want control over the bytes being placed into the
+		// variable at the other end.
+		String encoded = Base64.encode(data.getBytes(getBinaryCharset()));
 		String fullName = var.getFullName();
 		String stackLevel = var.getStackLevel();
 		String args = "-n " + fullName + " -d " + stackLevel + " -l " + encoded.length() + " -- " + encoded;
@@ -1278,7 +1283,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 	 */
 	public Node eval(String toEval) {
 		// XDebug expects all data to be base64 encoded.
-		String encoded = Base64.encode(toEval, session.getSessionEncoding());
+		// Convert to session encoding bytes 1st before converting to Base64
+		String encoded = Base64.encode(getSessionEncodingBytes(toEval));
 		String args = "-- " + encoded;
 		DBGpResponse resp = session.sendSyncCmd(DBGpCommand.eval, args);
 		if (DBGpUtils.isGoodDBGpResponse(this, resp)) {
@@ -1536,7 +1542,9 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 			if (debugMsg != null) {
 				debugMsg += " with expression:" + condition.getExpression();
 			}
-			args += " -- " + Base64.encode(condition.getExpression(), session.getSessionEncoding());
+			
+			//we use session encoding before converting to Base64.
+			args += " -- " + Base64.encode(getSessionEncodingBytes(condition.getExpression()));
 		} else if (condition.getType() == DBGpBreakpointCondition.HIT) {
 			if (debugMsg != null) {
 				debugMsg += " with hit :" + condition.getHitCondition() + condition.getHitValue();
@@ -2027,6 +2035,15 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 			return DBGpSession.DEFAULT_SESSION_ENCODING;
 		}
 	}
+	
+	public Charset getBinaryCharset() {
+		if (session != null) {
+			return session.getBinaryCharset();
+		} else {
+			return Charset.defaultCharset();
+		}
+		
+	}
 
 	private int getMaxDepth() {
 		if (sessionPreferences != null) {
@@ -2097,4 +2114,15 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 	public DebugOutput getOutputBuffer() {
 		return this.debugOutput;
 	}	
+	
+	private byte[] getSessionEncodingBytes(String toConvert) {
+		byte[] result = null;
+		try {
+			result = toConvert.getBytes(getSessionEncoding());
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

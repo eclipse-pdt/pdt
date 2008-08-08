@@ -90,6 +90,8 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		ILaunchConfigurationWorkingCopy wc = configuration.getWorkingCopy();
 		String project = proj.getFullPath().toString();
 		wc.setAttribute(IPHPDebugConstants.PHP_Project, project);
+		wc.setAttribute(IDebugParametersKeys.TRANSFER_ENCODING, PHPProjectPreferences.getTransferEncoding(proj));
+		wc.setAttribute(IDebugParametersKeys.OUTPUT_ENCODING, PHPProjectPreferences.getOutputEncoding(proj));		
 		wc.doSave();
 
 		// determine stop at first line (first calc the default and then try to extract the configuration attribute).

@@ -15,15 +15,21 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.DebugEvent;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.*;
@@ -48,6 +54,10 @@ public class DBGpSession {
 	private long creationTime;
 
 	private String sessionEncoding;
+	private Charset outputCharset;
+
+
+	private Charset binaryCharset;
 
 	public long getCreationTime() {
 		return creationTime;
@@ -282,6 +292,9 @@ public class DBGpSession {
 				idObj = new Integer(parsedResponse.getId());
 			} catch (NumberFormatException nfe) {
 				idObj = new Integer(DBGpCmd.getLastIdSent());
+				if (DBGpLogger.debugResp()) {
+					DBGpLogger.debug("no txn id, using last which was" + idObj.toString());
+				}
 			}
 			if (savedResponses.containsKey(idObj)) {
 				postAndSignalCaller(idObj, parsedResponse);
@@ -330,7 +343,10 @@ public class DBGpSession {
 			*/
 			String data = parsedResponse.getStreamData();
 			if (data != null) {
-				debugTarget.getOutputBuffer().append(Base64.decode(data, sessionEncoding ));
+				byte[] streamData = Base64.decode(data);
+				
+				String streamStr = new String(streamData, outputCharset);
+				debugTarget.getOutputBuffer().append(streamStr);
 				debugTarget.getOutputBuffer().incrementUpdateCount();
 			}
 		}
@@ -486,6 +502,40 @@ public class DBGpSession {
 		return null;
 	}
 
+	private void determineEncodings() {
+		ILaunch launch = getDebugTarget().getLaunch();
+		ILaunchConfiguration launchConfig = launch.getLaunchConfiguration();
+		outputCharset = getCharset(IDebugParametersKeys.OUTPUT_ENCODING, launchConfig);
+		binaryCharset = getCharset(IDebugParametersKeys.TRANSFER_ENCODING, launchConfig);
+	}
+
+	private Charset getCharset(String encodingKey, ILaunchConfiguration launchConfig) {
+		Charset charset = null;
+		String outputEncoding = null;		
+		if (launchConfig != null) {
+			try {
+				outputEncoding = launchConfig.getAttribute(encodingKey, "");
+			} catch (CoreException e) {
+			}
+		}
+		if (outputEncoding == null || outputEncoding.length() == 0) {
+			// null will return it from the main preferences
+			if (encodingKey == IDebugParametersKeys.OUTPUT_ENCODING) {
+				outputEncoding = PHPProjectPreferences.getOutputEncoding(null);
+			}
+			else {
+				outputEncoding = PHPProjectPreferences.getTransferEncoding(null);				
+			}
+		}
+		if (outputEncoding == null || Charset.isSupported(outputEncoding) == false) {
+			charset = Charset.defaultCharset();
+		}
+		else {
+			charset = Charset.forName(outputEncoding);
+		}
+		return charset;
+	}
+
 	/**
 	 * end this session
 	 *
@@ -553,8 +603,14 @@ public class DBGpSession {
 		return debugTarget;
 	}
 
+	/**
+	 * debug target calls this to say it is owner of the session.
+	 * @param debugTarget
+	 */
 	public void setDebugTarget(DBGpTarget debugTarget) {
 		this.debugTarget = debugTarget;
+		// now we have a target we can determine the user defined encodings
+		determineEncodings();
 	}
 
 	public String toString() {
@@ -577,7 +633,7 @@ public class DBGpSession {
 	}
 
 	/**
-	 * set the session encoding
+	 * set the session encoding.
 	 * @param sessionEncoding session encoding.
 	 */
 	public void setSessionEncoding(String sessionEncoding) {
@@ -602,5 +658,13 @@ public class DBGpSession {
 	
 	public String getRemoteHostname() {
 		return DBGpSocket.getInetAddress().getHostName();
+	}
+	
+	public Charset getOutputCharset() {
+		return outputCharset;
+	}
+
+	public Charset getBinaryCharset() {
+		return binaryCharset;
 	}
 }
