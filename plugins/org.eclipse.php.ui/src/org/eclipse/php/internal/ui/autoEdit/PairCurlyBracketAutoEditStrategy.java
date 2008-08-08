@@ -127,7 +127,8 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 	 */
 	private int copyRestOfLine(IStructuredDocument document, DocumentCommand command, StringBuffer buffer) throws BadLocationException {
 
-		if (command.offset + command.length == document.getLength()) { // if we're at the end of the document then nothing to copy
+		int documentLength = document.getLength();
+		if (command.offset + command.length == documentLength) { // if we're at the end of the document then nothing to copy
 			return 0;
 		}
 		int offset = command.offset;
@@ -169,6 +170,9 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			buffer.append(nextChar);
 			command.length++;
 			offset++;
+			if(offset == documentLength){
+				break;
+			}
 			nextChar = document.getChar(offset);
 		}
 
