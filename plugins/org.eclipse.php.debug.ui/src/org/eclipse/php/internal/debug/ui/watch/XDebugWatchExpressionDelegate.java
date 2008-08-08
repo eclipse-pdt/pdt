@@ -19,6 +19,7 @@ import org.eclipse.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.w3c.dom.Node;
 
 /**
@@ -59,7 +60,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 	private final class EvaluationRunnable extends Job {
 
 		public EvaluationRunnable() {
-			super("XDEbugEvaluationRunnable");
+			super("XDEbugEvaluationRunnable"); //$NON-NLS-1$
 			setSystem(true);
 		}
 
@@ -87,7 +88,7 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 
 		public void evaluate() {
 			//         Logger.debug("getValue() for: " + expressionText);
-			String stackLevel = "0";
+			String stackLevel = "0"; //$NON-NLS-1$
 			String testExp = expressionText.trim();
 			Node result = null;
 
@@ -126,7 +127,8 @@ public class XDebugWatchExpressionDelegate implements IWatchExpressionDelegate {
 
 		public String[] getErrorMessages() {
 			if (hasErrors) {
-				return new String[] { "Failed to evaluation Expression" };
+				// failed to evaluate expression.
+				return new String[] { PHPDebugUIMessages.XDebugWatch_failed };
 			}
 			return null;
 		}

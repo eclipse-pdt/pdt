@@ -129,9 +129,9 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 				try {
 					String filename = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_FILE);
 					Integer lineNumber = (Integer) marker.getAttribute(IMarker.LINE_NUMBER);
-					return filename + " [line: " + lineNumber.toString() + "]";
+					return filename + " [" + PHPDebugUIMessages.XDebugPresentation_line + ": " + lineNumber.toString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				} catch (CoreException e) {
-					Logger.logException("Unexpected error in XDebugModelPresentation", e);
+					Logger.logException("Unexpected error in XDebugModelPresentation", e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -149,12 +149,12 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 
 	private String getThreadText(DBGpThread thread) {
 		DBGpTarget target = (DBGpTarget) thread.getDebugTarget();
-		String label = "";
+		String label = ""; //$NON-NLS-1$
 		try {
 			label = target.getName();
 		} catch (DebugException e1) {
 			// Just log should never happen
-			Logger.logException("XDebugModelPresentation error getting target name", e1);
+			Logger.logException("XDebugModelPresentation error getting target name", e1); //$NON-NLS-1$
 		}
 		if (thread.isStepping()) {
 			label += PHPDebugUIMessages.MPresentation_Stepping_1;
@@ -189,20 +189,20 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 			String frameName = frame.getName();
 			if (frameName != null && frameName.length() > 0) {
 				buffer.append(frame.getName());
-				buffer.append("() ");
+				buffer.append("() "); //$NON-NLS-1$
 			}
 			buffer.append(frame.getSourceName());
 			buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1 + (frame.getLineNumber()));
 			return buffer.toString();
 
 		} catch (DebugException e) {
-			Logger.logException("Unexpected error in PHPModelPresentation", e);
+			Logger.logException("Unexpected error in PHPModelPresentation", e); //$NON-NLS-1$
 		} catch (NullPointerException npe) {
 			// This is here for debug purpose. Figure out why do we get nulls.
-			StringBuffer errorMessage = new StringBuffer("NPE in getStackFrameText(). Frame = ");
+			StringBuffer errorMessage = new StringBuffer("NPE in getStackFrameText(). Frame = "); //$NON-NLS-1$
 			errorMessage.append(frame);
 			if (frame != null) {
-				errorMessage.append(", Thread = ");
+				errorMessage.append(", Thread = "); //$NON-NLS-1$
 				errorMessage.append(frame.getThread());
 			}
 			Logger.logException(errorMessage.toString(), npe);
@@ -250,9 +250,9 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 					String type = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_TYPE);
 
 					if (IPHPDebugConstants.STORAGE_TYPE_INCLUDE.equals(type)) {
-						String projectName = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_PROJECT, "");
+						String projectName = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_PROJECT, ""); //$NON-NLS-1$
 						IProject project = PHPDebugUIPlugin.getProject(projectName);
-						String includeBaseDir = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_INC_BASEDIR, "");
+						String includeBaseDir = (String) marker.getAttribute(IPHPDebugConstants.STORAGE_INC_BASEDIR, ""); //$NON-NLS-1$
 						filename = marker.getAttribute(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, filename);
 
 						File file = new File(filename);
@@ -266,7 +266,7 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 						return new FileStoreEditorInput(store);
 					}
 				} catch (CoreException e) {
-					Logger.logException("Unexpected error in PHPModelPresentation", e);
+					Logger.logException("Unexpected error in PHPModelPresentation", e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -283,7 +283,7 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 			return new FileStoreEditorInput((IFileStore) element);
 		}
 
-		Logger.log(IStatus.WARNING, "Unknown editor input type: " + element.getClass().getName());
+		Logger.log(IStatus.WARNING, "Unknown editor input type: " + element.getClass().getName()); //$NON-NLS-1$
 		return null;
 	}
 
@@ -295,7 +295,7 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 	 */
 	public String getEditorId(IEditorInput input, Object element) {
 		if (input instanceof PHPSourceNotFoundEditorInput) {
-			return "org.eclipse.php.debug.SourceNotFoundEditor";
+			return "org.eclipse.php.debug.SourceNotFoundEditor"; //$NON-NLS-1$
 		}
 		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage || element instanceof LocalFile) {
 			return "org.eclipse.php.editor"; //$NON-NLS-1$

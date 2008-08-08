@@ -23,6 +23,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStackFrame;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -72,10 +73,10 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 							variable = textViewer.getDocument().get(hoverRegion.getOffset(), hoverRegion.getLength());
 							if (variable != null) {
 								variable = variable.trim();
-								variable = "<B>" + variable + " = </B>" + getPropertyValue(context, variable);
+								variable = "<B>" + variable + " = </B>" + getPropertyValue(context, variable); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 						} catch (BadLocationException e) {
-							Logger.logException("Error retrieving the value\n", e);
+							Logger.logException("Error retrieving the value\n", e); //$NON-NLS-1$
 						}
 						return variable;
 					}
@@ -95,9 +96,9 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		String value = null;
 		Node resp = debugTarget.eval(variable); // note this is a synchronous call
 		if (resp == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2");
+		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2"); //$NON-NLS-1$
 
 		IValue val = null;
 
@@ -110,12 +111,12 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		}
 
 		if (value != null && value.length() == 0) {
-			value = "Empty";
+			value = PHPDebugUIMessages.XDebugHover_empty;
 			return value;
 		}
 
 		if (value != null) {
-			value.replaceAll("\t", "    ");
+			value.replaceAll("\t", "    "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		return value;
@@ -126,9 +127,9 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		DBGpTarget debugTarget = (DBGpTarget) context.getDebugTarget();
 		Node resp = debugTarget.getProperty(variable, context.getStackLevel(), 0);
 		if (resp == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
-		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2");
+		IVariable tempVar = new DBGpVariable(debugTarget, resp, "-2"); //$NON-NLS-1$
 
 		IValue val = null;
 
@@ -141,18 +142,17 @@ public class XDebugTextHover extends AbstractScriptEditorTextHover implements IP
 		}
 
 		if (value != null && value.length() == 0) {
-			value = "Empty";
+			value = PHPDebugUIMessages.XDebugHover_empty;
 			return value;
 		}
 
 		if (value != null) {
-			value.replaceAll("\t", "    ");
+			value.replaceAll("\t", "    "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return value;
 	}
 
 	public IHoverMessageDecorator getMessageDecorator() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
