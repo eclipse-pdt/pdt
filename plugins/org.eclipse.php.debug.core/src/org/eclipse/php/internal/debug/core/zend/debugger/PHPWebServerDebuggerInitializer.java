@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -128,28 +127,13 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				;
 
 		} catch (UnknownHostException exc) {
-			Logger.log(Logger.WARNING, "Unknown Host Exception.");
-			String errorMessage = PHPDebugCoreMessages.DebuggerConnection_Problem_3;
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, exc));
+			Logger.logException("Unknown host: " + url.getHost(), exc);
 		} catch (ConnectException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
-			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { url.toString() });
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (IOException exc) {
 			Logger.logException("Unable to connect to URL " + url, exc);
-			String baseURL = url.toString();
-			int queryPartIndex = baseURL.indexOf('?');
-			if (queryPartIndex > -1) {
-				baseURL = baseURL.substring(0, queryPartIndex);
-			}
-			String filePath = url.getPath();
-			if (filePath.startsWith("/")) {
-				filePath = filePath.substring(1);
-			}
-			String errorMessage = MessageFormat.format(PHPDebugCoreMessages.DebuggerConnection_Failed_1, new String[] { baseURL, filePath });
-			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.DEBUG_CONNECTION_ERROR, errorMessage, null));
 		} catch (Exception exc) {
-			Logger.logException("Unexpected exception communicating with server", exc);
+			Logger.logException("Unexpected exception communicating with Web server", exc);
 			String errorMessage = exc.getMessage();
 			throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.getID(), IPHPDebugConstants.INTERNAL_ERROR, errorMessage, exc));
 		}
