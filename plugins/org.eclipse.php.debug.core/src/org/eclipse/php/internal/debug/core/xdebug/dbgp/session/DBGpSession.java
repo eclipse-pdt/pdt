@@ -38,6 +38,8 @@ import org.w3c.dom.Node;
 public class DBGpSession {
 
 	public static final String DEFAULT_SESSION_ENCODING = "ISO-8859-1";
+	public static final String DEFAULT_BINARY_ENCODING = Charset.defaultCharset().name();
+	public static final String DEFAULT_OUTPUT_ENCODING = Charset.defaultCharset().name();
 
 	private Socket DBGpSocket;
 	private AsyncResponseHandlerJob responseHandler;
@@ -54,10 +56,8 @@ public class DBGpSession {
 	private long creationTime;
 
 	private String sessionEncoding;
-	private Charset outputCharset;
-
-
-	private Charset binaryCharset;
+	private String outputEncoding;
+	private String binaryEncoding;
 
 	public long getCreationTime() {
 		return creationTime;
@@ -345,7 +345,13 @@ public class DBGpSession {
 			if (data != null) {
 				byte[] streamData = Base64.decode(data);
 				
-				String streamStr = new String(streamData, outputCharset);
+				String streamStr;
+				try {
+					streamStr = new String(streamData, outputEncoding);
+				} catch (UnsupportedEncodingException e) {
+					DBGpLogger.logException("invalid encoding: " + outputEncoding, this, e);
+					streamStr = new String(streamData);					
+				}
 				debugTarget.getOutputBuffer().append(streamStr);
 				debugTarget.getOutputBuffer().incrementUpdateCount();
 			}
@@ -505,12 +511,12 @@ public class DBGpSession {
 	private void determineEncodings() {
 		ILaunch launch = getDebugTarget().getLaunch();
 		ILaunchConfiguration launchConfig = launch.getLaunchConfiguration();
-		outputCharset = getCharset(IDebugParametersKeys.OUTPUT_ENCODING, launchConfig);
-		binaryCharset = getCharset(IDebugParametersKeys.TRANSFER_ENCODING, launchConfig);
+		outputEncoding = getCharset(IDebugParametersKeys.OUTPUT_ENCODING, launchConfig);
+		binaryEncoding = getCharset(IDebugParametersKeys.TRANSFER_ENCODING, launchConfig);
 	}
 
-	private Charset getCharset(String encodingKey, ILaunchConfiguration launchConfig) {
-		Charset charset = null;
+	private String getCharset(String encodingKey, ILaunchConfiguration launchConfig) {
+		String charset = null;
 		String outputEncoding = null;		
 		if (launchConfig != null) {
 			try {
@@ -528,10 +534,10 @@ public class DBGpSession {
 			}
 		}
 		if (outputEncoding == null || Charset.isSupported(outputEncoding) == false) {
-			charset = Charset.defaultCharset();
+			charset = Charset.defaultCharset().name();
 		}
 		else {
-			charset = Charset.forName(outputEncoding);
+			charset = outputEncoding;
 		}
 		return charset;
 	}
@@ -631,9 +637,18 @@ public class DBGpSession {
 	public String getSessionEncoding() {
 		return sessionEncoding;
 	}
+	
+	public String getOutputEncoding() {
+		return outputEncoding;
+	}
+
+	public String getBinaryEncoding() {
+		return binaryEncoding;
+	}
+	
 
 	/**
-	 * set the session encoding.
+	 * set the session encoding. DBGpTarget determines this when handshaking.
 	 * @param sessionEncoding session encoding.
 	 */
 	public void setSessionEncoding(String sessionEncoding) {
@@ -658,13 +673,5 @@ public class DBGpSession {
 	
 	public String getRemoteHostname() {
 		return DBGpSocket.getInetAddress().getHostName();
-	}
-	
-	public Charset getOutputCharset() {
-		return outputCharset;
-	}
-
-	public Charset getBinaryCharset() {
-		return binaryCharset;
-	}
+	}	
 }

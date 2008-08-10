@@ -10,9 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
+import java.io.UnsupportedEncodingException;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.w3c.dom.Node;
 
 public class DBGpStringValue extends DBGpValue {
@@ -67,7 +70,13 @@ public class DBGpStringValue extends DBGpValue {
 		} else {
 			setValueString(IDBGpModelConstants.INVALID_VAR_CONTENT);
 		}
-		byte[] newBytes = expression.getBytes(((DBGpTarget)getDebugTarget()).getBinaryCharset());
+		byte[] newBytes;
+		try {
+			newBytes = expression.getBytes(((DBGpTarget)getDebugTarget()).getBinaryEncoding());
+		} catch (UnsupportedEncodingException e) {
+			DBGpLogger.logException("unexpected encoding problem", this, e);
+			newBytes = expression.getBytes();			
+		}
 		setValueBytes(newBytes);
 		requiredBytes = newBytes.length;
 	}

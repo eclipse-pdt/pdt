@@ -1174,7 +1174,14 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 		// In this case we don't use session encoding, we use transfer
 		// encoding as we want control over the bytes being placed into the
 		// variable at the other end.
-		String encoded = Base64.encode(data.getBytes(getBinaryCharset()));
+		String encoded;
+		try {
+			encoded = Base64.encode(data.getBytes(getBinaryEncoding()));
+		} catch (UnsupportedEncodingException e1) {
+			// should never happen
+			DBGpLogger.logException("unexpected encoding problem", this, e1);
+			encoded = Base64.encode(data.getBytes());
+		}
 		String fullName = var.getFullName();
 		String stackLevel = var.getStackLevel();
 		String args = "-n " + fullName + " -d " + stackLevel + " -l " + encoded.length() + " -- " + encoded;
@@ -2036,11 +2043,11 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 		}
 	}
 	
-	public Charset getBinaryCharset() {
+	public String getBinaryEncoding() {
 		if (session != null) {
-			return session.getBinaryCharset();
+			return session.getBinaryEncoding();
 		} else {
-			return Charset.defaultCharset();
+			return DBGpSession.DEFAULT_BINARY_ENCODING;
 		}
 		
 	}

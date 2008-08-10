@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.Base64;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
@@ -121,7 +122,12 @@ public abstract class DBGpValue extends DBGpElement implements IValue {
 			if (valueData != null && valueData.trim().length() != 0) {
 				DBGpTarget target = (DBGpTarget)getDebugTarget();
 				valueBytes = Base64.decode(valueData.trim());
-				resStr = new String(valueBytes, target.getBinaryCharset());
+				try {
+					resStr = new String(valueBytes, target.getBinaryEncoding());
+				} catch (UnsupportedEncodingException e) {
+					DBGpLogger.logException("unexpected encoding problem", this, e);
+					resStr = new String(valueBytes);
+				}
 			}
 		}
 		return resStr;
