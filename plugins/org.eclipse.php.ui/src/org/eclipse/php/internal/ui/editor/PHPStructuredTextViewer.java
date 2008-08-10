@@ -12,12 +12,12 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentAdapter;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextPresentationListener;
-import org.eclipse.jface.text.Region;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.FormattingContext;
@@ -28,25 +28,30 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ProjectionMapping;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.source.AnnotationRulerColumn;
-import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jface.text.source.IOverviewRuler;
-import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.IVerticalRulerColumn;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.common.frameworks.internal.ui.ErrorDialog;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard;
+import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
@@ -54,6 +59,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
@@ -149,6 +155,52 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			// ((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
 			// }
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
+			// Handle javascript content assist when there is no support (instead of printing the stack trace)
+			if (config != null) {
+				IProject project =null;
+				boolean isJavaScriptRegion = false;
+				boolean hasJavaScriptNature = true;
+				try {
+					// Resolve the partition type
+					IStructuredDocument sDoc = (IStructuredDocument) getDocument();
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
+					if (textRegion instanceof ForeignRegion) {
+						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
+					}
+
+					// Check if the containing project has JS nature or not
+					if (textEditor instanceof PHPStructuredEditor) {
+						IModelElement modelElement = ((PHPStructuredEditor) textEditor).getModelElement();
+						
+						if (modelElement != null) {
+							IScriptProject scriptProject = modelElement.getScriptProject();
+							project = scriptProject.getProject();
+							if (project != null && project.getNature(JavaScriptCore.NATURE_ID) == null) {
+								hasJavaScriptNature = false;
+							}
+						}
+					}
+					
+					// open dialog if required
+					if (isJavaScriptRegion && !hasJavaScriptNature) {
+						Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
+						// Pop a question dialog - if the user selects 'Yes' JS Support is added, otherwise no change
+						boolean addJavaScriptSupport = ErrorDialog.openQuestion(activeWorkbenchShell, PHPUIMessages.getString("PHPStructuredTextViewer.0"), PHPUIMessages.getString("PHPStructuredTextViewer.1"));
+						// run the JSDT action for adding the JS nature
+						if (addJavaScriptSupport && project != null) {
+							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
+							wiz.selectionChanged(null, new StructuredSelection(project));
+							wiz.run(null);
+						}
+						return;
+					}
+
+				} catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
+
 			// notifing the processors that the next request for completion is an explicit request
 			if (config != null) {
 				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
