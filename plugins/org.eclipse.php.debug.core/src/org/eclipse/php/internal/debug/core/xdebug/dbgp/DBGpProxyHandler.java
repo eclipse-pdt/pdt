@@ -21,11 +21,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
+import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr.AcceptRemoteSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.DBGpSessionHandler;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * This class handles the management of DBGp proxy interaction.
@@ -134,6 +137,7 @@ public class DBGpProxyHandler {
 	 * configure the Proxy Handler from the preferences.
 	 */
 	public void configure() {
+		//TODO: move to using preference manager completely.
 		Preferences prefs = XDebugPreferenceMgr.getPreferences();
 		
 		useProxy = prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY);
@@ -141,9 +145,9 @@ public class DBGpProxyHandler {
 			unregister();
 		}
 		else {
-			int idePort = prefs.getInt(XDebugPreferenceMgr.XDEBUG_PREF_PORT);			
+			int idePort = XDebugPreferenceMgr.getPort(prefs);			
 			String ideKey = prefs.getString(XDebugPreferenceMgr.XDEBUG_PREF_IDEKEY);
-			boolean multisession = prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION); 
+			boolean multisession = XDebugPreferenceMgr.useMultiSession(); 
 			String proxy = prefs.getString(XDebugPreferenceMgr.XDEBUG_PREF_PROXY);
 			String proxyHost = proxy;
 			int proxyPort = -1;
@@ -160,6 +164,13 @@ public class DBGpProxyHandler {
 			}
 			
 			setProxyInfo(proxyHost, proxyPort, ideKey, idePort, multisession);
+			if (XDebugPreferenceMgr.getAcceptRemoteSession() != AcceptRemoteSession.off) {
+				// if jit we must register with the proxy straight away rather than wait
+				// for the first launch
+				if (registerWithProxy() == false) {
+					displayErrorMessage("Unable to connect to proxy\n" + getErrorMsg());
+				}
+			}
 		}
 	}
 	
@@ -281,5 +292,13 @@ public class DBGpProxyHandler {
 	public String getCurrentIdeKey() {
 		return currentIdeKey;
 	}
+	
+	private void displayErrorMessage(final String message) {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
+			}
+		});
+	}	
 	
 }
