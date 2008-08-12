@@ -186,8 +186,14 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         } catch (Exception e1){
             Logger.logException("DebugOutputView: ", e1);
         }
-        viewer.setInput(input);
-        viewer.refresh();
+        //TODO: This is a hack to workaround a null pointer exception occuring on .setInput()
+        try {
+        	viewer.setInput(input);
+            viewer.refresh();        	
+        }
+        catch (NullPointerException npe) {
+        	
+        }
         control.setTopIndex(top);
     }
 
