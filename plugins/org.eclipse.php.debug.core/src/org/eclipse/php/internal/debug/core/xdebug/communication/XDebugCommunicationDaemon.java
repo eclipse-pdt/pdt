@@ -15,19 +15,14 @@ package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
-import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.Launch;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -36,7 +31,6 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
-import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr.AcceptRemoteSession;
@@ -185,8 +179,10 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 		boolean multiSession = XDebugPreferenceMgr.useMultiSession();
 
 		if (session.getSessionId() == null && !multiSession) {
-			// web launch
-			target = new DBGpTarget(remoteLaunch, null, null, session.getIdeKey(), stopAtFirstLine, null);						
+			// non multisession web launch
+			target = new DBGpTarget(remoteLaunch, null, null, session.getIdeKey(), stopAtFirstLine, null);
+			
+			//try to locate a relevant server definition so we can get its path mapper
 			Server server = null;
 			Server[] servers = ServersManager.getServers();
 			for (int i = 0; i < servers.length; i++) {
@@ -199,56 +195,65 @@ public class XDebugCommunicationDaemon extends AbstractDebuggerCommunicationDaem
 			if (server != null) {
 				mapper = PathMapperRegistry.getByServer(server);						
 			}
-			else {
-				mapper = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
-				// but they would be persisted. We may try and find one for the particular server or create a temporary one.						
+			
+			if (mapper == null) {
+				// create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
+				// but they would be persisted.
+				mapper = new PathMapper(); 
 			}
 			// need to add ourselves as a session listener for future sessions
 			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)target);
 		}
 		else {
-			// cli launch or multisession launch create a single shot target
-			// The Launch Configuration, Source Locator.
+			// cli launch or multisession web launch: create a single shot target
 			target = new DBGpTarget(remoteLaunch, null /*no script name*/, session.getIdeKey(), session.getSessionId(), stopAtFirstLine);
 			//PathMapper p = PathMapperRegistry.getByPHPExe(null);
-			mapper = new PathMapper(); // create a temporary path mapper, we may look to holding these via the pathmapper registry in the future
-			// but they currently would be persisted.
+			// create a temporary path mapper			
+			mapper = new PathMapper();
 		}
 
-		// if we are multisession and the session was not picked up then we need a 
-		// multisession target started and added to the launch and listening for more sessions. 
-		if (multiSession) {
-			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(remoteLaunch, null, null, session.getIdeKey(), stopAtFirstLine, null);
-			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)multiSessionTarget);			
-			multiSessionTarget.addDebugTarget(target);
-			remoteLaunch.addDebugTarget(multiSessionTarget);
-		}
-
+		//set up the target with the relevant connections
 		target.setPathMapper(mapper);
 		target.setSession(session);
 		session.setDebugTarget(target);
-		remoteLaunch.addDebugTarget(target);
 		
+		if (multiSession && session.getSessionId() == null) {
+			// we are a multisession web launch
+			DBGpMultiSessionTarget multiSessionTarget = new DBGpMultiSessionTarget(remoteLaunch, null, null, session.getIdeKey(), stopAtFirstLine, null);
+			DBGpSessionHandler.getInstance().addSessionListener((IDBGpSessionListener)multiSessionTarget);			
+			remoteLaunch.addDebugTarget(multiSessionTarget);			
+			multiSessionTarget.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences(), target, mapper);
+		}
+		else {
+			// we are not a multisession web launch, so just add to the launch
+			remoteLaunch.addDebugTarget(target);
+			//tell the target it now has a session.
+			target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences());
+			//probably could do waitForInitialSession as session has already been set.
+		}
+		
+		//add the remote launch to the launch manager
 		DebugPlugin.getDefault().getLaunchManager().addLaunch(remoteLaunch);
-		target.sessionReceived((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences());
-		//probably could do waitForInitialSession as session has already been set.
 		
-		//org.eclipse.php.debug.ui.PHPDebugPerspective
-		//org.eclipse.debug.ui.DebugPerspective
-		//also look at the PHPLaunchUtilities
-		Display.getDefault().asyncExec(new Runnable() {
-
-			public void run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				//code the debug perspectives.
-				if (!PerspectiveManager.isCurrentPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective")) {
-					if(PerspectiveManager.shouldSwitchPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective")) {
-						PerspectiveManager.switchToPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective");
+		//check to see owning session target is still active, if so do a perspective switch
+		if (target.isTerminated() == false && target.isTerminating() == false) {
+			Display.getDefault().asyncExec(new Runnable() {
+	
+				public void run() {
+					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+					//code the debug perspectives.
+					//org.eclipse.php.debug.ui.PHPDebugPerspective
+					//org.eclipse.debug.ui.DebugPerspective
+					//also look at the PHPLaunchUtilities				
+					if (!PerspectiveManager.isCurrentPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective")) {
+						if(PerspectiveManager.shouldSwitchPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective")) {
+							PerspectiveManager.switchToPerspective(window, "org.eclipse.php.debug.ui.PHPDebugPerspective");
+						}
 					}
 				}
-			}
-			
-		});
+				
+			});
+		}
 	}
 
 	/*

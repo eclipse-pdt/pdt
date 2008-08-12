@@ -13,7 +13,6 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -246,7 +245,13 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 
 				//Determine something about the initial script and path mapping
 				testInitialScriptLocating();
-				initiateSession();
+				
+				//the pathmapper dialog allows a user to terminate the debug session.
+				//so check to see if the session has gone away. Could also check the 
+				//state of the target as well
+				if (session != null) {
+					initiateSession();
+				}
 			} else {
 				session.endSession();
 				terminateDebugTarget(true);

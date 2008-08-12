@@ -17,20 +17,11 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IThread;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
-import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpPreferences;
@@ -347,8 +338,18 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IPHPDebugTarg
 			DBGpSessionHandler.getInstance().removeSessionListener(this);
 			terminateMultiSessionDebugTarget();
 		}
-
 	}
+	
+	public void sessionReceived(DBGpBreakpointFacade facade, DBGpPreferences sessionPrefs, DBGpTarget owningTarget, PathMapper globalMapper) {
+		bpFacade = facade;
+		sessionPreferences = sessionPrefs;
+		owningTarget.setMultiSessionManaged(true);
+		addDebugTarget(owningTarget);
+		setPathMapper(globalMapper);
+		launch.addDebugTarget(owningTarget);
+		owningTarget.sessionReceived(facade, sessionPrefs);
+	}
+		
 
 	public boolean SessionCreated(DBGpSession session) {
 		synchronized (debugTargets) {
