@@ -12,11 +12,16 @@ package org.eclipse.php.internal.server.ui.launching;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -71,6 +76,21 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 				String phpPathString = null;
 				IProject project = null;
 				Object obj = search[i];
+				
+				if (obj instanceof IModelElement) {
+					IModelElement elem = (IModelElement) obj;
+					IResource res = null;
+					if (elem instanceof ISourceModule) {
+						res = ((ISourceModule) elem).getCorrespondingResource();
+					} else if (elem instanceof IType) {
+						res = ((IType) elem).getUnderlyingResource();
+					} else if (elem instanceof IMethod) {
+						res = ((IMethod) elem).getUnderlyingResource();
+					}
+					if (res instanceof IFile) {
+						obj = (IFile) res;
+					}
+				}				
 
 				if (obj instanceof IFile) {
 					IFile file = (IFile) obj;
