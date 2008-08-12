@@ -27,6 +27,8 @@ import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IMemoryBlock;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.php.internal.debug.core.model.DebugOutput;
+import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
@@ -39,7 +41,7 @@ import org.eclipse.php.internal.debug.core.xdebug.dbgp.session.IDBGpSessionListe
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.browser.IWebBrowser;
 
-public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTarget, IDBGpSessionListener, IDebugEventSetListener {
+public class DBGpMultiSessionTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDebugTarget, IDBGpSessionListener, IDebugEventSetListener {
 
 	// used to identify this debug target with the associated
 	// script being debugged.
@@ -90,6 +92,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	private ArrayList<DBGpTarget> debugTargets = new ArrayList<DBGpTarget>();
 
 	private PathMapper pathMapper;
+	
+	private DebugOutput debugOutput = new DebugOutput();
 
 	/**
 	 * Base constructor
@@ -463,5 +467,9 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IDBGpDebugTar
 	 */
 	public boolean isWebLaunch() {
 		return webLaunch;
+	}
+
+	public DebugOutput getOutputBuffer() {
+		return debugOutput;
 	}
 }
