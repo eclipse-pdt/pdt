@@ -11,19 +11,18 @@
 
 package org.eclipse.php.internal.debug.core.xdebug.dbgp;
 
-import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.php.internal.debug.core.xdebug.IDELayer;
-import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr.AcceptRemoteSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
@@ -38,14 +37,14 @@ public class DBGpProxyHandler {
 	private boolean registered = false;
 	private String currentIdeKey = null;
 	private String proxyHost = "";
-	private int proxyPort = -1;
+	private int proxyPort = DEFAULT_PROXY_PORT;
 	private int idePort = -1;
 	private int errorCode = 0;
 	private String errorMsg = "";
-	private boolean useProxy = false;
 	private boolean multisession = false;
 	
 	private static final int DEFAULT_PROXY_PORT = 9001;
+	private static final int PROXY_CONNECT_TIMEOUT = 3000; //3 seconds
 	
 	public static DBGpProxyHandler instance = new DBGpProxyHandler();
 	
@@ -140,8 +139,7 @@ public class DBGpProxyHandler {
 		//TODO: move to using preference manager completely.
 		Preferences prefs = XDebugPreferenceMgr.getPreferences();
 		
-		useProxy = prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY);
-		if (useProxy == false) {
+		if (useProxy() == false) {
 			unregister();
 		}
 		else {
@@ -150,7 +148,7 @@ public class DBGpProxyHandler {
 			boolean multisession = XDebugPreferenceMgr.useMultiSession(); 
 			String proxy = prefs.getString(XDebugPreferenceMgr.XDEBUG_PREF_PROXY);
 			String proxyHost = proxy;
-			int proxyPort = -1;
+			int proxyPort = DEFAULT_PROXY_PORT;
 			int split = proxy.indexOf(':');
 			if (split != -1) {
 				proxyHost = proxy.substring(0, split);
@@ -163,13 +161,30 @@ public class DBGpProxyHandler {
 				}
 			}
 			
-			setProxyInfo(proxyHost, proxyPort, ideKey, idePort, multisession);
-			if (XDebugPreferenceMgr.getAcceptRemoteSession() != AcceptRemoteSession.off) {
-				// if jit we must register with the proxy straight away rather than wait
-				// for the first launch
-				if (registerWithProxy() == false) {
-					displayErrorMessage("Unable to connect to proxy\n" + getErrorMsg());
+			if (proxyPort == XDebugPreferenceMgr.getPort()) {
+				displayErrorMessage("proxy port cannot be the same as debug port.\nproxy use disabled");
+				XDebugPreferenceMgr.setUseProxy(false);
+			}
+			else {
+				setProxyInfo(proxyHost, proxyPort, ideKey, idePort, multisession);
+				if (XDebugPreferenceMgr.getAcceptRemoteSession() != AcceptRemoteSession.off) {
+					// if jit we must register with the proxy straight away rather than wait
+					// for the first launch
+					
+					Job job = new Job("register with proxy") {
+
+						@Override
+						protected IStatus run(IProgressMonitor monitor) {
+							if (registerWithProxy() == false) {
+								displayErrorMessage("Unable to connect to proxy\n" + getErrorMsg());
+								XDebugPreferenceMgr.setUseProxy(false);
+							}
+							return Status.OK_STATUS;
+						}
+					};
+					job.schedule();
 				}
+				
 			}
 		}
 	}
@@ -183,9 +198,6 @@ public class DBGpProxyHandler {
 	 * @param multisession
 	 */
 	private void setProxyInfo(String host, int port, String idekey, int listeningPort, boolean multisession) {
-		if (port < 1) {
-			port = DEFAULT_PROXY_PORT;
-		}
 		if (!host.equalsIgnoreCase(proxyHost) || port != proxyPort || !idekey.equals(currentIdeKey)
 									|| idePort != listeningPort || this.multisession != multisession) {
 			unregister(); // checks for connection
@@ -202,7 +214,7 @@ public class DBGpProxyHandler {
 	 * @return
 	 */
 	public boolean useProxy() {
-		return useProxy;
+		return XDebugPreferenceMgr.useProxy();
 	}
 
 	/**
@@ -213,7 +225,14 @@ public class DBGpProxyHandler {
 	private DBGpResponse sendcmd(String cmd) {
 		DBGpResponse dbgpResp = null;
 		try {
-			Socket s = new Socket(proxyHost, proxyPort);
+			//TODO: look at reducing the timeout for connection failure.
+			//Socket s = new Socket(proxyHost, proxyPort);
+			Socket s = new Socket();
+			InetSocketAddress server = new InetSocketAddress(proxyHost, proxyPort);
+			InetSocketAddress local = new InetSocketAddress(0);
+			s.bind(local);
+			s.connect(server, PROXY_CONNECT_TIMEOUT);
+			
 			InputStream is = s.getInputStream();
 			OutputStream os = s.getOutputStream();
 			if (DBGpLogger.debugCmd()) {

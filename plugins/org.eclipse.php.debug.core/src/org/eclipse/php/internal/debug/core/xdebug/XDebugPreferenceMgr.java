@@ -150,6 +150,16 @@ public class XDebugPreferenceMgr {
 		return prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_MULTISESSION); 
 	}
 	
+	public static boolean useProxy() {
+		Preferences prefs = getPreferences();
+		return prefs.getBoolean(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY); 
+	}
+	
+	public static void setUseProxy(boolean newState) {
+		Preferences prefs = getPreferences();
+		prefs.setValue(XDebugPreferenceMgr.XDEBUG_PREF_USEPROXY, newState); 
+	}
+	
 	public static AcceptRemoteSession getAcceptRemoteSession() {
 		Preferences prefs = getPreferences();
 		int rSess = prefs.getInt(XDebugPreferenceMgr.XDEBUG_PREF_REMOTESESSION); 
