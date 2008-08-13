@@ -35,7 +35,7 @@ public class PhpTokenContainer {
 	// this iterator follows the localization principle 
 	// i.e. the user usually works in the same area of the document 
 	protected ListIterator<ContextRegion> tokensIterator = null;
-	
+
 	/**
 	 * find token for a given location 
 	 * @param offset
@@ -79,12 +79,19 @@ public class PhpTokenContainer {
 		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of ITextRegion
 
 		ITextRegion token = getToken(offset);
-		result.add(token);
+		// Checks that the token is within the given limits 
+		if (token.getEnd() <= offset + length) {
+			result.add(token);
+		}
 
-		while (tokensIterator.hasNext() && token.getEnd() <= offset + length) {
+		while (tokensIterator.hasNext()) {
 			final ContextRegion newtoken = tokensIterator.next();
 			if (newtoken != token) {
-				result.add(newtoken);
+				if (newtoken.getEnd() <= offset + length) {
+					result.add(newtoken);
+				} else {
+					break;
+				}
 			}
 			token = newtoken;
 		}
@@ -162,7 +169,7 @@ public class PhpTokenContainer {
 		// add
 		final Iterator<LexerStateChange> newIterator = newContainer.lexerStateChanges.iterator();
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
-		
+
 		// goto the previous before adding
 		if (oldIterator.nextIndex() != 1) {
 			oldIterator.previous();
@@ -172,7 +179,7 @@ public class PhpTokenContainer {
 		}
 	}
 
-	public synchronized  ListIterator<ContextRegion> removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
+	public synchronized ListIterator<ContextRegion> removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
 		assert tokenStart != null;
 
 		// go to the start region
@@ -209,7 +216,7 @@ public class PhpTokenContainer {
 	/**
 	 * One must call releaseModelForWrite() after constructing the  
 	 */
-	public synchronized  void releaseModelFromCreation() {
+	public synchronized void releaseModelFromCreation() {
 		tokensIterator = phpTokens.listIterator();
 	}
 
@@ -221,7 +228,7 @@ public class PhpTokenContainer {
 	 * @return
 	 * @throws BadLocationException
 	 */
-	public synchronized  ListIterator<ContextRegion> getPhpTokensIterator(final int offset) throws BadLocationException {
+	public synchronized ListIterator<ContextRegion> getPhpTokensIterator(final int offset) throws BadLocationException {
 		// fast results for empty lists
 		if (phpTokens.isEmpty()) {
 			return tokensIterator;
@@ -233,6 +240,7 @@ public class PhpTokenContainer {
 
 		return tokensIterator;
 	}
+
 	/**
 	 * @return the whole tokens as an array 
 	 */
@@ -266,13 +274,13 @@ public class PhpTokenContainer {
 		// if state was change - we add a new token and add state 
 		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
 			int textLength = (PhpLexer.WHITESPACE.equals(yylex)) ? 0 : yylengthLength;
-			
+
 			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
 			lexerStateChanges.addLast(new LexerStateChange((LexerState) lexerState, contextRegion));
 			return;
 		}
-		
+
 		assert phpTokens.size() > 0;
 		// if we can only adjust the previous token size 
 		if (yylex == PhpLexer.WHITESPACE) {
@@ -301,7 +309,6 @@ public class PhpTokenContainer {
 			last.adjustLength(yylength);
 		}
 	}
-	
 
 	/**
 	 * This node represent a change in the lexer state during lexical analysis
