@@ -19,7 +19,6 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 
@@ -154,6 +153,19 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 	public void setValue(IValue xvalue) throws DebugException {
 		// assume never called unless supportsValueModification is true
 		setValue(xvalue.getValueString());
+	}
+	
+	/**
+	 * replaces this variable's underlying value, but does not send it to the application
+	 * this is useful if we have obtained a value containing more data than the original
+	 * when it was created (eg a string).
+	 * @param value the new value.
+	 */
+	public void replaceValue(IValue value) {
+		if (value instanceof DBGpValue) {
+			this.value = (DBGpValue)value;
+			fireChangeEvent(DebugEvent.CONTENT);
+		}
 	}
 
 	/*

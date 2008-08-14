@@ -112,7 +112,7 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 	private IVariable[] superGlobalVars;
 
 	// used to cache dbgp commands to program while it is running
-	private Vector DBGpCmdQueue = new Vector();
+	private Vector<DBGpBreakpointCmd> DBGpCmdQueue = new Vector<DBGpBreakpointCmd>();
 
 	// dbgp session support
 	private volatile DBGpSession session;

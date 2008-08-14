@@ -114,6 +114,10 @@ public class DBGpCommand {
 	private int lastIdSent;
 	private String lastCmdSent;
 
+	public String getLastCmdSent() {
+		return lastCmdSent;
+	}
+
 	public DBGpCommand(Socket socket) {
 		this.socket = socket;
 		/*

@@ -100,49 +100,15 @@ public class DBGpStringValue extends DBGpValue {
 
 	@Override
 	public IVariable[] getVariables() throws DebugException {
-		final int split = 100;
+		
 		if (stringInfo == null) {
 			int arrayLength = getValueBytes().length;
-			int subs = arrayLength/split;
-			if (arrayLength % split !=0) {
-				subs++;
-			}
-
-			if (arrayLength > split) {
-				stringInfo = new IVariable[subs + 1];
-			}
-			else {
-				stringInfo = new IVariable[arrayLength + 1];				
-			}
+			//stringInfo = createVariables(getValueBytes(), 0, arrayLength, 1, getDebugTarget());
+			stringInfo = SimpleByteArrayValue.createVariables(getValueBytes(), 0, arrayLength, 1, getDebugTarget());
+			
+			// add in the current length (real length) information
 			IValue iv = new SimpleIntValue(arrayLength, getRequiredBytes(), getDebugTarget());
 			stringInfo[0] = new SimpleVariable("length", iv, getDebugTarget());
-			
-			if (arrayLength > split) {
-				int rangeStart = 0;
-				int rangeEnd = 0;
-				for (int j=0; j < subs; j++) {
-					if (j == subs - 1) {
-						rangeEnd = arrayLength - 1; 
-					}
-					else {
-						rangeEnd = rangeStart + split - 1;
-					}
-					if (rangeStart <= rangeEnd) {
-						iv = new SimpleByteArrayValue(getValueBytes(), rangeStart, rangeEnd, getDebugTarget());
-						stringInfo[j + 1] = new SimpleVariable("[" + rangeStart + ".." + rangeEnd + "]", iv, getDebugTarget());				
-						rangeStart += split;
-						
-					}
-				}
-			}
-			else {
-				// don't split out the data.
-				for (int i = 0; i < arrayLength; i++) {
-					IValue iv2 = new SimpleByteValue(getValueBytes()[i], getDebugTarget());
-					stringInfo[i + 1] = new SimpleVariable(Integer.toString(i), iv2, getDebugTarget());
-				}
-				
-			}
 		}
 		return stringInfo;
 	}

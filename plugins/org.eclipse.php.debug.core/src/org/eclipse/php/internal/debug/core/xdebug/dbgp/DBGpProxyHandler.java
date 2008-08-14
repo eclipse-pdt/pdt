@@ -280,7 +280,6 @@ public class DBGpProxyHandler {
 			baos.write(b);
 		}
 		byteArray = baos.toByteArray(); 
-		String rr = new String(byteArray, "ASCII");
 		if (DBGpLogger.debugResp()) {
 			DBGpLogger.debug("Response: " + new String(byteArray, "ASCII"));
 		}
