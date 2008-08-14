@@ -72,14 +72,18 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 		if (byteCount > childLimit) {
 			int split = childLimit;
 			int children = byteCount/split;
-			while (children > childLimit) {
-				split*=10;
-				children = byteCount/split;
-			}
-			
 			if (byteCount % split !=0) {
 				children++;
 			}
+			
+			while (children > childLimit) {
+				split*=10;
+				children = byteCount/split;
+				if (byteCount % split !=0) {
+					children++;
+				}
+			}
+			
 			
 			childVariables = new IVariable[children + startOffset];
 			int rangeStart = bytePos;
