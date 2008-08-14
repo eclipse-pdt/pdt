@@ -17,12 +17,12 @@ import org.eclipse.debug.internal.ui.actions.variables.ChangeVariableValueInputD
 import org.eclipse.debug.ui.actions.IVariableValueEditor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpStringValue;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpTarget;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.model.DBGpVariable;
 import org.eclipse.php.internal.debug.ui.Logger;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.widgets.Shell;
 import org.w3c.dom.Node;
 
@@ -45,9 +45,8 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 	public boolean editVariable(IVariable variable, Shell shell) {
 		try {
 			String name = variable.getName();
-			String title = "Change Value"; // PHPDebugUIMessages.PHPPrimitiveValueEditor_0
-			// PHPDebugUIMessages.PHPPrimitiveValueEditor_1
-			String message = MessageFormat.format("Enter a new value for {0}:", new Object[] { name }); //$NON-NLS-1$
+			String title = PHPDebugUIMessages.PHPPrimitiveValueEditor_0;
+			String message = MessageFormat.format(PHPDebugUIMessages.PHPPrimitiveValueEditor_1, new Object[] { name }); //$NON-NLS-1$
 			String initialValue = getValueString(variable);
 			
 			PrimitiveValidator validator = new PrimitiveValidator(variable);
@@ -56,10 +55,12 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 				String stringValue = dialog.getValue();
 				variable.setValue(stringValue);
 			}
+			else {
+				
+			}
 		} catch (DebugException e) {
 			IStatus status = e.getStatus();
-			//         PHPDebugUIMessages.PHPPrimitiveValueEditor_2, // PHPDebugUIMessages.PHPPrimitiveValueEditor_3           
-			ErrorDialog.openError(shell, "Error Changing Value", "An exception occurred attempting to change the variable value.", status);
+			ErrorDialog.openError(shell, PHPDebugUIMessages.PHPPrimitiveValueEditor_2, PHPDebugUIMessages.PHPPrimitiveValueEditor_3, status);
 		}
 		return true;
 	}
@@ -81,6 +82,8 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 					try {
 						valRes = tempVar.getValue();
 						if (valRes != null) {
+							// update the variable with the latest value.
+							((DBGpVariable)variable).replaceValue(valRes);
 							initialValue = valRes.getValueString();
 						}
 					} catch (Exception e) {
@@ -116,7 +119,7 @@ public class XDebugVariableValueEditor implements IVariableValueEditor {
 			String errorMsg = null;
 			try {
 				if (!var.verifyValue(newText)) {
-					errorMsg = "Invalid entry for variable";
+					errorMsg = PHPDebugUIMessages.XDebugVariableValueEditor_invalidValue;
 				}
 			} catch (DebugException e) {
 				Logger.logException("DebugException", e);

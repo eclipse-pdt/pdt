@@ -176,6 +176,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String XDebugWatch_failed;
 	public static String XDebugHover_empty;
 	public static String XDebugPresentation_line;
+	public static String XDebugVariableValueEditor_invalidValue;
 
 	static {
 		// load message values from bundle file
