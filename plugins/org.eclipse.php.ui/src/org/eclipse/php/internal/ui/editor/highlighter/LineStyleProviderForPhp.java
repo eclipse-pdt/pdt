@@ -469,6 +469,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					// extends the prev styleRange with the current element length
 					styleRange.length += element.getTextLength();
 				} else {
+					// Verify that the element does not exceed the given partition end, otherwise break. It is assumed that the elements are sorted according to ascending indexes
+					if ((regionStart + element.getStart() + element.getTextLength()) > (partitionStartOffset+partitionLength)){
+						break;
+					}
 					// create new styleRange
 					styleRange = new StyleRange(regionStart + element.getStart(), element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
 					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
@@ -539,6 +543,26 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		public void propertyChange(PropertyChangeEvent event) {
 			// have to do it this way so others can override the method
 			handlePropertyChange(event);
+		}
+	}
+	
+	/*
+	 * Handle changes to the preferences
+	 */
+	protected void handlePropertyChange(PropertyChangeEvent event) {
+		if (event != null) {
+			String prefKey = event.getProperty();
+			if (PreferenceConstants.EDITOR_NORMAL_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_BOUNDARYMARKER_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_KEYWORD_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_VARIABLE_COLOR.equals(prefKey)
+				|| PreferenceConstants.EDITOR_STRING_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_COMMENT_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_PHPDOC_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_NUMBER_COLOR.equals(prefKey)
+				|| PreferenceConstants.EDITOR_HEREDOC_COLOR.equals(prefKey) || PreferenceConstants.EDITOR_TASK_COLOR.equals(prefKey)) {
+				addTextAttribute(prefKey);
+			}
+		} else {
+			loadColors();
+		}
+		
+		if (fRecHighlighter != null) {
+			fRecHighlighter.refreshDisplay();		
 		}
 	}
 }
