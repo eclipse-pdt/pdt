@@ -472,7 +472,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 					}
 					// create new styleRange
 					int styleStart = regionStart + element.getStart();
-					if (styleStart < partitionStartOffset) {
+					if (i == 0 && (element.getType() == PHPRegionTypes.WHITESPACE || element.getTextEnd() < from) && styleStart < partitionStartOffset) {
 						styleStart = partitionStartOffset;
 					}
 					styleRange = new StyleRange(styleStart, element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
