@@ -27,8 +27,6 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -36,7 +34,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
@@ -461,9 +458,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
 				// ignore any first whitespace regions
-				if (i == 0 && (element.getType() == PHPRegionTypes.WHITESPACE || element.getTextEnd() < from)) {
-					continue;
-				}
+//				if (i == 0 && (element.getType() == PHPRegionTypes.WHITESPACE || element.getTextEnd() < from)) {
+//					continue;
+//				}
 				attr = getAttributeFor(element);
 				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null && prevElement.getTextLength() == prevElement.getLength()) {
 					// extends the prev styleRange with the current element length
@@ -474,7 +471,11 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 						break;
 					}
 					// create new styleRange
-					styleRange = new StyleRange(regionStart + element.getStart(), element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
+					int styleStart = regionStart + element.getStart();
+					if (styleStart < partitionStartOffset) {
+						styleStart = partitionStartOffset;
+					}
+					styleRange = new StyleRange(styleStart, element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
 					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
 						styleRange.underline = true;
 						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
