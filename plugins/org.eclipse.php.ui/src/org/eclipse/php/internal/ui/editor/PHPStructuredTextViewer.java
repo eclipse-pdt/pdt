@@ -17,6 +17,8 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -43,7 +45,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.common.frameworks.internal.ui.ErrorDialog;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
@@ -186,9 +187,11 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					if (isJavaScriptRegion && !hasJavaScriptNature) {
 						Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
 						// Pop a question dialog - if the user selects 'Yes' JS Support is added, otherwise no change
-						boolean addJavaScriptSupport = ErrorDialog.openQuestion(activeWorkbenchShell, PHPUIMessages.getString("PHPStructuredTextViewer.0"), PHPUIMessages.getString("PHPStructuredTextViewer.1"));
+						int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", activeWorkbenchShell, PHPUIMessages.getString("PHPStructuredTextViewer.0"), null, PHPUIMessages.getString("PHPStructuredTextViewer.1"), OptionalMessageDialog.QUESTION, new String[] {
+							IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
+
 						// run the JSDT action for adding the JS nature
-						if (addJavaScriptSupport && project != null) {
+						if (addJavaScriptSupport == 0 && project != null) {
 							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
 							wiz.selectionChanged(null, new StructuredSelection(project));
 							wiz.run(null);
