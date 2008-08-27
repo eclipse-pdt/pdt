@@ -164,8 +164,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				try {
 					// Resolve the partition type
 					IStructuredDocument sDoc = (IStructuredDocument) getDocument();
-					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
-					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
+					// get the "real" offset - adjusted according to the projection
+					int selectionOffset = getSelectedRange().x;
+					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 					if (textRegion instanceof ForeignRegion) {
 						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
 					}
