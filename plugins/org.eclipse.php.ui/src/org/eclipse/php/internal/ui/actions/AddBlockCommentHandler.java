@@ -55,17 +55,13 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				// get current text selection
 				ITextSelection textSelection = getCurrentSelection(textEditor);
 
-				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+				// If there is alternating or more then one block in the text selection, action is aborted !
+				if (isMoreThanOneContextBlockSelected(document, textSelection)) {
+					//	displayCommentActinosErrorDialog(editor);
+					//	return null;
+					org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+					return addBlockCommentHandlerWST.execute(event);
 
-				if (model != null) {
-					// If there is alternating or more then one block in the text selection, action is aborted !
-					if (isMoreThenOneContextBlockSelected(model, textSelection)) {
-//						displayCommentActinosErrorDialog(editor);
-//						return null;
-						org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
-						return addBlockCommentHandlerWST.execute(event);
-
-					}
 				}
 
 				if (textSelection.isEmpty()) {
@@ -96,8 +92,6 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 	}
 
 	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-
 		int openCommentOffset = textSelection.getOffset();
 		int closeCommentOffset = openCommentOffset + textSelection.getLength();
 
@@ -105,17 +99,25 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 			return;
 		}
 
-		model.beginRecording(this, PHPUIMessages.getString("AddBlockComment_tooltip"));
-		model.aboutToChangeModel();
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+		if (model != null) {
+			try {
+				model.beginRecording(this, PHPUIMessages.getString("AddBlockComment_tooltip"));
+				model.aboutToChangeModel();
 
-		try {
-			document.replace(closeCommentOffset, 0, CLOSE_COMMENT);
-			document.replace(openCommentOffset, 0, OPEN_COMMENT);
-		} catch (BadLocationException e) {
-			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-		} finally {
-			model.changedModel();
-			model.endRecording(this);
+				try {
+					document.replace(closeCommentOffset, 0, CLOSE_COMMENT);
+					document.replace(openCommentOffset, 0, OPEN_COMMENT);
+				} catch (BadLocationException e) {
+					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				} finally {
+					model.changedModel();
+					model.endRecording(this);
+				}
+			} finally {
+				model.releaseFromEdit();
+
+			}
 		}
 	}
 

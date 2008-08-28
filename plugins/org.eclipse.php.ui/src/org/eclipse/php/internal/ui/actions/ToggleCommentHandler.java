@@ -25,7 +25,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
-
 /**
  * Handler class for toggling comment lines
  * Operates as router which decides which context comment to be applied (XML or PHP)
@@ -58,14 +57,11 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 				if (document instanceof IStructuredDocument) {
 					int selectionOffset = textSelection.getOffset();
 					IStructuredDocument sDoc = (IStructuredDocument) document;
-					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
-					if (model != null) {
-						// If there is alternating or more then one block in the text selection, action is aborted !
-						if (isMoreThenOneContextBlockSelected(model, textSelection)) {
-							org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
-							return addBlockCommentHandlerWST.execute(event);
-						}
+					// If there is alternating or more then one block in the text selection, action is aborted !
+					if (isMoreThanOneContextBlockSelected(sDoc, textSelection)) {
+						org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler addBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+						return addBlockCommentHandlerWST.execute(event);
 					}
 
 					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
@@ -156,6 +152,7 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			} finally {
 				model.changedModel();
 				model.endRecording(this);
+				model.releaseFromEdit();
 			}
 		}
 	}

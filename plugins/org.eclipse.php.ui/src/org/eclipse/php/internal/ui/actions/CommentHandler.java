@@ -24,10 +24,8 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-
 
 /**
  * Handler class for the Comment Handlers 
@@ -139,10 +137,15 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 		}
 	}
 
-	protected boolean isMoreThenOneContextBlockSelected(IStructuredModel model, ITextSelection textSelection) {
-		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		if (structuredDocument == null) {
+	protected boolean isMoreThanOneContextBlockSelected(IDocument document, ITextSelection textSelection) {
+		if (document == null) {
 			assert false;
+			return true;
+		}
+		IStructuredDocument structuredDocument = null;
+		if (document instanceof IStructuredDocument) {
+			structuredDocument = (IStructuredDocument) document;
+		} else {
 			return true;
 		}
 

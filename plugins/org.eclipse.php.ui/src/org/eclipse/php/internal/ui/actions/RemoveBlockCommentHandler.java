@@ -53,16 +53,12 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 				// get current text selection
 				ITextSelection textSelection = getCurrentSelection(textEditor);
 
-				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-
-				if (model != null) {
-					// If there is alternating or more then one block in the text selection, action is aborted !
-					if (isMoreThenOneContextBlockSelected(model, textSelection)) {
-						//	displayCommentActinosErrorDialog(editor);
-						//	return null;
-						org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
-						return removeBlockCommentHandlerWST.execute(event);
-					}
+				// If there is alternating or more then one block in the text selection, action is aborted !
+				if (isMoreThanOneContextBlockSelected(document, textSelection)) {
+					//	displayCommentActinosErrorDialog(editor);
+					//	return null;
+					org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler removeBlockCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
+					return removeBlockCommentHandlerWST.execute(event);
 				}
 
 				if (textSelection.isEmpty()) {
@@ -94,8 +90,6 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 
 	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
-
 		int selectionOffset = textSelection.getOffset();
 		int selectionLength = textSelection.getLength();
 
@@ -103,14 +97,21 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 			return;
 		}
 
-		model.beginRecording(this, PHPUIMessages.getString("RemoveBlockComment_tooltip"));
-		model.aboutToChangeModel();
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+		if (model != null) {
+			try {
+				model.beginRecording(this, PHPUIMessages.getString("RemoveBlockComment_tooltip"));
+				model.aboutToChangeModel();
 
-		try {
-			removeOpenCloseComments(document, selectionOffset, selectionLength);
-		} finally {
-			model.changedModel();
-			model.endRecording(this);
+				try {
+					removeOpenCloseComments(document, selectionOffset, selectionLength);
+				} finally {
+					model.changedModel();
+					model.endRecording(this);
+				}
+			} finally {
+				model.releaseFromEdit();
+			}
 		}
 	}
 
