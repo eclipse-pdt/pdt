@@ -15,15 +15,17 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
-import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * Handler class for toggling comment lines
@@ -73,8 +75,12 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 						container = (ITextRegionContainer) textRegion;
 						textRegion = container.getRegionAtCharacterOffset(selectionOffset);
 					}
+					boolean isJavaScriptRegion = false;
 
-					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
+					if (textRegion instanceof ForeignRegion) {
+						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
+					}
+					if (textRegion.getType() == PHPRegionContext.PHP_CONTENT || isJavaScriptRegion) {
 						processAction(textEditor, document, textSelection);
 					} else {
 						org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler toggleCommentHandlerWST = new org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler();//org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler();
@@ -130,23 +136,51 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			try {
 				model.beginRecording(this, PHPUIMessages.getString("ToggleComment_tooltip"));
 				model.aboutToChangeModel();
-
+				
+				// The eclipse way is as follows:
+				// If and only if all lines are commented - we should uncomment
+				// else - comment all
+				
+				// Check first whether all lines are commented:
+				boolean allLinesCommented = true;
 				for (int i = selectionStartLine; i <= selectionEndLine; i++) {
 					try {
 						if (document.getLineLength(i) > 0) {
-							if (isCommentLine(document, i)) {
+							if (!isCommentLine(document, i)) {
+								allLinesCommented = false;
+								break;
+							}
+						}
+					} catch (BadLocationException e) {
+						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+					}
+				}
+
+				// If all lines are commented, uncomment all lines:
+				if (allLinesCommented) {
+					for (int i = selectionStartLine; i <= selectionEndLine; i++) {
+						try {
+							if (document.getLineLength(i) > 0) {
 								int lineOffset = document.getLineOffset(i);
 								IRegion region = document.getLineInformation(i);
 								String string = document.get(region.getOffset(), region.getLength());
 								int openCommentOffset = lineOffset + string.indexOf(SINGLE_LINE_COMMENT);
 								uncommentSingleLine(document, openCommentOffset);
-							} else {
+							}
+						} catch (BadLocationException e) {
+							Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+						}
+					}
+				} else { // comment all lines
+					for (int i = selectionStartLine; i <= selectionEndLine; i++) {
+						try {
+							if (document.getLineLength(i) > 0) {
 								int openCommentOffset = document.getLineOffset(i);
 								commentSingleLine(document, openCommentOffset);
 							}
+						} catch (BadLocationException e) {
+							Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 						}
-					} catch (BadLocationException e) {
-						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 					}
 				}
 			} finally {
