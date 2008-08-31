@@ -195,6 +195,7 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 				public void run() {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					try {
+						normalizeFile(file);						
 						IEditorPart editor;
 						if (editorID == null) {
 							editor = IDE.openEditor(page, file, true);
@@ -205,7 +206,6 @@ public class PHPFileCreationWizard extends Wizard implements INewWizard {
 							StructuredTextViewer textViewer = ((PHPStructuredEditor) editor).getTextViewer();
 							textViewer.setSelectedRange(offset, 0);
 						}
-						normalizeFile(file);
 					} catch (PartInitException e) {
 					}
 				}
