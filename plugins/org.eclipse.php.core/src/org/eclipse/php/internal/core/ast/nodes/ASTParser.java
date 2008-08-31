@@ -42,9 +42,7 @@ public class ASTParser {
 	// version tags
 	public static final String VERSION_PHP4 = PHPVersion.PHP4;
 	public static final String VERSION_PHP5 = PHPVersion.PHP5;
-
-	// empty buffer
-	private static final StringReader EMPTY_STRING_READER = new StringReader(""); //$NON-NLS-1$
+	private static final Reader EMPTY_STRING_READER = new StringReader("");
 
 	/**
 	* THREAD SAFE AST PARSER STARTS HERE
@@ -81,7 +79,7 @@ public class ASTParser {
 	*/
 	public static ASTParser newParser(String version) {
 		try {
-			return new ASTParser(EMPTY_STRING_READER, version, false);
+			return new ASTParser(new StringReader(""), version, false);
 		} catch (IOException e) {
 			assert false;
 			// Since we use empty reader we cannot have an IOException here
@@ -97,7 +95,7 @@ public class ASTParser {
 			throw new IllegalStateException("ASTParser - Can't parser with null ISourceModule");  
 		}
 		try {
-			final ASTParser parser = new ASTParser(EMPTY_STRING_READER, version, false, sourceModule);
+			final ASTParser parser = new ASTParser(new StringReader(""), version, false, sourceModule);
 			parser.setSource(sourceModule.getSourceAsCharArray());
 			return parser;
 		} catch (IOException e) {
