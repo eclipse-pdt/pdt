@@ -79,21 +79,11 @@ public class PhpTokenContainer {
 		List<ITextRegion> result = new ArrayList<ITextRegion>(); // list of ITextRegion
 
 		ITextRegion token = getToken(offset);
-		// Checks that the token is within the given limits 
-		if (token.getEnd() <= offset + length) {
-			result.add(token);
-		}
+		result.add(token);
 
-		while (tokensIterator.hasNext()) {
-			final ContextRegion newtoken = tokensIterator.next();
-			if (newtoken != token) {
-				if (newtoken.getEnd() <= offset + length) {
-					result.add(newtoken);
-				} else {
-					break;
-				}
-			}
-			token = newtoken;
+		while (tokensIterator.hasNext() && token.getEnd() <= offset + length) {
+			token = tokensIterator.next();
+			result.add(token);
 		}
 
 		return result.toArray(new ITextRegion[result.size()]);
@@ -171,7 +161,7 @@ public class PhpTokenContainer {
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
 
 		// goto the previous before adding
-		if (oldIterator.nextIndex() != 1) {
+		if (oldIterator.hasNext() && oldIterator.nextIndex() != 1) {
 			oldIterator.previous();
 		}
 		while (newIterator.hasNext()) {
