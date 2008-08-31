@@ -40,10 +40,10 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 /**
  * Coloring mechanism for PHP partitions
  */
-public class LineStyleProviderForPhp extends AbstractLineStyleProvider implements LineStyleProvider  {
+public class LineStyleProviderForPhp extends AbstractLineStyleProvider implements LineStyleProvider {
 
 	private IPreferenceStore fColorPreferences;
-	
+
 	/** Contains region to style mapping */
 	protected static final Map<String, String> fColorTypes = new HashMap<String, String>(); // String (token type), String (color)
 	static {
@@ -448,7 +448,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			int length;
 			if (partitionStartOffset < regionStart) {
 				from = 0;
-				length = partitionLength - (partitionStartOffset - regionStart);
+				length = partitionLength - (regionStart - partitionStartOffset);
 			} else {
 				from = partitionStartOffset - regionStart;
 				length = partitionLength;
@@ -457,39 +457,65 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			ITextRegion prevElement = null;
 			for (int i = 0; i < phpTokens.length; i++) {
 				ITextRegion element = phpTokens[i];
-				// ignore any first whitespace regions
-//				if (i == 0 && (element.getType() == PHPRegionTypes.WHITESPACE || element.getTextEnd() < from)) {
-//					continue;
-//				}
 				attr = getAttributeFor(element);
-				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null && prevElement.getTextLength() == prevElement.getLength()) {
-					// extends the prev styleRange with the current element length
-					styleRange.length += element.getTextLength();
-				} else {
-					// Verify that the element does not exceed the given partition end, otherwise break. It is assumed that the elements are sorted according to ascending indexes
-					if ((regionStart + element.getStart() + element.getTextLength()) > (partitionStartOffset+partitionLength)){
-						break;
+				// Check that the elements are different - otherwise the coloring is not valid
+				if (prevElement == element) {
+					continue;
+				}
+				if ((styleRange != null) && (previousAttr != null) && (previousAttr.equals(attr)) && prevElement != null && prevElement.getLength() == prevElement.getLength()) {
+					// extends the prev styleRange with the current element
+					// length
+					styleRange.length += element.getLength();
+					if (styleRange.start + styleRange.length > partitionStartOffset + partitionLength) {
+						styleRange.length -= (styleRange.start + styleRange.length) - (partitionStartOffset + partitionLength);
 					}
+				} else {
 					// create new styleRange
 					int styleStart = regionStart + element.getStart();
-					if (i == 0 && (element.getType() == PHPRegionTypes.WHITESPACE || element.getTextEnd() < from) && styleStart < partitionStartOffset) {
+					int styleLength = element.getLength();
+					if (styleStart + styleLength < partitionStartOffset) { // if the range ends before the requested starting position - ignoring it
+						continue;
+					}
+					if (styleStart < partitionStartOffset) { // if the region starts before the requested starting position - adjusting the style start position
+						styleLength -= (partitionStartOffset - styleStart);
 						styleStart = partitionStartOffset;
 					}
-					styleRange = new StyleRange(styleStart, element.getTextLength(), attr.getForeground(), attr.getBackground(), attr.getStyle());
-					if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
-						styleRange.underline = true;
-						styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
+					if (styleStart + styleLength > partitionStartOffset + partitionLength) {//if the region ends after the requested end position - making it shorter
+						styleLength -= (styleStart + styleLength) - (partitionStartOffset + partitionLength);
 					}
-					if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
-						styleRange.strikeout = true;
-						styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
+					if (attr.getBackground() != null && element.getTextEnd() != element.getEnd()) {//in case of background color make sure the highlighting will not paint the whitespaces
+						//applying style to the region w/o the whitespace
+						styleRange = new StyleRange(styleStart, styleLength - (element.getEnd() - element.getTextEnd()), attr.getForeground(), attr.getBackground(), attr.getStyle());
+						if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+							styleRange.underline = true;
+							styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
+						}
+						if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+							styleRange.strikeout = true;
+							styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
+						}
+						holdResults.add(styleRange);
+						//applying style to the whitespace (important for the refresh of the specific range
+						styleRange = new StyleRange(regionStart + element.getTextEnd(), element.getEnd() - element.getTextEnd(), attr.getForeground(), null, attr.getStyle());
+						holdResults.add(styleRange);
+						previousAttr = null;
+					} else {
+						styleRange = new StyleRange(styleStart, styleLength, attr.getForeground(), attr.getBackground(), attr.getStyle());
+						if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+							styleRange.underline = true;
+							styleRange.fontStyle &= ~TextAttribute.UNDERLINE;
+						}
+						if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+							styleRange.strikeout = true;
+							styleRange.fontStyle &= ~TextAttribute.STRIKETHROUGH;
+						}
+						holdResults.add(styleRange);
+						// technically speaking, we don't need to update
+						// previousAttr
+						// in the other case, because the other case is when
+						// it hasn't changed
+						previousAttr = attr;
 					}
-					holdResults.add(styleRange);
-					// technically speaking, we don't need to update
-					// previousAttr
-					// in the other case, because the other case is when
-					// it hasn't changed
-					previousAttr = attr;
 				}
 				prevElement = element;
 			}
@@ -546,7 +572,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 			handlePropertyChange(event);
 		}
 	}
-	
+
 	/*
 	 * Handle changes to the preferences
 	 */
@@ -561,9 +587,9 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		} else {
 			loadColors();
 		}
-		
+
 		if (fRecHighlighter != null) {
-			fRecHighlighter.refreshDisplay();		
+			fRecHighlighter.refreshDisplay();
 		}
 	}
 }
