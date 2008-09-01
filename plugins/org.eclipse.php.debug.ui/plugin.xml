@@ -300,6 +300,12 @@
 			</actionSet>
 			<actionSet id="org.eclipse.php.ui.text.php.actionSet.presentation">
 			</actionSet>
+   <actionSet
+         id="org.eclipse.php.ui.PHPActionSet">
+   </actionSet>
+   <actionSet
+         id="org.eclipse.php.ui.A_OpenActionSet">
+   </actionSet>
 		</perspectiveExtension>
 	</extension>
 	
