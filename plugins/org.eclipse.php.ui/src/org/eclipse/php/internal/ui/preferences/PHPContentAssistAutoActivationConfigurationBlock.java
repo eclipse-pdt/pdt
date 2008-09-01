@@ -49,27 +49,34 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 			}
 		});
-
+		
 		autoActivationDelay = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelay"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 20, new PositiveIntegerStringValidator(PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
 			PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"), PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayPositive")));
-
 		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationTriggersPHP"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
-
 		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationTriggersPHPDoc"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
-		autoActivationTriggersPHPDoc.setEnabled(false);
-
+		
+		setControlsEnablement();
+	}
+	
+	protected void setControlsEnablement() {
+		boolean autoActivateSectionEnabled = getPreferenceStore().getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION);
+		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
+		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, autoActivateSectionEnabled);
+		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 	}
 	
 	protected IPreferenceStore getPreferenceStore() {
 		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
 	}
+	
+	protected void storeValues() {
+		super.storeValues();
+		PHPCorePlugin.getDefault().savePluginPreferences();
+	}
 
 	// restore text boxes enablement according to the checkbox 
-	@Override
 	protected void restoreDefaultTextValues() {
 		super.restoreDefaultTextValues();
-		boolean enable = autoActivationCheckBox.getSelection();
-		autoActivationDelay.setEnabled(enable);
-		autoActivationTriggersPHP.setEnabled(enable);
+		setControlsEnablement();
 	}
 }

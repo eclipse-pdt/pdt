@@ -77,4 +77,9 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected IPreferenceStore getPreferenceStore() {
 		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
 	}
+
+	protected void storeValues() {
+		super.storeValues();
+		PHPCorePlugin.getDefault().savePluginPreferences();
+	}
 }
