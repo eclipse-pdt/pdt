@@ -22,30 +22,22 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
-import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentLoader;
-import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
-import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
 /**
  * View of the PHP parameter stack
@@ -56,6 +48,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
     private int fUpdateCount;
     private IDebugEventSetListener terminateListener;
     private DebugViewHelper debugViewHelper;
+	private StructuredTextViewer fSourceViewer;
 
     public DebugOutputView() {
         super();
@@ -65,27 +58,26 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.debug.ui.AbstractDebugView#createViewer(org.eclipse.swt.widgets.Composite)
      */
     protected Viewer createViewer(Composite parent) {
-        int styles= SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION;
-        StructuredTextViewer fSourceViewer= new StructuredTextViewer(parent, null, null, false, styles);
-        StructuredTextViewerConfigurationHTML config = new StructuredTextViewerConfigurationHTML();
-        fSourceViewer.configure(config);
+        
+    	int styles= SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.FULL_SELECTION;
+        fSourceViewer= new StructuredTextViewer(parent, null, null, false, styles);
         fSourceViewer.setEditable(false);
         getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
         getSite().setSelectionProvider(fSourceViewer.getSelectionProvider());
 
         terminateListener = new IDebugEventSetListener() {
-        	IPHPDebugTarget target;
+        	PHPDebugTarget target;
 			public void handleDebugEvents(DebugEvent[] events) {
 				if (events != null) {
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						Object obj = events[i].getSource();
 
-						if(!(obj instanceof IPHPDebugTarget))
+						if(!(obj instanceof PHPDebugTarget))
 							continue;
 
 						if ( events[i].getKind() == DebugEvent.TERMINATE) {
-							target = (IPHPDebugTarget)obj;
+							target = (PHPDebugTarget)obj;
 							Job job = new UIJob("debug output") {
 								public IStatus runInUIThread(IProgressMonitor monitor) {
 									update(target);
@@ -109,7 +101,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.debug.ui.AbstractDebugView#getHelpContextId()
      */
     protected String getHelpContextId() {
-        return IPHPHelpContextIds.DEBUG_OUTPUT_VIEW;
+    	return IPHPHelpContextIds.DEBUG_OUTPUT_VIEW;
     }
 
     /* (non-Javadoc)
@@ -133,6 +125,7 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+
     	IPHPDebugTarget target = debugViewHelper.getSelectionElement(selection);
         update(target);
     }
@@ -152,21 +145,8 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
 	        	// check if output hasn't been updated
 	        	if (fTarget == oldTarget && fUpdateCount == oldcount) return;
 
-	            ss = new HTMLDocumentLoader();
-	            dd = (BasicStructuredDocument)ss.createNewStructuredDocument();
-	            IModelManager mmanager = StructuredModelManager.getModelManager();
-	            dd.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForHTML.ContentTypeID_HTML).getParser());
 	            String output = outputBuffer.toString();
 	            dd.setText(this, output);
-	            try {
-	                dd.computePartitioning(0,output.length());
-	            } catch (BadLocationException e) {
-	                Logger.logException("DebugOutputView: ", e);
-	            }
-	            dd.setDocumentPartitioner(new StructuredTextPartitionerForHTML());
-	            dd.setReParser(new XMLStructuredDocumentReParser());
-	            dd.reparse(this);
-	            input = dd;
         	} else {
         		// Not Suspended or Terminated
 
@@ -178,23 +158,13 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         		return;
         	}
         }
-        StructuredTextViewer viewer = (StructuredTextViewer)getViewer();
-        StyledText control = (StyledText)viewer.getControl();
-        int top = 0;
         try {
-        	top = control.getTopIndex();
-        } catch (Exception e1){
-            Logger.logException("DebugOutputView: ", e1);
+	        fSourceViewer.setInput(input);
+        } catch (Exception e) {
+        	// Don't handle - it may be NPE in LineStyleProviderForEmbeddedCSS
         }
-        //TODO: This is a hack to workaround a null pointer exception occuring on .setInput()
-        try {
-        	viewer.setInput(input);
-            viewer.refresh();        	
-        }
-        catch (NullPointerException npe) {
-        	
-        }
-        control.setTopIndex(top);
+        fSourceViewer.configure(new StructuredTextViewerConfigurationHTML());
+        fSourceViewer.refresh();
     }
 
     /* (non-Javadoc)
@@ -224,6 +194,4 @@ public class DebugOutputView extends AbstractDebugView implements ISelectionList
         IPHPDebugTarget target = debugViewHelper.getSelectionElement(null);
         update(target);
     }
-
-
 }
