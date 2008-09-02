@@ -32,16 +32,13 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements IPH
 	private ITextHover fBestHover;
 
 	public BestMatchHover() {
-		if (PHPUiPlugin.getActivePage() != null) {
-			setEditor(PHPUiPlugin.getActivePage().getActiveEditor());
-		}
-		installTextHovers();
+		this(PHPUiPlugin.getActivePage() == null ? null : PHPUiPlugin.getActivePage().getActiveEditor(), PHPUiPlugin.getDefault().getPreferenceStore());
 	}
 
 	public BestMatchHover(IEditorPart editor, IPreferenceStore store) {
-		this();
 		setEditor(editor);
 		setPreferenceStore(store);
+		installTextHovers();
 	}
 
 	/**
@@ -72,6 +69,7 @@ public class BestMatchHover extends AbstractScriptEditorTextHover implements IPH
 			IPHPTextHover hover = spec.createTextHover();
 			if (hover != null) {
 				hover.setEditor(getEditor());
+				hover.setPreferenceStore(getPreferenceStore());
 				addTextHover(hover);
 				fTextHoverSpecifications.remove(spec);
 			}
