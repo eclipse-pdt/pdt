@@ -15,6 +15,7 @@ package org.eclipse.php.internal.ui.search;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 /**
  * Finds all implement occurrences of an extended class or an implemented interface.
@@ -38,18 +39,18 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 			fIdentifier = (Identifier) node;
 			StructuralPropertyDescriptor locationInParent = fIdentifier.getLocationInParent();
 			if (locationInParent != ClassDeclaration.SUPER_CLASS_PROPERTY && locationInParent != ClassDeclaration.INTERFACES_PROPERTY && locationInParent != InterfaceDeclaration.INTERFACES_PROPERTY) {
-				return "ImplementOccurrencesFinder_invalidTarget";
+				return "ImplementOccurrencesFinder_invalidTarget"; //$NON-NLS-1$
 			}
 			IBinding resolvedBinding = fIdentifier.resolveBinding();
 			if (resolvedBinding == null || !(resolvedBinding instanceof ITypeBinding)) {
-				return "ImplementOccurrencesFinder_invalidTarget";
+				return "ImplementOccurrencesFinder_invalidTarget"; //$NON-NLS-1$
 			} else {
 				fBinding = (ITypeBinding) resolvedBinding;
 			}
 			fTypeDeclaration = (TypeDeclaration) fIdentifier.getParent();
 			return null;
 		}
-		fDescription = "OccurrencesFinder_occurrence_description";
+		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -65,7 +66,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	@Override
 	protected void findOccurrences() {
-		fDescription = Messages.format("Implementors of methods in ''{0}''", fIdentifier.getName());
+		fDescription = Messages.format(PHPUIMessages.getString("ImplementOccurrencesFinder.3"), fIdentifier.getName()); //$NON-NLS-1$
 		fTypeDeclaration.accept(this);
 		fResult.add(new OccurrenceLocation(fIdentifier.getStart(), fIdentifier.getLength(), getOccurrenceType(fIdentifier), fDescription));
 	}

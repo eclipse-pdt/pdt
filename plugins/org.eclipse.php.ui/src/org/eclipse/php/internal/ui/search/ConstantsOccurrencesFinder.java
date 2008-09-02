@@ -41,7 +41,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 			}
 			return null;
 		}
-		fDescription = "OccurrencesFinder_occurrence_description";
+		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -115,7 +115,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (expression.getType() == ASTNode.SCALAR) {
 			Scalar scalar = (Scalar) expression;
 			String value = scalar.getStringValue();
-			return "true".equalsIgnoreCase(value);
+			return "true".equalsIgnoreCase(value); //$NON-NLS-1$
 		}
 		return false;
 	}

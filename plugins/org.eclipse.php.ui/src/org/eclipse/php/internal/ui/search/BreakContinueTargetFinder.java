@@ -11,10 +11,11 @@
 package org.eclipse.php.internal.ui.search;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 
-	private static final String TARGET_OF = "Target of ''{0};''";
+	private static final String TARGET_OF = PHPUIMessages.getString("BreakContinueTargetFinder.0"); //$NON-NLS-1$
 	public static final String ID = "BreakContinueTargetFinder"; //$NON-NLS-1$
 	private static final int[] TARGETS = { ASTNode.FOR_STATEMENT, ASTNode.WHILE_STATEMENT, ASTNode.SWITCH_STATEMENT, ASTNode.FOR_EACH_STATEMENT, ASTNode.DO_STATEMENT };
 	private static final int[] STOPPERS = { ASTNode.PROGRAM, ASTNode.FUNCTION_DECLARATION };
@@ -45,7 +46,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 				return null;
 			}
 		}
-		fDescription = "BreakContinueTargetFinder_occurrence_description";
+		fDescription = "BreakContinueTargetFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -99,11 +100,11 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 			// do nothing
 			return;
 		}
-		String nestingStr = "";
+		String nestingStr = ""; //$NON-NLS-1$
 		if (nestingLevel > 1) {
 			nestingStr = ' ' + Integer.toString(nestingLevel);
 		}
-		fDescription = Messages.format(TARGET_OF, (statement.getType() == ASTNode.BREAK_STATEMENT) ? "break" + nestingStr : "continue" + nestingStr);
+		fDescription = Messages.format(TARGET_OF, (statement.getType() == ASTNode.BREAK_STATEMENT) ? "break" + nestingStr : "continue" + nestingStr); //$NON-NLS-1$ //$NON-NLS-2$
 		// No need for the visitor. Just traverse up the AST tree and locate the target.
 		addOccurrences();
 	}
@@ -189,7 +190,7 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	public String getJobLabel() {
-		return "BreakContinueTargetFinder_job_label";
+		return "BreakContinueTargetFinder_job_label"; //$NON-NLS-1$
 	}
 
 	public int getSearchKind() {
@@ -197,10 +198,10 @@ public class BreakContinueTargetFinder extends AbstractOccurrencesFinder {
 	}
 
 	public String getUnformattedPluralLabel() {
-		return "BreakContinueTargetFinder_label_plural";
+		return "BreakContinueTargetFinder_label_plural"; //$NON-NLS-1$
 	}
 
 	public String getUnformattedSingularLabel() {
-		return "BreakContinueTargetFinder_label_singular";
+		return "BreakContinueTargetFinder_label_singular"; //$NON-NLS-1$
 	}
 }

@@ -31,7 +31,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	public static final String ID = "HTMLOccurrencesFinder"; //$NON-NLS-1$
-	private String htmlTag = "HTML tag";
+	private String htmlTag = "HTML tag"; //$NON-NLS-1$
 	private int offset;
 	private IStructuredDocument document;
 
@@ -57,7 +57,7 @@ public class HTMLOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (document != null && offset > 0 && node != null && ASTNode.IN_LINE_HTML == node.getType()) {
 			return null;
 		}
-		fDescription = "OccurrencesFinder_occurrence_description";
+		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 

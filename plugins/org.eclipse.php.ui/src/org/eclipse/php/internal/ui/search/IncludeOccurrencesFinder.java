@@ -29,10 +29,11 @@ import org.eclipse.php.internal.core.ast.nodes.Include;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 
-	private static final String INCLUDE_POINT_OF = "Required by ''{0}()''";
+	private static final String INCLUDE_POINT_OF = PHPUIMessages.getString("IncludeOccurrencesFinder.0"); //$NON-NLS-1$
 	public static final String ID = "RequireFinder"; //$NON-NLS-1$
 	private IModelElement source;
 	private IBinding binding;
@@ -59,13 +60,13 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 					this.methods = module.getMethods();
 					return null;
 				} catch (ModelException e) {
-					fDescription = "MethodExitsFinder_occurrence_exit_description";
+					fDescription = "MethodExitsFinder_occurrence_exit_description"; //$NON-NLS-1$
 					return fDescription;
 				}
 			}
 
 		}
-		fDescription = "MethodExitsFinder_occurrence_exit_description";
+		fDescription = "MethodExitsFinder_occurrence_exit_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -103,7 +104,7 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public String getJobLabel() {
-		return "RncludeFinder_job_label";
+		return "RncludeFinder_job_label"; //$NON-NLS-1$
 	}
 
 	public int getSearchKind() {
@@ -111,11 +112,11 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public String getUnformattedPluralLabel() {
-		return "IncludeFinder_label_plural";
+		return "IncludeFinder_label_plural"; //$NON-NLS-1$
 	}
 
 	public String getUnformattedSingularLabel() {
-		return "IncludeFinder_label_singular";
+		return "IncludeFinder_label_singular"; //$NON-NLS-1$
 	}
 
 	@Override

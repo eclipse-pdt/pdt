@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 
 /**
@@ -25,8 +26,8 @@ import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
  */
 public abstract class AbstractOccurrencesFinder extends AbstractVisitor implements IOccurrencesFinder {
 
-	protected static final String BASE_DESCRIPTION = "Occurrance of ''{0}''";
-	protected static final String BASE_WRITE_DESCRIPTION = "Write occurrance of ''{0}''";
+	protected static final String BASE_DESCRIPTION = PHPUIMessages.getString("AbstractOccurrencesFinder.0"); //$NON-NLS-1$
+	protected static final String BASE_WRITE_DESCRIPTION = PHPUIMessages.getString("AbstractOccurrencesFinder.1"); //$NON-NLS-1$
 	protected static final String BRACKETS = "()";
 
 	protected List<OccurrenceLocation> fResult;
@@ -85,7 +86,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getJobLabel()
 	 */
 	public String getJobLabel() {
-		return "OccurrencesFinder_job_label";
+		return "OccurrencesFinder_job_label"; //$NON-NLS-1$
 	}
 
 	/*
@@ -101,7 +102,7 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getUnformattedPluralLabel()
 	 */
 	public String getUnformattedPluralLabel() {
-		return "OccurrencesFinder_label_plural";
+		return "OccurrencesFinder_label_plural"; //$NON-NLS-1$
 	}
 
 	/*
@@ -109,6 +110,6 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 * @see org.eclipse.php.internal.ui.search.IOccurrencesFinder#getUnformattedSingularLabel()
 	 */
 	public String getUnformattedSingularLabel() {
-		return "OccurrencesFinder_label_singular";
+		return "OccurrencesFinder_label_singular"; //$NON-NLS-1$
 	}
 }

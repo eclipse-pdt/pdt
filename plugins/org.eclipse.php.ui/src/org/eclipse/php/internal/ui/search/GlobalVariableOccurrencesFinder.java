@@ -46,7 +46,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 			globalName = ((Identifier) node).getName();
 			return null;
 		}
-		fDescription = "OccurrencesFinder_occurrence_description";
+		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 

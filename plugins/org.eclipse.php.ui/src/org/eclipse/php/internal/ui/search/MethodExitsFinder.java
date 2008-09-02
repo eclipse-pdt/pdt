@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.search;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.corext.ASTNodes;
 
 /**
@@ -20,7 +21,7 @@ import org.eclipse.php.internal.ui.corext.ASTNodes;
  */
 public class MethodExitsFinder extends AbstractOccurrencesFinder {
 
-	private static final String EXIT_POINT_OF = "Exit point of ''{0}()''";
+	private static final String EXIT_POINT_OF = PHPUIMessages.getString("MethodExitsFinder.0"); //$NON-NLS-1$
 	public static final String ID = "MethodExitsFinder"; //$NON-NLS-1$
 	private FunctionDeclaration fFunctionDeclaration;
 
@@ -34,11 +35,11 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		if (isExitExecutionPath(node)) {
 			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fFunctionDeclaration == null)
-				return "MethodExitsFinder_no_return_type_selected";
+				return "MethodExitsFinder_no_return_type_selected"; //$NON-NLS-1$
 			return null;
 
 		}
-		fDescription = "MethodExitsFinder_occurrence_exit_description";
+		fDescription = "MethodExitsFinder_occurrence_exit_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -103,7 +104,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	}
 
 	public String getJobLabel() {
-		return "MethodExitsFinder_job_label";
+		return "MethodExitsFinder_job_label"; //$NON-NLS-1$
 	}
 
 	public int getSearchKind() {
@@ -111,10 +112,10 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	}
 
 	public String getUnformattedPluralLabel() {
-		return "MethodExitsFinder_label_plural";
+		return "MethodExitsFinder_label_plural"; //$NON-NLS-1$
 	}
 
 	public String getUnformattedSingularLabel() {
-		return "MethodExitsFinder_label_singular";
+		return "MethodExitsFinder_label_singular"; //$NON-NLS-1$
 	}
 }

@@ -14,6 +14,7 @@
 package org.eclipse.php.internal.ui.search;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 /**
  * A local variable occurrence finder.
@@ -47,7 +48,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 			return null;
 		}
 		// return "OccurrencesFinder_no_occurrence";
-		fDescription = "OccurrencesFinder_occurrence_description";
+		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
 
@@ -63,7 +64,7 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @see org.eclipse.php.internal.ui.search.AbstractOccurrencesFinder#findOccurrences()
 	 */
 	protected void findOccurrences() {
-		fDescription = Messages.format("Occurrance of ''${0}''", fIdentifier.getName());
+		fDescription = Messages.format(PHPUIMessages.getString("LocalVariableOccurrencesFinder.1"), fIdentifier.getName()); //$NON-NLS-1$
 		fFunctionDeclaration.accept(this);
 	}
 
