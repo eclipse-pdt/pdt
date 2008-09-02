@@ -63,7 +63,6 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
 
 public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerConfigurationHTML {
 
-	private HashMap<String, ArrayList<IContentAssistProcessor>> processorsCache = new HashMap<String, ArrayList<IContentAssistProcessor>>();
 	private static final String PHP_CONTENT_ASSISTANT_EXT = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
 	private static final String CONTENT_ASSIST_PROCESSOR_EXT = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
 	private static final String HYPERLINK_DETECTOR_EXT = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
@@ -144,9 +143,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	}
 
 	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType, PHPStructuredTextViewer viewer) {
-		if (processorsCache.get(partitionType) != null) {
-			return processorsCache.get(partitionType);
-		}
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
 		processors.add(new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT));
 
@@ -168,8 +164,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				}
 			}
 		}
-
-		processorsCache.put(partitionType, processors);
 		return processors;
 	}
 
