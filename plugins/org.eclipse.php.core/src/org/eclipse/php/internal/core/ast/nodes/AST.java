@@ -1217,7 +1217,11 @@ public class AST {
 		ClassDeclaration classDeclaration = new ClassDeclaration(this);
 		classDeclaration.setModifier(modifier);
 		classDeclaration.setName(newIdentifier(className));
-		classDeclaration.setSuperClass(newIdentifier(superClass));
+		if(superClass != null) {
+			 classDeclaration.setSuperClass(newIdentifier(superClass));
+		} else {
+			 classDeclaration.setSuperClass(null);
+		}
 		classDeclaration.interfaces().addAll(interfaces);
 		classDeclaration.setBody(body);
 		return classDeclaration;
