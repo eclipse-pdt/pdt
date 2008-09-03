@@ -46,10 +46,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.part.ViewPart;
@@ -134,16 +131,17 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 					} else {
 						showFunctionHelpAction.setEnabled(false);
 					}
+				} else {
+					showFunctionHelpAction.setEnabled(false);
 				}
 			}
 		});
 
 		fViewer.getTree().setMenu(fContextMenu);
-		// Do not register the context menu - no extra entries contributed will be added
-		// fixes bug #239764
-		//		IWorkbenchPartSite site = getSite();
-		//		site.registerContextMenu(menuMgr, fViewer);
-		//		site.setSelectionProvider(fViewer);
+		
+		IWorkbenchPartSite site = getSite();
+		site.setSelectionProvider(fViewer);
+		
 	}
 
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
