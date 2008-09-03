@@ -95,34 +95,6 @@ public class PreferenceConstants {
 	 */
 	public static final String APPEARANCE_METHOD_TYPEPARAMETERS = "methodtypeparametesr";//$NON-NLS-1$
 
-
-	/**
-	 * A named preference that controls the behavior when double clicking on a container in the folders view.
-	 * <p>
-	 * Value is of type <code>String</code>: possible values are <code>
-	 * DOUBLE_CLICK_GOES_INTO</code> or <code>
-	 * DOUBLE_CLICK_EXPANDS</code>.
-	 * </p>
-	 *
-	 * @see #DOUBLE_CLICK_EXPANDS
-	 * @see #DOUBLE_CLICK_GOES_INTO
-	 */
-	public static final String DOUBLE_CLICK = "phpviewDoubleclick"; //$NON-NLS-1$
-
-	/**
-	 * A string value used by the named preference <code>DOUBLE_CLICK</code>.
-	 *
-	 * @see #DOUBLE_CLICK
-	 */
-	public static final String DOUBLE_CLICK_EXPANDS = "phpviewDoubleclickExpands"; //$NON-NLS-1$
-
-	/**
-	 * A string value used by the named preference <code>DOUBLE_CLICK</code>.
-	 *
-	 * @see #DOUBLE_CLICK
-	 */
-	public static final String DOUBLE_CLICK_GOES_INTO = "phpviewGointo"; //$NON-NLS-1$
-
 	/**
 	 * A named preference that controls whether annotation roll over is used or not.
 	 * <p>
@@ -904,8 +876,6 @@ public class PreferenceConstants {
 		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, false);
 
 		IPreferenceStore store = getPreferenceStore();
-
-		store.setDefault(DOUBLE_CLICK, DOUBLE_CLICK_EXPANDS);
 
 		store.setDefault(LINK_FOLDERS_TO_EDITOR, false);
 		store.setDefault(LINK_BROWSING_PROJECTS_TO_EDITOR, true);
