@@ -1461,6 +1461,27 @@
 				</or>
 			</visibility>			
 		</objectContribution>
+		
+			<objectContribution
+			objectClass="org.eclipse.dltk.core.IModelElement"
+			id="org.eclipse.php.ui.modelElementSearchContribution">			
+			<action
+         class="org.eclipse.search.internal.ui.OpenSearchDialogAction"
+         definitionId="org.eclipse.search.ui.openSearchDialog"
+         helpContextId="open_search_dialog_action_context"
+         icon="icons/full/etool16/search.gif"
+         id="org.eclipse.php.ui.actions.Search"
+         label="%openSearchDialogAction.label"
+         menubarPath="additions"
+         tooltip="%openSearchDialogAction.tooltip">
+			</action>
+			<visibility>
+				<or>
+					<objectClass name="org.eclipse.dltk.core.ISourceModule"/>
+					<objectClass name="org.eclipse.dltk.core.IMember"/>
+				</or>
+			</visibility>		
+		</objectContribution>
 	</extension>
 
 
