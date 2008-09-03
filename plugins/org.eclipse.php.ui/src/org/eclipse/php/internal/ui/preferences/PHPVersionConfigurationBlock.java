@@ -70,7 +70,7 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	private void createUseAspTagsContent(Composite composite) {
-		useAspTagsButton = new Button(composite, SWT.CHECK);
+		useAspTagsButton = new Button(composite, SWT.CHECK | SWT.RIGHT);
 		useAspTagsButton.setText(PHPUIMessages.getString("Preferences_php_editor_useAspTagsAsPhp_label"));
 		useAspTagsButton.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {

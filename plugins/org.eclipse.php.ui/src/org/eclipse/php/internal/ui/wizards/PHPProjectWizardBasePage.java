@@ -55,7 +55,7 @@ public class PHPProjectWizardBasePage extends DataModelWizardPage implements IPr
 			checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			checkLinkComposite.setLayout(new GridLayout(2, false));
 
-			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK);
+			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT );
 			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport"));
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.setSelection(model.getBooleanProperty(PHPCoreConstants.ADD_JS_NATURE));

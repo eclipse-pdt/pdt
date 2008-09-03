@@ -58,7 +58,7 @@ public class PHPVersionGroup implements SelectionListener {
 		checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		checkLinkComposite.setLayout(new GridLayout(2, false));
 
-		fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
+		fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT);
 		fEnableProjectSettings.setText(PHPUIMessages.getString("PHPVersionGroup_EnableProjectSettings"));
 		fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 
