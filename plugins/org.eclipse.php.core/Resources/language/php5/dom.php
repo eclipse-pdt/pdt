@@ -2228,266 +2228,190 @@ function dom_import_simplexml (SimpleXMLElement $node) {}
 
 
 /**
- * 1
+ * Node is a DOMElement
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ELEMENT_NODE', 1);
 
 /**
- * 2
+ * Node is a DOMAttr
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ATTRIBUTE_NODE', 2);
 
 /**
- * 3
+ * Node is a DOMText
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_TEXT_NODE', 3);
 
 /**
- * 4
+ * Node is a DOMCharacterData
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_CDATA_SECTION_NODE', 4);
 
 /**
- * 5
+ * Node is a DOMEntityReference
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ENTITY_REF_NODE', 5);
 
 /**
- * 6
+ * Node is a DOMEntity
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ENTITY_NODE', 6);
 
 /**
- * 7
+ * Node is a DOMProcessingInstruction
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_PI_NODE', 7);
 
 /**
- * 8
+ * Node is a DOMComment
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_COMMENT_NODE', 8);
 
 /**
- * 9
+ * Node is a DOMDocument
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_DOCUMENT_NODE', 9);
 
 /**
- * 10
+ * Node is a DOMDocumentType
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_DOCUMENT_TYPE_NODE', 10);
 
 /**
- * 11
+ * Node is a DOMDocumentFragment
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_DOCUMENT_FRAG_NODE', 11);
 
 /**
- * 12
+ * Node is a DOMNotation
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_NOTATION_NODE', 12);
-
-/**
- * 13
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_HTML_DOCUMENT_NODE', 13);
-
-/**
- * 14
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_DTD_NODE', 14);
-
-/**
- * 15
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ELEMENT_DECL_NODE', 15);
-
-/**
- * 16
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_DECL_NODE', 16);
-
-/**
- * 17
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ENTITY_DECL_NODE', 17);
-
-/**
- * 18
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_NAMESPACE_DECL_NODE', 18);
-
-/**
- * 2
- * @link http://php.net/manual/en/domxml.constants.php
- */
 define ('XML_LOCAL_NAMESPACE', 18);
-
-/**
- * 1
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_CDATA', 1);
-
-/**
- * 2
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_ID', 2);
-
-/**
- * 3
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_IDREF', 3);
-
-/**
- * 4
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_IDREFS', 4);
-
-/**
- * 5
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_ENTITY', 6);
-
-/**
- * 7
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_NMTOKEN', 7);
-
-/**
- * 8
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_NMTOKENS', 8);
-
-/**
- * 9
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_ENUMERATION', 9);
-
-/**
- * 10
- * @link http://php.net/manual/en/dom.constants.php
- */
 define ('XML_ATTRIBUTE_NOTATION', 10);
 define ('DOM_PHP_ERR', 0);
 
 /**
- * 1
+ * If index or size is negative, or greater than the allowed value.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_INDEX_SIZE_ERR', 1);
 
 /**
- * 2
+ * If the specified range of text does not fit into a 
+ * DOMString.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOMSTRING_SIZE_ERR', 2);
 
 /**
- * 3
+ * If any node is inserted somewhere it doesn't belong
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_HIERARCHY_REQUEST_ERR', 3);
 
 /**
- * 4
+ * If a node is used in a different document than the one that created it.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_WRONG_DOCUMENT_ERR', 4);
 
 /**
- * 5
+ * If an invalid or illegal character is specified, such as in a name.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_INVALID_CHARACTER_ERR', 5);
 
 /**
- * 6
+ * If data is specified for a node which does not support data.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_NO_DATA_ALLOWED_ERR', 6);
 
 /**
- * 7
+ * If an attempt is made to modify an object where modifications are not allowed.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_NO_MODIFICATION_ALLOWED_ERR', 7);
 
 /**
- * 8
+ * If an attempt is made to reference a node in a context where it does not exist.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_NOT_FOUND_ERR', 8);
 
 /**
- * 9
+ * If the implementation does not support the requested type of object or operation.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_NOT_SUPPORTED_ERR', 9);
 
 /**
- * 10
+ * If an attempt is made to add an attribute that is already in use elsewhere.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_INUSE_ATTRIBUTE_ERR', 10);
 
 /**
- * 11
+ * If an attempt is made to use an object that is not, or is no longer, usable.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_INVALID_STATE_ERR', 11);
 
 /**
- * 12
+ * If an invalid or illegal string is specified.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_SYNTAX_ERR', 12);
 
 /**
- * 13
+ * If an attempt is made to modify the type of the underlying object.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_INVALID_MODIFICATION_ERR', 13);
 
 /**
- * 14
+ * If an attempt is made to create or change an object in a way which is 
+ * incorrect with regard to namespaces.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_NAMESPACE_ERR', 14);
 
 /**
- * 15
+ * If a parameter or an operation is not supported by the underlying object.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_INVALID_ACCESS_ERR', 15);
 
 /**
- * 16
+ * If a call to a method such as insertBefore or removeChild would make the Node
+ * invalid with respect to "partial validity", this exception would be raised and 
+ * the operation would not be done.
  * @link http://php.net/manual/en/dom.constants.php
  */
 define ('DOM_VALIDATION_ERR', 16);
