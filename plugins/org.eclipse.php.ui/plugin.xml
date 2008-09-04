@@ -664,7 +664,7 @@
 				definitionId="org.eclipse.php.ui.navigate.open.method" disabledIcon="icons/full/dtool16/openmethod.gif"
 				icon="icons/full/etool16/openmethod.gif" id="openMethod"
 				label="%OpenMethodAction.label" menubarPath="navigate/open.ext2"
-				toolbarPath="org.eclipse.search.searchActionSet/Search" tooltip="%OpenMethodAction.tooltip" />
+				tooltip="%OpenMethodAction.tooltip" />		
 			<action allowLabelUpdate="true"
 				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration" id="org.eclipse.php.ui.actions.OpenDeclaration"
 				label="%OpenDeclarationAction.label" menubarPath="navigate/open.ext2"
