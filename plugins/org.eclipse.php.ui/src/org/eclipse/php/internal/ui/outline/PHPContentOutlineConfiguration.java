@@ -221,4 +221,14 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 		return new PHPNodeActionManager(((StructuredTextEditor) activeEditor).getModel(), treeViewer);
 	}
+
+	@Override
+	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
+		super.enableShowAttributes(showAttributes, treeViewer);
+		// fix bug #241111 - show attributes in outline
+		if (fLabelProviderHTML != null) {
+			// This option is only relevant for the HTML outline
+			fLabelProviderHTML.fShowAttributes = showAttributes;
+		}
+	}
 }
