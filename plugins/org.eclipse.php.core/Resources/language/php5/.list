@@ -4,9 +4,9 @@ Reflection.php
 SPL.php
 SQLite.php
 SimpleXML.php
-Zend Cache.php
+Zend Data Cache.php
 Zend Debugger.php
-ZendUtils.php
+Zend Utils.php
 basic.php
 bcmath.php
 bz2.php
@@ -16,12 +16,14 @@ curl.php
 date.php
 dom.php
 exif.php
+fileinfo.php
 filter.php
 ftp.php
 gd.php
 gettext.php
 gmp.php
 hash.php
+ibm_db2.php
 iconv.php
 imap.php
 json.php
@@ -41,6 +43,7 @@ odbc.php
 openssl.php
 pcntl.php
 pcre.php
+pdo_ibm.php
 pdo_mysql.php
 pdo_pgsql.php
 pdo_sqlite.php

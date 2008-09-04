@@ -52,11 +52,9 @@ function iconv_strlen ($str, $charset = null) {}
  * @link http://php.net/manual/en/function.iconv-substr.php
  * @param str string
  * @param offset int
- * @param length int[optional]
- * @param charset string[optional]
  * @return string the portion of str specified by the
  */
-function iconv_substr ($str, $offset, $length = null, $charset = null) {}
+function iconv_substr ($str, $offset) {}
 
 /**
  * Finds position of first occurrence of a needle within a haystack
@@ -110,7 +108,7 @@ function iconv_mime_decode ($encoded_header, $mode = null, $charset = null) {}
 function iconv_mime_decode_headers ($encoded_headers, $mode = null, $charset = null) {}
 
 define ('ICONV_IMPL', "glibc");
-define ('ICONV_VERSION', 2.5);
+define ('ICONV_VERSION', 2.7);
 define ('ICONV_MIME_DECODE_STRICT', 1);
 define ('ICONV_MIME_DECODE_CONTINUE_ON_ERROR', 2);
 

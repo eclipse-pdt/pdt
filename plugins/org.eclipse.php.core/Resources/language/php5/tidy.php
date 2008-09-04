@@ -55,49 +55,49 @@ final class tidyNode  {
 
 	/**
 	 * Returns true if this node has children
-	 * @link http://php.net/manual/en/function.tidyNode-hasChildren.php
+	 * @link http://php.net/manual/en/function.tidynode-haschildren.php
 	 */
 	public function hasChildren () {}
 
 	/**
 	 * Returns true if this node has siblings
-	 * @link http://php.net/manual/en/function.tidyNode-hasSiblings.php
+	 * @link http://php.net/manual/en/function.tidynode-hassiblings.php
 	 */
 	public function hasSiblings () {}
 
 	/**
 	 * Returns true if this node represents a comment
-	 * @link http://php.net/manual/en/function.tidyNode-isComment.php
+	 * @link http://php.net/manual/en/function.tidynode-iscomment.php
 	 */
 	public function isComment () {}
 
 	/**
 	 * Returns true if this node is part of a HTML document
-	 * @link http://php.net/manual/en/function.tidyNode-isHtml.php
+	 * @link http://php.net/manual/en/function.tidynode-ishtml.php
 	 */
 	public function isHtml () {}
 
 	/**
 	 * Returns true if this node represents text (no markup)
-	 * @link http://php.net/manual/en/function.tidyNode-isText.php
+	 * @link http://php.net/manual/en/function.tidynode-istext.php
 	 */
 	public function isText () {}
 
 	/**
 	 * Returns true if this node is JSTE
-	 * @link http://php.net/manual/en/function.tidyNode-isJste.php
+	 * @link http://php.net/manual/en/function.tidynode-isjste.php
 	 */
 	public function isJste () {}
 
 	/**
 	 * Returns true if this node is ASP
-	 * @link http://php.net/manual/en/function.tidyNode-isAsp.php
+	 * @link http://php.net/manual/en/function.tidynode-isasp.php
 	 */
 	public function isAsp () {}
 
 	/**
 	 * Returns true if this node is PHP
-	 * @link http://php.net/manual/en/function.tidyNode-isPhp.php
+	 * @link http://php.net/manual/en/function.tidynode-isphp.php
 	 */
 	public function isPhp () {}
 

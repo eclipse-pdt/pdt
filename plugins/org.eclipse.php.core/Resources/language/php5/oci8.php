@@ -1,6 +1,6 @@
 <?php
 
-// Start of oci8 v.1.2.3
+// Start of oci8 v.1.3.4
 
 class OCI_Lob  {
 
@@ -116,8 +116,11 @@ class OCI_Lob  {
 	/**
 	 * &Alias; <function>oci_lob_export</function>
 	 * @link http://php.net/manual/en/function.oci-lob-writetofile.php
+	 * @param filename
+	 * @param start[optional]
+	 * @param length[optional]
 	 */
-	public function writetofile () {}
+	public function writetofile ($filename, $start, $length) {}
 
 	/**
 	 * Exports LOB's contents to a file
@@ -165,8 +168,9 @@ class OCI_Lob  {
 	/**
 	 * &Alias; <function>oci_lob_import</function>
 	 * @link http://php.net/manual/en/function.oci-lob-savefile.php
+	 * @param filename
 	 */
-	public function savefile () {}
+	public function savefile ($filename) {}
 
 	/**
 	 * Frees resources associated with the LOB descriptor
@@ -549,31 +553,79 @@ function oci_pconnect ($username, $password, $db = null, $charset = null, $sessi
  */
 function oci_error ($source = null) {}
 
-function oci_free_descriptor () {}
+/**
+ * @param lob_descriptor
+ */
+function oci_free_descriptor ($lob_descriptor) {}
 
-function oci_lob_save () {}
+/**
+ * @param lob_descriptor
+ * @param data
+ * @param offset[optional]
+ */
+function oci_lob_save ($lob_descriptor, $data, $offset) {}
 
-function oci_lob_import () {}
+/**
+ * @param lob_descriptor
+ * @param filename
+ */
+function oci_lob_import ($lob_descriptor, $filename) {}
 
-function oci_lob_size () {}
+/**
+ * @param lob_descriptor
+ */
+function oci_lob_size ($lob_descriptor) {}
 
-function oci_lob_load () {}
+/**
+ * @param lob_descriptor
+ */
+function oci_lob_load ($lob_descriptor) {}
 
-function oci_lob_read () {}
+/**
+ * @param lob_descriptor
+ * @param length
+ */
+function oci_lob_read ($lob_descriptor, $length) {}
 
-function oci_lob_eof () {}
+/**
+ * @param lob_descriptor
+ */
+function oci_lob_eof ($lob_descriptor) {}
 
-function oci_lob_tell () {}
+/**
+ * @param lob_descriptor
+ */
+function oci_lob_tell ($lob_descriptor) {}
 
-function oci_lob_truncate () {}
+/**
+ * @param lob_descriptor
+ * @param length[optional]
+ */
+function oci_lob_truncate ($lob_descriptor, $length) {}
 
-function oci_lob_erase () {}
+/**
+ * @param lob_descriptor
+ * @param offset[optional]
+ * @param length[optional]
+ */
+function oci_lob_erase ($lob_descriptor, $offset, $length) {}
 
-function oci_lob_flush () {}
+/**
+ * @param lob_descriptor
+ * @param flag[optional]
+ */
+function oci_lob_flush ($lob_descriptor, $flag) {}
 
-function ocisetbufferinglob () {}
+/**
+ * @param lob_descriptor
+ * @param mode
+ */
+function ocisetbufferinglob ($lob_descriptor, $mode) {}
 
-function ocigetbufferinglob () {}
+/**
+ * @param lob_descriptor
+ */
+function ocigetbufferinglob ($lob_descriptor) {}
 
 /**
  * Compares two LOB/FILE locators for equality
@@ -584,11 +636,23 @@ function ocigetbufferinglob () {}
  */
 function oci_lob_is_equal (OCI-Lob $lob1, OCI-Lob $lob2) {}
 
-function oci_lob_rewind () {}
+/**
+ * @param lob_descriptor
+ */
+function oci_lob_rewind ($lob_descriptor) {}
 
-function oci_lob_write () {}
+/**
+ * @param lob_descriptor
+ * @param string
+ * @param length[optional]
+ */
+function oci_lob_write ($lob_descriptor, $string, $length) {}
 
-function oci_lob_append () {}
+/**
+ * @param lob_descriptor_to
+ * @param lob_descriptor_from
+ */
+function oci_lob_append ($lob_descriptor_to, $lob_descriptor_from) {}
 
 /**
  * Copies large object
@@ -600,9 +664,20 @@ function oci_lob_append () {}
  */
 function oci_lob_copy (OCI-Lob $lob_to, OCI-Lob $lob_from, $length = null) {}
 
-function oci_lob_export () {}
+/**
+ * @param lob_descriptor
+ * @param filename
+ * @param start[optional]
+ * @param length[optional]
+ */
+function oci_lob_export ($lob_descriptor, $filename, $start, $length) {}
 
-function oci_lob_seek () {}
+/**
+ * @param lob_descriptor
+ * @param offset
+ * @param whence[optional]
+ */
+function oci_lob_seek ($lob_descriptor, $offset, $whence) {}
 
 /**
  * Commits outstanding statements
@@ -649,21 +724,51 @@ function oci_set_prefetch ($statement, $rows) {}
  */
 function oci_password_change ($connection, $username, $old_password, $new_password) {}
 
-function oci_free_collection () {}
+/**
+ * @param collection
+ */
+function oci_free_collection ($collection) {}
 
-function oci_collection_append () {}
+/**
+ * @param collection
+ * @param value
+ */
+function oci_collection_append ($collection, $value) {}
 
-function oci_collection_element_get () {}
+/**
+ * @param collection
+ * @param index
+ */
+function oci_collection_element_get ($collection, $index) {}
 
-function oci_collection_element_assign () {}
+/**
+ * @param collection
+ * @param index
+ * @param value
+ */
+function oci_collection_element_assign ($collection, $index, $value) {}
 
-function oci_collection_assign () {}
+/**
+ * @param collection_to
+ * @param collection_from
+ */
+function oci_collection_assign ($collection_to, $collection_from) {}
 
-function oci_collection_size () {}
+/**
+ * @param collection
+ */
+function oci_collection_size ($collection) {}
 
-function oci_collection_max () {}
+/**
+ * @param collection
+ */
+function oci_collection_max ($collection) {}
 
-function oci_collection_trim () {}
+/**
+ * @param collection
+ * @param number
+ */
+function oci_collection_trim ($collection, $number) {}
 
 /**
  * Allocates new collection object
@@ -675,287 +780,381 @@ function oci_collection_trim () {}
  */
 function oci_new_collection ($connection, $tdo, $schema = null) {}
 
-function oci_free_cursor () {}
+/**
+ * @param statement_resource
+ */
+function oci_free_cursor ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_free_statement</function>
  * @link http://php.net/manual/en/function.ocifreecursor.php
+ * @param statement_resource
  */
-function ocifreecursor () {}
+function ocifreecursor ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_bind_by_name</function>
  * @link http://php.net/manual/en/function.ocibindbyname.php
- * @param var1
- * @param var2
- * @param var3
+ * @param statement_resource
+ * @param column_name
+ * @param variable
+ * @param maximum_length[optional]
+ * @param type[optional]
  */
-function ocibindbyname ($var1, $var2, &$var3) {}
+function ocibindbyname ($statement_resource, $column_name, &$variable, $maximum_length, $type) {}
 
 /**
  * &Alias; <function>oci_define_by_name</function>
  * @link http://php.net/manual/en/function.ocidefinebyname.php
- * @param var1
- * @param var2
- * @param var3
+ * @param statement_resource
+ * @param column_name
+ * @param variable
+ * @param type[optional]
  */
-function ocidefinebyname ($var1, $var2, &$var3) {}
+function ocidefinebyname ($statement_resource, $column_name, &$variable, $type) {}
 
 /**
  * &Alias; <function>oci_field_is_null</function>
  * @link http://php.net/manual/en/function.ocicolumnisnull.php
+ * @param statement_resource
+ * @param column_number_or_name
  */
-function ocicolumnisnull () {}
+function ocicolumnisnull ($statement_resource, $column_number_or_name) {}
 
 /**
  * &Alias; <function>oci_field_name</function>
  * @link http://php.net/manual/en/function.ocicolumnname.php
+ * @param statement_resource
+ * @param column_number
  */
-function ocicolumnname () {}
+function ocicolumnname ($statement_resource, $column_number) {}
 
 /**
  * &Alias; <function>oci_field_size</function>
  * @link http://php.net/manual/en/function.ocicolumnsize.php
+ * @param statement_resource
+ * @param column_number_or_name
  */
-function ocicolumnsize () {}
+function ocicolumnsize ($statement_resource, $column_number_or_name) {}
 
 /**
  * &Alias; <function>oci_field_scale</function>
  * @link http://php.net/manual/en/function.ocicolumnscale.php
+ * @param statement_resource
+ * @param column_number
  */
-function ocicolumnscale () {}
+function ocicolumnscale ($statement_resource, $column_number) {}
 
 /**
  * &Alias; <function>oci_field_precision</function>
  * @link http://php.net/manual/en/function.ocicolumnprecision.php
+ * @param statement_resource
+ * @param column_number
  */
-function ocicolumnprecision () {}
+function ocicolumnprecision ($statement_resource, $column_number) {}
 
 /**
  * &Alias; <function>oci_field_type</function>
  * @link http://php.net/manual/en/function.ocicolumntype.php
+ * @param statement_resource
+ * @param column_number
  */
-function ocicolumntype () {}
+function ocicolumntype ($statement_resource, $column_number) {}
 
 /**
  * &Alias; <function>oci_field_type_raw</function>
  * @link http://php.net/manual/en/function.ocicolumntyperaw.php
+ * @param statement_resource
+ * @param column_number
  */
-function ocicolumntyperaw () {}
+function ocicolumntyperaw ($statement_resource, $column_number) {}
 
 /**
  * &Alias; <function>oci_execute</function>
  * @link http://php.net/manual/en/function.ociexecute.php
+ * @param statement_resource
+ * @param mode[optional]
  */
-function ociexecute () {}
+function ociexecute ($statement_resource, $mode) {}
 
 /**
  * &Alias; <function>oci_cancel</function>
  * @link http://php.net/manual/en/function.ocicancel.php
+ * @param statement_resource
  */
-function ocicancel () {}
+function ocicancel ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_fetch</function>
  * @link http://php.net/manual/en/function.ocifetch.php
+ * @param statement_resource
  */
-function ocifetch () {}
+function ocifetch ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_fetch_all</function>
  * @link http://php.net/manual/en/function.ocifetchstatement.php
- * @param var1
- * @param var2
+ * @param statement_resource
+ * @param output
+ * @param skip[optional]
+ * @param maximum_rows[optional]
+ * @param flags[optional]
  */
-function ocifetchstatement ($var1, &$var2) {}
+function ocifetchstatement ($statement_resource, &$output, $skip, $maximum_rows, $flags) {}
 
 /**
  * &Alias; <function>oci_free_statement</function>
  * @link http://php.net/manual/en/function.ocifreestatement.php
+ * @param statement_resource
  */
-function ocifreestatement () {}
+function ocifreestatement ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_internal_debug</function>
  * @link http://php.net/manual/en/function.ociinternaldebug.php
+ * @param mode
  */
-function ociinternaldebug () {}
+function ociinternaldebug ($mode) {}
 
 /**
  * &Alias; <function>oci_num_fields</function>
  * @link http://php.net/manual/en/function.ocinumcols.php
+ * @param statement_resource
  */
-function ocinumcols () {}
+function ocinumcols ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_parse</function>
  * @link http://php.net/manual/en/function.ociparse.php
+ * @param connection_resource
+ * @param sql_text
  */
-function ociparse () {}
+function ociparse ($connection_resource, $sql_text) {}
 
 /**
  * &Alias; <function>oci_new_cursor</function>
  * @link http://php.net/manual/en/function.ocinewcursor.php
+ * @param connection_resource
  */
-function ocinewcursor () {}
+function ocinewcursor ($connection_resource) {}
 
 /**
  * &Alias; <function>oci_result</function>
  * @link http://php.net/manual/en/function.ociresult.php
+ * @param statement_resource
+ * @param column_number_or_name
  */
-function ociresult () {}
+function ociresult ($statement_resource, $column_number_or_name) {}
 
 /**
  * &Alias; <function>oci_server_version</function>
  * @link http://php.net/manual/en/function.ociserverversion.php
+ * @param connection_resource
  */
-function ociserverversion () {}
+function ociserverversion ($connection_resource) {}
 
 /**
  * &Alias; <function>oci_statement_type</function>
  * @link http://php.net/manual/en/function.ocistatementtype.php
+ * @param statement_resource
  */
-function ocistatementtype () {}
+function ocistatementtype ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_num_rows</function>
  * @link http://php.net/manual/en/function.ocirowcount.php
+ * @param statement_resource
  */
-function ocirowcount () {}
+function ocirowcount ($statement_resource) {}
 
 /**
  * &Alias; <function>oci_close</function>
  * @link http://php.net/manual/en/function.ocilogoff.php
+ * @param connection_resource
  */
-function ocilogoff () {}
+function ocilogoff ($connection_resource) {}
 
 /**
  * &Alias; <function>oci_connect</function>
  * @link http://php.net/manual/en/function.ocilogon.php
+ * @param username
+ * @param password
+ * @param connection_string[optional]
+ * @param character_set[optional]
+ * @param session_mode[optional]
  */
-function ocilogon () {}
+function ocilogon ($username, $password, $connection_string, $character_set, $session_mode) {}
 
 /**
  * &Alias; <function>oci_new_connect</function>
  * @link http://php.net/manual/en/function.ocinlogon.php
+ * @param username
+ * @param password
+ * @param connection_string[optional]
+ * @param character_set[optional]
+ * @param session_mode[optional]
  */
-function ocinlogon () {}
+function ocinlogon ($username, $password, $connection_string, $character_set, $session_mode) {}
 
 /**
  * &Alias; <function>oci_pconnect</function>
  * @link http://php.net/manual/en/function.ociplogon.php
+ * @param username
+ * @param password
+ * @param connection_string[optional]
+ * @param character_set[optional]
+ * @param session_mode[optional]
  */
-function ociplogon () {}
+function ociplogon ($username, $password, $connection_string, $character_set, $session_mode) {}
 
 /**
  * &Alias; <function>oci_error</function>
  * @link http://php.net/manual/en/function.ocierror.php
+ * @param connection_or_statement_resource[optional]
  */
-function ocierror () {}
+function ocierror ($connection_or_statement_resource) {}
 
 /**
  * &Alias; <xref linkend="function.oci-lob-free" />
  * @link http://php.net/manual/en/function.ocifreedesc.php
+ * @param lob_descriptor
  */
-function ocifreedesc () {}
+function ocifreedesc ($lob_descriptor) {}
 
 /**
  * &Alias; <xref linkend="function.oci-lob-save" />
  * @link http://php.net/manual/en/function.ocisavelob.php
+ * @param lob_descriptor
+ * @param data
+ * @param offset[optional]
  */
-function ocisavelob () {}
+function ocisavelob ($lob_descriptor, $data, $offset) {}
 
 /**
  * &Alias; <xref linkend="function.oci-lob-import" />
  * @link http://php.net/manual/en/function.ocisavelobfile.php
+ * @param lob_descriptor
+ * @param filename
  */
-function ocisavelobfile () {}
+function ocisavelobfile ($lob_descriptor, $filename) {}
 
 /**
  * &Alias; <xref linkend="function.oci-lob-export" />
  * @link http://php.net/manual/en/function.ociwritelobtofile.php
+ * @param lob_descriptor
+ * @param filename
+ * @param start[optional]
+ * @param length[optional]
  */
-function ociwritelobtofile () {}
+function ociwritelobtofile ($lob_descriptor, $filename, $start, $length) {}
 
 /**
  * &Alias; <xref linkend="function.oci-lob-load" />
  * @link http://php.net/manual/en/function.ociloadlob.php
+ * @param lob_descriptor
  */
-function ociloadlob () {}
+function ociloadlob ($lob_descriptor) {}
 
 /**
  * &Alias; <function>oci_commit</function>
  * @link http://php.net/manual/en/function.ocicommit.php
+ * @param connection_resource
  */
-function ocicommit () {}
+function ocicommit ($connection_resource) {}
 
 /**
  * &Alias; <function>oci_rollback</function>
  * @link http://php.net/manual/en/function.ocirollback.php
+ * @param connection_resource
  */
-function ocirollback () {}
+function ocirollback ($connection_resource) {}
 
 /**
  * &Alias; <function>oci_new_descriptor</function>
  * @link http://php.net/manual/en/function.ocinewdescriptor.php
+ * @param connection_resource
+ * @param type[optional]
  */
-function ocinewdescriptor () {}
+function ocinewdescriptor ($connection_resource, $type) {}
 
 /**
  * &Alias; <function>oci_set_prefetch</function>
  * @link http://php.net/manual/en/function.ocisetprefetch.php
+ * @param statement_resource
+ * @param number_of_rows
  */
-function ocisetprefetch () {}
+function ocisetprefetch ($statement_resource, $number_of_rows) {}
 
-function ocipasswordchange () {}
+/**
+ * @param connection_resource_or_connection_string
+ * @param username
+ * @param old_password
+ * @param new_password
+ */
+function ocipasswordchange ($connection_resource_or_connection_string, $username, $old_password, $new_password) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-free" />
  * @link http://php.net/manual/en/function.ocifreecollection.php
+ * @param collection
  */
-function ocifreecollection () {}
+function ocifreecollection ($collection) {}
 
 /**
  * &Alias; <function>oci_new_collection</function>
  * @link http://php.net/manual/en/function.ocinewcollection.php
+ * @param connection_resource
+ * @param type_name
+ * @param schema_name[optional]
  */
-function ocinewcollection () {}
+function ocinewcollection ($connection_resource, $type_name, $schema_name) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-append" />
  * @link http://php.net/manual/en/function.ocicollappend.php
+ * @param collection
+ * @param value
  */
-function ocicollappend () {}
+function ocicollappend ($collection, $value) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-element-get" />
  * @link http://php.net/manual/en/function.ocicollgetelem.php
+ * @param collection
+ * @param index
  */
-function ocicollgetelem () {}
+function ocicollgetelem ($collection, $index) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-element-assign" />
  * @link http://php.net/manual/en/function.ocicollassignelem.php
+ * @param collection
+ * @param index
+ * @param value
  */
-function ocicollassignelem () {}
+function ocicollassignelem ($collection, $index, $value) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-size" />
  * @link http://php.net/manual/en/function.ocicollsize.php
+ * @param collection
  */
-function ocicollsize () {}
+function ocicollsize ($collection) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-max" />
  * @link http://php.net/manual/en/function.ocicollmax.php
+ * @param collection
  */
-function ocicollmax () {}
+function ocicollmax ($collection) {}
 
 /**
  * &Alias; <xref linkend="function.oci-collection-trim" />
  * @link http://php.net/manual/en/function.ocicolltrim.php
+ * @param collection
+ * @param number
  */
-function ocicolltrim () {}
+function ocicolltrim ($collection, $number) {}
 
 
 /**
@@ -980,6 +1179,7 @@ define ('OCI_SYSOPER', 4);
  * @link http://php.net/manual/en/oci8.constants.php
  */
 define ('OCI_SYSDBA', 2);
+define ('OCI_CRED_EXT', -2147483648);
 
 /**
  * Statement execution mode. Use this mode if you don't want 
@@ -1301,5 +1501,5 @@ define ('OCI_TEMP_CLOB', 2);
  */
 define ('OCI_TEMP_BLOB', 1);
 
-// End of oci8 v.1.2.3
+// End of oci8 v.1.3.4
 ?>

@@ -363,7 +363,7 @@ define ('GMP_ROUND_MINUSINF', 2);
  * The GMP library version
  * @link http://php.net/manual/en/gmp.constants.php
  */
-define ('GMP_VERSION', "4.2.1");
+define ('GMP_VERSION', "4.2.2");
 
 // End of gmp v.
 ?>

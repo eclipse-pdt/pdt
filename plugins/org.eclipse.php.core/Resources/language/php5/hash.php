@@ -49,10 +49,10 @@ function hash_hmac_file ($algo, $filename, $key, $raw_output = null) {}
  * @link http://php.net/manual/en/function.hash-init.php
  * @param algo string
  * @param options int[optional]
- * @param key string
+ * @param key string[optional]
  * @return resource a Hashing Context resource for use with hash_update,
  */
-function hash_init ($algo, $options = null, $key) {}
+function hash_init ($algo, $options = null, $key = null) {}
 
 /**
  * Pump data into an active hashing context

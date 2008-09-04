@@ -529,9 +529,10 @@ function pg_untrace ($connection = null) {}
  * Create a large object
  * @link http://php.net/manual/en/function.pg-lo-create.php
  * @param connection resource[optional]
+ * @param object_id mixed[optional]
  * @return int 
  */
-function pg_lo_create ($connection = null) {}
+function pg_lo_create ($connection = null, $object_id = null) {}
 
 /**
  * Delete a large object
@@ -592,9 +593,10 @@ function pg_lo_read_all ($large_object) {}
  * @link http://php.net/manual/en/function.pg-lo-import.php
  * @param connection resource
  * @param pathname string
+ * @param object_id mixed
  * @return int 
  */
-function pg_lo_import ($connection, $pathname) {}
+function pg_lo_import ($connection, $pathname, $object_id) {}
 
 /**
  * Export a large object to file

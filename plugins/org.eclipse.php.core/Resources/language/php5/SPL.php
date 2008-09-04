@@ -1007,12 +1007,12 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable {
 class RecursiveDirectoryIterator extends DirectoryIterator implements Traversable, Iterator, RecursiveIterator {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
-	const CURRENT_AS_FILEINFO = 16;
-	const CURRENT_AS_SELF = 0;
+	const CURRENT_AS_FILEINFO = 0;
+	const CURRENT_AS_SELF = 16;
 	const KEY_MODE_MASK = 3840;
 	const KEY_AS_PATHNAME = 0;
 	const KEY_AS_FILENAME = 256;
-	const NEW_CURRENT_AND_KEY = 272;
+	const NEW_CURRENT_AND_KEY = 256;
 
 
 	/**

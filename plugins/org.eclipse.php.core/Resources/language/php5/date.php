@@ -1,6 +1,6 @@
 <?php
 
-// Start of date v.5.2.5
+// Start of date v.5.2.6
 
 class DateTime  {
 	const ATOM = "Y-m-d\TH:i:sP";
@@ -454,5 +454,5 @@ define ('SUNFUNCS_RET_STRING', 1);
  */
 define ('SUNFUNCS_RET_DOUBLE', 2);
 
-// End of date v.5.2.5
+// End of date v.5.2.6
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-// Start of standard v.5.2.5
+// Start of standard v.5.2.6
 
 class __PHP_Incomplete_Class  {
 }
@@ -227,7 +227,7 @@ function iptcembed ($iptcdata, $jpeg_file_name, $spool = null) {}
  * @link http://php.net/manual/en/function.getimagesize.php
  * @param filename string
  * @param imageinfo array[optional]
- * @return array an array with 5 elements.
+ * @return array an array with 7 elements.
  */
 function getimagesize ($filename, array &$imageinfo = null) {}
 
@@ -466,9 +466,10 @@ function hebrevc ($hebrew_text, $max_chars_per_line = null) {}
  * Inserts HTML line breaks before all newlines in a string
  * @link http://php.net/manual/en/function.nl2br.php
  * @param string string
+ * @param is_xhtml bool[optional]
  * @return string the altered string.
  */
-function nl2br ($string) {}
+function nl2br ($string, $is_xhtml = null) {}
 
 /**
  * Returns filename component of path
@@ -497,7 +498,7 @@ function dirname ($path) {}
 function pathinfo ($path, $options = null) {}
 
 /**
- * Un-quote string quoted with <function>addslashes</function>
+ * Un-quotes a quoted string
  * @link http://php.net/manual/en/function.stripslashes.php
  * @param str string
  * @return string a string with backslashes stripped off.
@@ -832,12 +833,9 @@ function soundex ($str) {}
  * @link http://php.net/manual/en/function.levenshtein.php
  * @param str1 string
  * @param str2 string
- * @param cost_ins int[optional]
- * @param cost_rep int
- * @param cost_del int
  * @return int 
  */
-function levenshtein ($str1, $str2, $cost_ins = null, $cost_rep, $cost_del) {}
+function levenshtein ($str1, $str2) {}
 
 /**
  * Return a specific character
@@ -1165,11 +1163,11 @@ function proc_nice ($increment) {}
 /**
  * Generate a random integer
  * @link http://php.net/manual/en/function.rand.php
- * @param min int[optional]
- * @param max int
+ * @param min[optional]
+ * @param max[optional]
  * @return int 
  */
-function rand ($min = null, $max) {}
+function rand ($min, $max) {}
 
 /**
  * Seed the random number generator
@@ -1189,11 +1187,11 @@ function getrandmax () {}
 /**
  * Generate a better random value
  * @link http://php.net/manual/en/function.mt-rand.php
- * @param min int[optional]
- * @param max int
+ * @param min[optional]
+ * @param max[optional]
  * @return int 
  */
-function mt_rand ($min = null, $max) {}
+function mt_rand ($min, $max) {}
 
 /**
  * Seed the better random number generator
@@ -2013,9 +2011,10 @@ function ini_get ($varname) {}
  * Gets all configuration options
  * @link http://php.net/manual/en/function.ini-get-all.php
  * @param extension string[optional]
- * @return array an associative array uses the directive name as the array key,
+ * @param details bool[optional]
+ * @return array an associative array with directive name as the array key.
  */
-function ini_get_all ($extension = null) {}
+function ini_get_all ($extension = null, $details = null) {}
 
 /**
  * Sets the value of a configuration option
@@ -2204,7 +2203,7 @@ function dns_check_record ($host, $type) {}
  * @link http://php.net/manual/en/function.checkdnsrr.php
  * @param host string
  * @param type string[optional]
- * @return int true if any records are found; returns false if no records
+ * @return bool true if any records are found; returns false if no records
  */
 function checkdnsrr ($host, $type = null) {}
 
@@ -2232,11 +2231,9 @@ function getmxrr ($hostname, array &$mxhosts, array &$weight = null) {}
  * @link http://php.net/manual/en/function.dns-get-record.php
  * @param hostname string
  * @param type int[optional]
- * @param authns array[optional]
- * @param addtl array
  * @return array 
  */
-function dns_get_record ($hostname, $type = null, array &$authns = null, array &$addtl) {}
+function dns_get_record ($hostname, $type = null) {}
 
 /**
  * Get the integer value of a variable
@@ -2640,7 +2637,7 @@ function fstat ($handle) {}
 function fseek ($handle, $offset, $whence = null) {}
 
 /**
- * Tells file pointer read/write position
+ * Returns the current position of the file read/write pointer
  * @link http://php.net/manual/en/function.ftell.php
  * @param handle resource
  * @return int the position of the file pointer referenced by
@@ -2769,9 +2766,11 @@ function stream_select (&$read_streams, &$write_streams, &$except_streams, $tv_s
 /**
  * Create a streams context
  * @link http://php.net/manual/en/function.stream-context-create.php
- * @param options[optional]
+ * @param options array[optional]
+ * @param params array[optional]
+ * @return resource 
  */
-function stream_context_create ($options) {}
+function stream_context_create (array $options = null, array $params = null) {}
 
 /**
  * Set parameters for a stream/wrapper/context
@@ -3213,10 +3212,10 @@ function opendir ($path, $context = null) {}
 /**
  * Close directory handle
  * @link http://php.net/manual/en/function.closedir.php
- * @param dir_handle resource
+ * @param dir_handle resource[optional]
  * @return void 
  */
-function closedir ($dir_handle) {}
+function closedir ($dir_handle = null) {}
 
 /**
  * Change directory
@@ -3236,18 +3235,18 @@ function getcwd () {}
 /**
  * Rewind directory handle
  * @link http://php.net/manual/en/function.rewinddir.php
- * @param dir_handle resource
+ * @param dir_handle resource[optional]
  * @return void 
  */
-function rewinddir ($dir_handle) {}
+function rewinddir ($dir_handle = null) {}
 
 /**
  * Read entry from directory handle
  * @link http://php.net/manual/en/function.readdir.php
- * @param dir_handle resource
+ * @param dir_handle resource[optional]
  * @return string the filename on success, or false on failure.
  */
-function readdir ($dir_handle) {}
+function readdir ($dir_handle = null) {}
 
 /**
  * Return an instance of the Directory class
@@ -4053,7 +4052,7 @@ function array_values (array $input) {}
  * Counts all the values of an array
  * @link http://php.net/manual/en/function.array-count-values.php
  * @param input array
- * @return array an assosiative array of values from input as
+ * @return array an associative array of values from input as
  */
 function array_count_values (array $input) {}
 
@@ -4507,23 +4506,23 @@ define ('PHP_URL_PASS', 4);
 define ('PHP_URL_PATH', 5);
 define ('PHP_URL_QUERY', 6);
 define ('PHP_URL_FRAGMENT', 7);
-define ('M_E', 2.71828182846);
-define ('M_LOG2E', 1.44269504089);
-define ('M_LOG10E', 0.434294481903);
-define ('M_LN2', 0.69314718056);
-define ('M_LN10', 2.30258509299);
-define ('M_PI', 3.14159265359);
-define ('M_PI_2', 1.57079632679);
-define ('M_PI_4', 0.785398163397);
-define ('M_1_PI', 0.318309886184);
-define ('M_2_PI', 0.636619772368);
-define ('M_SQRTPI', 1.77245385091);
-define ('M_2_SQRTPI', 1.1283791671);
-define ('M_LNPI', 1.14472988585);
-define ('M_EULER', 0.577215664902);
-define ('M_SQRT2', 1.41421356237);
-define ('M_SQRT1_2', 0.707106781187);
-define ('M_SQRT3', 1.73205080757);
+define ('M_E', 2.718281828459);
+define ('M_LOG2E', 1.442695040889);
+define ('M_LOG10E', 0.43429448190325);
+define ('M_LN2', 0.69314718055995);
+define ('M_LN10', 2.302585092994);
+define ('M_PI', 3.1415926535898);
+define ('M_PI_2', 1.5707963267949);
+define ('M_PI_4', 0.78539816339745);
+define ('M_1_PI', 0.31830988618379);
+define ('M_2_PI', 0.63661977236758);
+define ('M_SQRTPI', 1.7724538509055);
+define ('M_2_SQRTPI', 1.1283791670955);
+define ('M_LNPI', 1.1447298858494);
+define ('M_EULER', 0.57721566490153);
+define ('M_SQRT2', 1.4142135623731);
+define ('M_SQRT1_2', 0.70710678118655);
+define ('M_SQRT3', 1.7320508075689);
 define ('INF', INF);
 define ('NAN', NAN);
 define ('INFO_GENERAL', 1);
@@ -5251,5 +5250,5 @@ define ('DNS_A6', 16777216);
 define ('DNS_ANY', 268435456);
 define ('DNS_ALL', 251713587);
 
-// End of standard v.5.2.5
+// End of standard v.5.2.6
 ?>

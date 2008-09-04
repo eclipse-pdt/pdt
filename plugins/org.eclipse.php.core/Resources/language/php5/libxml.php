@@ -2,9 +2,6 @@
 
 // Start of libxml v.
 
-/**
- * @link http://php.net/manual/en/ref.libxml.php
- */
 class LibXMLError  {
 }
 

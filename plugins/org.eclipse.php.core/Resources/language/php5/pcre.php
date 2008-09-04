@@ -181,7 +181,7 @@ define ('PREG_BAD_UTF8_ERROR', 4);
  * PHP 5.2.4.
  * @link http://php.net/manual/en/pcre.constants.php
  */
-define ('PCRE_VERSION', "7.3 2007-08-28");
+define ('PCRE_VERSION', "7.6 2008-01-28");
 
 // End of pcre v.
 ?>

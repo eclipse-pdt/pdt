@@ -40,7 +40,10 @@ class DOMException extends Exception  {
 
 class DOMStringList  {
 
-	public function item () {}
+	/**
+	 * @param index
+	 */
+	public function item ($index) {}
 
 }
 
@@ -49,23 +52,38 @@ class DOMStringList  {
  */
 class DOMNameList  {
 
-	public function getName () {}
+	/**
+	 * @param index
+	 */
+	public function getName ($index) {}
 
-	public function getNamespaceURI () {}
+	/**
+	 * @param index
+	 */
+	public function getNamespaceURI ($index) {}
 
 }
 
 class DOMImplementationList  {
 
-	public function item () {}
+	/**
+	 * @param index
+	 */
+	public function item ($index) {}
 
 }
 
 class DOMImplementationSource  {
 
-	public function getDomimplementation () {}
+	/**
+	 * @param features
+	 */
+	public function getDomimplementation ($features) {}
 
-	public function getDomimplementations () {}
+	/**
+	 * @param features
+	 */
+	public function getDomimplementations ($features) {}
 
 }
 
@@ -77,13 +95,27 @@ class DOMImplementationSource  {
  */
 class DOMImplementation  {
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
 	public function hasFeature () {}
 
-	public function createDocumentType () {}
+	/**
+	 * @param qualifiedName
+	 * @param publicId
+	 * @param systemId
+	 */
+	public function createDocumentType ($qualifiedName, $publicId, $systemId) {}
 
-	public function createDocument () {}
+	/**
+	 * @param namespaceURI
+	 * @param qualifiedName
+	 * @param docType DOMDocumentType
+	 */
+	public function createDocument ($namespaceURI, $qualifiedNameDOMDocumentType , $docType) {}
 
 }
 
@@ -92,47 +124,111 @@ class DOMImplementation  {
  */
 class DOMNode  {
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -147,49 +243,116 @@ class DOMDocumentFragment extends DOMNode  {
 
 	public function __construct () {}
 
-	public function appendXML () {}
+	/**
+	 * @param data
+	 */
+	public function appendXML ($data) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -199,117 +362,279 @@ class DOMDocumentFragment extends DOMNode  {
  */
 class DOMDocument extends DOMNode  {
 
-	public function createElement () {}
+	/**
+	 * @param tagName
+	 * @param value[optional]
+	 */
+	public function createElement ($tagName, $value) {}
 
 	public function createDocumentFragment () {}
 
-	public function createTextNode () {}
+	/**
+	 * @param data
+	 */
+	public function createTextNode ($data) {}
 
-	public function createComment () {}
+	/**
+	 * @param data
+	 */
+	public function createComment ($data) {}
 
-	public function createCDATASection () {}
+	/**
+	 * @param data
+	 */
+	public function createCDATASection ($data) {}
 
-	public function createProcessingInstruction () {}
+	/**
+	 * @param target
+	 * @param data
+	 */
+	public function createProcessingInstruction ($target, $data) {}
 
-	public function createAttribute () {}
+	/**
+	 * @param name
+	 */
+	public function createAttribute ($name) {}
 
-	public function createEntityReference () {}
+	/**
+	 * @param name
+	 */
+	public function createEntityReference ($name) {}
 
-	public function getElementsByTagName () {}
+	/**
+	 * @param tagName
+	 */
+	public function getElementsByTagName ($tagName) {}
 
-	public function importNode () {}
+	/**
+	 * @param importedNode DOMNode
+	 * @param deep
+	 */
+	public function importNode (DOMNode $importedNode, $deep) {}
 
-	public function createElementNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param qualifiedName
+	 * @param value[optional]
+	 */
+	public function createElementNS ($namespaceURI, $qualifiedName, $value) {}
 
-	public function createAttributeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param qualifiedName
+	 */
+	public function createAttributeNS ($namespaceURI, $qualifiedName) {}
 
-	public function getElementsByTagNameNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 */
+	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
 
-	public function getElementById () {}
+	/**
+	 * @param elementId
+	 */
+	public function getElementById ($elementId) {}
 
-	public function adoptNode () {}
+	/**
+	 * @param source DOMNode
+	 */
+	public function adoptNode (DOMNode $source) {}
 
 	public function normalizeDocument () {}
 
-	public function renameNode () {}
+	/**
+	 * @param node DOMNode
+	 * @param namespaceURI
+	 * @param qualifiedName
+	 */
+	public function renameNode (DOMNode $node, $namespaceURI, $qualifiedName) {}
 
-	public function load () {}
+	/**
+	 * @param source
+	 * @param options[optional]
+	 */
+	public function load ($source, $options) {}
 
-	public function save () {}
+	/**
+	 * @param file
+	 */
+	public function save ($file) {}
 
-	public function loadXML () {}
+	/**
+	 * @param source
+	 * @param options[optional]
+	 */
+	public function loadXML ($source, $options) {}
 
-	public function saveXML () {}
+	/**
+	 * @param node DOMNode[optional]
+	 */
+	public function saveXML (DOMNode $node) {}
 
-	public function __construct () {}
+	/**
+	 * @param version[optional]
+	 * @param encoding[optional]
+	 */
+	public function __construct ($version, $encoding) {}
 
 	public function validate () {}
 
 	/**
 	 * Substitutes XIncludes in a DomDocument Object
 	 * @link http://php.net/manual/en/function.domdocument-xinclude.php
+	 * @param options[optional]
 	 */
-	public function xinclude () {}
+	public function xinclude ($options) {}
 
-	public function loadHTML () {}
+	/**
+	 * @param source
+	 */
+	public function loadHTML ($source) {}
 
-	public function loadHTMLFile () {}
+	/**
+	 * @param source
+	 */
+	public function loadHTMLFile ($source) {}
 
 	public function saveHTML () {}
 
-	public function saveHTMLFile () {}
+	/**
+	 * @param file
+	 */
+	public function saveHTMLFile ($file) {}
 
-	public function schemaValidate () {}
+	/**
+	 * @param filename
+	 */
+	public function schemaValidate ($filename) {}
 
-	public function schemaValidateSource () {}
+	/**
+	 * @param source
+	 */
+	public function schemaValidateSource ($source) {}
 
-	public function relaxNGValidate () {}
+	/**
+	 * @param filename
+	 */
+	public function relaxNGValidate ($filename) {}
 
-	public function relaxNGValidateSource () {}
+	/**
+	 * @param source
+	 */
+	public function relaxNGValidateSource ($source) {}
 
-	public function registerNodeClass () {}
+	/**
+	 * @param baseClass
+	 * @param extendedClass
+	 */
+	public function registerNodeClass ($baseClass, $extendedClass) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -318,7 +643,10 @@ class DOMDocument extends DOMNode  {
  */
 class DOMNodeList  {
 
-	public function item () {}
+	/**
+	 * @param index
+	 */
+	public function item ($index) {}
 
 }
 
@@ -327,19 +655,42 @@ class DOMNodeList  {
  */
 class DOMNamedNodeMap  {
 
-	public function getNamedItem () {}
+	/**
+	 * @param name
+	 */
+	public function getNamedItem ($name) {}
 
-	public function setNamedItem () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function setNamedItem (DOMNode $arg) {}
 
-	public function removeNamedItem () {}
+	/**
+	 * @param name[optional]
+	 */
+	public function removeNamedItem ($name) {}
 
-	public function item () {}
+	/**
+	 * @param index[optional]
+	 */
+	public function item ($index) {}
 
-	public function getNamedItemNS () {}
+	/**
+	 * @param namespaceURI[optional]
+	 * @param localName[optional]
+	 */
+	public function getNamedItemNS ($namespaceURI, $localName) {}
 
-	public function setNamedItemNS () {}
+	/**
+	 * @param arg DOMNode[optional]
+	 */
+	public function setNamedItemNS (DOMNode $arg) {}
 
-	public function removeNamedItemNS () {}
+	/**
+	 * @param namespaceURI[optional]
+	 * @param localName[optional]
+	 */
+	public function removeNamedItemNS ($namespaceURI, $localName) {}
 
 }
 
@@ -349,57 +700,141 @@ class DOMNamedNodeMap  {
  */
 class DOMCharacterData extends DOMNode  {
 
-	public function substringData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function substringData ($offset, $count) {}
 
-	public function appendData () {}
+	/**
+	 * @param arg
+	 */
+	public function appendData ($arg) {}
 
-	public function insertData () {}
+	/**
+	 * @param offset
+	 * @param arg
+	 */
+	public function insertData ($offset, $arg) {}
 
-	public function deleteData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function deleteData ($offset, $count) {}
 
-	public function replaceData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 * @param arg
+	 */
+	public function replaceData ($offset, $count, $arg) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -412,49 +847,117 @@ class DOMAttr extends DOMNode  {
 
 	public function isId () {}
 
-	public function __construct () {}
+	/**
+	 * @param name
+	 * @param value[optional]
+	 */
+	public function __construct ($name, $value) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -464,85 +967,220 @@ class DOMAttr extends DOMNode  {
  */
 class DOMElement extends DOMNode  {
 
-	public function getAttribute () {}
+	/**
+	 * @param name
+	 */
+	public function getAttribute ($name) {}
 
-	public function setAttribute () {}
+	/**
+	 * @param name
+	 * @param value
+	 */
+	public function setAttribute ($name, $value) {}
 
-	public function removeAttribute () {}
+	/**
+	 * @param name
+	 */
+	public function removeAttribute ($name) {}
 
-	public function getAttributeNode () {}
+	/**
+	 * @param name
+	 */
+	public function getAttributeNode ($name) {}
 
-	public function setAttributeNode () {}
+	/**
+	 * @param newAttr DOMAttr
+	 */
+	public function setAttributeNode (DOMAttr $newAttr) {}
 
-	public function removeAttributeNode () {}
+	/**
+	 * @param oldAttr DOMAttr
+	 */
+	public function removeAttributeNode (DOMAttr $oldAttr) {}
 
-	public function getElementsByTagName () {}
+	/**
+	 * @param name
+	 */
+	public function getElementsByTagName ($name) {}
 
-	public function getAttributeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 */
+	public function getAttributeNS ($namespaceURI, $localName) {}
 
-	public function setAttributeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param qualifiedName
+	 * @param value
+	 */
+	public function setAttributeNS ($namespaceURI, $qualifiedName, $value) {}
 
-	public function removeAttributeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 */
+	public function removeAttributeNS ($namespaceURI, $localName) {}
 
-	public function getAttributeNodeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 */
+	public function getAttributeNodeNS ($namespaceURI, $localName) {}
 
-	public function setAttributeNodeNS () {}
+	/**
+	 * @param newAttr DOMAttr
+	 */
+	public function setAttributeNodeNS (DOMAttr $newAttr) {}
 
-	public function getElementsByTagNameNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 */
+	public function getElementsByTagNameNS ($namespaceURI, $localName) {}
 
-	public function hasAttribute () {}
+	/**
+	 * @param name
+	 */
+	public function hasAttribute ($name) {}
 
-	public function hasAttributeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 */
+	public function hasAttributeNS ($namespaceURI, $localName) {}
 
-	public function setIdAttribute () {}
+	/**
+	 * @param name
+	 * @param isId
+	 */
+	public function setIdAttribute ($name, $isId) {}
 
-	public function setIdAttributeNS () {}
+	/**
+	 * @param namespaceURI
+	 * @param localName
+	 * @param isId
+	 */
+	public function setIdAttributeNS ($namespaceURI, $localName, $isId) {}
 
-	public function setIdAttributeNode () {}
+	/**
+	 * @param attr DOMAttr
+	 * @param isId
+	 */
+	public function setIdAttributeNode (DOMAttr $attr, $isId) {}
 
-	public function __construct () {}
+	/**
+	 * @param name
+	 * @param value[optional]
+	 * @param uri[optional]
+	 */
+	public function __construct ($name, $value, $uri) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -552,67 +1190,160 @@ class DOMElement extends DOMNode  {
  */
 class DOMText extends DOMCharacterData  {
 
-	public function splitText () {}
+	/**
+	 * @param offset
+	 */
+	public function splitText ($offset) {}
 
 	public function isWhitespaceInElementContent () {}
 
 	public function isElementContentWhitespace () {}
 
-	public function replaceWholeText () {}
+	/**
+	 * @param content
+	 */
+	public function replaceWholeText ($content) {}
 
-	public function __construct () {}
+	/**
+	 * @param value[optional]
+	 */
+	public function __construct ($value) {}
 
-	public function substringData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function substringData ($offset, $count) {}
 
-	public function appendData () {}
+	/**
+	 * @param arg
+	 */
+	public function appendData ($arg) {}
 
-	public function insertData () {}
+	/**
+	 * @param offset
+	 * @param arg
+	 */
+	public function insertData ($offset, $arg) {}
 
-	public function deleteData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function deleteData ($offset, $count) {}
 
-	public function replaceData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 * @param arg
+	 */
+	public function replaceData ($offset, $count, $arg) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -622,59 +1353,146 @@ class DOMText extends DOMCharacterData  {
  */
 class DOMComment extends DOMCharacterData  {
 
-	public function __construct () {}
+	/**
+	 * @param value[optional]
+	 */
+	public function __construct ($value) {}
 
-	public function substringData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function substringData ($offset, $count) {}
 
-	public function appendData () {}
+	/**
+	 * @param arg
+	 */
+	public function appendData ($arg) {}
 
-	public function insertData () {}
+	/**
+	 * @param offset
+	 * @param arg
+	 */
+	public function insertData ($offset, $arg) {}
 
-	public function deleteData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function deleteData ($offset, $count) {}
 
-	public function replaceData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 * @param arg
+	 */
+	public function replaceData ($offset, $count, $arg) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -692,7 +1510,10 @@ class DOMDomError  {
 
 class DOMErrorHandler  {
 
-	public function handleError () {}
+	/**
+	 * @param error DOMError
+	 */
+	public function handleError (DOMError $error) {}
 
 }
 
@@ -701,77 +1522,181 @@ class DOMLocator  {
 
 class DOMConfiguration  {
 
-	public function setParameter () {}
+	/**
+	 * @param name
+	 * @param value DOMUserData
+	 */
+	public function setParameter ($nameDOMUserData , $value) {}
 
-	public function getParameter () {}
+	/**
+	 * @param name[optional]
+	 */
+	public function getParameter ($name) {}
 
-	public function canSetParameter () {}
+	/**
+	 * @param name[optional]
+	 * @param value DOMUserData[optional]
+	 */
+	public function canSetParameter ($nameDOMUserData , $value) {}
 
 }
 
 class DOMCdataSection extends DOMText  {
 
-	public function __construct () {}
+	/**
+	 * @param value
+	 */
+	public function __construct ($value) {}
 
-	public function splitText () {}
+	/**
+	 * @param offset
+	 */
+	public function splitText ($offset) {}
 
 	public function isWhitespaceInElementContent () {}
 
 	public function isElementContentWhitespace () {}
 
-	public function replaceWholeText () {}
+	/**
+	 * @param content
+	 */
+	public function replaceWholeText ($content) {}
 
-	public function substringData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function substringData ($offset, $count) {}
 
-	public function appendData () {}
+	/**
+	 * @param arg
+	 */
+	public function appendData ($arg) {}
 
-	public function insertData () {}
+	/**
+	 * @param offset
+	 * @param arg
+	 */
+	public function insertData ($offset, $arg) {}
 
-	public function deleteData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 */
+	public function deleteData ($offset, $count) {}
 
-	public function replaceData () {}
+	/**
+	 * @param offset
+	 * @param count
+	 * @param arg
+	 */
+	public function replaceData ($offset, $count, $arg) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -781,47 +1706,111 @@ class DOMCdataSection extends DOMText  {
  */
 class DOMDocumentType extends DOMNode  {
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -838,47 +1827,111 @@ class DOMNotation  {
  */
 class DOMEntity extends DOMNode  {
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -888,49 +1941,116 @@ class DOMEntity extends DOMNode  {
  */
 class DOMEntityReference extends DOMNode  {
 
-	public function __construct () {}
+	/**
+	 * @param name
+	 */
+	public function __construct ($name) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
@@ -940,57 +2060,131 @@ class DOMEntityReference extends DOMNode  {
  */
 class DOMProcessingInstruction extends DOMNode  {
 
-	public function __construct () {}
+	/**
+	 * @param name
+	 * @param value[optional]
+	 */
+	public function __construct ($name, $value) {}
 
-	public function insertBefore () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param refChild DOMNode[optional]
+	 */
+	public function insertBefore (DOMNode $newChildDOMNode , $refChild = null) {}
 
-	public function replaceChild () {}
+	/**
+	 * @param newChild DOMNode
+	 * @param oldChild DOMNode
+	 */
+	public function replaceChild (DOMNode $newChildDOMNode , $oldChild) {}
 
-	public function removeChild () {}
+	/**
+	 * @param oldChild DOMNode
+	 */
+	public function removeChild (DOMNode $oldChild) {}
 
-	public function appendChild () {}
+	/**
+	 * @param newChild DOMNode
+	 */
+	public function appendChild (DOMNode $newChild) {}
 
 	public function hasChildNodes () {}
 
-	public function cloneNode () {}
+	/**
+	 * @param deep
+	 */
+	public function cloneNode ($deep) {}
 
 	public function normalize () {}
 
-	public function isSupported () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function isSupported ($feature, $version) {}
 
 	public function hasAttributes () {}
 
-	public function compareDocumentPosition () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function compareDocumentPosition (DOMNode $other) {}
 
-	public function isSameNode () {}
+	/**
+	 * @param other DOMNode
+	 */
+	public function isSameNode (DOMNode $other) {}
 
-	public function lookupPrefix () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function lookupPrefix ($namespaceURI) {}
 
-	public function isDefaultNamespace () {}
+	/**
+	 * @param namespaceURI
+	 */
+	public function isDefaultNamespace ($namespaceURI) {}
 
-	public function lookupNamespaceUri () {}
+	/**
+	 * @param prefix
+	 */
+	public function lookupNamespaceUri ($prefix) {}
 
-	public function isEqualNode () {}
+	/**
+	 * @param arg DOMNode
+	 */
+	public function isEqualNode (DOMNode $arg) {}
 
-	public function getFeature () {}
+	/**
+	 * @param feature
+	 * @param version
+	 */
+	public function getFeature ($feature, $version) {}
 
-	public function setUserData () {}
+	/**
+	 * @param key
+	 * @param data DOMUserData
+	 * @param handler
+	 */
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
-	public function getUserData () {}
+	/**
+	 * @param key
+	 */
+	public function getUserData ($key) {}
 
 	public function getNodePath () {}
 
-	public function C14N () {}
+	/**
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14N ($exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
-	public function C14NFile () {}
+	/**
+	 * @param uri
+	 * @param exclusive[optional]
+	 * @param with_comments[optional]
+	 * @param xpath[optional]
+	 * @param ns_prefixes[optional]
+	 */
+	public function C14NFile ($uri, $exclusive, $with_commentsarray , $xpath = nullarray , $ns_prefixes = null) {}
 
 }
 
 class DOMStringExtend  {
 
-	public function findOffset16 () {}
+	/**
+	 * @param offset32
+	 */
+	public function findOffset16 ($offset32) {}
 
-	public function findOffset32 () {}
+	/**
+	 * @param offset16
+	 */
+	public function findOffset32 ($offset16) {}
 
 }
 
@@ -999,13 +2193,28 @@ class DOMStringExtend  {
  */
 class DOMXPath  {
 
-	public function __construct () {}
+	/**
+	 * @param doc DOMDocument
+	 */
+	public function __construct (DOMDocument $doc) {}
 
-	public function registerNamespace () {}
+	/**
+	 * @param prefix
+	 * @param uri
+	 */
+	public function registerNamespace ($prefix, $uri) {}
 
-	public function query () {}
+	/**
+	 * @param expr
+	 * @param context DOMNode[optional]
+	 */
+	public function query ($exprDOMNode , $context) {}
 
-	public function evaluate () {}
+	/**
+	 * @param expr
+	 * @param context DOMNode[optional]
+	 */
+	public function evaluate ($exprDOMNode , $context) {}
 
 }
 
@@ -1020,80 +2229,110 @@ function dom_import_simplexml (SimpleXMLElement $node) {}
 
 /**
  * 1
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ELEMENT_NODE', 1);
 
 /**
  * 2
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ATTRIBUTE_NODE', 2);
 
 /**
  * 3
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_TEXT_NODE', 3);
 
 /**
  * 4
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_CDATA_SECTION_NODE', 4);
 
 /**
  * 5
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ENTITY_REF_NODE', 5);
 
 /**
  * 6
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_ENTITY_NODE', 6);
 
 /**
  * 7
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_PI_NODE', 7);
 
 /**
  * 8
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_COMMENT_NODE', 8);
 
 /**
  * 9
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_DOCUMENT_NODE', 9);
 
 /**
  * 10
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_DOCUMENT_TYPE_NODE', 10);
 
 /**
  * 11
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_DOCUMENT_FRAG_NODE', 11);
 
 /**
  * 12
- * @link http://php.net/manual/en/domxml.constants.php
+ * @link http://php.net/manual/en/dom.constants.php
  */
 define ('XML_NOTATION_NODE', 12);
+
+/**
+ * 13
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_HTML_DOCUMENT_NODE', 13);
+
+/**
+ * 14
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_DTD_NODE', 14);
+
+/**
+ * 15
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ELEMENT_DECL_NODE', 15);
+
+/**
+ * 16
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_DECL_NODE', 16);
+
+/**
+ * 17
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ENTITY_DECL_NODE', 17);
+
+/**
+ * 18
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_NAMESPACE_DECL_NODE', 18);
 
 /**
@@ -1101,14 +2340,59 @@ define ('XML_NAMESPACE_DECL_NODE', 18);
  * @link http://php.net/manual/en/domxml.constants.php
  */
 define ('XML_LOCAL_NAMESPACE', 18);
+
+/**
+ * 1
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_CDATA', 1);
+
+/**
+ * 2
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ID', 2);
+
+/**
+ * 3
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_IDREF', 3);
+
+/**
+ * 4
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_IDREFS', 4);
+
+/**
+ * 5
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ENTITY', 6);
+
+/**
+ * 7
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NMTOKEN', 7);
+
+/**
+ * 8
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NMTOKENS', 8);
+
+/**
+ * 9
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_ENUMERATION', 9);
+
+/**
+ * 10
+ * @link http://php.net/manual/en/dom.constants.php
+ */
 define ('XML_ATTRIBUTE_NOTATION', 10);
 define ('DOM_PHP_ERR', 0);
 

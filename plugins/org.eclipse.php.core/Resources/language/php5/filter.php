@@ -3,7 +3,7 @@
 // Start of filter v.0.11.0
 
 /**
- * Gets variable from outside PHP and optionally filters it
+ * Gets a specific external variable by name and optionally filters it
  * @link http://php.net/manual/en/function.filter-input.php
  * @param type int
  * @param variable_name string
@@ -24,7 +24,7 @@ function filter_input ($type, $variable_name, $filter = null, $options = null) {
 function filter_var ($variable, $filter = null, $options = null) {}
 
 /**
- * Gets multiple variables from outside PHP and optionally filters them
+ * Gets external variables and optionally filters them
  * @link http://php.net/manual/en/function.filter-input-array.php
  * @param type int
  * @param definition mixed[optional]

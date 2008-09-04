@@ -1,6 +1,6 @@
 <?php
 
-// Start of ZendUtils v.
+// Start of Zend Utils v.
 
 function zem_get_extension_info_by_id () {}
 
@@ -14,5 +14,9 @@ function zend_is_configuration_changed () {}
 
 function zend_set_configuration_changed () {}
 
-// End of ZendUtils v.
+function zend_get_cfg_var () {}
+
+function zend_restart_php () {}
+
+// End of Zend Utils v.
 ?>

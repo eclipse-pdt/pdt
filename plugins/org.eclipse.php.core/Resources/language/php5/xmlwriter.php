@@ -341,7 +341,7 @@ class XMLWriter  {
 	 * Returns current buffer
 	 * @link http://php.net/manual/en/function.xmlwriter-output-memory.php
 	 * @param flush bool[optional]
-	 * @return bool the current buffer as a string.
+	 * @return string the current buffer as a string.
 	 */
 	public function outputMemory ($flush = null) {}
 
@@ -689,7 +689,7 @@ function xmlwriter_write_dtd_entity ($name, $content) {}
  * Returns current buffer
  * @link http://php.net/manual/en/function.xmlwriter-output-memory.php
  * @param flush bool[optional]
- * @return bool the current buffer as a string.
+ * @return string the current buffer as a string.
  */
 function xmlwriter_output_memory ($flush = null) {}
 

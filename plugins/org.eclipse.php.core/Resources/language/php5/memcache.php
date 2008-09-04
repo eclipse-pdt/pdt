@@ -6,7 +6,7 @@ class Memcache  {
 
 	/**
 	 * Open memcached server connection
-	 * @link http://php.net/manual/en/function.Memcache-connect.php
+	 * @link http://php.net/manual/en/function.memcache-connect.php
 	 * @param host string
 	 * @param port int[optional]
 	 * @param timeout int[optional]
@@ -16,7 +16,7 @@ class Memcache  {
 
 	/**
 	 * Open memcached server persistent connection
-	 * @link http://php.net/manual/en/function.Memcache-pconnect.php
+	 * @link http://php.net/manual/en/function.memcache-pconnect.php
 	 * @param host string
 	 * @param port int[optional]
 	 * @param timeout int[optional]
@@ -26,14 +26,14 @@ class Memcache  {
 
 	/**
 	 * Return version of the server
-	 * @link http://php.net/manual/en/function.Memcache-getVersion.php
+	 * @link http://php.net/manual/en/function.memcache-getversion.php
 	 * @return string a string of server version number or false on failure.
 	 */
 	public function getversion () {}
 
 	/**
 	 * Add an item to the server
-	 * @link http://php.net/manual/en/function.Memcache-add.php
+	 * @link http://php.net/manual/en/function.memcache-add.php
 	 * @param key string
 	 * @param var mixed
 	 * @param flag int[optional]
@@ -44,7 +44,7 @@ class Memcache  {
 
 	/**
 	 * Store data at the server
-	 * @link http://php.net/manual/en/function.Memcache-set.php
+	 * @link http://php.net/manual/en/function.memcache-set.php
 	 * @param key string
 	 * @param var mixed
 	 * @param flag int[optional]
@@ -55,7 +55,7 @@ class Memcache  {
 
 	/**
 	 * Replace value of the existing item
-	 * @link http://php.net/manual/en/function.Memcache-replace.php
+	 * @link http://php.net/manual/en/function.memcache-replace.php
 	 * @param key string
 	 * @param var mixed
 	 * @param flag int[optional]
@@ -66,7 +66,7 @@ class Memcache  {
 
 	/**
 	 * Retrieve item from the server
-	 * @link http://php.net/manual/en/function.Memcache-get.php
+	 * @link http://php.net/manual/en/function.memcache-get.php
 	 * @param key string
 	 * @param flags int[optional]
 	 * @return string the string associated with the key or
@@ -75,7 +75,7 @@ class Memcache  {
 
 	/**
 	 * Delete item from the server
-	 * @link http://php.net/manual/en/function.Memcache-delete.php
+	 * @link http://php.net/manual/en/function.memcache-delete.php
 	 * @param key string
 	 * @param timeout int[optional]
 	 * @return bool 
@@ -84,7 +84,7 @@ class Memcache  {
 
 	/**
 	 * Get statistics of the server
-	 * @link http://php.net/manual/en/function.Memcache-getStats.php
+	 * @link http://php.net/manual/en/function.memcache-getstats.php
 	 * @param type string[optional]
 	 * @param slabid int[optional]
 	 * @param limit int[optional]
@@ -94,7 +94,7 @@ class Memcache  {
 
 	/**
 	 * Increment item's value
-	 * @link http://php.net/manual/en/function.Memcache-increment.php
+	 * @link http://php.net/manual/en/function.memcache-increment.php
 	 * @param key string
 	 * @param value int[optional]
 	 * @return int new item's value on success or false on failure.
@@ -103,7 +103,7 @@ class Memcache  {
 
 	/**
 	 * Decrement item's value
-	 * @link http://php.net/manual/en/function.Memcache-decrement.php
+	 * @link http://php.net/manual/en/function.memcache-decrement.php
 	 * @param key string
 	 * @param value int[optional]
 	 * @return int item's new value on success or false on failure.
@@ -112,14 +112,14 @@ class Memcache  {
 
 	/**
 	 * Close memcached server connection
-	 * @link http://php.net/manual/en/function.Memcache-close.php
+	 * @link http://php.net/manual/en/function.memcache-close.php
 	 * @return bool 
 	 */
 	public function close () {}
 
 	/**
 	 * Flush all existing items at the server
-	 * @link http://php.net/manual/en/function.Memcache-flush.php
+	 * @link http://php.net/manual/en/function.memcache-flush.php
 	 * @return bool 
 	 */
 	public function flush () {}

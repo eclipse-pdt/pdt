@@ -113,13 +113,13 @@ function imagecreatefromstring ($data) {}
 function imagecolorclosest ($image, $red, $green, $blue) {}
 
 /**
- * Get the index of the color which has the hue, white and blackness nearest to the given color
+ * Get the index of the color which has the hue, white and blackness
  * @link http://php.net/manual/en/function.imagecolorclosesthwb.php
  * @param image resource
  * @param red int
  * @param green int
  * @param blue int
- * @return int 
+ * @return int an integer with the index of the color which has
  */
 function imagecolorclosesthwb ($image, $red, $green, $blue) {}
 
@@ -302,7 +302,7 @@ function imagetruecolortopalette ($image, $dither, $ncolors) {}
 function imagesetthickness ($image, $thickness) {}
 
 /**
- * Draw a partial ellipse and fill it
+ * Draw a partial arc and fill it
  * @link http://php.net/manual/en/function.imagefilledarc.php
  * @param image resource
  * @param cx int
@@ -416,22 +416,22 @@ function imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $sr
 /**
  * Rotate an image with a given angle
  * @link http://php.net/manual/en/function.imagerotate.php
- * @param source_image resource
+ * @param image resource
  * @param angle float
  * @param bgd_color int
  * @param ignore_transparent int[optional]
  * @return resource 
  */
-function imagerotate ($source_image, $angle, $bgd_color, $ignore_transparent = null) {}
+function imagerotate ($image, $angle, $bgd_color, $ignore_transparent = null) {}
 
 /**
  * Should antialias functions be used or not
  * @link http://php.net/manual/en/function.imageantialias.php
  * @param image resource
- * @param on bool
+ * @param enabled bool
  * @return bool 
  */
-function imageantialias ($image, $on) {}
+function imageantialias ($image, $enabled) {}
 
 /**
  * Set the tile image for filling
@@ -504,7 +504,7 @@ function imagecreatefromxbm ($filename) {}
  * Create a new image from GD file or URL
  * @link http://php.net/manual/en/function.imagecreatefromgd.php
  * @param filename string
- * @return resource 
+ * @return resource an image resource identifier on success, false on errors.
  */
 function imagecreatefromgd ($filename) {}
 
@@ -512,7 +512,7 @@ function imagecreatefromgd ($filename) {}
  * Create a new image from GD2 file or URL
  * @link http://php.net/manual/en/function.imagecreatefromgd2.php
  * @param filename string
- * @return resource 
+ * @return resource an image resource identifier on success, false on errors.
  */
 function imagecreatefromgd2 ($filename) {}
 
@@ -524,7 +524,7 @@ function imagecreatefromgd2 ($filename) {}
  * @param srcY int
  * @param width int
  * @param height int
- * @return resource 
+ * @return resource an image resource identifier on success, false on errors.
  */
 function imagecreatefromgd2part ($filename, $srcX, $srcY, $width, $height) {}
 
@@ -790,6 +790,60 @@ function imagesy ($image) {}
 function imagedashedline ($image, $x1, $y1, $x2, $y2, $color) {}
 
 /**
+ * Give the bounding box of a text using TrueType fonts
+ * @link http://php.net/manual/en/function.imagettfbbox.php
+ * @param size float
+ * @param angle float
+ * @param fontfile string
+ * @param text string
+ * @return array 
+ */
+function imagettfbbox ($size, $angle, $fontfile, $text) {}
+
+/**
+ * Write text to the image using TrueType fonts
+ * @link http://php.net/manual/en/function.imagettftext.php
+ * @param image resource
+ * @param size float
+ * @param angle float
+ * @param x int
+ * @param y int
+ * @param color int
+ * @param fontfile string
+ * @param text string
+ * @return array an array with 8 elements representing four points making the
+ */
+function imagettftext ($image, $size, $angle, $x, $y, $color, $fontfile, $text) {}
+
+/**
+ * Give the bounding box of a text using fonts via freetype2
+ * @link http://php.net/manual/en/function.imageftbbox.php
+ * @param size float
+ * @param angle float
+ * @param fontfile string
+ * @param text string
+ * @param extrainfo array[optional]
+ * @return array 
+ */
+function imageftbbox ($size, $angle, $fontfile, $text, array $extrainfo = null) {}
+
+/**
+ * Write text to the image using fonts using FreeType 2
+ * @link http://php.net/manual/en/function.imagefttext.php
+ * @param image resource
+ * @param size float
+ * @param angle float
+ * @param x int
+ * @param y int
+ * @param color int
+ * @param fontfile string
+ * @param text string
+ * @param extrainfo array[optional]
+ * @return array 
+ */
+function imagefttext ($image, $size, $angle, $x, $y, $color, $fontfile, $text, array $extrainfo = null) {}
+
+/**
  * Return the image types supported by this PHP build
  * @link http://php.net/manual/en/function.imagetypes.php
  * @return int a bit-field corresponding to the image formats supported by the
@@ -897,7 +951,7 @@ define ('IMG_JPG', 2);
 
 /**
  * Used as a return value by imagetypes
- * This constant has the same value as IMAGE_JPG
+ * This constant has the same value as IMG_JPG
  * @link http://php.net/manual/en/image.constants.php
  */
 define ('IMG_JPEG', 2);

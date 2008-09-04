@@ -209,10 +209,10 @@ function is_a ($object, $class_name) {}
 function get_class_vars ($class_name) {}
 
 /**
- * Gets the properties of the given object
+ * Gets the public properties of the given object
  * @link http://php.net/manual/en/function.get-object-vars.php
  * @param object object
- * @return array an associative array of defined object properties for the
+ * @return array an associative array of defined object accessible non-static properties
  */
 function get_object_vars ($object) {}
 
@@ -350,9 +350,10 @@ function get_defined_constants ($categorize = null) {}
 /**
  * Generates a backtrace
  * @link http://php.net/manual/en/function.debug-backtrace.php
+ * @param provide_object bool[optional]
  * @return array an associative array. The possible returned elements
  */
-function debug_backtrace () {}
+function debug_backtrace ($provide_object = null) {}
 
 /**
  * Prints a backtrace
@@ -606,7 +607,7 @@ define ('TRUE', true);
 define ('FALSE', false);
 define ('NULL', null);
 define ('ZEND_THREAD_SAFE', false);
-define ('PHP_VERSION', "5.2.5");
+define ('PHP_VERSION', "5.2.6");
 define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
 define ('DEFAULT_INCLUDE_PATH', ".:/usr/local/zend/share/pear");
@@ -636,7 +637,7 @@ define ('UPLOAD_ERR_NO_FILE', 4);
 define ('UPLOAD_ERR_NO_TMP_DIR', 6);
 define ('UPLOAD_ERR_CANT_WRITE', 7);
 define ('UPLOAD_ERR_EXTENSION', 8);
-define ('DEBUGGER_VERSION', "5.2.13");
+define ('DEBUGGER_VERSION', "5.2.14");
 define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");
@@ -645,7 +646,7 @@ define ('STDERR', "Resource id #3");
  * The full path and filename of the file. If used inside an include,
  * the name of the included file is returned.
  * Since PHP 4.0.2, __FILE__ always contains an
- * absolute path whereas in older versions it contained relative path
+ * absolute path with symlinks resolved whereas in older versions it contained relative path
  * under some circumstances.
  * @link http://php.net/manual/en/language.constants.php
  */

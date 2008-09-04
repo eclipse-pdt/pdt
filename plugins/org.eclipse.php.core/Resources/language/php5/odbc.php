@@ -58,8 +58,13 @@ function odbc_commit ($connection_id) {}
 /**
  * Connect to a datasource
  * @link http://php.net/manual/en/function.odbc-connect.php
+ * @param dsn string
+ * @param user string
+ * @param password string
+ * @param cursor_type int[optional]
+ * @return resource an ODBC connection id or 0 (false) on
  */
-function odbc_connect () {}
+function odbc_connect ($dsn, $user, $password, $cursor_type = null) {}
 
 /**
  * Get cursorname
@@ -81,8 +86,11 @@ function odbc_data_source ($connection_id, $fetch_type) {}
 /**
  * Execute a prepared statement
  * @link http://php.net/manual/en/function.odbc-execute.php
+ * @param result_id resource
+ * @param parameters_array array[optional]
+ * @return bool 
  */
-function odbc_execute () {}
+function odbc_execute ($result_id, array $parameters_array = null) {}
 
 /**
  * Get the last error code
@@ -140,10 +148,12 @@ function odbc_fetch_row ($result_id, $row_number = null) {}
 /**
  * Fetch one result row into array
  * @link http://php.net/manual/en/function.odbc-fetch-into.php
- * @param var1
- * @param var2
+ * @param result_id resource
+ * @param result_array array
+ * @param rownumber int[optional]
+ * @return int the number of columns in the result;
  */
-function odbc_fetch_into ($var1, &$var2) {}
+function odbc_fetch_into ($result_id, array $result_array, $rownumber = null) {}
 
 /**
  * Get the length (precision) of a field
@@ -199,10 +209,13 @@ function odbc_field_num ($result_id, $field_name) {}
 function odbc_free_result ($result_id) {}
 
 /**
- * Returns a result identifier containing information about data types supported by the data source
+ * Retrieves information about data types supported by the data source
  * @link http://php.net/manual/en/function.odbc-gettypeinfo.php
+ * @param connection_id resource
+ * @param data_type int[optional]
+ * @return resource an ODBC result identifier or
  */
-function odbc_gettypeinfo () {}
+function odbc_gettypeinfo ($connection_id, $data_type = null) {}
 
 /**
  * Handling of LONG columns
@@ -240,20 +253,31 @@ function odbc_num_rows ($result_id) {}
 /**
  * Open a persistent database connection
  * @link http://php.net/manual/en/function.odbc-pconnect.php
+ * @param dsn string
+ * @param user string
+ * @param password string
+ * @param cursor_type int[optional]
+ * @return resource an ODBC connection id or 0 (false) on
  */
-function odbc_pconnect () {}
+function odbc_pconnect ($dsn, $user, $password, $cursor_type = null) {}
 
 /**
  * Prepares a statement for execution
  * @link http://php.net/manual/en/function.odbc-prepare.php
+ * @param connection_id resource
+ * @param query_string string
+ * @return resource an ODBC result identifier if the SQL command was prepared
  */
-function odbc_prepare () {}
+function odbc_prepare ($connection_id, $query_string) {}
 
 /**
  * Get result data
  * @link http://php.net/manual/en/function.odbc-result.php
+ * @param result_id resource
+ * @param field mixed
+ * @return mixed the string contents of the field, false on error, &null; for
  */
-function odbc_result () {}
+function odbc_result ($result_id, $field) {}
 
 /**
  * Print result as HTML table
@@ -275,26 +299,52 @@ function odbc_rollback ($connection_id) {}
 /**
  * Adjust ODBC settings
  * @link http://php.net/manual/en/function.odbc-setoption.php
+ * @param id resource
+ * @param function int
+ * @param option int
+ * @param param int
+ * @return bool 
  */
-function odbc_setoption () {}
+function odbc_setoption ($id, $function, $option, $param) {}
 
 /**
- * Returns either the optimal set of columns that uniquely identifies a row in the table or columns that are automatically updated when any value in the row is updated by a transaction
+ * Retrieves special columns
  * @link http://php.net/manual/en/function.odbc-specialcolumns.php
+ * @param connection_id resource
+ * @param type int
+ * @param qualifier string
+ * @param owner string
+ * @param table string
+ * @param scope int
+ * @param nullable int
+ * @return resource an ODBC result identifier or false on
  */
-function odbc_specialcolumns () {}
+function odbc_specialcolumns ($connection_id, $type, $qualifier, $owner, $table, $scope, $nullable) {}
 
 /**
  * Retrieve statistics about a table
  * @link http://php.net/manual/en/function.odbc-statistics.php
+ * @param connection_id resource
+ * @param qualifier string
+ * @param owner string
+ * @param table_name string
+ * @param unique int
+ * @param accuracy int
+ * @return resource an ODBC result identifier or false on failure.
  */
-function odbc_statistics () {}
+function odbc_statistics ($connection_id, $qualifier, $owner, $table_name, $unique, $accuracy) {}
 
 /**
  * Get the list of table names stored in a specific data source
  * @link http://php.net/manual/en/function.odbc-tables.php
+ * @param connection_id resource
+ * @param qualifier string[optional]
+ * @param owner string[optional]
+ * @param name string[optional]
+ * @param types string[optional]
+ * @return resource an ODBC result identifier containing the information
  */
-function odbc_tables () {}
+function odbc_tables ($connection_id, $qualifier = null, $owner = null, $name = null, $types = null) {}
 
 /**
  * Gets the primary keys for a table
@@ -322,26 +372,43 @@ function odbc_columnprivileges ($connection_id, $qualifier, $owner, $table_name,
 /**
  * Lists tables and the privileges associated with each table
  * @link http://php.net/manual/en/function.odbc-tableprivileges.php
+ * @param connection_id resource
+ * @param qualifier string
+ * @param owner string
+ * @param name string
+ * @return resource 
  */
-function odbc_tableprivileges () {}
+function odbc_tableprivileges ($connection_id, $qualifier, $owner, $name) {}
 
 /**
- * Returns a list of foreign keys in the specified table or a list of foreign keys in other tables that refer to the primary key in the specified table
+ * Retrieves a list of foreign keys
  * @link http://php.net/manual/en/function.odbc-foreignkeys.php
+ * @param connection_id resource
+ * @param pk_qualifier string
+ * @param pk_owner string
+ * @param pk_table string
+ * @param fk_qualifier string
+ * @param fk_owner string
+ * @param fk_table string
+ * @return resource an ODBC result identifier or false on failure.
  */
-function odbc_foreignkeys () {}
+function odbc_foreignkeys ($connection_id, $pk_qualifier, $pk_owner, $pk_table, $fk_qualifier, $fk_owner, $fk_table) {}
 
 /**
  * Get the list of procedures stored in a specific data source
  * @link http://php.net/manual/en/function.odbc-procedures.php
+ * @param connection_id resource
+ * @return resource an ODBC
  */
-function odbc_procedures () {}
+function odbc_procedures ($connection_id) {}
 
 /**
  * Retrieve information about parameters to procedures
  * @link http://php.net/manual/en/function.odbc-procedurecolumns.php
+ * @param connection_id resource
+ * @return resource the list of input and output parameters, as well as the
  */
-function odbc_procedurecolumns () {}
+function odbc_procedurecolumns ($connection_id) {}
 
 /**
  * &Alias; <function>odbc_exec</function>

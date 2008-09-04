@@ -276,7 +276,7 @@ function mb_detect_encoding ($str, $encoding_list = null, $strict = null) {}
 
 /**
  * Returns an array of all supported encodings
- * @link http://php.net/manual/en/function.func-name.php
+ * @link http://php.net/manual/en/function.mb-list-encodings.php
  * @return array a numerically indexed array.
  */
 function mb_list_encodings () {}

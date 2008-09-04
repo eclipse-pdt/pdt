@@ -4,23 +4,52 @@
 
 class XSLTProcessor  {
 
-	public function importStylesheet () {}
+	/**
+	 * @param doc DOMDocument
+	 */
+	public function importStylesheet (DOMDocument $doc) {}
 
-	public function transformToDoc () {}
+	/**
+	 * @param doc DOMNode
+	 */
+	public function transformToDoc (DOMNode $doc) {}
 
-	public function transformToUri () {}
+	/**
+	 * @param doc DOMDocument
+	 * @param uri
+	 */
+	public function transformToUri (DOMDocument $doc, $uri) {}
 
-	public function transformToXml () {}
+	/**
+	 * @param doc DOMDocument
+	 */
+	public function transformToXml (DOMDocument $doc) {}
 
-	public function setParameter () {}
+	/**
+	 * @param namespace
+	 * @param name
+	 * @param value[optional]
+	 */
+	public function setParameter ($namespace, $name, $value) {}
 
-	public function getParameter () {}
+	/**
+	 * @param namespace
+	 * @param name
+	 */
+	public function getParameter ($namespace, $name) {}
 
-	public function removeParameter () {}
+	/**
+	 * @param namespace
+	 * @param name
+	 */
+	public function removeParameter ($namespace, $name) {}
 
 	public function hasExsltSupport () {}
 
-	public function registerPHPFunctions () {}
+	/**
+	 * @param restrict[optional]
+	 */
+	public function registerPHPFunctions ($restrict) {}
 
 }
 define ('XSL_CLONE_AUTO', 0);

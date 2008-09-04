@@ -1,6 +1,6 @@
 <?php
 
-// Start of Zend Cache v.
+// Start of Zend Data Cache v.
 
 function zend_shm_cache_store () {}
 
@@ -18,5 +18,5 @@ function zend_disk_cache_delete () {}
 
 function zend_disk_cache_clear () {}
 
-// End of Zend Cache v.
+// End of Zend Data Cache v.
 ?>
