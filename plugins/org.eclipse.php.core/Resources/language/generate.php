@@ -66,14 +66,14 @@ if ($splitFiles) {
 }
 $intFunctions = get_defined_functions();
 foreach ($intFunctions["internal"] as $intFunction) {
-	if (!$processedFunctions[strtolower($intFunction)]) {
+	if (!@$processedFunctions[strtolower($intFunction)]) {
 		print_function (new ReflectionFunction ($intFunction));
 	}
 }
 
 $intClasses = array_merge (get_declared_classes(), get_declared_interfaces());
 foreach ($intClasses as $intClass) {
-	if (!$processedClasses[strtolower($intClass)]) {
+	if (!@$processedClasses[strtolower($intClass)]) {
 		print_class (new ReflectionClass ($intClass));
 	}
 }
@@ -88,7 +88,7 @@ $intConstants['__CLASS__'] = null;
 $intConstants['__FUNCTION__'] = null;
 $intConstants['__METHOD__'] = null;
 foreach ($intConstants as $name => $value) {
-	if (!$processedConstants[$name]) {
+	if (!@$processedConstants[$name]) {
 		print_constant ($name, $value);
 	}
 }
@@ -270,7 +270,10 @@ function parse_phpdoc_constants ($phpdocDir) {
 					$constantsDoc[$constant]['doc'] = xml_to_phpdoc($match[2][$i]);
 				}
 			}
-			if (preg_match_all ('@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)) {
+			if (preg_match_all (
+				'@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>\d+</entry>\s*<entry>(.*?)</entry>@s', $xml, $match) 
+				|| preg_match_all ('@<entry>\s*<constant>([a-zA-Z_][a-zA-Z0-9_]*)</constant>.*?</entry>\s*<entry>(.*?)</entry>@s', $xml, $match)) {
+
 				for ($i = 0; $i < count($match[0]); ++$i) {
 					$constant = $match[1][$i];
 					$constantsDoc[$constant]['id'] = $id;
@@ -412,7 +415,7 @@ function print_function ($functionRef, $tabs = 0) {
 		print "&";
 	}
 	print "{$functionRef->getName()} (";
-	$parameters = $functionsDoc[$funckey]['parameters'];
+	$parameters = @$functionsDoc[$funckey]['parameters'];
 	if ($parameters) {
 		print_parameters ($parameters);
 	} else {
@@ -437,12 +440,12 @@ function print_parameters ($parameters) {
 			if ($type && (class_exists ($type) || $type == "array")) {
 				print "{$type} ";
 			}
-			if ($parameter['isreference']) {
+			if (@$parameter['isreference']) {
 				print "&";
 			}
 			print "\${$parameter['name']}";
-			if ($parameter['isoptional']) {
-				if ($parameter['defaultvalue']) {
+			if (@$parameter['isoptional']) {
+				if (@$parameter['defaultvalue']) {
 					$value = $parameter['defaultvalue'];
 					if (!is_numeric ($value)) {
 						$value = "'{$value}'";
@@ -465,8 +468,10 @@ function print_parameters_ref ($paramsRef) {
 	foreach ($paramsRef as $paramRef) {
 		if ($paramRef->isArray()) {
 			print "array ";
-		} else if ($classRef = $paramRef->getClass()) {
-			print "{$classRef->getName()} ";
+		} else {
+			if ($className = get_parameter_classname($paramRef)) {
+				print "{$className} ";
+			}
 		}
 		$name = $paramRef->getName() ? $paramRef->getName() : "var".($i+1);
 		if ($name != "...") {
@@ -511,7 +516,7 @@ function print_constant ($name, $value = null, $tabs = 0) {
 	}
 	$value = escape_const_value ($value);
 
-	$doc = $constantsDoc[$name]['doc'];
+	$doc = @$constantsDoc[$name]['doc'];
 	if ($doc) {
 		print "\n";
 		print_tabs ($tabs);
@@ -590,16 +595,16 @@ function print_doccomment ($ref, $tabs = 0) {
 	}
 	else if ($ref instanceof ReflectionClass) {
 		$refname = strtolower($ref->getName());
-		if ($classesDoc[$refname]) {
+		if (@$classesDoc[$refname]) {
 			print_tabs ($tabs);
 			print "/**\n";
-			$doc = $classesDoc[$refname]['doc'];
+			$doc = @$classesDoc[$refname]['doc'];
 			if ($doc) {
 				$doc = newline_to_phpdoc ($doc, $tabs);
 				print_tabs ($tabs);
 				print " * {$doc}\n";
 			}
-			if ($classesDoc[$refname]['id']) {
+			if (@$classesDoc[$refname]['id']) {
 				print_Tabs ($tabs);
 				$url = make_url ($classesDoc[$refname]['id']);
 				print " * @link {$url}\n";
@@ -610,12 +615,12 @@ function print_doccomment ($ref, $tabs = 0) {
 	}
 	else if ($ref instanceof ReflectionFunctionAbstract) {
 		$funckey = make_funckey_from_ref ($ref);
-		$returntype = $functionsDoc[$funckey]['returntype'];
-		$desc = $functionsDoc[$funckey]['quickref'];
-		$returndoc = newline_to_phpdoc ($functionsDoc[$funckey]['returndoc'], $tabs);
+		$returntype = @$functionsDoc[$funckey]['returntype'];
+		$desc = @$functionsDoc[$funckey]['quickref'];
+		$returndoc = newline_to_phpdoc (@$functionsDoc[$funckey]['returndoc'], $tabs);
 
 		$paramsRef = $ref->getParameters();
-		$parameters = $functionsDoc[$funckey]['parameters'];
+		$parameters = @$functionsDoc[$funckey]['parameters'];
 
 		if ($desc || count ($paramsRef) > 0 || $parameters || $returntype) {
 			print_tabs ($tabs);
@@ -624,7 +629,7 @@ function print_doccomment ($ref, $tabs = 0) {
 				print_tabs ($tabs);
 				print " * {$desc}\n";
 			}
-			if ($functionsDoc[$funckey]['id']) {
+			if (@$functionsDoc[$funckey]['id']) {
 				print_tabs ($tabs);
 				$url = make_url ($functionsDoc[$funckey]['id']);
 				print " * @link {$url}\n";
@@ -633,7 +638,7 @@ function print_doccomment ($ref, $tabs = 0) {
 				foreach ($parameters as $parameter) {
 					print_tabs ($tabs);
 					print " * @param {$parameter['name']} {$parameter['type']}";
-					if ($parameter['isoptional']) {
+					if (@$parameter['isoptional']) {
 						print "[optional]";
 					}
 					print "\n";
@@ -644,8 +649,8 @@ function print_doccomment ($ref, $tabs = 0) {
 					print_tabs ($tabs);
 					$name = $paramRef->getName() ? $paramRef->getName() : "var".++$i;
 					print " * @param {$name}";
-					if ($classRef = $paramRef->getClass()) {
-						print " {$classRef->getName()}";
+					if ($className = get_parameter_classname($paramRef)) {
+						print " {$className}";
 						if ($paramRef->isArray()) {
 							print "[]";
 						}
@@ -698,6 +703,23 @@ function newline_to_phpdoc ($str, $tabs = 0) {
  */
 function print_tabs ($tabs) {
 	print str_repeat("\t", $tabs);
+}
+
+/**
+ * Returns class name from given parameter reference, this method is a workaround
+ * for the case when exception is thrown from getClass() when such classname does not exist.
+ */
+function get_parameter_classname(ReflectionParameter $paramRef) {
+	try {
+		if ($classRef = $paramRef->getClass()) {
+			return $classRef->getName();
+		}
+	} catch (Exception $e) {
+		if (preg_match('/Class (\w+) does not exist/', $e->getMessage(), $matches)) {
+			return $matches[1];
+		}
+	}
+	return null;
 }
 
 /**
