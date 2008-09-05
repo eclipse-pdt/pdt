@@ -34,9 +34,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-	private static final String DOUBLE_CLICK = org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK;
-	private static final String DOUBLE_CLICK_GOES_INTO = org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_GOES_INTO;
-	private static final String DOUBLE_CLICK_EXPANDS = org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_EXPANDS;
+	// TODO: assign DLTK values once its build support these constants
+	private static final String DOUBLE_CLICK = "" ; // org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK;
+	private static final String DOUBLE_CLICK_GOES_INTO = ""; // org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_GOES_INTO;
+	private static final String DOUBLE_CLICK_EXPANDS = ""; // org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_EXPANDS;
 
 	private ArrayList fCheckBoxes;
 	private ArrayList fRadioButtons;
@@ -65,8 +66,8 @@ public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchP
 		button.setText(label);
 		button.setData(new String[] { key, value });
 		button.setLayoutData(gd);
-		
-		button.setSelection(value.equals(PreferenceConstants.getPreferenceStore().getString(key)));
+
+		button.setSelection(value.equals(DLTKUIPlugin.getDefault().getPreferenceStore().getString(key)));
 		
 		fRadioButtons.add(button);
 		return button;
