@@ -678,14 +678,14 @@ public class CodeAssistUtils {
 
 	/**
 	 * This method searches for all fields in the project scope that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
+	 * By default variables is looked only in current file. 
 	 * 
 	 * @param sourceModule Current source module
 	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
 	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName) {
-		return getGlobalFields(sourceModule, prefix, exactName, false);
+		return getGlobalFields(sourceModule, prefix, exactName, true);
 	}
 	
 	/**

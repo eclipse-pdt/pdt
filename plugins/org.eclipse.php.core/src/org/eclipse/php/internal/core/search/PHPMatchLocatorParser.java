@@ -24,11 +24,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.MatchLocatorParser;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocatorParser extends MatchLocatorParser {
@@ -92,6 +88,20 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			SimpleReference ref = ((Argument)node).getRef();
 			FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
 			locator.match(decl, getNodeSet());
+		}
+		else if (node instanceof ForEachStatement) {
+			Expression key = ((ForEachStatement)node).getKey();
+			Expression value = ((ForEachStatement)node).getValue();
+			if (key instanceof SimpleReference) {
+				SimpleReference ref = (SimpleReference) key;
+				FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+				locator.match(decl, getNodeSet());
+			}
+			if (value instanceof SimpleReference) {
+				SimpleReference ref = (SimpleReference) value;
+				FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
+				locator.match(decl, getNodeSet());
+			}
 		}
 	}
 }
