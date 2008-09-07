@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.codeassist;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,14 +23,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
-import org.eclipse.dltk.core.CompletionProposal;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.util.WeakHashSet;
 import org.eclipse.jface.text.BadLocationException;
@@ -61,11 +50,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 public class PHPCompletionEngine extends ScriptCompletionEngine {
 
@@ -666,7 +651,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 
 				// Complete global scope variables:
-				IModelElement[] variables = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false);
+				IModelElement[] variables = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false, !showVarsFromOtherFiles());
 				for (IModelElement var : variables) {
 					IField field = (IField) var;
 					try {
@@ -708,7 +693,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			if (showConstantAssist()) {
-				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false);
+				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, false, !showVarsFromOtherFiles());
 				for (IModelElement constant : constants) {
 					try {
 						if ((((IField) constant).getFlags() & Modifiers.AccConstant) != 0) {
@@ -1302,7 +1287,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (showConstantAssist()) {
-			IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, lastWord, false);
+			IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, lastWord, false, !showVarsFromOtherFiles());
 			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement constant : constants) {
 				IField field = (IField) constant;
@@ -1485,21 +1470,28 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	private boolean determineObjsFromOtherFiles() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES)) {
-			pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
+		}
+		return true;
+	}
+	
+	private boolean showVarsFromOtherFiles() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);
 		}
 		return true;
 	}
 
 	private boolean showConstantAssist() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST)) {
-			pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST);
 		}
 		return true;
 	}
 
 	private boolean showNonStrictOptions() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS)) {
-			pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
 		}
 		return false;
 	}

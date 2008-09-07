@@ -50,6 +50,26 @@ public class CorePreferenceConstants {
 			store.setValue(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE,Locale.getDefault().toString());
 			store.setDefault(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
 		}
+		
+		store.setDefault(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, false);
+		store.setDefault(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_PREFIX_COMPLETION, false);
+		// implemented:
+		store.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, false);
+		store.setDefault(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false);
+		store.setDefault(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, false);
+		store.setDefault(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
+		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
+		store.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
+		store.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
 	}
 
 	// Don't instantiate

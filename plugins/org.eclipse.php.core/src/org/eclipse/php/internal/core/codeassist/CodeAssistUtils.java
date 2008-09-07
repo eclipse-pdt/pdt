@@ -685,7 +685,20 @@ public class CodeAssistUtils {
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
 	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD);
+		return getGlobalFields(sourceModule, prefix, exactName, false);
+	}
+	
+	/**
+	 * This method searches for all fields in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Field name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param currentFileOnly Whether to search variables only in current file
+	 */
+	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD, currentFileOnly);
 	}
 	
 	/**
@@ -717,6 +730,7 @@ public class CodeAssistUtils {
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
 	public static IModelElement[] getMethodFields(IMethod method, String prefix, boolean exactName) {
+		
 		SearchEngine searchEngine = new SearchEngine();
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { method }, toolkit);
@@ -756,32 +770,66 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType) {
+		return getGlobalElements(sourceModule, prefix, exactName, elementType, false);
+	}
+	
+	/**
+	 * This method searches in the project scope for all elements of specified type that match the given prefix.
+	 * If currentFileOnly parameter is <code>true</code>, the search scope will contain only the source module.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Element name or prefix
+	 * @param exactName Whether the prefix is an exact name of the element
+	 * @param elementType Element type from {@link IDLTKSearchConstants}
+	 * @param currentFileOnly Whether to search elements in current file only
+	 * @return
+	 */
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
 		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
-		IScriptProject scriptProject = sourceModule.getScriptProject();
 		IDLTKSearchScope scope;
-		if (scriptProject != null) {
-			scope = SearchEngine.createSearchScope(scriptProject);
+		if (currentFileOnly) {
+			scope = SearchEngine.createSearchScope(sourceModule);
 		} else {
-			scope = SearchEngine.createWorkspaceScope(toolkit);
+			IScriptProject scriptProject = sourceModule.getScriptProject();
+			if (scriptProject != null) {
+				scope = SearchEngine.createSearchScope(scriptProject);
+			} else {
+				scope = SearchEngine.createWorkspaceScope(toolkit);
+			}
+		} 
+		
+		if (!currentFileOnly && prefix.startsWith("$")) { //$NON-NLS-1$
+			// search variables using mixin model:
+			IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null, scope);
+			return variables == null ? EMPTY : variables;
 		}
+		
+		return getGlobalElements(scope, prefix, exactName, elementType);
+	}
+	
+	/**
+	 * This method searches in the project scope for all elements of specified type that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param scope Search scope
+	 * @param prefix Element name or prefix
+	 * @param exactName Whether the prefix is an exact name of the element
+	 * @param elementType Element type from {@link IDLTKSearchConstants}
+	 * @return
+	 */
+	private static IModelElement[] getGlobalElements(IDLTKSearchScope scope, String prefix, boolean exactName, int elementType) {
+		
+		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
 		int matchRule;
 		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
 			matchRule = SearchPattern.R_PATTERN_MATCH;
 		} else {
-			if (exactName) {
-				matchRule = SearchPattern.R_EXACT_MATCH;
-			} else {
-				if (prefix.startsWith("$")) { //$NON-NLS-1$
-					// search variables using mixin model:
-					IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null, scope);
-					return variables == null ? EMPTY : variables;
-				}
-				matchRule = SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-			}
+			matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 		}
 		
 		SearchEngine searchEngine = new SearchEngine();
