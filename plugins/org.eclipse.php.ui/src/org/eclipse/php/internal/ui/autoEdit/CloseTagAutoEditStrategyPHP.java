@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2008 Zend Corporation and IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,9 +50,9 @@ public class CloseTagAutoEditStrategyPHP implements IAutoEditStrategy {
 							// scriptlet - add end ?>
 							IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset - 1);
 							if (node != null && prefixedWith(document, command.offset, "<") && !closeTagAppears(node.getSource(), command.offset)) { //$NON-NLS-1$ //$NON-NLS-2$
-								command.text += " ?>"; //$NON-NLS-1$
+								command.text += "php ?>"; //$NON-NLS-1$
 								command.shiftsCaret = false;
-								command.caretOffset = command.offset + 1;
+								command.caretOffset = command.offset + 5;
 								command.doit = false;
 							}
 						}
