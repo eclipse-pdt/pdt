@@ -22,27 +22,16 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticConstantAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticDispatch;
-import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -56,11 +45,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 public class PHPSelectionEngine extends ScriptSelectionEngine {
 
@@ -122,7 +107,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return elements;
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 
 		// Use the old way by playing with document & buffer:
@@ -140,7 +125,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		} finally {
 			if (structuredModel != null && structuredModel.isSharedForRead()) {
 				structuredModel.releaseFromRead();
@@ -219,7 +204,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										try {
 											fields.addAll(Arrays.asList(getClassField(type, fieldName)));
 										} catch (ModelException e) {
-											Logger.logException(e);
+//											Logger.logException(e);
 										}
 									}
 								}
@@ -249,7 +234,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											fields.addAll(Arrays.asList(getClassField(type, fieldName)));
 											fields.addAll(Arrays.asList(getClassField(type, '$' + fieldName)));
 										} catch (ModelException e) {
-											Logger.logException(e);
+//											Logger.logException(e);
 										}
 									}
 								}
@@ -445,7 +430,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return EMPTY;
 	}

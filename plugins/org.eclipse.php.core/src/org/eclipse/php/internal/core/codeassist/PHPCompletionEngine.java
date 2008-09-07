@@ -199,7 +199,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				calcCompletionOption(document, position, (ISourceModule)module.getModelElement());
 			} catch (BadLocationException e) {
 				Logger.logException(e);
-
 			}
 		}
 	}
@@ -494,7 +493,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 								reportType(type, relevanceClass--, EMPTY);
 							}
 						} catch (ModelException e) {
-							Logger.logException(e);
+//							Logger.logException(e);
 						}
 					}
 				}
@@ -616,7 +615,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				inClass = true;
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 
 		int relevanceKeyword = RELEVANCE_KEYWORD;
@@ -663,7 +662,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+//					Logger.logException(e);
 				}
 
 				// Complete global scope variables:
@@ -677,7 +676,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportField(field, relevanceVar--, false);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 
@@ -704,7 +703,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						reportMethod((IMethod) function, relevanceMethod--);
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+//					Logger.logException(e);
 				}
 			}
 
@@ -716,7 +715,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportField((IField) constant, relevanceConst--, false);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 			}
@@ -731,7 +730,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType((IType) type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 			}
@@ -803,7 +802,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportMethod((IMethod) method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 			}
@@ -820,7 +819,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						reportField(field, relevanceVar--, true);
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+//					Logger.logException(e);
 				}
 			}
 		}
@@ -842,7 +841,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportMethod(method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 			}
@@ -864,7 +863,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+//					Logger.logException(e);
 				}
 			}
 		}
@@ -915,7 +914,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 								reportType((IType) type, relevanceClass--, WHITESPACE_SUFFIX);
 							}
 						} catch (ModelException e) {
-							Logger.logException(e);
+//							Logger.logException(e);
 						}
 					}
 				}
@@ -959,7 +958,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportMethod(superMethod, relevanceMethod--);
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 
@@ -1067,7 +1066,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportType((IType) i, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 	}
@@ -1128,7 +1127,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportType(type, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 	}
@@ -1183,7 +1182,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType(type, relevanceClass--, BRACKETS_SUFFIX);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 				if (CodeAssistUtils.startsWithIgnoreCase(SELF, prefix)) {
@@ -1202,7 +1201,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType((IType) typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 				if (CodeAssistUtils.startsWithIgnoreCase(SELF, prefix)) {
@@ -1221,7 +1220,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType((IType) typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
-						Logger.logException(e);
+//						Logger.logException(e);
 					}
 				}
 				break;
@@ -1298,7 +1297,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportMethod((IMethod) function, relevanceMethod--);
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 
@@ -1312,7 +1311,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						reportField(field, relevanceConst--, false);
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+//					Logger.logException(e);
 				}
 			}
 		}
@@ -1344,7 +1343,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			try {
 				params = method.getParameters();
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 
 			if (params != null && params.length > 0) {

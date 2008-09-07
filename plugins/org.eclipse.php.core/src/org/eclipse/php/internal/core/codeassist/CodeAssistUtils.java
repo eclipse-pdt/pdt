@@ -10,13 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.codeassist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,23 +18,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.core.IDLTKLanguageToolkit;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ITypeHierarchy;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
-import org.eclipse.dltk.core.search.IDLTKSearchConstants;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.core.search.SearchMatch;
-import org.eclipse.dltk.core.search.SearchParticipant;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
@@ -48,7 +27,6 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
@@ -119,7 +97,7 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
@@ -144,7 +122,7 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
@@ -228,7 +206,7 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return fields.toArray(new IField[fields.size()]);
 	}
@@ -386,7 +364,7 @@ public class CodeAssistUtils {
 				type = type.getParent();
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return (IType) type;
 	}
@@ -404,7 +382,7 @@ public class CodeAssistUtils {
 				return (IMethod) method;
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return null;
 	}
@@ -462,7 +440,7 @@ public class CodeAssistUtils {
 					return type;
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 
@@ -497,7 +475,7 @@ public class CodeAssistUtils {
 					onlyClasses.add(type);
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 		return onlyClasses.toArray(new IType[onlyClasses.size()]);
@@ -521,7 +499,7 @@ public class CodeAssistUtils {
 					onlyInterfaces.add(type);
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 		return onlyInterfaces.toArray(new IType[onlyInterfaces.size()]);
@@ -668,7 +646,7 @@ public class CodeAssistUtils {
 					return true;
 				}
 			} catch (CoreException e) {
-				Logger.logException(e);
+//				Logger.logException(e);
 			}
 		}
 		return false;
@@ -726,7 +704,7 @@ public class CodeAssistUtils {
 				return getMethodFields(method, prefix, exactName);
 			}
 		} catch (ModelException e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return getGlobalFields(sourceModule, prefix, exactName);
 	}
@@ -762,7 +740,7 @@ public class CodeAssistUtils {
 				}
 			}, null);
 		} catch (CoreException e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
@@ -832,7 +810,7 @@ public class CodeAssistUtils {
 				}
 			}, null);
 		} catch (CoreException e) {
-			Logger.logException(e);
+//			Logger.logException(e);
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
