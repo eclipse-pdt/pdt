@@ -266,14 +266,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	private boolean fMarkImplementors;
 
-	/**
-	 * Tells whether to mark HTML tags in this editor. Only valid if
-	 * {@link #fMarkOccurrenceAnnotations} is <code>true</code>.
-	 * 
-	 * @since 3.4
-	 */
-	private boolean fMarkHTMLTags;
-
 	private boolean saveActionsEnabled = false;
 	private boolean saveActionsIgnoreEmptyLines = false;
 
@@ -1034,7 +1026,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		fMarkImplementors = store.getBoolean(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS);
 		fMarkMethodExitPoints = store.getBoolean(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS);
 		fMarkBreakContinueTargets = store.getBoolean(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS);
-		fMarkHTMLTags = store.getBoolean(PreferenceConstants.EDITOR_MARK_HTML_TAGS);
 	}
 
 	/**
@@ -2145,10 +2136,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				fStickyOccurrenceAnnotations = newBooleanValue;
 				return;
 			}
-			if (PreferenceConstants.EDITOR_MARK_HTML_TAGS.equals(property)) {
-				fMarkHTMLTags = newBooleanValue;
-				return;
-			}
 			if (SemanticHighlightings.affectsEnablement(getPreferenceStore(), event)) {
 				if (isSemanticHighlightingEnabled())
 					installSemanticHighlighting();
@@ -2542,12 +2529,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		OccurrenceLocation[] locations = null;
 
 		ASTNode selectedNode = NodeFinder.perform(astRoot, selection.getOffset(), selection.getLength());
-		if (fMarkHTMLTags) {
-			IOccurrencesFinder finder = OccurrencesFinderFactory.createHTMLOccurrencesFinder(document, selection.getOffset());
-			if (finder.initialize(astRoot, selectedNode) == null) {
-				locations = finder.getOccurrences();
-			}
-		}
 
 		if (locations == null && fMarkExceptions) {
 			// TODO : Implement Me!

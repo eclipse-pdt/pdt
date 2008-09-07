@@ -13,7 +13,6 @@
  */
 package org.eclipse.php.internal.ui.search;
 
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 
 /**
@@ -50,17 +49,6 @@ public class OccurrencesFinderFactory {
 			default:
 				return null;
 		}
-	}
-
-	/**
-	 * Creates and returns an {@link HTMLOccurrencesFinder}.
-	 * @param selectionOffset 
-	 * @param document An instance of IStructuredDocument.
-	 * 
-	 * @return A new {@link HTMLOccurrencesFinder}
-	 */
-	public static IOccurrencesFinder createHTMLOccurrencesFinder(IDocument document, int selectionOffset) {
-		return new HTMLOccurrencesFinder(document, selectionOffset);
 	}
 
 	/**

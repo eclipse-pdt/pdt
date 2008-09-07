@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -23,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.dltk.ui.PreferenceConstants;
 
 public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
@@ -35,7 +37,7 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 
 	protected void initializeValues() {
 		super.initializeValues();
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		showReturnTypeCB.setSelection(store.getBoolean(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE));
 	}
 
@@ -84,13 +86,13 @@ public class PHPAppearancePreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void performDefaults() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, false);
 		super.performDefaults();
 	}
 
 	public boolean performOk() {
-		IPreferenceStore store = PHPUiPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		store.setValue(PreferenceConstants.APPEARANCE_METHOD_RETURNTYPE, showReturnTypeCB.getSelection());
 		return super.performOk();
 	}

@@ -474,17 +474,6 @@ public class PreferenceConstants {
 	public static final String EDITOR_MARK_IMPLEMENTORS= "markImplementors"; //$NON-NLS-1$
 	
 	/**
-	 * A named preference that controls whether HTML tags are marked.
-	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
-	 * <p>
-	 * Value is of type <code>Boolean</code>.
-	 * </p>
-	 * 
-	 * @since 3.4
-	 */
-	public static final String EDITOR_MARK_HTML_TAGS= "markHTMLTags"; //$NON-NLS-1$
-
-	/**
 	 * A named preference prefix for semantic highlighting preferences.
 	 * 
 	 * @since 3.0
@@ -909,7 +898,6 @@ public class PreferenceConstants {
 		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS, true);
-		store.setDefault(PreferenceConstants.EDITOR_MARK_HTML_TAGS, true);
 				
 		store.setDefault(FORMATTER_COMMENT_CLEARBLANKLINES, false);
 		store.setDefault(FORMATTER_COMMENT_FORMATHTML, true);
