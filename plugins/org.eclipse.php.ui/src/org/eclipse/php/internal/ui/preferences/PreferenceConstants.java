@@ -12,13 +12,11 @@ package org.eclipse.php.internal.ui.preferences;
 
 import java.util.Locale;
 
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.SemanticHighlightings;
@@ -924,29 +922,6 @@ public class PreferenceConstants {
 		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
 		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
 		
-		Preferences corePreferences = PHPCorePlugin.getDefault().getPluginPreferences();
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, false);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_ORDER_PROPOSALS, false);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, false);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_PREFIX_COMPLETION, false);
-		// implemented:
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, false);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
-		corePreferences.setDefault(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
-
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);
 		store.setDefault(EDITOR_BOUNDARYMARKER_COLOR, EDITOR_BOUNDARYMARKER_DEFAULT_COLOR);
