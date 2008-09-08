@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
@@ -27,7 +28,6 @@ import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
@@ -98,7 +98,9 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 						docs.add(doc);
 					}
 				} catch (CoreException e) {
-					Logger.logException(e);
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 		} else {

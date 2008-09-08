@@ -24,7 +24,6 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
@@ -55,7 +54,9 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		try {
 			decl = PHPModelUtils.getNodeByMethod(module, method);
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 
 		if (decl != null) {
@@ -63,7 +64,9 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 			try {
 				parameters = method.getParameters();
 			} catch (ModelException e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 				parameters = new String[0];
 			}
 
@@ -87,7 +90,9 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 			try {
 				decl.traverse(visitor);
 			} catch (Exception e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 			if (decl.getBody() != null) {
 				subGoals.add(new ExpressionTypeGoal(innerContext, decl.getBody()));

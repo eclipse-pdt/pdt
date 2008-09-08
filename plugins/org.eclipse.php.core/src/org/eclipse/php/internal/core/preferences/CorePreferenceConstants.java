@@ -61,7 +61,7 @@ public class CorePreferenceConstants {
 		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, false);
 		store.setDefault(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, true);
 		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
-		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, true);
+		store.setDefault(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, false);
 		store.setDefault(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false);
 		store.setDefault(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, false);
 		store.setDefault(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);

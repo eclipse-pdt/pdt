@@ -107,7 +107,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return elements;
 			}
 		} catch (Exception e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_SELECTION) {
+				e.printStackTrace();
+			}
 		}
 
 		// Use the old way by playing with document & buffer:
@@ -125,7 +127,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 			}
 		} catch (Exception e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_SELECTION) {
+				e.printStackTrace();
+			}
 		} finally {
 			if (structuredModel != null && structuredModel.isSharedForRead()) {
 				structuredModel.releaseFromRead();
@@ -204,7 +208,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										try {
 											fields.addAll(Arrays.asList(getClassField(type, fieldName)));
 										} catch (ModelException e) {
-//											Logger.logException(e);
+											if (DLTKCore.DEBUG_SELECTION) {
+												e.printStackTrace();
+											}
 										}
 									}
 								}
@@ -234,7 +240,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											fields.addAll(Arrays.asList(getClassField(type, fieldName)));
 											fields.addAll(Arrays.asList(getClassField(type, '$' + fieldName)));
 										} catch (ModelException e) {
-//											Logger.logException(e);
+											if (DLTKCore.DEBUG_SELECTION) {
+												e.printStackTrace();
+											}
 										}
 									}
 								}
@@ -430,7 +438,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 			}
 		} catch (Exception e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_SELECTION) {
+				e.printStackTrace();
+			}
 		}
 		return EMPTY;
 	}

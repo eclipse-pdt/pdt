@@ -97,7 +97,9 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
@@ -122,7 +124,9 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
@@ -206,7 +210,9 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return fields.toArray(new IField[fields.size()]);
 	}
@@ -364,7 +370,9 @@ public class CodeAssistUtils {
 				type = type.getParent();
 			}
 		} catch (ModelException e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return (IType) type;
 	}
@@ -382,7 +390,9 @@ public class CodeAssistUtils {
 				return (IMethod) method;
 			}
 		} catch (ModelException e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -440,7 +450,9 @@ public class CodeAssistUtils {
 					return type;
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -475,7 +487,9 @@ public class CodeAssistUtils {
 					onlyClasses.add(type);
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return onlyClasses.toArray(new IType[onlyClasses.size()]);
@@ -499,7 +513,9 @@ public class CodeAssistUtils {
 					onlyInterfaces.add(type);
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return onlyInterfaces.toArray(new IType[onlyInterfaces.size()]);
@@ -646,7 +662,9 @@ public class CodeAssistUtils {
 					return true;
 				}
 			} catch (CoreException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return false;
@@ -717,7 +735,9 @@ public class CodeAssistUtils {
 				return getMethodFields(method, prefix, exactName);
 			}
 		} catch (ModelException e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return getGlobalFields(sourceModule, prefix, exactName);
 	}
@@ -754,7 +774,9 @@ public class CodeAssistUtils {
 				}
 			}, null);
 		} catch (CoreException e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
@@ -858,7 +880,9 @@ public class CodeAssistUtils {
 				}
 			}, null);
 		} catch (CoreException e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}

@@ -28,7 +28,6 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.util.WeakHashSet;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPModifiers;
@@ -183,7 +182,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			try {
 				calcCompletionOption(document, position, (ISourceModule)module.getModelElement());
 			} catch (BadLocationException e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -478,7 +479,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 								reportType(type, relevanceClass--, EMPTY);
 							}
 						} catch (ModelException e) {
-//							Logger.logException(e);
+							if (DLTKCore.DEBUG_COMPLETION) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -493,7 +496,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		try {
 			return phpScriptRegion.isLineComment(relativeOffset);
 		} catch (BadLocationException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 			return false;
 		}
 	}
@@ -508,7 +513,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				endOffset = startOffset + internalRegion.getTextLength();
 				firstChar = document.get(startOffset, internalRegion.getTextLength()).charAt(0);
 			} catch (BadLocationException e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 				return false;
 			}
 			return firstChar == '\'' && documentOffset <= endOffset - 1 && startOffset < documentOffset;
@@ -600,7 +607,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				inClass = true;
 			}
 		} catch (ModelException e) {
-//			Logger.logException(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 
 		int relevanceKeyword = RELEVANCE_KEYWORD;
@@ -626,8 +635,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						final char charBefore = doc.get(offset - 2, 1).charAt(0);
 						if (charBefore == '\\')
 							return;
-					} catch (final BadLocationException badLocationException) {
-						Logger.logException(badLocationException);
+					} catch (final BadLocationException e) {
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 
@@ -647,7 +658,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				} catch (ModelException e) {
-//					Logger.logException(e);
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 
 				// Complete global scope variables:
@@ -661,7 +674,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportField(field, relevanceVar--, false);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 
@@ -688,7 +703,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						reportMethod((IMethod) function, relevanceMethod--);
 					}
 				} catch (ModelException e) {
-//					Logger.logException(e);
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 			}
 
@@ -700,7 +717,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportField((IField) constant, relevanceConst--, false);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -715,7 +734,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType((IType) type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -787,7 +808,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportMethod((IMethod) method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -804,7 +827,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						reportField(field, relevanceVar--, true);
 					}
 				} catch (ModelException e) {
-//					Logger.logException(e);
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -826,7 +851,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportMethod(method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -848,7 +875,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				} catch (ModelException e) {
-//					Logger.logException(e);
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -899,7 +928,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 								reportType((IType) type, relevanceClass--, WHITESPACE_SUFFIX);
 							}
 						} catch (ModelException e) {
-//							Logger.logException(e);
+							if (DLTKCore.DEBUG_COMPLETION) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -943,7 +974,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportMethod(superMethod, relevanceMethod--);
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -1051,7 +1084,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportType((IType) i, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -1112,7 +1147,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportType(type, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -1167,7 +1204,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType(type, relevanceClass--, BRACKETS_SUFFIX);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 				if (CodeAssistUtils.startsWithIgnoreCase(SELF, prefix)) {
@@ -1186,7 +1225,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType((IType) typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 				if (CodeAssistUtils.startsWithIgnoreCase(SELF, prefix)) {
@@ -1205,7 +1246,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							reportType((IType) typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
-//						Logger.logException(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 				break;
@@ -1282,7 +1325,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					reportMethod((IMethod) function, relevanceMethod--);
 				}
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -1296,7 +1341,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						reportField(field, relevanceConst--, false);
 					}
 				} catch (ModelException e) {
-//					Logger.logException(e);
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -1328,7 +1375,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			try {
 				params = method.getParameters();
 			} catch (ModelException e) {
-//				Logger.logException(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 
 			if (params != null && params.length > 0) {

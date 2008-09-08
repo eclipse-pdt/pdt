@@ -20,23 +20,10 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.IMixinElement;
-import org.eclipse.dltk.core.search.IDLTKSearchConstants;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.core.search.SearchMatch;
-import org.eclipse.dltk.core.search.SearchParticipant;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
+import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
@@ -136,7 +123,9 @@ public class PHPModelUtils {
 		try {
 			rootNode.traverse(visitor);
 		} catch (Exception e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 		return (MethodDeclaration) visitor.getResult();
 	}
@@ -146,7 +135,9 @@ public class PHPModelUtils {
 		try {
 			rootNode.traverse(visitor);
 		} catch (Exception e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 		return (TypeDeclaration) visitor.getResult();
 	};
@@ -156,7 +147,9 @@ public class PHPModelUtils {
 		try {
 			rootNode.traverse(visitor);
 		} catch (Exception e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 		return (ASTNode) visitor.getResult();
 	};

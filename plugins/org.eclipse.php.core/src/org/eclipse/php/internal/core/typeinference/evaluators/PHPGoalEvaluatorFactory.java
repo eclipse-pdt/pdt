@@ -17,10 +17,10 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.ti.IGoalEvaluatorFactory;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
-import org.eclipse.php.internal.core.Logger;
 
 public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
@@ -63,7 +63,9 @@ public class PHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 					factories.add(new FactoryInfo(priority, factory));
 				}
 			} catch (Exception e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
 		factoryInfos = factories.toArray(new FactoryInfo[factories.size()]);

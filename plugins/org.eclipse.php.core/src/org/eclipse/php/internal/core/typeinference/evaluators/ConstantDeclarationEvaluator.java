@@ -24,7 +24,6 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
@@ -64,7 +63,9 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 				try {
 					offsets.get(sourceModule).add(field.getSourceRange());
 				} catch (ModelException e) {
-					Logger.logException(e);
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -84,7 +85,9 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 						subGoals.add(new ExpressionTypeGoal(goal.getContext(), scalar));
 					}
 				} catch (Exception e) {
-					Logger.logException(e);
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
