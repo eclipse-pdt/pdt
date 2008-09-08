@@ -27,19 +27,51 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements
 		// need to add handling for multiple line comments  
 		
 		begin = skipSpaces(content, begin, end);
+		int commentStart = isLineComment(content, begin, end);
+		if( commentStart!= -1 ){
+			return commentStart;
+		} else {
+			return isMultipleLineComment();
+		}					
+	}	
+
+	/**
+	 * Check if this line is a comment and returns the start location 
+	 * in the line after the comment symbol  
+	 * @param content
+	 * @param begin
+	 * @param end
+	 * @return the start location in the line after the comment symbol 
+	 */
+	private int isLineComment(char[] content, int begin, int end){
+		
 		if (begin + 1 < end && content[begin] == '/' && content[begin+1] == '/') {
 			return begin + 2;
 		} else if(begin < end && content[begin] == '#') {
 			return begin + 1; 
-		} else {
-			return -1;
-		}						
+		}
+		
+		return -1;
 	}
+	
+	/**
+	 * Check if this line is a the first one of a multiple line comment 
+	 * and returns the start location in this line after the comment symbol
+	 * @param content
+	 * @param begin
+	 * @param end
+	 * @return the start location in the line after the comment symbol 
+	 */
+	private int isMultipleLineComment() {
+		return -1;
+	}
+	
 	private static int skipSpaces(char[] content, int pos, final int end) {
 		while (pos < end && Character.isWhitespace(content[pos])) {
 			++pos;
 		}
 		return pos;
 	}
+	
 
 }
