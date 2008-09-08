@@ -40,19 +40,7 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPModifiers;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InterfaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPCallExpression;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
@@ -300,7 +288,54 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fRequestor.enterField(info);
 		return true;
 	}
+	
+	public boolean visit(CatchClause catchClause) throws Exception {
+		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+		info.modifiers = Modifiers.AccDefault;
+		SimpleReference var = catchClause.getVariable();
+		info.name = var.getName();
+		info.nameSourceEnd = var.sourceEnd() - 1;
+		info.nameSourceStart = var.sourceStart();
+		info.declarationStart = catchClause.sourceStart();
+		fRequestor.enterField(info);
+		return true;
+	}
 
+	public boolean endvisit(CatchClause catchClause) throws Exception {
+		fRequestor.exitField(catchClause.sourceEnd() - 1);
+		return true;
+	}
+	
+	public boolean visit(ForEachStatement foreachStatement) throws Exception {
+		if (foreachStatement.getKey() instanceof VariableReference) {
+			SimpleReference var = (SimpleReference) foreachStatement.getKey();
+			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+			info.modifiers = Modifiers.AccDefault;
+			info.name = var.getName();
+			info.nameSourceEnd = var.sourceEnd() - 1;
+			info.nameSourceStart = var.sourceStart();
+			info.declarationStart = var.sourceStart();
+			fRequestor.enterField(info);
+			fRequestor.exitField(var.sourceEnd() - 1);
+		}
+		if (foreachStatement.getValue() instanceof VariableReference) {
+			SimpleReference var = (SimpleReference) foreachStatement.getValue();
+			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
+			info.modifiers = Modifiers.AccDefault;
+			info.name = var.getName();
+			info.nameSourceEnd = var.sourceEnd() - 1;
+			info.nameSourceStart = var.sourceStart();
+			info.declarationStart = var.sourceStart();
+			fRequestor.enterField(info);
+			fRequestor.exitField(var.sourceEnd() - 1);
+		}
+		return true;
+	}
+	
+	public boolean endvisit(ForEachStatement foreachStatement) throws Exception {
+		return true;
+	}
+	
 	public boolean endvisit(PHPFieldDeclaration declaration) throws Exception {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
@@ -415,6 +450,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return visit((ClassConstantDeclaration) node);
 		}
+		if (clasName.equals(CatchClause.class.getName())) {
+			return visit((CatchClause) node);
+		}
+		if (clasName.equals(ForEachStatement.class.getName())) {
+			return visit((ForEachStatement) node);
+		}
 		return true;
 	}
 
@@ -432,6 +473,12 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
 			return endvisit((ClassConstantDeclaration) node);
+		}
+		if (clasName.equals(CatchClause.class.getName())) {
+			return endvisit((CatchClause) node);
+		}
+		if (clasName.equals(ForEachStatement.class.getName())) {
+			return endvisit((ForEachStatement) node);
 		}
 		return true;
 	}
