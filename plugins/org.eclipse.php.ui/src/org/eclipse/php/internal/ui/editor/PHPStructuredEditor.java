@@ -125,6 +125,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
 	private CompositeActionGroup fActionGroups;
+	
+	private long fLastActionsUpdate;
+	
 	/** Indicates whether the structure editor is displaying an external file */
 	protected boolean isExternal;
 
@@ -2254,6 +2257,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	protected void updateCursorDependentActions() {
 		if (fCursorActions != null) {
+			
+			long currentTime = System.currentTimeMillis();
+			if (fLastActionsUpdate > currentTime - 1000) { // only allow updates at most once per second
+				return;
+			}
+			fLastActionsUpdate = currentTime;
+			
 			final Iterator<String> e = fCursorActions.iterator();
 			while (e.hasNext())
 				updateAction(e.next());
