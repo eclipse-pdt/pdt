@@ -14,26 +14,23 @@ import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
 import org.eclipse.dltk.compiler.task.TodoTaskAstParser;
 import org.eclipse.dltk.validators.core.IBuildParticipant;
 
-public class PHPTodoTaskAstParser extends TodoTaskAstParser implements
-		IBuildParticipant {
+public class PHPTodoTaskAstParser extends TodoTaskAstParser implements IBuildParticipant {
 
 	public PHPTodoTaskAstParser(ITodoTaskPreferences preferences) {
 		super(preferences);
 	}
-	
+
 	@Override
 	protected int findCommentStart(char[] content, int begin, int end) {
-		// TODO - this code recognizes only tasks starting with  //
-		// need to add handling for multiple line comments  
-		
 		begin = skipSpaces(content, begin, end);
-		int commentStart = isLineComment(content, begin, end);
-		if( commentStart!= -1 ){
+		int commentStart = getOneLineCommentStart(content, begin, end);
+		if (commentStart != -1) {
 			return commentStart;
 		} else {
-			return isMultipleLineComment();
-		}					
-	}	
+			// TODO need to implement handling for multiple line comments
+			return getMultipleLineCommentStart();
+		}
+	}
 
 	/**
 	 * Check if this line is a comment and returns the start location 
@@ -43,17 +40,17 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements
 	 * @param end
 	 * @return the start location in the line after the comment symbol 
 	 */
-	private int isLineComment(char[] content, int begin, int end){
-		
-		if (begin + 1 < end && content[begin] == '/' && content[begin+1] == '/') {
+	private int getOneLineCommentStart(char[] content, int begin, int end) {
+
+		if (begin + 1 < end && content[begin] == '/' && content[begin + 1] == '/') {
 			return begin + 2;
-		} else if(begin < end && content[begin] == '#') {
-			return begin + 1; 
+		} else if (begin < end && content[begin] == '#') {
+			return begin + 1;
 		}
-		
+
 		return -1;
 	}
-	
+
 	/**
 	 * Check if this line is a the first one of a multiple line comment 
 	 * and returns the start location in this line after the comment symbol
@@ -62,16 +59,15 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements
 	 * @param end
 	 * @return the start location in the line after the comment symbol 
 	 */
-	private int isMultipleLineComment() {
+	private int getMultipleLineCommentStart() {
 		return -1;
 	}
-	
+
 	private static int skipSpaces(char[] content, int pos, final int end) {
 		while (pos < end && Character.isWhitespace(content[pos])) {
 			++pos;
 		}
 		return pos;
 	}
-	
 
 }
