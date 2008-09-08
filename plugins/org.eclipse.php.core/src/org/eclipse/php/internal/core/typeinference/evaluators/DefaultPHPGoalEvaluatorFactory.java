@@ -65,6 +65,9 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 		if (goalClass == VarCommentVariableGoal.class) {
 			return new VarCommentVariableEvaluator(goal);
 		}
+		if (goalClass == ForeachStatementGoal.class) {
+			return new ForeachStatementEvaluator(goal);
+		}
 		return null;
 	}
 

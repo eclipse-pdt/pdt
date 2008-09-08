@@ -308,9 +308,6 @@ public class ASTUtils {
 			}
 
 			public boolean visitGeneral(ASTNode node) throws Exception {
-				if (node.sourceEnd() < offset || node.sourceStart() > offset) {
-					return false;
-				}
 				if (!(node instanceof ASTError) && node.sourceStart() <= offset && node.sourceEnd() >= offset) {
 					if (!contextStack.isEmpty()) {
 						context = contextStack.peek();

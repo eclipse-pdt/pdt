@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
@@ -37,6 +38,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
@@ -85,7 +87,11 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
 				}
 				for (ASTNode declaration : declarations) {
-					subGoals.add(new VariableDeclarationGoal(context, declaration));
+					if (declaration instanceof ForEachStatement) {
+						subGoals.add(new ForeachStatementGoal(context, ((ForEachStatement) declaration).getExpression()));
+					} else {
+						subGoals.add(new VariableDeclarationGoal(context, declaration));
+					}
 				}
 				return subGoals.toArray(new IGoal[subGoals.size()]);
 			}
@@ -206,6 +212,13 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				if (catchClause.getVariable().getName().equals(variableName)) {
 					declarations.clear();
 					declarations.addLast(catchClause);
+					return visitGeneral(s);
+				}
+			} else if (s instanceof ForEachStatement) {
+				ForEachStatement foreachStatement = (ForEachStatement) s;
+				if (foreachStatement.getValue() instanceof SimpleReference && ((SimpleReference)foreachStatement.getValue()).getName().equals(variableName)) {
+					declarations.clear();
+					declarations.addLast(foreachStatement);
 					return visitGeneral(s);
 				}
 			}
