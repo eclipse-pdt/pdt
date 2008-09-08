@@ -29,6 +29,8 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements
 		begin = skipSpaces(content, begin, end);
 		if (begin + 1 < end && content[begin] == '/' && content[begin+1] == '/') {
 			return begin + 2;
+		} else if(begin < end && content[begin] == '#') {
+			return begin + 1; 
 		} else {
 			return -1;
 		}						
