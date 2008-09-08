@@ -432,7 +432,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// Return class if nothing else found.
-						IModelElement[] elements = CodeAssistUtils.getGlobalOrMethodFields(sourceModule, offset, elementName, true);
+						IModelElement[] elements = CodeAssistUtils.getGlobalClasses(sourceModule, elementName, true);
 						return filterElements(sourceModule, elements);
 					}
 				}
