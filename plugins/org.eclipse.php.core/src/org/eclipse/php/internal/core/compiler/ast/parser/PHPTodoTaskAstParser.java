@@ -22,7 +22,10 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements
 		super(preferences);
 	}
 	
+	@Override
 	protected int findCommentStart(char[] content, int begin, int end) {
+		// TODO - this code recognizes only tasks starting with  //
+		// need to add handling for multiple line comments  
 		
 		begin = skipSpaces(content, begin, end);
 		if (begin + 1 < end && content[begin] == '/' && content[begin+1] == '/') {
