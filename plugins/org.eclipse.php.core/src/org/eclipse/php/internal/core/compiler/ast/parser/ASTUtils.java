@@ -34,6 +34,7 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -310,7 +311,7 @@ public class ASTUtils {
 				if (node.sourceEnd() < offset || node.sourceStart() > offset) {
 					return false;
 				}
-				if (node.sourceStart() <= offset && node.sourceEnd() >= offset) {
+				if (!(node instanceof ASTError) && node.sourceStart() <= offset && node.sourceEnd() >= offset) {
 					if (!contextStack.isEmpty()) {
 						context = contextStack.peek();
 					}
