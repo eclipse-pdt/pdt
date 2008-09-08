@@ -150,6 +150,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			String name = element.getElementName();
 			return (name != null && name.indexOf('<') >= 0);
 		}
+		// Filter out non-class variables:
+		if (element.getElementType() == IModelElement.FIELD) {
+			return (element.getParent().getElementType() != IModelElement.TYPE); 
+		}
 		return false;
 	}
 
