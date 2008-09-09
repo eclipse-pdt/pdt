@@ -12,13 +12,8 @@ package org.eclipse.php.internal.ui.outline;
 
 import java.util.Vector;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.ElementChangedEvent;
-import org.eclipse.dltk.core.IElementChangedListener;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IModelElementDelta;
-import org.eclipse.dltk.core.IParent;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -152,6 +147,13 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 		// Filter out non-class variables:
 		if (element.getElementType() == IModelElement.FIELD) {
+			IField field = (IField) element;
+			try {
+				if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+					return false;
+				}
+			} catch (ModelException e) {
+			}
 			return (element.getParent().getElementType() != IModelElement.TYPE); 
 		}
 		return false;
