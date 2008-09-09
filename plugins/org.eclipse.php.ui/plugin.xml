@@ -203,7 +203,7 @@
 	<extension point="org.eclipse.ui.editors.annotationTypes">
 		<type name="org.eclipse.php.ui.occurrences">
 		</type>
-		<type name="org.eclipse.php.ui.occurrences.write" super="org.eclipse.php.ui.occurrences">
+		<type name="org.eclipse.php.ui.occurrences.write">
 		</type>
 	</extension>
 
