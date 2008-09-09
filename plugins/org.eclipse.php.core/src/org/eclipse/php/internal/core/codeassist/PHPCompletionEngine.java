@@ -970,7 +970,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 			try {
 				int flags = superMethod.getFlags();
-				if ((flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0 && (flags & IPHPModifiers.Internal) == 0) {
+				if ((flags & Modifiers.AccFinal) == 0 && (flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0 && (flags & IPHPModifiers.Internal) == 0) {
 					reportMethod(superMethod, relevanceMethod--);
 				}
 			} catch (ModelException e) {
