@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.preferences;
 import java.util.ArrayList;
 
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -35,10 +34,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 public class PHPBasePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	// TODO: assign DLTK values once its build support these constants
-	private static final String DOUBLE_CLICK = "" ; // org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK;
-	private static final String DOUBLE_CLICK_GOES_INTO = ""; // org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_GOES_INTO;
-	private static final String DOUBLE_CLICK_EXPANDS = ""; // org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_EXPANDS;
-
+	private static final String DOUBLE_CLICK =  org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK;
+	private static final String DOUBLE_CLICK_EXPANDS =  org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_EXPANDS;
+	private static final String DOUBLE_CLICK_GOES_INTO =  org.eclipse.dltk.ui.PreferenceConstants.DOUBLE_CLICK_GOES_INTO;
+	
 	private ArrayList fCheckBoxes;
 	private ArrayList fRadioButtons;
 	private ArrayList fTextControls;
