@@ -130,7 +130,7 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 			while (i > 0) {
 				char ch = document.getChar(i - 1);
 				if (!(Character.isLetterOrDigit(ch))) {
-					if (!('@' == ch || '_' == ch)) {
+					if (!('@' == ch || '_' == ch || '$' == ch)) {
 						break;
 					}
 				}
