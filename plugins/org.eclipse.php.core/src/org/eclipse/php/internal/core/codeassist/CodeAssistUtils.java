@@ -119,7 +119,11 @@ public class CodeAssistUtils {
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
 				String methodName = typeMethod.getElementName();
-				if ((exactName && methodName.equalsIgnoreCase(prefix)) || startsWithIgnoreCase(methodName, prefix)) {
+				if (exactName) {
+					if (methodName.equalsIgnoreCase(prefix)) {
+						methods.add(typeMethod);
+					}
+				} else if (startsWithIgnoreCase(methodName, prefix)) {
 					methods.add(typeMethod);
 				}
 			}
@@ -195,7 +199,11 @@ public class CodeAssistUtils {
 
 					int flags = typeField.getFlags();
 					if ((flags & Modifiers.AccConstant) != 0) {
-						if (exactName && elementName.equals(prefix) || elementName.startsWith(prefix)) {
+						if (exactName) {
+							if (elementName.equals(prefix)) {
+								fields.add(typeField);
+							}
+						} else if (elementName.startsWith(prefix)) {
 							fields.add(typeField);
 						}
 					} else { // variable
@@ -203,7 +211,11 @@ public class CodeAssistUtils {
 						if (!tmp.startsWith(DOLLAR)) {
 							tmp = DOLLAR + tmp;
 						}
-						if (exactName && elementName.equals(tmp) || elementName.startsWith(tmp)) {
+						if (exactName) {
+							if (elementName.equals(tmp)) {
+								fields.add(typeField);
+							}
+						} else if (elementName.startsWith(tmp)) {
 							fields.add(typeField);
 						}
 					}

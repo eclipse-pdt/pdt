@@ -1437,6 +1437,26 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		noProposal = false;
 		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
+			
+			try {
+				for (IMethod method : type.getMethods()) {
+					if (method.isConstructor()) {
+						String[] params = method.getParameters();
+						if (params != null && params.length > 0) {
+							char[][] args = new char[params.length][];
+							for (int i = 0; i < params.length; ++i) {
+								args[i] = params[i].toCharArray();
+							}
+							proposal.setParameterNames(args);
+						}
+						break;
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
+			}
 
 			proposal.setModelElement(type);
 			proposal.setName(name);
