@@ -48,6 +48,9 @@ public class PHPOverrideCompletionProposal extends ScriptOverrideCompletionPropo
 		if (i != -1) {
 			infoDisplayString = infoDisplayString.substring(0, i);
 		}
+		if (infoDisplayString.length() == 0) {
+			return null;
+		}
 		return new ContextInformation(displayString, infoDisplayString);
 	}
 
