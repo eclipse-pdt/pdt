@@ -24,6 +24,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	private static final String EXIT_POINT_OF = PHPUIMessages.getString("MethodExitsFinder.0"); //$NON-NLS-1$
 	public static final String ID = "MethodExitsFinder"; //$NON-NLS-1$
 	private FunctionDeclaration fFunctionDeclaration;
+	private ASTNode fExitPointNode;
 
 	/**
 	 * @param root the AST root
@@ -32,6 +33,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
+		fExitPointNode = node;
 		if (isExitExecutionPath(node)) {
 			fFunctionDeclaration = (FunctionDeclaration) ASTNodes.getParent(node, ASTNode.FUNCTION_DECLARATION);
 			if (fFunctionDeclaration == null)
@@ -68,7 +70,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		//						return;
 		//				}
 		//			}
-		int offset = fFunctionDeclaration.getStart() + fFunctionDeclaration.getLength() - 1; // closing bracket
+		int offset = fExitPointNode.getEnd();
 		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fDescription));
 		//		}
 	}
