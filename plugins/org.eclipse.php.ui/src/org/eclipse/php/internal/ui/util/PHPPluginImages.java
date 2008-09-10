@@ -87,6 +87,7 @@ public class PHPPluginImages {
 	public static final String IMG_OBJS_PHP_CLASSES_GROUP = NAME_PREFIX + "class_group.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_CONSTANTS_GROUP = NAME_PREFIX + "const_group.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_FUNCTIONS_GROUP = NAME_PREFIX + "func_group.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_OCCURRENCES = NAME_PREFIX + "searchm_obj.gif"; //$NON-NLS-1$
 
 	public static final String IMG_OBJS_ZIP = NAME_PREFIX + "zip_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_EXTZIP = NAME_PREFIX + "zip_l_obj.gif"; //$NON-NLS-1$
@@ -118,6 +119,7 @@ public class PHPPluginImages {
 	public static final ImageDescriptor DESC_OBJ_PHP_CLASSES_GROUP = createManaged(T_OBJ, IMG_OBJS_PHP_CLASSES_GROUP);
 	public static final ImageDescriptor DESC_OBJ_PHP_CONSTANTS_GROUP = createManaged(T_OBJ, IMG_OBJS_PHP_CONSTANTS_GROUP);
 	public static final ImageDescriptor DESC_OBJ_PHP_FUNCTIONS_GROUP = createManaged(T_OBJ, IMG_OBJS_PHP_FUNCTIONS_GROUP);
+	public static final ImageDescriptor DESC_OBJS_OCCURRENCES = createManaged(T_OBJ, IMG_OBJS_OCCURRENCES);
 	//
 	public static final ImageDescriptor DESC_OBJS_CLASS = createManaged(T_OBJ, IMG_OBJS_CLASS);
 	public static final ImageDescriptor DESC_OBJS_CLASS_DEFAULT = createManaged(T_OBJ, IMG_OBJS_CLASS_DEFAULT);

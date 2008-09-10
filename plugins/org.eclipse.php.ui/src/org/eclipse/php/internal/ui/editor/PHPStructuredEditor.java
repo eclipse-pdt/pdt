@@ -51,6 +51,7 @@ import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.source.*;
+import org.eclipse.jface.text.source.ImageUtilities;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -84,6 +85,7 @@ import org.eclipse.php.internal.ui.search.OccurrencesFinderFactory;
 import org.eclipse.php.internal.ui.search.IOccurrencesFinder.OccurrenceLocation;
 import org.eclipse.php.internal.ui.text.DocumentCharacterIterator;
 import org.eclipse.php.internal.ui.text.PHPWordIterator;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -91,7 +93,10 @@ import org.eclipse.php.ui.editor.hover.IHoverMessageDecorator;
 import org.eclipse.php.ui.editor.hover.IPHPTextHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -125,9 +130,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected PHPPairMatcher fBracketMatcher = new PHPPairMatcher(BRACKETS);
 	private CompositeActionGroup fContextMenuGroup;
 	private CompositeActionGroup fActionGroups;
-	
+
 	private long fLastActionsUpdate;
-	
+
 	/** Indicates whether the structure editor is displaying an external file */
 	protected boolean isExternal;
 
@@ -150,9 +155,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * 
 	 * @see ITextViewer#getSelectedRange()
 	 * @since 3.3
-	 */	
+	 */
 	private Point fCachedSelectedRange;
-	
+
 	/**
 	 * The selection used when forcing occurrence marking through code.
 	 * 
@@ -643,7 +648,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 					} catch (ModelException e) {
 						Logger.logException(e);
 					} catch (IOException e) {
-						Logger.logException(e);					}
+						Logger.logException(e);
+					}
 				}
 			}
 		}
@@ -817,7 +823,18 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				String description = location.getDescription();
 				String annotationType = (location.getFlags() == IOccurrencesFinder.F_WRITE_OCCURRENCE) ? "org.eclipse.php.ui.occurrences.write" : "org.eclipse.php.ui.occurrences"; //$NON-NLS-1$ //$NON-NLS-2$
 
-				annotationMap.put(new TemporaryAnnotation(position, annotationType, description, new ReconcileAnnotationKey(null, PHPPartitionTypes.PHP_DEFAULT, ReconcileAnnotationKey.TOTAL)), position);
+				// create an annotation to mark the occurrence
+				ReconcileAnnotationKey reconcileAnnotationKey = new ReconcileAnnotationKey(null, PHPPartitionTypes.PHP_DEFAULT, ReconcileAnnotationKey.TOTAL);
+				TemporaryAnnotation annotation = new TemporaryAnnotation(position, annotationType, description, reconcileAnnotationKey) {
+
+					// Supply an occurrence image to display in the vertical ruler
+					@Override
+					public void paint(GC gc, Canvas canvas, Rectangle r) {
+						ImageUtilities.drawImage(PHPUiPlugin.getImageDescriptorRegistry().get(PHPPluginImages.DESC_OBJS_OCCURRENCES), gc, canvas, r, SWT.CENTER, SWT.TOP);
+					}
+
+				};
+				annotationMap.put(annotation, position);
 			}
 
 			if (isCanceled(progressMonitor))
@@ -2063,7 +2080,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	public Point getCachedSelectedRange() {
 		return fCachedSelectedRange;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2072,7 +2089,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	protected void handleCursorPositionChanged() {
 		updateCursorDependentActions();
-		fCachedSelectedRange= getTextViewer().getSelectedRange();		
+		fCachedSelectedRange = getTextViewer().getSelectedRange();
 		super.handleCursorPositionChanged();
 	}
 
@@ -2257,13 +2274,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 */
 	protected void updateCursorDependentActions() {
 		if (fCursorActions != null) {
-			
+
 			long currentTime = System.currentTimeMillis();
 			if (fLastActionsUpdate > currentTime - 1000) { // only allow updates at most once per second
 				return;
 			}
 			fLastActionsUpdate = currentTime;
-			
+
 			final Iterator<String> e = fCursorActions.iterator();
 			while (e.hasNext())
 				updateAction(e.next());
@@ -2583,7 +2600,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				selectedNode = name;
 			}
 		}
-		
+
 		if (locations == null && selectedNode != null && (selectedNode.getType() == ASTNode.IDENTIFIER || selectedNode.getType() == ASTNode.SCALAR)) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
