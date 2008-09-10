@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.swt.graphics.Image;
@@ -51,6 +52,14 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 			return i;
 		}
 		return replacementString.length();
+	}
+	
+	public IContextInformation getContextInformation() {
+		String displayString = getDisplayString();
+		if (displayString.indexOf('(') == -1) {
+			return null;
+		}
+		return super.getContextInformation();
 	}
 
 	protected boolean isCamelCaseMatching() {
