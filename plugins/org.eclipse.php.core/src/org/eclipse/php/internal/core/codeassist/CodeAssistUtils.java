@@ -797,7 +797,7 @@ public class CodeAssistUtils {
 	
 	/**
 	 * This method searches in the project scope for all elements of specified type that match the given prefix.
-	 * If currentFileOnly parameter is <code>true</code>, the search scope will contain only the source module.
+	 * If currentFileOnly parameter is <code>true</code>, the search scope for variables will contain only the source module.
 	 * If the project doesn't exist, workspace scope is used.
 	 * 
 	 * @param sourceModule Current source module
@@ -811,8 +811,10 @@ public class CodeAssistUtils {
 		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
+		boolean isVariable = prefix.startsWith("$"); //$NON-NLS-1$
+		
 		IDLTKSearchScope scope;
-		if (currentFileOnly) {
+		if (currentFileOnly && isVariable) {
 			scope = SearchEngine.createSearchScope(sourceModule);
 		} else {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
@@ -823,7 +825,7 @@ public class CodeAssistUtils {
 			}
 		} 
 		
-		if (!currentFileOnly && prefix.startsWith("$")) { //$NON-NLS-1$
+		if (!currentFileOnly && isVariable) {
 			// search variables using mixin model:
 			IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null, scope);
 			return variables == null ? EMPTY : variables;
