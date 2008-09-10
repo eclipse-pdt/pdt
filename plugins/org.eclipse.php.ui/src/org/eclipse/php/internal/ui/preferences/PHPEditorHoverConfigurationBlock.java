@@ -114,8 +114,8 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	private TableViewer fHoverTableViewer;
 	private TableColumn fNameColumn;
 	private TableColumn fModifierColumn;
-	private Text fDescription;
-	private Button fShowHoverAffordanceCheckbox;
+	private Text fDescription;	
+	private Button fRollOverCheckBox;
 
 	private PreferencePage fMainPreferencePage;
 
@@ -169,15 +169,13 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		hoverComposite.setLayout(layout);
 
 		String rollOverLabel = PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_annotationRollover");
-		addCheckBox(hoverComposite, rollOverLabel, PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER, 0); //$NON-NLS-1$
+		fRollOverCheckBox = addCheckBox(hoverComposite, rollOverLabel, PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER, 0); //$NON-NLS-1$
 
-		// Affordance checkbox
-		fShowHoverAffordanceCheckbox = new Button(hoverComposite, SWT.CHECK);
-		fShowHoverAffordanceCheckbox.setText(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_showAffordance"));
+		
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalIndent = 0;
 		gd.horizontalSpan = 2;
-		fShowHoverAffordanceCheckbox.setLayoutData(gd);
+		fRollOverCheckBox.setLayoutData(gd);
 
 		addFiller(hoverComposite);
 
@@ -379,6 +377,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		}
 		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS, buf.toString());
 		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS, maskBuf.toString());
+		fStore.setValue(PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER, fRollOverCheckBox.getSelection());
 
 		PHPUiPlugin.getDefault().resetPHPEditorTextHoverDescriptors();
 	}
