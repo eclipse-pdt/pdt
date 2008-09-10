@@ -147,7 +147,6 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		ArrayList overlayKeys = new ArrayList();
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_ANNOTATION_ROLL_OVER));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS));
 
@@ -344,7 +343,6 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 	}
 
 	void initializeFields() {
-		fShowHoverAffordanceCheckbox.setSelection(fStore.getBoolean(PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE));
 
 		fModifierEditor.setEnabled(false);
 
@@ -382,8 +380,6 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS, buf.toString());
 		fStore.setValue(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIER_MASKS, maskBuf.toString());
 
-		fStore.setValue(PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, fShowHoverAffordanceCheckbox.getSelection());
-
 		PHPUiPlugin.getDefault().resetPHPEditorTextHoverDescriptors();
 	}
 
@@ -393,9 +389,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 		updateStatus(null);
 	}
 
-	private void restoreFromPreferences() {
-
-		fShowHoverAffordanceCheckbox.setSelection(fStore.getBoolean(PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE));
+	private void restoreFromPreferences() {	
 
 		String compiledTextHoverModifiers = fStore.getString(PreferenceConstants.EDITOR_TEXT_HOVER_MODIFIERS);
 

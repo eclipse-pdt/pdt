@@ -715,11 +715,6 @@ public class PreferenceConstants {
 	public static final String ID_BESTMATCH_HOVER = "org.eclipse.php.ui.editor.hover.BestMatchHover"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines whether the hint to make hover sticky should be shown.
-	 */
-	public static final String EDITOR_SHOW_TEXT_HOVER_AFFORDANCE = "PreferenceConstants.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE"; //$NON-NLS-1$
-
-	/**
 	 * A named preference that defines the key for the hover modifiers.
 	 */
 	public static final String EDITOR_TEXT_HOVER_MODIFIERS = PHPUiPlugin.ID + "hoverModifiers"; //$NON-NLS-1$
@@ -962,8 +957,7 @@ public class PreferenceConstants {
 
 		String mod1Name = Action.findModifierString(SWT.MOD1); // SWT.COMMAND on Mac; SWT.CONTROL elsewhere
 		store.setDefault(EDITOR_TEXT_HOVER_MODIFIERS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + mod1Name); //$NON-NLS-1$
-		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$
-		store.setDefault(EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, true);
+		store.setDefault(EDITOR_TEXT_HOVER_MODIFIER_MASKS, "org.eclipse.php.ui.editor.hover.BestMatchHover;0;org.eclipse.php.ui.editor.hover.PHPSourceTextHover;" + SWT.MOD1); //$NON-NLS-1$		
 
 		store.setDefault(PHP_MANUAL_SITE, PHPManualConfigSerializer.toString(new PHPManualConfig(PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_LABEL, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_SITE, PHPManualSiteDescriptor.DEFAULT_PHP_MANUAL_EXTENSION, false)));
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
