@@ -1,0 +1,245 @@
+<project default="run">
+	<target name="init">
+
+		<!-- common releng helper scripts -->
+		<property name="helper"
+		          value="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/buildAllHelper.xml" />
+
+		<property name="compilerArg"
+		          value="-enableJavadoc -encoding ISO-8859-1 -warn:-serial,nls,unused,unchecked,raw" />
+		<echo message="Set compilerArgs = '${compilerArg}'" />
+
+		<property name="commonScriptsDir"
+		          value="${basedir}/../org.eclipse.modeling.common.releng/scripts" />
+
+		<!-- TODO: set correct source and target levels here -->
+		<echo message="Set javacSource and javacTarget = 1.5" />
+		<property name="javacSource" value="1.5" />
+		<property name="javacTarget" value="1.5" />
+
+		<path id="bc">
+			<fileset dir="${java.home}/lib">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+		<property name="bootclasspath" refid="bc" />
+
+		<!-- TODO: if using JDK1.4, comment out these lines -->
+		<echo message="Set J2SE-1.5 = ${bootclasspath}" />
+		<property name="J2SE-1.5" value="${bootclasspath}" />
+		<condition property="bundleBootClasspath" value="${J2SE-1.5}">
+			<isset property="J2SE-1.5" />
+		</condition>
+		<condition property="bundleJavacSource" value="1.5">
+			<isset property="J2SE-1.5" />
+		</condition>
+		<condition property="bundleJavacTarget" value="1.5">
+			<isset property="J2SE-1.5" />
+		</condition>
+
+		<property name="buildingOSGi" value="true" />
+		<property name="collectingFolder" value="eclipse" />
+		<property name="archivePrefix" value="eclipse" />
+
+		<!-- Reduce the amount of info in the build log -->
+		<property name="javacVerbose" value="false" />
+
+		<property name="buildDirectory" location="${basedir}/../src/eclipse" />
+		<property file="${basedir}/repoInfo.properties" />
+		<property name="testBase" location="${buildDirectory}/../testing" />
+		<available file="${buildDirectory}/label.properties"
+		           property="label.properties.exists" />
+		<ant target="create.label.properties" antfile="${helper}" />
+		<property file="${buildDirectory}/label.properties" />
+
+		<echo message="buildAll.xml properties:" />
+		<echo message="basedir = ${basedir}" />
+
+		<!-- load a value for ${subprojectName}, among other variables, from build.cfg -->
+		<property name="buildConfigFile" value="${basedir}/../build.cfg" />
+		<available file="${buildConfigFile}"
+		           type="file"
+		           property="buildConfigIsAvailable" />
+		<fail message="Can't load build properties from ${buildConfigFile}"
+		      unless="buildConfigIsAvailable" />
+		<!-- TODO: set any special build-related properties here by echoing them into ${buildConfigFile}:
+		<echo file="${buildConfigFile}" append="true">
+# extra properties specific to just this build
+propertyName=propertyValue
+</echo>	-->
+
+		<property file="${buildConfigFile}" />
+
+		<echo message="buildVer = ${buildVer}" />
+		<echo message="subprojectName = ${subprojectName}" />
+
+		<!-- <echo message="Base OS: ${baseos}; Base Window System: ${basews}"/> -->
+		<condition property="isWindows">
+			<equals arg1="${baseos}.${basews}" arg2="win32.win32" />
+		</condition>
+		<condition property="isLinuxGTK">
+			<equals arg1="${baseos}.${basews}" arg2="linux.gtk" />
+		</condition>
+		<condition property="isLinuxMotif">
+			<equals arg1="${baseos}.${basews}" arg2="linux.motif" />
+		</condition>
+
+		<!-- required for signing & repackaging master zip into smaller zips -->
+		<property name="masterZip"
+		          value="${projectName}-Master-${buildAlias}.zip" />
+		<property name="allZip"
+		          value="${projectName}-ALL-${buildAlias}.zip" />
+		<property name="SDKZip"
+		          value="${projectName}-SDK-${buildAlias}.zip" />
+
+		<!-- run on emf.toro / emft.eclipse -->
+		<available file="/opt/sun-java2-5.0"
+		           type="dir"
+		           property="java15-home"
+		           value="/opt/sun-java2-5.0" />
+		<!-- run on build.eclipse -->
+		<available file="/opt/public/common/ibm-java2-ppc-50"
+		           type="dir"
+		           property="java15-home"
+		           value="/opt/public/common/ibm-java2-ppc-50" />
+		<echo message="Using java15-home = ${java15-home}" />
+
+		<property name="stagingHome"
+		          value="/home/data/httpd/download-staging.priv" />
+		<!-- HACK: until this build can run as a PDT committer, it needs to be signed in a dir in which nickb@build.eclipse.org can work -->
+		<!-- TODO: change to tools/pdt -->
+		<property name="projectPath" value="tools/gef" />
+		<!-- user with write perms in staging dir & permission to run /usr/bin/sign -->
+		<!-- TODO: change to some other user in signers group w/ write access to  /home/data/httpd/download-staging.priv/tools/pdt -->
+		<property name="buildServerUser" value="nickb@build.eclipse.org" />
+		<condition property="sign">
+			<or>
+				<!-- want to enable/disable signing for a given build type? add/remove types here -->
+				<equals arg1="${buildType}" arg2="I" />
+				<equals arg1="${buildType}" arg2="M" />
+				<equals arg1="${buildType}" arg2="S" />
+				<equals arg1="${buildType}" arg2="R" />
+			</or>
+		</condition>
+	</target>
+
+	<target name="buildAll">
+
+		<macrodef name="echo-timestamp">
+			<sequential>
+				<ant target="-timestamp"
+				     inheritAll="false"
+				     antfile="${helper}" />
+			</sequential>
+		</macrodef>
+
+		<echo-timestamp />
+
+		<!-- build Master Zip using "outputUpdateJars=true" in build.properties so we get ONLY jars, not mix of folders & jars -->
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="builder/all" />
+		</ant>
+
+		<echo-timestamp />
+		<ant target="signMasterZip" antfile="${helper}">
+			<property name="mailStatus" value="nomail" />
+		</ant>
+
+		<!-- Unpack jars to ALL zip with mix of folders & jars -->
+		<ant target="unpackUpdateJarsAndRepack" antfile="${helper}">
+			<property name="sourceZip"
+			          value="${buildDirectory}/${buildLabel}/${masterZip}" />
+			<property name="targetZip"
+			          value="${buildDirectory}/${buildLabel}/${allZip}" />
+		</ant>
+
+
+		<echo-timestamp />
+		<!-- build SDK -->
+		<zip destfile="${buildDirectory}/${buildLabel}/${SDKZip}" update="true">
+			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}"
+			            dirmode="775"
+			            filemode="664"
+			            excludes="**/*.pack.gz, **/pack.properties, **/features/*.jar, **/org.eclipse.*.all*, **/org.eclipse.*.all*/**, **/plugins/*.source_*.jar" />
+		</zip>
+		<!-- build runtime from SDK -->
+		<zip destfile="${buildDirectory}/${buildLabel}/${projectName}-runtime-${buildAlias}.zip"
+		     update="true">
+			<zipfileset src="${buildDirectory}/${buildLabel}/${SDKZip}"
+			            dirmode="775"
+			            filemode="664"
+			            excludes="**/org.eclipse.*.examples*, **/org.eclipse.*.examples*/**, **/org.eclipse.*.sdk*, **/org.eclipse.*.sdk*/**, **/org.eclipse.*.all*, **/org.eclipse.*.all*/**, **/org.eclipse.*.doc*, **/org.eclipse.*.doc*/**, **/org.eclipse.*.source*, **/org.eclipse.*.source*/**, **/*src.zip"
+						includes="**/org.eclipse.php*, **/org.eclipse.php*/**, **/org.eclipse.pdt*, **/org.eclipse.pdt*/**"/>
+			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}"
+			            dirmode="775"
+			            filemode="664"
+			            id="rootfiles"
+			            includes="**/eclipse/epl-v10.html, **/eclipse/notice.html" />
+		</zip>
+
+		<!-- TODO: build examples from ALL zip or SDK zip? -->
+		<!-- TODO: uncomment this when there are examples features/plugins to build -->
+		<!-- <zip destfile="${buildDirectory}/${buildLabel}/${projectName}-examples-${buildAlias}.zip"
+		     update="true">
+			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}"
+			            dirmode="775"
+			            filemode="664">
+				<include name="**/org.eclipse.*.example*" />
+				<include name="**/org.eclipse.*.example*/**" />
+			</zipfileset>
+			<zipfileset refid="rootfiles" />
+		</zip> -->
+
+		<!-- remove rootfiles -->
+		<ant target="removeRootFilesFromMaster" antfile="${helper}" />
+
+		<!-- pack the master zip -->
+		<ant target="packMasterZip" antfile="${helper}" />
+
+		<echo-timestamp />
+
+		<!-- TODO: if you plan to keep your ${allZip} and it's different from your SDK, remove the next line -->
+		<delete file="${buildDirectory}/${buildLabel}/${allZip}"
+		        failonerror="true"
+		        quiet="true" />
+
+		<ant antfile="build.xml" target="main">
+			<property name="component" value="builder/tests" />
+		</ant>
+
+		<echo-timestamp />
+		<ant target="generateDigests" antfile="${helper}" />
+	</target>
+
+	<target name="run" depends="init">
+		<antcall target="buildAll" />
+		<ant target="test" antfile="${helper}" />
+		<ant target="publish" antfile="${helper}" />
+		<ant target="cleanUp" antfile="${helper}" />
+	</target>
+
+	<target name="runTestsOnly" depends="init">
+		<delete dir="${buildDirectory}" />
+		<mkdir dir="${buildDirectory}/${buildLabel}" />
+		<copy todir="${buildDirectory}/${buildLabel}">
+			<fileset dir="${buildDirectory}/..">
+				<include name="**/*.zip" />
+			</fileset>
+		</copy>
+		<ant target="test" antfile="${helper}" />
+		<ant target="publish" antfile="${helper}" />
+		<ant target="cleanUp" antfile="${helper}" />
+	</target>
+
+	<target name="runWithoutTest" depends="init">
+		<antcall target="buildAll" />
+		<ant target="publish" antfile="${helper}" />
+		<ant target="cleanUp" antfile="${helper}" />
+	</target>
+
+	<target name="buildOnly" depends="init">
+		<antcall target="buildAll" />
+		<ant target="cleanUp" antfile="${helper}" />
+	</target>
+
+</project>

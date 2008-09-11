@@ -1,0 +1,221 @@
+<project name="Build specific targets and properties"
+         default="noDefault"
+         basedir=".">
+
+	<!-- ===================================================================== -->
+	<!-- Run a given ${target} on all elements being built -->
+	<!-- ===================================================================== -->
+	<target name="allElements">
+		<ant antfile="${genericTargets}" target="${target}">
+			<property name="type" value="feature" />
+			<!-- 
+				TODO: change to ".all" feature if your SDK does not include all your features 
+				(eg., no examples), and be sure to create an ".all" feature which includes your 
+				SDK feature plus any other plugins/features not included in the SDK 
+			-->
+			<property name="id" value="org.eclipse.php.sdk_feature" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Targets to assemble the built elements for particular configurations  -->
+	<!-- These generally call the generated assemble scripts (named in -->
+	<!-- ${assembleScriptName}) but may also add pre and post processing -->
+	<!-- Add one target for each root element and each configuration -->
+	<!-- ===================================================================== -->
+
+	<!-- 
+		TODO: change to ".all" feature if your SDK does not include all your features 
+		(eg., no examples), and be sure to create an ".all" feature which includes your 
+		SDK feature plus any other plugins/features not included in the SDK 
+	-->
+	<target name="assemble.org.eclipse.php.sdk_feature">
+		<property name="archiveName"
+		          value="pdt-Master-${buildAlias}.zip" />
+		<ant antfile="${assembleScriptName}" />
+		<!-- ADD POST STEPS -->
+	</target>
+
+	<target name="getMapFiles" >
+		<copy todir="${buildDirectory}">
+			<fileset dir="${buildDirectory}/../org.eclipse.${subprojectName2}.releng" includes="**/maps/*.map"/>
+		</copy>
+		<antcall target="tagMapFiles" />
+	</target>
+
+	<target name="tagMapFiles" if="tagMaps">
+		<cvs cvsRsh="ssh"
+		     dest="${buildDirectory}/maps"
+		     command="tag v${timestamp}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before setup -->
+	<!-- ===================================================================== -->
+	<target name="preSetup">
+		<mkdir dir="${buildDirectory}/${buildLabel}" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after setup but before starting the build proper -->
+	<!-- ===================================================================== -->
+	<target name="postSetup">
+		<!-- TODO: if your project requires more dependencies, add them here -->
+		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
+		<echo message="Download, then unpack: Eclipse, EMF, DTP, DLTK, GEF, WTP ..." />
+		<ant target="getDependency"
+		     antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${eclipseURL}" />
+			<property name="file" value="${eclipseFile}" />
+			<property name="isUnpackedFile"
+			          value="${buildDirectory}/plugins/org.eclipse.platform.doc.isv/plugin.xml" />
+		</ant>
+		<ant target="getDependency"
+		     antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${emfURL}" />
+			<property name="file" value="${emfFile}" />
+			<property name="isUnpackedFile"
+			          value="${buildDirectory}/plugins/org.eclipse.emf.ecore/plugin.xml" />
+		</ant>
+		<ant target="getDependency"
+		     antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${dtpURL}" />
+			<property name="file" value="${dtpFile}" />
+			<property name="isUnpackedFile"
+			          value="${buildDirectory}/plugins/org.eclipse.datatools.connectivity.db.generic/plugin.xml" />
+		</ant>
+		<ant target="getDependency"
+		     antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${dltkURL}" />
+			<property name="file" value="${dltkFile}" />
+			<property name="isUnpackedFile"
+			          value="${buildDirectory}/plugins/org.eclipse.dltk.core/plugin.xml" />
+		</ant>
+		<ant target="getDependency"
+		     antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${gefURL}" />
+			<property name="file" value="${gefFile}" />
+			<property name="isUnpackedFile"
+			          value="${buildDirectory}/plugins/org.eclipse.gef/plugin.xml" />
+		</ant>
+		<ant target="getDependency"
+		     antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
+			<property name="url" value="${wtpURL}" />
+			<property name="file" value="${wtpFile}" />
+			<property name="isUnpackedFile"
+			          value="${buildDirectory}/plugins/org.eclipse.jst/plugin.xml" />
+		</ant>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before fetching the build elements -->
+	<!-- ===================================================================== -->
+	<target name="preFetch">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after the fetch -->
+	<!-- ===================================================================== -->
+	<target name="postFetch">
+		<replace dir="${buildDirectory}/plugins"
+		         value="${timestamp}"
+		         token="@buildid@">
+			<include name="**/about.mappings" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before generating build scripts -->
+	<!-- ===================================================================== -->
+	<target name="preGenerate">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after generating the build scripts -->
+	<!-- ===================================================================== -->
+	<target name="postGenerate">
+		<antcall target="clean" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before assembling -->
+	<!-- ===================================================================== -->
+	<target name="preAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after assembling-->
+	<!-- ===================================================================== -->
+	<target name="postAssemble">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do before running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="preProcess">
+		<replace dir="${buildDirectory}/plugins"
+		         value="${timestamp}"
+		         token="@build@">
+			<include name="**/about.mappings" />
+		</replace>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after running the build.xmls for the elements being built. -->
+	<!-- ===================================================================== -->
+	<target name="postProcess">
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Steps to do after everything is built and assembled -->
+	<!-- (e.g., testing, posting, emailing, ...) -->
+	<!-- ===================================================================== -->
+	<target name="postBuild">
+		<antcall target="gatherLogs" />
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Helper targets -->
+	<!-- ===================================================================== -->
+	<target name="gatherLogs">
+		<mkdir dir="${buildDirectory}/${buildLabel}/compilelogs" />
+		<antcall target="allElements">
+			<param name="target" value="gatherLogs" />
+		</antcall>
+
+		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs"
+		       overwrite="true">
+			<fileset dir="${buildDirectory}/features">
+				<include name="**/org.eclipse.php.sdk/*.log.zip" />
+			</fileset>
+		</unzip>
+
+		<!-- [228768] need to collect other logs, not just the zipped ones -->
+		<!-- HACK (from releng.eclipsebuilder/../master/customTargets.xml): 
+			 copy logs from features which nest others because they are not included in the zip created above. -->
+		<copy todir="${buildDirectory}/${buildLabel}/compilelogs"
+		      overwrite="true"
+		      failonerror="false">
+			<fileset dir="${buildDirectory}/features">
+				<include name="**/org.eclipse.php*/feature.temp.folder/plugins/**/@dot.bin.log" />
+			</fileset>
+			<!-- remove prefix dirs: want just plugins/org.eclipse.draw2d_3.4.0.v20080529/@dot.bin.log -->
+			<mapper type="regexp"
+			        from="^.+/feature\.temp\.folder/(plugins)/([^/]+)/([^/]*)$$"
+			        to="\1/\2/\3" />
+		</copy>
+	</target>
+	<target name="clean" unless="noclean">
+		<antcall target="allElements">
+			<param name="target" value="cleanElement" />
+		</antcall>
+	</target>
+
+	<!-- ===================================================================== -->
+	<!-- Default target                                                        -->
+	<!-- ===================================================================== -->
+	<target name="noDefault">
+		<echo message="You must specify a target when invoking this file" />
+	</target>
+
+</project>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<topLevel>
+	<zipTypes>
+		<zipType name="projruntime">
+			<platform 
+				id="projRUN" 
+				name="All" 
+				fileName='&lt;a href="pdt-runtime-@build@.zip"&gt;pdt-runtime-@build@.zip&lt;/a&gt; &lt;font size="2"&gt;(size:@pdt-runtime-@build@.zip.size@ - checksum:&lt;a href="pdt-runtime-@build@.zip.md5"&gt;md5&lt;/a&gt;)&lt;/font&gt;'>
+			</platform>
+		</zipType>
+		<zipType name="projsdk">
+			<platform 
+				id="projSRC" 
+				name="All" 
+				fileName='&lt;a href="pdt-SDK-@build@.zip"&gt;pdt-SDK-@build@.zip&lt;/a&gt; &lt;font size="2"&gt;(size:@pdt-SDK-@build@.zip.size@ - checksum:&lt;a href="pdt-SDK-@build@.zip.md5"&gt;md5&lt;/a&gt;)&lt;/font&gt;'>
+			</platform>
+		</zipType>
+		<zipType name="projtests">
+			<platform 
+				id="T" 
+				name="All" 
+				fileName='&lt;a href="pdt-Automated-Tests-@build@.zip"&gt;pdt-Automated-Tests-@build@.zip&lt;/a&gt; &lt;font size="2"&gt;(size:@pdt-Automated-Tests-@build@.zip.size@ - checksum:&lt;a href="pdt-Automated-Tests-@build@.zip.md5"&gt;md5&lt;/a&gt;)&lt;/font&gt;'>
+			</platform>
+		</zipType>
+		<zipType name="projexamples">
+			<platform 
+				id="EX" 
+				name="All" 
+				fileName='&lt;a href="pdt-examples-@build@.zip"&gt;pdt-examples-@build@.zip&lt;/a&gt; &lt;font size="2"&gt;(size:@pdt-examples-@build@.zip.size@ - checksum:&lt;a href="pdt-examples-@build@.zip.md5"&gt;md5&lt;/a&gt;)&lt;/font&gt;'>
+			</platform>
+		</zipType>
+	</zipTypes>
+
+	<logFiles>
+		<logFile name="org.eclipse.pdt.test_linux.gtk.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="projRUN"></effectedFile>
+		</logFile>
+	
+	<!-- Comment out for now until we get tests on various platforms.
+		<logFile name="org.eclipse.pdt.test_win32.xml">
+			<effectedFile id="SDK"></effectedFile>
+			<effectedFile id="projRUN"></effectedFile>
+		</logFile>
+	-->	
+	
+@entries@
+
+	</logFiles>
+</topLevel>
