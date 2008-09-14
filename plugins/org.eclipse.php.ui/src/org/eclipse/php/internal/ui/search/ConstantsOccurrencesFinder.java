@@ -60,7 +60,8 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(Scalar scalar) {
 		String scalarValue = scalar.getStringValue();
 		if (scalar.getScalarType() == Scalar.TYPE_STRING && scalarValue != null) {
-			if (!isQuoted(scalarValue)) {
+			// disregard strings
+			if (!isQuoted(scalarValue) && (scalar.getParent().getType() != ASTNode.QUOTE)) {
 				if (checkEquality(scalarValue)) {
 					// Usage of the scalar
 					fResult.add(new OccurrenceLocation(scalar.getStart(), scalar.getLength(), getOccurrenceType(scalar), fDescription));

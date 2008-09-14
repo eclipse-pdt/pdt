@@ -2601,7 +2601,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		}
 
-		if (locations == null && selectedNode != null && (selectedNode.getType() == ASTNode.IDENTIFIER || selectedNode.getType() == ASTNode.SCALAR)) {
+		if (locations == null && selectedNode != null && (selectedNode.getType() == ASTNode.IDENTIFIER || (isScalarButNotInString(selectedNode)))) {
 			int type = PhpElementConciliator.concile(selectedNode);
 			if (markOccurrencesOfType(type)) {
 				IOccurrencesFinder finder = OccurrencesFinderFactory.getOccurrencesFinder(type);
@@ -2626,6 +2626,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		// fOccurrencesFinderJob.setSystem(true);
 		// fOccurrencesFinderJob.schedule();
 		fOccurrencesFinderJob.run(new NullProgressMonitor());
+	}
+
+	/**
+	 * Checks whether or not the node is a scalar and return true only if the scalar is not part of a string
+	 * @param node
+	 * @return
+	 */
+	private boolean isScalarButNotInString(ASTNode node) {
+		return (node.getType() == ASTNode.SCALAR) && (node.getParent().getType() != ASTNode.QUOTE);
 	}
 
 	protected void uninstallOverrideIndicator() {
