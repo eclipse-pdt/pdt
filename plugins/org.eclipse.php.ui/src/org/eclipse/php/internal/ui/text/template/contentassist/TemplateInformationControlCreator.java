@@ -10,19 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text.template.contentassist;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.internal.ui.text.hover.SourceViewerInformationControl;
+import java.io.IOException;
+import java.io.StringReader;
 
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.internal.ui.text.HTML2TextReader;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.IInformationControlCreatorExtension;
+import org.eclipse.jface.text.TextPresentation;
+import org.eclipse.php.internal.ui.editor.hover.PHPSourceViewerInformationControl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Shell;
-
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
-import org.eclipse.jface.text.IInformationControlCreatorExtension;
 
 //import org.eclipse.jdt.internal.ui.JavaPlugin;
 //import org.eclipse.jdt.internal.ui.text.java.hover.SourceViewerInformationControl;
@@ -30,7 +31,7 @@ import org.eclipse.jface.text.IInformationControlCreatorExtension;
 
 public final class TemplateInformationControlCreator implements IInformationControlCreator, IInformationControlCreatorExtension {
 
-	private SourceViewerInformationControl fControl;
+	private PHPSourceViewerInformationControl fControl;
 
 	/**
 	 * The orientation to be used by this hover.
@@ -51,7 +52,16 @@ public final class TemplateInformationControlCreator implements IInformationCont
 	 * @see org.eclipse.jface.text.IInformationControlCreator#createInformationControl(org.eclipse.swt.widgets.Shell)
 	 */
 	public IInformationControl createInformationControl(Shell parent) {
-		fControl= new SourceViewerInformationControl(parent, fOrientation, PHPLanguageToolkit.getDefault());
+		fControl= new PHPSourceViewerInformationControl(parent, fOrientation) {
+			public void setInformation(String content) {
+				TextPresentation presentation = new TextPresentation();
+				HTML2TextReader reader = new HTML2TextReader(new StringReader(content), presentation);
+				try {
+					super.setInformation(reader.getString());
+				} catch (IOException e) {
+				}
+			}
+		};
 		fControl.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				fControl= null;

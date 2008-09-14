@@ -26,6 +26,6 @@ public class OpenMethodAction extends org.eclipse.dltk.ui.actions.OpenMethodActi
 
 	@Override
 	protected IDLTKUILanguageToolkit getUILanguageToolkit() {
-		return new PHPUILanguageToolkit();
+		return PHPUILanguageToolkit.getInstance();
 	}
 }

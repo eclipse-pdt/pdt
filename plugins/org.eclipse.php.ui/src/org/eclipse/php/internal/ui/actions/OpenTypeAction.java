@@ -26,6 +26,6 @@ public class OpenTypeAction extends org.eclipse.dltk.ui.actions.OpenTypeAction {
 
 	@Override
 	protected IDLTKUILanguageToolkit getUILanguageToolkit() {
-		return new PHPUILanguageToolkit();
+		return PHPUILanguageToolkit.getInstance();
 	}
 }

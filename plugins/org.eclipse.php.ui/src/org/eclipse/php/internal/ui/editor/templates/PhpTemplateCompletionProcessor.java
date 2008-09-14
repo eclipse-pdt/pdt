@@ -13,29 +13,29 @@ package org.eclipse.php.internal.ui.editor.templates;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.templates.ScriptTemplateAccess;
 import org.eclipse.dltk.ui.templates.ScriptTemplateCompletionProcessor;
-import org.eclipse.dltk.ui.templates.ScriptTemplateContextType;
 import org.eclipse.dltk.ui.text.completion.ScriptContentAssistInvocationContext;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.text.template.contentassist.TemplateInformationControlCreator;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.IWorkbenchPartOrientation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -182,6 +182,16 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region, int relevance) {
 		return new PhpTemplateProposal(template, context, region, getImage(template), relevance);
+	}
+	
+	protected IInformationControlCreator getInformationControlCreator() {
+		int orientation = Window.getDefaultOrientation();
+		IEditorPart editor = getContext().getEditor();
+		if (editor == null)
+			editor = DLTKUIPlugin.getActivePage().getActiveEditor();
+		if (editor instanceof IWorkbenchPartOrientation)
+			orientation = ((IWorkbenchPartOrientation) editor).getOrientation();
+		return new TemplateInformationControlCreator(orientation);
 	}
 
 	/*
