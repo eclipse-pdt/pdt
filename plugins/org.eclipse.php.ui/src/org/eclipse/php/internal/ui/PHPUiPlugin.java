@@ -38,6 +38,7 @@ import org.eclipse.php.internal.ui.editor.templates.PhpTemplateContextType;
 import org.eclipse.php.internal.ui.folding.PHPFoldingStructureProviderRegistry;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.text.PHPTextTools;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
@@ -49,6 +50,7 @@ import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ConfigurationElementSorter;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.jsdt.core.ITypeRoot;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.xml.ui.internal.Logger;
@@ -93,6 +95,8 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	private ASTProvider fASTProvider;
 
 	private ColorManager fColorManager;
+
+	private PHPTextTools fTextTools;
 
 	/**
 	 * The constructor.
@@ -342,9 +346,9 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	}
 	
 	/**
-	 * Returns the AST provider.
+	 * Returns color manager
 	 * 
-	 * @return the AST provider
+	 * @return the color manager
 	 * @since 3.0
 	 */
 	public synchronized ColorManager getColorManager() {
@@ -352,6 +356,19 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			fColorManager = new ColorManager();
 
 		return fColorManager;
+	}
+	
+	/**
+	 * Returns text tools
+	 * 
+	 * @return the text tools
+	 * @since 3.0
+	 */
+	public synchronized PHPTextTools getTextTools() {
+		if (fTextTools == null)
+			fTextTools = new PHPTextTools(true);
+		
+		return fTextTools;
 	}
 
 	/**

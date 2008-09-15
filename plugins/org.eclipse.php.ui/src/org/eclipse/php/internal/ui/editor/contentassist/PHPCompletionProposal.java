@@ -11,11 +11,13 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
 public class PHPCompletionProposal extends ScriptCompletionProposal {
@@ -69,5 +71,9 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	protected boolean insertCompletion() {
 		Preferences pluginPreferences = PHPCorePlugin.getDefault().getPluginPreferences();
 		return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
+	}
+
+	protected ScriptTextTools getTextTools() {
+		return PHPUiPlugin.getDefault().getTextTools();
 	}
 }
