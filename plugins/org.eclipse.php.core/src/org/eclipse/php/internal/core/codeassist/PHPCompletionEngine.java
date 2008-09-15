@@ -68,6 +68,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final String BRACKETS_SUFFIX = "()"; //$NON-NLS-1$
 	private static final String WHITESPACE_SUFFIX = " "; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
+	private static final String OPEN_BRACE = "("; //$NON-NLS-1$
 
 	private final static int RELEVANCE_KEYWORD = 10000000;
 	private final static int RELEVANCE_METHOD = 1000000;
@@ -112,6 +113,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected ISourceModule sourceModule;
 	protected boolean explicit;
 	private Preferences pluginPreferences;
+	private boolean hasWhitespaceAtEnd;
+	private boolean hasOpenBraceAtEnd;
+	private boolean hasPaamayimNekudotaimAtEnd;
+	private int wordEndOffset;
+	private String nextWord;
 
 	enum States {
 		CATCH, NEW, INSTANCEOF
@@ -296,10 +302,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
 		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
-		boolean haveSpacesAtEnd = totalLength != endPosition;
-
+		hasWhitespaceAtEnd = totalLength != endPosition;
+		
 		if (inPHPDoc) {
-			if (isInPhpDocCompletion(statementText, offset, lastWord, haveSpacesAtEnd)) {
+			if (isInPhpDocCompletion(statementText, offset, lastWord)) {
 				// the current position is php doc block.
 				return;
 			}
@@ -313,11 +319,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				int tagEnd = PHPTextSequenceUtilities.readIdentifierEndIndex(statementText, tagStart, false);
 				String tagName = statementText.subSequence(tagStart, tagEnd).toString();
 
-				if (isVariableCompletion(offset, tagName, lastWord, haveSpacesAtEnd)) {
+				if (isVariableCompletion(offset, tagName, lastWord)) {
 					// the current position is a variable completion after @param PHP-doc tag
 					return;
 				}
-				if (tagStart == startPosition && isReturnTypeCompletion(offset, tagName, haveSpacesAtEnd)) {
+				if (tagStart == startPosition && isReturnTypeCompletion(offset, tagName)) {
 					// the current position is a class completion after @return PHP-doc tag
 					return;
 				}
@@ -345,13 +351,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			if (haveSpacesAtEnd && isNewOrInstanceofStatement(lastWord, EMPTY, offset, type)) { //$NON-NLS-1$
+			if (hasWhitespaceAtEnd && isNewOrInstanceofStatement(lastWord, EMPTY, offset, type)) { //$NON-NLS-1$
 				// the current position is inside new or instanceof statement.
 				return;
 			}
 
 			int line = document.getLineOfOffset(offset);
-			if (isClassFunctionCompletion(statementText, offset, line, lastWord, startPosition, haveSpacesAtEnd)) {
+			if (isClassFunctionCompletion(statementText, offset, line, lastWord, startPosition)) {
 				// the current position is in class function.
 				return;
 			}
@@ -360,7 +366,26 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 			String firstWord = statementText.subSequence(startPosition, endPosition).toString();
 
-			if (!haveSpacesAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
+			wordEndOffset = container.getStartOffset() + phpScriptRegion.getStart() + internalPHPRegion.getTextEnd();
+			
+			ITextRegion nextRegion = internalPHPRegion;
+			do {
+				nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
+				if (!PHPPartitionTypes.isPHPCommentState(nextRegion.getType()) && nextRegion.getType() != PHPRegionTypes.WHITESPACE) {
+					break;
+				}
+			} while (nextRegion.getEnd() < phpScriptRegion.getLength());
+			
+			nextWord = document.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
+			
+			hasOpenBraceAtEnd = hasPaamayimNekudotaimAtEnd = false;
+			if (OPEN_BRACE.equals(nextWord)) {
+				hasOpenBraceAtEnd = true;
+			} else if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
+				hasPaamayimNekudotaimAtEnd = true;
+			}
+			
+			if (!hasWhitespaceAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
 				// the current position is inside new or instanceof statement.
 				if (lastWord.startsWith(DOLLAR)) {
 					getRegularCompletion(lastWord, offset, container, phpScriptRegion, internalPHPRegion, document);
@@ -368,12 +393,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			if (haveSpacesAtEnd && CodeAssistUtils.isFunctionCall(lastWord)) {
+			if (hasWhitespaceAtEnd && CodeAssistUtils.isFunctionCall(lastWord)) {
 				// the current position is between the end of a function call and open bracket.
 				return;
 			}
 
-			if (isInArrayOption(haveSpacesAtEnd, firstWord, lastWord, startPosition, offset, statementText, type)) {
+			if (isInArrayOption(firstWord, lastWord, startPosition, offset, statementText, type)) {
 				// the current position is after '[' sign show special completion.
 				return;
 			}
@@ -387,8 +412,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	private boolean isInPhpDocCompletion(CharSequence statementText, int offset, String tagName, boolean hasSpacesAtEnd) {
-		if (hasSpacesAtEnd) {
+	private boolean isInPhpDocCompletion(CharSequence statementText, int offset, String tagName) {
+		if (hasWhitespaceAtEnd) {
 			return false;
 		}
 		int startPosition = statementText.length() - tagName.length();
@@ -425,8 +450,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	@SuppressWarnings("unchecked")
-	private boolean isVariableCompletion(int offset, String tagName, String varName, boolean haveSpacesAtEnd) {
-		if (haveSpacesAtEnd) {
+	private boolean isVariableCompletion(int offset, String tagName, String varName) {
+		if (hasWhitespaceAtEnd) {
 			return false;
 		}
 		if (!PHPDocTag.PARAM_NAME.equals(tagName)) {
@@ -457,8 +482,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return false;
 	}
 
-	private boolean isReturnTypeCompletion(final int offset, String tagName, boolean haveSpacesAtEnd) {
-		if (!haveSpacesAtEnd) {
+	private boolean isReturnTypeCompletion(final int offset, String tagName) {
+		if (!hasWhitespaceAtEnd) {
 			return false;
 		}
 		if (!PHPDocTag.RETURN_NAME.equals(tagName)) {
@@ -748,7 +773,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return;
 	}
 
-	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition, boolean haveSpacesAtEnd) {
+	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition) {
 		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition);
 		if (startFunctionPosition <= 2) {
 			return false;
@@ -771,7 +796,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line, determineObjsFromOtherFiles());
 
-		if (haveSpacesAtEnd && functionName.length() > 0) {
+		if (hasWhitespaceAtEnd && functionName.length() > 0) {
 			// check if current position is between the end of a function call and open bracket.
 			return CodeAssistUtils.isClassFunctionCall(sourceModule, types, functionName);
 		}
@@ -1295,13 +1320,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return false;
 	}
 
-	protected boolean isInArrayOption(boolean haveSpacesAtEnd, String firstWord, String lastWord, int startPosition, int offset, TextSequence text, String type) {
+	protected boolean isInArrayOption(String firstWord, String lastWord, int startPosition, int offset, TextSequence text, String type) {
 		if (PHPPartitionTypes.isPHPQuotesState(type)) {
 			return false;
 		}
 		boolean isArrayOption = false;
 		if (startPosition > 0 && !lastWord.startsWith(DOLLAR)) { //$NON-NLS-1$
-			if (haveSpacesAtEnd) {
+			if (hasWhitespaceAtEnd) {
 				if (lastWord.length() == 0 && firstWord.length() == 0) {
 					if (text.charAt(startPosition - 1) == '[') {
 						isArrayOption = true;
@@ -1400,14 +1425,26 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			proposal.setModelElement(method);
 			proposal.setName(name);
-			proposal.setCompletion((elementName + BRACKETS_SUFFIX).toCharArray());
+			
+			if (hasOpenBraceAtEnd) {
+				proposal.setCompletion(elementName.toCharArray());
+			} else {
+				proposal.setCompletion((elementName + BRACKETS_SUFFIX).toCharArray());
+			}
 			try {
 				proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
-			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+			
+			int replaceStart = this.startPosition - this.offset;
+			int replaceEnd = this.endPosition - this.offset;
+			if (replaceEnd < wordEndOffset) {
+				replaceEnd = wordEndOffset;
+			}
+			proposal.setReplaceRange(replaceStart, replaceEnd);
+			
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
@@ -1460,12 +1497,27 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			proposal.setModelElement(type);
 			proposal.setName(name);
-			proposal.setCompletion((elementName + suffix).toCharArray());
+			
+			if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix) {
+				proposal.setCompletion(elementName.toCharArray());
+			} else {
+				proposal.setCompletion((elementName + suffix).toCharArray());
+			}
+			
 			try {
 				proposal.setFlags(type.getFlags());
 			} catch (ModelException e) {
 			}
-			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+			
+			int replaceStart = this.startPosition - this.offset;
+			int replaceEnd = this.endPosition - this.offset;
+			if (replaceEnd < wordEndOffset) {
+				replaceEnd = wordEndOffset - 1;
+			} else if (wordEndOffset != this.endPosition) {
+				replaceEnd--;
+			}
+			proposal.setReplaceRange(replaceStart, replaceEnd);
+			
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
@@ -1508,7 +1560,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				proposal.setFlags(field.getFlags());
 			} catch (ModelException e) {
 			}
-			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+			
+			int replaceStart = this.startPosition - this.offset;
+			int replaceEnd = this.endPosition - this.offset;
+			if (replaceEnd < wordEndOffset) {
+				replaceEnd = wordEndOffset;
+			}
+			proposal.setReplaceRange(replaceStart, replaceEnd);
+			
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
@@ -1528,10 +1587,23 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 			proposal.setName(name.toCharArray());
-			proposal.setCompletion((name + suffix).toCharArray());
+			
+			if (nextWord != null && nextWord.equals(suffix)) {
+				proposal.setCompletion(name.toCharArray());
+			} else {
+				proposal.setCompletion((name + suffix).toCharArray());
+			}
+			
 			// proposal.setFlags(Flags.AccDefault);
 			proposal.setRelevance(relevance);
-			proposal.setReplaceRange(this.startPosition - this.offset, this.endPosition - this.offset);
+			
+			int replaceStart = this.startPosition - this.offset;
+			int replaceEnd = this.endPosition - this.offset;
+			if (replaceEnd < wordEndOffset) {
+				replaceEnd = wordEndOffset;
+			}
+			proposal.setReplaceRange(replaceStart, replaceEnd);
+			
 			this.requestor.accept(proposal);
 			if (DEBUG) {
 				this.printDebug(proposal);
