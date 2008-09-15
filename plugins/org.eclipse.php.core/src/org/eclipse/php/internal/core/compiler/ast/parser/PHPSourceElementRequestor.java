@@ -20,12 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.ast.declarations.Argument;
-import org.eclipse.dltk.ast.declarations.Declaration;
-import org.eclipse.dltk.ast.declarations.FieldDeclaration;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -37,6 +32,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
+import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -59,9 +55,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	
 	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
 
-	public PHPSourceElementRequestor(ISourceElementRequestor requestor, char[] contents, char[] filename) {
+	public PHPSourceElementRequestor(ISourceElementRequestor requestor, ISourceModule sourceModule) {
 		super(requestor);
-
+		
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, "phpSourceElementRequestors");
 		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(elements.length);
@@ -69,8 +65,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			try {
 				PHPSourceElementRequestorExtension extension = (PHPSourceElementRequestorExtension) element.createExecutableExtension("class");
 				extension.setRequestor(fRequestor);
-				extension.setContents(contents);
-				extension.setFilename(new String(filename));
+				extension.setSourceModule(sourceModule);
 
 				requestors.add(extension);
 			} catch (CoreException e) {

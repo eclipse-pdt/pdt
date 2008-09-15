@@ -12,11 +12,11 @@ package org.eclipse.php.core;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.env.ISourceModule;
 
 public class PHPSourceElementRequestorExtension extends ASTVisitor {
 
-	private String filename;
-	private char[] contents;
+	private ISourceModule fSourceModule;
 	protected ISourceElementRequestor fRequestor;
 
 	public PHPSourceElementRequestorExtension() {
@@ -26,19 +26,15 @@ public class PHPSourceElementRequestorExtension extends ASTVisitor {
 		fRequestor = requesor;
 	}
 	
-	public void setContents(char[] contents) {
-		this.contents = contents;
+	public ISourceElementRequestor getRequestor() {
+		return fRequestor;
+	}
+	
+	public void setSourceModule(ISourceModule sourceModule) {
+		fSourceModule = sourceModule;
 	}
 
-	public char[] getContents() {
-		return contents;
-	}
-
-	public void setFilename(String file) {
-		this.filename = file;
-	}
-
-	public String getFilename() {
-		return filename;
+	public ISourceModule getSourceModule() {
+		return fSourceModule;
 	}
 }
