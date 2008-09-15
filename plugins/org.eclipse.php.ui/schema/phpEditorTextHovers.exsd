@@ -89,9 +89,9 @@
 &lt;ul&gt;
 &lt;li&gt;1000 – Best Match Hover&lt;/li&gt;
 &lt;li&gt;500 – Problem Hover&lt;/li&gt;
-&lt;li&gt;400 – PHP Annotation Hover&lt;/li&gt;
+&lt;li&gt;400 – PHP Documentation Hover&lt;/li&gt;
 &lt;li&gt;300 – PHP Source Hover&lt;/li&gt;
-&lt;li&gt;200 – PHP Debug Text Hover&lt;/li&gt;
+&lt;li&gt;200 – PHP Annotation Text Hover&lt;/li&gt;
 &lt;/ul&gt;
                </documentation>
             </annotation>

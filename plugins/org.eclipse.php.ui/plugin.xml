@@ -1128,16 +1128,16 @@
 			description="%problemHoverDescription" id="org.eclipse.php.ui.editor.hover.ProblemHover"
 			label="%problemHover" priority="500" />
 		<hover
-			class="org.eclipse.php.internal.ui.editor.hover.PHPAnnotationTextHover"
-			description="%annotationHoverDescription" id="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
-			label="%annotationHover" priority="400" />
-		<hover
 			class="org.eclipse.php.internal.ui.editor.hover.PHPDocumentationHover"
 			description="%documentationHoverDescription" id="org.eclipse.php.ui.editor.hover.PHPDocumentationHover"
-			label="%documentationHover" priority="300" />
+			label="%documentationHover" priority="400" />
 		<hover class="org.eclipse.php.internal.ui.editor.hover.PHPSourceTextHover"
 			description="%sourceHoverDescription" id="org.eclipse.php.ui.editor.hover.PHPSourceTextHover"
-			label="%sourceHover" priority="200" />
+			label="%sourceHover" priority="300" />
+		<hover
+			class="org.eclipse.php.internal.ui.editor.hover.PHPAnnotationTextHover"
+			description="%annotationHoverDescription" id="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
+			label="%annotationHover" priority="200" />
 	</extension>
 
 	<!--PHP Working Set:-->
