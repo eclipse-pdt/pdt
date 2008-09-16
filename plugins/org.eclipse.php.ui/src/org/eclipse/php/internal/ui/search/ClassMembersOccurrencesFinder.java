@@ -68,17 +68,21 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		ASTNode parent = identifier.getParent();
 		if (parent.getType() == ASTNode.VARIABLE) {
 			Variable var = (Variable) parent;
-			if (var.getParent().getType() == ASTNode.FIELD_ACCESS) {
-				typeBinding = ((FieldAccess) var.getParent()).getDispatcher().resolveTypeBinding();
-			} else if (var.getParent().getType() == ASTNode.FUNCTION_NAME) {
-				FunctionName fn = (FunctionName) var.getParent();
+			ASTNode varParent = var.getParent();
+			if (var.getParent().getType() == ASTNode.ARRAY_ACCESS) {
+				varParent = varParent.getParent();
+			}
+			if (varParent.getType() == ASTNode.FIELD_ACCESS) {
+				typeBinding = ((FieldAccess) varParent).getDispatcher().resolveTypeBinding();
+			} else if (varParent.getType() == ASTNode.FUNCTION_NAME) {
+				FunctionName fn = (FunctionName) varParent;
 				if (fn.getParent().getType() == ASTNode.FUNCTION_INVOCATION) {
 					FunctionInvocation fi = (FunctionInvocation) fn.getParent();
 					if (fi.getParent().getType() == ASTNode.METHOD_INVOCATION) {
 						typeBinding = ((MethodInvocation) fi.getParent()).getDispatcher().resolveTypeBinding();
 					}
 				}
-			} else if (var.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
+			} else if (varParent.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 				return resolveDeclaringClassType(var.getParent());
 			}
 		} else if (parent.getType() == ASTNode.STATIC_CONSTANT_ACCESS) {
@@ -190,7 +194,6 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
 			}
 		}
-		// }
 		return true;
 	}
 
