@@ -106,12 +106,9 @@ propertyName=propertyValue
 
 		<property name="stagingHome"
 		          value="/home/data/httpd/download-staging.priv" />
-		<!-- HACK: until this build can run as a PDT committer, it needs to be signed in a dir in which nickb@build.eclipse.org can work -->
-		<!-- TODO: change to tools/pdt -->
-		<property name="projectPath" value="tools/gef" />
+		<property name="projectPath" value="tools/pdt" />
 		<!-- user with write perms in staging dir & permission to run /usr/bin/sign -->
-		<!-- TODO: change to some other user in signers group w/ write access to  /home/data/httpd/download-staging.priv/tools/pdt -->
-		<property name="buildServerUser" value="nickb@build.eclipse.org" />
+		<property name="buildServerUser" value="apeled@build.eclipse.org" />
 		<condition property="sign">
 			<or>
 				<!-- want to enable/disable signing for a given build type? add/remove types here -->
