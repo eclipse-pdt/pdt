@@ -326,7 +326,7 @@ public class BindingUtility {
 		}
 
 		public boolean visitGeneral(ASTNode node) throws Exception {
-			if (node.sourceEnd() < sourceRange.offset || node.sourceStart() > sourceRange.getEnd()) {
+			if (node.sourceStart() > sourceRange.getEnd()) {
 				return false;
 			}
 			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
