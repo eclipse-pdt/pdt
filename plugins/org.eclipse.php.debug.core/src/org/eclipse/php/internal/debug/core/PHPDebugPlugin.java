@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.IInternalDebugUIConstants;
 import org.eclipse.debug.ui.IDebugUIConstants;
@@ -292,7 +288,7 @@ public class PHPDebugPlugin extends Plugin {
 					fLaunchChangedAutoRemoveLaunches = false;// We got the event, so reset the flag.
 				} else {
 					// The event was triggered from some other source - e.g. The user changed the preferences manually.
-					fInitialAutoRemoveLaunches = ((Boolean) event.getNewValue()).booleanValue();
+					fInitialAutoRemoveLaunches = Boolean.valueOf(event.getNewValue().toString());
 				}
 			}
 		}
