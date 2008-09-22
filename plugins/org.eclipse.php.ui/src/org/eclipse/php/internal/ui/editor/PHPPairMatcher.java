@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor;
 
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 
 /**
  * Helper class for match pairs of characters.
@@ -130,7 +132,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		boolean useGenericsHeuristic = openingPeer == '<';
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
-		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, TextUtilities.getContentType(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false));
+		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset);
 		if (useGenericsHeuristic && !isTypeParameterBracket(offset, document, scanner))
 			return -1;
 
@@ -142,7 +144,7 @@ public final class PHPPairMatcher implements ICharacterPairMatcher {
 		if (useGenericsHeuristic && !fHighlightAngularBrackets)
 			return -1;
 
-		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, TextUtilities.getContentType(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false));
+		PHPHeuristicScanner scanner = PHPHeuristicScanner.createHeuristicScanner(document, offset);
 		int peer = scanner.findOpeningPeer(offset - 1, openingPeer, closingPeer);
 		if (peer == PHPHeuristicScanner.NOT_FOUND)
 			return -1;

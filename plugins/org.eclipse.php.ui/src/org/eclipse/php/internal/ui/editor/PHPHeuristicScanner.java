@@ -17,7 +17,12 @@ import java.util.Arrays;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 
 /**
  * Utility methods for heuristic based Java manipulations in an incomplete
@@ -291,6 +296,28 @@ final class PHPHeuristicScanner implements Symbols {
 	 */
 	public PHPHeuristicScanner(IDocument document) {
 		this(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, IDocument.DEFAULT_CONTENT_TYPE);
+	}
+
+	/**
+	 * Creates a PHPHeuristicScanner with a default partition type set to - PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or 
+	 * PHPPartitionTypes.PHP_DEFAULT.
+	 * Matching open/close symbol will only be looked for in the same partition type, so that for example a closing bracket in a commented line 
+	 * will not match an opening bracket in the code. 
+	 * 
+	 * @param document the document to scan
+	 * @param offset the offset in the document
+	 * @return the PHPHeuristicScanner for the given document and offset
+	 * @throws BadLocationException 
+	 */
+	public static PHPHeuristicScanner createHeuristicScanner(IDocument document, int offset) throws BadLocationException {
+		// Create a scanner with default values
+		PHPHeuristicScanner scanner = new PHPHeuristicScanner(document);
+		// Calculate the partition in the given offset and classify it accordingly
+		ITypedRegion partition = scanner.getPartition(offset);
+		// Update the default partition in the scanner
+		scanner.fPartition = partition.getType();
+
+		return scanner;
 	}
 
 	/**
@@ -886,16 +913,15 @@ final class PHPHeuristicScanner implements Symbols {
 	public boolean isDefaultPartition(int position) {
 		Assert.isTrue(position >= 0);
 		Assert.isTrue(position <= fDocument.getLength());
-
-		try {
-			return fPartition.equals(TextUtilities.getContentType(fDocument, fPartitioning, position, false));
-		} catch (BadLocationException e) {
-			return false;
-		}
+		ITypedRegion partition = getPartition(position);
+		return fPartition.equals(partition.getType());
 	}
 
 	/**
 	 * Returns the partition at <code>position</code>.
+	 * Classify the partition as - PHPPartitionTypes.PHP_COMMENT, PHPPartitionTypes.PHP_QUOTED_STRING or PHPPartitionTypes.PHP_DEFAULT.
+	 * Matching open/close symbol will only be looked for in the same partition type, so that for example a closing bracket in a commented line 
+	 * will not match an opening bracket in the code. 
 	 * 
 	 * @param position
 	 *            the position to get the partition for
@@ -907,6 +933,28 @@ final class PHPHeuristicScanner implements Symbols {
 		Assert.isTrue(position <= fDocument.getLength());
 
 		try {
+			// If we have a structured document - extract the text region from the document and classify it
+			if (fDocument instanceof BasicStructuredDocument) {
+				IStructuredDocumentRegion sdRegion = ((BasicStructuredDocument) fDocument).getRegionAtCharacterOffset(position);
+				ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(position);
+				if (textRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion phpScriptRegion = (IPhpScriptRegion) textRegion;
+					textRegion = phpScriptRegion.getPhpToken(position - sdRegion.getStartOffset() - phpScriptRegion.getStart());
+					// handle comments
+					if (PHPPartitionTypes.isPHPCommentState(textRegion.getType())) {
+						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_COMMENT);
+					}
+					// handle strings
+					else if (PHPPartitionTypes.isPHPQuotesState(textRegion.getType())) {
+						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_QUOTED_STRING);
+					}
+					// handle the rest
+					else if (PHPPartitionTypes.isPHPRegularState(textRegion.getType())) {
+						return new TypedRegion(position, 0, PHPPartitionTypes.PHP_DEFAULT);
+					}
+				}
+			}
+
 			return TextUtilities.getPartition(fDocument, fPartitioning, position, false);
 		} catch (BadLocationException e) {
 			return new TypedRegion(position, 0, "__no_partition_at_all"); //$NON-NLS-1$
