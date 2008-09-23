@@ -82,12 +82,12 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 		// Implementations to override.
 	}
 
-	protected void removeOpenCloseComments(IDocument document, int offset, int length) {
+	protected void removeOpenCloseComments(IDocument document, int offset, int endOffset) {
 		try {
-			int adjusted_length = length;
+			int adjusted_length = endOffset - offset;
 
 			// remove open comments
-			String string = document.get(offset, length);
+			String string = document.get(offset, adjusted_length);
 			int index = string.lastIndexOf(OPEN_COMMENT);
 			while (index != -1) {
 				document.replace(offset + index, OPEN_COMMENT.length(), ""); //$NON-NLS-1$
@@ -101,6 +101,7 @@ public abstract class CommentHandler extends AbstractHandler implements IHandler
 			while (index != -1) {
 				document.replace(offset + index, CLOSE_COMMENT.length(), ""); //$NON-NLS-1$
 				index = string.lastIndexOf(CLOSE_COMMENT, index - 1);
+				adjusted_length -= CLOSE_COMMENT.length();
 			}
 
 		} catch (BadLocationException e) {
