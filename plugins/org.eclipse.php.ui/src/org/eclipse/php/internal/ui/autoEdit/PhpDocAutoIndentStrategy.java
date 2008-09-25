@@ -18,6 +18,7 @@ import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.util.SuperTypeHierarchyCache;
@@ -27,6 +28,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
  * TODO : move this auto strategy to DLTK?
@@ -119,11 +121,17 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 							if (unit != null) {
 								try {
 									ScriptModelUtil.reconcile(unit);
-									String string = createScriptdocTags(d, c, indentation, lineDelimiter, unit);
+									String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) d, c.offset);
+									String commentBlockBody;
+									if (partitionType.equals(PHPPartitionTypes.PHP_DOC)) {
+										commentBlockBody = createScriptdocTags(d, c, indentation, lineDelimiter, unit);
+									} else {//Multiline comment
+										commentBlockBody = PHP_COMMENT_BLOCK_MID;
+									}
 									buf.append(restOfLine);
 									// only add tags if they are non-empty - the empty line has already been added above.
-									if (string != null && !string.trim().equals("*")) //$NON-NLS-1$
-										buf.append(string);
+									if (commentBlockBody != null && !commentBlockBody.trim().equals("*")) //$NON-NLS-1$
+										buf.append(commentBlockBody);
 								} catch (CoreException e) {
 									Logger.logException(e);
 								}
