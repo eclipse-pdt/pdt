@@ -21,7 +21,6 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.IEditorPart;
@@ -96,24 +95,18 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 	}
 
 	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
-		
+
 		int selectionOffset = textSelection.getOffset();
 		int selectionLength = textSelection.getLength();
-
-//		if (textSelection.getLength() == 0) {
-//			return; 
-//		}
 
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
 				model.beginRecording(this, PHPUIMessages.getString("RemoveBlockComment_tooltip"));
 				model.aboutToChangeModel();
-				
+
 				if (document instanceof IStructuredDocument) {
 					IStructuredDocument sDoc = (IStructuredDocument) document;
-
-					//IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
 					ITextRegion textRegion = sDoc.getRegionAtCharacterOffset(selectionOffset).getRegionAtCharacterOffset(selectionOffset);
 
 					Stack<TextLocation> phpCommentLocationStack = new Stack<TextLocation>(); // stack of ITextRegion including only Comments' Start and End tokens locations
@@ -133,20 +126,20 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 								ITextRegion startToken = findCommentStartToken(token, (PhpScriptRegion) textRegion);
 								TextLocation commentOffsets = new TextLocation(startToken.getStart() + regionOffset, startToken.getEnd() + regionOffset);
 								boolean result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
-								assert(result);
+								assert (result);
 								lastOffsetParsed = commentOffsets.endOffset - regionOffset;
 
 								ITextRegion endToken = findCommentEndToken(token, (PhpScriptRegion) textRegion);
 								commentOffsets = new TextLocation(endToken.getStart() + regionOffset, endToken.getEnd() + regionOffset);
 								result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
-								assert(result);
+								assert (result);
 								lastOffsetParsed = commentOffsets.endOffset - regionOffset;
 
 							}
 						}
 						for (int i = phpCommentLocationStack.size(); i > 0; i--) {
 							TextLocation location = phpCommentLocationStack.pop();
-							removeOpenCloseComments(document, location.startOffset, location.endOffset );
+							document.replace(location.startOffset, location.endOffset - location.startOffset, ""); //$NON-NLS-1$
 						}
 
 					} catch (BadLocationException e) {
@@ -168,7 +161,7 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 			phpCommentLocationStack.push(commentOffsets);
 			return true;
 		}
-		return false ;
+		return false;
 	}
 
 	private ITextRegion findCommentStartToken(ITextRegion token, PhpScriptRegion phpScriptRegion) throws BadLocationException {
