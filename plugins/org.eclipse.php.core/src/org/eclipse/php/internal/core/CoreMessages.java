@@ -43,4 +43,6 @@ public final class CoreMessages extends NLS {
 			return ""; //$NON-NLS-1$
 		}
 	}
+
+	public static String PHPTodoTaskAstParser_0;
 }
