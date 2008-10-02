@@ -95,8 +95,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 					// phpdoc started on this line
 					buf.append(" * "); //$NON-NLS-1$
 
-					boolean preference = true; //=isPreferenceTrue(PreferenceConstants.EDITOR_ADD_JAVADOC_TAGS);
-					if (preference && isNewComment(d, offset)) {
+					if (TypingPreferences.closePhpdoc && isNewComment(d, offset)) {
 						c.shiftsCaret = false;
 						c.caretOffset = c.offset + buf.length();
 						String lineDelimiter = TextUtilities.getDefaultLineDelimiter(d);
@@ -110,7 +109,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 						if (getCommentEnd(d, offset) > 0) {
 							endTag = "";
 						}
-						if (preference) {
+						if (TypingPreferences.addDocTags) {
 							// we need to close the comment before computing
 							// the correct tags in order to get the method
 							d.replace(offset, replacementLength, endTag);
