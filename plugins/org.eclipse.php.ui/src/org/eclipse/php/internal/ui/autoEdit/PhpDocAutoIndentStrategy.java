@@ -209,7 +209,11 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		IModelElement element = unit.getElementAt(nextElementOffset);
 		if (element == null)
 			return null;
-
+		
+		// Checking the element we got is not the element within the "/**" was typed	
+		if ( getCodeDataOffset(element) <= command.caretOffset){
+			return null;
+		}
 		int type = element != null ? element.getElementType() : -1;
 		if (type != IModelElement.METHOD && type != IModelElement.TYPE && type != IModelElement.FIELD) {
 			assert false;
