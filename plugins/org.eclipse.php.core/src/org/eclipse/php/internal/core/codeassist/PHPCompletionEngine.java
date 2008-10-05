@@ -1513,7 +1513,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			int replaceEnd = this.endPosition - this.offset;
 			if (replaceEnd < wordEndOffset) {
 				replaceEnd = wordEndOffset - 1;
-			} else if (wordEndOffset != this.endPosition) {
+			} else if (wordEndOffset > 0 && wordEndOffset != this.endPosition) {
 				replaceEnd--;
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
