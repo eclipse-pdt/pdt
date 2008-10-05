@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -42,8 +39,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  *
  */
 public class PHPTodoTaskAstParser extends TodoTaskAstParser implements IBuildParticipant {
-
-	List<PHPTaskTag> tasks = new ArrayList<PHPTaskTag>();
 
 	public PHPTodoTaskAstParser(ITodoTaskPreferences preferences) {
 		super(preferences);
