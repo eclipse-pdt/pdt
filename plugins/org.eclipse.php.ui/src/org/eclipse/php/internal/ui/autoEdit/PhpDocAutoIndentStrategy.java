@@ -210,15 +210,6 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		if (element == null)
 			return null;
 
-		// Calculating indentation need to be added
-		String indentString = null;
-		try {
-			indentString = getIndentString(document, element);
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-			return null;
-		}
-
 		int type = element != null ? element.getElementType() : -1;
 		if (type != IModelElement.METHOD && type != IModelElement.TYPE && type != IModelElement.FIELD) {
 			assert false;
@@ -245,7 +236,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			Logger.logException(e);
 		}
 
-		return indentPattern(comment, indentString, lineDelimiter);
+		return indentPattern(comment, indentation, lineDelimiter);
 	}
 
 	private int getEndOfWhiteSpacesOffset(IDocument document, int offset, int end) throws BadLocationException {
