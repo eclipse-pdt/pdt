@@ -74,7 +74,7 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements IBuildPar
 							//go over the text regions and look for the tasks
 							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(textRegion.getStart(), textRegion.getLength());
 							for (int j = 0; j < phpTokens.length; j++) {
-								ITextRegion phpToken = phpTokens[j]; 
+								ITextRegion phpToken = phpTokens[j];
 								if (phpToken.getType().equals(PHPRegionTypes.TASK)) {
 									// get the task information from the document 
 									IStructuredDocument document = structuredDocumentRegion.getParentDocument();
@@ -84,14 +84,15 @@ public class PHPTodoTaskAstParser extends TodoTaskAstParser implements IBuildPar
 									if (j + 1 < phpTokens.length) {
 										ITextRegion phpNextToken = phpTokens[j + 1];
 										phpNextToken.getType().equals(PHPRegionTypes.TASK);
-										//length = length + phpNextToken.getLength();
+										length = length + phpNextToken.getLength();
 									}
 									String taskStr = document.get(offset, length);
 									taskStr = taskStr.trim();
 									int lineNumber = document.getLineOfOffset(offset);
-									
+									int charEnd = offset + taskStr.length();
+
 									// report the task
-									taskReporter.reportTask(taskStr, lineNumber, TaskTag.PRIORITY_NORMAL, offset, length);
+									taskReporter.reportTask(taskStr, lineNumber, TaskTag.PRIORITY_NORMAL, offset, charEnd);
 								}
 							}
 						} catch (BadLocationException e) {
