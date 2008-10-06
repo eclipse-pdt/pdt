@@ -30,11 +30,11 @@ public class PHPTodoTaskPreferences extends TodoTaskPreferences {
 	
 	public static List<TodoTask> getDefaultTags() {
 		
-		final List<TodoTask> defaultTags = new ArrayList<TodoTask>();
-		defaultTags.add(new TodoTask("@todo", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$
+		final List<TodoTask> defaultTags = new ArrayList<TodoTask>();		
 		defaultTags.add(new TodoTask("TODO", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$
 		defaultTags.add(new TodoTask("FIXME", TodoTask.PRIORITY_HIGH)); //$NON-NLS-1$ 
-		defaultTags.add(new TodoTask("XXX", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$		
+		defaultTags.add(new TodoTask("XXX", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$	
+		defaultTags.add(new TodoTask("@todo", TodoTask.PRIORITY_NORMAL)); //$NON-NLS-1$
 		return defaultTags;
 	}
 	
@@ -46,8 +46,8 @@ public class PHPTodoTaskPreferences extends TodoTaskPreferences {
 				sb.append(TAG_SEPARATOR);
 			}
 			sb.append(task.name);
-			sb.append(PRIORITY_SEPARATOR);
-			sb.append(task.priority);
+		//	sb.append(PRIORITY_SEPARATOR);
+		//	sb.append(task.priority);
 		}
 		final String string = sb.toString();
 		return string;

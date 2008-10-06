@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
-import org.eclipse.dltk.compiler.task.ITodoTaskPreferences;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.validators.core.AbstractBuildParticipantType;
 import org.eclipse.dltk.validators.core.IBuildParticipant;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.project.PHPNature;
 
 public class PHPTodoParserType extends AbstractBuildParticipantType {
@@ -27,14 +25,9 @@ public class PHPTodoParserType extends AbstractBuildParticipantType {
 	}
 
 	protected IBuildParticipant createBuildParticipant(IScriptProject project) {
-		final ITodoTaskPreferences prefs = new PHPTodoTaskPreferences(PHPCorePlugin.getDefault().getPluginPreferences());
-		if (prefs.isEnabled()) {
-			final PHPTodoTaskAstParser parser = new PHPTodoTaskAstParser(prefs);
-			if (parser.isValid()) {
-				return parser;
-			}
-		}
-		return null;
+
+		final PHPTodoTaskAstParser parser = new PHPTodoTaskAstParser(project);
+		return parser;
 	}
 
 	public String getNature() {
