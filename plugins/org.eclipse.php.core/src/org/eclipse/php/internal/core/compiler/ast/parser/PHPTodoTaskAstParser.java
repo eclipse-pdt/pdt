@@ -12,14 +12,11 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.task.ITaskReporter;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
+import org.eclipse.dltk.core.builder.IBuildContext;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -41,49 +38,49 @@ import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
  * @author Eden K.,2008
  *
  */
-public class PHPTodoTaskAstParser /*extends TodoTaskAstParser*/ implements IBuildParticipant {
+public class PHPTodoTaskAstParser implements IBuildParticipant {
 
 	protected TaskTag[] taskTags = null;
 
 	public PHPTodoTaskAstParser(IScriptProject scriptProject) {
 		IProject project = scriptProject.getProject();
-		TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();	
-		getTaskTags(project, taskTagsProvider);		
+		TaskTagsProvider taskTagsProvider = TaskTagsProvider.getInstance();
+		getTaskTags(project, taskTagsProvider);
 	}
 
 	private void getTaskTags(IProject project, TaskTagsProvider taskTagsProvider) {
 		taskTags = taskTagsProvider.getProjectTaskTags(project);
-		if(taskTags == null){
+		if (taskTags == null) {
 			taskTags = taskTagsProvider.getWorkspaceTaskTags();
 		}
 	}
 
-	public void build(ISourceModule module, ModuleDeclaration astModuleDeclaration, IProblemReporter reporter) throws CoreException {
-		final ITaskReporter taskReporter = (ITaskReporter) reporter.getAdapter(ITaskReporter.class);
+	public void build(IBuildContext context) throws CoreException {
+		final ITaskReporter taskReporter = (ITaskReporter) context.getProblemReporter();
 		if (taskReporter == null) {
 			return;
 		}
 
 		IStructuredModel model = null;
 		try {
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(module.getPath());
+			IFile file = context.getFile();
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
 			if (model == null) {
 				return;
 			}
 			IStructuredDocumentRegion[] sdRegions = model.getStructuredDocument().getStructuredDocumentRegions();
 			for (IStructuredDocumentRegion structuredDocumentRegion : sdRegions) {
-				
+
 				IStructuredDocument document = structuredDocumentRegion.getParentDocument();
-				
+
 				ITextRegionList textRegions = structuredDocumentRegion.getRegions();
 				for (int i = 0; i < textRegions.size(); i++) {
 					ITextRegion textRegion = textRegions.get(i);
 					int regionStart = structuredDocumentRegion.getStartOffset(textRegion);
-					
-					if (textRegion instanceof ContextRegionContainer) {					
+
+					if (textRegion instanceof ContextRegionContainer) {
 						textRegion = extractPhpScriptRegion(textRegion);
-						regionStart+=textRegion.getStart(); 
+						regionStart += textRegion.getStart();
 					}
 					// parse the actual script
 					if (textRegion instanceof PhpScriptRegion) {
@@ -93,11 +90,11 @@ public class PHPTodoTaskAstParser /*extends TodoTaskAstParser*/ implements IBuil
 							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(textRegion.getStart(), textRegion.getLength());
 							for (int j = 0; j < phpTokens.length; j++) {
 								ITextRegion phpToken = phpTokens[j];
-								if (phpToken.getType().equals(PHPRegionTypes.TASK)) {										
+								if (phpToken.getType().equals(PHPRegionTypes.TASK)) {
 									// get the task information from the document 									
 									int offset = regionStart + phpToken.getStart();
 									int length = phpToken.getLength();
-									
+
 									String taskKeyword = document.get(offset, phpToken.getLength());
 									int priority = getTaskPriority(taskKeyword);
 
@@ -130,11 +127,11 @@ public class PHPTodoTaskAstParser /*extends TodoTaskAstParser*/ implements IBuil
 	 * @return
 	 */
 	private int getTaskPriority(String taskStr) {
-				
+
 		String taskTagLowerCase = taskStr.toLowerCase();
 		for (int i = 0; i < taskTags.length; i++) {
-			TaskTag taskTag = taskTags[i];			
-			if(taskTag.getTag().toLowerCase().equals(taskTagLowerCase)){
+			TaskTag taskTag = taskTags[i];
+			if (taskTag.getTag().toLowerCase().equals(taskTagLowerCase)) {
 				return taskTag.getPriority();
 			}
 		}
@@ -143,7 +140,7 @@ public class PHPTodoTaskAstParser /*extends TodoTaskAstParser*/ implements IBuil
 	}
 
 	/**
-	 * Reports the "TODO" task
+	 * Reports the task
 	 * @param document
 	 * @param taskReporter
 	 * @param offset

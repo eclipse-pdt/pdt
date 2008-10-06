@@ -10,28 +10,16 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.validators.core.AbstractBuildParticipantType;
-import org.eclipse.dltk.validators.core.IBuildParticipant;
-import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.dltk.core.builder.IBuildParticipant;
+import org.eclipse.dltk.core.builder.IBuildParticipantFactory;
 
-public class PHPTodoParserType extends AbstractBuildParticipantType {
-
-	private static final String ID = "org.eclipse.dltk.php.todo"; //$NON-NLS-1$
-	private static final String NAME = "PHP TODO task parser"; //$NON-NLS-1$
-
-	public PHPTodoParserType() {
-		super(ID, NAME);
-	}
-
-	protected IBuildParticipant createBuildParticipant(IScriptProject project) {
-
+public class PHPTodoParserType implements IBuildParticipantFactory {
+	
+	public IBuildParticipant createBuildParticipant(IScriptProject project) throws CoreException {		
 		final PHPTodoTaskAstParser parser = new PHPTodoTaskAstParser(project);
 		return parser;
-	}
-
-	public String getNature() {
-		return PHPNature.ID;
 	}
 
 }
