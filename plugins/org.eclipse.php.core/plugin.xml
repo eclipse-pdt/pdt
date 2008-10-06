@@ -196,14 +196,6 @@
           priority="0">
     </fileHierarchyResolver>
  </extension>
- <!--<extension
-         point="org.eclipse.dltk.validators.core.validator">
-      <validatorType
-            class="org.eclipse.php.internal.core.compiler.ast.parser.PHPTodoParserType"
-            id="org.eclipse.dltk.php.todo"
-            nature="org.eclipse.php.core.PHPNature">
-      </validatorType>
-   </extension>-->
    <extension
          point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
