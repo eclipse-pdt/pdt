@@ -49,16 +49,16 @@ ${package_declaration}
 ${typecomment}
 ${type_declaration}</template>
 
-<template name="classbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.classbody" description="%CodeTemplates.classbody" context="php" enabled="true">
+<template name="classbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.classbody" description="%CodeTemplates.classbody" context="php" enabled="true" autoinsert="false">
 </template>
 
-<template name="interfacebody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.interfacebody" description="%CodeTemplates.interfacebody" context="php" enabled="true">
+<template name="interfacebody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.interfacebody" description="%CodeTemplates.interfacebody" context="php" enabled="true" autoinsert="false">
 </template>
 
-<template name="enumbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.enumbody" description="%CodeTemplates.enumbody" context="php" enabled="true">
+<template name="enumbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.enumbody" description="%CodeTemplates.enumbody" context="php" enabled="true" autoinsert="false">
 </template>
 
-<template name="annotationbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.annotationbody" description="%CodeTemplates.annotationbody" context="php" enabled="true">
+<template name="annotationbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.annotationbody" description="%CodeTemplates.annotationbody" context="php" enabled="true" autoinsert="false">
 </template>
 
 <template name="catchblock" id="org.eclipse.php.ui.editor.templates.php.codetemplates.catchblock" description="%CodeTemplates.catchblock" context="php" enabled="true">// ${todo} %CodeTemplates.catchblock.tododesc
