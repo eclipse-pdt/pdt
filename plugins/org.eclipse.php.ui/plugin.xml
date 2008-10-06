@@ -987,15 +987,14 @@
 			id="org.eclipse.php.ui.preferences.PHPEditorSaveActionsPreferencePage"
 			name="%saveActionsPreferencePageName">
 		</page>
-		 <page
-         category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
-         class="org.eclipse.php.internal.ui.preferences.PHPTodoTaskPreferencePage"
-         id="org.eclipse.dltk.php.preferences.todo"
-         name="%PHPTaskTagsPreferencePage.name">
-      <keywordReference
-            id="org.eclipse.php.ui.todo">
-      </keywordReference>
-   </page>
+   		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
+			id="org.eclipse.php.ui.preferences.TodoTaskPreferencePage" 
+			name="%todoTaskPrefName">
+			<keywordReference
+            	id="org.eclipse.php.ui.todo">
+      	</keywordReference>
+       </page>
 	</extension>
 
 	<extension point="org.eclipse.ui.keywords">
@@ -1090,6 +1089,27 @@
 					<objectClass name="org.eclipse.dltk.core.ISourceModule" />
 				</or>
 			</visibility>
+		</objectContribution>
+		
+		<objectContribution
+			objectClass="org.eclipse.dltk.core.IModelElement"
+			id="org.eclipse.php.ui.modelElementSearchContribution">			
+			<action
+         class="org.eclipse.search.internal.ui.OpenSearchDialogAction"
+         definitionId="org.eclipse.search.ui.openSearchDialog"
+         helpContextId="open_search_dialog_action_context"
+         icon="icons/full/etool16/search.gif"
+         id="org.eclipse.php.ui.actions.Search"
+         label="%openSearchDialogAction.label"
+         menubarPath="additions"
+         tooltip="%openSearchDialogAction.tooltip">
+			</action>
+			<visibility>
+				<or>
+					<objectClass name="org.eclipse.dltk.core.ISourceModule"/>
+					<objectClass name="org.eclipse.dltk.core.IMember"/>
+				</or>
+			</visibility>		
 		</objectContribution>
 	</extension>
 
