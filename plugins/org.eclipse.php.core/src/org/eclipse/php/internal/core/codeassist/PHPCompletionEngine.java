@@ -649,7 +649,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(sourceModule.getScriptProject().getProject(), prefix);
 		for (KeywordData k : keywordsList) {
-			if (inClass == k.isClassKeyword) {
+			if (!inClass || (inClass && k.isClassKeyword)) {
 				reportKeyword(k.name, k.suffix, relevanceKeyword--);
 			}
 		}
