@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.ui.dialogs.ProjectSelectionDialog;
 import org.eclipse.jface.dialogs.ControlEnableState;
 import org.eclipse.jface.dialogs.Dialog;
@@ -205,8 +206,8 @@ public abstract class PropertyAndPreferencePage extends PreferencePage implement
 			}
 			ProjectSelectionDialog dialog = new ProjectSelectionDialog(getShell(), projectsWithSpecifics);
 			if (dialog.open() == Window.OK) {
-				IProject res = (IProject) dialog.getFirstResult();
-				openProjectProperties(res.getProject(), data);
+				ScriptProject result = (ScriptProject) dialog.getFirstResult();				
+				openProjectProperties(result.getProject(), data);
 			}
 		}
 	}
