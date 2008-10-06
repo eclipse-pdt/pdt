@@ -249,6 +249,9 @@ public class TypeBinding implements ITypeBinding {
 	 */
 	public ITypeBinding getElementType() {
 		// TODO Auto-generated method stub
+		if (null == this.elements || this.elements.length != 1){
+			return null;
+		}
 		return null;
 	}
 
