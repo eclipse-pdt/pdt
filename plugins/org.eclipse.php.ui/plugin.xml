@@ -401,9 +401,9 @@
 			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
 		</page>
 
-		<!-- -->
+		<!-- -->		
 		<page
-        class="org.eclipse.php.internal.ui.preferences.PHPTodoTaskPreferencePage"
+        class="org.eclipse.php.internal.ui.preferences.TodoTaskPreferencePage"
         id="org.eclipse.php.ui.propertyPages.TodoTaskPreferencePage"
         name="%todoPageName">
 			<enabledWhen>
