@@ -44,7 +44,7 @@ import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
-import org.eclipse.php.internal.ui.text.PHPInformationElementProvider;
+import org.eclipse.php.internal.ui.text.PHPInformationHierarchyProvider;
 import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
@@ -436,7 +436,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		InformationPresenter presenter = new InformationPresenter(getHierarchyPresenterControlCreator());
 		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
 		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
-		IInformationProvider provider = new PHPInformationElementProvider(viewer.getTextEditor(), doCodeResolve);
+		IInformationProvider provider = new PHPInformationHierarchyProvider(viewer.getTextEditor(), doCodeResolve);
 		presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
 		presenter.setSizeConstraints(50, 20, true, false);
 		return presenter;

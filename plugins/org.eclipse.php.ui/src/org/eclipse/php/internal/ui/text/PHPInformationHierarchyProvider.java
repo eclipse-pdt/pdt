@@ -14,6 +14,9 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.core.Member;
+import org.eclipse.dltk.internal.core.SourceField;
+import org.eclipse.dltk.internal.core.SourceType;
 import org.eclipse.dltk.internal.ui.actions.SelectionConverter;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ModelTextSelection;
@@ -32,20 +35,21 @@ import org.eclipse.ui.IEditorPart;
 
 /**
  * Provides a PHP element information to be displayed in by an information presenter.
+ * IMPORTANT : This class is for Open Hierarchy actions only ! 
  * This class can handle IModelElements, unlike the {@link PHPElementProvider}. 
  */
-public class PHPInformationElementProvider implements IInformationProvider, IInformationProviderExtension {
+public class PHPInformationHierarchyProvider implements IInformationProvider, IInformationProviderExtension {
 
 	private PHPStructuredEditor fEditor;
 	private boolean fUseCodeResolve;
 
-	public PHPInformationElementProvider(IEditorPart editor) {
+	public PHPInformationHierarchyProvider(IEditorPart editor) {
 		fUseCodeResolve = false;
 		if (editor instanceof PHPStructuredEditor)
 			fEditor = (PHPStructuredEditor) editor;
 	}
 
-	public PHPInformationElementProvider(IEditorPart editor, boolean useCodeResolve) {
+	public PHPInformationHierarchyProvider(IEditorPart editor, boolean useCodeResolve) {
 		this(editor);
 		fUseCodeResolve = useCodeResolve;
 	}
@@ -71,34 +75,35 @@ public class PHPInformationElementProvider implements IInformationProvider, IInf
 		return getInformation2(textViewer, subject).toString();
 	}
 
-	/*
-	 * @see IInformationProviderExtension#getElement(ITextViewer, IRegion)
+	/** 
+	 * This method functionality is slightly different then the method it implements 
+	 * ( org.eclipse.jface.text.information.IInformationProviderExtension#getInformation2(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion))
+	 * as it returns the enclosing type for members, and not the element itself (nirc)
 	 */
 	public Object getInformation2(ITextViewer textViewer, IRegion subject) {
 		if (fEditor == null)
 			return null;
 
-		try {
-			if (fUseCodeResolve) {
-				IModelElement inputModelElement = fEditor.getModelElement();
-				if (inputModelElement instanceof ISourceModule && subject != null) {
-					ISourceModule sourceModule = (ISourceModule) inputModelElement;
-					IModelElement modelElement = getSelectionModelElement(subject.getOffset(), subject.getLength(), sourceModule);
-					if (modelElement != null) {
+		if (fUseCodeResolve) {
+			IModelElement inputModelElement = fEditor.getModelElement();
+			if (inputModelElement instanceof ISourceModule && subject != null) {
+				ISourceModule sourceModule = (ISourceModule) inputModelElement;
+				IModelElement modelElement = getSelectionModelElement(subject.getOffset(), subject.getLength(), sourceModule);
+				
+				if (modelElement != null ) {
+					if (modelElement instanceof SourceType){
 						return modelElement;
-					} else {
-						IType[] topLevelTypes = ((ISourceModule) inputModelElement).getTypes();
-						if (topLevelTypes != null && topLevelTypes.length > 0 && topLevelTypes[0] instanceof IModelElement) {
-							return topLevelTypes[0];
-						}
 					}
+					if(modelElement instanceof Member){ 
+						return ((Member) modelElement).getDeclaringType();
+					}
+				} else { // if no element - returns null
+					return null;							
 				}
 			}
-
-			return EditorUtility.getEditorInputModelElement(fEditor, false);
-		} catch (ModelException e) {
-			return null;
 		}
+
+		return EditorUtility.getEditorInputModelElement(fEditor, false);
 
 	}
 
