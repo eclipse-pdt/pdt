@@ -1107,6 +1107,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showInterfaceList(String prefix, int offset) {
+		
+		this.setSourceRange(offset - prefix.length(), offset);
+		
 		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(sourceModule, prefix, requestor.isContextInformationMode());
 		int relevanceClass = RELEVANCE_CLASS;
 		for (IModelElement i : interfaces) {
@@ -1511,10 +1514,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			
 			int replaceStart = this.startPosition - this.offset;
 			int replaceEnd = this.endPosition - this.offset;
-			if (replaceEnd < wordEndOffset) {
-				replaceEnd = wordEndOffset - 1;
-			} else if (wordEndOffset > 0 && wordEndOffset != this.endPosition) {
-				replaceEnd--;
+			if (replaceEnd > replaceStart) {
+				if (replaceEnd < wordEndOffset) {
+					replaceEnd = wordEndOffset - 1;
+				} else if (wordEndOffset > 0 && wordEndOffset != this.endPosition) {
+					replaceEnd--;
+				}
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
 			
