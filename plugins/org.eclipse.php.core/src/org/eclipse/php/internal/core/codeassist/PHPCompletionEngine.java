@@ -623,9 +623,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void getRegularCompletion(String prefix, int offset, ITextRegionCollection sdRegion, ITextRegion tRegion, ContextRegion internalPhpRegion, IStructuredDocument document) {
-		if (!explicit && prefix.length() == 0) {
-			return;
-		}
 
 		this.setSourceRange(offset - prefix.length(), offset);
 
@@ -652,6 +649,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (!inClass || (inClass && k.isClassKeyword)) {
 				reportKeyword(k.name, k.suffix, relevanceKeyword--);
 			}
+		}
+		
+		if (!explicit && prefix.length() == 0) {
+			return;
 		}
 
 		if (internalPhpRegion != null) {
