@@ -739,7 +739,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			if (showConstantAssist()) {
-				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles());
+				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles(), constantsCaseSensitive());
 				for (IModelElement constant : constants) {
 					try {
 						if ((((IField) constant).getFlags() & Modifiers.AccConstant) != 0) {
@@ -1370,7 +1370,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (showConstantAssist()) {
-			IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, lastWord, requestor.isContextInformationMode(), !showVarsFromOtherFiles());
+			IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, lastWord, requestor.isContextInformationMode(), !showVarsFromOtherFiles(), constantsCaseSensitive());
 			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement constant : constants) {
 				IField field = (IField) constant;
@@ -1648,6 +1648,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private boolean showNonStrictOptions() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS)) {
 			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS);
+		}
+		return false;
+	}
+	
+	private boolean constantsCaseSensitive() {
+		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE)) {
+			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);
 		}
 		return false;
 	}

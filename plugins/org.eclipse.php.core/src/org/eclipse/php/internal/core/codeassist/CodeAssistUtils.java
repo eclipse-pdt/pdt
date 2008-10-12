@@ -728,7 +728,20 @@ public class CodeAssistUtils {
 	 * @param currentFileOnly Whether to search variables only in current file
 	 */
 	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD, currentFileOnly);
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD, currentFileOnly, false);
+	}
+	
+	/**
+	 * This method searches for all fields in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Field name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param currentFileOnly Whether to search variables only in current file
+	 */
+	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly, boolean caseSensitive) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD, currentFileOnly, caseSensitive);
 	}
 	
 	/**
@@ -809,6 +822,20 @@ public class CodeAssistUtils {
 	
 	/**
 	 * This method searches in the project scope for all elements of specified type that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Element name or prefix
+	 * @param exactName Whether the prefix is an exact name of the element
+	 * @param elementType Element type from {@link IDLTKSearchConstants}
+	 * @return
+	 */
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
+		return getGlobalElements(sourceModule, prefix, exactName, elementType, currentFileOnly, false);
+	}
+	
+	/**
+	 * This method searches in the project scope for all elements of specified type that match the given prefix.
 	 * If currentFileOnly parameter is <code>true</code>, the search scope for variables will contain only the source module.
 	 * If the project doesn't exist, workspace scope is used.
 	 * 
@@ -819,7 +846,7 @@ public class CodeAssistUtils {
 	 * @param currentFileOnly Whether to search elements in current file only
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
 		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
@@ -843,7 +870,7 @@ public class CodeAssistUtils {
 			return variables == null ? EMPTY : variables;
 		}
 		
-		return getGlobalElements(scope, prefix, exactName, elementType);
+		return getGlobalElements(scope, prefix, exactName, elementType, caseSensitive);
 	}
 	
 	/**
@@ -856,7 +883,7 @@ public class CodeAssistUtils {
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(IDLTKSearchScope scope, String prefix, boolean exactName, int elementType) {
+	private static IModelElement[] getGlobalElements(IDLTKSearchScope scope, String prefix, boolean exactName, int elementType, boolean caseSensitive) {
 		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
@@ -864,8 +891,16 @@ public class CodeAssistUtils {
 		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
 			matchRule = SearchPattern.R_PATTERN_MATCH;
+			if (caseSensitive) {
+				matchRule |= SearchPattern.R_CASE_SENSITIVE;
+			}
 		} else {
-			matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+			if (caseSensitive) {
+				matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_PREFIX_MATCH;
+				matchRule |= SearchPattern.R_CASE_SENSITIVE;
+			} else {
+				matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
+			}
 		}
 		
 		SearchEngine searchEngine = new SearchEngine();
