@@ -245,28 +245,28 @@ public final class ASTProvider {
 
 	private void activePhpEditorChanged(IWorkbenchPart editor) {
 
-		ISourceModule javaElement= null;
+		ISourceModule phpElement= null;
 		if (editor instanceof PHPStructuredEditor) {
 			IModelElement inputModelElement = ((PHPStructuredEditor) editor).getModelElement();
 			if (inputModelElement != null && inputModelElement.getElementType() == IModelElement.SOURCE_MODULE) {
-				javaElement= (ISourceModule) inputModelElement;
+				phpElement= (ISourceModule) inputModelElement;
 			}			
 		}
 
 		synchronized (this) {
 			fActiveEditor= editor;
-			fActivePhpElement= javaElement;
-			cache(null, javaElement);
+			fActivePhpElement= phpElement;
+			cache(null, phpElement);
 		}
 
 		if (DEBUG)
-			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "active editor is: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "active editor is: " + toString(phpElement)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		synchronized (fReconcileLock) {
-			if (fIsReconciling && (fReconcilingPhpElement == null || !fReconcilingPhpElement.equals(javaElement))) {
+			if (fIsReconciling && (fReconcilingPhpElement == null || !fReconcilingPhpElement.equals(phpElement))) {
 				fIsReconciling= false;
 				fReconcilingPhpElement= null;
-			} else if (javaElement == null) {
+			} else if (phpElement == null) {
 				fIsReconciling= false;
 				fReconcilingPhpElement= null;
 			}
@@ -299,22 +299,22 @@ public final class ASTProvider {
 	/**
 	 * Informs that reconciling for the given element is about to be started.
 	 *
-	 * @param javaElement the Php element
+	 * @param phpElement the Php element
 	 * @see org.eclipse.jdt.internal.ui.text.java.IPhpReconcilingListener#aboutToBeReconciled()
 	 */
-	void aboutToBeReconciled(ISourceModule javaElement) {
+	void aboutToBeReconciled(ISourceModule phpElement) {
 
-		if (javaElement == null)
+		if (phpElement == null)
 			return;
 
 		if (DEBUG)
-			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "about to reconcile: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "about to reconcile: " + toString(phpElement)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		synchronized (fReconcileLock) {
 			fIsReconciling= true;
-			fReconcilingPhpElement= javaElement;
+			fReconcilingPhpElement= phpElement;
 		}
-		cache(null, javaElement);
+		cache(null, phpElement);
 	}
 
 	/**
@@ -336,14 +336,14 @@ public final class ASTProvider {
 	/**
 	 * Returns a string for the given Php element used for debugging.
 	 *
-	 * @param javaElement the compilation unit AST
+	 * @param phpElement the compilation unit AST
 	 * @return a string used for debugging
 	 */
-	private String toString(ISourceModule javaElement) {
-		if (javaElement == null)
+	private String toString(ISourceModule phpElement) {
+		if (phpElement == null)
 			return "null"; //$NON-NLS-1$
 		else
-			return javaElement.getElementName();
+			return phpElement.getElementName();
 
 	}
 
@@ -364,18 +364,18 @@ public final class ASTProvider {
 	 * Caches the given compilation unit AST for the given Php element.
 	 *
 	 * @param ast
-	 * @param javaElement
+	 * @param phpElement
 	 */
-	private synchronized void cache(Program ast, ISourceModule javaElement) {
+	private synchronized void cache(Program ast, ISourceModule phpElement) {
 
-		if (fActivePhpElement != null && !fActivePhpElement.equals(javaElement)) {
-			if (DEBUG && javaElement != null) // don't report call from disposeAST()
-				System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "don't cache AST for inactive: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$
+		if (fActivePhpElement != null && !fActivePhpElement.equals(phpElement)) {
+			if (DEBUG && phpElement != null) // don't report call from disposeAST()
+				System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "don't cache AST for inactive: " + toString(phpElement)); //$NON-NLS-1$ //$NON-NLS-2$
 			return;
 		}
 
-		if (DEBUG && (javaElement != null || ast != null)) // don't report call from disposeAST()
-			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "caching AST: " + toString(ast) + " for: " + toString(javaElement)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (DEBUG && (phpElement != null || ast != null)) // don't report call from disposeAST()
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "caching AST: " + toString(ast) + " for: " + toString(phpElement)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		if (fAST != null)
 			disposeAST();
@@ -491,12 +491,12 @@ public final class ASTProvider {
 	 * Tells whether the given Php element is the one
 	 * reported as currently being reconciled.
 	 *
-	 * @param javaElement the Php element
+	 * @param phpElement the Php element
 	 * @return <code>true</code> if reported as currently being reconciled
 	 */
-	private boolean isReconciling(ISourceModule javaElement) {
+	private boolean isReconciling(ISourceModule phpElement) {
 		synchronized (fReconcileLock) {
-			return javaElement != null && javaElement.equals(fReconcilingPhpElement) && fIsReconciling;
+			return phpElement != null && phpElement.equals(fReconcilingPhpElement) && fIsReconciling;
 		}
 	}
 
@@ -589,13 +589,13 @@ public final class ASTProvider {
 	/*
 	 * @see org.eclipse.jdt.internal.ui.text.java.IPhpReconcilingListener#reconciled(org.eclipse.jdt.core.dom.Program)
 	 */
-	public void reconciled(Program ast, ISourceModule javaElement, IProgressMonitor progressMonitor) {
+	public void reconciled(Program ast, ISourceModule phpElement, IProgressMonitor progressMonitor) {
 		if (DEBUG)
-			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "reconciled: " + toString(javaElement) + ", AST: " + toString(ast)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "reconciled: " + toString(phpElement) + ", AST: " + toString(ast)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		synchronized (fReconcileLock) {
 			fIsReconciling= progressMonitor != null && progressMonitor.isCanceled();
-			if (javaElement == null || !javaElement.equals(fReconcilingPhpElement)) {
+			if (phpElement == null || !phpElement.equals(fReconcilingPhpElement)) {
 
 				if (DEBUG)
 					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "  ignoring AST of out-dated editor"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -608,7 +608,7 @@ public final class ASTProvider {
 				return;
 			}
 
-			cache(ast, javaElement);
+			cache(ast, phpElement);
 		}
 	}
 
