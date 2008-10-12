@@ -86,6 +86,7 @@ public class PHPTodoTaskAstParser implements IBuildParticipant {
 					if (textRegion instanceof PhpScriptRegion) {
 						PhpScriptRegion scriptRegion = (PhpScriptRegion) textRegion;
 						try {
+							
 							//go over the text regions and look for the tasks
 							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(textRegion.getStart(), textRegion.getLength());
 							for (int j = 0; j < phpTokens.length; j++) {
@@ -108,7 +109,7 @@ public class PHPTodoTaskAstParser implements IBuildParticipant {
 								}
 							}
 						} catch (BadLocationException e) {
-							Logger.logException(CoreMessages.PHPTodoTaskAstParser_0, e);
+							Logger.logException(CoreMessages.getString("PHPTodoTaskAstParser_0"), e);
 						}
 					}
 				}
