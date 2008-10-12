@@ -88,7 +88,7 @@ public class PHPTodoTaskAstParser implements IBuildParticipant {
 						try {
 							
 							//go over the text regions and look for the tasks
-							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(textRegion.getStart(), textRegion.getLength());
+							ITextRegion[] phpTokens = scriptRegion.getPhpTokens(0, textRegion.getLength());
 							for (int j = 0; j < phpTokens.length; j++) {
 								ITextRegion phpToken = phpTokens[j];
 								if (phpToken.getType().equals(PHPRegionTypes.TASK)) {
