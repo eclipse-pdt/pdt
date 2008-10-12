@@ -14,14 +14,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.*;
 
-public class PhpVersionChangedHandler {
+public class PhpVersionChangedHandler implements IResourceChangeListener {
 
-	private static final String PHP_VERSION = "php.version.change";
+	private static final String PHP_VERSION = "phpVersion";
 	
 	private HashMap<IProject, HashSet> projectListeners = new HashMap<IProject, HashSet>();
 	private HashMap<IProject, PreferencesPropagatorListener> preferencesPropagatorListeners = new HashMap<IProject, PreferencesPropagatorListener>();
@@ -34,13 +34,11 @@ public class PhpVersionChangedHandler {
 
 	private PhpVersionChangedHandler() {
 		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
 	public static PhpVersionChangedHandler getInstance() {
 		return instance;
-	}
-
-	public void projectModelChanged(IProject project) {
 	}
 
 	private void projectVersionChanged(IProject project, PreferencesPropagatorEvent event) {
@@ -91,7 +89,8 @@ public class PhpVersionChangedHandler {
 		IProject project = listener.getProject();
 		HashSet<IPreferencesPropagatorListener> listeners = projectListeners.get(project);
 		if (listeners == null) {
-			return;
+			projectAdded(project);
+			listeners = projectListeners.get(project);
 		}
 		listeners.add(listener);
 	}
@@ -121,11 +120,36 @@ public class PhpVersionChangedHandler {
 
 	public void projectRemoved(IProject project) {
 		PreferencesPropagatorListener listener = preferencesPropagatorListeners.get(project);
+		if (listener == null) {
+			return;
+		}
 		preferencesPropagator.removePropagatorListener(listener, PHP_VERSION);
 		preferencesPropagatorListeners.remove(project);
 
 		projectListeners.remove(project);
 	}
-	
 
+	public void resourceChanged(IResourceChangeEvent event) {
+		IResourceDelta resourceDelta = event.getDelta();
+		if (resourceDelta != null) {
+			IResourceDelta[] affectedChildren = resourceDelta.getAffectedChildren(IResourceDelta.CHANGED);
+			if (affectedChildren.length > 0) {
+				for (int i = 0; i < affectedChildren.length; i++) {
+					resourceDelta = affectedChildren[i];
+					IResource resource = resourceDelta.getResource();
+					if (resource instanceof IProject) {
+						IProject project = (IProject) resource;
+						int eventFlags = resourceDelta.getFlags();
+						if ((eventFlags & IResourceDelta.OPEN) != 0) {
+							if (project.isOpen()) {
+								projectAdded(project);
+							} else {
+								projectRemoved(project);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
