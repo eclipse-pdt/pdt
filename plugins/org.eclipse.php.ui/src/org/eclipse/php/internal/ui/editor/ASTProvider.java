@@ -30,12 +30,7 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.ASTNodes;
 import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.php.ui.editor.SharedASTProvider.WAIT_FLAG;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWindowListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 
 /**
  * Provides a shared AST for clients. The shared AST is
@@ -73,7 +68,7 @@ public final class ASTProvider {
 	 *
 	 * @since 3.0
 	 */
-	private class ActivationListener implements IPartListener2, IWindowListener {
+	private class ActivationListener implements IPartListener2, IWindowListener, IPerspectiveListener {
 
 
 		/*
@@ -193,6 +188,18 @@ public final class ASTProvider {
 			// return PhpUI.ID_CF_EDITOR.equals(id) || PhpUI.ID_CU_EDITOR.equals(id) || ref.getPart(false) instanceof PhpEditor;
 			return true;
 		}
+
+		public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+			
+			IWorkbenchPartReference ref = page.getActivePartReference();
+			if (isPhpEditor(ref) && !isActiveEditor(ref))
+				activePhpEditorChanged(ref.getPart(true));
+			
+		}
+
+		public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {						
+		}
+				
 	}
 
 	public static final String SHARED_AST_LEVEL= PHPVersion.PHP5;
@@ -236,6 +243,8 @@ public final class ASTProvider {
 		// Create and register activation listener
 		fActivationListener= new ActivationListener();
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
+		
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(fActivationListener);
 
 		// Ensure existing windows get connected
 		IWorkbenchWindow[] windows= PlatformUI.getWorkbench().getWorkbenchWindows();
