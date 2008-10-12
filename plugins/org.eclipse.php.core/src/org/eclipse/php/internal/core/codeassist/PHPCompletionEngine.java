@@ -1517,7 +1517,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (replaceEnd > replaceStart) {
 				if (replaceEnd < wordEndOffset) {
 					replaceEnd = wordEndOffset - 1;
-				} else if (wordEndOffset > 0 && wordEndOffset != this.endPosition) {
+				} else {
 					replaceEnd--;
 				}
 			}
