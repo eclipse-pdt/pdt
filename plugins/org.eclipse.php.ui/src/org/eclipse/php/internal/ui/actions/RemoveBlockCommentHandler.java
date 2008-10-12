@@ -107,13 +107,16 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 
 				if (document instanceof IStructuredDocument) {
 					IStructuredDocument sDoc = (IStructuredDocument) document;
+					IStructuredDocumentRegion regionAtCharacterOffset = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					int docRegionOffset = regionAtCharacterOffset.getStart();
 					ITextRegion textRegion = sDoc.getRegionAtCharacterOffset(selectionOffset).getRegionAtCharacterOffset(selectionOffset);
 
 					Stack<TextLocation> phpCommentLocationStack = new Stack<TextLocation>(); // stack of ITextRegion including only Comments' Start and End tokens locations
 
 					try {
-						int regionOffset = textRegion.getStart();
-						ITextRegion[] phpTokens = ((PhpScriptRegion) textRegion).getPhpTokens(selectionOffset - regionOffset, selectionLength);
+						int textRegionOffset = textRegion.getStart();
+						int normelizedOffset = textRegionOffset + docRegionOffset;
+						ITextRegion[] phpTokens = ((PhpScriptRegion) textRegion).getPhpTokens(selectionOffset - normelizedOffset, selectionLength);
 
 						int lastOffsetParsed = -1;
 
@@ -124,16 +127,16 @@ public class RemoveBlockCommentHandler extends CommentHandler implements IHandle
 							if (isCommentStartRegion(token) || isCommentRegion(token) || isCommentEndRegion(token)) {
 								// if we are somewhere within a comment (start/end/body), this will find the start and end tokens
 								ITextRegion startToken = findCommentStartToken(token, (PhpScriptRegion) textRegion);
-								TextLocation commentOffsets = new TextLocation(startToken.getStart() + regionOffset, startToken.getEnd() + regionOffset);
+								TextLocation commentOffsets = new TextLocation(startToken.getStart() + normelizedOffset, startToken.getEnd() + normelizedOffset);
 								boolean result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
-								lastOffsetParsed = commentOffsets.endOffset - regionOffset;
+								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
 
 								ITextRegion endToken = findCommentEndToken(token, (PhpScriptRegion) textRegion);
-								commentOffsets = new TextLocation(endToken.getStart() + regionOffset, endToken.getEnd() + regionOffset);
+								commentOffsets = new TextLocation(endToken.getStart() + normelizedOffset, endToken.getEnd() + normelizedOffset);
 								result = validateAndPushLocation(phpCommentLocationStack, commentOffsets);
 								assert (result);
-								lastOffsetParsed = commentOffsets.endOffset - regionOffset;
+								lastOffsetParsed = commentOffsets.endOffset - normelizedOffset;
 
 							}
 						}
