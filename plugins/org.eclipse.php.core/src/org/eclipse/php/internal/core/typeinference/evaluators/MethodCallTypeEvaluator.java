@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import java.util.Arrays;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.evaluation.types.UnknownType;
@@ -21,6 +23,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 public class MethodCallTypeEvaluator extends GoalEvaluator {
@@ -78,7 +81,11 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		}
 		if (state == STATE_WAITING_METHOD) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
-				result = previousResult;
+				if (result != null) {
+					result = PHPTypeInferenceUtils.combineTypes(Arrays.asList(new IEvaluatedType[] {result, previousResult}));
+				} else {
+					result = previousResult;
+				}
 			}
 		}
 		return null;
