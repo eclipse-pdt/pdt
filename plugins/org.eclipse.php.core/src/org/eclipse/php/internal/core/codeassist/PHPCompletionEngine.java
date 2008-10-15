@@ -271,7 +271,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		ContextRegion internalPHPRegion = null;
 		if (textRegion instanceof IPhpScriptRegion) {
 			phpScriptRegion = (IPhpScriptRegion) textRegion;
-			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart();
+			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart() - 1;
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
 			//if we are at the begining of multi-line comment or docBlock then we should get completion.
