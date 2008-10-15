@@ -728,7 +728,7 @@ public class CodeAssistUtils {
 	 * @param currentFileOnly Whether to search variables only in current file
 	 */
 	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD, currentFileOnly, false);
+		return getGlobalFields(sourceModule, prefix, exactName, currentFileOnly, false);
 	}
 	
 	/**
