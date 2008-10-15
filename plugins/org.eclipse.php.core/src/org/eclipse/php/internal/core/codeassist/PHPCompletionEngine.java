@@ -1236,7 +1236,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				for (IType type : types) {
 					try {
 						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType(type, relevanceClass--, BRACKETS_SUFFIX);
+							reportType(type, relevanceClass--, hasOpenBraceAtEnd ? EMPTY : BRACKETS_SUFFIX);
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
