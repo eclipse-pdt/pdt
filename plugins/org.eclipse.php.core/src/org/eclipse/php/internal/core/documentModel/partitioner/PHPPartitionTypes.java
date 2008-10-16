@@ -142,4 +142,17 @@ public abstract class PHPPartitionTypes {
 	public static boolean isPHPDocCommentState(String type) {
 		return type == PHPRegionTypes.PHPDOC_COMMENT;
 	}
+	
+	public static boolean isPHPCondition(String type) {
+		return (type == PHPRegionTypes.PHP_IF 
+			|| type == PHPRegionTypes.PHP_FOR
+			|| type == PHPRegionTypes.PHP_FOREACH);
+		
+	}
+	
+	public static boolean isPHPLoop(String type) {
+		return (type == PHPRegionTypes.PHP_WHILE
+			|| type == PHPRegionTypes.PHP_DO);
+		
+	}
 }
