@@ -653,11 +653,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 		
-		if (!explicit && prefix.length() == 0) {
-			return;
-		}
+		boolean currentFileOnly = (!explicit && prefix.length() == 0);
 
-		if (internalPhpRegion != null) {
+		if (!currentFileOnly && internalPhpRegion != null) {
 			final String type = internalPhpRegion.getType();
 
 			if (prefix.startsWith(DOLLAR) && !inClass) { //$NON-NLS-1$
@@ -728,7 +726,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (!inClass) {
-			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, requestor.isContextInformationMode());
+			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, requestor.isContextInformationMode(), currentFileOnly);
 			for (IModelElement function : functions) {
 				try {
 					if ((((IMethod) function).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -742,7 +740,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			if (showConstantAssist()) {
-				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles(), constantsCaseSensitive());
+				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), currentFileOnly && !showVarsFromOtherFiles(), constantsCaseSensitive());
 				for (IModelElement constant : constants) {
 					try {
 						if ((((IField) constant).getFlags() & Modifiers.AccConstant) != 0) {
@@ -759,7 +757,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (!inClass) {
 			if (showClassNamesInGlobalCompletion()) {
-				IModelElement[] classes = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, requestor.isContextInformationMode());
+				IModelElement[] classes = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, requestor.isContextInformationMode(), currentFileOnly);
 				for (IModelElement type : classes) {
 					try {
 						if ((((IType) type).getFlags() & IPHPModifiers.Internal) == 0) {

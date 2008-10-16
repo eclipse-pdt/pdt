@@ -696,7 +696,7 @@ public class CodeAssistUtils {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * This method searches for all classes in the project scope that match the given prefix.
 	 * If the project doesn't exist, workspace scope is used.
@@ -710,6 +710,19 @@ public class CodeAssistUtils {
 	}
 
 	/**
+	 * This method searches for all classes in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Field name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param currentFileOnly Whether to search variables only in current file
+	 */
+	public static IModelElement[] getGlobalClasses(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.TYPE, currentFileOnly);
+	}
+
+	/**
 	 * This method searches for all methods in the project scope that match the given prefix.
 	 * If the project doesn't exist, workspace scope is used.
 	 * 
@@ -719,6 +732,19 @@ public class CodeAssistUtils {
 	 */
 	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, boolean exactName) {
 		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.METHOD);
+	}
+	
+	/**
+	 * This method searches for all methods in the project scope that match the given prefix.
+	 * If the project doesn't exist, workspace scope is used.
+	 * 
+	 * @param sourceModule Current source module
+	 * @param prefix Field name
+	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param currentFileOnly Whether to search variables only in current file
+	 */
+	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
+		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.METHOD, currentFileOnly);
 	}
 
 	/**
@@ -843,6 +869,7 @@ public class CodeAssistUtils {
 	 * @param prefix Element name or prefix
 	 * @param exactName Whether the prefix is an exact name of the element
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
+	 * @param currentFileOnly Whether to search variables only in current file
 	 * @return
 	 */
 	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
@@ -868,7 +895,7 @@ public class CodeAssistUtils {
 		boolean isVariable = prefix.startsWith("$"); //$NON-NLS-1$
 		
 		IDLTKSearchScope scope;
-		if (currentFileOnly && isVariable) {
+		if (currentFileOnly) {
 			scope = SearchEngine.createSearchScope(sourceModule);
 		} else {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
