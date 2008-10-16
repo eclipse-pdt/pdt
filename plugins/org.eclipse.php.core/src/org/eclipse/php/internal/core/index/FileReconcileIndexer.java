@@ -83,4 +83,7 @@ public class FileReconcileIndexer implements IProjectIndexer {
 
 	public void removeSourceModule(IScriptProject project, String path) {
 	}
+
+	public void startIndexing() {
+	}
 }
