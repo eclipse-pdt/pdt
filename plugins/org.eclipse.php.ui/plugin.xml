@@ -1103,13 +1103,7 @@
          label="%openSearchDialogAction.label"
          menubarPath="additions"
          tooltip="%openSearchDialogAction.tooltip">
-			</action>
-			<visibility>
-				<or>
-					<objectClass name="org.eclipse.dltk.core.ISourceModule"/>
-					<objectClass name="org.eclipse.dltk.core.IMember"/>
-				</or>
-			</visibility>		
+			</action>			
 		</objectContribution>
 	</extension>
 
