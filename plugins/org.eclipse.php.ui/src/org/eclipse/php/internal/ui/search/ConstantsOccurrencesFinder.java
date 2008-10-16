@@ -68,7 +68,9 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 				}
 			} else {
 				// The scalar is quoted, so it might be in a 'define' or a 'constant' call.
-				scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
+				if (isQuoted(scalarValue)) {
+					scalarValue = scalarValue.substring(1, scalarValue.length() - 1);
+				}
 				if (checkEquality(scalarValue)) {
 					ASTNode parent = scalar.getParent();
 					if (parent.getType() == ASTNode.FUNCTION_INVOCATION) {
