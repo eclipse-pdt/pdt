@@ -12,9 +12,7 @@ package org.eclipse.php.internal.core.language;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -46,53 +44,57 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
 	
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
-	private IPreferencesPropagatorListener phpVersionListener;
-	private String phpVersion;
+	
+	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
+	private Map<IProject, String> project2PhpVersion = new HashMap<IProject, String>();
 
 	public LanguageModelInitializer() {
 	}
 
-	private void initializeListener(final IPath containerPath, final IScriptProject project) {
+	private void initializeListener(final IPath containerPath, final IScriptProject scriptProject) {
 
-		if (phpVersionListener != null) {
+		final IProject project = scriptProject.getProject();
+		if (project2PhpVerListener.containsKey(project)) {
 			return;
 		}
 
-		phpVersionListener = new IPreferencesPropagatorListener() {
+		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-				phpVersion = (String) event.getNewValue();
+				project2PhpVersion.put(project, (String) event.getNewValue());
 
 				try {
-					initialize(containerPath, project);
+					initialize(containerPath, scriptProject);
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
 			}
 
 			public IProject getProject() {
-				return project.getProject();
+				return project;
 			}
 		};
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
+		
+		project2PhpVerListener.put(project, versionChangeListener);
+		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(versionChangeListener);
 
-		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project.getProject(), new IProjectClosedObserver() {
+		ProjectRemovedObserversAttacher.getInstance().addProjectClosedObserver(project, new IProjectClosedObserver() {
 			public void closed() {
-				PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
-				phpVersionListener = null;
+				PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(project2PhpVerListener.remove(project));
 			}
 		});
 	}
 
-	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
+	public void initialize(IPath containerPath, IScriptProject scriptProject) throws CoreException {
 		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
-				if (isPHPProject(project)) {
+				if (isPHPProject(scriptProject)) {
 
-					phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
+					IProject project = scriptProject.getProject();
+					project2PhpVersion.put(project, PhpVersionProjectPropertyHandler.getVersion(project));
 
-					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { project }, new IBuildpathContainer[] { new LanguageModelContainer(containerPath) }, null);
+					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { scriptProject }, new IBuildpathContainer[] { new LanguageModelContainer(containerPath) }, null);
 
-					initializeListener(containerPath, project);
+					initializeListener(containerPath, scriptProject);
 				}
 			} catch (Exception e) {
 				Logger.logException(e);
@@ -191,7 +193,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			if (buildPathEntries == null) {
 				IEnvironment environment = EnvironmentManager.getEnvironment(project);
 				try {
-					IPath path = getContainerPath(project, phpVersion);
+					IPath path = getContainerPath(project, project2PhpVersion.get(project.getProject()));
 					if (environment != null) {
 						path = EnvironmentPathUtils.getFullPath(environment, path);
 					}
