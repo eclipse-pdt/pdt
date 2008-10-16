@@ -1245,8 +1245,27 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				IType[] types = CodeAssistUtils.getOnlyClasses(sourceModule, prefix, requestor.isContextInformationMode());
 				for (IType type : types) {
 					try {
-						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType(type, relevanceClass--, hasOpenBraceAtEnd ? EMPTY : BRACKETS_SUFFIX);
+						IMethod ctor = null;
+						for (IMethod method : type.getMethods()) {
+							if (method.isConstructor()) {
+								ctor = method;
+								break;
+							}
+						}
+						if (ctor != null) {
+							if ((ctor.getFlags() & IPHPModifiers.AccPrivate) == 0) {
+								FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
+									public boolean isConstructor() throws ModelException {
+										return true;
+									}
+								};
+								ctorMethod.setParameters(ctor.getParameters());
+								reportMethod(ctorMethod, relevanceClass--);
+							}
+						} else {
+							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+								reportType(type, relevanceClass--, hasOpenBraceAtEnd ? EMPTY : BRACKETS_SUFFIX);
+							}
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
