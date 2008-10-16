@@ -118,6 +118,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private boolean hasPaamayimNekudotaimAtEnd;
 	private int wordEndOffset;
 	private String nextWord;
+	private IStructuredDocument document;
+	private ContextRegion internalPHPRegion;
+	private IPhpScriptRegion phpScriptRegion;
+	private ITextRegionCollection regionContainer;
 
 	enum States {
 		CATCH, NEW, INSTANCEOF
@@ -149,8 +153,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	
 	public void complete(org.eclipse.dltk.compiler.env.ISourceModule module, int position, int i) {
 
-		IStructuredDocument document = null;
-		
 		if (requestor instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
 
@@ -226,19 +228,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 
-		ITextRegionCollection container = sdRegion;
+		regionContainer = sdRegion;
 
 		if (textRegion instanceof ITextRegionContainer) {
-			container = (ITextRegionContainer) textRegion;
-			textRegion = container.getRegionAtCharacterOffset(offset);
+			regionContainer = (ITextRegionContainer) textRegion;
+			textRegion = regionContainer.getRegionAtCharacterOffset(offset);
 		}
 
 		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
 			return;
 		}
 		if (textRegion.getType() == PHPRegionContext.PHP_CLOSE) {
-			if (container.getStartOffset(textRegion) == offset) {
-				ITextRegion regionBefore = container.getRegionAtCharacterOffset(offset - 1);
+			if (regionContainer.getStartOffset(textRegion) == offset) {
+				ITextRegion regionBefore = regionContainer.getRegionAtCharacterOffset(offset - 1);
 				if (regionBefore instanceof IPhpScriptRegion) {
 					textRegion = regionBefore;
 				}
@@ -248,13 +250,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		// find the start String for completion
-		int startOffset = container.getStartOffset(textRegion);
+		int startOffset = regionContainer.getStartOffset(textRegion);
 
 		//in case we are standing at the beginning of a word and asking for completion
 		//should not take into account the found region
 		//find the previous region and update the start offset
 		if (startOffset == offset) {
-			ITextRegion preTextRegion = container.getRegionAtCharacterOffset(offset - 1);
+			ITextRegion preTextRegion = regionContainer.getRegionAtCharacterOffset(offset - 1);
 			IStructuredDocumentRegion preSdRegion = null;
 			if (preTextRegion != null || (preSdRegion = sdRegion.getPrevious()) != null && (preTextRegion = preSdRegion.getRegionAtCharacterOffset(offset - 1)) != null) {
 				if (preTextRegion.getType() == EMPTY) { //$NON-NLS-1$
@@ -265,13 +267,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		boolean inPHPDoc = false;
-		IPhpScriptRegion phpScriptRegion = null;
 		String partitionType = null;
 		int internalOffset = 0;
-		ContextRegion internalPHPRegion = null;
 		if (textRegion instanceof IPhpScriptRegion) {
 			phpScriptRegion = (IPhpScriptRegion) textRegion;
-			internalOffset = offset - container.getStartOffset() - phpScriptRegion.getStart() - 1;
+			internalOffset = offset - regionContainer.getStartOffset() - phpScriptRegion.getStart() - 1;
 
 			partitionType = phpScriptRegion.getPartition(internalOffset);
 			//if we are at the begining of multi-line comment or docBlock then we should get completion.
@@ -335,16 +335,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 		} else { // not inside of PHPDoc
-
+			
 			if (isInArrayOptionQuotes(type, offset, statementText)) {
 				// the current position is inside quotes as a parameter for an array.
 				return;
 			}
 
-			if (isPHPSingleQuote(container, phpScriptRegion, internalPHPRegion, document, offset) || isLineComment(container, phpScriptRegion, offset)) {
+			if (isPHPSingleQuote(regionContainer, phpScriptRegion, internalPHPRegion, document, offset) || isLineComment(regionContainer, phpScriptRegion, offset)) {
 				// we dont have code completion inside single quotes.
 				return;
 			}
+			
+			wordEndOffset = regionContainer.getStartOffset() + phpScriptRegion.getStart() + internalPHPRegion.getTextEnd();
 
 			if (isInFunctionDeclaration(statementText, offset)) {
 				// the current position is inside function declaration.
@@ -371,8 +373,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 			String firstWord = statementText.subSequence(startPosition, endPosition).toString();
 
-			wordEndOffset = container.getStartOffset() + phpScriptRegion.getStart() + internalPHPRegion.getTextEnd();
-			
 			ITextRegion nextRegion = internalPHPRegion;
 			do {
 				nextRegion = phpScriptRegion.getPhpToken(nextRegion.getEnd());
@@ -381,7 +381,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 			} while (nextRegion.getEnd() < phpScriptRegion.getLength());
 			
-			nextWord = document.get(container.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
+			nextWord = document.get(regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
 			
 			hasOpenBraceAtEnd = hasPaamayimNekudotaimAtEnd = false;
 			if (OPEN_BRACE.equals(nextWord)) {
@@ -393,7 +393,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (!hasWhitespaceAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
 				// the current position is inside new or instanceof statement.
 				if (lastWord.startsWith(DOLLAR)) {
-					getRegularCompletion(lastWord, offset, container, phpScriptRegion, internalPHPRegion, document);
+					getRegularCompletion(lastWord, offset, regionContainer, phpScriptRegion, internalPHPRegion, document);
 				}
 				return;
 			}
@@ -413,7 +413,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			getRegularCompletion(lastWord, offset, container, phpScriptRegion, internalPHPRegion, document);
+			getRegularCompletion(lastWord, offset, regionContainer, phpScriptRegion, internalPHPRegion, document);
 		}
 	}
 
@@ -796,6 +796,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		} else {
 			return false;
 		}
+		
+		if (internalPHPRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || internalPHPRegion.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
+			try {
+				ITextRegion nextRegion = phpScriptRegion.getPhpToken(internalPHPRegion.getEnd());
+				wordEndOffset = regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
+			} catch (BadLocationException e) {
+			}
+		}
 
 		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line, determineObjsFromOtherFiles());
 
@@ -847,6 +855,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 
+			boolean showNonStrictOptions = showNonStrictOptions();
+			
 			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, requestor.isContextInformationMode(), true);
 			int relevanceVar = RELEVANCE_VAR;
 			int relevanceConst = RELEVANCE_CONST;
@@ -855,7 +865,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				try {
 					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
 						reportField(field, relevanceConst--, true);
-					} else {
+					} else if (showNonStrictOptions || (field.getFlags() & Modifiers.AccPrivate) == 0) {
 						reportField(field, relevanceVar--, true);
 					}
 				} catch (ModelException e) {
