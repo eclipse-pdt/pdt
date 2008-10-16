@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Astview Plug-in
+Bundle-SymbolicName: org.eclipse.php.astview;singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Activator: org.eclipse.php.astview.ASTViewPlugin
+Require-Bundle: org.eclipse.ui,org.eclipse.php.ui;bundle-version="1.1.
+ 0",org.eclipse.core.runtime,org.eclipse.php.core;bundle-version="1.1.
+ 0",org.eclipse.core.resources;bundle-version="3.4.0",org.eclipse.dltk
+ .core;bundle-version="1.0.0",org.eclipse.dltk.ui;bundle-version="1.0.
+ 0",org.eclipse.ui.workbench.texteditor;bundle-version="3.4.0",org.ecl
+ ipse.core.filebuffers;bundle-version="3.4.0",org.eclipse.jface.text;b
+ undle-version="3.4.0",org.eclipse.core.expressions;bundle-version="3.
+ 4.0"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+

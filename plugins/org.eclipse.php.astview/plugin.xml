@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="ASTView"
+            icon="$nl$/icons/view.gif"
+            category="org.eclipse.php.ui.views"
+            class="org.eclipse.php.astview.views.ASTView"
+            id="org.eclipse.php.astview.views.ASTView">
+      </view>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="ASTView"
+            description="AST View"
+            categoryId="org.eclipse.ui.category.views"
+            id="org.eclipse.php.astview.views.ASTView">
+      </command>
+   </extension> 
+
+
+  <extension
+     point="org.eclipse.ui.bindings">
+  <key
+        sequence="M2+M3+Q A"
+        commandId="org.eclipse.php.astview.views.ASTView"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+  </key>
+  <key
+        platform="carbon"
+        sequence="M2+M3+Q A"
+        commandId=""
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+  </key>
+  <key
+        platform="carbon"
+        sequence="M1+M3+Q A"
+        commandId="org.eclipse.php.astview.views.ASTView"
+        schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+  </key>
+  </extension>
+  
+  
+  <extension
+        point="org.eclipse.ui.perspectiveExtensions">
+     <perspectiveExtension targetID="org.eclipse.php.perspective">
+        <viewShortcut id="org.eclipse.php.astview.views.ASTView"/>
+     </perspectiveExtension>
+  </extension>
+
+</plugin>
