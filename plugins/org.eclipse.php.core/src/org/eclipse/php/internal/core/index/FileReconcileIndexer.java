@@ -47,7 +47,6 @@ public class FileReconcileIndexer implements IProjectIndexer {
 				}
 				try {
 					monitor.enterWrite(); // ask permission to write
-					manager.removeIndex(resource.getFullPath());
 					manager.indexDocument(document, participant, index, new Path(indexLocation));
 				} finally {
 					monitor.exitWrite(); // free write lock
