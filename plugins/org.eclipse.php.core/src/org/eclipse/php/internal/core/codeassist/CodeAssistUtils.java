@@ -340,6 +340,16 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile) {
+		return getFunctionReturnType(method, determineObjectFromOtherFile, true);
+	}
+	
+	/**
+	 * Determines the return type of the given method element.
+	 * @param method
+	 * @param determineObjectFromOtherFile
+	 * @return
+	 */
+	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile, boolean usePhpDoc) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 
 		IEvaluatedType classType = null;
@@ -351,12 +361,17 @@ public class CodeAssistUtils {
 		BasicContext sourceModuleContext = new BasicContext(sourceModule, moduleDeclaration);
 
 		InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
-		PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
-		IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
-
-		IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
-		if (modelElements != null) {
-			return modelElementsToTypes(modelElements);
+		IEvaluatedType evaluatedType;
+		IModelElement[] modelElements;
+		
+		if (usePhpDoc) {
+			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
+			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
+	
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+			if (modelElements != null) {
+				return modelElementsToTypes(modelElements);
+			}
 		}
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(instanceContext, method);

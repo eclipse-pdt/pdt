@@ -318,12 +318,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				++tagStart;
 				int tagEnd = PHPTextSequenceUtilities.readIdentifierEndIndex(statementText, tagStart, false);
 				String tagName = statementText.subSequence(tagStart, tagEnd).toString();
+				
+				wordEndOffset = offset;
+				while (!Character.isWhitespace(document.getChar(wordEndOffset))) {
+					++wordEndOffset;
+				}
 
-				if (isVariableCompletion(offset, tagName, lastWord)) {
+				if (isVariableCompletion(offset, tagName, tagEnd == endPosition ? EMPTY : lastWord)) {
 					// the current position is a variable completion after @param PHP-doc tag
 					return;
 				}
-				if (tagStart == startPosition && isReturnTypeCompletion(offset, tagName)) {
+				if (isReturnTypeCompletion(offset, tagName, tagEnd == endPosition ? EMPTY : lastWord)) {
 					// the current position is a class completion after @return PHP-doc tag
 					return;
 				}
@@ -451,9 +456,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	@SuppressWarnings("unchecked")
 	private boolean isVariableCompletion(int offset, String tagName, String varName) {
-		if (hasWhitespaceAtEnd) {
-			return false;
-		}
 		if (!PHPDocTag.PARAM_NAME.equals(tagName)) {
 			return false;
 		}
@@ -482,10 +484,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return false;
 	}
 
-	private boolean isReturnTypeCompletion(final int offset, String tagName) {
-		if (!hasWhitespaceAtEnd) {
-			return false;
-		}
+	private boolean isReturnTypeCompletion(final int offset, String tagName, String className) {
 		if (!PHPDocTag.RETURN_NAME.equals(tagName)) {
 			return false;
 		}
@@ -497,12 +496,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (declaration instanceof MethodDeclaration) {
 			IMethod method = (IMethod) PHPModelUtils.getModelElementByNode(sourceModule, moduleDeclaration, declaration);
 			if (method != null) {
-				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true);
+				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true, false);
 				if (returnTypes != null) {
+					
 					int relevanceClass = RELEVANCE_CLASS;
+					this.setSourceRange(offset - className.length(), offset);
+					
 					for (IType type : returnTypes) {
 						try {
-							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+							if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), className) && (type.getFlags() & IPHPModifiers.Internal) == 0) {
 								reportType(type, relevanceClass--, EMPTY);
 							}
 						} catch (ModelException e) {
@@ -1515,12 +1517,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			
 			int replaceStart = this.startPosition - this.offset;
 			int replaceEnd = this.endPosition - this.offset;
-			if (replaceEnd > replaceStart) {
-				if (replaceEnd < wordEndOffset) {
-					replaceEnd = wordEndOffset - 1;
-				} else {
-					replaceEnd--;
-				}
+			if (wordEndOffset > replaceStart && replaceEnd < wordEndOffset) {
+				replaceEnd = wordEndOffset - 1;
+			} else if (replaceEnd > replaceStart) {
+				replaceEnd--;
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
 			
