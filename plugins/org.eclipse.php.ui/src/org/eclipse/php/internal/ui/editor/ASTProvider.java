@@ -43,25 +43,23 @@ public final class ASTProvider {
 	/**
 	 * @deprecated Use {@link SharedASTProvider#WAIT_YES} instead.
 	 */
-	public static final WAIT_FLAG WAIT_YES= SharedASTProvider.WAIT_YES;
+	public static final WAIT_FLAG WAIT_YES = SharedASTProvider.WAIT_YES;
 
 	/**
 	 * @deprecated Use {@link SharedASTProvider#WAIT_ACTIVE_ONLY} instead.
 	 */
-	public static final WAIT_FLAG WAIT_ACTIVE_ONLY= SharedASTProvider.WAIT_ACTIVE_ONLY;
-	
+	public static final WAIT_FLAG WAIT_ACTIVE_ONLY = SharedASTProvider.WAIT_ACTIVE_ONLY;
+
 	/**
 	 * @deprecated Use {@link SharedASTProvider#WAIT_NO} instead.
 	 */
-	public static final WAIT_FLAG WAIT_NO= SharedASTProvider.WAIT_NO;
-	
-	
+	public static final WAIT_FLAG WAIT_NO = SharedASTProvider.WAIT_NO;
+
 	/**
 	 * Tells whether this class is in debug mode.
 	 * @since 3.0
 	 */
-	private static final boolean DEBUG= "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jdt.ui/debug/ASTProvider"));  //$NON-NLS-1$//$NON-NLS-2$
-
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jdt.ui/debug/ASTProvider")); //$NON-NLS-1$//$NON-NLS-2$
 
 	/**
 	 * Internal activation listener.
@@ -69,7 +67,6 @@ public final class ASTProvider {
 	 * @since 3.0
 	 */
 	private class ActivationListener implements IPartListener2, IWindowListener, IPerspectiveListener {
-
 
 		/*
 		 * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
@@ -139,7 +136,7 @@ public final class ASTProvider {
 		 * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
 		 */
 		public void windowActivated(IWorkbenchWindow window) {
-			IWorkbenchPartReference ref= window.getPartService().getActivePartReference();
+			IWorkbenchPartReference ref = window.getPartService().getActivePartReference();
 			if (isPhpEditor(ref) && !isActiveEditor(ref))
 				activePhpEditorChanged(ref.getPart(true));
 		}
@@ -182,7 +179,7 @@ public final class ASTProvider {
 			if (ref == null)
 				return false;
 
-			String id= ref.getId();
+			String id = ref.getId();
 
 			// The instanceof check is not need but helps clients, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=84862
 			// return PhpUI.ID_CF_EDITOR.equals(id) || PhpUI.ID_CU_EDITOR.equals(id) || ref.getPart(false) instanceof PhpEditor;
@@ -190,35 +187,33 @@ public final class ASTProvider {
 		}
 
 		public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-			
+
 			IWorkbenchPartReference ref = page.getActivePartReference();
 			if (isPhpEditor(ref) && !isActiveEditor(ref))
 				activePhpEditorChanged(ref.getPart(true));
-			
+
 		}
 
-		public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {						
+		public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String changeId) {
 		}
-				
+
 	}
 
-	public static final String SHARED_AST_LEVEL= PHPVersion.PHP5;
-	public static final boolean SHARED_AST_STATEMENT_RECOVERY= true;
-	public static final boolean SHARED_BINDING_RECOVERY= true;
+	public static final String SHARED_AST_LEVEL = PHPVersion.PHP5;
+	public static final boolean SHARED_AST_STATEMENT_RECOVERY = true;
+	public static final boolean SHARED_BINDING_RECOVERY = true;
 
-	private static final String DEBUG_PREFIX= "ASTProvider > "; //$NON-NLS-1$
-
+	private static final String DEBUG_PREFIX = "ASTProvider > "; //$NON-NLS-1$
 
 	private ISourceModule fReconcilingPhpElement;
 	private ISourceModule fActivePhpElement;
 	private Program fAST;
 	private ActivationListener fActivationListener;
-	private Object fReconcileLock= new Object();
-	private Object fWaitLock= new Object();
+	private Object fReconcileLock = new Object();
+	private Object fWaitLock = new Object();
 	private boolean fIsReconciling;
 	private IWorkbenchPart fActiveEditor;
 
-	
 	/**
 	 * Returns the Php plug-in's AST provider.
 	 * 
@@ -228,7 +223,7 @@ public final class ASTProvider {
 	public static ASTProvider getASTProvider() {
 		return PHPUiPlugin.getDefault().getASTProvider();
 	}
-	
+
 	/**
 	 * Creates a new AST provider.
 	 */
@@ -241,30 +236,30 @@ public final class ASTProvider {
 	 */
 	void install() {
 		// Create and register activation listener
-		fActivationListener= new ActivationListener();
+		fActivationListener = new ActivationListener();
 		PlatformUI.getWorkbench().addWindowListener(fActivationListener);
-		
+
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(fActivationListener);
 
 		// Ensure existing windows get connected
-		IWorkbenchWindow[] windows= PlatformUI.getWorkbench().getWorkbenchWindows();
-		for (int i= 0, length= windows.length; i < length; i++)
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (int i = 0, length = windows.length; i < length; i++)
 			windows[i].getPartService().addPartListener(fActivationListener);
 	}
 
 	private void activePhpEditorChanged(IWorkbenchPart editor) {
 
-		ISourceModule phpElement= null;
+		ISourceModule phpElement = null;
 		if (editor instanceof PHPStructuredEditor) {
 			IModelElement inputModelElement = ((PHPStructuredEditor) editor).getModelElement();
 			if (inputModelElement != null && inputModelElement.getElementType() == IModelElement.SOURCE_MODULE) {
-				phpElement= (ISourceModule) inputModelElement;
-			}			
+				phpElement = (ISourceModule) inputModelElement;
+			}
 		}
 
 		synchronized (this) {
-			fActiveEditor= editor;
-			fActivePhpElement= phpElement;
+			fActiveEditor = editor;
+			fActivePhpElement = phpElement;
 			cache(null, phpElement);
 		}
 
@@ -273,11 +268,11 @@ public final class ASTProvider {
 
 		synchronized (fReconcileLock) {
 			if (fIsReconciling && (fReconcilingPhpElement == null || !fReconcilingPhpElement.equals(phpElement))) {
-				fIsReconciling= false;
-				fReconcilingPhpElement= null;
+				fIsReconciling = false;
+				fReconcilingPhpElement = null;
 			} else if (phpElement == null) {
-				fIsReconciling= false;
-				fReconcilingPhpElement= null;
+				fIsReconciling = false;
+				fReconcilingPhpElement = null;
 			}
 		}
 	}
@@ -320,8 +315,8 @@ public final class ASTProvider {
 			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "about to reconcile: " + toString(phpElement)); //$NON-NLS-1$ //$NON-NLS-2$
 
 		synchronized (fReconcileLock) {
-			fIsReconciling= true;
-			fReconcilingPhpElement= phpElement;
+			fIsReconciling = true;
+			fReconcilingPhpElement = phpElement;
 		}
 		cache(null, phpElement);
 	}
@@ -337,7 +332,7 @@ public final class ASTProvider {
 		if (DEBUG)
 			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "disposing AST: " + toString(fAST) + " for: " + toString(fActivePhpElement)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		fAST= null;
+		fAST = null;
 
 		cache(null, null);
 	}
@@ -389,7 +384,7 @@ public final class ASTProvider {
 		if (fAST != null)
 			disposeAST();
 
-		fAST= ast;
+		fAST = ast;
 
 		// Signal AST change
 		synchronized (fWaitLock) {
@@ -419,13 +414,13 @@ public final class ASTProvider {
 	public Program getAST(ISourceModule input, WAIT_FLAG waitFlag, IProgressMonitor progressMonitor) throws ModelException, IOException {
 		if (input == null || waitFlag == null)
 			throw new IllegalArgumentException("input or wait flag are null"); //$NON-NLS-1$
-		
+
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
 
 		boolean isActiveElement;
 		synchronized (this) {
-			isActiveElement= input.equals(fActivePhpElement);
+			isActiveElement = input.equals(fActivePhpElement);
 			if (isActiveElement) {
 				if (fAST != null) {
 					if (DEBUG)
@@ -444,7 +439,7 @@ public final class ASTProvider {
 		}
 		if (isActiveElement && isReconciling(input)) {
 			try {
-				final ISourceModule activeElement= fReconcilingPhpElement;
+				final ISourceModule activeElement = fReconcilingPhpElement;
 
 				// Wait for AST
 				synchronized (fWaitLock) {
@@ -473,11 +468,11 @@ public final class ASTProvider {
 		if (isActiveElement)
 			aboutToBeReconciled(input);
 
-		Program ast= null;
+		Program ast = null;
 		try {
-			ast= createAST(input, progressMonitor);
+			ast = createAST(input, progressMonitor);
 			if (progressMonitor != null && progressMonitor.isCanceled()) {
-				ast= null;
+				ast = null;
 				if (DEBUG)
 					System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "Ignore created AST for: " + input.getElementName() + " - operation has been cancelled"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
@@ -521,10 +516,10 @@ public final class ASTProvider {
 	private static Program createAST(final ISourceModule input, final IProgressMonitor progressMonitor) throws ModelException, IOException {
 		if (!hasSource(input))
 			return null;
-		
+
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
-		
+
 		final ASTParser parser = ASTParser.newParser(SHARED_AST_LEVEL, input);
 		// parser.setResolveBindings(true);
 		// parser.setStatementsRecovery(SHARED_AST_STATEMENT_RECOVERY);
@@ -533,8 +528,8 @@ public final class ASTProvider {
 		if (progressMonitor != null && progressMonitor.isCanceled())
 			return null;
 
-		final Program root[]= new Program[1]; 
-		
+		final Program root[] = new Program[1];
+
 		SafeRunner.run(new ISafeRunnable() {
 			public void run() {
 				try {
@@ -542,8 +537,8 @@ public final class ASTProvider {
 						return;
 					if (DEBUG)
 						System.err.println(getThreadName() + " - " + DEBUG_PREFIX + "creating AST for: " + input.getElementName()); //$NON-NLS-1$ //$NON-NLS-2$
-					root[0]= parser.createAST(progressMonitor);
-					
+					root[0] = parser.createAST(progressMonitor);
+
 					//mark as unmodifiable
 					ASTNodes.setFlagsToAST(root[0], ASTNode.PROTECT);
 				} catch (OperationCanceledException ex) {
@@ -552,14 +547,15 @@ public final class ASTProvider {
 					return;
 				}
 			}
+
 			public void handleException(Throwable ex) {
-				IStatus status= new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK, "Error in JDT Core during AST creation", ex);  //$NON-NLS-1$
+				IStatus status = new Status(IStatus.ERROR, PHPUiPlugin.ID, IStatus.OK, "Error in JDT Core during AST creation", ex); //$NON-NLS-1$
 				PHPUiPlugin.getDefault().getLog().log(status);
 			}
 		});
 		return root[0];
 	}
-	
+
 	/**
 	 * Checks whether the given Php element has accessible source.
 	 * 
@@ -570,7 +566,7 @@ public final class ASTProvider {
 	private static boolean hasSource(ISourceModule je) {
 		if (je == null || !je.exists())
 			return false;
-		
+
 		try {
 			return je.getBuffer() != null;
 		} catch (ModelException ex) {
@@ -578,7 +574,7 @@ public final class ASTProvider {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Disposes this AST provider.
 	 */
@@ -586,7 +582,14 @@ public final class ASTProvider {
 
 		// Dispose activation listener
 		PlatformUI.getWorkbench().removeWindowListener(fActivationListener);
-		fActivationListener= null;
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().removePerspectiveListener(fActivationListener);
+
+		// Ensure existing windows get disconnected
+		IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+		for (int i = 0, length = windows.length; i < length; i++)
+			windows[i].getPartService().removePartListener(fActivationListener);
+
+		fActivationListener = null;
 
 		disposeAST();
 
@@ -603,7 +606,7 @@ public final class ASTProvider {
 			System.out.println(getThreadName() + " - " + DEBUG_PREFIX + "reconciled: " + toString(phpElement) + ", AST: " + toString(ast)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		synchronized (fReconcileLock) {
-			fIsReconciling= progressMonitor != null && progressMonitor.isCanceled();
+			fIsReconciling = progressMonitor != null && progressMonitor.isCanceled();
 			if (phpElement == null || !phpElement.equals(fReconcilingPhpElement)) {
 
 				if (DEBUG)
@@ -622,12 +625,11 @@ public final class ASTProvider {
 	}
 
 	private static String getThreadName() {
-		String name= Thread.currentThread().getName();
+		String name = Thread.currentThread().getName();
 		if (name != null)
 			return name;
 		else
 			return Thread.currentThread().toString();
 	}
-	
-}
 
+}

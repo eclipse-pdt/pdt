@@ -63,7 +63,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 	// The shared instance.
 	private static PHPUiPlugin plugin;
-	
+
 	//the active formatter for this execution
 	private IContentFormatter fActiveFormatter = null;
 
@@ -122,6 +122,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
+		fASTProvider = null;
 		plugin = null;
 	}
 
@@ -189,7 +190,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public static IWorkbenchPage getActivePage() {
 		return getDefault().internalGetActivePage();
 	}
-	
+
 	public static IEditorPart getActiveEditor() {
 		IWorkbenchPage activePage = getActivePage();
 		if (activePage != null) {
@@ -344,7 +345,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 		return fASTProvider;
 	}
-	
+
 	/**
 	 * Returns color manager
 	 * 
@@ -357,7 +358,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 
 		return fColorManager;
 	}
-	
+
 	/**
 	 * Returns text tools
 	 * 
@@ -367,7 +368,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public synchronized PHPTextTools getTextTools() {
 		if (fTextTools == null)
 			fTextTools = new PHPTextTools(true);
-		
+
 		return fTextTools;
 	}
 
