@@ -32,7 +32,7 @@ public class PHPContextInformationValidator implements IContextInformationValida
 		if (info instanceof IContextInformationExtension) {
 			fPosition = ((IContextInformationExtension) info).getContextInformationPosition();
 		} else {
-			fPosition = offset;
+			fPosition = offset - 1;
 		}
 		fCurrentParameter = -1;
 	}
