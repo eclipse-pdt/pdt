@@ -24,6 +24,7 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
 import org.eclipse.php.internal.ui.corext.template.php.CodeTemplateContextType;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
 
 /**
  * Class that offers access to the templates contained in the 'code templates' preference page.
@@ -170,7 +171,7 @@ public class CodeGeneration {
 	 */
 	public static String getFieldComment(IScriptProject sp, IField field, String lineDelimiter) throws CoreException {
 		String fieldName = field.getElementName();
-		String fieldType = "unknown_type";
+		String fieldType = null;
 		Boolean isVar = false;
 
 		try {
@@ -193,21 +194,33 @@ public class CodeGeneration {
 				if (varDeclaration.getParent() instanceof Assignment) {
 					Expression expression = ((Assignment) varDeclaration.getParent()).getRightHandSide();
 					varType = expression.resolveTypeBinding();
-					//FIXME - what happens when it is a simple type... (see bug #241807)
+					if (expression instanceof Scalar) {
+						Scalar scalar = (Scalar) expression;
+						switch (scalar.getScalarType()) {
+							case Scalar.TYPE_INT:
+								fieldType = "integer";
+								break;
+							case Scalar.TYPE_STRING:
+								fieldType = "string";
+								break;
+						}
+					}
 
 				} else {
 					varType = varDeclaration.resolveTypeBinding();
 				}
 			}
 
-			if (null != varType) {
-				if (varType.isUnknown()) {
-					fieldType = "unknown_type";
-				} else if (varType.isAmbiguous()) {
+			if (null == fieldType && null != varType) {
+				if (varType.isAmbiguous()) {
 					fieldType = "Ambiguous";
 				} else {
 					fieldType = varType.getName();
 				}
+			}
+			
+			if (null == fieldType) {
+				fieldType = "unknown_type";
 			}
 
 		} catch (IOException e) {
