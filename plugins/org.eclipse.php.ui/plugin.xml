@@ -98,7 +98,7 @@
 			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart" icon="icons/full/obj16/phpfile.gif"
 			id="org.eclipse.php.ui.functions" />
 		<view name="%view.name.2" category="org.eclipse.php.ui.views"
-			class="org.eclipse.php.internal.ui.projectview.ProjectExplorerPart"
+			class="org.eclipse.php.internal.ui.projectoutlineview.ProjectOutlinePart"
 			id="org.eclipse.php.ui.projectOutline" icon="icons/full/obj16/php_project_outline.gif" />
 	</extension>
 
