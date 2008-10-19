@@ -70,7 +70,7 @@ public class MethodExitsFinder extends AbstractOccurrencesFinder {
 		//						return;
 		//				}
 		//			}
-		int offset = fExitPointNode.getEnd();
+		int offset = fFunctionDeclaration.getEnd() - 1;
 		fResult.add(new OccurrenceLocation(offset, 1, getOccurrenceType(null), fDescription));
 		//		}
 	}
