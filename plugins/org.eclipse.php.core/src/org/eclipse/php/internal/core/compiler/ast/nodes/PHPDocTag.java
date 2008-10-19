@@ -113,7 +113,7 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 		
 		int valueStart = start + getTagKind(tagKind).length() + 1;
 		
-		if (tagKind == RETURN) {
+		if (tagKind == RETURN || tagKind == VAR || tagKind == THROWS) {
 			
 			int wordStart = getNonWhitespaceIndex(value, 0);
 			int wordEnd = getWhitespaceIndex(value, wordStart);
@@ -136,19 +136,6 @@ public class PHPDocTag extends ASTNode implements PHPDocTagKinds {
 					references = types.toArray(new TypeReference[types.size()]);
 				}
 			}
-			
-		} else if (tagKind == VAR || tagKind == THROWS) {
-			
-			int wordStart = getNonWhitespaceIndex(value, 0);
-			int wordEnd = getWhitespaceIndex(value, wordStart);
-			if (wordStart < wordEnd) {
-			
-				references = new SimpleReference[1];
-				int sourceStart = valueStart + wordStart;
-				int sourceEnd = valueStart + wordEnd;
-				references[0] = new TypeReference(sourceStart, sourceEnd, value.substring(wordStart, wordEnd));
-			}
-			
 		} else if (tagKind == PARAM) {
 			
 			int firstWordStart = getNonWhitespaceIndex(value, 0);

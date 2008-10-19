@@ -63,10 +63,10 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			for (PHPDocTag tag : docBlock.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
-					if (references.length == 1) {
-						IEvaluatedType type = PHPSimpleTypes.fromString(references[0].getName());
+					for (SimpleReference ref : references) {
+						IEvaluatedType type = PHPSimpleTypes.fromString(ref.getName());
 						if (type == null) {
-							type = new PHPClassType(references[0].getName());
+							type = new PHPClassType(ref.getName());
 						}
 						evaluated.add(type);
 					}
