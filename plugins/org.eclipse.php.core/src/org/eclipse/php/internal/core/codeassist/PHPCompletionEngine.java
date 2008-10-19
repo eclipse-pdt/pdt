@@ -928,10 +928,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		for (int i = text.length() - 1; i >= functionStart; i--) {
 			if (text.charAt(i) == '(') {
 				boolean showClassCompletion = true;
+				boolean showInitializerCompletion = false;
 				int j = text.length() - 1;
 				for (; j > i; j--) {
 					// fixed bug 178032 - check if the cursor is after type means no '$' sign between cursor to '(' sign or ',' sign
 					if (text.charAt(j) == '$') {
+						showClassCompletion = false;
+						break;
+					}
+					if (text.charAt(j) == '=') {
+						showInitializerCompletion = true;
 						showClassCompletion = false;
 						break;
 					}
@@ -964,6 +970,30 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						} catch (ModelException e) {
 							if (DLTKCore.DEBUG_COMPLETION) {
 								e.printStackTrace();
+							}
+						}
+					}
+				} else {
+					if (showInitializerCompletion) {
+						String prefix = text.subTextSequence(j + 1, text.length()).toString().trim();
+						
+						if (showConstantAssist()) {
+							
+							this.setSourceRange(offset - prefix.length(), offset);
+							
+							IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles(), constantsCaseSensitive());
+							int relevanceConst = RELEVANCE_CONST;
+							for (IModelElement constant : constants) {
+								IField field = (IField) constant;
+								try {
+									if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+										reportField(field, relevanceConst--, false);
+									}
+								} catch (ModelException e) {
+									if (DLTKCore.DEBUG_COMPLETION) {
+										e.printStackTrace();
+									}
+								}
 							}
 						}
 					}
