@@ -393,7 +393,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (!hasWhitespaceAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
 				// the current position is inside new or instanceof statement.
 				if (lastWord.startsWith(DOLLAR)) {
-					getRegularCompletion(lastWord, offset, regionContainer, phpScriptRegion, internalPHPRegion, document);
+					getRegularCompletion(lastWord, offset);
 				}
 				return;
 			}
@@ -413,7 +413,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			getRegularCompletion(lastWord, offset, regionContainer, phpScriptRegion, internalPHPRegion, document);
+			getRegularCompletion(lastWord, offset);
 		}
 	}
 
@@ -562,18 +562,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 	}
 
-	protected void reportArrayVariables(String arrayName, int offset, String prefix) {
+	protected boolean reportArrayVariables(String arrayName, int offset, String prefix) {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		int relevanceVar = RELEVANCE_VAR;
 
 		if (arrayName.equals("$_SERVER") || arrayName.equals("$HTTP_SERVER_VARS")) { //$NON-NLS-1$ //$NON-NLS-2$
 			reportVariables(serverVaraibles, prefix, relevanceVar, true);
-			return;
+			return true;
 		}
 		if (arrayName.equals("$_SESSION") || arrayName.equals("$HTTP_SESSION_VARS")) { //$NON-NLS-1$ //$NON-NLS-2$
 			reportVariables(sessionVariables, prefix, relevanceVar, true);
-			return;
+			return true;
 		}
 		if (arrayName.equals("$GLOBALS")) { //$NON-NLS-1$
 			if (prefix.length() == 0) {
@@ -586,8 +586,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			reportVariables(phpVariables, prefix, relevanceVar, true);
-			return;
+			return true;
 		}
+		return false;
 	}
 
 	protected boolean isInArrayOptionQuotes(String type, int offset, TextSequence text) {
@@ -624,7 +625,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	protected void getRegularCompletion(String prefix, int offset, ITextRegionCollection sdRegion, ITextRegion tRegion, ContextRegion internalPhpRegion, IStructuredDocument document) {
+	protected void getRegularCompletion(String prefix, int offset) {
+		getRegularCompletion(prefix, offset, true);
+	}
+	
+	protected void getRegularCompletion(String prefix, int offset, boolean showKeywords) {
 
 		this.setSourceRange(offset - prefix.length(), offset);
 
@@ -646,17 +651,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int relevanceClass = RELEVANCE_CLASS;
 		int relevanceMethod = RELEVANCE_METHOD;
 
-		Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(sourceModule.getScriptProject().getProject(), prefix);
-		for (KeywordData k : keywordsList) {
-			if (!inClass || (inClass && k.isClassKeyword)) {
-				reportKeyword(k.name, k.suffix, relevanceKeyword--);
+		if (showKeywords) {
+			Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(sourceModule.getScriptProject().getProject(), prefix);
+			for (KeywordData k : keywordsList) {
+				if (!inClass || (inClass && k.isClassKeyword)) {
+					reportKeyword(k.name, k.suffix, relevanceKeyword--);
+				}
 			}
 		}
 		
 		boolean currentFileOnly = (!explicit && prefix.length() == 0);
 
-		if (!currentFileOnly && internalPhpRegion != null) {
-			final String type = internalPhpRegion.getType();
+		if (!currentFileOnly && internalPHPRegion != null) {
+			final String type = internalPHPRegion.getType();
 
 			if (prefix.startsWith(DOLLAR) && !inClass) { //$NON-NLS-1$
 				if (PHPPartitionTypes.isPHPQuotesState(type)) {
@@ -714,7 +721,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			if (PHPPartitionTypes.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && sdRegion.getStartOffset(tRegion) + tRegion.getLength() <= offset) {
+			if (PHPPartitionTypes.isPHPQuotesState(type) || type.equals(PHPRegionTypes.PHP_HEREDOC_TAG) && regionContainer.getStartOffset(phpScriptRegion) + phpScriptRegion.getLength() <= offset) {
 				return;
 			}
 		}
@@ -1401,43 +1408,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 		int endPosition = startPosition - 1;
-
+		
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, endPosition);
 		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String variableName = text.subSequence(startPosition, endPosition).toString();
 
-		reportArrayVariables(variableName, offset, lastWord);
-
-		int relevanceMethod = RELEVANCE_METHOD;
-
-		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, lastWord, requestor.isContextInformationMode());
-		for (IModelElement function : functions) {
-			try {
-				if ((((IMethod) function).getFlags() & IPHPModifiers.Internal) == 0) {
-					reportMethod((IMethod) function, relevanceMethod--);
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-		if (showConstantAssist()) {
-			IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, lastWord, requestor.isContextInformationMode(), !showVarsFromOtherFiles(), constantsCaseSensitive());
-			int relevanceConst = RELEVANCE_CONST;
-			for (IModelElement constant : constants) {
-				IField field = (IField) constant;
-				try {
-					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-						reportField(field, relevanceConst--, false);
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
-				}
-			}
+		if (!reportArrayVariables(variableName, offset, lastWord)) {
+			getRegularCompletion(lastWord, offset, false);
 		}
 		return true;
 	}
