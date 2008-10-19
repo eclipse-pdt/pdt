@@ -291,7 +291,8 @@ public class TaskTagsProvider {
 			}
 			if (StringUtils.occurrencesOf(priorities, ',') == StringUtils.occurrencesOf(newValue, ',')) {
 				TaskTag[] taskTags = getTagsAndPropertiesFrom(newValue, priorities);
-				TaskTagsEvent taskEvent = new TaskTagsEvent(TaskTagsProvider.this, getProject(), taskTags, getProjectTagsCaseSensitive(getProject()));
+				IProject eventProject = (event.getSource()!= null && event.getSource() instanceof IProject) ? (IProject) event.getSource() : null;
+				TaskTagsEvent taskEvent = new TaskTagsEvent(TaskTagsProvider.this, eventProject, taskTags, getProjectTagsCaseSensitive(getProject()));
 				notifyTaskTagChange(taskEvent);
 			}
 		}
