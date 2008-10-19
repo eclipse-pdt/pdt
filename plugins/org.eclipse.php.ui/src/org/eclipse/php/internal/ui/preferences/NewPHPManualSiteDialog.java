@@ -387,7 +387,6 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 
 	private String detectCHMLanguageSuffix(String chmFile) {
 		StringBuffer suffix = new StringBuffer("::/"); //$NON-NLS-1$
-		String defaultLang = "en"; //$NON-NLS-1$
 		char[] buf = new char[8192];
 		try {
 			FileReader r = new FileReader(chmFile);
@@ -397,14 +396,11 @@ public class NewPHPManualSiteDialog extends StatusDialog {
 				Matcher m = LANG_DETECT_PATTERN.matcher(new String(buf));
 				if (m.find()) {
 					suffix.append(m.group(1));
-				} else {
-					suffix.append(defaultLang);
 				}
 			} finally {
 				r.close();
 			}
 		} catch (Exception e) {
-			suffix.append(defaultLang);
 		}
 		return suffix.toString();
 	}
