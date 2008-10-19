@@ -672,20 +672,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 
+				Set<IModelElement> variables = new TreeSet<IModelElement>(new CodeAssistUtils.AlphabeticComparator());
 				// Complete local scope variables:
 				try {
 					IModelElement enclosingElement = sourceModule.getElementAt(offset);
 					if (enclosingElement instanceof IMethod) {
 						IMethod method = (IMethod) enclosingElement;
-						IModelElement[] variables = CodeAssistUtils.getMethodFields(method, prefix, requestor.isContextInformationMode());
-						for (IModelElement var : variables) {
-							IField field = (IField) var;
-							if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-								reportField(field, relevanceConst--, false);
-							} else {
-								reportField(field, relevanceVar--, false);
-							}
-						}
+						variables.addAll(Arrays.asList(CodeAssistUtils.getMethodFields(method, prefix, requestor.isContextInformationMode())));
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG_COMPLETION) {
@@ -694,7 +687,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 
 				// Complete global scope variables:
-				IModelElement[] variables = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles());
+				variables.addAll(Arrays.asList(CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles())));
+				
 				for (IModelElement var : variables) {
 					IField field = (IField) var;
 					try {
@@ -709,7 +703,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				}
-
+				
 				IMethod containerMethodData = CodeAssistUtils.getContainerMethodData(sourceModule, offset);
 				if (containerMethodData != null && containerMethodData.getDeclaringType() != null) {
 					reportVariables(classVariables, prefix, relevanceVar--, false);

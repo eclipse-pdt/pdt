@@ -831,7 +831,7 @@ public class CodeAssistUtils {
 
 		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
-		final List<IModelElement> elements = new LinkedList<IModelElement>();
+		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -948,7 +948,7 @@ public class CodeAssistUtils {
 		SearchEngine searchEngine = new SearchEngine();
 		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
-		final List<IModelElement> elements = new LinkedList<IModelElement>();
+		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -976,5 +976,11 @@ public class CodeAssistUtils {
 			}
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
+	}
+	
+	static class AlphabeticComparator implements Comparator<IModelElement> {
+		public int compare(IModelElement o1, IModelElement o2) {
+			return o1.getElementName().compareTo(o2.getElementName());
+		}
 	}
 }
