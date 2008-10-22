@@ -40,6 +40,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		if (null == input)
 			return getTitleToolTip();
 		
+		// TODO ???
 		return "NIRC";
 	}
 	

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 Zend Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,12 +51,16 @@ import org.eclipse.ui.IWorkingSet;
  */
 /* .... was ScriptExplorerContentProvider */
 public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider implements ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
+	
 	static public class GroupNode implements Comparable<Object> {
 
+		// TODO don't forget modifiers - I think that the modelElement should be refactored to the content provider
+		// and should be renamed to "project" 
 		static IModelElement modelElement;
 		String text;
 		int type;
 
+		// TODO don't forget modifiers		
 		GroupNode(final int type, final String text, final IModelElement modelElement) {
 			this.type = type;
 			this.text = text;
@@ -93,6 +97,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			return text;
 		}
 
+		// TODO don't forget modifiers		
 		Object[] getChildren() {
 			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
 				public int compare(IModelElement o1, IModelElement o2) {
@@ -160,10 +165,12 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		}
 	}
 
+	// TODO the images should be located on the groupnode class		
 	private static final Image CLASSES_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage();
 	private static final Image CONSTANTS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();
 	private static final Image FUNCTIONS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage();
 
+	// TODO these constants should be located on the groupnode class		
 	public static final int GROUP_CONSTANTS = 2;
 	public static final int GROUP_CLASSES = 3;
 	public static final int GROUP_FUNCTIONS = 4;
