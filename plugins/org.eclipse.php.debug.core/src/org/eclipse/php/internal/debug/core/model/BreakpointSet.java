@@ -13,11 +13,7 @@ package org.eclipse.php.internal.debug.core.model;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.dltk.core.DLTKCore;
@@ -103,7 +99,7 @@ public class BreakpointSet {
 			return true;
 		} else {
 			IProject project = resource.getProject();
-			return fProjects.contains(project);
+			return fProject.equals(project) || fProjects.contains(project);
 		}
 	}
 
