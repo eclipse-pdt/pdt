@@ -3,7 +3,7 @@ package org.eclipse.php.internal.ui.projectoutlineview;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.internal.ui.projectoutlineview.ProjectOutlineContentProvider.GroupNode;
+import org.eclipse.php.internal.ui.projectoutlineview.ProjectOutlineContentProvider.ProjectOutlineGroups;
 import org.eclipse.swt.graphics.Image;
 
 public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
@@ -15,8 +15,8 @@ public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof GroupNode) {
-			return ((GroupNode) element).getImage();
+		if (element instanceof ProjectOutlineGroups) {
+			return ((ProjectOutlineGroups) element).getImage();
 			
 		}
 		return super.getImage(element);
@@ -24,7 +24,7 @@ public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof GroupNode){
+		if (element instanceof ProjectOutlineGroups){
 			return getSpecificText(element);
 		}
 		return super.getText(element);
@@ -35,8 +35,8 @@ public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 	}
 	
 	private String getSpecificText(Object element) {
-		if (element instanceof GroupNode) {
-			return ((GroupNode)element).getText();
+		if (element instanceof ProjectOutlineGroups) {
+			return ((ProjectOutlineGroups)element).getText();
 		}
 		return null;
 	}

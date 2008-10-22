@@ -1,13 +1,16 @@
 package org.eclipse.php.internal.ui.projectoutlineview;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.*;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -35,15 +38,14 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	}
 
-	
-	public String getTitleToolTip(Object input) {
-		if (null == input)
-			return getTitleToolTip();
-		
-		// TODO ???
-		return "NIRC";
-	}
-	
+	/*	public String getTitleToolTip(Object input) {
+			if (null == input)
+				return getTitleToolTip();
+			
+			// TODO ???
+			return "NIRC";
+		}*/
+
 	@Override
 	public String getTitleToolTip() {
 		// TODO Auto-generated method stub
@@ -67,13 +69,15 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 		// register this view to the page 
 		getSite().getPage().addPartListener(this);
-		
-		setInputAsEditor();
+
+		selectProject(null);
 	}
 
-	private void setInputAsEditor() {
+	private void setInputAsEditor(IEditorPart editor) {
 		final TreeViewer treeViewer = getTreeViewer();
-		treeViewer.setInput(getInput());
+		if (!treeViewer.getInput().equals(getInput(editor))) {
+			treeViewer.setInput(getInput(editor));
+		}
 	}
 
 	/* (non-Javadoc)
@@ -87,13 +91,8 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		super.dispose();
 	}
 
-	private Object getInput() {
-		IEditorPart input = getSite().getPage().getActiveEditor();
-		IEditorPart editor = (IEditorPart) input;
-		if (editor == null) {
-			return null;
-		}
-
+	private Object getInput(IEditorPart editor) {
+		
 		final IEditorInput editorInput = editor.getEditorInput();
 		final IFile file = (IFile) editorInput.getAdapter(IFile.class);
 		if (file != null) {
@@ -104,7 +103,65 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	}
 
 	public void partActivated(IWorkbenchPart part) {
-		setInputAsEditor();
+		selectProject(part);
+
+		
+	}
+	private Object findInputElement() {
+		
+			Object input = getSite().getPage().getInput();
+			if (input instanceof IWorkspace) {
+				return DLTKCore.create(((IWorkspace) input).getRoot());
+			} else if (input instanceof IContainer) {
+				IModelElement element = DLTKCore.create((IContainer) input);
+				if (element != null && element.exists()) {
+					return element;
+				}
+				return input;
+			}
+			// 1GERPRT: ITPJUI:ALL - Packages View is empty when shown in Type
+			// Hierarchy Perspective
+			// we can't handle the input
+			// fall back to show the workspace
+			return DLTKCore.create(DLTKUIPlugin.getWorkspace().getRoot());
+		
+	}
+	private void selectProject(IWorkbenchPart part) {
+		IEditorPart editor = getSite().getPage().getActiveEditor();
+
+		if (editor != null) {
+			setInputAsEditor(editor);
+		}else if (part instanceof ScriptExplorerPart) {
+			setInputAsExplorerProject(part);
+			return;
+		}
+	}
+
+	private void setInputAsExplorerProject(IWorkbenchPart part) {
+
+		
+		final TreeSelection input = (TreeSelection) ((ScriptExplorerPart) part).getTreeViewer().getSelection();
+		IScriptProject scriptProject = null;
+		//getting selected project (from ScriptExplorerPart selection.
+		if (input.getFirstElement() instanceof IModelElement) {
+			scriptProject = (IScriptProject) ((IModelElement) input.getFirstElement()).getAncestor(IModelElement.SCRIPT_PROJECT);
+		}
+
+		if (null == scriptProject) {
+			// If no project is selected - choosing the first project
+			IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+			if (null != projects && projects.length != 0) {
+				scriptProject = DLTKCore.create(projects[0]);
+			}
+		}
+		
+		final TreeViewer treeViewer = getTreeViewer();
+		if (!treeViewer.getInput().equals(scriptProject)) {
+			treeViewer.setInput(scriptProject);
+		}
+
+		return;
+
 	}
 
 	public void partBroughtToTop(IWorkbenchPart part) {
@@ -117,7 +174,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	}
 
 	public void partOpened(IWorkbenchPart part) {
-		setInputAsEditor();
+		selectProject(part);;
 	}
 
 }
