@@ -64,7 +64,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IMethod[] getSuperClassMethods(IType type, String prefix, boolean exactName) {
-		final Set<IMethod> methods = new LinkedHashSet<IMethod>();
+		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		try {
 			if (type.getSuperClasses() != null) {
 				if (prefix.length() == 0) {
@@ -112,10 +112,8 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
-		final Set<IMethod> methods = new LinkedHashSet<IMethod>();
+		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		try {
-			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix, exactName)));
-
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
 				String methodName = typeMethod.getElementName();
@@ -127,6 +125,9 @@ public class CodeAssistUtils {
 					methods.add(typeMethod);
 				}
 			}
+			
+			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix, exactName)));
+			
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG_COMPLETION) {
 				e.printStackTrace();
@@ -144,7 +145,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
-		final Set<IField> fields = new LinkedHashSet<IField>();
+		final Set<IField> fields = new TreeSet<IField>(new AlphabeticComparator());
 		try {
 			List<IType> searchTypes = new LinkedList<IType>();
 			searchTypes.add(type);
