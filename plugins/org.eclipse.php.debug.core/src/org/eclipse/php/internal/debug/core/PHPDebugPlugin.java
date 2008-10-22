@@ -181,8 +181,7 @@ public class PHPDebugPlugin extends Plugin {
 	 */
 	public static String getDebugHosts() {
 		Preferences prefs = PHPProjectPreferences.getModelPreferences();
-		String hosts = prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP);
-		return hosts.replaceAll(",", "%2C");
+		return prefs.getString(PHPDebugCorePreferenceNames.CLIENT_IP);
 	}
 
 	public static String getWorkspaceDefaultServer() {

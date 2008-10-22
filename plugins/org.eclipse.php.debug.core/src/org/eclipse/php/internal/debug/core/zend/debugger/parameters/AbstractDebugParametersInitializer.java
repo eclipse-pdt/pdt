@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger.parameters;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -55,13 +57,16 @@ public abstract class AbstractDebugParametersInitializer implements IDebugParame
 	public String generateQuery(ILaunch launch) {
 		StringBuffer buf = new StringBuffer();
 
-		Hashtable parameters = generateQueryParameters(launch);
-		Enumeration e = parameters.keys();
+		Hashtable<String, String> parameters = generateQueryParameters(launch);
+		Enumeration<String> e = parameters.keys();
 
 		while (e.hasMoreElements()) {
 			String key = (String) e.nextElement();
 			buf.append(key);
-			buf.append(parameters.get(key));
+			try {
+				buf.append(URLEncoder.encode((String) parameters.get(key), "UTF-8"));
+			} catch (UnsupportedEncodingException exc) {
+			}
 			if (e.hasMoreElements()) {
 				buf.append('&'); //$NON-NLS-1$
 			}

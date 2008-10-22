@@ -18,6 +18,7 @@ package org.eclipse.php.internal.debug.core.zend.debugger.messages;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import org.eclipse.php.debug.core.debugger.messages.IDebugNotificationMessage;
 import org.eclipse.php.internal.debug.core.zend.communication.CommunicationUtilities;
@@ -107,7 +108,7 @@ public class DebugSessionStartedNotification extends DebugMessageNotificationImp
 		setServerProtocol(in.readInt()); // read the protocal id (For future use);
 		setFileName(CommunicationUtilities.readString(in));
 		setUri(CommunicationUtilities.readString(in));
-		setQuery(CommunicationUtilities.readString(in));
+		setQuery(URLDecoder.decode(CommunicationUtilities.readString(in), "UTF-8"));
 		setOptions(CommunicationUtilities.readString(in));
 	}
 

@@ -41,7 +41,7 @@ public interface IDebugParametersInitializer {
 	 * @param ILaunch launch
 	 * @return A hastable containing debug query parameters
 	 */
-	public Hashtable generateQueryParameters(ILaunch launch);
+	public Hashtable<String, String> generateQueryParameters(ILaunch launch);
 	
 	/**
 	 * Returns ID of the corresponding Debug handler
