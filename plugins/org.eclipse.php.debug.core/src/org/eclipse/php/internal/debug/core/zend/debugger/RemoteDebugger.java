@@ -15,11 +15,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
@@ -296,15 +294,44 @@ public class RemoteDebugger implements IRemoteDebugger {
 		if (debugTarget.getContextManager().isResolveBlacklisted(remoteFile)) {
 			return remoteFile;
 		}
+		
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 
 		// check if this file is already local
-		if (ResourcesPlugin.getWorkspace().getRoot().findMember(remoteFile) != null) {
+		if (workspace.getRoot().findMember(remoteFile) != null) {
 			return remoteFile;
 		}
 
 		// If we are running local debugger, check if "remote" file exists and return it if it does
 		if (debugTarget.isPHPCGI() && new File(remoteFile).exists()) {
-			IFile wsFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(remoteFile));
+			
+			IFile wsFile = null;
+			IPath location = new Path(remoteFile); 
+			IProject[] projects = workspace.getRoot().getProjects();
+			IProject currentProject = debugTarget.getProject();
+			// set current project to higher priority:
+			for (int i = 0; i < projects.length; i++) {
+				IProject project = projects[i];
+				if (project.equals(currentProject)) {
+					IProject tmp = projects[0];
+					projects[0] = project;
+					projects[i] = tmp;
+					break;
+				}
+			}
+			for (int i = 0; i < projects.length; i++) {
+				IProject project = projects[i];
+				if (!project.isOpen() || !project.isAccessible()) {
+					continue;
+				}
+				IPath projectLocation = project.getLocation();
+				if (projectLocation != null && projectLocation.isPrefixOf(location)) {
+					int segmentsToRemove = projectLocation.segmentCount();
+					wsFile = workspace.getRoot().getFile(project.getFullPath().append(location.removeFirstSegments(segmentsToRemove)));
+					break;
+				}
+			}
+			
 			if (wsFile != null) {
 				return wsFile.getFullPath().toString();
 			} else {
