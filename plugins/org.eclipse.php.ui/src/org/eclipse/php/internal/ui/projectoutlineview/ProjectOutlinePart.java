@@ -8,10 +8,11 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.PreferenceConstants;
+import org.eclipse.dltk.ui.viewsupport.ProblemTreeViewer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -38,13 +39,18 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	}
 
-	/*	public String getTitleToolTip(Object input) {
-			if (null == input)
-				return getTitleToolTip();
-			
-			// TODO ???
-			return "NIRC";
-		}*/
+	/**
+	 * This viewer ensures that non-leaves in the hierarchical layout are not
+	 * removed by any filters.
+	 * 
+	 * 
+	 */
+	/* FIXME : to be remove as DLTK integration build is released (ScriptExplorerPart changes) - NirC
+	protected ProblemTreeViewer createViewer(Composite composite) {
+		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI
+				| SWT.H_SCROLL | SWT.V_SCROLL);
+	}
+	*/
 
 	@Override
 	public String getTitleToolTip() {
@@ -54,7 +60,6 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	@Override
 	protected ScriptExplorerLabelProvider createLabelProvider() {
-		// TODO Auto-generated method stub
 		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 
 		return new ProjectOutlineLabelProvider(getContentProvider(), store);
@@ -66,7 +71,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-
+		
 		// register this view to the page 
 		getSite().getPage().addPartListener(this);
 
@@ -75,7 +80,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	private void setInputAsEditor(IEditorPart editor) {
 		final TreeViewer treeViewer = getTreeViewer();
-		if (!treeViewer.getInput().equals(getInput(editor))) {
+		if (null == treeViewer.getInput() || !treeViewer.getInput().equals(getInput(editor))) {
 			treeViewer.setInput(getInput(editor));
 		}
 	}
@@ -107,25 +112,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 		
 	}
-	private Object findInputElement() {
-		
-			Object input = getSite().getPage().getInput();
-			if (input instanceof IWorkspace) {
-				return DLTKCore.create(((IWorkspace) input).getRoot());
-			} else if (input instanceof IContainer) {
-				IModelElement element = DLTKCore.create((IContainer) input);
-				if (element != null && element.exists()) {
-					return element;
-				}
-				return input;
-			}
-			// 1GERPRT: ITPJUI:ALL - Packages View is empty when shown in Type
-			// Hierarchy Perspective
-			// we can't handle the input
-			// fall back to show the workspace
-			return DLTKCore.create(DLTKUIPlugin.getWorkspace().getRoot());
-		
-	}
+
 	private void selectProject(IWorkbenchPart part) {
 		IEditorPart editor = getSite().getPage().getActiveEditor();
 
@@ -156,7 +143,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 		}
 		
 		final TreeViewer treeViewer = getTreeViewer();
-		if (!treeViewer.getInput().equals(scriptProject)) {
+		if (treeViewer.getInput() == null || !treeViewer.getInput().equals(scriptProject)) {
 			treeViewer.setInput(scriptProject);
 		}
 
@@ -176,5 +163,17 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	public void partOpened(IWorkbenchPart part) {
 		selectProject(part);;
 	}
+	
+	/* FIXME : to be remove as DLTK integration build is released (ScriptExplorerPart changes) - NirC
+	protected class ProjectOutlineProblemTreeViewer extends PackageExplorerProblemTreeViewer {
+		
+		public ProjectOutlineProblemTreeViewer(Composite parent, int style) {
+			super(parent, style);
+		}
 
+		protected boolean evaluateExpandableWithFilters(Object parent) {
+			return false;
+		}
+	
+	}*/
 }

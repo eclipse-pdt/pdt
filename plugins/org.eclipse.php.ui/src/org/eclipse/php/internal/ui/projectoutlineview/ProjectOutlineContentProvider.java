@@ -134,6 +134,14 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 				return childrenList.toArray();
 			}
 
+			public boolean hasChildren() {
+				Object[] children = getChildren();
+				if ( null == children || children.length == 0){
+					return false;
+				}
+				return true;
+			}
+
 
 
 		}
@@ -376,7 +384,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	@Override
 	public boolean hasChildren(Object element) {
 		if (element instanceof ProjectOutlineGroups)
-			return true;
+			return ((ProjectOutlineGroups)element).hasChildren();
 
 		return super.hasChildren(element);
 	}
@@ -503,7 +511,8 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		super.inputChanged(viewer, oldInput, newInput);
 		if (null != newInput && newInput instanceof Model){
 			try {
-				newInput = ((Model)newInput).getScriptProjects()[0];
+				IScriptProject[] scriptProjects = ((Model)newInput).getScriptProjects();
+				newInput = scriptProjects.length > 0 ? scriptProjects[0] : new Object[0];  
 			} catch (ModelException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -511,7 +520,6 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		}
 		
 		fViewer = (TreeViewer) viewer;
-		super.inputChanged(viewer, oldInput, newInput);
 		if (oldInput == null && newInput != null ) {
 			DLTKCore.addElementChangedListener(this);
 		} else if (oldInput != null && newInput == null) {
