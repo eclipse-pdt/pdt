@@ -26,14 +26,11 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -103,10 +100,15 @@ public class PHPManual {
 		}
 
 		String path = null;
-
 		if (modelElement instanceof IMethod) {
 			try {
 				path = buildPathForMethod((IMethod) modelElement);
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		} else if (modelElement instanceof IType) {
+			try {
+				path = buildPathForClass((IType) modelElement);
 			} catch (ModelException e) {
 				Logger.logException(e);
 			}
@@ -126,15 +128,10 @@ public class PHPManual {
 		return null;
 	}
 
-	protected String buildPathForMethod(IMethod method) throws ModelException {
-
+	private String getPHPDocLink(Declaration declaration) {
 		String path = null;
-		ISourceModule sourceModule = method.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
-
-		if (methodDeclaration instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocDeclaration = (IPHPDocAwareDeclaration) methodDeclaration;
+		if (declaration instanceof IPHPDocAwareDeclaration) {
+			IPHPDocAwareDeclaration phpDocDeclaration = (IPHPDocAwareDeclaration) declaration;
 
 			PHPDocBlock docBlock = phpDocDeclaration.getPHPDoc();
 			if (docBlock != null) {
@@ -154,20 +151,36 @@ public class PHPManual {
 					}
 				}
 			}
+		}
+		return path;
+	}
 
-			if (path == null) {
-				IType declaringType = method.getDeclaringType();
-				if (declaringType != null) {
-					String functionName = declaringType.getElementName() + "::" + method.getElementName(); //$NON-NLS-1$
-					path = (String) getPHPEntityPathMap().get(functionName.toLowerCase());
-					if (path == null) {
-						path = buildPathForMethod(declaringType.getElementName(), method.getElementName());
-					}
-				} else {
-					path = (String) getPHPEntityPathMap().get(method.getElementName().toLowerCase());
-					if (path == null) {
-						path = buildPathForMethod(null, method.getElementName());
-					}
+	protected String buildPathForClass(IType type) throws ModelException {
+		ISourceModule sourceModule = type.getSourceModule();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
+		return getPHPDocLink(typeDeclaration);
+	}
+
+	protected String buildPathForMethod(IMethod method) throws ModelException {
+
+		ISourceModule sourceModule = method.getSourceModule();
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
+
+		String path = getPHPDocLink(methodDeclaration);
+		if (path == null) {
+			IType declaringType = method.getDeclaringType();
+			if (declaringType != null) {
+				String functionName = declaringType.getElementName() + "::" + method.getElementName(); //$NON-NLS-1$
+				path = (String) getPHPEntityPathMap().get(functionName.toLowerCase());
+				if (path == null) {
+					path = buildPathForMethod(declaringType.getElementName(), method.getElementName());
+				}
+			} else {
+				path = (String) getPHPEntityPathMap().get(method.getElementName().toLowerCase());
+				if (path == null) {
+					path = buildPathForMethod(null, method.getElementName());
 				}
 			}
 		}
