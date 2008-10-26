@@ -287,7 +287,7 @@
 	<extension id="HTMLValidatorForPHP" name="HTML Syntax Validator (for PHP Files)"
 		point="org.eclipse.wst.validation.validatorV2">
 		<validator build="true"
-			class="org.eclipse.wst.html.internal.validation.HTMLValidator"
+			class="org.eclipse.wst.html.internal.validation.HTMLValidator:org.eclipse.php.core.phpsource"
 			manual="true" sourceid="org.eclipse.php.core.phpsource" version="1"
 			markerId="org.eclipse.wst.html.core.validationMarker">
 			<include>
