@@ -283,6 +283,8 @@
 	-->
 	<!--
 		======================================================================================
+		add the content type as a parameter to HTMLValidator, so that it will be added 
+		in setInitializationData() and html markers will be added for php files 
 	-->
 	<extension id="HTMLValidatorForPHP" name="HTML Syntax Validator (for PHP Files)"
 		point="org.eclipse.wst.validation.validatorV2">
