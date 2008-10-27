@@ -92,6 +92,7 @@ public class PHPINIUtil {
 		if (project != null) {
 			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
 			List<String> includePath = new ArrayList<String>(path.length);
+			
 			for (IncludePath pathObject : path) {
 				if (pathObject.isBuildpath()) {
 					IBuildpathEntry entry = (IBuildpathEntry) pathObject.getEntry();
@@ -99,12 +100,16 @@ public class PHPINIUtil {
 					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 						IPath entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
 						includePath.add(entryPath.toFile().getAbsolutePath());
-					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT || entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT || entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE || entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
-						IPath location = resource.getLocation();
-						if (location != null) {
-							includePath.add(location.toOSString());
+						if (resource != null) {
+							IPath location = resource.getLocation();
+							if (location != null) {
+								includePath.add(location.toOSString());
+							}
+						} else {
+							includePath.add(entryPath.toOSString());
 						}
 					}
 				} else {
