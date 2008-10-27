@@ -25,7 +25,7 @@ public class OutlineUtils {
 	 * @param exactName
 	 * @return
 	 */
-	public static IType[] getOnlyClasses(IProjectFragment projectFragment, String prefix, boolean exactName) {
+	public static IType[] getOnlyClasses(IModelElement projectFragment, String prefix, boolean exactName) {
 		IModelElement[] classes = getGlobalClasses(projectFragment, prefix, exactName);
 		List<IType> onlyClasses = new LinkedList<IType>();
 		for (IModelElement c : classes) {
@@ -50,15 +50,15 @@ public class OutlineUtils {
 	 * @param prefix Field name
 	 * @param exactName Whether the prefix is an exact name of a class
 	 */
-	public static IModelElement[] getGlobalClasses(IProjectFragment projectFragment, String prefix, boolean exactName) {
+	public static IModelElement[] getGlobalClasses(IModelElement projectFragment, String prefix, boolean exactName) {
 		return getGlobalElements( projectFragment, prefix, exactName, IDLTKSearchConstants.TYPE);
 	}
 	
-	public static IModelElement[] getGlobalFunctions(IProjectFragment projectFragment, String prefix, boolean exactName) {
+	public static IModelElement[] getGlobalFunctions(IModelElement projectFragment, String prefix, boolean exactName) {
 		return getGlobalElements( projectFragment, prefix, exactName, IDLTKSearchConstants.METHOD);
 	}
 	
-	public static IModelElement[] getGlobalConstants(IProjectFragment projectFragment, String prefix, boolean exactName) {
+	public static IModelElement[] getGlobalConstants(IModelElement projectFragment, String prefix, boolean exactName) {
 		ArrayList<IModelElement> constantsElements = new ArrayList<IModelElement>();
 		
 		IModelElement[] globalElements = getGlobalElements( projectFragment, prefix, exactName, IDLTKSearchConstants.FIELD);
@@ -88,7 +88,7 @@ public class OutlineUtils {
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(IProjectFragment projectFragment, String prefix, boolean exactName, int elementType) {
+	private static IModelElement[] getGlobalElements(IModelElement projectFragment, String prefix, boolean exactName, int elementType) {
 		return getGlobalElements( projectFragment, prefix, exactName, elementType, false);
 	}
 	/**
@@ -101,7 +101,7 @@ public class OutlineUtils {
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(IProjectFragment projectFragment, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
+	private static IModelElement[] getGlobalElements(IModelElement projectFragment, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
 		return getGlobalElements( projectFragment, prefix, exactName, elementType, currentFileOnly, false);
 	}
 	
@@ -117,7 +117,7 @@ public class OutlineUtils {
 	 * @param currentFileOnly Whether to search elements in current file only
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(IProjectFragment projectFragment, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
+	private static IModelElement[] getGlobalElements(IModelElement projectFragment, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
 		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
@@ -142,7 +142,6 @@ public class OutlineUtils {
 	 * @return
 	 */
 	private static IModelElement[] getGlobalElements(IDLTKSearchScope scope, String prefix, boolean exactName, int elementType, boolean caseSensitive) {
-		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
 		int matchRule;

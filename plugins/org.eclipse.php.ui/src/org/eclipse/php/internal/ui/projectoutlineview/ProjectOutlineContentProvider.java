@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projectoutlineview;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import org.eclipse.core.resources.IFolder;
@@ -52,100 +51,100 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider implements ITreeContentProvider, IElementChangedListener, IPropertyChangeListener {
 
-		private static final Image CLASSES_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage();
-		private static final Image CONSTANTS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();
-		private static final Image FUNCTIONS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage();
+	private static final Image CLASSES_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage();
+	private static final Image CONSTANTS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();
+	private static final Image FUNCTIONS_GROUP_IMAGE = PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage();
 
-		public enum ProjectOutlineGroups {
-			
+	public enum ProjectOutlineGroups {
+
 			GROUP_CLASSES(CLASSES_GROUP_IMAGE, "Classes" ), 
 			GROUP_CONSTANTS(CONSTANTS_GROUP_IMAGE, "Constants"),
 			GROUP_FUNCTIONS(FUNCTIONS_GROUP_IMAGE, "Functions");
-			
-			private Image image;
-			private String text;
 
-			ProjectOutlineGroups(Image image, String text){
-				this.image = image;
-				this.text = text;
-			}
-			
-			public Image getImage() {
-				return image;
-			}
+		private Image image;
+		private String text;
 
-			public String getText() {
-				return text;
-			}
-			
-			protected Object[] getChildren() {
-				TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
-					public int compare(IModelElement o1, IModelElement o2) {
-						return (o1.getElementName().compareTo(o2.getElementName()));
-
-					}
-				});
-
-				if (scripProject != null && scripProject instanceof IScriptProject) {
-					IScriptProject scriptProject = (IScriptProject) scripProject;
-					ArrayList<IProjectFragment> projectFragments = new ArrayList<IProjectFragment>();
-
-					// getting project's fragments
-					try {
-						for (IProjectFragment projectFragment : (scriptProject.getProjectFragments())) {
-							if (!projectFragment.isExternal()) { //adding only non-external resources
-								projectFragments.add(projectFragment);
-							}
-						}
-					} catch (ModelException e) {
-						Logger.logException(e);
-					}
-
-					// foreach fragment getting its children, 
-					// and then merging them into last fragments list
-					for (IProjectFragment projectFragment : projectFragments) {
-						IModelElement[] children = null;
-
-						switch (this) {
-							case GROUP_CLASSES:
-								children = OutlineUtils.getGlobalClasses(projectFragment, "", false);
-								break;
-
-							case GROUP_FUNCTIONS:
-								children = OutlineUtils.getGlobalFunctions(projectFragment, "", false);
-								break;
-
-							case GROUP_CONSTANTS:
-								children = OutlineUtils.getGlobalConstants(projectFragment, "", false);
-								break;
-						}
-
-						childrenList.addAll(Arrays.asList(children));
-						if (null != children) {
-							for (IModelElement child : children) {
-								childrenList.add(child);
-							}
-						}
-					}
-				}
-
-				if (null == childrenList || childrenList.isEmpty())
-					return StandardModelElementContentProvider.NO_CHILDREN;
-				return childrenList.toArray();
-			}
-
-			public boolean hasChildren() {
-				Object[] children = getChildren();
-				if ( null == children || children.length == 0){
-					return false;
-				}
-				return true;
-			}
-
-
-
+		ProjectOutlineGroups(Image image, String text) {
+			this.image = image;
+			this.text = text;
 		}
 
+		public Image getImage() {
+			return image;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		protected Object[] getChildren() {
+			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+				public int compare(IModelElement o1, IModelElement o2) {
+					if (0 != o1.getElementName().compareTo(o2.getElementName())) {
+						return (o1.getPath().toOSString()).compareTo(o2.getPath().toOSString());
+					}
+					return 0;
+
+				}
+			});
+
+			if (scripProject != null && scripProject instanceof IScriptProject) {
+				IScriptProject scriptProject = (IScriptProject) scripProject;
+				ArrayList<IProjectFragment> projectFragments = new ArrayList<IProjectFragment>();
+
+				// getting project's fragments
+				try {
+					for (IProjectFragment projectFragment : (scriptProject.getProjectFragments())) {
+						if (!projectFragment.isExternal()) { //adding only non-external resources
+							projectFragments.add(projectFragment);
+						}
+					}
+				} catch (ModelException e) {
+					Logger.logException(e);
+				}
+
+				// foreach fragment getting its children, 
+				// and then merging them into last fragments list
+				for (IProjectFragment projectFragment : projectFragments) {
+					IModelElement[] children = null;
+
+					switch (this) {
+						case GROUP_CLASSES:
+							children = OutlineUtils.getGlobalClasses(projectFragment, "", false);
+							break;
+
+						case GROUP_FUNCTIONS:
+							children = OutlineUtils.getGlobalFunctions(projectFragment, "", false);
+							break;
+
+						case GROUP_CONSTANTS:
+							children = OutlineUtils.getGlobalConstants(projectFragment, "", false);
+							break;
+					}
+
+					childrenList.addAll(Arrays.asList(children));
+					if (null != children) {
+						for (IModelElement child : children) {
+							childrenList.add(child);
+						}
+					}
+				}
+			}
+
+			if (null == childrenList || childrenList.isEmpty())
+				return StandardModelElementContentProvider.NO_CHILDREN;
+			return childrenList.toArray();
+		}
+
+		public boolean hasChildren() {
+			Object[] children = getChildren();
+			if (null == children || children.length == 0) {
+				return false;
+			}
+			return true;
+		}
+
+	}
 
 	protected static final int ORIGINAL = 0;
 	protected static final int PARENT = 1 << 0;
@@ -158,7 +157,6 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	private boolean fShowLibrariesNode;
 	private boolean fFoldPackages;
 	static IScriptProject scripProject = null;
-
 
 	private Collection fPendingUpdates;
 	private boolean showGroups;
@@ -176,7 +174,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 		fIsFlatLayout = false;
 		fFoldPackages = arePackagesFoldedInHierarchicalLayout();
 		fPendingUpdates = null;
-		showGroups = true;//FIXME : PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(ShowGroupsAction.PREF_SHOW_GROUPS);
+		showGroups = true;//= PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(ShowGroupsAction.PREF_SHOW_GROUPS);
 
 		DLTKUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(this);
 	}
@@ -368,7 +366,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 
 	public Object[] getChildren(final Object element) {
 	
-		if (element instanceof IScriptProject){
+		if (element instanceof IScriptProject) {
 			scripProject = (IScriptProject) element;
 			return getGroupNodes();
 		}
@@ -383,16 +381,17 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof ProjectOutlineGroups)
-			return ((ProjectOutlineGroups)element).hasChildren();
-
-		return super.hasChildren(element);
+		return true;
+		//		if (element instanceof ProjectOutlineGroups)
+		//			//return ((ProjectOutlineGroups)element).hasChildren();
+		//			return true;
+		//		
+		//		return super.hasChildren(element);
 	}
-
 
 	ProjectOutlineGroups[] getGroupNodes() {
 
-		if (showGroups ) {
+		if (showGroups) {
 			if (fProjectOutlineGroups == null)
 				fProjectOutlineGroups = ProjectOutlineGroups.values();
 		} else
@@ -425,10 +424,10 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			if (entryKind == IBuildpathEntry.BPE_CONTAINER) {
 				// all ClassPathContainers are added later
 			} else if (fShowLibrariesNode && (entryKind == IBuildpathEntry.BPE_LIBRARY /*
-																																									 * ||
-																																									 * entryKind ==
-																																									 * IBuildpathEntry.BPE_VARIABLE
-																																									 */)) {
+																																											 * ||
+																																											 * entryKind ==
+																																											 * IBuildpathEntry.BPE_VARIABLE
+																																											 */)) {
 				addZIPContainer = true;
 			} else {
 				if (isProjectProjectFragment(root)) {
@@ -488,10 +487,10 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 					if (entryKind == IBuildpathEntry.BPE_CONTAINER) {
 						return new BuildPathContainer(root.getScriptProject(), entry);
 					} else if (fShowLibrariesNode && (entryKind == IBuildpathEntry.BPE_LIBRARY /*
-																																																																			 * ||
-																																																																			 * entryKind ==
-																																																																			 * IBuildpathEntry.BPE_VARIABLE
-																																																																			 */)) {
+																																																																							 * ||
+																																																																							 * entryKind ==
+																																																																							 * IBuildpathEntry.BPE_VARIABLE
+																																																																							 */)) {
 						return new LibraryContainer(root.getScriptProject());
 					}
 				}
@@ -509,24 +508,24 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 	 */
 	public void inputChanged(final Viewer viewer, final Object oldInput, Object newInput) {
 		super.inputChanged(viewer, oldInput, newInput);
-		if (null != newInput && newInput instanceof Model){
+		if (null != newInput && newInput instanceof Model) {
 			try {
-				IScriptProject[] scriptProjects = ((Model)newInput).getScriptProjects();
-				newInput = scriptProjects.length > 0 ? scriptProjects[0] : new Object[0];  
+				IScriptProject[] scriptProjects = ((Model) newInput).getScriptProjects();
+				newInput = scriptProjects.length > 0 ? scriptProjects[0] : new Object[0];
 			} catch (ModelException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+
 		fViewer = (TreeViewer) viewer;
-		if (oldInput == null && newInput != null ) {
+		if (oldInput == null && newInput != null) {
 			DLTKCore.addElementChangedListener(this);
 		} else if (oldInput != null && newInput == null) {
 			DLTKCore.removeElementChangedListener(this);
 		}
 
-		if (fInput == null || !fInput.equals(newInput) )
+		if (fInput == null || !fInput.equals(newInput))
 			fInput = newInput;
 	}
 
@@ -576,9 +575,9 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 					}
 					result.add(curr);
 				} /*
-																																									 * else if (fragment == null && curr.isRootFolder()) {
-																																									 * result.add(curr); }
-																																									 */
+																																												 * else if (fragment == null && curr.isRootFolder()) {
+																																												 * result.add(curr); }
+																																												 */
 			} else {
 				result.add(children[i]);
 			}
@@ -769,7 +768,6 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			// if added it could be that the corresponding IProject is already
 			// shown. Remove it first.
 			// bug 184296
-			//FIXME : if (kind == IModelElementDelta.ADDED ) {
 
 			if (kind == IModelElementDelta.ADDED || kind == IModelElementDelta.CHANGED) {
 				postRemove(element.getResource(), runnables);
@@ -1163,4 +1161,7 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			}
 		}
 	}
+
+
+
 }

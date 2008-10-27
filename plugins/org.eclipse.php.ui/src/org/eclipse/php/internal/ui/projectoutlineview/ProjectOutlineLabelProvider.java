@@ -10,7 +10,6 @@ public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 
 	public ProjectOutlineLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
 		super(cp, store);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
