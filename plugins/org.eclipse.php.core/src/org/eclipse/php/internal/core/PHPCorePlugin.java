@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelManager;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
@@ -54,6 +55,10 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		
+		// start the include path manager
+		IncludePathManager.getInstance();
+		
 		// register the listener in charge of converting the projects - applies for projects being opened during work
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(fProjectConvertListener, IResourceChangeEvent.PRE_BUILD);
 		// run the conversion over all the projects in the workspace - all open projects will be converted

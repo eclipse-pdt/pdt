@@ -11,7 +11,8 @@
 package org.eclipse.php.internal.core.util;
 
 import java.io.File;
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -20,8 +21,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
 
 /**
  * This utility implements internal PHP mechanism for searching included files.
@@ -64,30 +65,22 @@ public class PHPSearchEngine {
 		}
 
 		// look into include path:
-		Object[] includePaths = buildIncludePath(currentProject);
-		for (Object includePath : includePaths) {
-			if (includePath instanceof IContainer) {
-				IContainer container = (IContainer) includePath;
-				IResource resource = container.findMember(path);
-				if (resource instanceof IFile) {
-					return new ResourceResult((IFile) resource);
-				}
-			} else if (includePath instanceof IBuildpathEntry) {
+		IncludePath[] includePaths = buildIncludePath(currentProject);
+		for (IncludePath includePath : includePaths) {
+			if (includePath.isBuildpath()) {
 				IBuildpathEntry entry = (IBuildpathEntry) includePath;
 				IPath entryPath = entry.getPath();
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 					// We don't support lookup in archive
 					// update the phar case when time arrives 
 						
-/*				TODO: fix when DLTK has variable support
-                } else if (entry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
-					entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+                } else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+					entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
 					File entryDir = entryPath.toFile();
 					file = new File(entryDir, path);
 					if (file.exists()) {
 						return new IncludedFileResult(entry, file);
 					}
-*/				
 				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 					IProject project = workspaceRoot.getProject(entry.getPath().segment(0));
@@ -97,6 +90,12 @@ public class PHPSearchEngine {
 							return new ResourceResult((IFile) resource);
 						}
 					}
+				}
+			} else {
+				IContainer container = (IContainer) includePath.getEntry();
+				IResource resource = container.findMember(path);
+				if (resource instanceof IFile) {
+					return new ResourceResult((IFile) resource);
 				}
 			}
 		}
@@ -141,10 +140,10 @@ public class PHPSearchEngine {
 	 * @param project Current project
 	 * @return array of include path objects (it can be one of: IContainer, IncludePathEntry)
 	 */
-	public static Object[] buildIncludePath(IProject project) {
-		Set<Object> results = new HashSet<Object>();
+	public static IncludePath[] buildIncludePath(IProject project) {
+		Set<IncludePath> results = new LinkedHashSet<IncludePath>();
 		buildIncludePath(project, results);
-		return results.toArray();
+		return results.toArray(new IncludePath[results.size()]);
 	}
 
 	/**
@@ -153,7 +152,7 @@ public class PHPSearchEngine {
 	 * @param project Current project
 	 * @param results Array of include path objects (it can be one of: IContainer, IncludePathEntry)
 	 */
-	public static void buildIncludePath(IProject project, Set<Object> results) {
+	public static void buildIncludePath(IProject project, Set<IncludePath> results) {
 		if (results.contains(project)) {
 			return;
 		}
@@ -161,20 +160,7 @@ public class PHPSearchEngine {
 			return;
 		}
 		// Collect include paths:
-		final IScriptProject scriptProject = DLTKCore.create(project);
-		if (scriptProject != null) {
-			IBuildpathEntry[] rawBuildpath;
-			try {
-				rawBuildpath = scriptProject.getRawBuildpath();
-				for (IBuildpathEntry entry : rawBuildpath) {
-					results.add(entry);
-				}
-			} catch (ModelException e) {
-				return;
-			}
-		}
-		// Add current project:
-		results.add(project);
+		results.addAll(Arrays.asList(IncludePathManager.getInstance().getIncludePath(project)));
 	}
 
 	/**
