@@ -43,7 +43,7 @@
 			<param name="classname" value="org.eclipse.php.test.HeadlessTestSuite" />
 			<param name="report" value="HeadlessTestSuite" />
 			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="application" value="org.eclipse.php.test.coretestapplication" />
 			<param name="testTarget" value="HeadlessTestSuite" />
 			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
 		</antcall>
@@ -55,7 +55,7 @@
 			<param name="classname" value="org.eclipse.php.test.GUITestSuite" />
 			<param name="report" value="GUITestSuite" />
 			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.uitestapplication" />
+			<param name="application" value="org.eclipse.php.test.uitestapplication" />
 			<param name="testTarget" value="GUITestSuite" />
 			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=true" />
 		</antcall>
@@ -67,7 +67,7 @@
 			<param name="classname" value="org.eclipse.php.test.BareTestSuite" />
 			<param name="report" value="BareTestSuite" />
 			<param name="testPluginsRequired" value="" />
-			<param name="application" value="org.eclipse.test.coretestapplication" />
+			<param name="application" value="org.eclipse.php.test.coretestapplication" />
 			<param name="testTarget" value="BareTestSuite" />
 			<param name="vmargs" value="-ea -DCreateGolden=false -DEnableWorkbench=false" />
 		</antcall>
