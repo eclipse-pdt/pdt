@@ -56,9 +56,6 @@
 		<antcall target="getAndInstall">
 			<param name="groupId" value="dltkRuntime" />
 		</antcall>
-		<!--<antcall target="getAndInstall">
-			<param name="groupId" value="dtpRuntime" />
-		</antcall>-->
 		<antcall target="getAndInstall">
 			<param name="groupId" value="eclipseRuntime" />
 		</antcall>
@@ -66,7 +63,7 @@
 			<param name="groupId" value="cvsClient" />
 		</antcall>
 		<antcall target="getAndInstall">
-			<param name="groupId" value="jdtRuntime" />
+			<param name="groupId" value="dltkRse" />
 		</antcall>
 
 	</target>
