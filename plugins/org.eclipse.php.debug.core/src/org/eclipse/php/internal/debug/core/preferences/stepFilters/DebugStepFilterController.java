@@ -16,7 +16,9 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -93,9 +95,8 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 				//check if the given path is inside an include path variable container
 				else if ((currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_VAR) || currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER) {
 					
-					// TODO : should fix once DLTK expose variable mechanism
-//					String includePathVarPath = PHPProjectOptions.getIncludePathVariable(currentFilter.getPath()).toOSString();
-//					filterResult = FileUtils.checkIfContainerOfFile(includePathVarPath, path);
+					String includePathVarPath = DLTKCore.getResolvedVariablePath(new Path(currentFilter.getPath())).toOSString();
+					filterResult = FileUtils.checkIfContainerOfFile(includePathVarPath, path);
 					break;
 				}
 			}

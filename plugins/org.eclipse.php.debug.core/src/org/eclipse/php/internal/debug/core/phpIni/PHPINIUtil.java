@@ -21,11 +21,15 @@ import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
@@ -86,35 +90,29 @@ public class PHPINIUtil {
 
 		// Modify include path:
 		if (project != null) {
-			Object[] path = PHPSearchEngine.buildIncludePath(project);
+			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
 			List<String> includePath = new ArrayList<String>(path.length);
-			for (Object pathObject : path) {
-				if (pathObject instanceof IBuildpathEntry) {
-					IBuildpathEntry entry = (IBuildpathEntry) pathObject;
-					IPath entryPath = entry.getPath();
+			for (IncludePath pathObject : path) {
+				if (pathObject.isBuildpath()) {
+					IBuildpathEntry entry = (IBuildpathEntry) pathObject.getEntry();
 					
-					// TODO : should fix once DLTK expose variable mechanism
-					/*if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-					} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						IPath containerPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
-						if (containerPath != null) {
-							entryPath = containerPath;
-						} else {
-							entryPath = null;
+					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+						IPath entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
+						includePath.add(entryPath.toFile().getAbsolutePath());
+					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT || entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+						IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(entryPath);
+						IPath location = resource.getLocation();
+						if (location != null) {
+							includePath.add(location.toOSString());
 						}
 					}
-					if (entryPath != null) {
-						includePath.add(entryPath.toFile().getAbsolutePath());
-					}
-				} else if (pathObject instanceof IContainer) {
-					IContainer container = (IContainer) pathObject;
+				} else {
+					IContainer container = (IContainer) pathObject.getEntry();
 					IPath location = container.getLocation();
 					if (location != null) {
 						includePath.add(location.toOSString());
 					}
-				} else {
-					includePath.add(pathObject.toString());
 				}
 			}
 			modifyIncludePath(tempIniFile, includePath.toArray(new String[includePath.size()]));

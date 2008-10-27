@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourceContainerType;
 import org.eclipse.debug.core.sourcelookup.containers.CompositeSourceContainer;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 
 public class PHPVariableSourceContainer extends CompositeSourceContainer {
@@ -35,8 +36,8 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
     }
 
     protected ISourceContainer[] createSourceContainers() throws CoreException {
-        String variableName = fPath.toOSString();
-        File file = getVariableFile(variableName);
+    	IPath path = DLTKCore.getResolvedVariablePath(fPath);
+        File file = path.toFile();
         ISourceContainer[] container = new ISourceContainer[1];
         if (file.isDirectory()) {
             container[0] = new PHPDirectorySourceContainer(file, false, project);
@@ -57,23 +58,6 @@ public class PHPVariableSourceContainer extends CompositeSourceContainer {
 
     public ISourceContainerType getType() {
         // TODO Auto-generated method stub
-        return null;
-    }
-
-    private File getVariableFile(String variableName) {
-        int index = variableName.indexOf('/');
-        String extention = ""; //$NON-NLS-1$
-        if (index != -1) {
-            if (index + 1 < variableName.length()) {
-                extention = variableName.substring(index + 1);
-            }
-            variableName = variableName.substring(0, index);
-        }
-        
-     // TODO : should fix once DLTK expose variable mechanism
-//        IPath path = PHPProjectOptions.getIncludePathVariable(variableName);
-//        path = path.append(extention);
-//        return path.toFile();
         return null;
     }
 

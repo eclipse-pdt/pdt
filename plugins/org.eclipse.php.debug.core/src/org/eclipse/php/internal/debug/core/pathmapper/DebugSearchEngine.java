@@ -47,8 +47,10 @@ import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeLi
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
+import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ExternalFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
@@ -132,8 +134,7 @@ public class DebugSearchEngine {
 				if (result instanceof IncludedFileResult) {
 					IncludedFileResult incFileResult = (IncludedFileResult) result;
 					IBuildpathEntry container = incFileResult.getContainer();
-					// TODO : should fix once DLTK expose variable mechanism
-					Type type = /*(container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER;
+					Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 					return new PathEntry(incFileResult.getFile().getAbsolutePath(), type, container);
 				}
 				if (result != null) {
@@ -184,19 +185,19 @@ public class DebugSearchEngine {
 
 				LinkedList<PathEntry> results = new LinkedList<PathEntry>();
 
-				Object[] includePaths;
+				IncludePath[] includePaths;
 				if (currentProject != null) {
 					includePaths = PHPSearchEngine.buildIncludePath(currentProject);
 				} else {
 					// Search in the whole workspace:
-					Set<Object> s = new LinkedHashSet<Object>();
+					Set<IncludePath> s = new LinkedHashSet<IncludePath>();
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject project : projects) {
 						if (project.isOpen() && project.isAccessible()) {
 							PHPSearchEngine.buildIncludePath(project, s);
 						}
 					}
-					includePaths = s.toArray();
+					includePaths = s.toArray(new IncludePath[s.size()]);
 				}
 
 				// Try to find this file in the Workspace:
@@ -227,12 +228,11 @@ public class DebugSearchEngine {
 						if (includePath instanceof IBuildpathEntry) {
 							IBuildpathEntry entry = (IBuildpathEntry) includePath;
 							IPath entryPath = entry.getPath();
-							// TODO : should fix once DLTK expose variable mechanism
-//							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-//								entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
-//							}
+							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+								entryPath = DLTKCore.getResolvedVariablePath(entryPath);
+							}
 							if (entryPath != null && entryPath.isPrefixOf(Path.fromOSString(remoteFile))) {
-								Type type = /*(entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER;
+								Type type = (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 								localFile[0] = new PathEntry(file.getAbsolutePath(), type, entry);
 								pathMapper.addEntry(remoteFile, localFile[0]);
 								PathMapperRegistry.storeToPreferences();
@@ -270,14 +270,13 @@ public class DebugSearchEngine {
 								}
 							}
 						}
-						// TODO : should fix once DLTK expose variable mechanism
-						/*else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-							entryPath = IncludePathVariableManager.instance().resolveVariablePath(entryPath.toString());
+						else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
 							}
-						}*/
+						}
 					}
 				}
 
@@ -391,8 +390,7 @@ public class DebugSearchEngine {
 	 */
 	private static void find(final File file, final VirtualPath path, final IBuildpathEntry container, final List<PathEntry> results) {
 		if (!file.isDirectory() && file.getName().equals(path.getLastSegment())) {
-			// TODO : should fix once DLTK expose variable mechanism
-			Type type = /*(container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER;
+			Type type = (container.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER;
 			PathEntry pathEntry = new PathEntry(file.getAbsolutePath(), type, container);
 			results.add(pathEntry);
 			return;

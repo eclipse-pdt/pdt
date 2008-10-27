@@ -58,11 +58,10 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 						containers.add(new ProjectSourceContainer(includeProject, false));
 					}
 				}
-				// TODO : should fix once DLTK expose variable mechanism
-//				else if (element.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
-//					IPath path = element.getPath();
-//					containers.add(new PHPVariableSourceContainer(path, project));
-//				}
+				else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+					IPath path = element.getPath();
+					containers.add(new PHPVariableSourceContainer(path, project));
+				}
 			}
 		}
 

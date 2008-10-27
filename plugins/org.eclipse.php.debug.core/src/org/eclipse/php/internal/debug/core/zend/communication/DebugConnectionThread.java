@@ -635,14 +635,21 @@ public class DebugConnectionThread implements Runnable {
 		String phpExeString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String fileNameString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		boolean runWithDebugInfo = launchConfiguration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
-		String projectString = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_WORKING_DIRECTORY, (String) null);
+		
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = null;
+		String file = launchConfiguration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+		if (file != null) { 
+			IResource resource = workspaceRoot.findMember(file);
+			if (resource != null) {
+				project = resource.getProject();
+			}
+		}
 
 		if (launch.getLaunchMode().equals(ILaunchManager.DEBUG_MODE)) {
 			runWithDebugInfo = false;
 		}
 
-		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project = null;
 		String debugFileName = fileNameString;
 
 		IPath filePath = new Path(fileNameString);
@@ -650,9 +657,6 @@ public class DebugConnectionThread implements Runnable {
 		if (res != null) {
 			IFile fileToDebug = (IFile) res;
 			debugFileName = fileToDebug.getName();
-			project = fileToDebug.getProject();
-		} else if (projectString != null) {
-			project = workspaceRoot.getProject(projectString);
 		}
 		
 		boolean stopAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);

@@ -50,18 +50,15 @@ public class BreakpointSet {
 						if (includeResource instanceof IProject) {
 							fProjects.add((IProject) includeResource);
 						}
-					}
-					// TODO : should fix once DLTK expose variable mechanism
-					/* else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-						IPath path = element.getPath();
-						String variableName = path.toOSString();
-						File file = getVariableFile(variableName);
+					} else if (element.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+						IPath path = DLTKCore.getResolvedVariablePath(element.getPath());
+						File file = path.toFile();
 						if (file != null) {
 							if (file.isDirectory()) {
 								fDirectories.add(file.getAbsolutePath());
 							}
 						}
-					}*/
+					}
 				}
 			}
 		}
@@ -101,24 +98,6 @@ public class BreakpointSet {
 			IProject project = resource.getProject();
 			return fProject.equals(project) || fProjects.contains(project);
 		}
-	}
-
-	private File getVariableFile(String variableName) {
-		int index = variableName.indexOf('/');
-		String extention = ""; //$NON-NLS-1$
-		if (index != -1) {
-			if (index + 1 < variableName.length()) {
-				extention = variableName.substring(index + 1);
-			}
-			variableName = variableName.substring(0, index);
-		}
-		// TODO : should fix once DLTK expose variable mechanism
-		IPath path = null; // PHPProjectOptions.getIncludePathVariable(variableName);
-		if (path == null) {
-			return null;
-		}
-		path = path.append(extention);
-		return path.toFile();
 	}
 
 }

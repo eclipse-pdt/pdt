@@ -16,21 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.core.runtime.*;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.debug.ui.CommonTab;
@@ -112,9 +101,17 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 		String phpExeString = configuration.getAttribute(IPHPDebugConstants.ATTR_EXECUTABLE_LOCATION, (String) null);
 		String phpIniPath = configuration.getAttribute(IPHPDebugConstants.ATTR_INI_LOCATION, (String) null);
-		String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_WORKING_DIRECTORY, (String) null);
 		String fileName = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE_FULL_PATH, (String) null);
 		boolean runWithDebugInfo = configuration.getAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, true);
+		
+		IProject project = null;
+		String file = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
+		if (file != null) { 
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
+			if (resource != null) {
+				project = resource.getProject();
+			}
+		}
 
 		if (monitor.isCanceled()) {
 			return;
@@ -129,9 +126,6 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			displayErrorMessage("Please set a valid PHP executable for this launch.");
 			return;
 		}
-
-		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-		IProject project = projectName == null ? null : workspaceRoot.getProject(projectName);
 
 		subMonitor = new SubProgressMonitor(monitor, 10); // 10 of 100
 
@@ -301,7 +295,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 		if ("".equals(filePath)) {
 			return super.saveBeforeLaunch(configuration, mode, monitor);
 		}
-		IPath path = Path.fromOSString(filePath);
+//		IPath path = Path.fromOSString(filePath);
 
 		// TODO - check if bug isn't reopened due to the change 
 		// find if the file is under UNTITLED_FOLDER_PATH always look like .../Untitled_Documents/filename.php
