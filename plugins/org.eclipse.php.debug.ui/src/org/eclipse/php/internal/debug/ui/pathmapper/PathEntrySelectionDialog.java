@@ -10,27 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.pathmapper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.debug.core.pathmapper.BestMatchPathComparator;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
@@ -49,13 +40,7 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -418,14 +403,11 @@ public class PathEntrySelectionDialog extends TrayDialog {
 
 			if (element instanceof IBuildpathEntry) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-				// TODO : fix once DLTK exposes variables
-/*				if (includePathEntry.getEntryKind() == IIncludePathEntry.IPE_VARIABLE) {
+				if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 				} else {
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 				}
-				*/
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
 
 			if (element instanceof PathEntry) {
@@ -463,13 +445,12 @@ public class PathEntrySelectionDialog extends TrayDialog {
 			if (entry.getType() == Type.INCLUDE_FOLDER || entry.getType() == Type.INCLUDE_VAR) {
 				IBuildpathEntry includePathEntry = (IBuildpathEntry) entry.getContainer();
 				String includePath = EnvironmentPathUtils.getLocalPathString(includePathEntry.getPath());
-				// TODO : fix once DLTK exposes variables
-//				if (includePathEntry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
-//					IPath p = IncludePathVariableManager.instance().resolveVariablePath(includePath);
-//					if (p != null) {
-//						includePath = p.toOSString();
-//					}
-//				}
+				if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+					IPath p = DLTKCore.getResolvedVariablePath(includePathEntry.getPath());
+					if (p != null) {
+						includePath = p.toOSString();
+					}
+				}
 				if (includePath != null && path.startsWith(includePath)) {
 					path = path.substring(includePath.length());
 				}

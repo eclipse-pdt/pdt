@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.viewers.*;
@@ -147,19 +146,19 @@ public class PathMapperEntryDialog extends StatusDialog {
 						fWorkspacePathText.setText(resource.getFullPath().toString());
 					} else if (selectedElement instanceof IBuildpathEntry) {
 						IBuildpathEntry includePathEntry = (IBuildpathEntry) selectedElement;
-						fWorkspacePathText.setData(/*includePathEntry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER);
-//						if (includePathEntry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
-//							IPath incPath = IncludePathVariableManager.instance().resolveVariablePath(includePathEntry.getPath().toString());
-//							if (incPath != null) {
-//								fWorkspacePathText.setText(incPath.toOSString());
-//							}
-//						} else {
+						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
+						if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							IPath incPath = DLTKCore.getResolvedVariablePath(includePathEntry.getPath());
+							if (incPath != null) {
+								fWorkspacePathText.setText(incPath.toOSString());
+							}
+						} else {
 							fWorkspacePathText.setText(includePathEntry.getPath().toOSString());
-//						}
+						}
 					} else if (selectedElement instanceof IPFile) {
 						IPFile ipFile = (IPFile) selectedElement;
 						IBuildpathEntry includePathEntry = ipFile.includePathEntry;
-						fWorkspacePathText.setData(/*includePathEntry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE ? Type.INCLUDE_VAR : */Type.INCLUDE_FOLDER);
+						fWorkspacePathText.setData(includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE ? Type.INCLUDE_VAR : Type.INCLUDE_FOLDER);
 						fWorkspacePathText.setText(ipFile.file.getAbsolutePath());
 					}
 				}
@@ -400,13 +399,12 @@ public class PathMapperEntryDialog extends StatusDialog {
 						if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							file = path.toFile();
 						}
-						// TODO : fix once DLTK exposes variables
-//						else if (includePathEntry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
-//							path = IncludePathVariableManager.instance().resolveVariablePath(path.toString());
-//							if (path != null) {
-//								file = path.toFile();
-//							}
-//						}
+						else if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+							path = DLTKCore.getResolvedVariablePath(path);
+							if (path != null) {
+								file = path.toFile();
+							}
+						}
 						if (file != null) {
 							return getChildren(new IPFile(includePathEntry, file));
 						}
@@ -462,14 +460,12 @@ public class PathMapperEntryDialog extends StatusDialog {
 			public Image getImage(Object element) {
 				if (element instanceof IBuildpathEntry) {
 					IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
-					// TODO : fix once DLTK exposes variables
-/*					if (includePathEntry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
+					if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 						return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 					} else {
 						return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 					}
-*/				}
+				}
 				if (element instanceof IPFile) {
 					return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
 				}

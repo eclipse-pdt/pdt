@@ -63,13 +63,12 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 				if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 					file = path.toFile();
 				}
-				// TODO : should fix once DLTK expose variable mechanism 
-				/* else if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					path = IncludePathVariableManager.instance().resolveVariablePath(path.toString());
+				 else if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+					path = DLTKCore.getResolvedVariablePath(path);
 					if (path != null) {
 						file = path.toFile();
 					}
-				}*/
+				}
 				if (file != null) {
 					return getChildren(new IncPathFile(IBuildpathEntry, file));
 				}
@@ -191,14 +190,12 @@ class PHPResLabelProvider extends ScriptUILabelProvider {
 	public Image getImage(Object element) {
 		if (element instanceof IBuildpathEntry) {
 			IBuildpathEntry IBuildpathEntry = (IBuildpathEntry) element;
-			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
-			// TODO : should fix once DLTK expose variable mechanism 
-/*			if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+			if (IBuildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_ENV_VAR);
 			} else {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
-*/		}
+		}
 		if (element instanceof IncPathFile) {
 			IncPathFile currentFile = (IncPathFile) element;
 			if (currentFile.file.isDirectory()) {

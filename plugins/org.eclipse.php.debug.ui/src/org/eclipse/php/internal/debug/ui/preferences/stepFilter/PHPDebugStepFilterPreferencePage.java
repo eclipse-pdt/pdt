@@ -324,10 +324,9 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 			} else if (resourceToFilter instanceof IBuildpathEntry) {
 				IBuildpathEntry entry = (IBuildpathEntry) resourceToFilter;
 				filteredPath = entry.getPath().toOSString();
-				// TODO : fix once DLTK exposes variables
-				/*if (entry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {//variable
+				if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {//variable
 					addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR);
-				} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {//library = folder
+				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {//library = folder
 					addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY);
 				}
 
@@ -336,17 +335,15 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 				File file = ((IncPathFile) resourceToFilter).file;
 				filteredPath = file.getAbsolutePath();
 				if (file.isDirectory()) {
-					// TODO : fix once DLTK exposes variables
-					/*if (entry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
+					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER);
-					} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FOLDER);
 					}
 				} else {
-					// TODO : fix once DLTK exposes variables
-					/*if (entry.getEntryKind() == IBuildpathEntry.IPE_VARIABLE) {
+					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FILE);
-					} else */if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 						addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_LIBRARY_FILE);
 					}
 				}
