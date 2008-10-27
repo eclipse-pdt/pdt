@@ -290,6 +290,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected SemanticHighlightingManager fSemanticManager;
 
 	/**
+	 * Stores the current IModelElement used as the outline input.
+	 */
+	private IModelElement fModelElement;
+	
+	/**
 	 * Internal implementation class for a change listener.
 	 * 
 	 * @since 3.0
@@ -2053,7 +2058,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			fPHPOutlinePageListener.install(outlinePage);
 			fPHPOutlinePage = outlinePage;
 
-			outlinePage.setInput(getModelElement());
+			// Set the outline page input only if it is different than the current one 
+			IModelElement modelElement = getModelElement();
+			if (modelElement != fModelElement) {
+				outlinePage.setInput(modelElement);
+				fModelElement = modelElement;
+			}
 		}
 		return adapter;
 	}
@@ -2357,7 +2367,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * IScriptReconcilingListener methods - reconcile listeners
 	 */
 	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
-
+	
 	public void addReconcileListener(IPhpScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
 			fReconcilingListeners.add(reconcileListener);

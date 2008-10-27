@@ -32,6 +32,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	public PHPOutlineContentProvider(TreeViewer viewer) {
 		super();
 		fOutlineViewer = viewer;
+
+		// fix bug 251682 - auto-expand outline view
+		fOutlineViewer.setAutoExpandLevel(TreeViewer.ALL_LEVELS);
+
 		inputChanged(fOutlineViewer, null, null);
 	}
 
@@ -125,7 +129,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-//		boolean isCU = (newInput instanceof ISourceModule);
+		//		boolean isCU = (newInput instanceof ISourceModule);
 
 		if (/*isCU &&*/fListener == null) {
 			fListener = new ElementChangedListener();
@@ -154,7 +158,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				}
 			} catch (ModelException e) {
 			}
-			return (element.getParent().getElementType() != IModelElement.TYPE); 
+			return (element.getParent().getElementType() != IModelElement.TYPE);
 		}
 		return false;
 	}
