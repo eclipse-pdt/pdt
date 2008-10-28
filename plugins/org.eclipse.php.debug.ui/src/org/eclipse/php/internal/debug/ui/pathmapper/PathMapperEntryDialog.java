@@ -13,7 +13,6 @@ package org.eclipse.php.internal.debug.ui.pathmapper;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,12 +26,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper.Mapping;
@@ -153,7 +155,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 								fWorkspacePathText.setText(incPath.toOSString());
 							}
 						} else {
-							fWorkspacePathText.setText(includePathEntry.getPath().toOSString());
+							fWorkspacePathText.setText(EnvironmentPathUtils.getLocalPath(includePathEntry.getPath()).toOSString());
 						}
 					} else if (selectedElement instanceof IPFile) {
 						IPFile ipFile = (IPFile) selectedElement;
@@ -381,20 +383,33 @@ public class PathMapperEntryDialog extends StatusDialog {
 						IResource[] members = container.members();
 						for (IResource member : members) {
 							if (member instanceof IContainer && member.isAccessible()) {
-								r.add(member);
+								if (member instanceof IProject) { // show only PHP projects
+									IProject project = (IProject) member;
+									if (project.hasNature(PHPNature.ID)) {
+										r.add(member);
+									}
+								} else {
+									r.add(member);
+								}
 							}
 						}
 						// Add include paths:
 						if (parentElement instanceof IProject) {
 							IProject project = (IProject) parentElement;
-							IScriptProject scriptProject = DLTKCore.create(project);
-							IBuildpathEntry[] includePath = scriptProject.getRawBuildpath();
-							r.addAll(Arrays.asList(includePath));
+							IncludePath[] includePath = IncludePathManager.getInstance().getIncludePath(project);
+							for (IncludePath path : includePath) {
+								if (path.isBuildpath()) {
+									IBuildpathEntry buildpathEntry = (IBuildpathEntry) path.getEntry();
+									if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+										r.add(buildpathEntry);
+									}
+								}
+							}
 						}
 						return r.toArray();
 					} else if (parentElement instanceof IBuildpathEntry) {
 						IBuildpathEntry includePathEntry = (IBuildpathEntry) parentElement;
-						IPath path = includePathEntry.getPath();
+						IPath path = EnvironmentPathUtils.getLocalPath(includePathEntry.getPath());
 						File file = null;
 						if (includePathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							file = path.toFile();
@@ -475,7 +490,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 			public String getText(Object element) {
 				if (element instanceof IBuildpathEntry) {
 					IBuildpathEntry includePathEntry = (IBuildpathEntry) element;
-					return includePathEntry.getPath().toOSString();
+					return EnvironmentPathUtils.getLocalPath(includePathEntry.getPath()).toOSString();
 				}
 				if (element instanceof IPFile) {
 					return ((IPFile) element).file.getName();
