@@ -1155,6 +1155,13 @@
 			description="%annotationHoverDescription" id="org.eclipse.php.ui.editor.hover.PHPAnnotationTextHover"
 			label="%annotationHover" priority="200" />
 	</extension>
+	
+	<!-- Hyperlink Detectors -->
+	<extension point="org.eclipse.php.ui.phpHyperlinkDetector">
+		<detector class="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
+			id="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
+			name="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"/>
+	</extension>
 
 	<!--PHP Working Set:-->
 	<extension point="org.eclipse.ui.ide.projectNatureImages">
