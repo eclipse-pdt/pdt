@@ -77,7 +77,9 @@ public class IncludeHyperlinkDetector implements IHyperlinkDetectorForPHP {
 		
 		if (file[0] != null) {
 			ISourceModule includedSourceModule = FileNetworkUtility.findSourceModule(sourceModule, file[0]);
-			return new IHyperlink[] { new ModelElementHyperlink(selectRegion[0], includedSourceModule, new OpenAction(editor)) };
+			if (includedSourceModule != null) {
+				return new IHyperlink[] { new ModelElementHyperlink(selectRegion[0], includedSourceModule, new OpenAction(editor)) };
+			}
 		}
 		return null;
 	}
