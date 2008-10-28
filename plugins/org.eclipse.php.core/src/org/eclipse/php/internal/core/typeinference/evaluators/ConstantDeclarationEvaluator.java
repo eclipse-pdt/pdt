@@ -19,7 +19,10 @@ import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
@@ -42,8 +45,17 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		ConstantDeclarationGoal typedGoal = (ConstantDeclarationGoal) goal;
 		String constantName = typedGoal.getConstantName();
 		String typeName = typedGoal.getTypeName();
+		
+		IDLTKSearchScope scope = null;
+		IScriptProject scriptProject = null;
+		ISourceModuleContext sourceModuleContext = (ISourceModuleContext) goal.getContext();
+		if (sourceModuleContext != null) {
+			scriptProject = sourceModuleContext.getSourceModule().getScriptProject();
+			scope = SearchEngine.createSearchScope(scriptProject);
+		}
 
-		IModelElement[] elements = PHPMixinModel.getInstance().getConstant(constantName, typeName);
+		PHPMixinModel mixinModel = scriptProject == null ? PHPMixinModel.getWorkspaceInstance() : PHPMixinModel.getInstance(scriptProject);
+		IModelElement[] elements = mixinModel.getConstant(constantName, typeName, scope);
 
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 

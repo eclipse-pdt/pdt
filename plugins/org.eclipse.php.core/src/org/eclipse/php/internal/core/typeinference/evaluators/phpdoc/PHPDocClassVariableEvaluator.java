@@ -52,7 +52,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 		for (IType type : types) {
-			IModelElement[] elements = PHPMixinModel.getInstance().getVariableDoc(variableName, null, type.getElementName());
+			IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getVariableDoc(variableName, null, type.getElementName());
 			for (IModelElement e : elements) {
 				docs.add((PHPDocField) e);
 			}

@@ -23,6 +23,8 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.ti.*;
@@ -62,7 +64,9 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		boolean exploreOtherFiles = true;
 
 		// Find all global variables from mixin
-		IModelElement[] elements = PHPMixinModel.getInstance().getVariable(variableName, null, null);
+		IScriptProject scriptProject = sourceModuleContext.getSourceModule().getScriptProject();
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+		IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getVariable(variableName, null, null, scope);
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 
 		Comparator<ISourceRange> sourceRangeComparator = new Comparator<ISourceRange>() {

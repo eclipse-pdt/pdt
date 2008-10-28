@@ -20,8 +20,11 @@ import java.util.Set;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -110,7 +113,9 @@ public class PHPTypeInferenceUtils {
 			return new IModelElement[] { ((ModelClassType)type).getTypeDeclaration() };
 		}
 		if (type instanceof PHPClassType) {
-			elements = PHPMixinModel.getInstance().getClass(((PHPClassType)type).getTypeName());
+			IScriptProject scriptProject = context.getSourceModule().getScriptProject();
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			elements = PHPMixinModel.getInstance(scriptProject).getClass(((PHPClassType)type).getTypeName(), scope);
 		}
 		else if (type instanceof AmbiguousType) {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();

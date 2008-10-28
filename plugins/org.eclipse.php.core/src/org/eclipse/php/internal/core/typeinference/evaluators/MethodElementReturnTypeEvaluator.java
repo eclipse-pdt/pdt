@@ -19,6 +19,8 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -114,7 +116,8 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		}
 
 		IType type = (IType) parent;
-		final IModelElement[] elements = PHPMixinModel.getInstance().getClassDoc(type.getElementName());
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(type);
+		final IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getClassDoc(type.getElementName(), scope);
 		for (IModelElement e : elements) {
 			final PHPDocBlock docBlock = ((PHPDocField) e).getDocBlock();
 			for (PHPDocTag tag : docBlock.getTags()) {

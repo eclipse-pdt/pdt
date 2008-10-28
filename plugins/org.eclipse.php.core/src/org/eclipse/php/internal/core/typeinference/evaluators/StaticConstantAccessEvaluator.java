@@ -37,7 +37,7 @@ public class StaticConstantAccessEvaluator extends GoalEvaluator {
 		Expression dispatcher = expr.getDispatcher();
 		if (dispatcher instanceof TypeReference) {
 			TypeReference typeReference = (TypeReference) dispatcher;
-			return new IGoal[] { new ConstantDeclarationGoal(expr.getConstant().getName(), typeReference.getName()) };
+			return new IGoal[] { new ConstantDeclarationGoal(goal.getContext(), expr.getConstant().getName(), typeReference.getName()) };
 		}
 		return IGoal.NO_GOALS;
 	}

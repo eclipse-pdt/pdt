@@ -25,31 +25,13 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.compiler.ast.nodes.CatchClause;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
-import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ListVariable;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPFieldDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
@@ -247,6 +229,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	protected String report(String key, PHPMixinElementInfo object) {
+		PHPMixinModel.clearKeysCache(key);
 		ElementInfo info = new IMixinRequestor.ElementInfo();
 		info.key = key;
 		info.object = object;

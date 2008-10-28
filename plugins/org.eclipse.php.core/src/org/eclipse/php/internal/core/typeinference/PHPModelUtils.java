@@ -48,7 +48,7 @@ public class PHPModelUtils {
 
 		String key = PHPMixinBuildVisitor.restoreKeyByNode(sourceModule, unit, node);
 		if (key != null) {
-			IMixinElement[] elements = PHPMixinModel.getRawInstance().find(key);
+			IMixinElement[] elements = PHPMixinModel.getInstance(sourceModule.getScriptProject()).getRawModel().find(key);
 			if (elements.length > 0) {
 				Object[] allObjects = elements[0].getAllObjects();
 				for (Object obj : allObjects) {
@@ -101,14 +101,15 @@ public class PHPModelUtils {
 			throw new NullPointerException();
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
+		final IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
 		final List<PHPDocField> docs = new LinkedList<PHPDocField>();
 		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 			public void acceptSearchMatch(SearchMatch match) throws CoreException {
 				IMethod method = (IMethod) match.getElement();
-				IModelElement[] methodDoc = PHPMixinModel.getInstance().getMethodDoc(method.getDeclaringType().getElementName(), method.getElementName());
+				IScriptProject scriptProject = method.getScriptProject();
+				IModelElement[] methodDoc = PHPMixinModel.getInstance(scriptProject).getMethodDoc(method.getDeclaringType().getElementName(), method.getElementName(), SearchEngine.createSearchScope(scriptProject));
 				for (IModelElement doc : methodDoc) {
 					docs.add((PHPDocField) doc);
 				}

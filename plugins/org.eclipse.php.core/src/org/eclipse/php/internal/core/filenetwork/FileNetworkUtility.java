@@ -94,7 +94,7 @@ public class FileNetworkUtility {
 		ISourceModule file = root.getFile();
 
 		// Find all includes to the current source module in mixin:
-		IModelElement[] includes = PHPMixinModel.getInstance().getInclude(file.getPath().lastSegment());
+		IModelElement[] includes = PHPMixinModel.getWorkspaceInstance().getInclude(file.getPath().lastSegment());
 		for (IModelElement e : includes) {
 			IncludeField include = (IncludeField) e;
 

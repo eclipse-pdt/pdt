@@ -14,8 +14,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
@@ -41,16 +44,20 @@ public abstract class AbstractPHPGoalEvaluator extends GoalEvaluator {
 
 		if (instanceType instanceof PHPClassType) {
 			PHPClassType classType = (PHPClassType) instanceType;
-			IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+			IScriptProject scriptProject = currentModule.getScriptProject();
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
 			for (IModelElement e : elements) {
 				types.add((IType) e);
 			}
 		} else if (instanceType instanceof AmbiguousType) {
 			AmbiguousType ambiguousType = (AmbiguousType) instanceType;
+			IScriptProject scriptProject = currentModule.getScriptProject();
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 				if (type instanceof PHPClassType) {
 					PHPClassType classType = (PHPClassType) type;
-					IModelElement[] elements = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+					IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
 					for (IModelElement e : elements) {
 						types.add((IType) e);
 					}

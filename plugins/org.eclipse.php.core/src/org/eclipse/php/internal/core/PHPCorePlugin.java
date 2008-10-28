@@ -16,10 +16,7 @@ import java.util.Hashtable;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -41,7 +38,7 @@ public class PHPCorePlugin extends Plugin {
 
 	//The shared instance.
 	private static PHPCorePlugin plugin;
-
+	
 	/**
 	 * The constructor.
 	 */
@@ -153,11 +150,24 @@ public class PHPCorePlugin extends Plugin {
 		}
 		scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
 	}
+	
+	private final ListenerList shutdownListeners = new ListenerList();
+	
+	public void addShutdownListener(IShutdownListener listener) {
+		shutdownListeners.add(listener);
+	}
 
 	/**
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
+		
+		Object[] listeners = shutdownListeners.getListeners();
+		for (int i = 0; i < listeners.length; ++i) {
+			((IShutdownListener) listeners[i]).shutdown();
+		}
+		shutdownListeners.clear();
+		
 		super.stop(context);
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(fProjectConvertListener);
 		plugin = null;
@@ -220,6 +230,7 @@ public class PHPCorePlugin extends Plugin {
 	 * @see #getDefaultOptions()
 	 * @see JavaCorePreferenceInitializer for changing default settings
 	 */
+	@SuppressWarnings("unchecked")
 	public static Hashtable getOptions() {
 		return ModelManager.getModelManager().getOptions();
 	}

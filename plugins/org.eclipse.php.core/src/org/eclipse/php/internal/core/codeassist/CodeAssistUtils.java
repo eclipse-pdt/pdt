@@ -490,10 +490,11 @@ public class CodeAssistUtils {
 	/**
 	 * Checks whether function with given name exists.
 	 * @param functionName
+	 * @param scriptProject 
 	 * @return
 	 */
-	public static boolean isFunctionCall(String functionName) {
-		IModelElement[] functions = PHPMixinModel.getInstance().getFunction(functionName);
+	public static boolean isFunctionCall(String functionName, IScriptProject scriptProject) {
+		IModelElement[] functions = scriptProject == null ? PHPMixinModel.getWorkspaceInstance().getFunction(functionName) : PHPMixinModel.getInstance(scriptProject).getFunction(functionName);
 		return functions.length > 0;
 	}
 
@@ -894,12 +895,12 @@ public class CodeAssistUtils {
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
 		boolean isVariable = prefix.startsWith("$"); //$NON-NLS-1$
-		
+
+		IScriptProject scriptProject = sourceModule.getScriptProject();
 		IDLTKSearchScope scope;
 		if (currentFileOnly) {
 			scope = SearchEngine.createSearchScope(sourceModule);
 		} else {
-			IScriptProject scriptProject = sourceModule.getScriptProject();
 			if (scriptProject != null) {
 				scope = SearchEngine.createSearchScope(scriptProject);
 			} else {
@@ -909,7 +910,8 @@ public class CodeAssistUtils {
 		
 		if (!currentFileOnly && isVariable) {
 			// search variables using mixin model:
-			IModelElement[] variables = PHPMixinModel.getInstance().getVariable(prefix + WILDCARD, null, null, scope);
+			PHPMixinModel mixinModel = scriptProject == null ? PHPMixinModel.getWorkspaceInstance() : PHPMixinModel.getInstance(scriptProject);
+			IModelElement[] variables = mixinModel.getVariable(prefix + WILDCARD, null, null, scope);
 			return variables == null ? EMPTY : variables;
 		}
 		

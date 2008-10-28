@@ -20,7 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -75,18 +78,22 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 			List<IType> types = new LinkedList<IType>();
 			if (instanceType instanceof AmbiguousType) {
 				AmbiguousType ambiguousType = (AmbiguousType) instanceType;
+				IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 				for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 					if (type instanceof PHPClassType) {
 						PHPClassType classType = (PHPClassType) type;
-						IModelElement[] classes = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+						IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
 						for (IModelElement c : classes) {
 							types.add((IType) c);
 						}
 					}
 				}
 			} else {
+				IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 				PHPClassType classType = (PHPClassType) instanceType;
-				IModelElement[] classes = PHPMixinModel.getInstance().getClass(classType.getTypeName());
+				IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
 				for (IModelElement c : classes) {
 					types.add((IType) c);
 				}
@@ -104,7 +111,9 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 				}
 			}
 		} else {
-			IModelElement[] elements = PHPMixinModel.getInstance().getFunctionDoc(methodName);
+			IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getFunctionDoc(methodName, scope);
 			for (IModelElement e : elements) {
 				docs.add((PHPDocField) e);
 			}

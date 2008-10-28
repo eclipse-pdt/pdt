@@ -398,7 +398,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				return;
 			}
 
-			if (hasWhitespaceAtEnd && CodeAssistUtils.isFunctionCall(lastWord)) {
+			if (hasWhitespaceAtEnd && CodeAssistUtils.isFunctionCall(lastWord, sourceModule.getScriptProject())) {
 				// the current position is between the end of a function call and open bracket.
 				return;
 			}

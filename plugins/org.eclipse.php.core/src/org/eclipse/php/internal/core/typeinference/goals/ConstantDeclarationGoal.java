@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.goals;
 
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.AbstractGoal;
 
 public class ConstantDeclarationGoal extends AbstractGoal {
@@ -17,8 +18,8 @@ public class ConstantDeclarationGoal extends AbstractGoal {
 	private String constantName;
 	private String typeName;
 
-	public ConstantDeclarationGoal(String constantName, String typeName) {
-		super(null);
+	public ConstantDeclarationGoal(IContext context, String constantName, String typeName) {
+		super(context);
 		this.constantName = constantName;
 		this.typeName = typeName;
 	}

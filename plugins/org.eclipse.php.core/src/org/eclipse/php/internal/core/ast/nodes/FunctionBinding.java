@@ -54,7 +54,7 @@ public class FunctionBinding implements IFunctionBinding {
 	 */
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
-		IModelElement[] methodDoc = PHPMixinModel.getInstance().getMethodDoc(modelElement.getDeclaringType().getElementName(), modelElement.getElementName());
+		IModelElement[] methodDoc = PHPMixinModel.getInstance(modelElement.getScriptProject()).getMethodDoc(modelElement.getDeclaringType().getElementName(), modelElement.getElementName());
 		ArrayList<ITypeBinding> exeptions = new ArrayList<ITypeBinding>();
 		for (IModelElement element : methodDoc) {
 			PHPDocField docField = (PHPDocField) element;

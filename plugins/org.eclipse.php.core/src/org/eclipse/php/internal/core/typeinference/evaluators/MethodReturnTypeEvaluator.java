@@ -13,10 +13,9 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.IGoal;
@@ -57,14 +56,16 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		IType[] types = getTypes(typedContext.getInstanceType(), typedContext.getSourceModule());
 
 		if (types.length == 0) {
-			IModelElement[] elements = PHPMixinModel.getInstance().getFunction(methodName);
+			IScriptProject scriptProject = typedContext.getSourceModule().getScriptProject();
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getFunction(methodName, scope);
 			for (IModelElement e : elements) {
 				methods.add((IMethod) e);
 			}
 		} else {
 			for (IType type : types) {
 				try {
-					IModelElement[] elements = PHPMixinModel.getInstance().getMethod(type.getElementName(), methodName);
+					IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getMethod(type.getElementName(), methodName);
 					if (elements.length == 0) {
 						elements = PHPModelUtils.getClassMethod(type, methodName, null);
 					}
