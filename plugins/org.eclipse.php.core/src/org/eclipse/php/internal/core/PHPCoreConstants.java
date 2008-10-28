@@ -18,6 +18,13 @@ public interface PHPCoreConstants {
 	public static final String IP_VARIABLE_INITIALIZER_EXTPOINT_ID = "includePathVariables"; //$NON-NLS-1$
 
 	//
+	// Project default folders names
+	//
+	public static final String PROJECT_DEFAULT_SOURCE_FOLDER = "src"; //$NON-NLS-1$
+	public static final String PROJECT_DEFAULT_RESOURCES_FOLDER = "resources"; //$NON-NLS-1$
+
+
+	//
 	// Project Option names
 	//
 	public static final String PHPOPTION_DEFAULT_ENCODING = PLUGIN_ID + ".defaultEncoding"; //$NON-NLS-1$

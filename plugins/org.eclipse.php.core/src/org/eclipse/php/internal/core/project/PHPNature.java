@@ -12,16 +12,18 @@ package org.eclipse.php.internal.core.project;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ScriptNature;
+import org.eclipse.dltk.core.*;
+import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
 public class PHPNature extends ScriptNature {
@@ -148,6 +150,44 @@ public class PHPNature extends ScriptNature {
 
 		IScriptProject scriptProject = DLTKCore.create(getProject());
 		LanguageModelInitializer.enableLanguageModelFor(scriptProject);
+		
+		try {
+			configureBuildPath(scriptProject);
+		} catch (ModelException e){
+			Logger.logException("Failed updating buildpath", e); // //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Updates the project buildpath. 
+	 * Remove the project from the buildpath (it is there as a default) and add the default project 
+	 * src folder to it
+	 * @param scriptProject
+	 * @throws ModelException
+	 */
+	private void configureBuildPath(IScriptProject scriptProject) throws ModelException {
+		
+		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
+		
+		// get the current buildpath entries, in order to add/remove entries
+		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
+		
+		// remove the project itself from the buildpath
+		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
+			if(! buildpathEntry.getPath().equals(scriptProject.getPath())){
+				newRawBuildpath.add(buildpathEntry);
+			}
+		}		
+		
+		// add the default src folder to the buildpath
+		IFolder folder = getProject().getFolder(new Path(PHPCoreConstants.PROJECT_DEFAULT_SOURCE_FOLDER));			
+		IBuildpathEntry newSourceEntry = DLTKCore.newSourceEntry(folder.getFullPath());
+		newRawBuildpath.add(newSourceEntry);
+		
+		// set the new updated buildpath for the project		
+		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+		
+		
 	}
 
 	/**
