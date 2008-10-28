@@ -68,7 +68,7 @@ public class PHPSearchEngine {
 		IncludePath[] includePaths = buildIncludePath(currentProject);
 		for (IncludePath includePath : includePaths) {
 			if (includePath.isBuildpath()) {
-				IBuildpathEntry entry = (IBuildpathEntry) includePath;
+				IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
 				IPath entryPath = entry.getPath();
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 					// We don't support lookup in archive
