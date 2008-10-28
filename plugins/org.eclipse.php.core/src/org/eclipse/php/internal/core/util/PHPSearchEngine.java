@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 
@@ -69,13 +70,13 @@ public class PHPSearchEngine {
 		for (IncludePath includePath : includePaths) {
 			if (includePath.isBuildpath()) {
 				IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
-				IPath entryPath = entry.getPath();
+				IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 					// We don't support lookup in archive
 					// update the phar case when time arrives 
 						
                 } else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
+					entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 					File entryDir = entryPath.toFile();
 					file = new File(entryDir, path);
 					if (file.exists()) {
@@ -83,9 +84,18 @@ public class PHPSearchEngine {
 					}
 				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
 					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-					IProject project = workspaceRoot.getProject(entry.getPath().segment(0));
+					IProject project = workspaceRoot.getProject(entryPath.segment(0));
 					if (project.isAccessible()) {
 						IResource resource = project.findMember(path);
+						if (resource instanceof IFile) {
+							return new ResourceResult((IFile) resource);
+						}
+					}
+				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+					IResource resource = workspaceRoot.findMember(entryPath);
+					if (resource instanceof IContainer) {
+						resource = ((IContainer)resource).findMember(path);
 						if (resource instanceof IFile) {
 							return new ResourceResult((IFile) resource);
 						}
