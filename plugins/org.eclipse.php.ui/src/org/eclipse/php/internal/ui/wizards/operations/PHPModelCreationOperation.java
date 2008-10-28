@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -104,6 +105,9 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 			};
 			job.setRule(project.getWorkspace().getRoot());
 			job.schedule();
+			
+			createDefaultProjectStructure(monitor, project);	
+			
 		} catch (CoreException e) {
 			Logger.logException(e);
 		} finally {
@@ -112,6 +116,36 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 		if (monitor.isCanceled())
 			throw new OperationCanceledException();
 		return OK_STATUS;
+	}
+
+	/**
+	 * Creates the default structure for a newly created project
+	 * @param monitor
+	 * @param project
+	 */
+	protected void createDefaultProjectStructure(IProgressMonitor monitor, IProject project) {
+		try {
+			createFolder(project, monitor, PHPCoreConstants.PROJECT_DEFAULT_SOURCE_FOLDER);
+			createFolder(project, monitor, PHPCoreConstants.PROJECT_DEFAULT_RESOURCES_FOLDER);							
+		} catch (CoreException e) {
+			Logger.logException("Failed creating project initial structure", e); //$NON-NLS-1$
+		}
+		
+		
+	}
+	
+	/**
+	 * @param project
+	 * @param monitor
+	 * @param folderName
+	 * @throws CoreException
+	 */
+	private IFolder createFolder(IProject project, IProgressMonitor monitor, String folderName) throws CoreException {
+		final IFolder folder = project.getFolder(folderName);
+		if (!folder.isAccessible()) {
+			folder.create(true, true, monitor);
+		}
+		return folder;
 	}
 
 	public boolean canUndo() {
