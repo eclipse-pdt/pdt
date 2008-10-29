@@ -153,7 +153,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	private void resolveMagicClassVariableDeclaration(IType[] types, String variableName) {
 		for (IType type : types) {
 			IScriptProject scriptProject = type.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getSourceModule());
 			final IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getClassDoc(type.getElementName(), scope);
 			for (IModelElement e : elements) {
 				final PHPDocBlock docBlock = ((PHPDocField) e).getDocBlock();

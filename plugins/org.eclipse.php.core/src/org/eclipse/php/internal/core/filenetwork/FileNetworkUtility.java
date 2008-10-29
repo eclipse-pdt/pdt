@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.filenetwork;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -23,11 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
@@ -92,22 +84,38 @@ public class FileNetworkUtility {
 	private static void internalBuildReferencingFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
 
 		ISourceModule file = root.getFile();
-
-		// Find all includes to the current source module in mixin:
-		IModelElement[] includes = PHPMixinModel.getWorkspaceInstance().getInclude(file.getPath().lastSegment());
-		for (IModelElement e : includes) {
-			IncludeField include = (IncludeField) e;
-
-			// Candidate that includes the original source module:
-			ISourceModule referencingFile = include.getSourceModule();
-
-			// Try to resolve include:
-			ISourceModule testFile = findSourceModule(referencingFile, include.getFilePath());
-
-			// If this is the correct include (that means that included file is the original file):
-			if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
-				processedFiles.add(referencingFile);
-				root.addChild(new Node(referencingFile));
+		
+		List<PHPMixinModel> mixinModelInstances;
+		IScriptProject scriptProject = file.getScriptProject();
+		if (scriptProject != null) {
+			IProject[] referencingProjects = scriptProject.getProject().getReferencingProjects();
+			mixinModelInstances = new ArrayList<PHPMixinModel>(referencingProjects.length + 1);
+			mixinModelInstances.add(PHPMixinModel.getInstance(scriptProject));
+			for (IProject referencingProject : referencingProjects) {
+				mixinModelInstances.add(PHPMixinModel.getInstance(DLTKCore.create(referencingProject)));
+			}
+		} else {
+			mixinModelInstances = new ArrayList<PHPMixinModel>(1);
+			mixinModelInstances.add(PHPMixinModel.getWorkspaceInstance());
+		}
+		
+		for (PHPMixinModel mixinModel : mixinModelInstances) {
+			// Find all includes to the current source module in mixin:
+			IModelElement[] includes = mixinModel.getInclude(file.getPath().lastSegment());
+			for (IModelElement e : includes) {
+				IncludeField include = (IncludeField) e;
+	
+				// Candidate that includes the original source module:
+				ISourceModule referencingFile = include.getSourceModule();
+	
+				// Try to resolve include:
+				ISourceModule testFile = findSourceModule(referencingFile, include.getFilePath());
+	
+				// If this is the correct include (that means that included file is the original file):
+				if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
+					processedFiles.add(referencingFile);
+					root.addChild(new Node(referencingFile));
+				}
 			}
 		}
 

@@ -116,7 +116,7 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		}
 
 		IType type = (IType) parent;
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(type);
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getSourceModule());
 		final IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getClassDoc(type.getElementName(), scope);
 		for (IModelElement e : elements) {
 			final PHPDocBlock docBlock = ((PHPDocField) e).getDocBlock();
