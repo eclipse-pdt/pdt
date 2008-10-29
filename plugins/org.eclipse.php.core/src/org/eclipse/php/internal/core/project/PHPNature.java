@@ -172,17 +172,16 @@ public class PHPNature extends ScriptNature {
 		// get the current buildpath entries, in order to add/remove entries
 		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
 		
-		// remove the project itself from the buildpath
+
 		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
-			if(! buildpathEntry.getPath().equals(scriptProject.getPath())){
-				newRawBuildpath.add(buildpathEntry);
-			}
+			if( buildpathEntry.getPath().equals(scriptProject.getPath())){
+				// exclude the default resources folder to the project buildpath
+				IFolder folder = getProject().getFolder(new Path(PHPCoreConstants.PROJECT_DEFAULT_RESOURCES_FOLDER));			
+				buildpathEntry = DLTKCore.newSourceEntry(scriptProject.getPath(), new IPath[]{folder.getProjectRelativePath().addTrailingSeparator()});
+			} 
+			newRawBuildpath.add(buildpathEntry);
 		}		
 		
-		// add the default src folder to the buildpath
-		IFolder folder = getProject().getFolder(new Path(PHPCoreConstants.PROJECT_DEFAULT_SOURCE_FOLDER));			
-		IBuildpathEntry newSourceEntry = DLTKCore.newSourceEntry(folder.getFullPath());
-		newRawBuildpath.add(newSourceEntry);
 		
 		// set the new updated buildpath for the project		
 		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
