@@ -821,15 +821,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		} else {
 			String parent = statementText.toString().substring(0, statementText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
-			boolean isInstanceOf = !parent.equals("$this"); //$NON-NLS-1$
+			boolean isThisVar = parent.equals("$this"); //$NON-NLS-1$
 			//boolean addVariableDollar = parent.endsWith("()");
 			boolean addVariableDollar = false;
-			showClassCall(offset, types, functionName, isInstanceOf, addVariableDollar);
+			showClassCall(offset, types, functionName, isThisVar, addVariableDollar);
 		}
 		return true;
 	}
 
-	protected void showClassCall(int offset, IType[] className, String prefix, boolean isInstanceOf, boolean addVariableDollar) {
+	protected void showClassCall(int offset, IType[] className, String prefix, boolean isThisVar, boolean addVariableDollar) {
 		if (className == null) {
 			return;
 		}
@@ -837,13 +837,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		int relevanceMethod = RELEVANCE_METHOD;
+		
+		boolean showNonStrictOptions = showNonStrictOptions();
 
 		for (IType type : className) {
 			if (!prefix.startsWith(DOLLAR)) {
 				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, requestor.isContextInformationMode());
 				for (IModelElement method : methods) {
 					try {
-						if ((((IMethod) method).getFlags() & IPHPModifiers.Internal) == 0) {
+						if ((((IMethod) method).getFlags() & IPHPModifiers.Internal) == 0 && (showNonStrictOptions || isThisVar || (((IMethod) method).getFlags() & Modifiers.AccPrivate) == 0)) {
 							reportMethod((IMethod) method, relevanceMethod--);
 						}
 					} catch (ModelException e) {
@@ -854,8 +856,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 
-			boolean showNonStrictOptions = showNonStrictOptions();
-			
 			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, requestor.isContextInformationMode(), true);
 			int relevanceVar = RELEVANCE_VAR;
 			int relevanceConst = RELEVANCE_CONST;
@@ -864,7 +864,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				try {
 					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
 						reportField(field, relevanceConst--, true);
-					} else if (showNonStrictOptions || (field.getFlags() & Modifiers.AccPrivate) == 0) {
+					} else if (showNonStrictOptions || isThisVar || (field.getFlags() & Modifiers.AccPrivate) == 0) {
 						reportField(field, relevanceVar--, true);
 					}
 				} catch (ModelException e) {
