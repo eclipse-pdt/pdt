@@ -161,7 +161,7 @@ public class PhpTokenContainer {
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
 
 		// goto the previous before adding
-		if (oldIterator.hasNext() && oldIterator.nextIndex() != 1) {
+		if (oldIterator.nextIndex() != 1) {
 			oldIterator.previous();
 		}
 		while (newIterator.hasNext()) {
