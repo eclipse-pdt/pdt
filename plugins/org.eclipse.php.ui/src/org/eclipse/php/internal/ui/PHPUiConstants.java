@@ -20,4 +20,5 @@ public interface PHPUiConstants {
 	public static final String CONTENT_ASSIST_PROFERENCE_PAGE = "org.eclipse.php.ui.preferences.PHPContentAssistPreferencePage"; //$NON-NLS-1$
 	public static final String RSE_TEMP_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature"; //$NON-NLS-1$
 	public static final String RSE_TEMP_PROJECT_NAME = "RemoteSystemsTempFiles"; //$NON-NLS-1$
+	public static final String PHP_MARKER_TYPE = "org.eclipse.php.ui.phpTaskMarker"; //$NON-NLS-1$
 }
