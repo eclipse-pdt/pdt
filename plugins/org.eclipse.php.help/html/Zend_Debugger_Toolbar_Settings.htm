@@ -17,8 +17,9 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 div.whs1 { width:100%; }
-p.whs2 { text-align:right; x-condition:Online; }
-p.whs3 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs2 { text-align:right; x-condition:Product, Online; }
+p.whs3 { text-align:right; x-condition:Online; }
+p.whs4 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -86,11 +87,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <div placeholder id="footer" class="whs1">
- <p align="right" class="whs2"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs2"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs3"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs3">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs4">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

@@ -17,8 +17,8 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 h1.whs1 { color:#00709e; }
-img_whs2 { border:none; width:297px; height:134px; float:none; }
-img_whs3 { border:none; width:278px; height:80px; float:none; }
+img_whs2 { border:none; width:297px; height:134px; float:none; border-style:none; }
+img_whs3 { border:none; width:278px; height:80px; float:none; border-style:none; }
 table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs5 { width:7.093%; }
 col.whs6 { width:92.907%; }
@@ -31,7 +31,7 @@ td.whs12 { width:7.093%; padding-right:10px; padding-left:10px; border-left-styl
 img_whs13 { border:none; width:28px; height:41px; float:none; border-style:none; }
 td.whs14 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 p.whs15 { font-weight:normal; }
-img_whs16 { border:none; width:452px; height:160px; float:none; }
+img_whs16 { border:none; width:452px; height:160px; float:none; border-style:none; }
 td.whs17 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 table.whs18 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs19 { x-cell-content-align:top; height:16px; x-condition:Online; }
@@ -44,8 +44,9 @@ img_whs25 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs26 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 tr.whs27 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs28 { width:100%; }
-p.whs29 { text-align:right; x-condition:Online; }
-p.whs30 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs29 { text-align:right; x-condition:Product, Online; }
+p.whs30 { text-align:right; x-condition:Online; }
+p.whs31 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -163,6 +164,8 @@ if (window.writeIntopicBar)
 <p class="whs21"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs25"></td>
 <td width="92.907%" class="whs26">
 <p class="whs11">Related Links:</p>
+<p class="whs15"><a HREF="Setting_Breakpoints.htm" style="font-weight: normal;"><span 
+ style="font-weight: normal;">Setting Breakpoints</a></span></p>
 <p><a HREF="Breakpoints_View.htm">Breakpoints View</a></p>
 <p><a HREF="Debugging_Concept.htm">Debugging</a></td></tr>
 <tr valign="top" class="whs27"><td colspan="1" rowspan="1" width="7.093%" class="whs24">
@@ -171,11 +174,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs28">
- <p align="right" class="whs29"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs29"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs30"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs30">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs31">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

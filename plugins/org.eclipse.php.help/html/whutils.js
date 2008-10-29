@@ -497,18 +497,7 @@ function getFontStyle(oFont)
 	if(oFont)
 	{
 		sStyle+="font-family:"+oFont.sName+";";
-		if(gbMac)
-		{
-			var nSize=parseInt(oFont.sSize);
-			if(gbIE5)
-				nSize+=2;
-			else
-				nSize+=4;
-			sStyle+="font-size:"+nSize+"pt;";
-		}
-		else
-			sStyle+="font-size:"+oFont.sSize+";";
-			
+		sStyle+="font-size:"+oFont.sSize+";";
 		sStyle+="font-style:"+oFont.sStyle+";";
 		sStyle+="font-weight:"+oFont.sWeight+";";
 		sStyle+="text-decoration:"+oFont.sDecoration+";";

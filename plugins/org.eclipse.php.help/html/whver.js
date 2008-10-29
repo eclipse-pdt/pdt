@@ -16,6 +16,7 @@ var gbSafari3=false;
 var gAgent=navigator.userAgent.toLowerCase();
 var gbMac=(gAgent.indexOf("mac")!=-1);
 var gbSunOS=(gAgent.indexOf("sunos")!=-1);
+var gbUnixOS=(gAgent.indexOf("linux")!=-1) || (gAgent.indexOf("unix")!=-1);
 var gbOpera=(gAgent.indexOf("opera")!=-1);
 var gbKonqueror=(gAgent.indexOf("konqueror")!= -1);
 var gbSafari=(gAgent.indexOf("safari")!= -1);

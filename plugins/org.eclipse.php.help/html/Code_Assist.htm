@@ -38,8 +38,9 @@ td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-s
 img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
 p.whs21 { x-condition:Online; }
 div.whs22 { width:100%; }
-p.whs23 { text-align:right; x-condition:Online; }
-p.whs24 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs23 { text-align:right; x-condition:Product, Online; }
+p.whs24 { text-align:right; x-condition:Online; }
+p.whs25 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -137,44 +138,49 @@ if (window.writeIntopicBar)
 	<li style="margin-left: -20px;" class=p><p>Mark the required checkboxes 
  to configure the following options: </p></li>
 </ol>
-<p class=Strong style="margin-left: 40px;">Options</p>
-<ul><li class=p-ListBullet2><p class=ListBullet2>Completion Inserts / Completion 
- Overwrites: Select whether to insert new code or overwrite existing code. 
- </p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Insert single proposals 
- automatically: When only one code assist suggestion exists, the code assist 
- suggestion will be inserted automatically. </p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Show variables from other 
- files: Shows variables which are in other files in the project.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Determine object type 
- from other files: Shows objects from other files in the project.</p></li>
+<p class=Strong style="margin-left: 0px;">Options</p>
+<ul><li class=p-ListBullet1><p class=ListBullet1>Completion Inserts / Completion 
+ Overwrites - Select whether selecting an item from the Code Assist list 
+ &nbsp;will cause new code to be entered or existing code 
+ to be overwritten.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Insert single proposals 
+ automatically - When only one code assist suggestion exists, the code 
+ assist suggestion will be inserted automatically. </p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Show variables from other 
+ files - Shows variables which are in other files in the project.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Determine object type 
+ from other files - Shows objects from other files in the project.</p></li>
 </ul>
-<p class=Strong style="margin-left: 40px;">Filters</p>
-<ul><li class=p-ListBullet2><p class=ListBullet2>Show constants assist: 
- Displays constants in Code Assist. </p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Case sensitive for constants: 
- Constants will be case sensitive.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Show class name in Global 
- Completion list: Enables the addition of class names to the code assist 
+<p class=Strong style="margin-left: 0px;">Filters</p>
+<ul><li class=p-ListBullet1><p class=ListBullet1>Show constants - Displays 
+ constants in the code assist list.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Case sensitive for constants 
+ - Constants will be case sensitive.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Show class names - Displays 
+ class names in the code assist list.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Show non-strict options 
+ - Display options which go against PHP strict practice in the code assist 
  list.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Show non-strict options 
- : Will show options which go against PHP strict practice.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Group completion options: 
- Groups options according to element type.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Group completion options 
+ - Groups options according to element type.</p></li>
 </ul>
-<p class=Strong style="margin-left: 40px;">Auto-activation</p>
-<ul><li class=p-ListBullet2><p class=ListBullet2>Enable auto activation: 
- Enable code assist to be automatically activated.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Auto activation delay: 
+<p class=Strong style="margin-left: 0px;">Auto-activation</p>
+<ul><li class=p-ListBullet1><p class=ListBullet1>Enable auto activation 
+ - The code assist list will automatically be displayed.</p></li>
+</ul>
+<p class=Note style="margin-left: 40px;">Note:</p>
+<p class=NoteText style="margin-left: 40px;">If this is unmarked, you can 
+ still display the code assist list by pressing Ctrl+Space.</p>
+<ul><li class=p-ListBullet2><p class=ListBullet2>Auto activation delay: 
  Determines the delay before the Code Assist box is automatically displayed.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Auto-activation triggers 
- for PHP: Sets the characters that determine PHP context.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Auto-activation triggers 
- for PHPDoc: Sets the characters that determine PHP context.</p></li>
+	<li style="x-condition: PDT;" class=p-ListBullet2><p class=ListBullet2>Auto-activation 
+ triggers for PHP: Sets the characters that determine PHP context.</p></li>
+	<li style="x-condition: PDT;" class=p-ListBullet2><p class=ListBullet2>Auto-activation 
+ triggers for PHPDoc: Sets the characters that determine PHPDoc context.</p></li>
 </ul>
-<p class=Note style="margin-left: 64px;">Note: </p>
-<p class=NoteText style="margin-left: 64px;">A maximum of 4 characters 
- can be entered. </p>
+<p class=Note style="margin-left: 64px; x-condition: PDT;">Note: </p>
+<p class=NoteText style="margin-left: 64px; x-condition: PDT;">A maximum 
+ of 4 characters can be entered. </p>
 <ol start="2" type="1" class="whs15">
 	<li style="margin-left: -20px;" class=p><p>Click Apply to apply your 
  settings.</p></li>
@@ -211,11 +217,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs22">
- <p align="right" class="whs23"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs23"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs24"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs24">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs25">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

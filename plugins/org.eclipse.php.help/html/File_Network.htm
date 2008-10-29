@@ -18,7 +18,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 <!--
 h1.whs1 { color:#00709e; }
 div.whs2 { float:none; }
-img_whs3 { border:none; width:436px; height:281px; float:none; }
+img_whs3 { border:none; width:436px; height:281px; float:none; border-style:none; }
 table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs5 { width:7.093%; }
 col.whs6 { width:92.907%; }
@@ -42,8 +42,9 @@ img_whs23 { border:none; width:28px; height:18px; float:none; border-style:none;
 td.whs24 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 p.whs25 { x-condition:Online; }
 div.whs26 { width:100%; }
-p.whs27 { text-align:right; x-condition:Online; }
-p.whs28 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs27 { text-align:right; x-condition:Product, Online; }
+p.whs28 { text-align:right; x-condition:Online; }
+p.whs29 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -111,21 +112,18 @@ if (window.writeIntopicBar)
  Preferences</h1>
 <div class="whs2">
 </div>
-<p>&nbsp;</p>
-<p>The File Network Preferences page allows you to enable/disable the File 
- Network option.</p>
-<p>&nbsp;</p>
-<p>The File Network 
- Preferences page is accessed from Window | Preferences | PHP | File Network.</p>
-<p class=picture><img src="file_network_preference.png" x-maintain-ratio="TRUE" width="436px" height="281px" border="0" class="img_whs3"></p>
-<p class=FIgureCaption>File Network Preferences page</p>
+<p>The File Network Preferences 
+ page allows you to enable/disable the File Network option.</p>
 <p>The File Network stores a node for each file. Each node has 2 arrays: 
  the first array stores references to all files that are included by the 
  file (using include/require statements), and the second array stores references 
  to all files in which the file is included. These arrays are used for 
- Refactoring and Organize Include operations.</p>
+ Refactoring and Organize Include operations. Disabling this option reduces 
+ the amount of memory used by PDT.</p>
 <p>&nbsp;</p>
-<p>Disabling this option reduces the amount of memory used by PDT.</p>
+<p>The File Network 
+ Preferences page is accessed from Window | Preferences | PHP | File Network.</p>
+<p class=picture><img src="file_network_preference.png" x-maintain-ratio="TRUE" width="436px" height="281px" border="0" class="img_whs3"></p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs4">
 <col class="whs5">
 <col class="whs6">
@@ -224,11 +222,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs26">
- <p align="right" class="whs27"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs27"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs28"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs28">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs29">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

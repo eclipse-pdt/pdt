@@ -42,8 +42,9 @@ img_whs27 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs28 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 tr.whs29 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs30 { width:100%; }
-p.whs31 { text-align:right; x-condition:Online; }
-p.whs32 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs31 { text-align:right; x-condition:Product, Online; }
+p.whs32 { text-align:right; x-condition:Online; }
+p.whs33 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -110,11 +111,9 @@ if (window.writeIntopicBar)
 <h1>Configuring Studio Communication Settings in Platform</h1>
 <div class="whs1">
 </div>
-<p>&nbsp;</p>
-<p>In order for you to be able to view, debug and profile Platform Events 
- in PDT, 
- you must ensure the correct communication settings are configured in your 
- Zend Platform.</p>
+<p>In order for you to be able 
+ to view, debug and profile Platform Events in PDT, you must ensure the 
+ correct communication settings are configured in your Zend Platform.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
 <col class="whs4">
@@ -167,7 +166,9 @@ if (window.writeIntopicBar)
 	<li style="margin-left: -20px;" class=p><p>Click <img src="platform_save.png" x-maintain-ratio="TRUE" width="43px" height="15px" border="0" class="img_whs16"> to save your settings.</p></li>
 	<li style="margin-left: -20px;  font-weight: normal; " class=p><p><span 
  style="font-weight: normal;">Go to the Platform | Preferences tab.</span></p></li>
-	<li style="margin-left: -20px;" class=p-picture><p class=picture><img src="comm_tunnel_method.png" x-maintain-ratio="TRUE" width="453px" height="126px" border="0" class="img_whs17"></p></li>
+</ol>
+<p class=picture><img src="comm_tunnel_method.png" x-maintain-ratio="TRUE" width="453px" height="126px" border="0" class="img_whs17"></p>
+<ol start="3" type="1" class="whs13">
 	</ol>
 <ol start="8" type="1" class="whs13">
 	<li style="margin-left: -20px;" class=p><p>In the Zend Platform Settings 
@@ -190,20 +191,20 @@ if (window.writeIntopicBar)
  Broadcast Port is set to the same port number as Platform ’s Auto Detection 
  Port. This test should only be run when PDT is open.</p></li>
 	</ul>
-	<ul start="3" type="1" class="whs18">
+	<ol start="3" type="1" class="whs13">
 		<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1><span 
  style="font-weight: bold; color: #000000;"><font color=black ><B>Method of passing the Zend 
  Studio Server parameters</B></font></span> - Defines the means for passing communication 
  parameters from the Zend Platform to PDT. Choose COOKIE or GET method. </p></li>
-	</ul>
+	</ol>
 </ol>
 <p class=Note style="margin-left: 52px;">Note: </p>
 <p class=NoteText style="margin-left: 52px;">The default, recommended method 
  is COOKIE. The GET method should only be used if you are experiencing 
  problems with the COOKIE method.</p>
-<ol start="10" type="1" class="whs13">
+<ol start="9" type="1" class="whs13">
 	<li style="margin-left: -20px;" class=p><p>Click Save.</p></li>
-	<li style="margin-left: -20px;" class=p><p>Restart your web server 
+	<li style="margin-left: -20px;" class=p><p>Restart your Web server 
  for the settings to take effect.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs5">
@@ -234,13 +235,16 @@ if (window.writeIntopicBar)
 <td colspan="1" rowspan="1" width="92.907%" class="whs28">
 <p>&nbsp;</td></tr>
 </table>
-<p>&nbsp;</p>
 <div placeholder id="footer" class="whs30">
- <p align="right" class="whs31"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs31"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs32"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs32">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs33">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

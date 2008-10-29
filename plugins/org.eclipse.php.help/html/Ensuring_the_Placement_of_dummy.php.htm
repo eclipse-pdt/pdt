@@ -41,8 +41,9 @@ td.whs22 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 p.whs23 { x-condition:PDT, Online; }
 tr.whs24 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs25 { width:100%; }
-p.whs26 { text-align:right; x-condition:Online; }
-p.whs27 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs26 { text-align:right; x-condition:Product, Online; }
+p.whs27 { text-align:right; x-condition:Online; }
+p.whs28 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -108,7 +109,7 @@ if (window.writeIntopicBar)
 //-->
 </script>
 <h1>Ensuring the Placement of dummy.php</h1>
-<p>In order for the remote server to actively create a tunnel to PDT, a 
+<p>In order for the remote server's debugger to communicate with PDT, a 
  file called dummy.php must be located in your server's document root.</p>
 <p>&nbsp;</p>
 <p>With the default Zend Platform and Zend Core installations, a dummy.php 
@@ -117,11 +118,11 @@ if (window.writeIntopicBar)
 <p>If you installed the standalone Zend Debugger, you must copy the dummy.php 
  file from the Zend Debugger archive to your server's document root.</p>
 <p>&nbsp;</p>
-<p>If you have set up a virtual host and it's document root is not pointed 
- at the remote server's default document root, you will have to copy the 
- dummy.php to the virtual host's document root in order to be able to debug 
- on that virtual host.</p>
-<p>&nbsp;</p>
+<p class=Note>Note:</p>
+<p class=NoteText>If you have set up a virtual host and it's document root 
+ is not pointed at the remote server's default document root, you will 
+ have to copy the dummy.php to the virtual host's document root in order 
+ to be able to debug on that virtual host.</p>
 <p>You must also ensure that the Dummy File name is set to 'dummy.php' 
  in PDT.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
@@ -153,7 +154,7 @@ if (window.writeIntopicBar)
  you changed the name of the dummy file on the server, you must change 
  this entry accordingly.</span></p>
 <ol start="4" type="1" class="whs12">
-	<li style="margin-left: -20px; font-weight: normal; " class=p><p class="whs13">Click 
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs13">Click 
  OK.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs4">
@@ -183,11 +184,15 @@ Setting Up Remote Debugging</a></p>
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs25">
- <p align="right" class="whs26"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs26"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs27"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs27">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs28">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

@@ -43,10 +43,10 @@ col.whs24 { width:14.371%; }
 col.whs25 { width:16.465%; }
 col.whs26 { width:44.171%; }
 td.whs27 { width:14.371%; padding-right:10px; padding-left:10px; border-top-width:1px; border-top-color:#000000; border-top-style:Solid; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; border-left-style:Solid; border-left-color:#000000; border-left-width:1px; }
-img_whs28 { border:none; width:188px; height:37px; float:none; border-style:none; }
-td.whs29 { width:16.465%; padding-right:10px; padding-left:10px; border-top-width:1px; border-top-color:#000000; border-top-style:Solid; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
-td.whs30 { width:44.171%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-td.whs31 { width:14.371%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+td.whs28 { width:16.465%; padding-right:10px; padding-left:10px; border-top-width:1px; border-top-color:#000000; border-top-style:Solid; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
+td.whs29 { width:44.171%; border-top-style:Solid; border-top-color:#000000; border-top-width:1px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
+td.whs30 { width:14.371%; padding-right:10px; padding-left:10px; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
+img_whs31 { border:none; width:188px; height:37px; float:none; border-style:none; }
 td.whs32 { width:16.465%; padding-right:10px; padding-left:10px; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; }
 td.whs33 { width:44.171%; padding-right:10px; padding-left:10px; border-right-style:Solid; border-right-color:#000000; border-right-width:1px; border-bottom-width:1px; border-bottom-color:#000000; border-bottom-style:Solid; }
 img_whs34 { border:none; width:24px; height:23px; float:none; border-style:none; }
@@ -63,8 +63,9 @@ img_whs44 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs45 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 tr.whs46 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs47 { width:100%; }
-p.whs48 { text-align:right; x-condition:Online; }
-p.whs49 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs48 { text-align:right; x-condition:Product, Online; }
+p.whs49 { text-align:right; x-condition:Online; }
+p.whs50 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -144,7 +145,7 @@ if (window.writeIntopicBar)
  etc.). Clicking an element or declaration will cause the corresponding 
  code to appear in the PHP editor.</p>
 <p class=picture><img src="view_php_explorer.png" x-maintain-ratio="TRUE" width="190px" height="237px" border="0" class="img_whs2"></p>
-<p class=Strong>PHP Explorer view Toolbar Commands</p>
+<p class=Strong>PHP Explorer View Toolbar Commands</p>
 <table x-use-null-cells cellspacing="0" width="94.567%" class="whs3">
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table><table x-use-null-cells cellspacing='0' width='94.567%' border='1' bordercolor='black' bordercolorlight='black' bordercolordark='black'>");
@@ -201,7 +202,7 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 //--></script>
 </table>
 <p>&nbsp;</p>
-<p class=Strong>PHP Explorer view Menu Commands</p>
+<p class=Strong>PHP Explorer View Menu Commands</p>
 <p>The view's menu can be accessed through the view menu icon <img src="menu_icon.png" x-maintain-ratio="TRUE" width="17px" height="16px" border="0" class="img_whs22">.</p>
 <p>&nbsp;</p>
 <table x-use-null-cells cellspacing="0" width="94.433%" class="whs23">
@@ -214,13 +215,20 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 
 <tr valign="top" class="whs7">
 <td colspan="1" rowspan="1" width="14.371%" class="whs27">
-<p><img src="php_explorer_menu_show.png" x-maintain-ratio="TRUE" width="188px" height="37px" border="0" class="img_whs28"></td>
-<td colspan="1" rowspan="1" width="16.465%" class="whs29">
+<p class="whs9">Icon</td>
+<td colspan="1" rowspan="1" width="16.465%" class="whs28">
+<p class="whs9">Name</td>
+<td colspan="1" rowspan="1" width="44.171%" class="whs29">
+<p class="whs9">Description</td></tr>
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="14.371%" class="whs30">
+<p><img src="php_explorer_menu_show.png" x-maintain-ratio="TRUE" width="188px" height="37px" border="0" class="img_whs31"></td>
+<td colspan="1" rowspan="1" width="16.465%" class="whs32">
 <p>Show</td>
-<td colspan="1" rowspan="1" width="44.171%" class="whs30">
+<td colspan="1" rowspan="1" width="44.171%" class="whs33">
 <p>Select to view your projects grouped by Project or Working Set.</td></tr>
 <tr valign="top" class="whs7">
-<td colspan="1" rowspan="1" width="14.371%" class="whs31">
+<td colspan="1" rowspan="1" width="14.371%" class="whs30">
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="16.465%" class="whs32">
 <p>Select Working Set</td>
@@ -230,14 +238,14 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 See the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/cworkset.htm">Working 
  Sets</a> topic in the Workbench User Guide for more informations. </td></tr>
 <tr valign="top" class="whs7">
-<td colspan="1" rowspan="1" width="14.371%" class="whs31">
+<td colspan="1" rowspan="1" width="14.371%" class="whs30">
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="16.465%" class="whs32">
 <p>Deselect Working Set</td>
 <td colspan="1" rowspan="1" width="44.171%" class="whs33">
 <p>Deselects the Working Set (if selected).</td></tr>
 <tr valign="top" class="whs7">
-<td colspan="1" rowspan="1" width="14.371%" class="whs31">
+<td colspan="1" rowspan="1" width="14.371%" class="whs30">
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="16.465%" class="whs32">
 <p>Edit Active Working Set</td>
@@ -246,7 +254,7 @@ See the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/cwork
 <p>See the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/cworkset.htm">Working 
  Sets</a> topic in the Workbench User Guide for more informations. </td></tr>
 <tr valign="top" class="whs7">
-<td colspan="1" rowspan="1" width="14.371%" class="whs31">
+<td colspan="1" rowspan="1" width="14.371%" class="whs30">
 <p><img src="view_filters_icon.png" x-maintain-ratio="TRUE" width="24px" height="23px" border="0" class="img_whs34"></td>
 <td colspan="1" rowspan="1" width="16.465%" class="whs32">
 <p>Filters..</td>
@@ -255,7 +263,7 @@ See the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/cwork
  elements will be excluded from being displayed in the view. You select 
  to exclude elements according to name or type.</td></tr>
 <tr valign="top" class="whs7">
-<td width="14.371%" class="whs31">
+<td width="14.371%" class="whs30">
 <p><img src="link_with_editor_icon.png" x-maintain-ratio="TRUE" width="23px" height="21px" border="0" class="img_whs17"></td>
 <td colspan="1" rowspan="1" width="16.465%" class="whs32">
 <p>Link With Editor</td>
@@ -298,11 +306,15 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs47">
- <p align="right" class="whs48"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs48"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs49"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs49">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs50">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

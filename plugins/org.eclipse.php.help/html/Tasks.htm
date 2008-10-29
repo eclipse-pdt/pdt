@@ -31,8 +31,9 @@ tr.whs12 { x-cell-content-align:top; height:24px; }
 td.whs13 { width:50%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
 td.whs14 { width:50%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 div.whs15 { width:100%; }
-p.whs16 { text-align:right; x-condition:Online; }
-p.whs17 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs16 { text-align:right; x-condition:Product, Online; }
+p.whs17 { text-align:right; x-condition:Online; }
+p.whs18 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -107,7 +108,7 @@ if (window.writeIntopicBar)
 <td width="50%" class="whs5">
 <p><a HREF="File_Creation.htm">Easy File Creation</a></td>
 <td width="50%" class="whs6">
-<p><a HREF="Searching_for_PHP_Elements.htm">Searching for PHP Elements</a></td></tr>
+<p><a HREF="Viewing_Type_Hierarchies.htm">Viewing Type Hierarchies</a></td></tr>
 <tr valign="top" class="whs7">
 <td width="50%" class="whs8">
 <p><a HREF="Using_Code_Assist.htm">Using Code Assist</a></td>
@@ -117,31 +118,45 @@ if (window.writeIntopicBar)
 <td width="50%" class="whs11">
 <p><a HREF="Using_Templates.htm">Using Templates</a></td>
 <td width="50%" class="whs9">
-<p><a HREF="How_to_Comment_and_Uncomment_PHP_Code.htm">Adding Comments</a></td></tr>
+<p><a HREF="using_mark_Occurrences.htm">Using Mark Occurrences</a></td></tr>
 <tr valign="top" class="whs12">
 <td colspan="1" rowspan="1" width="50%" class="whs13">
 <p><a HREF="Formatting_Code.htm">Formatting Code</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs14">
-<p><a HREF="Adding_a_Server_Path_Map.htm">Adding a Server Location Path 
- Map</a></td></tr>
+<p><a HREF="Creating_PHP_Working_Sets.htm">Creating PHP Working Sets</a></td></tr>
 <tr valign="top" class="whs10">
 <td colspan="1" rowspan="1" width="50%" class="whs13">
 <p><a HREF="Using_Code_Folding.htm">Using Code Folding</a></td>
+<td colspan="1" rowspan="1" width="50%" class="whs14">
+<p><a HREF="How_to_Comment_and_Uncomment_PHP_Code.htm">Adding Comments</a></td></tr>
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs13">
+<p><a HREF="Opening_PHP_Elements.htm">Opening PHP Elements</a></td>
+<td colspan="1" rowspan="1" width="50%" class="whs14">
+<p><a HREF="Adding_a_Server_Path_Map.htm">Adding a Server Location Path 
+ Map</a></td></tr>
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs13">
+<p><a HREF="Searching_for_PHP_Elements.htm">Searching for PHP Elements</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs14">
 <p><a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm">Adding Elements 
  to a Project's Include Path</a></td></tr>
 <tr valign="top" class="whs4">
 <td colspan="1" rowspan="1" width="50%" class="whs13">
-<p><a HREF="Opening_PHP_Elements.htm">Opening PHP Elements</a></td>
+<p><a HREF="Opening_Types_Methods.htm">Opening Types/Methods</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs14">
 <p><a HREF="Debugging.htm">Using the Debugger</a></td></tr>
 </table>
 <div placeholder id="footer" class="whs15">
- <p align="right" class="whs16"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs16"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs17"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs17">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs18">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

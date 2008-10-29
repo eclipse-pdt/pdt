@@ -27,22 +27,24 @@ td.whs8 { width:71.788%; border-top-style:Solid; border-top-color:#000000; borde
 td.whs9 { width:28.212%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
 p.whs10 { x-condition:PDT; }
 td.whs11 { width:71.788%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; }
-p.whs12 { margin-left:40px; x-condition:PDT; }
-table.whs13 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs14 { width:7.093%; }
-col.whs15 { width:92.907%; }
-tr.whs16 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs17 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
-p.whs18 { font-size:6pt; }
-td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs20 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs21 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs22 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs23 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-tr.whs24 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs25 { width:100%; }
-p.whs26 { text-align:right; x-condition:Online; }
-p.whs27 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs12 { margin-left:40px; }
+p.whs13 { margin-left:40px; x-condition:PDT; }
+table.whs14 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs15 { width:7.093%; }
+col.whs16 { width:92.907%; }
+tr.whs17 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs19 { font-size:6pt; }
+td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs21 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs23 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs24 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+tr.whs25 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs26 { width:100%; }
+p.whs27 { text-align:right; x-condition:Product, Online; }
+p.whs28 { text-align:right; x-condition:Online; }
+p.whs29 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -141,10 +143,21 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Configure your debug preferences.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Launching.htm" 
- style="x-condition: PDT;">Launching</a></td>
+<p class="whs12"><a HREF="Installed_Debuggers.htm">Installed 
+ Debuggers</a></td>
 <td width="71.788%" class="whs11">
-<p>Configure the workspace's behaviour when a debug session is launched.</td></tr>
+<p>Configure the settings for your installed debuggers.</td></tr>
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="28.212%" class="whs9">
+<p class="whs12"><a HREF="Launching.htm">Workbench Options</a></td>
+<td colspan="1" rowspan="1" width="71.788%" class="whs11">
+<p>Configure the workspace's behavior when a debug session is launched.</td></tr>
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="28.212%" class="whs9">
+<p class="whs12"><a HREF="Step_Filtering_Preferences.htm">Step 
+ Filtering</a></td>
+<td colspan="1" rowspan="1" width="71.788%" class="whs11">
+<p>Configure Step Filtering elements.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
 <p class="whs10"><a href="Editor.htm" style="x-condition: PDT;">Editor</a></td>
@@ -152,35 +165,35 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>Configure Smart Caret positioning.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Code_Assist.htm" 
+<p class="whs13"><a href="Code_Assist.htm" 
  style="x-condition: PDT;">Code Assist</a></td>
 <td width="71.788%" class="whs11">
 <p>Configure Code Assist preferences.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Folding.htm" style="x-condition: PDT;">Folding</a></td>
+<p class="whs13"><a href="Folding.htm" style="x-condition: PDT;">Folding</a></td>
 <td width="71.788%" class="whs11">
 <p>Configure the elements which will be folded by default.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Hovers.htm" style="x-condition: PDT;">Hovers</a></td>
+<p class="whs13"><a href="Hovers.htm" style="x-condition: PDT;">Hovers</a></td>
 <td width="71.788%" class="whs11">
 <p>Configure the settings and shortcuts for the hover functionality.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Syntax_Coloring.htm" 
+<p class="whs13"><a href="Syntax_Coloring.htm" 
  style="x-condition: PDT;">Syntax Coloring</a></td>
 <td width="71.788%" class="whs11">
 <p>Set the font color for different elements.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Task_Tags.htm" 
+<p class="whs13"><a href="Task_Tags.htm" 
  style="x-condition: PDT;">Task Tags</a></td>
 <td width="71.788%" class="whs11">
 <p>Add and edit tasks tags.</td></tr>
 <tr valign="top" class="whs5">
 <td width="28.212%" class="whs9">
-<p class="whs12"><a href="Typing.htm" style="x-condition: PDT;">Typing</a></td>
+<p class="whs13"><a href="Typing.htm" style="x-condition: PDT;">Typing</a></td>
 <td width="71.788%" class="whs11">
 <p>Configure which items should be automatically completed.</td></tr>
 <tr valign="top" class="whs5">
@@ -228,32 +241,36 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 //--></script>
 </table>
 <p>&nbsp;</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs13">
-<col class="whs14">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs14">
 <col class="whs15">
+<col class="whs16">
 
-<tr valign="top" class="whs16"><td colspan="1" rowspan="1" width="7.093%" class="whs17">
-<p class="whs18">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<tr valign="top" class="whs17"><td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<p class="whs19">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs20">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs20"><td width="7.093%" class="whs21">
-<p class="whs18"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
-<td width="92.907%" class="whs23">
+<tr valign="top" class="whs21"><td width="7.093%" class="whs22">
+<p class="whs19"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs23"></td>
+<td width="92.907%" class="whs24">
 <p class="whs7">Related Links:</p>
 <p><a HREF="Window.htm">Window</a></p>
 <p><a HREF="PHP_Perspectives_and_Views.htm">PHP Perspectives and Views</a></p>
 <p><a HREF="Menus.htm">PHP Perspective Menus</a></td></tr>
-<tr valign="top" class="whs24"><td colspan="1" rowspan="1" width="7.093%" class="whs21">
-<p class="whs18">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs23">
+<tr valign="top" class="whs25"><td colspan="1" rowspan="1" width="7.093%" class="whs22">
+<p class="whs19">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs24">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs25">
- <p align="right" class="whs26"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+<div placeholder id="footer" class="whs26">
+ <p align="right" class="whs27"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs28"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs27">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs29">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

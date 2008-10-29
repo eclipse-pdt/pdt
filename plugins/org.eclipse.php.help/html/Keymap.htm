@@ -62,8 +62,9 @@ img_whs43 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs44 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 tr.whs45 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs46 { width:100%; }
-p.whs47 { text-align:right; x-condition:Online; }
-p.whs48 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs47 { text-align:right; x-condition:Product, Online; }
+p.whs48 { text-align:right; x-condition:Online; }
+p.whs49 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -454,11 +455,15 @@ Reference</a></p>
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs46">
- <p align="right" class="whs47"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs47"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs48"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs48">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs49">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

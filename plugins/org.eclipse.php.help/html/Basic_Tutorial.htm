@@ -23,8 +23,9 @@ tr.whs4 { x-cell-content-align:top; }
 td.whs5 { width:50%; padding-right:10px; padding-left:10px; }
 td.whs6 { width:50%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 div.whs7 { width:100%; }
-p.whs8 { text-align:right; x-condition:Online; }
-p.whs9 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs8 { text-align:right; x-condition:Product, Online; }
+p.whs9 { text-align:right; x-condition:Online; }
+p.whs10 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -117,11 +118,15 @@ if (window.writeIntopicBar)
 </tr>
 </table>
 <div placeholder id="footer" class="whs7">
- <p align="right" class="whs8"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs8"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs9"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs9">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs10">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

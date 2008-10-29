@@ -1166,7 +1166,7 @@ function _BSSCPopup(strURL, width, height)
 		}
 
 		if (IsDirty(nIndex)) {
-			if (gbBsMac) {
+			if (gbBsMac || gbBsNS4) {
 				setTimeout("BSSCPopup_AfterLoad(" + nIndex + "," + nToken + "," + cuswidth + "," + cusheight  +")", 400);
 			} else {
 				setTimeout("BSSCPopup_AfterLoad(" + nIndex + "," + nToken + "," + cuswidth + "," + cusheight + ")", 100);
@@ -1455,6 +1455,13 @@ function getScrollTop()
 		return 0;
 }
 
+function getScrollHeight(thisWindow)
+{
+	if(typeof(thisWindow.document.body.scrollHeight) != "undefined")
+		return thisWindow.document.body.scrollHeight;
+	else 
+		return 0;
+}
 
 function MoveDivAndShow(nIndex, nToken, cuswidth, cusheight)
 {
@@ -1525,7 +1532,7 @@ function BSSCGetContentSize(thisWindow, size)
 	if (!gbBsIE4 && !gbBsOpera7 && !gbBsNS4)
 		return;
 
-	if ((gbBsMac&&gbBsIE4)||gbBsNS4||gbBsOpera7) {
+	if ((gbBsMac&&gbBsIE4)||gbBsOpera7) {
 		size.x = 320;
 		size.y = 180;
 		return;
@@ -1556,22 +1563,25 @@ function BSSCGetContentSize(thisWindow, size)
 	var maxx = gBsClientWidth * gBMaxXOfParent;
 	
 	// This double resize causes the document to re-render (and we need it to)
-	if (!gbBsIE5)
+	if (!gbBsIE5 && !gbBsNS4)
 		thisWindow.moveTo(10000,10000); // this is used to fix the flash on IE4.
 		
 	thisWindow.resizeTo(1, 1);
 	thisWindow.resizeTo(1, 1);
-	thisWindow.resizeTo(maxgoldx, thisWindow.document.body.scrollHeight + gBscrollHeight);
-	thisWindow.resizeTo(maxgoldx, thisWindow.document.body.scrollHeight + gBscrollHeight);
+	
+	thisWindow.resizeTo(maxgoldx, getScrollHeight(thisWindow) + gBscrollHeight);
+	thisWindow.resizeTo(maxgoldx, getScrollHeight(thisWindow) + gBscrollHeight);
+
 		
-	var miny = thisWindow.document.body.scrollHeight + gBscrollHeight;
+	var miny = getScrollHeight(thisWindow) + gBscrollHeight;
 	
 	if (miny > GoldenSize.y) // the popup does not fix in the parent wanted golden area. so try to expand itself as large as it can
 	{
-		thisWindow.resizeTo(maxx , thisWindow.document.body.scrollHeight + gBscrollHeight);
-		thisWindow.resizeTo(maxx , thisWindow.document.body.scrollHeight + gBscrollHeight);
 		
-		miny = 	thisWindow.document.body.scrollHeight + gBscrollHeight;
+		thisWindow.resizeTo(maxx , getScrollHeight(thisWindow) + gBscrollHeight);
+		thisWindow.resizeTo(maxx , getScrollHeight(thisWindow) + gBscrollHeight);
+		
+		miny = 	getScrollHeight(thisWindow) + gBscrollHeight;
 		maxy = gBsClientHeight * gBMaxYOfParent;
 		
 		if (miny > maxy) { // the popup must have a scroll, OK let it be.
@@ -1591,7 +1601,7 @@ function BSSCGetContentSize(thisWindow, size)
 				x = x + deltax;
 				thisWindow.resizeTo(x, miny);
 				thisWindow.resizeTo(x, miny);
-				diffy = thisWindow.document.body.scrollHeight + gBscrollHeight - x * ClientRate;
+				diffy = getScrollHeight(thisWindow) + gBscrollHeight - x * ClientRate;
 				if (diffy >  gBpermitYDelta ) // it is higher than wanted, so x need to be wide a little bitter
 					deltax = Math.abs(deltax) /2;
 				else if (diffy <  -gBpermitYDelta) // it is shorter than wanted, so x need to be narrow a little bitter
@@ -1602,8 +1612,8 @@ function BSSCGetContentSize(thisWindow, size)
 				if (Math.abs(deltax) < gBpermitXDelta) // the next change is too slight and it can be ignore.
 					break;
 			}
-			size.x = thisWindow.document.body.scrollWidth; //+ gBscrollWidth;
-			size.y = thisWindow.document.body.scrollHeight;// + gBscrollHeight;	
+			size.x = thisWindow.document.body.scrollWidth + gBscrollWidth;
+			size.y = getScrollHeight(thisWindow) + gBscrollHeight;	
 			thisWindow.document.body.scroll = 'no';
 		}
 	}
@@ -1621,7 +1631,7 @@ function BSSCGetContentSize(thisWindow, size)
 				x = x + deltax;
 				thisWindow.resizeTo(x, miny);
 				thisWindow.resizeTo(x, miny);
-				diffy = thisWindow.document.body.scrollHeight + gBscrollHeight - x * gBRateH_W;
+				diffy = getScrollHeight(thisWindow) + gBscrollHeight - x * gBRateH_W;
 				if (diffy >  gBpermitYDelta ) // it is higher than wanted, so x need to be wide a little bitter
 					deltax = Math.abs(deltax) /2;
 				else if (diffy <  -gBpermitYDelta) // it is shorter than wanted, so x need to be narrow a little bitter
@@ -1632,17 +1642,17 @@ function BSSCGetContentSize(thisWindow, size)
 				if (Math.abs(deltax) < gBpermitXDelta) // the next change is too slight and it can be ignore.
 					break;
 			}
-			size.x = thisWindow.document.body.scrollWidth; //+ gBscrollWidth;
-			size.y = thisWindow.document.body.scrollHeight ;
+			size.x = thisWindow.document.body.scrollWidth + gBscrollWidth;
+			size.y = getScrollHeight(thisWindow) + gBscrollHeight ;
 			thisWindow.document.body.scroll = 'no'; // At this time we do not want to show scroll any more. so it will looks better a little.
 			thisWindow.resizeTo(size.x, size.y);
 			if (thisWindow.document.body.scrollWidth > size.x)
 			{
 				size.x = thisWindow.document.body.scrollWidth;
 			}
-			if (thisWindow.document.body.scrollHeight > size.y)
+			if (getScrollHeight(thisWindow) > size.y)
 			{
-				size.y = thisWindow.document.body.scrollHeight;
+				size.y = getScrollHeight(thisWindow);
 			}
 		}
 	}

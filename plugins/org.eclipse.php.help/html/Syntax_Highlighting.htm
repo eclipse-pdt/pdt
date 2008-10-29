@@ -30,8 +30,9 @@ td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 p.whs12 { font-weight:bold; }
 p.whs13 { x-condition:Online; }
 div.whs14 { width:100%; }
-p.whs15 { text-align:right; x-condition:Online; }
-p.whs16 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs15 { text-align:right; x-condition:Product, Online; }
+p.whs16 { text-align:right; x-condition:Online; }
+p.whs17 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -109,8 +110,8 @@ if (window.writeIntopicBar)
  settings to be applied to it.</p>
 <p>&nbsp;</p>
 <p>The default color and font settings for PHP elements are:</p>
-<ul><li style=" color: #ff0000; " class=p-ListBullet1><p class=ListBullet1><span 
- style="color: #ff0000;"><font color=red >Boundry Maker</font></span></p></li>
+<ul><li style="color: #ff0000;" class=p-ListBullet1><p class=ListBullet1><span>PHP 
+ tags</span></p></li>
 	<li style=" color: #808080; " class=p-ListBullet1><p class=ListBullet1><span 
  style="color: #808080;"><font color=gray >Comment</font></span></p></li>
 	<li class=p-ListBullet1><p class=ListBullet1><span style="color: #007f7f;"><font color=#007f7f >HereDoc</font></span> 
@@ -132,6 +133,12 @@ if (window.writeIntopicBar)
 <p>The color and font settings can be configured from the <a href="Syntax_Coloring.htm">Syntax 
  Coloring preferences</a> page, accessed from Window | Preferences | PHP 
  | Editor | Syntax Coloring.</p>
+<p class=Note>Note:</p>
+<p class=NoteText>Syntax Coloring will also be available for JavaScript 
+ elements if JavaScript support was enabled for the project. See <a href="Enabling_JavaScript_Support_in_PHP_Projects.htm">Enabling 
+ JavaScript Support in PHP Projects</a> for more information.<br>
+To configure JavaScript syntax coloring preferences, go to Window | Preferences 
+ | JavaScript | Editor | Syntax Coloring.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
 <col class="whs4">
@@ -155,11 +162,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs14">
- <p align="right" class="whs15"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs15"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs16"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs16">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs17">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

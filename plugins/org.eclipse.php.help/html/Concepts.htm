@@ -24,8 +24,9 @@ td.whs5 { width:50%; padding-right:10px; padding-left:10px; }
 p.whs6 { x-condition:PDT; }
 tr.whs7 { x-cell-content-align:top; height:23px; }
 div.whs8 { width:100%; }
-p.whs9 { text-align:right; x-condition:Online; }
-p.whs10 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs9 { text-align:right; x-condition:Product, Online; }
+p.whs10 { text-align:right; x-condition:Online; }
+p.whs11 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -101,47 +102,61 @@ if (window.writeIntopicBar)
 <p class="whs6"><a href="PHP_Support.htm" style="x-condition: PDT;">PHP 
  Support</a></td>
 <td width="50%" class="whs5">
-<p><a HREF="Bookmarks.htm">Bookmarks</a></td></tr>
+<p><a HREF="Hover_Support.htm">Hover Support</a></td></tr>
 <tr valign="top" class="whs7">
 <td width="50%" class="whs5">
 <p class="whs6"><a href="Code_Assist_Concept.htm" style="x-condition: PDT;">Code 
  Assist</a></td>
 <td width="50%" class="whs5">
-<p><a HREF="Hover_Support.htm">Hover Support</a></td></tr>
+<p><a HREF="Override_Indicators.htm">Override Indicators</a></td></tr>
 <tr valign="top" class="whs4">
 <td colspan="1" rowspan="1" width="50%" class="whs5">
-<p><a HREF="Syntax_Highlighting.htm">Syntax Coloring</a></td>
+<p class="whs6"><a HREF="Syntax_Highlighting.htm">Syntax Coloring</a></td>
+<td colspan="1" rowspan="1" width="50%" class="whs5">
+<p><a HREF="PHP_Working_Sets.htm">PHP Working Sets</a></td></tr>
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs5">
+<p class="whs6"><span style="x-condition: PDT;"><span><a href="Automatic_Insertion.htm" 
+ style="x-condition: PDT;">Automatic Completion</a></span></span></td>
+<td colspan="1" rowspan="1" width="50%" class="whs5">
+<p><a HREF="Show_Type_Hierarchy.htm">Type Hierarchy</a></td></tr>
+<tr valign="top" class="whs4">
+<td colspan="1" rowspan="1" width="50%" class="whs5">
+<p>Mark Occurrences</td>
 <td colspan="1" rowspan="1" width="50%" class="whs5">
 <p><a HREF="PHP_Manual_Integration.htm">PHP Manual Integration</a></td></tr>
 <tr valign="top" class="whs4">
 <td colspan="1" rowspan="1" width="50%" class="whs5">
-<p class="whs6"><span><span><a href="Automatic_Insertion.htm" 
- style="x-condition: PDT;">Automatic Completion</a></span></span></td>
+<p><a HREF="Matching_Brackets.htm">Matching Brackets</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs5">
 <p><a HREF="Real_Time_Error_Detection.htm">Real Time Error Detection</a></td></tr>
 <tr valign="top" class="whs4">
 <td width="50%" class="whs5">
-<p><a HREF="Matching_Brackets.htm">Matching Brackets</a></td>
+<p class="whs6"><span style="x-condition: PDT;"><a href="Code_Folding.htm" 
+ style="x-condition: PDT;">Code Folding</a></span></td>
 <td width="50%" class="whs5">
 <p><a HREF="Debugging_Concept.htm">Debugging</a></td></tr>
 <tr valign="top" class="whs4">
 <td colspan="1" rowspan="1" width="50%" class="whs5">
-<p class="whs6"><a href="Code_Folding.htm" style="x-condition: PDT;">Code 
- Folding</a></td>
+<p><a HREF="Commenting_Code.htm">Commenting Code</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs5">
 <p><a HREF="Include_Paths.htm">Include Paths</a></td></tr>
 <tr valign="top" class="whs4">
 <td colspan="1" rowspan="1" width="50%" class="whs5">
-<p><a HREF="Commenting_Code.htm">Commenting Code</a></td>
+<p><a HREF="Bookmarks.htm">Bookmarks</a></td>
 <td colspan="1" rowspan="1" width="50%" class="whs5">
 <p><a HREF="Path_Mapping.htm">Path Mapping</a></td></tr>
 </table>
 <div placeholder id="footer" class="whs8">
- <p align="right" class="whs9"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs9"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs10"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs10">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs11">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

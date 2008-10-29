@@ -56,8 +56,9 @@ img_whs35 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs36 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 tr.whs37 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs38 { width:100%; }
-p.whs39 { text-align:right; x-condition:Online; }
-p.whs40 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs39 { text-align:right; x-condition:Product, Online; }
+p.whs40 { text-align:right; x-condition:Online; }
+p.whs41 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -200,7 +201,8 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td width="12.475%" class="whs20">
 <p class="whs2">Use Step Filters</td>
 <td width="80.04%" class="whs21">
-<p>Change whether step filters should be used in the current Debug View.</td></tr>
+<p>Enables/disables the <a HREF="Step_Filtering_Preferences.htm">step filters</a> 
+ functionality.</td></tr>
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
 //--></script>
@@ -235,11 +237,15 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs38">
- <p align="right" class="whs39"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs39"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs40"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs40">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs41">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

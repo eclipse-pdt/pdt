@@ -30,13 +30,13 @@ img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 p.whs13 { font-weight:normal; }
 td.whs14 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-img_whs15 { border:none; width:297px; height:134px; float:none; }
+img_whs15 { border:none; width:297px; height:134px; float:none; border-style:none; }
 ol.whs16 { list-style:decimal; }
-img_whs17 { border:none; width:204px; height:218px; float:none; }
+img_whs17 { border:none; width:204px; height:218px; float:none; border-style:none; }
 p.whs18 { margin-left:40px; }
 p.whs19 { margin-left:0px; }
-img_whs20 { border:none; width:452px; height:160px; float:none; }
-img_whs21 { border:none; width:278px; height:80px; float:none; }
+img_whs20 { border:none; width:452px; height:138px; float:none; }
+img_whs21 { border:none; width:278px; height:80px; float:none; border-style:none; }
 table.whs22 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs23 { x-cell-content-align:top; height:16px; x-condition:Online; }
 td.whs24 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
@@ -47,8 +47,9 @@ img_whs28 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs29 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 tr.whs30 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs31 { width:100%; }
-p.whs32 { text-align:right; x-condition:Online; }
-p.whs33 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs32 { text-align:right; x-condition:Product, Online; }
+p.whs33 { text-align:right; x-condition:Online; }
+p.whs34 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript">
 <!--
@@ -169,19 +170,19 @@ if (window.writeIntopicBar)
 <td width="92.907%" class="whs12">
 <p class="whs9">To add a condition to a breakpoint:</p>
 <ol type="1" class="whs16">
-	<li style="margin-left: -20px; font-weight: normal; " class=p><p class="whs13">Right-click 
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs13">Right-click 
  the breakpoint in the vertical marker bar and select Breakpoint Properties...</p></li>
 </ol>
 <p class=picture><img src="breakpoint_properties_select.png" x-maintain-ratio="TRUE" width="204px" height="218px" border="0" class="img_whs17"></p>
 <p class="whs18">The PHP Conditional Breakpoint dialog opens.</p>
 <ol start="2" type="1" class="whs16">
-	<li style="margin-left: -20px;" class=P><p class="whs19">Enter 
+	<li style="margin-left: -20px;" class=p><p class="whs19">Enter 
  the required condition and ensure the Enable Set Condition checkbox is 
  marked.</p></li>
 </ol>
-<p class=picture><img src="conditional_breakpoint_properties.png" x-maintain-ratio="TRUE" width="452px" height="160px" border="0" class="img_whs20"></p>
-<ol start="2" type="1" class="whs16">
-	<li style="margin-left: -20px;" class=P><p>Click OK.</p></li>
+<p class=FIgureCaption style="x-condition: PDT;"><img src="conditional_breakpoint_properties1.png" x-maintain-ratio="TRUE" width="452px" height="138px" border="0" class="img_whs20"></p>
+<ol start="3" type="1" class="whs16">
+	<li style="margin-left: -20px;" class=p><p>Click OK.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs5">
 <td rowspan="1" colspan="2" width="100%" class="whs14">
@@ -203,8 +204,8 @@ if (window.writeIntopicBar)
 <tr valign="top" class="whs26"><td width="7.093%" class="whs27">
 <p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs28"></td>
 <td width="92.907%" class="whs29">
-<p><span style="font-weight: bold;"><B>Related Links:</B></span><br>
-<a HREF="Breakpoints.htm">Breakpoints</a></p>
+<p><span style="font-weight: bold;"><B>Related Links:</B></span><a HREF="Breakpoints.htm"><br>
+Breakpoints</a></p>
 <p><a HREF="Breakpoints_View.htm">Breakpoints View</a></p>
 <p><a HREF="Debugging_Concept.htm">Debugging</a></p>
 <p><a HREF="Analyzing_Debugger_Results.htm">Running and Analyzing Debugger 
@@ -215,11 +216,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs31">
- <p align="right" class="whs32"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs32"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs33"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs33">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs34">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

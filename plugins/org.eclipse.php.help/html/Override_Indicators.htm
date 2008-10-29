@@ -1,0 +1,179 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Override Indicators</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style>
+<!--
+body { border-left-style:None; border-right-style:None; border-bottom-style:None; background-color:Transparent; border-top-style:None; }
+-->
+</style><style type="text/css">
+<!--
+h1.whs1 { color:#00709e; }
+img_whs2 { border:none; width:428px; height:164px; float:none; border-style:none; }
+img_whs3 { border:none; width:294px; height:46px; float:none; border-style:none; }
+p.whs4 { font-weight:bold; }
+table.whs5 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs6 { width:7.093%; }
+col.whs7 { width:92.907%; }
+tr.whs8 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs10 { font-size:6pt; }
+td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs12 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs13 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs14 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs15 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+tr.whs16 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs17 { width:100%; }
+p.whs18 { text-align:right; x-condition:Product, Online; }
+p.whs19 { text-align:right; x-condition:Online; }
+p.whs20 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addTocInfo("PDT Help\nConcepts\nOverride Indicators");
+
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1 class="whs1">Override Indicators</h1>
+<p>‘Override Indicators’ are markers that display special decoration icons 
+ to indicate methods that override or implement other methods from a super-type's 
+ class / interface.</p>
+<p>The override indicators will be displayed as triangles in the marker 
+ bar (the vertical ruler to the left of the editor) next to the method's 
+ definition.</p>
+<p class=picture><img src="override_indicators.png" x-maintain-ratio="TRUE" width="428px" height="164px" border="0" class="img_whs2"></p>
+<p>Green triangles indicate an overridden method, while a white triangle 
+ indicates an implemented method.</p>
+<p>&nbsp;</p>
+<p>Hovering over a triangle displays a tool-tip that reveals the overridden 
+ or implemented method's super-type.</p>
+<p class=picture><img src="override_indicator_tooltip.png" x-maintain-ratio="TRUE" width="294px" height="46px" border="0" class="img_whs3"></p>
+<p class="whs4">Note:</p>
+<p>Markers will not be displayed if the methods do not comply with the 
+ overriding rules.</p>
+<p>These are as follows:</p>
+<ul><li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>You 
+ cannot override a non-static method with a static method.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>The 
+ overriding method must not be more restrictive than the overridden method</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>‘private’ 
+ methods are not inherited and cannot be overridden.</p></li>
+</ul>
+<p class=ListBullet1>&nbsp;</p>
+<h5>Override Indicators Preferences</h5>
+<p>The display preferences for the override indicators can be configured 
+ from the <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/reference/ref-22.htm">Annotations 
+ preferences page</a> (Window | Preferences | General | Editors | Text 
+ Editors | Annotations).</p>
+<p>Select the Override Indicators (org.eclipse.php.ui.overrideIndicator) 
+ option to configure the Override Indicators for PHP.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs5">
+<col class="whs6">
+<col class="whs7">
+
+<tr valign="top" class="whs8"><td colspan="1" rowspan="1" width="7.093%" class="whs9">
+<p class="whs10">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs11">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs12"><td width="7.093%" class="whs13">
+<p class="whs10"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs14"></td>
+<td width="92.907%" class="whs15">
+<p><span style="font-weight: bold;"><B>Related Links:</B></span><br>
+Mark Occurrences</p>
+<p><a HREF="Show_Type_Hierarchy.htm">Type Hierarchy</a></td></tr>
+<tr valign="top" class="whs16"><td colspan="1" rowspan="1" width="7.093%" class="whs13">
+<p class="whs10">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs15">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs17">
+ <p align="right" class="whs18"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs19"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs20">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

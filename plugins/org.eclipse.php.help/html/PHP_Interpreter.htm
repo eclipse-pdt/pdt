@@ -38,8 +38,9 @@ td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-s
 img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
 p.whs21 { x-condition:Online; }
 div.whs22 { width:100%; }
-p.whs23 { text-align:right; x-condition:Online; }
-p.whs24 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs23 { text-align:right; x-condition:Product, Online; }
+p.whs24 { text-align:right; x-condition:Online; }
+p.whs25 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -109,9 +110,9 @@ if (window.writeIntopicBar)
  Preferences</h1>
 <div class="whs1">
 </div>
-<p>&nbsp;</p>
-<p>The PHP Interpreter preferences page allows you to set which PHP version 
- to use.</p>
+<p>The PHP Interpreter preferences 
+ page allows you to set which PHP version to use for the project. This 
+ will affect the internal debugger, code analyzer and code assist.</p>
 <p>&nbsp;</p>
 <p>The PHP Interpreter 
  Preferences page is accessed from Window | Preferences | PHP | PHP Interpreter.</p>
@@ -132,8 +133,7 @@ if (window.writeIntopicBar)
 <p class="whs10">To configure your PHP version:</p>
 <ol type="1" class="whs14">
 	<li style="margin-left: -20px;" class=p><p>Select the PHP Version to 
- use. The default options are PHP 4 or PHP 5 or greater. The PHP version 
- chosen will affect the internal debugger, code analyzer and code completion.<br>
+ use. The default options are PHP 4 or PHP 5 or greater. <br>
 	See <a href="PHP_Support.htm">PHP Support</a> for more on effects the 
  PHP version settings have.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Mark the &quot;Use ASP tags 
@@ -214,11 +214,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs22">
- <p align="right" class="whs23"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs23"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs24"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs24">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs25">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

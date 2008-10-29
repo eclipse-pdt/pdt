@@ -34,8 +34,9 @@ p.whs15 { font-weight:bold; }
 p.whs16 { font-weight:normal; }
 tr.whs17 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs18 { width:100%; }
-p.whs19 { text-align:right; x-condition:Online; }
-p.whs20 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs19 { text-align:right; x-condition:Product, Online; }
+p.whs20 { text-align:right; x-condition:Online; }
+p.whs21 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -114,13 +115,13 @@ if (window.writeIntopicBar)
 <p class=picture><img src="editor.png" x-maintain-ratio="TRUE" width="539px" height="156px" border="0" class="img_whs3"></p>
 <p>Choose whether to enable:</p>
 <ul><li class=p-ListBullet1><p class=ListBullet1>Smart caret positioning 
- at line start and end - If this option is unchecked the cursor will jump 
- to the beginning/end of a line, when Home/End are pressed. If it is checked, 
- checked, the cursor will jump to the beginning/end of the <span style="font-style: italic;"><I>typed</I></span> 
+ at line start and end - If this checkbox is unmarked, the cursor will 
+ jump to the beginning/end of a line when Home/End are pressed. If it is 
+ marked, the cursor will jump to the beginning/end of the <span style="font-style: italic;"><I>typed</I></span> 
  line (i.e. ignoring the tabs at the beginning/end of a line).</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Smart caret positioning 
- in PHP names - If this options is checked, pressing Home and End will 
- jump to the beginning/end of a PHP name.</p></li>
+ in PHP names - If this checkbox is marked, the cursor will jump to the 
+ beginning/end of a PHP name when Home/End are pressed.</p></li>
 </ul>
 <p class=ListBullet1>&nbsp;</p>
 <p class=ListBullet1>Click Apply to apply your settings.</p>
@@ -153,11 +154,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs18">
- <p align="right" class="whs19"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs19"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs20"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs20">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs21">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

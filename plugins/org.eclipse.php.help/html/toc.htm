@@ -26,8 +26,9 @@ p.whs7 { font-weight:bold; margin-left:40px; line-height:200%; }
 p.whs8 { line-height:200%; }
 p.whs9 { margin-left:0px; font-weight:bold; line-height:200%; }
 div.whs10 { width:100%; }
-p.whs11 { text-align:right; x-condition:Online; }
-p.whs12 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs11 { text-align:right; x-condition:Product, Online; }
+p.whs12 { text-align:right; x-condition:Online; }
+p.whs13 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript">
 <!--
@@ -127,16 +128,22 @@ if (window.writeIntopicBar)
 <p class="whs3"><a href="PHP_Support.htm">PHP 
  Support</a> | <a href="Code_Assist_Concept.htm" style="font-weight: bold;">Code 
  Assist</a> | <a HREF="Syntax_Highlighting.htm">Syntax Coloring</a> | <a 
- HREF="Automatic_Insertion.htm">Automatic Completion</a> | <a HREF="Matching_Brackets.htm">Matching 
+ HREF="Automatic_Insertion.htm">Automatic Completion</a> |<span style="x-condition: PDT;"> 
+ </span>Mark Occurrences<span 
+ style="x-condition: PDT;"> |</span> <a HREF="Matching_Brackets.htm">Matching 
  Brackets</a>| <a HREF="Code_Folding.htm">Code Folding</a> | &nbsp;<a 
  HREF="Commenting_Code.htm">Commenting Code</a> | <a HREF="phpDoc_Comments.htm">phpDoc 
  Block Comments</a> | <a HREF="Bookmarks.htm">Bookmarks</a> | &nbsp;<a HREF="Hover_Support.htm">Hover 
- Support</a> | <a HREF="PHP_Working_Sets.htm">PHP Working Sets</a> | <a 
- HREF="PHP_Manual_Integration.htm">PHP Manual Integration</a> | <a HREF="Real_Time_Error_Detection.htm">Real 
- Time Error Detection</a> | </a>  | </span>&nbsp;<a 
- HREF="Debugging_Concept.htm">Debugging</a> | <a HREF="Breakpoints.htm">Breakpoints</a> 
- | <a HREF="Include_Paths.htm">Include Paths</a> &nbsp;| 
- <a HREF="Path_Mapping.htm">Path Mapping</a> </p>
+ Support</a> | <a HREF="Override_Indicators.htm" style="x-condition: PDT;">Override 
+ Indicators</a><span style="x-condition: PDT;"> |</span> <a HREF="PHP_Working_Sets.htm">PHP 
+ Working Sets</a> |<span style="x-condition: PDT;"> </span><a HREF="Show_Type_Hierarchy.htm" 
+ style="x-condition: PDT;">Type Hierarchy</a><span style="x-condition: PDT;"> 
+ |</span> <a HREF="PHP_Manual_Integration.htm">PHP Manual Integration</a> 
+ | <a HREF="Real_Time_Error_Detection.htm">Real Time Error Detection</a> 
+ | </a>  | </span><a HREF="Running.htm">Running</a> | <a HREF="Debugging_Concept.htm">Debugging</a> 
+ | <a HREF="Breakpoints.htm">Breakpoints</a> | <a HREF="Include_Paths.htm">Include 
+ Paths</a> &nbsp;| <a HREF="Path_Mapping.htm">Path Mapping</a> 
+ </p>
 <p class="whs6">&nbsp;</p>
 <ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1 
  style="font-weight: bold;"><a href="Tasks.htm">Tasks</a></p></li>
@@ -151,14 +158,21 @@ if (window.writeIntopicBar)
  <a HREF="Formatting_Code.htm">Formatting Code</a> | <a HREF="Using_Code_Folding.htm">Using 
  Code Folding</a> | &nbsp;<a href="Opening_PHP_Elements.htm">Opening 
  PHP Elements</a> | <a HREF="Searching_for_PHP_Elements.htm">Searching 
- for PHP Elements</a> | <a HREF="Using_Smart_Goto_Source.htm">Using Smart 
- Goto Source</a> | <a HREF="Creating_PHP_Working_Sets.htm">Creating PHP 
- Working Sets</a> | <a 
+ for PHP Elements</a> |<span style="x-condition: PDT;"> </span><a HREF="Opening_Types_Methods.htm" 
+ style="x-condition: PDT;">Opening Types/Methods</a><span style="x-condition: PDT;"> 
+ | </span><a HREF="Viewing_Type_Hierarchies.htm" style="x-condition: PDT;">Viewing 
+ Type Hierarchies</a><span style="x-condition: PDT;"> |</span> <a HREF="Using_Smart_Goto_Source.htm">Using 
+ Smart Goto Source</a> | <a HREF="using_mark_Occurrences.htm" style="x-condition: PDT;">Using 
+ Mark Occurrences</a><span style="x-condition: PDT;"> |</span> <a HREF="Creating_PHP_Working_Sets.htm">Creating 
+ PHP Working Sets</a> | <a 
  HREF="How_to_Comment_and_Uncomment_PHP_Code.htm">Adding Comments</a> | 
  <a HREF="Commenting_PHP_DocBlocks.htm" style="font-weight: normal;">Adding 
- PHP DocBlock Comments</a> | </p>
-<p class="whs7"><a HREF="Debugging.htm">Using the Debugger</a> | <a HREF="Setting_Breakpoints.htm" 
- style="font-weight: normal;"><span style="font-weight: normal;">Setting 
+ PHP DocBlock Comments</a> | </a><span 
+ style="font-weight: normal;"><a HREF="Running_PHP_Scripts_Locally.htm" 
+ style="font-weight: normal;">Running PHP Scripts Locally</a> | <a HREF="Running_PHP_Scripts_Remotely.htm" 
+ style="font-weight: normal;">Running PHP Scripts Remotely</a> | <a HREF="Running_PHP_Web_Pages.htm" 
+ style="font-weight: normal;">Running PHP Web Pages</a> |</span> <a HREF="Debugging.htm">Using 
+ the Debugger</a> | <a HREF="Setting_Breakpoints.htm"><span style="font-weight: normal;">Setting 
  Breakpoints</a> |</span> <span style="font-weight: normal;"><a HREF="Locally_Debugging_a_PHP_Script.htm">Locally 
  Debugging a PHP Script</a> | </span><span style="font-weight: normal;"> <a HREF="Debugging_a_PHP_Web_Page.htm">Debugging 
  a PHP Web Page</a> | </span></a> | </span><span style="font-weight: normal;"><a 
@@ -169,7 +183,7 @@ if (window.writeIntopicBar)
  your PDT to be an Allowed Host</a></span><span style="font-weight: normal;"> 
  | <a HREF="Ensuring_the_Placement_of_dummy.php.htm" style="font-weight: normal;">Ensuring 
  the Placement of dummy.php</a></span> | <a href="Adding_Elements_to_a_Project_s_Include_Path.htm">Adding 
- Elements to a Project's Include Path</a> 
+ Elements to a Project's Include Path</a></a> 
  | &nbsp;</span></p>
 <p class="whs8">&nbsp;</p>
 <ul><li style="font-weight: bold;" class=p-ListBullet1><p class=ListBullet1 
@@ -210,8 +224,10 @@ if (window.writeIntopicBar)
  href="PHP.htm">PHP Preferences Page </a>&nbsp;| <a href="Appearance.htm" 
  style="font-weight: bold;">Appearance Preferences</a> |<a href="Debug.htm" style="font-weight: bold;">Debug 
  Preferences</a> | <a HREF="Installed_Debuggers.htm">Installed Debuggers</a> 
- | <a HREF="Launching.htm">Workbench Options</a> &nbsp;| 
- <a href="Editor.htm" style="font-weight: bold;">Editor Preferences</a> 
+ | <a HREF="Launching.htm">Workbench Options</a> &nbsp;|<span 
+ style="x-condition: PDT;"> </span><a HREF="Step_Filtering_Preferences.htm" 
+ style="x-condition: PDT;">Step Filtering Preferences</a><span style="x-condition: PDT;"> 
+ | </span><a href="Editor.htm" style="font-weight: bold;">Editor Preferences</a> 
  | <a HREF="File_Network.htm">File Network Preferences</a> | <a href="Code_Assist.htm">Code 
  Assist Preferences</a> | <a href="Folding.htm">Folding Preferences</a> 
  | <a href="Hovers.htm">Hovers Preferences</a> | <a href="Syntax_Coloring.htm">Syntax 
@@ -227,13 +243,20 @@ if (window.writeIntopicBar)
  href="Templates.htm" style="font-weight: bold;">Templates Preferences</a></p>
 <p class="whs3">&nbsp;</p>
 <p class="whs3"><a 
- href="Keymap.htm">Keymap</a>  |  &nbsp;</span></p>
+ href="Keymap.htm">Keymap</a> | Useful Links 
+ | <span style="x-condition: Product;">| 
+ </span>Legal<span 
+ style="x-condition: Product;"> |</span></p>
 <div placeholder id="footer" class="whs10">
- <p align="right" class="whs11"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs11"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs12"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs12">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs13">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

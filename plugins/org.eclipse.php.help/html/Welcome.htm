@@ -18,10 +18,13 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 <!--
 h2.whs1 { text-align:center; }
 img_whs2 { border:none; width:75px; height:66px; float:none; border-style:none; }
-img_whs3 { border:none; width:16px; height:16px; float:none; border-style:none; }
-div.whs4 { width:100%; }
-p.whs5 { text-align:right; x-condition:Online; }
-p.whs6 { text-align:center; x-condition:PDT; text-decoration:underline; }
+h2.whs3 { x-condition:Product; }
+p.whs4 { x-condition:Product; }
+img_whs5 { border:none; width:16px; height:16px; float:none; border-style:none; }
+div.whs6 { width:100%; }
+p.whs7 { text-align:right; x-condition:Product, Online; }
+p.whs8 { text-align:right; x-condition:Online; }
+p.whs9 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -88,33 +91,40 @@ if (window.writeIntopicBar)
 <h1>Welcome to the Online Help</h1>
 <p>&nbsp;</p>
 <h2 align="center" class="whs1"><img src="view_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"><img src="php2wsdl_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"><img src="newpfile_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"><img src="newphpprj_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"><img src="license_key_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"><img src="framework_project_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"><img src="export_phpdoc_wiz.gif" x-maintain-ratio="TRUE" width="75px" height="66px" border="0" class="img_whs2"></h2>
-<h2>&nbsp;</h2>
-<h2>Using the <span style="x-condition: PDT;">PDT</span> Help System</h2>
-<p>Browse topics in the Contents frame (<img src="contents_view.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs3">) on the left. Click on a topic to have it 
- displayed. Use the Back and Forward buttons to navigate within the history 
- of viewed topics.</p>
-<h2>Searching</h2>
-<p>To quickly locate topics on a particular subject in the documentation, 
- enter a query in the Search field. Use the Search frame (<img src="search_results_view.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs3">) 
- to display the Search view. You can narrow the scope of your search by 
- selecting only the sections you are interested in.</p>
-<h2>Synchronizing</h2>
-<p>After you run a search and find a topic you were looking for, click 
- either the Refresh / Show Current Topic button (<img src="e_synch_nav.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs3">) or Show in Table of Contents button (<img src="e_synch_toc_nav.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs3">) 
+<h2 class="whs3">&nbsp;</h2>
+<h2 class="whs3">Using the <span style="x-condition: PDT, Product;">PDT</span> 
+ Help System</h2>
+<p class="whs4">Browse topics in the Contents frame (<img src="contents_view.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs5">) 
+ on the left. Click on a topic to have it displayed. Use the Back and Forward 
+ buttons to navigate within the history of viewed topics.</p>
+<h2 class="whs3">Searching</h2>
+<p class="whs4">To quickly locate topics on a particular 
+ subject in the documentation, enter a query in the Search field. Use the 
+ Search frame (<img src="search_results_view.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs5">) to display the Search view. You can narrow the scope of your 
+ search by selecting only the sections you are interested in.</p>
+<h2 class="whs3">Synchronizing</h2>
+<p class="whs4">After you run a search and find a topic 
+ you were looking for, click the Show in Table of Contents button (<img src="e_synch_toc_nav.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs5">) 
  to match the navigation tree with the current topic. You might also find 
  it useful to synchronize after following in-topic links.</p>
-<h2>Capabilities</h2>
-<p>To show documentation about capabilities that are disabled in the application, 
- select the Show All Topics button (<img src="e_show_all.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs3">). When you choose to show all topics in the 
- table of contents, the headings for documentation about any disabled activities 
- are shown in the table of contents and also appear in search results.</p>
+<h2 class="whs3">Capabilities</h2>
+<p class="whs4">To show documentation about capabilities 
+ that are disabled in the application, select the Show All Topics button 
+ (<img src="e_show_all.gif" x-maintain-ratio="TRUE" width="16px" height="16px" border="0" class="img_whs5">). 
+ When you choose to show all topics in the table of contents, the headings 
+ for documentation about any disabled activities are shown in the table 
+ of contents and also appear in search results.</p>
 <ul></ul>
-<div placeholder id="footer" class="whs4">
- <p align="right" class="whs5"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+<div placeholder id="footer" class="whs6">
+ <p align="right" class="whs7"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs8"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs6">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs9">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

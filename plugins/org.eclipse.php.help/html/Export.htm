@@ -52,8 +52,9 @@ td.whs33 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 p.whs34 { font-weight:normal; x-condition:Online; }
 tr.whs35 { x-cell-content-align:top; height:19px; x-condition:Online; }
 div.whs36 { width:100%; }
-p.whs37 { text-align:right; x-condition:Online; }
-p.whs38 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs37 { text-align:right; x-condition:Product, Online; }
+p.whs38 { text-align:right; x-condition:Online; }
+p.whs39 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -119,11 +120,12 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<h1>Export</h1>
+<h1>Export 
+ Submenu</h1>
 <div class="whs1">
 </div>
 <p>&nbsp;</p>
-<p>The Import submenu is available under <span style="x-condition: Online;"><img src="command_link.png" x-maintain-ratio="TRUE" width="17px" height="17px" border="0" class="img_whs2"></span> 
+<p>The Export submenu is available under <span style="x-condition: Online;"><img src="command_link.png" x-maintain-ratio="TRUE" width="17px" height="17px" border="0" class="img_whs2"></span> 
  <a href="javascript:executeCommand(&quot;org.eclipse.ui.file.export&quot;)">File 
  | Export</a> from the Menu Bar.</p>
 <p>&nbsp;</p>
@@ -201,7 +203,7 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p class="whs3">Team Project Set - <span style="font-weight: normal; x-condition: PDT;">Exports 
  Imports a description of the repository and version control information 
  for a set of projects.</span></p>
-<p class="whs18">For more on Team Project Sets, see <span style="color: #ff00ff;"><font color=magenta ><a 
+<p class="whs18">For more on Team Project Sets, see <span style="color: #ff00ff;"><font color=fuchsia ><a 
  href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/tasks/tasks-cvs-project-set.htm" 
  style="x-condition: PDT;">'Sharing your workspace setup using Project 
  Sets</a></font></span><span style="color: #0000ff; x-condition: PDT;"><font color=blue >'</font></span>. 
@@ -250,11 +252,15 @@ New</a></p>
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs36">
- <p align="right" class="whs37"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs37"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs38"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs38">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs39">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

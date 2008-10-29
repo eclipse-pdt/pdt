@@ -39,8 +39,9 @@ td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-s
 img_whs21 { border:none; width:28px; height:18px; float:none; border-style:none; }
 p.whs22 { x-condition:Online; }
 div.whs23 { width:100%; }
-p.whs24 { text-align:right; x-condition:Online; }
-p.whs25 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs24 { text-align:right; x-condition:Product, Online; }
+p.whs25 { text-align:right; x-condition:Online; }
+p.whs26 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript">
 <!--
@@ -134,13 +135,14 @@ if (window.writeIntopicBar)
  | Hovers.</p>
 <p class=FIgureCaption style="x-condition: PDT;"><img src="hover_preferences_pdt.png" x-maintain-ratio="TRUE" width="376px" height="384px" border="0" class="img_whs3"></p>
 <p>&nbsp;</p>
-<p>Select which of the following elements to enable by marking the relevant 
+<p>Select which of the following actions to enable by marking the relevant 
  checkboxes:</p>
-<ul><li class=p-ListBullet1><p class=ListBullet1>Enable annotation roll-over 
- when opening a new editor</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Show affordance in hover 
- on how to make it sticky</p></li>
+<ul><li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Enable 
+ annotation roll-over when opening a new editor</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Show 
+ affordance in hover on how to make it sticky</p></li>
 </ul>
+<p class=ListBullet1>&nbsp;</p>
 <p class=ListBullet1>The Text Hover key modifier preferences table allows 
  you to modify hover key preferences for certain elements. Pressing the 
  configured key while hovering over the element in the editor will display 
@@ -150,20 +152,21 @@ For example, applying the settings displayed in the screenshot above (Source
  in the editor will take you to that element's source.</p>
 <p class=ListBullet1>You can configure key preferences for the following 
  elements:</p>
-<ul><li class=p-ListBullet2><p class=ListBullet2>Combined Hover - Tries 
- the hover in the sequence listed in the table and uses the one which fits 
- best for the selected element and the current context.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Variable Values - Zend 
- Debugger - Shows the value of the selected variable while debugging with 
- the Zend Debugger.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Variable Values - XDebug 
- - Shows the value of the selected variable while debugging with XDebug.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Problem Description - 
- Shows the description of the selected problem.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Annotation Description 
- - Shows the description of the selected annotation.</p></li>
-	<li class=p-ListBullet2><p class=ListBullet2>Source - Shows the source 
- of the selected element.</p></li>
+<ul><li style="margin-left: -20px;" class=P-ListBullet1><p class=ListBullet1>Combined 
+ Hover - Tries the hover in the sequence listed in the table and uses the 
+ one which fits best for the selected element and the current context.</p></li>
+	<li style="margin-left: -20px;" class=P-ListBullet1><p class=ListBullet1>Variable 
+ Values - Zend Debugger - Shows the value of the selected variable while 
+ debugging with the Zend Debugger.</p></li>
+	<li style="margin-left: -20px;" class=P-ListBullet1><p class=ListBullet1>Variable 
+ Values - XDebug - Shows the value of the selected variable while debugging 
+ with XDebug.</p></li>
+	<li style="margin-left: -20px;" class=P-ListBullet1><p class=ListBullet1>Problem 
+ Description - Shows the description of the selected problem.</p></li>
+	<li style="margin-left: -20px;" class=P-ListBullet1><p class=ListBullet1>Annotation 
+ Description - Shows the description of the selected annotation.</p></li>
+	<li style="margin-left: -20px;" class=P-ListBullet1><p class=ListBullet1>Source 
+ - Shows the source of the selected element.</p></li>
 </ul>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs4">
 <col class="whs5">
@@ -217,11 +220,15 @@ For example, applying the settings displayed in the screenshot above (Source
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs23">
- <p align="right" class="whs24"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs24"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs25"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs25">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs26">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

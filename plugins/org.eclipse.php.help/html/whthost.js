@@ -1026,13 +1026,8 @@ function syncInit()
 					for(var i=0;i<aIdList.length-1;i++)
 						ExpandIt2(aIdList[i],true);
 				gsCTPath=gsTP;
-				if(!gbIE55)
-					aIdList[aIdList.length-1].focus();
-				else
-				{
-					HighLightElement(aIdList[aIdList.length-1],gsABgColor,"transparent");
-					aIdList[aIdList.length-1].focus();
-				}
+				HighLightElement(aIdList[aIdList.length-1],gsABgColor,"transparent");
+				aIdList[aIdList.length-1].focus();
 			}
 			var aPaths=gaBTPs;
 			gsTP=null;

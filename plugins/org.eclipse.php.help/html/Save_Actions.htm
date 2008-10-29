@@ -17,7 +17,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 div.whs1 { float:none; }
-img_whs2 { border:none; width:392px; height:229px; float:none; }
+img_whs2 { border:none; width:392px; height:229px; float:none; border-style:none; }
 table.whs3 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs4 { width:7.093%; }
 col.whs5 { width:92.907%; }
@@ -40,8 +40,9 @@ img_whs21 { border:none; width:28px; height:18px; float:none; x-condition:Online
 td.whs22 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 p.whs23 { x-condition:Online; }
 div.whs24 { width:100%; }
-p.whs25 { text-align:right; x-condition:Online; }
-p.whs26 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs25 { text-align:right; x-condition:Product, Online; }
+p.whs26 { text-align:right; x-condition:Online; }
+p.whs27 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -74,7 +75,8 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	
+	addTocInfo("PDT Help\nReference\nPHP Preferences\nEditor Preferences\nSave Actions Preferences");
+
 	}
 
 
@@ -132,12 +134,12 @@ if (window.writeIntopicBar)
 <td width="92.907%" class="whs13">
 <p class=ListBullet1 style="font-weight: bold;">To configure Save Actions:</p>
 <ol type="1" class="whs14">
-	<li style="margin-left: -20px;" class=P><p>Mark the 'remove trailing 
+	<li style="margin-left: -20px;" class=p><p>Mark the 'remove trailing 
  whitespace' checkbox to enable the removal of whitespace after every save.</p></li>
-	<li style="margin-left: -20px;" class=P><p>Select whether All whitespace 
+	<li style="margin-left: -20px;" class=p><p>Select whether All whitespace 
  lines will be removed (by marking 'All lines'), or whether empty lines 
  will be ignored (by marking 'Ignore empty lines).</p></li>
-	<li style="margin-left: -20px;" class=P><p>Click Apply to Apply your 
+	<li style="margin-left: -20px;" class=p><p>Click Apply to Apply your 
  settings.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs6">
@@ -174,9 +176,9 @@ if (window.writeIntopicBar)
 <tr valign="top" class="whs6">
 <td rowspan="1" colspan="2" width="100%" class="whs15">
 <p class=Note>Note:</p>
-<p class=NoteText>Code Analyzer settings can also be configured for an 
- existing project by right-clicking the project in PHP Explorer view and 
- selecting Properties | Save Actions.</td>
+<p class=NoteText>Save Action settings can also be configured for an existing 
+ project by right-clicking the project in PHP Explorer view and selecting 
+ Properties | Save Actions.</td>
 </tr>
 </table>
 <p class=ListBullet2>&nbsp;</p>
@@ -205,11 +207,15 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td></tr>
 </table>
 <div placeholder id="footer" class="whs24">
- <p align="right" class="whs25"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+ <p align="right" class="whs25"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs26"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs26">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs27">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

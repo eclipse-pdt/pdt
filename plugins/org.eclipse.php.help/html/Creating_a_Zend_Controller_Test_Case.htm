@@ -1,0 +1,278 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Creating a Zend Controller Test Case</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style>
+<!--
+body { border-left-style:None; border-right-style:None; border-bottom-style:None; background-color:Transparent; border-top-style:None; }
+-->
+</style><style type="text/css">
+<!--
+h1.whs1 { color:#00709e; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+img_whs14 { border:none; width:389px; height:336px; float:none; border-style:none; }
+p.whs15 { margin-left:0px; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+ul.whs17 { list-style:square; }
+table.whs18 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs19 { x-cell-content-align:top; x-condition:Online; }
+td.whs20 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs21 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs23 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs24 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs25 { x-condition:Online; }
+div.whs26 { width:100%; }
+p.whs27 { text-align:right; x-condition:Product, Online; }
+p.whs28 { text-align:right; x-condition:Online; }
+p.whs29 { text-align:center; x-condition:PDT; text-decoration:underline; }
+-->
+</style><script type="text/javascript" language="JavaScript">
+<!--
+if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4))
+{
+  var strNSS = "<style type='text/css'>";
+  strNSS += "p.whs15 {margin-left:1pt; }";
+  strNSS +="</style>";
+  document.write(strNSS);
+}
+//-->
+</script>
+<script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1 class="whs1">Creating a Zend Controller Test Case</h1>
+<p>A Zend Controller Test Case is a type of PHPUnit 
+ Test Case used for testing Zend Framework-based Web applications.</p>
+<p>The Zend Controller Test Case tests Controller 'Action' methods. These 
+ are actions that are received from the server and so require tests which 
+ can simulate the server environment, including requests from the user 
+ and responses from the server.</p>
+<p>See <a href="http://framework.zend.com/manual/en/zend.test.phpunit.html">http://framework.zend.com/manual/en/zend.test.phpunit.html</a> 
+ for more information.</p>
+<p>The Zend Controller Test Case takes server settings defined in your 
+ bootstrap.php file to simulate your server environment.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To create a new Zend Controller Test Case:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>In PHP Explorer view, right-click 
+ the Controller file containing the classes you would like to test and 
+ select New | Zend Framework Item | Zend Controller Test Case.<span style="margin-left: 40px;"><br>
+	The New Zend Controller Test Case dialog will open, with relevant information 
+ already entered into the various fields.</span><br>&nbsp;</p></li>
+</ol>
+<p class=picture><img src="zend_controller_new_test.png" x-maintain-ratio="TRUE" width="389px" height="336px" border="0" class="img_whs14"></p>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p class="whs15">The 
+ following information will be entered by default:</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1><span 
+ style="font-weight: bold;"><B>Target folder</B></span>: A new 'test' directory 
+ will be created with the same directory structure as your Controller file.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1 
+ style="margin-left: 0px;"><span style="font-weight: bold;"><B>SuperClass</B></span>: 
+ The default SuperClass is Zend_Test_PHPUnit_ControllerTestCase. If you 
+ would like to use a different SuperClass, the SuperClass must be one that 
+ extends Zend_Test_PHPUnit_ControllerTestCase.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1 
+ style="margin-left: 0px;"><span style="font-weight: bold;"><B>Controller 
+ to test</B></span>: The Controller class you selected.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1 
+ style="margin-left: 0px; font-weight: bold;">Test Class Name: &nbsp;<span 
+ style="font-weight: normal;">The Test Class Name will be in the format 
+ &lt;ControllerFileName&gt;Test.</span></p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1 
+ style="margin-left: 0px; font-weight: bold;">Test File Name: <span style="font-weight: normal;">The 
+ Test File Name will be in the format &lt;ControllerFileName&gt;Test.php.</span></p></li>
+</ol>
+<ol start="3" type="1" class="whs13">
+	<li style="margin-left: -20px; list-style: decimal;" type=1 class=p><p class="whs15">You can edit these fields if necessary.</p></li>
+	<li style="margin-left: -20px; list-style: decimal;" type=1 class=p><p class="whs15">If PHPUnit is not on the include path of your 
+ project, &nbsp;a warning will appear. To add PHPUnit 
+ to the include path, click the underlined &quot;Click here&quot; link 
+ at the bottom of the dialog screen. This will enable PHPUnit Code Assist 
+ options in the PHPUnit Test.<br>
+	Once it has been clicked, the link and the warning message will disappear.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Finish to create your 
+ test case.</p></li>
+</ol></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>&nbsp;A new test case file will be created. This will 
+ contain:</p>
+<ul type="square" class="whs17">
+	<li style="margin-left: -20px;" class=p><p>Skeleton test cases for 
+ all the 'Action' methods in the Controller file (i.e. all methods which 
+ have an 'Action' suffix.)</p></li>
+	<li style="margin-left: -20px;" class=p><p>A 'bootstrap' function which 
+ takes the settings from your bootstrap.php file in order to simulate your 
+ server connection. This will be used when the test case is run in order 
+ to simulate a user response from the server.</p></li>
+	<li style="margin-left: -20px;" class=p><p>A function which dispatches 
+ the URL to test in the format &lt;controller_name&gt;/&lt;action_name&gt;).<br>
+	e.g. '$this-&gt;dispatch(foo/bar);</p></li>
+</ul></td>
+</tr>
+</table>
+<h3>Running your Test Case</h3>
+<p>The created test case will initially consist of a skeleton test framework 
+ which you must edit in order to get meaningful results.</p>
+<p>Before you can run your test case you must:</p>
+<ul><li class=p-ListBullet1><p class=ListBullet1>Edit the various test 
+ case functions with the required inputs and expected responses.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>Ensure your bootstrap.php 
+ file is configured with your server settings.</p></li>
+</ul>
+<p class=Note>Note</p>
+<p class=NoteText>See <a href="http://framework.zend.com/manual/en/zend.test.phpunit.html">http://framework.zend.com/manual/en/zend.test.phpunit.html</a> 
+ for more information on setting up your test case and to see an example.</p>
+<p class=ListBullet1>Once you have edited your test case functions, you 
+ can run the test following the instructions in Running 
+ a PHPUnit Test Case.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs18">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs19">
+<td colspan="1" rowspan="1" width="7.093%" class="whs20">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs21">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs19">
+<td width="7.093%" class="whs22">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs23"></td>
+<td width="92.907%" class="whs24">
+<p class="whs25"><span style="font-weight: bold;"><B>Related 
+ Links:</B></span><a 
+ HREF="Creating_a_Zend_Framework_Action_Helper.htm"><br>
+Creating a Zend Action Helper</a></p>
+<p class="whs25">PHPUnit Testing</p>
+<p class="whs25">Running 
+ a PHPUnit Test Case</p>
+<p class="whs25">Zend Framework Integration</p>
+<p class="whs25">Integrating 
+ with Zend Framework</p>
+<p class="whs25">Creating 
+ Zend Framework Elements</p>
+<p class="whs25">Creating 
+ a Zend Controller File</td></tr>
+<tr valign="top" class="whs19">
+<td colspan="1" rowspan="1" width="7.093%" class="whs22">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs24">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs26">
+ <p align="right" class="whs27"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs28"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
+&quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs29">PHP Development 
+ Tool</p>
+ </div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

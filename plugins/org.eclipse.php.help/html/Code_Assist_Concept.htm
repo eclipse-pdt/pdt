@@ -48,14 +48,23 @@ td.whs29 { width:92.907%; padding-right:10px; padding-left:10px; border-right-st
 img_whs30 { border:none; width:350px; height:89px; float:none; border-style:none; }
 img_whs31 { border:none; width:214px; height:46px; float:none; border-style:none; }
 td.whs32 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-table.whs33 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-td.whs34 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs35 { font-size:6pt; }
-img_whs36 { border:none; width:28px; height:18px; float:none; border-style:none; }
-p.whs37 { x-condition:Online; }
-div.whs38 { width:100%; }
-p.whs39 { text-align:right; x-condition:Online; }
-p.whs40 { text-align:center; x-condition:PDT; text-decoration:underline; }
+h3.whs33 { x-condition:PDT; }
+p.whs34 { x-condition:PDT; }
+table.whs35 { x-cell-content-align:top; width:100%; border-spacing:0px; x-condition:PDT; }
+td.whs36 { width:7.093%; padding-right:10px; padding-left:10px; }
+td.whs37 { width:92.907%; padding-right:10px; padding-left:10px; }
+img_whs38 { border:none; width:28px; height:41px; float:none; border-style:none; }
+img_whs39 { border:none; width:480px; height:335px; float:none; }
+td.whs40 { width:100%; padding-right:10px; padding-left:10px; }
+table.whs41 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs42 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+p.whs43 { font-size:6pt; }
+img_whs44 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs45 { x-condition:Online; }
+div.whs46 { width:100%; }
+p.whs47 { text-align:right; x-condition:Product, Online; }
+p.whs48 { text-align:right; x-condition:Online; }
+p.whs49 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -124,9 +133,9 @@ if (window.writeIntopicBar)
 <h1>Code Assist</h1>
 <div class="whs1">
 </div>
-<p>&nbsp;</p>
-<p>The Code Assist feature enables the selection and insertion of existing 
- code elements to complete partially entered code.</p>
+<p>The Code Assist feature 
+ enables the selection and insertion of existing code elements to complete 
+ partially entered code.</p>
 <p>A list of possible code elements appears in relevant locations within 
  your files according to the context of your cursor, which you can then 
  select to be automatically entered into your code.</p>
@@ -182,7 +191,15 @@ if (window.writeIntopicBar)
  Variables, Constants, Keywords, Interfaces, attributes, values, nested 
  functions, names, syntax and include calls, as well as all user defined 
  Classes, Functions and Constants.</p>
-<h3>Using elements within the same scope</h3>
+<div class="whs1">
+ <p class=Note>Note:</p>
+ <p class=NoteText>Code Assist 
+ will also be available for JavaScript elements if JavaScript support was 
+ enabled for the project. See <a href="Enabling_JavaScript_Support_in_PHP_Projects.htm">Enabling 
+ JavaScript Support in PHP Projects</a> for more information. </p>
+</div>
+<h3>Using elements within the same 
+ scope</h3>
 <p>Elements within the same active project, file or function will be available 
  for use with Code Assist.</p>
 <p>&nbsp;</p>
@@ -239,48 +256,84 @@ if (window.writeIntopicBar)
 <p class="whs22">&nbsp;</td>
 </tr>
 </table>
-<h3><a name=Configuring_Code_Assist></a>Configuring Code Assist</h3>
-<p>To configure code assist options, go to the <a href="Code_Assist.htm">Code 
- Assist Preferences</a> page, accessed from Window Menu | Preferences | 
- PHP | Editor | Code Assist.</p>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs33">
+<h3 class="whs33">Code Assist for Magic Members</h3>
+<p class="whs34">PDT supports code assist options for 
+ 'magic members'. These are properties and methods which were declared 
+ using the @property or @method tags within <a HREF="phpDoc_Comments.htm" 
+ style="x-condition: PDT;">PHP DocBlock comments</a> rather than in the 
+ php script itself.</p>
+<p class="whs34">See <a href="http://manual.phpdoc.org/HTMLSmartyConverter/PHP/phpDocumentor/tutorial_tags.property.pkg.html" 
+ target=_blank>http://manual.phpdoc.org/HTMLSmartyConverter/PHP/phpDocumentor/tutorial_tags.property.pkg.html</a> 
+ for more information on magic members.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs35">
 <col class="whs19">
 <col class="whs20">
 
 <tr valign="top" class="whs5">
-<td colspan="1" rowspan="1" width="7.093%" class="whs34">
-<p class="whs35">&nbsp;</td>
+<td colspan="1" rowspan="1" width="7.093%" class="whs36">
+<p class="whs22">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs37">
+<p class="whs25">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs36">
+<p class="whs22"><img src="txt_file_icon.png" x-maintain-ratio="TRUE" alt="Usage Example" width="28px" height="41px" border="0" class="img_whs38"></td>
+<td width="92.907%" class="whs37">
+<p class="whs25">Example:</p>
+<p class=picture style="text-align: left;" align=left><img src="magic_members_example.png" x-maintain-ratio="TRUE" width="480px" height="335px" border="0" class="img_whs39"></td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs40">
+<p>&nbsp;</td>
+</tr>
+</table>
+<h3><a name=Configuring_Code_Assist></a>Configuring Code Assist</h3>
+<p>To configure PHP Code Assist options, go to the <a href="Code_Assist.htm">Code 
+ Assist Preferences</a> page, accessible from Window | Preferences | PHP 
+ | Editor | Code Assist.</p>
+<p>To configure JavaScript Code Assist options, go to the JavaScript Content 
+ Assist Preferences page, accessible from Window | Preferences | JavaScript 
+ | Editor | Content Assist.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs41">
+<col class="whs19">
+<col class="whs20">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs42">
+<p class="whs43">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs24">
 <p>&nbsp;</td></tr>
 <tr valign="top" class="whs5">
 <td width="7.093%" class="whs28">
-<p class="whs35"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs36"></td>
+<p class="whs43"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs44"></td>
 <td width="92.907%" class="whs29">
 <p class="whs25">Related Links:</p>
-<p class="whs37"><a href="Working_with_Code_Assist.htm"><span 
+<p class="whs45"><a href="Working_with_Code_Assist.htm"><span 
  style="x-condition: Online;">Working with Code Assist</span></a></p>
-<p class="whs37"><a href="Using_Code_Assist.htm"><span style="x-condition: Online;">Using 
+<p class="whs45"><a href="Using_Code_Assist.htm"><span style="x-condition: Online;">Using 
  Code Assist</span></a></p>
-<p class="whs37"><a href="Code_Assist.htm"><span style="x-condition: Online;">Code 
+<p class="whs45"><a href="Code_Assist.htm"><span style="x-condition: Online;">Code 
  Assist Preferences</span></a></p>
-<p class="whs37"><a href="Hover_Support.htm"><span style="x-condition: Online;">Hover 
+<p class="whs45"><a href="Hover_Support.htm"><span style="x-condition: Online;">Hover 
  Support</span></a></p>
-<p class="whs37"><a href="Commenting_PHP_DocBlocks.htm"><span 
+<p class="whs45"><a href="Commenting_PHP_DocBlocks.htm"><span 
  style="x-condition: Online;">Commenting PHP DocBlocks</span></a></p>
-<p class="whs37"><a href="Using_Templates.htm" style="x-condition: Online;">Using 
+<p class="whs45"><a href="Using_Templates.htm" style="x-condition: Online;">Using 
  Templates</a></td></tr>
 <tr valign="top" class="whs5">
 <td colspan="1" rowspan="1" width="7.093%" class="whs28">
-<p class="whs35">&nbsp;</td>
+<p class="whs43">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs29">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs38">
- <p align="right" class="whs39"><span><span 
- style="background-color: #ffffff;"><a href="javascript:crlf=&quot;
+<div placeholder id="footer" class="whs46">
+ <p align="right" class="whs47"><span 
+ style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
+ the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
+ Documentation</a> for the most up-to-date information.</p>
+ <p align="right" class="whs48"><span style="background-color: #ffffff;"><a 
+ href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
- style="x-condition: Online;">Submit Documentation Feedback</a></span></span></p>
- <p align="center" class="whs40">PHP Development 
+ style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
+ <p align="center" class="whs49">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
