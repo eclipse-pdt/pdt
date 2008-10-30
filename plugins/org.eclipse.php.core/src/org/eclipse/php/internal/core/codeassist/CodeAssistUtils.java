@@ -1038,6 +1038,19 @@ public class CodeAssistUtils {
 				if (currentFile != null && currentFile.equals(o1.getOpenable())) {
 					return -1;
 				}
+				if (o1 instanceof IMember) {
+					IType t1 = ((IMember)o1).getDeclaringType();
+//					IType t2 = ((IMember)o2).getDeclaringType();
+					try {
+						if ((t1.getFlags() & Modifiers.AccInterface) != 0) {
+							return -1;
+						}
+					} catch (Exception e) {
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
+					}
+				}
 				return 1;
 			}
 			return r;
