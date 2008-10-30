@@ -1458,7 +1458,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				proposal.setIsConstructor(elementName.equals(CONSTRUCTOR) || method.isConstructor());
 				proposal.setFlags(method.getFlags());
 			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
+				if (DEBUG) {
+					e.printStackTrace();
+				}
 			}
 			
 			int replaceStart = this.startPosition - this.offset;
