@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.codeassist;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.ast.ASTNode;
@@ -24,6 +22,7 @@ import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -394,7 +393,20 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							}
 
 							// What can it be? Only class variables:
-							List<IModelElement> fields = new LinkedList<IModelElement>();
+							Set<IModelElement> fields = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
+								public int compare(IModelElement o1, IModelElement o2) {
+									try {
+										ISourceRange r1 = ((SourceRefElement)o1).getSourceRange();
+										ISourceRange r2 = ((SourceRefElement)o2).getSourceRange();
+										return (int) Math.signum(r1.getOffset() - r2.getOffset());
+									} catch (ModelException e) {
+										if (DLTKCore.DEBUG_SELECTION) {
+											e.printStackTrace();
+										}
+									}
+									return 0;
+								}
+							});
 							for (IType t : types) {
 								fields.addAll(Arrays.asList(CodeAssistUtils.getClassFields(t, elementName, true, false)));
 							}

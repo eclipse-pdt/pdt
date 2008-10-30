@@ -204,10 +204,9 @@ public class CodeAssistUtils {
 			
 			for (IType searchType : searchTypes) {
 				IField[] typeFields = searchType.getFields();
+				
 				for (IField typeField : typeFields) {
-
 					String elementName = typeField.getElementName();
-
 					int flags = typeField.getFlags();
 					if ((flags & Modifiers.AccConstant) != 0) {
 						if (exactName) {
