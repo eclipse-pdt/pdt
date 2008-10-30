@@ -167,17 +167,6 @@ public class PHPModelUtils {
 	 * @return
 	 */
 	public static IModelElement[] filterElements(ISourceModule sourceModule, IModelElement[] elements) {
-		return filterElements(sourceModule, elements, true);
-	}
-	
-	/**
-	 * Leaves most 'suitable' for current source module elements
-	 * @param sourceModule
-	 * @param elements
-	 * @param fileNetworkFilter
-	 * @return
-	 */
-	public static IModelElement[] filterElements(ISourceModule sourceModule, IModelElement[] elements, boolean fileNetworkFilter) {
 		if (elements == null) {
 			return null;
 		}
@@ -186,7 +175,7 @@ public class PHPModelUtils {
 		// but declared in different files (determine filtering purpose):
 		int elementType = 0;
 		String elementName = null;
-		fileNetworkFilter = true;
+		boolean fileNetworkFilter = true;
 		for (IModelElement element : elements) {
 			if (elementName == null) {
 				elementType = element.getElementType();

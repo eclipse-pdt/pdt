@@ -97,16 +97,6 @@ public class PHPTypeInferenceUtils {
 	 * @return model elements
 	 */
 	public static IModelElement[] getModelElements(IEvaluatedType type, ISourceModuleContext context) {
-		return getModelElements(type, context, true);
-	}
-
-	/**
-	 * Converts IEvaluatedType to IModelElement, if found
-	 * @param evaluatedType Evaluated type
-	 * @param filter Whether to filter result using file network dependencies.
-	 * @return model elements
-	 */
-	public static IModelElement[] getModelElements(IEvaluatedType type, ISourceModuleContext context, boolean filter) {
 		IModelElement[] elements = null;
 		ISourceModule sourceModule = context.getSourceModule();
 
@@ -122,13 +112,13 @@ public class PHPTypeInferenceUtils {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType)type).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
-				IModelElement[] tmpArray = getModelElements(possibleType, context, filter);
+				IModelElement[] tmpArray = getModelElements(possibleType, context);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}
 			}
 			elements = tmpList.toArray(new IModelElement[tmpList.size()]);
 		}
-		return PHPModelUtils.filterElements(sourceModule, elements, filter);
+		return PHPModelUtils.filterElements(sourceModule, elements);
 	}
 }
