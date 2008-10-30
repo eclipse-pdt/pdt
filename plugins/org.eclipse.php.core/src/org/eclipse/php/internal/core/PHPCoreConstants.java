@@ -238,13 +238,4 @@ public interface PHPCoreConstants {
 	 */
 	public final static String CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES = "contentAssistShowVariablesFromOtherFiles"; //$NON-NLS-1$
 	
-	/**
-	 * A named preference that controls whether results of code selection engine will be filtered by File Network
-	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>false<code> code selection engine will filter elements by File Network. If
-	 * <code>true</code> all members are included.
-	 * </p>
-	 */
-	public final static String CODESELECT_FILE_NETWORK_FILTER = "codeSelectFileNetworkFilter"; //$NON-NLS-1$
-	
 }

@@ -161,22 +161,89 @@ public class PHPModelUtils {
 	}
 	
 	/**
+	 * Leaves most 'suitable' for current source module elements
+	 * @param sourceModule
+	 * @param elements
+	 * @return
+	 */
+	public static IModelElement[] filterElements(ISourceModule sourceModule, IModelElement[] elements) {
+		return filterElements(sourceModule, elements, true);
+	}
+	
+	/**
+	 * Leaves most 'suitable' for current source module elements
+	 * @param sourceModule
+	 * @param elements
+	 * @param fileNetworkFilter
+	 * @return
+	 */
+	public static IModelElement[] filterElements(ISourceModule sourceModule, IModelElement[] elements, boolean fileNetworkFilter) {
+		if (elements == null) {
+			return null;
+		}
+		
+		// Determine whether givent elements represent the same type and name,
+		// but declared in different files (determine filtering purpose):
+		int elementType = 0;
+		String elementName = null;
+		fileNetworkFilter = true;
+		for (IModelElement element : elements) {
+			if (elementName == null) {
+				elementType = element.getElementType();
+				elementName = element.getElementName();
+				continue;
+			}
+			if (!elementName.equals(element.getElementName()) || elementType != element.getElementType()) {
+				fileNetworkFilter = false;
+				break;
+			}
+		}
+		
+		if (fileNetworkFilter) {
+			return fileNetworkFilter(sourceModule, elements);
+		}
+		// prefer elements from current module:
+		List<IModelElement> fromThisModule = new LinkedList<IModelElement>();
+		for (IModelElement element : elements) {
+			if (((ModelElement) element).getSourceModule().equals(sourceModule)) {
+				fromThisModule.add(element);
+			}
+		}
+		if (fromThisModule.size() > 0) {
+			return fromThisModule.toArray(new IModelElement[fromThisModule.size()]);
+		}
+		return elements;
+	}
+	
+	/**
 	 * Filters model elements using file network.
 	 * @param sourceModule
 	 * @param elements
 	 * @return
 	 */
-	public static IModelElement[] fileNetworkFilter(ISourceModule sourceModule, IModelElement[] elements) {
+	private static IModelElement[] fileNetworkFilter(ISourceModule sourceModule, IModelElement[] elements) {
 		
 		if (elements != null && elements.length > 0) {
-			ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 			List<IModelElement> filteredElements = new LinkedList<IModelElement>();
+			
+			// If some of elements belong to current file return just it:
 			for (IModelElement element : elements) {
-				if (LanguageModelInitializer.isLanguageModelElement(element) || referenceTree.find(((ModelElement)element).getSourceModule())) {
+				if (sourceModule.equals(element.getOpenable())) {
 					filteredElements.add(element);
 				}
 			}
-			elements = filteredElements.toArray(new IModelElement[filteredElements.size()]);
+			if (filteredElements.size() == 0) {
+				// Filter by includes network
+				ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
+				for (IModelElement element : elements) {
+					if (LanguageModelInitializer.isLanguageModelElement(element) || referenceTree.find(((ModelElement)element).getSourceModule())) {
+						filteredElements.add(element);
+					}
+				}
+			}
+			if (filteredElements.size() > 0) {
+				elements = filteredElements.toArray(new IModelElement[filteredElements.size()]);
+			}
 		}
 		return elements;
 	}

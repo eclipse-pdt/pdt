@@ -25,7 +25,6 @@ import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.util.WeakHashSet;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -107,8 +106,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern catchPattern = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	protected HashSet<String> completedNames = new HashSet<String>();
-	protected WeakHashSet intresting = new WeakHashSet();
 	protected boolean isPHP5;
 	protected ISourceModule sourceModule;
 	protected boolean explicit;
@@ -1424,15 +1421,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			relevance = 1;
 		}
 		
-		this.intresting.add(method);
 		String elementName = method.getElementName();
-		if (completedNames.contains(elementName)) {
-			return;
-		}
-		completedNames.add(elementName);
-		if (elementName.indexOf('.') != -1) {
-			elementName = elementName.substring(elementName.indexOf('.') + 1);
-		}
 		char[] name = elementName.toCharArray();
 
 		// accept result
@@ -1493,16 +1482,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			relevance = 1;
 		}
 		
-		this.intresting.add(type);
 		String elementName = type.getElementName();
-		if (completedNames.contains(elementName)) {
-			return;
-		}
-		completedNames.add(elementName);
 		char[] name = elementName.toCharArray();
-		if (name.length == 0) {
-			return;
-		}
 
 		// accept result
 		noProposal = false;
@@ -1566,16 +1547,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			relevance = 1;
 		}
 		
-		this.intresting.add(field);
 		String elementName = field.getElementName();
-		if (completedNames.contains(elementName)) {
-			return;
-		}
-		completedNames.add(elementName);
 		char[] name = elementName.toCharArray();
-		if (name.length == 0) {
-			return;
-		}
 
 		// accept result
 		noProposal = false;

@@ -113,6 +113,7 @@ public class CodeAssistUtils {
 	 */
 	public static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
+		final Set<String> methodNames = new HashSet<String>();
 		try {
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
@@ -120,13 +121,22 @@ public class CodeAssistUtils {
 				if (exactName) {
 					if (methodName.equalsIgnoreCase(prefix)) {
 						methods.add(typeMethod);
+						methodNames.add(methodName.toLowerCase());
 					}
 				} else if (startsWithIgnoreCase(methodName, prefix)) {
 					methods.add(typeMethod);
 				}
 			}
 			
-			methods.addAll(Arrays.asList(getSuperClassMethods(type, prefix, exactName)));
+			IMethod[] superClassMethods = getSuperClassMethods(type, prefix, exactName);
+			// Filter overriden methods:
+			for (IMethod superClassMethod : superClassMethods) {
+				String methodName = superClassMethod.getElementName().toLowerCase();
+				if (!methodNames.contains(methodName)) {
+					methods.add(superClassMethod);
+					methodNames.add(methodName);
+				}
+			}
 			
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG_COMPLETION) {
@@ -263,7 +273,7 @@ public class CodeAssistUtils {
 				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(instanceContext, variableName);
 				IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 				
-				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
 				if (modelElements != null) {
 					return modelElementsToTypes(modelElements);
 				}
@@ -271,7 +281,7 @@ public class CodeAssistUtils {
 				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, variableName);
 				evaluatedType = typeInferencer.evaluateType(goal);
 
-				modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+				modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
 				if (modelElements != null) {
 					return modelElementsToTypes(modelElements);
 				}
@@ -298,7 +308,7 @@ public class CodeAssistUtils {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
 
-			IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, !determineObjectFromOtherFile);
+			IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context);
 			if (modelElements != null) {
 				return modelElementsToTypes(modelElements);
 			}
@@ -369,7 +379,7 @@ public class CodeAssistUtils {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 	
-			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
 			if (modelElements != null) {
 				return modelElementsToTypes(modelElements);
 			}
@@ -377,7 +387,7 @@ public class CodeAssistUtils {
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(instanceContext, method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
-		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, !determineObjectFromOtherFile);
+		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
 		if (modelElements != null) {
 			return modelElementsToTypes(modelElements);
 		}
@@ -630,7 +640,7 @@ public class CodeAssistUtils {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 				BasicContext context = new BasicContext(sourceModule, moduleDeclaration);
 				IEvaluatedType type = new PHPClassType(className);
-				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context, !determineObjectFromOtherFile));
+				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context));
 			}
 		}
 		//check for $GLOBALS['myVar'] scenario
@@ -912,23 +922,26 @@ public class CodeAssistUtils {
 			// search variables using mixin model:
 			PHPMixinModel mixinModel = scriptProject == null ? PHPMixinModel.getWorkspaceInstance() : PHPMixinModel.getInstance(scriptProject);
 			IModelElement[] variables = mixinModel.getVariable(prefix + WILDCARD, null, null, scope);
-			return variables == null ? EMPTY : variables;
+			return variables == null ? EMPTY : filterOtherFilesElements(sourceModule, variables);
 		}
 		
-		return getGlobalElements(scope, prefix, exactName, elementType, caseSensitive);
+		return getGlobalElements(sourceModule, scope, prefix, exactName, elementType, currentFileOnly, caseSensitive);
 	}
 	
 	/**
 	 * This method searches in the project scope for all elements of specified type that match the given prefix.
 	 * If the project doesn't exist, workspace scope is used.
 	 * 
+	 * @param sourceModule Current file
 	 * @param scope Search scope
 	 * @param prefix Element name or prefix
 	 * @param exactName Whether the prefix is an exact name of the element
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
+	 * @param currentFileOnly Whether to look in current file only
+	 * @param caseSensitive Whether the search is case sensitive
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(IDLTKSearchScope scope, String prefix, boolean exactName, int elementType, boolean caseSensitive) {
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, IDLTKSearchScope scope, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
 		
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		
@@ -951,7 +964,7 @@ public class CodeAssistUtils {
 		SearchEngine searchEngine = new SearchEngine();
 		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
-		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
+		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -978,12 +991,57 @@ public class CodeAssistUtils {
 				e.printStackTrace();
 			}
 		}
-		return elements.toArray(new IModelElement[elements.size()]);
+		
+		IModelElement[] result = elements.toArray(new IModelElement[elements.size()]);
+		return currentFileOnly ? result : PHPModelUtils.filterElements(sourceModule, result);
 	}
 	
+	/**
+	 * Filters model elements leaving only elements with same names from current file
+	 * @param currentFile
+	 * @param elements
+	 * @return
+	 */
+	private static IModelElement[] filterOtherFilesElements(ISourceModule currentFile, IModelElement[] modelElements) {
+		List<IModelElement> elements = new ArrayList<IModelElement>(modelElements.length);
+		String lastName = null;
+		for (IModelElement element : modelElements) {
+			if (element.getElementName().equals(lastName)) {
+				continue;
+			}
+			lastName = null;
+			if (currentFile.equals(element.getOpenable())) {
+				lastName = element.getElementName();
+			}
+			elements.add(element);
+		}
+		return elements.toArray(new IModelElement[elements.size()]);
+	}
+
+	/**
+	 * This class not only used for sorting elements alphabetically, but it also gives
+	 * priority to the elements declared in current file. 
+	 */
 	static class AlphabeticComparator implements Comparator<IModelElement> {
+		
+		private ISourceModule currentFile;
+		
+		public AlphabeticComparator() {
+		}
+		
+		public AlphabeticComparator(ISourceModule currentFile) {
+			this.currentFile = currentFile;
+		}
+		
 		public int compare(IModelElement o1, IModelElement o2) {
-			return o1.getElementName().compareTo(o2.getElementName());
+			int r = o1.getElementName().compareTo(o2.getElementName());
+			if (r == 0) {
+				if (currentFile != null && currentFile.equals(o1.getOpenable())) {
+					return -1;
+				}
+				return 1;
+			}
+			return r;
 		}
 	}
 }

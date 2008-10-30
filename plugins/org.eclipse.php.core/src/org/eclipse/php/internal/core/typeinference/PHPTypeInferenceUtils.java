@@ -108,12 +108,13 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IModelElement[] getModelElements(IEvaluatedType type, ISourceModuleContext context, boolean filter) {
 		IModelElement[] elements = null;
+		ISourceModule sourceModule = context.getSourceModule();
 
 		if (type instanceof ModelClassType) {
 			return new IModelElement[] { ((ModelClassType)type).getTypeDeclaration() };
 		}
 		if (type instanceof PHPClassType) {
-			IScriptProject scriptProject = context.getSourceModule().getScriptProject();
+			IScriptProject scriptProject = sourceModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 			elements = PHPMixinModel.getInstance(scriptProject).getClass(((PHPClassType)type).getTypeName(), scope);
 		}
@@ -121,19 +122,13 @@ public class PHPTypeInferenceUtils {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType)type).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
-				IModelElement[] tmpArray = getModelElements(possibleType, context, false);
+				IModelElement[] tmpArray = getModelElements(possibleType, context, filter);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}
 			}
 			elements = tmpList.toArray(new IModelElement[tmpList.size()]);
 		}
-
-		// Filter model elements using file network:
-		if (filter) {
-			elements = PHPModelUtils.fileNetworkFilter(context.getSourceModule(), elements);
-		}
-
-		return elements;
+		return PHPModelUtils.filterElements(sourceModule, elements, filter);
 	}
 }
