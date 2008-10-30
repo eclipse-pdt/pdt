@@ -90,3 +90,4 @@ Bundle-ClassPath: Resources/parserTools/javacup/java-cup-10k.jar,
  .
 Export-Package: org.eclipse.php.internal.core.language
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Localization: plugin

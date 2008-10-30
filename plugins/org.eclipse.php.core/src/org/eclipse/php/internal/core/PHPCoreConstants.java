@@ -237,5 +237,10 @@ public interface PHPCoreConstants {
 	 * </p>
 	 */
 	public final static String CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES = "contentAssistShowVariablesFromOtherFiles"; //$NON-NLS-1$
-	
+
+	/**
+	 * PHP Task Marker
+	 */
+	public static final String PHP_MARKER_TYPE = "org.eclipse.php.core.phpTaskMarker"; //$NON-NLS-1$
+
 }
