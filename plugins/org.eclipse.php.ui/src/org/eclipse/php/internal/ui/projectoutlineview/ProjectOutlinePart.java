@@ -1,17 +1,31 @@
+/*******************************************************************************
+ * Copyright (c) 2000, 2008 Zend Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.ui.projectoutlineview;
 
-import org.eclipse.core.resources.*;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.dltk.ui.viewsupport.ProblemTreeViewer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -23,7 +37,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * Project Outline for the php perspective, it is based on the {@link ScriptExplorerPart} 
  * Registration to the page part (editor) is done to change the project context  
  * @author Roy, 2008
- * @version 1.1 (by NirC, 2008)
+ * @version 2.0 (by NirC, 2008)
  */
 public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListener {
 
@@ -39,23 +53,9 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 	}
 
-	/**
-	 * This viewer ensures that non-leaves in the hierarchical layout are not
-	 * removed by any filters.
-	 * 
-	 * 
-	 */
-	/* FIXME : to be remove as DLTK integration build is released (ScriptExplorerPart changes) - NirC
-	protected ProblemTreeViewer createViewer(Composite composite) {
-		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI
-				| SWT.H_SCROLL | SWT.V_SCROLL);
-	}
-	*/
-
 	@Override
 	public String getTitleToolTip() {
-		// TODO Auto-generated method stub
-		return "Project Outline View";
+		return PHPUIMessages.getString("PHPProjectOutline.title.tooltip");
 	}
 
 	@Override
@@ -71,18 +71,42 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-		
+
 		// register this view to the page 
 		getSite().getPage().addPartListener(this);
 
 		selectProject(null);
 	}
 
-	private void setInputAsEditor(IEditorPart editor) {
+	@Override
+	protected void setComparator() {
+		getTreeViewer().setComparator(new ModelElementSorter()/*new ViewerSorter(){
+					@Override
+					public int compare(Viewer viewer, Object object1, Object object2) {
+						if (object1 instanceof IModelElement && object2 instanceof IModelElement) {
+							IModelElement left = (IModelElement) object1;
+							IModelElement right = (IModelElement) object2;
+							int result = left.getElementName().compareToIgnoreCase(right.getElementName());
+							if (result != 0)
+								return result;
+							return (left.getPath() + left.getElementName()).compareToIgnoreCase(right.getPath() + right.getElementName());
+						}
+						return super.compare(viewer, object1, object2);
+					}
+					
+				}*/);
+
+	}
+
+	private void setInputAsEditor(IScriptProject scriptProject) {
 		final TreeViewer treeViewer = getTreeViewer();
-		if (null == treeViewer.getInput() || !treeViewer.getInput().equals(getInput(editor))) {
-			treeViewer.setInput(getInput(editor));
+		if (null == treeViewer.getInput() || !treeViewer.getInput().equals(scriptProject)) {
+			treeViewer.setInput(scriptProject);
 		}
+	}
+
+	private void setInputAsEditor(IEditorPart editor) {
+		setInputAsEditor((IScriptProject) getInput(editor));
 	}
 
 	/* (non-Javadoc)
@@ -97,7 +121,7 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	}
 
 	private Object getInput(IEditorPart editor) {
-		
+
 		final IEditorInput editorInput = editor.getEditorInput();
 		final IFile file = (IFile) editorInput.getAdapter(IFile.class);
 		if (file != null) {
@@ -110,7 +134,6 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	public void partActivated(IWorkbenchPart part) {
 		selectProject(part);
 
-		
 	}
 
 	private void selectProject(IWorkbenchPart part) {
@@ -118,15 +141,13 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 
 		if (editor != null) {
 			setInputAsEditor(editor);
-		}else if (part instanceof ScriptExplorerPart) {
+		} else if (part instanceof ScriptExplorerPart) {
 			setInputAsExplorerProject(part);
 			return;
 		}
 	}
 
 	private void setInputAsExplorerProject(IWorkbenchPart part) {
-
-		
 		final TreeSelection input = (TreeSelection) ((ScriptExplorerPart) part).getTreeViewer().getSelection();
 		IScriptProject scriptProject = null;
 		//getting selected project (from ScriptExplorerPart selection.
@@ -141,12 +162,8 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 				scriptProject = DLTKCore.create(projects[0]);
 			}
 		}
-		
-		final TreeViewer treeViewer = getTreeViewer();
-		if (treeViewer.getInput() == null || !treeViewer.getInput().equals(scriptProject)) {
-			treeViewer.setInput(scriptProject);
-		}
 
+		setInputAsEditor(scriptProject);
 		return;
 
 	}
@@ -161,19 +178,28 @@ public class ProjectOutlinePart extends ScriptExplorerPart implements IPartListe
 	}
 
 	public void partOpened(IWorkbenchPart part) {
-		selectProject(part);;
+		selectProject(part);
 	}
+
 	
-	/* FIXME : to be remove as DLTK integration build is released (ScriptExplorerPart changes) - NirC
+	/**
+	 * Enable lazy loading for group elements
+	 */
+	protected ProblemTreeViewer createViewer(Composite composite) {
+		return new ProjectOutlineProblemTreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+	}
+
 	protected class ProjectOutlineProblemTreeViewer extends PackageExplorerProblemTreeViewer {
-		
+
 		public ProjectOutlineProblemTreeViewer(Composite parent, int style) {
 			super(parent, style);
 		}
 
+		/**
+		 * Always return true for elements to reduce model queries 
+		 */
 		protected boolean evaluateExpandableWithFilters(Object parent) {
 			return false;
 		}
-	
-	}*/
+	}
 }

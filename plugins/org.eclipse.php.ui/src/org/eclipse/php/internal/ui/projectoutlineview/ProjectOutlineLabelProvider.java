@@ -1,11 +1,19 @@
+/**
+ * TODO header
+ */
 package org.eclipse.php.internal.ui.projectoutlineview;
 
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.internal.ui.projectoutlineview.ProjectOutlineContentProvider.ProjectOutlineGroups;
 import org.eclipse.swt.graphics.Image;
 
+
+/**
+ * TODO description
+ * @author nir.c
+ *
+ */
 public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 
 	public ProjectOutlineLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
@@ -24,22 +32,10 @@ public class ProjectOutlineLabelProvider extends ScriptExplorerLabelProvider {
 	@Override
 	public String getText(Object element) {
 		if (element instanceof ProjectOutlineGroups){
-			return getSpecificText(element);
-		}
-		return super.getText(element);
-//		if (text != null) {
-//			return decorateText(text, element);
-//		}
-//		return super.getText(element);
-	}
-	
-	private String getSpecificText(Object element) {
-		if (element instanceof ProjectOutlineGroups) {
 			return ((ProjectOutlineGroups)element).getText();
 		}
-		return null;
+		return super.getText(element);
 	}
 
-	
 
 }
