@@ -110,7 +110,7 @@ public class ConstantsOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * False, in case that the parameters contain a 'false' case parameter.
 	 */
 	private boolean isCaseSensitiveDefined(List<Expression> parameters) {
-		if (parameters.size() == 2 || parameters.size() > 3) {
+		if (parameters.size() != 3) {
 			// default behavior is case sensitive.
 			return true;
 		}
