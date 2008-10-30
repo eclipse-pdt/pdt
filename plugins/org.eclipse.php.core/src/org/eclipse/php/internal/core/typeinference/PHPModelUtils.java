@@ -191,16 +191,6 @@ public class PHPModelUtils {
 		if (fileNetworkFilter) {
 			return fileNetworkFilter(sourceModule, elements);
 		}
-		// prefer elements from current module:
-		List<IModelElement> fromThisModule = new LinkedList<IModelElement>();
-		for (IModelElement element : elements) {
-			if (((ModelElement) element).getSourceModule().equals(sourceModule)) {
-				fromThisModule.add(element);
-			}
-		}
-		if (fromThisModule.size() > 0) {
-			return fromThisModule.toArray(new IModelElement[fromThisModule.size()]);
-		}
 		return elements;
 	}
 	

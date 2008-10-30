@@ -1271,6 +1271,21 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		switch (state) {
 			case NEW:
 				IType[] types = CodeAssistUtils.getOnlyClasses(sourceModule, prefix, requestor.isContextInformationMode());
+				IType enclosingClass = null;
+				try {
+					IModelElement enclosingElement = sourceModule.getElementAt(offset);
+					if (enclosingElement instanceof IMethod) {
+						IModelElement parent = ((IMethod)enclosingElement).getParent();
+						if (parent instanceof IType) {
+							enclosingClass = (IType) parent;
+						}
+					}
+				} catch (ModelException e) {
+					if (DEBUG) {
+						e.printStackTrace();
+					}
+				}
+				
 				for (IType type : types) {
 					try {
 						IMethod ctor = null;
@@ -1281,7 +1296,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							}
 						}
 						if (ctor != null) {
-							if ((ctor.getFlags() & IPHPModifiers.AccPrivate) == 0) {
+							if ((ctor.getFlags() & IPHPModifiers.AccPrivate) == 0 || type.equals(enclosingClass)) {
 								FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
 									public boolean isConstructor() throws ModelException {
 										return true;
