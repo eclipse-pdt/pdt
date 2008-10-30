@@ -172,7 +172,7 @@ public class GlobalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				final Identifier id = (Identifier) varName;
 				if (id.getName().equals("GLOBALS")) { //$NON-NLS-1$
 					final Expression index = arrayAccess.getIndex();
-					if (index.getType() == ASTNode.SCALAR) {
+					if (index != null && index.getType() == ASTNode.SCALAR) {
 						Scalar scalar = (Scalar) index;
 						final String stringValue = scalar.getStringValue();
 						if (stringValue.length() > 2 && isQuated(stringValue)) {
