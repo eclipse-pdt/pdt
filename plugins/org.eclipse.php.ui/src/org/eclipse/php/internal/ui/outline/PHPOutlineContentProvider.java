@@ -129,12 +129,15 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-		//		boolean isCU = (newInput instanceof ISourceModule);
-
-		if (/*isCU &&*/fListener == null) {
+		// Check that the new input is valid
+		boolean isCU = (newInput instanceof ISourceModule);
+		// Add a listener if input is valid and there wasn't one
+		if (isCU && fListener == null) {
 			fListener = new ElementChangedListener();
 			DLTKCore.addElementChangedListener(fListener);
-		} else if (/*!isCU &&*/fListener != null) {
+		}
+		// If the new input is not valid and there is a listener - remove it
+		else if (!isCU && fListener != null) {
 			DLTKCore.removeElementChangedListener(fListener);
 			fListener = null;
 		}
