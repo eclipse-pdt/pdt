@@ -1,8 +1,8 @@
 package org.eclipse.php.internal.ui.editor.validation;
 
 import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -19,10 +19,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.AbstractValidator;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
-import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
-import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 
 /**
@@ -30,23 +30,23 @@ import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
  * @author Eden K.,2008 
  *
  */
-public class PHPTodoTaskValidator implements IValidator {
+public class PHPTodoTaskValidator extends AbstractValidator {
 
 	protected TaskTag[] taskTags = null;
-	private IFile file = null;	
+
+	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
+		if (resource.getType() != IResource.FILE)
+			return null;
+		ValidationResult result = new ValidationResult();
+		IReporter reporter = result.getReporter(monitor);
+		validateFile(reporter, (IFile) resource);
+		return result;
+	}
 
 	/**
 	 * Search for tasks in the validated file and create a marker for each task found 
 	 */
-	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-
-		String[] delta = helper.getURIs();
-		if (delta.length == 0) {
-			return;
-		}
-
-		file = getFile(delta[0]);		
-		Assert.isNotNull(file);
+	public void validateFile(IReporter reporter, IFile file) {
 
 		// populate the task tags from the preferences
 		if (taskTags == null) {
@@ -61,15 +61,11 @@ public class PHPTodoTaskValidator implements IValidator {
 		}
 		IStructuredModel model = null;
 		try {
-			// desperately try to get the model :) In case it doesn't exist yet, try to create it now
+			// desperately try to get the model :) In case it doesn't exist yet, create it
 			try {
 				model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-			} catch (NullPointerException e) {
-				try {
-					model = StructuredModelManager.getModelManager().getNewModelForRead(file, false);
-				} catch (Exception e2) {
-					model = StructuredModelManager.getModelManager().getNewModelForRead(file, true);
-				}
+			} catch (Exception e) {
+				model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 			}
 			if (model == null) {
 				return;
@@ -131,6 +127,7 @@ public class PHPTodoTaskValidator implements IValidator {
 		} finally {
 			if (model != null) {
 				model.releaseFromRead();
+				model = null;
 			}
 
 		}
@@ -147,7 +144,7 @@ public class PHPTodoTaskValidator implements IValidator {
 		getTaskTags(file.getProject(), taskTagsProvider);
 	}
 
-	public void cleanup(IReporter reporter) {		
+	public void cleanup(IReporter reporter) {
 	}
 
 	/**

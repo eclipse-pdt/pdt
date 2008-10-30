@@ -343,6 +343,46 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
+	<!--
+		======================================================================================	
+	    Task validation 			   						  
+		======================================================================================
+	-->
+	 <extension
+		id="phpTaskMarker"
+        name="%PHPTaskMarker.label"
+        point="org.eclipse.core.resources.markers">
+		<persistent value="true"/>
+		<attribute name="lineNumber"/>
+		<attribute name="charStart"/>
+		<attribute name="charEnd"/>
+		<attribute name="message"/>
+		<attribute name="priority"/>
+		<attribute name="severity"/>
+		<attribute name="userEditable"/>
+		<super type="org.eclipse.core.resources.taskmarker"/>
+ 	</extension> 	
+	
+
+  <extension id="org.eclipse.php.ui.PHPTaskValidator" name="PHPTaskValidator"
+		point="org.eclipse.wst.validation.validatorV2">
+		<validator build="true"
+			class="org.eclipse.php.internal.ui.editor.validation.PHPTodoTaskValidator"
+			manual="true" sourceid="org.eclipse.php.core.phpsource" version="1"
+			markerId="org.eclipse.php.ui.phpTaskMarker">
+			<include>
+				<rules>
+					<contentType id="org.eclipse.wst.html.core.htmlsource"></contentType>
+					<fileext caseSensitive="false" ext="php" />
+					<fileext caseSensitive="false" ext="php4" />
+					<fileext caseSensitive="false" ext="inc" />
+					<fileext caseSensitive="false" ext="php5" />
+					<fileext caseSensitive="false" ext="tpl" />
+				</rules>
+			</include>
+			<group id="org.eclipse.wst.sse.core.structuredModelGroup" />
+		</validator>
+	</extension>
 
 	<!--Templates:-->
 	<extension point="org.eclipse.ui.editors.templates">
@@ -1270,35 +1310,5 @@
 			id="org.eclipse.php.internal.ui.documentation.PHPDocumentationProvider"
 			nature="org.eclipse.php.core.PHPNature">
 		</provider>
-	</extension>
-	
-	 <extension
-		id="phpTaskMarker"
-        name="%PHPTaskMarker.label"
-        point="org.eclipse.core.resources.markers">
-		<persistent value="true"/>
-		<attribute name="lineNumber"/>
-		<attribute name="charStart"/>
-		<attribute name="charEnd"/>
-		<attribute name="message"/>
-		<attribute name="priority"/>
-		<attribute name="severity"/>
-		<attribute name="userEditable"/>
-		<super type="org.eclipse.core.resources.taskmarker"/>
- 	</extension> 	
-  <extension
-        id="org.eclipse.php.ui.PHPTaskValidator"
-        name="PHPTaskValidator"
-        point="org.eclipse.wst.validation.validator">
-     <validator>
-        <helper
-              class="org.eclipse.wst.sse.ui.internal.reconcile.validator.IncrementalHelper">
-        </helper>
-        <run
-              class="org.eclipse.php.internal.ui.editor.validation.PHPTodoTaskValidator"
-              enabled="true"
-              fullBuild="true">
-        </run>
-     </validator>
-  </extension>
+	</extension>	
 </plugin>
