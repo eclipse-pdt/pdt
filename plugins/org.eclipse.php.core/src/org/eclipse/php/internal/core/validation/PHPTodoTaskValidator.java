@@ -224,7 +224,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 		marker.setAttribute(IMarker.TASK, true);
 
-		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
+		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber + 1);
 		marker.setAttribute(IMarker.CHAR_START, offset);
 		marker.setAttribute(IMarker.CHAR_END, charEnd);
 		marker.setAttribute(IMarker.MESSAGE, taskStr);
