@@ -62,7 +62,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 
 	private TreeViewer fViewer;
 	private PHPFunctionsContentProvider fContentProvider;
-	private ScriptUILabelProvider fLabelProvider;
+	private PHPFunctionsLabelProvider fLabelProvider;
 
 	private Menu fContextMenu;
 	private String fWorkingSetName;
@@ -78,7 +78,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		fViewer = createViewer(parent);
 		fViewer.setUseHashlookup(true);
 		// sort entries alphabetically
-		fViewer.setSorter(new ModelElementSorter());
+		fViewer.setSorter(new PHPFunctionsSorter());
 		setProviders();
 
 		setUpPopupMenu();
@@ -264,7 +264,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		}
 
 		if (fLabelProvider == null) {
-			fLabelProvider = new ScriptUILabelProvider();
+			fLabelProvider = new PHPFunctionsLabelProvider();
 			fViewer.setLabelProvider(fLabelProvider);
 
 		}
