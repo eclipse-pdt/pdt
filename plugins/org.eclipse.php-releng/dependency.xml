@@ -28,9 +28,6 @@
 			<param name="groupId" value="dltk" />
 		</antcall>
 		<antcall target="getAndInstall">
-			<param name="groupId" value="dtp" />
-		</antcall>
-		<antcall target="getAndInstall">
 			<param name="groupId" value="eclipse" />
 		</antcall>
 		<antcall target="getAndInstall">
