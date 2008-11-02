@@ -118,6 +118,13 @@ propertyName=propertyValue
 				<equals arg1="${buildType}" arg2="R" />
 			</or>
 		</condition>
+                <condition property="allinone">
+                        <or>
+                                <!-- want to enable/disable building all-in-one(s) for a given build type? add/remove types here -->
+                                <equals arg1="${buildType}" arg2="S" />
+                                <equals arg1="${buildType}" arg2="R" />
+                        </or>
+                </condition>
 	</target>
 
 	<target name="buildAll">
@@ -205,7 +212,15 @@ propertyName=propertyValue
 		</ant>
 
 		<echo-timestamp />
+		<antcall target="buildAllInOnes"/>
+
+		<echo-timestamp />
 		<ant target="generateDigests" antfile="${helper}" />
+	</target>
+
+	<target name="buildAllInOnes" if="allinone">
+		<echo message="TODO: implement packaging steps for All In One zips/tar.gzs ..."/>
+		<!-- TODO: implement packaging steps for All In One zips/tar.gzs -->
 	</target>
 
 	<target name="run" depends="init">
