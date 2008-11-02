@@ -78,9 +78,9 @@
 		</ant>
 
 		<condition property="create-changelog" value="true">
-			<not>
-				<contains string="${buildType}" substring="N" />
-			</not>
+			<and>
+				<contains string="${buildType}" substring="I" />
+			</and>
 		</condition>
 		<antcall target="createChangelog" />
 	</target>
