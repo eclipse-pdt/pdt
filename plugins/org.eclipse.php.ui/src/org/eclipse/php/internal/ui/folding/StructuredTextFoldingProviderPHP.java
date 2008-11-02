@@ -1402,7 +1402,7 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 			sdRegion = sdRegion.getNext();
 		}
 		
-		if (sdRegion.getType() != PHPRegionTypes.PHP_CONTENT || sdRegion.getRegions().size() < 2) {
+		if (sdRegion == null || sdRegion.getType() != PHPRegionTypes.PHP_CONTENT || sdRegion.getRegions().size() < 2) {
 			return null;
 		}
 		
