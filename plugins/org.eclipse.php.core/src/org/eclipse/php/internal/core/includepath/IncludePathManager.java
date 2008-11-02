@@ -115,10 +115,16 @@ public class IncludePathManager {
 
 		String includePath = CorePreferencesSupport.getInstance().getProjectSpecificPreferencesValue(PREF_KEY, null, project);
 		if (includePath != null) {
-			int i;
-			while ((i = includePath.indexOf(PREF_SEP)) != -1) {
-				String path = includePath.substring(0, i);
-				includePath = includePath.substring(i + 1);
+			while (includePath != null) {
+				String path;
+				int i = includePath.indexOf(PREF_SEP);
+				if (i == -1) {
+					path = includePath;
+					includePath = null;
+				} else {
+					path = includePath.substring(0, i);
+					includePath = includePath.substring(i + 1);
+				}
 
 				if ((i = path.indexOf(';')) != -1) {
 					int kind = Integer.parseInt(path.substring(0, i));
