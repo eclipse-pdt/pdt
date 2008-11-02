@@ -82,8 +82,8 @@ public class DebugConnectionThread implements Runnable {
 
 	protected static int startMessageId = (new DebugSessionStartedNotification()).getType();
 	private Socket socket;
-	private DataInputStream in;
-	private DataOutputStream out;
+	private DataInputStream connectionIn;
+	private DataOutputStream connectionOut;
 	protected boolean validProtocol;
 	private boolean isInitialized;
 	private InputMessageHandler inputMessageHandler;
@@ -131,10 +131,10 @@ public class DebugConnectionThread implements Runnable {
 				//These 2 methods are blocked until the threads
 				//will stop working and will be free to handle
 				//another connection.
+				this.connectionIn = in;
+				this.connectionOut = out;
 				restartInputMessageHandler(out);
 				restartInputManager(in);
-				this.in = in;
-				this.out = out;
 				isInitialized = true;
 			}
 			//			getCommunicationAdministrator().connectionEstablished();
@@ -185,10 +185,10 @@ public class DebugConnectionThread implements Runnable {
 			synchronized (byteArrayOutputStream) {
 				byteArrayOutputStream.reset();
 				((IDebugMessage) msg).serialize(dataOutputStream);
-				synchronized (out) {
-					out.writeInt(byteArrayOutputStream.size());
-					byteArrayOutputStream.writeTo(out);
-					out.flush();
+				synchronized (connectionOut) {
+					connectionOut.writeInt(byteArrayOutputStream.size());
+					byteArrayOutputStream.writeTo(connectionOut);
+					connectionOut.flush();
 				}
 			}
 		} catch (SocketException se) {
@@ -220,11 +220,11 @@ public class DebugConnectionThread implements Runnable {
 				theMsg.serialize(dataOutputStream);
 
 				int messageSize = byteArrayOutputStream.size();
-				synchronized (out) {
+				synchronized (connectionOut) {
 					requestsTable.put(theMsg.getID(), theMsg);
-					out.writeInt(messageSize);
-					byteArrayOutputStream.writeTo(out);
-					out.flush();
+					connectionOut.writeInt(messageSize);
+					byteArrayOutputStream.writeTo(connectionOut);
+					connectionOut.flush();
 				}
 			}
 
@@ -302,12 +302,12 @@ public class DebugConnectionThread implements Runnable {
 			theMsg.serialize(dataOutputStream);
 
 			int messageSize = byteArrayOutputStream.size();
-			synchronized (out) {
+			synchronized (connectionOut) {
 				requestsTable.put(msgId, request);
 				responseHandlers.put(new Integer(msgId), responseHandler);
-				out.writeInt(messageSize);
-				byteArrayOutputStream.writeTo(out);
-				out.flush();
+				connectionOut.writeInt(messageSize);
+				byteArrayOutputStream.writeTo(connectionOut);
+				connectionOut.flush();
 			}
 		} catch (Exception exc) { // Return null for any exception
 			System.out.println("Exception for request no." + theMsg.getType() + exc.toString()); //$NON-NLS-1$
@@ -320,9 +320,9 @@ public class DebugConnectionThread implements Runnable {
 	 * Returns true if the connection is alive.
 	 */
 	public boolean isConnected() {
-		if (in != null) {
+		if (connectionIn != null) {
 			try {
-				in.available();
+				connectionIn.available();
 				return true;
 			} catch (IOException ioe) {
 			}
@@ -425,10 +425,10 @@ public class DebugConnectionThread implements Runnable {
 			} catch (Exception exc) {
 			}
 		}
-		if (out != null) {
+		if (connectionOut != null) {
 			try {
-				synchronized (out) {
-					out.close();
+				synchronized (connectionOut) {
+					connectionOut.close();
 				}
 			} catch (Exception exc) {
 			}
@@ -440,18 +440,18 @@ public class DebugConnectionThread implements Runnable {
 			} catch (Exception exc) {
 			}
 		}
-		if (in != null) {
+		if (connectionIn != null) {
 			try {
-				in.close();
+				connectionIn.close();
 			} catch (Exception exc) {
 			}
 		}
 
 		socket = null;
-		in = null;
-		if (out != null) {
-			synchronized (out) {
-				out = null;
+		connectionIn = null;
+		if (connectionOut != null) {
+			synchronized (connectionOut) {
+				connectionOut = null;
 			}
 		}
 	}
