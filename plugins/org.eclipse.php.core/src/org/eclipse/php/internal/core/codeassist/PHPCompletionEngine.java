@@ -239,6 +239,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			regionContainer = (ITextRegionContainer) textRegion;
 			textRegion = regionContainer.getRegionAtCharacterOffset(offset);
 		}
+		
+		if (textRegion == null) {
+			return;
+		}
 
 		if (textRegion.getType() == PHPRegionContext.PHP_OPEN) {
 			return;
