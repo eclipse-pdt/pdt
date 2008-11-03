@@ -30,6 +30,7 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.osgi.service.environment.EnvironmentInfo;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.ui.dnd.DNDUtils;
 import org.eclipse.php.internal.ui.editor.ASTProvider;
@@ -55,6 +56,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionin
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -73,6 +75,7 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	public static final boolean isDebugMode;
 
 	public static final String PERSPECTIVE_ID = "org.eclipse.php.perspective"; //$NON-NLS-1$
+	public static final String CREATE_TEST_PROJECT_SWITCH = "-phpdemo"; //$NON-NLS-1$
 
 	static {
 		String value = Platform.getDebugOption("org.eclipse.php.ui/debug"); //$NON-NLS-1$
@@ -110,11 +113,44 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		final BundleContext ctx = context;
+
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				DNDUtils.initEditorSiteExternalDrop();
+				processCommandLine(ctx);
 			}
 		});
+	}
+
+	private void processCommandLine(BundleContext context) {
+		ServiceTracker environmentTracker = new ServiceTracker(context, EnvironmentInfo.class.getName(), null);
+		environmentTracker.open();
+		EnvironmentInfo environmentInfo = (EnvironmentInfo) environmentTracker.getService();
+		environmentTracker.close();
+		if (environmentInfo == null) {
+			return;
+		}
+		String[] args = environmentInfo.getNonFrameworkArgs();
+		if (args == null || args.length == 0) {
+			return;
+		}
+
+		// go over the program args and see if there is a flag for creating a test project
+
+		// search backwards since the program parameters are at the end of the
+		// array
+		for (int i = args.length - 1; i >= 0; i--) {
+			if (args[i].equals(CREATE_TEST_PROJECT_SWITCH)) {
+				createTestProject();
+				return;
+			}
+		}
+		return;
+	}
+
+	private void createTestProject() {
+		TestProject.run();
 	}
 
 	/**
