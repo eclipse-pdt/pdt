@@ -15,44 +15,43 @@ import org.eclipse.dltk.core.ModelException;
  *
  */
 public class ConstantNode {
-	
+
 	private static final String CONSTANT_NODE_LABEL = "constants";
 
-	public ConstantNode(){		
+	public ConstantNode() {
 	}
-	
+
 	List<IModelElement> modules = new ArrayList<IModelElement>();
-	
-	public Object[] getChildren(){
+
+	public Object[] getChildren() {
 		List<IField> children = new ArrayList<IField>();
 		// only the constants should be shown under this node
 		for (IModelElement element : modules) {
-			if(isConstant(element)){
+			if (isConstant(element)) {
 				children.add((IField) element);
 			}
 		}
 		return children.toArray(new Object[children.size()]);
 	}
 
-
 	public void addSourceModuleChildren(IModelElement[] externalSourceModuleChildren) {
 		modules.addAll(Arrays.asList(externalSourceModuleChildren));
-		
+
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return CONSTANT_NODE_LABEL;
 	}
-	
+
 	/**
 	 * Gets a model element and verifies if it is a constant
 	 * @param element
 	 * @return whether the element is a constant or not
 	 */
-	public static boolean isConstant(IModelElement element){
+	public static boolean isConstant(IModelElement element) {
 		boolean isConstant = false;
-		
-		if(element.getElementType() == IModelElement.FIELD){
+
+		if (element.getElementType() == IModelElement.FIELD) {
 			IField field = (IField) element;
 			try {
 				if ((field.getFlags() & Modifiers.AccConstant) != 0) {
@@ -63,7 +62,7 @@ public class ConstantNode {
 				isConstant = false;
 			}
 		}
-		
-		return isConstant;						
+
+		return isConstant;
 	}
 }

@@ -62,7 +62,7 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 			// handle all method references
 		} else if (element instanceof ISourceReference) {
 			ISourceReference source = ((ISourceReference) element);
-			return super.getChildren(source); 
+			return super.getChildren(source);
 		} else if (element instanceof ConstantNode) {
 			return ((ConstantNode) element).getChildren();
 		}
@@ -78,11 +78,11 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 	private IModelElement[] filterConstants(IModelElement[] externalSourceModuleChildren) {
 		List<IModelElement> filteredList = new ArrayList<IModelElement>();
 		for (IModelElement modelElement : externalSourceModuleChildren) {
-			if(! ConstantNode.isConstant(modelElement) ){
+			if (!ConstantNode.isConstant(modelElement)) {
 				filteredList.add(modelElement);
-			} 
+			}
 		}
 		return filteredList.toArray(new IModelElement[filteredList.size()]);
 	}
-	
+
 }
