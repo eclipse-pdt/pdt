@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -93,12 +94,17 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		try {
 			IFile file = (IFile) sourceUnit.getModelElement().getResource();
 			if (file != null) {
-				structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-				if (structuredModel == null) {
-					structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
-				}
-				if (structuredModel instanceof AbstractStructuredModel) {
-					document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
+				if (file.exists()) {
+					structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+					if (structuredModel == null) {
+						structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
+					}
+					if (structuredModel instanceof AbstractStructuredModel) {
+						document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
+					}
+				} else {
+					document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
+					document.set(sourceUnit.getSourceContents());
 				}
 			}
 		} catch (Exception e) {
@@ -229,6 +235,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
 					return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((TypeReference) node).getName()), (ISourceModuleContext) context);
+				}
+				else if (node instanceof ClassInstanceCreation) {
+					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
+					Expression className = newNode.getClassName();
+					if (className instanceof SimpleReference) {
+						return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((SimpleReference) className).getName()), (ISourceModuleContext) context);
+					}
 				}
 			}
 		}

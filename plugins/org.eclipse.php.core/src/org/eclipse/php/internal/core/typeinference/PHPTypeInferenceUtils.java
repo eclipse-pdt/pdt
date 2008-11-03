@@ -19,16 +19,14 @@ import java.util.Set;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.UnknownType;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -76,13 +74,13 @@ public class PHPTypeInferenceUtils {
 		}
 		return new AmbiguousType(types.toArray(new IEvaluatedType[types.size()]));
 	}
-	
+
 	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ASTNode expression) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, expression);
 		return resolveExpression(sourceModule, moduleDeclaration, context, expression);
 	}
-	
+
 	public static IEvaluatedType resolveExpression(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, IContext context, ASTNode expression) {
 		if (context != null) {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
@@ -90,27 +88,44 @@ public class PHPTypeInferenceUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Converts IEvaluatedType to IModelElement, if found. This method filters elements using file network dependencies.
 	 * @param evaluatedType Evaluated type
 	 * @return model elements
 	 */
-	public static IModelElement[] getModelElements(IEvaluatedType type, ISourceModuleContext context) {
+	public static IModelElement[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context) {
 		IModelElement[] elements = null;
 		ISourceModule sourceModule = context.getSourceModule();
 
-		if (type instanceof ModelClassType) {
-			return new IModelElement[] { ((ModelClassType)type).getTypeDeclaration() };
+		if (evaluatedType instanceof ModelClassType) {
+			return new IModelElement[] { ((ModelClassType) evaluatedType).getTypeDeclaration() };
 		}
-		if (type instanceof PHPClassType) {
+		if (evaluatedType instanceof PHPClassType) {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			elements = PHPMixinModel.getInstance(scriptProject).getClass(((PHPClassType)type).getTypeName(), scope);
-		}
-		else if (type instanceof AmbiguousType) {
+			if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
+				List<IModelElement> result = new LinkedList<IModelElement>();
+				try {
+					IType[] types = sourceModule.getTypes();
+					for (IType t : types) {
+						if (t.getElementName().equalsIgnoreCase(evaluatedType.getTypeName())) {
+							result.add(t);
+							break;
+						}
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+				return result.toArray(new IModelElement[result.size()]);
+			} else {
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
+				elements = PHPMixinModel.getInstance(scriptProject).getClass(((PHPClassType) evaluatedType).getTypeName(), scope);
+			}
+		} else if (evaluatedType instanceof AmbiguousType) {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();
-			IEvaluatedType[] possibleTypes = ((AmbiguousType)type).getPossibleTypes();
+			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
 				IModelElement[] tmpArray = getModelElements(possibleType, context);
 				if (tmpArray != null) {

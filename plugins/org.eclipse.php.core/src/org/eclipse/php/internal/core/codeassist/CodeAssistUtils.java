@@ -124,6 +124,7 @@ public class CodeAssistUtils {
 					if (methodName.equalsIgnoreCase(prefix)) {
 						methods.add(typeMethod);
 						methodNames.add(methodName.toLowerCase());
+						break;
 					}
 				} else if (startsWithIgnoreCase(methodName, prefix)) {
 					methods.add(typeMethod);
@@ -214,6 +215,7 @@ public class CodeAssistUtils {
 						if (exactName) {
 							if (elementName.equals(prefix)) {
 								fields.add(typeField);
+								break;
 							}
 						} else if (elementName.startsWith(prefix)) {
 							fields.add(typeField);
@@ -226,6 +228,7 @@ public class CodeAssistUtils {
 						if (exactName) {
 							if (elementName.equals(tmp)) {
 								fields.add(typeField);
+								break;
 							}
 						} else if (elementName.startsWith(tmp)) {
 							fields.add(typeField);
@@ -909,55 +912,7 @@ public class CodeAssistUtils {
 
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
-			List<IModelElement> elements = new LinkedList<IModelElement>();
-			try {
-				switch (elementType) {
-					case IDLTKSearchConstants.TYPE:
-						IType[] types = sourceModule.getTypes();
-						for (IType type : types) {
-							String typeName = type.getElementName();
-							if (exactName) {
-								if (typeName.equalsIgnoreCase(prefix)) {
-									elements.add(type);
-								}
-							} else if (startsWithIgnoreCase(typeName, prefix)) {
-								elements.add(type);
-							}
-						}
-						break;
-					case IDLTKSearchConstants.METHOD:
-						IMethod[] methods = ((AbstractSourceModule)sourceModule).getMethods();
-						for (IMethod method : methods) {
-							String methodName = method.getElementName();
-							if (exactName) {
-								if (methodName.equalsIgnoreCase(prefix)) {
-									elements.add(method);
-								}
-							} else if (startsWithIgnoreCase(methodName, prefix)) {
-								elements.add(method);
-							}
-						}
-						break;
-					case IDLTKSearchConstants.FIELD:
-						IField[] fields = sourceModule.getFields();
-						for (IField field : fields) {
-							String fieldName = field.getElementName();
-							if (exactName) {
-								if (fieldName.equals(prefix)) {
-									elements.add(field);
-								}
-							} else if (fieldName.startsWith(prefix)) {
-								elements.add(field);
-							}
-						}
-						break;
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
-			}
-			return elements.toArray(new IModelElement[elements.size()]);
+			return getSourceModuleElements(sourceModule, prefix, exactName, elementType);
 		}
 
 		IDLTKSearchScope scope;
@@ -1066,6 +1021,64 @@ public class CodeAssistUtils {
 				lastName = element.getElementName();
 			}
 			elements.add(element);
+		}
+		return elements.toArray(new IModelElement[elements.size()]);
+	}
+	
+	/**
+	 * Returns file global model elements by given prefix
+	 */
+	public static IModelElement[] getSourceModuleElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType) {
+		List<IModelElement> elements = new LinkedList<IModelElement>();
+		try {
+			switch (elementType) {
+				case IDLTKSearchConstants.TYPE:
+					IType[] types = sourceModule.getTypes();
+					for (IType type : types) {
+						String typeName = type.getElementName();
+						if (exactName) {
+							if (typeName.equalsIgnoreCase(prefix)) {
+								elements.add(type);
+								break;
+							}
+						} else if (startsWithIgnoreCase(typeName, prefix)) {
+							elements.add(type);
+						}
+					}
+					break;
+				case IDLTKSearchConstants.METHOD:
+					IMethod[] methods = ((AbstractSourceModule)sourceModule).getMethods();
+					for (IMethod method : methods) {
+						String methodName = method.getElementName();
+						if (exactName) {
+							if (methodName.equalsIgnoreCase(prefix)) {
+								elements.add(method);
+								break;
+							}
+						} else if (startsWithIgnoreCase(methodName, prefix)) {
+							elements.add(method);
+						}
+					}
+					break;
+				case IDLTKSearchConstants.FIELD:
+					IField[] fields = sourceModule.getFields();
+					for (IField field : fields) {
+						String fieldName = field.getElementName();
+						if (exactName) {
+							if (fieldName.equals(prefix)) {
+								elements.add(field);
+								break;
+							}
+						} else if (fieldName.startsWith(prefix)) {
+							elements.add(field);
+						}
+					}
+					break;
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}

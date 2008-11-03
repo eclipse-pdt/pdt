@@ -42,9 +42,9 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 * Path of the language model for php projects
 	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
-	
+
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
-	
+
 	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
 	private Map<IProject, String> project2PhpVersion = new HashMap<IProject, String>();
 
@@ -73,7 +73,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				return project;
 			}
 		};
-		
+
 		project2PhpVerListener.put(project, versionChangeListener);
 		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(versionChangeListener);
 
@@ -132,10 +132,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	public static boolean isLanguageModelElement(IModelElement element) {
 		IProjectFragment fragment = (IProjectFragment) element.getAncestor(IModelElement.PROJECT_FRAGMENT);
 		if (fragment != null) {
-		
 			IScriptProject project = element.getScriptProject();
 			if (project != null) {
-			
 				String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
 				try {
 					IPath containerPath = getContainerPath(project, phpVersion);

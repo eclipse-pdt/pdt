@@ -46,6 +46,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
@@ -165,16 +166,23 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			IStructuredModel structuredModel = null;
 			try {
 				IFile file = (IFile) module.getModelElement().getResource();
-				if (file != null && file.exists()) {
-					structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-					if (structuredModel != null) {
-						document = structuredModel.getStructuredDocument();
-					} else {
-						try {
-							document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
-						} catch (Exception e) {
+				if (file != null) {
+					if (file.exists()) {
+						structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+						if (structuredModel == null) {
+							structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
 						}
+						if (structuredModel instanceof AbstractStructuredModel) {
+							document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
+						}
+					} else {
+						document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
+						document.set(module.getSourceContents());
 					}
+				}
+			} catch (Exception e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
 				}
 			} finally {
 				if (structuredModel != null) {
