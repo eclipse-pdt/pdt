@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IProjectFragment;
+import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.php.internal.ui.Logger;
@@ -83,6 +85,15 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 			}
 		}
 		return filteredList.toArray(new IModelElement[filteredList.size()]);
+	}
+
+	@Override
+	public boolean hasChildren(Object element) {
+		// do not show children for methods
+		if (element instanceof IModelElement && ((IModelElement) element).getElementType() == IModelElement.METHOD) {
+			return false;
+		}
+		return super.hasChildren(element);
 	}
 
 }

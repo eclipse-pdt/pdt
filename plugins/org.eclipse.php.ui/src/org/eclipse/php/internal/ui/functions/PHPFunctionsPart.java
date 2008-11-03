@@ -21,8 +21,6 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.ui.ModelElementSorter;
-import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.dltk.ui.viewsupport.StatusBarUpdater;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -81,6 +79,17 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		fViewer.setSorter(new PHPFunctionsSorter());
 		setProviders();
 
+		// filter out children for methods 
+		fViewer.addFilter(new ViewerFilter() {
+			@Override
+			public boolean select(Viewer viewer, Object parentElement, Object element) {
+				if (isMethodVariable(parentElement, element)) {
+					return false;
+				}
+				return true;
+			}
+		});
+
 		setUpPopupMenu();
 
 		addDoubleClickListener();
@@ -113,6 +122,23 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_FUNCTIONS_VIEW);
 	}
 
+	/**
+	 * Checks whether the given element is a method variable.
+	 * @param parentElement
+	 * @param element
+	 * @return whether the given element is a method variable
+	 */
+	public static boolean isMethodVariable(Object parentElement, Object element) {
+		if (parentElement instanceof IModelElement && element instanceof IModelElement) {
+			if (((IModelElement) parentElement).getElementType() == IModelElement.METHOD && ((IModelElement) element).getElementType() == IModelElement.FIELD) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
 	private void setUpPopupMenu() {
 		showFunctionHelpAction = new ShowFunctionHelpAction();
 
@@ -138,10 +164,10 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		});
 
 		fViewer.getTree().setMenu(fContextMenu);
-		
+
 		IWorkbenchPartSite site = getSite();
 		site.setSelectionProvider(fViewer);
-		
+
 	}
 
 	private void updateInputForCurrentEditor(final IEditorPart editorPart) {
