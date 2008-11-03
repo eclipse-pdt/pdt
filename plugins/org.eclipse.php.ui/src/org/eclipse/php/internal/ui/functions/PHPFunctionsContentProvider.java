@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalSourceModule;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
@@ -77,10 +78,11 @@ public class PHPFunctionsContentProvider extends StandardModelElementContentProv
 	private IModelElement[] filterConstants(IModelElement[] externalSourceModuleChildren) {
 		List<IModelElement> filteredList = new ArrayList<IModelElement>();
 		for (IModelElement modelElement : externalSourceModuleChildren) {
-			if(! (modelElement instanceof IField)  ){
+			if(! ConstantNode.isConstant(modelElement) ){
 				filteredList.add(modelElement);
 			} 
 		}
 		return filteredList.toArray(new IModelElement[filteredList.size()]);
 	}
+	
 }
