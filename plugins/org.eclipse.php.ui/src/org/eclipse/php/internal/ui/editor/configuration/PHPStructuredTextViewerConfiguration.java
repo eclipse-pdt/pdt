@@ -23,6 +23,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
@@ -296,7 +297,19 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		List<IHyperlinkDetector> detectors = new LinkedList<IHyperlinkDetector>();
 		IHyperlinkDetector[] inheritedDetectors = super.getHyperlinkDetectors(sourceViewer);
 		if (inheritedDetectors != null) {
-			detectors.addAll(Arrays.asList(inheritedDetectors));
+			for (final IHyperlinkDetector detector : inheritedDetectors) {
+				detectors.add(new IHyperlinkDetector() {
+					public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
+						try {
+							return detector.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);
+						} catch (Exception e) {
+							// fail safe hyperlink detector - prevent others from failing
+						}
+						return null;
+					}
+					
+				});
+			}
 		}
 
 		detectors.add(new PHPHyperlinkDetector(((PHPStructuredTextViewer)sourceViewer).getTextEditor()));
