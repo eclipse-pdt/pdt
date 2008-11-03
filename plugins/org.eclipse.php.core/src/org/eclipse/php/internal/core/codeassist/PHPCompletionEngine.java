@@ -1385,7 +1385,30 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	 * @param classData
 	 */
 	private void addSelfFunctionToProposals(IType type) {
-		reportMethod(new FakeMethod((ModelElement) type, SELF), RELEVANCE_METHOD);
+		try {
+			IMethod ctor = null;
+			for (IMethod method : type.getMethods()) {
+				if (method.isConstructor()) {
+					ctor = method;
+					break;
+				}
+			}
+			if (ctor != null) {
+				FakeMethod ctorMethod = new FakeMethod((ModelElement) type, SELF) {
+					public boolean isConstructor() throws ModelException {
+						return true;
+					}
+				};
+				ctorMethod.setParameters(ctor.getParameters());
+				reportMethod(ctorMethod, RELEVANCE_METHOD);
+			} else {
+				reportMethod(new FakeMethod((ModelElement) type, SELF), RELEVANCE_METHOD);
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	protected boolean isNewOrInstanceofStatement(String keyword, String prefix, int offset, String type) {
