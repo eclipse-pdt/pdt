@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.18 2008/07/06 12:08:10 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.19 2008/11/03 16:58:32 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1604,14 +1604,14 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 ;
 
 class_constant_declaration ::=
-class_constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar:expr
+class_constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar:expr
 {:
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
 	list.add(new ASTNode[] {constId, expr});
 	RESULT = list;
 :}
 
-| T_CONST:value T_STRING:constName T_EQUAL static_scalar:expr
+| T_CONST:value string_st:constName T_EQUAL static_scalar:expr
 {:
 	List list = new LinkedList();
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
@@ -2021,7 +2021,7 @@ string_st:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters
 	RESULT = new PHPCallExpression(functionNameleft, endright, null, name, parameters); 
 :}
 
-| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {: 
 	SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
 	StaticMethodInvocation staticMethodInvocation = new StaticMethodInvocation(classNameleft, endright, className, name, parameters); 
@@ -2222,7 +2222,7 @@ common_scalar:scalar
 ;
 
 static_class_constant ::=
-T_STRING:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
+T_STRING:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
 {:
 	ConstantReference vname = new ConstantReference(varNameleft, varNameright, varName);
 	TypeReference cname = new TypeReference(classNameleft, classNameright, className);
@@ -2852,7 +2852,7 @@ variable:var
 ;
 
 class_constant ::=
-fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
+fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
 {:
 	ConstantReference name = new ConstantReference(varNameleft, varNameright, varName);
 	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, name); 
