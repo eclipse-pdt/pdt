@@ -1,8 +1,11 @@
 package org.eclipse.php.internal.ui.functions;
 
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
@@ -38,12 +41,14 @@ public class PHPFunctionsLabelProvider extends ScriptUILabelProvider {
 		}
 		return super.getText(element);
 	}
-	
+
 	public Image getImage(Object element) {
-		if(element instanceof ConstantNode){
-			return PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage();					
+		if (element instanceof ConstantNode) {
+			ImageDescriptor descriptor = new ScriptElementImageDescriptor(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP, 0, ScriptElementImageProvider.BIG_SIZE);
+			return DLTKUIPlugin.getImageDescriptorRegistry().get(descriptor);
+		} else {
+			return super.getImage(element);
 		}
-		return super.getImage(element);
 	}
 
 }
