@@ -136,12 +136,11 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 			return;
 		}
 
-		// go over the program args and see if there is a flag for creating a test project
-
-		// search backwards since the program parameters are at the end of the
+		// go over the program args. search backwards since the program parameters are at the end of the
 		// array
 		for (int i = args.length - 1; i >= 0; i--) {
-			if (args[i].equals(CREATE_TEST_PROJECT_SWITCH)) {
+			// check if there is a flag for creating a test project
+			if (CREATE_TEST_PROJECT_SWITCH.equals(args[i])) {
 				createTestProject();
 				return;
 			}
@@ -149,8 +148,11 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 		return;
 	}
 
+	/**
+	 * Create the php demo project and its files 
+	 */
 	private void createTestProject() {
-		TestProject.run();
+		PhpDemoProject.run();
 	}
 
 	/**
