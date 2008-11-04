@@ -204,7 +204,7 @@ public class PHPKeywords {
 		new KeywordData("xor", WHITESPACE_SUFFIX, 1),
 	};
 	
-	private static KeywordData[] getKeywordDataByProject(IProject project) {
+	public static KeywordData[] getKeywordDataByProject(IProject project) {
 		if (PHPVersion.PHP4.equals(PhpVersionProjectPropertyHandler.getVersion(project))) {
 			return keywordsPhp4;
 		}
