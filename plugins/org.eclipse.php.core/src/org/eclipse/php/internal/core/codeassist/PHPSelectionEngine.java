@@ -41,7 +41,6 @@ import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
@@ -96,11 +95,10 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			if (file != null) {
 				if (file.exists()) {
 					structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-					if (structuredModel == null) {
-						structuredModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(file);
-					}
-					if (structuredModel instanceof AbstractStructuredModel) {
-						document = ((AbstractStructuredModel) structuredModel).getStructuredDocument();
+					if (structuredModel != null) {
+						document = structuredModel.getStructuredDocument();
+					} else {
+						document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
 					}
 				} else {
 					document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
