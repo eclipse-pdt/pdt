@@ -35,8 +35,6 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.PHPKeywords;
-import org.eclipse.php.internal.core.phpModel.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -272,14 +270,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
 					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, endPosition, true);
 					String elementName = statement.subSequence(startPosition, endPosition).toString();
-					
-					// If selected element is a keyword - return immidiately (less load on model)
-					KeywordData[] keywords = PHPKeywords.getKeywordDataByProject(sourceModule.getScriptProject().getProject());
-					for (KeywordData data : keywords) {
-						if (data.name.equals(elementName)) {
-							return EMPTY;
-						}
-					}
 
 					// Determine previous word:
 					int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
