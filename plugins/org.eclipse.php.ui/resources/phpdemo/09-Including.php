@@ -7,8 +7,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *******************************************************************************/
 
-require_once '05-inherit.php';
-require_once '01-src/01-included.php';
+require_once '05-Inherit.php';
+require_once 'src/01-included.php';
 
 $instance = new MyClass();
 $instance->classFunc();
