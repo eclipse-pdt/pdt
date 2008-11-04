@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.functions;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -29,6 +27,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
@@ -391,10 +390,10 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 		if (fWorkingSetName == null)
 			return result;
 
-		String wsstr = MessageFormat.format(PHPUIMessages.getString("PHPExplorer_toolTip"), new String[] { fWorkingSetName });
+		String wsstr = NLS.bind(PHPUIMessages.getString("PHPExplorer_toolTip"), new String[] { fWorkingSetName });
 		if (result.length() == 0)
 			return wsstr;
-		return MessageFormat.format(PHPUIMessages.getString("PHPExplorer_toolTip2"), new String[] { result, fWorkingSetName });
+		return NLS.bind(PHPUIMessages.getString("PHPExplorer_toolTip2"), new String[] { result, fWorkingSetName });
 	}
 
 	void updateTitle() {
