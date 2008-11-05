@@ -2221,8 +2221,10 @@ class DOMXPath  {
 /**
  * Gets a DOMElement object from a SimpleXMLElement object
  * @link http://php.net/manual/en/function.dom-import-simplexml.php
- * @param node SimpleXMLElement
- * @return DOMElement 
+ * @param node SimpleXMLElement <p>
+ * The SimpleXMLElement node.
+ * </p>
+ * @return DOMElement The DOMElement node added or false if any errors occur.
  */
 function dom_import_simplexml (SimpleXMLElement $node) {}
 

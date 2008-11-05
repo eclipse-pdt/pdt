@@ -105,6 +105,7 @@ final class tidyNode  {
 	 * returns the parent node of the current node
 	 * @link http://php.net/manual/en/function.tidynode-getparent.php
 	 * @return tidyNode a tidyNode if the node has a parent, or &null;
+	 * otherwise.
 	 */
 	public function getParent () {}
 
@@ -131,7 +132,9 @@ function tidy_parse_file () {}
 /**
  * Return a string representing the parsed tidy markup
  * @link http://php.net/manual/en/function.tidy-get-output.php
- * @param object tidy
+ * @param object tidy <p>
+ * The tidy object.
+ * </p>
  * @return string the parsed tidy markup.
  */
 function tidy_get_output (tidy $object) {}
@@ -212,7 +215,9 @@ function tidy_error_count () {}
 /**
  * Returns the Number of Tidy warnings encountered for specified document
  * @link http://php.net/manual/en/function.tidy-warning-count.php
- * @param object tidy
+ * @param object tidy <p>
+ * The Tidy object.
+ * </p>
  * @return int the number of warnings.
  */
 function tidy_warning_count (tidy $object) {}
@@ -220,7 +225,9 @@ function tidy_warning_count (tidy $object) {}
 /**
  * Returns the Number of Tidy accessibility warnings encountered for specified document
  * @link http://php.net/manual/en/function.tidy-access-count.php
- * @param object tidy
+ * @param object tidy <p>
+ * The Tidy object.
+ * </p>
  * @return int the number of warnings.
  */
 function tidy_access_count (tidy $object) {}
@@ -234,9 +241,14 @@ function tidy_config_count () {}
 /**
  * Returns the documentation for the given option name
  * @link http://php.net/manual/en/function.tidy-get-opt-doc.php
- * @param object tidy
- * @param optname string
+ * @param object tidy <p>
+ * A tidy object
+ * </p>
+ * @param optname string <p>
+ * The option name
+ * </p>
  * @return string a string if the option exists and has documentation available, or
+ * false otherwise.
  */
 function tidy_get_opt_doc (tidy $object, $optname) {}
 
@@ -267,8 +279,12 @@ function tidy_get_body () {}
 /**
  * ob_start callback function to repair the buffer
  * @link http://php.net/manual/en/function.ob-tidyhandler.php
- * @param input string
- * @param mode int[optional]
+ * @param input string <p>
+ * The buffer.
+ * </p>
+ * @param mode int[optional] <p>
+ * The buffer mode.
+ * </p>
  * @return string the modified buffer.
  */
 function ob_tidyhandler ($input, $mode = null) {}

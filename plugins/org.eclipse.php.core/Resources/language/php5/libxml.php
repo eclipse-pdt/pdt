@@ -8,7 +8,10 @@ class LibXMLError  {
 /**
  * Set the streams context for the next libxml document load or write
  * @link http://php.net/manual/en/function.libxml-set-streams-context.php
- * @param streams_context resource
+ * @param streams_context resource <p>
+ * The stream context resource (created with
+ * stream_context_create)
+ * </p>
  * @return void 
  */
 function libxml_set_streams_context ($streams_context) {}
@@ -16,8 +19,11 @@ function libxml_set_streams_context ($streams_context) {}
 /**
  * Disable libxml errors and allow user to fetch error information as needed
  * @link http://php.net/manual/en/function.libxml-use-internal-errors.php
- * @param use_errors bool[optional]
- * @return bool 
+ * @param use_errors bool[optional] <p>
+ * Whether to enable user error handling. Defaults to false.
+ * </p>
+ * @return bool This function returns the previous value of
+ * use_errors.
  */
 function libxml_use_internal_errors ($use_errors = null) {}
 
@@ -25,6 +31,7 @@ function libxml_use_internal_errors ($use_errors = null) {}
  * Retrieve last error from libxml
  * @link http://php.net/manual/en/function.libxml-get-last-error.php
  * @return LibXMLError a LibXMLError object if there is any error in the
+ * buffer, false otherwise.
  */
 function libxml_get_last_error () {}
 
@@ -39,6 +46,7 @@ function libxml_clear_errors () {}
  * Retrieve array of errors
  * @link http://php.net/manual/en/function.libxml-get-errors.php
  * @return array an array with LibXMLError objects if there are any
+ * errors in the buffer, or an empty array otherwise.
  */
 function libxml_get_errors () {}
 
@@ -124,14 +132,18 @@ define ('LIBXML_NONET', 2048);
 /**
  * Activate small nodes allocation optimization. This may speed up your
  * application without needing to change the code.
+ * <p>
  * Only available in Libxml &gt;= 2.6.21
+ * </p>
  * @link http://php.net/manual/en/libxml.constants.php
  */
 define ('LIBXML_COMPACT', 65536);
 
 /**
  * Drop the XML declaration when saving a document
+ * <p>
  * Only available in Libxml &gt;= 2.6.21
+ * </p>
  * @link http://php.net/manual/en/libxml.constants.php
  */
 define ('LIBXML_NOXMLDECL', 2);
@@ -139,9 +151,11 @@ define ('LIBXML_NOXMLDECL', 2);
 /**
  * Expand empty tags (e.g. &lt;br/&gt; to
  * &lt;br&gt;&lt;/br&gt;)
+ * <p>
  * This option is currently just available in the
  * and
  * functions.
+ * </p>
  * @link http://php.net/manual/en/libxml.constants.php
  */
 define ('LIBXML_NOEMPTYTAG', 4);

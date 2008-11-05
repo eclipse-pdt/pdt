@@ -12,11 +12,11 @@ class SoapClient  {
 	/**
 	 * Calls a SOAP function (deprecated)
 	 * @link http://php.net/manual/en/function.soap-soapclient-call.php
-	 * @param function_name string
-	 * @param arguments array
-	 * @param options array[optional]
-	 * @param input_headers array[optional]
-	 * @param output_headers array[optional]
+	 * @param function_name string 
+	 * @param arguments array 
+	 * @param options array[optional] 
+	 * @param input_headers array[optional] 
+	 * @param output_headers array[optional] 
 	 * @return mixed 
 	 */
 	public function __call ($function_name, array $arguments, array $options = null, array $input_headers = null, array $output_headers = null) {}
@@ -24,74 +24,91 @@ class SoapClient  {
 	/**
 	 * Calls a SOAP function
 	 * @link http://php.net/manual/en/function.soap-soapclient-soapcall.php
-	 * @param function_name string
-	 * @param arguments array
-	 * @param options array[optional]
-	 * @param input_headers mixed[optional]
-	 * @param output_headers array[optional]
-	 * @return mixed 
+	 * @param function_name string 
+	 * @param arguments array 
+	 * @param options array[optional] 
+	 * @param input_headers mixed[optional] 
+	 * @param output_headers array[optional] 
+	 * @return mixed SOAP functions may return one, or multiple values. If only one value is returned
+	 * by the SOAP function, the return value of __soapCall will be
+	 * a simple value (e.g. an integer, a string, etc). If multiple values are
+	 * returned, __soapCall will return
+	 * an associative array of named output parameters.
 	 */
 	public function __soapCall ($function_name, array $arguments, array $options = null, $input_headers = null, array &$output_headers = null) {}
 
 	/**
 	 * Returns last SOAP request
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastrequest.php
-	 * @return string 
+	 * @return string The last SOAP request.
 	 */
 	public function __getLastRequest () {}
 
 	/**
 	 * Returns last SOAP response.
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastresponse.php
-	 * @return string 
+	 * @return string The last SOAP response.
 	 */
 	public function __getLastResponse () {}
 
 	/**
 	 * Returns last SOAP request headers
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastrequestheaders.php
-	 * @return string 
+	 * @return string The last SOAP request headers.
 	 */
 	public function __getLastRequestHeaders () {}
 
 	/**
 	 * Returns last SOAP response headers.
 	 * @link http://php.net/manual/en/function.soap-soapclient-getlastresponseheaders.php
-	 * @return string 
+	 * @return string The last SOAP response headers.
 	 */
 	public function __getLastResponseHeaders () {}
 
 	/**
 	 * Returns list of SOAP functions
 	 * @link http://php.net/manual/en/function.soap-soapclient-getfunctions.php
-	 * @return array 
+	 * @return array The list of SOAP functions.
 	 */
 	public function __getFunctions () {}
 
 	/**
 	 * Returns list of SOAP types
 	 * @link http://php.net/manual/en/function.soap-soapclient-gettypes.php
-	 * @return array 
+	 * @return array The list of SOAP types.
 	 */
 	public function __getTypes () {}
 
 	/**
 	 * Performs a SOAP request
 	 * @link http://php.net/manual/en/function.soap-soapclient-dorequest.php
-	 * @param request string
-	 * @param location string
-	 * @param action string
-	 * @param version int
-	 * @param one_way int[optional]
-	 * @return string 
+	 * @param request string <p>
+	 * The XML SOAP request.
+	 * </p>
+	 * @param location string <p>
+	 * The URL to request.
+	 * </p>
+	 * @param action string <p>
+	 * The SOAP action.
+	 * </p>
+	 * @param version int <p>
+	 * The SOAP version.
+	 * </p>
+	 * @param one_way int[optional] <p>
+	 * </p>
+	 * @return string The XML SOAP response.
 	 */
 	public function __doRequest ($request, $location, $action, $version, $one_way = null) {}
 
 	/**
 	 * Sets the cookie that will be sent with the SOAP request
 	 * @link http://php.net/manual/en/function.soap-soapclient-setcookie.php
-	 * @param name string
-	 * @param value string[optional]
+	 * @param name string <p>
+	 * The name of the cookie.
+	 * </p>
+	 * @param value string[optional] <p>
+	 * The value of the cookie. If not specified, the cookie will be deleted.
+	 * </p>
 	 * @return void 
 	 */
 	public function __setCookie ($name, $value = null) {}
@@ -125,7 +142,9 @@ class SoapServer  {
 	/**
 	 * Sets persistence mode of SoapServer
 	 * @link http://php.net/manual/en/function.soap-soapserver-setpersistence.php
-	 * @param mode int
+	 * @param mode int <p>
+	 * One of the SOAP_PERSISTENCE_XXX constants.
+	 * </p>
 	 * @return void 
 	 */
 	public function setPersistence ($mode) {}
@@ -133,9 +152,14 @@ class SoapServer  {
 	/**
 	 * Sets class which will handle SOAP requests
 	 * @link http://php.net/manual/en/function.soap-soapserver-setclass.php
-	 * @param class_name string
-	 * @param args mixed[optional]
-	 * @param _ mixed[optional]
+	 * @param class_name string <p>
+	 * The name of the exported class.
+	 * </p>
+	 * @param args mixed[optional] <p>
+	 * These optional parameters will be passed to the default class constructor
+	 * during object creation. 
+	 * </p>
+	 * @param _ mixed[optional] 
 	 * @return void 
 	 */
 	public function setClass ($class_name, $args = null, $_ = null) {}
@@ -145,7 +169,22 @@ class SoapServer  {
 	/**
 	 * Adds one or several functions those will handle SOAP requests
 	 * @link http://php.net/manual/en/function.soap-soapserver-addfunction.php
-	 * @param functions mixed
+	 * @param functions mixed <p>
+	 * To export one function, pass the function name into this parameter as
+	 * a string.
+	 * </p>
+	 * <p>
+	 * To export several functions, pass an array of function names.
+	 * </p>
+	 * <p>
+	 * To export all the functions, pass a special constant SOAP_FUNCTIONS_ALL.
+	 * </p>
+	 * <p>
+	 * functions must receive all input arguments in the same
+	 * order as defined in the WSDL file (They should not receive any output parameters
+	 * as arguments) and return one or more values. To return several values they must
+	 * return an array with named output parameters.
+	 * </p>
 	 * @return void 
 	 */
 	public function addFunction ($functions) {}
@@ -153,14 +192,17 @@ class SoapServer  {
 	/**
 	 * Returns list of defined functions
 	 * @link http://php.net/manual/en/function.soap-soapserver-getfunctions.php
-	 * @return array 
+	 * @return array The list of all functions.
 	 */
 	public function getFunctions () {}
 
 	/**
 	 * Handles a SOAP request
 	 * @link http://php.net/manual/en/function.soap-soapserver-handle.php
-	 * @param soap_request string[optional]
+	 * @param soap_request string[optional] <p>
+	 * The SOAP request. If this argument is omitted, the request is supposed
+	 * to be in the $HTTP_RAW_POST_DATA PHP variable.
+	 * </p>
 	 * @return void 
 	 */
 	public function handle ($soap_request = null) {}
@@ -168,11 +210,11 @@ class SoapServer  {
 	/**
 	 * Issue SoapServer fault indicating an error
 	 * @link http://php.net/manual/en/function.soap-soapserver-fault.php
-	 * @param code string
-	 * @param string string
-	 * @param actor string[optional]
-	 * @param details mixed[optional]
-	 * @param name string[optional]
+	 * @param code string 
+	 * @param string string 
+	 * @param actor string[optional] 
+	 * @param details mixed[optional] 
+	 * @param name string[optional] 
 	 * @return void 
 	 */
 	public function fault ($code, $string, $actor = null, $details = null, $name = null) {}
@@ -246,7 +288,7 @@ class SoapHeader  {
 /**
  * Set whether to use the SOAP error handler and return the former value
  * @link http://php.net/manual/en/function.use-soap-error-handler.php
- * @param handler bool[optional]
+ * @param handler bool[optional] 
  * @return bool 
  */
 function use_soap_error_handler ($handler = null) {}
@@ -254,8 +296,10 @@ function use_soap_error_handler ($handler = null) {}
 /**
  * Checks if SOAP call was failed
  * @link http://php.net/manual/en/function.is-soap-fault.php
- * @param obj mixed
- * @return bool 
+ * @param obj mixed <p>
+ * The tested object.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function is_soap_fault ($obj) {}
 

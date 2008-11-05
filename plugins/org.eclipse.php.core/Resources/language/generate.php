@@ -202,11 +202,21 @@ function parse_phpdoc_functions ($phpdocDir) {
 			}
 			if (preg_match ('@<refsect1\s+role=["\']parameters["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$parameters = $match[1];
+                if (preg_match_all('@<varlistentry\s*.*?>.*?<parameter>(.*?)</parameter>.*?<listitem\s*.*?>(.*?)</listitem>.*?</varlistentry>@s', $parameters, $match)) {
+                    for ($i = 0; $i < count($match[0]); $i++) {
+                        for ($j = 0; $j < count(@$functionsDoc[$refname]['parameters']); $j++) {
+                            if ($match[1][$i] == $functionsDoc[$refname]['parameters'][$j]['name']) {
+                                $functionsDoc[$refname]['parameters'][$j]['paramdoc'] = xml_to_phpdoc ($match[2][$i]);
+                                break;
+                            }
+                        }
+                    }
+                }
 			}
 			if (preg_match ('@<refsect1\s+role=["\']returnvalues["\']>(.*?)</refsect1>@s', $xml, $match)) {
 				$returnvalues = $match[1];
-				if (preg_match ('@<para>\s*Returns(.*)@', $returnvalues, $match)) {
-					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[1]);
+				if (preg_match ('@<para>\s*(Returns)?(.*)</para>?@s', $returnvalues, $match)) {
+					$functionsDoc[$refname]['returndoc'] = xml_to_phpdoc ($match[2]);
 				}
 			}
 
@@ -641,6 +651,8 @@ function print_doccomment ($ref, $tabs = 0) {
 					if (@$parameter['isoptional']) {
 						print "[optional]";
 					}
+                    $paramdoc = newline_to_phpdoc (@$parameter['paramdoc'], $tabs);
+                    print " {$paramdoc}";
 					print "\n";
 				}
 			} else {
@@ -677,9 +689,11 @@ function print_doccomment ($ref, $tabs = 0) {
  * @return string
  */
 function xml_to_phpdoc ($str) {
+	$str = str_replace ("&return.success;", "Returns true on success or false on failure.", $str);
+	$str = str_replace ("&return.void;", "", $str);
 	$str = str_replace ("&true;", "true", $str);
 	$str = str_replace ("&false;", "false", $str);
-	$str = strip_tags ($str);
+    $str = strip_tags_special ($str);
 	$str = preg_replace ("/  */", " ", $str);
 	$str = preg_replace ("/[\r\n][\t ]/", "\n", $str);
 	$str = trim ($str);
@@ -741,6 +755,28 @@ function finish_file_output($filename) {
 	print "?>\n";
 	file_put_contents ($filename, ob_get_contents());
 	ob_end_clean();
+}
+
+/**
+ * Strips xml tags from the string like the standard strip_tags() function
+ * would do, but also translates some of the docbook tags (such as tables
+ * an paragraphs) to proper html tags
+ * @param str string
+ * @return string
+ */
+function strip_tags_special ($str) {
+    // first mask and translate the tags to preseve
+    $str = preg_replace ("/<(\/?)table>/", "###($1table)###", $str);
+    $str = str_replace ("<row>", "###(tr valign=\"top\")###", $str);
+    $str = str_replace ("</row>", "###(/tr)###", $str);
+    $str = preg_replace ("/<(\/?)entry>/", "###($1td)###", $str);
+    $str = preg_replace ("/<(\/?)para>/", "###($1p)###", $str);
+    // now strip the remaining tags
+    $str = strip_tags ($str);
+    // and restore the translated ones
+    $str = str_replace ("###(", "<", $str);
+    $str = str_replace (")###", ">", $str);
+    return $str;
 }
 
 /**

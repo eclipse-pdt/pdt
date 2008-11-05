@@ -5,9 +5,25 @@
 /**
  * Connect to an LDAP server
  * @link http://php.net/manual/en/function.ldap-connect.php
- * @param hostname string[optional]
- * @param port int[optional]
+ * @param hostname string[optional] <p>
+ * If you are using OpenLDAP 2.x.x you can specify a URL instead of the
+ * hostname. To use LDAP with SSL, compile OpenLDAP 2.x.x with SSL
+ * support, configure PHP with SSL, and set this parameter as 
+ * ldaps://hostname/.
+ * </p>
+ * @param port int[optional] <p>
+ * The port to connect to. Not used when using URLs. Defaults to 389.
+ * </p>
  * @return resource a positive LDAP link identifier on success, or false on error.
+ * When OpenLDAP 2.x.x is used, ldap_connect will always
+ * return a resource as it does not actually connect but just
+ * initializes the connecting parameters. The actual connect happens with
+ * the next calls to ldap_* funcs, usually with
+ * ldap_bind.
+ * </p>
+ * <p>
+ * If no arguments are specified then the link identifier of the already
+ * opened link will be returned.
  */
 function ldap_connect ($hostname = null, $port = null) {}
 
@@ -20,32 +36,86 @@ function ldap_close () {}
 /**
  * Bind to LDAP directory
  * @link http://php.net/manual/en/function.ldap-bind.php
- * @param link_identifier resource
- * @param bind_rdn string[optional]
- * @param bind_password string[optional]
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param bind_rdn string[optional] <p>
+ * </p>
+ * @param bind_password string[optional] <p>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_bind ($link_identifier, $bind_rdn = null, $bind_password = null) {}
 
 /**
  * Unbind from LDAP directory
  * @link http://php.net/manual/en/function.ldap-unbind.php
- * @param link_identifier resource
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_unbind ($link_identifier) {}
 
 /**
  * Read an entry
  * @link http://php.net/manual/en/function.ldap-read.php
- * @param link_identifier resource
- * @param base_dn string
- * @param filter string
- * @param attributes array[optional]
- * @param attrsonly int[optional]
- * @param sizelimit int[optional]
- * @param timelimit int[optional]
- * @param deref int[optional]
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param base_dn string <p>
+ * The base DN for the directory.
+ * </p>
+ * @param filter string <p>
+ * An empty filter is not allowed. If you want to retrieve absolutely all
+ * information for this entry, use a filter of 
+ * objectClass=*. If you know which entry types are
+ * used on the directory server, you might use an appropriate filter such
+ * as objectClass=inetOrgPerson.
+ * </p>
+ * @param attributes array[optional] <p>
+ * An array of the required attributes, e.g. array("mail", "sn", "cn").
+ * Note that the "dn" is always returned irrespective of which attributes
+ * types are requested.
+ * </p>
+ * <p>
+ * Using this parameter is much more efficient than the default action
+ * (which is to return all attributes and their associated values). 
+ * The use of this parameter should therefore be considered good
+ * practice.
+ * </p>
+ * @param attrsonly int[optional] <p>
+ * Should be set to 1 if only attribute types are wanted. If set to 0
+ * both attributes types and attribute values are fetched which is the
+ * default behaviour.
+ * </p>
+ * @param sizelimit int[optional] <p>
+ * Enables you to limit the count of entries fetched. Setting this to 0
+ * means no limit.
+ * </p>
+ * <p>
+ * This parameter can NOT override server-side preset sizelimit. You can
+ * set it lower though.
+ * </p>
+ * <p>
+ * Some directory server hosts will be configured to return no more than
+ * a preset number of entries. If this occurs, the server will indicate
+ * that it has only returned a partial results set. This also occurs if
+ * you use this parameter to limit the count of fetched entries.
+ * </p>
+ * @param timelimit int[optional] <p>
+ * Sets the number of seconds how long is spend on the search. Setting
+ * this to 0 means no limit.
+ * </p>
+ * <p>
+ * This parameter can NOT override server-side preset timelimit. You can
+ * set it lower though.
+ * </p>
+ * @param deref int[optional] <p>
+ * Specifies how aliases should be handled during the search. It can be
+ * one of the following:
+ * LDAP_DEREF_NEVER - (default) aliases are never
+ * dereferenced.
  * @return resource a search result identifier or false on error.
  */
 function ldap_read ($link_identifier, $base_dn, $filter, array $attributes = null, $attrsonly = null, $sizelimit = null, $timelimit = null, $deref = null) {}
@@ -53,14 +123,57 @@ function ldap_read ($link_identifier, $base_dn, $filter, array $attributes = nul
 /**
  * Single-level search
  * @link http://php.net/manual/en/function.ldap-list.php
- * @param link_identifier resource
- * @param base_dn string
- * @param filter string
- * @param attributes array[optional]
- * @param attrsonly int[optional]
- * @param sizelimit int[optional]
- * @param timelimit int[optional]
- * @param deref int[optional]
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param base_dn string <p>
+ * The base DN for the directory.
+ * </p>
+ * @param filter string <p>
+ * </p>
+ * @param attributes array[optional] <p>
+ * An array of the required attributes, e.g. array("mail", "sn", "cn").
+ * Note that the "dn" is always returned irrespective of which attributes
+ * types are requested.
+ * </p>
+ * <p>
+ * Using this parameter is much more efficient than the default action
+ * (which is to return all attributes and their associated values). 
+ * The use of this parameter should therefore be considered good
+ * practice.
+ * </p>
+ * @param attrsonly int[optional] <p>
+ * Should be set to 1 if only attribute types are wanted. If set to 0
+ * both attributes types and attribute values are fetched which is the
+ * default behaviour.
+ * </p>
+ * @param sizelimit int[optional] <p>
+ * Enables you to limit the count of entries fetched. Setting this to 0
+ * means no limit.
+ * </p>
+ * <p>
+ * This parameter can NOT override server-side preset sizelimit. You can
+ * set it lower though.
+ * </p>
+ * <p>
+ * Some directory server hosts will be configured to return no more than
+ * a preset number of entries. If this occurs, the server will indicate
+ * that it has only returned a partial results set. This also occurs if
+ * you use this parameter to limit the count of fetched entries.
+ * </p>
+ * @param timelimit int[optional] <p>
+ * Sets the number of seconds how long is spend on the search. Setting
+ * this to 0 means no limit.
+ * </p>
+ * <p>
+ * This parameter can NOT override server-side preset timelimit. You can
+ * set it lower though.
+ * </p>
+ * @param deref int[optional] <p>
+ * Specifies how aliases should be handled during the search. It can be
+ * one of the following:
+ * LDAP_DEREF_NEVER - (default) aliases are never
+ * dereferenced.
  * @return resource a search result identifier or false on error.
  */
 function ldap_list ($link_identifier, $base_dn, $filter, array $attributes = null, $attrsonly = null, $sizelimit = null, $timelimit = null, $deref = null) {}
@@ -68,14 +181,60 @@ function ldap_list ($link_identifier, $base_dn, $filter, array $attributes = nul
 /**
  * Search LDAP tree
  * @link http://php.net/manual/en/function.ldap-search.php
- * @param link_identifier resource
- * @param base_dn string
- * @param filter string
- * @param attributes array[optional]
- * @param attrsonly int[optional]
- * @param sizelimit int[optional]
- * @param timelimit int[optional]
- * @param deref int[optional]
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param base_dn string <p>
+ * The base DN for the directory.
+ * </p>
+ * @param filter string <p>
+ * The search filter can be simple or advanced, using boolean operators in
+ * the format described in the LDAP documentation (see the Netscape Directory SDK for full
+ * information on filters).
+ * </p>
+ * @param attributes array[optional] <p>
+ * An array of the required attributes, e.g. array("mail", "sn", "cn").
+ * Note that the "dn" is always returned irrespective of which attributes
+ * types are requested.
+ * </p>
+ * <p>
+ * Using this parameter is much more efficient than the default action
+ * (which is to return all attributes and their associated values). 
+ * The use of this parameter should therefore be considered good
+ * practice.
+ * </p>
+ * @param attrsonly int[optional] <p>
+ * Should be set to 1 if only attribute types are wanted. If set to 0
+ * both attributes types and attribute values are fetched which is the
+ * default behaviour.
+ * </p>
+ * @param sizelimit int[optional] <p>
+ * Enables you to limit the count of entries fetched. Setting this to 0
+ * means no limit.
+ * </p>
+ * <p>
+ * This parameter can NOT override server-side preset sizelimit. You can
+ * set it lower though.
+ * </p>
+ * <p>
+ * Some directory server hosts will be configured to return no more than
+ * a preset number of entries. If this occurs, the server will indicate
+ * that it has only returned a partial results set. This also occurs if
+ * you use this parameter to limit the count of fetched entries.
+ * </p>
+ * @param timelimit int[optional] <p>
+ * Sets the number of seconds how long is spend on the search. Setting
+ * this to 0 means no limit.
+ * </p>
+ * <p>
+ * This parameter can NOT override server-side preset timelimit. You can
+ * set it lower though.
+ * </p>
+ * @param deref int[optional] <p>
+ * Specifies how aliases should be handled during the search. It can be
+ * one of the following:
+ * LDAP_DEREF_NEVER - (default) aliases are never
+ * dereferenced.
  * @return resource a search result identifier or false on error.
  */
 function ldap_search ($link_identifier, $base_dn, $filter, array $attributes = null, $attrsonly = null, $sizelimit = null, $timelimit = null, $deref = null) {}
@@ -83,16 +242,21 @@ function ldap_search ($link_identifier, $base_dn, $filter, array $attributes = n
 /**
  * Free result memory
  * @link http://php.net/manual/en/function.ldap-free-result.php
- * @param result_identifier resource
- * @return bool 
+ * @param result_identifier resource <p>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_free_result ($result_identifier) {}
 
 /**
  * Count the number of entries in a search
  * @link http://php.net/manual/en/function.ldap-count-entries.php
- * @param link_identifier resource
- * @param result_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_identifier resource <p>
+ * The internal LDAP result.
+ * </p>
  * @return int number of entries in the result or false on error.
  */
 function ldap_count_entries ($link_identifier, $result_identifier) {}
@@ -100,82 +264,138 @@ function ldap_count_entries ($link_identifier, $result_identifier) {}
 /**
  * Return first result id
  * @link http://php.net/manual/en/function.ldap-first-entry.php
- * @param link_identifier resource
- * @param result_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_identifier resource <p>
+ * </p>
  * @return resource the result entry identifier for the first entry on success and
+ * false on error.
  */
 function ldap_first_entry ($link_identifier, $result_identifier) {}
 
 /**
  * Get next result entry
  * @link http://php.net/manual/en/function.ldap-next-entry.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
  * @return resource entry identifier for the next entry in the result whose entries
+ * are being read starting with ldap_first_entry. If
+ * there are no more entries in the result then it returns false.
  */
 function ldap_next_entry ($link_identifier, $result_entry_identifier) {}
 
 /**
  * Get all result entries
  * @link http://php.net/manual/en/function.ldap-get-entries.php
- * @param link_identifier resource
- * @param result_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_identifier resource <p>
+ * </p>
  * @return array a complete result information in a multi-dimensional array on
+ * success and false on error.
+ * </p>
+ * <p>
+ * The structure of the array is as follows.
+ * The attribute index is converted to lowercase. (Attributes are
+ * case-insensitive for directory servers, but not when used as
+ * array indices.)
  */
 function ldap_get_entries ($link_identifier, $result_identifier) {}
 
 /**
  * Return first attribute
  * @link http://php.net/manual/en/function.ldap-first-attribute.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
  * @return string the first attribute in the entry on success and false on
+ * error.
  */
 function ldap_first_attribute ($link_identifier, $result_entry_identifier) {}
 
 /**
  * Get the next attribute in result
  * @link http://php.net/manual/en/function.ldap-next-attribute.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
  * @return string the next attribute in an entry on success and false on
+ * error.
  */
 function ldap_next_attribute ($link_identifier, $result_entry_identifier) {}
 
 /**
  * Get attributes from a search result entry
  * @link http://php.net/manual/en/function.ldap-get-attributes.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
  * @return array a complete entry information in a multi-dimensional array
+ * on success and false on error.
  */
 function ldap_get_attributes ($link_identifier, $result_entry_identifier) {}
 
 /**
  * Get all values from a result entry
  * @link http://php.net/manual/en/function.ldap-get-values.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
- * @param attribute string
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
+ * @param attribute string <p>
+ * </p>
  * @return array an array of values for the attribute on success and false on
+ * error. The number of values can be found by indexing "count" in the
+ * resultant array. Individual values are accessed by integer index in the
+ * array. The first index is 0.
+ * </p>
+ * <p>
+ * LDAP allows more than one entry for an attribute, so it can, for example,
+ * store a number of email addresses for one person's directory entry all
+ * labeled with the attribute "mail"
+ * return_value["count"] = number of values for attribute
+ * return_value[0] = first value of attribute
+ * return_value[i] = ith value of attribute
  */
 function ldap_get_values ($link_identifier, $result_entry_identifier, $attribute) {}
 
 /**
  * Get all binary values from a result entry
  * @link http://php.net/manual/en/function.ldap-get-values-len.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
- * @param attribute string
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
+ * @param attribute string <p>
+ * </p>
  * @return array an array of values for the attribute on success and false on
+ * error. Individual values are accessed by integer index in the array. The
+ * first index is 0. The number of values can be found by indexing "count"
+ * in the resultant array.
  */
 function ldap_get_values_len ($link_identifier, $result_entry_identifier, $attribute) {}
 
 /**
  * Get the DN of a result entry
  * @link http://php.net/manual/en/function.ldap-get-dn.php
- * @param link_identifier resource
- * @param result_entry_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param result_entry_identifier resource <p>
+ * </p>
  * @return string the DN of the result entry and false on error.
  */
 function ldap_get_dn ($link_identifier, $result_entry_identifier) {}
@@ -183,8 +403,15 @@ function ldap_get_dn ($link_identifier, $result_entry_identifier) {}
 /**
  * Splits DN into its component parts
  * @link http://php.net/manual/en/function.ldap-explode-dn.php
- * @param dn string
- * @param with_attrib int
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param with_attrib int <p>
+ * Used to request if the RDNs are returned with only values or their
+ * attributes as well. To get RDNs with the attributes (i.e. in
+ * attribute=value format) set with_attrib to 0
+ * and to get only values set it to 1.
+ * </p>
  * @return array an array of all DN components.
  */
 function ldap_explode_dn ($dn, $with_attrib) {}
@@ -192,7 +419,9 @@ function ldap_explode_dn ($dn, $with_attrib) {}
 /**
  * Convert DN to User Friendly Naming format
  * @link http://php.net/manual/en/function.ldap-dn2ufn.php
- * @param dn string
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
  * @return string the user friendly name.
  */
 function ldap_dn2ufn ($dn) {}
@@ -200,74 +429,113 @@ function ldap_dn2ufn ($dn) {}
 /**
  * Add entries to LDAP directory
  * @link http://php.net/manual/en/function.ldap-add.php
- * @param link_identifier resource
- * @param dn string
- * @param entry array
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param entry array <p>
+ * An array that specifies the information about the entry. The values in
+ * the entries are indexed by individual attributes.
+ * In case of multiple values for an attribute, they are indexed using
+ * integers starting with 0.
+ * ]]>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_add ($link_identifier, $dn, array $entry) {}
 
 /**
  * Delete an entry from a directory
  * @link http://php.net/manual/en/function.ldap-delete.php
- * @param link_identifier resource
- * @param dn string
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_delete ($link_identifier, $dn) {}
 
 /**
  * Modify an LDAP entry
  * @link http://php.net/manual/en/function.ldap-modify.php
- * @param link_identifier resource
- * @param dn string
- * @param entry array
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param entry array <p>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_modify ($link_identifier, $dn, array $entry) {}
 
 /**
  * Add attribute values to current attributes
  * @link http://php.net/manual/en/function.ldap-mod-add.php
- * @param link_identifier resource
- * @param dn string
- * @param entry array
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param entry array <p>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_mod_add ($link_identifier, $dn, array $entry) {}
 
 /**
  * Replace attribute values with new ones
  * @link http://php.net/manual/en/function.ldap-mod-replace.php
- * @param link_identifier resource
- * @param dn string
- * @param entry array
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param entry array <p>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_mod_replace ($link_identifier, $dn, array $entry) {}
 
 /**
  * Delete attribute values from current attributes
  * @link http://php.net/manual/en/function.ldap-mod-del.php
- * @param link_identifier resource
- * @param dn string
- * @param entry array
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param entry array <p>
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_mod_del ($link_identifier, $dn, array $entry) {}
 
 /**
  * Return the LDAP error number of the last LDAP command
  * @link http://php.net/manual/en/function.ldap-errno.php
- * @param link_identifier resource
- * @return int 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @return int Return the LDAP error number of the last LDAP command for this
+ * link.
  */
 function ldap_errno ($link_identifier) {}
 
 /**
  * Convert LDAP error number into string error message
  * @link http://php.net/manual/en/function.ldap-err2str.php
- * @param errno int
+ * @param errno int <p>
+ * The error number.
+ * </p>
  * @return string the error message, as a string.
  */
 function ldap_err2str ($errno) {}
@@ -275,7 +543,9 @@ function ldap_err2str ($errno) {}
 /**
  * Return the LDAP error message of the last LDAP command
  * @link http://php.net/manual/en/function.ldap-error.php
- * @param link_identifier resource
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
  * @return string string error message.
  */
 function ldap_error ($link_identifier) {}
@@ -283,20 +553,29 @@ function ldap_error ($link_identifier) {}
 /**
  * Compare value of attribute found in entry specified with DN
  * @link http://php.net/manual/en/function.ldap-compare.php
- * @param link_identifier resource
- * @param dn string
- * @param attribute string
- * @param value string
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param attribute string <p>
+ * The attribute name.
+ * </p>
+ * @param value string <p>
+ * The compared value.
+ * </p>
  * @return mixed true if value matches otherwise returns
+ * false. Returns -1 on error.
  */
 function ldap_compare ($link_identifier, $dn, $attribute, $value) {}
 
 /**
  * Sort LDAP result entries
  * @link http://php.net/manual/en/function.ldap-sort.php
- * @param link resource
- * @param result resource
- * @param sortfilter string
+ * @param link resource 
+ * @param result resource 
+ * @param sortfilter string 
  * @return bool 
  */
 function ldap_sort ($link, $result, $sortfilter) {}
@@ -304,40 +583,190 @@ function ldap_sort ($link, $result, $sortfilter) {}
 /**
  * Modify the name of an entry
  * @link http://php.net/manual/en/function.ldap-rename.php
- * @param link_identifier resource
- * @param dn string
- * @param newrdn string
- * @param newparent string
- * @param deleteoldrdn bool
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param dn string <p>
+ * The distinguished name of an LDAP entity.
+ * </p>
+ * @param newrdn string <p>
+ * The new RDN.
+ * </p>
+ * @param newparent string <p>
+ * The new parent/superior entry.
+ * </p>
+ * @param deleteoldrdn bool <p>
+ * If true the old RDN value(s) is removed, else the old RDN value(s)
+ * is retained as non-distinguished values of the entry.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_rename ($link_identifier, $dn, $newrdn, $newparent, $deleteoldrdn) {}
 
 /**
  * Get the current value for given option
  * @link http://php.net/manual/en/function.ldap-get-option.php
- * @param link_identifier resource
- * @param option int
- * @param retval mixed
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param option int <p>
+ * The parameter option can be one of:
+ * <tr valign="top">
+ * <td>Option</td>
+ * <td>Type</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_DEREF</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_SIZELIMIT</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_TIMELIMIT</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_NETWORK_TIMEOUT</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_PROTOCOL_VERSION</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_ERROR_NUMBER</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_REFERRALS</td>
+ * <td>bool</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_RESTART</td>
+ * <td>bool</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_HOST_NAME</td>
+ * <td>string</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_ERROR_STRING</td>
+ * <td>string</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_MATCHED_DN</td>
+ * <td>string</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_SERVER_CONTROLS</td>
+ * <td>array</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_CLIENT_CONTROLS</td>
+ * <td>array</td>
+ * </tr>
+ * </p>
+ * @param retval mixed <p>
+ * This will be set to the option value.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_get_option ($link_identifier, $option, &$retval) {}
 
 /**
  * Set the value of the given option
  * @link http://php.net/manual/en/function.ldap-set-option.php
- * @param link_identifier resource
- * @param option int
- * @param newval mixed
- * @return bool 
+ * @param link_identifier resource <p>
+ * An LDAP link identifier, returned by ldap_connect.
+ * </p>
+ * @param option int <p>
+ * The parameter option can be one of:
+ * <tr valign="top">
+ * <td>Option</td>
+ * <td>Type</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_DEREF</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_SIZELIMIT</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_TIMELIMIT</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_NETWORK_TIMEOUT</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_PROTOCOL_VERSION</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_ERROR_NUMBER</td>
+ * <td>integer</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_REFERRALS</td>
+ * <td>bool</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_RESTART</td>
+ * <td>bool</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_HOST_NAME</td>
+ * <td>string</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_ERROR_STRING</td>
+ * <td>string</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_MATCHED_DN</td>
+ * <td>string</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_SERVER_CONTROLS</td>
+ * <td>array</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>LDAP_OPT_CLIENT_CONTROLS</td>
+ * <td>array</td>
+ * </tr>
+ * </p>
+ * <p>
+ * LDAP_OPT_SERVER_CONTROLS and 
+ * LDAP_OPT_CLIENT_CONTROLS require a list of
+ * controls, this means that the value must be an array of controls. A
+ * control consists of an oid identifying the control,
+ * an optional value, and an optional flag for
+ * criticality. In PHP a control is given by an
+ * array containing an element with the key oid
+ * and string value, and two optional elements. The optional
+ * elements are key value with string value
+ * and key iscritical with boolean value.
+ * iscritical defaults to false
+ * if not supplied. See draft-ietf-ldapext-ldap-c-api-xx.txt
+ * for details. See also the second example below.
+ * </p>
+ * @param newval mixed <p>
+ * The new value for the specified option.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function ldap_set_option ($link_identifier, $option, $newval) {}
 
 /**
  * Return first reference
  * @link http://php.net/manual/en/function.ldap-first-reference.php
- * @param link resource
- * @param result resource
+ * @param link resource 
+ * @param result resource 
  * @return resource 
  */
 function ldap_first_reference ($link, $result) {}
@@ -345,8 +774,8 @@ function ldap_first_reference ($link, $result) {}
 /**
  * Get next reference
  * @link http://php.net/manual/en/function.ldap-next-reference.php
- * @param link resource
- * @param entry resource
+ * @param link resource 
+ * @param entry resource 
  * @return resource 
  */
 function ldap_next_reference ($link, $entry) {}
@@ -354,9 +783,9 @@ function ldap_next_reference ($link, $entry) {}
 /**
  * Extract information from reference entry
  * @link http://php.net/manual/en/function.ldap-parse-reference.php
- * @param link resource
- * @param entry resource
- * @param referrals array
+ * @param link resource 
+ * @param entry resource 
+ * @param referrals array 
  * @return bool 
  */
 function ldap_parse_reference ($link, $entry, array &$referrals) {}
@@ -364,12 +793,12 @@ function ldap_parse_reference ($link, $entry, array &$referrals) {}
 /**
  * Extract information from result
  * @link http://php.net/manual/en/function.ldap-parse-result.php
- * @param link resource
- * @param result resource
- * @param errcode int
- * @param matcheddn string[optional]
- * @param errmsg string[optional]
- * @param referrals array[optional]
+ * @param link resource 
+ * @param result resource 
+ * @param errcode int 
+ * @param matcheddn string[optional] 
+ * @param errmsg string[optional] 
+ * @param referrals array[optional] 
  * @return bool 
  */
 function ldap_parse_result ($link, $result, &$errcode, &$matcheddn = null, &$errmsg = null, array &$referrals = null) {}
@@ -377,7 +806,7 @@ function ldap_parse_result ($link, $result, &$errcode, &$matcheddn = null, &$err
 /**
  * Start TLS
  * @link http://php.net/manual/en/function.ldap-start-tls.php
- * @param link resource
+ * @param link resource 
  * @return bool 
  */
 function ldap_start_tls ($link) {}
@@ -385,8 +814,8 @@ function ldap_start_tls ($link) {}
 /**
  * Set a callback function to do re-binds on referral chasing
  * @link http://php.net/manual/en/function.ldap-set-rebind-proc.php
- * @param link resource
- * @param callback callback
+ * @param link resource 
+ * @param callback callback 
  * @return bool 
  */
 function ldap_set_rebind_proc ($link, $callback) {}

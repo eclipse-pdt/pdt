@@ -5,20 +5,45 @@
 /**
  * Gets a specific external variable by name and optionally filters it
  * @link http://php.net/manual/en/function.filter-input.php
- * @param type int
- * @param variable_name string
- * @param filter int[optional]
- * @param options mixed[optional]
- * @return mixed 
+ * @param type int <p>
+ * One of INPUT_GET, INPUT_POST,
+ * INPUT_COOKIE, INPUT_SERVER,
+ * INPUT_ENV, INPUT_SESSION (not
+ * implemented yet) and INPUT_REQUEST (not
+ * implemented yet).
+ * </p>
+ * @param variable_name string <p>
+ * Name of a variable to get.
+ * </p>
+ * @param filter int[optional] <p>
+ * Filter to apply. Defaults to FILTER_DEFAULT.
+ * </p>
+ * @param options mixed[optional] <p>
+ * Associative array of options or bitwise disjunction of flags. If filter
+ * accepts options, flags can be provided in "flags" field of array.
+ * </p>
+ * @return mixed Value of the requested variable on success, false if the filter fails,
+ * or &null; if the variable_name variable is not set.
+ * If the flag FILTER_NULL_ON_FAILURE is used, it
+ * returns false if the variable is not set and &null; if the filter fails.
  */
 function filter_input ($type, $variable_name, $filter = null, $options = null) {}
 
 /**
  * Filters a variable with a specified filter
  * @link http://php.net/manual/en/function.filter-var.php
- * @param variable mixed
- * @param filter int[optional]
- * @param options mixed[optional]
+ * @param variable mixed <p>
+ * Value to filter.
+ * </p>
+ * @param filter int[optional] <p>
+ * ID of a filter to use.
+ * Defaults to FILTER_SANITIZE_STRING.
+ * </p>
+ * @param options mixed[optional] <p>
+ * Associative array of options or bitwise disjunction of flags. If filter
+ * accepts options, flags can be provided in "flags" field of array. For
+ * the "callback" filter, callback type should be passed.
+ * </p>
  * @return mixed the filtered data, or false if the filter fails.
  */
 function filter_var ($variable, $filter = null, $options = null) {}
@@ -26,18 +51,59 @@ function filter_var ($variable, $filter = null, $options = null) {}
 /**
  * Gets external variables and optionally filters them
  * @link http://php.net/manual/en/function.filter-input-array.php
- * @param type int
- * @param definition mixed[optional]
- * @return mixed 
+ * @param type int <p>
+ * One of INPUT_GET, INPUT_POST,
+ * INPUT_COOKIE, INPUT_SERVER,
+ * INPUT_ENV, INPUT_SESSION, or
+ * INPUT_REQUEST.
+ * </p>
+ * @param definition mixed[optional] <p>
+ * An array defining the arguments. A valid key is a string
+ * containing a variable name and a valid value is either a filter type,
+ * or an array optionally specifying the filter, flags and
+ * options. If the value is an array, valid keys are
+ * filter which specifies the filter type,
+ * flags which specifies any flags that apply to the
+ * filter, and options which specifies any options
+ * that apply to the filter. See the example below for a better
+ * understanding.
+ * </p>
+ * <p>
+ * This parameter can be also an integer holding a filter constant. Then all values in the
+ * input array are filtered by this filter.
+ * </p>
+ * @return mixed An array containing the values of the requested variables on success, or false 
+ * on failure. An array value will be false if the filter fails, or &null; if 
+ * the variable is not set. Or if the flag FILTER_NULL_ON_FAILURE
+ * is used, it returns false if the variable is not set and &null; if the filter 
+ * fails.
  */
 function filter_input_array ($type, $definition = null) {}
 
 /**
  * Gets multiple variables and optionally filters them
  * @link http://php.net/manual/en/function.filter-var-array.php
- * @param data array
- * @param definition mixed[optional]
- * @return mixed 
+ * @param data array <p>
+ * An array with string keys containing the data to filter.
+ * </p>
+ * @param definition mixed[optional] <p>
+ * An array defining the arguments. A valid key is a string
+ * containing a variable name and a valid value is either a filter type,
+ * or an array optionally specifying the filter, flags and
+ * options. If the value is an array, valid keys are
+ * filter which specifies the filter type,
+ * flags which specifies any flags that apply to the
+ * filter, and options which specifies any options
+ * that apply to the filter. See the example below for a better
+ * understanding.
+ * </p>
+ * <p>
+ * This parameter can be also an integer holding a filter constant. Then all values in the
+ * input array are filtered by this filter.
+ * </p>
+ * @return mixed An array containing the values of the requested variables on success, or false 
+ * on failure. An array value will be false if the filter fails, or &null; if 
+ * the variable is not set.
  */
 function filter_var_array (array $data, $definition = null) {}
 
@@ -45,23 +111,33 @@ function filter_var_array (array $data, $definition = null) {}
  * Returns a list of all supported filters
  * @link http://php.net/manual/en/function.filter-list.php
  * @return array an array of names of all supported filters, empty array if there
+ * are no such filters. Indexes of this array are not filter IDs, they can be
+ * obtained with filter_id from a name instead.
  */
 function filter_list () {}
 
 /**
  * Checks if variable of specified type exists
  * @link http://php.net/manual/en/function.filter-has-var.php
- * @param type int
- * @param variable_name string
- * @return bool 
+ * @param type int <p>
+ * One of INPUT_GET, INPUT_POST,
+ * INPUT_COOKIE, INPUT_SERVER,
+ * INPUT_ENV.
+ * </p>
+ * @param variable_name string <p>
+ * Name of a variable to check.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function filter_has_var ($type, $variable_name) {}
 
 /**
  * Returns the filter ID belonging to a named filter
  * @link http://php.net/manual/en/function.filter-id.php
- * @param filtername string
- * @return int 
+ * @param filtername string <p>
+ * Name of a filter to get.
+ * </p>
+ * @return int ID of a filter on success or &null; if filter doesn't exist.
  */
 function filter_id ($filtername) {}
 

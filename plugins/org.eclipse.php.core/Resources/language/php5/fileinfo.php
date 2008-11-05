@@ -17,8 +17,11 @@ class finfo  {
 /**
  * Create a new fileinfo resource
  * @link http://php.net/manual/en/function.finfo-open.php
- * @param options int[optional]
- * @param arg string[optional]
+ * @param options int[optional] <p>
+ * One or disjunction of more Fileinfo
+ * constants.
+ * </p>
+ * @param arg string[optional] 
  * @return resource a magic database resource on success or false on failure.
  */
 function finfo_open ($options = null, $arg = null) {}
@@ -26,36 +29,56 @@ function finfo_open ($options = null, $arg = null) {}
 /**
  * Close fileinfo resource
  * @link http://php.net/manual/en/function.finfo-close.php
- * @param finfo resource
- * @return bool 
+ * @param finfo resource <p>
+ * Fileinfo resource returned by finfo_open.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function finfo_close ($finfo) {}
 
 /**
  * Set libmagic configuration options
  * @link http://php.net/manual/en/function.finfo-set-flags.php
- * @param options int
- * @return bool 
+ * @param options int <p>
+ * One or disjunction of more Fileinfo
+ * constants.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function finfo_set_flags ($options) {}
 
 /**
  * Return information about a file
  * @link http://php.net/manual/en/function.finfo-file.php
- * @param file_name string
- * @param options int[optional]
- * @param context resource[optional]
+ * @param file_name string <p>
+ * Name of a file to be checked.
+ * </p>
+ * @param options int[optional] <p>
+ * One or disjunction of more Fileinfo
+ * constants.
+ * </p>
+ * @param context resource[optional] <p>
+ * For a description of contexts, refer to .
+ * </p>
  * @return string a textual description of the contents of the
+ * filename argument, or false if an error occurred.
  */
 function finfo_file ($file_name, $options = null, $context = null) {}
 
 /**
  * Return information about a string buffer
  * @link http://php.net/manual/en/function.finfo-buffer.php
- * @param string string
- * @param options int[optional]
- * @param context resource[optional]
+ * @param string string <p>
+ * Content of a file to be checked.
+ * </p>
+ * @param options int[optional] <p>
+ * One or disjunction of more Fileinfo
+ * constants.
+ * </p>
+ * @param context resource[optional] <p>
+ * </p>
  * @return string a textual description of the string
+ * argument, or false if an error occurred.
  */
 function finfo_buffer ($string, $options = null, $context = null) {}
 

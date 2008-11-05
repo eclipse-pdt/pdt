@@ -1518,8 +1518,14 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	/**
 	 * Return a well-formed XML string based on SimpleXML element
 	 * @link http://php.net/manual/en/function.simplexml-element-asXML.php
-	 * @param filename string[optional]
-	 * @return mixed 
+	 * @param filename string[optional] <p>
+	 * If specified, the function writes the data to the file rather than
+	 * returning it.
+	 * </p>
+	 * @return mixed If the filename isn't specified, this function
+	 * returns a string on success and false on error. If the
+	 * parameter is specified, it returns true if the file was written
+	 * successfully and false otherwise.
 	 */
 	public function asXML ($filename = null) {}
 
@@ -1528,25 +1534,39 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	/**
 	 * Runs XPath query on XML data
 	 * @link http://php.net/manual/en/function.simplexml-element-xpath.php
-	 * @param path string
+	 * @param path string <p>
+	 * An XPath path
+	 * </p>
 	 * @return array an array of SimpleXMLElement objects or false in
+	 * case of an error.
 	 */
 	public function xpath ($path) {}
 
 	/**
 	 * Creates a prefix/ns context for the next XPath query
 	 * @link http://php.net/manual/en/function.simplexml-element-registerXPathNamespace.php
-	 * @param prefix string
-	 * @param ns string
-	 * @return bool 
+	 * @param prefix string <p>
+	 * The namespace prefix to use in the XPath query for the namespace given in 
+	 * ns.
+	 * </p>
+	 * @param ns string <p>
+	 * The namespace to use for the XPath query. This must match a namespace in
+	 * use by the XML document or the XPath query using 
+	 * prefix will not return any results.
+	 * </p>
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function registerXPathNamespace ($prefix, $ns) {}
 
 	/**
 	 * Identifies an element's attributes
 	 * @link http://php.net/manual/en/function.simplexml-element-attributes.php
-	 * @param ns string[optional]
-	 * @param is_prefix bool[optional]
+	 * @param ns string[optional] <p>
+	 * An optional namespace for the retrieved attributes
+	 * </p>
+	 * @param is_prefix bool[optional] <p>
+	 * Default to false
+	 * </p>
 	 * @return SimpleXMLElement 
 	 */
 	public function attributes ($ns = null, $is_prefix = null) {}
@@ -1554,8 +1574,11 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	/**
 	 * Finds children of given node
 	 * @link http://php.net/manual/en/function.simplexml-element-children.php
-	 * @param ns string[optional]
-	 * @param is_prefix bool[optional]
+	 * @param ns string[optional] <p>
+	 * </p>
+	 * @param is_prefix bool[optional] <p>
+	 * Default to false
+	 * </p>
 	 * @return SimpleXMLElement 
 	 */
 	public function children ($ns = null, $is_prefix = null) {}
@@ -1563,42 +1586,64 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 	/**
 	 * Returns namespaces used in document
 	 * @link http://php.net/manual/en/function.simplexml-element-getNamespaces.php
-	 * @param recursive bool[optional]
-	 * @return array 
+	 * @param recursive bool[optional] <p>
+	 * If specified, returns all namespaces used in parent and child nodes. 
+	 * Otherwise, returns only namespaces used in root node.
+	 * </p>
+	 * @return array The getNamespaces method returns an array of 
+	 * namespace names with their associated URIs.
 	 */
 	public function getNamespaces ($recursive = null) {}
 
 	/**
 	 * Returns namespaces declared in document
 	 * @link http://php.net/manual/en/function.simplexml-element-getDocNamespaces.php
-	 * @param recursive bool[optional]
-	 * @return array 
+	 * @param recursive bool[optional] <p>
+	 * If specified, returns all namespaces declared in parent and child nodes. 
+	 * Otherwise, returns only namespaces declared in root node.
+	 * </p>
+	 * @return array The getDocNamespaces method returns an array 
+	 * of namespace names with their associated URIs.
 	 */
 	public function getDocNamespaces ($recursive = null) {}
 
 	/**
 	 * Gets the name of the XML element
 	 * @link http://php.net/manual/en/function.simplexml-element-getName.php
-	 * @return string 
+	 * @return string The getName method returns as a string the 
+	 * name of the XML tag referenced by the SimpleXMLElement object.
 	 */
 	public function getName () {}
 
 	/**
 	 * Adds a child element to the XML node
 	 * @link http://php.net/manual/en/function.simplexml-element-addChild.php
-	 * @param name string
-	 * @param value string[optional]
-	 * @param namespace string[optional]
-	 * @return SimpleXMLElement 
+	 * @param name string <p>
+	 * The name of the child element to add.
+	 * </p>
+	 * @param value string[optional] <p>
+	 * If specified, the value of the child element.
+	 * </p>
+	 * @param namespace string[optional] <p>
+	 * If specified, the namespace to which the child element belongs.
+	 * </p>
+	 * @return SimpleXMLElement The addChild method returns a SimpleXMLElement
+	 * object representing the child added to the XML node.
 	 */
 	public function addChild ($name, $value = null, $namespace = null) {}
 
 	/**
 	 * Adds an attribute to the SimpleXML element
 	 * @link http://php.net/manual/en/function.simplexml-element-addAttribute.php
-	 * @param name string
-	 * @param value string
-	 * @param namespace string[optional]
+	 * @param name string <p>
+	 * The name of the attribute to add.
+	 * </p>
+	 * @param value string <p>
+	 * The value of the attribute.
+	 * </p>
+	 * @param namespace string[optional] <p>
+	 * If specified, the namespace to which the attribute belongs.
+	 * </p>
 	 * @return void 
 	 */
 	public function addAttribute ($name, $value, $namespace = null) {}
@@ -2081,8 +2126,13 @@ function spl_classes () {}
 /**
  * Default implementation for __autoload()
  * @link http://php.net/manual/en/function.spl-autoload.php
- * @param class_name string
- * @param file_extensions string[optional]
+ * @param class_name string <p>
+ * </p>
+ * @param file_extensions string[optional] <p>
+ * By default it checks all include paths to
+ * contain filenames built up by the lowercase class name appended by the
+ * filename extensions .inc and .php. 
+ * </p>
  * @return void 
  */
 function spl_autoload ($class_name, $file_extensions = null) {}
@@ -2090,38 +2140,55 @@ function spl_autoload ($class_name, $file_extensions = null) {}
 /**
  * Register and return default file extensions for spl_autoload
  * @link http://php.net/manual/en/function.spl-autoload-extensions.php
- * @param file_extensions string[optional]
- * @return string 
+ * @param file_extensions string[optional] <p>
+ * When calling without an argument, it simply returns the current list
+ * of extensions each separated by comma. To modify the list of file
+ * extensions, simply invoke the functions with the new list of file
+ * extensions to use in a single string with each extensions separated
+ * by comma.
+ * </p>
+ * @return string A comma delimitated list of default file extensions for
+ * spl_autoload.
  */
 function spl_autoload_extensions ($file_extensions = null) {}
 
 /**
  * Register given function as __autoload() implementation
  * @link http://php.net/manual/en/function.spl-autoload-register.php
- * @param autoload_function callback[optional]
- * @return bool 
+ * @param autoload_function callback[optional] <p>
+ * The autoload function being registered.
+ * If no parameter is provided, then the default implementation of
+ * spl_autoload will be registered. 
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function spl_autoload_register ($autoload_function = null) {}
 
 /**
  * Unregister given function as __autoload() implementation
  * @link http://php.net/manual/en/function.spl-autoload-unregister.php
- * @param autoload_function mixed
- * @return bool 
+ * @param autoload_function mixed <p>
+ * The autoload function being unregistered.
+ * </p>
+ * @return bool Returns true on success or false on failure.
  */
 function spl_autoload_unregister ($autoload_function) {}
 
 /**
  * Return all registered __autoload() functions
  * @link http://php.net/manual/en/function.spl-autoload-functions.php
- * @return array 
+ * @return array An array of all registered __autoload functions.
+ * If the autoload stack is not activated then the return value is false.
+ * If no function is registered the return value will be an empty array.
  */
 function spl_autoload_functions () {}
 
 /**
  * Try all registered __autoload() function to load the requested class
  * @link http://php.net/manual/en/function.spl-autoload-call.php
- * @param class_name string
+ * @param class_name string <p>
+ * The class name being searched.
+ * </p>
  * @return void 
  */
 function spl_autoload_call ($class_name) {}
@@ -2129,43 +2196,61 @@ function spl_autoload_call ($class_name) {}
 /**
  * Return the parent classes of the given class
  * @link http://php.net/manual/en/function.class-parents.php
- * @param class mixed
- * @param autoload bool[optional]
- * @return array 
+ * @param class mixed <p>
+ * An object (class instance) or a string (class name).
+ * </p>
+ * @param autoload bool[optional] <p>
+ * Whether to allow this function to load the class automatically through
+ * the __autoload magic
+ * method. Defaults to true.
+ * </p>
+ * @return array An array on success, or false on error.
  */
 function class_parents ($class, $autoload = null) {}
 
 /**
  * Return the interfaces which are implemented by the given class
  * @link http://php.net/manual/en/function.class-implements.php
- * @param class mixed
- * @param autoload bool[optional]
- * @return array 
+ * @param class mixed <p>
+ * An object (class instance) or a string (class name).
+ * </p>
+ * @param autoload bool[optional] <p>
+ * Whether to allow this function to load the class automatically through
+ * the __autoload magic
+ * method. Defaults to true.
+ * </p>
+ * @return array An array on success, or false on error.
  */
 function class_implements ($class, $autoload = null) {}
 
 /**
  * Return hash id for given object
  * @link http://php.net/manual/en/function.spl-object-hash.php
- * @param obj object
- * @return string 
+ * @param obj object 
+ * @return string A string that is unique for each object and is always the same for
+ * the same object.
  */
 function spl_object_hash ($obj) {}
 
 /**
  * Copy the iterator into an array
  * @link http://php.net/manual/en/function.iterator-to-array.php
- * @param iterator IteratorAggregate
- * @param use_keys bool[optional]
- * @return array 
+ * @param iterator IteratorAggregate <p>
+ * The iterator being counted.
+ * </p>
+ * @param use_keys bool[optional] <p>
+ * </p>
+ * @return array The number of elements in iterator.
  */
 function iterator_to_array ($iterator, $use_keys = null) {}
 
 /**
  * Count the elements in an iterator
  * @link http://php.net/manual/en/function.iterator-count.php
- * @param iterator IteratorAggregate
- * @return int 
+ * @param iterator IteratorAggregate <p>
+ * The iterator being counted.
+ * </p>
+ * @return int The number of elements in iterator.
  */
 function iterator_count ($iterator) {}
 

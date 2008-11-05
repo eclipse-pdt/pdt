@@ -159,9 +159,22 @@ final class SQLiteException extends RuntimeException  {
 /**
  * Opens a SQLite database and create the database if it does not exist
  * @link http://php.net/manual/en/function.sqlite-open.php
- * @param filename string
- * @param mode int[optional]
- * @param error_message string[optional]
+ * @param filename string <p>
+ * The filename of the SQLite database. If the file does not exist, SQLite
+ * will attempt to create it. PHP must have write permissions to the file
+ * if data is inserted, the database schema is modified or to create the
+ * database if it does not exist.
+ * </p>
+ * @param mode int[optional] <p>
+ * The mode of the file. Intended to be used to open the database in
+ * read-only mode. Presently, this parameter is ignored by the sqlite
+ * library. The default value for mode is the octal value
+ * 0666 and this is the recommended value.
+ * </p>
+ * @param error_message string[optional] <p>
+ * Passed by reference and is set to hold a descriptive error message
+ * explaining why the database could not be opened if there was an error.
+ * </p>
  * @return resource a resource (database handle) on success, false on error.
  */
 function sqlite_open ($filename, $mode = null, &$error_message = null) {}
@@ -169,9 +182,22 @@ function sqlite_open ($filename, $mode = null, &$error_message = null) {}
 /**
  * Opens a persistent handle to an SQLite database and create the database if it does not exist
  * @link http://php.net/manual/en/function.sqlite-popen.php
- * @param filename string
- * @param mode int[optional]
- * @param error_message string[optional]
+ * @param filename string <p>
+ * The filename of the SQLite database. If the file does not exist, SQLite
+ * will attempt to create it. PHP must have write permissions to the file
+ * if data is inserted, the database schema is modified or to create the
+ * database if it does not exist.
+ * </p>
+ * @param mode int[optional] <p>
+ * The mode of the file. Intended to be used to open the database in
+ * read-only mode. Presently, this parameter is ignored by the sqlite
+ * library. The default value for mode is the octal value
+ * 0666 and this is the recommended value.
+ * </p>
+ * @param error_message string[optional] <p>
+ * Passed by reference and is set to hold a descriptive error message
+ * explaining why the database could not be opened if there was an error.
+ * </p>
  * @return resource a resource (database handle) on success, false on error.
  */
 function sqlite_popen ($filename, $mode = null, &$error_message = null) {}
@@ -179,7 +205,10 @@ function sqlite_popen ($filename, $mode = null, &$error_message = null) {}
 /**
  * Closes an open SQLite database
  * @link http://php.net/manual/en/function.sqlite-close.php
- * @param dbhandle resource
+ * @param dbhandle resource <p>
+ * The SQLite Database resource; returned from sqlite_open
+ * when used procedurally.
+ * </p>
  * @return void 
  */
 function sqlite_close ($dbhandle) {}
@@ -187,28 +216,59 @@ function sqlite_close ($dbhandle) {}
 /**
  * Executes a query against a given database and returns a result handle
  * @link http://php.net/manual/en/function.sqlite-query.php
- * @param query string
- * @param result_type int[optional]
- * @param error_msg string[optional]
- * @return SQLiteResult 
+ * @param query string <p>
+ * The query to be executed.
+ * </p>
+ * @param result_type int[optional] &sqlite.result-type;
+ * @param error_msg string[optional] <p>
+ * The specified variable will be filled if an error occurs. This is
+ * specially important because SQL syntax errors can't be fetched using
+ * the sqlite_last_error function.
+ * </p>
+ * @return SQLiteResult This function will return a result handle or false on failure.
+ * For queries that return rows, the result handle can then be used with
+ * functions such as sqlite_fetch_array and
+ * sqlite_seek.
+ * </p>
+ * <p>
+ * Regardless of the query type, this function will return false if the
+ * query failed.
+ * </p>
+ * <p>
+ * sqlite_query returns a buffered, seekable result
+ * handle. This is useful for reasonably small queries where you need to
+ * be able to randomly access the rows. Buffered result handles will
+ * allocate memory to hold the entire result and will not return until it
+ * has been fetched. If you only need sequential access to the data, it is
+ * recommended that you use the much higher performance
+ * sqlite_unbuffered_query instead.
  */
 function sqlite_query ($query, $result_type = null, &$error_msg = null) {}
 
 /**
  * Executes a result-less query against a given database
  * @link http://php.net/manual/en/function.sqlite-exec.php
- * @param query string
- * @param error_msg string[optional]
- * @return bool 
+ * @param query string <p>
+ * The query to be executed.
+ * </p>
+ * @param error_msg string[optional] <p>
+ * The specified variable will be filled if an error occurs. This is
+ * specially important because SQL syntax errors can't be fetched using
+ * the sqlite_last_error function.
+ * </p>
+ * @return bool This function will return a boolean result; true for success or false for failure.
+ * If you need to run a query that returns rows, see sqlite_query.
  */
 function sqlite_exec ($query, &$error_msg = null) {}
 
 /**
  * Execute a query against a given database and returns an array
  * @link http://php.net/manual/en/function.sqlite-array-query.php
- * @param query string
- * @param result_type int[optional]
- * @param decode_binary bool[optional]
+ * @param query string <p>
+ * The query to be executed.
+ * </p>
+ * @param result_type int[optional] &sqlite.result-type;
+ * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the entire result set; false otherwise.
  */
 function sqlite_array_query ($query, $result_type = null, $decode_binary = null) {}
@@ -216,9 +276,9 @@ function sqlite_array_query ($query, $result_type = null, $decode_binary = null)
 /**
  * Executes a query and returns either an array for one single column or the value of the first row
  * @link http://php.net/manual/en/function.sqlite-single-query.php
- * @param query string
- * @param first_row_only bool[optional]
- * @param decode_binary bool[optional]
+ * @param query string 
+ * @param first_row_only bool[optional] 
+ * @param decode_binary bool[optional] 
  * @return array 
  */
 function sqlite_single_query ($query, $first_row_only = null, $decode_binary = null) {}
@@ -226,18 +286,19 @@ function sqlite_single_query ($query, $first_row_only = null, $decode_binary = n
 /**
  * Fetches the next row from a result set as an array
  * @link http://php.net/manual/en/function.sqlite-fetch-array.php
- * @param result_type int[optional]
- * @param decode_binary bool[optional]
+ * @param result_type int[optional] &sqlite.result-type;
+ * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the next row from a result set; false if the
+ * next position is beyond the final row.
  */
 function sqlite_fetch_array ($result_type = null, $decode_binary = null) {}
 
 /**
  * Fetches the next row from a result set as an object
  * @link http://php.net/manual/en/function.sqlite-fetch-object.php
- * @param class_name string[optional]
- * @param ctor_params array[optional]
- * @param decode_binary bool[optional]
+ * @param class_name string[optional] 
+ * @param ctor_params array[optional] 
+ * @param decode_binary bool[optional] 
  * @return object 
  */
 function sqlite_fetch_object ($class_name = null, array $ctor_params = null, $decode_binary = null) {}
@@ -245,7 +306,7 @@ function sqlite_fetch_object ($class_name = null, array $ctor_params = null, $de
 /**
  * Fetches the first column of a result set as a string
  * @link http://php.net/manual/en/function.sqlite-fetch-single.php
- * @param decode_binary bool[optional]
+ * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return string 
  */
 function sqlite_fetch_single ($decode_binary = null) {}
@@ -259,26 +320,32 @@ function sqlite_fetch_string () {}
 /**
  * Fetches all rows from a result set as an array of arrays
  * @link http://php.net/manual/en/function.sqlite-fetch-all.php
- * @param result_type int[optional]
- * @param decode_binary bool[optional]
+ * @param result_type int[optional] &sqlite.result-type;
+ * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the remaining rows in a result set. If called right
+ * after sqlite_query, it returns all rows. If called
+ * after sqlite_fetch_array, it returns the rest. If
+ * there are no rows in a result set, it returns an empty array.
  */
 function sqlite_fetch_all ($result_type = null, $decode_binary = null) {}
 
 /**
  * Fetches the current row from a result set as an array
  * @link http://php.net/manual/en/function.sqlite-current.php
- * @param result_type int[optional]
- * @param decode_binary bool[optional]
+ * @param result_type int[optional] &sqlite.result-type;
+ * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return array an array of the current row from a result set; false if the
+ * current position is beyond the final row.
  */
 function sqlite_current ($result_type = null, $decode_binary = null) {}
 
 /**
  * Fetches a column from the current row of a result set
  * @link http://php.net/manual/en/function.sqlite-column.php
- * @param index_or_name mixed
- * @param decode_binary bool[optional]
+ * @param index_or_name mixed <p>
+ * The column index or name to fetch.
+ * </p>
+ * @param decode_binary bool[optional] &sqlite.decode-bin;
  * @return mixed 
  */
 function sqlite_column ($index_or_name, $decode_binary = null) {}
@@ -329,15 +396,22 @@ function sqlite_num_fields () {}
 /**
  * Returns the name of a particular field
  * @link http://php.net/manual/en/function.sqlite-field-name.php
- * @param field_index int
+ * @param field_index int <p>
+ * The ordinal column number in the result set.
+ * </p>
  * @return string the name of a field in an SQLite result set, given the ordinal
+ * column number; false on error.
  */
 function sqlite_field_name ($field_index) {}
 
 /**
  * Seek to a particular row number of a buffered result set
  * @link http://php.net/manual/en/function.sqlite-seek.php
- * @param rownum int
+ * @param rownum int <p>
+ * The ordinal row number to seek to. The row number is zero-based (0 is
+ * the first row).
+ * </p>
+ * &sqlite.no-unbuffered;
  * @return bool false if the row does not exist, true otherwise.
  */
 function sqlite_seek ($rownum) {}
@@ -367,14 +441,18 @@ function sqlite_prev () {}
  * Returns whether more rows are available
  * @link http://php.net/manual/en/function.sqlite-valid.php
  * @return bool true if there are more rows available from the
+ * result handle, or false otherwise.
  */
 function sqlite_valid () {}
 
 /**
  * Finds whether or not more rows are available
  * @link http://php.net/manual/en/function.sqlite-has-more.php
- * @param result resource
+ * @param result resource <p>
+ * The SQLite result resource.
+ * </p>
  * @return bool true if there are more rows available from the
+ * result handle, or false otherwise.
  */
 function sqlite_has_more ($result) {}
 
@@ -382,13 +460,22 @@ function sqlite_has_more ($result) {}
  * Returns whether or not a previous row is available
  * @link http://php.net/manual/en/function.sqlite-has-prev.php
  * @return bool true if there are more previous rows available from the
+ * result handle, or false otherwise.
  */
 function sqlite_has_prev () {}
 
 /**
  * Escapes a string for use as a query parameter
  * @link http://php.net/manual/en/function.sqlite-escape-string.php
- * @param item string
+ * @param item string <p>
+ * The string being quoted.
+ * </p>
+ * <p>
+ * If the item contains a NUL
+ * character, or if it begins with a character whose ordinal value is
+ * 0x01, PHP will apply a binary encoding scheme so that
+ * you can safely store and retrieve binary data.
+ * </p>
  * @return string an escaped string for use in an SQLite SQL statement.
  */
 function sqlite_escape_string ($item) {}
@@ -396,7 +483,19 @@ function sqlite_escape_string ($item) {}
 /**
  * Set busy timeout duration, or disable busy handlers
  * @link http://php.net/manual/en/function.sqlite-busy-timeout.php
- * @param milliseconds int
+ * @param milliseconds int <p>
+ * The number of milliseconds. When set to
+ * 0, busy handlers will be disabled and SQLite will
+ * return immediately with a SQLITE_BUSY status code
+ * if another process/thread has the database locked for an update.
+ * </p>
+ * <p>
+ * PHP sets the default busy timeout to be 60 seconds when the database is
+ * opened.
+ * </p>
+ * <p>
+ * There are one thousand (1000) milliseconds in one second.
+ * </p>
  * @return void 
  */
 function sqlite_busy_timeout ($milliseconds) {}
@@ -411,28 +510,52 @@ function sqlite_last_error () {}
 /**
  * Returns the textual description of an error code
  * @link http://php.net/manual/en/function.sqlite-error-string.php
- * @param error_code int
+ * @param error_code int <p>
+ * The error code being used, which might be passed in from
+ * sqlite_last_error.
+ * </p>
  * @return string a human readable description of the error_code,
+ * as a string.
  */
 function sqlite_error_string ($error_code) {}
 
 /**
  * Execute a query that does not prefetch and buffer all data
  * @link http://php.net/manual/en/function.sqlite-unbuffered-query.php
- * @param query string
- * @param result_type int[optional]
- * @param error_msg string[optional]
+ * @param query string <p>
+ * The query to be executed.
+ * </p>
+ * @param result_type int[optional] &sqlite.result-type;
+ * @param error_msg string[optional] <p>
+ * The specified variable will be filled if an error occurs. This is
+ * specially important because SQL syntax errors can't be fetched using
+ * the sqlite_last_error function.
+ * </p>
  * @return SQLiteUnbuffered a result handle or false on failure.
+ * </p>
+ * <p>
+ * sqlite_unbuffered_query returns a sequential
+ * forward-only result set that can only be used to read each row, one after
+ * the other.
  */
 function sqlite_unbuffered_query ($query, $result_type = null, &$error_msg = null) {}
 
 /**
  * Register an aggregating UDF for use in SQL statements
  * @link http://php.net/manual/en/function.sqlite-create-aggregate.php
- * @param function_name string
- * @param step_func callback
- * @param finalize_func callback
- * @param num_args int[optional]
+ * @param function_name string <p>
+ * The name of the function used in SQL statements.
+ * </p>
+ * @param step_func callback <p>
+ * Callback function called for each row of the result set.
+ * </p>
+ * @param finalize_func callback <p>
+ * Callback function to aggregate the "stepped" data from each row.
+ * </p>
+ * @param num_args int[optional] <p>
+ * Hint to the SQLite parser if the callback function accepts a
+ * predetermined number of arguments.
+ * </p>
  * @return void 
  */
 function sqlite_create_aggregate ($function_name, $step_func, $finalize_func, $num_args = null) {}
@@ -440,9 +563,18 @@ function sqlite_create_aggregate ($function_name, $step_func, $finalize_func, $n
 /**
  * Registers a "regular" User Defined Function for use in SQL statements
  * @link http://php.net/manual/en/function.sqlite-create-function.php
- * @param function_name string
- * @param callback callback
- * @param num_args int[optional]
+ * @param function_name string <p>
+ * The name of the function used in SQL statements.
+ * </p>
+ * @param callback callback <p>
+ * Callback function to handle the defined SQL function.
+ * </p>
+ * Callback functions should return a type understood by SQLite (i.e.
+ * scalar type).
+ * @param num_args int[optional] <p>
+ * Hint to the SQLite parser if the callback function accepts a
+ * predetermined number of arguments.
+ * </p>
  * @return void 
  */
 function sqlite_create_function ($function_name, $callback, $num_args = null) {}
@@ -450,9 +582,19 @@ function sqlite_create_function ($function_name, $callback, $num_args = null) {}
 /**
  * Opens a SQLite database and returns a SQLiteDatabase object
  * @link http://php.net/manual/en/function.sqlite-factory.php
- * @param filename string
- * @param mode int[optional]
- * @param error_message string[optional]
+ * @param filename string <p>
+ * The filename of the SQLite database.
+ * </p>
+ * @param mode int[optional] <p>
+ * The mode of the file. Intended to be used to open the database in
+ * read-only mode. Presently, this parameter is ignored by the sqlite
+ * library. The default value for mode is the octal value
+ * 0666 and this is the recommended value.
+ * </p>
+ * @param error_message string[optional] <p>
+ * Passed by reference and is set to hold a descriptive error message
+ * explaining why the database could not be opened if there was an error.
+ * </p>
  * @return SQLiteDatabase a SQLiteDatabase object on success, &null; on error.
  */
 function sqlite_factory ($filename, $mode = null, &$error_message = null) {}
@@ -460,24 +602,41 @@ function sqlite_factory ($filename, $mode = null, &$error_message = null) {}
 /**
  * Encode binary data before returning it from an UDF
  * @link http://php.net/manual/en/function.sqlite-udf-encode-binary.php
- * @param data string
- * @return string 
+ * @param data string <p>
+ * The string being encoded.
+ * </p>
+ * @return string The encoded string.
  */
 function sqlite_udf_encode_binary ($data) {}
 
 /**
  * Decode binary data passed as parameters to an UDF
  * @link http://php.net/manual/en/function.sqlite-udf-decode-binary.php
- * @param data string
- * @return string 
+ * @param data string <p>
+ * The encoded data that will be decoded, data that was applied by either
+ * sqlite_udf_encode_binary or
+ * sqlite_escape_string. 
+ * </p>
+ * @return string The decoded string.
  */
 function sqlite_udf_decode_binary ($data) {}
 
 /**
  * Return an array of column types from a particular table
  * @link http://php.net/manual/en/function.sqlite-fetch-column-types.php
- * @param table_name string
- * @param result_type int[optional]
+ * @param table_name string <p>
+ * The table name to query.
+ * </p>
+ * @param result_type int[optional] <p>
+ * The optional result_type parameter accepts a
+ * constant and determines how the returned array will be indexed. Using
+ * SQLITE_ASSOC will return only associative indices
+ * (named fields) while SQLITE_NUM will return only
+ * numerical indices (ordinal field numbers).
+ * SQLITE_BOTH will return both associative and
+ * numerical indices. SQLITE_ASSOC is the default for
+ * this function.
+ * </p>
  * @return array an array of column data types; false on error.
  */
 function sqlite_fetch_column_types ($table_name, $result_type = null) {}
