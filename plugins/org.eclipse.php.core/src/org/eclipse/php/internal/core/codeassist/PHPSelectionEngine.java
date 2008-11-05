@@ -110,7 +110,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				e.printStackTrace();
 			}
 		} finally {
-			if (structuredModel != null && structuredModel.isSharedForRead()) {
+			if (structuredModel != null) {
 				structuredModel.releaseFromRead();
 			}
 		}
