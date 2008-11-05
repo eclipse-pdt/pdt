@@ -69,7 +69,7 @@ public class PHPPluginImages {
 	public static final String IMG_KEYWORD = NAME_PREFIX + "phpkeyword.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_CUNIT = NAME_PREFIX + "phpfile.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_INCLUDE = NAME_PREFIX + "include_file.gif"; //$NON-NLS-1$
-	public static final String IMG_OBJS_CUNIT_RESOURCE = NAME_PREFIX + "jcu_resource_obj.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJS_CUNIT_RESOURCE = NAME_PREFIX + "php_resource_obj.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_FOLDER = NAME_PREFIX + "folder_opened.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_PHP_FILE = NAME_PREFIX + "phpfile.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJS_EMPTY_PACK_RESOURCE = NAME_PREFIX + "empty_pack_fldr_obj.gif"; //$NON-NLS-1$

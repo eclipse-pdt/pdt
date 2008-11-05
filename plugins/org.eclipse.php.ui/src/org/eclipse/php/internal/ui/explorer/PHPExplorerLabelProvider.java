@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
+import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * 
@@ -39,6 +43,29 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			return ((IModelElement) element).getPath().lastSegment();
 		}
 		return super.getText(element);
+	}
+
+	@Override
+	public Image getImage(Object element) {
+		IModelElement modelElement = null;
+		if (element instanceof IResource) {
+			modelElement = DLTKCore.create((IResource) element);
+		}
+		if (element instanceof IScriptFolder) {
+			modelElement = (IScriptFolder) element;
+		}
+
+		if (modelElement != null) {
+			IScriptProject project = modelElement.getScriptProject();
+			if (modelElement instanceof ISourceModule && !project.isOnBuildpath(modelElement)) {
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
+			}
+			if ((modelElement instanceof IProjectFragment || modelElement instanceof IScriptFolder) && project.isOnBuildpath(modelElement)) {
+				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
+			}
+		}
+
+		return super.getImage(element);
 	}
 
 }
