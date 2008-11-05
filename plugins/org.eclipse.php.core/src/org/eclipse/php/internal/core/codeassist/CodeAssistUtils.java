@@ -908,7 +908,7 @@ public class CodeAssistUtils {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 
-		boolean isVariable = prefix.startsWith("$"); //$NON-NLS-1$
+		boolean isVariable = elementType == IDLTKSearchConstants.FIELD && prefix.startsWith("$"); //$NON-NLS-1$
 
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
