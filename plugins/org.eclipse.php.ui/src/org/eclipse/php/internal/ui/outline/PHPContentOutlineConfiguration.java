@@ -18,6 +18,7 @@ import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -29,6 +30,8 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -162,7 +165,16 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 							IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 							if (activeEditor instanceof StructuredTextEditor) {
 								StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
-								object = editor.getModel();
+								IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+								IStructuredModel model = null;
+								try {
+									model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+									return super.getElements(model);
+								} finally {
+									if (model != null) {
+										model.releaseFromRead();
+									}
+								}
 							}
 						}
 						return super.getElements(object);
@@ -193,10 +205,8 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public ISelection getSelection(final TreeViewer viewer, final ISelection selection) {
 		final IContentProvider contentProvider = viewer.getContentProvider();
 		if (contentProvider instanceof PHPOutlineContentProvider) {
-			final PHPOutlineContentProvider phpOutline = (PHPOutlineContentProvider) contentProvider;
 			if (MODE_PHP == mode) {
 				if (selection instanceof IStructuredSelection && selection instanceof TextSelection) {
-					final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 					IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
 					if (activeEditor instanceof PHPStructuredEditor) {
 						ISourceReference computedSourceReference = ((PHPStructuredEditor) activeEditor).computeHighlightRangeSourceReference();
@@ -219,7 +229,20 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
-		return new PHPNodeActionManager(((StructuredTextEditor) activeEditor).getModel(), treeViewer);
+		if (activeEditor instanceof StructuredTextEditor) {
+			StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
+			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+			IStructuredModel model = null;
+			try {
+				model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+				return new PHPNodeActionManager(model, treeViewer);
+			} finally {
+				if (model != null) {
+					model.releaseFromRead();
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
