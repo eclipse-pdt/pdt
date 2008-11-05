@@ -12,24 +12,18 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.SourceContainerWorkbookPage;
-import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.NewSourceContainerWorkbookPage;
-import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.util.PixelConverter;
-import org.eclipse.php.internal.ui.wizards.fields.LayoutUtil;
-import org.eclipse.php.internal.ui.wizards.fields.TreeListDialogField;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPBuildPathsBlock extends BuildpathsBlock {
@@ -50,37 +44,32 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 	public Control createControl(Composite parent) {
 		
-		fSWTWidget = parent;
-		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setFont(parent.getFont());
-		GridLayout layout = new GridLayout();
-		layout.marginWidth = 0;
-		layout.marginHeight = 0;
-		layout.numColumns = 1;			
-		composite.setLayout(layout);
+		final Composite container = new Composite(parent, SWT.NONE);
 		
+		GridLayout layout = new GridLayout(3, false);
+		layout.marginHeight = 0;
+		container.setLayout(layout);		
+		container.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
 		fSourceContainerPage = new SourceContainerWorkbookPage(fBuildPathList);
-		
-		
-		TabFolder folder = new TabFolder(composite, SWT.NONE);
-		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
-		folder.setFont(composite.getFont());
-		TabItem item;
-		item = new TabItem(folder, SWT.NONE);
-		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
-		item.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));		
-		
-		item.setData(fSourceContainerPage);
-		item.setControl(fSourceContainerPage.getControl(folder));
+		Control control = fSourceContainerPage.getControl(container);
+		control.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 		
 		if (fCurrScriptProject != null) {
 			fSourceContainerPage.init(fCurrScriptProject);
 		}
-		
-		
-		Dialog.applyDialogFont(composite);
-		return composite;
+					
+		Dialog.applyDialogFont(container);
+		return container;
 	}
+	
+	protected GridData createGridData(int flag, int hspan, int indent) {
+		GridData gd = new GridData(flag);
+		gd.horizontalIndent = indent;
+		gd.horizontalSpan = hspan;
+		return gd;
+	}
+	
+	
 
 }
