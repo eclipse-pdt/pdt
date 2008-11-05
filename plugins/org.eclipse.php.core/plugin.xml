@@ -74,11 +74,12 @@
 		</participant>
 	</extension>
 
-	<!-- initialize php ui preferences -->
+	<!-- Preferences initialization -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
 			class="org.eclipse.php.internal.core.preferences.PHPCorePreferenceInitializer" />
 	</extension>
+	
 	<extension id="phpproblemmarker" name="PHP Syntax Error"
 		point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.core.resources.problemmarker" />
@@ -92,11 +93,14 @@
 		<attribute name="userEditable" />
 		<super type="org.eclipse.core.resources.textmarker" />
 	</extension>
+	
+	<!-- DLTK -->
 	<extension point="org.eclipse.dltk.core.language">
 		<language class="org.eclipse.php.internal.core.PHPLanguageToolkit"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</language>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.sourceParsers">
 		<parserContribution natureId="org.eclipse.php.core.PHPNature">
 			<parser
@@ -106,69 +110,85 @@
 			</parser>
 		</parserContribution>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.sourceElementParsers">
 		<parser
 			class="org.eclipse.php.internal.core.compiler.ast.parser.PHPSourceElementParser"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</parser>
 	</extension>
+	
+	<extension point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.dltk.core.builder.ParserBuildParticipantFactory"
+            id="org.eclipse.dltk.ruby.buildParticipant.parser"
+            name="%parserBuildParticipant.name"
+            nature="org.eclipse.php.core.PHPNature">
+      </buildParticipant>
+    </extension>
+	
 	<extension point="org.eclipse.dltk.core.mixin">
 		<mixin class="org.eclipse.php.internal.core.mixin.PHPMixinParser"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</mixin>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.search">
 		<seachFactory class="org.eclipse.php.internal.core.search.PHPSearchFactory"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</seachFactory>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.typeEvaluators">
 		<evaluator
 			evaluator="org.eclipse.php.internal.core.typeinference.PHPTypeInferencer"
 			nature="org.eclipse.php.core.PHPNature">
 		</evaluator>
 	</extension>
+	
 	<extension point="org.eclipse.php.core.goalEvaluatorFactories">
 		<factory
 			class="org.eclipse.php.internal.core.typeinference.evaluators.DefaultPHPGoalEvaluatorFactory"
 			priority="10">
 		</factory>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.buildpathContainerInitializer">
 		<buildpathContainerInitializer
 			class="org.eclipse.php.internal.core.language.LanguageModelInitializer"
 			id="org.eclipse.php.core.LANGUAGE">
 		</buildpathContainerInitializer>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.completionEngine">
 		<completionEngine
 			class="org.eclipse.php.core.codeassist.PHPCompletionEngine" nature="org.eclipse.php.core.PHPNature"
 			priority="0">
 		</completionEngine>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.selectionEngine">
 		<selectionEngine class="org.eclipse.php.core.codeassist.PHPSelectionEngine"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</selectionEngine>
 	</extension>
+	
 	<extension point="org.eclipse.dltk.core.fileHierarchyResolvers">
 		<fileHierarchyResolver
 			class="org.eclipse.php.internal.core.filenetwork.PHPFileHierarchyResolver"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</fileHierarchyResolver>
 	</extension>	
+	
 	<extension point="org.eclipse.dltk.core.projectIndexer">
       <projectIndexer
             class="org.eclipse.php.internal.core.index.FileReconcileIndexer"
             nature="org.eclipse.php.core.PHPNature">
       </projectIndexer>
 	</extension>
-<!--
-		======================================================================================	
-	    Task validation 			   						  
-		======================================================================================
-	-->
-	 <extension
+    
+    <!-- TASK validation -->
+    <extension
 		id="phpTaskMarker"
         name="%PHPTaskMarker.label"
         point="org.eclipse.core.resources.markers">
@@ -183,8 +203,7 @@
 		<super type="org.eclipse.core.resources.taskmarker"/>
  	</extension> 	
 	
-
-  <extension id="org.eclipse.php.core.PHPTaskValidator" name="PHPTaskValidator"
+    <extension id="org.eclipse.php.core.PHPTaskValidator" name="PHPTaskValidator"
 		point="org.eclipse.wst.validation.validatorV2">
 		<validator build="true"
 			class="org.eclipse.php.internal.core.validation.PHPTodoTaskValidator"
@@ -203,4 +222,5 @@
 			<group id="org.eclipse.wst.sse.core.structuredModelGroup" />
 		</validator>
 	</extension>
+	
 </plugin>
