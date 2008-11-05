@@ -91,9 +91,16 @@
 
 	<extension point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.eclipse.php.ui.views" />
-		<view name="%view.name.0" category="org.eclipse.php.ui.views"
+		<view name="Old PHP Explorer" category="org.eclipse.php.ui.views"
 			class="org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart"
-			icon="icons/full/obj16/php_explorer.gif" id="org.eclipse.php.ui.explorer" />
+			icon="icons/full/obj16/php_explorer.gif" id="org.eclipse.php.ui.explorerOld" />
+  <view
+        category="org.eclipse.php.ui.views"
+        class="org.eclipse.php.internal.ui.explorer.PHPExplorerPart"
+        icon="icons/full/obj16/php_explorer.gif"
+        id="org.eclipse.php.ui.explorer"
+        name="%view.name.0">
+  </view>
 		<view name="%view.name.1" category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart" icon="icons/full/obj16/phpfile.gif"
 			id="org.eclipse.php.ui.functions" />
