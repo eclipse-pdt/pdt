@@ -302,7 +302,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 					public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 						try {
 							return detector.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);
-						} catch (Exception e) {
+						} catch (Throwable e) {
 							// fail safe hyperlink detector - prevent others from failing
 						}
 						return null;
