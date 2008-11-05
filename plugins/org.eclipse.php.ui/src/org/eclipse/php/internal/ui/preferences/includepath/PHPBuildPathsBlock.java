@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
-import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.SourceContainerWorkbookPage;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
-import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -23,10 +21,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class PHPBuildPathsBlock extends BuildpathsBlock {
+public class PHPBuildPathsBlock extends TempBuildpathsBlock {
 
 	public PHPBuildPathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow, boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
