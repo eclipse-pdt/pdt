@@ -10,11 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences.includepath;
 
+import org.eclipse.dltk.internal.ui.wizards.buildpath.SourceContainerWorkbookPage;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPBuildPathsBlock extends BuildpathsBlock {
@@ -31,6 +38,27 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	@Override
 	protected boolean supportZips() {
 		return false;
+	}
+
+	public Control createControl(Composite parent) {
+		fSWTWidget = parent;
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setFont(parent.getFont());
+		GridLayout layout = new GridLayout();
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		layout.numColumns = 1;			
+		composite.setLayout(layout);
+
+		fSourceContainerPage = new SourceContainerWorkbookPage(fBuildPathList);
+		
+		Control control = fSourceContainerPage.getControl(parent);
+
+		if (fCurrScriptProject != null) {
+			fSourceContainerPage.init(fCurrScriptProject);
+		}
+		Dialog.applyDialogFont(composite);
+		return composite;
 	}
 
 }
