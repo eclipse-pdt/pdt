@@ -31,7 +31,6 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.mixin.NamespaceType;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -950,7 +949,7 @@ public class CodeAssistUtils {
 	 * @param caseSensitive Whether the search is case sensitive
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, IDLTKSearchScope scope, String prefix, boolean exactName, final int elementType, boolean currentFileOnly, boolean caseSensitive) {
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, IDLTKSearchScope scope, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 
@@ -974,29 +973,11 @@ public class CodeAssistUtils {
 		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
-		
-		final List<String> namespaceNames = new LinkedList<String>();
-		if (elementType == IDLTKSearchConstants.TYPE) {
-			PHPMixinModel mixinModel = PHPMixinModel.getInstance(sourceModule.getScriptProject());
-			IModelElement[] namespaces = mixinModel.getNamespace(prefix + WILDCARD, scope);
-			for (IModelElement namespace : namespaces) {
-				namespaceNames.add(((NamespaceType)namespace).getElementName());
-				elements.add(namespace);
-			}
-		}
-		
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 
 					IModelElement element = (IModelElement) match.getElement();
-					if (namespaceNames.size() > 0) {
-						for (String namespaceName : namespaceNames) {
-							if (element.getElementName().startsWith(namespaceName + '_')) {
-								return;
-							}
-						}
-					}
 
 					// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
 					if (element instanceof SourceModule) {
@@ -1125,8 +1106,8 @@ public class CodeAssistUtils {
 				}
 				if (o1 instanceof IMember) {
 					IType t1 = ((IMember) o1).getDeclaringType();
+					//					IType t2 = ((IMember)o2).getDeclaringType();
 					if (t1 != null) {
-						// IType t2 = ((IMember)o2).getDeclaringType();
 						try {
 							if ((t1.getFlags() & Modifiers.AccInterface) != 0) {
 								return -1;
