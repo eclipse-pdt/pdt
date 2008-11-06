@@ -14,6 +14,7 @@ import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -43,8 +44,20 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	 */
 	@Override
 	public ScriptExplorerContentProvider createContentProvider() {
-		return new PHPExplorerContentProvider(true);
-
+		boolean showCUChildren = DLTKUIPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_SOURCE_MODULE_CHILDREN);
+		if (getRootMode() == ScriptExplorerPart.PROJECTS_AS_ROOTS) {
+			return new PHPExplorerContentProvider(showCUChildren) {
+				protected IPreferenceStore getPreferenceStore() {
+					return DLTKUIPlugin.getDefault().getPreferenceStore();
+				}
+			};
+		} else {
+			return new WorkingSetAwarePHPExplorerContentProvider(showCUChildren, getWorkingSetModel()) {
+				protected IPreferenceStore getPreferenceStore() {
+					return DLTKUIPlugin.getDefault().getPreferenceStore();
+				}
+			};
+		}
 	}
 
 	/*
