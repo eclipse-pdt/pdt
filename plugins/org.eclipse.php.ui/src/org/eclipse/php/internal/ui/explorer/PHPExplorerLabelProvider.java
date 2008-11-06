@@ -39,7 +39,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 	 */
 	@Override
 	public String getText(Object element) {
-		if (element instanceof IModelElement) {
+		if (element instanceof IOpenable) {
 			return ((IModelElement) element).getPath().lastSegment();
 		}
 		return super.getText(element);
