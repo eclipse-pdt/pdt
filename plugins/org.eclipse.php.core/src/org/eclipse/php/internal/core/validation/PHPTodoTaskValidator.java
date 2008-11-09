@@ -12,6 +12,7 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
+import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -38,6 +39,12 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		if (resource.getType() != IResource.FILE)
 			return null;
+		
+		// process only PHP files
+		if(! PHPModelUtil.isPhpFile((IFile) resource)){
+			return null;
+		}
+		
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);
 		validateFile(reporter, (IFile) resource);
