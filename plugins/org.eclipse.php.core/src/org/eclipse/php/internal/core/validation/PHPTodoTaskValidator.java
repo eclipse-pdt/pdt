@@ -4,7 +4,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.validators.core.IValidator;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.CoreMessages;
@@ -37,14 +36,11 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 	protected TaskTag[] taskTags = null;
 
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
-		if (resource.getType() != IResource.FILE)
-			return null;
-		
 		// process only PHP files
-		if(! PHPModelUtil.isPhpFile((IFile) resource)){
+		if (resource.getType() != IResource.FILE || !(PHPModelUtil.isPhpFile((IFile) resource))) {
 			return null;
 		}
-		
+
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);
 		validateFile(reporter, (IFile) resource);
