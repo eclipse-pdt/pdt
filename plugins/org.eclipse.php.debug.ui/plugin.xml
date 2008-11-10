@@ -244,12 +244,12 @@
 			name="%parameterStack.name" id="org.eclipse.debug.ui.PHPStackView" />
 		<view category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.debug.ui.views.DebugOutputView"
-			icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
+			icon="icon/full/obj16/debug_output.gif"
 			id="org.eclipse.debug.ui.PHPDebugOutput" name="%debugOutput.name">
 		</view>
 		<view category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.debug.ui.views.DebugBrowserView"
-			icon="platform:/plugin/org.eclipse.php.ui/icons/full/obj16/phpfile.gif"
+			icon="icon/full/obj16/browser_output.gif"
 			id="org.eclipse.debug.ui.PHPBrowserOutput" name="%browserOutput.name">
 		</view>
 	</extension>
