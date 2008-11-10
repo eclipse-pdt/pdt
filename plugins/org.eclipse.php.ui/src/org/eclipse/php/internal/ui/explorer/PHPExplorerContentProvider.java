@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.explorer;
 import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.*;
@@ -35,12 +36,15 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
+		try {
 		// Handles SourceModule and downwards as well as ExternalProjectFragments (i.e language model)
 		if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable) || parentElement instanceof ExternalProjectFragment) {
+			if (parentElement instanceof IFolder) {
+				return ((IFolder) parentElement).members();
+		}
 			return super.getChildren(parentElement);
 		}
 
-		try {
 			if (parentElement instanceof IOpenable) {
 				IResource resource = ((IOpenable) parentElement).getResource();
 				if (resource instanceof IContainer) {
