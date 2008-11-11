@@ -9,7 +9,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -49,7 +48,7 @@ public class IncludePathManager {
 									break;
 								}
 							}
-							if (added && !entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)) {
+							if (added && isBuildpathAllowed(entry)) {
 								newEntries.add(new IncludePath(entry));
 								changed = true;
 							}
@@ -156,7 +155,7 @@ public class IncludePathManager {
 			try {
 				IBuildpathEntry[] buildpath = DLTKCore.create(project).getRawBuildpath();
 				for (IBuildpathEntry entry : buildpath) {
-					if (!entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)) {
+					if (isBuildpathAllowed(entry)) {
 						includePathEntries.add(new IncludePath(entry));
 					}
 				}
@@ -190,5 +189,9 @@ public class IncludePathManager {
 			}
 		}
 		CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(PREF_KEY, buf.toString(), project);
+	}
+	
+	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
+		return (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
 	}
 }
