@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
@@ -152,7 +154,7 @@ public class PHPNature extends ScriptNature {
 		LanguageModelInitializer.enableLanguageModelFor(scriptProject);
 		
 		try {
-			configureBuildPath(scriptProject);
+			configureBuildPathAndIncludePath(scriptProject);
 		} catch (ModelException e){
 			Logger.logException("Failed updating buildpath", e); // //$NON-NLS-1$
 		}
@@ -165,7 +167,7 @@ public class PHPNature extends ScriptNature {
 	 * @param scriptProject
 	 * @throws ModelException
 	 */
-	private void configureBuildPath(IScriptProject scriptProject) throws ModelException {
+	private void configureBuildPathAndIncludePath(IScriptProject scriptProject) throws ModelException {
 		
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 		
@@ -186,7 +188,8 @@ public class PHPNature extends ScriptNature {
 		// set the new updated buildpath for the project		
 		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
 		
-		
+		IProject project = scriptProject.getProject();
+		IncludePathManager.getInstance().setIncludePath(project, new IncludePath[]{new IncludePath(project)});
 	}
 
 	/**
