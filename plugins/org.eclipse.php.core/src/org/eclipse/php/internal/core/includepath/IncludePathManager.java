@@ -7,7 +7,8 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
@@ -173,8 +174,8 @@ public class IncludePathManager {
 	 * @param project
 	 * @param includePathEntries Ordered include path entries
 	 */
-	public void setIncludePath(IProject project, IncludePath[] includePathEntries) {
-		StringBuilder buf = new StringBuilder();
+	public void setIncludePath(final IProject project, IncludePath[] includePathEntries) {
+		final StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < includePathEntries.length; ++i) {
 			IncludePath includePath = includePathEntries[i];
 			if (includePath.isBuildpath()) {
@@ -188,7 +189,14 @@ public class IncludePathManager {
 				buf.append(PREF_SEP);
 			}
 		}
-		CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(PREF_KEY, buf.toString(), project);
+		WorkspaceJob job = new WorkspaceJob("Modifying Include Path") {
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+				CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(PREF_KEY, buf.toString(), project);
+				return Status.OK_STATUS;
+			}
+		};
+		job.setRule(project.getWorkspace().getRoot());
+		job.schedule();
 	}
 	
 	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
