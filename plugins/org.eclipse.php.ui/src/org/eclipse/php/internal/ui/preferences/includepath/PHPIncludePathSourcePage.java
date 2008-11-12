@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Eden K., 2008
  *
  */
-public class PHPIncludePathSourcePage extends SourceContainerWorkbookPage {
+public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 
 	// redefine the indexes of the buttons
 	protected int IDX_ADD = 0;

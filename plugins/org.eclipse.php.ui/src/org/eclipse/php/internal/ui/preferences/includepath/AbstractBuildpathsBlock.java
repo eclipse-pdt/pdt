@@ -82,8 +82,8 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 	protected TabFolder fTabFolder;
 	protected int fPageIndex;
 	protected BuildPathBasePage fSourceContainerPage;
-	protected ProjectsWorkbookPage fProjectsPage;
-	protected LibrariesWorkbookPage fLibrariesPage;
+	protected TempProjectsWorkbookPage fProjectsPage;
+	protected TempLibrariesWorkbookPage fLibrariesPage;
 	protected BuildPathBasePage fCurrPage;
 	protected String fUserSettingsTimeStamp;
 	protected long fFileTimeStamp;
@@ -169,25 +169,25 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
 		item.setImage(DLTKPluginImages
 				.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
-		if (fUseNewPage) {
-			fSourceContainerPage = new NewSourceContainerWorkbookPage(
-					fBuildPathList, fRunnableContext, getPreferenceStore());
-		} else {
-			fSourceContainerPage = new SourceContainerWorkbookPage(
+//		if (fUseNewPage) {
+//			fSourceContainerPage = new NewSourceContainerWorkbookPage(
+//					fBuildPathList, fRunnableContext, getPreferenceStore());
+//		} else {
+			fSourceContainerPage = new TempSourceContainerWorkbookPage(
 					fBuildPathList);
-		}
+//		}
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 		Image projectImage = workbench.getSharedImages().getImage(
 				IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new ProjectsWorkbookPage(fBuildPathList, fPageContainer);
+		fProjectsPage = new TempProjectsWorkbookPage(fBuildPathList, fPageContainer);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
 		item.setData(fProjectsPage);
 		item.setControl(fProjectsPage.getControl(folder));
-		fLibrariesPage = new LibrariesWorkbookPage(this.supportZips(),
+		fLibrariesPage = new TempLibrariesWorkbookPage(this.supportZips(),
 				fBuildPathList, fPageContainer);
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
@@ -823,10 +823,10 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 		} else {
 			fTabFolder.setSelection(pageIndex);
 			Object page = fTabFolder.getItem(pageIndex).getData();
-			if (page instanceof LibrariesWorkbookPage) {
+			if (page instanceof TempLibrariesWorkbookPage) {
 				BPListElement element = BPListElement.createFromExisting(entry,
 						fCurrScriptProject);
-				((LibrariesWorkbookPage) page).addElement(element);
+				((TempLibrariesWorkbookPage) page).addElement(element);
 			}
 		}
 	}

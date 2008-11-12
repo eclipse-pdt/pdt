@@ -24,7 +24,9 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
-import org.eclipse.dltk.internal.ui.wizards.buildpath.*;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListLabelProvider;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BuildpathOrderingWorkbookPage;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.NewSourceContainerWorkbookPage;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
@@ -107,24 +109,24 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
 		item.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
-		if (fUseNewPage) {
-			fSourceContainerPage = new NewSourceContainerWorkbookPage(fBuildPathList, fRunnableContext, getPreferenceStore());
-		} else {
+//		if (fUseNewPage) {
+//			fSourceContainerPage = new NewSourceContainerWorkbookPage(fBuildPathList, fRunnableContext, getPreferenceStore());
+//		} else {
 			fSourceContainerPage = new PHPIncludePathSourcePage(fBuildPathList);
-		}
+//		}
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 		Image projectImage = workbench.getSharedImages().getImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new ProjectsWorkbookPage(fBuildPathList, fPageContainer);
+		fProjectsPage = new TempProjectsWorkbookPage(fBuildPathList, fPageContainer);
 		fProjectsPage.setTitle(PHPUIMessages.getString("IncludePathProjectsPage_Folders_Label")); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
 		item.setData(fProjectsPage);
 		item.setControl(fProjectsPage.getControl(folder));
-		fLibrariesPage = new LibrariesWorkbookPage(this.supportZips(), fBuildPathList, fPageContainer);
+		fLibrariesPage = new TempLibrariesWorkbookPage(this.supportZips(), fBuildPathList, fPageContainer);
 		fLibrariesPage.setTitle(PHPUIMessages.getString("IncludePathLibrariesPage_Folders_Label")); //$NON-NLS-1$
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
