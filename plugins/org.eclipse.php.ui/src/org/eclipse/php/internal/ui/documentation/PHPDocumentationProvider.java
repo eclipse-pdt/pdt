@@ -19,14 +19,10 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.core.SourceParserUtil;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
+import org.eclipse.php.core.codeassist.FakeGroupMethod;
+import org.eclipse.php.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -106,6 +102,11 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 
 	private void appendMethodInfo(IMethod method, StringBuilder buf) throws ModelException {
+		
+		if (method instanceof FakeGroupMethod) {
+			appendDefinitionRow(FIELD_DESC, "This is a group containing multiple functions.", buf);
+			return;
+		}
 
 		ISourceModule sourceModule = method.getSourceModule();
 		String fileName = sourceModule.getElementName();
@@ -153,6 +154,11 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 
 	private void appendTypeInfo(IType type, StringBuilder buf) throws ModelException {
+		
+		if (type instanceof FakeGroupType) {
+			appendDefinitionRow(FIELD_DESC, "This is a group containing multiple classes or interfaces.", buf);
+			return;
+		}
 
 		ISourceModule sourceModule = type.getSourceModule();
 		String fileName = sourceModule.getElementName();

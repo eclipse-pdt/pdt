@@ -92,7 +92,7 @@ public enum ProjectOutlineGroups {
 
 				switch (this) {
 					case GROUP_CLASSES:
-						children = mixinModel.getClass(ASTRIX_STRING, scope);
+						children = mixinModel.getType(ASTRIX_STRING, scope);
 						break;
 
 					case GROUP_FUNCTIONS:
