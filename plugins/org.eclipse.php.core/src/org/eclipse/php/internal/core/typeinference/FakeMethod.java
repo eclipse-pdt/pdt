@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
@@ -23,7 +24,7 @@ public class FakeMethod extends SourceMethod {
 	private String receiver;
 	private String[] parameters = NO_STRINGS;
 	private String[] parameterInitializers = NO_STRINGS;
-	private int flags;
+	private int flags = Modifiers.AccPublic;
 	private int offset;
 	private int length;
 	private boolean hasSpecialOffsets = false;

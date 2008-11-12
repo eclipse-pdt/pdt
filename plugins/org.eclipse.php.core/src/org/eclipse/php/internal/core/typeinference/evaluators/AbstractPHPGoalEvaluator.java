@@ -46,7 +46,7 @@ public abstract class AbstractPHPGoalEvaluator extends GoalEvaluator {
 			PHPClassType classType = (PHPClassType) instanceType;
 			IScriptProject scriptProject = currentModule.getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
+			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getType(classType.getTypeName(), scope);
 			for (IModelElement e : elements) {
 				types.add((IType) e);
 			}
@@ -57,7 +57,7 @@ public abstract class AbstractPHPGoalEvaluator extends GoalEvaluator {
 			for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 				if (type instanceof PHPClassType) {
 					PHPClassType classType = (PHPClassType) type;
-					IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
+					IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getType(classType.getTypeName(), scope);
 					for (IModelElement e : elements) {
 						types.add((IType) e);
 					}

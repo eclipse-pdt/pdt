@@ -83,7 +83,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 				for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
 					if (type instanceof PHPClassType) {
 						PHPClassType classType = (PHPClassType) type;
-						IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
+						IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getType(classType.getTypeName(), scope);
 						for (IModelElement c : classes) {
 							types.add((IType) c);
 						}
@@ -93,7 +93,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 				IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 				PHPClassType classType = (PHPClassType) instanceType;
-				IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getClass(classType.getTypeName(), scope);
+				IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getType(classType.getTypeName(), scope);
 				for (IModelElement c : classes) {
 					types.add((IType) c);
 				}

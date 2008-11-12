@@ -503,7 +503,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (declaration instanceof MethodDeclaration) {
 			IMethod method = (IMethod) PHPModelUtils.getModelElementByNode(sourceModule, moduleDeclaration, declaration);
 			if (method != null) {
-				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, true, false);
+				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, 0);
 				if (returnTypes != null) {
 					
 					int relevanceClass = RELEVANCE_CLASS;
@@ -586,7 +586,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (prefix.length() == 0) {
 				prefix = DOLLAR;
 			}
-			IModelElement[] elements = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode());
+			int mask = 0;
+			if (requestor.isContextInformationMode()) {
+				mask |= CodeAssistUtils.EXACT_NAME;
+			}
+			IModelElement[] elements = CodeAssistUtils.getGlobalFields(sourceModule, prefix, mask);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
 				reportField(field, relevanceVar--, true);
@@ -692,7 +696,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					IModelElement enclosingElement = sourceModule.getElementAt(offset);
 					if (enclosingElement instanceof IMethod) {
 						IMethod method = (IMethod) enclosingElement;
-						variables.addAll(Arrays.asList(CodeAssistUtils.getMethodFields(method, prefix, requestor.isContextInformationMode())));
+						int mask = 0;
+						if (requestor.isContextInformationMode()) {
+							mask |= CodeAssistUtils.EXACT_NAME;
+						}
+						variables.addAll(Arrays.asList(CodeAssistUtils.getMethodFields(method, prefix, mask)));
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG_COMPLETION) {
@@ -701,7 +709,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 
 				// Complete global scope variables:
-				variables.addAll(Arrays.asList(CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles())));
+				int mask = 0;
+				if (requestor.isContextInformationMode()) {
+					mask |= CodeAssistUtils.EXACT_NAME;
+				}
+				if (!showVarsFromOtherFiles()) {
+					mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
+				}
+				variables.addAll(Arrays.asList(CodeAssistUtils.getGlobalFields(sourceModule, prefix, mask)));
 				
 				for (IModelElement var : variables) {
 					IField field = (IField) var;
@@ -734,7 +749,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		if (!inClass) {
-			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, requestor.isContextInformationMode(), currentFileOnly);
+			int mask = 0;
+			if (requestor.isContextInformationMode()) {
+				mask |= CodeAssistUtils.EXACT_NAME;
+			}
+			if (currentFileOnly) {
+				mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
+			}
+			
+			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, mask);
 			for (IModelElement function : functions) {
 				try {
 					if ((((IMethod) function).getFlags() & IPHPModifiers.Internal) == 0) {
@@ -748,7 +771,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			if (showConstantAssist()) {
-				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), currentFileOnly && !showVarsFromOtherFiles(), constantsCaseSensitive());
+				mask = 0;
+				if (requestor.isContextInformationMode()) {
+					mask |= CodeAssistUtils.EXACT_NAME;
+				}
+				if (currentFileOnly && !showVarsFromOtherFiles()) {
+					mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
+				}
+				if (constantsCaseSensitive()) {
+					mask |= CodeAssistUtils.CASE_SENSITIVE;
+				}
+				IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, mask);
 				for (IModelElement constant : constants) {
 					try {
 						if ((((IField) constant).getFlags() & Modifiers.AccConstant) != 0) {
@@ -765,11 +798,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (!inClass) {
 			if (showClassNamesInGlobalCompletion()) {
-				IModelElement[] classes = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, requestor.isContextInformationMode(), currentFileOnly);
-				for (IModelElement type : classes) {
+				int mask = 0;
+				if (requestor.isContextInformationMode()) {
+					mask |= CodeAssistUtils.EXACT_NAME;
+				}
+				if (currentFileOnly) {
+					mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
+				}
+				IType[] classes = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
+				for (IType type : classes) {
 					try {
-						if ((((IType) type).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType((IType) type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
+						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType(type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
@@ -812,26 +852,37 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 
 		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line, determineObjsFromOtherFiles());
-
-		if (hasWhitespaceAtEnd && functionName.length() > 0) {
-			// check if current position is between the end of a function call and open bracket.
-			return CodeAssistUtils.isClassFunctionCall(sourceModule, types, functionName);
-		}
-
-		if (isClassTriger) {
-			if (isParent) {
-				if (types != null) { //$NON-NLS-1$
+		if (types != null) {
+			if (hasWhitespaceAtEnd && functionName.length() > 0) {
+				// check if current position is between the end of a function call and open bracket.
+				return CodeAssistUtils.isClassFunctionCall(sourceModule, types, functionName);
+			}
+	
+			if (isClassTriger) {
+				if (isParent) {
+					// Collect parents:
+					Set<IType> parents = new HashSet<IType>();
+					for (IType type : types) {
+						try {
+							ITypeHierarchy hierarchy = type.newSupertypeHierarchy(null);
+							parents.addAll(Arrays.asList(hierarchy.getAllSuperclasses(type)));
+						} catch (ModelException e) {
+							if (DLTKCore.DEBUG_COMPLETION) {
+								e.printStackTrace();
+							}
+						}
+					}
+					showClassCall(offset, parents.toArray(new IType[parents.size()]), functionName, false, false);
+				} else {
 					showClassStaticCall(offset, types, functionName);
 				}
 			} else {
-				showClassStaticCall(offset, types, functionName);
+				String parent = statementText.toString().substring(0, statementText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
+				boolean isThisVar = parent.equals("$this"); //$NON-NLS-1$
+				//boolean addVariableDollar = parent.endsWith("()");
+				boolean addVariableDollar = false;
+				showClassCall(offset, types, functionName, isThisVar, addVariableDollar);
 			}
-		} else {
-			String parent = statementText.toString().substring(0, statementText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
-			boolean isThisVar = parent.equals("$this"); //$NON-NLS-1$
-			//boolean addVariableDollar = parent.endsWith("()");
-			boolean addVariableDollar = false;
-			showClassCall(offset, types, functionName, isThisVar, addVariableDollar);
 		}
 		return true;
 	}
@@ -847,9 +898,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		
 		boolean showNonStrictOptions = showNonStrictOptions();
 
+		int mask = 0;
+		if (requestor.isContextInformationMode()) {
+			mask |= CodeAssistUtils.EXACT_NAME;
+		}
 		for (IType type : className) {
 			if (!prefix.startsWith(DOLLAR)) {
-				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, requestor.isContextInformationMode());
+				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, mask);
 				for (IModelElement method : methods) {
 					try {
 						if ((((IMethod) method).getFlags() & IPHPModifiers.Internal) == 0 && (showNonStrictOptions || isThisVar || (((IMethod) method).getFlags() & Modifiers.AccPrivate) == 0)) {
@@ -863,7 +918,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 
-			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, requestor.isContextInformationMode(), true);
+			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, mask);
 			int relevanceVar = RELEVANCE_VAR;
 			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement element : fields) {
@@ -888,11 +943,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		boolean showNonStrictOptions = showNonStrictOptions();
 
+		int mask = 0;
+		if (requestor.isContextInformationMode()) {
+			mask |= CodeAssistUtils.EXACT_NAME;
+		}
 		int relevanceMethod = RELEVANCE_METHOD;
 		if (!prefix.startsWith(DOLLAR)) {
 			for (IType type : className) {
-				IMethod[] classMethods = CodeAssistUtils.getClassMethods(type, prefix, requestor.isContextInformationMode());
-
+				IMethod[] classMethods = CodeAssistUtils.getClassMethods(type, prefix, mask);
 				for (IMethod method : classMethods) {
 					try {
 						if ((!isPHP5 || showNonStrictOptions || (method.getFlags() & Modifiers.AccStatic) != 0) && (method.getFlags() & IPHPModifiers.Internal) == 0) {
@@ -910,7 +968,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int relevanceConst = RELEVANCE_CONST;
 		int relevanceVar = RELEVANCE_VAR;
 		for (IType type : className) {
-			IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, requestor.isContextInformationMode(), true);
+			IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, mask);
 			for (IField field : classFields) {
 				try {
 					int flags = field.getFlags();
@@ -937,6 +995,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (functionStart == -1) {
 			return false;
 		}
+		
+		
 
 		// are we inside parameters part in function declaration statement
 		for (int i = text.length() - 1; i >= functionStart; i--) {
@@ -975,11 +1035,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					this.setSourceRange(offset - prefix.length(), offset);
 
 					int relevanceClass = RELEVANCE_CLASS;
-					IModelElement[] classes = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, requestor.isContextInformationMode());
-					for (IModelElement type : classes) {
+					int mask = 0;
+					if (requestor.isContextInformationMode()) {
+						mask |= CodeAssistUtils.EXACT_NAME;
+					}
+					IType[] classes = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
+					for (IType type : classes) {
 						try {
-							if ((((IType) type).getFlags() & IPHPModifiers.Internal) == 0) {
-								reportType((IType) type, relevanceClass--, WHITESPACE_SUFFIX);
+							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+								reportType(type, relevanceClass--, WHITESPACE_SUFFIX);
 							}
 						} catch (ModelException e) {
 							if (DLTKCore.DEBUG_COMPLETION) {
@@ -995,7 +1059,17 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							
 							this.setSourceRange(offset - prefix.length(), offset);
 							
-							IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, requestor.isContextInformationMode(), !showVarsFromOtherFiles(), constantsCaseSensitive());
+							int mask = 0;
+							if (requestor.isContextInformationMode()) {
+								mask |= CodeAssistUtils.EXACT_NAME;
+							}
+							if (!showVarsFromOtherFiles()) {
+								mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
+							}
+							if (constantsCaseSensitive()) {
+								mask |= CodeAssistUtils.CASE_SENSITIVE;
+							}
+							IModelElement[] constants = CodeAssistUtils.getGlobalFields(sourceModule, prefix, mask);
 							int relevanceConst = RELEVANCE_CONST;
 							for (IModelElement constant : constants) {
 								IField field = (IField) constant;
@@ -1041,7 +1115,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int relevanceMethod = RELEVANCE_METHOD;
 
-		IMethod[] superClassMethods = CodeAssistUtils.getSuperClassMethods(classData, functionNameStart, requestor.isContextInformationMode());
+		int mask = 0;
+		if (requestor.isContextInformationMode()) {
+			mask |= CodeAssistUtils.EXACT_NAME;
+		}
+		IMethod[] superClassMethods = CodeAssistUtils.getSuperClassMethods(classData, functionNameStart, mask);
 		for (IMethod superMethod : superClassMethods) {
 			if (classData.getMethod(superMethod.getElementName()).exists()) {
 				continue;
@@ -1159,12 +1237,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		
 		this.setSourceRange(offset - prefix.length(), offset);
 		
-		IModelElement[] interfaces = CodeAssistUtils.getOnlyInterfaces(sourceModule, prefix, requestor.isContextInformationMode());
+		int mask = CodeAssistUtils.ONLY_INTERFACES;
+		if (requestor.isContextInformationMode()) {
+			mask |= CodeAssistUtils.EXACT_NAME;
+		}
+		IType[] interfaces = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 		int relevanceClass = RELEVANCE_CLASS;
-		for (IModelElement i : interfaces) {
+		for (IType i : interfaces) {
 			try {
-				if ((((IType) i).getFlags() & IPHPModifiers.Internal) == 0) {
-					reportType((IType) i, relevanceClass--, EMPTY);
+				if ((i.getFlags() & IPHPModifiers.Internal) == 0) {
+					reportType(i, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
@@ -1223,7 +1305,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int relevanceClass = RELEVANCE_CLASS;
 
-		IType[] classes = CodeAssistUtils.getOnlyClasses(sourceModule, prefix, requestor.isContextInformationMode());
+		int mask = CodeAssistUtils.ONLY_CLASSES;
+		if (requestor.isContextInformationMode()) {
+			mask |= CodeAssistUtils.EXACT_NAME;
+		}
+		IType[] classes = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 		for (IType type : classes) {
 			try {
 				if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
@@ -1275,12 +1361,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 	protected void showClassList(String prefix, int offset, States state) {
 		this.setSourceRange(offset - prefix.length(), offset);
-
 		int relevanceClass = RELEVANCE_CLASS;
 
 		switch (state) {
 			case NEW:
-				IType[] types = CodeAssistUtils.getOnlyClasses(sourceModule, prefix, requestor.isContextInformationMode());
+				int mask = CodeAssistUtils.ONLY_CLASSES;
+				if (requestor.isContextInformationMode()) {
+					mask |= CodeAssistUtils.EXACT_NAME;
+				}
+				IType[] types = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 				IType enclosingClass = null;
 				try {
 					IModelElement enclosingElement = sourceModule.getElementAt(offset);
@@ -1337,11 +1426,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 				break;
 			case INSTANCEOF:
-				IModelElement[] typeElements = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, requestor.isContextInformationMode());
-				for (IModelElement typeElement : typeElements) {
+				mask = 0;
+				if (requestor.isContextInformationMode()) {
+					mask |= CodeAssistUtils.EXACT_NAME;
+				}
+				IType[] typeElements = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
+				for (IType typeElement : typeElements) {
 					try {
-						if ((((IType) typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType((IType) typeElement, relevanceClass--, EMPTY);
+						if ((typeElement.getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType(typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
@@ -1360,11 +1453,15 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 				break;
 			case CATCH:
-				typeElements = CodeAssistUtils.getGlobalClasses(sourceModule, prefix, requestor.isContextInformationMode());
-				for (IModelElement typeElement : typeElements) {
+				mask = 0;
+				if (requestor.isContextInformationMode()) {
+					mask |= CodeAssistUtils.EXACT_NAME;
+				}
+				typeElements = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
+				for (IType typeElement : typeElements) {
 					try {
-						if ((((IType) typeElement).getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType((IType) typeElement, relevanceClass--, EMPTY);
+						if ((typeElement.getFlags() & IPHPModifiers.Internal) == 0) {
+							reportType(typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
@@ -1497,9 +1594,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			proposal.setModelElement(method);
 			proposal.setName(name);
 			
-			if (hasOpenBraceAtEnd) {
+			if (method instanceof FakeGroupMethod) {
+				proposal.setCompletion(elementName.substring(0, elementName.length()-1).toCharArray());
+				relevance = 10000001;
+			}
+			else if (hasOpenBraceAtEnd) {
 				proposal.setCompletion(elementName.toCharArray());
-			} else {
+			}
+			else {
 				proposal.setCompletion((elementName + BRACKETS_SUFFIX).toCharArray());
 			}
 			try {
@@ -1563,9 +1665,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			proposal.setModelElement(type);
 			proposal.setName(name);
 			
-			if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix) {
+			if (type instanceof FakeGroupType) {
+				proposal.setCompletion(elementName.substring(0, elementName.length()-1).toCharArray());
+				relevance = 10000001;
+			}
+			else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix) {
 				proposal.setCompletion(elementName.toCharArray());
-			} else {
+			}
+			else {
 				proposal.setCompletion((elementName + suffix).toCharArray());
 			}
 			
@@ -1612,6 +1719,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (removeDollar && completion.startsWith(DOLLAR)) {
 				completion = completion.substring(1);
 			}
+			
 			proposal.setCompletion(completion.toCharArray());
 			try {
 				proposal.setFlags(field.getFlags());

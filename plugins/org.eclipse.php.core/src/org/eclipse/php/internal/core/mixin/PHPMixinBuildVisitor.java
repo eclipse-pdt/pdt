@@ -35,6 +35,22 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
+/**
+ * <p>This class builds mixin model. The keys format is the following:</p>
+ * <ul>
+ * 	<li><b>{function</b>			Global Function</li>
+ * 	<li><b>{constant@</b>			Global Constant</li>
+ * 	<li><b>{$variable</b>			Global Variable</li>
+ * 	<li><b>class%</b>				Class Declaration</li>
+ * 	<li><b>interface&gt;</b>		Interface Declaration</li>
+ * 	<li><b>{class%{method</b>		Class or Interface Method</li>
+ * 	<li><b>{class%{$field</b>		Class or Interface Variable</li>
+ * 	<li><b>{class%{constant@</b>	Class or Interface Constant</li>
+ * </ul>
+ * <b>Note: PHPDoc keys are the same as their original element keys</b>
+ * 
+ * @author michael
+ */
 public class PHPMixinBuildVisitor extends ASTVisitor {
 
 	//	private ModuleDeclaration module;
@@ -66,7 +82,9 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public abstract String reportConstant(String name, IField object);
 
-		public abstract String reportType(String name, IType object, boolean isInterface);
+		public abstract String reportType(String name, IType object);
+		
+		public abstract String reportInterface(String name, IType object);
 
 		public abstract String reportInclude(String filePath);
 
@@ -87,21 +105,25 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public String reportMethod(String name, IMethod object) {
 			// Report global function:
-			return report(MixinModel.SEPARATOR + name, PHPMixinElementInfo.createMethod(object));
+			return report(new StringBuilder(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createMethod(object));
 		}
 
-		public String reportType(String name, IType object, boolean isInterface) {
-			return report(name + PHPMixinParser.CLASS_SUFFIX, isInterface ? PHPMixinElementInfo.createInterface(object) : PHPMixinElementInfo.createClass(object));
+		public String reportType(String name, IType object) {
+			return report(new StringBuilder(name).append(PHPMixinParser.CLASS_SUFFIX).toString(), PHPMixinElementInfo.createClass(object));
+		}
+		
+		public String reportInterface(String name, IType object) {
+			return report(new StringBuilder(name).append(PHPMixinParser.INTERFACE_SUFFIX).toString(), PHPMixinElementInfo.createInterface(object));
 		}
 
 		public String reportVariable(String name, IField object) {
 			// Report global variable:
-			return report(MixinModel.SEPARATOR + name, PHPMixinElementInfo.createVariable(object));
+			return report(new StringBuilder(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createVariable(object));
 		}
 
 		public String reportConstant(String name, IField object) {
 			// Report global constant:
-			return report(MixinModel.SEPARATOR + name, PHPMixinElementInfo.createConstant(object));
+			return report(new StringBuilder(MixinModel.SEPARATOR).append(name).append(PHPMixinParser.CONSTANT_SUFFIX).toString(), PHPMixinElementInfo.createConstant(object));
 		}
 
 		public String getKey() {
@@ -117,7 +139,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			if (i >= 0) {
 				filePath = filePath.substring(i + 1);
 			}
-			return report(filePath + PHPMixinParser.INCLUDE_SUFFIX, PHPMixinElementInfo.createInclude(object));
+			return report(new StringBuilder(filePath).append(PHPMixinParser.INCLUDE_SUFFIX).toString(), PHPMixinElementInfo.createInclude(object));
 		}
 	}
 
@@ -132,23 +154,28 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		public String reportMethod(String name, IMethod object) {
 			// Report class method:
-			return report(getClassKey() + MixinModel.SEPARATOR + name, PHPMixinElementInfo.createMethod(object));
+			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createMethod(object));
 		}
 
-		public String reportType(String name, IType obj, boolean isInterface) {
+		public String reportType(String name, IType obj) {
 			// There's no nested classes in PHP
+			return null;
+		}
+		
+		public String reportInterface(String name, IType obj) {
+			// There's no nested interfaces in PHP
 			return null;
 		}
 
 		public String reportVariable(String name, IField object) {
 			// Report class field:
 			PHPMixinElementInfo info = PHPMixinElementInfo.createVariable(object);
-			return report(getClassKey() + MixinModel.SEPARATOR + name, info);
+			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append(name).toString(), info);
 		}
 
 		public String reportConstant(String name, IField object) {
 			// Report class constant:
-			return report(getClassKey() + MixinModel.SEPARATOR + name, PHPMixinElementInfo.createConstant(object));
+			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append(name).append(PHPMixinParser.CONSTANT_SUFFIX).toString(), PHPMixinElementInfo.createConstant(object));
 		}
 
 		public String getClassKey() {
@@ -181,18 +208,23 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return sourceModuleScope.reportMethod(name, object);
 		}
 
-		public String reportType(String name, IType obj, boolean isInterface) {
+		public String reportType(String name, IType obj) {
 			// Class defined in m(ethod belongs to the global scope:
-			return sourceModuleScope.reportType(name, obj, isInterface);
+			return sourceModuleScope.reportType(name, obj);
+		}
+		
+		public String reportInterface(String name, IType obj) {
+			// Class defined in m(ethod belongs to the global scope:
+			return sourceModuleScope.reportInterface(name, obj);
 		}
 
 		public String reportVariable(String name, IField obj) {
 			PHPMixinElementInfo info = PHPMixinElementInfo.createVariable(obj);
 			if (name.charAt(0) == '$') { // Method or function scope local variable (example: $a = ...)
-				return report(getKey() + MixinModel.SEPARATOR + name, info);
+				return report(new StringBuilder(getKey()).append(MixinModel.SEPARATOR).append(name).toString(), info);
 			}
 			// Otherwise - it's a class variable ($this->a = ...):
-			return report(getClassKey() + MixinModel.SEPARATOR + '$' + name, info);
+			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append('$').append(name).toString(), info);
 		}
 
 		public String reportConstant(String name, IField object) {
@@ -542,7 +574,14 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		String name = decl.getName();
 		Scope scope = scopes.peek();
-		String newKey = scope.reportType(name, obj, decl.getKind() == ASTNodeKinds.INTERFACE_DECLARATION);
+		String newKey;
+		if (decl.getKind() == ASTNodeKinds.INTERFACE_DECLARATION) {
+			newKey = scope.reportInterface(name, obj);
+			// we report internal elements as they are under class always:
+			newKey = newKey.replace(PHPMixinParser.INTERFACE_SUFFIX, PHPMixinParser.CLASS_SUFFIX);
+		} else {
+			newKey = scope.reportType(name, obj);
+		}
 		scopes.push(new ClassScope(decl, newKey));
 
 		if (decl instanceof IPHPDocAwareDeclaration) {

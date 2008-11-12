@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -32,6 +33,10 @@ public class FakeField extends SourceField {
 
 	public ISourceRange getSourceRange() throws ModelException {
 		return new SourceRange(offset, length);
+	}
+	
+	public int getFlags() {
+		return Modifiers.AccPublic;
 	}
 
 	public boolean equals(Object o) {

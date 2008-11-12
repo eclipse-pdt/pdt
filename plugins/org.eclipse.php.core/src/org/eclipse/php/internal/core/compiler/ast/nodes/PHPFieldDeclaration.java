@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
@@ -26,6 +27,9 @@ public class PHPFieldDeclaration extends FieldDeclaration implements IPHPDocAwar
 	public PHPFieldDeclaration(VariableReference variable, Expression initializer, int start, int end, int modifiers, int declStart, PHPDocBlock phpDoc) {
 		super(variable.getName(), variable.sourceStart(), variable.sourceEnd(), start, end);
 
+		if ((modifiers & Modifiers.AccPrivate) == 0 && (modifiers & Modifiers.AccProtected) == 0) {
+			modifiers |= Modifiers.AccPublic;
+		}
 		setModifiers(modifiers);
 
 		this.declStart = declStart;

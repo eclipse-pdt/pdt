@@ -121,7 +121,7 @@ public class PHPTypeInferenceUtils {
 				return result.toArray(new IModelElement[result.size()]);
 			} else {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-				elements = PHPMixinModel.getInstance(scriptProject).getClass(((PHPClassType) evaluatedType).getTypeName(), scope);
+				elements = PHPMixinModel.getInstance(scriptProject).getType(((PHPClassType) evaluatedType).getTypeName(), scope);
 			}
 		} else if (evaluatedType instanceof AmbiguousType) {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();

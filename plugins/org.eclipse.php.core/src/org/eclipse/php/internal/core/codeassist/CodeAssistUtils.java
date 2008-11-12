@@ -19,8 +19,11 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.*;
+import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.BasicContext;
@@ -29,13 +32,13 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
+import org.eclipse.php.internal.core.mixin.PHPMixinParser;
+import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
@@ -43,7 +46,46 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodRetu
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
+/**
+ * This is a common utility used by completion and selection engines for PHP elements retrieval.
+ * @author michael
+ */
 public class CodeAssistUtils {
+
+	/**
+	 * Whether to look for exact name or for the prefix
+	 */
+	public static final int EXACT_NAME = 1 << 0;
+	
+	/**
+	 * Whether the match will be case-sensitive
+	 */
+	public static final int CASE_SENSITIVE = 1 << 1;
+	
+	/**
+	 * Whether to retrieve only current file elements
+	 */
+	public static final int ONLY_CURRENT_FILE = 1 << 2;
+	
+	/**
+	 * Whether to retrieve only classes excluding interfaces (when asking for types)
+	 */
+	public static final int ONLY_CLASSES = 1 << 3;
+	
+	/**
+	 * Whether to retrieve only interfaces excluding classes (when asking for types)
+	 */
+	public static final int ONLY_INTERFACES = 1 << 4;
+	
+	/**
+	 * Whether to retrieve only variables excluding constants (when asking for fields)
+	 */
+	public static final int ONLY_VARIABLES = 1 << 5;
+	
+	/**
+	 * Whether to use PHPDoc in type inference
+	 */
+	public static final int USE_PHPDOC = 1 << 5;
 
 	private static final String SELF = "self"; //$NON-NLS-1$
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
@@ -62,10 +104,10 @@ public class CodeAssistUtils {
 	 * This method finds all ancestor methods that match the given prefix.
 	 * @param type
 	 * @param prefix
-	 * @param exactName
+	 * @param mask
 	 * @return
 	 */
-	public static IMethod[] getSuperClassMethods(IType type, String prefix, boolean exactName) {
+	public static IMethod[] getSuperClassMethods(IType type, String prefix, int mask) {
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		try {
 			if (type.getSuperClasses() != null) {
@@ -82,6 +124,7 @@ public class CodeAssistUtils {
 					IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 
 					int matchRule;
+					boolean exactName = (mask & EXACT_NAME) != 0;
 					if (prefix.length() == 0 && !exactName) {
 						prefix = WILDCARD;
 						matchRule = SearchPattern.R_PATTERN_MATCH;
@@ -110,12 +153,13 @@ public class CodeAssistUtils {
 	 * This method finds all class methods that match the given prefix.
 	 * @param type
 	 * @param prefix
-	 * @param exactName
+	 * @param mask
 	 * @return
 	 */
-	public static IMethod[] getClassMethods(IType type, String prefix, boolean exactName) {
+	public static IMethod[] getClassMethods(IType type, String prefix, int mask) {
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		final Set<String> methodNames = new HashSet<String>();
+		boolean exactName = (mask & EXACT_NAME) != 0;
 		try {
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
@@ -131,7 +175,7 @@ public class CodeAssistUtils {
 				}
 			}
 
-			IMethod[] superClassMethods = getSuperClassMethods(type, prefix, exactName);
+			IMethod[] superClassMethods = getSuperClassMethods(type, prefix, mask);
 			// Filter overriden methods:
 			for (IMethod superClassMethod : superClassMethods) {
 				String methodName = superClassMethod.getElementName().toLowerCase();
@@ -153,11 +197,13 @@ public class CodeAssistUtils {
 	 * This method finds all class fields that match the given prefix.
 	 * @param type
 	 * @param prefix
-	 * @param exactName
-	 * @param searchConstants
+	 * @param mask
 	 * @return
 	 */
-	public static IField[] getClassFields(IType type, String prefix, boolean exactName, boolean searchConstants) {
+	public static IField[] getClassFields(IType type, String prefix, int mask) {
+		boolean exactName = (mask & EXACT_NAME) != 0;
+		boolean searchConstants = (mask & ONLY_VARIABLES) == 0;
+		
 		final Set<IField> fields = new TreeSet<IField>(new AlphabeticComparator());
 		try {
 			List<IType> searchTypes = new LinkedList<IType>();
@@ -250,15 +296,12 @@ public class CodeAssistUtils {
 	 * @param propertyName
 	 * @param offset
 	 * @param line
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line, boolean determineObjectFromOtherFile) {
+	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line) {
 		for (IType type : types) {
-
 			PHPClassType classType = new PHPClassType(type.getElementName());
-
-			IField[] fields = getClassFields(type, propertyName, true, false);
+			IField[] fields = getClassFields(type, propertyName, CASE_SENSITIVE | ONLY_VARIABLES);
 
 			Set<String> processedFields = new HashSet<String>();
 			for (IField field : fields) {
@@ -300,10 +343,9 @@ public class CodeAssistUtils {
 	 * @param variableName
 	 * @param position
 	 * @param line
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line, boolean determineObjectFromOtherFile) {
+	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, position);
 		if (context != null) {
@@ -340,10 +382,10 @@ public class CodeAssistUtils {
 	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getFunctionReturnType(IType type, String functionName, boolean determineObjectFromOtherFile) {
-		IMethod[] classMethod = getClassMethods(type, functionName, true);
+	public static IType[] getFunctionReturnType(IType type, String functionName) {
+		IMethod[] classMethod = getClassMethods(type, functionName, EXACT_NAME);
 		if (classMethod.length > 0) {
-			return getFunctionReturnType(classMethod[0], determineObjectFromOtherFile);
+			return getFunctionReturnType(classMethod[0]);
 		}
 		return null;
 	}
@@ -354,17 +396,17 @@ public class CodeAssistUtils {
 	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile) {
-		return getFunctionReturnType(method, determineObjectFromOtherFile, true);
+	public static IType[] getFunctionReturnType(IMethod method) {
+		return getFunctionReturnType(method, USE_PHPDOC);
 	}
 
 	/**
 	 * Determines the return type of the given method element.
 	 * @param method
-	 * @param determineObjectFromOtherFile
+	 * @param mask
 	 * @return
 	 */
-	public static IType[] getFunctionReturnType(IMethod method, boolean determineObjectFromOtherFile, boolean usePhpDoc) {
+	public static IType[] getFunctionReturnType(IMethod method, int mask) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 
 		IEvaluatedType classType = null;
@@ -379,6 +421,7 @@ public class CodeAssistUtils {
 		IEvaluatedType evaluatedType;
 		IModelElement[] modelElements;
 
+		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
@@ -513,58 +556,6 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * Retrieves all classes from the global scope by the given prefix.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix
-	 * @param exactName
-	 * @return
-	 */
-	public static IType[] getOnlyClasses(ISourceModule sourceModule, String prefix, boolean exactName) {
-		IModelElement[] classes = getGlobalClasses(sourceModule, prefix, exactName);
-		List<IType> onlyClasses = new LinkedList<IType>();
-		for (IModelElement c : classes) {
-			IType type = (IType) c;
-			try {
-				if ((type.getFlags() & Modifiers.AccInterface) == 0) {
-					onlyClasses.add(type);
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return onlyClasses.toArray(new IType[onlyClasses.size()]);
-	}
-
-	/**
-	 * Retrieves all interfaces from the global scope by the given prefix.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix
-	 * @param exactName
-	 * @return
-	 */
-	public static IType[] getOnlyInterfaces(ISourceModule sourceModule, String prefix, boolean exactName) {
-		IModelElement[] classes = getGlobalClasses(sourceModule, prefix, exactName);
-		List<IType> onlyInterfaces = new LinkedList<IType>();
-		for (IModelElement i : classes) {
-			IType type = (IType) i;
-			try {
-				if ((type.getFlags() & Modifiers.AccInterface) != 0) {
-					onlyInterfaces.add(type);
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return onlyInterfaces.toArray(new IType[onlyInterfaces.size()]);
-	}
-
-	/**
 	 * This method finds types for the receiver in the statement text.
 	 * @param sourceModule
 	 * @param statementText
@@ -606,13 +597,13 @@ public class CodeAssistUtils {
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVariableType(types, propertyName, offset, line, determineObjectFromOtherFile);
+			return getVariableType(types, propertyName, offset, line);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
 		Set<IType> result = new LinkedHashSet<IType>();
 		for (IType type : types) {
-			IType[] returnTypes = getFunctionReturnType(type, functionName, determineObjectFromOtherFile);
+			IType[] returnTypes = getFunctionReturnType(type, functionName);
 			if (returnTypes != null) {
 				result.addAll(Arrays.asList(returnTypes));
 			}
@@ -662,7 +653,7 @@ public class CodeAssistUtils {
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			int statementStart = offset - statementText.length();
-			return getVariableType(sourceModule, className, statementStart, line, determineObjectFromOtherFile);
+			return getVariableType(sourceModule, className, statementStart, line);
 		}
 		// if its function call calc the return type.
 		if (statementText.charAt(propertyEndPosition - 1) == ')') {
@@ -672,14 +663,14 @@ public class CodeAssistUtils {
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			IType classData = getContainerClassData(sourceModule, offset);
 			if (classData != null) { //if its a clss function
-				return getFunctionReturnType(classData, functionName, determineObjectFromOtherFile);
+				return getFunctionReturnType(classData, functionName);
 			}
 
 			// if its a non class function
 			Set<IType> returnTypes = new LinkedHashSet<IType>();
-			IModelElement[] functions = getGlobalMethods(sourceModule, functionName, true);
+			IModelElement[] functions = getGlobalMethods(sourceModule, functionName, EXACT_NAME);
 			for (IModelElement function : functions) {
-				IType[] types = getFunctionReturnType((IMethod) function, determineObjectFromOtherFile);
+				IType[] types = getFunctionReturnType((IMethod) function);
 				if (types != null) {
 					returnTypes.addAll(Arrays.asList(types));
 				}
@@ -719,35 +710,28 @@ public class CodeAssistUtils {
 	 * 
 	 * @param sourceModule Current source module
 	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param mask
 	 */
-	public static IModelElement[] getGlobalClasses(ISourceModule sourceModule, String prefix, boolean exactName) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.TYPE);
-	}
-
-	/**
-	 * This method searches for all classes in the project scope that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 * @param currentFileOnly Whether to search variables only in current file
-	 */
-	public static IModelElement[] getGlobalClasses(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.TYPE, currentFileOnly);
-	}
-
-	/**
-	 * This method searches for all methods in the project scope that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 */
-	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, boolean exactName) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.METHOD);
+	public static IType[] getGlobalTypes(ISourceModule sourceModule, String prefix, int mask) {
+		IModelElement[] elements = getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.TYPE, mask);
+		List<IType> filteredElements = new LinkedList<IType>();
+		for (IModelElement c : elements) {
+			IType type = (IType) c;
+			try {
+				if ((mask & ONLY_INTERFACES) != 0 && (type.getFlags() & Modifiers.AccInterface) == 0) {
+					continue;
+				}
+				if ((mask & ONLY_CLASSES) != 0 && (type.getFlags() & Modifiers.AccInterface) != 0) {
+					continue;
+				}
+				filteredElements.add(type);
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return filteredElements.toArray(new IType[filteredElements.size()]);
 	}
 
 	/**
@@ -756,11 +740,10 @@ public class CodeAssistUtils {
 	 * 
 	 * @param sourceModule Current source module
 	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 * @param currentFileOnly Whether to search variables only in current file
+	 * @param mask
 	 */
-	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.METHOD, currentFileOnly);
+	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, int mask) {
+		return getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.METHOD, mask);
 	}
 
 	/**
@@ -769,36 +752,10 @@ public class CodeAssistUtils {
 	 * 
 	 * @param sourceModule Current source module
 	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param mask
 	 */
-	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName) {
-		return getGlobalFields(sourceModule, prefix, exactName, true);
-	}
-
-	/**
-	 * This method searches for all fields in the project scope that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 * @param currentFileOnly Whether to search variables only in current file
-	 */
-	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly) {
-		return getGlobalFields(sourceModule, prefix, exactName, currentFileOnly, false);
-	}
-
-	/**
-	 * This method searches for all fields in the project scope that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
-	 * @param currentFileOnly Whether to search variables only in current file
-	 */
-	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, boolean exactName, boolean currentFileOnly, boolean caseSensitive) {
-		return getGlobalElements(sourceModule, prefix, exactName, IDLTKSearchConstants.FIELD, currentFileOnly, caseSensitive);
+	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, int mask) {
+		return getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.FIELD, mask);
 	}
 
 	/**
@@ -806,22 +763,25 @@ public class CodeAssistUtils {
 	 * @param sourceModule
 	 * @param offset
 	 * @param prefix
-	 * @param exactName
+	 * @param mask
 	 * @return
 	 */
-	public static IModelElement[] getGlobalOrMethodFields(ISourceModule sourceModule, int offset, String prefix, boolean exactName) {
+	public static IModelElement[] getGlobalOrMethodFields(ISourceModule sourceModule, int offset, String prefix, int mask) {
 		try {
 			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			if (enclosingElement instanceof IField) {
+				enclosingElement = enclosingElement.getParent();
+			}
 			if (enclosingElement instanceof IMethod) {
 				IMethod method = (IMethod) enclosingElement;
-				return getMethodFields(method, prefix, exactName);
+				return getMethodFields(method, prefix, mask);
 			}
 		} catch (ModelException e) {
 			if (DLTKCore.DEBUG_COMPLETION) {
 				e.printStackTrace();
 			}
 		}
-		return getGlobalFields(sourceModule, prefix, exactName);
+		return getGlobalFields(sourceModule, prefix, mask);
 	}
 
 	/**
@@ -829,15 +789,16 @@ public class CodeAssistUtils {
 	 * 
 	 * @param method Method to look at
 	 * @param prefix Field name
-	 * @param exactName Whether the prefix is an exact name of a class
+	 * @param mask
 	 */
-	public static IModelElement[] getMethodFields(IMethod method, String prefix, boolean exactName) {
+	public static IModelElement[] getMethodFields(IMethod method, String prefix, int mask) {
 
 		SearchEngine searchEngine = new SearchEngine();
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(new IModelElement[] { method }, toolkit);
 
 		int matchRule;
+		boolean exactName = (mask & EXACT_NAME) != 0;
 		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
 			matchRule = SearchPattern.R_PATTERN_MATCH;
@@ -865,46 +826,16 @@ public class CodeAssistUtils {
 
 	/**
 	 * This method searches in the project scope for all elements of specified type that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix Element name or prefix
-	 * @param exactName Whether the prefix is an exact name of the element
-	 * @param elementType Element type from {@link IDLTKSearchConstants}
-	 * @return
-	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType) {
-		return getGlobalElements(sourceModule, prefix, exactName, elementType, false);
-	}
-
-	/**
-	 * This method searches in the project scope for all elements of specified type that match the given prefix.
-	 * If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule Current source module
-	 * @param prefix Element name or prefix
-	 * @param exactName Whether the prefix is an exact name of the element
-	 * @param elementType Element type from {@link IDLTKSearchConstants}
-	 * @param currentFileOnly Whether to search variables only in current file
-	 * @return
-	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly) {
-		return getGlobalElements(sourceModule, prefix, exactName, elementType, currentFileOnly, false);
-	}
-
-	/**
-	 * This method searches in the project scope for all elements of specified type that match the given prefix.
 	 * If currentFileOnly parameter is <code>true</code>, the search scope for variables will contain only the source module.
 	 * If the project doesn't exist, workspace scope is used.
 	 * 
 	 * @param sourceModule Current source module
 	 * @param prefix Element name or prefix
-	 * @param exactName Whether the prefix is an exact name of the element
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
-	 * @param currentFileOnly Whether to search elements in current file only
+	 * @param mask
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, String prefix, int elementType, int mask) {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 
@@ -912,11 +843,11 @@ public class CodeAssistUtils {
 
 		IScriptProject scriptProject = sourceModule.getScriptProject();
 		if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
-			return getSourceModuleElements(sourceModule, prefix, exactName, elementType);
+			return getSourceModuleElements(sourceModule, prefix, elementType, mask);
 		}
 
 		IDLTKSearchScope scope;
-		if (currentFileOnly) {
+		if ((mask & ONLY_CURRENT_FILE) != 0) {
 			scope = SearchEngine.createSearchScope(sourceModule);
 		} else {
 			if (scriptProject != null) {
@@ -926,14 +857,14 @@ public class CodeAssistUtils {
 			}
 		}
 
-		if (!currentFileOnly && isVariable) {
+		if ((mask & EXACT_NAME) == 0 & (mask & ONLY_CURRENT_FILE) == 0 && isVariable) {
 			// search variables using mixin model:
 			PHPMixinModel mixinModel = scriptProject == null ? PHPMixinModel.getWorkspaceInstance() : PHPMixinModel.getInstance(scriptProject);
 			IModelElement[] variables = mixinModel.getVariable(prefix + WILDCARD, null, null, scope);
 			return variables == null ? EMPTY : filterOtherFilesElements(sourceModule, variables);
 		}
 
-		return getGlobalElements(sourceModule, scope, prefix, exactName, elementType, currentFileOnly, caseSensitive);
+		return getGlobalElements(sourceModule, scope, prefix, elementType, mask);
 	}
 
 	/**
@@ -943,16 +874,104 @@ public class CodeAssistUtils {
 	 * @param sourceModule Current file
 	 * @param scope Search scope
 	 * @param prefix Element name or prefix
-	 * @param exactName Whether the prefix is an exact name of the element
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
-	 * @param currentFileOnly Whether to look in current file only
-	 * @param caseSensitive Whether the search is case sensitive
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, IDLTKSearchScope scope, String prefix, boolean exactName, int elementType, boolean currentFileOnly, boolean caseSensitive) {
+	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, IDLTKSearchScope scope, String prefix, final int elementType, int mask) {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 
+		SearchEngine searchEngine = new SearchEngine();
+		SearchPattern pattern = null;
+		
+		boolean exactName = (mask & EXACT_NAME) != 0;
+		boolean caseSensitive = (mask & CASE_SENSITIVE) != 0;
+		boolean currentFileOnly = (mask & ONLY_CURRENT_FILE) != 0;
+
+		// Group options:
+		Set<String> elementsToSearch = new HashSet<String>();
+		Set<String> groups = new HashSet<String>();
+
+		boolean showGroupOptions = PHPCorePlugin.getDefault().getPluginPreferences().getBoolean(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS);
+		if (!prefix.startsWith("$") && !currentFileOnly && showGroupOptions && (elementType == IDLTKSearchConstants.TYPE || elementType == IDLTKSearchConstants.METHOD)) {
+			if (!exactName) {
+				MixinModel mixinModel = PHPMixinModel.getInstance(sourceModule.getScriptProject()).getRawModel();
+				
+				// Build the mixin request key:
+				String[] elementNames;
+				if (elementType == IDLTKSearchConstants.TYPE) {
+					if ((mask & ONLY_CLASSES) != 0) {
+						elementNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString());
+					} else if ((mask & ONLY_INTERFACES) != 0) {
+						elementNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString());
+					} else {
+						String[] classNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString());
+						String[] interfaceNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString());
+						elementNames = new String[classNames.length + interfaceNames.length];
+						System.arraycopy(classNames, 0, elementNames, 0, classNames.length);
+						System.arraycopy(interfaceNames, 0, elementNames, classNames.length, interfaceNames.length);
+					}
+				} else {
+					elementNames = mixinModel.findKeys(new StringBuilder(MixinModel.SEPARATOR).append(prefix).append(WILDCARD).toString());
+				}
+
+				// Filter Mixin result strings:
+				Set<String> elementNamesSet = new HashSet<String>();
+				for (String elementName : elementNames) {
+					if (elementType == IDLTKSearchConstants.TYPE) {
+						elementName = elementName.substring(0, elementName.length() - 1);
+					} else {
+						if (!Character.isJavaIdentifierPart(elementName.substring(elementName.length() - 1).charAt(0))) {
+							continue; // filter non-methods
+						}
+						elementName = elementName.substring(1);
+						if (elementName.indexOf(IIndexConstants.SEPARATOR) != -1) {
+							continue; // filter class members
+						}
+						if (elementName.charAt(0) == '$') {
+							continue; // filter variables
+						}
+					}
+					elementNamesSet.add(elementName);
+				}
+				elementNames = elementNamesSet.toArray(new String[elementNamesSet.size()]);
+
+				// Calculate minimal namespaces:
+				int prefixLength = prefix.length();
+				for (String elementName : elementNames) {
+					int nsIdx = elementName.substring(prefixLength).indexOf('_');
+					if ((nsIdx >= 0 && prefixLength > 0 || prefixLength == 0 && nsIdx > 0) && nsIdx < elementName.length() - 1) {
+						groups.add(elementName.substring(0, prefixLength + nsIdx));
+					}
+				}
+
+				// Calclulate classes to search:
+				List<String> filteredGroups = new LinkedList<String>();
+				for (String group : groups) {
+					List<String> filteredElements = new LinkedList<String>();
+					for (String elementName : elementNames) {
+						if (elementName.startsWith(group)) {
+							int underscore = elementName.lastIndexOf('_');
+							if (underscore < group.length()) {
+								elementsToSearch.add(elementName);
+							} else {
+								if (elementName.charAt(group.length()) == '_') {
+									filteredElements.add(elementName);
+								}
+							}
+						}
+					}
+					if (filteredElements.size() == 1) {
+						elementsToSearch.add(filteredElements.get(0));
+						filteredGroups.add(group);
+					}
+				}
+				for (String filteredGroup : filteredGroups) {
+					groups.remove(filteredGroup);
+				}
+			}
+		}
+		
 		int matchRule;
 		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
@@ -968,37 +987,59 @@ public class CodeAssistUtils {
 				matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 			}
 		}
-
-		SearchEngine searchEngine = new SearchEngine();
-		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
-
-		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
-		try {
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-
-					IModelElement element = (IModelElement) match.getElement();
-
-					// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
-					if (element instanceof SourceModule) {
-						return;
-					}
-
-					IModelElement parent = element.getParent();
-
-					// Global scope elements in PHP are those, which are not defined in class body,
-					// or it is a variable, and its parent - source module
-					if ((element instanceof IField && parent instanceof org.eclipse.dltk.core.ISourceModule) || (!(element instanceof IField) && !(parent instanceof IType))) {
-						elements.add(element);
+		
+		if (groups.size() > 0) {
+			if (elementsToSearch.size() > 0) {
+				StringBuilder buf = new StringBuilder();
+				int i = elementsToSearch.size();
+				for (String elementName : elementsToSearch) {
+					buf.append(elementName);
+					if (--i > 0) {
+						buf.append('|');
 					}
 				}
-			}, null);
-		} catch (CoreException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
+				pattern = SearchPattern.createPattern(buf.toString(), elementType, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_REGEXP_MATCH, toolkit);
+			}
+		} else {
+			pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
+		}
+
+		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
+		if (pattern != null) {
+			try {
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+
+						IModelElement element = (IModelElement) match.getElement();
+						// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
+						if (element instanceof SourceModule) {
+							return;
+						}
+						IModelElement parent = element.getParent();
+						// Global scope elements in PHP are those, which are not defined in class body,
+						// or it is a variable, and its parent - source module
+						if ((element instanceof IField && parent instanceof org.eclipse.dltk.core.ISourceModule) || (!(element instanceof IField) && !(parent instanceof IType))) {
+							elements.add(element);
+						}
+					}
+				}, null);
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 
+		if (showGroupOptions) {
+			for (String group : groups) {
+				String fakeElementName = new StringBuilder(group).append("_*").toString();
+				if (elementType == IDLTKSearchConstants.TYPE) {
+					elements.add(new FakeGroupType((ModelElement) sourceModule, fakeElementName));
+				} else if (elementType == IDLTKSearchConstants.METHOD) {
+					elements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
+				}
+			}
+		}
 		IModelElement[] result = elements.toArray(new IModelElement[elements.size()]);
 		return currentFileOnly ? result : PHPModelUtils.filterElements(sourceModule, result);
 	}
@@ -1024,11 +1065,11 @@ public class CodeAssistUtils {
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
-	
+
 	/**
 	 * Returns file global model elements by given prefix
 	 */
-	public static IModelElement[] getSourceModuleElements(ISourceModule sourceModule, String prefix, boolean exactName, int elementType) {
+	public static IModelElement[] getSourceModuleElements(ISourceModule sourceModule, String prefix, int elementType, int mask) {
 		List<IModelElement> elements = new LinkedList<IModelElement>();
 		try {
 			switch (elementType) {
@@ -1036,7 +1077,7 @@ public class CodeAssistUtils {
 					IType[] types = sourceModule.getTypes();
 					for (IType type : types) {
 						String typeName = type.getElementName();
-						if (exactName) {
+						if ((mask & EXACT_NAME) != 0) {
 							if (typeName.equalsIgnoreCase(prefix)) {
 								elements.add(type);
 								break;
@@ -1047,10 +1088,10 @@ public class CodeAssistUtils {
 					}
 					break;
 				case IDLTKSearchConstants.METHOD:
-					IMethod[] methods = ((AbstractSourceModule)sourceModule).getMethods();
+					IMethod[] methods = ((AbstractSourceModule) sourceModule).getMethods();
 					for (IMethod method : methods) {
 						String methodName = method.getElementName();
-						if (exactName) {
+						if ((mask & EXACT_NAME) != 0) {
 							if (methodName.equalsIgnoreCase(prefix)) {
 								elements.add(method);
 								break;
@@ -1064,7 +1105,7 @@ public class CodeAssistUtils {
 					IField[] fields = sourceModule.getFields();
 					for (IField field : fields) {
 						String fieldName = field.getElementName();
-						if (exactName) {
+						if ((mask & EXACT_NAME) != 0) {
 							if (fieldName.equals(prefix)) {
 								elements.add(field);
 								break;
@@ -1099,6 +1140,9 @@ public class CodeAssistUtils {
 		}
 
 		public int compare(IModelElement o1, IModelElement o2) {
+			if (o1 instanceof FakeGroupType) {
+				return -1;
+			}
 			int r = o1.getElementName().compareTo(o2.getElementName());
 			if (r == 0) {
 				if (currentFile != null && currentFile.equals(o1.getOpenable())) {

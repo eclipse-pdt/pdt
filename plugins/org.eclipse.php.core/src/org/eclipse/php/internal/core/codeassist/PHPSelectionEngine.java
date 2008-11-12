@@ -153,14 +153,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								for (IModelElement element : elements) {
 									if (element instanceof IType) {
 										IType type = (IType) element;
-										methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(type, callExpression.getName(), true)));
+										methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(type, callExpression.getName(), CodeAssistUtils.EXACT_NAME)));
 									}
 								}
 							}
 							return methods.toArray(new IModelElement[methods.size()]);
 						}
 					} else {
-						return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalMethods(sourceModule, callExpression.getName(), true));
+						return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalMethods(sourceModule, callExpression.getName(), CodeAssistUtils.EXACT_NAME));
 					}
 				}
 				// Static field or constant access:
@@ -303,7 +303,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// Class instantiation:
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
-							return CodeAssistUtils.getOnlyClasses(sourceModule, elementName, true);
+							return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_CLASSES);
 						}
 
 						// Handle extends and implements:
@@ -361,7 +361,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							IModelElement[] elements = CodeAssistUtils.getGlobalOrMethodFields(sourceModule, offset, elementName, true);
+							IModelElement[] elements = CodeAssistUtils.getGlobalOrMethodFields(sourceModule, offset, elementName, CodeAssistUtils.EXACT_NAME);
 							return PHPModelUtils.filterElements(sourceModule, elements);
 						}
 
@@ -374,7 +374,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalClasses(sourceModule, elementName, true));
+							return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME));
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset, sDoc.getLineOfOffset(offset), true);
@@ -384,11 +384,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							if (types != null && types.length > 0) {
 								List<IMethod> methods = new LinkedList<IMethod>();
 								for (IType t : types) {
-									methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(t, elementName, true)));
+									methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(t, elementName, CodeAssistUtils.EXACT_NAME)));
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalMethods(sourceModule, elementName, true));
+							return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalMethods(sourceModule, elementName, CodeAssistUtils.EXACT_NAME));
 						}
 
 						if (types != null && types.length > 0) {
@@ -419,19 +419,19 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							});
 							for (IType t : types) {
-								fields.addAll(Arrays.asList(CodeAssistUtils.getClassFields(t, elementName, true, false)));
+								fields.addAll(Arrays.asList(CodeAssistUtils.getClassFields(t, elementName, CodeAssistUtils.EXACT_NAME)));
 							}
 							return fields.toArray(new IModelElement[fields.size()]);
 						}
 
 						// This can be only global constant, if we've reached here:
-						IModelElement[] constants = PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalFields(sourceModule, elementName, true));
+						IModelElement[] constants = PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalFields(sourceModule, elementName, CodeAssistUtils.EXACT_NAME));
 						if (constants.length > 0) {
 							return constants;
 						}
 
 						// Return class if nothing else found.
-						IModelElement[] elements = CodeAssistUtils.getGlobalClasses(sourceModule, elementName, true);
+						IModelElement[] elements = CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME);
 						return PHPModelUtils.filterElements(sourceModule, elements);
 					}
 				}
@@ -447,12 +447,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static IModelElement[] getGeneralizationTypes(ISourceModule sourceModule, boolean isClassDeclaration, String generalization, String elementName) {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
-				return CodeAssistUtils.getOnlyClasses(sourceModule, elementName, true);
+				return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_CLASSES);
 			}
-			return CodeAssistUtils.getOnlyInterfaces(sourceModule, elementName, true);
+			return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_INTERFACES);
 		}
 		if (IMPLEMENTS.equalsIgnoreCase(generalization)) { //$NON-NLS-1$ //$NON-NLS-2$
-			return CodeAssistUtils.getOnlyInterfaces(sourceModule, elementName, true);
+			return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_INTERFACES);
 		}
 		return null;
 	}

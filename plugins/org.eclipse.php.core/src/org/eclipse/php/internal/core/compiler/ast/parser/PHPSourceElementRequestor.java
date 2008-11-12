@@ -137,6 +137,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			for (Argument arg : arguments) {
 				ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 				info.name = arg.getName();
+				info.modifiers = Modifiers.AccPublic;
 				info.nameSourceStart = arg.getNameStart();
 				info.nameSourceEnd = arg.getNameEnd() - 1;
 				info.declarationStart = arg.sourceStart();
@@ -257,7 +258,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean visit(FieldDeclaration declaration) throws Exception {
 		// This is constant declaration:
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-		info.modifiers = Modifiers.AccConstant;
+		info.modifiers = Modifiers.AccConstant | Modifiers.AccPublic | Modifiers.AccFinal;
 		info.name = declaration.getName();
 		info.nameSourceStart = declaration.getNameStart();
 		info.nameSourceEnd = declaration.getNameEnd() - 1;
@@ -286,7 +287,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	
 	public boolean visit(CatchClause catchClause) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-		info.modifiers = Modifiers.AccDefault;
+		info.modifiers = Modifiers.AccPublic;
 		SimpleReference var = catchClause.getVariable();
 		info.name = var.getName();
 		info.nameSourceEnd = var.sourceEnd() - 1;
@@ -305,7 +306,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (foreachStatement.getKey() instanceof VariableReference) {
 			SimpleReference var = (SimpleReference) foreachStatement.getKey();
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-			info.modifiers = Modifiers.AccDefault;
+			info.modifiers = Modifiers.AccPublic;
 			info.name = var.getName();
 			info.nameSourceEnd = var.sourceEnd() - 1;
 			info.nameSourceStart = var.sourceStart();
@@ -316,7 +317,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (foreachStatement.getValue() instanceof VariableReference) {
 			SimpleReference var = (SimpleReference) foreachStatement.getValue();
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-			info.modifiers = Modifiers.AccDefault;
+			info.modifiers = Modifiers.AccPublic;
 			info.name = var.getName();
 			info.nameSourceEnd = var.sourceEnd() - 1;
 			info.nameSourceStart = var.sourceStart();
@@ -369,7 +370,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	public boolean visit(ClassConstantDeclaration declaration) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-		info.modifiers = Modifiers.AccConstant;
+		info.modifiers = Modifiers.AccConstant | Modifiers.AccPublic | Modifiers.AccFinal;
 		ConstantReference constantName = declaration.getConstantName();
 		info.name = ASTUtils.stripQuotes(constantName.getName());
 		info.nameSourceEnd = constantName.sourceEnd() - 1;
@@ -395,7 +396,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				if (field instanceof SimpleReference) {
 					SimpleReference ref = (SimpleReference) field;
 					ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-					info.modifiers = Modifiers.AccDefault;
+					info.modifiers = Modifiers.AccPublic;
 					info.name = '$' + ref.getName();
 					info.nameSourceEnd = ref.sourceEnd() - 1;
 					info.nameSourceStart = ref.sourceStart();
@@ -406,7 +407,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		} else if (left instanceof VariableReference) {
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
-			info.modifiers = Modifiers.AccDefault;
+			info.modifiers = Modifiers.AccPublic;
 			info.name = ((VariableReference) left).getName();
 			info.nameSourceEnd = left.sourceEnd() - 1;
 			info.nameSourceStart = left.sourceStart();
