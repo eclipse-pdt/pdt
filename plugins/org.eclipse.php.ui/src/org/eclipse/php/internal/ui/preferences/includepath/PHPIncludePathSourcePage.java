@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.*;
+import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.TreeListDialogField;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -23,18 +26,18 @@ import org.eclipse.swt.widgets.Control;
  * @author Eden K., 2008
  *
  */
-public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
+public class PHPIncludePathSourcePage extends SourceContainerWorkbookPage {
 
 	// redefine the indexes of the buttons
 	protected int IDX_ADD = 0;
 	protected int IDX_REMOVE = 1;
 	protected int IDX_ADD_LINK = 2;
 	protected int IDX_EDIT = 3;
-	
+
 	public PHPIncludePathSourcePage(ListDialogField buildpathList) {
-		super(buildpathList); 
+		super(buildpathList);
 	}
-	
+
 	/**
 	 * This is actually the content provider for the folders list.
 	 * override the hasChildren method according to the filter
@@ -43,11 +46,10 @@ public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 	 */
 	protected class PHPSourceContainerAdapter extends SourceContainerAdapter {
 		public boolean hasChildren(TreeListDialogField field, Object element) {
-			return shouldDisplayElement(element);
+			return false;
 		}
-
 	}
-	
+
 	/**
 	 * Define which elements in the tree should be displayed
 	 * @param element
@@ -64,7 +66,7 @@ public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 		}
 		return true;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.dltk.internal.ui.wizards.buildpath.SourceContainerWorkbookPage#initContainerElements()
@@ -74,63 +76,55 @@ public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 
 		String[] buttonLabels;
 
-		buttonLabels = new String[] {
-				NewWizardMessages.SourceContainerWorkbookPage_folders_add_button,				
-				NewWizardMessages.SourceContainerWorkbookPage_folders_remove_button };
+		buttonLabels = new String[] { NewWizardMessages.SourceContainerWorkbookPage_folders_add_button, NewWizardMessages.SourceContainerWorkbookPage_folders_remove_button };
 
-		fFoldersList = new TreeListDialogField(adapter, buttonLabels,
-				new BPListLabelProvider());
+		fFoldersList = new TreeListDialogField(adapter, buttonLabels, new BPListLabelProvider());
 		fFoldersList.setDialogFieldListener(adapter);
-		fFoldersList
-				.setLabelText(NewWizardMessages.SourceContainerWorkbookPage_folders_label);
+		fFoldersList.setLabelText(PHPUIMessages.getString("IncludePathSourcePage_Folders_Label")); //$NON-NLS-1$
 
 		fFoldersList.setViewerSorter(new BPListElementSorter());
-		
+
 	}
-	
-//	protected void updateFoldersList() {	
-//		ArrayList folders= new ArrayList();
-//		
-//		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePath(fCurrJProject.getProject());
-//			
-//		List<IncludePath> includePathEntries= Arrays.asList(includePath);
-//		for (IncludePath entry : includePathEntries) {
-//			if (entry.getEntry() instanceof IBuildpathEntry && ((IBuildpathEntry)entry.getEntry()).getEntryKind() == IBuildpathEntry.BPE_SOURCE){
-//				folders.add(entry);
-//			}
-//		}				
-//		fFoldersList.setElements(folders);		
-//		
-////		for (int i= 0; i < folders.size(); i++) {
-////			BPListElement cpe= (BPListElement) folders.get(i);
-////			IPath[] ePatterns= (IPath[]) cpe.getAttribute(BPListElement.EXCLUSION);
-////			IPath[] iPatterns= (IPath[])cpe.getAttribute(BPListElement.INCLUSION);			
-////			if (ePatterns.length > 0 || iPatterns.length > 0) {
-////				fFoldersList.expandElement(cpe, 3);
-////			}				
-////		}
-//	}			
-	
+
+	protected void updateFoldersList() {
+		ArrayList folders = new ArrayList();
+
+		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePath(fCurrJProject.getProject());
+
+		// the include path is made of resources and/or buildpath entries
+		// extract the resource out of the entries and create "build path list" elements
+		// for display purposes
+		List<IncludePath> includePathEntries = Arrays.asList(includePath);
+		for (IncludePath entry : includePathEntries) {
+			Object includePathEntry = entry.getEntry();
+			IResource resource = null;
+			if (!(includePathEntry instanceof IBuildpathEntry)) {
+				resource = (IResource) includePathEntry;
+				folders.add(new BPListElement(fCurrJProject, IBuildpathEntry.BPE_SOURCE, resource.getFullPath(), resource, false));
+			}
+		}
+		fFoldersList.setElements(folders);
+
+	}
+
 	/**
 	 * Get the original functionality and add a filter 
 	 */
-	public Control getControl(Composite parent){
+	public Control getControl(Composite parent) {
 		Control control = super.getControl(parent);
 		addFilter();
 		return control;
 	}
-	
-	
-	private void addFilter() {		
+
+	private void addFilter() {
 		fFoldersList.getTreeViewer().addFilter(new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
 				return shouldDisplayElement(element);
 			}
-		});		
+		});
 	}
-	
-	
+
 	protected int getIDX_ADD() {
 		return IDX_ADD;
 	}
@@ -147,5 +141,27 @@ public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 		return IDX_REMOVE;
 	}
 
+	protected void sourcePageCustomButtonPressed(DialogField field, int index) {
+		if (field == fFoldersList) {
+			if (index == IDX_ADD) {
+				IProject project = fCurrJProject.getProject();
+				if (project.exists() && hasFolders(project)) {
+					List existingElements = fFoldersList.getElements();
+					BPListElement[] existing = (BPListElement[]) existingElements.toArray(new BPListElement[existingElements.size()]);
+					CreateMultipleSourceFoldersDialog dialog = new CreateMultipleSourceFoldersDialog(fCurrJProject, existing, getShell());
+					if (dialog.open() == Window.OK) {
+						refresh(dialog.getInsertedElements(), dialog.getRemovedElements(), dialog.getModifiedElements());
+					}
+				} else {
+					BPListElement newElement = new BPListElement(fCurrJProject, IBuildpathEntry.BPE_SOURCE, false);
+					AddSourceFolderWizard wizard = newSourceFolderWizard(newElement, fFoldersList.getElements(), true);
+					OpenBuildPathWizardAction action = new OpenBuildPathWizardAction(wizard);
+					action.run();
+				}
+			} else {
+				super.sourcePageCustomButtonPressed(field, index);
+			}
+		}
+	}
 
 }

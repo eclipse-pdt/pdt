@@ -20,8 +20,7 @@ public class IncludePathProperties extends BuildPathsPropertyPage implements IWo
 	public IncludePathProperties() {
 	}
 
-	@Override
-	protected TempBuildpathsBlock createBuildPathBlock(IWorkbenchPreferenceContainer pageContainer) {
+	protected AbstractBuildpathsBlock createBuildPathBlock(IWorkbenchPreferenceContainer pageContainer) {
 		return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), this, getSettings().getInt(INDEX), false, pageContainer);
 	}
 }
