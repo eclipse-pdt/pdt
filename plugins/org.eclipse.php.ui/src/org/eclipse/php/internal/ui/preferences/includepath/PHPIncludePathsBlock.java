@@ -137,7 +137,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 		// a non shared image
 		Image cpoImage = DLTKPluginImages.DESC_TOOL_BUILDPATH_ORDER.createImage();
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
-		BuildpathOrderingWorkbookPage ordpage = new BuildpathOrderingWorkbookPage(fBuildPathList);
+		TempBuildpathOrderingWorkbookPage ordpage = new TempBuildpathOrderingWorkbookPage(fBuildPathList);
 		setTitle(PHPUIMessages.getString("IncludePathOrderPage_Folders_Label")); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(PHPUIMessages.getString("BuildPathsBlock_tab_order")); //$NON-NLS-1$

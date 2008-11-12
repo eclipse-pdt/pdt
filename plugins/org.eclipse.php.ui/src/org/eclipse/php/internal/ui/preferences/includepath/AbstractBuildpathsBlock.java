@@ -199,7 +199,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 		Image cpoImage = DLTKPluginImages.DESC_TOOL_BUILDPATH_ORDER
 				.createImage();
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
-		BuildpathOrderingWorkbookPage ordpage = new BuildpathOrderingWorkbookPage(
+		TempBuildpathOrderingWorkbookPage ordpage = new TempBuildpathOrderingWorkbookPage(
 				fBuildPathList);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_order);
