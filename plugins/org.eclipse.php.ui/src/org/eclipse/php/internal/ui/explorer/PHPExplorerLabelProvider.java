@@ -28,21 +28,6 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
 		super(cp, store);
-		// TODO Auto-generated constructor stub
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider#getText(java.lang.Object)
-	 * 
-	 * Override the default text - do not display a full path for a folder
-	 */
-	@Override
-	public String getText(Object element) {
-		if (element instanceof IOpenable) {
-			return ((IModelElement) element).getPath().lastSegment();
-		}
-		return super.getText(element);
 	}
 
 	@Override
