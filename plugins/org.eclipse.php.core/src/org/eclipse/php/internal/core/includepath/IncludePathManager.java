@@ -10,6 +10,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -25,7 +26,7 @@ public class IncludePathManager {
 			public void elementChanged(ElementChangedEvent event) {
 				processChildren(event.getDelta());
 			}
-			
+
 			private void processChildren(IModelElementDelta delta) {
 				IModelElement element = delta.getElement();
 				try {
@@ -34,17 +35,17 @@ public class IncludePathManager {
 						IProject project = scriptProject.getProject();
 						IncludePath[] includePathEntries = getIncludePath(project);
 						List<IncludePath> newEntries = new LinkedList<IncludePath>(Arrays.asList(includePathEntries));
-						
+
 						IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-						
+
 						// This is a workaround to the lack of information about buildpath changes in delta:
 						boolean changed = false;
-						
+
 						// Calculate added entries: 
 						for (IBuildpathEntry entry : rawBuildpath) {
 							boolean added = true;
 							for (IncludePath includePath : includePathEntries) {
-								if (includePath.isBuildpath() && entry == includePath.getEntry()) {
+								if (includePath.isBuildpath() && entry.equals(includePath.getEntry())) {
 									added = false;
 									break;
 								}
@@ -54,19 +55,19 @@ public class IncludePathManager {
 								changed = true;
 							}
 						}
-						
+
 						// Calculate removed entries:
 						List<IncludePath> entriesToRemove = new LinkedList<IncludePath>();
 						for (IncludePath includePath : includePathEntries) {
 							boolean removed = true;
 							for (IBuildpathEntry entry : rawBuildpath) {
 								if (includePath.isBuildpath()) {
-									if (entry == includePath.getEntry()) {
+									if (entry.equals(includePath.getEntry())) {
 										removed = false;
 										break;
 									}
 								} else {
-									if (entry.getPath().isPrefixOf(((IResource)includePath.getEntry()).getFullPath())) {
+									if (entry.getPath().isPrefixOf(((IResource) includePath.getEntry()).getFullPath())) {
 										removed = false;
 										break;
 									}
@@ -84,7 +85,7 @@ public class IncludePathManager {
 						if (changed) {
 							setIncludePath(project, newEntries.toArray(new IncludePath[newEntries.size()]));
 						}
-						
+
 					} else {
 						IModelElementDelta[] children = delta.getAffectedChildren();
 						for (IModelElementDelta child : children) {
@@ -113,6 +114,15 @@ public class IncludePathManager {
 
 		List<IncludePath> includePathEntries = new LinkedList<IncludePath>();
 
+		IBuildpathEntry[] buildpath = null;
+		try {
+			buildpath = DLTKCore.create(project).getRawBuildpath();
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+
 		String includePath = CorePreferencesSupport.getInstance().getProjectSpecificPreferencesValue(PREF_KEY, null, project);
 		if (includePath != null) {
 			while (includePath != null) {
@@ -135,34 +145,24 @@ public class IncludePathManager {
 						if (resource != null) {
 							includePathEntries.add(new IncludePath(resource));
 						}
-					} else {
-						IBuildpathEntry[] buildpath;
-						try {
-							buildpath = DLTKCore.create(project).getRawBuildpath();
-							for (IBuildpathEntry entry : buildpath) {
-								if (entry.getEntryKind() == kind && entry.getPath().equals(new Path(path))) {
+					} else if (buildpath != null) {
+						for (IBuildpathEntry entry : buildpath) {
+							if (entry.getEntryKind() == kind) {
+								IPath localPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
+								if (localPath.equals(new Path(path))) {
 									includePathEntries.add(new IncludePath(entry));
+									break;
 								}
 							}
-						} catch (ModelException e) {
-							if (DLTKCore.DEBUG) {
-								e.printStackTrace();
-							}
 						}
+
 					}
 				}
 			}
-		} else { // by default include path equals to the build path
-			try {
-				IBuildpathEntry[] buildpath = DLTKCore.create(project).getRawBuildpath();
-				for (IBuildpathEntry entry : buildpath) {
-					if (isBuildpathAllowed(entry)) {
-						includePathEntries.add(new IncludePath(entry));
-					}
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+		} else if (buildpath != null) { // by default include path equals to the build path
+			for (IBuildpathEntry entry : buildpath) {
+				if (isBuildpathAllowed(entry)) {
+					includePathEntries.add(new IncludePath(entry));
 				}
 			}
 		}
@@ -180,7 +180,8 @@ public class IncludePathManager {
 			IncludePath includePath = includePathEntries[i];
 			if (includePath.isBuildpath()) {
 				IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
-				buf.append(entry.getEntryKind()).append(';').append(entry.getPath().toString());
+				IPath localPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
+				buf.append(entry.getEntryKind()).append(';').append(localPath.toString());
 			} else {
 				IResource entry = (IResource) includePath.getEntry();
 				buf.append("0;").append(entry.getFullPath().toString());
@@ -196,9 +197,10 @@ public class IncludePathManager {
 			}
 		};
 		job.setRule(project.getWorkspace().getRoot());
+		job.setPriority(WorkspaceJob.INTERACTIVE);
 		job.schedule();
 	}
-	
+
 	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
 		return (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
 	}
