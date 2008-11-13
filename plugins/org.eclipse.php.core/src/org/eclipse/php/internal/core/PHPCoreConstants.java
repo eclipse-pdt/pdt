@@ -138,15 +138,6 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_CONSTANTS_CASE_SENSITIVE = "contentAssistConstantsCaseSensitive"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that controls if code assist determines object type from other files
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> code assist will try to determine object type
-	 * from other files. If <code>false</code> it will determine object type only from current scope.
-	 * </p>
-	 */
-	public final static String CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES = "contentAssistDetermineObjTypeFromOtherFiles"; //$NON-NLS-1$
-
-	/**
 	 * A named preference that controls if argument names are filled in when a method is selected from as list
 	 * of code assist proposal.
 	 * <p>

@@ -851,7 +851,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line, determineObjsFromOtherFiles());
+		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line);
 		if (types != null) {
 			if (hasWhitespaceAtEnd && functionName.length() > 0) {
 				// check if current position is between the end of a function call and open bracket.
@@ -1784,13 +1784,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return true;
 	}
 
-	private boolean determineObjsFromOtherFiles() {
-		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES)) {
-			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES);
-		}
-		return true;
-	}
-	
 	private boolean showVarsFromOtherFiles() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES)) {
 			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES);

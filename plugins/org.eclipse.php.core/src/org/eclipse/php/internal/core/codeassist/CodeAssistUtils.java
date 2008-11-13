@@ -385,7 +385,6 @@ public class CodeAssistUtils {
 	 * Determines the return type of the method defined by type element and method name.
 	 * @param type
 	 * @param functionName
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
 	public static IType[] getFunctionReturnType(IType type, String functionName) {
@@ -399,7 +398,6 @@ public class CodeAssistUtils {
 	/**
 	 * Determines the return type of the given method element.
 	 * @param method
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
 	public static IType[] getFunctionReturnType(IMethod method) {
@@ -568,10 +566,9 @@ public class CodeAssistUtils {
 	 * @param endPosition
 	 * @param offset
 	 * @param line
-	 * @param determineObjectFromOtherFile
 	 * @return
 	 */
-	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line, boolean determineObjectFromOtherFile) {
+	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read whitespace
 
 		boolean isClassTriger = false;
@@ -592,12 +589,12 @@ public class CodeAssistUtils {
 
 		if (lastObjectOperator == -1) {
 			// if there is no "->" or "::" in the left sequence then we need to calc the object type
-			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset, line, determineObjectFromOtherFile);
+			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset, line);
 		}
 
 		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, lastObjectOperator + 2);
 		String propertyName = statementText.subSequence(propertyStartPosition, propertyEndPosition).toString();
-		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset, line, determineObjectFromOtherFile);
+		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset, line);
 
 		int bracketIndex = propertyName.indexOf('(');
 
@@ -620,7 +617,7 @@ public class CodeAssistUtils {
 	/**
 	 * Getting an instance and finding its type.
 	 */
-	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line, boolean determineObjectFromOtherFile) {
+	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
