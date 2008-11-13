@@ -14,6 +14,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -108,5 +109,10 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			FieldDeclaration decl = new FieldDeclaration(ref.getName(), ref.sourceStart(), ref.sourceEnd(), node.sourceStart(), node.sourceEnd());
 			locator.match(decl, getNodeSet());
 		}
+	}
+	
+	public void parseBodies(ModuleDeclaration unit) {
+		unit.rebuild();
+		super.parseBodies(unit);
 	}
 }
