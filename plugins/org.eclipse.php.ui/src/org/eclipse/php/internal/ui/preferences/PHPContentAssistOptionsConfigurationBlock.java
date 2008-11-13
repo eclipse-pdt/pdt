@@ -32,7 +32,6 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 	protected Button completionOverrideRadioButton;
 	protected Button insertSingleproposalsCheckBox;
 	protected Button showVariableFromOtherFilesCheckBox;
-	protected Button determineObjTypeFromOtherFilesCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_optionsSectionLabel"));
@@ -59,8 +58,6 @@ public class PHPContentAssistOptionsConfigurationBlock extends AbstractPHPConten
 
 		insertSingleproposalsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_insertSignleProposals"), PHPCoreConstants.CODEASSIST_AUTOINSERT, 0);
 		showVariableFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showVariablesFromOtherFiles"), PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, 0);
-		determineObjTypeFromOtherFilesCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_determineObjTypeFromOtherFiles"), PHPCoreConstants.CODEASSIST_DETERMINE_OBJ_TYPE_FROM_OTHER_FILES, 0);
-
 	}
 
 	protected void initializeValues() {
