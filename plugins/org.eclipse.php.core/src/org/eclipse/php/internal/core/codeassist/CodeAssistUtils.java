@@ -56,32 +56,32 @@ public class CodeAssistUtils {
 	 * Whether to look for exact name or for the prefix
 	 */
 	public static final int EXACT_NAME = 1 << 0;
-	
+
 	/**
 	 * Whether the match will be case-sensitive
 	 */
 	public static final int CASE_SENSITIVE = 1 << 1;
-	
+
 	/**
 	 * Whether to retrieve only current file elements
 	 */
 	public static final int ONLY_CURRENT_FILE = 1 << 2;
-	
+
 	/**
 	 * Whether to retrieve only classes excluding interfaces (when asking for types)
 	 */
 	public static final int ONLY_CLASSES = 1 << 3;
-	
+
 	/**
 	 * Whether to retrieve only interfaces excluding classes (when asking for types)
 	 */
 	public static final int ONLY_INTERFACES = 1 << 4;
-	
+
 	/**
 	 * Whether to retrieve only variables excluding constants (when asking for fields)
 	 */
 	public static final int ONLY_VARIABLES = 1 << 5;
-	
+
 	/**
 	 * Whether to use PHPDoc in type inference
 	 */
@@ -178,6 +178,9 @@ public class CodeAssistUtils {
 			IMethod[] superClassMethods = getSuperClassMethods(type, prefix, mask);
 			// Filter overriden methods:
 			for (IMethod superClassMethod : superClassMethods) {
+				if (type.equals(superClassMethod.getDeclaringType())) {
+					continue;
+				}
 				String methodName = superClassMethod.getElementName().toLowerCase();
 				if (!methodNames.contains(methodName)) {
 					methods.add(superClassMethod);
@@ -203,17 +206,19 @@ public class CodeAssistUtils {
 	public static IField[] getClassFields(IType type, String prefix, int mask) {
 		boolean exactName = (mask & EXACT_NAME) != 0;
 		boolean searchConstants = (mask & ONLY_VARIABLES) == 0;
-		
+
 		final Set<IField> fields = new TreeSet<IField>(new AlphabeticComparator());
 		try {
 			List<IType> searchTypes = new LinkedList<IType>();
-			searchTypes.add(type);
 
 			if (prefix.length() == 0) {
+				searchTypes.add(type);
+
 				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
 				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
 				searchTypes.addAll(Arrays.asList(allSuperclasses));
-			} else {
+				
+			} else if (type.getSuperClasses() != null) {
 				SearchEngine searchEngine = new SearchEngine();
 				IDLTKSearchScope scope;
 				SearchPattern pattern;
@@ -226,22 +231,11 @@ public class CodeAssistUtils {
 					matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 				}
 
-				if (type.getSuperClasses() != null) {
-					scope = SearchEngine.createSuperHierarchyScope(type);
+				scope = SearchEngine.createSuperHierarchyScope(type);
 
-					if (searchConstants) {
-						// search for constants in hierarchy
-						pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-							public void acceptSearchMatch(SearchMatch match) throws CoreException {
-								fields.add((IField) match.getElement());
-							}
-						}, null);
-					}
-
-					// search for variables in hierarchy
-					pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+				if (searchConstants) {
+					// search for constants in hierarchy
+					pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
@@ -249,6 +243,18 @@ public class CodeAssistUtils {
 						}
 					}, null);
 				}
+
+				// search for variables in hierarchy
+				pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						fields.add((IField) match.getElement());
+					}
+				}, null);
+
+			} else {
+				searchTypes.add(type);
 			}
 
 			for (IType searchType : searchTypes) {
@@ -883,7 +889,7 @@ public class CodeAssistUtils {
 
 		SearchEngine searchEngine = new SearchEngine();
 		SearchPattern pattern = null;
-		
+
 		boolean exactName = (mask & EXACT_NAME) != 0;
 		boolean caseSensitive = (mask & CASE_SENSITIVE) != 0;
 		boolean currentFileOnly = (mask & ONLY_CURRENT_FILE) != 0;
@@ -896,7 +902,7 @@ public class CodeAssistUtils {
 		if (!prefix.startsWith("$") && !currentFileOnly && showGroupOptions && (elementType == IDLTKSearchConstants.TYPE || elementType == IDLTKSearchConstants.METHOD)) {
 			if (!exactName) {
 				MixinModel mixinModel = PHPMixinModel.getInstance(sourceModule.getScriptProject()).getRawModel();
-				
+
 				// Build the mixin request key:
 				String[] elementNames;
 				if (elementType == IDLTKSearchConstants.TYPE) {
@@ -971,7 +977,7 @@ public class CodeAssistUtils {
 				}
 			}
 		}
-		
+
 		int matchRule;
 		if (prefix.length() == 0 && !exactName) {
 			prefix = WILDCARD;
@@ -987,7 +993,7 @@ public class CodeAssistUtils {
 				matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 			}
 		}
-		
+
 		if (groups.size() > 0) {
 			if (elementsToSearch.size() > 0) {
 				StringBuilder buf = new StringBuilder();
