@@ -43,6 +43,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		super(provideMembers);
 		// get the include path manager
 		includePathManager = IncludePathManager.getInstance();
+		super.setIsFlatLayout(false);
 	}
 
 	@Override
@@ -111,17 +112,29 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		}
 
 		public String getLabel() {
+			// FIXME externalize string
 			return "Include Path";
 		}
 
 		public IAdaptable[] getChildren() {
+			IScriptProject scriptProject = getScriptProject();
 			ArrayList<IAdaptable> res = new ArrayList<IAdaptable>();
 			for (int i = 0; i < fIncludePath.length; i++) {
 				Object entry = fIncludePath[i].getEntry();
 				if (entry instanceof IResource) {
 					res.add((IResource) entry);
 				} else if (entry instanceof IBuildpathEntry) {
-					res.add(new IncludePathEntry(getScriptProject(), (IBuildpathEntry) entry));
+					// Add referenced projects
+					IBuildpathEntry buildpathEntry = (IBuildpathEntry) entry;
+					if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+						res.add(new IncludePathEntry(scriptProject, buildpathEntry));
+						continue;
+					}
+					// Add libraries
+					IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments(buildpathEntry);
+					for (IProjectFragment projectFragment : findProjectFragments) {
+						res.add(projectFragment);
+					}
 				}
 
 			}
