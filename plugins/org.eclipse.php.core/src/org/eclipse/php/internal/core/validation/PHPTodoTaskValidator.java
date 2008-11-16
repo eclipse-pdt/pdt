@@ -43,17 +43,20 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 		ValidationResult result = new ValidationResult();
 		IReporter reporter = result.getReporter(monitor);
-		validateFile(reporter, (IFile) resource);
+		validateFile(reporter, (IFile) resource, kind);
+		
+	
 		return result;
 	}
 
 	/**
 	 * Search for tasks in the validated file and create a marker for each task found 
 	 */
-	public void validateFile(IReporter reporter, IFile file) {
+	public void validateFile(IReporter reporter, IFile file, int kind) {
 
 		// populate the task tags from the preferences
-		if (taskTags == null) {
+		// in case it is empty or it is a clean/full build
+		if (taskTags == null || (kind == 0)) {
 			populateTaskTags(file);
 		}
 
