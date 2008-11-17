@@ -14,24 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -40,7 +30,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
-import org.eclipse.ui.model.WorkbenchViewerComparator;
 import org.eclipse.ui.part.DrillDownComposite;
 
 /**
@@ -197,7 +186,6 @@ public class PHPResourceSelectionGroup extends Composite {
 		cp = new PHPResourceContentProvider();
 		treeViewer.setContentProvider(cp);
 		treeViewer.setLabelProvider(new PHPResLabelProvider());
-		treeViewer.setComparator(new ResourceViewerComparator());
 		treeViewer.setUseHashlookup(true);
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -244,7 +232,7 @@ public class PHPResourceSelectionGroup extends Composite {
 		if (selectedResource instanceof IResource) {
 			result = ((IResource) selectedResource).getFullPath();
 		} else if (selectedResource instanceof IBuildpathEntry) {
-			result = ((IBuildpathEntry) selectedResource).getPath();
+			result = EnvironmentPathUtils.getLocalPath(((IBuildpathEntry) selectedResource).getPath());
 		} else if (selectedResource instanceof IncPathFile) {
 			result = new Path(((IncPathFile) selectedResource).file.getAbsolutePath());
 		}
@@ -276,30 +264,5 @@ public class PHPResourceSelectionGroup extends Composite {
 		}
 		treeViewer.setExpandedElements(itemsToExpand.toArray());
 		treeViewer.setSelection(new StructuredSelection(resource), true);
-	}
-}
-
-class ResourceViewerComparator extends WorkbenchViewerComparator {
-	public int compare(Viewer viewer, Object e1, Object e2) {
-
-		if (e1 instanceof IProject && !(e2 instanceof IProject)) {
-			return -1;
-		}
-
-		if (!(e1 instanceof IProject) && (e2 instanceof IProject)) {
-			return 1;
-		}
-
-		ILabelProvider lprov = (ILabelProvider) ((ContentViewer) viewer).getLabelProvider();
-		String name1 = lprov.getText(e1);
-		String name2 = lprov.getText(e2);
-		if (name1 == null) {
-			name1 = ""; //$NON-NLS-1$
-		}
-		if (name2 == null) {
-			name2 = ""; //$NON-NLS-1$
-		}
-
-		return name1.compareTo(name2);
 	}
 }

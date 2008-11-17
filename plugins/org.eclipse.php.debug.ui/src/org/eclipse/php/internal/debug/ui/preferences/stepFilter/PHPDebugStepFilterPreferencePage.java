@@ -25,6 +25,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -323,7 +324,7 @@ public class PHPDebugStepFilterPreferencePage extends PreferencePage implements 
 				}
 			} else if (resourceToFilter instanceof IBuildpathEntry) {
 				IBuildpathEntry entry = (IBuildpathEntry) resourceToFilter;
-				filteredPath = entry.getPath().toOSString();
+				filteredPath = EnvironmentPathUtils.getLocalPath(entry.getPath()).toOSString();
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {//variable
 					addFilter(filteredPath, true, IStepFilterTypes.PHP_INCLUDE_PATH_VAR);
 				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {//library = folder
