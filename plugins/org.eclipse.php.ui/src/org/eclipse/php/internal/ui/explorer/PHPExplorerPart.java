@@ -13,18 +13,46 @@ package org.eclipse.php.internal.ui.explorer;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
+import org.eclipse.dltk.internal.ui.scriptview.WorkingSetAwareModelElementSorter;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.ui.IWorkingSet;
 
 /**
  * PHP Explorer view part to display the projects, contained files and referenced folders/libraries.
  * The view displays those in a "file-system oriented" manner, and not in a "model oriented" manner.
  * 
- * @author apeled, nirc
+ * @author apeled, ncohen
  *
  */
 public class PHPExplorerPart extends ScriptExplorerPart {
+
+	public class PHPExplorerElementSorter extends ModelElementSorter {
+		private static final int INCLUDE_PATH_CONTAINER = 59;
+		
+		@Override
+		public int category(Object element) {
+			if (element instanceof IncludePathContainer) 
+				return INCLUDE_PATH_CONTAINER;
+			else
+				return super.category(element);
+		}
+		
+	}
+	
+	public class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
+		
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (e1 instanceof IWorkingSet || e2 instanceof IWorkingSet)
+				return 0;
+
+			return super.compare(viewer, e1, e2);
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -69,5 +97,22 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		final IPreferenceStore store = DLTKUIPlugin.getDefault().getPreferenceStore();
 		return new PHPExplorerLabelProvider(getContentProvider(), store);
 	}
+
+	/**
+	 * Overriding DTLK original setComerator, and setting "includePathContainer - aware" comparators
+	 */
+	@Override
+	protected void setComparator() {
+		if (showWorkingSets()) {
+			PHPExplorerWorkingSetAwareModelElementSorter comparator = new PHPExplorerWorkingSetAwareModelElementSorter();
+			comparator.setInnerElements(false);
+			getTreeViewer().setComparator(comparator);
+		} else {
+			ModelElementSorter comparator = new PHPExplorerElementSorter();
+			comparator.setInnerElements(false);
+			getTreeViewer().setComparator(comparator);
+		}
+	}
+	
 
 }

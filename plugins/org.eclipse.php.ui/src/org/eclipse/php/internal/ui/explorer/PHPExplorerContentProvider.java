@@ -14,12 +14,15 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
+import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
@@ -98,12 +101,20 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		return NO_CHILDREN;
 	}
 
+	@Override
+	public boolean hasChildren(Object element) {
+		if (element instanceof IncludePathProject)
+			return false;
+
+		return super.hasChildren(element);
+	}
+
 	/**
 	 * 
 	 * @author apeled, ncohen
 	 *
 	 */
-	class IncludePathContainer extends BuildPathContainer {
+	protected class IncludePathContainer extends BuildPathContainer {
 		private IncludePath[] fIncludePath;
 
 		public IncludePathContainer(IScriptProject parent, IncludePath[] entries) {
@@ -113,7 +124,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 
 		public String getLabel() {
 			// FIXME externalize string
-			return "Include Path";
+			return "PHP Include Path";
 		}
 
 		public IAdaptable[] getChildren() {
@@ -121,7 +132,18 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 			ArrayList<IAdaptable> res = new ArrayList<IAdaptable>();
 			for (int i = 0; i < fIncludePath.length; i++) {
 				Object entry = fIncludePath[i].getEntry();
-				if (entry instanceof IResource) {
+				if (scriptProject.getResource().equals(entry)) { //includePath of self Project
+					IModelElement parent = scriptProject.getParent();
+					try {
+						if (parent instanceof ModelElement)
+							res.add(new IncludePathProject(scriptProject.getProject(), (ModelElement) parent));
+						else
+							throw (new IllegalStateException());
+					} catch (IllegalStateException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (entry instanceof IResource) {
 					res.add((IResource) entry);
 				} else if (entry instanceof IBuildpathEntry) {
 					// Add referenced projects
@@ -142,6 +164,13 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 			return res.toArray(new IAdaptable[res.size()]);
 		}
 
+	}
+
+	protected class IncludePathProject extends ScriptProject {
+
+		public IncludePathProject(IProject project, ModelElement parent) {
+			super(project, parent);
+		}
 	}
 
 	/**
