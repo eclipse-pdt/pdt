@@ -17,8 +17,8 @@ public class IncludePathManager {
 
 	private static final String PREF_KEY = "include_path"; //$NON-NLS-1$
 	private static final char PREF_SEP = (char) 5;
-
 	private static IncludePathManager instance = new IncludePathManager();
+	private boolean modifyingIncludePath;
 
 	private IncludePathManager() {
 		DLTKCore.addElementChangedListener(new IElementChangedListener() {
@@ -28,6 +28,10 @@ public class IncludePathManager {
 			}
 
 			private void processChildren(IModelElementDelta delta) {
+				if (modifyingIncludePath) {
+					return;
+				}
+				
 				IModelElement element = delta.getElement();
 				try {
 					if ((delta.getFlags() & IModelElementDelta.F_BUILDPATH_CHANGED) != 0) {
@@ -111,9 +115,7 @@ public class IncludePathManager {
 	 * @return ordered include path
 	 */
 	public IncludePath[] getIncludePath(IProject project) {
-
 		List<IncludePath> includePathEntries = new LinkedList<IncludePath>();
-
 		IBuildpathEntry[] buildpath = null;
 		try {
 			buildpath = DLTKCore.create(project).getRawBuildpath();
@@ -190,9 +192,11 @@ public class IncludePathManager {
 				buf.append(PREF_SEP);
 			}
 		}
+		modifyingIncludePath = true;
 		WorkspaceJob job = new WorkspaceJob("Modifying Include Path") {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(PREF_KEY, buf.toString(), project);
+				modifyingIncludePath = false;
 				return Status.OK_STATUS;
 			}
 		};
