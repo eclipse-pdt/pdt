@@ -217,7 +217,7 @@ public class CodeAssistUtils {
 				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
 				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
 				searchTypes.addAll(Arrays.asList(allSuperclasses));
-				
+
 			} else if (type.getSuperClasses() != null) {
 				SearchEngine searchEngine = new SearchEngine();
 				IDLTKSearchScope scope;
@@ -305,38 +305,40 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line) {
-		for (IType type : types) {
-			PHPClassType classType = new PHPClassType(type.getElementName());
-			IField[] fields = getClassFields(type, propertyName, CASE_SENSITIVE | ONLY_VARIABLES);
+		if (types != null) {
+			for (IType type : types) {
+				PHPClassType classType = new PHPClassType(type.getElementName());
+				IField[] fields = getClassFields(type, propertyName, CASE_SENSITIVE | ONLY_VARIABLES);
 
-			Set<String> processedFields = new HashSet<String>();
-			for (IField field : fields) {
+				Set<String> processedFields = new HashSet<String>();
+				for (IField field : fields) {
 
-				String variableName = field.getElementName();
-				if (processedFields.contains(variableName)) {
-					continue;
-				}
-				processedFields.add(variableName);
+					String variableName = field.getElementName();
+					if (processedFields.contains(variableName)) {
+						continue;
+					}
+					processedFields.add(variableName);
 
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
-				BasicContext sourceModuleContext = new BasicContext(field.getSourceModule(), moduleDeclaration);
-				InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
-				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
+					BasicContext sourceModuleContext = new BasicContext(field.getSourceModule(), moduleDeclaration);
+					InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
+					PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 
-				PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(instanceContext, variableName);
-				IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
+					PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(instanceContext, variableName);
+					IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
-				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
-				if (modelElements != null) {
-					return modelElementsToTypes(modelElements);
-				}
+					IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
+					if (modelElements != null) {
+						return modelElementsToTypes(modelElements);
+					}
 
-				ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, variableName);
-				evaluatedType = typeInferencer.evaluateType(goal);
+					ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, variableName);
+					evaluatedType = typeInferencer.evaluateType(goal);
 
-				modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
-				if (modelElements != null) {
-					return modelElementsToTypes(modelElements);
+					modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext);
+					if (modelElements != null) {
+						return modelElementsToTypes(modelElements);
+					}
 				}
 			}
 		}
