@@ -173,7 +173,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 //			fSourceContainerPage = new NewSourceContainerWorkbookPage(
 //					fBuildPathList, fRunnableContext, getPreferenceStore());
 //		} else {
-			fSourceContainerPage = new TempSourceContainerWorkbookPage(
+			fSourceContainerPage = new TempSourceContainerWorkbookPage2(
 					fBuildPathList);
 //		}
 		item.setData(fSourceContainerPage);
