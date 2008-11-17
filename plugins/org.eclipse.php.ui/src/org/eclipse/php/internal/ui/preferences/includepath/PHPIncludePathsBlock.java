@@ -107,11 +107,11 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
 		item.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
-//		if (fUseNewPage) {
-//			fSourceContainerPage = new NewSourceContainerWorkbookPage(fBuildPathList, fRunnableContext, getPreferenceStore());
-//		} else {
-			fSourceContainerPage = new PHPIncludePathSourcePage(fBuildPathList);
-//		}
+		//		if (fUseNewPage) {
+		//			fSourceContainerPage = new NewSourceContainerWorkbookPage(fBuildPathList, fRunnableContext, getPreferenceStore());
+		//		} else {
+		fSourceContainerPage = new PHPIncludePathSourcePage(fBuildPathList);
+		//		}
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 
@@ -196,10 +196,8 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 			// and the rest for the build path array
 			for (Iterator<IBuildpathEntry> iter = buildpathEntries.iterator(); iter.hasNext();) {
 				BPListElement entry = (BPListElement) iter.next();
-				if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-					newIncludePathEntries.add(entry.getBuildpathEntry());
-
-				} else {
+				newIncludePathEntries.add(entry.getBuildpathEntry());
+				if (entry.getEntryKind() != IBuildpathEntry.BPE_SOURCE) {
 					newBuildPathEntries.add(entry.getBuildpathEntry());
 				}
 
@@ -219,7 +217,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 	}
 
 	/**
-	 * Create the include path based on the elements in the source tab of this dialog 
+	 * Create the include path based on all of the tabs elements 
 	 * @param scriptProject
 	 * @param entries
 	 * @throws ModelException
@@ -229,9 +227,13 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 
 		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
 		for (IBuildpathEntry buildpathEntry : entries) {
-			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());
-			if (resource != null) {
-				includePathEntries.add(new IncludePath(resource));
+			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());
+				if (resource != null) {
+					includePathEntries.add(new IncludePath(resource));
+				}
+			} else {
+				includePathEntries.add(new IncludePath(buildpathEntry));
 			}
 		}
 		// update the include path for this project
