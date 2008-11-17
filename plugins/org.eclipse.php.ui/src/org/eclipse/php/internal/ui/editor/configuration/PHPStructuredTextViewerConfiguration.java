@@ -125,20 +125,24 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
-		if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
-			ArrayList<IContentAssistProcessor> processorsList = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
-			processors = new IContentAssistProcessor[processorsList.size()];
-			processorsList.toArray(processors);
-		} else {
-			ArrayList<IContentAssistProcessor> phpDocProcessors = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
-			IContentAssistProcessor[] superProcessors = super.getContentAssistProcessors(sourceViewer, partitionType);
-			if (superProcessors != null) {
-				for (IContentAssistProcessor processor : superProcessors) {
-					phpDocProcessors.add(processor);
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
+				ArrayList<IContentAssistProcessor> processorsList = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
+				processors = new IContentAssistProcessor[processorsList.size()];
+				processorsList.toArray(processors);
+			} else {
+				ArrayList<IContentAssistProcessor> phpDocProcessors = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
+				IContentAssistProcessor[] superProcessors = super.getContentAssistProcessors(sourceViewer, partitionType);
+				if (superProcessors != null) {
+					for (IContentAssistProcessor processor : superProcessors) {
+						phpDocProcessors.add(processor);
+					}
 				}
+				processors = new IContentAssistProcessor[phpDocProcessors.size()];
+				phpDocProcessors.toArray(processors);
 			}
-			processors = new IContentAssistProcessor[phpDocProcessors.size()];
-			phpDocProcessors.toArray(processors);
+		} else {
+			processors = new IContentAssistProcessor[0];
 		}
 		return processors;
 	}
@@ -175,7 +179,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer, boolean reCreate) {
 		if (fContentAssistant == null || reCreate) {
 			fContentAssistant = getPHPContentAssistantExtension();
-			
+
 			if (fContentAssistant == null) {
 				fContentAssistant = new StructuredContentAssistant();
 			}
@@ -184,7 +188,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
-			
+
 			Preferences preferences = PHPCorePlugin.getDefault().getPluginPreferences();
 			fContentAssistant.enableAutoActivation(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION));
 			fContentAssistant.setAutoActivationDelay(preferences.getInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY));
@@ -204,7 +208,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				}
 			}
 		}
-		
+
 		return fContentAssistant;
 	}
 
@@ -269,15 +273,16 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			return super.getTextHover(sourceViewer, contentType, stateMask);
 		}
 
-		PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
-		int i = 0;
-		while (i < hoverDescs.length) {
-			if (hoverDescs[i].isEnabled() && hoverDescs[i].getStateMask() == stateMask) {
-				return new PHPTextHoverProxy(hoverDescs[i], ((PHPStructuredTextViewer) sourceViewer).getTextEditor(), fPreferenceStore);
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			PHPEditorTextHoverDescriptor[] hoverDescs = PHPUiPlugin.getDefault().getPHPEditorTextHoverDescriptors();
+			int i = 0;
+			while (i < hoverDescs.length) {
+				if (hoverDescs[i].isEnabled() && hoverDescs[i].getStateMask() == stateMask) {
+					return new PHPTextHoverProxy(hoverDescs[i], ((PHPStructuredTextViewer) sourceViewer).getTextEditor(), fPreferenceStore);
+				}
+				i++;
 			}
-			i++;
 		}
-
 		return null;
 	}
 
@@ -307,12 +312,14 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 						}
 						return null;
 					}
-					
+
 				});
 			}
 		}
 
-		detectors.add(new PHPHyperlinkDetector(((PHPStructuredTextViewer)sourceViewer).getTextEditor()));
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			detectors.add(new PHPHyperlinkDetector(((PHPStructuredTextViewer) sourceViewer).getTextEditor()));
+		}
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(HYPERLINK_DETECTOR_EXT);
 		for (int i = 0; i < elements.length; i++) {
 			IConfigurationElement element = elements[i];
@@ -324,7 +331,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				}
 			}
 		}
-		
+
 		return detectors.toArray(new IHyperlinkDetector[detectors.size()]);
 	}
 
@@ -421,13 +428,15 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	 * @since 2.1
 	 */
 	public IInformationPresenter getOutlinePresenter(ISourceViewer sourceViewer) {
-		InformationPresenter presenter;
-		presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, SHOW_OUTLINE_PREF_KEY)); //$NON-NLS-1$
-		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-		presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
-		IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer) sourceViewer).getTextEditor());
-		presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
-		presenter.setSizeConstraints(50, 20, true, false);
+		InformationPresenter presenter = null;
+		if (sourceViewer instanceof PHPStructuredTextViewer) {
+			presenter = new InformationPresenter(getOutlinePresenterControlCreator(sourceViewer, SHOW_OUTLINE_PREF_KEY)); //$NON-NLS-1$
+			presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+			presenter.setAnchor(AbstractInformationControlManager.ANCHOR_GLOBAL);
+			IInformationProvider provider = new PHPElementProvider(((PHPStructuredTextViewer) sourceViewer).getTextEditor());
+			presenter.setInformationProvider(provider, PHPPartitionTypes.PHP_DEFAULT);
+			presenter.setSizeConstraints(50, 20, true, false);
+		}
 		return presenter;
 	}
 
