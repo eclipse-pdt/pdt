@@ -21,11 +21,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-public class TempBuildpathOrderingWorkbookPage extends BuildPathBasePage {
+public class PHPBuildpathOrderingWorkbookPage extends BuildPathBasePage {
 
 	private ListDialogField fBuildpathList;
 
-	public TempBuildpathOrderingWorkbookPage(ListDialogField buildpathList) {
+	public PHPBuildpathOrderingWorkbookPage(ListDialogField buildpathList) {
 		fBuildpathList = buildpathList;
 	}
 

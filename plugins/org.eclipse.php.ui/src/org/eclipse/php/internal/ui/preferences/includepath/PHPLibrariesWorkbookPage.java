@@ -44,7 +44,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class TempLibrariesWorkbookPage extends BuildPathBasePage {
+public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 	private ListDialogField fBuildPathList;
 	private IScriptProject fCurrJProject;
 	private TreeListDialogField fLibrariesList;
@@ -63,13 +63,22 @@ public class TempLibrariesWorkbookPage extends BuildPathBasePage {
 	private int IDX_ADD = 0;
 	private boolean fWithZip = false;
 	private IScriptProject scriptProject;
+	
+	private boolean fSupportZips = false;
 
-	public TempLibrariesWorkbookPage(boolean supportZips,
+	public PHPLibrariesWorkbookPage(boolean supportZips,
 			ListDialogField classPathList,
 			IWorkbenchPreferenceContainer pageContainer) {
 		fBuildPathList = classPathList;
 		fPageContainer = pageContainer;
+		fSupportZips = supportZips;
 		fSWTControl = null;
+		
+		initContainerElements();
+
+	}
+	
+	protected void initContainerElements() {
 
 		String[] buttonLabelsWith = new String[] {
 				NewWizardMessages.LibrariesWorkbookPage_libraries_addzip_button,
@@ -92,14 +101,14 @@ public class TempLibrariesWorkbookPage extends BuildPathBasePage {
 		String[] buttonLabels;
 		buttonLabels = buttonLabelsWithout;
 		IDX_ADD = IDX_WITHOUTZIP;
-		fWithZip = supportZips;
+		fWithZip = fSupportZips;
 		if (fWithZip) {
 			buttonLabels = buttonLabelsWith;
 			IDX_ADD = 0;
 		}
 		LibrariesAdapter adapter = new LibrariesAdapter();
 		fLibrariesList = new TreeListDialogField(adapter, buttonLabels,
-				new BPListLabelProvider());
+				new PHPBPListLabelProvider());
 		fLibrariesList.setDialogFieldListener(adapter);
 		if (this.fWithZip) {
 			fLibrariesList
@@ -114,6 +123,7 @@ public class TempLibrariesWorkbookPage extends BuildPathBasePage {
 			fLibrariesList.enableButton(IDX_REPLACE + IDX_ADD, false);
 		}
 		fLibrariesList.setViewerSorter(new BPListElementSorter());
+		
 	}
 
 	/*
@@ -147,6 +157,7 @@ public class TempLibrariesWorkbookPage extends BuildPathBasePage {
 
 	// -------- UI creation
 	public Control getControl(Composite parent) {
+		
 		PixelConverter converter = new PixelConverter(parent);
 		Composite composite = new Composite(parent, SWT.NONE);
 		LayoutUtil.doDefaultLayout(composite,
@@ -159,6 +170,7 @@ public class TempLibrariesWorkbookPage extends BuildPathBasePage {
 		fSWTControl = composite;
 		return composite;
 	}
+
 
 	private Shell getShell() {
 		if (fSWTControl != null) {

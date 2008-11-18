@@ -82,8 +82,8 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 	protected TabFolder fTabFolder;
 	protected int fPageIndex;
 	protected BuildPathBasePage fSourceContainerPage;
-	protected TempProjectsWorkbookPage fProjectsPage;
-	protected TempLibrariesWorkbookPage fLibrariesPage;
+	protected PHPProjectsWorkbookPage fProjectsPage;
+	protected PHPLibrariesWorkbookPage fLibrariesPage;
 	protected BuildPathBasePage fCurrPage;
 	protected String fUserSettingsTimeStamp;
 	protected long fFileTimeStamp;
@@ -126,7 +126,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 				NewWizardMessages.BuildPathsBlock_buildpath_checkall_button,
 				NewWizardMessages.BuildPathsBlock_buildpath_uncheckall_button };
 		fBuildPathList = new ListDialogField(null, buttonLabels,
-				new BPListLabelProvider());
+				new PHPBPListLabelProvider());
 		//fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList
 				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
@@ -173,7 +173,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 //			fSourceContainerPage = new NewSourceContainerWorkbookPage(
 //					fBuildPathList, fRunnableContext, getPreferenceStore());
 //		} else {
-			fSourceContainerPage = new TempSourceContainerWorkbookPage2(
+			fSourceContainerPage = new TempSourceContainerWorkbookPage(
 					fBuildPathList);
 //		}
 		item.setData(fSourceContainerPage);
@@ -181,13 +181,13 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 		Image projectImage = workbench.getSharedImages().getImage(
 				IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new TempProjectsWorkbookPage(fBuildPathList, fPageContainer);
+		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList, fPageContainer);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
 		item.setData(fProjectsPage);
 		item.setControl(fProjectsPage.getControl(folder));
-		fLibrariesPage = new TempLibrariesWorkbookPage(this.supportZips(),
+		fLibrariesPage = new PHPLibrariesWorkbookPage(this.supportZips(),
 				fBuildPathList, fPageContainer);
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
@@ -199,7 +199,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 		Image cpoImage = DLTKPluginImages.DESC_TOOL_BUILDPATH_ORDER
 				.createImage();
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
-		TempBuildpathOrderingWorkbookPage ordpage = new TempBuildpathOrderingWorkbookPage(
+		PHPBuildpathOrderingWorkbookPage ordpage = new PHPBuildpathOrderingWorkbookPage(
 				fBuildPathList);
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_order);
@@ -823,10 +823,10 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 		} else {
 			fTabFolder.setSelection(pageIndex);
 			Object page = fTabFolder.getItem(pageIndex).getData();
-			if (page instanceof TempLibrariesWorkbookPage) {
+			if (page instanceof PHPLibrariesWorkbookPage) {
 				BPListElement element = BPListElement.createFromExisting(entry,
 						fCurrScriptProject);
-				((TempLibrariesWorkbookPage) page).addElement(element);
+				((PHPLibrariesWorkbookPage) page).addElement(element);
 			}
 		}
 	}

@@ -78,7 +78,7 @@ public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 
 		buttonLabels = new String[] { NewWizardMessages.SourceContainerWorkbookPage_folders_add_button, NewWizardMessages.SourceContainerWorkbookPage_folders_remove_button };
 
-		fFoldersList = new TreeListDialogField(adapter, buttonLabels, new BPListLabelProvider());
+		fFoldersList = new TreeListDialogField(adapter, buttonLabels, new PHPBPListLabelProvider());
 		fFoldersList.setDialogFieldListener(adapter);
 		fFoldersList.setLabelText(PHPUIMessages.getString("IncludePathSourcePage_Folders_Label")); //$NON-NLS-1$
 

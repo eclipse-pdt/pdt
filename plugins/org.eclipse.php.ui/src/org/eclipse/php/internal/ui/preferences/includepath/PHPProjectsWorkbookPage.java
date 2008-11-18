@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
-public class TempProjectsWorkbookPage extends BuildPathBasePage {
+public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 	private final int IDX_ADDPROJECT = 0;
 
@@ -48,7 +48,7 @@ public class TempProjectsWorkbookPage extends BuildPathBasePage {
 
 	private final IWorkbenchPreferenceContainer fPageContainer;
 
-	public TempProjectsWorkbookPage(ListDialogField buildpathList,
+	public PHPProjectsWorkbookPage(ListDialogField buildpathList,
 			IWorkbenchPreferenceContainer pageContainer) {
 		fBuildpathList = buildpathList;
 		fPageContainer = pageContainer;
@@ -63,7 +63,7 @@ public class TempProjectsWorkbookPage extends BuildPathBasePage {
 		ProjectsAdapter adapter = new ProjectsAdapter();
 
 		fProjectsList = new TreeListDialogField(adapter, buttonLabels,
-				new BPListLabelProvider());
+				new PHPBPListLabelProvider());
 		fProjectsList.setDialogFieldListener(adapter);
 		fProjectsList
 				.setLabelText(NewWizardMessages.ProjectsWorkbookPage_projects_label);

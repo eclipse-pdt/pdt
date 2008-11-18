@@ -25,7 +25,6 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
-import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListLabelProvider;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -69,7 +68,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 	protected void initContainerElements() {
 		BuildPathAdapter adapter = new BuildPathAdapter();
 		String[] buttonLabels = new String[] { NewWizardMessages.BuildPathsBlock_buildpath_up_button, NewWizardMessages.BuildPathsBlock_buildpath_down_button };
-		fBuildPathList = new ListDialogField(null, buttonLabels, new BPListLabelProvider());
+		fBuildPathList = new ListDialogField(null, buttonLabels, new PHPBPListLabelProvider());
 		fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);
@@ -117,14 +116,14 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 
 		IWorkbench workbench = DLTKUIPlugin.getDefault().getWorkbench();
 		Image projectImage = workbench.getSharedImages().getImage(IDE.SharedImages.IMG_OBJ_PROJECT);
-		fProjectsPage = new TempProjectsWorkbookPage(fBuildPathList, fPageContainer);
+		fProjectsPage = new PHPProjectsWorkbookPage(fBuildPathList, fPageContainer);
 		fProjectsPage.setTitle(PHPUIMessages.getString("IncludePathProjectsPage_Folders_Label")); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_projects);
 		item.setImage(projectImage);
 		item.setData(fProjectsPage);
 		item.setControl(fProjectsPage.getControl(folder));
-		fLibrariesPage = new TempLibrariesWorkbookPage(this.supportZips(), fBuildPathList, fPageContainer);
+		fLibrariesPage = new PHPLibrariesWorkbookPage(this.supportZips(), fBuildPathList, fPageContainer);
 		fLibrariesPage.setTitle(PHPUIMessages.getString("IncludePathLibrariesPage_Folders_Label")); //$NON-NLS-1$
 		fLibrariesPage.setScriptProject(getScriptProject());
 		item = new TabItem(folder, SWT.NONE);
@@ -135,7 +134,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 		// a non shared image
 		Image cpoImage = DLTKPluginImages.DESC_TOOL_BUILDPATH_ORDER.createImage();
 		composite.addDisposeListener(new ImageDisposer(cpoImage));
-		TempBuildpathOrderingWorkbookPage ordpage = new TempBuildpathOrderingWorkbookPage(fBuildPathList);
+		PHPBuildpathOrderingWorkbookPage ordpage = new PHPBuildpathOrderingWorkbookPage(fBuildPathList);
 		setTitle(PHPUIMessages.getString("IncludePathOrderPage_Folders_Label")); //$NON-NLS-1$
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(PHPUIMessages.getString("BuildPathsBlock_tab_order")); //$NON-NLS-1$
