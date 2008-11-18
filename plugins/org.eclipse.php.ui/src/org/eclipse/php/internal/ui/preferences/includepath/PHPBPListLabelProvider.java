@@ -10,24 +10,11 @@ public class PHPBPListLabelProvider extends BPListLabelProvider {
 
 	protected ImageDescriptor getCPListElementBaseImage(BPListElement cpentry) {
 
-		switch (cpentry.getEntryKind()) {
-		case IBuildpathEntry.BPE_SOURCE:
-			if (cpentry.getPath().segmentCount() == 1) {
-				return fProjectImage;
-			} else {
-				return DLTKPluginImages
-						.getDescriptor(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT);
-			}
-		case IBuildpathEntry.BPE_LIBRARY:
+		if(cpentry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 			return DLTKPluginImages
-					.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
-		case IBuildpathEntry.BPE_PROJECT:
-			return fProjectImage;
-		case IBuildpathEntry.BPE_CONTAINER:
-			return DLTKPluginImages
-					.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
-		default:
-			return null;
-		}
+			.getDescriptor(DLTKPluginImages.IMG_OBJS_LIBRARY);
+		} else {
+			return super.getCPListElementBaseImage(cpentry);
+		}		
 	}
 }
