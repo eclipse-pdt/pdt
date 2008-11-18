@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.explorer;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -33,6 +34,10 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		IModelElement modelElement = null;
+		if (element instanceof ExternalProjectFragment) {
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
+		}
+		
 		if (element instanceof IResource) {
 			modelElement = DLTKCore.create((IResource) element);
 		}
