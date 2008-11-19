@@ -57,7 +57,10 @@ public class CodeTemplateContext extends TemplateContext {
 		if (!canEvaluate(template))
 			return null;
 
-		String pattern = changeLineDelimiter(template.getPattern(), fLineDelimiter);
+		String pattern = template.getPattern();
+		if (fLineDelimiter != null) {
+			pattern = changeLineDelimiter(pattern, fLineDelimiter);
+		}
 
 		TemplateTranslator translator = new TemplateTranslator();
 		TemplateBuffer buffer = translator.translate(pattern);
