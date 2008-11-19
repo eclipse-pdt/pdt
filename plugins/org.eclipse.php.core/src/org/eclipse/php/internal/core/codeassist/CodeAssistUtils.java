@@ -816,9 +816,14 @@ public class CodeAssistUtils {
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				private Set<String> processedVars = new HashSet<String>();
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IModelElement element = (IModelElement) match.getElement();
-					elements.add(element);
+					String elementName = element.getElementName();
+					if (!processedVars.contains(elementName)) {
+						processedVars.add(elementName);
+						elements.add(element);
+					}
 				}
 			}, null);
 		} catch (CoreException e) {
