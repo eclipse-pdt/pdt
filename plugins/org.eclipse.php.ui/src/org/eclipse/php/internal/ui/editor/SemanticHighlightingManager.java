@@ -22,11 +22,11 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.ui.ColorManager;
-import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 
 /**
@@ -266,7 +266,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	/** The preference store */
 	private IPreferenceStore fPreferenceStore;
 	/** The source viewer configuration */
-	private PHPStructuredTextViewerConfiguration fConfiguration;
+	private StructuredTextViewerConfiguration fConfiguration;
 	/** The presentation reconciler */
 	private StructuredPresentationReconciler fPresentationReconciler;
 
@@ -287,7 +287,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		fColorManager= colorManager;
 		fPreferenceStore= preferenceStore;
 		if (fEditor != null) {
-			fConfiguration = (PHPStructuredTextViewerConfiguration) fEditor.getSourceViwerConfiguration();
+			fConfiguration = (StructuredTextViewerConfiguration) fEditor.getSourceViwerConfiguration();
 			fPresentationReconciler = (StructuredPresentationReconciler) fConfiguration.getPresentationReconciler(sourceViewer);
 		} else {
 			fConfiguration= null;
