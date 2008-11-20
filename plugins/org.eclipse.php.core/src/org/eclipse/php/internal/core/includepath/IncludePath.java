@@ -1,13 +1,14 @@
 package org.eclipse.php.internal.core.includepath;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IBuildpathEntry;
 
 /**
  * Include path entry
  */
-public class IncludePath {
+public class IncludePath implements IAdaptable{
 
-	private boolean isBuildpath;
+	protected boolean isBuildpath;
 	private Object entry;
 
 	public IncludePath(Object entry) {
@@ -64,4 +65,11 @@ public class IncludePath {
 	public String toString() {
 		return new StringBuilder("Include Path [").append(entry.toString()).append(']').toString();
 	}
+
+	public Object getAdapter(Class adapter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }
