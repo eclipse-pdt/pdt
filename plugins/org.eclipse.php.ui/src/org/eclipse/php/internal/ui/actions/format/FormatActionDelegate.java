@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.actions.format;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.IModelElement;
@@ -110,7 +111,8 @@ public class FormatActionDelegate extends org.eclipse.wst.sse.ui.internal.action
 			Object[] elements = fSelection.toArray();
 			for (int i = 0; i < elements.length; i++) {
 				if (elements[i] instanceof IModelElement) {
-					available = processorAvailable(((IModelElement) elements[i]).getResource());
+					IResource resource = ((IModelElement) elements[i]).getResource();			
+					available = (null != resource) ?  processorAvailable(resource) : false;
 
 					if (available)
 						break;
