@@ -13,8 +13,13 @@ package org.eclipse.php.internal.ui.editor.adapter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.internal.ui.search.DLTKSearchPageScoreComputer;
+import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.ui.actions.filters.GenericActionFilter;
+import org.eclipse.search.ui.ISearchPageScoreComputer;
 import org.eclipse.ui.IActionFilter;
 
 /**
@@ -27,6 +32,7 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 	private static Map<Class<?>, Object> adapterType2Object = new HashMap<Class<?>, Object>(4);
 	static {
 		adapterType2Object.put(IActionFilter.class, new GenericActionFilter());
+		adapterType2Object.put(ISearchPageScoreComputer.class, new DLTKSearchPageScoreComputer());
 	}
 
 	public PhpElementAdapterFactory() {
@@ -34,6 +40,17 @@ public class PhpElementAdapterFactory implements IAdapterFactory {
 
 	@SuppressWarnings("unchecked")
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
+		if (adaptableObject instanceof IImplForPhp) {
+			if (adapterType == IModelElement.class) {
+				return ((IImplForPhp) adaptableObject).getModelElement();
+			}
+			if (adapterType == IResource.class) {
+				IModelElement modelElement = ((IImplForPhp) adaptableObject).getModelElement();
+				if (modelElement != null) {
+					return modelElement.getResource();
+				}
+			}
+		}
 		return adapterType2Object.get(adapterType);
 	}
 

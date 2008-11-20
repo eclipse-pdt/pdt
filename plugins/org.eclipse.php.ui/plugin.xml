@@ -639,6 +639,21 @@
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
 		</factory>
 		<factory
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			<adapter type="org.eclipse.ui.IActionFilter" />
+		</factory>
+		<factory
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			<adapter type="org.eclipse.dltk.core.IModelElement" />
+		</factory>
+		<factory
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			<adapter type="org.eclipse.core.resources.IResource" />
+		</factory>
+		<factory
 			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
 			<adapter type="org.eclipse.search.ui.ISearchPageScoreComputer" />
@@ -649,9 +664,14 @@
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory
-			adaptableType="org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp"
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
 			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
-			<adapter type="org.eclipse.ui.IActionFilter" />
+			<adapter type="org.eclipse.dltk.core.IModelElement" />
+		</factory>
+		<factory
+			adaptableType="org.eclipse.php.internal.core.documentModel.dom.TextImplForPhp"
+			class="org.eclipse.php.internal.ui.editor.adapter.PhpElementAdapterFactory">
+			<adapter type="org.eclipse.core.resources.IResource" />
 		</factory>
 	</extension>
 

@@ -62,6 +62,7 @@ import org.eclipse.php.internal.core.ast.nodes.Expression;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
+import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -2851,12 +2852,15 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		ISelection selection = getSelectionProvider().getSelection();
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
-			// PR 39995: [navigation] Forward history cleared after going back
-			// in navigation history:
-			// mark only in navigation history if the cursor is being moved
-			// (which it isn't if
-			// this is called from a PostSelectionEvent that should only update
-			// the magnet)
+			if (textSelection instanceof IStructuredSelection) {
+				Object firstElement = ((IStructuredSelection)textSelection).getFirstElement();
+				if (firstElement instanceof IImplForPhp) {
+					((IImplForPhp)firstElement).setModelElement(getModelElement());
+				}
+			}
+			// PR 39995: [navigation] Forward history cleared after going back in navigation history:
+			// mark only in navigation history if the cursor is being moved (which it isn't if
+			// this is called from a PostSelectionEvent that should only update the magnet)
 			if (moveCursor && (textSelection.getOffset() != 0 || textSelection.getLength() != 0))
 				markInNavigationHistory();
 		}
