@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.documentModel.dom;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.internal.core.documentModel.DOMModelForPHP;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
@@ -28,7 +29,9 @@ import org.w3c.dom.Node;
  * Represents elements in the dom model {@link DOMModelForPHP}
  * @author Roy, 2007
  */
-public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
+public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, IImplForPhp {
+
+	private IModelElement modelElement;
 
 	public ElementImplForPhp() {
 		super();
@@ -42,12 +45,10 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		super(that);
 	}
 
-	@Override
 	protected boolean isNestedClosed(String regionType) {
 		return regionType == PHPRegionContext.PHP_CLOSE;
 	}
 
-	@Override
 	public Node cloneNode(boolean deep) {
 		ElementImpl cloned = new ElementImplForPhp(this);
 		if (deep)
@@ -59,7 +60,6 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 	 * @see ElementStyleImpl#setOwnerDocument(Document)
 	 * make this method package visible
 	 */
-	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
@@ -68,12 +68,10 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 	 * @see setTagName(String)
 	 * make this method package visible
 	 */
-	@Override
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
 	}
 
-	@Override
 	public boolean isGlobalTag() {
 		return isPhpTag() ? false : super.isGlobalTag();
 	}
@@ -85,7 +83,6 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
 	}
 
-	@Override
 	public INodeAdapter getExistingAdapter(Object type) {
 
 		// no validation or validation propagation for PHP tags
@@ -97,12 +94,19 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable {
 
 	private final static ValidationComponent nullValidator = new NullValidator();
 
-	@Override
 	public String getPrefix() {
 		final String prefix = super.getPrefix();
 		if (prefix == null && isPhpTag()) {
 			return ""; //$NON-NLS-1$
 		}
 		return prefix;
+	}
+	
+	public IModelElement getModelElement() {
+		return modelElement;
+	}
+
+	public void setModelElement(IModelElement modelElement) {
+		this.modelElement = modelElement;
 	}
 }
