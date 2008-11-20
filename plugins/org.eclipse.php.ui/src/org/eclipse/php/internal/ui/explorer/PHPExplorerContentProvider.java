@@ -18,20 +18,16 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
+import org.eclipse.dltk.internal.core.ExternalScriptFolder;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.ScriptProject;
-import org.eclipse.dltk.internal.ui.navigator.ProjectFragmentContainer;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
-import org.eclipse.dltk.ui.DLTKPluginImages;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.Logger;
-import org.eclipse.php.internal.ui.util.PHPPluginImages;
 
 /**
  * 
@@ -53,14 +49,24 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 	public Object[] getChildren(Object parentElement) {
 		try {
 			// Handles SourceModule and downwards as well as ExternalProjectFragments (i.e language model)
+			if (parentElement instanceof IncludePath) {
+				//TODO return ((IncludePathEntry)parentElement).getChildren();
+			}
+
 			if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable) || parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
 					return ((IFolder) parentElement).members();
 				}
+
+				
 				return super.getChildren(parentElement);
 			}
 
 			if (parentElement instanceof IOpenable) {
+				if (parentElement instanceof ExternalScriptFolder) {
+					return ((ExternalScriptFolder) parentElement).getChildren();
+				}
+				
 				IResource resource = ((IOpenable) parentElement).getResource();
 				if (resource instanceof IContainer) {
 
@@ -101,14 +107,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		return NO_CHILDREN;
 	}
 
-	@Override
-	public boolean hasChildren(Object element) {
-		if (element instanceof IncludePathProject)
-			return false;
-
-		return super.hasChildren(element);
-	}
-
 	/**
 	 * 
 	 * @author apeled, ncohen
@@ -132,32 +130,20 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 			ArrayList<IAdaptable> res = new ArrayList<IAdaptable>();
 			for (int i = 0; i < fIncludePath.length; i++) {
 				Object entry = fIncludePath[i].getEntry();
-				if (scriptProject.getResource().equals(entry)) { //includePath of self Project
-					IModelElement parent = scriptProject.getParent();
-					try {
-						if (parent instanceof ModelElement)
-							res.add(new IncludePathProject(scriptProject.getProject(), (ModelElement) parent));
-						else
-							throw (new IllegalStateException());
-					} catch (IllegalStateException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else if (entry instanceof IResource) {
-					res.add((IResource) entry);
-				} else if (entry instanceof IBuildpathEntry) {
-					// Add referenced projects
+
+				if (entry instanceof IBuildpathEntry) {
+
 					IBuildpathEntry buildpathEntry = (IBuildpathEntry) entry;
-					if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-						res.add(new IncludePathEntry(scriptProject, buildpathEntry));
+					if (buildpathEntry.getEntryKind() != IBuildpathEntry.BPE_PROJECT) {
+						// Add libraries
+						IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments(buildpathEntry);
+						for (IProjectFragment projectFragment : findProjectFragments) {
+							res.add(projectFragment);
+						}
 						continue;
 					}
-					// Add libraries
-					IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments(buildpathEntry);
-					for (IProjectFragment projectFragment : findProjectFragments) {
-						res.add(projectFragment);
-					}
 				}
+				res.add(fIncludePath[i]);
 
 			}
 
@@ -166,58 +152,4 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 
 	}
 
-	protected class IncludePathProject extends ScriptProject {
-
-		public IncludePathProject(IProject project, ModelElement parent) {
-			super(project, parent);
-		}
-	}
-
-	/**
-	 * 
-	 * @author apeled, ncohen
-	 *
-	 */
-	class IncludePathEntry extends ProjectFragmentContainer {
-
-		IBuildpathEntry bpe;
-
-		public IncludePathEntry(IScriptProject project, IBuildpathEntry entry) {
-			super(project);
-			bpe = entry;
-		}
-
-		@Override
-		public IAdaptable[] getChildren() {
-			return null;
-		}
-
-		@Override
-		public ImageDescriptor getImageDescriptor() {
-			// An included PHP project
-			if (bpe.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-				return PHPPluginImages.DESC_OBJS_PHP_PROJECT;
-			}
-			// A library
-			if (bpe.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-				return DLTKPluginImages.getDescriptor(DLTKPluginImages.IMG_OBJS_EXTJAR_WSRC);
-			}
-			return null;
-		}
-
-		@Override
-		public String getLabel() {
-			if (bpe.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-				return bpe.getPath().lastSegment();
-			}
-			String path = bpe.getPath().toString();
-			return path.substring(path.lastIndexOf(IPath.DEVICE_SEPARATOR) + 1);
-		}
-
-		@Override
-		public IProjectFragment[] getProjectFragments() {
-			return null;
-		}
-
-	}
 }

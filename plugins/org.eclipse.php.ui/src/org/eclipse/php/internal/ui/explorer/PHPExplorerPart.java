@@ -19,6 +19,7 @@ import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.ui.IWorkingSet;
 
@@ -31,7 +32,7 @@ import org.eclipse.ui.IWorkingSet;
  */
 public class PHPExplorerPart extends ScriptExplorerPart {
 
-	public class PHPExplorerElementSorter extends ModelElementSorter {
+	protected class PHPExplorerElementSorter extends ModelElementSorter {
 		private static final int INCLUDE_PATH_CONTAINER = 59;
 		
 		@Override
@@ -41,10 +42,20 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			else
 				return super.category(element);
 		}
+
+		@Override
+		public int compare(Viewer viewer, Object e1, Object e2) {
+			if (e1 instanceof IncludePath || e2 instanceof IncludePath){
+				return -1;
+			}
+			return super.compare(viewer, e1, e2);
+		}
+		
+		
 		
 	}
 	
-	public class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
+	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
 		
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IWorkingSet || e2 instanceof IWorkingSet)
