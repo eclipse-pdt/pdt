@@ -1,5 +1,6 @@
 package org.eclipse.php.internal.core.includepath;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -207,5 +208,33 @@ public class IncludePathManager {
 
 	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
 		return (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
+	}
+
+	/**
+	 * Removes the given entry from the builpath (according to the path)
+	 * @param scriptProject
+	 * @param buildpathEntry
+	 * @throws ModelException 
+	 */
+	public void removeEntryFromBuildPath(IScriptProject scriptProject, IBuildpathEntry buildpathEntry) throws ModelException { 
+		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
+		
+		// get the current buildpath entries, in order to remove the given entries
+		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
+		
+
+		for (IBuildpathEntry entry : rawBuildpath) {
+			if( !(entry.getPath().equals(buildpathEntry.getPath()))){
+				newRawBuildpath.add(entry);
+			} 
+
+		}		
+		
+		modifyingIncludePath = true;
+		// set the new updated buildpath for the project		
+		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+		
+		modifyingIncludePath = false;
+		
 	}
 }
