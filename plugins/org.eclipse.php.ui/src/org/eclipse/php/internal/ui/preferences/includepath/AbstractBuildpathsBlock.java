@@ -26,6 +26,7 @@ import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.dltk.internal.ui.wizards.TypedViewerFilter;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathBasePage;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.FolderSelectionDialog;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
 import org.eclipse.dltk.ui.DLTKPluginImages;

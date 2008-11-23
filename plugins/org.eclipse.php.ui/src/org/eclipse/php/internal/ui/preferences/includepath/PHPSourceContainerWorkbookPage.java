@@ -253,7 +253,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 	}
 
 	protected Shell getShell() {
-		if (fSWTControl != null) {
+		if (fSWTControl != null && !fSWTControl.isDisposed()) {
 			return fSWTControl.getShell();
 		}
 		return DLTKUIPlugin.getActiveWorkbenchShell();

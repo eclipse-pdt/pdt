@@ -17,7 +17,6 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
@@ -25,6 +24,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathBasePage;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.StringButtonDialogField;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -34,6 +34,7 @@ import org.eclipse.dltk.ui.viewsupport.ImageDisposer;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -164,9 +165,43 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 	}
 
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+		adaptBuildPath();
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		initializeTimeStamps();
 		updateUI();
+	}
+
+	/**
+	 * The purpose of this method is to adapt the build path according to the entries added to the include path.
+	 * If the user added to the include path source folders that are not in (or contained in) the build path,
+	 * he will not get code completion and other functionality for this sources.
+	 * THe user is prompted and asked if he wants to add the relevant sources to the build path as well
+	 * see bug#255930
+	 */
+	private void adaptBuildPath() {
+		PHPIncludePathSourcePage includePathSourcePage = (PHPIncludePathSourcePage) fSourceContainerPage;
+
+		boolean shouldAddToBuildPath = includePathSourcePage.shouldAddToBuildPath();
+		if (!shouldAddToBuildPath) {
+			return;
+		}
+
+		// get the source elements that the user added in the source tab
+		List<BPListElement> addedElements = includePathSourcePage.getAddedElements();
+		List<IBuildpathEntry> buildPathEntries = new ArrayList<IBuildpathEntry>();
+
+		//in case there are any, the user is prompted with a question 
+		if (addedElements.size() > 0) {
+			for (BPListElement listElement : addedElements) {
+				buildPathEntries.add(listElement.getBuildpathEntry());
+			}
+			// if the user chose to, the relevant entries are added to the buildpath 
+			try {
+				IncludePathManager.getInstance().addEntriesToBuildPath(fCurrScriptProject, buildPathEntries);
+			} catch (ModelException e) {
+				Logger.logException("Failed adding entries to build path", e); ////$NON-NLS-1$
+			}
+		}
 	}
 
 	/*
@@ -184,10 +219,10 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 			IPath projPath = project.getFullPath();
 			monitor.worked(1);
 
-			monitor.worked(1);
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
+
 			List<IBuildpathEntry> newBuildPathEntries = new ArrayList<IBuildpathEntry>();
 			List<IBuildpathEntry> newIncludePathEntries = new ArrayList<IBuildpathEntry>();
 
@@ -208,35 +243,11 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 				}
 			}
 			addEntriesToBuildPath(javaProject, newBuildPathEntries);
-			addEntriesToIncludePath(project, newIncludePathEntries);
+			IncludePathManager.getInstance().addEntriesToIncludePath(project, newIncludePathEntries);
 
 		} finally {
 			monitor.done();
 		}
-	}
-
-	/**
-	 * Create the include path based on all of the tabs elements 
-	 * @param scriptProject
-	 * @param entries
-	 * @throws ModelException
-	 */
-	private static void addEntriesToIncludePath(IProject project, List<IBuildpathEntry> entries) {
-		IncludePathManager includePathManager = IncludePathManager.getInstance();
-
-		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
-		for (IBuildpathEntry buildpathEntry : entries) {
-			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());
-				if (resource != null) {
-					includePathEntries.add(new IncludePath(resource));
-				}
-			} else {
-				includePathEntries.add(new IncludePath(buildpathEntry));
-			}
-		}
-		// update the include path for this project
-		includePathManager.setIncludePath(project, includePathEntries.toArray(new IncludePath[includePathEntries.size()]));
 	}
 
 	/**

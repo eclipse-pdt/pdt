@@ -7,19 +7,16 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.*;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.TreeListDialogField;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -38,6 +35,22 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	protected int IDX_REMOVE = 1;
 	protected int IDX_ADD_LINK = 2;
 	protected int IDX_EDIT = 3;
+
+	private List<BPListElement> fAddedElements = new ArrayList<BPListElement>();
+	private List<BPListElement> fRemovedElements = new ArrayList<BPListElement>();
+	private boolean addToBuildPath = false;
+
+	public boolean shouldAddToBuildPath() {
+		return addToBuildPath;
+	}
+
+	public List<BPListElement> getAddedElements() {
+		return fAddedElements;
+	}
+
+	public List<BPListElement> getRemovedElements() {
+		return fRemovedElements;
+	}
 
 	public PHPIncludePathSourcePage(ListDialogField buildpathList) {
 		super(buildpathList);
@@ -168,55 +181,43 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 			}
 		}
 	}
-	
-	@Override
-	protected void removeEntry() {
-		List selElements = fFoldersList.getSelectedElements();
-		for (int i = selElements.size() - 1; i >= 0; i--) {
-			Object elem = selElements.get(i);
-			if (elem instanceof BPListElementAttribute) {
-				BPListElementAttribute attrib = (BPListElementAttribute) elem;
-				String key = attrib.getKey();
-				Object value = null;
-				if (key.equals(BPListElement.EXCLUSION)
-						|| key.equals(BPListElement.INCLUSION)) {
-					value = new Path[0];
-				}
-				attrib.getParent().setAttribute(key, value);
-				selElements.remove(i);
+
+	protected void refresh(List insertedElements, List removedElements, List modifiedElements) {
+		fFoldersList.addElements(insertedElements);
+
+		// for each added source entry, check if it is already a part of the buildpath
+		// in case it is not, add the entry to the added elements list 
+		// and ask the user if he would like to add it to the build path as well
+
+		for (Iterator iterator = insertedElements.iterator(); iterator.hasNext();) {
+			BPListElement element = (BPListElement) iterator.next();
+			if (!IncludePathUtils.isContainedInBuildpath(element.getPath(), fCurrJProject)) {
+				fAddedElements.add(element);
 			}
 		}
-		if (selElements.isEmpty()) {
-			fFoldersList.refresh();
-			fBuildpathList.dialogFieldChanged(); // validate
-		} else {
-			for (Iterator iter = selElements.iterator(); iter.hasNext();) {
-				BPListElement element = (BPListElement) iter.next();
-				
-				if (element.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-					if ( IncludePathUtils.isContainedInBuildpath(element.getBuildpathEntry().getPath(), fCurrJProject)){
-						boolean remove = IncludePathUtils.openRemoveFromBuildPathDialog(getShell());
-						if(remove){
-							try {
-								IncludePathManager.getInstance().removeEntryFromBuildPath(fCurrJProject, element.getBuildpathEntry());
-							} catch (ModelException e) {
-								Logger.logException("Failed removing entry from Build Path",e); ////$NON-NLS-1$
-							}
-						}
-					}
-					List list = BuildpathModifier.removeFilters(element
-							.getPath(), fCurrJProject, fFoldersList
-							.getElements());
-					for (Iterator iterator = list.iterator(); iterator
-							.hasNext();) {
-						BPListElement modified = (BPListElement) iterator
-								.next();
-						fFoldersList.refresh(modified);
-						fFoldersList.expandElement(modified, 3);
-					}
-				}
-			}
-			fFoldersList.removeElements(selElements);
+
+		if (fAddedElements.size() > 0) {
+			addToBuildPath = IncludePathUtils.openConfirmationDialog(getShell(), PHPUIMessages.getString("IncludePath.AddEntryTitle"), PHPUIMessages.getString("IncludePath.AddEntryToBuildPathMessage")); //$NON-NLS-1$ ////$NON-NLS-2$
+		}
+
+		for (Iterator iter = insertedElements.iterator(); iter.hasNext();) {
+			BPListElement element = (BPListElement) iter.next();
+			fFoldersList.expandElement(element, 3);
+		}
+
+		fFoldersList.removeElements(removedElements);
+
+		fRemovedElements.addAll(removedElements);
+
+		for (Iterator iter = modifiedElements.iterator(); iter.hasNext();) {
+			BPListElement element = (BPListElement) iter.next();
+			fFoldersList.refresh(element);
+			fFoldersList.expandElement(element, 3);
+		}
+
+		fFoldersList.refresh(); // does enforce the order of the entries.
+		if (!insertedElements.isEmpty()) {
+			fFoldersList.postSetSelection(new StructuredSelection(insertedElements));
 		}
 	}
 

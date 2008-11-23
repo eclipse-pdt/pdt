@@ -1,11 +1,18 @@
 package org.eclipse.php.internal.ui.preferences.includepath;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.core.includepath.IncludePath;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Shell;
 
@@ -20,12 +27,11 @@ public class IncludePathUtils {
 	public static boolean fPrompting = false;
 	
 	/**
-	 * Prompts the user with a message dialog asking if he would like to remove the selected entrie(s) 
-	 * also from the build path
+	 * Prompts the user with a confirmation dialog asking for the given message 
 	 * @param shell
 	 * @return the user choice (yes/no)
 	 */
-	public static boolean openRemoveFromBuildPathDialog(Shell shell){
+	public static boolean openConfirmationDialog(Shell shell, String title, String message){
 		
 		if (shell == null || fPrompting) {
 			return false;
@@ -36,7 +42,7 @@ public class IncludePathUtils {
 			shell.setMinimized(false);
 		}
 
-		boolean answer = MessageDialog.openQuestion(shell, PHPUIMessages.getString("IncludePath.RemoveEntryTitle"), PHPUIMessages.getString("IncludePath.RemoveEntryMessage")); //$NON-NLS-1$ ////$NON-NLS-2$
+		boolean answer = MessageDialog.openQuestion(shell, title, message);
 				
 		synchronized (IncludePathUtils.class) {
 			fPrompting = false;
@@ -77,7 +83,7 @@ public class IncludePathUtils {
 		for (IBuildpathEntry buildpathEntry : buildpath) {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE){
 				IPath buildPathEntryPath = buildpathEntry.getPath();
-				if (resourcePath.isPrefixOf(buildPathEntryPath) || resourcePath.toString().equals(buildPathEntryPath.toString())){
+				if (buildPathEntryPath.isPrefixOf(resourcePath) || resourcePath.toString().equals(buildPathEntryPath.toString())){
 					result = true;
 				}
 			}
@@ -85,5 +91,46 @@ public class IncludePathUtils {
 		
 		return result;
 	}
+	
+	/**
+	 * Returns whether the given path is in the include definitions
+	 * Meaning if one of the entries in the include path has the same path of this resource
+	 * @param project
+	 * @param resourcePath
+	 * @return
+	 */
+	public static boolean isInIncludePath(IProject project, IPath entryPath) {
+		
+		boolean result = false;
+		
+		if(entryPath == null){
+			return false;
+		}
+					
+		IncludePathManager includepathManager = IncludePathManager.getInstance();
+		IncludePath[] includePathEntries = includepathManager.getIncludePath(project);
+		
+		// go over the entries and compare the path.
+		// checks if the path for one of the entries equals to the given one
+		for (IncludePath entry : includePathEntries) {
+			Object includePathEntry = entry.getEntry();
+			IPath resourcePath = null;
+			if (includePathEntry instanceof IBuildpathEntry) {
+				IBuildpathEntry bpEntry = (IBuildpathEntry) includePathEntry;
+				resourcePath = bpEntry.getPath();
+			} else {
+				IResource resource = (IResource) includePathEntry;
+				resourcePath = resource.getFullPath();
+			}
+			
+			if(resourcePath != null && resourcePath.toString().equals(entryPath.toString())){
+				result = true;
+				break;
+			}			
+
+		}
+		return result;
+	}
+
 
 }

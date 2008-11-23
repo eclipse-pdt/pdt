@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 import java.util.List;
 
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathBasePage;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.LayoutUtil;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
