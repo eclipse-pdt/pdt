@@ -12,6 +12,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -32,7 +33,7 @@ public class IncludePathManager {
 				if (modifyingIncludePath) {
 					return;
 				}
-				
+
 				IModelElement element = delta.getElement();
 				try {
 					if ((delta.getFlags() & IModelElementDelta.F_BUILDPATH_CHANGED) != 0) {
@@ -211,30 +212,125 @@ public class IncludePathManager {
 	}
 
 	/**
-	 * Removes the given entry from the builpath (according to the path)
+	 * Removes the given entry from the build path (according to the path)
 	 * @param scriptProject
 	 * @param buildpathEntry
 	 * @throws ModelException 
 	 */
-	public void removeEntryFromBuildPath(IScriptProject scriptProject, IBuildpathEntry buildpathEntry) throws ModelException { 
+	public void removeEntryFromBuildPath(IScriptProject scriptProject, IBuildpathEntry buildpathEntry) throws ModelException {
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-		
+
 		// get the current buildpath entries, in order to remove the given entries
 		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
-		
 
 		for (IBuildpathEntry entry : rawBuildpath) {
-			if( !(entry.getPath().equals(buildpathEntry.getPath()))){
+			if (!(entry.getPath().equals(buildpathEntry.getPath()))) {
 				newRawBuildpath.add(entry);
-			} 
+			}
 
-		}		
-		
+		}
+
 		modifyingIncludePath = true;
 		// set the new updated buildpath for the project		
 		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+
+		modifyingIncludePath = false;
+
+	}
+
+	/**
+	 * Removes the given entry from the include path (according to the path)
+	 * @param scriptProject
+	 * @param buildpathEntry
+	 * @throws ModelException 
+	 */
+	public void removeEntryFromIncludePath(IProject project, IBuildpathEntry buildpathEntry) throws ModelException {
+
+		IncludePathManager includepathManager = IncludePathManager.getInstance();
+		IncludePath[] includePathEntries = includepathManager.getIncludePath(project);
+		List<IncludePath> newIncludePathEntries = new ArrayList<IncludePath>();
+
+		// go over the entries and compare the path.
+		// if it is the same as the given entry, it won't be added to the list.
+		for (IncludePath entry : includePathEntries) {
+			Object includePathEntry = entry.getEntry();
+			IPath resourcePath = null;
+			if (includePathEntry instanceof IBuildpathEntry) {
+				IBuildpathEntry bpEntry = (IBuildpathEntry) includePathEntry;
+				resourcePath = bpEntry.getPath();
+			} else {
+				IResource resource = (IResource) includePathEntry;
+				resourcePath = resource.getFullPath();
+			}
+
+			if (resourcePath != null && !resourcePath.toString().equals(buildpathEntry.getPath().toString())) {
+				newIncludePathEntries.add(entry);
+			}
+
+		}
+
+		modifyingIncludePath = true;
+		// update the include path for this project
+		includepathManager.setIncludePath(project, newIncludePathEntries.toArray(new IncludePath[newIncludePathEntries.size()]));
+
+		modifyingIncludePath = false;
+
+	}
+
+	/**
+	 * Adds the given entries to Include Path 
+	 * @param scriptProject
+	 * @param entries
+	 * @throws ModelException
+	 */
+	public void addEntriesToIncludePath(IProject project, List<IBuildpathEntry> entries) {
+		IncludePathManager includePathManager = IncludePathManager.getInstance();
+
+		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
+		for (IBuildpathEntry buildpathEntry : entries) {
+			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());
+				if (resource != null) {
+					includePathEntries.add(new IncludePath(resource));
+				}
+			} else {
+				includePathEntries.add(new IncludePath(buildpathEntry));
+			}
+		}
+		modifyingIncludePath = true;
+		// update the include path for this project
+		includePathManager.setIncludePath(project, includePathEntries.toArray(new IncludePath[includePathEntries.size()]));
 		
 		modifyingIncludePath = false;
-		
 	}
+
+	/**
+	 * Adds the given entries to the Build Path 
+	 * @param scriptProject
+	 * @param entries
+	 * @throws ModelException
+	 */
+	public void addEntriesToBuildPath(IScriptProject scriptProject, List<IBuildpathEntry> entries) throws ModelException {
+		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
+
+		// get the current buildpath entries, in order to add/remove entries
+		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
+
+		// get all of the source folders and the language library from the existing build path 
+		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
+			newRawBuildpath.add(buildpathEntry);
+		}
+		// add all of the entries added in this dialog
+		for (IBuildpathEntry buildpathEntry : entries) {
+			newRawBuildpath.add(buildpathEntry);
+		}
+
+		modifyingIncludePath = true;
+		
+		// set the new updated buildpath for the project		
+		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+
+		modifyingIncludePath = false;
+	}
+
 }
