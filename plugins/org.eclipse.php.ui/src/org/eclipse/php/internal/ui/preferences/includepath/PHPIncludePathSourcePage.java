@@ -2,11 +2,15 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.*;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.DialogField;
@@ -15,6 +19,7 @@ import org.eclipse.dltk.internal.ui.wizards.dialogfields.TreeListDialogField;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -26,7 +31,7 @@ import org.eclipse.swt.widgets.Control;
  * @author Eden K., 2008
  *
  */
-public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
+public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	// redefine the indexes of the buttons
 	protected int IDX_ADD = 0;
@@ -161,6 +166,57 @@ public class PHPIncludePathSourcePage extends TempSourceContainerWorkbookPage {
 			} else {
 				super.sourcePageCustomButtonPressed(field, index);
 			}
+		}
+	}
+	
+	@Override
+	protected void removeEntry() {
+		List selElements = fFoldersList.getSelectedElements();
+		for (int i = selElements.size() - 1; i >= 0; i--) {
+			Object elem = selElements.get(i);
+			if (elem instanceof BPListElementAttribute) {
+				BPListElementAttribute attrib = (BPListElementAttribute) elem;
+				String key = attrib.getKey();
+				Object value = null;
+				if (key.equals(BPListElement.EXCLUSION)
+						|| key.equals(BPListElement.INCLUSION)) {
+					value = new Path[0];
+				}
+				attrib.getParent().setAttribute(key, value);
+				selElements.remove(i);
+			}
+		}
+		if (selElements.isEmpty()) {
+			fFoldersList.refresh();
+			fBuildpathList.dialogFieldChanged(); // validate
+		} else {
+			for (Iterator iter = selElements.iterator(); iter.hasNext();) {
+				BPListElement element = (BPListElement) iter.next();
+				
+				if (element.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+					if ( IncludePathUtils.isContainedInBuildpath(element.getBuildpathEntry().getPath(), fCurrJProject)){
+						boolean remove = IncludePathUtils.openRemoveFromBuildPathDialog(getShell());
+						if(remove){
+							try {
+								IncludePathManager.getInstance().removeEntryFromBuildPath(fCurrJProject, element.getBuildpathEntry());
+							} catch (ModelException e) {
+								Logger.logException("Failed removing entry from Build Path",e); ////$NON-NLS-1$
+							}
+						}
+					}
+					List list = BuildpathModifier.removeFilters(element
+							.getPath(), fCurrJProject, fFoldersList
+							.getElements());
+					for (Iterator iterator = list.iterator(); iterator
+							.hasNext();) {
+						BPListElement modified = (BPListElement) iterator
+								.next();
+						fFoldersList.refresh(modified);
+						fFoldersList.expandElement(modified, 3);
+					}
+				}
+			}
+			fFoldersList.removeElements(selElements);
 		}
 	}
 

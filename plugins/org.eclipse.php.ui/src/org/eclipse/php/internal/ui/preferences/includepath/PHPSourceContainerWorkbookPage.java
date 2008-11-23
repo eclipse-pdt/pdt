@@ -40,7 +40,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 
-public class TempSourceContainerWorkbookPage extends BuildPathBasePage {
+public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 
 	public class OpenBuildPathWizardAction extends AbstractOpenWizardAction
 			implements IPropertyChangeListener {
@@ -122,7 +122,7 @@ public class TempSourceContainerWorkbookPage extends BuildPathBasePage {
 		return result;
 	}
 
-	private ListDialogField fBuildpathList;
+	protected ListDialogField fBuildpathList;
 	protected IScriptProject fCurrJProject;
 
 	private Control fSWTControl;
@@ -149,7 +149,7 @@ public class TempSourceContainerWorkbookPage extends BuildPathBasePage {
 		return IDX_REMOVE;
 	}
 
-	public TempSourceContainerWorkbookPage(ListDialogField buildpathList) {
+	public PHPSourceContainerWorkbookPage(ListDialogField buildpathList) {
 		fBuildpathList = buildpathList;
 		fSWTControl = null;
 	}
@@ -456,7 +456,7 @@ public class TempSourceContainerWorkbookPage extends BuildPathBasePage {
 		fFoldersList.enableButton(getIDX_ADD(), noAttributes);
 	}
 
-	private void removeEntry() {
+	protected void removeEntry() {
 		List selElements = fFoldersList.getSelectedElements();
 		for (int i = selElements.size() - 1; i >= 0; i--) {
 			Object elem = selElements.get(i);
@@ -495,7 +495,7 @@ public class TempSourceContainerWorkbookPage extends BuildPathBasePage {
 		}
 	}
 
-	private boolean canRemove(List selElements) {
+	protected boolean canRemove(List selElements) {
 		if (selElements.size() == 0) {
 			return false;
 		}

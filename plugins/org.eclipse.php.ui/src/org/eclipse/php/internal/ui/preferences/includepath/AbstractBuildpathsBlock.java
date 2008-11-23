@@ -25,8 +25,8 @@ import org.eclipse.dltk.internal.ui.util.CoreUtility;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.TypedElementSelectionValidator;
 import org.eclipse.dltk.internal.ui.wizards.TypedViewerFilter;
-import org.eclipse.dltk.internal.ui.wizards.buildpath.*;
-import org.eclipse.dltk.internal.ui.wizards.buildpath.newsourcepage.NewSourceContainerWorkbookPage;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.FolderSelectionDialog;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
@@ -173,7 +173,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 //			fSourceContainerPage = new NewSourceContainerWorkbookPage(
 //					fBuildPathList, fRunnableContext, getPreferenceStore());
 //		} else {
-			fSourceContainerPage = new TempSourceContainerWorkbookPage(
+			fSourceContainerPage = new PHPSourceContainerWorkbookPage(
 					fBuildPathList);
 //		}
 		item.setData(fSourceContainerPage);
