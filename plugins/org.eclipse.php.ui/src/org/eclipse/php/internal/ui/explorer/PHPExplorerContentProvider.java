@@ -14,15 +14,12 @@ import java.util.ArrayList;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.core.ExternalScriptFolder;
-import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
@@ -36,7 +33,10 @@ import org.eclipse.php.internal.ui.Logger;
  *
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*implements IResourceChangeListener*/{
-	IncludePathManager includePathManager;
+
+	protected static final String PHP_INCLUDE_PATH = "PHP Include Path"; ////$NON-NLS-1$
+	
+	protected IncludePathManager includePathManager;
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
@@ -49,10 +49,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 	public Object[] getChildren(Object parentElement) {
 		try {
 			// Handles SourceModule and downwards as well as ExternalProjectFragments (i.e language model)
-			if (parentElement instanceof IncludePath) {
-				//TODO return ((IncludePathEntry)parentElement).getChildren();
-			}
-
 			if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable) || parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
 					return ((IFolder) parentElement).members();
@@ -121,8 +117,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		}
 
 		public String getLabel() {
-			// FIXME externalize string
-			return "PHP Include Path";
+			return PHP_INCLUDE_PATH;
 		}
 
 		public IAdaptable[] getChildren() {

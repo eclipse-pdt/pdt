@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.explorer;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
-import org.eclipse.dltk.internal.ui.scriptview.WorkingSetAwareModelElementSorter;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
