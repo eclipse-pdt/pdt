@@ -1,0 +1,230 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="generator" content="Adobe RoboHelp - www.adobe.com">
+<title>Build Paths</title>
+<link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
+<!--
+if (navigator.appName !="Netscape")
+{   document.write("<link rel='stylesheet' href='default.css'>");}
+//-->
+</script>
+<style>
+<!--
+body { border-left-style:None; border-right-style:None; border-bottom-style:None; background-color:Transparent; border-top-style:None; }
+-->
+</style><style type="text/css">
+<!--
+h1.whs1 { color:#00709e; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
+col.whs3 { width:7.093%; }
+col.whs4 { width:92.907%; }
+tr.whs5 { x-cell-content-align:top; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-size:6pt; }
+td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs9 { font-weight:bold; }
+td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs13 { list-style:decimal; }
+img_whs14 { border:none; width:297px; height:263px; float:none; }
+p.whs15 { font-weight:normal; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+tr.whs17 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs20 { x-cell-content-align:top; height:35px; }
+td.whs21 { width:7.093%; padding-right:10px; padding-left:10px; x-condition:Online; }
+img_whs22 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs23 { width:92.907%; padding-right:10px; padding-left:10px; }
+p.whs24 { font-weight:bold; x-condition:Online; }
+p.whs25 { x-condition:Online; }
+tr.whs26 { x-cell-content-align:top; height:19px; x-condition:Online; }
+td.whs27 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+td.whs28 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+div.whs29 { width:100%; }
+p.whs30 { text-align:center; }
+-->
+</style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
+<!--
+function reDo() {
+  if (innerWidth != origWidth || innerHeight != origHeight)
+     location.reload();
+}
+if ((parseInt(navigator.appVersion) == 4) && (navigator.appName == "Netscape")) {
+	origWidth = innerWidth;
+	origHeight = innerHeight;
+	onresize = reDo;
+}
+onerror = null; 
+//-->
+</script>
+<style type="text/css">
+<!--
+div.WebHelpPopupMenu { position:absolute; left:0px; top:0px; z-index:4; visibility:hidden; }
+p.WebHelpNavBar { text-align:right; }
+-->
+</style><script type="text/javascript" language="javascript1.2" src="whmsg.js"></script>
+<script type="text/javascript" language="javascript" src="whver.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whproxy.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whutils.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whlang.js"></script>
+<script type="text/javascript" language="javascript1.2" src="whtopic.js"></script>
+<script type="text/javascript" language="javascript1.2">
+<!--
+if (window.gbWhTopic)
+{
+	if (window.setRelStartPage)
+	{
+	addTocInfo("PDT Help\nConcepts\nBuild Paths");
+
+	}
+
+
+	if(1)
+	{
+	
+	}
+
+	if (window.setRelStartPage)
+	{
+	setRelStartPage("IDE_Help.htm");
+
+		autoSync(1);
+		sendSyncInfo();
+		sendAveInfoOut();
+	}
+
+}
+else
+	if (window.gbIE4)
+		document.location.reload();
+//-->
+</script>
+</head>
+<body leftmargin="5" topmargin="5" rightmargin="5" bottommargin="5"><script type="text/javascript" language="javascript1.2">
+<!--
+if (window.writeIntopicBar)
+	writeIntopicBar(4);
+//-->
+</script>
+<h1 class="whs1"><span style="color: #00709e;"><font color=#00709e >Build Paths</font></span></h1>
+<p>The PHP build process scans all files, folders, projects and libraries 
+ that are on the project's PHP Build Path so that resources which are referenced 
+ in the project can be made available for Code Assist options and Refactoring 
+ operations. The required resources must therefore be included in the PHP 
+ Build Path.</p>
+<p>The project's Build Path properties page allows you to select PHP resources 
+ to include/exclude from this process. Rather than automatically scanning 
+ all referenced projects and libraries, configuring the Build Path allows 
+ you to select which resources will be scanned, thereby significantly speeding 
+ up the build process.</p>
+<p>&nbsp;</p>
+<p>The Build Path is determined by the resources included in the project's 
+ Build Path &nbsp;properties page. </p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs6">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<p class="whs9">&nbsp;</td></tr>
+<tr valign="top" class="whs5">
+<td width="7.093%" class="whs10">
+<p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
+<td width="92.907%" class="whs12">
+<p class="whs9">To configure the project's Build Path:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>In PHP Explorer view, right-click 
+ the required project and select Build Path | Configure Build Path.<br>
+	The Build Path properties page is displayed. </p></li>
+</ol>
+<p class=picture><img src="build_path_properties.png" x-maintain-ratio="TRUE" width="297px" height="263px" border="0" class="img_whs14"></p>
+<p>This page allows you to include/exclude specific files, folders and 
+ variables from the Build Path.</p>
+<p>&nbsp;</p>
+<p class="whs9">To add a source folder from your Workspace 
+ to the Build Path:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs15">Click 
+ Add folder.<br>
+	The Source Folder Selection dialog will display.</p></li>
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs15">Select 
+ the required folders and click OK.</p></li>
+</ol>
+<p>&nbsp;</p>
+<p>You can choose to include or exclude specific resources or file name 
+ patterns from within source folders which you have added.</p>
+<p class="whs9">To include/exclude specific resources from 
+ the Build Path:</p>
+<ol type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Expand the node next to 
+ the folder from which you would like to include/exclude resources.<br>
+	A list of the resources which are included and excluded will be displayed 
+ (by default, all resources within the folder are included).</p></li>
+	<li style="margin-left: -20px;" class=p><p>Select the Included or Excluded 
+ list and click Edit.<br>
+	The Inclusion / Exclusion patterns dialog is displayed.</p></li>
+</ol>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;" class=p><p>Click Add next to the Inclusion 
+ or Exclusion patterns panes.<br>
+	The Add Inclusion/Exclusion Pattern dialog is displayed.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Enter or select the required 
+ resources / pattern to Include/Exclude and click OK.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Finish.<br>
+	All resources in the folder which match an Inclusion pattern but do 
+ not match an Exclusion pattern will be added to the Build Path.</p></li>
+</ol>
+<h3>Saving your changes</h3>
+<p>Once you have made all necessary changes to your Build Path, click OK.</td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>Your project will be rebuilt to reflect the changes, according to the 
+ settings you configured.</p>
+</td>
+</tr>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs2">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs17"><td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs20">
+<td width="7.093%" class="whs21">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
+<td width="92.907%" class="whs23">
+<p class="whs24">Related Links:</p>
+<p class="whs25"><a HREF="PHP_Explorer_view.htm" style="x-condition: Online;">PHP 
+ Explorer View</a></td></tr>
+<tr valign="top" class="whs26"><td colspan="1" rowspan="1" width="7.093%" class="whs27">
+<p class="whs7">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs28">
+<p>&nbsp;</td></tr>
+</table>
+<p>&nbsp;</p>
+<div placeholder id="footer" class="whs29">
+<p align="center" class="whs30">&nbsp;</p>
+<p align="center" class="whs30">© 1999-2007 Zend Technologies, 
+ Ltd. All rights reserved.</p>
+</div>
+<script type="text/javascript" language="javascript1.2">
+<!--
+highlightSearch();
+if (window.writeIntopicBar)
+	writeIntopicBar(0);
+if(0)
+{
+
+}
+//-->
+</script>
+</body>
+</html>

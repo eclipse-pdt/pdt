@@ -33,6 +33,7 @@
     <topic label="Breakpoints" href="html/Breakpoints.htm"/>
     <topic label="Include Paths" href="html/Include_Paths.htm"/>
     <topic label="Path Mapping" href="html/Path_Mapping.htm"/>
+    <topic label="Build Paths" href="html/Build_Paths.htm"/>
   </topic>
   <topic label="Tasks" href="html/Tasks.htm">
    <topic label="Easy File Creation" href="html/File_Creation.htm">
