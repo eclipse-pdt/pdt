@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
+import org.eclipse.dltk.internal.core.ProjectFragment;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.ui.DLTKPluginImages;
@@ -69,17 +70,21 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 		if (element instanceof IResource) {
 			modelElement = DLTKCore.create((IResource) element);
 		}
-		if (element instanceof IScriptFolder) {
-			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
-		}
-
+		
+		
+		if ( element instanceof IModelElement)
+ 			modelElement = (IModelElement) element;
+		
 		if (modelElement != null) {
 			IScriptProject project = modelElement.getScriptProject();
-			if (modelElement instanceof ISourceModule && !project.isOnBuildpath(modelElement)) {
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
-			}
-			if ((modelElement instanceof IProjectFragment || modelElement instanceof IScriptFolder) && project.isOnBuildpath(modelElement)) {
-				return DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKAGE);
+			if (!project.isOnBuildpath(modelElement)){//not in build path, hence: hollow, non-pakg icons
+				if (modelElement instanceof ISourceModule ) 
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
+				if (modelElement instanceof IProjectFragment || modelElement instanceof IScriptFolder) 
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
+			}else{//in build path ...
+				if (element instanceof IScriptFolder)
+					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
 			}
 		}
 
