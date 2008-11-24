@@ -70,7 +70,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			modelElement = DLTKCore.create((IResource) element);
 		}
 		if (element instanceof IScriptFolder) {
-			modelElement = (IScriptFolder) element;
+			return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
 		}
 
 		if (modelElement != null) {
