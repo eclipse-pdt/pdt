@@ -1,4 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 Zend Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.ui;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +24,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
+/**
+ * This is a factory project class for the PHP Demo 
+ * use -phpdemo for gettingthis  
+ */
 public class PhpDemoProject {
 
 	private static final String SRC_FOLDER = "src/";//$NON-NLS-1$	
@@ -21,7 +36,6 @@ public class PhpDemoProject {
 	private static final String FILE_NAME1 = "01-Visibility1.php"; //$NON-NLS-1$
 	private static final String FILE_NAME2 = "02-Visibility2.php"; //$NON-NLS-1$
 	private static final String FILE_NAME3 = "03-html.php"; //$NON-NLS-1$
-	private static final String FILE_NAME4 = "04-InTryCatch.php"; //$NON-NLS-1$
 	private static final String FILE_NAME5 = "05-Inherit.php"; //$NON-NLS-1$
 	private static final String FILE_NAME6 = "06-FunctionParameter.php"; //$NON-NLS-1$
 	private static final String FILE_NAME7 = "07-ClassExtension.php"; //$NON-NLS-1$
@@ -51,7 +65,6 @@ public class PhpDemoProject {
 			final IFile file = createFile(testProject, FILES_PATH, FILE_NAME1);
 			createFile(testProject, FILES_PATH, FILE_NAME2);
 			createFile(testProject, FILES_PATH, FILE_NAME3);
-			createFile(testProject, FILES_PATH, FILE_NAME4);
 			createFile(testProject, FILES_PATH, FILE_NAME5);
 			createFile(testProject, FILES_PATH, FILE_NAME6);
 			createFile(testProject, FILES_PATH, FILE_NAME7);
@@ -63,20 +76,6 @@ public class PhpDemoProject {
 
 			createFolder(testProject, FILES_PATH, SRC_FOLDER);
 			createFile(testProject, FILES_PATH, SRC_FOLDER + SRC_FILE_NAME1);
-
-
-			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					if (page != null) {
-						try {
-							page.openEditor(new FileEditorInput(file), PHPUiConstants.PHP_EDITOR_ID, false);//use false in order to keep the welcome screen
-						} catch (PartInitException e) {
-							Logger.logException(e);
-						}
-					}
-				}
-			});
 		} catch (Exception e) {
 			Logger.logException(e);
 		}
