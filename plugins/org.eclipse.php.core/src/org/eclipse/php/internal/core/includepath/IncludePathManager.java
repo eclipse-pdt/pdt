@@ -74,7 +74,10 @@ public class IncludePathManager {
 										removed = false;
 										break;
 									}
-								}/* else {
+								} else {
+									removed = false;
+								}
+									/* else {
 									if (entry.getPath().isPrefixOf(((IResource) includePath.getEntry()).getFullPath())) {
 										removed = false;
 										break;
@@ -213,32 +216,6 @@ public class IncludePathManager {
 		return (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
 	}
 
-	/**
-	 * Removes the given entry from the build path (according to the path)
-	 * @param scriptProject
-	 * @param buildpathEntry
-	 * @throws ModelException 
-	 */
-	public void removeEntryFromBuildPath(IScriptProject scriptProject, IBuildpathEntry buildpathEntry) throws ModelException {
-		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-
-		// get the current buildpath entries, in order to remove the given entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
-
-		for (IBuildpathEntry entry : rawBuildpath) {
-			if (!(entry.getPath().equals(buildpathEntry.getPath()))) {
-				newRawBuildpath.add(entry);
-			}
-
-		}
-
-		modifyingIncludePath = true;
-		// set the new updated buildpath for the project		
-		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
-
-		modifyingIncludePath = false;
-
-	}
 
 	/**
 	 * Removes the given entry from the include path (according to the path)
@@ -270,12 +247,8 @@ public class IncludePathManager {
 			}
 
 		}
-
-		modifyingIncludePath = true;
 		// update the include path for this project
 		includepathManager.setIncludePath(project, newIncludePathEntries.toArray(new IncludePath[newIncludePathEntries.size()]));
-
-		modifyingIncludePath = false;
 
 	}
 
@@ -298,41 +271,52 @@ public class IncludePathManager {
 			} else {
 				includePathEntries.add(new IncludePath(buildpathEntry, project));
 			}
-		}
-		modifyingIncludePath = true;
+		}	
 		// update the include path for this project
 		includePathManager.setIncludePath(project, includePathEntries.toArray(new IncludePath[includePathEntries.size()]));
-		
-		modifyingIncludePath = false;
 	}
 
+	
 	/**
-	 * Adds the given entries to the Build Path 
-	 * @param scriptProject
-	 * @param entries
-	 * @throws ModelException
+	 * Returns whether the given path is in the include definitions
+	 * Meaning if one of the entries in the include path has the same path of this resource
+	 * @param project
+	 * @param resourcePath
+	 * @return
 	 */
-	public void addEntriesToBuildPath(IScriptProject scriptProject, List<IBuildpathEntry> entries) throws ModelException {
-		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-
-		// get the current buildpath entries, in order to add/remove entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
-
-		// get all of the source folders and the language library from the existing build path 
-		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
-			newRawBuildpath.add(buildpathEntry);
-		}
-		// add all of the entries added in this dialog
-		for (IBuildpathEntry buildpathEntry : entries) {
-			newRawBuildpath.add(buildpathEntry);
-		}
-
-		modifyingIncludePath = true;
+	public static boolean isInIncludePath(IProject project, IPath entryPath) {
 		
-		// set the new updated buildpath for the project		
-		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
+		boolean result = false;
+		
+		if(entryPath == null){
+			return false;
+		}
+					
+		IncludePathManager includepathManager = IncludePathManager.getInstance();
+		IncludePath[] includePathEntries = includepathManager.getIncludePaths(project);
+		
+		// go over the entries and compare the path.
+		// checks if the path for one of the entries equals to the given one
+		for (IncludePath entry : includePathEntries) {
+			Object includePathEntry = entry.getEntry();
+			IPath resourcePath = null;
+			if (includePathEntry instanceof IBuildpathEntry) {
+				IBuildpathEntry bpEntry = (IBuildpathEntry) includePathEntry;
+				resourcePath = bpEntry.getPath();
+			} else {
+				IResource resource = (IResource) includePathEntry;
+				resourcePath = resource.getFullPath();
+			}
+			
+			if(resourcePath != null && resourcePath.toString().equals(entryPath.toString())){
+				result = true;
+				break;
+			}			
 
-		modifyingIncludePath = false;
+		}
+		return result;
 	}
+
+
 
 }
