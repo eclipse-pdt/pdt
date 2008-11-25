@@ -156,6 +156,12 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 			}
 		});
 		fTabFolder = folder;
+		
+		//TODO - add listener to include path manager changes
+		// upon change call updateUI(); 
+		// and release listener on dispose
+				
+		
 		Dialog.applyDialogFont(composite);
 		return composite;
 	}
