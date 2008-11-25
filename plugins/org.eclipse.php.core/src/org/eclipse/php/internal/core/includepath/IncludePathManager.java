@@ -12,7 +12,6 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -72,12 +71,12 @@ public class IncludePathManager {
 										removed = false;
 										break;
 									}
-								} else {
+								}/* else {
 									if (entry.getPath().isPrefixOf(((IResource) includePath.getEntry()).getFullPath())) {
 										removed = false;
 										break;
 									}
-								}
+								}*/
 							}
 							if (removed) {
 								entriesToRemove.add(includePath);
