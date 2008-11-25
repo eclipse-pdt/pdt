@@ -396,7 +396,7 @@ public class PathMapperEntryDialog extends StatusDialog {
 						// Add include paths:
 						if (parentElement instanceof IProject) {
 							IProject project = (IProject) parentElement;
-							IncludePath[] includePath = IncludePathManager.getInstance().getIncludePath(project);
+							IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
 							for (IncludePath path : includePath) {
 								if (path.isBuildpath()) {
 									IBuildpathEntry buildpathEntry = (IBuildpathEntry) path.getEntry();
