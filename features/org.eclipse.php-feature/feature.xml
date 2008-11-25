@@ -19,6 +19,10 @@
       <discovery label="%updateSiteName" url="http://download.eclipse.org/tools/pdt/updates/"/>
    </url>
 
+   <requires>
+      <import feature="org.eclipse.dltk.core" version="1.0.0" match="compatible"/>
+   </requires>
+
    <plugin
          id="org.eclipse.php.core"
          download-size="0"
