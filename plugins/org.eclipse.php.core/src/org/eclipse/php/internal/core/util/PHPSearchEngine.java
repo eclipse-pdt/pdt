@@ -170,7 +170,7 @@ public class PHPSearchEngine {
 			return;
 		}
 		// Collect include paths:
-		results.addAll(Arrays.asList(IncludePathManager.getInstance().getIncludePath(project)));
+		results.addAll(Arrays.asList(IncludePathManager.getInstance().getIncludePaths(project)));
 	}
 
 	/**

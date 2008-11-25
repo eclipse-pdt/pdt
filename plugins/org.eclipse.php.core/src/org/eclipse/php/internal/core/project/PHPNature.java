@@ -189,7 +189,7 @@ public class PHPNature extends ScriptNature {
 		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
 		
 		IProject project = scriptProject.getProject();
-		IncludePathManager.getInstance().setIncludePath(project, new IncludePath[]{new IncludePath(project)});
+		IncludePathManager.getInstance().setIncludePath(project, new IncludePath[]{new IncludePath(project,project)});
 	}
 
 	/**
