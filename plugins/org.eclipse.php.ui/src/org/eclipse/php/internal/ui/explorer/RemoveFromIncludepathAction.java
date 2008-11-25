@@ -23,6 +23,7 @@ import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.Logger;
@@ -52,7 +53,7 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 			ExternalProjectFragment projFragment = (ExternalProjectFragment) object;
 			IScriptProject scriptProject = projFragment.getScriptProject();
 			try {
-				IncludePathManager.getInstance().removeEntryFromBuildPath(scriptProject, projFragment.getBuildpathEntry());
+				BuildPathUtils.removeEntryFromBuildPath(scriptProject, projFragment.getBuildpathEntry());
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e);
 			}
