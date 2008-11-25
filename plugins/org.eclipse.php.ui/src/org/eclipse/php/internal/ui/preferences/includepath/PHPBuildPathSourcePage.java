@@ -10,6 +10,7 @@ import org.eclipse.dltk.internal.corext.buildpath.BuildpathModifier;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElementAttribute;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
+import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
@@ -58,7 +59,7 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 					// in case it is, add the entry to the removed elements list 
 					// and ask the user if he would like to remove it to the include path as well
 					
-					if (IncludePathUtils.isInIncludePath(fCurrJProject.getProject(), element.getPath())) {
+					if (IncludePathManager.isInIncludePath(fCurrJProject.getProject(), element.getPath())) {
 						// add to removed elements list
 						fRemovedElements.add(element);
 					}

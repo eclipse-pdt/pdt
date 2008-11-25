@@ -35,6 +35,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -197,7 +198,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 			}
 			// if the user chose to, the relevant entries are added to the buildpath 
 			try {
-				IncludePathManager.getInstance().addEntriesToBuildPath(fCurrScriptProject, buildPathEntries);
+				BuildPathUtils.addEntriesToBuildPath(fCurrScriptProject, buildPathEntries);
 			} catch (ModelException e) {
 				Logger.logException("Failed adding entries to build path", e); ////$NON-NLS-1$
 			}
@@ -242,7 +243,9 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 					monitor.worked(1);
 				}
 			}
-			addEntriesToBuildPath(javaProject, newBuildPathEntries);
+			if(newBuildPathEntries.size() > 0){
+				addEntriesToBuildPath(javaProject, newBuildPathEntries);
+			}			
 			IncludePathManager.getInstance().addEntriesToIncludePath(project, newIncludePathEntries);
 
 		} finally {

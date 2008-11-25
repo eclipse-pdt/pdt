@@ -17,6 +17,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -191,7 +192,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 		for (Iterator iterator = insertedElements.iterator(); iterator.hasNext();) {
 			BPListElement element = (BPListElement) iterator.next();
-			if (!IncludePathUtils.isContainedInBuildpath(element.getPath(), fCurrJProject)) {
+			if (!BuildPathUtils.isContainedInBuildpath(element.getPath(), fCurrJProject)) {
 				fAddedElements.add(element);
 			}
 		}
