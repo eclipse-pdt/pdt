@@ -1,7 +1,10 @@
 package org.eclipse.php.internal.core.includepath;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.IScriptProject;
 
 /**
  * Include path entry
@@ -10,10 +13,16 @@ public class IncludePath implements IAdaptable{
 
 	protected boolean isBuildpath;
 	private Object entry;
-
-	public IncludePath(Object entry) {
+	private IProject fProject;
+	
+	public IncludePath(Object entry, IProject project) {
 		isBuildpath = (entry instanceof IBuildpathEntry);
 		this.entry = entry;
+		this.fProject = project;
+	}
+
+	public IncludePath(Object entry, IScriptProject scriptProject) {
+		this( entry, scriptProject.getProject());
 	}
 
 	/**
@@ -69,6 +78,15 @@ public class IncludePath implements IAdaptable{
 	public Object getAdapter(Class adapter) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+
+	/**
+	 * @return the scriptProject
+	 */
+	public IProject getProject() {
+		return fProject;
 	}
 	
 	

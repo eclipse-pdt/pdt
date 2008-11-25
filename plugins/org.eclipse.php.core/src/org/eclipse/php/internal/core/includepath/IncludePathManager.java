@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.event.ChangeListener;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -12,6 +14,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -38,7 +41,7 @@ public class IncludePathManager {
 					if ((delta.getFlags() & IModelElementDelta.F_BUILDPATH_CHANGED) != 0) {
 						IScriptProject scriptProject = element.getScriptProject();
 						IProject project = scriptProject.getProject();
-						IncludePath[] includePathEntries = getIncludePath(project);
+						IncludePath[] includePathEntries = getIncludePaths(project);
 						List<IncludePath> newEntries = new LinkedList<IncludePath>(Arrays.asList(includePathEntries));
 
 						IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
@@ -56,7 +59,7 @@ public class IncludePathManager {
 								}
 							}
 							if (added && isBuildpathAllowed(entry)) {
-								newEntries.add(new IncludePath(entry));
+								newEntries.add(new IncludePath(entry, scriptProject));
 								changed = true;
 							}
 						}
@@ -115,7 +118,7 @@ public class IncludePathManager {
 	 * @param project
 	 * @return ordered include path
 	 */
-	public IncludePath[] getIncludePath(IProject project) {
+	public IncludePath[] getIncludePaths(IProject project) {
 		List<IncludePath> includePathEntries = new LinkedList<IncludePath>();
 		IBuildpathEntry[] buildpath = null;
 		try {
@@ -146,14 +149,14 @@ public class IncludePathManager {
 					if (kind == 0) {
 						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
 						if (resource != null) {
-							includePathEntries.add(new IncludePath(resource));
+							includePathEntries.add(new IncludePath(resource,project));
 						}
 					} else if (buildpath != null) {
 						for (IBuildpathEntry entry : buildpath) {
 							if (entry.getEntryKind() == kind) {
 								IPath localPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 								if (localPath.equals(new Path(path))) {
-									includePathEntries.add(new IncludePath(entry));
+									includePathEntries.add(new IncludePath(entry,project));
 									break;
 								}
 							}
@@ -165,7 +168,7 @@ public class IncludePathManager {
 		} else if (buildpath != null) { // by default include path equals to the build path
 			for (IBuildpathEntry entry : buildpath) {
 				if (isBuildpathAllowed(entry)) {
-					includePathEntries.add(new IncludePath(entry));
+					includePathEntries.add(new IncludePath(entry,project));
 				}
 			}
 		}
@@ -246,7 +249,7 @@ public class IncludePathManager {
 	public void removeEntryFromIncludePath(IProject project, IBuildpathEntry buildpathEntry) throws ModelException {
 
 		IncludePathManager includepathManager = IncludePathManager.getInstance();
-		IncludePath[] includePathEntries = includepathManager.getIncludePath(project);
+		IncludePath[] includePathEntries = includepathManager.getIncludePaths(project);
 		List<IncludePath> newIncludePathEntries = new ArrayList<IncludePath>();
 
 		// go over the entries and compare the path.
@@ -290,10 +293,10 @@ public class IncludePathManager {
 			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
 				IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(buildpathEntry.getPath());
 				if (resource != null) {
-					includePathEntries.add(new IncludePath(resource));
+					includePathEntries.add(new IncludePath(resource, project));
 				}
 			} else {
-				includePathEntries.add(new IncludePath(buildpathEntry));
+				includePathEntries.add(new IncludePath(buildpathEntry, project));
 			}
 		}
 		modifyingIncludePath = true;
