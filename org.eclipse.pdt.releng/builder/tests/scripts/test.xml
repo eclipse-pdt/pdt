@@ -49,13 +49,13 @@
 			<property name="file" value="${emfFile}" />
 			<property name="unpackDest" value="${dropins-home}" />
 		</ant>
-		<ant target="getTestDependency"
+		<!--<ant target="getTestDependency"
 		     antfile="${getTestDependencies.xml}"
 		     dir="${common.releng.dir}">
 			<property name="url" value="${dtpURL}" />
 			<property name="file" value="${dtpFile}" />
 			<property name="unpackDest" value="${dropins-home}" />
-		</ant>
+		</ant>-->
 		<ant target="getTestDependency"
 		     antfile="${getTestDependencies.xml}"
 		     dir="${common.releng.dir}">
