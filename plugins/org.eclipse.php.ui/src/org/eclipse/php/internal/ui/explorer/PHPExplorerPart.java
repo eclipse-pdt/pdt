@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.explorer;
 
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
+import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
@@ -72,7 +73,6 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	 */
 	@Override
 	public void setFlatLayout(boolean enable) {
-		// TODO Auto-generated method stub
 		super.setFlatLayout(false);
 	}
 
@@ -123,6 +123,19 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			getTreeViewer().setComparator(comparator);
 		}
 	}
+	
+	@Override
+	protected ScriptExplorerActionGroup getActionGroup() {
+		/*
+		 * setting our own PDT action group, based on DLTK's ScriptExplorer action-group,
+		 * but also adding "include path" actions
+		 */
+		return new PHPExplorerActionGroup(this);
+	}
+
+
+	
+	
 	
 
 }

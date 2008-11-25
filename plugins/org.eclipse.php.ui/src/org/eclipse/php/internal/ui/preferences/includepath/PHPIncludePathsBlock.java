@@ -303,7 +303,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 		List<BPListElement> newBuildpath = new ArrayList<BPListElement>();
 		IProject project = fCurrScriptProject.getProject();
 
-		IncludePath[] includePathEntries = IncludePathManager.getInstance().getIncludePath(project);
+		IncludePath[] includePathEntries = IncludePathManager.getInstance().getIncludePaths(project);
 		for (IncludePath entry : includePathEntries) {
 			Object includePathEntry = entry.getEntry();
 

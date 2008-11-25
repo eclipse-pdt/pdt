@@ -108,7 +108,7 @@ public class IncludePathUtils {
 		}
 					
 		IncludePathManager includepathManager = IncludePathManager.getInstance();
-		IncludePath[] includePathEntries = includepathManager.getIncludePath(project);
+		IncludePath[] includePathEntries = includepathManager.getIncludePaths(project);
 		
 		// go over the entries and compare the path.
 		// checks if the path for one of the entries equals to the given one

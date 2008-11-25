@@ -107,7 +107,7 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	protected void updateFoldersList() {
 		ArrayList folders = new ArrayList();
 
-		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePath(fCurrJProject.getProject());
+		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(fCurrJProject.getProject());
 
 		// the include path is made of resources and/or buildpath entries
 		// extract the resource out of the entries and create "build path list" elements

@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.core.ExternalScriptFolder;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
@@ -25,6 +26,7 @@ import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 
 /**
  * 
@@ -33,10 +35,7 @@ import org.eclipse.php.internal.ui.Logger;
  *
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*implements IResourceChangeListener*/{
-
-	protected static final String PHP_INCLUDE_PATH = "PHP Include Path"; ////$NON-NLS-1$
-	
-	protected IncludePathManager includePathManager;
+	IncludePathManager includePathManager;
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
@@ -49,20 +48,33 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 	public Object[] getChildren(Object parentElement) {
 		try {
 			// Handles SourceModule and downwards as well as ExternalProjectFragments (i.e language model)
+			if (parentElement instanceof IncludePath) {
+				Object entry = ((IncludePath) parentElement).getEntry();
+				if (entry instanceof IBuildpathEntry) {
+					ArrayList<Object> res;
+					IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
+					IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
+					for (IProjectFragment projectFragment : findProjectFragments) {
+						//can be only one
+						return getChildren(projectFragment);
+					}
+					return getChildren(((BuildpathEntry) entry).getPath());
+				}
+			}
+
 			if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable) || parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
 					return ((IFolder) parentElement).members();
 				}
 
-				
 				return super.getChildren(parentElement);
 			}
 
 			if (parentElement instanceof IOpenable) {
 				if (parentElement instanceof ExternalScriptFolder) {
-					return ((ExternalScriptFolder) parentElement).getChildren();
+					return super.getChildren(parentElement);
 				}
-				
+
 				IResource resource = ((IOpenable) parentElement).getResource();
 				if (resource instanceof IContainer) {
 
@@ -81,8 +93,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 					if (parentElement instanceof IScriptProject) {
 						IScriptProject project = (IScriptProject) parentElement;
 						// Add include path node
-						IncludePath[] includePath = includePathManager.getIncludePath(project.getProject());
-						IncludePathContainer incPathContainer = new IncludePathContainer(project, includePath);
+						IncludePath[] includePaths = includePathManager.getIncludePaths(project.getProject());
+						IncludePathContainer incPathContainer = new IncludePathContainer(project, includePaths);
 						returnChlidren.add(incPathContainer);
 
 						// Add the language library
@@ -117,32 +129,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		}
 
 		public String getLabel() {
-			return PHP_INCLUDE_PATH;
+			return PHPUIMessages.getString("IncludePathExplorerNode_label");
 		}
 
 		public IAdaptable[] getChildren() {
-			IScriptProject scriptProject = getScriptProject();
-			ArrayList<IAdaptable> res = new ArrayList<IAdaptable>();
-			for (int i = 0; i < fIncludePath.length; i++) {
-				Object entry = fIncludePath[i].getEntry();
-
-				if (entry instanceof IBuildpathEntry) {
-
-					IBuildpathEntry buildpathEntry = (IBuildpathEntry) entry;
-					if (buildpathEntry.getEntryKind() != IBuildpathEntry.BPE_PROJECT) {
-						// Add libraries
-						IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments(buildpathEntry);
-						for (IProjectFragment projectFragment : findProjectFragments) {
-							res.add(projectFragment);
-						}
-						continue;
-					}
-				}
-				res.add(fIncludePath[i]);
-
-			}
-
-			return res.toArray(new IAdaptable[res.size()]);
+			return fIncludePath;
 		}
 
 	}
