@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.*;
@@ -60,7 +61,12 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 			if (entry instanceof ExternalProjectFragment) {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
-
+			
+			// Folder in the include path, should have "source-folder" image.
+			if (entry instanceof IFolder) {
+				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+			}
+			
 			if (entry instanceof IResource) {
 				return (getImage((IResource) entry));
 
