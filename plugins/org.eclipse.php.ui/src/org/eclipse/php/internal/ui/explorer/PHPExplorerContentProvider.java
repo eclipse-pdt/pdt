@@ -46,22 +46,23 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
+
+		
+		if (parentElement instanceof IncludePath) {
+			Object entry = ((IncludePath) parentElement).getEntry();
+			if (entry instanceof IBuildpathEntry) {
+				ArrayList<Object> res;
+				IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
+				IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
+				for (IProjectFragment projectFragment : findProjectFragments) {
+					//can be only one
+					return getChildren(projectFragment);
+				}
+				return getChildren(((BuildpathEntry) entry).getPath());
+			}
+		}
 		try {
 			// Handles SourceModule and downwards as well as ExternalProjectFragments (i.e language model)
-			if (parentElement instanceof IncludePath) {
-				Object entry = ((IncludePath) parentElement).getEntry();
-				if (entry instanceof IBuildpathEntry) {
-					ArrayList<Object> res;
-					IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
-					IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
-					for (IProjectFragment projectFragment : findProjectFragments) {
-						//can be only one
-						return getChildren(projectFragment);
-					}
-					return getChildren(((BuildpathEntry) entry).getPath());
-				}
-			}
-
 			if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable) || parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
 					return ((IFolder) parentElement).members();
@@ -112,6 +113,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		} catch (CoreException e) {
 			Logger.logException(e);
 		}
+
 		return NO_CHILDREN;
 	}
 
