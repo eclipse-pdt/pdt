@@ -1056,9 +1056,10 @@
 			id="org.eclipse.php.ui.preferences.MarkOccurrencesPreferencePage"
 			name="%editorMarkOccurrencesPageName">
 		</page>
+		<!-- Disabled for now. Bug #237211
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.includepath.IncludePathVarsPreferencePage"
-			id="org.eclipse.php.ui.preferences.IncludePathVariables" name="%includePathVariables" />
+			id="org.eclipse.php.ui.preferences.IncludePathVariables" name="%includePathVariables" />-->
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPManualPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPManualPreferencePage" name="%functionsManualPageName">
