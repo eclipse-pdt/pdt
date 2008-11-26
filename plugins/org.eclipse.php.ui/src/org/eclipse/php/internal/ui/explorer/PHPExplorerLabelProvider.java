@@ -112,7 +112,7 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 					return ((IBuildpathEntry) entry).getPath().lastSegment();
 				} else {
 					IPath localPath = EnvironmentPathUtils.getLocalPath(((IBuildpathEntry) entry).getPath());
-					return localPath.toString();
+					return localPath.toOSString();
 				}
 			}
 			if (entry instanceof ExternalProjectFragment) {
