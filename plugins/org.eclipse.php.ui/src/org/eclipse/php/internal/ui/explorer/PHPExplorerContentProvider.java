@@ -11,9 +11,11 @@
 package org.eclipse.php.internal.ui.explorer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -23,6 +25,7 @@ import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.core.ExternalScriptFolder;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
+import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.Logger;
@@ -34,20 +37,27 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
  * @author apeled, ncohen
  *
  */
-public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*implements IResourceChangeListener*/{
-	IncludePathManager includePathManager;
+public class PHPExplorerContentProvider extends ScriptExplorerContentProvider implements IIncludepathListener /*, IResourceChangeListener*/{
+
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
 		// get the include path manager
-		includePathManager = IncludePathManager.getInstance();
 		super.setIsFlatLayout(false);
+		
+		IncludePathManager.getInstance().registerIncludepathListener(this);
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+		IncludePathManager.getInstance().unregisterIncludepathListener(this);
+	}
+	
+	
+	@Override
 	public Object[] getChildren(Object parentElement) {
 
-		
 		if (parentElement instanceof IncludePath) {
 			Object entry = ((IncludePath) parentElement).getEntry();
 			if (entry instanceof IBuildpathEntry) {
@@ -94,7 +104,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 					if (parentElement instanceof IScriptProject) {
 						IScriptProject project = (IScriptProject) parentElement;
 						// Add include path node
-						IncludePath[] includePaths = includePathManager.getIncludePaths(project.getProject());
+						IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project.getProject());
 						IncludePathContainer incPathContainer = new IncludePathContainer(project, includePaths);
 						returnChlidren.add(incPathContainer);
 
@@ -137,7 +147,17 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider /*
 		public IAdaptable[] getChildren() {
 			return fIncludePath;
 		}
-
 	}
 
+	/**
+	 * 
+	 */
+	public void refresh(IProject project) {
+		Collection<Runnable> runnables = new ArrayList<Runnable>();
+		final ArrayList<IScriptProject> resources = new ArrayList<IScriptProject>(1);
+		resources.add(DLTKCore.create(project));
+
+		postRefresh(resources, true, runnables);
+		this.executeRunnables(runnables);
+	}
 }
