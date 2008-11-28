@@ -218,7 +218,6 @@ public class DebugSearchEngine {
 						}
 					}
 				} catch (Exception e) {
-					System.out.println("here");
 					// no need to catch - this may be due to IPath creation failure
 				}
 
