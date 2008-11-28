@@ -204,10 +204,10 @@ public class DebugSearchEngine {
 				try {
 					IPath path = Path.fromOSString(remoteFile);
 					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-					if (file.exists()) {
-						for (Object includePath : includePaths) {
-							if (includePath instanceof IContainer) {
-								IContainer container = (IContainer)includePath;
+					if (file != null && file.exists()) {
+						for (IncludePath includePath : includePaths) {
+							if (includePath.getEntry() instanceof IContainer) {
+								IContainer container = (IContainer)includePath.getEntry();
 								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
 									localFile[0] = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, file.getParent());
 									pathMapper.addEntry(remoteFile, localFile[0]);
@@ -218,15 +218,16 @@ public class DebugSearchEngine {
 						}
 					}
 				} catch (Exception e) {
+					System.out.println("here");
 					// no need to catch - this may be due to IPath creation failure
 				}
 
 				// Try to find this file in the Include Path:
 				File file = new File(remoteFile);
 				if (file.exists()) {
-					for (Object includePath : includePaths) {
-						if (includePath instanceof IBuildpathEntry) {
-							IBuildpathEntry entry = (IBuildpathEntry) includePath;
+					for (IncludePath includePath : includePaths) {
+						if (includePath.getEntry() instanceof IBuildpathEntry) {
+							IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
 							IPath entryPath = entry.getPath();
 							if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 								entryPath = DLTKCore.getResolvedVariablePath(entryPath);
@@ -243,15 +244,15 @@ public class DebugSearchEngine {
 				}
 
 				// Iterate over all include path, and search for a requested file
-				for (Object includePath : includePaths) {
-					if (includePath instanceof IContainer) {
+				for (IncludePath includePath : includePaths) {
+					if (includePath.getEntry() instanceof IContainer) {
 						try {
-							find((IContainer) includePath, abstractPath, results);
+							find((IContainer) includePath.getEntry(), abstractPath, results);
 						} catch (InterruptedException e) {
 							PHPDebugPlugin.log(e);
 						}
-					} else if (includePath instanceof IBuildpathEntry) {
-						IBuildpathEntry entry = (IBuildpathEntry) includePath;
+					} else if (includePath.getEntry() instanceof IBuildpathEntry) {
+						IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
 						IPath entryPath = entry.getPath();
 						if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
 							// We don't support lookup in archive

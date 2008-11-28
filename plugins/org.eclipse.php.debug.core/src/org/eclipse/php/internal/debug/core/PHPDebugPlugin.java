@@ -83,6 +83,7 @@ public class PHPDebugPlugin extends Plugin {
 
 		// TODO - XDebug - See if this can be removed
 		XDebugLaunchListener.getInstance();
+		DBGpProxyHandler.instance.configure();
 	}
 
 	/**

@@ -49,7 +49,6 @@ public class DBGpProxyHandler {
 	public static DBGpProxyHandler instance = new DBGpProxyHandler();
 	
 	private DBGpProxyHandler() {	
-		configure();
 	}
 	
 	
