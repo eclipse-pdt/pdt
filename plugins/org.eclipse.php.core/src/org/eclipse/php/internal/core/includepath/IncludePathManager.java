@@ -1,11 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.core.includepath;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.event.ChangeListener;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -14,7 +19,6 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -22,7 +26,9 @@ public class IncludePathManager {
 	private static final String PREF_KEY = "include_path"; //$NON-NLS-1$
 	private static final char PREF_SEP = (char) 5;
 	private static IncludePathManager instance = new IncludePathManager();
+
 	private boolean modifyingIncludePath;
+	private final Set<IIncludepathListener> listeners = new HashSet<IIncludepathListener>(4);
 
 	private IncludePathManager() {
 		DLTKCore.addElementChangedListener(new IElementChangedListener() {
@@ -77,11 +83,11 @@ public class IncludePathManager {
 								} else {
 									removed = false;
 								}
-									/* else {
-									if (entry.getPath().isPrefixOf(((IResource) includePath.getEntry()).getFullPath())) {
-										removed = false;
-										break;
-									}
+								/* else {
+								if (entry.getPath().isPrefixOf(((IResource) includePath.getEntry()).getFullPath())) {
+									removed = false;
+									break;
+								}
 								}*/
 							}
 							if (removed) {
@@ -152,14 +158,14 @@ public class IncludePathManager {
 					if (kind == 0) {
 						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
 						if (resource != null) {
-							includePathEntries.add(new IncludePath(resource,project));
+							includePathEntries.add(new IncludePath(resource, project));
 						}
 					} else if (buildpath != null) {
 						for (IBuildpathEntry entry : buildpath) {
 							if (entry.getEntryKind() == kind) {
 								IPath localPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 								if (localPath.equals(new Path(path))) {
-									includePathEntries.add(new IncludePath(entry,project));
+									includePathEntries.add(new IncludePath(entry, project));
 									break;
 								}
 							}
@@ -171,7 +177,7 @@ public class IncludePathManager {
 		} else if (buildpath != null) { // by default include path equals to the build path
 			for (IBuildpathEntry entry : buildpath) {
 				if (isBuildpathAllowed(entry)) {
-					includePathEntries.add(new IncludePath(entry,project));
+					includePathEntries.add(new IncludePath(entry, project));
 				}
 			}
 		}
@@ -204,6 +210,9 @@ public class IncludePathManager {
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(PREF_KEY, buf.toString(), project);
 				modifyingIncludePath = false;
+				
+				// TODO - should not be part of the current job
+				refresh(project);
 				return Status.OK_STATUS;
 			}
 		};
@@ -216,7 +225,6 @@ public class IncludePathManager {
 		return (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
 	}
 
-
 	/**
 	 * Removes the given entry from the include path (according to the path)
 	 * @param scriptProject
@@ -225,8 +233,7 @@ public class IncludePathManager {
 	 */
 	public void removeEntryFromIncludePath(IProject project, IBuildpathEntry buildpathEntry) throws ModelException {
 
-		IncludePathManager includepathManager = IncludePathManager.getInstance();
-		IncludePath[] includePathEntries = includepathManager.getIncludePaths(project);
+		IncludePath[] includePathEntries = getIncludePaths(project);
 		List<IncludePath> newIncludePathEntries = new ArrayList<IncludePath>();
 
 		// go over the entries and compare the path.
@@ -248,7 +255,7 @@ public class IncludePathManager {
 
 		}
 		// update the include path for this project
-		includepathManager.setIncludePath(project, newIncludePathEntries.toArray(new IncludePath[newIncludePathEntries.size()]));
+		setIncludePath(project, newIncludePathEntries.toArray(new IncludePath[newIncludePathEntries.size()]));
 
 	}
 
@@ -259,7 +266,6 @@ public class IncludePathManager {
 	 * @throws ModelException
 	 */
 	public void addEntriesToIncludePath(IProject project, List<IBuildpathEntry> entries) {
-		IncludePathManager includePathManager = IncludePathManager.getInstance();
 
 		List<IncludePath> includePathEntries = new ArrayList<IncludePath>();
 		for (IBuildpathEntry buildpathEntry : entries) {
@@ -271,12 +277,11 @@ public class IncludePathManager {
 			} else {
 				includePathEntries.add(new IncludePath(buildpathEntry, project));
 			}
-		}	
+		}
 		// update the include path for this project
-		includePathManager.setIncludePath(project, includePathEntries.toArray(new IncludePath[includePathEntries.size()]));
+		setIncludePath(project, includePathEntries.toArray(new IncludePath[includePathEntries.size()]));
 	}
 
-	
 	/**
 	 * Returns whether the given path is in the include definitions
 	 * Meaning if one of the entries in the include path has the same path of this resource
@@ -285,16 +290,16 @@ public class IncludePathManager {
 	 * @return
 	 */
 	public static boolean isInIncludePath(IProject project, IPath entryPath) {
-		
+
 		boolean result = false;
-		
-		if(entryPath == null){
+
+		if (entryPath == null) {
 			return false;
 		}
-					
+
 		IncludePathManager includepathManager = IncludePathManager.getInstance();
 		IncludePath[] includePathEntries = includepathManager.getIncludePaths(project);
-		
+
 		// go over the entries and compare the path.
 		// checks if the path for one of the entries equals to the given one
 		for (IncludePath entry : includePathEntries) {
@@ -307,16 +312,58 @@ public class IncludePathManager {
 				IResource resource = (IResource) includePathEntry;
 				resourcePath = resource.getFullPath();
 			}
-			
-			if(resourcePath != null && resourcePath.toString().equals(entryPath.toString())){
+
+			if (resourcePath != null && resourcePath.toString().equals(entryPath.toString())) {
 				result = true;
 				break;
-			}			
+			}
 
 		}
 		return result;
 	}
 
+	/**
+	 * Adds the given listener to the list of Include path listeners
+	 * @param listener
+	 */
+	public void registerIncludepathListener(IIncludepathListener listener) {
+		if (listener == null) {
+			throw new IllegalArgumentException("Error adding listener in IncludepathManager"); //$//$NON-NLS-1$
+		}
 
+		synchronized (this) {
+			listeners.add(listener);
+		}
+	}
+
+	/**
+	 * Removes the given listener to the list of Include path listeners
+	 * @param listener
+	 */
+	public void unregisterIncludepathListener(IIncludepathListener listener) {
+		if (listener == null) {
+			throw new IllegalArgumentException("Error adding listener in IncludepathManager"); //$//$NON-NLS-1$
+		}
+
+		synchronized (this) {
+			listeners.remove(listener);
+		}
+	}
+
+	/**
+	 * Operates the refresh callback of the registered listeners
+	 * @param project
+	 */
+	public synchronized void refresh(IProject project) {
+		IIncludepathListener[] array = null;
+		
+		synchronized (this) {
+			array = listeners.toArray(new IIncludepathListener[listeners.size()]);
+		}
+
+		for (IIncludepathListener includepathListener : array) {
+			includepathListener.refresh(project);
+		}
+	}
 
 }
