@@ -42,12 +42,14 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
-		// get the include path manager
-		super.setIsFlatLayout(false);
-		
 		IncludePathManager.getInstance().registerIncludepathListener(this);
+		setIsFlatLayout(false);
 	}
-
+	
+	public void setIsFlatLayout(final boolean state) {
+		super.setIsFlatLayout(false); 
+	}
+	
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -150,7 +152,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 	}
 
 	/**
-	 * 
+	 * This method overrides the   
 	 */
 	public void refresh(IProject project) {
 		Collection<Runnable> runnables = new ArrayList<Runnable>();

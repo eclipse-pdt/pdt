@@ -34,8 +34,13 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 	public PHPExplorerLabelProvider(ScriptExplorerContentProvider cp, IPreferenceStore store) {
 		super(cp, store);
+		super.setIsFlatLayout(false);
 	}
 
+	public void setIsFlatLayout(boolean state) {
+		super.setIsFlatLayout(false);
+	}
+	
 	@Override
 	public Image getImage(Object element) {
 		IModelElement modelElement = null;
