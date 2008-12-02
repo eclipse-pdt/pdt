@@ -34,7 +34,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 public class PHPProjectCreationWizard extends NewElementWizard implements INewWizard, IExecutableExtension {
 
-	public static final String WIZARD_ID = "org.eclipse.dltk.ruby.wizards.newproject"; //$NON-NLS-1$
+	public static final String WIZARD_ID = "org.eclipse.php.wizards.newproject"; //$NON-NLS-1$
 
 	protected PHPProjectWizardFirstPage fFirstPage;
 	protected ProjectWizardSecondPage fSecondPage;
