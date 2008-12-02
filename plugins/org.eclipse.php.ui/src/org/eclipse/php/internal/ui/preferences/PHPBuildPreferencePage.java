@@ -69,6 +69,9 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 		// only used when page is shown programatically
 		setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
 		
+		fRadioButtons= new ArrayList();
+		fTextControls= new ArrayList();
+		
 		fSelectionListener= new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {}
 
@@ -126,25 +129,25 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 		layout.numColumns= 2;
 		sourceFolderGroup.setLayout(layout);
 		sourceFolderGroup.setLayoutData(gd);
-		sourceFolderGroup.setText(PreferencesMessages.NewJavaProjectPreferencePage_sourcefolder_label);
+		sourceFolderGroup.setText(PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_label);
 
 		int indent= 0;
 
-		fProjectAsSourceFolder= addRadioButton(sourceFolderGroup, PreferencesMessages.NewJavaProjectPreferencePage_sourcefolder_project, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
+		fProjectAsSourceFolder= addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_project, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
 		fProjectAsSourceFolder.addSelectionListener(fSelectionListener);
 
-		fFoldersAsSourceFolder= addRadioButton(sourceFolderGroup, PreferencesMessages.NewJavaProjectPreferencePage_sourcefolder_folder, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
+		fFoldersAsSourceFolder= addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_folder, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
 		fFoldersAsSourceFolder.addSelectionListener(fSelectionListener);
 
 		indent= convertWidthInCharsToPixels(4);
 
 		fSrcFolderNameLabel= new Label(sourceFolderGroup, SWT.NONE);
-		fSrcFolderNameLabel.setText(PreferencesMessages.NewJavaProjectPreferencePage_folders_src);
+		fSrcFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_src);
 		fSrcFolderNameText= addTextControl(sourceFolderGroup, fSrcFolderNameLabel, SRCBIN_SRCNAME, indent);
 		fSrcFolderNameText.addModifyListener(fModifyListener);
 
 		fBinFolderNameLabel= new Label(sourceFolderGroup, SWT.NONE);
-		fBinFolderNameLabel.setText(PreferencesMessages.NewJavaProjectPreferencePage_folders_bin);
+		fBinFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_bin);
 		fBinFolderNameText= addTextControl(sourceFolderGroup, fBinFolderNameLabel, SRCBIN_BINNAME, indent);
 		fBinFolderNameText.addModifyListener(fModifyListener);
 
@@ -199,7 +202,7 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 			String srcName= fSrcFolderNameText.getText();
 			String binName= fBinFolderNameText.getText();
 			if (srcName.length() + binName.length() == 0) {
-				updateStatus(new StatusInfo(IStatus.ERROR,  PreferencesMessages.NewJavaProjectPreferencePage_folders_error_namesempty));
+				updateStatus(new StatusInfo(IStatus.ERROR,  PreferencesMessages.NewPHPProjectPreferencePage_folders_error_namesempty));
 				return;
 			}
 			IWorkspace workspace= PHPUiPlugin.getWorkspace();
@@ -210,7 +213,7 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 			if (srcName.length() != 0) {
 				status= workspace.validatePath(srcPath.toString(), IResource.FOLDER);
 				if (!status.isOK()) {
-					String message= Messages.format(PreferencesMessages.NewJavaProjectPreferencePage_folders_error_invalidsrcname, status.getMessage());
+					String message= Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidsrcname, status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}
@@ -219,7 +222,7 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 			if (binName.length() != 0) {
 				status= workspace.validatePath(binPath.toString(), IResource.FOLDER);
 				if (!status.isOK()) {
-					String message= Messages.format(PreferencesMessages.NewJavaProjectPreferencePage_folders_error_invalidbinname, status.getMessage());
+					String message= Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidbinname, status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}

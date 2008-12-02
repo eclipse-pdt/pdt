@@ -24,8 +24,7 @@ import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.preferences.PHPBuildPreferencePage;
 import org.eclipse.php.internal.ui.wizards.fields.DialogField;
 import org.eclipse.php.internal.ui.wizards.fields.IDialogFieldListener;
 import org.eclipse.php.internal.ui.wizards.fields.LayoutUtil;
@@ -58,8 +57,7 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 				return;
 			}
 			// check whether the project name is valid
-			final IStatus nameStatus = workspace.validateName(name,
-					IResource.PROJECT);
+			final IStatus nameStatus = workspace.validateName(name, IResource.PROJECT);
 			if (!nameStatus.isOK()) {
 				setErrorMessage(nameStatus.getMessage());
 				setPageComplete(false);
@@ -72,7 +70,7 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 				setPageComplete(false);
 				return;
 			}
-			
+
 			setPageComplete(true);
 			setErrorMessage(null);
 			setMessage(null);
@@ -120,22 +118,22 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 		private Link fPreferenceLink;
 
 		public LayoutGroup() {
-			fStdRadio= new SelectionButtonDialogField(SWT.RADIO);
+			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fStdRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_ProjectSrc"));
 			fStdRadio.setDialogFieldListener(this);
 
-			fSrcBinRadio= new SelectionButtonDialogField(SWT.RADIO);
+			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fSrcBinRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_SrcResources"));
 			fSrcBinRadio.setDialogFieldListener(this);
 
 			//boolean useSrcBin= PreferenceConstants.getPreferenceStore().getBoolean("test3");
-			boolean useSrcBin=false ;//FIXME : need to get default from pref. store
+			boolean useSrcBin = false;//FIXME : need to get default from pref. store
 			fSrcBinRadio.setSelection(useSrcBin);
 			fStdRadio.setSelection(!useSrcBin);
 		}
 
 		public Control createContent(Composite composite) {
-			fGroup= new Group(composite, SWT.NONE);
+			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
 
 			fGroup.setLayout(initGridLayout(new GridLayout(3, false), true));
@@ -147,7 +145,7 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 
 			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
 
-			fPreferenceLink= new Link(fGroup, SWT.NONE);
+			fPreferenceLink = new Link(fGroup, SWT.NONE);
 			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
 			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
 			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
@@ -156,7 +154,6 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			updateEnableState();
 			return fGroup;
 		}
-
 
 		/* (non-Javadoc)
 		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -168,8 +165,8 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 		private void updateEnableState() {
 			if (fDetectGroup == null)
 				return;
-			
-			final boolean detect= fDetectGroup.mustDetect();
+
+			final boolean detect = fDetectGroup.mustDetect();
 			fStdRadio.setEnabled(!detect);
 			fSrcBinRadio.setEnabled(!detect);
 			if (fPreferenceLink != null) {
@@ -196,7 +193,6 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			widgetDefaultSelected(e);
 		}
 
-
 		/*
 		 * @see org.eclipse.jdt.internal.ui.wizards.dialogfields.IDialogFieldListener#dialogFieldChanged(org.eclipse.jdt.internal.ui.wizards.dialogfields.DialogField)
 		 * @since 3.5
@@ -205,26 +201,23 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			updateEnableState();
 		}
 
-
 		public void widgetDefaultSelected(SelectionEvent e) {
-			//FIXME : 1. need to create PHP->Build pref. page
-			//FIXME : 2. link it ...
-			
-			String prefID = PHPInterpreterPreferencePage.PREF_ID;
+
+			String prefID = PHPBuildPreferencePage.PREF_ID;
 			Map data = null;
 			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
-//			if (!fEnableProjectSettings.getSelection()) {
-//				fConfigurationBlock.performRevert();
-//			}
+			//			if (!fEnableProjectSettings.getSelection()) {
+			//				fConfigurationBlock.performRevert();
+			//			}
 		}
 	}
 
-	
 	protected PdtValidator fPdtValidator;
+
 	public NameGroup getNameGroup() {
 		return fNameGroup;
 	}
-	
+
 	protected PHPVersionGroup fVersionGroup;
 	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
 	protected LayoutGroup fLayoutGroup;
@@ -304,5 +297,5 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 		// always in workspace
 		return true;
 	}
-	
+
 }

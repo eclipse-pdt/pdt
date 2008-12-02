@@ -376,6 +376,17 @@
 	<!--Property Pages:-->
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
+			class="org.eclipse.php.internal.ui.preferences.PHPBuildPreferencePage"
+			id="org.eclipse.php.ui.propertyPages.PHPBuildPreferencePage"
+			name="%phpBuildPreferenceName">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+				</adapt>
+			</enabledWhen>
+			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
+		</page>
+		
+		<page
 			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
 			name="%phpInterpreterPreferenceName">
@@ -1040,6 +1051,11 @@
 			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPInterpreterPreferencePage"
 			name="%phpInterpreterPreferenceName">
+		</page>
+		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+			class="org.eclipse.php.internal.ui.preferences.PHPBuildPreferencePage"
+			id="org.eclipse.php.ui.preferences.PHPBuildPreferencePage"
+			name="%phpBuildPreferenceName">
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPSyntaxColoringPage"
