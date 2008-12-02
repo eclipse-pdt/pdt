@@ -150,7 +150,8 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
 			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 			fPreferenceLink.addSelectionListener(this);
-
+			fPreferenceLink.setEnabled(true);
+			
 			updateEnableState();
 			return fGroup;
 		}
@@ -169,9 +170,7 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			final boolean detect = fDetectGroup.mustDetect();
 			fStdRadio.setEnabled(!detect);
 			fSrcBinRadio.setEnabled(!detect);
-			if (fPreferenceLink != null) {
-				fPreferenceLink.setEnabled(!detect && fSrcBinRadio.isSelected());
-			}
+			
 			if (fGroup != null) {
 				fGroup.setEnabled(!detect);
 			}

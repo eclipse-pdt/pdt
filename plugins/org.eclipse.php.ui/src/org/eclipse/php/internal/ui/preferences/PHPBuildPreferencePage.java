@@ -33,54 +33,50 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 
 	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPBuildPreferencePage"; //$NON-NLS-1$
 	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPBuildPreferencePage"; //$NON-NLS-1$
-	
-	private static final String SRCBIN_FOLDERS_IN_NEWPROJ= PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ;
-	private static final String SRCBIN_SRCNAME= PreferenceConstants.SRCBIN_SRCNAME;
-	private static final String SRCBIN_BINNAME= PreferenceConstants.SRCBIN_BINNAME;
-	
-	//FIXME : remove member:
-	private PHPVersionConfigurationBlock fConfigurationBlock;
-	
+
+	private static final String SRCBIN_FOLDERS_IN_NEWPROJ = PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ;
+	private static final String SRCBIN_SRCNAME = PreferenceConstants.SRCBIN_SRCNAME;
+	private static final String SRCBIN_BINNAME = PreferenceConstants.SRCBIN_BINNAME;
+
 	private ArrayList fRadioButtons;
 	private Button fProjectAsSourceFolder;
 	private Button fFoldersAsSourceFolder;
 
 	private Label fSrcFolderNameLabel;
 	private Label fBinFolderNameLabel;
-	
+
 	private ArrayList fTextControls;
 	private Text fSrcFolderNameText;
 	private Text fBinFolderNameText;
-	
-	
+
 	private SelectionListener fSelectionListener;
 	private ModifyListener fModifyListener;
-
 
 	public PHPBuildPreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
 		setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
-		
-		fRadioButtons= new ArrayList();
-		fTextControls= new ArrayList();
-		
-		fSelectionListener= new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {}
+		setDescription(PreferencesMessages.NewPHPProjectPreferencePage_description);
+
+		fRadioButtons = new ArrayList();
+		fTextControls = new ArrayList();
+
+		fSelectionListener = new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
 
 			public void widgetSelected(SelectionEvent e) {
 				controlChanged(e.widget);
 			}
 		};
-		
-		fModifyListener= new ModifyListener() {
+
+		fModifyListener = new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				controlModified(e.widget);
 			}
@@ -91,15 +87,12 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createControl(Composite parent) {
-		IWorkbenchPreferenceContainer container = (IWorkbenchPreferenceContainer) getContainer();
-		fConfigurationBlock = new PHPVersionConfigurationBlock(getNewStatusChangedListener(), getProject(), container);
-
 		super.createControl(parent);
 
 		//FIXME : PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_BUILD_PREFERENCES);
-		
+
 	}
-	
+
 	private void controlModified(Widget widget) {
 		if (widget == fSrcFolderNameText || widget == fBinFolderNameText) {
 			validateFolders();
@@ -112,59 +105,57 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 	protected Control createPreferenceContent(Composite parent) {
 		initializeDialogUnits(parent);
 
-		Composite result= new Composite(parent, SWT.NONE);
-		GridLayout layout= new GridLayout();
-		layout.marginHeight= convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
-		layout.marginWidth= 0;
-		layout.verticalSpacing= convertVerticalDLUsToPixels(10);
-		layout.horizontalSpacing= convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
-		layout.numColumns= 2;
+		Composite result = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		layout.marginWidth = 0;
+		layout.verticalSpacing = convertVerticalDLUsToPixels(10);
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.numColumns = 2;
 		result.setLayout(layout);
 
-		GridData gd= new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan= 2;
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
 
-		Group sourceFolderGroup= new Group(result, SWT.NONE);
-		layout= new GridLayout();
-		layout.numColumns= 2;
+		Group sourceFolderGroup = new Group(result, SWT.NONE);
+		layout = new GridLayout();
+		layout.numColumns = 2;
 		sourceFolderGroup.setLayout(layout);
 		sourceFolderGroup.setLayoutData(gd);
 		sourceFolderGroup.setText(PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_label);
 
-		int indent= 0;
+		int indent = 0;
 
-		fProjectAsSourceFolder= addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_project, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
+		fProjectAsSourceFolder = addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_project, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.FALSE, indent);
 		fProjectAsSourceFolder.addSelectionListener(fSelectionListener);
 
-		fFoldersAsSourceFolder= addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_folder, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
+		fFoldersAsSourceFolder = addRadioButton(sourceFolderGroup, PreferencesMessages.NewPHPProjectPreferencePage_sourcefolder_folder, SRCBIN_FOLDERS_IN_NEWPROJ, IPreferenceStore.TRUE, indent);
 		fFoldersAsSourceFolder.addSelectionListener(fSelectionListener);
 
-		indent= convertWidthInCharsToPixels(4);
+		indent = convertWidthInCharsToPixels(4);
 
-		fSrcFolderNameLabel= new Label(sourceFolderGroup, SWT.NONE);
+		fSrcFolderNameLabel = new Label(sourceFolderGroup, SWT.NONE);
 		fSrcFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_src);
-		fSrcFolderNameText= addTextControl(sourceFolderGroup, fSrcFolderNameLabel, SRCBIN_SRCNAME, indent);
+		fSrcFolderNameText = addTextControl(sourceFolderGroup, fSrcFolderNameLabel, SRCBIN_SRCNAME, indent);
 		fSrcFolderNameText.addModifyListener(fModifyListener);
 
-		fBinFolderNameLabel= new Label(sourceFolderGroup, SWT.NONE);
-		fBinFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_bin);
-		fBinFolderNameText= addTextControl(sourceFolderGroup, fBinFolderNameLabel, SRCBIN_BINNAME, indent);
+		fBinFolderNameLabel = new Label(sourceFolderGroup, SWT.NONE);
+		fBinFolderNameLabel.setText(PreferencesMessages.NewPHPProjectPreferencePage_folders_public);
+		fBinFolderNameText = addTextControl(sourceFolderGroup, fBinFolderNameLabel, SRCBIN_BINNAME, indent);
 		fBinFolderNameText.addModifyListener(fModifyListener);
-
-
 
 		validateFolders();
 
 		//FIXME : Dialog.applyDialogFont(result);
 		return result;
 	}
-	
-	private Button addRadioButton(Composite parent, String label, String key, String value, int indent) {
-		GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		gd.horizontalSpan= 2;
-		gd.horizontalIndent= indent;
 
-		Button button= new Button(parent, SWT.RADIO);
+	private Button addRadioButton(Composite parent, String label, String key, String value, int indent) {
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gd.horizontalSpan = 2;
+		gd.horizontalIndent = indent;
+
+		Button button = new Button(parent, SWT.RADIO);
 		button.setText(label);
 		button.setData(new String[] { key, value });
 		button.setLayoutData(gd);
@@ -174,16 +165,17 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 		fRadioButtons.add(button);
 		return button;
 	}
+
 	private Text addTextControl(Composite parent, Label labelControl, String key, int indent) {
-		GridData gd= new GridData();
-		gd.horizontalIndent= indent;
+		GridData gd = new GridData();
+		gd.horizontalIndent = indent;
 
 		labelControl.setLayoutData(gd);
 
-		gd= new GridData(GridData.FILL_HORIZONTAL);
-		gd.widthHint= convertWidthInCharsToPixels(30);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.widthHint = convertWidthInCharsToPixels(30);
 
-		Text text= new Text(parent, SWT.SINGLE | SWT.BORDER);
+		Text text = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		text.setText(getPreferenceStore().getString(key));
 		text.setData(key);
 		text.setLayoutData(gd);
@@ -191,69 +183,82 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 		fTextControls.add(text);
 		return text;
 	}
+
 	private void validateFolders() {
-		boolean useFolders= fFoldersAsSourceFolder.getSelection();
+		boolean useFolders = fFoldersAsSourceFolder.getSelection();
 
 		fSrcFolderNameText.setEnabled(useFolders);
 		fBinFolderNameText.setEnabled(useFolders);
 		fSrcFolderNameLabel.setEnabled(useFolders);
 		fBinFolderNameLabel.setEnabled(useFolders);
 		if (useFolders) {
-			String srcName= fSrcFolderNameText.getText();
-			String binName= fBinFolderNameText.getText();
+			String srcName = fSrcFolderNameText.getText();
+			String binName = fBinFolderNameText.getText();
 			if (srcName.length() + binName.length() == 0) {
-				updateStatus(new StatusInfo(IStatus.ERROR,  PreferencesMessages.NewPHPProjectPreferencePage_folders_error_namesempty));
+				updateStatus(new StatusInfo(IStatus.ERROR, PreferencesMessages.NewPHPProjectPreferencePage_folders_error_namesempty));
 				return;
 			}
-			IWorkspace workspace= PHPUiPlugin.getWorkspace();
-			IProject dmy= workspace.getRoot().getProject("project"); //$NON-NLS-1$
+			IWorkspace workspace = PHPUiPlugin.getWorkspace();
+			IProject dmy = workspace.getRoot().getProject("project"); //$NON-NLS-1$
 
 			IStatus status;
-			IPath srcPath= dmy.getFullPath().append(srcName);
+			IPath srcPath = dmy.getFullPath().append(srcName);
 			if (srcName.length() != 0) {
-				status= workspace.validatePath(srcPath.toString(), IResource.FOLDER);
+				status = workspace.validatePath(srcPath.toString(), IResource.FOLDER);
 				if (!status.isOK()) {
-					String message= Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidsrcname, status.getMessage());
+					String message = Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidsrcname, status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}
 			}
-			IPath binPath= dmy.getFullPath().append(binName);
+			IPath binPath = dmy.getFullPath().append(binName);
 			if (binName.length() != 0) {
-				status= workspace.validatePath(binPath.toString(), IResource.FOLDER);
+				status = workspace.validatePath(binPath.toString(), IResource.FOLDER);
 				if (!status.isOK()) {
-					String message= Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidbinname, status.getMessage());
+					String message = Messages.format(PreferencesMessages.NewPHPProjectPreferencePage_folders_error_invalidbinname, status.getMessage());
 					updateStatus(new StatusInfo(IStatus.ERROR, message));
 					return;
 				}
 			}
-//			IClasspathEntry entry= JavaCore.newSourceEntry(srcPath);
-//			status= JavaConventions.validateClasspath(JavaCore.create(dmy), new IClasspathEntry[] { entry }, binPath);
-//			if (!status.isOK()) {
-//				String message= PreferencesMessages.NewJavaProjectPreferencePage_folders_error_invalidcp;
-//				updateStatus(new StatusInfo(IStatus.ERROR, message));
-//				return;
-//			}
+			//			IClasspathEntry entry= JavaCore.newSourceEntry(srcPath);
+			//			status= JavaConventions.validateClasspath(JavaCore.create(dmy), new IClasspathEntry[] { entry }, binPath);
+			//			if (!status.isOK()) {
+			//				String message= PreferencesMessages.NewJavaProjectPreferencePage_folders_error_invalidcp;
+			//				updateStatus(new StatusInfo(IStatus.ERROR, message));
+			//				return;
+			//			}
 		}
 		updateStatus(new StatusInfo()); // set to OK
 	}
-	
+
+	@Override
+	protected boolean supportsProjectSpecificOptions() {
+		// project specific preferences is not relevant in this case
+		return false;
+	}
+
 	private void updateStatus(IStatus status) {
 		setValid(!status.matches(IStatus.ERROR));
 		StatusUtil.applyToStatusLine(this, status);
 	}
-	
+
 	private void controlChanged(Widget widget) {
 		if (widget == fFoldersAsSourceFolder || widget == fProjectAsSourceFolder) {
 			validateFolders();
 		}
 	}
 
+	public static void initDefaults(IPreferenceStore store) {
+		store.setDefault(SRCBIN_FOLDERS_IN_NEWPROJ, false);
+		store.setDefault(SRCBIN_SRCNAME, "application"); //$NON-NLS-1$
+		store.setDefault(SRCBIN_BINNAME, "public"); //$NON-NLS-1$
+	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#hasProjectSpecificOptions(org.eclipse.core.resources.IProject)
 	 */
 	protected boolean hasProjectSpecificOptions(IProject project) {
-		return fConfigurationBlock.hasProjectSpecificOptions(project);
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -274,9 +279,6 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage#enableProjectSpecificSettings(boolean)
 	 */
 	protected void enableProjectSpecificSettings(boolean useProjectSpecificSettings) {
-		if (fConfigurationBlock != null) {
-			fConfigurationBlock.useProjectSpecificSettings(useProjectSpecificSettings);
-		}
 		super.enableProjectSpecificSettings(useProjectSpecificSettings);
 	}
 
@@ -284,39 +286,52 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 	 * @see org.eclipse.jface.preference.IPreferencePage#performDefaults()
 	 */
 	protected void performDefaults() {
-		super.performDefaults();
-		if (fConfigurationBlock != null) {
-			fConfigurationBlock.performDefaults();
+		IPreferenceStore store = getPreferenceStore();
+
+		for (int i = 0; i < fRadioButtons.size(); i++) {
+			Button button = (Button) fRadioButtons.get(i);
+			String[] info = (String[]) button.getData();
+			button.setSelection(info[1].equals(store.getDefaultString(info[0])));
 		}
+		for (int i = 0; i < fTextControls.size(); i++) {
+			Text text = (Text) fTextControls.get(i);
+			String key = (String) text.getData();
+			text.setText(store.getDefaultString(key));
+		}
+
+		validateFolders();
+		super.performDefaults();
+
 	}
 
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performOk()
 	 */
 	public boolean performOk() {
-		if (fConfigurationBlock != null && !fConfigurationBlock.performOk()) {
-			return false;
+		IPreferenceStore store = getPreferenceStore();
+		for (int i = 0; i < fRadioButtons.size(); i++) {
+			Button button = (Button) fRadioButtons.get(i);
+			if (button.getSelection()) {
+				String[] info = (String[]) button.getData();
+				store.setValue(info[0], info[1]);
+			}
 		}
+		for (int i = 0; i < fTextControls.size(); i++) {
+			Text text = (Text) fTextControls.get(i);
+			String key = (String) text.getData();
+			store.setValue(key, text.getText());
+		}
+
+		PHPUiPlugin.getDefault().savePluginPreferences();
 		return super.performOk();
+
 	}
 
 	/*
 	 * @see org.eclipse.jface.preference.IPreferencePage#performApply()
 	 */
 	public void performApply() {
-		if (fConfigurationBlock != null) {
-			fConfigurationBlock.performApply();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.dialogs.DialogPage#dispose()
-	 */
-	public void dispose() {
-		if (fConfigurationBlock != null) {
-			fConfigurationBlock.dispose();
-		}
-		super.dispose();
+		performOk();
 	}
 
 	/* (non-Javadoc)

@@ -349,7 +349,7 @@ public class PreferenceConstants {
 	 *
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_OCCURRENCES= "markOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_OCCURRENCES = "markOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether occurrences are sticky in the editor.
@@ -359,8 +359,8 @@ public class PreferenceConstants {
 	 *
 	 * @since 3.0
 	 */
-	public static final String EDITOR_STICKY_OCCURRENCES= "stickyOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_STICKY_OCCURRENCES = "stickyOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether type occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -370,7 +370,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_TYPE_OCCURRENCES= "markTypeOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_TYPE_OCCURRENCES = "markTypeOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether method occurrences are marked.
@@ -381,8 +381,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_METHOD_OCCURRENCES= "markMethodOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_METHOD_OCCURRENCES = "markMethodOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether function occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -392,8 +392,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.4
 	 */
-	public static final String EDITOR_MARK_FUNCTION_OCCURRENCES= "markFunctionOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_FUNCTION_OCCURRENCES = "markFunctionOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether constant (static final) occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -403,8 +403,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_CONSTANT_OCCURRENCES= "markConstantOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_CONSTANT_OCCURRENCES = "markConstantOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether local variable occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -414,8 +414,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES= "markLocalVariableOccurrences"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_LOCAL_VARIABLE_OCCURRENCES = "markLocalVariableOccurrences"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether global variable occurrences are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -425,7 +425,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.4
 	 */
-	public static final String EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES= "markGlobalVariableOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_GLOBAL_VARIABLE_OCCURRENCES = "markGlobalVariableOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether exception occurrences are marked.
@@ -436,7 +436,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_EXCEPTION_OCCURRENCES= "markExceptionOccurrences"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_EXCEPTION_OCCURRENCES = "markExceptionOccurrences"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether method exit points are marked.
@@ -447,7 +447,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_MARK_METHOD_EXIT_POINTS= "markMethodExitPoints"; //$NON-NLS-1$
+	public static final String EDITOR_MARK_METHOD_EXIT_POINTS = "markMethodExitPoints"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether targets for of <code>break</code> and <code>continue</code> statements are marked.
@@ -458,8 +458,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.2
 	 */
-	public static final String EDITOR_MARK_BREAK_CONTINUE_TARGETS= "markBreakContinueTargets"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_BREAK_CONTINUE_TARGETS = "markBreakContinueTargets"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether method exit points are marked.
 	 * Only valid if {@link #EDITOR_MARK_OCCURRENCES} is <code>true</code>.
@@ -469,14 +469,14 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.1
 	 */
-	public static final String EDITOR_MARK_IMPLEMENTORS= "markImplementors"; //$NON-NLS-1$
-	
+	public static final String EDITOR_MARK_IMPLEMENTORS = "markImplementors"; //$NON-NLS-1$
+
 	/**
 	 * A named preference prefix for semantic highlighting preferences.
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX="semanticHighlighting."; //$NON-NLS-1$
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX = "semanticHighlighting."; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if semantic highlighting is enabled.
@@ -488,8 +488,8 @@ public class PreferenceConstants {
 	 * @deprecated As of 3.1, this preference is not used or set any longer; see
 	 *             {@link SemanticHighlightings#affectsEnablement(IPreferenceStore, org.eclipse.jface.util.PropertyChangeEvent)}
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED=EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + "enabled"; //$NON-NLS-1$
-	
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED = EDITOR_SEMANTIC_HIGHLIGHTING_PREFIX + "enabled"; //$NON-NLS-1$
+
 	/**
 	 * A named preference suffix that controls a semantic highlighting's color.
 	 * <p>
@@ -501,7 +501,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 * @since 3.0
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_COLOR_SUFFIX=".color"; //$NON-NLS-1$
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_COLOR_SUFFIX = ".color"; //$NON-NLS-1$
 
 	/**
 	 * A named preference suffix that controls if semantic highlighting has the text attribute bold.
@@ -511,7 +511,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_BOLD_SUFFIX=".bold"; //$NON-NLS-1$
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_BOLD_SUFFIX = ".bold"; //$NON-NLS-1$
 
 	/**
 	 * A named preference suffix that controls if semantic highlighting has the text attribute italic.
@@ -521,8 +521,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ITALIC_SUFFIX=".italic"; //$NON-NLS-1$
-	
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ITALIC_SUFFIX = ".italic"; //$NON-NLS-1$
+
 	/**
 	 * A named preference suffix that controls if semantic highlighting has the text attribute strikethrough.
 	 * <p>
@@ -531,8 +531,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.1
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_STRIKETHROUGH_SUFFIX=".strikethrough"; //$NON-NLS-1$
-	
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_STRIKETHROUGH_SUFFIX = ".strikethrough"; //$NON-NLS-1$
+
 	/**
 	 * A named preference suffix that controls if semantic highlighting has the text attribute underline.
 	 * <p>
@@ -541,7 +541,7 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.1
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_UNDERLINE_SUFFIX=".underline"; //$NON-NLS-1$
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_UNDERLINE_SUFFIX = ".underline"; //$NON-NLS-1$
 
 	/**
 	 * A named preference suffix that controls if semantic highlighting is enabled.
@@ -551,10 +551,8 @@ public class PreferenceConstants {
 	 * 
 	 * @since 3.0
 	 */
-	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX=".enabled"; //$NON-NLS-1$
-	
-		
-	
+	public static final String EDITOR_SEMANTIC_HIGHLIGHTING_ENABLED_SUFFIX = ".enabled"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that controls whether blank lines are cleared during formatting.
 	 * <p>
@@ -749,8 +747,8 @@ public class PreferenceConstants {
 	 * </p>
 	 * @since 3.0
 	 */
-	public static final String SEARCH_USE_REDUCED_MENU= "Search.usereducemenu"; //$NON-NLS-1$
-	
+	public static final String SEARCH_USE_REDUCED_MENU = "Search.usereducemenu"; //$NON-NLS-1$
+
 	/**
 	 * A named preference that holds the background color used for parameter hints.
 	 * <p>
@@ -774,7 +772,7 @@ public class PreferenceConstants {
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
 	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "contentAssistParametersForeground"; //$NON-NLS-1$
-	
+
 	/**
 	 * A named preference that holds the background color used in the code assist selection dialog.
 	 * <p>
@@ -832,7 +830,7 @@ public class PreferenceConstants {
 	 * output folder. If <code>false</code> source and output folder equals to the project.
 	 * </p>
 	 */
-	public static final String SRCBIN_FOLDERS_IN_NEWPROJ= "org.eclipse.pdt.ui.wizards.srcBinFoldersInNewProjects"; //$NON-NLS-1$
+	public static final String SRCBIN_FOLDERS_IN_NEWPROJ = "org.eclipse.php.ui.wizards.srcBinFoldersInNewProjects"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that specifies the source folder name used when creating a new Java project. Value is inactive
@@ -843,7 +841,7 @@ public class PreferenceConstants {
 	 *
 	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
 	 */
-	public static final String SRCBIN_SRCNAME= "org.eclipse.pdt.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
+	public static final String SRCBIN_SRCNAME = "org.eclipse.php.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that specifies the output folder name used when creating a new Java project. Value is inactive
@@ -854,20 +852,19 @@ public class PreferenceConstants {
 	 *
 	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
 	 */
-	public static final String SRCBIN_BINNAME= "org.eclipse.pdt.ui.wizards.srcBinFoldersBinName"; //$NON-NLS-1$
+	public static final String SRCBIN_BINNAME = "org.eclipse.php.ui.wizards.srcBinFoldersBinName"; //$NON-NLS-1$
 
-	
 	/**
 	 * some constants for auto-ident Smart Tab
 	 */
 	public static final String TAB = "tab"; //$NON-NLS-1$
 	public static final String FORMATTER_TAB_CHAR = PHPUiPlugin.ID + ".smart_tab.char"; //$NON-NLS-1$
 
-	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES= "cleanup.remove_trailing_whitespaces"; //$NON-NLS-1$
-	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL= "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
-	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY= "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
-	public static final String PREF_OUTLINEMODE="ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
-	
+	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES = "cleanup.remove_trailing_whitespaces"; //$NON-NLS-1$
+	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL = "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
+	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
+	public static final String PREF_OUTLINEMODE = "ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
+
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
@@ -923,7 +920,7 @@ public class PreferenceConstants {
 		store.setDefault(PreferenceConstants.EDITOR_MARK_METHOD_EXIT_POINTS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_BREAK_CONTINUE_TARGETS, true);
 		store.setDefault(PreferenceConstants.EDITOR_MARK_IMPLEMENTORS, true);
-				
+
 		store.setDefault(FORMATTER_COMMENT_CLEARBLANKLINES, false);
 		store.setDefault(FORMATTER_COMMENT_FORMATHTML, true);
 		store.setDefault(FORMATTER_COMMENT_LINELENGTH, 80);
@@ -948,7 +945,7 @@ public class PreferenceConstants {
 		PreferenceConverter.setDefault(store, CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_BACKGROUND, new RGB(255, 255, 0));
 		PreferenceConverter.setDefault(store, CODEASSIST_REPLACEMENT_FOREGROUND, new RGB(255, 0, 0));
-		
+
 		// SyntaxColoringPage
 		store.setDefault(EDITOR_NORMAL_COLOR, EDITOR_NORMAL_DEFAULT_COLOR);
 		store.setDefault(EDITOR_BOUNDARYMARKER_COLOR, EDITOR_BOUNDARYMARKER_DEFAULT_COLOR);
@@ -995,7 +992,7 @@ public class PreferenceConstants {
 		store.setDefault(PHP_MANUAL_OPEN_IN_NEW_BROWSER, true);
 
 		store.setDefault(PreferenceConstants.SEARCH_USE_REDUCED_MENU, true);
-		
+
 		store.setDefault(SWITCH_BACK_TO_PHP_PERSPECTIVE, MessageDialogWithToggle.NEVER);
 
 		// default locale
@@ -1008,9 +1005,12 @@ public class PreferenceConstants {
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES, false);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_ALL, true);
 		store.setDefault(FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY, false);
-		
+
 		//default php outline mode
 		store.setDefault(PREF_OUTLINEMODE, PHPContentOutlineConfiguration.MODE_PHP);
+
+		// do more complicated stuff
+		PHPBuildPreferencePage.initDefaults(store);
 	}
 
 	// Don't instantiate

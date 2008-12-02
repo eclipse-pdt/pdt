@@ -127,7 +127,7 @@ public final class PreferencesMessages extends NLS {
 	public static String NewPHPProjectPreferencePage_sourcefolder_project;
 	public static String NewPHPProjectPreferencePage_sourcefolder_folder;
 	public static String NewPHPProjectPreferencePage_folders_src;
-	public static String NewPHPProjectPreferencePage_folders_bin;
+	public static String NewPHPProjectPreferencePage_folders_public;
 	public static String NewPHPProjectPreferencePage_jrelibrary_label;
 	public static String NewPHPProjectPreferencePage_jre_variable_description;
 	public static String NewPHPProjectPreferencePage_jre_container_description;
