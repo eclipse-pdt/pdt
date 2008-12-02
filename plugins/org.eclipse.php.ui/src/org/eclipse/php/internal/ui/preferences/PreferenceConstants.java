@@ -826,6 +826,38 @@ public class PreferenceConstants {
 	public final static String CODEASSIST_REPLACEMENT_FOREGROUND = "contentAssistCompletionReplacementForeground"; //$NON-NLS-1$
 
 	/**
+	 * A named preference that controls whether new projects are generated using source and output folder.
+	 * <p>
+	 * Value is of type <code>Boolean</code>. if <code>true</code> new projects are created with a source and
+	 * output folder. If <code>false</code> source and output folder equals to the project.
+	 * </p>
+	 */
+	public static final String SRCBIN_FOLDERS_IN_NEWPROJ= "org.eclipse.pdt.ui.wizards.srcBinFoldersInNewProjects"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that specifies the source folder name used when creating a new Java project. Value is inactive
+	 * if <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 *
+	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
+	 */
+	public static final String SRCBIN_SRCNAME= "org.eclipse.pdt.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
+
+	/**
+	 * A named preference that specifies the output folder name used when creating a new Java project. Value is inactive
+	 * if <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 *
+	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
+	 */
+	public static final String SRCBIN_BINNAME= "org.eclipse.pdt.ui.wizards.srcBinFoldersBinName"; //$NON-NLS-1$
+
+	
+	/**
 	 * some constants for auto-ident Smart Tab
 	 */
 	public static final String TAB = "tab"; //$NON-NLS-1$

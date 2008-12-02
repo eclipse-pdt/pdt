@@ -15,6 +15,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.IStatusChangeListener;
@@ -38,13 +39,13 @@ public class PHPVersionGroup implements SelectionListener {
 
 	private final Group fGroup;
 	private final Link fPreferenceLink;
-	private final PHPProjectWizardBasePage fPage;
+	private final WizardPage fPage;
 	protected Button fEnableProjectSettings;
 	protected PHPVersionConfigurationBlock fConfigurationBlock;
 
-	public PHPVersionGroup(Composite composite, PHPProjectWizardBasePage page) {
+	public PHPVersionGroup(Composite composite, WizardPage wizardBasePage) {
 
-		fPage = page;
+		fPage = wizardBasePage;
 		fGroup = new Group(composite, SWT.NONE);
 		fGroup.setFont(composite.getFont());
 		GridLayout layout = new GridLayout();
@@ -116,12 +117,24 @@ public class PHPVersionGroup implements SelectionListener {
 		};
 	}
 
+	//FIXME : remove this redundant method
 	public void setPropertiesInDataModel(IDataModel dataModel) {
 		if (fEnableProjectSettings.getSelection()) {
 			String version = fConfigurationBlock.getPHPVersionValue();
 			boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
 			dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS, useASPTags);
 			dataModel.setStringProperty(Keys.PHP_VERSION, version);
+		}
+	}
+	
+	public void setPropertiesInDataModel(IProject project) {
+		if (fEnableProjectSettings.getSelection()) {
+			String version = fConfigurationBlock.getPHPVersionValue();
+			boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
+
+//FIXME : update project with values
+//			dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS, useASPTags);
+//			dataModel.setStringProperty(Keys.PHP_VERSION, version);
 		}
 	}
 

@@ -22,6 +22,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
+import org.eclipse.php.internal.ui.wizards.OldPHPProjectCreationWizard;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -43,7 +44,7 @@ import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 public class SaveAsDialog extends TitleAreaDialog {
 
 	private static final String DIALOG_SETTINGS_SECTION = "SaveAsDialogSettings"; //$NON-NLS-1$
-	
+
 	private static final int NEW_PROJ_ID = IDialogConstants.CLIENT_ID + 1;
 
 	private IFile originalFile = null;
@@ -119,7 +120,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 	protected void createButtonsForButtonBar(Composite parent) {
 		GridLayout parentLayout = (GridLayout) parent.getLayout();
 		parentLayout.makeColumnsEqualWidth = false;
-		
+
 		newProjectButton = createButton(parent, NEW_PROJ_ID, PHPUIMessages.getString("SaveAsDialog_createNewProject"), false); //$NON-NLS-1$
 		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
@@ -206,7 +207,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		if (file.exists()) {
 			String[] buttons = new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.CANCEL_LABEL };
-			String question = "The file '"+file.getFullPath().toString()+"' already exists. Would you like to replace it ?"; //$NON-NLS-1$ //$NON-NLS-2$
+			String question = "The file '" + file.getFullPath().toString() + "' already exists. Would you like to replace it ?"; //$NON-NLS-1$ //$NON-NLS-2$
 			MessageDialog d = new MessageDialog(getShell(), PHPUIMessages.getString("SaveAsDialog_saveFileMessage"), null, question, MessageDialog.QUESTION, buttons, 0); //$NON-NLS-1$
 			int overwrite = d.open();
 			switch (overwrite) {

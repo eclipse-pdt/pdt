@@ -61,6 +61,7 @@
 
 			<!-- Add other Web document wizards shortcuts to the New menu:-->
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPProjectCreationWizard" />
+			<newWizardShortcut id="org.eclipse.php.ui.wizards.OldPHPProjectCreationWizard" />
 			<newWizardShortcut id="org.eclipse.php.ui.wizards.PHPFileCreationWizard" />
 			<newWizardShortcut id="org.eclipse.ui.wizards.new.folder" />
 			<newWizardShortcut id="org.eclipse.ui.wizards.new.file" />
@@ -119,6 +120,15 @@
 			category="org.eclipse.php.project.ui"
 			class="org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard"
 			name="%PHPProject.name" icon="icons/full/obj16/add_php_project.gif"
+			finalPerspective="org.eclipse.php.perspective" preferredPerspectives="org.eclipse.php.perspective"
+			project="true">
+			<description>%PHPProject.description</description>
+			<selection class="org.eclipse.core.resources.IResource" />
+		</wizard>
+			<wizard id="org.eclipse.php.ui.wizards.OldPHPProjectCreationWizard"
+			category="org.eclipse.php.project.ui"
+			class="org.eclipse.php.internal.ui.wizards.OldPHPProjectCreationWizard"
+			name="Old PHP Project Wizard" icon="icons/full/obj16/add_php_project.gif"
 			finalPerspective="org.eclipse.php.perspective" preferredPerspectives="org.eclipse.php.perspective"
 			project="true">
 			<description>%PHPProject.description</description>

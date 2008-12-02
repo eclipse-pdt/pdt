@@ -10,268 +10,121 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.util.BusyIndicatorRunnableContext;
+import org.eclipse.dltk.ui.util.IStatusChangeListener;
+import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
+import org.eclipse.dltk.ui.wizards.NewElementWizard;
+import org.eclipse.dltk.ui.wizards.ProjectWizardSecondPage;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
+import org.eclipse.php.internal.ui.preferences.includepath.PHPIncludePathsBlock;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.wizards.operations.PHPCreationDataModelProvider;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.INewWizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
-import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
-import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
-import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard;
-import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
-import org.osgi.service.prefs.BackingStoreException;
 
-public class PHPProjectCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
+public class PHPProjectCreationWizard extends NewElementWizard implements INewWizard, IExecutableExtension {
 
-	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
+	public static final String WIZARD_ID = "org.eclipse.dltk.ruby.wizards.newproject"; //$NON-NLS-1$
 
-	protected PHPIncludePathPage includePathPage;
-	protected PHPProjectWizardBasePage basePage;
+	protected PHPProjectWizardFirstPage fFirstPage;
+	protected ProjectWizardSecondPage fSecondPage;
+	protected ProjectWizardSecondPage fLastPage;
+	protected IConfigurationElement fConfigElement;
 
-	protected final ArrayList wizardPagesList = new ArrayList();
-	protected IProject createdProject = null;
-	protected IConfigurationElement configElement;
-	protected List /** WizardPageFactory */
-	wizardPageFactories = new ArrayList();
 
-	public PHPProjectCreationWizard(IDataModel model) {
-		super(model);
-		populateWizardFactoryList();
-	}
 
 	public PHPProjectCreationWizard() {
-		super();
-		populateWizardFactoryList();
+		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
+		setDialogSettings(DLTKUIPlugin.getDefault().getDialogSettings());
+		setWindowTitle(PHPUIMessages.getString("PHPProjectCreationWizard_WizardTitle"));
 	}
 
-	/**
-	 * This operation is called after the Wizard  is created (and before the doAddPages)
-	 * and it is used to define all the properties that the wizard pages will set
-	 * (not necessarly store as properties).
-	 * All the wizard pages may access these properties.
-	 */
-	protected IDataModelProvider getDefaultProvider() {
-		return new PHPCreationDataModelProvider(wizardPageFactories);
+	public void addPages() {
+		super.addPages();
+		fFirstPage = new PHPProjectWizardFirstPage();
+
+		// First page
+		fFirstPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page1Title"));
+		fFirstPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page1Description"));
+		addPage(fFirstPage);
+
+		// Second page (Include Path)
+		fSecondPage = new ProjectWizardSecondPage(fFirstPage) {
+			protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
+				return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
+			}
+
+			protected String getScriptNature() {
+				return PHPNature.ID;
+			}
+
+			protected IPreferenceStore getPreferenceStore() {
+				return PHPUiPlugin.getDefault().getPreferenceStore();
+			}
+		};
+		fSecondPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page2Title"));
+		fSecondPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page2Description"));
+		addPage(fSecondPage);
+		
+		// Third page (Build Path)
+		fLastPage = new ProjectWizardSecondPage(fFirstPage) {
+			protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
+				return new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
+			}
+
+			protected String getScriptNature() {
+				return PHPNature.ID;
+			}
+
+			protected IPreferenceStore getPreferenceStore() {
+				return PHPUiPlugin.getDefault().getPreferenceStore();
+			}
+		};
+		fLastPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Title"));
+		fLastPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Description"));
+		addPage(fLastPage);
+
+	}
+
+	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
+		//fSecondPage.performFinish(monitor); // use the full progress monitor
+		fLastPage.performFinish(monitor); // use the full progress monitor
+	}
+
+	public boolean performFinish() {
+		boolean res = super.performFinish();
+		if (res) {
+			BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
+			selectAndReveal(fLastPage.getScriptProject().getProject());
+		}
+		return res;
 	}
 
 	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jface.wizard.Wizard#addPages()
+	 * Stores the configuration element for the wizard. The config element will
+	 * be used in <code>performFinish</code> to set the result perspective.
 	 */
-	public void doAddPages() {
-		// if we succeeded adding the default pages, add the contributed pages
-		if (addDeafaultPages()) {
-			addContributedPages();
-		}
-
+	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+		fConfigElement = cfig;
 	}
 
-	protected void addContributedPages() {
-		// generates the pages added trough the phpWizardPages extention point
-		// and add them to the wizard
-		for (Iterator iter = wizardPageFactories.iterator(); iter.hasNext();) {
-			WizardPageFactory pageFactory = (WizardPageFactory) iter.next();
-			IWizardPage currentPage = pageFactory.createPage(getDataModel());
-			addPage(currentPage);
-		}
+	public boolean performCancel() {
+		fLastPage.performCancel();
+		return super.performCancel();
 	}
 
-	protected boolean addDeafaultPages() {
-		addPage(basePage = new PHPProjectWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
-		addPage(includePathPage = new PHPIncludePathPage(getDataModel(), "page2")); //$NON-NLS-1$
-		return true;
-	}
-
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		configElement = config;
-	}
-
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle(PHPUIMessages.getString("PHPProjectCreationWizard_PageTile")); //$NON-NLS-1$
-		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
-	}
-
-	protected boolean prePerformFinish() {
-		createdProject = (IProject) getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT);
-		
-		String location = (String) getDataModel().getProperty(IProjectCreationPropertiesNew.USER_DEFINED_LOCATION);
-		File projectLocation = new File(location);
-		if (projectLocation.exists() && projectLocation.isDirectory() && projectLocation.listFiles().length != 0) {
-			LocationVerificationDialog dialog = new LocationVerificationDialog(getShell(), (String)getDataModel().getProperty(IProjectCreationPropertiesNew.PROJECT_NAME), location);
-			dialog.open();
-			if(dialog.getCreateInNewLocation()){
-				getDataModel().setProperty(IProjectCreationPropertiesNew.USER_DEFINED_LOCATION, location + System.getProperty("file.separator") + createdProject.getName()); //$NON-NLS-1$
-			}
-		}
-
-		getDataModel().setProperty(PHPCoreConstants.PHPOPTION_INCLUDE_PATH, includePathPage.getIncludePathsBlock().getRawBuildPath());
-		basePage.setProjectOptionInModel(getDataModel());
-
-		return super.prePerformFinish();
-	}
-
-	static class LocationVerificationDialog extends MessageDialog {
-
-		private String projectName;
-		private String location;
-
-		private boolean createInNewLocation = true;
-
-		private Button radio1;
-
-		private Button radio2;
-
-		LocationVerificationDialog(Shell parentShell, String project, String location) {
-			super(parentShell, PHPUIMessages.getString("PHPProjectCreationWizard.title"), null, NLS.bind(PHPUIMessages.getString("PHPProjectCreationWizard.message"),location), MessageDialog.QUESTION, new String[] { IDialogConstants.OK_LABEL}, 0); //$NON-NLS-1$ //$NON-NLS-2$
-			this.projectName = project;
-			this.location = location;
-		}
-
-		
-		/*
-		 * (non-Javadoc) Method declared on Window.
-		 */
-		protected void configureShell(Shell newShell) {
-			super.configureShell(newShell);
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(newShell, IIDEHelpContextIds.DELETE_PROJECT_DIALOG);
-		}
-
-		protected Control createCustomArea(Composite parent) {
-			Composite composite = new Composite(parent, SWT.NONE);
-			composite.setLayout(new GridLayout());
-			radio1 = new Button(composite, SWT.RADIO);
-			radio1.addSelectionListener(selectionListener);
-
-			radio1.setText(PHPUIMessages.getString("PHPProjectCreationWizard.createProjectIn") + location + "."); //$NON-NLS-1$ //$NON-NLS-2$
-			radio1.setFont(parent.getFont());
-
-			// Add explanatory label that the action cannot be undone.
-			// We can't put multi-line formatted text in a radio button,
-			// so we have to create a separate label.
-			Label detailsLabel = new Label(composite, SWT.LEFT);
-			detailsLabel.setText(PHPUIMessages.getString("PHPProjectCreationWizard.details") + location + PHPUIMessages.getString("PHPProjectCreationWizard.folder")); //$NON-NLS-1$ //$NON-NLS-2$
-			detailsLabel.setFont(parent.getFont());
-			// indent the explanatory label
-			GC gc = new GC(detailsLabel);
-			gc.setFont(detailsLabel.getParent().getFont());
-			FontMetrics fontMetrics = gc.getFontMetrics();
-			gc.dispose();
-			GridData data = new GridData();
-			data.horizontalIndent = Dialog.convertHorizontalDLUsToPixels(fontMetrics, IDialogConstants.INDENT);
-			detailsLabel.setLayoutData(data);
-			// add a listener so that clicking on the label selects the
-			// corresponding radio button.
-			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=172574
-			detailsLabel.addMouseListener(new MouseAdapter() {
-				public void mouseUp(MouseEvent e) {
-					createInNewLocation = false;
-					radio1.setSelection(!createInNewLocation);
-					radio2.setSelection(createInNewLocation);
-				}
-			});
-			// Add a spacer label
-			new Label(composite, SWT.LEFT);
-
-			radio2 = new Button(composite, SWT.RADIO);
-			radio2.addSelectionListener(selectionListener);
-			radio2.setText(PHPUIMessages.getString("PHPProjectCreationWizard.createProjectIn") + location + System.getProperty("file.separator") + projectName + "."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			radio2.setFont(parent.getFont());
-
-			// set initial state
-			radio1.setSelection(!createInNewLocation);
-			radio2.setSelection(createInNewLocation);
-
-			return composite;
-		}
-
-		private SelectionListener selectionListener = new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				Button button = (Button) e.widget;
-				if (button.getSelection()) {
-					createInNewLocation = (button == radio2);
-				}
-			}
-		};
-
-		boolean getCreateInNewLocation() {
-			return createInNewLocation;
-		}
-		
-		protected Control createButtonBar(Composite parent) {
-			Composite composite = new Composite(parent, SWT.NONE);
-			GridLayoutFactory.fillDefaults().numColumns(0) // this is incremented
-															// by createButton
-					.equalWidth(true).applyTo(composite);
-
-			GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).span(
-					2, 1).applyTo(composite);
-			composite.setFont(parent.getFont());
-			// Add the buttons to the button bar.
-			createButtonsForButtonBar(composite);
-			return composite;
-		}
-	}
-
-	protected void postPerformFinish() throws InvocationTargetException {
-		if (createdProject != null) {
-			// Save any project-specific data (Fix Bug# 143406)
-			try {
-				new ProjectScope(createdProject).getNode(PHPCorePlugin.ID).flush();
-			} catch (BackingStoreException e) {
-				Logger.logException(e);
-			}
-		}
-
-		UIJob j = new UIJob("") { //$NON-NLS-1$
-			public IStatus runInUIThread(IProgressMonitor monitor) {
-				BasicNewProjectResourceWizard.updatePerspective(configElement);
-				return Status.OK_STATUS;
-			}
-		};
-		j.setUser(false);
-		j.schedule();
-	}
-
-	private void populateWizardFactoryList() {
-		IWizardPage[] pageGenerators = PHPWizardPagesRegistry.getPageFactories(ID);
-		if (pageGenerators != null) {
-			for (IWizardPage element : pageGenerators) {
-				WizardPageFactory pageFactory = (WizardPageFactory) element;
-				wizardPageFactories.add(pageFactory);
-			}
-		}
+	public IModelElement getCreatedElement() {
+		return DLTKCore.create(fFirstPage.getProjectHandle());
 	}
 
 }
