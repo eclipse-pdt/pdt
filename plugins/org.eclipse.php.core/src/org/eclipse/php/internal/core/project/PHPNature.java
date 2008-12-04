@@ -152,45 +152,9 @@ public class PHPNature extends ScriptNature {
 
 		IScriptProject scriptProject = DLTKCore.create(getProject());
 		LanguageModelInitializer.enableLanguageModelFor(scriptProject);
-		
-		try {
-			configureBuildPathAndIncludePath(scriptProject);
-		} catch (ModelException e){
-			Logger.logException("Failed updating buildpath", e); // //$NON-NLS-1$
-		}
+
 	}
 
-	/**
-	 * Updates the project buildpath. 
-	 * Remove the project from the buildpath (it is there as a default) and add the default project 
-	 * src folder to it
-	 * @param scriptProject
-	 * @throws ModelException
-	 */
-	private void configureBuildPathAndIncludePath(IScriptProject scriptProject) throws ModelException {
-		
-		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-		
-		// get the current buildpath entries, in order to add/remove entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
-		
-
-		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
-			if( buildpathEntry.getPath().equals(scriptProject.getPath())){
-				// exclude the default resources folder to the project buildpath
-				IFolder folder = getProject().getFolder(new Path(PHPCoreConstants.PROJECT_DEFAULT_RESOURCES_FOLDER));			
-				buildpathEntry = DLTKCore.newSourceEntry(scriptProject.getPath(), new IPath[]{folder.getProjectRelativePath().addTrailingSeparator()});
-			} 
-			newRawBuildpath.add(buildpathEntry);
-		}		
-		
-		
-		// set the new updated buildpath for the project		
-		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
-		
-		IProject project = scriptProject.getProject();
-		IncludePathManager.getInstance().setIncludePath(project, new IncludePath[]{new IncludePath(project,project)});
-	}
 
 	/**
 	 * Create a folder relative to the project based on aProjectRelativePathString.
