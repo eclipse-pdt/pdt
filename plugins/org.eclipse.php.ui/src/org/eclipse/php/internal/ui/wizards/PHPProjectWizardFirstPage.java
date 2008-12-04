@@ -17,25 +17,30 @@ import java.util.Observer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.IEnvironment;
+import org.eclipse.dltk.core.environment.IFileHandle;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.internal.ui.wizards.NewWizardMessages;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.*;
-import org.eclipse.dltk.launching.IInterpreterInstall;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.environment.IEnvironmentUI;
-import org.eclipse.dltk.ui.wizards.ProjectWizardFirstPage;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.preferences.PHPBuildPreferencePage;
-import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.preferences.*;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -45,19 +50,260 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
 /**
  * The first page of the <code>SimpleProjectWizard</code>.
  */
-public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
+public class PHPProjectWizardFirstPage extends WizardPage {
+	protected PHPProjectWizardFirstPage() {
+		super(PAGE_NAME);
+		setPageComplete(false);
+		setTitle(NewWizardMessages.ScriptProjectWizardFirstPage_page_title);
+		setDescription(NewWizardMessages.ScriptProjectWizardFirstPage_page_description);
+		fInitialName = ""; //$NON-NLS-1$
+	}
+
+	private static final String PAGE_NAME = NewWizardMessages.ScriptProjectWizardFirstPage_page_pageName;
+
+	protected Validator fPdtValidator;
+	protected String fInitialName;
+	protected NameGroup fNameGroup;
+	protected DetectGroup fDetectGroup;
+	protected VersionGroup fVersionGroup;
+	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
+	protected LayoutGroup fLayoutGroup;
+	protected LocationGroup fPHPLocationGroup;
+
+	public void createControl(Composite parent) {
+		initializeDialogUnits(parent);
+		final Composite composite = new Composite(parent, SWT.NULL);
+		composite.setFont(parent.getFont());
+		composite.setLayout(initGridLayout(new GridLayout(1, false), true));
+		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+		// create UI elements
+		fNameGroup = new NameGroup(composite, fInitialName);
+		fPHPLocationGroup = new LocationGroup(composite);
+
+		fVersionGroup = new VersionGroup(composite);
+		fLayoutGroup = new LayoutGroup(composite);
+		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
+		fDetectGroup = new DetectGroup(composite);
+
+		// establish connections
+		fNameGroup.addObserver(fPHPLocationGroup);
+		fDetectGroup.addObserver(fLayoutGroup);
+		// fDetectGroup.addObserver(fInterpreterEnvironmentGroup);
+
+		fPHPLocationGroup.addObserver(fDetectGroup);
+		// initialize all elements
+		fNameGroup.notifyObservers();
+		// create and connect validator
+		fPdtValidator = new Validator();
+
+		fNameGroup.addObserver(fPdtValidator);
+		fPHPLocationGroup.addObserver(fPdtValidator);
+
+		setControl(composite);
+		Dialog.applyDialogFont(composite);
+	}
+
+	public URI getLocationURI() {
+		IEnvironment environment = getEnvironment();
+		return environment.getURI(fPHPLocationGroup.getLocation());
+	}
+
+	public IEnvironment getEnvironment() {
+		return fPHPLocationGroup.getEnvironment();
+	}
+
+	/**
+	 * Creates a project resource handle for the current project name field
+	 * value.
+	 * <p>
+	 * This method does not create the project resource; this is the
+	 * responsibility of <code>IProject::create</code> invoked by the new
+	 * project resource wizard.
+	 * </p>
+	 * 
+	 * @return the new project resource handle
+	 */
+	public IProject getProjectHandle() {
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(fNameGroup.getName());
+	}
+
+	public String getProjectName() {
+		return fNameGroup.getName();
+	}
+
+	public boolean isInWorkspace() {
+		return fPHPLocationGroup.isInWorkspace();
+	}
+	
+	public boolean getDetect() {
+		return fDetectGroup.mustDetect();
+	}
+	
+	public boolean isSrc() {
+		// TODO Auto-generated method stub
+		return fLayoutGroup.isSrcBin();
+	}
+
+	/**
+	 * Initialize a grid layout with the default Dialog settings.
+	 */
+	protected GridLayout initGridLayout(GridLayout layout, boolean margins) {
+		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
+		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
+		if (margins) {
+			layout.marginWidth = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_MARGIN);
+			layout.marginHeight = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_MARGIN);
+		} else {
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+		}
+		return layout;
+	}
+
+	/**
+	 * Show a warning when the project location contains files.
+	 */
+	protected final class DetectGroup extends Observable implements Observer, SelectionListener {
+		private final Link fHintText;
+		private boolean fDetect;
+
+		public DetectGroup(Composite composite) {
+			fHintText = new Link(composite, SWT.WRAP);
+			fHintText.setFont(composite.getFont());
+			fHintText.addSelectionListener(this);
+			GridData gd = new GridData(GridData.FILL, SWT.FILL, true, true);
+			gd.widthHint = convertWidthInCharsToPixels(50);
+			fHintText.setLayoutData(gd);
+		}
+
+		private boolean isValidProjectName(String name) {
+			if (name.length() == 0) {
+				return false;
+			}
+			final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
+			return workspace.validateName(name, IResource.PROJECT).isOK() && workspace.getRoot().findMember(name) == null;
+		}
+
+		public void update(Observable o, Object arg) {
+			if (o instanceof LocationGroup) {
+				boolean oldDetectState = fDetect;
+				IPath location = fPHPLocationGroup.getLocation();
+				if (fPHPLocationGroup.isInWorkspace()) {
+					if (!isValidProjectName(getProjectName())) {
+						fDetect = false;
+					} else {
+						IEnvironment environment = fPHPLocationGroup.getEnvironment();
+						final IFileHandle directory = environment.getFile(location.append(getProjectName()));
+						fDetect = directory.isDirectory();
+					}
+				} else {
+					IEnvironment environment = fPHPLocationGroup.getEnvironment();
+					if (location.toPortableString().length() > 0) {
+						final IFileHandle directory = environment.getFile(location);
+						fDetect = directory.isDirectory();
+					}
+				}
+				if (oldDetectState != fDetect) {
+					setChanged();
+					notifyObservers();
+					if (fDetect) {
+						fHintText.setVisible(true);
+						fHintText.setText(NewWizardMessages.ScriptProjectWizardFirstPage_DetectGroup_message);
+					} else {
+						fHintText.setVisible(false);
+					}
+
+				}
+			}
+		}
+
+		public boolean mustDetect() {
+			return fDetect;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse
+		 * .swt.events.SelectionEvent)
+		 */
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org
+		 * .eclipse.swt.events.SelectionEvent)
+		 */
+		public void widgetDefaultSelected(SelectionEvent e) {
+			if (DLTKCore.DEBUG) {
+				System.err.println("DetectGroup show compilancePreferencePage..."); //$NON-NLS-1$
+			}
+
+		}
+	}
+
+	/**
+	 * Request a project name. Fires an event whenever the text field is
+	 * changed, regardless of its content.
+	 */
+	public final class NameGroup extends Observable implements IDialogFieldListener {
+		protected final StringDialogField fNameField;
+
+		public NameGroup(Composite composite, String initialName) {
+			final Composite nameComposite = new Composite(composite, SWT.NONE);
+			nameComposite.setFont(composite.getFont());
+			nameComposite.setLayout(initGridLayout(new GridLayout(2, false), false));
+			nameComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			// text field for project name
+			fNameField = new StringDialogField();
+			fNameField.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_NameGroup_label_text);
+			fNameField.setDialogFieldListener(this);
+			setName(initialName);
+			fNameField.doFillIntoGrid(nameComposite, 2);
+			LayoutUtil.setHorizontalGrabbing(fNameField.getTextControl(null));
+		}
+
+		protected void fireEvent() {
+			setChanged();
+			notifyObservers();
+		}
+
+		public String getName() {
+			return fNameField.getText().trim();
+		}
+
+		public void postSetFocus() {
+			fNameField.postSetFocusOnDialogField(getShell().getDisplay());
+		}
+
+		public void setName(String name) {
+			fNameField.setText(name);
+		}
+
+		public void dialogFieldChanged(DialogField field) {
+			fireEvent();
+		}
+	}
+
 	/**
 	 * Validate this page and show appropriate warnings and error
 	 * NewWizardMessages.
 	 */
-	public final class PdtValidator implements Observer {
+	public final class Validator implements Observer {
 		public void update(Observable o, Object arg) {
 			final IWorkspace workspace = DLTKUIPlugin.getWorkspace();
-			final String name = getNameGroup().getName();
+			final String name = fNameGroup.getName();
 			// check whether the project name field is empty
 			if (name.length() == 0) {
 				setErrorMessage(null);
@@ -90,11 +336,14 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 	 * @author alon
 	 *
 	 */
-	public class JavaScriptSupportGroup {
+	public class JavaScriptSupportGroup implements SelectionListener{
 
 		private final Group fGroup;
 		protected Button fEnableJavaScriptSupport;
-
+		
+		public boolean shouldSupportJavaScript(){
+			return PHPUiPlugin.getDefault().getPreferenceStore().getBoolean( (PreferenceConstants.JavaScriptSupportEnable));
+		}
 		public JavaScriptSupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
 
 			fGroup = new Group(composite, SWT.NONE);
@@ -113,14 +362,20 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT);
 			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport"));
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-			//FIXME	fEnableJavaScriptSupport.setSelection(model.getBooleanProperty(PHPCoreConstants.ADD_JS_NATURE));
+			fEnableJavaScriptSupport.addSelectionListener(this);
+		}	
+		
+		public void widgetDefaultSelected(SelectionEvent e) {}
+		
+		public void widgetSelected(SelectionEvent e) {
+			PHPUiPlugin.getDefault().getPreferenceStore().setValue( (PreferenceConstants.JavaScriptSupportEnable), fEnableJavaScriptSupport.getSelection());				
 		}
 
 	}
 	/**
 	 * Request a project layout.
 	 */
-	private final class LayoutGroup implements Observer, SelectionListener, IDialogFieldListener {
+	public class LayoutGroup implements Observer, SelectionListener, IDialogFieldListener {
 
 		private final SelectionButtonDialogField fStdRadio, fSrcBinRadio;
 		private Group fGroup;
@@ -163,30 +418,6 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 
 			updateEnableState();
 		}
-
-		//		public Control createContent(Composite composite) {
-		//			fGroup = new Group(composite, SWT.NONE);
-		//			fGroup.setFont(composite.getFont());
-		//
-		//			fGroup.setLayout(initGridLayout(new GridLayout(3, false), true));
-		//			fGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
-		//			fGroup.setText(PHPUIMessages.getString("LayoutGroup_OptionBlock_Title"));
-		//
-		//			fStdRadio.doFillIntoGrid(fGroup, 3);
-		//			LayoutUtil.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
-		//
-		//			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
-		//
-		//			fPreferenceLink = new Link(fGroup, SWT.NONE);
-		//			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
-		//			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
-		//			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
-		//			fPreferenceLink.addSelectionListener(this);
-		//			fPreferenceLink.setEnabled(true);
-		//
-		//			updateEnableState();
-		//			return fGroup;
-		//		}
 
 		/* (non-Javadoc)
 		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
@@ -234,112 +465,17 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 
-			String prefID = PHPBuildPreferencePage.PREF_ID;
+			String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
 			Map data = null;
 			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
-			//			if (!fEnableProjectSettings.getSelection()) {
-			//				fConfigurationBlock.performRevert();
-			//			}
 		}
 	}
-
-	protected PdtValidator fPdtValidator;
-
-	public NameGroup getNameGroup() {
-		return fNameGroup;
-	}
-
-	protected PHPVersionGroup fVersionGroup;
-	protected JavaScriptSupportGroup fJavaScriptSupportGroup;
-	protected LayoutGroup fLayoutGroup;
-	protected PHPLocationGroup fPHPLocationGroup;
-
-	public void createControl(Composite parent) {
-		initializeDialogUnits(parent);
-		final Composite composite = new Composite(parent, SWT.NULL);
-		composite.setFont(parent.getFont());
-		composite.setLayout(initGridLayout(new GridLayout(1, false), true));
-		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
-		// create UI elements
-		fNameGroup = new NameGroup(composite, fInitialName);
-		fPHPLocationGroup = new PHPLocationGroup(composite);
-
-		fVersionGroup = new PHPVersionGroup(composite, this);
-		fLayoutGroup = new LayoutGroup(composite);
-		fJavaScriptSupportGroup = new JavaScriptSupportGroup(composite, this);
-
-		createCustomGroups(composite);
-		fDetectGroup = new DetectGroup(composite);
-
-		// establish connections
-		fNameGroup.addObserver(fPHPLocationGroup);
-		fDetectGroup.addObserver(fLayoutGroup);
-		// fDetectGroup.addObserver(fInterpreterEnvironmentGroup);
-
-		fPHPLocationGroup.addObserver(fDetectGroup);
-		// initialize all elements
-		fNameGroup.notifyObservers();
-		// create and connect validator
-		fPdtValidator = new PdtValidator();
-
-		fNameGroup.addObserver(fPdtValidator);
-		fPHPLocationGroup.addObserver(fPdtValidator);
-
-		setControl(composite);
-		Dialog.applyDialogFont(composite);
-	}
-
-	public URI getLocationURI() {
-		IEnvironment environment = getEnvironment();
-		return environment.getURI(fPHPLocationGroup.getLocation());
-	}
-
-	@Override
-	protected void createInterpreterGroup(Composite parent) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	protected IInterpreterInstall getInterpreter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isInWorkspace() {
-		return fPHPLocationGroup.isInWorkspace();
-	}
-
-	@Override
-	protected Observable getInterpreterGroupObservable() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void handlePossibleInterpreterChange() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected boolean interpeterRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected boolean supportInterpreter() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	/**
 	 * Request a location. Fires an event whenever the checkbox or the location
 	 * field is changed, regardless of whether the change originates from the
 	 * user or has been invoked programmatically.
 	 */
-	public class PHPLocationGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener {
+	public class LocationGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener {
 		protected final SelectionButtonDialogField fWorkspaceRadio;
 		protected final SelectionButtonDialogField fExternalRadio;
 		protected final StringButtonDialogField fLocation;
@@ -350,7 +486,7 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 		private int localEnv;
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
 
-		public PHPLocationGroup(Composite composite) {
+		public LocationGroup(Composite composite) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -375,10 +511,6 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 			fLocation.doFillIntoGrid(group, numColumns);
 			LayoutUtil.setHorizontalGrabbing(fLocation.getTextControl(null));
 
-			//			fEnvironment = new ComboDialogField(SWT.DROP_DOWN | SWT.READ_ONLY);
-			//			fEnvironment.setLabelText(NewWizardMessages.ProjectWizardFirstPage_host);
-			//			fEnvironment.setDialogFieldListener(this);
-			//			
 			environments = EnvironmentManager.getEnvironments();
 			String[] items = new String[environments.length];
 			localEnv = 0;
@@ -401,13 +533,6 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 		protected void fireEvent() {
 			setChanged();
 			notifyObservers();
-		}
-
-		private void updateInterpreters() {
-			Observable observable = PHPProjectWizardFirstPage.this.getInterpreterGroupObservable();
-			if (observable != null && observable instanceof AbstractInterpreterGroup) {
-				((AbstractInterpreterGroup) observable).handlePossibleInterpreterChange();
-			}
 		}
 
 		protected String getDefaultPath(String name) {
@@ -481,13 +606,237 @@ public class PHPProjectWizardFirstPage extends ProjectWizardFirstPage {
 				}
 			}
 
-			//			if (field == fExternalRadio) {
-			//				updateInterpreters();
-			//			}
-
 			fireEvent();
 		}
 
 	}
+
+	/**
+	 * Request a location. Fires an event whenever the checkbox or the location
+	 * field is changed, regardless of whether the change originates from the
+	 * user or has been invoked programmatically.
+	 */
+	public class VersionGroup extends Observable implements Observer, IStringButtonAdapter, IDialogFieldListener, SelectionListener {
+		protected final SelectionButtonDialogField fDefaultValues;
+		protected final SelectionButtonDialogField fCustomValues;
+
+		protected PHPVersionConfigurationBlock fConfigurationBlock;
+
+		private String fPreviousExternalLocation;
+		private int localEnv;
+		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
+
+		public VersionGroup(Composite composite) {
+			final int numColumns = 3;
+			final Group group = new Group(composite, SWT.NONE);
+			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			group.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
+			group.setText("PHP Version"); //FIXME
+			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
+			fDefaultValues.setDialogFieldListener(this);
+			fDefaultValues.setLabelText("Use default PHP language settings");
+			fCustomValues = new SelectionButtonDialogField(SWT.RADIO);
+			fCustomValues.setDialogFieldListener(this);
+			fCustomValues.setLabelText("Use project specific settings :");
+
+			fDefaultValues.setSelection(true);
+			fCustomValues.setSelection(false);
+			fDefaultValues.doFillIntoGrid(group, numColumns);
+			fCustomValues.doFillIntoGrid(group, numColumns);
+
+//			Composite versionComposite = new Composite(group, SWT.NONE);
+//			versionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+//			versionComposite.setLayout(new GridLayout(2, false));
+
+			//fConfigurationBlock = createConfigurationBlock(getNewStatusChangedListener(), getProject(), null);
+			fConfigurationBlock = createConfigurationBlock(new IStatusChangeListener() {
+				public void statusChanged(IStatus status) {
+				}
+			}, (IProject) null, null);
+			fConfigurationBlock.createContents(group);
+			fConfigurationBlock.setEnabled(false);
+
+		}
+
+		protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener, IProject project, IWorkbenchPreferenceContainer container) {
+			return new PHPVersionConfigurationBlock(listener, project, container);
+		}
+
+		protected void fireEvent() {
+			setChanged();
+			notifyObservers();
+		}
+
+		//	
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.util.Observer#update(java.util.Observable,
+		 * java.lang.Object)
+		 */
+		public void update(Observable o, Object arg) {
+			//			if (isInWorkspace()) {
+			//				fLocation.setText(getDefaultPath(fNameGroup.getName()));
+			//			}
+			fireEvent();
+		}
+
+		public boolean isInWorkspace() {
+			return fDefaultValues.isSelected();
+		}
+
+		public void changeControlPressed(DialogField field) {
+			IEnvironment environment = getEnvironment();
+			IEnvironmentUI environmentUI = (IEnvironmentUI) environment.getAdapter(IEnvironmentUI.class);
+			if (environmentUI != null) {
+				String selectedDirectory = environmentUI.selectFolder(getShell());
+
+				if (selectedDirectory != null) {
+					//fLocation.setText(selectedDirectory);
+					DLTKUIPlugin.getDefault().getDialogSettings().put(DIALOGSTORE_LAST_EXTERNAL_LOC, selectedDirectory);
+				}
+			}
+		}
+
+		public void dialogFieldChanged(DialogField field) {
+			if (field == fDefaultValues) {
+				final boolean checked = fDefaultValues.isSelected();
+				if (null != fConfigurationBlock)
+					this.fConfigurationBlock.setEnabled(!checked);
+			}
+
+			fireEvent();
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			String prefID = PHPInterpreterPreferencePage.PREF_ID;
+			Map data = null;
+			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
+			if (!fCustomValues.isSelected()) {
+				fConfigurationBlock.performRevert();
+			}
+		}
+
+	}
+/*	public class OldVersionGroup implements SelectionListener {
+
+		private final Group fGroup;
+		private final Link fPreferenceLink;
+		private final WizardPage fPage;
+		protected Button fEnableProjectSettings;
+		protected PHPVersionConfigurationBlock fConfigurationBlock;
+
+		public OldVersionGroup(Composite composite, WizardPage wizardBasePage) {
+
+			fPage = wizardBasePage;
+			fGroup = new Group(composite, SWT.NONE);
+			fGroup.setFont(composite.getFont());
+			GridLayout layout = new GridLayout();
+
+			fGroup.setLayout(layout);
+			GridData data = new GridData(GridData.FILL_BOTH);
+			fGroup.setLayoutData(data);
+			fGroup.setText(PHPUIMessages.getString("PHPVersionGroup_OptionBlockTitle"));
+
+			Composite checkLinkComposite = new Composite(fGroup, SWT.NONE);
+			checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			checkLinkComposite.setLayout(new GridLayout(2, false));
+
+			fEnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT);
+			fEnableProjectSettings.setText(PHPUIMessages.getString("PHPVersionGroup_EnableProjectSettings"));
+			fEnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
+
+			fEnableProjectSettings.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					updateEnableState();
+				}
+			});
+
+			fPreferenceLink = new Link(checkLinkComposite, SWT.NONE);
+			fPreferenceLink.setFont(fGroup.getFont());
+			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
+			fPreferenceLink.setText(PHPUIMessages.getString("PHPVersionGroup_ConfigWorkspaceSettings"));
+			fPreferenceLink.addSelectionListener(this);
+
+			Composite versionComposite = new Composite(fGroup, SWT.NONE);
+			versionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			versionComposite.setLayout(new GridLayout(2, false));
+
+			fConfigurationBlock = createConfigurationBlock(getNewStatusChangedListener(), getProject(), null);
+			fConfigurationBlock.createContents(versionComposite);
+			fConfigurationBlock.setEnabled(false);
+		}
+
+		private void updateEnableState() {
+			if (fEnableProjectSettings.getSelection()) {
+				fConfigurationBlock.setEnabled(true);
+			} else {
+				fConfigurationBlock.performRevert();
+				fConfigurationBlock.setEnabled(false);
+			}
+		}
+
+		public void widgetSelected(SelectionEvent e) {
+			widgetDefaultSelected(e);
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+			String prefID = PHPInterpreterPreferencePage.PREF_ID;
+			Map data = null;
+			PreferencesUtil.createPreferenceDialogOn(fPage.getShell(), prefID, new String[] { prefID }, data).open();
+			if (!fEnableProjectSettings.getSelection()) {
+				fConfigurationBlock.performRevert();
+			}
+		}
+
+		protected IProject getProject() {
+			return ResourcesPlugin.getWorkspace().getRoot().getProject("DUMMY______________Project"); //$NON-NLS-1$
+		}
+
+		protected IStatusChangeListener getNewStatusChangedListener() {
+			return new IStatusChangeListener() {
+				public void statusChanged(IStatus status) {
+				}
+			};
+		}
+
+		//FIXME : remove this redundant method
+		public void setPropertiesInDataModel(IDataModel dataModel) {
+			if (fEnableProjectSettings.getSelection()) {
+				String version = fConfigurationBlock.getPHPVersionValue();
+				boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
+				dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS, useASPTags);
+				dataModel.setStringProperty(Keys.PHP_VERSION, version);
+			}
+		}
+
+		public void setPropertiesInDataModel(IProject project) {
+			if (fEnableProjectSettings.getSelection()) {
+				String version = fConfigurationBlock.getPHPVersionValue();
+				boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
+
+				//FIXME : update project with values
+				//				dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS, useASPTags);
+				//				dataModel.setStringProperty(Keys.PHP_VERSION, version);
+			}
+		}
+
+		protected PHPVersionConfigurationBlock createConfigurationBlock(IStatusChangeListener listener, IProject project, IWorkbenchPreferenceContainer container) {
+			return new PHPVersionConfigurationBlock(listener, project, container);
+		}
+
+		public PHPVersionConfigurationBlock getVersionBlock() {
+			return fConfigurationBlock;
+		}
+
+		public void setVisible(boolean visible) {
+			fGroup.setVisible(visible);
+		}
+	}*/
 
 }

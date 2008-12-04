@@ -841,8 +841,14 @@ public class PreferenceConstants {
 	 *
 	 * @see #SRCBIN_FOLDERS_IN_NEWPROJ
 	 */
-	public static final String SRCBIN_SRCNAME = "org.eclipse.php.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
-
+	//public static final String SRCBIN_SRCNAME = "org.eclipse.php.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
+	public static final String SRCBIN_SRCNAME = "com.xore.dltk.ui.wizards.srcFoldersSrcName"; //$NON-NLS-1$
+	
+	
+	
+	public static final String JavaScriptSupportEnable = "org.eclipse.php.ui.wizards.JSsupport"; //$NON-NLS-1$
+	
+	
 	/**
 	 * A named preference that specifies the output folder name used when creating a new Java project. Value is inactive
 	 * if <code>SRCBIN_FOLDERS_IN_NEWPROJ</code> is set to <code>false</code>.
@@ -1010,7 +1016,7 @@ public class PreferenceConstants {
 		store.setDefault(PREF_OUTLINEMODE, PHPContentOutlineConfiguration.MODE_PHP);
 
 		// do more complicated stuff
-		PHPBuildPreferencePage.initDefaults(store);
+		PHPProjectLayoutPreferencePage.initDefaults(store);
 	}
 
 	// Don't instantiate

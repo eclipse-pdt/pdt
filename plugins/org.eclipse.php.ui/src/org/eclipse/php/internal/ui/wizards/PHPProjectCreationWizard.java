@@ -37,8 +37,8 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 	public static final String WIZARD_ID = "org.eclipse.php.wizards.newproject"; //$NON-NLS-1$
 
 	protected PHPProjectWizardFirstPage fFirstPage;
-	protected ProjectWizardSecondPage fSecondPage;
-	protected ProjectWizardSecondPage fLastPage;
+	protected PHPProjectWizardSecondPage fSecondPage;
+	protected PHPProjectWizardSecondPage fLastPage = fSecondPage;
 	protected IConfigurationElement fConfigElement;
 
 
@@ -59,45 +59,34 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 		addPage(fFirstPage);
 
 		// Second page (Include Path)
-		fSecondPage = new ProjectWizardSecondPage(fFirstPage) {
-			protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
-				return new PHPIncludePathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
-			}
-
-			protected String getScriptNature() {
-				return PHPNature.ID;
-			}
-
-			protected IPreferenceStore getPreferenceStore() {
-				return PHPUiPlugin.getDefault().getPreferenceStore();
-			}
-		};
+		fSecondPage = new PHPProjectWizardSecondPage(fFirstPage);
 		fSecondPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page2Title"));
 		fSecondPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page2Description"));
 		addPage(fSecondPage);
 		
-		// Third page (Build Path)
-		fLastPage = new ProjectWizardSecondPage(fFirstPage) {
-			protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
-				return new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
-			}
-
-			protected String getScriptNature() {
-				return PHPNature.ID;
-			}
-
-			protected IPreferenceStore getPreferenceStore() {
-				return PHPUiPlugin.getDefault().getPreferenceStore();
-			}
-		};
-		fLastPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Title"));
-		fLastPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Description"));
-		addPage(fLastPage);
+		fLastPage = fSecondPage ;
+//		
+//		// Third page (Build Path)
+//		fLastPage = new ProjectWizardSecondPage(fFirstPage) {
+//			protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
+//				return new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
+//			}
+//
+//			protected String getScriptNature() {
+//				return PHPNature.ID;
+//			}
+//
+//			protected IPreferenceStore getPreferenceStore() {
+//				return PHPUiPlugin.getDefault().getPreferenceStore();
+//			}
+//		};
+//		fLastPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Title"));
+//		fLastPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Description"));
+//		addPage(fLastPage);
 
 	}
 
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		//fSecondPage.performFinish(monitor); // use the full progress monitor
 		fLastPage.performFinish(monitor); // use the full progress monitor
 	}
 

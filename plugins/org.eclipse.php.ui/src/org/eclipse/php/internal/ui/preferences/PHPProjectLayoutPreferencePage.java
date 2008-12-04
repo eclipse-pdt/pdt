@@ -34,10 +34,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
-public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
+public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 
-	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPBuildPreferencePage"; //$NON-NLS-1$
-	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPBuildPreferencePage"; //$NON-NLS-1$
+	public static final String PREF_ID = "org.eclipse.php.ui.preferences.PHPProjectLayoutPreferencePage"; //$NON-NLS-1$
+	public static final String PROP_ID = "org.eclipse.php.ui.propertyPages.PHPProjectLayoutPreferencePage"; //$NON-NLS-1$
 
 	private static final String SRCBIN_FOLDERS_IN_NEWPROJ = PreferenceConstants.SRCBIN_FOLDERS_IN_NEWPROJ;
 	private static final String SRCBIN_SRCNAME = PreferenceConstants.SRCBIN_SRCNAME;
@@ -57,11 +57,11 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 	private SelectionListener fSelectionListener;
 	private ModifyListener fModifyListener;
 
-	public PHPBuildPreferencePage() {
+	public PHPProjectLayoutPreferencePage() {
 		setPreferenceStore(PHPUiPlugin.getDefault().getPreferenceStore());
 
 		// only used when page is shown programatically
-		setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
+		//setTitle(PHPUIMessages.getString("PHPBuildPreferencePage_title"));
 		setDescription(PreferencesMessages.NewPHPProjectPreferencePage_description);
 
 		fRadioButtons = new ArrayList();
@@ -89,8 +89,7 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
-		//FIXME : PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_BUILD_PREFERENCES);
-
+		//HELP //FIXME : PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_BUILD_PREFERENCES);
 	}
 
 	private void controlModified(Widget widget) {
@@ -145,8 +144,7 @@ public class PHPBuildPreferencePage extends PropertyAndPreferencePage {
 		fBinFolderNameText.addModifyListener(fModifyListener);
 
 		validateFolders();
-
-		//FIXME : Dialog.applyDialogFont(result);
+		
 		return result;
 	}
 
