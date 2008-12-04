@@ -17,17 +17,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.dltk.ui.util.BusyIndicatorRunnableContext;
-import org.eclipse.dltk.ui.util.IStatusChangeListener;
-import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
 import org.eclipse.dltk.ui.wizards.NewElementWizard;
-import org.eclipse.dltk.ui.wizards.ProjectWizardSecondPage;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.PHPUiPlugin;
-import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
-import org.eclipse.php.internal.ui.preferences.includepath.PHPIncludePathsBlock;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
@@ -38,10 +29,11 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 	protected PHPProjectWizardFirstPage fFirstPage;
 	protected PHPProjectWizardSecondPage fSecondPage;
-	protected PHPProjectWizardSecondPage fLastPage = fSecondPage;
+	protected PHPProjectWizardThirdPage fThirdPage;
+	protected PHPProjectWizardThirdPage fLastPage = fThirdPage;
 	protected IConfigurationElement fConfigElement;
 
-
+	protected int fLastPageIndex = -1;
 
 	public PHPProjectCreationWizard() {
 		setDefaultPageImageDescriptor(PHPPluginImages.DESC_WIZBAN_ADD_PHP_PROJECT);
@@ -63,27 +55,14 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 		fSecondPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page2Title"));
 		fSecondPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page2Description"));
 		addPage(fSecondPage);
-		
-		fLastPage = fSecondPage ;
-//		
-//		// Third page (Build Path)
-//		fLastPage = new ProjectWizardSecondPage(fFirstPage) {
-//			protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
-//				return new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
-//			}
-//
-//			protected String getScriptNature() {
-//				return PHPNature.ID;
-//			}
-//
-//			protected IPreferenceStore getPreferenceStore() {
-//				return PHPUiPlugin.getDefault().getPreferenceStore();
-//			}
-//		};
-//		fLastPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Title"));
-//		fLastPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Description"));
-//		addPage(fLastPage);
 
+		// Third page (Include Path)
+		fThirdPage = new PHPProjectWizardThirdPage(fFirstPage);
+		fThirdPage.setTitle(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Title"));
+		fThirdPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Description"));
+		addPage(fThirdPage);
+		
+		fLastPage = fThirdPage ;
 	}
 
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
@@ -114,6 +93,14 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 
 	public IModelElement getCreatedElement() {
 		return DLTKCore.create(fFirstPage.getProjectHandle());
+	}
+
+	public int getLastPageIndex() {
+		return fLastPageIndex;
+	}
+	
+	public void setLastPageIndex(int current) {
+		fLastPageIndex = current;		
 	}
 
 }

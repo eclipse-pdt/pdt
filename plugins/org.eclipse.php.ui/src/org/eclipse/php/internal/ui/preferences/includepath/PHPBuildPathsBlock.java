@@ -17,8 +17,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.dltk.core.IBuildpathEntry;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
@@ -26,6 +25,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
@@ -38,6 +38,28 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPBuildPathsBlock extends BuildpathsBlock {
 
+	/**
+	 * @author nir.c
+	 * Wrapper composite, that un/register itself to any buildpath changes
+	 */
+	private final class BuildPathComposite extends Composite implements IElementChangedListener {
+
+		private BuildPathComposite(Composite parent, int style) {
+			super(parent, style);
+			DLTKCore.addElementChangedListener(this);
+		}
+
+		@Override
+		public void dispose() {
+			DLTKCore.removeElementChangedListener(this);
+			super.dispose();
+		}
+
+		public void elementChanged(ElementChangedEvent event) {
+			PHPBuildPathsBlock.this.updateUI();
+		}
+	}
+	
 	public PHPBuildPathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow, boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
 	}
@@ -54,7 +76,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 	public Control createControl(Composite parent) {
 
-		final Composite container = new Composite(parent, SWT.NONE);
+		final Composite container = new BuildPathComposite(parent, SWT.NONE);
 
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;

@@ -36,6 +36,7 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
+import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -62,6 +63,28 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  *
  */
 public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
+
+	/**
+	 * @author nir.c
+	 * Wrapper composite, that un/register itself to any includepath changes
+	 */
+	private final class IncludePathComposite extends Composite implements IIncludepathListener {
+
+		private IncludePathComposite(Composite parent, int style) {
+			super(parent, style);
+			IncludePathManager.getInstance().registerIncludepathListener(this);
+		}
+
+		@Override
+		public void dispose() {
+			IncludePathManager.getInstance().unregisterIncludepathListener(this);
+			super.dispose();
+		}
+
+		public void refresh(IProject project) {
+			PHPIncludePathsBlock.this.updateUI();
+		}
+	}
 
 	public PHPIncludePathsBlock(IRunnableContext runnableContext, IStatusChangeListener context, int pageToShow, boolean useNewPage, IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
@@ -93,8 +116,10 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 
 	// -------- UI creation ---------
 	public Control createControl(Composite parent) {
+
 		fSWTWidget = parent;
-		Composite composite = new Composite(parent, SWT.NONE);
+		Composite composite = new IncludePathComposite(parent, SWT.NONE);
+		
 		composite.setFont(parent.getFont());
 		GridLayout layout = new GridLayout();
 		layout.marginWidth = 0;
