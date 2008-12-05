@@ -44,6 +44,10 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
+/**
+ * "As You Type" validation for PHP content
+ * This class reconciles php content to the DLTK model  
+ */
 public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 
 	private IEditorPart fEditor;
@@ -171,7 +175,13 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 		return result;
 	}
 
+	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
+		validate(null, helper, reporter);
+	}
+	
+	
 	public void validate(IRegion dirtyRegion, IValidationContext helper, IReporter reporter) {
+
 		// install editors
 		if (fEditor == null) {
 			install(helper);
@@ -257,13 +267,9 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 	}
 
 	public void cleanup(IReporter reporter) {
-
-	}
-
-	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
 	}
 
 	public void disconnect(IDocument document) {
+		this.document = null;
 	}
-
 }
