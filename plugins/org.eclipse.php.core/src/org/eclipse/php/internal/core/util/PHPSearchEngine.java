@@ -72,9 +72,11 @@ public class PHPSearchEngine {
 				IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
 				IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
 				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-					// We don't support lookup in archive
-					// update the phar case when time arrives 
-						
+					File entryDir = entryPath.toFile();
+					file = new File(entryDir, path);
+					if (file.exists()) {
+						return new IncludedFileResult(entry, file);
+					}	
                 } else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 					entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 					File entryDir = entryPath.toFile();
