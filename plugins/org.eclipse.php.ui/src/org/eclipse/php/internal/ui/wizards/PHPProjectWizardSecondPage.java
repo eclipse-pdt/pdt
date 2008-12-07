@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.filesystem.EFS;
@@ -41,12 +42,19 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPIncludePathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.internal.core.ClasspathEntry;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
 /**
@@ -54,15 +62,15 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
  * project creation (so that linked folders can be defined) and, if an existing
  * external location was specified, offers to do a buildpath detection
  */
-public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage implements IPHPProjectCreateWizardPage{
+public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage implements IPHPProjectCreateWizardPage {
 
 	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
 	private static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
 
-	private final PHPProjectWizardFirstPage fFirstPage;
+	protected final PHPProjectWizardFirstPage fFirstPage;
 
 	private URI fCurrProjectLocation; // null if location is platform location
-	private IProject fCurrProject;
+	protected IProject fCurrProject;
 
 	private boolean fKeepContent;
 
@@ -99,6 +107,18 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	 */
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
+		IWizardPage currentPage = getContainer().getCurrentPage();
+		if (!visible && currentPage != null) {
+			//going back from 2nd page to 1st one
+			if (currentPage instanceof PHPProjectWizardFirstPage) {
+				IWizardPage nextPage = currentPage.getNextPage();
+				if (nextPage instanceof PHPProjectWizardSecondPage) {
+					((PHPProjectWizardSecondPage) nextPage).removeProject();
+				} else {
+					throw (new IllegalStateException());
+				}
+			}
+		}
 	}
 
 	private void changeToNewProject() {
@@ -160,7 +180,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 
 			createProject(fCurrProject, fCurrProjectLocation, new SubProgressMonitor(monitor, 20));
 
-			IBuildpathEntry[] entries = null;
+			IBuildpathEntry[] buildpathEntries = null;
 			IncludePath[] includepathEntries = null;
 
 			if (fFirstPage.getDetect()) {
@@ -168,12 +188,13 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 
 					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(getScriptNature());
 					final BuildpathDetector detector = createBuildpathDetector(monitor, toolkit);
-					entries = detector.getBuildpath();
+					buildpathEntries = detector.getBuildpath();
 
 				} else {
 					monitor.worked(20);
 				}
-			} else if (fFirstPage.isSrc()) {
+			} else if (fFirstPage.hasPhpSourceFolder()) {
+				//need to create sub-folders and set special build/include paths
 				IPreferenceStore store = getPreferenceStore();
 				IPath srcPath = new Path(store.getString(PreferenceConstants.SRCBIN_SRCNAME));
 				IPath binPath = new Path(store.getString(PreferenceConstants.SRCBIN_BINNAME));
@@ -199,14 +220,15 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 				List cpEntries = new ArrayList();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath.append(srcPath)));
 
-				entries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
+				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 				includepathEntries = new IncludePath[] { new IncludePath(fCurrProject.getFolder(srcPath), fCurrProject) };
 			} else {
+				//flat project layout
 				IPath projectPath = fCurrProject.getFullPath();
 				List cpEntries = new ArrayList();
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
-				entries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
+				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
 				includepathEntries = new IncludePath[] { new IncludePath(fCurrProject, fCurrProject) };
 
 				monitor.worked(20);
@@ -214,17 +236,19 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			
-			init(DLTKCore.create(fCurrProject), entries, false);
-			configureScriptProject(new SubProgressMonitor(monitor, 30));		
 
-			//Adding natures other then PHP which is addedas default
-			if (fFirstPage.fJavaScriptSupportGroup.shouldSupportJavaScript()) {
-				JsWebNature.addJsNature(fCurrProject, new SubProgressMonitor(monitor, 1));
-			}
+			init(DLTKCore.create(fCurrProject), buildpathEntries, false);
+			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
-			//adding build paths:
-			getScriptProject().setRawBuildpath(entries, new NullProgressMonitor());
+			//checking and adding JS nature,libs, include path if needed
+			addJsSupport(monitor);
+
+			// setting PHP4/5 and ASP-Tags :
+			setPhpLangOptions();
+
+			//adding build paths, and language-Container:
+			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
+			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
 			//adding include paths:
 			IncludePathManager.getInstance().setIncludePath(fCurrProject, includepathEntries);
 
@@ -233,26 +257,46 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		}
 	}
 
+	protected void addJsSupport(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
+		if (fFirstPage.fJavaScriptSupportGroup.shouldSupportJavaScript()) {
+			JsWebNature jsWebNature = new JsWebNature(fCurrProject, new SubProgressMonitor(monitor, 1));
+			jsWebNature.configure();
+
+			ArrayList<IIncludePathEntry> newJsClassPathsList = new ArrayList<IIncludePathEntry>();
+			// Adding all JS libs
+			newJsClassPathsList.addAll(Arrays.asList(jsWebNature.getJavaProject().getRawIncludepath()));
+			// Adding proj root as JS build path
+			IPath[] exclusionPatterns = ClasspathEntry.EXCLUDE_NONE;
+			if (fFirstPage.hasPhpSourceFolder()) {
+				//if we have PHP source folder, we exclude it from JS build path
+				exclusionPatterns = new IPath[] { new Path(getPreferenceStore().getString(PreferenceConstants.SRCBIN_SRCNAME)) };
+			}
+			newJsClassPathsList.add(JavaScriptCore.newSourceEntry(fCurrProject.getFullPath(), exclusionPatterns));
+
+			jsWebNature.getJavaProject().setRawIncludepath((IIncludePathEntry[]) newJsClassPathsList.toArray(new IIncludePathEntry[] {}), monitor);
+		}
+	}
+
 	@Override
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
 
 		if (monitor == null) {
-			monitor= new NullProgressMonitor();
+			monitor = new NullProgressMonitor();
 		}
-		
-		int nSteps= 6;			
-		monitor.beginTask(NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script, nSteps); 
-		
+
+		int nSteps = 6;
+		monitor.beginTask(NewWizardMessages.ScriptCapabilityConfigurationPage_op_desc_Script, nSteps);
+
 		try {
-			IProject project= getScriptProject().getProject();
+			IProject project = getScriptProject().getProject();
 			BuildpathsBlock.addScriptNature(project, new SubProgressMonitor(monitor, 1), getScriptNature());
-//			getBuildPathsBlock().configureScriptProject(new SubProgressMonitor(monitor, 5));
+			//getBuildPathsBlock().configureScriptProject(new SubProgressMonitor(monitor, 5));
 		} catch (OperationCanceledException e) {
 			throw new InterruptedException();
 		} finally {
 			monitor.done();
-		}			
-	
+		}
+
 	}
 
 	protected BuildpathDetector createBuildpathDetector(IProgressMonitor monitor, IDLTKLanguageToolkit toolkit) throws CoreException {
@@ -369,8 +413,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			if (fCurrProject == null) {
 				updateProject(new SubProgressMonitor(monitor, 1));
 			}
-			//TODO - check if we need this ... : 
-//			configureScriptProject(new SubProgressMonitor(monitor, 2));
 
 			if (!fKeepContent) {
 				if (DLTKCore.DEBUG) {
@@ -378,6 +420,12 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 				}
 			}
 
+			// flushing includepath changes in wizard page
+			IWizardPage currentPage = getContainer().getCurrentPage();
+			if (!(currentPage instanceof PHPProjectWizardFirstPage)) {
+				getBuildPathsBlock().configureScriptProject(monitor);
+			}
+			
 		} finally {
 			monitor.done();
 			fCurrProject = null;
@@ -386,6 +434,13 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 				fIsAutobuild = null;
 			}
 		}
+	}
+
+	protected void setPhpLangOptions() {
+		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
+		String phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
+		UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, fCurrProject);
+		PhpVersionProjectPropertyHandler.setVersion(phpVersion, fCurrProject);
 	}
 
 	private void removeProject() {

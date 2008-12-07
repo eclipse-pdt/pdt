@@ -195,7 +195,6 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 	protected void updateBuildPathStatus() {
 		// disable checking for nested folders errors
 	}
-
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
 		adaptBuildPath();
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);

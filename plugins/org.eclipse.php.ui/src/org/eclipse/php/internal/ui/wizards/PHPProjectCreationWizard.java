@@ -30,7 +30,7 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 	protected PHPProjectWizardFirstPage fFirstPage;
 	protected PHPProjectWizardSecondPage fSecondPage;
 	protected PHPProjectWizardThirdPage fThirdPage;
-	protected PHPProjectWizardThirdPage fLastPage = fThirdPage;
+	protected PHPProjectWizardSecondPage fLastPage = fThirdPage;
 	protected IConfigurationElement fConfigElement;
 
 	protected int fLastPageIndex = -1;
@@ -62,11 +62,14 @@ public class PHPProjectCreationWizard extends NewElementWizard implements INewWi
 		fThirdPage.setDescription(PHPUIMessages.getString("PHPProjectCreationWizard_Page3Description"));
 		addPage(fThirdPage);
 		
-		fLastPage = fThirdPage ;
+		fLastPage = fSecondPage ;
 	}
 
 	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		fLastPage.performFinish(monitor); // use the full progress monitor
+		fSecondPage.performFinish(monitor); // use the full progress monitor
+		if(getContainer().getCurrentPage() instanceof PHPProjectWizardThirdPage){
+			fThirdPage.performFinish(monitor); // use the full progress monitor
+		}
 	}
 
 	public boolean performFinish() {

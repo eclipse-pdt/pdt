@@ -142,9 +142,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		return fDetectGroup.mustDetect();
 	}
 
-	public boolean isSrc() {
-		// TODO Auto-generated method stub
-		return fLayoutGroup.isSrcBin();
+	/**
+	 * returns whether this project layout is "detailed" - 
+	 * meaning tree structure - one folder for source, one for resources
+	 * @return
+	 */
+	public boolean hasPhpSourceFolder() {
+		return fLayoutGroup.isDetailedLayout();
 	}
 
 	/**
@@ -439,11 +443,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		/**
-		 * Return <code>true</code> if the user specified to create 'source' and 'bin' folders.
+		 * Return <code>true</code> if the user specified to create 'application' and 'public' folders.
 		 *
 		 * @return returns <code>true</code> if the user specified to create 'source' and 'bin' folders.
 		 */
-		public boolean isSrcBin() {
+		public boolean isDetailedLayout() {
 			return fSrcBinRadio.isSelected();
 		}
 
@@ -729,6 +733,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		IWizardPage currentPage = getContainer().getCurrentPage();
 		if (!visible && currentPage != null) {
+			//going forward from 1st page to 2nd one
 			if (currentPage instanceof IPHPProjectCreateWizardPage) {
 				((IPHPProjectCreateWizardPage) currentPage).initPage();
 			} else {
@@ -738,8 +743,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	}
 
-	public void initPage() {
-		// TODO Auto-generated method stub	
+	public void initPage() {	
 	}
 
 }

@@ -75,7 +75,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	}
 
 	public Control createControl(Composite parent) {
-
+		fSWTWidget = parent;
 		final Composite container = new BuildPathComposite(parent, SWT.NONE);
 
 		GridLayout layout = new GridLayout(3, false);
