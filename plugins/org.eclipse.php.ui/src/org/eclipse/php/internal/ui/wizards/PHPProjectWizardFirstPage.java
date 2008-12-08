@@ -468,7 +468,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		public void widgetDefaultSelected(SelectionEvent e) {
 
 			String prefID = PHPProjectLayoutPreferencePage.PREF_ID;
-			
+
 			Map data = null;
 			PreferencesUtil.createPreferenceDialogOn(getShell(), prefID, new String[] { prefID }, data).open();
 		}
@@ -523,12 +523,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 					localEnv = i;
 				}
 			}
-			////			fEnvironment.setItems(items);
-			////			fEnvironment.selectItem(local);
-			//			fEnvironment.doFillIntoGrid(group, numColumns);
-			//			LayoutUtil.setHorizontalGrabbing(fEnvironment.getComboControl(null));
 
-			//			fEnvironment.setEnabled(false);
 			fExternalRadio.attachDialogFields(new DialogField[] { fLocation });
 
 		}
@@ -625,27 +620,25 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		protected PHPVersionConfigurationBlock fConfigurationBlock;
 
-		private String fPreviousExternalLocation;
-		private int localEnv;
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
 		private Link fPreferenceLink;
-		
+
 		public VersionGroup(Composite composite) {
 			final int numColumns = 3;
 			final Group group = new Group(composite, SWT.NONE);
 			group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			group.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			group.setText("PHP Version"); //FIXME externalize
+			group.setText(PHPUIMessages.getString("VersionGroup_OptionBlock_Title"));//$NON-NLS-1$ 
 			fDefaultValues = new SelectionButtonDialogField(SWT.RADIO);
 			fDefaultValues.setDialogFieldListener(this);
-			fDefaultValues.setLabelText("Use default PHP settings");
+			fDefaultValues.setLabelText(PHPUIMessages.getString("VersionGroup_OptionBlock_fDefaultValues"));//$NON-NLS-1$ 
 			fCustomValues = new SelectionButtonDialogField(SWT.RADIO);
 			fCustomValues.setDialogFieldListener(this);
-			fCustomValues.setLabelText("Use project specific settings :");
+			fCustomValues.setLabelText(PHPUIMessages.getString("VersionGroup_OptionBlock_fCustomValues"));//$NON-NLS-1$ 
 
 			fDefaultValues.setSelection(true);
 			fCustomValues.setSelection(false);
-			
+
 			fDefaultValues.doFillIntoGrid(group, numColumns);
 			fCustomValues.doFillIntoGrid(group, numColumns);
 
@@ -655,12 +648,12 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			}, (IProject) null, null);
 			fConfigurationBlock.createContents(group);
 			fConfigurationBlock.setEnabled(false);
-//			fPreferenceLink = new Link(fGroup, SWT.NONE);
-//			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
-//			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
-//			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
-//			fPreferenceLink.addSelectionListener(this);
-//			fPreferenceLink.setEnabled(true);
+			//			fPreferenceLink = new Link(fGroup, SWT.NONE);
+			//			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
+			//			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
+			//			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
+			//			fPreferenceLink.addSelectionListener(this);
+			//			fPreferenceLink.setEnabled(true);
 
 		}
 
@@ -682,9 +675,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		 * java.lang.Object)
 		 */
 		public void update(Observable o, Object arg) {
-			//			if (isInWorkspace()) {
-			//				fLocation.setText(getDefaultPath(fNameGroup.getName()));
-			//			}
 			fireEvent();
 		}
 
@@ -742,7 +732,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	}
 
-	public void initPage() {	
+	public void initPage() {
 	}
 
 }

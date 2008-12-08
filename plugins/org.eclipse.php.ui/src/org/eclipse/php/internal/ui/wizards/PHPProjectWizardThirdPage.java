@@ -1,19 +1,22 @@
 package org.eclipse.php.internal.ui.wizards;
 
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
 
+/**
+ * New PHP Project Wizard - 3rd page - Build Paths configuration
+ * Consists of the 2nd page (IncludePath) most functionality
+ * @author nir.c
+ *
+ */
 public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 
 	@Override

@@ -190,7 +190,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(getScriptNature());
 					final BuildpathDetector detector = createBuildpathDetector(monitor, toolkit);
 					buildpathEntries = detector.getBuildpath();
-	
+
 				} else {
 					monitor.worked(20);
 				}
@@ -251,10 +251,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
 			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
 			//init, and adding include paths:
-			getBuildPathsBlock().init(getScriptProject(), new IBuildpathEntry[]{});
+			getBuildPathsBlock().init(getScriptProject(), new IBuildpathEntry[] {});
 			IncludePathManager.getInstance().setIncludePath(fCurrProject, includepathEntries);
-			
-			
+
 		} finally {
 			monitor.done();
 		}
@@ -436,7 +435,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			if (!(currentPage instanceof PHPProjectWizardFirstPage)) {
 				getBuildPathsBlock().configureScriptProject(monitor);
 			}
-			
+
 		} finally {
 			monitor.done();
 			fCurrProject = null;
