@@ -109,7 +109,9 @@ propertyName=propertyValue
 		<property name="allInOnePrefix" value="${projectName}-all-in-one" />
 		<property name="allInOnePlatforms" value="linux-gtk,win32,macosx-carbon" />
 		<property name="allInOneInputs" value="${allZip}" />
-		<property name="allInOneBuildTypes" value="S,R" />
+		<!-- testing: disable packing & do all-in-one for N -->
+		<property name="allInOneBuildTypes" value="N,S,R" />
+		<property name="skipPack" value="true"/>
 	</target>
 
 	<target name="buildAll">
