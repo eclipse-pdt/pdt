@@ -191,6 +191,9 @@ public class IncludePathManager {
 	 */
 	public void setIncludePath(final IProject project, IncludePath[] includePathEntries) {
 		final StringBuilder buf = new StringBuilder();
+		if (null == project || includePathEntries == null){
+			return;
+		}
 		for (int i = 0; i < includePathEntries.length; ++i) {
 			IncludePath includePath = includePathEntries[i];
 			if (includePath.isBuildpath()) {
