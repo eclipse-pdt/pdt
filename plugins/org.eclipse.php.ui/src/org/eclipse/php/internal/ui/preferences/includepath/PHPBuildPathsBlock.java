@@ -16,8 +16,10 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
@@ -34,6 +36,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPBuildPathsBlock extends BuildpathsBlock {
@@ -144,5 +147,30 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 			}
 		}
 	}
+
+	@Override
+	protected void doUpdateUI() {
+		fBuildPathDialogField.refresh();
+		fBuildPathList.refresh();
+		if (fSourceContainerPage != null) {
+			fSourceContainerPage.init(fCurrScriptProject);
+			
+		}
+		doStatusLineUpdate();
+	}
+	// -------- verification -------------------------------
+	private void doStatusLineUpdate() {
+		if (Display.getCurrent() != null) {
+			IStatus res = findMostSevereStatus();
+			fContext.statusChanged(res);
+		}
+	}
+	
+	private IStatus findMostSevereStatus() {
+		return StatusUtil.getMostSevere(new IStatus[] {
+				fPathStatus, fBuildPathStatus
+		});
+	}
+	
 
 }
