@@ -250,9 +250,11 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			//adding build paths, and language-Container:
 			getScriptProject().setRawBuildpath(buildpathEntries, new NullProgressMonitor());
 			LanguageModelInitializer.enableLanguageModelFor(getScriptProject());
-			//adding include paths:
+			//init, and adding include paths:
+			getBuildPathsBlock().init(getScriptProject(), new IBuildpathEntry[]{});
 			IncludePathManager.getInstance().setIncludePath(fCurrProject, includepathEntries);
-
+			
+			
 		} finally {
 			monitor.done();
 		}

@@ -231,8 +231,9 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 
 	private void libaryPageCustomButtonPressed(DialogField field, int index) {
 		BPListElement[] libentries = null;
+		
 		IEnvironment environment = EnvironmentManager
-				.getEnvironment(this.scriptProject);
+				.getEnvironment(this.fCurrJProject);
 		switch (index - IDX_ADD) {
 		case IDX_ADDZIP: /* add archive */
 			if (fWithZip) {

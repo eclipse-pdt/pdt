@@ -27,7 +27,6 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 	@Override
 	protected BuildpathsBlock createBuildpathBlock(IStatusChangeListener listener) {
 		PHPBuildPathsBlock buildPathsBlock = new PHPBuildPathsBlock(new BusyIndicatorRunnableContext(), listener, 0, useNewSourcePage(), null);
-		//		 buildPathsBlo;
 		return buildPathsBlock;
 	}
 
