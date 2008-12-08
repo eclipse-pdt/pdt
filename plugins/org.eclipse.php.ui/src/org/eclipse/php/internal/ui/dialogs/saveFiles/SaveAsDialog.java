@@ -22,7 +22,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
-import org.eclipse.php.internal.ui.wizards.OldPHPProjectCreationWizard;
 import org.eclipse.php.internal.ui.wizards.PHPProjectCreationWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
