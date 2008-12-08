@@ -364,6 +364,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport"));
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
+			fEnableJavaScriptSupport.setSelection(
+				PHPUiPlugin.getDefault().getPreferenceStore().getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
 		}
 
 		public void widgetDefaultSelected(SelectionEvent e) {

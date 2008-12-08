@@ -893,7 +893,8 @@ public class PreferenceConstants {
 		editorStore.setDefault(SpellingService.PREFERENCE_SPELLING_ENABLED, false);
 
 		IPreferenceStore store = getPreferenceStore();
-
+		
+		store.setDefault(JavaScriptSupportEnable, false);
 		store.setDefault(LINK_FOLDERS_TO_EDITOR, false);
 		store.setDefault(LINK_BROWSING_PROJECTS_TO_EDITOR, true);
 		store.setDefault(LINK_BROWSING_FOLDERS_TO_EDITOR, true);
