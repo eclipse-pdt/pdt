@@ -184,12 +184,13 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			IncludePath[] includepathEntries = null;
 
 			if (fFirstPage.getDetect()) {
+				includepathEntries = setProjectBaseIncludepath();
 				if (!fCurrProject.getFile(FILENAME_BUILDPATH).exists()) {
 
 					IDLTKLanguageToolkit toolkit = DLTKLanguageManager.getLanguageToolkit(getScriptNature());
 					final BuildpathDetector detector = createBuildpathDetector(monitor, toolkit);
 					buildpathEntries = detector.getBuildpath();
-
+	
 				} else {
 					monitor.worked(20);
 				}
@@ -229,7 +230,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 				cpEntries.add(DLTKCore.newSourceEntry(projectPath));
 
 				buildpathEntries = (IBuildpathEntry[]) cpEntries.toArray(new IBuildpathEntry[cpEntries.size()]);
-				includepathEntries = new IncludePath[] { new IncludePath(fCurrProject, fCurrProject) };
+				includepathEntries = setProjectBaseIncludepath();
 
 				monitor.worked(20);
 			}
@@ -255,6 +256,14 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		} finally {
 			monitor.done();
 		}
+	}
+
+	/**
+	 * new project settings, helper
+	 * @return array of IncludePath's, size=1, and includes only the project's root-dir include path
+	 */
+	private IncludePath[] setProjectBaseIncludepath() {
+		return new IncludePath[] { new IncludePath(fCurrProject, fCurrProject) };
 	}
 
 	protected void addJsSupport(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
