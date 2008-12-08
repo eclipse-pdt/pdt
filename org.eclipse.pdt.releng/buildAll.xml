@@ -185,9 +185,7 @@ propertyName=propertyValue
 
 		<echo-timestamp />
 
-		<!-- DISABLED... not working yet
 		<ant target="packAllInOnes" antfile="${helper}" />
-		-->
 
 		<delete file="${buildDirectory}/${buildLabel}/${allZip}" failonerror="true" quiet="true" />
 
