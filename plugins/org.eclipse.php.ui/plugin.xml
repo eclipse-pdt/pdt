@@ -375,17 +375,8 @@
 
 	<!--Property Pages:-->
 	<extension point="org.eclipse.ui.propertyPages">
-		<page
-			class="org.eclipse.php.internal.ui.preferences.PHPProjectLayoutPreferencePage"
-			id="org.eclipse.php.ui.propertyPages.PHPProjectLayoutPreferencePage"
-			name="%phpBuildPreferenceName">
-			<enabledWhen>
-				<adapt type="org.eclipse.core.resources.IProject">
-				</adapt>
-			</enabledWhen>
-			<filter name="nature" value="org.eclipse.php.core.PHPNature" />
-		</page>
 		
+		<!-- PHP default verions and ASP tags option-->
 		<page
 			class="org.eclipse.php.internal.ui.preferences.PHPInterpreterPreferencePage"
 			id="org.eclipse.php.ui.propertyPages.PHPInterpreterPreferencePage"
