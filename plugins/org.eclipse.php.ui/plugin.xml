@@ -377,7 +377,7 @@
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
 			class="org.eclipse.php.internal.ui.preferences.PHPProjectLayoutPreferencePage"
-			id="org.eclipse.php.ui.propertyPages.PHPBuildPreferencePage"
+			id="org.eclipse.php.ui.propertyPages.PHPProjectLayoutPreferencePage"
 			name="%phpBuildPreferenceName">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
@@ -1054,7 +1054,7 @@
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPProjectLayoutPreferencePage"
-			id="org.eclipse.php.ui.preferences.PHPBuildPreferencePage"
+			id="org.eclipse.php.ui.preferences.PHPProjectLayoutPreferencePage"
 			name="%phpBuildPreferenceName">
 		</page>
 		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
