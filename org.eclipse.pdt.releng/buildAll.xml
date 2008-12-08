@@ -107,7 +107,7 @@ propertyName=propertyValue
 			(in addition to eclipse + all build dependencies), and for which build types to perform this step 
 		-->
 		<property name="allInOnePrefix" value="${projectName}-all-in-one" />
-		<property name="allInOnePlatforms" value="linux-gtk,win32,macosx-carbon" />
+		<property name="allInOnePlatforms" value="win32,linux-gtk,macosx-carbon" />
 		<property name="allInOneInputs" value="${allZip}" />
 		<!-- testing: disable packing & do all-in-one for N -->
 		<property name="allInOneBuildTypes" value="N,S,R" />
