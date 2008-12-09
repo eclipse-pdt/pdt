@@ -114,17 +114,17 @@ if (window.writeIntopicBar)
 </script>
 <h1>Configuring a Project's PHP Build Path</h1>
 <p>By configuring your project's PHP Build Path, you can select resources 
- and file patterns which will be included or excluded from the Build process.</p>
+ which will be included or excluded from the Build process.</p>
 <p class=Note>Note:</p>
-<p class=NoteText>If during project creation you selected to 'use project 
- as source folder', all resources within the folder will be added to the 
- Build Path by default.<br>
+<p class=NoteText>If during project creation you selected the 'use project 
+ as source folder' under the Project Layout category, all resources within 
+ the folder will be added to the Build Path by default.<br>
 If you selected to 'create separate folders for source files and public 
  resources' during the project's creation, resources in the 'public' folder 
- will by default be excluded from the Build Path.</p>
-<p>Build Path configuration can be done through the project's Build Path 
- properties page, accessed by right-clicking the required project and selecting 
- Build Path | Configure Build Path.</p>
+ will be excluded from the Build Path by default.</p>
+<p>The project's PHP Build Path can be configured through the project's 
+ Build Path properties page, accessed by right-clicking the required project 
+ and selecting Build Path | Configure Build Path.</p>
 <p class=picture><img src="build_path_properties.png" x-maintain-ratio="TRUE" width="297px" height="263px" border="0" class="img_whs1"></p>
 <p>This page allows you to add folders and resources to your Build Path 
  and configure rules for including / excluding certain resources in the 
@@ -137,7 +137,7 @@ If you selected to 'create separate folders for source files and public
  Patterns for the Project</h3>
 <p>By configuring inclusion/exclusion patterns for the Build Path, you 
  can select to include or exclude all resources in your project which match 
- the defined pattern.</p>
+ a defined pattern.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <col class="whs4">
 <col class="whs5">
@@ -178,11 +178,12 @@ If you selected to 'create separate folders for source files and public
 </table>
 <h3>Configuring Different Inclusion/Exclusion Patterns for Folders Within 
  your Project</h3>
-<p>If you want to configure different rules for resources contained within 
- specific folders, the required folder will be excluded from the project 
- source's Build Path and added as a separate source folder. This is done 
- to resolve any conflicts which may arise from configuring one pattern 
- for the parent folder and another for the child.</p>
+<p>You can configure different inclusion/exclusion rules for child folders 
+ within a selected directory. However, you will need to exclude the selected 
+ child folder from the parent directory's Build Path and add it as a separate 
+ Build Path source folder. This is done to resolve any conflicts which 
+ may arise from configuring one pattern for the parent folder and another 
+ for the child.</p>
 <p>Source folders can be created and/or added from the PHP Build Path properties 
  page or from PHP Explorer view.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs3">
@@ -209,17 +210,15 @@ If you selected to 'create separate folders for source files and public
  necessary, click Create New Folder to create a new folder.</p></li>
 	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Select 
  the required folder and click OK.</p></li>
-	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Click 
- OK.<br>
-	The folderwill be added as a 
- separate source folder in the Build Path list.</p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>The folderwill be added 
+ as a separate source folder in the Build Path list.</p></li>
 </ol>
 <p class=Note>Note:</p>
 <p class=NoteText>In order to overcome the nesting conflict, &nbsp;you 
- should remove the exclude the folder you have just added from the parent 
- folder's Build Path. See '<a href="#include_exclude_build_path">Configuring 
- Inclusion/Exclusion Patterns</a>', above, for information &nbsp;on 
- how to exclude the folder and all resources contained within it.</p>
+ should exclude the folder you have just added from the parent folder's 
+ Build Path. See '<a href="#include_exclude_build_path">Configuring Inclusion/Exclusion 
+ Patterns</a>', above, for information &nbsp;on how to 
+ exclude the folder and all resources contained within it.</p>
 <p class=picture><img src="build_path_add_source_folder.png" x-maintain-ratio="TRUE" width="363px" height="228px" border="0" class="img_whs17"></p>
 <p class="whs16">From PHP 
  Explorer view:</p>
@@ -239,14 +238,14 @@ If you selected to 'create separate folders for source files and public
 	In order to avoid these nesting conflicts, select one of the following 
  options:</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Replace existing project 
- source folder entry to solve nesting - This will remove your parent project 
+ source folder entry to solve nesting - This will remove your parent directory 
  as a source folder from the Build Path configuration and replace it with 
  the currently selected folder.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Update exclusion filters 
  in other source folders to solve nesting - This will exclude the currently 
- selected folder from the project root's Build Path but will add it as 
- a separate entity so that different inclusion/exclusion patters can be 
- configured for it.</p></li>
+ selected folder from the parent directory's Build Path but will add it 
+ as a separate entity so that different inclusion/exclusion patters can 
+ be configured for it.</p></li>
 </ol>
 <ol start="4" type="1" class="whs14">
 	<li style="margin-left: -20px;" class=p><p>Click Finish.</p></li>
@@ -301,14 +300,14 @@ If you selected to 'create separate folders for source files and public
 	In order to avoid these nesting conflicts, select one of the following 
  options:</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Replace existing project 
- source folder entry to solve nesting - This will remove your parent project 
- from the Build Path configuration and replace it with the currently selected 
- folder.</p></li>
+ source folder entry to solve nesting - This will remove your parent directory 
+ as a source folder from the Build Path configuration and replace it with 
+ the currently selected folder.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Update exclusion filters 
  in other source folders to solve nesting - This will exclude the currently 
- selected folder from the project root's Build Path but will add it as 
- a separate entity so that different inclusion/exclusion patters can be 
- configured for it.</p></li>
+ selected folder from the parent directory's Build Path but will add it 
+ as a separate entity so that different inclusion/exclusion patters can 
+ be configured for it.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>Ignore nesting conflicts 
  - The selected folder will be added as a separate entity to the Build 
  Path list but will need to be manually excluded from the project root's 

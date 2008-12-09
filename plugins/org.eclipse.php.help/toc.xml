@@ -59,10 +59,9 @@
     <topic label="Enabling JavaScript Support in PHP Projects" href="html/Enabling_JavaScript_Support_in_PHP_Projects.htm">
       <topic label="Setting the JavaScript Build Path" href="html/Setting_the_JavaScript_Build_Path.htm"/>
     </topic>
-     <topic label="Using JavaScript Content Assist" href="html/Using_JavaScript_Content_Assist.htm"/>
-     <topic label="Opening JavaScript Types" href="html/Opening_JavaScript_Types.htm"/>
-     <topic label="Using JavaScript Syntax Coloring" href="html/Using_JavaScript_Syntax_Coloring.htm"/>
      <topic label="Viewing JavaScript Elements in the Outline View" href="html/Viewing_JavaScript_Elements_in_the_Outline_View.htm"/>
+     <topic label="Using JavaScript Content Assist" href="html/Using_JavaScript_Content_Assist.htm"/>
+     <topic label="Using JavaScript Syntax Coloring" href="html/Using_JavaScript_Syntax_Coloring.htm"/>
      <topic label="Using JavaScript Mark Occurrences" href="html/Using_JavaScript_Mark_Occurences.htm"/>
    </topic>
     <topic label="Configuring a Project's PHP Build Path" href="html/Configuring_Build_Paths.htm"/>
@@ -84,6 +83,7 @@
     <topic label="PHP Perspective" href="html/PHP_Perspective_Views.htm">
       <topic label="PHP Explorer View" href="html/PHP_Explorer_view.htm"/>
       <topic label="Outline View" href="html/PHP_Outline_VIew.htm"/>
+      <topic label="Type Hierarchy View" href="html/Type_Hierarchy_View.htm"/>
     </topic>
     <topic label="PHP Debug Perspective" href="html/PHP_Debug_Perspective.htm">
       <topic label="Debug View" href="html/Debug_View.htm"/>
@@ -92,6 +92,10 @@
       <topic label="Parameter Stack View" href="html/Parameter_Stack.htm"/>
       <topic label="Debug Output View" href="html/Debug_Output_View.htm"/>
       <topic label="Browser Output View" href="html/Browser_Output_View.htm"/>
+    </topic>
+    <topic label="Other PHP Views">
+      <topic label="PHP Functions View" href="html/PHP_Functions_View.htm"/>
+      <topic label="PHP Project Outline View" href="html/Project_Outline_view.htm"/>
     </topic>
    </topic>
    <topic label="PHP Perspective Menus" href="html/Menus.htm">
@@ -135,6 +139,7 @@
       <topic label="Typing Preferences" href="html/Typing.htm"/>
       <topic label="Task Tags Preferences" href="html/Task_Tags.htm"/>
     </topic>
+     <topic label="New Project Layout Preferences" href="html/New_Project_Layout_Preferences.htm"/>
      <topic label="Path Variables Preferences" href="html/Path_Variables.htm"/>
      <topic label="PHP Executables Preferences" href="html/PHP_Executables.htm"/>
      <topic label="PHP Interpreter Preferences" href="html/PHP_Interpreter.htm"/>
@@ -149,6 +154,7 @@
       <topic label="Formatter Properties" href="html/Formatter_Properties.htm"/>
       <topic label="Code Templates Properties" href="html/Code_Templates_Properties.htm"/>
     </topic>
+     <topic label="PHP Build Path Properties" href="html/PHP_Build_Path_Properties.htm"/>
      <topic label="PHP Debug Properties" href="html/PHP_Debug_Properties.htm"/>
      <topic label="PHP Include Path Properties" href="html/PHP_Include_Path_Properties.htm"/>
      <topic label="PHP Interpreter Properties" href="html/PHP_Interpreter_Properties.htm"/>
@@ -159,6 +165,7 @@
      <topic label="Task Tags Properties" href="html/Task_Tags_Properties.htm"/>
      <topic label="Validation Properties" href="html/Validation_Properties.htm"/>
    </topic>
+    <topic label="PHP Icons" href="html/PHP_Icons.htm"/>
     <topic label="Keymap" href="html/Keymap.htm"/>
   </topic>
  </topic>

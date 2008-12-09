@@ -17,8 +17,8 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 h1.whs1 { color:#00709e; }
-img_whs2 { border:none; width:397px; height:468px; float:none; }
-img_whs3 { border:none; width:435px; height:320px; float:none; }
+img_whs2 { border:none; width:397px; height:468px; float:none; border-style:none; }
+img_whs3 { border:none; width:435px; height:320px; float:none; border-style:none; }
 table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs5 { width:7.093%; }
 col.whs6 { width:92.907%; }
@@ -31,10 +31,20 @@ td.whs12 { width:7.093%; padding-right:10px; padding-left:10px; border-left-styl
 img_whs13 { border:none; width:28px; height:33px; float:none; border-style:none; }
 td.whs14 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-div.whs16 { width:100%; }
-p.whs17 { text-align:right; x-condition:Product, Online; }
-p.whs18 { text-align:right; x-condition:Online; }
-p.whs19 { text-align:center; x-condition:PDT; text-decoration:underline; }
+table.whs16 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs17 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs20 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs21 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs22 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs23 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs24 { font-weight:normal; }
+tr.whs25 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs26 { width:100%; }
+p.whs27 { text-align:right; x-condition:Product, Online; }
+p.whs28 { text-align:right; x-condition:Online; }
+p.whs29 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -103,9 +113,9 @@ if (window.writeIntopicBar)
 <p>The New Project Layout Preferences page allows you to configure the 
  default layout for new PHP projects. The default layout will configure 
  whether all folders under the project root will be considered as 'source' 
- folders for the Build process, or whether separate folders will be created 
- for resources which are included and resources which are excluded from 
- the Build process.</p>
+ folders for the <a HREF="Build_Paths.htm">Build process</a>, or whether 
+ separate folders will be created for resources which are included and 
+ resources which are excluded from the Build process.</p>
 <p>&nbsp;</p>
 <p>The preferences configured in the New Project Layout Preferences page 
  will affect the default option selected in the Project Layout category 
@@ -149,16 +159,37 @@ if (window.writeIntopicBar)
 <p>&nbsp;</td>
 </tr>
 </table>
-<div placeholder id="footer" class="whs16">
- <p align="right" class="whs17"><span 
+<table x-use-null-cells cellspacing="0" width="100%" class="whs16">
+<col class="whs5">
+<col class="whs6">
+
+<tr valign="top" class="whs17"><td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<p class="whs9">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs20"><td width="7.093%" class="whs21">
+<p class="whs9"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
+<td width="92.907%" class="whs23">
+<p class="whs11">Related Links:</p>
+<p class="whs24"><a href="Preferences.htm">PHP Preferences</a></p>
+<p class="whs24"><a HREF="Build_Paths.htm">PHP Build Path</a></p>
+<p class="whs24"><a HREF="Configuring_Build_Paths.htm">Configuring 
+ a Project's PHP Build Path</a></td></tr>
+<tr valign="top" class="whs25"><td colspan="1" rowspan="1" width="7.093%" class="whs21">
+<p class="whs9">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs23">
+<p>&nbsp;</td></tr>
+</table>
+<div placeholder id="footer" class="whs26">
+ <p align="right" class="whs27"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
  the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
  Documentation</a> for the most up-to-date information.</p>
- <p align="right" class="whs18"><span style="background-color: #ffffff;"><a 
+ <p align="right" class="whs28"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs19">PHP Development 
+ <p align="center" class="whs29">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
