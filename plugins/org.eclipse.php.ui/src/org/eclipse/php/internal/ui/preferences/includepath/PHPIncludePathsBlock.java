@@ -62,7 +62,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * @author Eden K., 2008
  *
  */
-public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
+public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 	/**
 	 * @author nir.c
@@ -93,7 +93,7 @@ public class PHPIncludePathsBlock extends AbstractBuildpathsBlock {
 	protected void initContainerElements() {
 		BuildPathAdapter adapter = new BuildPathAdapter();
 		String[] buttonLabels = new String[] { NewWizardMessages.BuildPathsBlock_buildpath_up_button, NewWizardMessages.BuildPathsBlock_buildpath_down_button };
-		fBuildPathList = new ListDialogField(null, buttonLabels, new PHPBPListLabelProvider());
+		fBuildPathList = new ListDialogField(null, buttonLabels, new PHPIPListLabelProvider());
 		fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);
 		fBuildPathList.setUpButtonIndex(0);

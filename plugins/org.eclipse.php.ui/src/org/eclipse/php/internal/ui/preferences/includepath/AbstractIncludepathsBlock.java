@@ -57,7 +57,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
-public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
+public abstract class AbstractIncludepathsBlock extends BuildpathsBlock{
 	public static interface IRemoveOldBinariesQuery {
 		/**
 		 * Do the callback. Returns <code>true</code> if .class files should be
@@ -98,7 +98,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 	// non-property
 	// page context
 
-	public AbstractBuildpathsBlock(IRunnableContext runnableContext,
+	public AbstractIncludepathsBlock(IRunnableContext runnableContext,
 			IStatusChangeListener context, int pageToShow, boolean useNewPage,
 			IWorkbenchPreferenceContainer pageContainer) {
 		super(runnableContext, context, pageToShow, useNewPage, pageContainer);
@@ -127,7 +127,7 @@ public abstract class AbstractBuildpathsBlock extends BuildpathsBlock{
 				NewWizardMessages.BuildPathsBlock_buildpath_checkall_button,
 				NewWizardMessages.BuildPathsBlock_buildpath_uncheckall_button };
 		fBuildPathList = new ListDialogField(null, buttonLabels,
-				new PHPBPListLabelProvider());
+				new PHPIPListLabelProvider());
 		//fBuildPathList.setDialogFieldListener(adapter);
 		fBuildPathList
 				.setLabelText(NewWizardMessages.BuildPathsBlock_buildpath_label);

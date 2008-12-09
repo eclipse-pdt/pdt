@@ -67,9 +67,12 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_LIBRARY);
 			}
 			
-			// Folder in the include path, should have "source-folder" image.
+			// Folder in the include path, should have same image as in the PHP Explorer .
 			if (entry instanceof IFolder) {
-				return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
+				IModelElement createdScriptFolder = DLTKCore.create((IFolder)entry);
+				if (null == createdScriptFolder)
+					return getImage(entry);
+				return getImage(createdScriptFolder);	
 			}
 			
 			if (entry instanceof IResource) {

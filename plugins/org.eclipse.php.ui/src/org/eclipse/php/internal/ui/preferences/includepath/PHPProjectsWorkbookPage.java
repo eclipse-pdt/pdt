@@ -63,7 +63,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 		ProjectsAdapter adapter = new ProjectsAdapter();
 
 		fProjectsList = new TreeListDialogField(adapter, buttonLabels,
-				new PHPBPListLabelProvider());
+				new PHPIPListLabelProvider());
 		fProjectsList.setDialogFieldListener(adapter);
 		fProjectsList
 				.setLabelText(NewWizardMessages.ProjectsWorkbookPage_projects_label);

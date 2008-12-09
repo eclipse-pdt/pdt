@@ -108,7 +108,7 @@ public class PHPLibrariesWorkbookPage extends BuildPathBasePage {
 		}
 		LibrariesAdapter adapter = new LibrariesAdapter();
 		fLibrariesList = new TreeListDialogField(adapter, buttonLabels,
-				new PHPBPListLabelProvider());
+				new PHPIPListLabelProvider());
 		fLibrariesList.setDialogFieldListener(adapter);
 		if (this.fWithZip) {
 			fLibrariesList

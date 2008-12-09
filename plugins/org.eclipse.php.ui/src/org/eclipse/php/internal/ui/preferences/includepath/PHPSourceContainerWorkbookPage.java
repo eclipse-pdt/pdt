@@ -171,7 +171,7 @@ public class PHPSourceContainerWorkbookPage extends BuildPathBasePage {
 				NewWizardMessages.SourceContainerWorkbookPage_folders_remove_button };
 
 		fFoldersList = new TreeListDialogField(adapter, buttonLabels,
-				new PHPBPListLabelProvider());
+				new PHPIPListLabelProvider());
 		fFoldersList.setDialogFieldListener(adapter);
 		fFoldersList
 				.setLabelText(NewWizardMessages.SourceContainerWorkbookPage_folders_label);
