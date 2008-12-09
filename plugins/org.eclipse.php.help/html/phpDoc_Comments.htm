@@ -17,23 +17,28 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 </style><style type="text/css">
 <!--
 div.whs1 { float:none; }
-table.whs2 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs3 { width:7.093%; }
 col.whs4 { width:92.907%; }
 tr.whs5 { x-cell-content-align:top; }
-td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-p.whs7 { font-size:6pt; }
-td.whs8 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
-img_whs10 { border:none; width:28px; height:18px; float:none; border-style:none; }
-td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
-p.whs12 { font-weight:bold; }
-p.whs13 { x-condition:Online; font-weight:normal; }
-p.whs14 { x-condition:Online; }
-div.whs15 { width:100%; }
-p.whs16 { text-align:right; x-condition:Product, Online; }
-p.whs17 { text-align:right; x-condition:Online; }
-p.whs18 { text-align:center; x-condition:PDT; text-decoration:underline; }
+td.whs6 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
+p.whs7 { font-style:italic; color:#0000ff; font-size:6pt; }
+img_whs8 { border:none; width:28px; height:41px; float:none; border-style:none; }
+td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+p.whs10 { font-weight:bold; }
+td.whs11 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs12 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs13 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+p.whs14 { font-size:6pt; }
+td.whs15 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs16 { border:none; width:28px; height:18px; float:none; border-style:none; }
+td.whs17 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+p.whs18 { x-condition:Online; font-weight:normal; }
+p.whs19 { x-condition:Online; }
+div.whs20 { width:100%; }
+p.whs21 { text-align:right; x-condition:Product, Online; }
+p.whs22 { text-align:right; x-condition:Online; }
+p.whs23 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -109,60 +114,87 @@ if (window.writeIntopicBar)
  constants to the code. Developers are prompted to immediately add a description 
  ensuring that the added elements are documented in their context and in 
  real-time.</p>
-<p>&nbsp;</p>
 <p class=ListBullet2 style="margin-left: 0px;">phpDoc blocks are descriptive 
  comments that are part of the application code. They are used to describe 
  the PHP element in the exact location in the code where the element appears. 
  The block consists of a short description, long description, and phpDoc 
  tags.</p>
-<p class=ListBullet2 style="margin-left: 0px;">&nbsp;</p>
-<p class=ListBullet2 style="margin-left: 0px;">Descriptions that are added 
- above a code element are also automatically added to the Code Assist bank 
- so that the next time the code element is used it is readily available 
- from the Code Assist list.</p>
-<p class=ListBullet2 style="margin-left: 0px;">In addition, the element's 
- descriptions will appear in the Outline view.<br>&nbsp;</p>
-<p class=ListBullet2 style="margin-left: 0px;">phpDoc blocks also serve 
- as the input for creating a PHPDoc.<br>
-See the <a HREF="Commenting_PHP_DocBlocks.htm">Commenting PHP DocBlocks</a> 
- topic for more information.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
 <col class="whs4">
 
 <tr valign="top" class="whs5">
-<td colspan="1" rowspan="1" width="7.093%" class="whs6">
-<p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs8">
+<td width="7.093%" class="whs6">
+<p class="whs7"><img src="txt_file_icon.png" x-maintain-ratio="TRUE" alt="Usage Example" width="28px" height="41px" border="0" class="img_whs8"></td>
+<td width="92.907%" class="whs9">
+<p class="whs10">Example:</p>
+<p>When creating a phpDoc Block commen for the following function:</p>
+<p class=code>function add ($a, $b) {</p>
+<p class=code>&nbsp;&nbsp;&nbsp;&nbsp;return $a + $b;</p>
+<p class=code>}</p>
+<p>&nbsp;the following comment will be created:</p>
+<p class=code>/**</p>
+<p class=code>&nbsp;* Enter description here...</p>
+<p class=code>&nbsp;*</p>
+<p class=code>&nbsp;* @param unknown_type $a</p>
+<p class=code>&nbsp;* @param unknown_type $b</p>
+<p class=code>&nbsp;* @return unknown</p>
+<p class=code>&nbsp;*/</td></tr>
+<tr valign="top" class="whs5">
+<td rowspan="1" colspan="2" width="100%" class="whs11">
+<p>The comments should now be edited with the relevant description and 
+ parameters.</td>
+</tr>
+</table>
+<p class=ListBullet2 style="margin-left: 0px;">Descriptions that are added 
+ for a code element are also automatically added to the Code Assist bank 
+ so that the next time the code element is used it is readily available 
+ from the Code Assist list. The element's descriptions will also appear 
+ in the Outline view.</p>
+<p class=Note>Note:</p>
+<p class=NoteText>PDT 
+ offers code assist support for magic members declared in code comments. 
+ See the <a href="Code_Assist_Concept.htm#magic_members">Code Assist</a> 
+ concept for more information.</p>
+<p class=ListBullet2 style="margin-left: 0px;">phpDoc blocks also serve 
+ as the input for creating a PHPDoc.</p>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs12">
+<col class="whs3">
+<col class="whs4">
+
+<tr valign="top" class="whs5">
+<td colspan="1" rowspan="1" width="7.093%" class="whs13">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs9">
 <p>&nbsp;</td></tr>
 <tr valign="top" class="whs5">
-<td width="7.093%" class="whs9">
-<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs10"></td>
-<td width="92.907%" class="whs11">
-<p class="whs12">Related Links:</p>
-<p class="whs13"><a href="Commenting_Code.htm" 
- style="x-condition: Online; font-weight: normal;">Commenting Code</a></p>
-<p class="whs14"><a href="How_to_Comment_and_Uncomment_PHP_Code.htm" 
- style="x-condition: Online;">Commenting PHP Code</a></p>
-<p class="whs14"><a href="Commenting_PHP_DocBlocks.htm" 
+<td width="7.093%" class="whs15">
+<p class="whs14"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs16"></td>
+<td width="92.907%" class="whs17">
+<p class="whs10">Related Links:</p>
+<p class="whs18"><a href="Commenting_PHP_DocBlocks.htm" 
  style="x-condition: Online;">Commenting PHP DocBlocks</a></p>
+<p class="whs18"><a href="Commenting_Code.htm" 
+ style="x-condition: Online; font-weight: normal;">Commenting Code</a></p>
+<p class="whs19"><a href="How_to_Comment_and_Uncomment_PHP_Code.htm" 
+ style="x-condition: Online;">Commenting PHP Code</a></p>
 </td></tr>
 <tr valign="top" class="whs5">
-<td colspan="1" rowspan="1" width="7.093%" class="whs9">
-<p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs11">
+<td colspan="1" rowspan="1" width="7.093%" class="whs15">
+<p class="whs14">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs17">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs15">
- <p align="right" class="whs16"><span 
+<div placeholder id="footer" class="whs20">
+ <p align="right" class="whs21"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
  the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
  Documentation</a> for the most up-to-date information.</p>
- <p align="right" class="whs17"><span style="background-color: #ffffff;"><a 
+ <p align="right" class="whs22"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs18">PHP Development 
+ <p align="center" class="whs23">PHP Development 
  Tool</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

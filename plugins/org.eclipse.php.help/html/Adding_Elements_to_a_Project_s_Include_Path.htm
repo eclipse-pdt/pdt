@@ -28,8 +28,8 @@ td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-st
 p.whs10 { font-weight:bold; }
 ol.whs11 { list-style:decimal; }
 p.whs12 { font-weight:normal; }
-img_whs13 { border:none; width:290px; height:277px; float:none; border-style:none; }
-img_whs14 { border:none; width:468px; height:271px; float:none; border-style:none; }
+img_whs13 { border:none; border-style:none; width:466px; height:252px; float:none; }
+ol.whs14 { list-style:lower-roman; }
 td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 table.whs16 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs17 { x-cell-content-align:top; height:16px; x-condition:Online; }
@@ -113,7 +113,7 @@ if (window.writeIntopicBar)
 <div class="whs1">
 </div>
 <p>This procedure describes 
- how to add a project/variable/folder to a project's <a HREF="Include_Paths.htm">include 
+ how to add a source folder/project/variable/folder to a project's <a HREF="Include_Paths.htm">include 
  path</a>.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
@@ -127,19 +127,43 @@ if (window.writeIntopicBar)
  include path:</p>
 <ol type="1" class="whs11">
 	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs12">In 
- PHP Explorer view, right-click the project's Include Paths.</p></li>
-	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs12">Select 
- 'Configure Include Paths'.</p></li>
+ PHP Explorer view, right-click the project and select Include Path | Configure 
+ Include Path...<br>
+	<span style="margin-left: 40px;">The project's PHP Include Path properties 
+ page will appear.</span></p></li>
 </ol>
-<p class=picture><img src="include_path_configure.png" x-maintain-ratio="TRUE" width="290px" height="277px" border="0" class="img_whs13"></p>
-<ol start="3" type="1" class="whs11">
-	<li style="margin-left: -20px;" class=p><p>The project's PHP Include 
- Path properties page will appear.</p></li>
+<p class=picture><img src="include_path_properties.png" x-maintain-ratio="TRUE" width="466px" height="252px" border="0" class="img_whs13"></p>
+<ol start="2" type="1" class="whs11">
+	<li style="margin-left: -20px; font-weight: bold; font-weight: normal; " 
+ class=p><p class="whs12"><span style="font-weight: bold;"><B>To 
+ configure source folders on your Include Path:</B></span></p></li>
 </ol>
-<p class=picture><img src="include_path_properties.png" x-maintain-ratio="TRUE" width="468px" height="271px" border="0" class="img_whs14"></p>
-<ol start="4" type="1" class="whs11">
-	<li style="margin-left: -20px;" class=p><p>To add a project to your 
- Include Path:</p></li>
+<ol start="1" type="1" class="whs11">
+	<li style="list-style: lower-roman;" type=i class=p><p>Select the Source 
+ tab.<br>
+	By default, all folders which are on your Build Path will be included 
+ in your Include Path.</p></li>
+	<li style="list-style: lower-roman;" type=i class=p><p>To remove a 
+ folder, select it and click Remove.</p></li>
+</ol>
+<p class=Note style="margin-left: 42px;">Note:</p>
+<p class=NoteText style="margin-left: 42px;">All folders within a specified 
+ parent directory are included in the Include Path. Conversely, removing 
+ the project root from the Include Path will remove all resources in the 
+ project from the Include Path. You can then add only the required folders.</p>
+<ol start="3" type="i" class="whs14">
+	<li class=P><p>To add a folder from your project, click the Add Folder 
+ button and select the required folder.<br>
+	A prompt will display, asking whether you would also like to add the 
+ selected folder(s) to your <a HREF="Build_Paths.htm">Build Path</a>. <br>
+	It is recommended that entries on your Build Path resemble entries 
+ on your Include Path.</p></li>
+	<li class=P><p>Click Yes to add the folder(s) to your Build Path or 
+ No for your Build Path to not be affected.</p></li>
+</ol>
+<ol start="5" type="1" class="whs11">
+	<li style="margin-left: -20px; font-weight: bold; " class=p><p><span 
+ style="font-weight: bold;"><B>To add a project to your Include Path:</B></span></p></li>
 </ol>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman;" type=i class=p><p>&nbsp;Select 
@@ -150,9 +174,9 @@ if (window.writeIntopicBar)
  you would like to add and click OK.<br>
 	The selected project(s) will be added to your project's Include Path.</p></li>
 </ol>
-<ol start="5" type="1" class="whs11">
-	<li style="margin-left: -20px;" class=p><p>To add Path Variables to 
- your Include Path:</p></li>
+<ol start="6" type="1" class="whs11">
+	<li style="margin-left: -20px; font-weight: bold; " class=p><p><span 
+ style="font-weight: bold;"><B>To add Path Variables to your Include Path:</B></span></p></li>
 </ol>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman;" type=i class=p><p>Select the Libraries 
@@ -175,9 +199,9 @@ To add a Variable to the Path Variables list, click Configure Variables
 <p class=Note style="margin-left: 24px;">Note:</p>
 <p class=NoteText style="margin-left: 24px;">The variable is a read-only 
  file and will not be available for editing.</p>
-<ol start="6" type="1" class="whs11">
-	<li style="margin-left: -20px;" class=p><p>To add external folders 
- to your Include Path:</p></li>
+<ol start="7" type="1" class="whs11">
+	<li style="margin-left: -20px; font-weight: bold; " class=p><p><span 
+ style="font-weight: bold;"><B>To add external folders to your Include Path:</B></span></p></li>
 </ol>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman;" type=i class=p><p>Select the Libraries 
@@ -191,12 +215,16 @@ To add a Variable to the Path Variables list, click Configure Variables
 	The folder will be added to your project's Include Path.</p></li>
 </ol>
 <p class=Note style="margin-left: 24px;">Note:</p>
-<p class=NoteText style="margin-left: 24px;">The library will be a read-only 
+<p class=NoteText style="margin-left: 24px;">The library is a read-only 
  file and will not be available for editing.</p>
-<ol start="7" type="1" class="whs11">
+<ol start="8" type="1" class="whs11">
 	<li style="margin-left: -20px;" class=p><p>Select the Order tab.</p></li>
-	<li style="margin-left: -20px;" class=p><p>Ensure the included elements 
- appear in the same order as they do in your php.ini.</p></li>
+	<li style="margin-left: -20px;" class=p><p>If necessary, rearrange 
+ the order of the entries to be searched for in the required order.<br>
+	See <a HREF="Include_Paths.htm">Include Paths</a> for more information 
+ on the order for which files are searched for in require/include calls.<br>
+	If applicable, it is recommended that elements appear in the same order 
+ as they do in your php.ini.</p></li>
 	<li style="margin-left: -20px;" class=p><p>If you want to rearrange 
  the order, select an element and click Up or Down to move it in the list.</p></li>
 	<li style="margin-left: -20px;" class=p><p>Once all the elements are 
