@@ -101,8 +101,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 						c.caretOffset = c.offset + buf.length();
 						String lineDelimiter = TextUtilities.getDefaultLineDelimiter(d);
 
-						int eolOffset = lineOffset + line.getLength();
-						int replacementLength = eolOffset - p;
+						int replacementLength = 0;
 						String restOfLine = d.get(p, replacementLength);
 						String endTag = lineDelimiter + indentation + " */"; //$NON-NLS-1$
 
