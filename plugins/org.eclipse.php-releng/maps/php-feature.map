@@ -9,5 +9,5 @@ plugin@org.eclipse.php.debug.ui=v20081209-1728,:pserver:anonymous@dev.eclipse.or
 plugin@org.eclipse.php.server.core=v20081209-1728,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.server.core
 plugin@org.eclipse.php.server.ui=v20081209-1728,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.server.ui
 plugin@org.eclipse.php.ui=v20081209-1728,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.ui
-plugin@org.eclipse.php.help=v20081209-1728,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.help
+plugin@org.eclipse.php.help=v20081209-1452,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.help
 plugin@org.eclipse.php.test=v20081209-1728,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/tests/org.eclipse.php.test
