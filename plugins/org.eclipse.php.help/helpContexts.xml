@@ -177,6 +177,10 @@
 		<description>Adding Elements to a Project's Include Path Help</description>
 		<topic href="html/Adding_Elements_to_a_Project_s_Include_Path.htm" label="Adding Elements to a Project's Include Path"/>
 	</context>
+		<context id="configuring_build_paths">
+		<description>Configuring a Project's PHP Build Path Help</description>
+		<topic href="html/Configuring_Build_Paths.htm" label="Configuring a Project's PHP Build Path"/>
+	</context>
 	<context id="reference">
 		<description>Reference Help</description>
 		<topic href="html/Reference.htm" label="Reference"/>
