@@ -167,6 +167,10 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					// get the "real" offset - adjusted according to the projection
 					int selectionOffset = getSelectedRange().x;
 					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+					if (sdRegion == null) {
+						super.doOperation(operation);
+						return;
+					}
 					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
 					if (textRegion instanceof ForeignRegion) {
 						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
