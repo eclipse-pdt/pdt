@@ -35,6 +35,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.*;
@@ -47,6 +48,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
@@ -103,7 +105,18 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
+		
+		setHelpContext(composite);
 	}
+
+
+
+	protected void setHelpContext(Composite parent) {
+		//FIXME : need to insert the right help context when it's ready
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,  IPHPHelpContextIds.ADDING_COMMENTS);
+	}
+	
+	
 
 	public URI getLocationURI() {
 		IEnvironment environment = getEnvironment();

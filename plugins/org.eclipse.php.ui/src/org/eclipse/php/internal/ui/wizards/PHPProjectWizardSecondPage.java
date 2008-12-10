@@ -46,10 +46,14 @@ import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPIncludePathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
@@ -258,6 +262,19 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			monitor.done();
 		}
 	}
+
+	@Override
+	public void createControl(Composite parent) {
+		super.createControl(parent);
+		setHelpContext(getControl());
+	}
+
+
+
+	protected void setHelpContext(Control control) {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,  IPHPHelpContextIds.ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH);
+	}
+	
 
 	/**
 	 * new project settings, helper

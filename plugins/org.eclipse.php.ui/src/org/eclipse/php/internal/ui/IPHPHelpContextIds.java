@@ -62,6 +62,7 @@ public interface IPHPHelpContextIds {
 				public static final String SETTING_UP_REMOTE_DEBUGGING = PREFIX + "setting_up_remote_debugging"; //$NON-NLS-1$ [html/Troubleshooting_Remote_Debugging.htm]
 			public static final String ADDING_A_SERVER_LOCATION_PATH_MAP = PREFIX + "adding_a_server_location_path_map"; //$NON-NLS-1$ [html/Adding_a_Server_Path_Map.htm]
 			public static final String ADDING_ELEMENTS_TO_A_PROJECT_S_INCLUDE_PATH = PREFIX + "adding_elements_to_a_project_s_include_path"; //$NON-NLS-1$ [html/Adding_Elements_to_a_Project_s_Include_Path.htm]
+			public static final String CONFIGURING_BUILD_PATHS = PREFIX + "configuring_build_paths"; //$NON-NLS-1$ [html/Configuring_Build_Paths.htm]
 		public static final String REFERENCE = PREFIX + "reference"; //$NON-NLS-1$ [html/Reference.htm]
 			public static final String PHP_PERSPECTIVES_AND_VIEWS = PREFIX + "php_perspectives_and_views"; //$NON-NLS-1$ [html/PHP_Perspectives_and_Views.htm]
 				public static final String PHP_PERSPECTIVE = PREFIX + "php_perspective"; //$NON-NLS-1$ [html/PHP_Perspective_Views.htm]

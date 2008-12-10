@@ -7,9 +7,13 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
 import org.eclipse.php.internal.ui.util.BusyIndicatorRunnableContext;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * New PHP Project Wizard - 3rd page - Build Paths configuration
@@ -64,6 +68,11 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 				fBuildPathsBlock.configureScriptProject(monitor);
 			}
 		}
+	}
+
+	@Override
+	protected void setHelpContext(Control control) {
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(control,  IPHPHelpContextIds.CONFIGURING_BUILD_PATHS);
 	}
 
 }
