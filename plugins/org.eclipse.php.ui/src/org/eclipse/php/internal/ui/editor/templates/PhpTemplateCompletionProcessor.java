@@ -76,6 +76,9 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 						// Find the structured document region:
 						IStructuredDocument document = (IStructuredDocument) domModelForPHP.getDocument().getStructuredDocument();
 						IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
+						if (sdRegion == null) { // empty file case
+							return false;
+						}
 						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
 
 						ITextRegionCollection container = sdRegion;
