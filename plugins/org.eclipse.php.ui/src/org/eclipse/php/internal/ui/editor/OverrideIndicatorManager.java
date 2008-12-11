@@ -178,6 +178,10 @@ class OverrideIndicatorManager implements IPhpScriptReconcilingListener {
 
 		final Map<OverrideIndicator, Position> annotationMap = new HashMap<OverrideIndicator, Position>(50);
 
+		if (ast.getSourceModule().isReadOnly()) {
+			return;
+		}
+		
 		ast.accept(new AbstractVisitor() {
 			/*
 			 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodDeclaration)
