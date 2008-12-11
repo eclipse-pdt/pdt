@@ -195,7 +195,7 @@ public class PHPexeItem {
 		if (executable.equals(this.executable)) {
 			return;
 		}
-		
+
 		this.executable = executable;
 		this.config = null;
 
@@ -328,7 +328,8 @@ public class PHPexeItem {
 				} else if (type.startsWith("cli")) { //$NON-NLS-1$
 					sapiType = SAPI_CLI;
 				} else {
-					PHPDebugPlugin.logWarningMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
+					PHPDebugPlugin.logErrorMessage("Can't determine type of the PHP executable"); //$NON-NLS-1$
+					this.executable = null;
 					return;
 				}
 
@@ -336,7 +337,8 @@ public class PHPexeItem {
 					name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			} else {
-				PHPDebugPlugin.logWarningMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$
+				PHPDebugPlugin.logErrorMessage("Can't determine version of the PHP executable");  //$NON-NLS-1$	
+				this.executable = null;
 				return;
 			}
 
@@ -355,7 +357,8 @@ public class PHPexeItem {
 						detectedConfig = null;
 					}
 				} else {
-					PHPDebugPlugin.logWarningMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
+					PHPDebugPlugin.logErrorMessage("Can't determine PHP.ini location of the PHP executable"); //$NON-NLS-1$
+					this.executable = null;
 					return;
 				}
 			}

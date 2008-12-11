@@ -380,6 +380,8 @@ public class PHPexes {
 						final File file = new File(filename);
 						if (file.exists()) {
 							final PHPexeItem newItem = new PHPexeItem(name, file, null, debuggerID, false);
+							if (null == newItem || null == newItem.getExecutable())
+								continue; // not adding "problematic" executables
 							newItem.setVersion(version);
 							addItem(newItem);
 							if (isDefault) {
