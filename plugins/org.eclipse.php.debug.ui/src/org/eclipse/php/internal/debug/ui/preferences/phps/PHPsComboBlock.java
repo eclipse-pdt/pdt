@@ -447,7 +447,13 @@ public class PHPsComboBlock implements ISelectionProvider {
 		// sort by name
 		Collections.sort(phpExecutables, new Comparator<PHPexeItem>() {
 			public int compare(final PHPexeItem o1, final PHPexeItem o2) {
-				return o1.getName().compareToIgnoreCase(o2.getName());
+				if (null != o1 && null != o2){
+				String o1Name = o1.getName();
+				String o2Name = o2.getName();
+				if (null != o1Name && null != o2Name)
+					return o1Name.compareToIgnoreCase(o2Name);
+				}
+				return 0;
 			}
 
 			public boolean equals(final Object obj) {

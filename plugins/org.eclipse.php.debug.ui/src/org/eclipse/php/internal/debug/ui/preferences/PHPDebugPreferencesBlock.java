@@ -60,6 +60,7 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
+	private static final String UNRESOLVED_PHP_VERSION = "Unresolved PHP Version"; //$NON-NLS-1$
 	private static final String DEBUGGERS_PAGE_ID = "org.eclipse.php.debug.ui.installedDebuggersPage"; //$NON-NLS-1$
 	private static final String SERVERS_PAGE_ID = "org.eclipse.php.server.internal.ui.PHPServersPreferencePage"; //$NON-NLS-1$
 	private static final String PHP_EXE_PAGE_ID = "org.eclipse.php.debug.ui.preferencesphps.PHPsPreferencePage"; //$NON-NLS-1$
@@ -89,7 +90,9 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 		PHPexes exes = PHPexes.getInstance();
 		String phpExeName = PHPDebugUIMessages.PhpDebugPreferencePage_noExeDefined;
 		if (exes.hasItems(PHPDebugPlugin.getCurrentDebuggerId())) {
-			phpExeName = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId()).getName();
+			String name = exes.getDefaultItem(PHPDebugPlugin.getCurrentDebuggerId()).getName();
+			if (null != name) 
+				phpExeName = name;
 		}
 		String transferEncoding = prefs.getString(PHPDebugCorePreferenceNames.TRANSFER_ENCODING);
 		String outputEncoding = prefs.getString(PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
@@ -223,7 +226,9 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			return;
 		}
 		for (PHPexeItem element : items) {
-			combo.add(element.getName());
+			String name = element.getName();
+			if (null == name) name = UNRESOLVED_PHP_VERSION ; 
+			combo.add(name);
 		}
 		// select the default item for the current selected debugger
 		if (fDefaultDebugger.getItemCount() > 0) {
@@ -231,6 +236,7 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			String defaultItemName;
 			if (defaultItem != null) {
 				defaultItemName = defaultItem.getName();
+				if (null == defaultItemName) defaultItemName = UNRESOLVED_PHP_VERSION ; 
 			} else {
 				defaultItemName = PHPDebugUIMessages.PHPDebuggersTable_notDefined;
 				if (combo.indexOf(defaultItemName) == -1) {
