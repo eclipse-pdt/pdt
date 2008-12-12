@@ -327,7 +327,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	}
 
 	protected BuildpathDetector createBuildpathDetector(IProgressMonitor monitor, IDLTKLanguageToolkit toolkit) throws CoreException {
-		BuildpathDetector detector = new BuildpathDetector(fCurrProject, toolkit);
+		BuildpathDetector detector = new PHPBuildpathDetector(fCurrProject, toolkit);
 		detector.detectBuildpath(new SubProgressMonitor(monitor, 20));
 		return detector;
 	}
