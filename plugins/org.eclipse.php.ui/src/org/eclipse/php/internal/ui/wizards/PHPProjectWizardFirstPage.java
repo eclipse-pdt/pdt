@@ -113,7 +113,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 	protected void setHelpContext(Composite parent) {
 		//FIXME : need to insert the right help context when it's ready
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,  IPHPHelpContextIds.ADDING_COMMENTS);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,  IPHPHelpContextIds.CREATING_PHP_PROJECTS);
 	}
 	
 	

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.util.Messages;
@@ -33,6 +34,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.PlatformUI;
 
 public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 
@@ -88,9 +90,10 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-
-		//HELP //FIXME : PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, IPHPHelpContextIds.PHP_BUILD_PREFERENCES);
+		//HELP //FIXME : PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHP_BUILD_PATH_PROPERTIES);	
 	}
+	
+
 
 	private void controlModified(Widget widget) {
 		if (widget == fSrcFolderNameText || widget == fBinFolderNameText) {
