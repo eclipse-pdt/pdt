@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="generator" content="Adobe RoboHelp - www.adobe.com">
-<title>Opening PHP Elements</title>
+<title>Creating PHP Projects</title>
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -16,7 +16,7 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-div.whs1 { float:none; }
+h1.whs1 { color:#00709e; }
 table.whs2 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs3 { width:7.093%; }
 col.whs4 { width:92.907%; }
@@ -29,8 +29,8 @@ td.whs10 { width:7.093%; padding-right:10px; padding-left:10px; border-left-styl
 img_whs11 { border:none; width:28px; height:33px; float:none; border-style:none; }
 td.whs12 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs13 { list-style:decimal; }
-img_whs14 { border:none; width:25px; height:26px; float:none; border-style:none; }
-img_whs15 { border:none; width:406px; height:229px; float:none; }
+img_whs14 { border:none; border-style:none; width:388px; height:489px; float:none; }
+p.whs15 { font-weight:normal; }
 td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs18 { x-cell-content-align:top; height:16px; x-condition:Online; }
@@ -77,7 +77,7 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addAvenueInfo("Zend Studio for Eclipse User Guide","Searching_for_PHP_Elements.htm","Formatting_Code.htm");
+	addTocInfo("PDT Help\nTasks\nCreating PHP Projects");
 
 	}
 
@@ -109,12 +109,9 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<h1>Opening PHP Elements</h1>
-<div class="whs1">
-</div>
-<p>&nbsp;</p>
-<p>This procedure describes how to use the Open PHP Element function to 
- navigate to a PHP element (Class, Function or Constant) in an open project.</p>
+<h1 class="whs1">Creating PHP Projects</h1>
+<p>PHP projects are the containers within which all PHP and other application 
+ files should be created. </p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs2">
 <col class="whs3">
 <col class="whs4">
@@ -128,28 +125,68 @@ if (window.writeIntopicBar)
 <td width="7.093%" class="whs10">
 <p class="whs7"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs11"></td>
 <td width="92.907%" class="whs12">
-<p class="whs9">To open a PHP Element:</p>
+<p class="whs9">To create a new PHP project:</p>
 <ol type="1" class="whs13">
-	<li style="margin-left: -20px;" class=p><p>From the Menu Bar, go to 
- Navigate | Open PHP Element -or- click the Open PHP Element icon on the 
- Toolbar <img src="toolbar_open_element.png" x-maintain-ratio="TRUE" width="25px" height="26px" border="0" class="img_whs14">.<br>
-	The Open PHP Element dialog will open.</p></li>
-	<li style="margin-left: -20px;" class=p><p>Enter the first few characters 
- of the element which you want to open.<br>
-	Resources that begin with those letters will appear in the 'Matching 
- Resources' pane, listed alphabetically.</p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>From 
+ the menu bar, go to File | New | PHP Project.<br>
+	The New PHP Project wizard is displayed.</p></li>
 </ol>
-<p class=picture style="x-condition: PDT;"><img src="open_php_element_dialog_pdt.png" x-maintain-ratio="TRUE" width="406px" height="229px" border="0" class="img_whs15"></p>
+<p class=picture style="x-condition: PDT;"><img src="new_php_project_wizard.png" x-maintain-ratio="TRUE" width="388px" height="489px" border="0" class="img_whs14"></p>
+<ol start="2" type="1" class="whs13">
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs15">Enter 
+ the following information:</p></li>
+	<li style="font-weight: normal; margin-left: -20px;" class=p-ListBullet1><p 
+ class=ListBullet1>Project name - The required project name</p></li>
+	<li style="font-weight: normal; margin-left: -20px;" class=p-ListBullet1><p 
+ class=ListBullet1>Contents - Select whether to:</p></li>
+</ol>
+<ul><li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Create 
+ a new project in the workspace - Creates a new project with the specified 
+ name.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Create 
+ a project from existing source - opens an existing PHP project in the 
+ workspace. Click Browse to select the existing project.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>PHP 
+ Version - Select whether to:</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Use 
+ default PHP settings - Uses the default PHP Interpreter settings.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Use 
+ project specific settings - Select the PHP version to be used for the 
+ project and whether ASP tags are used as PHP tags. See <a HREF="PHP_Interpreter.htm">PHP 
+ Interpreter Preferences</a> for more information.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Project 
+ Layout - Select whether to:</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Use 
+ project as source folder - All resources within the project will be added 
+ to the Build Path by default.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Create 
+ separate folders for source files and public resources - Separate folders 
+ will be created in which you can place resources which should be included 
+ or excluded from the Build Path.<br>
+	See <a HREF="Configuring_Build_Paths.htm">Configuring a Project's PHP 
+ Build Path</a> for more information.</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>JavaScript 
+ Support - Mark the 'Enable JavaScript support for this project' checkbox 
+ for JavaScript functionality (e.g. JavaScript Code Assist options) to 
+ be available to the project.<br>
+	See <a HREF="Enabling_JavaScript_Support_in_PHP_Projects.htm">Enabling 
+ JavaScript Support in PHP Projects</a> for more information.</p></li>
+</ul>
 <ol start="3" type="1" class="whs13">
-	<li style="margin-left: -20px;" class=p><p>You can filter by element 
- type (class, function or constant) by marking/unmarking the relevant checkboxes.</p></li>
-	<li style="margin-left: -20px;" class=p><p>Select the required element 
- and click OK.</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Next to <a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm">Configure 
+ the project's Include Path</a> (this can also be done following the project's 
+ creation).</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Next to <a HREF="Configuring_Build_Paths.htm">Configure 
+ the project's PHP Build Path</a> (this can also be done following the 
+ project's creation).</p></li>
+	<li style="margin-left: -20px;" class=p><p>Click Finish.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs5">
 <td rowspan="1" colspan="2" width="100%" class="whs16">
-<p>The file containing the element declaration will open in the editor, 
- with the element highlighted.</td>
+<p>The new PHP project will be created in your workspace and displayed 
+ in <a HREF="PHP_Explorer_view.htm">PHP Explorer View</a>.</p>
+<p>You can now start developing your application by <a HREF="File_Creation.htm">creating 
+ PHP Files</a> within your project.</td>
 </tr>
 </table>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs17">
@@ -163,10 +200,13 @@ if (window.writeIntopicBar)
 <tr valign="top" class="whs21"><td width="7.093%" class="whs22">
 <p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs23"></td>
 <td width="92.907%" class="whs24">
-<p><span style="font-weight: bold;"><B>Related Links:</B></span><a HREF="Navigate.htm"><br>
-Navigate Menu</a></p>
-<p><a HREF="Hover_Support.htm">Hover Support</a></p>
-<p><a HREF="Using_Smart_Goto_Source.htm">Using Smart Goto Source</a></td></tr>
+<p class="whs9">Related Links:</p>
+<p><a HREF="Creating_and_Uploading_a_Project.htm">Creating Projects and 
+ Files</a></p>
+<p><a HREF="Getting_Started.htm">Getting Started</a></p>
+<p><a HREF="File_Creation.htm">Creating PHP Files</a><a HREF="Build_Paths.htm"><br>
+PHP Build Path</a></p>
+<p><a HREF="Include_Paths.htm">PHP Include Paths</a></td></tr>
 <tr valign="top" class="whs25"><td colspan="1" rowspan="1" width="7.093%" class="whs22">
 <p class="whs7">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs24">

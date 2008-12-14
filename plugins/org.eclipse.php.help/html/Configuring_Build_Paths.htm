@@ -33,8 +33,8 @@ ol.whs14 { list-style:decimal; }
 td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 p.whs16 { font-weight:normal; text-decoration:underline; }
 img_whs17 { border:none; width:363px; height:228px; float:none; border-style:none; }
-img_whs18 { border:none; width:294px; height:227px; float:none; border-style:none; }
-img_whs19 { border:none; width:316px; height:255px; float:none; border-style:none; }
+img_whs18 { border:none; border-style:none; width:350px; height:208px; float:none; }
+img_whs19 { border:none; border-style:none; width:350px; height:253px; float:none; }
 table.whs20 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs21 { x-cell-content-align:top; height:16px; x-condition:Online; }
 td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
@@ -133,6 +133,9 @@ If you selected to 'create separate folders for source files and public
  to the options listed below.</p>
 <p class="whs2">Once you have made changes, click OK to 
  save.</p>
+<p class=Note>Note:</p>
+<p class=NoteText>By default, all folders which are on your Build Path 
+ will be included in your Include Path.</p>
 <h3><a name=include_exclude_build_path1></a>Configuring Inclusion/Exclusion 
  Patterns for the Project</h3>
 <p>By configuring inclusion/exclusion patterns for the Build Path, you 
@@ -210,24 +213,24 @@ If you selected to 'create separate folders for source files and public
  necessary, click Create New Folder to create a new folder.</p></li>
 	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Select 
  the required folder and click OK.</p></li>
-	<li style="margin-left: -20px; font-weight: normal;" class=p><p>The folderwill be added 
- as a separate source folder in the Build Path list.</p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>The 
+ folder will be added as a separate source folder in the Build Path list.</p></li>
 </ol>
 <p class=Note>Note:</p>
 <p class=NoteText>In order to overcome the nesting conflict, &nbsp;you 
  should exclude the folder you have just added from the parent folder's 
  Build Path. See '<a href="#include_exclude_build_path">Configuring Inclusion/Exclusion 
- Patterns</a>', above, for information &nbsp;on how to 
- exclude the folder and all resources contained within it.</p>
+ Patterns</a>', above, for information on how to exclude the folder and 
+ all resources contained within it.</p>
 <p class=picture><img src="build_path_add_source_folder.png" x-maintain-ratio="TRUE" width="363px" height="228px" border="0" class="img_whs17"></p>
 <p class="whs16">From PHP 
  Explorer view:</p>
 <ol type="1" class="whs14">
-	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs2">Right-click 
- the project and select Build Path | New Source Folder.<span style="font-weight: normal;"><br>
-	The New Source Folder dialog will be displayed.</span></p></li>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>Right-click 
+ the project and select Build Path | New Source Folder.<br>
+	The New Source Folder dialog will be displayed.</p></li>
 </ol>
-<p class=picture><img src="build_path_new_source_folder.png" x-maintain-ratio="TRUE" width="294px" height="227px" border="0" class="img_whs18"></p>
+<p class=picture style="x-condition: PDT;"><img src="build_path_new_source_folder.png" x-maintain-ratio="TRUE" width="350px" height="208px" border="0" class="img_whs18"></p>
 <ol start="2" type="1" class="whs14">
 	<li style="margin-left: -20px;" class=p><p>Enter the name for the new 
  folder in the Folder name field.</p></li>
@@ -282,7 +285,7 @@ If you selected to 'create separate folders for source files and public
  Path | Link Source.<br>
 	The Link Source dialog is displayed.</p></li>
 </ol>
-<p class=picture><img src="build_path_link_source.png" x-maintain-ratio="TRUE" width="316px" height="255px" border="0" class="img_whs19"></p>
+<p class=picture><img src="build_path_link_source.png" x-maintain-ratio="TRUE" width="350px" height="253px" border="0" class="img_whs19"></p>
 <ol start="2" type="1" class="whs14">
 	<li style="font-weight: bold; margin-left: -20px;" class=p><p>Click 
  the 'Browse..' button and browse to the location of the folder you want 

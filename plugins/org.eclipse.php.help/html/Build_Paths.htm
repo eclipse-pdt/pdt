@@ -104,14 +104,17 @@ if (window.writeIntopicBar)
 <h1>PHP Build Path</h1>
 <p>The PHP build process scans all files, folders, projects and libraries 
  that are on the project's PHP Build Path so that resources which are referenced 
- in the project can be made available for Code Assist options and Refactoring 
- operations. </p>
-<p>The project's Build Path properties page allows you to select PHP resources 
+ in the project can be made available for Code Assist options. This is done in order to get notification 
+ about changes in the file system (e.g. files added/removed from the project, 
+ code changes etc.) and in order to maintain the code data base (user classes, 
+ functions, variables etc.).</p>
+<p>&nbsp;</p>
+<p>Configuring the project's Build Path allows you to select PHP resources 
  to include/exclude from this process. Rather than automatically scanning 
  all referenced projects and libraries, configuring the Build Path allows 
  you to select which resources will be scanned (letting you, for example, 
  exclude large files containing images or other types of files not containing 
- code), thereby significantly speeding up the build process.</p>
+ code). This can significantly speed up the build process.</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs1">
 <col class="whs2">
 <col class="whs3">
@@ -125,9 +128,8 @@ if (window.writeIntopicBar)
 <p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs10"></td>
 <td width="92.907%" class="whs11">
 <p class="whs12">Related Links:</p>
-<p class="whs13"><a HREF="Configuring_Build_Paths.htm" 
- style="font-weight: normal;"><span style="font-weight: normal;">Configuring 
- a Project's Build Path</a></span></p>
+<p class="whs13"><a HREF="Configuring_Build_Paths.htm"><span 
+ style="font-weight: normal;">Configuring a Project's Build Path</span></a></p>
 <p class="whs14"><a HREF="PHP_Explorer_view.htm" style="x-condition: Online;">PHP 
  Explorer View</a></td></tr>
 <tr valign="top" class="whs15"><td colspan="1" rowspan="1" width="7.093%" class="whs16">
