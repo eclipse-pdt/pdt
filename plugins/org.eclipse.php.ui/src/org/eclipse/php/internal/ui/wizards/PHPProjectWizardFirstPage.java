@@ -338,7 +338,43 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				setPageComplete(false);
 				return;
 			}
-
+			final String location = fPHPLocationGroup.getLocation().toOSString();
+			// check whether location is empty
+			if (location.length() == 0) {
+				setErrorMessage(null);
+				setMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_enterLocation);
+				setPageComplete(false);
+				return;
+			}
+			// check whether the location is a syntactically correct path
+			if (!Path.EMPTY.isValidPath(location)) {
+				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_invalidDirectory);
+				setPageComplete(false);
+				return;
+			}
+			// check whether the location has the workspace as prefix
+			IPath projectPath = Path.fromOSString(location);
+			if (!fPHPLocationGroup.isInWorkspace()
+					&& Platform.getLocation().isPrefixOf(projectPath)) {
+				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_cannotCreateInWorkspace);
+				setPageComplete(false);
+				return;
+			}
+			// If we do not place the contents in the workspace validate the
+			// location.
+			if (!fPHPLocationGroup.isInWorkspace()) {
+				IEnvironment environment = getEnvironment();
+				if (EnvironmentManager.isLocal(environment)) {
+					final IStatus locationStatus = workspace
+							.validateProjectLocation(handle, projectPath);
+					if (!locationStatus.isOK()) {
+						setErrorMessage(locationStatus.getMessage());
+						setPageComplete(false);
+						return;
+					}
+				}
+			}
+			
 			setPageComplete(true);
 			setErrorMessage(null);
 			setMessage(null);
