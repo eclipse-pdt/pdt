@@ -33,6 +33,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 	private static final String ID_TYPEHIERARCHY = "org.eclipse.dltk.ui.TypeHierarchy"; //$NON-NLS-1$
 	private static final String ID_FUNCTIONS = "org.eclipse.php.ui.functions"; //$NON-NLS-1$
 	private static final String ID_PROJECT_OUTLINE = "org.eclipse.php.ui.projectOutline"; //$NON-NLS-1$
+	private static final String ORG_ECLIPSE_PHP_DEBUG_UI_PHPDEBUG_PERSPECTIVE = "org.eclipse.php.debug.ui.PHPDebugPerspective"; //$//$NON-NLS-1$
 	
 	public void createInitialLayout(IPageLayout layout) {
 
@@ -40,7 +41,7 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		addViews(layout);
 
 		layout.addPerspectiveShortcut(PERSPECTIVE_ID); 
-		layout.addPerspectiveShortcut("org.eclipse.php.debug.ui.PHPDebugPerspective");  //$NON-NLS-1$
+		layout.addPerspectiveShortcut(ORG_ECLIPSE_PHP_DEBUG_UI_PHPDEBUG_PERSPECTIVE);  //$NON-NLS-1$
 
 		layout.addShowViewShortcut(ID_EXPLORER);
 		layout.addShowViewShortcut(ID_TYPEHIERARCHY);
@@ -65,7 +66,6 @@ public class PHPPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION, IPageLayout.LEFT, 0.22f, editorArea);
 		topLeft.addView(ID_EXPLORER);
 		topLeft.addView(ID_TYPEHIERARCHY);
-		topLeft.addPlaceholder("org.eclipse.dltk.ui.TypeHierarchy");
 
 		// Bottom: Attributes view, Problem View, Task List, placeholder for Design View Log
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION, IPageLayout.BOTTOM, 0.75f, editorArea);
