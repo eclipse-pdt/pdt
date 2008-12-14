@@ -175,7 +175,7 @@
 	</context>
 	<context id="adding_elements_to_a_project_s_include_path">
 		<description>Adding Elements to a Project's Include Path Help</description>
-		<topic href="html/Adding_Elements_to_a_Project_s_Include_Path.htm" label="Adding Elements to a Project's Include Path"/>
+		<topic href="html/Adding_Elements_to_a_Project_s_Include_Path.htm" label="Configuring a Project's PHP Include Path"/>
 	</context>
 		<context id="configuring_build_paths">
 		<description>Configuring a Project's PHP Build Path Help</description>
@@ -395,6 +395,14 @@
 	</context>
  <context id="creating_php_projects">
     <description>Creating PHP Projects</description>
-    <topic href="html/Creating_PHP_Projects.htm" label="Help_Topic"/>
+    <topic href="html/Creating_PHP_Projects.htm" label="Creating PHP Projects"/>
+ </context>
+ <context id="php_include_path_properties">
+    <description>PHP Include Path Properties</description>
+    <topic href="html/PHP_Include_Path_Properties.htm" label="PHP Include Path Properties"/>
+ </context>
+  <context id="php_build_path_properties">
+    <description>PHP Build Path Properties</description>
+    <topic href="html/PHP_Build_Path_Properties.htm" label="PHP Build Path Properties"/>
  </context>
 </contexts>
