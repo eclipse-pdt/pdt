@@ -112,7 +112,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 
 	protected void setHelpContext(Composite parent) {
-		//FIXME : need to insert the right help context when it's ready
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent,  IPHPHelpContextIds.CREATING_PHP_PROJECTS);
 	}
 	
@@ -395,21 +394,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		}
 
 		public JavaScriptSupportGroup(Composite composite, WizardPage projectWizardFirstPage) {
-
+			final int numColumns = 3;
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
-			GridLayout layout = new GridLayout();
-
-			fGroup.setLayout(layout);
-			GridData data = new GridData(GridData.FILL_BOTH);
-			fGroup.setLayoutData(data);
+			
+			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
 			fGroup.setText(PHPUIMessages.getString("JavaScriptSupportGroup_OptionBlockTitle"));
 
-			Composite checkLinkComposite = new Composite(fGroup, SWT.NONE);
-			checkLinkComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			checkLinkComposite.setLayout(new GridLayout(2, false));
-
-			fEnableJavaScriptSupport = new Button(checkLinkComposite, SWT.CHECK | SWT.RIGHT);
+			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
 			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport"));
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
@@ -435,6 +428,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		private Link fPreferenceLink;
 
 		public LayoutGroup(Composite composite) {
+			final int numColumns = 3;
+			
 			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
 			fStdRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_ProjectSrc"));
 			fStdRadio.setDialogFieldListener(this);
@@ -452,9 +447,8 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			//createContent
 			fGroup = new Group(composite, SWT.NONE);
 			fGroup.setFont(composite.getFont());
-
-			fGroup.setLayout(initGridLayout(new GridLayout(3, false), true));
-			fGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
 			fGroup.setText(PHPUIMessages.getString("LayoutGroup_OptionBlock_Title"));
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
@@ -464,7 +458,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 			fPreferenceLink = new Link(fGroup, SWT.NONE);
 			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
-			//fPreferenceLink.setLayoutData(new GridData(GridData.END, GridData.END, false, false));
 			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 			fPreferenceLink.addSelectionListener(this);
 			fPreferenceLink.setEnabled(true);
