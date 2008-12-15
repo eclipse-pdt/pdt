@@ -94,7 +94,9 @@ public class CodeAssistUtils {
 	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
+	
 	private static final IModelElement[] EMPTY = new IModelElement[0];
+	private static final IType[] EMPTY_TYPES = new IType[0];
 
 	public static boolean startsWithIgnoreCase(String word, String prefix) {
 		return word.toLowerCase().startsWith(prefix.toLowerCase());
@@ -342,7 +344,7 @@ public class CodeAssistUtils {
 				}
 			}
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
@@ -367,7 +369,7 @@ public class CodeAssistUtils {
 				return modelElementsToTypes(modelElements);
 			}
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
@@ -394,7 +396,7 @@ public class CodeAssistUtils {
 		if (classMethod.length > 0) {
 			return getFunctionReturnType(classMethod[0]);
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
@@ -444,7 +446,7 @@ public class CodeAssistUtils {
 		if (modelElements != null) {
 			return modelElementsToTypes(modelElements);
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
@@ -576,14 +578,14 @@ public class CodeAssistUtils {
 		boolean isClassTriger = false;
 
 		if (endPosition < 2) {
-			return null;
+			return EMPTY_TYPES;
 		}
 		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
 		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
 			isClassTriger = true;
 		} else {
-			return null;
+			return EMPTY_TYPES;
 		}
 
 		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 2);
@@ -682,7 +684,7 @@ public class CodeAssistUtils {
 			}
 			return returnTypes.toArray(new IType[returnTypes.size()]);
 		}
-		return null;
+		return EMPTY_TYPES;
 	}
 
 	/**
