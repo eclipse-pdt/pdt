@@ -63,6 +63,16 @@ propertyName=propertyValue
 
 		<property file="${buildConfigFile}" />
 
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement path="${classpath}" />
+				<pathelement location="${thirdPartyJarsDir}/ant-contrib.jar" />
+				<fileset dir="/usr/share/java">
+					<include name="**/ant-contrib*.jar" />
+				</fileset>
+			</classpath>
+		</taskdef>
+
 		<echo message="buildVer = ${buildVer}" />
 		<echo message="subprojectName = ${subprojectName}" />
 
