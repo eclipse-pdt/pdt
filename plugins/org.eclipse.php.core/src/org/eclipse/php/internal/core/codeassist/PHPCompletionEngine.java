@@ -647,6 +647,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		boolean inClass = false;
 		try {
 			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			while (enclosingElement instanceof IField) {
+				enclosingElement = enclosingElement.getParent();
+			}
 			if (enclosingElement instanceof IType) {
 				inClass = true;
 			}
@@ -694,6 +697,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				// Complete local scope variables:
 				try {
 					IModelElement enclosingElement = sourceModule.getElementAt(offset);
+					while (enclosingElement instanceof IField) {
+						enclosingElement = enclosingElement.getParent();
+					}
 					if (enclosingElement instanceof IMethod) {
 						IMethod method = (IMethod) enclosingElement;
 						int mask = 0;
@@ -1378,6 +1384,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				IType enclosingClass = null;
 				try {
 					IModelElement enclosingElement = sourceModule.getElementAt(offset);
+					while (enclosingElement instanceof IField) {
+						enclosingElement = enclosingElement.getParent();
+					}
 					if (enclosingElement instanceof IMethod) {
 						IModelElement parent = ((IMethod)enclosingElement).getParent();
 						if (parent instanceof IType) {
