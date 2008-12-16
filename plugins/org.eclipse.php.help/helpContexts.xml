@@ -405,4 +405,8 @@
     <description>PHP Build Path Properties</description>
     <topic href="html/PHP_Build_Path_Properties.htm" label="PHP Build Path Properties"/>
  </context>
+  <context id="new_project_layout_preferences">
+    <description>New Project Layout Preferences</description>
+    <topic href="html/New_Project_Layout_Preferences.htm" label="New Project Layout Preferences"/>
+ </context> 
 </contexts>
