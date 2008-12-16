@@ -877,8 +877,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					showClassStaticCall(offset, types, functionName);
 				}
 			} else {
-				String parent = statementText.toString().substring(0, statementText.toString().lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
-				boolean isThisVar = parent.equals("$this"); //$NON-NLS-1$
+				boolean isThisVar = false;
+				final String text = statementText.toString();
+				final String parent = text.substring(0, text.lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
+				// check if the end of the statement is $this expression
+				if (parent.length() >= 5) {
+					isThisVar = "$this".equals(parent.substring(Math.max(0, parent.length() - 5))) ; //$NON-NLS-1$					
+				} 
 				//boolean addVariableDollar = parent.endsWith("()");
 				boolean addVariableDollar = false;
 				showClassCall(offset, types, functionName, isThisVar, addVariableDollar);
