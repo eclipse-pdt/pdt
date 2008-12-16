@@ -90,8 +90,9 @@ public class PHPProjectLayoutPreferencePage extends PropertyAndPreferencePage {
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		//HELP //FIXME : PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.PHP_BUILD_PATH_PROPERTIES);	
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(getControl(), IPHPHelpContextIds.NEW_PROJECT_LAYOUT_PREFERENCES);
 	}
+	
 	
 
 
