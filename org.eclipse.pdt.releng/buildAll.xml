@@ -114,8 +114,8 @@ depFilesListExtras=
 		<!-- additional requirement for PDT, since it packs all-in-ones based on Eclipse platform instead of SDK --> 
 		<propertyregex property="thisEclipseCVSClientFile"
 		               input="${eclipseFile}"
-		               regexp="(eclipse-SDK-)(.+)(-linux-gtk\.tar\.gz)"
-		               replace="eclipse-CVS-Client\2.zip"
+		               regexp="(.+eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
+		               replace="\1CVS-Client-\3.zip"
 		               casesensitive="false"
 		/>
 		<!-- <echo message="this eclipseCVSClientFile = ${thisEclipseCVSClientFile}" /> -->
@@ -128,7 +128,7 @@ depFilesListExtras=
 				<propertyregex property="thisEclipseCVSClientURL"
 				               input="${eclipseURL}"
 				               regexp="(.+eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
-				               replace="\1${allInOneEclipseBase}\3.zip"
+				               replace="\1CVS-Client-\3.zip"
 				               casesensitive="false"
 				/>
 				<!-- <echo message="this eclipseCVSClientURL = ${thisEclipseCVSClientURL}" /> -->
