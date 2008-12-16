@@ -132,7 +132,6 @@ depFilesListExtras=
 				               casesensitive="false"
 				/>
 				<!-- <echo message="this eclipseCVSClientURL = ${thisEclipseCVSClientURL}" /> -->
-				<echo-timestamp />
 				<get src="${thisEclipseCVSClientURL}" dest="${downloadsDir}/${thisEclipseCVSClientFile}" usetimestamp="true" />
 				<touch file="${downloadsDir}/${thisEclipseCVSClientFile}" />
 			</then>
