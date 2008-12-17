@@ -393,20 +393,108 @@
 		<description>Setting Breakpoints</description>
 		<topic href="html/Setting_Breakpoints.htm" label="Setting Breakpoints"/>	
 	</context>
- <context id="creating_php_projects">
-    <description>Creating PHP Projects</description>
-    <topic href="html/Creating_PHP_Projects.htm" label="Creating PHP Projects"/>
- </context>
- <context id="php_include_path_properties">
-    <description>PHP Include Path Properties</description>
-    <topic href="html/PHP_Include_Path_Properties.htm" label="PHP Include Path Properties"/>
- </context>
-  <context id="php_build_path_properties">
-    <description>PHP Build Path Properties</description>
-    <topic href="html/PHP_Build_Path_Properties.htm" label="PHP Build Path Properties"/>
- </context>
-  <context id="new_project_layout_preferences">
-    <description>New Project Layout Preferences</description>
-    <topic href="html/New_Project_Layout_Preferences.htm" label="New Project Layout Preferences"/>
- </context> 
-</contexts>
+ 	<context id="creating_php_projects">
+    	<description>Creating PHP Projects</description>
+    	<topic href="html/Creating_PHP_Projects.htm" label="Creating PHP Projects"/>
+ 	</context>
+ 	<context id="php_include_path_properties">
+	    <description>PHP Include Path Properties</description>
+    	<topic href="html/PHP_Include_Path_Properties.htm" label="PHP Include Path Properties"/>
+ 	</context>
+  	<context id="php_build_path_properties">
+    	<description>PHP Build Path Properties</description>
+    	<topic href="html/PHP_Build_Path_Properties.htm" label="PHP Build Path Properties"/>
+ 	</context>
+  	<context id="new_project_layout_preferences">
+    	<description>New Project Layout Preferences</description>
+    	<topic href="html/New_Project_Layout_Preferences.htm" label="New Project Layout Preferences"/>
+ 	</context> 
+  	<context id="code_templates_preferences">
+	    <description>Code Templates Preferences</description>
+	    <topic href="html/Code_Templates_Preferences.htm" label="Code Templates Preferences"/>
+ 	</context>
+ 	<context id="step_filtering_preferences">
+	    <description>Step Filtering Preferences</description>
+	    <topic href="html/Step_Filtering_Preferences.htm" label="Step Filtering Preferences"/>
+ 	</context> 
+ 	<context id="step_filtering_preferences">
+	    <description>Step Filtering Preferences</description>
+	    <topic href="html/Step_Filtering_Preferences.htm" label="Step Filtering Preferences"/>
+ 	</context> 
+ 	<context id="mark_occurences_preferences">
+	    <description>Mark Occurences Preferences</description>
+	    <topic href="html/Mark_Occurences.htm" label="Mark Occurences Preferences"/>
+ 	</context> 
+ 	<context id="save_actions_preferences">
+	    <description>Save Actions Preferences</description>
+	    <topic href="html/Save_Actions.htm" label="Save Actions Preferences"/>
+ 	</context> 
+ 	<context id="php_working_sets">
+	    <description>PHP Working Sets</description>
+	    <topic href="html/PHP_Working_Sets.htm" label="PHP Working Sets"/>
+ 	</context> 
+ 	<context id="breakpoints">
+	    <description>Breakpoints</description>
+	    <topic href="html/Breakpoints.htm" label="Breakpoints"/>
+ 	</context> 
+ 	<context id="opening_types_methods">
+	    <description>Opening Types / Methods</description>
+	    <topic href="html/Opening_Types_Methods.htm" label="Opening Types / Methods"/>
+ 	</context> 
+ 	<context id="viewing_type_hierarchies">
+	    <description>Viewing Type Hierarchies</description>
+	    <topic href="html/Viewing_Type_Hierarchies.htm" label="Viewing Type Hierarchies"/>
+ 	</context> 
+ 	<context id="build_paths">
+	    <description>Build Paths</description>
+    	<topic href="html/Build_Paths.htm" label="Build Paths"/>
+ 	</context> 
+ 	<context id="configuring_build_paths">
+	    <description>Configuring Build Paths</description>
+	    <topic href="html/Configuring_Build_Paths.htm" label="Configuring Build Paths"/>
+ 	</context> 
+ 	<context id="resource_properties">
+	    <description>Resource Properties</description>
+	    <topic href="html/Resource_Properties.htm" label="Resource Properties"/>
+ 	</context> 
+ 	<context id="builders_properties">
+	    <description>Builders Properties</description>
+	    <topic href="html/Builders_Properties.htm" label="Builders Properties"/>    		   
+ 	</context> 
+ 	<context id="code_templates_properties">
+	    <description>Code Templates Properties</description>
+	    <topic href="html/Code_Templates_Properties.htm" label="Code Templates Properties"/>
+ 	</context>
+  	<context id="formatter_properties">
+	    <description>Formatter Properties</description>
+	    <topic href="html/Formatter_Properties.htm" label="Formatter Properties"/>
+  	</context> 
+  	<context id="php_debug_properties">
+	    <description>PHP Debug Properties</description>
+	    <topic href="html/PHP_Debug_Properties.htm" label="PHP Debug Properties"/>
+  	</context>
+  	<context id="php_interpreter_properties">
+	    <description>PHP Interpreter Properties</description>
+    	<topic href="html/PHP_Interpreter_Properties.htm" label="PHP Interpreter Properties"/>
+  	</context> 
+  	<context id="php_task_tags_properties">
+  		<description>PHP Task Tags Properties</description>
+    	<topic href="html/PHP_Task_Tags_Properties.htm" label="PHP Task Tags Properties"/>
+  	</context>
+ 	<context id="project_references_properties">
+    	<description>Project References Properties</description>
+    	<topic href="html/Project_References_Properties.htm" label="Project References Properties"/>
+  	</context>
+  	<context id="save_actions_properties">
+	    <description>Save Actions Properties</description>
+	    <topic href="html/Save_Actions_Properties.htm" label="Save Actions Properties"/>
+  	</context>
+  	<context id="task_tags_properties">
+    	<description>Task Tags Properties</description>
+    	<topic href="html/Task_Tags_Properties.htm" label="Task Tags Properties"/>
+  	</context>
+  	<context id="type_hierarchy_view">
+    	<description>Type Hierarchy View</description>
+	    <topic href="html/Type_Hierarchy_View.htm" label="Type Hierarchy View"/>
+  	</context>
+ </contexts>

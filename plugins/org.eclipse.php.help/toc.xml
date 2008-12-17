@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--RoboML: Table of Content-->
 <toc label="Table of Contents">
- <topic label="PDT Help">
-   <topic label="Table of Contents" href="html/toc.htm"/>
+ <topic label="Table of Contents" href="html/toc.htm">
+   <topic label="What's New" href="html/What_s_New.htm"/>
   <topic label="Getting Started" href="html/Getting_Started.htm">
     <topic label="Quick Start" href="html/Quick_Start.htm"/>
    <topic label="Basic Tutorials" href="html/Basic_Tutorial.htm">
@@ -29,14 +29,16 @@
     <topic label="Type Hierarchy" href="html/Show_Type_Hierarchy.htm"/>
     <topic label="PHP Manual Integration" href="html/PHP_Manual_Integration.htm"/>
     <topic label="Real Time Error Detection" href="html/Real_Time_Error_Detection.htm"/>
+    <topic label="Running" href="html/Running.htm"/>
     <topic label="Debugging" href="html/Debugging_Concept.htm"/>
     <topic label="Breakpoints" href="html/Breakpoints.htm"/>
-    <topic label="Include Paths" href="html/Include_Paths.htm"/>
+    <topic label="PHP Include Paths" href="html/Include_Paths.htm"/>
     <topic label="PHP Build Path" href="html/Build_Paths.htm"/>
     <topic label="Path Mapping" href="html/Path_Mapping.htm"/>
   </topic>
   <topic label="Tasks" href="html/Tasks.htm">
-   <topic label="Easy File Creation" href="html/File_Creation.htm">
+    <topic label="Creating PHP Projects" href="html/Creating_PHP_Projects.htm"/>
+   <topic label="Creating PHP Files" href="html/File_Creation.htm">
      <topic label="Creating a PHP File Within a Project" href="html/Creating_a_PHP_File_within_a_Project.htm"/>
      <topic label="Creating a PHP File Outside of a Project" href="html/Creating_a_new_PHP_File_Outside_of_a_Project.htm"/>
      <topic label="Opening an External File" href="html/Opening_an_External_File_in_Neon.htm"/>
@@ -45,7 +47,6 @@
     <topic label="Using Templates" href="html/Using_Templates.htm"/>
     <topic label="Formatting Code" href="html/Formatting_Code.htm"/>
     <topic label="Using Code Folding" href="html/Using_Code_Folding.htm"/>
-    <topic label="Opening PHP Elements" href="html/Opening_PHP_Elements.htm"/>
     <topic label="Searching for PHP Elements" href="html/Searching_for_PHP_Elements.htm"/>
     <topic label="Opening Types/Methods" href="html/Opening_Types_Methods.htm"/>
     <topic label="Viewing Type Hierarchies" href="html/Viewing_Type_Hierarchies.htm"/>
@@ -65,9 +66,13 @@
      <topic label="Using JavaScript Mark Occurrences" href="html/Using_JavaScript_Mark_Occurences.htm"/>
    </topic>
     <topic label="Configuring a Project's PHP Build Path" href="html/Configuring_Build_Paths.htm"/>
-    <topic label="Configuring a Project's Include Path" href="html/Adding_Elements_to_a_Project_s_Include_Path.htm"/>
+    <topic label="Configuring a Project's PHP Include Path" href="html/Adding_Elements_to_a_Project_s_Include_Path.htm"/>
     <topic label="Adding a Server Location Path Map" href="html/Adding_a_Server_Path_Map.htm"/>
-   <topic label="Using the Debugger" href="html/Debugging.htm">
+   <topic label="Running Files and Applications" href="html/Running_Files_and_Applications.htm">
+     <topic label="Running PHP Scripts Locally" href="html/Running_PHP_Scripts_Locally.htm"/>
+     <topic label="Running PHP Web Pages" href="html/Running_PHP_Web_Pages.htm"/>
+   </topic>
+   <topic label="Debugging Files and Applications" href="html/Debugging.htm">
      <topic label="Setting Breakpoints" href="html/Setting_Breakpoints.htm"/>
      <topic label="Locally Debugging a PHP Script" href="html/Locally_Debugging_a_PHP_Script.htm"/>
      <topic label="Debugging a PHP Web Page" href="html/Debugging_a_PHP_Web_Page.htm"/>
@@ -131,7 +136,7 @@
     </topic>
     <topic label="Editor Preferences" href="html/Editor.htm">
       <topic label="Code Assist Preferences" href="html/Code_Assist.htm"/>
-      <topic label="Folding Preferences" href="html/Folding.htm"/>
+      <topic label="Code Folding Preferences" href="html/Folding.htm"/>
       <topic label="Hovers Preferences" href="html/Hovers.htm"/>
       <topic label="Mark Occurrences Preferences" href="html/Mark_Occurences.htm"/>
       <topic label="Save Actions Preferences" href="html/Save_Actions.htm"/>
