@@ -582,11 +582,9 @@ public class PHPCodeTemplateBlock extends PHPCoreOptionsConfigurationBlock {
 	}
 
 	private boolean confirmOverwrite(File file) {
-		//FIXME - replace XXXX with relevant message
 		return MessageDialog.openQuestion(getShell(),
 			PreferencesMessages.CodeTemplateBlock_export_exists_title, "The selected file already exists. Do you want to replace it?"); 
-			//Messages.format(PreferencesMessages.CodeTemplateBlock_export_exists_message, BasicElementLabels.getPathLabel(file)));
-	}
+		}
 
 
 	public void performDefaults() {
