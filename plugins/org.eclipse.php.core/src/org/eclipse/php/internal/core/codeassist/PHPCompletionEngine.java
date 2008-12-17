@@ -147,7 +147,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	public IAssistParser getParser() {
 		return null;
 	}
-	
+
 	public void complete(org.eclipse.dltk.compiler.env.ISourceModule module, int position, int i) {
 
 		if (requestor instanceof IPHPCompletionRequestor) {
@@ -191,7 +191,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		if (document != null) {
 			try {
-				calcCompletionOption(document, position, (ISourceModule)module.getModelElement());
+				calcCompletionOption(document, position, (ISourceModule) module.getModelElement());
 			} catch (BadLocationException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
 					e.printStackTrace();
@@ -237,7 +237,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			regionContainer = (ITextRegionContainer) textRegion;
 			textRegion = regionContainer.getRegionAtCharacterOffset(offset);
 		}
-		
+
 		if (textRegion == null) {
 			return;
 		}
@@ -310,7 +310,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 		String lastWord = statementText.subSequence(startPosition, endPosition).toString();
 		hasWhitespaceAtEnd = totalLength != endPosition;
-		
+
 		if (inPHPDoc) {
 			if (isInPhpDocCompletion(statementText, offset, lastWord)) {
 				// the current position is php doc block.
@@ -325,7 +325,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				++tagStart;
 				int tagEnd = PHPTextSequenceUtilities.readIdentifierEndIndex(statementText, tagStart, false);
 				String tagName = statementText.subSequence(tagStart, tagEnd).toString();
-				
+
 				wordEndOffset = offset;
 				while (!Character.isWhitespace(document.getChar(wordEndOffset))) {
 					++wordEndOffset;
@@ -342,7 +342,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 		} else { // not inside of PHPDoc
-			
+
 			if (isInArrayOptionQuotes(type, offset, statementText)) {
 				// the current position is inside quotes as a parameter for an array.
 				return;
@@ -352,7 +352,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				// we dont have code completion inside single quotes.
 				return;
 			}
-			
+
 			wordEndOffset = regionContainer.getStartOffset() + phpScriptRegion.getStart() + internalPHPRegion.getTextEnd();
 
 			if (isInFunctionDeclaration(statementText, offset)) {
@@ -387,16 +387,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					break;
 				}
 			} while (nextRegion.getEnd() < phpScriptRegion.getLength());
-			
+
 			nextWord = document.get(regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
-			
+
 			hasOpenBraceAtEnd = hasPaamayimNekudotaimAtEnd = false;
 			if (OPEN_BRACE.equals(nextWord)) {
 				hasOpenBraceAtEnd = true;
 			} else if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
 				hasPaamayimNekudotaimAtEnd = true;
 			}
-			
+
 			if (!hasWhitespaceAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
 				// the current position is inside new or instanceof statement.
 				if (lastWord.startsWith(DOLLAR)) {
@@ -505,10 +505,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (method != null) {
 				IType[] returnTypes = CodeAssistUtils.getFunctionReturnType(method, 0);
 				if (returnTypes != null) {
-					
+
 					int relevanceClass = RELEVANCE_CLASS;
 					this.setSourceRange(offset - className.length(), offset);
-					
+
 					for (IType type : returnTypes) {
 						try {
 							if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), className) && (type.getFlags() & IPHPModifiers.Internal) == 0) {
@@ -639,7 +639,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	protected void getRegularCompletion(String prefix, int offset) {
 		getRegularCompletion(prefix, offset, true);
 	}
-	
+
 	protected void getRegularCompletion(String prefix, int offset, boolean showKeywords) {
 
 		this.setSourceRange(offset - prefix.length(), offset);
@@ -673,7 +673,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 		}
-		
+
 		boolean currentFileOnly = (!explicit && prefix.length() == 0);
 
 		if (!currentFileOnly && internalPHPRegion != null) {
@@ -723,7 +723,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
 				}
 				variables.addAll(Arrays.asList(CodeAssistUtils.getGlobalFields(sourceModule, prefix, mask)));
-				
+
 				for (IModelElement var : variables) {
 					IField field = (IField) var;
 					try {
@@ -738,7 +738,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 				}
-				
+
 				IMethod containerMethodData = CodeAssistUtils.getContainerMethodData(sourceModule, offset);
 				if (containerMethodData != null && containerMethodData.getDeclaringType() != null) {
 					reportVariables(classVariables, prefix, relevanceVar--, false);
@@ -762,7 +762,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (currentFileOnly) {
 				mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
 			}
-			
+
 			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, mask);
 			for (IModelElement function : functions) {
 				try {
@@ -848,7 +848,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		} else {
 			return false;
 		}
-		
+
 		if (internalPHPRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || internalPHPRegion.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
 			try {
 				ITextRegion nextRegion = phpScriptRegion.getPhpToken(internalPHPRegion.getEnd());
@@ -863,7 +863,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				// check if current position is between the end of a function call and open bracket.
 				return CodeAssistUtils.isClassFunctionCall(sourceModule, types, functionName);
 			}
-	
+
 			if (isClassTriger) {
 				if (isParent) {
 					// Collect parents:
@@ -888,8 +888,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				final String parent = text.substring(0, text.lastIndexOf(OBJECT_FUNCTIONS_TRIGGER)).trim();
 				// check if the end of the statement is $this expression
 				if (parent.length() >= 5) {
-					isThisVar = "$this".equals(parent.substring(Math.max(0, parent.length() - 5))) ; //$NON-NLS-1$					
-				} 
+					isThisVar = "$this".equals(parent.substring(Math.max(0, parent.length() - 5))); //$NON-NLS-1$					
+				}
 				//boolean addVariableDollar = parent.endsWith("()");
 				boolean addVariableDollar = false;
 				showClassCall(offset, types, functionName, isThisVar, addVariableDollar);
@@ -906,7 +906,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		this.setSourceRange(offset - prefix.length(), offset);
 
 		int relevanceMethod = RELEVANCE_METHOD;
-		
+
 		boolean showNonStrictOptions = showNonStrictOptions();
 
 		int mask = 0;
@@ -1006,8 +1006,6 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (functionStart == -1) {
 			return false;
 		}
-		
-		
 
 		// are we inside parameters part in function declaration statement
 		for (int i = text.length() - 1; i >= functionStart; i--) {
@@ -1065,11 +1063,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				} else {
 					if (showInitializerCompletion) {
 						String prefix = text.subTextSequence(j + 1, text.length()).toString().trim();
-						
+
 						if (showConstantAssist()) {
-							
+
 							this.setSourceRange(offset - prefix.length(), offset);
-							
+
 							int mask = 0;
 							if (requestor.isContextInformationMode()) {
 								mask |= CodeAssistUtils.EXACT_NAME;
@@ -1245,9 +1243,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showInterfaceList(String prefix, int offset) {
-		
+
 		this.setSourceRange(offset - prefix.length(), offset);
-		
+
 		int mask = CodeAssistUtils.ONLY_INTERFACES;
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
@@ -1388,7 +1386,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						enclosingElement = enclosingElement.getParent();
 					}
 					if (enclosingElement instanceof IMethod) {
-						IModelElement parent = ((IMethod)enclosingElement).getParent();
+						IModelElement parent = ((IMethod) enclosingElement).getParent();
 						if (parent instanceof IType) {
 							enclosingClass = (IType) parent;
 						}
@@ -1398,16 +1396,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						e.printStackTrace();
 					}
 				}
-				
+
 				for (IType type : types) {
-					try {
-						IMethod ctor = null;
-						for (IMethod method : type.getMethods()) {
-							if (method.isConstructor()) {
-								ctor = method;
-								break;
+					IMethod ctor = null;
+					if (requestor.isContextInformationMode()) {
+						try {
+							for (IMethod method : type.getMethods()) {
+								if (method.isConstructor()) {
+									ctor = method;
+									break;
+								}
+							}
+						} catch (ModelException e) {
+							if (DLTKCore.DEBUG_COMPLETION) {
+								e.printStackTrace();
 							}
 						}
+					}
+					try {
 						if (ctor != null) {
 							if ((ctor.getFlags() & IPHPModifiers.AccPrivate) == 0 || type.equals(enclosingClass)) {
 								FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
@@ -1564,7 +1570,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 		int endPosition = startPosition - 1;
-		
+
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(text, endPosition);
 		startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(text, endPosition, true);
 		String variableName = text.subSequence(startPosition, endPosition).toString();
@@ -1579,7 +1585,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (relevance < 1) {
 			relevance = 1;
 		}
-		
+
 		String elementName = method.getElementName();
 		char[] name = elementName.toCharArray();
 
@@ -1607,15 +1613,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			proposal.setModelElement(method);
 			proposal.setName(name);
-			
+
 			if (method instanceof FakeGroupMethod) {
-				proposal.setCompletion(elementName.substring(0, elementName.length()-1).toCharArray());
+				proposal.setCompletion(elementName.substring(0, elementName.length() - 1).toCharArray());
 				relevance = 10000001;
-			}
-			else if (hasOpenBraceAtEnd) {
+			} else if (hasOpenBraceAtEnd) {
 				proposal.setCompletion(elementName.toCharArray());
-			}
-			else {
+			} else {
 				proposal.setCompletion((elementName + BRACKETS_SUFFIX).toCharArray());
 			}
 			try {
@@ -1626,14 +1630,14 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					e.printStackTrace();
 				}
 			}
-			
+
 			int replaceStart = this.startPosition - this.offset;
 			int replaceEnd = this.endPosition - this.offset;
 			if (replaceEnd < wordEndOffset) {
 				replaceEnd = wordEndOffset;
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
-			
+
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
@@ -1647,7 +1651,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (relevance < 1) {
 			relevance = 1;
 		}
-		
+
 		String elementName = type.getElementName();
 		char[] name = elementName.toCharArray();
 
@@ -1656,45 +1660,45 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
 			
-			try {
-				for (IMethod method : type.getMethods()) {
-					if (method.isConstructor()) {
-						String[] params = method.getParameters();
-						if (params != null && params.length > 0) {
-							char[][] args = new char[params.length][];
-							for (int i = 0; i < params.length; ++i) {
-								args[i] = params[i].toCharArray();
+			if (requestor.isContextInformationMode()) {
+				try {
+					for (IMethod method : type.getMethods()) {
+						if (method.isConstructor()) {
+							String[] params = method.getParameters();
+							if (params != null && params.length > 0) {
+								char[][] args = new char[params.length][];
+								for (int i = 0; i < params.length; ++i) {
+									args[i] = params[i].toCharArray();
+								}
+								proposal.setParameterNames(args);
 							}
-							proposal.setParameterNames(args);
+							break;
 						}
-						break;
 					}
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 			}
 
 			proposal.setModelElement(type);
 			proposal.setName(name);
-			
+
 			if (type instanceof FakeGroupType) {
-				proposal.setCompletion(elementName.substring(0, elementName.length()-1).toCharArray());
+				proposal.setCompletion(elementName.substring(0, elementName.length() - 1).toCharArray());
 				relevance = 10000001;
-			}
-			else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix) {
+			} else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix) {
 				proposal.setCompletion(elementName.toCharArray());
-			}
-			else {
+			} else {
 				proposal.setCompletion((elementName + suffix).toCharArray());
 			}
-			
+
 			try {
 				proposal.setFlags(type.getFlags());
 			} catch (ModelException e) {
 			}
-			
+
 			int replaceStart = this.startPosition - this.offset;
 			int replaceEnd = this.endPosition - this.offset;
 			if (wordEndOffset > replaceStart && replaceEnd < wordEndOffset) {
@@ -1703,7 +1707,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				replaceEnd--;
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
-			
+
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
@@ -1717,7 +1721,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (relevance < 1) {
 			relevance = 1;
 		}
-		
+
 		String elementName = field.getElementName();
 		char[] name = elementName.toCharArray();
 
@@ -1733,20 +1737,20 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (removeDollar && completion.startsWith(DOLLAR)) {
 				completion = completion.substring(1);
 			}
-			
+
 			proposal.setCompletion(completion.toCharArray());
 			try {
 				proposal.setFlags(field.getFlags());
 			} catch (ModelException e) {
 			}
-			
+
 			int replaceStart = this.startPosition - this.offset;
 			int replaceEnd = this.endPosition - this.offset;
 			if (replaceEnd < wordEndOffset) {
 				replaceEnd = wordEndOffset;
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
-			
+
 			proposal.setRelevance(relevance);
 			this.requestor.accept(proposal);
 			if (DEBUG) {
@@ -1760,29 +1764,29 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (relevance < 1) {
 			relevance = 1;
 		}
-		
+
 		// accept result
 		noProposal = false;
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 			proposal.setName(name.toCharArray());
-			
+
 			if (nextWord != null && nextWord.equals(suffix)) {
 				proposal.setCompletion(name.toCharArray());
 			} else {
 				proposal.setCompletion((name + suffix).toCharArray());
 			}
-			
+
 			// proposal.setFlags(Flags.AccDefault);
 			proposal.setRelevance(relevance);
-			
+
 			int replaceStart = this.startPosition - this.offset;
 			int replaceEnd = this.endPosition - this.offset;
 			if (replaceEnd < wordEndOffset) {
 				replaceEnd = wordEndOffset;
 			}
 			proposal.setReplaceRange(replaceStart, replaceEnd);
-			
+
 			this.requestor.accept(proposal);
 			if (DEBUG) {
 				this.printDebug(proposal);
@@ -1818,7 +1822,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		}
 		return false;
 	}
-	
+
 	private boolean constantsCaseSensitive() {
 		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE)) {
 			return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE);

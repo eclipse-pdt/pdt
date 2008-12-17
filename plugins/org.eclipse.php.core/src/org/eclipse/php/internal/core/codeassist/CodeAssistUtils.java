@@ -22,10 +22,8 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
-import org.eclipse.dltk.internal.core.AbstractSourceModule;
-import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.ScriptProject;
-import org.eclipse.dltk.internal.core.SourceModule;
+import org.eclipse.dltk.internal.core.*;
+import org.eclipse.dltk.internal.core.util.HandleFactory;
 import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -889,7 +887,7 @@ public class CodeAssistUtils {
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(ISourceModule sourceModule, IDLTKSearchScope scope, String prefix, final int elementType, int mask) {
+	private static IModelElement[] getGlobalElements(final ISourceModule sourceModule, final IDLTKSearchScope scope, String prefix, final int elementType, int mask) {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 
@@ -1019,22 +1017,33 @@ public class CodeAssistUtils {
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
 		if (pattern != null) {
 			try {
-				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-
-						IModelElement element = (IModelElement) match.getElement();
-						// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
-						if (element instanceof SourceModule) {
-							return;
+				if (!showGroupOptions && elementType == IDLTKSearchConstants.TYPE) {
+					final HandleFactory handleFactory = new HandleFactory();
+					searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(),
+						pattern.getMatchRule(), IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
+							public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+								Openable openable = handleFactory.createOpenable(path, scope);
+								elements.add(new FakeType(openable, new String(simpleTypeName), modifiers));
+							}
+					}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+				} else {
+					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+	
+							IModelElement element = (IModelElement) match.getElement();
+							// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
+							if (element instanceof SourceModule) {
+								return;
+							}
+							IModelElement parent = element.getParent();
+							// Global scope elements in PHP are those, which are not defined in class body,
+							// or it is a variable, and its parent - source module
+							if ((element instanceof IField && parent instanceof org.eclipse.dltk.core.ISourceModule) || (!(element instanceof IField) && !(parent instanceof IType))) {
+								elements.add(element);
+							}
 						}
-						IModelElement parent = element.getParent();
-						// Global scope elements in PHP are those, which are not defined in class body,
-						// or it is a variable, and its parent - source module
-						if ((element instanceof IField && parent instanceof org.eclipse.dltk.core.ISourceModule) || (!(element instanceof IField) && !(parent instanceof IType))) {
-							elements.add(element);
-						}
-					}
-				}, null);
+					}, null);
+				}
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
 					e.printStackTrace();
