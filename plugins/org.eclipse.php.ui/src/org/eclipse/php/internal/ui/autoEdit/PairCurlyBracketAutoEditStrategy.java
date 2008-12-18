@@ -20,10 +20,12 @@ import org.eclipse.php.internal.core.format.FormatPreferencesSupport;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.text.PHPDocumentRegionEdgeMatcher;
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 
 /**
  * 
@@ -135,15 +137,43 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 		IRegion lineInfo = document.getLineInformationOfOffset(offset);
 		int endOffset = lineInfo.getOffset() + lineInfo.getLength();
 		int whiteSpacesAdded = 0;
-		String lineEnd = document.get(offset, endOffset - offset);
+		int lengthToCopyDown = endOffset - offset;
+
+		IStructuredDocumentRegion[] structuredDocumentRegions = document.getStructuredDocumentRegions(offset, lengthToCopyDown);
+		if (structuredDocumentRegions != null && structuredDocumentRegions.length > 0) {
+			IStructuredDocumentRegion structuredDocumentRegion = structuredDocumentRegions[0];
+			ITextRegion firstRegion = structuredDocumentRegion.getFirstRegion();
+			ITextRegion lastRegion = structuredDocumentRegion.getLastRegion();
+
+			int xmlRelativeOffset = 0;
+
+			// deal with PHP block within HTML tags
+			if (!(firstRegion instanceof ContextRegion)) { //meaning "not-PHP-Resgion"
+				ITextRegion regionAtCharacterOffset = structuredDocumentRegion.getRegionAtCharacterOffset(offset);
+				if (regionAtCharacterOffset instanceof ContextRegionContainer) {
+					ContextRegionContainer phpContext = (ContextRegionContainer) regionAtCharacterOffset;
+					lastRegion = phpContext.getLastRegion();
+					firstRegion = phpContext.getFirstRegion();
+					xmlRelativeOffset = firstRegion.getLength();
+				}
+
+			}
+			int absolutOffset = lastRegion.getStart() + structuredDocumentRegion.getStartOffset() + xmlRelativeOffset;
+			if (absolutOffset <= endOffset) {
+				lengthToCopyDown = absolutOffset - offset;
+				;
+			}
+		}
+		String lineEnd = document.get(offset, lengthToCopyDown);
 
 		//if there are spaces between the '{' and the text in the line 
 		//(or the end of line)then need to override them
-
 		for (int i = 0; i < lineEnd.length(); i++) {
 			char c = lineEnd.charAt(i);
+			lengthToCopyDown--; //for every iteration, need copy one less char
 			if (c == '\n' || c == '\r' || !Character.isWhitespace(c)) {
 				command.length += i;
+				lengthToCopyDown++; // incrementing one back...
 				break;
 			}
 		}
@@ -151,7 +181,7 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 		String trimmedLineEnd = lineEnd.trim();
 		if (trimmedLineEnd.length() > 0 && trimmedLineEnd.charAt(0) == '}') {
 			//if there is a } then there is a problem with curlyCloseInsertionStrategy calc
-			// and we need to add manualy another indentation.
+			// and we need to add manually another indentation.
 			int indentationSize = FormatPreferencesSupport.getInstance().getIndentationSize(document);
 			char indentationChar = FormatPreferencesSupport.getInstance().getIndentationChar(document);
 			for (int i = 0; i < indentationSize; i++) {
@@ -163,14 +193,15 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 			buffer.append(blanks);
 		}
 
-		//copping the rest of the line after the { 
+		//copying the rest of the line after the "{" , 
+		//using length calculated according to regionEnd or EndOfLine
 		offset += command.length;
 		char nextChar = document.getChar(offset);
-		while (nextChar != '\n' && nextChar != '\r') {
+		for (int i = 0; lengthToCopyDown > 0; lengthToCopyDown--) {
 			buffer.append(nextChar);
 			command.length++;
 			offset++;
-			if(offset == documentLength){
+			if (offset == documentLength) {
 				break;
 			}
 			nextChar = document.getChar(offset);
