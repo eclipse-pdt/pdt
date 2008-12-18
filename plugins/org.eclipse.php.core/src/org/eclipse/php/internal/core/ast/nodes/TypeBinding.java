@@ -299,17 +299,20 @@ public class TypeBinding implements ITypeBinding {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
 
 				String[] superClassNames = type.getSuperClasses();
-				for (String superClass : superClassNames) {
-					int matchRule = SearchPattern.R_EXACT_MATCH;
-					SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							IType t = (IType) match.getElement();
-							if ((t.getFlags() & Modifiers.AccInterface) != 0) {
-								interfaces.add(resolver.getTypeBinding(t));
+				
+				if (superClassNames != null) {
+					for (String superClass : superClassNames) {
+						int matchRule = SearchPattern.R_EXACT_MATCH;
+						SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
+								IType t = (IType) match.getElement();
+								if ((t.getFlags() & Modifiers.AccInterface) != 0) {
+									interfaces.add(resolver.getTypeBinding(t));
+								}
 							}
-						}
-					}, null);
+						}, null);
+					}
 				}
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG) {
@@ -409,17 +412,19 @@ public class TypeBinding implements ITypeBinding {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
 				String[] superClassNames = type.getSuperClasses();
 
-				for (String superClass : superClassNames) {
-					int matchRule = SearchPattern.R_EXACT_MATCH;
-					SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							IType t = (IType) match.getElement();
-							if ((t.getFlags() & Modifiers.AccInterface) == 0) {
-								superClasses.add(t);
+				if (superClassNames != null) {
+					for (String superClass : superClassNames) {
+						int matchRule = SearchPattern.R_EXACT_MATCH;
+						SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
+								IType t = (IType) match.getElement();
+								if ((t.getFlags() & Modifiers.AccInterface) == 0) {
+									superClasses.add(t);
+								}
 							}
-						}
-					}, null);
+						}, null);
+					}
 				}
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG) {
