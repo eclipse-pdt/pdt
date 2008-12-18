@@ -1017,7 +1017,7 @@ public class CodeAssistUtils {
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
 		if (pattern != null) {
 			try {
-				if (!showGroupOptions && elementType == IDLTKSearchConstants.TYPE) {
+				if (elementType == IDLTKSearchConstants.TYPE) {
 					final HandleFactory handleFactory = new HandleFactory();
 					searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(),
 						pattern.getMatchRule(), IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
