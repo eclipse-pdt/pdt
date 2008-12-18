@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.filesystem.URIUtil;
@@ -32,6 +31,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.core.containers.LocalFileStorage;
 import org.eclipse.php.internal.core.containers.ZipEntryStorage;
 import org.eclipse.php.internal.ui.Logger;
@@ -68,7 +68,7 @@ public class EditorUtility {
 		final String newModifierString = Action.findModifierString(modifier);
 		if (modifierString.length() == 0)
 			return newModifierString;
-		return MessageFormat.format(PHPUIMessages.getString("EditorUtility_concatModifierStrings"), new String[] { modifierString, newModifierString });
+		return NLS.bind(PHPUIMessages.getString("EditorUtility_concatModifierStrings"), modifierString, newModifierString);
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class EditorUtility {
 		if (resource instanceof IFile)
 			return new FileEditorInput((IFile) resource);
 
-		return null;
+		return getEditorInput(element);
 	}
 
 	private static IEditorInput getEditorInput(IModelElement element) {
@@ -599,7 +599,7 @@ public class EditorUtility {
 	 * @param filesToOpen
 	 * @param window
 	 */
-	public static void openFilesInEditor(List filesToOpen, IWorkbenchWindow window) {
+	public static void openFilesInEditor(List<String> filesToOpen, IWorkbenchWindow window) {
 		PHPOpenExternalFileAction action = new PHPOpenExternalFileAction();
 		action.init(window);
 		action.run(filesToOpen);
@@ -609,7 +609,7 @@ public class EditorUtility {
 	 * @see openFilesInEditor(List, IWorkbenchWindow)
 	 * @param filesToOpen
 	 */
-	public static void openFilesInEditor(List filesToOpen) {
+	public static void openFilesInEditor(List<String> filesToOpen) {
 		openFilesInEditor(filesToOpen, PlatformUI.getWorkbench().getActiveWorkbenchWindow());
 	}
 

@@ -52,7 +52,7 @@ public class ExternalFileDropAdapter extends DropTargetAdapter {
 		if (event.data instanceof String[]) {
 			PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					EditorUtility.openFilesInEditor(Arrays.asList((Object[]) event.data));
+					EditorUtility.openFilesInEditor(Arrays.asList((String[]) event.data));
 				}
 			});
 		}
