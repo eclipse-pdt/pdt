@@ -51,7 +51,7 @@ public abstract class PHPEditorResolvingAction extends TextEditorAction implemen
 	}
 
 	public void update() {
-		setEnabled(getTextEditor() != null && isValid(getSelectedElement()));
+		setEnabled(getTextEditor() != null/* && isValid(getSelectedElement())*/);
 	}
 
 	protected IModelElement getSelectedElement() {
