@@ -13,18 +13,15 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ITypeHierarchy;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -158,7 +155,9 @@ public class TypeBinding implements ITypeBinding {
 						}
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 			return variableBindings.toArray(new IVariableBinding[variableBindings.size()]);
@@ -200,7 +199,9 @@ public class TypeBinding implements ITypeBinding {
 						}
 					}
 				} catch (ModelException e) {
-					Logger.logException(e);
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 			return methodBindings.toArray(new IMethodBinding[methodBindings.size()]);
@@ -249,7 +250,7 @@ public class TypeBinding implements ITypeBinding {
 	 */
 	public ITypeBinding getElementType() {
 		// TODO Auto-generated method stub
-		if (null == this.elements || this.elements.length != 1){
+		if (null == this.elements || this.elements.length != 1) {
 			return null;
 		}
 		return null;
@@ -290,23 +291,31 @@ public class TypeBinding implements ITypeBinding {
 			return new ITypeBinding[0];
 		}
 
-		ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
+		final ArrayList<ITypeBinding> interfaces = new ArrayList<ITypeBinding>();
 		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
-				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
-				IType[] superTypes = supertypeHierarchy.getSupertypes(type);
-				if (superTypes != null) {
-					for (IType superType : superTypes) {
-						if ((superType.getFlags() & Modifiers.AccInterface) != 0) {
-							interfaces.add(resolver.getTypeBinding(superType));
-						}
-					}
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
+				SearchEngine searchEngine = new SearchEngine();
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
 
+				String[] superClassNames = type.getSuperClasses();
+				for (String superClass : superClassNames) {
+					int matchRule = SearchPattern.R_EXACT_MATCH;
+					SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+							IType t = (IType) match.getElement();
+							if ((t.getFlags() & Modifiers.AccInterface) != 0) {
+								interfaces.add(resolver.getTypeBinding(t));
+							}
+						}
+					}, null);
+				}
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return interfaces.toArray(new ITypeBinding[interfaces.size()]);
 	}
@@ -392,21 +401,30 @@ public class TypeBinding implements ITypeBinding {
 			return null;
 		}
 
-		List<IType> superClasses = new ArrayList<IType>(elements.length);
+		final List<IType> superClasses = new ArrayList<IType>(elements.length);
 		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
-				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
-				IType[] superclasses = supertypeHierarchy.getSuperclass(type);
-				if (superclasses != null) {
-					for (IType superClass : superclasses) {
-						if ((superClass.getFlags() & Modifiers.AccInterface) == 0) {
-							superClasses.add(superClass);
+				SearchEngine searchEngine = new SearchEngine();
+				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
+				String[] superClassNames = type.getSuperClasses();
+
+				for (String superClass : superClassNames) {
+					int matchRule = SearchPattern.R_EXACT_MATCH;
+					SearchPattern pattern = SearchPattern.createPattern(superClass, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+							IType t = (IType) match.getElement();
+							if ((t.getFlags() & Modifiers.AccInterface) == 0) {
+								superClasses.add(t);
+							}
 						}
-					}
+					}, null);
 				}
-			} catch (ModelException e) {
-				Logger.logException(e);
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return resolver.getTypeBinding(superClasses.toArray(new IType[superClasses.size()]));
@@ -477,7 +495,9 @@ public class TypeBinding implements ITypeBinding {
 			try {
 				result &= (member.getFlags() & Modifiers.AccInterface) != 0;
 			} catch (ModelException e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return result;
@@ -538,10 +558,12 @@ public class TypeBinding implements ITypeBinding {
 					}
 				}
 			} catch (ModelException e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
+
 		return result;
 	}
 

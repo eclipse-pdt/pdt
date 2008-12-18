@@ -14,11 +14,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.Logger;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
@@ -173,7 +169,7 @@ public class VariableBinding implements IVariableBinding {
 			try {
 				return ((IField) modelElement).getFlags() & VALID_MODIFIERS;
 			} catch (ModelException e) {
-				Logger.logException(e);
+				if (DLTKCore.DEBUG) { e.printStackTrace(); }
 			}
 		}
 		return 0;

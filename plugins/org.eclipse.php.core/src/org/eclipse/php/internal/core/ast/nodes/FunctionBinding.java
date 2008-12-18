@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
@@ -123,7 +123,7 @@ public class FunctionBinding implements IFunctionBinding {
 		try {
 			return modelElement.getFlags() & VALID_MODIFIERS;
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) { e.printStackTrace(); }
 		}
 		return 0;
 	}

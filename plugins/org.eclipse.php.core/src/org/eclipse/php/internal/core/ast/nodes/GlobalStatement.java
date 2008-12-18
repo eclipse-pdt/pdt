@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

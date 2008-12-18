@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.IDocument;

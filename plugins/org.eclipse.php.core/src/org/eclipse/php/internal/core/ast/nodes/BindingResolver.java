@@ -11,11 +11,7 @@
 
 package org.eclipse.php.internal.core.ast.nodes;
 
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.WorkingCopyOwner;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.compiler.lookup.BlockScope;
 import org.eclipse.dltk.internal.compiler.lookup.LookupEnvironment;
 import org.eclipse.dltk.internal.compiler.lookup.SourceModuleScope;

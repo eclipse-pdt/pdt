@@ -14,11 +14,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.Logger;
+import org.eclipse.dltk.core.*;
 
 /**
  * PHP method binding implementation.
@@ -59,7 +55,7 @@ public class MethodBinding extends FunctionBinding implements IMethodBinding {
 		try {
 			return modelElement.isConstructor();
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) { e.printStackTrace(); }
 			return false;
 		}
 	}

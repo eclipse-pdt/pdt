@@ -22,6 +22,7 @@ import java_cup.runtime.lr_parser;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
+import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.scanner.*;
 import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.text.edits.TextEdit;

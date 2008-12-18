@@ -218,7 +218,7 @@ public class DefaultBindingResolver extends BindingResolver {
 			return getMethodBinding((IMethod) sourceModule.getElementAt(method.getStart()));
 			
 		} catch (ModelException e) {
-			Logger.logException(e);
+			if (DLTKCore.DEBUG) { e.printStackTrace(); }
 		}
 		return null;
 	}
