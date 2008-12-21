@@ -84,20 +84,19 @@ public class PHPExplorerLabelProvider extends ScriptExplorerLabelProvider {
 
 		if (element instanceof IResource) {
 			modelElement = DLTKCore.create((IResource) element);
-		}
-
-		if (element instanceof IModelElement)
+		} else if (element instanceof IModelElement) {
 			modelElement = (IModelElement) element;
+		}
 
 		if (modelElement != null) {
 			IScriptProject project = modelElement.getScriptProject();
 			if (!project.isOnBuildpath(modelElement)) {//not in build path, hence: hollow, non-pakg icons
-				if (modelElement instanceof ISourceModule)
+				if (modelElement.getElementType() == IModelElement.SOURCE_MODULE)
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_CUNIT_RESOURCE);
-				if (modelElement instanceof IProjectFragment || modelElement instanceof IScriptFolder)
+				if (modelElement.getElementType() == IModelElement.PROJECT_FRAGMENT || modelElement.getElementType() == IModelElement.SCRIPT_FOLDER)
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FOLDER);
 			} else {//in build path ...
-				if (element instanceof IScriptFolder)
+				if (modelElement.getElementType() == IModelElement.SCRIPT_FOLDER || element instanceof IFolder)
 					return PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHPFOLDER_ROOT);
 			}
 		}
