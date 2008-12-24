@@ -102,7 +102,13 @@ public class PHPManual {
 		String path = null;
 		if (modelElement instanceof IMethod) {
 			try {
-				path = buildPathForMethod((IMethod) modelElement);
+				IModelElement ancestor = ((IMethod) modelElement).getAncestor(IModelElement.TYPE);
+				if (null != ancestor) {
+					// if this is actually a method (not function), checking for declaring class manual
+					path = buildPathForClass((IType) ancestor);
+				} else {
+					path = buildPathForMethod((IMethod) modelElement);
+				}
 			} catch (ModelException e) {
 				Logger.logException(e);
 			}
@@ -156,10 +162,32 @@ public class PHPManual {
 	}
 
 	protected String buildPathForClass(IType type) throws ModelException {
-		ISourceModule sourceModule = type.getSourceModule();
-		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
-		return getPHPDocLink(typeDeclaration);
+		String path = null;
+		if (type != null) {
+			ISourceModule sourceModule = type.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
+			path = getPHPDocLink(typeDeclaration);
+
+			if (path == null) {
+
+				String className = type.getElementName(); //$NON-NLS-1$
+				path = (String) getPHPEntityPathMap().get(className.toLowerCase());
+				if (path == null) {
+					path = buildPathForClass(type.getElementName());
+				}
+			}
+		}
+		return path;
+	}
+
+	private String buildPathForClass(String className) {
+		StringBuffer buf = new StringBuffer();
+		buf.append("class."); //$NON-NLS-1$
+		if (className != null) {
+			buf.append(className);
+		}
+		return buf.toString().toLowerCase();
 	}
 
 	protected String buildPathForMethod(IMethod method) throws ModelException {
