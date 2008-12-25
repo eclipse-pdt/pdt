@@ -357,6 +357,10 @@
 		<contextType name="%templates.newphp.contextType.name"
 			class="org.eclipse.php.internal.ui.editor.templates.PhpNewFileTemplateContextType"
 			id="newPhp" />
+		<contextType name="%templates.phpcomment.contextType.name"
+			class="org.eclipse.php.internal.ui.editor.templates.PhpCommentTemplateContextType"
+			id="phpcomment" />
+			
 
 		<include file="templates/phpdefault-templates.xml"
 			translations="$nl$/templates/phpdefault-templates.properties" />

@@ -2,43 +2,43 @@
 <templates>
 <!-- Code templates : -->
 
-<template name="gettercomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.gettercomment" description="%CodeTemplates.gettercomment" context="php" enabled="true">/**
+<template name="gettercomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.gettercomment" description="%CodeTemplates.gettercomment" context="phpcomment" enabled="true">/**
  * @return %CodeTemplates.gettercomment.returntagcontent
  */</template>
 
-<template name="settercomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.settercomment" description="%CodeTemplates.settercomment" context="php" enabled="true">/**
+<template name="settercomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.settercomment" description="%CodeTemplates.settercomment" context="phpcomment" enabled="true">/**
  * @param ${param} %CodeTemplates.settercomment.paramtagcontent
  */</template>
 
-<template name="constructorcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorcomment" description="%CodeTemplates.constructorcomment" context="php" enabled="true">/**
+<template name="constructorcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorcomment" description="%CodeTemplates.constructorcomment" context="phpcomment" enabled="true">/**
  * ${tags}
  */</template>
 
-<template name="filecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.filecomment" description="%CodeTemplates.filecomment" context="php" enabled="true">/**
+<template name="filecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.filecomment" description="%CodeTemplates.filecomment" context="phpcomment" enabled="true">/**
  * 
  */</template>
 
-<template name="typecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.typecomment" description="%CodeTemplates.typecomment" context="php" enabled="true">/**
+<template name="typecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.typecomment" description="%CodeTemplates.typecomment" context="phpcomment" enabled="true">/**
  * @author ${user}
  *
  * ${tags}
  */</template>
  
-<template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.fieldcomment" description="%CodeTemplates.fieldcomment" context="php" enabled="true">/**
+<template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.fieldcomment" description="%CodeTemplates.fieldcomment" context="phpcomment" enabled="true">/**
  * @var ${field_type}
  */</template>
  
- <template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.varcomment" description="%CodeTemplates.varcomment" context="php" enabled="true">/* @var ${field_type} */</template>
+ <template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.varcomment" description="%CodeTemplates.varcomment" context="phpcomment" enabled="true">/* @var ${field_type} */</template>
  
-<template name="methodcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodcomment" description="%CodeTemplates.nonoverridingcomment" context="php" enabled="true">/**
+<template name="methodcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodcomment" description="%CodeTemplates.nonoverridingcomment" context="phpcomment" enabled="true">/**
  * ${tags}
  */</template>
 
-<template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="php" enabled="true">/* %CodeTemplates.overridecomment.nonjd
+<template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="phpcomment" enabled="true">/* %CodeTemplates.overridecomment.nonjd
  * ${see_to_overridden}
  */</template>
 
-<template name="delegatecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.delegatecomment" description="%CodeTemplates.delegatecomment" context="php" enabled="true">/**
+<template name="delegatecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.delegatecomment" description="%CodeTemplates.delegatecomment" context="phpcomment" enabled="true">/**
  * ${tags}
  * ${see_to_target}
  */</template>
