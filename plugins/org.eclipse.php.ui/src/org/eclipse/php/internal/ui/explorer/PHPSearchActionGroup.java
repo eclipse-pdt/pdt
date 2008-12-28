@@ -5,10 +5,7 @@
 package org.eclipse.php.internal.ui.explorer;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.php.internal.ui.IContextMenuConstants;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -27,7 +24,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 public class PHPSearchActionGroup extends ActionGroup {
 	private OpenSearchDialogAction action;
 	private OccurrencesSearchGroup fOccurrencesGroup;
-	private final PHPStructuredEditor fEditor;	
+	private final PHPStructuredEditor fEditor;
 
 	/**
 	 * Constructs the class.
@@ -35,10 +32,10 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 */
 	public PHPSearchActionGroup(PHPStructuredEditor editor) {
 		Assert.isNotNull(editor);
-		this.fEditor= editor;
-		
+		this.fEditor = editor;
+
 		action = new OpenSearchDialogAction();
-		fOccurrencesGroup= new OccurrencesSearchGroup(editor);	
+		fOccurrencesGroup = new OccurrencesSearchGroup(editor);
 	}
 
 	/**
@@ -48,9 +45,9 @@ public class PHPSearchActionGroup extends ActionGroup {
 	public PHPSearchActionGroup(IWorkbenchSite site) {
 		fEditor = null;
 		action = new OpenSearchDialogAction();
-		fOccurrencesGroup= new OccurrencesSearchGroup(site);	
+		fOccurrencesGroup = new OccurrencesSearchGroup(site);
 	}
-	
+
 	@Override
 	public void setContext(ActionContext context) {
 		fOccurrencesGroup.setContext(context);
@@ -70,28 +67,31 @@ public class PHPSearchActionGroup extends ActionGroup {
 	 */
 	public void fillContextMenu(IMenuManager menu) {
 		super.fillContextMenu(menu);
-		if(!PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
-			IMenuManager target= menu;
-			IMenuManager searchSubMenu= null;
+		if (!PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.SEARCH_USE_REDUCED_MENU)) {
+			IMenuManager target = menu;
+			IMenuManager searchSubMenu = null;
 			if (fEditor != null) {
-				String groupName= "SearchMessages.group_search"; 
-				searchSubMenu= new MenuManager(groupName, ITextEditorActionConstants.GROUP_FIND);
+				String groupName = "SearchMessages.group_search";
+				searchSubMenu = new MenuManager(groupName, ITextEditorActionConstants.GROUP_FIND);
 				searchSubMenu.add(new GroupMarker(ITextEditorActionConstants.GROUP_FIND));
-				target= searchSubMenu;
+				target = searchSubMenu;
 			}
-						
+
 			if (searchSubMenu != null) {
 				fOccurrencesGroup.fillContextMenu(target);
 				searchSubMenu.add(new Separator());
 			}
-			
+
 			// no other way to find out if we have added items.
-			if (searchSubMenu != null && searchSubMenu.getItems().length > 2) {		
+			if (searchSubMenu != null && searchSubMenu.getItems().length > 2) {
 				menu.appendToGroup(ITextEditorActionConstants.GROUP_FIND, searchSubMenu);
 			}
 		}
 
-		menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, action);
+		IContributionItem item = menu.find(IContextMenuConstants.GROUP_OPEN);
+		if (item != null) {
+			menu.appendToGroup(IContextMenuConstants.GROUP_OPEN, action);
+		}
 	}
 
 	@Override
@@ -99,6 +99,5 @@ public class PHPSearchActionGroup extends ActionGroup {
 		fOccurrencesGroup.dispose();
 		super.dispose();
 	}
-	
-	
+
 }
