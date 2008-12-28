@@ -935,10 +935,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			for (IModelElement element : fields) {
 				IField field = (IField) element;
 				try {
-					if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-						reportField(field, relevanceConst--, true);
-					} else if (showNonStrictOptions || isThisVar || (field.getFlags() & Modifiers.AccPrivate) == 0) {
-						reportField(field, relevanceVar--, true);
+					if ((field.getFlags() & Modifiers.AccStatic) == 0) {
+						if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+							reportField(field, relevanceConst--, true);
+						} else if (showNonStrictOptions || isThisVar || (field.getFlags() & Modifiers.AccPrivate) == 0) {
+							reportField(field, relevanceVar--, true);
+						}
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG_COMPLETION) {
