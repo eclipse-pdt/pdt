@@ -31,6 +31,8 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.core.*;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -38,6 +40,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTagKinds;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.PartInitException;
@@ -190,11 +193,16 @@ public class PHPManual {
 		return buf.toString().toLowerCase();
 	}
 
-	protected String buildPathForMethod(IMethod method) throws ModelException {
+	protected String buildPathForMethod(IMethod method) {
 
 		ISourceModule sourceModule = method.getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
+		MethodDeclaration methodDeclaration;
+		try {
+			methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
+		} catch (ModelException e) {
+			return null;
+		}
 
 		String path = getPHPDocLink(methodDeclaration);
 		if (path == null) {
@@ -243,13 +251,43 @@ public class PHPManual {
 			if (url.startsWith("mk:")) { //$NON-NLS-1$
 				browser.openURL(new URL(null, url, new MkHandler()));
 			} else {
-				browser.openURL(new URL(url));
+				URL url2 = validateUrlExists(url);
+				if (null == url2) {
+
+					//need to open some kind of err dialog and return
+					MessageDialog d = new MessageDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), PHPUIMessages.getString("PHPManual_title"), null, //$NON-NLS-1$
+						PHPUIMessages.getString("PHPManual_noManual_msg"), //$NON-NLS-1$
+						MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL }, 0);
+					d.open();
+					return;
+				}
+				browser.openURL(url2);
 			}
 
 		} catch (PartInitException e) {
 			Logger.logException(e);
 		} catch (MalformedURLException e) {
 			Logger.logException(e);
+		}
+	}
+
+	protected URL validateUrlExists(String url) throws MalformedURLException {
+		URL url2 = new URL(url);
+		if ("file".equals(url2.getProtocol())) {//$NON-NLS-1$
+			return validateFileUrlExists(url, url2);
+		}
+		//		else if ("http".equals(url2.getProtocol())){//$NON-NLS-1$
+		//			return validateHttpUrlExists(url, url2);
+		//		}
+		return url2;
+	}
+
+	private URL validateFileUrlExists(String url, URL url2) {
+		File file = new File(url.substring("file://".length()));
+		if (null != file && file.exists()) {
+			return url2;
+		} else {
+			return null;
 		}
 	}
 
