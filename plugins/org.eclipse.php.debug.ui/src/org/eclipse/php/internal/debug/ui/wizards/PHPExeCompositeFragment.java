@@ -14,9 +14,9 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.debug.internal.ui.PixelConverter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
@@ -29,7 +29,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 
 public class PHPExeCompositeFragment extends CompositeFragment implements IPHPExeCompositeFragment {
 
