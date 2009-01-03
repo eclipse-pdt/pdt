@@ -14,9 +14,9 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.debug.internal.ui.PixelConverter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPexeItem;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIImages;
