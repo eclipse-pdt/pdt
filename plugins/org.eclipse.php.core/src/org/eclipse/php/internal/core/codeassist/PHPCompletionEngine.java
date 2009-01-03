@@ -75,6 +75,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private final static int RELEVANCE_VAR = 10000;
 	private final static int RELEVANCE_CONST = 1000;
 
+	private static final int STATIC_MEMBERS = 1 << 0;
+	private static final int NON_STATIC_MEMBERS = 1 << 1;
+
 	protected final static String[] phpVariables = { "$_COOKIE", "$_ENV", "$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", "$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", "$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", "$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", };
 
 	protected final static String[] serverVaraibles = { "$DOCUMENT_ROOT", "$GATEWAY_INTERFACE", "$HTTP_ACCEPT", "$HTTP_ACCEPT_ENCODING", "$HTTP_ACCEPT_LANGUAGE", "$HTTP_CONNECTION", "$HTTP_HOST", "$HTTP_USER_AGENT", "$PATH", "$PATH_TRANSLATED", "$PHP_SELF", "$QUERY_STRING", "$REMOTE_ADDR",
@@ -878,9 +881,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							}
 						}
 					}
-					showClassCall(offset, parents.toArray(new IType[parents.size()]), functionName, false, false);
+					showClassMembers(offset, parents.toArray(new IType[parents.size()]), functionName, false, NON_STATIC_MEMBERS | STATIC_MEMBERS);
 				} else {
-					showClassStaticCall(offset, types, functionName);
+					showClassMembers(offset, types, functionName, false, STATIC_MEMBERS);
 				}
 			} else {
 				boolean isThisVar = false;
@@ -890,36 +893,42 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				if (parent.length() >= 5) {
 					isThisVar = "$this".equals(parent.substring(Math.max(0, parent.length() - 5))); //$NON-NLS-1$					
 				}
-				//boolean addVariableDollar = parent.endsWith("()");
-				boolean addVariableDollar = false;
-				showClassCall(offset, types, functionName, isThisVar, addVariableDollar);
+				showClassMembers(offset, types, functionName, isThisVar, NON_STATIC_MEMBERS);
 			}
 		}
 		return true;
 	}
 
-	protected void showClassCall(int offset, IType[] className, String prefix, boolean isThisVar, boolean addVariableDollar) {
+	protected void showClassMembers(int offset, IType[] className, String prefix, boolean isThisVar, int members) {
 		if (className == null) {
 			return;
 		}
-
 		this.setSourceRange(offset - prefix.length(), offset);
-
-		int relevanceMethod = RELEVANCE_METHOD;
-
-		boolean showNonStrictOptions = showNonStrictOptions();
 
 		int mask = 0;
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
+
+		int relevanceMethod = RELEVANCE_METHOD;
+
+		boolean showNonStrictOptions = showNonStrictOptions();
+
 		for (IType type : className) {
 			if (!prefix.startsWith(DOLLAR)) {
 				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, mask);
-				for (IModelElement method : methods) {
+				for (IMethod method : methods) {
 					try {
-						if ((((IMethod) method).getFlags() & IPHPModifiers.Internal) == 0 && (showNonStrictOptions || isThisVar || (((IMethod) method).getFlags() & Modifiers.AccPrivate) == 0)) {
-							reportMethod((IMethod) method, relevanceMethod--);
+						int flags = method.getFlags();
+						if ((members & NON_STATIC_MEMBERS) != 0) {
+							if ((flags & IPHPModifiers.Internal) == 0 && (showNonStrictOptions || isThisVar || (flags & Modifiers.AccPrivate) == 0)) {
+								reportMethod((IMethod) method, relevanceMethod--);
+							}
+						}
+						if ((members & STATIC_MEMBERS) != 0) {
+							if ((!isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) && (flags & IPHPModifiers.Internal) == 0) {
+								reportMethod(method, relevanceMethod--);
+							}
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
@@ -935,62 +944,25 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			for (IModelElement element : fields) {
 				IField field = (IField) element;
 				try {
-					if ((field.getFlags() & Modifiers.AccStatic) == 0) {
-						if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-							reportField(field, relevanceConst--, true);
-						} else if (showNonStrictOptions || isThisVar || (field.getFlags() & Modifiers.AccPrivate) == 0) {
-							reportField(field, relevanceVar--, true);
-						}
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-
-	protected void showClassStaticCall(int offset, IType[] className, String prefix) {
-		this.setSourceRange(offset - prefix.length(), offset);
-
-		boolean showNonStrictOptions = showNonStrictOptions();
-
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
-		int relevanceMethod = RELEVANCE_METHOD;
-		if (!prefix.startsWith(DOLLAR)) {
-			for (IType type : className) {
-				IMethod[] classMethods = CodeAssistUtils.getClassMethods(type, prefix, mask);
-				for (IMethod method : classMethods) {
-					try {
-						if ((!isPHP5 || showNonStrictOptions || (method.getFlags() & Modifiers.AccStatic) != 0) && (method.getFlags() & IPHPModifiers.Internal) == 0) {
-							reportMethod(method, relevanceMethod--);
-						}
-					} catch (ModelException e) {
-						if (DLTKCore.DEBUG_COMPLETION) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-
-		int relevanceConst = RELEVANCE_CONST;
-		int relevanceVar = RELEVANCE_VAR;
-		for (IType type : className) {
-			IField[] classFields = CodeAssistUtils.getClassFields(type, prefix, mask);
-			for (IField field : classFields) {
-				try {
 					int flags = field.getFlags();
 					boolean isConstant = (flags & Modifiers.AccConstant) != 0;
-					if (isConstant || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
-						if (isConstant) {
-							reportField(field, relevanceConst--, false);
-						} else {
-							reportField(field, relevanceVar--, false);
+
+					if ((members & NON_STATIC_MEMBERS) != 0) {
+						if ((flags & Modifiers.AccStatic) == 0) {
+							if ((flags & Modifiers.AccConstant) != 0) {
+								reportField(field, relevanceConst--, true);
+							} else if (showNonStrictOptions || isThisVar || (flags & Modifiers.AccPrivate) == 0) {
+								reportField(field, relevanceVar--, true);
+							}
+						}
+					}
+					if ((members & STATIC_MEMBERS) != 0) {
+						if (isConstant || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
+							if (isConstant) {
+								reportField(field, relevanceConst--, false);
+							} else {
+								reportField(field, relevanceVar--, false);
+							}
 						}
 					}
 				} catch (ModelException e) {
@@ -1661,7 +1633,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		noProposal = false;
 		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
 			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
-			
+
 			if (requestor.isContextInformationMode()) {
 				try {
 					for (IMethod method : type.getMethods()) {

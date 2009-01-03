@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.IGoal;
@@ -52,9 +51,20 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 		for (IType type : types) {
-			IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getVariableDoc(variableName, null, type.getElementName());
-			for (IModelElement e : elements) {
-				docs.add((PHPDocField) e);
+			try {
+				// we look in whole hiearchy
+				ITypeHierarchy superHierarchy = type.newSupertypeHierarchy(null);
+				IType[] superTypes = superHierarchy.getAllTypes();
+				for (IType superType : superTypes) {
+					IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getVariableDoc(variableName, null, superType.getElementName());
+					for (IModelElement e : elements) {
+						docs.add((PHPDocField) e);
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
 
