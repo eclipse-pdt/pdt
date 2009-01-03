@@ -132,7 +132,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
-			evaluated.add((IEvaluatedType)result);
+			evaluated.add((IEvaluatedType) result);
 		}
 		return IGoal.NO_GOALS;
 	}
@@ -254,9 +254,11 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		}
 
 		public boolean endvisit(Statement s) throws Exception {
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				decreaseConditionalLevel();
+			if (interesting(s)) {
+				ASTNode parent = nodesStack.peek();
+				if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
+					decreaseConditionalLevel();
+				}
 			}
 			return visitGeneral(s);
 		}
@@ -265,9 +267,11 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			if (e instanceof Block) {
 				return endvisit((Block) e);
 			}
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof ConditionalExpression) {
-				decreaseConditionalLevel();
+			if (interesting(e)) {
+				ASTNode parent = nodesStack.peek();
+				if (parent instanceof ConditionalExpression) {
+					decreaseConditionalLevel();
+				}
 			}
 			endvisitGeneral(e);
 			return true;
