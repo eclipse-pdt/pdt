@@ -245,7 +245,7 @@ public class CodeAssistUtils {
 				}
 
 				// search for variables in hierarchy
-				pattern = SearchPattern.createPattern(DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+				pattern = SearchPattern.createPattern(prefix.startsWith(DOLLAR) ? prefix : DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
