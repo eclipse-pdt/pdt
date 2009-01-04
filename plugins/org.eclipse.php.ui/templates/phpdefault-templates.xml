@@ -43,36 +43,30 @@
  * ${see_to_target}
  */</template>
 
-<template name="newtype" id="org.eclipse.php.ui.editor.templates.php.codetemplates.newtype" description="%CodeTemplates.newfile" context="php" enabled="true">${filecomment}
+<template name="newtype" id="org.eclipse.php.ui.editor.templates.php.codetemplates.newtype" description="%CodeTemplates.newfile" context="newtype_context" enabled="true">${filecomment}
 ${package_declaration}
 
 ${typecomment}
 ${type_declaration}</template>
 
-<template name="classbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.classbody" description="%CodeTemplates.classbody" context="php" enabled="true" autoinsert="false">
+<template name="classbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.classbody" description="%CodeTemplates.classbody" context="classbody_context" enabled="true" autoinsert="false">
 </template>
 
-<template name="interfacebody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.interfacebody" description="%CodeTemplates.interfacebody" context="php" enabled="true" autoinsert="false">
+<template name="interfacebody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.interfacebody" description="%CodeTemplates.interfacebody" context="interfacebody_context" enabled="true" autoinsert="false">
 </template>
 
-<template name="enumbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.enumbody" description="%CodeTemplates.enumbody" context="php" enabled="true" autoinsert="false">
-</template>
-
-<template name="annotationbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.annotationbody" description="%CodeTemplates.annotationbody" context="php" enabled="true" autoinsert="false">
-</template>
-
-<template name="catchblock" id="org.eclipse.php.ui.editor.templates.php.codetemplates.catchblock" description="%CodeTemplates.catchblock" context="php" enabled="true">// ${todo} %CodeTemplates.catchblock.tododesc
+<template name="catchblock" id="org.eclipse.php.ui.editor.templates.php.codetemplates.catchblock" description="%CodeTemplates.catchblock" context="catchblock_context" enabled="true">// ${todo} %CodeTemplates.catchblock.tododesc
 ${exception_var}.printStackTrace();</template>
 
-<template name="methodbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodbody" description="%CodeTemplates.methodstub" context="php" enabled="true">// ${todo} %CodeTemplates.methodstub.tododesc
+<template name="methodbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodbody" description="%CodeTemplates.methodstub" context="methodbody_context" enabled="true">// ${todo} %CodeTemplates.methodstub.tododesc
 ${body_statement}</template>
 
-<template name="constructorbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorbody" description="%CodeTemplates.constructorstub" context="php" enabled="true">${body_statement}
+<template name="constructorbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.constructorbody" description="%CodeTemplates.constructorstub" context="constructorbody_context" enabled="true">${body_statement}
 // ${todo} %CodeTemplates.constructorstub.tododesc</template>
 
-<template name="getterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.getterbody" description="%CodeTemplates.getterstub" context="php" enabled="true">return ${field};</template>
+<template name="getterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.getterbody" description="%CodeTemplates.getterstub" context="gettercomment_context" enabled="true">return ${field};</template>
 
-<template name="setterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.setterbody" description="%CodeTemplates.setterstub" context="php" enabled="true">${field} = ${param};</template>
+<template name="setterbody" id="org.eclipse.php.ui.editor.templates.php.codetemplates.setterbody" description="%CodeTemplates.setterstub" context="settercomment_context" enabled="true">${field} = ${param};</template>
 
 <!--  php templates -->
 
