@@ -39,13 +39,6 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 
 	public IVariable[] getVariables() throws DebugException {
 		if (elements == null) {
-//			int count = end - start + 1;
-//			elements = new IVariable[count];
-//			for (int i = 0; i < count; i++) {
-//				IValue iv = new SimpleByteValue(value[start + i], getDebugTarget());
-//				elements[i] = new SimpleVariable(Integer.toString(start + i), iv, getDebugTarget());
-//			}
-			
 			elements = createVariables(value, start, end - start + 1, 0, getDebugTarget());
 		}
 		return elements;
@@ -63,13 +56,26 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 		return getDebugTarget().getLaunch();
 	}
 	
+	/**
+	 * create variable entries for a byte array
+	 * @param bytes the byte array
+	 * @param bytePos offset within byte array to start
+	 * @param byteCount number of bytes to process
+	 * @param startOffset offset within the ivariable array to place the information. This allows the creation of ivariables
+	 * but to be able to place variable information before the result of this output
+	 * @param debugTarget the bebug target.
+	 * @return the variables to return.
+	 */
 	public static IVariable[] createVariables(byte[] bytes, int bytePos, int byteCount, int startOffset, IDebugTarget debugTarget) {
 		final int childLimit = 100;
 		
 		
 		IVariable[] childVariables = null;
 		
+		//determine the number of variables to return
 		if (byteCount > childLimit) {
+			
+			// more than one variable to be returned
 			int split = childLimit;
 			int children = byteCount/split;
 			if (byteCount % split !=0) {
@@ -84,13 +90,14 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 				}
 			}
 			
-			
 			childVariables = new IVariable[children + startOffset];
+			
+			// now populate the variables 
 			int rangeStart = bytePos;
 			int rangeEnd = 0;
 			for (int j=0; j < children; j++) {
 				if (j == children - 1) {
-					rangeEnd = byteCount - 1; 
+					rangeEnd = bytePos + byteCount - 1; 
 				}
 				else {
 					rangeEnd = rangeStart + split - 1;
@@ -113,5 +120,4 @@ public class SimpleByteArrayValue extends DBGpElement implements IValue {
 		}
 		return childVariables;
 	}
-	
 }
