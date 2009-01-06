@@ -353,7 +353,6 @@ public class DBGpSession {
 					streamStr = new String(streamData);					
 				}
 				debugTarget.getOutputBuffer().append(streamStr);
-				debugTarget.getOutputBuffer().incrementUpdateCount();
 			}
 		}
 		
