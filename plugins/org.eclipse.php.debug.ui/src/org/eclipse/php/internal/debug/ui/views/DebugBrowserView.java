@@ -21,7 +21,6 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
-import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.swt.SWT;
@@ -32,11 +31,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
@@ -113,9 +108,9 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 				}
 			}
 		};
+
 		DebugPlugin.getDefault().addDebugEventListener(terminateListener);
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
-
 
         if (fPartListener == null) {
             fPartListener= new DebugViewPartListener();
@@ -128,14 +123,12 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
-
 	}
-
 
     public void dispose() {
         getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(IDebugUIConstants.ID_DEBUG_VIEW, this);
         DebugPlugin.getDefault().removeDebugEventListener(terminateListener);
-        //        fTarget = null;
+
         if (swtBrowser != null && !swtBrowser.isDisposed()) {
         	swtBrowser.dispose();
         }
@@ -158,16 +151,17 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	        IPHPDebugTarget oldTarget = fTarget;
 	        int oldcount = fUpdateCount;
 	        fTarget = target;
-	        String output = ""; //$NON-NLS-1$
+	        
+	        DebugOutput debugOutput = null;
 	        if (fTarget != null ) {
 	           	if ((fTarget.isSuspended()) || (fTarget.isTerminated())) {
-	           		DebugOutput outputBuffer = fTarget.getOutputBuffer();
-	           		fUpdateCount = outputBuffer.getUpdateCount();
+	           		debugOutput = fTarget.getOutputBuffer();
+	           		fUpdateCount = debugOutput.getUpdateCount();
 
 	           		// check if output hasn't been updated
-	           		if (fTarget == oldTarget && fUpdateCount == oldcount) return;
-
-	           		output = outputBuffer.toString();
+	           		if (fTarget == oldTarget && fUpdateCount == oldcount) {
+	           			return;
+	           		}
 	           	} else {
 	           		// Not Suspended or Terminated
 
@@ -179,14 +173,23 @@ public class DebugBrowserView extends ViewPart implements ISelectionListener{
 	           		return;
 	           	}
 	        }
-	        int startIdx = output.indexOf("\r\n\r\n"); //$NON-NLS-1$
-	        if (startIdx == -1) {
-	        	startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
+	        
+	        if (debugOutput != null) {
+	        	String contentType = debugOutput.getContentType();
+	        	if (contentType != null && !contentType.startsWith("text")) {
+	        		return; // we don't show garbage anymore
+	        	}
+	        	String output = debugOutput.toString();
+		        // Skip headers
+		        int startIdx = output.indexOf("\r\n\r\n"); //$NON-NLS-1$
+		        if (startIdx == -1) {
+		        	startIdx = output.indexOf("\r\n"); //$NON-NLS-1$
+		        }
+		        if (startIdx != -1) {
+		        	output = output.substring(startIdx + 2);
+		        }
+		        swtBrowser.setText(output);
 	        }
-	        if (startIdx != -1) {
-	        	output = output.substring(startIdx + 2);
-	        }
-        	swtBrowser.setText(output);
         }
     }
 
