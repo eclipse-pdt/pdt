@@ -724,10 +724,6 @@
 				icon="icons/full/etool16/openmethod.gif" id="openMethod"
 				label="%OpenMethodAction.label" menubarPath="navigate/open.ext2"
 				tooltip="%OpenMethodAction.tooltip" />
-			<action allowLabelUpdate="true"
-				definitionId="org.eclipse.php.ui.edit.text.OpenDeclaration" id="org.eclipse.php.ui.actions.OpenDeclaration"
-				label="%OpenDeclarationAction.label" menubarPath="navigate/open.ext2"
-				retarget="true" />
 		</actionSet>
 		<actionSet label="%OpenActionSet.label" description="%OpenActionSet.description"
 			visible="false" id="org.eclipse.php.ui.A_OpenActionSet">
@@ -873,8 +869,6 @@
 		<command name="%ActionDefinition.moveElement.name"
 			description="%ActionDefinition.moveElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
-		<command name="%OpenDeclaration.name" description="%OpenDeclaration.description"
-			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.OpenDeclaration" />
 		<command name="%command.openType.name" description="%command.openType.description"
 			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.type" />
 		<command name="%command.openMethod.name" description="%command.openMethod.description"
