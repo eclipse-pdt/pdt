@@ -34,6 +34,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InstanceOfExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -124,6 +125,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
 		private int seenGlobal = 0;
 		private boolean mergeWithGlobalScope;
+		private int variableLevel;
 
 		public VariableDeclarationSearcher(VariableReference variableReference) {
 			variableName = variableReference.getName();
@@ -132,6 +134,10 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 		public LinkedList<ASTNode> getDeclarations() {
 			int nullIdx;
+			// Remove all outer level declarations
+			for (int i = 0; i < variableLevel; ++i) {
+				declarations.set(i, null);
+			}
 			while ((nullIdx = declarations.indexOf(null)) != -1) {
 				declarations.remove(nullIdx);
 			}
@@ -162,17 +168,55 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		}
 
 		private void increaseConditionalLevel() {
+			declarations.addLast(null);
 			++level;
 		}
 
 		private void decreaseConditionalLevel() {
 			--level;
 		}
+		
+		protected void chackForDeclarationInParent(ASTNode parent) {
+			if (parent instanceof IfStatement || parent instanceof WhileStatement) {
+				Expression condition = null;
+				if (parent instanceof IfStatement) {
+					condition = ((IfStatement)parent).getCondition();
+				} else {
+					condition = ((WhileStatement)parent).getCondition();
+				}
+				if (condition instanceof InstanceOfExpression) {
+					InstanceOfExpression i = (InstanceOfExpression) condition;
+					Expression variable = i.getExpr();
+					if (variable instanceof VariableReference) {
+						VariableReference variableReference = (VariableReference) variable;
+							if (variableName.equals(variableReference.getName())) {
+							while (declarations.size() > level) {
+								declarations.removeLast();
+							}
+							declarations.addLast(i.getClassName());
+						}
+					}
+				}
+			}
+			else if (parent instanceof CatchClause) {
+				CatchClause catchClause = (CatchClause) parent;
+				if (catchClause.getVariable().getName().equals(variableName)) {
+					declarations.addLast(catchClause);
+				}
+			}
+			else if (parent instanceof ForEachStatement) {
+				ForEachStatement foreachStatement = (ForEachStatement) parent;
+				if (foreachStatement.getValue() instanceof SimpleReference && ((SimpleReference)foreachStatement.getValue()).getName().equals(variableName)) {
+					declarations.addLast(foreachStatement);
+				}
+			} 
+		}
 
 		public boolean visit(Block s) throws Exception {
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
 				increaseConditionalLevel();
+				chackForDeclarationInParent(parent);
 			}
 			return visitGeneral(s);
 		}
@@ -193,38 +237,23 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 							// remove all declarations, since global statement overrides them
 							for (int i = 0; i < declarations.size(); ++i) {
 								declarations.set(i, null);
-								return visitGeneral(s);
 							}
+							return visitGeneral(s);
 						}
 					}
 				}
-			}
-			else if (s instanceof FormalParameter) {
+			} else if (s instanceof FormalParameter) {
 				FormalParameter parameter = (FormalParameter) s;
 				if (parameter.getName().equals(variableName)) {
-					declarations.clear(); // declarations list should be empty, but we still remove everything (maybe user typed the same argument twice)
+					declarations.clear();
 					declarations.addLast(s);
-					return visitGeneral(s);
-				}
-			}
-			else if (s instanceof CatchClause) {
-				CatchClause catchClause = (CatchClause) s;
-				if (catchClause.getVariable().getName().equals(variableName)) {
-					declarations.clear();
-					declarations.addLast(catchClause);
-					return visitGeneral(s);
-				}
-			} else if (s instanceof ForEachStatement) {
-				ForEachStatement foreachStatement = (ForEachStatement) s;
-				if (foreachStatement.getValue() instanceof SimpleReference && ((SimpleReference)foreachStatement.getValue()).getName().equals(variableName)) {
-					declarations.clear();
-					declarations.addLast(foreachStatement);
 					return visitGeneral(s);
 				}
 			}
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
 				increaseConditionalLevel();
+				chackForDeclarationInParent(parent);
 			}
 			return visitGeneral(s);
 		}
@@ -242,6 +271,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 			ASTNode parent = nodesStack.peek();
 			if (parent instanceof ConditionalExpression) {
 				increaseConditionalLevel();
+				chackForDeclarationInParent(parent);
 			}
 			return visitGeneral(e);
 		}
@@ -260,7 +290,10 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
 				decreaseConditionalLevel();
 			}
-			return visitGeneral(s);
+			if (shouldContinue(s)) {
+				endvisitGeneral(s);
+			}
+			return true;
 		}
 
 		public boolean endvisit(Expression e) throws Exception {
@@ -271,7 +304,9 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 			if (parent instanceof ConditionalExpression) {
 				decreaseConditionalLevel();
 			}
-			endvisitGeneral(e);
+			if (shouldContinue(e)) {
+				endvisitGeneral(e);
+			}
 			return true;
 		}
 
@@ -288,6 +323,9 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 
 		public boolean visitGeneral(ASTNode node) throws Exception {
 			nodesStack.push(node);
+			if (node.sourceStart() == variableOffset) {
+				variableLevel = level;
+			}
 			return shouldContinue(node);
 		}
 

@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.14 2008/07/06 12:08:11 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.15 2009/01/06 22:19:35 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -510,7 +510,7 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
 
 | T_USE:start use_filename:expr T_SEMICOLON:end
 {:
-	PHPCallArgumentsList list = new PHPCallArgumentsList();
+	PHPCallArgumentsList list = new PHPCallArgumentsList(expr.sourceStart(), expr.sourceEnd());
     list.addNode(expr);
     SimpleReference functionName = new SimpleReference(startleft, startright, "use");
     PHPCallExpression functionInvocation = new PHPCallExpression(startleft, exprright, null, functionName, list);
@@ -518,8 +518,10 @@ inner_statement_list:statementList T_CURLY_CLOSE:end
     RESULT = expressionStatement;
 :}
 
-| T_UNSET:start T_OPEN_PARENTHESE unset_variables:list T_CLOSE_PARENTHESE:closePar T_SEMICOLON:end
+| T_UNSET:start T_OPEN_PARENTHESE:openPar unset_variables:list T_CLOSE_PARENTHESE:closePar T_SEMICOLON:end
 {:
+	list.setStart(openParright);
+	list.setEnd(closeParleft);
 	SimpleReference functionName = new SimpleReference(startleft, startright, "unset");
     PHPCallExpression functionInvocation = new PHPCallExpression(startleft, closeParright, null, functionName, list);
     ExpressionStatement expressionStatement = new ExpressionStatement(startleft, endright, functionInvocation);
@@ -1325,6 +1327,10 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 
 | cvar:var T_EQUAL:varComment T_REFERENCE:reftoken T_NEW:start static_or_variable_string:className ctor_arguments:ctor
 {:
+	if (ctor.sourceStart() == 0) {
+		ctor.setStart(classNameright);
+		ctor.setEnd(classNameright);
+	}
 	ClassInstanceCreation classInstanceCreation;
 	if (className.getClass().equals(SimpleReference.class)) {
 		TypeReference classReference = new TypeReference(classNameleft, classNameright, ((SimpleReference)className).getName());
@@ -1338,6 +1344,10 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 
 | T_NEW:start static_or_variable_string:className ctor_arguments:ctor
 {:
+	if (ctor.sourceStart() == 0) {
+		ctor.setStart(classNameright);
+		ctor.setEnd(classNameright);
+	}
 	ClassInstanceCreation classInstanceCreation;
 	if (className.getClass().equals(SimpleReference.class)) {
 		TypeReference classReference = new TypeReference(classNameleft, classNameright, ((SimpleReference)className).getName());
@@ -1623,6 +1633,11 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	PHPCallArgumentsList list = new PHPCallArgumentsList();
     if (expr != null) {
         list.addNode(expr);
+		list.setStart(expr.sourceStart());
+		list.setEnd(expr.sourceEnd());
+	} else {
+		list.setStart(startright);
+		list.setEnd(startright);
     }
     SimpleReference functionName = new SimpleReference(startleft, startright, start);
     PHPCallExpression result = new PHPCallExpression(startleft, exprright, null, functionName, list);
@@ -1657,6 +1672,11 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	PHPCallArgumentsList expList = new PHPCallArgumentsList();
 	if (expr != null) {
 		expList.addNode(expr);
+		expList.setStart(expr.sourceStart());
+		expList.setEnd(expr.sourceEnd());
+	} else {
+		expList.setStart(startright);
+		expList.setEnd(startright);
 	}
 	SimpleReference name = new SimpleReference(startleft, startright, "print");
 	PHPCallExpression result = new PHPCallExpression(startleft, exprright, null, name, expList);
@@ -1665,14 +1685,18 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 ;
 
 function_call ::=
-string_st:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {: 
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
 	SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName);
 	RESULT = new PHPCallExpression(functionNameleft, endright, null, name, parameters); 
 :}
 
-| cvar:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| cvar:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
 	Expression result;
 	if (functionName.getKind() == ASTNodeKinds.FIELD_ACCESS) {
 		FieldAccess fieldAccess = (FieldAccess) functionName;
@@ -1690,8 +1714,11 @@ string_st:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters
 	RESULT = result;
 :}
 
-| string_st:className T_PAAMAYIM_NEKUDOTAYIM static_or_variable_string:functionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| string_st:className T_PAAMAYIM_NEKUDOTAYIM static_or_variable_string:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
+	parameters.setStart(startright);
+	parameters.setEnd(endleft);
+	
 	TypeReference classReference = new TypeReference(classNameleft, classNameright, className);
 	Expression result = null;
 	
@@ -1768,8 +1795,10 @@ ctor_arguments ::=
 	RESULT = new PHPCallArgumentsList();
 :}
 
-| T_OPEN_PARENTHESE function_call_parameter_list:paramsList T_CLOSE_PARENTHESE
+| T_OPEN_PARENTHESE:start function_call_parameter_list:paramsList T_CLOSE_PARENTHESE:end
 {:
+	paramsList.setStart(startright);
+	paramsList.setEnd(endleft);
 	RESULT = paramsList;
 :}
 ;
@@ -2384,17 +2413,19 @@ string_st:string
 ;
 
 internal_functions_in_yacc ::=
-T_ISSET:start T_OPEN_PARENTHESE isset_variables:varList T_CLOSE_PARENTHESE:end
+T_ISSET:start T_OPEN_PARENTHESE:openPar isset_variables:varList T_CLOSE_PARENTHESE:end
 {:
+	varList.setStart(openParright);
+	varList.setEnd(endleft);
 	SimpleReference name = new SimpleReference(startleft, startright, "isset");
 	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, varList);
 	RESULT = result;
 :}
 
-| T_EMPTY:start T_OPEN_PARENTHESE cvar:var T_CLOSE_PARENTHESE:end
+| T_EMPTY:start T_OPEN_PARENTHESE:openPar cvar:var T_CLOSE_PARENTHESE:end
 {:
 	SimpleReference name = new SimpleReference(startleft, startright, "empty");
-	PHPCallArgumentsList varList = new PHPCallArgumentsList();
+	PHPCallArgumentsList varList = new PHPCallArgumentsList(openParright, endleft);
 	varList.addNode(var);
 	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, varList);
 	RESULT = result;
@@ -2412,10 +2443,10 @@ T_ISSET:start T_OPEN_PARENTHESE isset_variables:varList T_CLOSE_PARENTHESE:end
 	RESULT = result;
 :}
 
-| T_EVAL:start T_OPEN_PARENTHESE expr:expr T_CLOSE_PARENTHESE:end
+| T_EVAL:start T_OPEN_PARENTHESE:openPar expr:expr T_CLOSE_PARENTHESE:end
 {:
 	SimpleReference name = new SimpleReference(startleft, startright, "eval");
-	PHPCallArgumentsList exprList = new PHPCallArgumentsList();
+	PHPCallArgumentsList exprList = new PHPCallArgumentsList(openParright, endleft);
 	exprList.addNode(expr);
 	PHPCallExpression result = new PHPCallExpression(startleft, endright, null, name, exprList);
 	RESULT = result;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
