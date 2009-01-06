@@ -869,6 +869,8 @@
 		<command name="%ActionDefinition.moveElement.name"
 			description="%ActionDefinition.moveElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
+		<command name="%OpenDeclaration.name" description="%OpenDeclaration.description"
+			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.OpenDeclaration" />
 		<command name="%command.openType.name" description="%command.openType.description"
 			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.type" />
 		<command name="%command.openMethod.name" description="%command.openMethod.description"
