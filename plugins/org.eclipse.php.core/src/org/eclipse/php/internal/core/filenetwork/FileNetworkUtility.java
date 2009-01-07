@@ -194,7 +194,7 @@ public class FileNetworkUtility {
 
 		IProject currentProject = from.getScriptProject().getProject();
 		String currentScriptDir = from.getParent().getPath().toString();
-		String currentWorkingDir = currentProject.getFullPath().toString();
+		String currentWorkingDir = currentScriptDir; //currentProject.getFullPath().toString();
 		Result<?, ?> result = PHPSearchEngine.find(path, currentWorkingDir, currentScriptDir, currentProject);
 
 		if (result instanceof ResourceResult) {
