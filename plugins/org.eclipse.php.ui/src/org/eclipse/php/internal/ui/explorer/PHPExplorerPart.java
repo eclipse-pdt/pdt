@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
@@ -35,7 +36,6 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	protected class PHPExplorerElementSorter extends ModelElementSorter {
 		private static final int INCLUDE_PATH_CONTAINER = 59;
 		
-		@Override
 		public int category(Object element) {
 			if (element instanceof IncludePathContainer) 
 				return INCLUDE_PATH_CONTAINER;
@@ -43,10 +43,23 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 				return super.category(element);
 		}
 
-		@Override
 		public int compare(Viewer viewer, Object e1, Object e2) {
-			if (e1 instanceof IncludePath || e2 instanceof IncludePath){
+			// Put Include Path node to the bottom:
+			if (e1 instanceof IncludePath || e2 instanceof IncludePath) {
 				return -1;
+			}
+
+			// Fix #256585 - sort by resource name
+			Object c1 = e1;
+			if (e1 instanceof SourceModule) {
+				c1 = ((SourceModule) e1).getResource();
+			}
+			Object c2 = e2;
+			if (e2 instanceof SourceModule) {
+				c2 = ((SourceModule) e2).getResource();
+			}
+			if (c1 != null && c2 != null) {
+				return super.compare(viewer, c1, c2);
 			}
 			return super.compare(viewer, e1, e2);
 		}
