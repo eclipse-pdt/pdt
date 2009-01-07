@@ -122,6 +122,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private ContextRegion internalPHPRegion;
 	private IPhpScriptRegion phpScriptRegion;
 	private ITextRegionCollection regionContainer;
+	private Set<IModelElement> processedElements = new HashSet<IModelElement>();
 
 	enum States {
 		CATCH, NEW, INSTANCEOF
@@ -152,54 +153,58 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	public void complete(org.eclipse.dltk.compiler.env.ISourceModule module, int position, int i) {
+		try {
+			if (requestor instanceof IPHPCompletionRequestor) {
+				IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
 
-		if (requestor instanceof IPHPCompletionRequestor) {
-			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
+				IDocument d = phpCompletionRequestor.getDocument();
+				if (d instanceof IStructuredDocument) {
+					document = (IStructuredDocument) d;
+				}
 
-			IDocument d = phpCompletionRequestor.getDocument();
-			if (d instanceof IStructuredDocument) {
-				document = (IStructuredDocument) d;
+				explicit = phpCompletionRequestor.isExplicit();
 			}
 
-			explicit = phpCompletionRequestor.isExplicit();
-		}
-
-		if (document == null) {
-			IStructuredModel structuredModel = null;
-			try {
-				IFile file = (IFile) module.getModelElement().getResource();
-				if (file != null) {
-					if (file.exists()) {
-						structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-						if (structuredModel != null) {
-							document = structuredModel.getStructuredDocument();
+			if (document == null) {
+				IStructuredModel structuredModel = null;
+				try {
+					IFile file = (IFile) module.getModelElement().getResource();
+					if (file != null) {
+						if (file.exists()) {
+							structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+							if (structuredModel != null) {
+								document = structuredModel.getStructuredDocument();
+							} else {
+								document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
+							}
 						} else {
-							document = StructuredModelManager.getModelManager().createStructuredDocumentFor(file);
+							document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
+							document.set(module.getSourceContents());
 						}
-					} else {
-						document = StructuredModelManager.getModelManager().createNewStructuredDocumentFor(file);
-						document.set(module.getSourceContents());
+					}
+				} catch (Exception e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
+				} finally {
+					if (structuredModel != null) {
+						structuredModel.releaseFromRead();
 					}
 				}
-			} catch (Exception e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
-			} finally {
-				if (structuredModel != null) {
-					structuredModel.releaseFromRead();
-				}
 			}
-		}
 
-		if (document != null) {
-			try {
-				calcCompletionOption(document, position, (ISourceModule) module.getModelElement());
-			} catch (BadLocationException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
+			if (document != null) {
+				try {
+					calcCompletionOption(document, position, (ISourceModule) module.getModelElement());
+				} catch (BadLocationException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
 				}
 			}
+			
+		} finally {
+			processedElements.clear();
 		}
 	}
 
@@ -1556,6 +1561,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportMethod(IMethod method, int relevance) {
+		if (processedElements.contains(method)) {
+			return;
+		}
+		processedElements.add(method);
+		
 		if (relevance < 1) {
 			relevance = 1;
 		}
@@ -1622,6 +1632,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportType(IType type, int relevance, String suffix) {
+		if (processedElements.contains(type)) {
+			return;
+		}
+		processedElements.add(type);
+		
 		if (relevance < 1) {
 			relevance = 1;
 		}
@@ -1692,6 +1707,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	private void reportField(IField field, int relevance, boolean removeDollar) {
+		if (processedElements.contains(field)) {
+			return;
+		}
+		processedElements.add(field);
+		
 		if (relevance < 1) {
 			relevance = 1;
 		}
