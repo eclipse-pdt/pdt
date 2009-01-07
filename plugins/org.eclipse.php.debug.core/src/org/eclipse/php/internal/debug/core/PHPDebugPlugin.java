@@ -78,8 +78,8 @@ public class PHPDebugPlugin extends Plugin {
 		// It's important the the default setting will occur before loading the daemons.
 		XDebugPreferenceMgr.setDefaults();
 
-		// Start all the daemons
-		DaemonPlugin.getDefault().startDaemons(null);
+		// Start all the daemons. CODE MOVED TO DAEMON PLUGIN
+		//DaemonPlugin.getDefault().startDaemons(null);
 
 		// TODO - XDebug - See if this can be removed
 		XDebugLaunchListener.getInstance();
