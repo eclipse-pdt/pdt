@@ -52,6 +52,7 @@ public class DaemonPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		startDaemons(null);
 	}
 
 	/**
