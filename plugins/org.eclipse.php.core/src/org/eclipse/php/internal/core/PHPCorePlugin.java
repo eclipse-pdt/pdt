@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
@@ -38,7 +39,7 @@ public class PHPCorePlugin extends Plugin {
 
 	//The shared instance.
 	private static PHPCorePlugin plugin;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -52,10 +53,10 @@ public class PHPCorePlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		// start the include path manager
 		IncludePathManager.getInstance();
-		
+
 		// register the listener in charge of converting the projects - applies for projects being opened during work
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(fProjectConvertListener, IResourceChangeEvent.PRE_BUILD);
 		// run the conversion over all the projects in the workspace - all open projects will be converted
@@ -150,9 +151,9 @@ public class PHPCorePlugin extends Plugin {
 		}
 		scriptProject.setRawBuildpath(newPath.toArray(new IBuildpathEntry[newPath.size()]), new NullProgressMonitor());
 	}
-	
+
 	private final ListenerList shutdownListeners = new ListenerList();
-	
+
 	public void addShutdownListener(IShutdownListener listener) {
 		shutdownListeners.add(listener);
 	}
@@ -161,13 +162,13 @@ public class PHPCorePlugin extends Plugin {
 	 * This method is called when the plug-in is stopped
 	 */
 	public void stop(BundleContext context) throws Exception {
-		
+
 		Object[] listeners = shutdownListeners.getListeners();
 		for (int i = 0; i < listeners.length; ++i) {
 			((IShutdownListener) listeners[i]).shutdown();
 		}
 		shutdownListeners.clear();
-		
+
 		super.stop(context);
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(fProjectConvertListener);
 		plugin = null;
@@ -233,5 +234,77 @@ public class PHPCorePlugin extends Plugin {
 	@SuppressWarnings("unchecked")
 	public static Hashtable getOptions() {
 		return ModelManager.getModelManager().getOptions();
+	}
+
+	/**
+	 * Initializes DLTKCore internal structures to allow subsequent operations
+	 * (such as the ones that need a resolved classpath) to run full speed. A
+	 * client may choose to call this method in a background thread early after
+	 * the workspace has started so that the initialization is transparent to
+	 * the user.
+	 * <p>
+	 * However calling this method is optional. Services will lazily perform
+	 * initialization when invoked. This is only a way to reduce initialization
+	 * overhead on user actions, if it can be performed before at some
+	 * appropriate moment.
+	 * </p>
+	 * <p>
+	 * This initialization runs accross all Java projects in the workspace. Thus
+	 * the workspace root scheduling rule is used during this operation.
+	 * </p>
+	 * <p>
+	 * This method may return before the initialization is complete. The
+	 * initialization will then continue in a background thread.
+	 * </p>
+	 * <p>
+	 * This method can be called concurrently.
+	 * </p>
+	 * 
+	 * @param monitor
+	 *            a progress monitor, or <code>null</code> if progress reporting
+	 *            and cancellation are not desired
+	 * @exception CoreException
+	 *                if the initialization fails, the status of the exception
+	 *                indicates the reason of the failure
+	 * @since 3.1
+	 */
+	public static void initializeAfterLoad(IProgressMonitor monitor) throws CoreException {
+		try {
+			if (monitor != null) {
+				monitor.beginTask(CoreMessages.PHPCorePlugin_initializingPHPToolkit, 100);
+			}
+			// dummy query for waiting until the indexes are ready
+			SearchEngine engine = new SearchEngine();
+			IDLTKSearchScope scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+			try {
+				if (monitor != null) {
+					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
+				}
+				engine.searchAllTypeNames(null, SearchPattern.R_EXACT_MATCH, "!@$#!@".toCharArray(), //$NON-NLS-1$
+					SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE, IDLTKSearchConstants.TYPE, scope, new TypeNameRequestor() {
+						public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+							// no type to accept
+						}
+					},
+					// will not activate index query caches if indexes are
+					// not ready, since it would take to long
+					// to wait until indexes are fully rebuild
+					IDLTKSearchConstants.CANCEL_IF_NOT_READY_TO_SEARCH, monitor == null ? null : new SubProgressMonitor(monitor, 49) // 49% of the time is spent in the
+					// dummy search
+					);
+			} catch (ModelException e) {
+				// /search failed: ignore
+			} catch (OperationCanceledException e) {
+				if (monitor != null && monitor.isCanceled()) {
+					throw e;
+				}
+				// else indexes were not ready: catch the exception so that jars
+				// are still refreshed
+			}
+		} finally {
+			if (monitor != null) {
+				monitor.done();
+			}
+		}
 	}
 }
