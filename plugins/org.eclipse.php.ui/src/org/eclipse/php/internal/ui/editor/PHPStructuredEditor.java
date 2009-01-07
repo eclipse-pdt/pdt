@@ -1773,10 +1773,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 
-		action = new OpenDeclarationAction(resourceBundle, this);
-		//action = new OpenHyperlinkAction(resourceBundle, "OpenAction_declaration_", this, getSourceViewer());
-		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
+//		action = new OpenDeclarationAction(resourceBundle, this);
+//		//action = new OpenHyperlinkAction(resourceBundle, "OpenAction_declaration_", this, getSourceViewer());
+//		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
+//		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
 
 		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);

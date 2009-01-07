@@ -17,11 +17,10 @@ import java.util.ResourceBundle;
 
 import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.action.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.actions.*;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -92,8 +91,8 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
 		fOpenDeclaration = new RetargetTextEditorAction(resourceBundle, "OpenAction_declaration_"); //$NON-NLS-1$
-		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
-
+		fOpenDeclaration.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration");
+		
 		fOpenTypeHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenTypeHierarchy"); //$NON-NLS-1$
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
 
@@ -144,7 +143,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	 */
 	public void contributeToMenu(IMenuManager menu) {
 		super.contributeToMenu(menu);
-
 		IMenuManager gotoMenu = menu.findMenuUsingPath("navigate/goTo"); //$NON-NLS-1$
 		menu.findMenuUsingPath("source"); //$NON-NLS-1$
 		if (gotoMenu != null) {
@@ -153,7 +151,13 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		}
 		IMenuManager navigateMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
 		if (navigateMenu != null) {
+			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fOpenDeclaration);
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.SHOW_EXT, fOpenHierarchy);
+			
+			//Work around for Bug 251074
+			// The SSE's action contributor append the fOpentFileAction with the same name "Open Declaration".
+			//Do we really want to extends from SSE's action contributor? 
+			IContributionItem item = navigateMenu.remove(new ActionContributionItem(fOpenFileAction));
 		}
 	}
 
