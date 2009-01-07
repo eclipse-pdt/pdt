@@ -14,10 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
@@ -126,6 +123,14 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 				processCommandLine(ctx);
 			}
 		});
+		
+		if (PlatformUI.isWorkbenchRunning()) {
+			new InitializeAfterLoadJob().schedule(); // must be last call in start() method
+		}
+	}
+	
+	static void initializeAfterLoad(IProgressMonitor monitor) {
+		org.eclipse.dltk.internal.corext.util.OpenTypeHistory.getInstance(PHPUILanguageToolkit.getInstance()).checkConsistency(monitor);
 	}
 
 	private void processCommandLine(BundleContext context) {
