@@ -22,7 +22,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.contexts.IContextService;
 
 /**
  * PHP Explorer view part to display the projects, contained files and referenced folders/libraries.
@@ -142,5 +144,20 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		 */
 		return new PHPExplorerActionGroup(this);
 	}
-
+	@Override
+	public void createPartControl(Composite parent) {
+		// TODO Auto-generated method stub
+		super.createPartControl(parent);
+		activateContext();
+	}
+	
+	/**
+	 * Activate a context that this view uses. It will be tied to this view
+	 * activation events and will be removed when the view is disposed.
+	 */
+	private void activateContext() {
+		IContextService contextService = (IContextService) getSite()
+				.getService(IContextService.class);
+		contextService.activateContext("org.eclipse.dltk.ui.scriptEditorScope");
+	}
 }
