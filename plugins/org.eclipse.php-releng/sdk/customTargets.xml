@@ -49,6 +49,15 @@
 		</unzip>
 	</target>
 
+	<target name="checkParserGeneratorExists">
+		<available property="parserGeneratorExists" file="${parserGenerator}" />
+	</target>
+	
+	<!-- Generate the PHP Parser classes -->
+	<target name="generatePhpParserFiles" depends="checkParserGeneratorExists" if="parserGeneratorExists">
+		<ant antfile="${parserGenerator}" />
+	</target>
+	
 	<!-- ===================================================================== -->
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
@@ -77,6 +86,9 @@
 	<!-- Steps to do after fetching the build elements -->
 	<!-- ===================================================================== -->
 	<target name="postFetch">
+		<antcall target="generatePhpParserFiles">
+			<param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/parser/build.xml" />
+		</antcall>
 	</target>
 
 	<!-- ===================================================================== -->
