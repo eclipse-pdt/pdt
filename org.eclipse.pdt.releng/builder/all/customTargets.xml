@@ -212,7 +212,7 @@
 		</replace>
 		
 		<antcall target="generatePhpParserFiles">
-			<param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/parser/build.xml" />
+			<param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/build.xml" />
 		</antcall>
 	</target>
 
