@@ -144,7 +144,7 @@ public class Identifier extends Expression {
 	}
 
 	public final void setName(String value) {
-		if (value == null || value.length() == 0) {
+		if (value == null/* || value.length() == 0*/) {
 			throw new IllegalArgumentException();
 		}
 
