@@ -1,11 +1,12 @@
-<project default="generateScanner">
+<project default="generateScanner" basedir=".">
 
 	<target name="generateScanner">
-		<java jar="..\JFlex-1.4.1\JFlex.jar" fork="true">
+		<java jar="../JFlex-1.4.1/JFlex.jar" fork="true">
 			<arg value="-d" />
-			<arg value="..\..\..\src\org\eclipse\php\internal\core\documentModel\parser" />
+			<arg value="../../../src/org/eclipse/php/internal/core/documentModel/parser" />
 			<arg value="-nobak" />
 			<arg value="PhpLexer5.jflex" />
 		</java>
 	</target>
+	
 </project>

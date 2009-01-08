@@ -1,0 +1,25 @@
+<project name="Builds all parser classes" default="main">
+	
+	<target name="main">
+		
+		<!-- PHP 4 -->
+		<ant dir="parser/php4/" antfile="genereteAstParser.xml" />
+		<ant dir="parser/php4/" antfile="genereteAstScanner.xml" />
+		<ant dir="parser/php4/" antfile="genereteCompilerAstParser.xml" />
+		
+		<!-- PHP 5 -->
+		<ant dir="parser/php5/" antfile="genereteAstParser.xml" />
+		<ant dir="parser/php5/" antfile="genereteAstScanner.xml" />
+		<ant dir="parser/php5/" antfile="genereteCompilerAstParser.xml" />
+		
+		<!-- PHPDoc Lexer -->
+		<ant dir="parser/phpdoc/" antfile="genereteCompilerScanner.xml" />
+		
+		<!-- Highlighting Lexer -->
+		<ant dir="highlighting/" antfile="generetePhpLexer4.xml" />
+		<ant dir="highlighting/" antfile="generetePhpLexer5.xml" />
+		<ant dir="highlighting/" antfile="generetePHPTokenizer.xml" />
+		
+	</target>
+	
+</project>

@@ -1,4 +1,4 @@
-<project default="generateParser">
+<project default="generateParser" basedir=".">
 
 	<target name="generateParser">
 		<java 
@@ -15,7 +15,6 @@
 			<arg value="Php4ParserConstants"/>
 			<arg value="-interface"/>
 		</java>
-
 		
 		<replace
 			file="Php4AstParser.java"
@@ -31,7 +30,5 @@
 			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4"/>
 
 	</target>
-
-
 
 </project>

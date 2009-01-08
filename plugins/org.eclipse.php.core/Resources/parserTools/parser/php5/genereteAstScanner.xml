@@ -1,7 +1,7 @@
-<project default="generateScanner">
+<project default="generateScanner" basedir=".">
 
 	<target name="generateScanner">
-		<java jar="..\..\JFlex-1.4.1\JFlex.jar" fork="true">
+		<java jar="../../JFlex-1.4.1/JFlex.jar" fork="true">
 			<arg value="-d" />
 			<arg value="../../../../src/org/eclipse/php/internal/core/ast/scanner" />
 			<arg value="-nobak" />

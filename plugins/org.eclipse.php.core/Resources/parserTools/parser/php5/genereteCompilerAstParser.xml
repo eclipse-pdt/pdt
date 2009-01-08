@@ -1,4 +1,4 @@
-<project default="generateParser">
+<project default="generateParser" basedir=".">
 
 	<target name="generateParser">
 		<java  jar="../../javacup/java-cup-10k.jar" input="php_compiler_ast_parser.cup" fork="true">
@@ -18,8 +18,9 @@
 			value="extends AbstractASTParser"/>
 
 		<move file="Php5AstParser.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/" />
-
+		
 		<move file="Php5ParserConstants.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5" />
-
+	
 	</target>
+	
 </project>

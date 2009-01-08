@@ -1,4 +1,4 @@
-<project default="generateParser">
+<project default="generateParser" basedir=".">
 
 	<target name="generateParser">
 		<java 
@@ -25,7 +25,5 @@
 			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner"/>
 
 	</target>
-
-
 
 </project>

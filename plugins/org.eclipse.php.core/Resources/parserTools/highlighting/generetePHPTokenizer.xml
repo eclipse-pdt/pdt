@@ -1,10 +1,11 @@
 <project default="generateScanner">
 
 	<target name="generateScanner">
-		<java jar="..\JFlex-1.2.2\JFlex.jar" fork="true">
+		<java jar="../JFlex-1.2.2/JFlex.jar" fork="true">
 			<arg value="-d" />
-			<arg value="..\..\..\src\org\eclipse\php\internal\core\documentModel\parser" />
+			<arg value="../../../src/org/eclipse/php/internal/core/documentModel/parser" />
 			<arg value="-skel" />
+			<arg value="-nobak" />
 			<arg value="skeleton.sse" />
 			<arg value="PHPTokenizer.jflex" />
 		</java>
