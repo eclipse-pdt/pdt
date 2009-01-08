@@ -5,9 +5,10 @@
 			<arg value="-d" />
 			<arg value="../../../src/org/eclipse/php/internal/core/documentModel/parser" />
 			<arg value="-skel" />
-			<arg value="-nobak" />
 			<arg value="skeleton.sse" />
 			<arg value="PHPTokenizer.jflex" />
 		</java>
+		
+		<delete file="../../../src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java~" />
 	</target>
 </project>
