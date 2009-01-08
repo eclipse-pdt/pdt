@@ -22,7 +22,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.contexts.IContextService;
 
 /**
  * PHP Explorer view part to display the projects, contained files and referenced folders/libraries.
@@ -35,9 +37,9 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 
 	protected class PHPExplorerElementSorter extends ModelElementSorter {
 		private static final int INCLUDE_PATH_CONTAINER = 59;
-		
+
 		public int category(Object element) {
-			if (element instanceof IncludePathContainer) 
+			if (element instanceof IncludePathContainer)
 				return INCLUDE_PATH_CONTAINER;
 			else
 				return super.category(element);
@@ -63,13 +65,10 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			}
 			return super.compare(viewer, e1, e2);
 		}
-		
-		
-		
 	}
-	
+
 	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
-		
+
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			if (e1 instanceof IWorkingSet || e2 instanceof IWorkingSet)
 				return 0;
@@ -136,7 +135,7 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			getTreeViewer().setComparator(comparator);
 		}
 	}
-	
+
 	@Override
 	protected ScriptExplorerActionGroup getActionGroup() {
 		/*
@@ -145,10 +144,20 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		 */
 		return new PHPExplorerActionGroup(this);
 	}
-
-
+	@Override
+	public void createPartControl(Composite parent) {
+		// TODO Auto-generated method stub
+		super.createPartControl(parent);
+		activateContext();
+	}
 	
-	
-	
-
+	/**
+	 * Activate a context that this view uses. It will be tied to this view
+	 * activation events and will be removed when the view is disposed.
+	 */
+	private void activateContext() {
+		IContextService contextService = (IContextService) getSite()
+				.getService(IContextService.class);
+		contextService.activateContext("org.eclipse.dltk.ui.scriptEditorScope");
+	}
 }
