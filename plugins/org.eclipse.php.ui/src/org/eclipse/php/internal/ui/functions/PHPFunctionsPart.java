@@ -185,7 +185,7 @@ public class PHPFunctionsPart extends ViewPart implements IPartListener {
 					Object currentInput = fViewer.getInput();
 					IProjectFragment[] projectFragments = project.getProjectFragments();
 
-					if (projectFragments == null || projectFragments.length == 0) {
+					if (projectFragments == null || projectFragments.length <= 1) {
 						return Status.CANCEL_STATUS;
 					}
 
