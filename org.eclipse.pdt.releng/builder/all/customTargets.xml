@@ -187,6 +187,15 @@
 		</if>
 
 	</target>
+	
+	<target name="checkParserGeneratorExists">
+		<available property="parserGeneratorExists" file="${parserGenerator}" />
+	</target>
+	
+	<!-- Generate the PHP Parser classes -->
+	<target name="generatePhpParserFiles" depends="checkParserGeneratorExists" if="parserGeneratorExists">
+		<ant antfile="${parserGenerator}" />
+	</target>
 
 	<!-- ===================================================================== -->
 	<!-- Steps to do before fetching the build elements -->
@@ -201,6 +210,10 @@
 		<replace dir="${buildDirectory}/plugins" value="${timestamp}" token="@buildid@">
 			<include name="**/about.mappings" />
 		</replace>
+		
+		<antcall target="generatePhpParserFiles">
+			<param name="parserGenerator" value="${buildDirectory}/plugins/org.eclipse.php.core/Resources/parserTools/parser/build.xml" />
+		</antcall>
 	</target>
 
 	<!-- ===================================================================== -->
