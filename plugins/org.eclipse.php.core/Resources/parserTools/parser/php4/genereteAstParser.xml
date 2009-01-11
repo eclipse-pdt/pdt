@@ -1,6 +1,13 @@
 <project default="generateParser" basedir=".">
+	
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			srcfile="php_ast_parser.cup"
+			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/PhpAstParser4.java" />
+	</target>
 
-	<target name="generateParser">
+	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
 		<java 
 			jar="../../javacup/java-cup-10k.jar"  
 			input="php_ast_parser.cup"

@@ -1,6 +1,20 @@
 <project default="generateScanner" basedir=".">
 
-	<target name="generateScanner">
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/DocumentorLexer.java">
+			
+			<srcfiles dir=".">
+				<and>
+					<filename name="documentor_compiler_ast_scanner.flex"/>
+					<filename name="documentor_compiler_ast_scanner.skeleton"/>
+				</and>
+			</srcfiles>
+		</uptodate>
+	</target>
+
+	<target name="generateScanner" depends="checkUpToDate" unless="upToDate">
 		<java jar="../../JFlex-1.4.1/JFlex.jar" fork="true">
 			<arg value="-d" />
 			<arg value="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser" />

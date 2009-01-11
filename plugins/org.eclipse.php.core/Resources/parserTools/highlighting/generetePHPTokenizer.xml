@@ -1,6 +1,13 @@
 <project default="generateScanner">
 
-	<target name="generateScanner">
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			srcfile="PHPTokenizer.jflex"
+			targetfile="../../../src/org/eclipse/php/internal/core/documentModel/parser/PHPTokenizer.java" />
+	</target>
+
+	<target name="generateScanner" depends="checkUpToDate" unless="upToDate">
 		<java jar="../JFlex-1.2.2/JFlex.jar" fork="true">
 			<arg value="-d" />
 			<arg value="../../../src/org/eclipse/php/internal/core/documentModel/parser" />

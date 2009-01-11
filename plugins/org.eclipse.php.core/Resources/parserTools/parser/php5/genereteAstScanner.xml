@@ -1,6 +1,13 @@
 <project default="generateScanner" basedir=".">
 
-	<target name="generateScanner">
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			srcfile="ast_scanner.flex"
+			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/PhpAstLexer5.java" />
+	</target>
+
+	<target name="generateScanner" depends="checkUpToDate" unless="upToDate">
 		<java jar="../../JFlex-1.4.1/JFlex.jar" fork="true">
 			<arg value="-d" />
 			<arg value="../../../../src/org/eclipse/php/internal/core/ast/scanner" />
