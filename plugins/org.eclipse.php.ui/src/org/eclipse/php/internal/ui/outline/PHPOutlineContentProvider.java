@@ -22,6 +22,8 @@ import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 public class PHPOutlineContentProvider implements ITreeContentProvider {
@@ -184,14 +186,20 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			if (d != null) {
 				d.asyncExec(new Runnable() {
 					public void run() {
-						IEditorPart activeEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-						if (activeEditor instanceof PHPStructuredEditor) {
-							IModelElement base = ((PHPStructuredEditor) activeEditor).getModelElement();
+						IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						if (activeWorkbenchWindow != null) {
+							IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+							if (activePage != null) {
+								IEditorPart activeEditor = activePage.getActiveEditor();
+								if (activeEditor instanceof PHPStructuredEditor) {
+									IModelElement base = ((PHPStructuredEditor) activeEditor).getModelElement();
 
-							IModelElementDelta delta = findElement(base, e.getDelta());
-							if (delta != null && fOutlineViewer != null) {
-								fOutlineViewer.refresh();
-								//								fOutlineViewer.reconcile(delta);
+									IModelElementDelta delta = findElement(base, e.getDelta());
+									if (delta != null && fOutlineViewer != null) {
+										fOutlineViewer.refresh();
+										//								fOutlineViewer.reconcile(delta);
+									}
+								}
 							}
 						}
 					}
