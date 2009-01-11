@@ -183,7 +183,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						if (modelElement != null) {
 							IScriptProject scriptProject = modelElement.getScriptProject();
 							project = scriptProject.getProject();
-							if (project != null && project.getNature(JavaScriptCore.NATURE_ID) == null) {
+							if (project != null && project.isAccessible() && project.getNature(JavaScriptCore.NATURE_ID) == null) {
 								hasJavaScriptNature = false;
 							}
 						}
