@@ -1,4 +1,4 @@
-<project name="Builds all parser classes" default="main">
+<project name="Builds all parser classes" default="main" basedir=".">
 	
 	<target name="main">
 		
