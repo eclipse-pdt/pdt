@@ -12,20 +12,14 @@ package org.eclipse.php.internal.ui.editor;
 
 import java.io.IOException;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ISafeRunnable;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.ASTNodes;
 import org.eclipse.php.ui.editor.SharedASTProvider;
@@ -199,7 +193,7 @@ public final class ASTProvider {
 
 	}
 
-	public static final String SHARED_AST_LEVEL = PHPVersion.PHP5;
+	public static final PHPVersion SHARED_AST_LEVEL = PHPVersion.PHP5;
 	public static final boolean SHARED_AST_STATEMENT_RECOVERY = true;
 	public static final boolean SHARED_BINDING_RECOVERY = true;
 

@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.language.PHPVersion;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -31,7 +31,7 @@ import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationData
 
 public class PHPCreationDataModelProvider extends ProjectCreationDataModelProviderNew {
 
-	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4, PHPVersion.PHP5 };
+	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4.toString(), PHPVersion.PHP5.toString() };
 
 	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1") }; //$NON-NLS-1$ //$NON-NLS-2$
 

@@ -40,6 +40,7 @@ import org.eclipse.dltk.ui.wizards.CapabilityConfigurationPage;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -465,7 +466,7 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 
 	protected void setPhpLangOptions() {
 		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
-		String phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
+		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
 		UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, fCurrProject);
 		PhpVersionProjectPropertyHandler.setVersion(phpVersion, fCurrProject);
 	}

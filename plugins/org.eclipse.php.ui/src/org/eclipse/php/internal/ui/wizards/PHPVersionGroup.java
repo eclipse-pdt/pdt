@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.IStatusChangeListener;
@@ -120,16 +121,16 @@ public class PHPVersionGroup implements SelectionListener {
 	//FIXME : remove this redundant method
 	public void setPropertiesInDataModel(IDataModel dataModel) {
 		if (fEnableProjectSettings.getSelection()) {
-			String version = fConfigurationBlock.getPHPVersionValue();
+			PHPVersion version = fConfigurationBlock.getPHPVersionValue();
 			boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
 			dataModel.setBooleanProperty(Keys.EDITOR_USE_ASP_TAGS, useASPTags);
-			dataModel.setStringProperty(Keys.PHP_VERSION, version);
+			dataModel.setStringProperty(Keys.PHP_VERSION, version.getAlias());
 		}
 	}
 	
 	public void setPropertiesInDataModel(IProject project) {
 		if (fEnableProjectSettings.getSelection()) {
-			String version = fConfigurationBlock.getPHPVersionValue();
+			PHPVersion version = fConfigurationBlock.getPHPVersionValue();
 			boolean useASPTags = fConfigurationBlock.getUseAspTagsValue();
 
 //FIXME : update project with values

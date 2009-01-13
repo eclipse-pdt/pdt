@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.preferences.util.Key;
@@ -200,8 +201,8 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
     
 	//   Accessed from the PHP project Wizard 
-    public String getPHPVersionValue() {
-        return getValue(PREF_PHP_VERSION);       
+    public PHPVersion getPHPVersionValue() {
+        return PHPVersion.byAlias(getValue(PREF_PHP_VERSION));       
     }
     
     //  Accessed from the PHP project Wizard

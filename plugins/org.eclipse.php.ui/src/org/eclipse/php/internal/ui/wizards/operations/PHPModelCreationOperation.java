@@ -22,6 +22,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
@@ -62,7 +63,7 @@ public class PHPModelCreationOperation extends AbstractDataModelOperation implem
 			
 			// set project properties prior to any job execution
 			if (model.isPropertySet(Keys.PHP_VERSION)) {
-				String version = model.getStringProperty(Keys.PHP_VERSION);
+				PHPVersion version = PHPVersion.byAlias(model.getStringProperty(Keys.PHP_VERSION));
 				PhpVersionProjectPropertyHandler.setVersion(version, project);
 				boolean useASPTags = model.getBooleanProperty(Keys.EDITOR_USE_ASP_TAGS);
 				UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, project);
