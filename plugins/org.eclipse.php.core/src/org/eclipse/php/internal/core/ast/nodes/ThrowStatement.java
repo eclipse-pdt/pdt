@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -165,7 +166,7 @@ public class ThrowStatement extends Statement {
 
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(
-			String apiLevel) {
+			PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -263,7 +264,7 @@ public class DeclareStatement extends Statement {
 	}
 
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 }

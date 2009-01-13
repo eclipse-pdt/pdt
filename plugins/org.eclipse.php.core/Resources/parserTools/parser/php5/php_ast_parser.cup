@@ -1,8 +1,8 @@
-package org.eclipse.php.internal.core.ast.scanner;
+package org.eclipse.php.internal.core.ast.scanner.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.10 2008/04/30 15:41:35 ggurfinke Exp $
+////    $Id: php_ast_parser.cup,v 1.11 2009/01/13 14:34:47 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -319,8 +319,8 @@ precedence right T_STATIC, T_ABSTRACT, T_FINAL, T_PRIVATE, T_PROTECTED, T_PUBLIC
 thestart ::=
 top_statement_list:statementList
 {:
-	PhpAstLexer5 phpAstLexer5 = (PhpAstLexer5) parser.getScanner();
-	List commentList = phpAstLexer5.getCommentList();
+	PhpAstLexer phpAstLexer = (PhpAstLexer) parser.getScanner();
+	List commentList = phpAstLexer.getCommentList();
 	Program program = new Program(statementListleft, statementListright, parser.ast, statementList, commentList);
 	RESULT = program; 
 :}
@@ -1301,7 +1301,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
 method_body:body
 {:
 	int methodStart = modifier == null ? startleft : modifierleft;
-	modifier = modifier == null ? PhpAstParser5.PUBLIC : modifier;
+	modifier = modifier == null ? PhpAstParser.PUBLIC : modifier;
 	Identifier functionId = new Identifier(functionNameleft, functionNameright, parser.ast, functionName);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, bodyright, parser.ast, functionId, paramList, body, isReference.booleanValue());
 	MethodDeclaration methodDeclaration = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
@@ -1340,7 +1340,7 @@ non_empty_member_modifiers:list
 
 | T_VAR
 {:
-	RESULT = PhpAstParser5.PUBLIC;
+	RESULT = PhpAstParser.PUBLIC;
 :}
 ;
 
@@ -1379,32 +1379,32 @@ member_modifier:modifier
 member_modifier ::=
 T_PUBLIC
 {:
-	RESULT = PhpAstParser5.PUBLIC;
+	RESULT = PhpAstParser.PUBLIC;
 :}
 
 | T_PROTECTED
 {:
-	RESULT = PhpAstParser5.PROTECTED;
+	RESULT = PhpAstParser.PROTECTED;
 :}
 
 | T_PRIVATE
 {:
-	RESULT = PhpAstParser5.PRIVATE;
+	RESULT = PhpAstParser.PRIVATE;
 :}
 
 | T_STATIC
 {:
-	RESULT = PhpAstParser5.STATIC;
+	RESULT = PhpAstParser.STATIC;
 :}
 
 | T_ABSTRACT
 {:
-	RESULT = PhpAstParser5.ABSTRACT;
+	RESULT = PhpAstParser.ABSTRACT;
 :}
 
 | T_FINAL
 {:
-	RESULT = PhpAstParser5.FINAL;
+	RESULT = PhpAstParser.FINAL;
 :}
 ;
 

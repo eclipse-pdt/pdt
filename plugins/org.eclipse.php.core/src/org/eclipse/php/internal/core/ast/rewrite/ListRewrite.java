@@ -13,13 +13,7 @@ package org.eclipse.php.internal.core.ast.rewrite;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.dltk.ast.declarations.FieldDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.Block;
-import org.eclipse.php.internal.core.ast.nodes.ChildListPropertyDescriptor;
-import org.eclipse.php.internal.core.ast.nodes.FieldsDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.Statement;
-import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.text.edits.TextEditGroup;
 

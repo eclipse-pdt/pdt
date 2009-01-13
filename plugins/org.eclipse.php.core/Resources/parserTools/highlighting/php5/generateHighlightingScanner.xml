@@ -1,0 +1,19 @@
+<project name="Generating highlighting scanner for PHP 5" default="generateScanner" basedir=".">
+
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			srcfile="highlighting_scanner.jflex"
+			targetfile="../../../../src/org/eclipse/php/internal/core/documentModel/parser/PhpLexer5.java" />
+	</target>
+
+	<target name="generateScanner" depends="checkUpToDate" unless="upToDate">
+		<java jar="../../JFlex-1.4.1/JFlex.jar" fork="true">
+			<arg value="-d" />
+			<arg value="../../../../src/org/eclipse/php/internal/core/documentModel/parser" />
+			<arg value="-nobak" />
+			<arg value="highlighting_scanner.jflex" />
+		</java>
+	</target>
+	
+</project>

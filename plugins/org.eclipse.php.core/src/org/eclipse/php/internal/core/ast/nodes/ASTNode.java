@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.*;
 
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
@@ -461,7 +462,7 @@ public abstract class ASTNode implements Visitable {
 	 * @return a list of property descriptors (element type: 
 	 * {@link StructuralPropertyDescriptor})
 	 */
-	abstract List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel);
+	abstract List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel);
 
 	/**
 	 * @return the related AST

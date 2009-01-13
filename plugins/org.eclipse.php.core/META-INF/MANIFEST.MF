@@ -27,6 +27,9 @@ Provide-Package: java_cup,
  org.eclipse.php.internal.core.ast.nodes,
  org.eclipse.php.internal.core.ast.rewrite,
  org.eclipse.php.internal.core.ast.scanner,
+ org.eclipse.php.internal.core.ast.scanner.php4,
+ org.eclipse.php.internal.core.ast.scanner.php5,
+ org.eclipse.php.internal.core.ast.scanner.php53,
  org.eclipse.php.internal.core.ast.util,
  org.eclipse.php.internal.core.ast.visitor,
  org.eclipse.php.internal.core.buildpath,
@@ -35,6 +38,7 @@ Provide-Package: java_cup,
  org.eclipse.php.internal.core.compiler.ast.parser,
  org.eclipse.php.internal.core.compiler.ast.parser.php4,
  org.eclipse.php.internal.core.compiler.ast.parser.php5,
+ org.eclipse.php.internal.core.compiler.ast.parser.php53,
  org.eclipse.php.internal.core.compiler.ast.visitor,
  org.eclipse.php.internal.core.containers,
  org.eclipse.php.internal.core.documentModel,
@@ -85,10 +89,12 @@ Provide-Package: java_cup,
  org.eclipse.php.internal.core.util.collections,
  org.eclipse.php.internal.core.util.preferences,
  org.eclipse.php.internal.core.util.project.observer,
- org.eclipse.php.internal.core.util.text
+ org.eclipse.php.internal.core.util.text,
+ org.eclipse.php.internal.core.validation
 Bundle-Vendor: Eclipse.org
 Bundle-ClassPath: Resources/parserTools/javacup/java-cup-10k.jar,
  .
-Export-Package: org.eclipse.php.internal.core.language
+Export-Package: org.eclipse.php.internal.core.ast.scanner.php5,
+ org.eclipse.php.internal.core.language
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin

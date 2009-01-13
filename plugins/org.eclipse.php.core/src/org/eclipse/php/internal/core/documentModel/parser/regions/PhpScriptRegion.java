@@ -17,8 +17,8 @@ import java.util.ListIterator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPLexerStates;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexer4;
@@ -262,7 +262,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	private PhpLexer getPhpLexer(Reader stream, LexerState startState) {
 		PhpLexer lexer;
 		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
+		if (phpVersion.equals(PHPVersion.PHP5)) {
 			lexer = new PhpLexer5(stream);
 		} else {
 			lexer = new PhpLexer4(stream);

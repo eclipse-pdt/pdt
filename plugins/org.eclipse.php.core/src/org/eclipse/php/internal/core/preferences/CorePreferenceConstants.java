@@ -15,6 +15,7 @@ import java.util.Locale;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 
 public class CorePreferenceConstants {
 
@@ -34,7 +35,7 @@ public class CorePreferenceConstants {
 	 */
 	public static void initializeDefaultValues() {
 		Preferences store = getPreferenceStore();
-		store.setDefault(Keys.PHP_VERSION, PHPCoreConstants.PHP5);
+		store.setDefault(Keys.PHP_VERSION, PHPVersion.PHP5.getAlias());
 
 		store.setDefault(PHPCoreConstants.TASK_TAGS, PHPCoreConstants.DEFAULT_TASK_TAGS);
 		store.setDefault(PHPCoreConstants.TASK_PRIORITIES, PHPCoreConstants.DEFAULT_TASK_PRIORITIES);

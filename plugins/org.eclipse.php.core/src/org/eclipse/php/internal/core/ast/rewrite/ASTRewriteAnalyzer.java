@@ -23,6 +23,7 @@ import org.eclipse.dltk.compiler.util.ScannerHelper;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.BlockContext;
@@ -34,7 +35,6 @@ import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInf
 import org.eclipse.php.internal.core.ast.rewrite.TargetSourceRangeComputer.SourceRange;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.language.PHPVersion;
 import org.eclipse.text.edits.*;
 
 /**
@@ -47,13 +47,6 @@ import org.eclipse.text.edits.*;
  * (text manipulation API) that describe the required code changes. 
  */
 public final class ASTRewriteAnalyzer extends AbstractVisitor {
-
-	/**
-	 * Internal synonym for depreciated constant AST.JLS2
-	 * to alleviate depreciated warnings.
-	 * @deprecated
-	 */
-	/*package*/static final String PHP4_INTERNAL = PHPVersion.PHP4;
 
 	TextEdit currentEdit;
 	final RewriteEventStore eventStore; // used from inner classes
@@ -1107,7 +1100,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			int startPos = scanner.getCurrentStartOffset();
 			int nextStart = startPos;
 			// prepare the modifiers 'syms'
-			String phpVersion = this.scanner.getPHPVersion();
+			PHPVersion phpVersion = this.scanner.getPHPVersion();
 			int modifiers[] = new int[] { SymbolsProvider.getModifierSym("public", phpVersion), SymbolsProvider.getModifierSym("private", phpVersion), SymbolsProvider.getModifierSym("protected", phpVersion), SymbolsProvider.getModifierSym("static", phpVersion),
 				SymbolsProvider.getModifierSym("abstract", phpVersion), SymbolsProvider.getModifierSym("final", phpVersion) };
 			loop: while (true) {
@@ -2450,8 +2443,8 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 */
 	public boolean visit(FormalParameter formalParameter) {
 		try {
-			if (formalParameter.getAST().apiLevel().equals(AST.PHP4) && isChanged(formalParameter, FormalParameter.IS_MANDATORY_PROPERTY)) {
-				if (formalParameter.getAST().apiLevel().equals(AST.PHP5)) {
+			if (formalParameter.getAST().apiLevel() == PHPVersion.PHP4 && isChanged(formalParameter, FormalParameter.IS_MANDATORY_PROPERTY)) {
+				if (formalParameter.getAST().apiLevel() == PHPVersion.PHP5) {
 					throw new CoreException(new Status(IStatus.ERROR, PHPCorePlugin.ID, "Could not set a FormalParameter 'isMandatory' property for PHP5 AST"));
 				}
 				// Rewrite the isMandatory field

@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.ast.rewrite;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.ast.nodes.Program;
 
 /**
  * 

@@ -23,11 +23,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer4;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstLexer5;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstParser4;
-import org.eclipse.php.internal.core.ast.scanner.PhpAstParser5;
-import org.eclipse.php.internal.core.language.PHPVersion;
+import org.eclipse.php.internal.core.PHPVersion;
 
 /**
 * A PHP language parser for creating abstract syntax trees (ASTs).<p>
@@ -40,8 +36,6 @@ import org.eclipse.php.internal.core.language.PHPVersion;
 public class ASTParser {
 
 	// version tags
-	public static final String VERSION_PHP4 = PHPVersion.PHP4;
-	public static final String VERSION_PHP5 = PHPVersion.PHP5;
 	private static final Reader EMPTY_STRING_READER = new StringReader("");
 
 	/**
@@ -50,17 +44,14 @@ public class ASTParser {
 	private final AST ast;
 	private final ISourceModule sourceModule;
 
-	private ASTParser(Reader reader, String version, boolean useASPTags) throws IOException {
-		this(reader, version, useASPTags, null);
+	private ASTParser(Reader reader, PHPVersion phpVersion, boolean useASPTags) throws IOException {
+		this(reader, phpVersion, useASPTags, null);
 	}
 
-	private ASTParser(Reader reader, String version, boolean useASPTags, ISourceModule sourceModule) throws IOException {
+	private ASTParser(Reader reader, PHPVersion phpVersion, boolean useASPTags, ISourceModule sourceModule) throws IOException {
 
 		this.sourceModule = sourceModule;
-		if (!VERSION_PHP4.equals(version) && !VERSION_PHP5.equals(version)) {
-			throw new IllegalArgumentException("Invalid PHP version in ASTParser: " + version);
-		}
-		this.ast = new AST(reader, version, useASPTags);
+		this.ast = new AST(reader, phpVersion, useASPTags);
 		this.ast.setDefaultNodeFlag(ASTNode.ORIGINAL);
 
 		// set resolve binding property and the binding resolver 
@@ -77,7 +68,7 @@ public class ASTParser {
 	/**
 	* Factory methods for ASTParser
 	*/
-	public static ASTParser newParser(String version) {
+	public static ASTParser newParser(PHPVersion version) {
 		try {
 			return new ASTParser(new StringReader(""), version, false);
 		} catch (IOException e) {
@@ -90,7 +81,7 @@ public class ASTParser {
 	/**
 	* Factory methods for ASTParser
 	*/
-	public static ASTParser newParser(String version, ISourceModule sourceModule) {
+	public static ASTParser newParser(PHPVersion version, ISourceModule sourceModule) {
 		if (sourceModule == null) {
 			throw new IllegalStateException("ASTParser - Can't parser with null ISourceModule");  
 		}
@@ -105,15 +96,15 @@ public class ASTParser {
 		}
 	}
 
-	public static ASTParser newParser(Reader reader, String version) throws IOException {
+	public static ASTParser newParser(Reader reader, PHPVersion version) throws IOException {
 		return new ASTParser(reader, version, false);
 	}
 
-	public static ASTParser newParser(Reader reader, String version, boolean useASPTags) throws IOException {
+	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags) throws IOException {
 		return new ASTParser(reader, version, useASPTags);
 	}
 
-	public static ASTParser newParser(Reader reader, String version, boolean useASPTags, ISourceModule sourceModule) throws IOException {
+	public static ASTParser newParser(Reader reader, PHPVersion version, boolean useASPTags, ISourceModule sourceModule) throws IOException {
 		return new ASTParser(reader, version, useASPTags, sourceModule);
 	}
 
@@ -173,13 +164,17 @@ public class ASTParser {
 	/********************************************************************************
 	* NOT THREAD SAFE IMPLEMENTATION STARTS HERE 
 	*********************************************************************************/
+	// php 5.3 analysis
+	private static final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer PHP_AST_LEXER5_3 = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
+	private static final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser PHP_AST_PARSER5_3 = new org.eclipse.php.internal.core.ast.scanner.php53.PhpAstParser(PHP_AST_LEXER5_3);
+	
 	// php 5 analysis
-	private static final PhpAstLexer5 PHP_AST_LEXER5 = new PhpAstLexer5(ASTParser.EMPTY_STRING_READER);
-	private static final PhpAstParser5 PHP_AST_PARSER5 = new PhpAstParser5(PHP_AST_LEXER5);
+	private static final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer PHP_AST_LEXER5 = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
+	private static final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser PHP_AST_PARSER5 = new org.eclipse.php.internal.core.ast.scanner.php5.PhpAstParser(PHP_AST_LEXER5);
 
 	// php 4 analysis 
-	private static final PhpAstLexer4 PHP_AST_LEXER4 = new PhpAstLexer4(ASTParser.EMPTY_STRING_READER);
-	private static final PhpAstParser4 PHP_AST_PARSER4 = new PhpAstParser4(PHP_AST_LEXER4);
+	private static final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer PHP_AST_LEXER4 = new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer(ASTParser.EMPTY_STRING_READER);
+	private static final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser PHP_AST_PARSER4 = new org.eclipse.php.internal.core.ast.scanner.php4.PhpAstParser(PHP_AST_LEXER4);
 
 	/**
 	* @param phpCode String - represents the source code of the PHP program
@@ -190,7 +185,7 @@ public class ASTParser {
 	*/
 	public static final Program parse(String phpCode, boolean aspTagsAsPhp) throws Exception {
 		StringReader reader = new StringReader(phpCode);
-		return parse(reader, aspTagsAsPhp, VERSION_PHP5);
+		return parse(reader, aspTagsAsPhp, PHPVersion.PHP5);
 	}
 
 	/**
@@ -202,20 +197,20 @@ public class ASTParser {
 	*/
 	public static final Program parse(File phpFile, boolean aspTagsAsPhp) throws Exception {
 		final Reader reader = new FileReader(phpFile);
-		return parse(reader, aspTagsAsPhp, VERSION_PHP5);
+		return parse(reader, aspTagsAsPhp, PHPVersion.PHP5);
 	}
 
 	/**
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
-	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, String phpVersion) throws Exception {
+	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, PHPVersion phpVersion) throws Exception {
 		return parse(phpDocument, aspTagsAsPhp, phpVersion, 0, phpDocument.getLength());
 	}
 
 	/**
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
-	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, String phpVersion, final int offset, final int length) throws Exception {
+	public static final Program parse(final IDocument phpDocument, boolean aspTagsAsPhp, PHPVersion phpVersion, final int offset, final int length) throws Exception {
 		final Reader reader = new InputStreamReader(new InputStream() {
 			private int index = offset;
 			private final int size = offset + length;
@@ -238,7 +233,7 @@ public class ASTParser {
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
 	public static final Program parse(IDocument phpDocument, boolean aspTagsAsPhp) throws Exception {
-		return parse(phpDocument, aspTagsAsPhp, VERSION_PHP5);
+		return parse(phpDocument, aspTagsAsPhp, PHPVersion.PHP5);
 	}
 
 	/**
@@ -262,7 +257,7 @@ public class ASTParser {
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
 	public static final Program parse(Reader reader) throws Exception {
-		return parse(reader, true, VERSION_PHP5);
+		return parse(reader, true, PHPVersion.PHP5);
 	}
 
 	/**
@@ -271,8 +266,8 @@ public class ASTParser {
 	* @throws Exception
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
-	public synchronized static Program parse(Reader reader, boolean aspTagsAsPhp, String phpVersion) throws Exception {
-		AST ast = new AST(EMPTY_STRING_READER, VERSION_PHP5, false);
+	public synchronized static Program parse(Reader reader, boolean aspTagsAsPhp, PHPVersion phpVersion) throws Exception {
+		AST ast = new AST(EMPTY_STRING_READER, PHPVersion.PHP5, false);
 		final Scanner lexer = getLexer(ast, reader, phpVersion, aspTagsAsPhp);
 		final lr_parser phpParser = getParser(phpVersion, ast);
 		phpParser.setScanner(lexer);
@@ -290,41 +285,60 @@ public class ASTParser {
 	* @return
 	* @throws IOException
 	*/
-	private static Scanner getLexer(AST ast, Reader reader, String phpVersion, boolean aspTagsAsPhp) throws IOException {
-		if (VERSION_PHP4.equals(phpVersion)) {
-			final PhpAstLexer4 lexer4 = getLexer4(reader);
+	private static Scanner getLexer(AST ast, Reader reader, PHPVersion phpVersion, boolean aspTagsAsPhp) throws IOException {
+		if (PHPVersion.PHP4 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer lexer4 = getLexer4(reader);
 			lexer4.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer4.setAST(ast);
 			return lexer4;
-		} else if (VERSION_PHP5.equals(phpVersion)) {
-			final PhpAstLexer5 lexer5 = getLexer5(reader);
+		} else if (PHPVersion.PHP5 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer lexer5 = getLexer5(reader);
 			lexer5.setUseAspTagsAsPhp(aspTagsAsPhp);
 			lexer5.setAST(ast);
 			return lexer5;
+		} else if (PHPVersion.PHP5_3 == phpVersion) {
+			final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer lexer53 = getLexer53(reader);
+			lexer53.setUseAspTagsAsPhp(aspTagsAsPhp);
+			lexer53.setAST(ast);
+			return lexer53;
 		} else {
 			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 	}
 
-	private static lr_parser getParser(String phpVersion, AST ast) throws IOException {
-		if (VERSION_PHP4.equals(phpVersion)) {
+	private static lr_parser getParser(PHPVersion phpVersion, AST ast) throws IOException {
+		if (PHPVersion.PHP4 == phpVersion) {
 			PHP_AST_PARSER4.setAST(ast);
 			return PHP_AST_PARSER4;
-		} else if (VERSION_PHP5.equals(phpVersion)) {
+		} else if (PHPVersion.PHP5 == phpVersion) {
 			PHP_AST_PARSER5.setAST(ast);
 			return PHP_AST_PARSER5;
+		} else if (PHPVersion.PHP5_3 == phpVersion) {
+			PHP_AST_PARSER5_3.setAST(ast);
+			return PHP_AST_PARSER5_3;
 		} else {
 			throw new IllegalArgumentException(CoreMessages.getString("ASTParser_1") + phpVersion);
 		}
 
+	}
+	
+	/**
+	* @param reader
+	* @return the singleton {@link org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer}
+	*/
+	private static org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer getLexer53(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php53.PhpAstLexer phpAstLexer53 = ASTParser.PHP_AST_LEXER5_3;
+		phpAstLexer53.yyreset(reader);
+		phpAstLexer53.resetCommentList();
+		return phpAstLexer53;
 	}
 
 	/**
 	* @param reader
-	* @return the singleton {@link PhpAstLexer5}
+	* @return the singleton {@link org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer}
 	*/
-	private static PhpAstLexer5 getLexer5(Reader reader) throws IOException {
-		final PhpAstLexer5 phpAstLexer5 = ASTParser.PHP_AST_LEXER5;
+	private static org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer getLexer5(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer phpAstLexer5 = ASTParser.PHP_AST_LEXER5;
 		phpAstLexer5.yyreset(reader);
 		phpAstLexer5.resetCommentList();
 		return phpAstLexer5;
@@ -332,10 +346,10 @@ public class ASTParser {
 
 	/**
 	* @param reader
-	* @return the singleton {@link PhpAstLexer5}
+	* @return the singleton {@link org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer}
 	*/
-	private static PhpAstLexer4 getLexer4(Reader reader) throws IOException {
-		final PhpAstLexer4 phpAstLexer4 = ASTParser.PHP_AST_LEXER4;
+	private static org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer getLexer4(Reader reader) throws IOException {
+		final org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer phpAstLexer4 = ASTParser.PHP_AST_LEXER4;
 		phpAstLexer4.yyreset(reader);
 		phpAstLexer4.resetCommentList();
 		return phpAstLexer4;

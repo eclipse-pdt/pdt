@@ -1,0 +1,33 @@
+<project name="Generates Compiler AST Parser for PHP 5" default="generateParser" basedir=".">
+
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			srcfile="php_compiler_ast_parser.cup"
+			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/PhpAstParser.java" />
+	</target>
+
+	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
+		<java  jar="../../javacup/java-cup-10k.jar" input="php_compiler_ast_parser.cup" fork="true">
+			<arg value="-compact_red" />
+			<arg value="-expect" />
+			<arg value="4" />
+			<arg value="-parser" />
+			<arg value="PhpAstParser" />
+			<arg value="-symbols" />
+			<arg value="PhpParserConstants" />
+			<arg value="-interface" />
+		</java>
+		
+		<replace
+			file="PhpAstParser.java"
+			token="extends java_cup.runtime.lr_parser"
+			value="extends AbstractASTParser"/>
+
+		<move file="PhpAstParser.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/" />
+		
+		<move file="PhpParserConstants.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5" />
+	
+	</target>
+	
+</project>

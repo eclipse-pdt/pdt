@@ -1,0 +1,35 @@
+<project name="Generates DOM AST Parser for PHP 5.3" default="generateParser" basedir=".">
+
+	<target name="checkUpToDate">
+		<uptodate
+			property="upToDate"
+			srcfile="php_ast_parser.cup"
+			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53/PhpAstParser.java" />
+	</target>
+
+	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
+		<java 
+			jar="../../javacup/java-cup-10k.jar" 
+			input="php_ast_parser.cup"
+			fork="true">
+			<arg value="-compact_red"/>
+			<arg value="-expect"/>
+			<arg value="4"/>
+			<arg value="-parser"/>
+			<arg value="PhpAstParser"/>
+			<arg value="-symbols"/>
+			<arg value="ParserConstants"/>
+			<arg value="-interface"/>
+		</java>
+
+		<move
+			file="PhpAstParser.java"
+			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53"/>
+
+		<move
+			file="ParserConstants.java"
+			todir="../../../../src/org/eclipse/php/internal/core/ast/scanner/php53"/>
+
+	</target>
+
+</project>

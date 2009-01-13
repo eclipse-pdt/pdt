@@ -3,23 +3,29 @@
 	<target name="main">
 		<dirname property="antfile.dir" file="${ant.file}"/>
 		
-		<!-- PHP 4 -->
-		<ant dir="${antfile.dir}/parser/php4/" antfile="genereteAstParser.xml" />
-		<ant dir="${antfile.dir}/parser/php4/" antfile="genereteAstScanner.xml" />
-		<ant dir="${antfile.dir}/parser/php4/" antfile="genereteCompilerAstParser.xml" />
+		<!-- PHP 4 AST -->
+		<ant dir="${antfile.dir}/parser/php4/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php4/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php4/" antfile="generateCompilerAstParser.xml" />
 		
-		<!-- PHP 5 -->
-		<ant dir="${antfile.dir}/parser/php5/" antfile="genereteAstParser.xml" />
-		<ant dir="${antfile.dir}/parser/php5/" antfile="genereteAstScanner.xml" />
-		<ant dir="${antfile.dir}/parser/php5/" antfile="genereteCompilerAstParser.xml" />
+		<!-- PHP 5 AST -->
+		<ant dir="${antfile.dir}/parser/php5/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php5/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php5/" antfile="generateCompilerAstParser.xml" />
+		
+		<!-- PHP 5.3 AST -->
+		<ant dir="${antfile.dir}/parser/php53/" antfile="generateAstParser.xml" />
+		<ant dir="${antfile.dir}/parser/php53/" antfile="generateAstScanner.xml" />
+		<ant dir="${antfile.dir}/parser/php53/" antfile="generateCompilerAstParser.xml" />
 		
 		<!-- PHPDoc Lexer -->
-		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="genereteCompilerScanner.xml" />
+		<ant dir="${antfile.dir}/parser/phpdoc/" antfile="generatePHPDocScanner.xml" />
 		
 		<!-- Highlighting Lexer -->
-		<ant dir="${antfile.dir}/highlighting/" antfile="generetePhpLexer4.xml" />
-		<ant dir="${antfile.dir}/highlighting/" antfile="generetePhpLexer5.xml" />
-		<ant dir="${antfile.dir}/highlighting/" antfile="generetePHPTokenizer.xml" />
+		<ant dir="${antfile.dir}/highlighting/php4" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php5" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/php53" antfile="generateHighlightingScanner.xml" />
+		<ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" />
 		
 	</target>
 	

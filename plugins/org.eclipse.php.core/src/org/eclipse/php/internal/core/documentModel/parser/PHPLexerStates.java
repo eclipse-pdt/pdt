@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.documentModel.parser;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 
@@ -38,7 +38,7 @@ public class PHPLexerStates {
 			return -1;
 		}
 		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
+		if (phpVersion.equals(PHPVersion.PHP5)) {
 			return versionedToUnified5[state];
 		}
 
@@ -48,7 +48,7 @@ public class PHPLexerStates {
 	public static int toSpecificVersionState(IProject project, int state) {
 		assert (state >= BASE) : "State provided is not universal state";
 		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (phpVersion.equals(PHPCoreConstants.PHP5)) {
+		if (phpVersion.equals(PHPVersion.PHP5)) {
 			return unifiedToVersioned5[state - BASE];
 		}
 

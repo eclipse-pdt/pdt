@@ -14,19 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
-import org.eclipse.php.internal.core.language.PHPVersion;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
-
-	/**
-	 * Internal synonynm for deprecated constant AST.JSL2
-	 * to alleviate deprecation warnings.
-	 * @deprecated
-	 */
-	/*package*/static final String PHP4_INTERNAL = PHPVersion.PHP4;
 
 	public static String asString(ASTNode node, RewriteEventStore store) {
 		ASTRewriteFlattener flattener = new ASTRewriteFlattener(store);
@@ -446,7 +439,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 
 	public boolean visit(FormalParameter formalParameter) {
 		if (formalParameter.isMandatory()) {
-			if (formalParameter.getAST().apiLevel().equals(AST.PHP4)) {
+			if (formalParameter.getAST().apiLevel() == PHPVersion.PHP4) {
 				result.append("const "); // only for PHP 4
 			}
 		}

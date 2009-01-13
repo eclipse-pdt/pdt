@@ -1,10 +1,10 @@
-<project default="generateParser" basedir=".">
+<project name="Generates Compiler AST Parser for PHP 5.3" default="generateParser" basedir=".">
 
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
 			srcfile="php_compiler_ast_parser.cup"
-			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/Php5AstParser.java" />
+			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php53/PhpAstParser.java" />
 	</target>
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
@@ -13,20 +13,20 @@
 			<arg value="-expect" />
 			<arg value="4" />
 			<arg value="-parser" />
-			<arg value="Php5AstParser" />
+			<arg value="PhpAstParser" />
 			<arg value="-symbols" />
-			<arg value="Php5ParserConstants" />
+			<arg value="PhpParserConstants" />
 			<arg value="-interface" />
 		</java>
 		
 		<replace
-			file="Php5AstParser.java"
+			file="PhpAstParser.java"
 			token="extends java_cup.runtime.lr_parser"
 			value="extends AbstractASTParser"/>
 
-		<move file="Php5AstParser.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5/" />
+		<move file="PhpAstParser.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php53" />
 		
-		<move file="Php5ParserConstants.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php5" />
+		<move file="PhpParserConstants.java" todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php53" />
 	
 	</target>
 	

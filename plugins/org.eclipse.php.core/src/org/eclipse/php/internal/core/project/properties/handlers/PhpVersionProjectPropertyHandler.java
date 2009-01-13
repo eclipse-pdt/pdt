@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.project.properties.handlers;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants.Keys;
 
@@ -20,14 +20,14 @@ public class PhpVersionProjectPropertyHandler {
 	private PhpVersionProjectPropertyHandler() {}
 
 	public static String getVersion(IProject project) {
-		return project != null ? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project) : PHPCoreConstants.PHP5;
+		return project != null ? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project) : PHPVersion.PHP5.getAlias();
 	}
 	
-	public static String getVersion() {
-		return CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.PHP_VERSION);
+	public static PHPVersion getVersion() {
+		return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getWorkspacePreferencesValue(Keys.PHP_VERSION));
 	}
     
-    public static boolean setVersion(String version, IProject project) {
-        return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.PHP_VERSION, version, project);
+    public static boolean setVersion(PHPVersion version, IProject project) {
+        return CorePreferencesSupport.getInstance().setProjectSpecificPreferencesValue(Keys.PHP_VERSION, version.getAlias(), project);
     }
 }

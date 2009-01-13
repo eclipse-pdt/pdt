@@ -14,6 +14,7 @@ import java.util.*;
 
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
@@ -623,7 +624,7 @@ public class Program extends ASTNode {
 	}
 	
 	@Override
-	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(String apiLevel) {
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
 	

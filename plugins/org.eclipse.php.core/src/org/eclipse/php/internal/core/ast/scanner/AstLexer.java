@@ -14,6 +14,8 @@ import java.util.List;
 
 import java_cup.runtime.Scanner;
 
+import org.eclipse.php.internal.core.PHPVersion;
+
 /**
  * Description:   
  * @author moshe, 2006
@@ -89,9 +91,8 @@ public interface AstLexer extends Scanner{
 	
 	/**
 	 * Returns the PHP version for this lexer.
-	 * 
-	 * @return The PHP version (e.g. php4 / php5)
+	 * @return {@link PHPVersion}
 	 */
-	public String getPHPVersion();
+	public PHPVersion getPHPVersion();
 
 }

@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.*;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.format.ICodeFormattingProcessor;
 import org.eclipse.php.internal.core.format.IFormatterProcessorFactory;
@@ -119,9 +120,9 @@ import org.eclipse.text.edits.*;
 
 	private final Map options;
 	private IDocument document;
-	private String phpVersion;
+	private PHPVersion phpVersion;
 
-	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders, RewriteEventStore eventStore, Map options, String lineDelimiter, String phpVersion) {
+	public ASTRewriteFormatter(IDocument document, NodeInfoStore placeholders, RewriteEventStore eventStore, Map options, String lineDelimiter, PHPVersion version) {
 		this.document = document;
 		this.placeholders = placeholders;
 		this.eventStore = eventStore;
@@ -136,7 +137,7 @@ import org.eclipse.text.edits.*;
 
 		this.tabWidth = IndentManipulation.getTabWidth(options);
 		this.indentWidth = IndentManipulation.getIndentWidth(options);
-		this.phpVersion = phpVersion;
+		this.phpVersion = version;
 	}
 
 	public NodeInfoStore getPlaceholders() {

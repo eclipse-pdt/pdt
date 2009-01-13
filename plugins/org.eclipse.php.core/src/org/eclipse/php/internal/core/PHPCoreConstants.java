@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core;
 
-import org.eclipse.php.internal.core.language.PHPVersion;
 
 public interface PHPCoreConstants {
 	
@@ -23,20 +22,14 @@ public interface PHPCoreConstants {
 	public static final String PROJECT_DEFAULT_SOURCE_FOLDER = "src"; //$NON-NLS-1$
 	public static final String PROJECT_DEFAULT_RESOURCES_FOLDER = "resources"; //$NON-NLS-1$
 
-
 	//
 	// Project Option names
 	//
 	public static final String PHPOPTION_DEFAULT_ENCODING = PLUGIN_ID + ".defaultEncoding"; //$NON-NLS-1$
 	public static final String PHPOPTION_CONTEXT_ROOT = PLUGIN_ID + ".contextRoot"; //$NON-NLS-1$
 	public static final String PHPOPTION_INCLUDE_PATH = PLUGIN_ID + ".includePath"; //$NON-NLS-1$
-	//
-	// Project Option values
-	//
-	public static final String PHP4 = PHPVersion.PHP4;
-	public static final String PHP5 = PHPVersion.PHP5;
-	public static final String ADD_JS_NATURE = PLUGIN_ID + ".addJsNature"; //$NON-NLS-1$
 
+	public static final String ADD_JS_NATURE = PLUGIN_ID + ".addJsNature"; //$NON-NLS-1$
 	public static final String TASK_PRIORITIES = PLUGIN_ID + ".taskPriorities"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_HIGH = "HIGH"; //$NON-NLS-1$
 	public static final String TASK_PRIORITY_LOW = "LOW"; //$NON-NLS-1$
