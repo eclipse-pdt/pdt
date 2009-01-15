@@ -46,7 +46,7 @@ public class Program extends ASTNode {
 	public static final ChildListPropertyDescriptor STATEMENTS_PROPERTY = 
 		new ChildListPropertyDescriptor(Program.class, "statements", Statement.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor COMMENTS_PROPERTY = 
-		new ChildListPropertyDescriptor(Program.class, "statements", Comment.class, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildListPropertyDescriptor(Program.class, "comments", Comment.class, NO_CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -57,6 +57,7 @@ public class Program extends ASTNode {
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(1);
 		properyList.add(STATEMENTS_PROPERTY);
+		properyList.add(COMMENTS_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 	
