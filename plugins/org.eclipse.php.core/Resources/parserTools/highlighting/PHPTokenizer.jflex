@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
@@ -391,7 +391,7 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 private PhpLexer getPhpLexer(int[] parameters) {
 	PhpLexer lexer;
 	final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-	if (phpVersion.equals(PHPCoreConstants.PHP5)) {
+	if (phpVersion.equals(PHPVersion.PHP5)) {
 		lexer = new PhpLexer5(yy_reader);
 	} else {
 		lexer = new PhpLexer4(yy_reader);
