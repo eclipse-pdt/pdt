@@ -48,6 +48,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 %state ST_HEREDOC
 %state ST_START_HEREDOC
 %state ST_END_HEREDOC
+%state ST_NOWDOC
 %state ST_LOOKING_FOR_PROPERTY
 %state ST_LOOKING_FOR_VARNAME
 %state ST_VAR_OFFSET
@@ -191,13 +192,13 @@ import org.eclipse.php.internal.core.PHPVersion;
 %}
 
 LNUM=[0-9]+
-DNUM=([0-9]*[\.][0-9]+)|([0-9]+[\.][0-9]*)
+DNUM=([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
 EXPONENT_DNUM=(({LNUM}|{DNUM})[eE][+-]?{LNUM})
 HNUM="0x"[0-9a-fA-F]+
 LABEL=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 WHITESPACE=[ \n\r\t]+
 TABS_AND_SPACES=[ \t]*
-ANY_CHAR=(.|[\n])
+ANY_CHAR=[^]
 NEWLINE=("\r"|"\n"|"\r\n")
 DOUBLE_QUOTES_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$\"\\{]|("\\"{ANY_CHAR})))
 BACKQUOTE_LITERAL_DOLLAR=("$"+([^a-zA-Z_\x7f-\xff$`\\{]|("\\"{ANY_CHAR})))
@@ -209,6 +210,7 @@ HEREDOC_LABEL_NO_NEWLINE=({LABEL}([^a-zA-Z0-9_\x7f-\xff;$\n\r\\{]|(";"[^$\n\r\\{
 DOUBLE_QUOTES_CHARS=("{"*([^$\"\\{]|("\\"{ANY_CHAR}))|{DOUBLE_QUOTES_LITERAL_DOLLAR})
 BACKQUOTE_CHARS=("{"*([^$`\\{]|("\\"{ANY_CHAR}))|{BACKQUOTE_LITERAL_DOLLAR})
 HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDOC_NEWLINE}+({HEREDOC_NON_LABEL}|{HEREDOC_LABEL_NO_NEWLINE})))
+NOWDOC_CHARS=([^\n\r]|{NEWLINE}+([^a-zA-Z_\x7f-\xff\n\r]|({LABEL}([^a-zA-Z0-9_\x7f-\xff;\n\r]|(";"[^\n\r])))))
 
 %%
 
@@ -328,6 +330,10 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	return createSymbol(ParserConstants.T_CONTINUE);
 }
 
+<ST_IN_SCRIPTING>"goto" {
+ 	return createSymbol(ParserConstants.T_GOTO);
+}
+
 <ST_IN_SCRIPTING>"echo" {
 	return createSymbol(ParserConstants.T_ECHO);
 }
@@ -357,6 +363,9 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
     return createSymbol(ParserConstants.T_OBJECT_OPERATOR);
 }
 
+<ST_IN_SCRIPTING,ST_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
+}
+
 <ST_LOOKING_FOR_PROPERTY>"->" {
 	return createSymbol(ParserConstants.T_OBJECT_OPERATOR);
 }
@@ -373,6 +382,10 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 
 <ST_IN_SCRIPTING>"::" {
 	return createSymbol(ParserConstants.T_PAAMAYIM_NEKUDOTAYIM);
+}
+
+<ST_IN_SCRIPTING>"\\" {
+	return createSymbol(ParserConstants.T_NS_SEPARATOR);
 }
 
 <ST_IN_SCRIPTING>"new" {
@@ -437,6 +450,10 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 
 <ST_IN_SCRIPTING>"require_once" {
 	return createSymbol(ParserConstants.T_REQUIRE_ONCE);
+}
+
+<ST_IN_SCRIPTING>"namespace" {
+ 	return createSymbol(ParserConstants.T_NAMESPACE);
 }
 
 <ST_IN_SCRIPTING>"use" {
@@ -669,7 +686,7 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
     return createFullSymbol(ParserConstants.T_DNUMBER);
 }
 
-<ST_VAR_OFFSET>0|([1-9][0-9]*) {
+<ST_VAR_OFFSET>[0]|([1-9][0-9]*) { /* Offset could be treated as a long */
 	return createFullSymbol(ParserConstants.T_NUM_STRING);
 }
 
@@ -699,6 +716,14 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 
 <ST_IN_SCRIPTING>"__FILE__" {
     return createSymbol(ParserConstants.T_FILE);
+}
+
+<ST_IN_SCRIPTING>"__DIR__" {
+ 	return createSymbol(ParserConstants.T_DIR);
+}
+
+<ST_IN_SCRIPTING>"__NAMESPACE__" {
+	return createSymbol(ParserConstants.T_NS_C);
 }
 
 <YYINITIAL>(([^<]|"<"[^?%s<])+)|"<s"|"<" {
@@ -915,10 +940,14 @@ yybegin(ST_DOCBLOCK);
     return createSymbol(ParserConstants.T_QUATE);
 }
 
-<ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}{LABEL}{NEWLINE} {
-    int removeChars = (yytext().charAt(0) == 'b')?4:3;
+<ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|(["]{LABEL}["])){NEWLINE} {
+    int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
     heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
-    yybegin(ST_START_HEREDOC);
+    if (heredoc.charAt(0) == '\'') {
+		yybegin(ST_NOWDOC);
+  	} else {
+    	yybegin(ST_START_HEREDOC);
+    }
     return createSymbol(ParserConstants.T_START_HEREDOC);
 }
 
@@ -948,16 +977,16 @@ yybegin(ST_DOCBLOCK);
         yybegin(ST_IN_SCRIPTING);
         return createSymbol(ParserConstants.T_END_HEREDOC);
     } else {
-    	   yybegin(ST_HEREDOC);
+    	yybegin(ST_HEREDOC);
     }
 }
 
 <ST_HEREDOC>{HEREDOC_CHARS}*{HEREDOC_NEWLINE}+{LABEL}";"?[\n\r] {
-    	String text = yytext();
+    String text = yytext();
 
     if (text.charAt(text.length() - 2)== ';') {
 		text = text.substring(0, text.length() - 2);
-        	yypushback(1);
+        yypushback(1);
     } else {
 		text = text.substring(0, text.length() - 1);
     }
@@ -966,11 +995,11 @@ yybegin(ST_DOCBLOCK);
 	int heredocLength = heredoc.length();
 	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		yypushback(2);
-        	yybegin(ST_END_HEREDOC);
-        	// we need to remove the closing label from the symbol value.
-        	Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
-        	String value = (String)sym.value;
-        	sym.value = value.substring(0, value.length() - heredocLength + 1);
+        yybegin(ST_END_HEREDOC);
+        // we need to remove the closing label from the symbol value.
+        Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+        String value = (String)sym.value;
+        sym.value = value.substring(0, value.length() - heredocLength + 1);
 	   	return sym;
 	}
 	yypushback(1);
@@ -978,9 +1007,33 @@ yybegin(ST_DOCBLOCK);
 }
 
 <ST_END_HEREDOC>{ANY_CHAR} {
-     heredoc = null;
+    heredoc = null;
 	yybegin(ST_IN_SCRIPTING);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
+}
+
+<ST_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
+ 	String text = yytext();
+
+ 	if (text.charAt(text.length() - 2)== ';') {
+		text = text.substring(0, text.length() - 2);
+        yypushback(1);
+    } else {
+		text = text.substring(0, text.length() - 1);
+    }
+ 
+ 	int textLength = text.length();
+	int heredocLength = heredoc.length();
+	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
+		yypushback(2);
+       	yybegin(ST_END_HEREDOC);
+       	// we need to remove the closing label from the symbol value.
+       	Symbol sym = createFullSymbol(ParserConstants.T_ENCAPSED_AND_WHITESPACE);
+       	String value = (String)sym.value;
+       	sym.value = value.substring(0, value.length() - heredocLength + 1);
+	   	return sym;
+	}
+	yypushback(1);
 }
 
 <ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC>"{$" {

@@ -854,5 +854,14 @@ public class ASTMatcher {
 		WhileStatement o = (WhileStatement) other;
 
 		return (safeSubtreeMatch(node.getCondition(), o.getCondition()) && safeSubtreeMatch(node.getAction(), o.getAction()));
-	}		
+	}
+	
+	public boolean match(Namespace node, Object other) {
+		if (!(other instanceof Namespace)) {
+			return false;
+		}
+		Namespace o = (Namespace) other;
+
+		return safeSubtreeListMatch(node.names(), o.names());
+	}
 }

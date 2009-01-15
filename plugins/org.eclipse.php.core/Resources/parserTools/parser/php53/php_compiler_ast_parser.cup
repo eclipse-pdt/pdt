@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.1 2009/01/13 14:34:44 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.2 2009/01/15 14:17:12 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -80,6 +80,7 @@ terminal  T_CASE;
 terminal  T_DEFAULT;
 terminal  T_BREAK;
 terminal  T_CONTINUE;
+terminal  T_GOTO;
 terminal  PHPDocBlock T_FUNCTION;
 terminal  PHPDocBlock T_CONST;
 terminal  T_RETURN;
@@ -113,6 +114,10 @@ terminal  T_CURLY_OPEN_WITH_DOLAR;
 terminal  T_CURLY_OPEN;
 terminal  T_CURLY_CLOSE;
 terminal  T_PAAMAYIM_NEKUDOTAYIM;
+terminal  T_NAMESPACE;
+terminal  T_NS_C;
+terminal  T_DIR;
+terminal  T_NS_SEPARATOR;
 terminal String T_VAR_COMMENT;
 terminal String T_DEFINE;
 

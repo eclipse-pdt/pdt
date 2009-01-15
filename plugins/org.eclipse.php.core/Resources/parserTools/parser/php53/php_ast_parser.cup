@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.1 2009/01/13 14:34:44 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.2 2009/01/15 14:17:12 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -102,6 +102,7 @@ terminal  T_CASE;
 terminal  T_DEFAULT;
 terminal  T_BREAK;
 terminal  T_CONTINUE;
+terminal  T_GOTO;
 terminal  T_FUNCTION;
 terminal  T_CONST;
 terminal  T_RETURN;
@@ -135,6 +136,10 @@ terminal  T_CURLY_OPEN_WITH_DOLAR;
 terminal  T_CURLY_OPEN;
 terminal  T_CURLY_CLOSE;
 terminal  T_PAAMAYIM_NEKUDOTAYIM;
+terminal  T_NAMESPACE;
+terminal  T_NS_C;
+terminal  T_DIR;
+terminal  T_NS_SEPARATOR;
 terminal String T_VAR_COMMENT;
 terminal String T_DEFINE;
 
@@ -178,6 +183,8 @@ terminal T_QUATE,T_BACKQUATE;
 /* Non terminals */
 
 non terminal Program thestart;
+non terminal Namespace namespace_name;
+non terminal List namespace_names_list;
 non terminal List top_statement_list;
 non terminal Statement top_statement;
 non terminal Statement statement;
@@ -323,6 +330,29 @@ top_statement_list:statementList
 	List commentList = phpAstLexer.getCommentList();
 	Program program = new Program(statementListleft, statementListright, parser.ast, statementList, commentList);
 	RESULT = program; 
+:}
+;
+
+namespace_name ::=
+namespace_names_list:namesList
+{:
+	Namespace namespace = new Namespace(namesListleft, namesListright, parser.ast, namesList); 
+:}
+;
+
+namespace_names_list ::=
+T_STRING:name
+{:
+	List namesList = new LinkedList();
+	namesList.add(new Identifier(nameleft, nameright, parser.ast, name));
+	RESULT = namesList;
+:}
+
+| 
+namespace_names_list:namesList T_NS_SEPARATOR T_STRING:name
+{:
+	namesList.add(new Identifier(nameleft, nameright, parser.ast, name));
+	RESULT = namesList;
 :}
 ;
 
