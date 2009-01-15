@@ -31,9 +31,9 @@ import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationData
 
 public class PHPCreationDataModelProvider extends ProjectCreationDataModelProviderNew {
 
-	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4.toString(), PHPVersion.PHP5.toString() };
+	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4.getAlias(), PHPVersion.PHP5.getAlias(), PHPVersion.PHP5_3.getAlias() };
 
-	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1") }; //$NON-NLS-1$ //$NON-NLS-2$
+	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1"), PHPUIMessages.getString("PHPCreationDataModelProvider.2") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 	private static final String ID = "org.eclipse.php.ui.wizards.PHPProjectCreationWizard"; //$NON-NLS-1$
 
