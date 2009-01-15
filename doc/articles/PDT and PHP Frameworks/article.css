@@ -1,0 +1,171 @@
+h1 {
+	font-family: sans-serif;
+	font-size: 150%
+}
+
+.summary {
+	margin-left: 30px;
+	margin-right: 30px;
+	border-style: solid;
+	border-width: 1px;
+	padding: 10px 10px 10px 10px;
+	font-family: serif;
+	font-size: 110%;
+}
+
+.summary h2 {
+	font-size: 100%;
+	font-weight: bold;
+	margin-top: 5px;
+}
+
+.summary p {
+	font-family: serif;
+	font-size: 100%;
+}
+.author {
+	margin-top: 10px;
+	font-weight: bold;
+}
+
+.date {
+	font-size: 80%;
+}
+
+.copyright {
+	font-size: 80%;
+}
+
+.content {
+	font-family: serif;
+	font-size: 110%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-family: serif;
+	font-size: 110%;
+}
+
+.content h1 {
+	font-family: sans-serif;
+}
+
+.content h2 {
+	font-family: sans-serif;
+	font-size: 130%;
+	font-weight: bold;
+}
+
+.content h3 {
+	font-family: sans-serif;
+	font-size: 120%;
+	font-style: italic;
+}
+
+.content p {
+	font-family: serif;
+	font-size: 110%;
+}
+
+.content ul {
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.content ol {
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.content li {
+	font-family: serif;
+	font-size: 110%;
+}
+
+table {
+	border-style: solid;
+	border-width: 1;
+	border-spacing: 5px;
+	border-collapse: collapse;	
+	font-family: serif;
+	font-size: 100%;
+}
+
+th {
+	border-style: solid;
+	border-width: 3px;
+	text-align: left;
+	padding: 2px 5px 2px 5px;
+}
+
+td {
+	border-style: solid;
+	border-width: 3px;
+	text-align: left;
+	padding: 2px 5px 2px 5px;
+}
+
+.sidebar {
+	font-family: serif;
+	font-size: 100%;
+	margin: 1em 5em 1em 5em;
+	padding-top: 0px;
+	padding-left: 5px;
+	font-family: serif;
+	font-size: 110%;
+	border-style: solid;
+	border-width: 1px;
+	background: #e4e3f1;
+}
+
+.sidebar p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	font-family: serif;
+	font-size: 90%;
+}
+.sidebar ul {
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.sidebar ol {
+	margin-left: 20px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.sidebar li {
+	font-family: serif;
+	font-size: 90%;
+}
+
+.notices {
+	border-style: solid;
+	border-width: 0px;
+	border-top-width: 1px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-family: serif;
+	font-size: 100%;
+}
+
+.figure {
+	margin: 0 50px 0 50px;
+	text-align: center;
+}
+
+.figure table {
+	margin-left:auto; margin-right:auto;
+}
+
+.caption {
+	text-align: center;
+	font-size: 90%;
+}
+
+.menu-selection {
+	font-style: italic;
+}

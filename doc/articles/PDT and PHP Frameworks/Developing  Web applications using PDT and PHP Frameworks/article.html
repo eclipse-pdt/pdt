@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Developing Web Applications Using PDT and PHP Frameworks</title>
+<meta http-equiv="Content-Type"
+	content="text/html; charset=windows-1252">
+<link href="../article.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<h1>Developing Web Applications Using PDT and PHP Frameworks</h1>
+<div class="summary">
+<h2>Summary</h2>
+<p>
+PHP Frameworks allow developers to use industry standard best practices in their code. This article explains how to use the Eclipse-based PDT tool in order to get the best performance from your framework-based applications during both development and production runtime.
+</p>
+
+<div class="author">By Nir Cohen and Keren Stern, Eclipse.org - PDT</div>
+<div class="copyright">Copyright &copy; 2009 Eclipse.org</div>
+<div class="date">January 08, 2009</div>
+</div>
+
+<div class="content">
+<h2>Prologue</h2>
+<p>As a PHP developer you have the privilege of choosing from a variety of PHP frameworks, each with its own pros and cons.<br/>
+ However, in order to maximise the benefit you get from your framework, you should utilize the advantages provided by the PDT development tool.
+</p>
+
+<h2>Getting your framework of choice</h2>
+<p>There are several open source PHP frameworks out there. See <i>'External Links'</i> section at the bottom of this artice for a comparison of the leading frameworks.</p> 
+<p>Download the one that suits you most, unpack and put it under your ‘htdocs’ directory.<br/>
+e.g. under: <i>C:\Program Files(x86)\Zend\Apache2\htdocs</i>, or <i>C:\xampp\htdocs\</i></p>
+<blockquote>
+<p><img src="images/tip.gif" width="62" height="13"> 
+Different frameworks provide different advantages. Read as many comments from other developers as you can before deciding which one to use.</p>
+</blockquote>
+
+
+<h2>Getting and installing the Eclipse and PDT tool</h2>
+<p>
+If you have all the required dependencies, you can add the PDT tool as a (runtime) plugin to your existing Eclipse environment.<br/>
+Alternatively, you can download the All-In-One package supplied by PDT, which includes all the dependencies you need to start working.<br/>
+These can be downloaded from the <a href="http://www.eclipse.org/pdt/downloads/">PDT Downloads page</a>.</p>
+
+<div class="summary">
+	<h4>What is the Eclipse workspace?</h4>
+	The workspace is the place where you store your projects and project settings. Essentially, it is a directory on your hard drive. 
+	Eclipse will ask you to set your workspace the first time you run it. 
+
+	<h4>Defining your workspace</h4>
+	There are no fixed rules, but I would advise you to set your workspace to your <i>htdocs</i> directory (for example <i>C:\\xampp\\htdocs\\</i>).<br/>
+	Workspaces can be defined after startup by going to : <i>File > Switch Workspace > Other</i>
+	
+	<h4>What are  Eclipse projects?</h4>
+	Projects (as you might expect) are the applications you are developing.<br/>
+	In our case, these are Framework applications - the things that start out life as a copy of your <i>app</i> folder.
+
+</div>
+
+<h2>Creating a new PHP Project</h2>
+<p>
+1. Launch Eclipse, and switch to the PHP perspective.<br/>
+2. From the Menu Bar, go to <i>File > New > PHP Project</i>.<br/>
+3. In the Project name field, type your application's name.<br/>
+4. Click the ‘Finish’ button, and the project will be created. You will be able to browse your new project in the ‘PHP Explorer’ view.<br/>
+5. Create your framework directory structure.<br/>
+</p>
+<blockquote>
+	<p><img src="images/tip.gif" width="62" height="13"> You are advised to use the Quickstart guides (see ‘external links’ section below)</p>
+</blockquote>
+
+<h2>PHP Include Paths</h2>
+<p>
+The PHP Include Path is a set of locations that is used for finding resources referenced by include/require statements.
+</p>
+
+<h2>Build Paths</h2>
+<p>
+The Eclipse build process scans all resources that are on the project's Build Path so that elements defined within them can be made
+available for Code Assist options. This is done in order to get notification about changes in the file system
+(e.g. files added/removed from the project, code changes etc.) and in order to maintain the code database (user classes, functions, variables etc.).
+</p>
+
+<div class="summary">
+	<img src="images/tip.gif" width="62" height="13"> 
+	Keep in mind that the PHP buildpath settings are visible on the 'PHP Explorer' view, but the JavaScript Libraries stettings are not.<br/>
+	To change them, go to : <i>Project's Properties > JavaScript > JavaScript Libraries > 'Source' tab</i>, and configure the JavaScript buildpath by adding/removing relevant folders.
+	<div style="text-align: center;"><img src="images/JavaScript_Libraries.png" ></div>
+</div>
+
+<h2>Adding the Framework Library to your project</h2>
+<p>
+There are several ways to "attach" the framework code to your project.<br/>
+<div>
+	<p>
+	1. Link source to Framework location (example #1)
+	<blockquote>
+		+ Production-server-ready - assuming the same framework location<br/>
+		- When sharing code /co-programming, the other developer will need to set this link as well.
+	</blockquote>
+	</p>
+	
+	<p>
+	2. Create a seperate project that will hold the framework library code (example #2)
+	<blockquote>
+		+ Very modular, using framework as a "black-box". (easier version update etc')<br/>
+		- Need to define the "real" location of the framework on the production-server.
+	</blockquote>
+	</p>
+	
+	<p>
+	3. Copy the code into the project itself (example #3)
+	<blockquote>
+		+ This will ensure you won't be dependent on where/if this specific framewrok version is installed on your production server<br/>
+		- Redundant code - each application will include the framework code.
+	</blockquote>
+	</p>
+</div>
+</p>
+
+<hr/>
+
+<h2>Example Projects</h2>
+
+<table> 
+	<tr valign="top">
+		<td>
+			<h4>Example #1 - CakePHP Project</h4>
+			<img src="images/example_1.png">
+		</td>
+		
+		<td>
+			<h4>Example #2 - ZendFramework Project</h4>
+			<img src="images/example_2.png">
+		</td>
+		
+		<td>
+			<h4>Example #3 - Symfony Project</h4>
+			<img src="images/example_3.png">
+		</td>
+	</tr>
+</table>
+
+<hr/>
+
+<h2>References</h2>
+<blockquote>
+	<p>
+	<a href="http://bakery.cakephp.org/articles/view/setting-up-eclipse-to-work-with-cake">http://bakery.cakephp.org/articles/view/setting-up-eclipse-to-work-with-cake</a><br/>
+	</p>
+</blockquote>
+
+<hr/>
+
+<h2>External Links</h2>
+<blockquote>
+	<table>
+	<tr>
+		<th>&nbsp;</th>
+		<th>Framework website URLs</th>
+		<th>QuickStart Guide URLs</th>
+	</tr>
+	<tr>
+		<td>Symfony</td>
+		<td><a href="http://www.symfony-project.org/">http://www.symfony-project.org</a></td>
+		<td><a href="http://www.symfony-project.org/tutorial/1_2/my-first-project">http://www.symfony-project.org/tutorial/1_2/my-first-project</a></td>
+	</tr>
+	<tr>
+		<td>Zend Framework</td>
+		<td><a href="http://framework.zend.com/">http://framework.zend.com</a></td>
+		<td><a href="http://framework.zend.com/docs/quickstart">http://framework.zend.com/docs/quickstart</a></td>
+	</tr>
+	<tr>
+		<td>Codeigniter</td>
+		<td><a href="http://codeigniter.com/">http://codeigniter.com</a></td>
+		<td><a href="http://codeigniter.com/tutorials/watch/intro/ ">http://codeigniter.com/tutorials/watch/intro/ </a></td>
+	</tr>
+	<tr>
+		<td>CakePHP</td>
+		<td><a href="http://cakephp.org/">http://cakephp.org</a></td>
+		<td><a href="http://book.cakephp.org/view/4/Beginning-With-CakePHP ">http://book.cakephp.org/view/4/Beginning-With-CakePHP</a></td>
+	</tr>
+	</table>
+</blockquote>
+
+
+</body>
+</html>
