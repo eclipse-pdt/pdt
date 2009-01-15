@@ -862,6 +862,6 @@ public class ASTMatcher {
 		}
 		Namespace o = (Namespace) other;
 
-		return safeSubtreeListMatch(node.names(), o.names());
+		return safeSubtreeListMatch(node.names(), o.names()) && safeSubtreeMatch(node.getBody(), node.getBody());
 	}
 }

@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.2 2009/01/15 14:17:12 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.3 2009/01/15 16:57:13 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -183,8 +183,7 @@ terminal T_QUATE,T_BACKQUATE;
 /* Non terminals */
 
 non terminal Program thestart;
-non terminal Namespace namespace_name;
-non terminal List namespace_names_list;
+non terminal List namespace_name;
 non terminal List top_statement_list;
 non terminal Statement top_statement;
 non terminal Statement statement;
@@ -334,13 +333,6 @@ top_statement_list:statementList
 ;
 
 namespace_name ::=
-namespace_names_list:namesList
-{:
-	Namespace namespace = new Namespace(namesListleft, namesListright, parser.ast, namesList); 
-:}
-;
-
-namespace_names_list ::=
 T_STRING:name
 {:
 	List namesList = new LinkedList();
@@ -349,7 +341,7 @@ T_STRING:name
 :}
 
 | 
-namespace_names_list:namesList T_NS_SEPARATOR T_STRING:name
+namespace_name:namesList T_NS_SEPARATOR T_STRING:name
 {:
 	namesList.add(new Identifier(nameleft, nameright, parser.ast, name));
 	RESULT = namesList;
@@ -392,6 +384,27 @@ statement:statement
 	// Note: we never generate T_HALT_COMPILER
 	RESULT = null;
 :}
+
+| T_NAMESPACE:start namespace_name:namesList T_SEMICOLON:end
+{:
+	Namespace namespace = new Namespace(startleft, endright, parser.ast, namesList);
+	RESULT = namespace;
+:}
+
+| T_NAMESPACE:start namespace_name:namesList T_CURLY_OPEN:token top_statement_list:statementList T_CURLY_CLOSE:end
+{:
+	Block block = new Block(tokenleft, endright, parser.ast, statementList);
+	Namespace namespace = new Namespace(startleft, endright, parser.ast, namesList, block);
+	RESULT = namespace;
+:}
+
+| T_NAMESPACE:start T_CURLY_OPEN:token top_statement_list:statementList T_CURLY_CLOSE:end
+{:
+	Block block = new Block(tokenleft, endright, parser.ast, statementList);
+	Namespace namespace = new Namespace(startleft, endright, parser.ast, block);
+	RESULT = namespace;
+:}
+
 ;
 
 inner_statement_list ::=
