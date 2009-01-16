@@ -66,6 +66,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		fColorTypes.put(PHPRegionTypes.PHP_CATCH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_CLASS, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_CONTINUE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_GOTO, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_DECLARE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_DEFAULT, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_DO, PreferenceConstants.EDITOR_KEYWORD_COLOR);
@@ -104,6 +105,7 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 		fColorTypes.put(PHPRegionTypes.PHP_SWITCH, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_TRY, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_THROW, PreferenceConstants.EDITOR_KEYWORD_COLOR);
+		fColorTypes.put(PHPRegionTypes.PHP_NAMESPACE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_USE, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_VAR, PreferenceConstants.EDITOR_KEYWORD_COLOR);
 		fColorTypes.put(PHPRegionTypes.PHP_WHILE, PreferenceConstants.EDITOR_KEYWORD_COLOR);

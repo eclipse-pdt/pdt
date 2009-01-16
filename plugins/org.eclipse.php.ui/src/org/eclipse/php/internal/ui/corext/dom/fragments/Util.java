@@ -16,8 +16,8 @@ import java.io.StringReader;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer5;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner;
+import org.eclipse.php.internal.core.documentModel.parser.php5.PhpLexer;
 import org.eclipse.php.internal.ui.corext.SourceRange;
 
 /**
@@ -68,8 +68,8 @@ class Util {
 		if (0 == trimmedText.length()) {
 			return true;
 		} else {
-			Scanner scanner = new PhpLexer5(new StringReader(trimmedText));
-			scanner.initialize(PhpLexer5.ST_PHP_IN_SCRIPTING);
+			Scanner scanner = new PhpLexer(new StringReader(trimmedText));
+			scanner.initialize(PhpLexer.ST_PHP_IN_SCRIPTING);
 			try {
 				return scanner.yylex() == null;
 			} catch (IOException e) {
