@@ -39,6 +39,7 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.php.astview.*;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
@@ -65,11 +66,11 @@ import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 public class ASTView extends ViewPart implements IShowInSource {
 
 	// TODO check with the PHP fields
-	private static final String PHP5= AST.PHP5;
+	private static final PHPVersion PHP5= PHPVersion.PHP5;
 	/** (Used to get rid of deprecation warnings in code)
 	 * @deprecated
 	 */
-	private static final String PHP4= AST.PHP4;
+	private static final PHPVersion PHP4= PHPVersion.PHP4;
 
 	private class ASTViewSelectionProvider implements ISelectionProvider {
 		ListenerList fListeners= new ListenerList(ListenerList.IDENTITY);
@@ -398,10 +399,10 @@ public class ASTView extends ViewPart implements IShowInSource {
 		fCreateBindings= !fDialogSettings.getBoolean(SETTINGS_NO_BINDINGS); // inverse so that default is to create bindings
 		fStatementsRecovery= !fDialogSettings.getBoolean(SETTINGS_NO_STATEMENTS_RECOVERY); // inverse so that default is use recovery
 		fBindingsRecovery= !fDialogSettings.getBoolean(SETTINGS_NO_BINDINGS_RECOVERY); // inverse so that default is use recovery
-		fCurrentASTLevel= PHP5;
+		fCurrentASTLevel= PHP5.name();
 		try {
-			String level= fDialogSettings.get(SETTINGS_JLS);
-			if (level == PHP4 || level == PHP5) {
+			String level = fDialogSettings.get(SETTINGS_JLS);
+			if (level.equals(PHP4.name()) || level.equals(PHP5.name()) ) {
 				fCurrentASTLevel= level;
 			}
 		} catch (NumberFormatException e) {
@@ -473,7 +474,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 	}
 	
 	private String getInitialASTLevel(ISourceModule typeRoot) {
-		return PHP5;
+		return PHP5.name();
 /*		String option= typeRoot.getScriptProject().getOption(DLTKCore.  JavaCore.COMPILER_SOURCE, true);
 		if (option.compareTo(JavaCore.VERSION_1_5) >= 0) {
 			return PHP5;
@@ -569,7 +570,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		} else {
 			ISourceModule sm = (ISourceModule) input;
 			StringReader st = new StringReader (sm.getBuffer().getContents());
-			ASTParser parser= ASTParser.newParser(st,  astLevel,  false, sm);
+			ASTParser parser= ASTParser.newParser(st, PHPVersion.valueOf(astLevel),  false, sm);
 			startTime= System.currentTimeMillis();
 			root= (Program) parser.createAST(null);
 			endTime= System.currentTimeMillis();
@@ -925,8 +926,8 @@ public class ASTView extends ViewPart implements IShowInSource {
 		ASTViewImages.setImageDescriptors(fLinkWithEditor, ASTViewImages.LINK_WITH_EDITOR);
 			
 		fASTVersionToggleActions= new ASTLevelToggle[] {
-				new ASTLevelToggle("AST Level &2.0", PHP4), //$NON-NLS-1$
-				new ASTLevelToggle("AST Level &3.0", PHP5) //$NON-NLS-1$
+				new ASTLevelToggle("AST Level &2.0", PHP4.name()), //$NON-NLS-1$
+				new ASTLevelToggle("AST Level &3.0", PHP5.name()) //$NON-NLS-1$
 		};
 		
 				
