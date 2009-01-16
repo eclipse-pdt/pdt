@@ -212,8 +212,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		this.sourceModule = sourceModule;
 
-		String phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
-		isPHP5 = phpVersion.equals(PHPVersion.PHP5);
+		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
+		isPHP5 = phpVersion == PHPVersion.PHP5;
 
 		// Find the structured document region:
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);

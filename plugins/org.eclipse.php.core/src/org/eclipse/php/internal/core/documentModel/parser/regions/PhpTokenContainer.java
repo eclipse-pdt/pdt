@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.documentModel.parser.regions;
 import java.util.*;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
+import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
@@ -263,7 +263,7 @@ public class PhpTokenContainer {
 
 		// if state was change - we add a new token and add state 
 		if (lexerStateChanges.size() == 0 || !getLastChange().state.equals(lexerState)) {
-			int textLength = (PhpLexer.WHITESPACE.equals(yylex)) ? 0 : yylengthLength;
+			int textLength = (AbstractPhpLexer.WHITESPACE.equals(yylex)) ? 0 : yylengthLength;
 
 			final ContextRegion contextRegion = new ContextRegion(yylex, start, textLength, yylength);
 			phpTokens.addLast(contextRegion);
@@ -273,7 +273,7 @@ public class PhpTokenContainer {
 
 		assert phpTokens.size() > 0;
 		// if we can only adjust the previous token size 
-		if (yylex == PhpLexer.WHITESPACE) {
+		if (yylex == AbstractPhpLexer.WHITESPACE) {
 			final ITextRegion last = phpTokens.getLast();
 			last.adjustLength(yylength);
 		} else { // else - add as a new token

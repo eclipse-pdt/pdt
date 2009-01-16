@@ -47,7 +47,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
 
 	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
-	private Map<IProject, String> project2PhpVersion = new HashMap<IProject, String>();
+	private Map<IProject, PHPVersion> project2PhpVersion = new HashMap<IProject, PHPVersion>();
 
 	public LanguageModelInitializer() {
 	}
@@ -61,7 +61,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 
 		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-				project2PhpVersion.put(project, (String) event.getNewValue());
+				project2PhpVersion.put(project, PHPVersion.byAlias((String) event.getNewValue()));
 
 				try {
 					initialize(containerPath, scriptProject);
@@ -103,7 +103,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		}
 	}
 
-	private static IPath getContainerPath(IScriptProject project, String phpVersion) throws IOException {
+	private static IPath getContainerPath(IScriptProject project, PHPVersion phpVersion) throws IOException {
 		String libraryPath = getLanguageLibraryPath(project, phpVersion);
 
 		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(), new Path(libraryPath), null);
@@ -113,8 +113,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		return path;
 	}
 
-	private static String getLanguageLibraryPath(IScriptProject project, String phpVersion) {
-		return String.format(LANGUAGE_LIBRARY_PATH, PHPVersion.PHP4.equals(phpVersion) ? 4 : 5);
+	private static String getLanguageLibraryPath(IScriptProject project, PHPVersion phpVersion) {
+		return String.format(LANGUAGE_LIBRARY_PATH, PHPVersion.PHP4 == phpVersion ? 4 : 5);
 	}
 
 	private static boolean isPHPProject(IScriptProject project) {
@@ -135,7 +135,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (fragment != null) {
 			IScriptProject project = element.getScriptProject();
 			if (project != null) {
-				String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
+				PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
 				try {
 					IPath containerPath = getContainerPath(project, phpVersion);
 					return EnvironmentPathUtils.getLocalPath(fragment.getPath()).equals(containerPath);

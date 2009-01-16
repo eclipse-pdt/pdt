@@ -370,10 +370,7 @@ private ITextRegion bufferedTextRegion = null;
 private final String doScanEndPhp(boolean isAsp, String searchContext, int exitState, int immediateFallbackState) throws IOException {
 	yypushback(1); // begin with the last char
 	
-	int[] currentParameters = getParamenters();
-	currentParameters[6] = ST_PHP_IN_SCRIPTING;
-	
-	final PhpLexer phpLexer = getPhpLexer(currentParameters); 
+	final AbstractPhpLexer phpLexer = getPhpLexer(); 
 	bufferedTextRegion = new PhpScriptRegion(searchContext, yychar, project, phpLexer);
 
 	// restore the locations / states
@@ -386,18 +383,21 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
 /**
  * @param project
  * @param stream
- * @return a new lexer for the given project with the given stream
+ * @return a new lexer for the given project with the given stream initialized with current parameters
  */
-private PhpLexer getPhpLexer(int[] parameters) {
-	PhpLexer lexer;
-	final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-	if (phpVersion.equals(PHPVersion.PHP5)) {
-		lexer = new PhpLexer5(yy_reader);
-	} else {
-		lexer = new PhpLexer4(yy_reader);
+private AbstractPhpLexer getPhpLexer() {
+	final PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
+	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(yy_reader, phpVersion);
+	int[] currentParameters = getParamenters();
+	try {
+		// set initial lexer state - we use reflection here since we don't know the constant value of 
+		// of this state in specific PHP version lexer 
+		currentParameters[6] = lexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(lexer);
+	} catch (Exception e) {
+		Logger.logException(e);
 	}
-	lexer.initialize(parameters[6]);
-	lexer.reset(yy_reader, yy_buffer, parameters);
+	lexer.initialize(currentParameters[6]);
+	lexer.reset(yy_reader, yy_buffer, currentParameters);
 	lexer.setPatterns(project);
 
 	lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
@@ -593,11 +593,9 @@ private final String doBlockTagScan() throws IOException {
 }
 
 private IProject project;
-private int ST_PHP_IN_SCRIPTING = -1; 
 
 public void setProject(IProject project) {
 	this.project = project;
-	ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
 }
 
 public void reset(java.io.Reader  reader, char[] buffer, int[] parameters){

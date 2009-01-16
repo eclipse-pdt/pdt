@@ -19,8 +19,11 @@ public class PhpVersionProjectPropertyHandler {
 	
 	private PhpVersionProjectPropertyHandler() {}
 
-	public static String getVersion(IProject project) {
-		return project != null ? CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project) : PHPVersion.PHP5.getAlias();
+	public static PHPVersion getVersion(IProject project) {
+		if (project != null) {
+			return PHPVersion.byAlias(CorePreferencesSupport.getInstance().getPreferencesValue(Keys.PHP_VERSION, null, project));
+		}
+		return PHPVersion.PHP5; // default version
 	}
 	
 	public static PHPVersion getVersion() {

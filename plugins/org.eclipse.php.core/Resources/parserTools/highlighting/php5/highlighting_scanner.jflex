@@ -9,15 +9,15 @@
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
 
-package org.eclipse.php.internal.core.documentModel.parser;
+package org.eclipse.php.internal.core.documentModel.parser.php5;
 
 import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 %%
 
 %public
-%class PhpLexer5
-%extends PhpLexer
+%class PhpLexer
+%extends org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer
 %type String
 %unicode
 %caseless
@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 
 
 %{
-    public PhpLexer5(int state){
+    public PhpLexer(int state){
         initialize(state);
     }
     public void reset(char array[], int offset, int length) {

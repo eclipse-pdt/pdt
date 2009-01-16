@@ -43,11 +43,15 @@ public interface PHPRegionTypes {
 	//	static final String PHP_CLASS_C = "PHP_CLASS_C";
 
 	static final String PHP_PAAMAYIM_NEKUDOTAYIM = "PHP_PAAMAYIM_NEKUDOTAYIM"; //$NON-NLS-1$
+	
+	static final String PHP_NS_SEPARATOR = "PHP_NS_SEPARATOR"; //$NON-NLS-1$
 
 	static final String PHP_EXTENDS = "PHP_EXTENDS"; //$NON-NLS-1$
 
 	static final String PHP_VAR_COMMENT = "PHP_VAR_COMMENT"; //$NON-NLS-1$
 
+	static final String PHP_NAMESPACE = "PHP_NAMESPACE"; //$NON-NLS-1$
+	
 	static final String PHP_USE = "PHP_USE"; //$NON-NLS-1$
 
 	//	static final String PHP_MINUS_EQUAL = "PHP_MINUS_EQUAL";
@@ -225,6 +229,8 @@ public interface PHPRegionTypes {
 	//	static final String PHP_RGREATER = "PHP_RGREATER";
 
 	static final String PHP_CONTINUE = "PHP_CONTINUE"; //$NON-NLS-1$
+	
+	static final String PHP_GOTO = "PHP_GOTO"; //$NON-NLS-1$
 
 	//	static final String PHP_IS_IDENTICAL = "PHP_IS_IDENTICAL";
 
@@ -407,6 +413,10 @@ public interface PHPRegionTypes {
 	static final String PHP_CASTING = "PHP_CASTING"; //$NON-NLS-1$
 
 	static final String PHP__FILE__ = "PHP__FILE__"; //$NON-NLS-1$
+	
+	static final String PHP__DIR__ = "PHP__DIR__"; //$NON-NLS-1$
+	
+	static final String PHP__NAMESPACE__ = "PHP__NAMESPACE__"; //$NON-NLS-1$
 
 	static final String PHP__LINE__ = "PHP__LINE__"; //$NON-NLS-1$
 

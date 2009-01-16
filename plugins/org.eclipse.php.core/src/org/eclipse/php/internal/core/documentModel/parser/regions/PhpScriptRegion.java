@@ -19,10 +19,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.documentModel.parser.PHPLexerStates;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer4;
-import org.eclipse.php.internal.core.documentModel.parser.PhpLexer5;
+import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
+import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
@@ -50,12 +48,19 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	// true when the last reparse action is full reparse
 	protected boolean isFullReparsed;
 
-	public PhpScriptRegion(String newContext, int startOffset, IProject project, PhpLexer phpLexer) {
+	public PhpScriptRegion(String newContext, int startOffset, IProject project, AbstractPhpLexer phpLexer) {
 		super(newContext, startOffset, 0, 0, PhpScriptRegion.PHP_SCRIPT);
 
 		this.project = project;
-		ST_PHP_LINE_COMMENT = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_LINE_COMMENT);
-		ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
+		
+		try {
+			// we use reflection here since we don't know the constant value of 
+			// of this state in specific PHP version lexer
+			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField("ST_PHP_LINE_COMMENT").getInt(phpLexer);
+			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
 		completeReparse(phpLexer);
 	}
 
@@ -142,7 +147,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 			final LexerState endState = tokensContaier.getState(tokenEnd.getEnd() + 1);
 
 			final PhpTokenContainer newContainer = new PhpTokenContainer();
-			final PhpLexer phpLexer = getPhpLexer(new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
+			final AbstractPhpLexer phpLexer = getPhpLexer(new DocumentReader(flatnode, changes, requestStart, lengthToReplace, newTokenOffset), startState);
 
 			Object state = startState;
 			try {
@@ -211,10 +216,14 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	public void completeReparse(IDocument doc, int start, int length) {
 		//bug fix for 225118 we need to refresh the constants since this function is being called
 		//after the project's PHP version was changed. 
-		ST_PHP_LINE_COMMENT = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_LINE_COMMENT);
-		ST_PHP_IN_SCRIPTING = PHPLexerStates.toSpecificVersionState(project, PHPLexerStates.ST_PHP_IN_SCRIPTING);
-		PhpLexer lexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null);
-		completeReparse(lexer);
+		AbstractPhpLexer phpLexer = getPhpLexer(new BlockDocumentReader(doc, start, length), null);
+		try {
+			ST_PHP_LINE_COMMENT = phpLexer.getClass().getField("ST_PHP_LINE_COMMENT").getInt(phpLexer);
+			ST_PHP_IN_SCRIPTING = phpLexer.getClass().getField("ST_PHP_IN_SCRIPTING").getInt(phpLexer);
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		completeReparse(phpLexer);
 	}
 
 	private final boolean isHereDoc(final ITextRegion tokenStart) {
@@ -250,7 +259,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * Performing a fully parse process to php script
 	 * @param newText
 	 */
-	public void completeReparse(PhpLexer lexer) {
+	public void completeReparse(AbstractPhpLexer lexer) {
 		setPhpTokens(lexer);
 	}
 
@@ -259,14 +268,9 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param stream
 	 * @return a new lexer for the given project with the given stream
 	 */
-	private PhpLexer getPhpLexer(Reader stream, LexerState startState) {
-		PhpLexer lexer;
-		final String phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (phpVersion.equals(PHPVersion.PHP5)) {
-			lexer = new PhpLexer5(stream);
-		} else {
-			lexer = new PhpLexer4(stream);
-		}
+	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState) {
+		final PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
+		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream, phpVersion);
 		lexer.initialize(ST_PHP_IN_SCRIPTING);
 		lexer.setPatterns(project);
 
@@ -282,7 +286,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @param script 
 	 * @return a list of php tokens
 	 */
-	private void setPhpTokens(PhpLexer lexer) {
+	private void setPhpTokens(AbstractPhpLexer lexer) {
 		setLength(0);
 		setTextLength(0);
 
