@@ -209,6 +209,14 @@ public abstract class AbstractVisitor implements Visitor {
 		return true;
 	}
 
+	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
+		return true;
+	}
+
+	public boolean visit(NamespaceName namespaceName) {
+		return true;
+	}
+
 	public boolean visit(ParenthesisExpression parenthesisExpression) {
 		return true;
 	}
@@ -282,6 +290,14 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	public boolean visit(UnaryOperation unaryOperation) {
+		return true;
+	}
+
+	public boolean visit(UseStatement useStatement) {
+		return true;
+	}
+
+	public boolean visit(UseStatementPart useStatementPart) {
 		return true;
 	}
 
@@ -418,6 +434,12 @@ public abstract class AbstractVisitor implements Visitor {
 
 	public void endVisit(MethodInvocation methodInvocation) {
 	}
+	
+	public void endVisit(NamespaceDeclaration namespaceDeclaration) {
+	}
+
+	public void endVisit(NamespaceName namespaceName) {
+	}
 
 	public void endVisit(ParenthesisExpression parenthesisExpression) {
 	}
@@ -474,6 +496,12 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	public void endVisit(UnaryOperation unaryOperation) {
+	}
+	
+	public void endVisit(UseStatement useStatement) {
+	}
+
+	public void endVisit(UseStatementPart useStatementPart) {
 	}
 
 	public void endVisit(Variable variable) {

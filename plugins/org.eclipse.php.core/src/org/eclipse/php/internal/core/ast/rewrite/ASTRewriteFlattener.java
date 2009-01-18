@@ -437,6 +437,53 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		return false;
 	}
 
+	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
+		result.append("namespace ");
+		namespaceDeclaration.childrenAccept(this);
+		if (namespaceDeclaration.getBody() == null) {
+			result.append(";\n"); //$NON-NLS-1$
+		}
+		return false;
+	}
+
+	public boolean visit(NamespaceName namespaceName) {
+		if (namespaceName.isGlobal()) {
+			result.append("\\");
+		}
+		List<Identifier> segments = namespaceName.segments();
+		Iterator<Identifier> it = segments.iterator();
+		while (it.hasNext()) {
+			it.next().accept(this);
+			if (it.hasNext()) {
+				result.append("\\");
+			}
+		}
+		return false;
+	}
+
+	public boolean visit(UseStatement useStatement) {
+		result.append("use ");
+		Iterator<UseStatementPart> it = useStatement.parts().iterator();
+		while (it.hasNext()) {
+			it.next().accept(this);
+			if (it.hasNext()) {
+				result.append(", ");
+			}
+		}
+		result.append(";\n");
+		return false;
+	}
+
+	public boolean visit(UseStatementPart useStatementPart) {
+		useStatementPart.getName().accept(this);
+		Identifier alias = useStatementPart.getAlias();
+		if (alias != null) {
+			result.append(" as ");
+			alias.accept(this);
+		}
+		return false;
+	}
+
 	public boolean visit(FormalParameter formalParameter) {
 		if (formalParameter.isMandatory()) {
 			if (formalParameter.getAST().apiLevel() == PHPVersion.PHP4) {
