@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.11 2009/01/13 14:34:47 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.12 2009/01/18 14:14:44 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1292,7 +1292,7 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 
 | class_constant_declaration:list T_SEMICOLON:end
 {:
-	ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(listleft, endright, parser.ast, list);
+	ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(listleft, endright, parser.ast, list);
 	RESULT = classConstantDeclaration;
 :}
 

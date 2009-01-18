@@ -137,7 +137,7 @@ public class HierarchicalVisitor extends AbstractVisitor {
 		return visit((Statement) catchClause);
 	}
 
-	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
+	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		return visit((Statement) classConstantDeclaration);
 	}
 

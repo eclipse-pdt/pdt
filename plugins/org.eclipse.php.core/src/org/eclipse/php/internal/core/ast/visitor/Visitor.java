@@ -84,9 +84,9 @@ public interface Visitor {
 
 	public void endVisit(CatchClause catchClause);
 	
-	public boolean visit(ClassConstantDeclaration classConstantDeclaration);
+	public boolean visit(ConstantDeclaration classConstantDeclaration);
 
-	public void endVisit(ClassConstantDeclaration classConstantDeclaration);
+	public void endVisit(ConstantDeclaration classConstantDeclaration);
 	
 	public boolean visit(ClassDeclaration classDeclaration);
 	

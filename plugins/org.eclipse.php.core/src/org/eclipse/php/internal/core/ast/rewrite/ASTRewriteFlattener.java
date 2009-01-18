@@ -256,7 +256,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		return false;
 	}
 
-	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
+	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		result.append("const "); //$NON-NLS-1$
 		boolean isFirst = true;
 		Identifier[] variableNames = classConstantDeclaration.getVariableNames();

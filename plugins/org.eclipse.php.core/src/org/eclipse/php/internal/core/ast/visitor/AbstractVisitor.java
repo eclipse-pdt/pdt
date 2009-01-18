@@ -77,7 +77,7 @@ public abstract class AbstractVisitor implements Visitor {
 		return true;
 	}
 
-	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
+	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		return true;
 	}
 
@@ -320,7 +320,7 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(CatchClause catchClause) {
 	}
 
-	public void endVisit(ClassConstantDeclaration classConstantDeclaration) {
+	public void endVisit(ConstantDeclaration classConstantDeclaration) {
 	}
 
 	public void endVisit(ClassDeclaration classDeclaration) {

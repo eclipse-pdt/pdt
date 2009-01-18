@@ -20,11 +20,11 @@ import org.eclipse.php.internal.core.ast.match.ASTMatcher;
 import org.eclipse.php.internal.core.ast.visitor.Visitor;
 
 /**
- * Represents a class constant declaration
+ * Represents a class or namespace constant declaration
  * <pre>e.g.<pre> const MY_CONST = 5;
  * const MY_CONST = 5, YOUR_CONSTANT = 8;
  */
-public class ClassConstantDeclaration extends Statement {
+public class ConstantDeclaration extends Statement {
 
 	private final ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<Identifier>(NAMES_PROPERTY);
 	private final ASTNode.NodeList<Expression> initializers = new ASTNode.NodeList<Expression>(INITIALIZERS_PROPERTY);
@@ -33,9 +33,9 @@ public class ClassConstantDeclaration extends Statement {
 	 * The structural property of this node type.
 	 */
 	public static final ChildListPropertyDescriptor NAMES_PROPERTY = 
-		new ChildListPropertyDescriptor(ClassConstantDeclaration.class, "names", Identifier.class, CYCLE_RISK); //$NON-NLS-1$
+		new ChildListPropertyDescriptor(ConstantDeclaration.class, "names", Identifier.class, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor INITIALIZERS_PROPERTY = 
-		new ChildListPropertyDescriptor(ClassConstantDeclaration.class, "initializers", Expression.class, CYCLE_RISK); //$NON-NLS-1$
+		new ChildListPropertyDescriptor(ConstantDeclaration.class, "initializers", Expression.class, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -50,7 +50,7 @@ public class ClassConstantDeclaration extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	private ClassConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
+	private ConstantDeclaration(int start, int end, AST ast, List<Identifier> names, List<Expression> initializers) {
 		super(start, end, ast);
 		
 		if (names == null || initializers == null || names.size() != initializers.size()) {
@@ -65,7 +65,7 @@ public class ClassConstantDeclaration extends Statement {
 		}
 	}
 	
-	public ClassConstantDeclaration(int start, int end, AST ast, List variablesAndDefaults) {
+	public ConstantDeclaration(int start, int end, AST ast, List variablesAndDefaults) {
 		super(start, end, ast);
 		if (variablesAndDefaults == null || variablesAndDefaults == null || variablesAndDefaults.size() == 0) {
 			throw new IllegalArgumentException();
@@ -80,7 +80,7 @@ public class ClassConstantDeclaration extends Statement {
 		}
 	}
 
-	public ClassConstantDeclaration(AST ast) {
+	public ConstantDeclaration(AST ast) {
 		super(ast);
 	}
 	
@@ -122,7 +122,7 @@ public class ClassConstantDeclaration extends Statement {
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<ClassConstantDeclaration"); //$NON-NLS-1$
+		buffer.append(tab).append("<ConstantDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(">\n"); //$NON-NLS-1$
 		Iterator<Identifier> iterator1 = names.iterator();
@@ -140,11 +140,11 @@ public class ClassConstantDeclaration extends Statement {
 			}
 			buffer.append(tab).append(TAB).append("</InitialValue>\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</ClassConstantDeclaration>"); //$NON-NLS-1$
+		buffer.append(tab).append("</ConstantDeclaration>"); //$NON-NLS-1$
 	}
 
 	public int getType() {
-		return ASTNode.CLASS_CONSTANT_DECLARATION;
+		return ASTNode.CONSTANT_DECLARATION;
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class ClassConstantDeclaration extends Statement {
 	ASTNode clone0(AST target) {
 		final List names = ASTNode.copySubtrees(target, this.names());
 		final List initializers = ASTNode.copySubtrees(target, this.initializers());
-		final ClassConstantDeclaration ccd = new ClassConstantDeclaration(this.getStart(), this.getEnd(), target, names, initializers);
+		final ConstantDeclaration ccd = new ConstantDeclaration(this.getStart(), this.getEnd(), target, names, initializers);
 		return ccd;
 		
 	}

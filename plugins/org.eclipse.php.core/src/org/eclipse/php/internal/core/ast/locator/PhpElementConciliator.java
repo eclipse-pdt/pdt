@@ -93,7 +93,7 @@ public class PhpElementConciliator {
 			}
 		}
 
-		if(parent.getType() == ASTNode.CLASS_CONSTANT_DECLARATION)
+		if(parent.getType() == ASTNode.CONSTANT_DECLARATION)
 			return true;
 
 		// check if it is a dispatch

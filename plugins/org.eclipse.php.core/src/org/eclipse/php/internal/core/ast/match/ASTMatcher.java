@@ -338,11 +338,11 @@ public class ASTMatcher {
 				&& safeSubtreeMatch(node.getBody(), o.getBody()));
 	}
 	
-	public boolean match(ClassConstantDeclaration node, Object other) {
-		if (!(other instanceof ClassConstantDeclaration)) {
+	public boolean match(ConstantDeclaration node, Object other) {
+		if (!(other instanceof ConstantDeclaration)) {
 			return false;
 		}
-		ClassConstantDeclaration o = (ClassConstantDeclaration) other;
+		ConstantDeclaration o = (ConstantDeclaration) other;
 
 		return (safeSubtreeListMatch(node.initializers(), o.initializers())
 				&& safeSubtreeListMatch(node.names(), o.names()));

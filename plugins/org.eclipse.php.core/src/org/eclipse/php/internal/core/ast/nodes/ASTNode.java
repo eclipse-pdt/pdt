@@ -42,7 +42,7 @@ public abstract class ASTNode implements Visitable {
 	public static final int CAST_EXPRESSION = 8;
 	public static final int CATCH_CLAUSE = 9;
 	public static final int STATIC_CONSTANT_ACCESS = 10;
-	public static final int CLASS_CONSTANT_DECLARATION = 11;
+	public static final int CONSTANT_DECLARATION = 11;
 	public static final int CLASS_DECLARATION = 12;
 	public static final int CLASS_INSTANCE_CREATION = 13;
 	public static final int CLASS_NAME = 14;
@@ -545,8 +545,8 @@ public abstract class ASTNode implements Visitable {
 				return CatchClause.class;
 			case STATIC_CONSTANT_ACCESS:
 				return StaticConstantAccess.class;
-			case CLASS_CONSTANT_DECLARATION:
-				return ClassConstantDeclaration.class;
+			case CONSTANT_DECLARATION:
+				return ConstantDeclaration.class;
 			case CLASS_DECLARATION:
 				return ClassDeclaration.class;
 			case CLASS_INSTANCE_CREATION:
@@ -611,6 +611,10 @@ public abstract class ASTNode implements Visitable {
 				return MethodDeclaration.class;
 			case METHOD_INVOCATION:
 				return MethodInvocation.class;
+			case NAMESPACE:
+				return NamespaceDeclaration.class;
+			case NAMESPACE_NAME:
+				return NamespaceName.class;
 			case POSTFIX_EXPRESSION:
 				return PostfixExpression.class;
 			case PREFIX_EXPRESSION:
@@ -643,6 +647,10 @@ public abstract class ASTNode implements Visitable {
 				return TryStatement.class;
 			case UNARY_OPERATION:
 				return UnaryOperation.class;
+			case USE_STATEMENT:
+				return UseStatement.class;
+			case USE_STATEMENT_PART:
+				return UseStatementPart.class;
 			case VARIABLE:
 				return Variable.class;
 			case WHILE_STATEMENT:

@@ -1184,23 +1184,23 @@ public class AST {
 	}
 
 	/**
-	 * Creates a new {@link ClassConstantDeclaration}.
+	 * Creates a new {@link ConstantDeclaration}.
 	 * 
 	 * @return A new ClassConstantDeclaration.
 	 */
-	public ClassConstantDeclaration newClassConstantDeclaration() {
-		ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(this);
+	public ConstantDeclaration newClassConstantDeclaration() {
+		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(this);
 		return classConstantDeclaration;
 	}
 
 	/**
-	 * Creates a new {@link ClassConstantDeclaration}.
+	 * Creates a new {@link ConstantDeclaration}.
 	 * @param names
 	 * @param initializers
 	 * @return A new ClassConstantDeclaration.
 	 */
-	public ClassConstantDeclaration newClassConstantDeclaration(List<Identifier> names, List<Expression> initializers) {
-		ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(this);
+	public ConstantDeclaration newClassConstantDeclaration(List<Identifier> names, List<Expression> initializers) {
+		ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(this);
 		classConstantDeclaration.initializers().addAll(initializers);
 		classConstantDeclaration.names().addAll(names);
 		return classConstantDeclaration;

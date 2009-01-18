@@ -2267,7 +2267,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 	 * @see org.eclipse.php.internal.core.ast.visitor.AbstractVisitor#visit(org.eclipse.php.internal.core.ast.nodes.ClassConstantDeclaration)
 	 */
 	@Override
-	public boolean visit(ClassConstantDeclaration classConstantDeclaration) {
+	public boolean visit(ConstantDeclaration classConstantDeclaration) {
 		// TODO - Same as with the DeclareStatement, this require a different rewriting for now.
 		if (!hasChildrenChanges(classConstantDeclaration)) {
 			return doVisitUnchangedChildren(classConstantDeclaration);

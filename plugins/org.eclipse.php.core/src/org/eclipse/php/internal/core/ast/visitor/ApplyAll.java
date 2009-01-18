@@ -81,7 +81,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 		return apply(classConstant);
 	}
 
-	public boolean visit(ClassConstantDeclaration classConstantDeclaratio) {
+	public boolean visit(ConstantDeclaration classConstantDeclaratio) {
 		return apply(classConstantDeclaratio);
 	}
 
@@ -330,7 +330,7 @@ public abstract class ApplyAll extends AbstractVisitor {
 		endVisitNode(catchClause);
 	}
 
-	public void endVisit(ClassConstantDeclaration classConstantDeclaration) {
+	public void endVisit(ConstantDeclaration classConstantDeclaration) {
 		endVisitNode(classConstantDeclaration);
 	}
 

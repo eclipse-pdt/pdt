@@ -46,7 +46,7 @@ public abstract class Expression extends ASTNode {
 		final int parentType = parent.getType();
 
 		// check - formal parameter and declare statement 
-		if (parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.DECLARE_STATEMENT || parentType == ASTNode.CLASS_CONSTANT_DECLARATION) {
+		if (parentType == ASTNode.FORMAL_PARAMETER || parentType == ASTNode.DECLARE_STATEMENT || parentType == ASTNode.CONSTANT_DECLARATION) {
 			return true;
 		}
 		// check - static statement

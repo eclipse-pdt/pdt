@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.4 2009/01/18 12:50:54 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.5 2009/01/18 14:14:43 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -256,7 +256,7 @@ non terminal List interface_extends_list;
 non terminal VariableBase w_variable;
 non terminal Identifier fully_qualified_class_name;
 non terminal List class_variable_declaration;
-non terminal List class_constant_declaration;
+non terminal List constant_declaration;
 non terminal Integer method_modifiers;
 non terminal Block method_body;
 non terminal List non_empty_member_modifiers;
@@ -413,6 +413,12 @@ statement:statement
 {:
 	UseStatement useStatement = new UseStatement(startleft, endright, parser.ast, useDeclList);
 	RESULT = useStatement;
+:}
+
+| constant_declaration:list T_SEMICOLON:end
+{:
+	ConstantDeclaration namespaceConstantDeclaration = new ConstantDeclaration(listleft, endright, parser.ast, list);
+	RESULT = namespaceConstantDeclaration;
 :}
 
 ;
@@ -1393,9 +1399,9 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON:end
 	RESULT = fieldsDeclaration;
 :}
 
-| class_constant_declaration:list T_SEMICOLON:end
+| constant_declaration:list T_SEMICOLON:end
 {:
-	ClassConstantDeclaration classConstantDeclaration = new ClassConstantDeclaration(listleft, endright, parser.ast, list);
+	ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(listleft, endright, parser.ast, list);
 	RESULT = classConstantDeclaration;
 :}
 
@@ -1543,8 +1549,8 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 :}
 ;
 
-class_constant_declaration ::=
-class_constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar:expr
+constant_declaration ::=
+constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar:expr
 {:
 	Identifier constId = new Identifier(constNameleft, constNameright, parser.ast, constName);
 	list.add(new ASTNode[] {constId, expr});
