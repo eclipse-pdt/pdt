@@ -23,19 +23,19 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * <pre>e.g.<pre>namespace MyNamespace;
  *namespace MyProject\Sub\Level;
  */
-public class Namespace extends Statement {
+public class NamespaceDeclaration extends Statement {
 	
-	protected ASTNode.NodeList<Identifier> names = new ASTNode.NodeList<Identifier>(ELEMENTS_PROPERTY);
+	private NamespaceName name;
 	private Block body;
 	
 	/**
 	 * The "namespace" structural property of this node type.
 	 */
-	public static final ChildListPropertyDescriptor ELEMENTS_PROPERTY = 
-		new ChildListPropertyDescriptor(Namespace.class, "names", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = 
+		new ChildPropertyDescriptor(NamespaceDeclaration.class, "name", NamespaceName.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
 	
 	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(Namespace.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(NamespaceDeclaration.class, "body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -45,50 +45,26 @@ public class Namespace extends Statement {
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
 	static {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
-		properyList.add(ELEMENTS_PROPERTY);
+		properyList.add(NAME_PROPERTY);
+		properyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public Namespace(int start, int end, AST ast, Identifier[] names, Block body) {
+	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body) {
 		super(start, end, ast);
-
-		if (names == null) {
-			throw new IllegalArgumentException();
+		
+		// Either name or body can be null, but not both of them
+		if (name == null && body == null) {
+			throw new IllegalArgumentException("Either namespace name or body must not be null");
 		}
-		for (Identifier name : names) {
-			this.names.add(name);
-		}
-		// Body can be null
+		
+		this.name = name;
 		this.body = body;
 	}
 	
 	/**
-	 * Creates global namespace node (without name)
-	 * @param start
-	 * @param end
-	 * @param ast
-	 * @param body
-	 */
-	public Namespace(int start, int end, AST ast, Block body) {
-		super(start, end, ast);
-
-		// Body must be set in this case
-		if (body == null) {
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	public Namespace(int start, int end, AST ast, List names) {
-		this(start, end, ast, names, null);
-	}
-	
-	public Namespace(int start, int end, AST ast, List names, Block body) {
-		this(start, end, ast, names == null ? null : (Identifier[]) names.toArray(new Identifier[names.size()]), body);
-	}
-
-	/**
-	 * The body component of this type declaration node 
-	 * @return body component of this type declaration node
+	 * The body component of this namespace declaration node 
+	 * @return body component of this namespace declaration node
 	 */
 	public Block getBody() {
 		return body;
@@ -106,9 +82,6 @@ public class Namespace extends Statement {
 	 * </ul>
 	 */ 
 	public void setBody(Block block) {
-		if (block == null) {
-			throw new IllegalArgumentException();
-		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.body;
 		preReplaceChild(oldChild, block, BODY_PROPERTY);
@@ -116,45 +89,85 @@ public class Namespace extends Statement {
 		postReplaceChild(oldChild, block, BODY_PROPERTY);
 	}
 	
+	/**
+	 * The name component of this namespace declaration node 
+	 * @return name component of this namespace declaration node
+	 */
+	public NamespaceName getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name of this parameter
+	 * 
+	 * @param name of this type declaration.
+	 * @exception IllegalArgumentException if:
+	 * <ul>
+	 * <li>the node belongs to a different AST</li>
+	 * <li>the node already has a parent</li>
+	 * <li>a cycle in would be created</li>
+	 * </ul>
+	 */ 
+	public void setName(NamespaceName name) {
+		// an Assignment may occur inside a Expression - must check cycles
+		ASTNode oldChild = this.name;
+		preReplaceChild(oldChild, name, NAME_PROPERTY);
+		this.name = name;
+		postReplaceChild(oldChild, name, NAME_PROPERTY);
+	}
+	
 	public void childrenAccept(Visitor visitor) {
-		for (ASTNode node : this.names) {
-			node.accept(visitor);
+		NamespaceName name = getName();
+		if (name != null) {
+			name.accept(visitor);
 		}
-		getBody().accept(visitor);
+		Block body = getBody();
+		if (body != null) {
+			body.accept(visitor);
+		}
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
-		for (ASTNode node : this.names) {
-			node.traverseTopDown(visitor);
+		NamespaceName name = getName();
+		if (name != null) {
+			name.accept(visitor);
 		}
-		getBody().traverseTopDown(visitor);
+		Block body = getBody();
+		if (body != null) {
+			body.accept(visitor);
+		}
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
-		for (ASTNode node : this.names) {
-			node.traverseBottomUp(visitor);
+		NamespaceName name = getName();
+		if (name != null) {
+			name.accept(visitor);
 		}
-		getBody().traverseTopDown(visitor);
+		Block body = getBody();
+		if (body != null) {
+			body.accept(visitor);
+		}
 		accept(visitor);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
-		buffer.append(tab).append("<Namespace"); //$NON-NLS-1$
+		buffer.append(tab).append("<NamespaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n").append(tab).append(TAB).append("<Name>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		for (ASTNode node : this.names) {
-			node.toString(buffer, TAB + tab + tab);
+		buffer.append(">\n");
+		
+		NamespaceName name = getName();
+		if (name != null) {
+			name.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append(TAB).append("</Name>\n");
 		
 		Block body = getBody();
 		if (body != null) {
 			body.toString(buffer, TAB + tab);
 			buffer.append("\n"); //$NON-NLS-1$
 		}
-		buffer.append(tab).append("</Namespace>"); //$NON-NLS-1$
+		buffer.append(tab).append("</NamespaceDeclaration>"); //$NON-NLS-1$
 	}
 
 	public void accept0(Visitor visitor) {
@@ -169,14 +182,6 @@ public class Namespace extends Statement {
 		return ASTNode.NAMESPACE;
 	}
 
-	/**
-	 * Retrieves names parts of the namespace
-	 * @return names. If names list is empty, that means that this namespace is global.
-	 */
-	public List<Identifier> names() {
-		return this.names;
-	}
-	
 	/* (omit javadoc for this method)
 	 * Method declared on ASTNode.
 	 */
@@ -189,9 +194,9 @@ public class Namespace extends Statement {
 	 * Method declared on ASTNode.
 	 */
 	ASTNode clone0(AST target) {
-		final List names = ASTNode.copySubtrees(target, names());
+		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final Namespace result = new Namespace(this.getStart(), this.getEnd(), target, names, body);
+		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name, body);
 		return result;
 	}
 	
@@ -200,23 +205,20 @@ public class Namespace extends Statement {
 		return PROPERTY_DESCRIPTORS;
 	}
 	
-	/* (omit javadoc for this method)
-	 * Method declared on ASTNode.
-	 */
-	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
-		if (property == ELEMENTS_PROPERTY) {
-			return names();
-		}
-		// allow default implementation to flag the error
-		return super.internalGetChildListProperty(property);
-	}
-	
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == BODY_PROPERTY) {
 			if (get) {
 				return getBody();
 			} else {
-				setBody((Block) body);
+				setBody((Block) child);
+				return null;
+			}
+		}
+		if (property == NAME_PROPERTY) {
+			if (get) {
+				return getName();
+			} else {
+				setName((NamespaceName) child);
 				return null;
 			}
 		}

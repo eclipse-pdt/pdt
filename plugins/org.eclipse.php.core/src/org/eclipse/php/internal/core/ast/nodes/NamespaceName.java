@@ -1,0 +1,189 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.core.ast.nodes;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.ast.match.ASTMatcher;
+import org.eclipse.php.internal.core.ast.visitor.Visitor;
+
+/**
+ * Represents namespace name:
+ * <pre>e.g.<pre>MyNamespace;
+ *MyProject\Sub\Level;
+ */
+public class NamespaceName extends Expression {
+	
+	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<Identifier>(ELEMENTS_PROPERTY);
+	private boolean global;
+	
+	/**
+	 * The "namespace" structural property of this node type.
+	 */
+	public static final ChildListPropertyDescriptor ELEMENTS_PROPERTY = 
+		new ChildListPropertyDescriptor(NamespaceName.class, "segments", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor GLOBAL_PROPERTY = 
+		new SimplePropertyDescriptor(UseStatementPart.class, "global", Boolean.class, MANDATORY); //$NON-NLS-1$
+	
+	/**
+	 * A list of property descriptors (element type: 
+	 * {@link StructuralPropertyDescriptor}),
+	 * or null if uninitialized.
+	 */
+	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
+	static {
+		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
+		properyList.add(ELEMENTS_PROPERTY);
+		properyList.add(GLOBAL_PROPERTY);
+		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
+	}
+
+	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global) {
+		super(start, end, ast);
+
+		if (segments == null) {
+			throw new IllegalArgumentException();
+		}
+		for (Identifier name : segments) {
+			this.segments.add(name);
+		}
+		
+		this.global = global;
+	}
+	
+	public NamespaceName(int start, int end, AST ast, List segments, boolean global) {
+		super(start, end, ast);
+
+		if (segments == null) {
+			throw new IllegalArgumentException();
+		}
+		Iterator<Identifier> it = segments.iterator();
+		while (it.hasNext()) {
+			this.segments.add(it.next());
+		}
+		
+		this.global = global;
+	}
+
+	public void childrenAccept(Visitor visitor) {
+		for (ASTNode node : this.segments) {
+			node.accept(visitor);
+		}
+	}
+
+	public void traverseTopDown(Visitor visitor) {
+		accept(visitor);
+		for (ASTNode node : this.segments) {
+			node.traverseTopDown(visitor);
+		}
+	}
+
+	public void traverseBottomUp(Visitor visitor) {
+		for (ASTNode node : this.segments) {
+			node.traverseBottomUp(visitor);
+		}
+		accept(visitor);
+	}
+
+	public void toString(StringBuffer buffer, String tab) {
+		buffer.append(tab).append("<NamespaceName"); //$NON-NLS-1$
+		appendInterval(buffer);
+		buffer.append(" global='").append(global).append('\'');
+		buffer.append(">\n"); //$NON-NLS-1$
+		for (ASTNode node : this.segments) {
+			node.toString(buffer, TAB + tab);
+			buffer.append("\n"); //$NON-NLS-1$
+		}				
+		buffer.append(tab).append("</NamespaceName>"); //$NON-NLS-1$
+	}
+
+	public void accept0(Visitor visitor) {
+		final boolean visit = visitor.visit(this);
+		if (visit) {
+			childrenAccept(visitor);
+		}
+		visitor.endVisit(this);
+	}	
+	
+	public int getType() {
+		return ASTNode.NAMESPACE_NAME;
+	}
+	
+	/**
+	 * Returns whether this namespace name has global context (starts with '\')
+	 * @return
+	 */
+	public boolean isGlobal() {
+		return global;
+	}
+	
+	public void setGlobal(boolean global) {
+		this.global = global;
+	}
+
+	/**
+	 * Retrieves names parts of the namespace
+	 * @return segments. If names list is empty, that means that this namespace is global.
+	 */
+	public List<Identifier> segments() {
+		return this.segments;
+	}
+	
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	public boolean subtreeMatch(ASTMatcher matcher, Object other) {
+		// dispatch to correct overloaded match method
+		return matcher.match(this, other);
+	}
+
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	ASTNode clone0(AST target) {
+		final List segments = ASTNode.copySubtrees(target, segments());
+		boolean global = isGlobal();
+		final NamespaceName result = new NamespaceName(this.getStart(), this.getEnd(), target, segments, global);
+		return result;
+	}
+	
+	@Override
+	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
+		return PROPERTY_DESCRIPTORS;
+	}
+	
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+		if (property == GLOBAL_PROPERTY) {
+			if (get) {
+				return isGlobal();
+			} else {
+				setGlobal(value);
+				return false;
+			}
+		}
+		return super.internalGetSetBooleanProperty(property, get, value);
+	}
+
+	/* (omit javadoc for this method)
+	 * Method declared on ASTNode.
+	 */
+	final List internalGetChildListProperty(ChildListPropertyDescriptor property) {
+		if (property == ELEMENTS_PROPERTY) {
+			return segments();
+		}
+		// allow default implementation to flag the error
+		return super.internalGetChildListProperty(property);
+	}
+}

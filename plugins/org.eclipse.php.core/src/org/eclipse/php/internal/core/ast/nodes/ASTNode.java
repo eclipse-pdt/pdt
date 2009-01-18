@@ -96,7 +96,10 @@ public abstract class ASTNode implements Visitable {
 	public static final int PARENTHESIS_EXPRESSION = 62;
 	public static final int SINGLE_FIELD_DECLARATION = 63;
 	public static final int NAMESPACE = 64;
-
+	public static final int NAMESPACE_NAME = 65;
+	public static final int USE_STATEMENT_PART = 66;
+	public static final int USE_STATEMENT = 67;
+	
 	/** Internal convenience constant indicating that there is definite risk of cycles.
 	 */
 	static final boolean CYCLE_RISK = true;

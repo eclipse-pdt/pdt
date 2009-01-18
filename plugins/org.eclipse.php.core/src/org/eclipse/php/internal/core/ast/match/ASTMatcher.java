@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.match;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
 
@@ -856,12 +859,35 @@ public class ASTMatcher {
 		return (safeSubtreeMatch(node.getCondition(), o.getCondition()) && safeSubtreeMatch(node.getAction(), o.getAction()));
 	}
 	
-	public boolean match(Namespace node, Object other) {
-		if (!(other instanceof Namespace)) {
+	public boolean match(NamespaceDeclaration node, Object other) {
+		if (!(other instanceof NamespaceDeclaration)) {
 			return false;
 		}
-		Namespace o = (Namespace) other;
+		NamespaceDeclaration o = (NamespaceDeclaration) other;
+		return safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getBody(), o.getBody());
+	}
+	
+	public boolean match(NamespaceName node, Object other) {
+		if (!(other instanceof NamespaceName)) {
+			return false;
+		}
+		NamespaceName o = (NamespaceName) other;
+		return safeSubtreeListMatch(node.segments(), o.segments());
+	}
 
-		return safeSubtreeListMatch(node.names(), o.names()) && safeSubtreeMatch(node.getBody(), node.getBody());
+	public boolean match(UseStatementPart node, Object other) {
+		if (!(other instanceof UseStatementPart)) {
+			return false;
+		}
+		UseStatementPart o = (UseStatementPart) other;
+		return safeSubtreeMatch(node.getName(), o.getName()) && safeSubtreeMatch(node.getAlias(), o.getAlias());
+	}
+	
+	public boolean match(UseStatement node, Object other) {
+		if (!(other instanceof UseStatement)) {
+			return false;
+		}
+		UseStatement o = (UseStatement) other;
+		return safeSubtreeListMatch(node.parts(), o.parts());
 	}
 }

@@ -89,6 +89,7 @@ public abstract class PhpTokenNames {
 		token2Name.put(PhpParserConstants.T_DEFAULT, "default"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_BREAK, "break"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_CONTINUE, "continue"); //$NON-NLS-1$
+		token2Name.put(PhpParserConstants.T_GOTO, "goto"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_ECHO, "echo"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_PRINT, "print"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_CLASS, "class"); //$NON-NLS-1$
@@ -110,6 +111,7 @@ public abstract class PhpTokenNames {
 		token2Name.put(PhpParserConstants.T_INCLUDE_ONCE, "include_once"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_REQUIRE, "require"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_REQUIRE_ONCE, "require_once"); //$NON-NLS-1$
+		token2Name.put(PhpParserConstants.T_NAMESPACE, "namespace"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_USE, "use"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_GLOBAL, "global"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_ISSET, "isset"); //$NON-NLS-1$
@@ -122,6 +124,7 @@ public abstract class PhpTokenNames {
 		token2Name.put(PhpParserConstants.T_ENDDECLARE, "enddeclare"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_OBJECT_OPERATOR, "->"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_PAAMAYIM_NEKUDOTAYIM, "::"); //$NON-NLS-1$
+		token2Name.put(PhpParserConstants.T_NS_SEPARATOR, "\\"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_CURLY_CLOSE, "}"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_CURLY_OPEN, "{"); //$NON-NLS-1$
 		token2Name.put(PhpParserConstants.T_DOUBLE_ARROW, "=>"); //$NON-NLS-1$
