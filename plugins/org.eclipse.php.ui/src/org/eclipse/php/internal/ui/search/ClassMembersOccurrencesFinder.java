@@ -97,8 +97,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		} else if (parent.getType() == ASTNode.FUNCTION_DECLARATION) {
 			FunctionDeclaration fd = (FunctionDeclaration) parent;
 			return resolveDeclaringClassType(fd);
-		} else if (parent.getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
-			ClassConstantDeclaration ccd = (ClassConstantDeclaration) parent;
+		} else if (parent.getType() == ASTNode.CONSTANT_DECLARATION) {
+			ConstantDeclaration ccd = (ConstantDeclaration) parent;
 			return resolveDeclaringClassType(ccd);
 		}
 		if (typeBinding != null && typeBinding.isClass()) {
@@ -283,8 +283,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 						}
 					}
 				}
-			} else if (statement.getType() == ASTNode.CLASS_CONSTANT_DECLARATION) {
-				ClassConstantDeclaration classVariableDeclaration = (ClassConstantDeclaration) statement;
+			} else if (statement.getType() == ASTNode.CONSTANT_DECLARATION) {
+				ConstantDeclaration classVariableDeclaration = (ConstantDeclaration) statement;
 				List<Identifier> variableNames = classVariableDeclaration.names();
 				for (Identifier name : variableNames) {
 					if (classMemberName.equals(name.getName())) {
@@ -309,7 +309,7 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	protected int getOccurrenceType(ASTNode node) {
 		// Default return is F_READ_OCCURRENCE, although the implementation of the Scalar visit might also use F_WRITE_OCCURRENCE
-		if (node.getParent().getType() == ASTNode.CLASS_CONSTANT_DECLARATION || isInAssignment(node)) {
+		if (node.getParent().getType() == ASTNode.CONSTANT_DECLARATION || isInAssignment(node)) {
 			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 		}
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
