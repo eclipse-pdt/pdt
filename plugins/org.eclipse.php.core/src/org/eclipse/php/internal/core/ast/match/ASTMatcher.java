@@ -890,4 +890,20 @@ public class ASTMatcher {
 		UseStatement o = (UseStatement) other;
 		return safeSubtreeListMatch(node.parts(), o.parts());
 	}
+
+	public boolean match(GotoLabel node, Object other) {
+		if (!(other instanceof GotoLabel)) {
+			return false;
+		}
+		GotoLabel o = (GotoLabel) other;
+		return safeSubtreeMatch(node.getName(), o.getName());
+	}
+
+	public boolean match(GotoStatement node, Object other) {
+		if (!(other instanceof GotoStatement)) {
+			return false;
+		}
+		GotoStatement o = (GotoStatement) other;
+		return safeSubtreeMatch(node.getLabel(), o.getLabel());
+	}
 }

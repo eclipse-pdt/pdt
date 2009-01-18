@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.5 2009/01/18 14:14:43 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.6 2009/01/18 19:35:05 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -419,6 +419,18 @@ statement:statement
 {:
 	ConstantDeclaration namespaceConstantDeclaration = new ConstantDeclaration(listleft, endright, parser.ast, list);
 	RESULT = namespaceConstantDeclaration;
+:}
+
+| T_STRING:label T_NEKUDOTAIM:end
+{:
+	Identifier name = new Identifier(labelleft, labelright, parser.ast, label);
+	RESULT = new GotoLabel(labelleft, endright, parser.ast, name);
+:}
+
+| T_GOTO:start T_STRING:label T_SEMICOLON:end
+{:
+	Identifier name = new Identifier(labelleft, labelright, parser.ast, label);
+	RESULT = new GotoStatement(startleft, endright, parser.ast, name);
 :}
 
 ;
