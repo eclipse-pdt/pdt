@@ -597,6 +597,19 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(";\n "); //$NON-NLS-1$
 		return false;
 	}
+	
+	public boolean visit(GotoLabel gotoLabel) {
+		gotoLabel.getName().accept(this);
+		result.append(":\n "); //$NON-NLS-1$
+		return false;
+	}
+	
+	public boolean visit(GotoStatement gotoStatement) {
+		result.append("goto "); //$NON-NLS-1$
+		gotoStatement.getLabel().accept(this);
+		result.append(";\n "); //$NON-NLS-1$
+		return false;
+	}
 
 	public boolean visit(Identifier identifier) {
 		result.append(identifier.getName());
