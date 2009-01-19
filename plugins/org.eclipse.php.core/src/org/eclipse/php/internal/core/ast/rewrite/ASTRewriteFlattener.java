@@ -681,6 +681,44 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(")"); //$NON-NLS-1$
 		return false;
 	}
+	
+	public boolean visit(LambdaFunctionDeclaration functionDeclaration) {
+		if (functionDeclaration.isStatic()) {
+			result.append(" static");
+		}
+		result.append(" function ");
+		if (functionDeclaration.isReference()) {
+			result.append('&');
+		}
+		result.append('(');
+		List<FormalParameter> formalParametersList = functionDeclaration.formalParameters();
+		Iterator<FormalParameter> paramIt = formalParametersList.iterator();
+		while (paramIt.hasNext()) {
+			paramIt.next().accept(this);
+			if (paramIt.hasNext()) {
+				result.append(", ");
+			}
+		}
+		result.append(')');
+		
+		List<Expression> lexicalVariables = functionDeclaration.lexicalVariables();
+		if (lexicalVariables.size() > 0) {
+			result.append(" use (");
+			Iterator<Expression> it = lexicalVariables.iterator();
+			while (it.hasNext()) {
+				it.next().accept(this);
+				if (it.hasNext()) {
+					result.append(", "); //$NON-NLS-1$
+				}
+			}
+			result.append(')');
+		}
+		
+		if (functionDeclaration.getBody() != null) {
+			functionDeclaration.getBody().accept(this);
+		}
+		return false;
+	}
 
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		result.append(methodDeclaration.getModifierString());

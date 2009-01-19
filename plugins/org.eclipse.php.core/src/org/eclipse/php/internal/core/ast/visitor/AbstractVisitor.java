@@ -164,6 +164,14 @@ public abstract class AbstractVisitor implements Visitor {
 	public boolean visit(GlobalStatement globalStatement) {
 		return true;
 	}
+	
+	public boolean visit(GotoLabel gotoLabel) {
+		return true;
+	}
+	
+	public boolean visit(GotoStatement gotoStatement) {
+		return true;
+	}
 
 	public boolean visit(Identifier identifier) {
 		return true;
@@ -194,6 +202,10 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+		return true;
+	}
+	
+	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
 		return true;
 	}
 
@@ -402,6 +414,12 @@ public abstract class AbstractVisitor implements Visitor {
 	public void endVisit(GlobalStatement globalStatement) {
 	}
 
+	public void endVisit(GotoLabel gotoLabel) {
+	}
+
+	public void endVisit(GotoStatement gotoStatement) {
+	}
+
 	public void endVisit(Identifier identifier) {
 	}
 
@@ -424,6 +442,9 @@ public abstract class AbstractVisitor implements Visitor {
 	}
 
 	public void endVisit(InterfaceDeclaration interfaceDeclaration) {
+	}
+	
+	public void endVisit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
 	}
 
 	public void endVisit(ListVariable listVariable) {

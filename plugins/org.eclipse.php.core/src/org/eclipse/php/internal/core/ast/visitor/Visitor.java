@@ -172,6 +172,14 @@ public interface Visitor {
 
 	public void endVisit(GlobalStatement globalStatement);
 	
+	public boolean visit(GotoLabel gotoLabel);
+
+	public void endVisit(GotoLabel gotoLabel);
+	
+	public boolean visit(GotoStatement gotoStatement);
+
+	public void endVisit(GotoStatement gotoStatement);
+	
 	public boolean visit(Identifier identifier);
 	
 	public void endVisit(Identifier identifier);
@@ -204,9 +212,21 @@ public interface Visitor {
 
 	public void endVisit(InterfaceDeclaration interfaceDeclaration);
 	
+	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration);
+	
+	public void endVisit(LambdaFunctionDeclaration lambdaFunctionDeclaration);
+	
 	public boolean visit(ListVariable listVariable);
 	
 	public void endVisit(ListVariable listVariable);
+	
+	public boolean visit(NamespaceName namespaceName);
+
+	public void endVisit(NamespaceName namespaceName);
+	
+	public boolean visit(NamespaceDeclaration namespaceDeclaration);
+	
+	public void endVisit(NamespaceDeclaration namespaceDeclaration);
 
 	public boolean visit(MethodDeclaration methodDeclaration);
 
@@ -295,6 +315,14 @@ public interface Visitor {
 	public boolean visit(Variable variable);
 	
 	public void endVisit(Variable variable);
+	
+	public boolean visit(UseStatement useStatement);
+
+	public void endVisit(UseStatement useStatement);
+
+	public boolean visit(UseStatementPart useStatementPart);
+	
+	public void endVisit(UseStatementPart useStatementPart);
 
 	public boolean visit(WhileStatement whileStatement);
 	
