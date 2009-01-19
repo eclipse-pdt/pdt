@@ -267,7 +267,7 @@ public class ASTParser {
 	* @deprecated use Thread-Safe ASTParser methods
 	*/
 	public synchronized static Program parse(Reader reader, boolean aspTagsAsPhp, PHPVersion phpVersion) throws Exception {
-		AST ast = new AST(EMPTY_STRING_READER, PHPVersion.PHP5, false);
+		AST ast = new AST(EMPTY_STRING_READER, phpVersion, false);
 		final Scanner lexer = getLexer(ast, reader, phpVersion, aspTagsAsPhp);
 		final lr_parser phpParser = getParser(phpVersion, ast);
 		phpParser.setScanner(lexer);
