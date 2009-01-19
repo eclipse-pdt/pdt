@@ -906,4 +906,17 @@ public class ASTMatcher {
 		GotoStatement o = (GotoStatement) other;
 		return safeSubtreeMatch(node.getLabel(), o.getLabel());
 	}
+	
+	public boolean match(LambdaFunctionDeclaration node, Object other) {
+		if (!(other instanceof LambdaFunctionDeclaration)) {
+			return false;
+		}
+		LambdaFunctionDeclaration o = (LambdaFunctionDeclaration) other;
+		
+		return (safeEquals(node.isReference(), o.isReference())
+				&& safeEquals(node.isStatic(), o.isStatic())
+				&& safeSubtreeMatch(node.getBody(), o.getBody())
+				&& safeSubtreeListMatch(node.formalParameters(), o.formalParameters())
+				&& safeSubtreeListMatch(node.lexicalVariables(), o.lexicalVariables()));
+	}
 }

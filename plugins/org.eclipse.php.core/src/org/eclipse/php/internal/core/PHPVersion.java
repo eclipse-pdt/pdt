@@ -51,4 +51,8 @@ public enum PHPVersion {
 	public static PHPVersion byAlias(String alias) {
 		return Aliases.map.get(alias);
 	}
+	
+	public boolean isLessThan(PHPVersion phpVersion) {
+		return ordinal() < phpVersion.ordinal();
+	}
 }

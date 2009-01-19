@@ -22,8 +22,12 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * Represents conditional expression
  * Holds the condition, if true expression and if false expression
  * each on e can be any expression
- * <pre>e.g.<pre> (bool) $a ? 3 : 4
+ * <pre>e.g. (bool) $a ? 3 : 4
  * $a > 0 ? $a : -$a
+ * </pre>
+ * The node supports also the new notation introduced in PHP 5.3:
+ * <pre>
+ * $a ? : $b
  */
 public class ConditionalExpression extends Expression {
 
@@ -37,7 +41,7 @@ public class ConditionalExpression extends Expression {
 	public static final ChildPropertyDescriptor CONDITION_PROPERTY = 
 		new ChildPropertyDescriptor(ConditionalExpression.class, "condition", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor IF_TRUE_PROPERTY = 
-		new ChildPropertyDescriptor(ConditionalExpression.class, "ifTrue", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(ConditionalExpression.class, "ifTrue", Expression.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor IF_FALSE_PROPERTY = 
 		new ChildPropertyDescriptor(ConditionalExpression.class, "ifFalse", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	
@@ -62,7 +66,7 @@ public class ConditionalExpression extends Expression {
 	public ConditionalExpression(int start, int end, AST ast, Expression condition, Expression ifTrue, Expression ifFalse) {
 		super(start, end, ast);
 
-		if (condition == null || ifTrue == null || ifFalse == null) {
+		if (condition == null || (ast.apiLevel().isLessThan(PHPVersion.PHP5_3) && ifTrue == null) || ifFalse == null) {
 			throw new IllegalArgumentException();
 		}
 		setCondition(condition);
@@ -80,14 +84,18 @@ public class ConditionalExpression extends Expression {
 
 	public void childrenAccept(Visitor visitor) {
 		condition.accept(visitor);
-		ifTrue.accept(visitor);
+		if (ifTrue != null) {
+			ifTrue.accept(visitor);
+		}
 		ifFalse.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
 		condition.traverseTopDown(visitor);
-		ifTrue.traverseTopDown(visitor);
+		if (ifTrue != null) {
+			ifTrue.traverseTopDown(visitor);
+		}
 		ifFalse.traverseTopDown(visitor);
 	}
 
@@ -105,9 +113,12 @@ public class ConditionalExpression extends Expression {
 		buffer.append(TAB).append(tab).append("<Condition>\n"); //$NON-NLS-1$
 		condition.toString(buffer, TAB + TAB + tab);
 		buffer.append("\n").append(TAB).append(tab).append("</Condition>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-		buffer.append(TAB).append(tab).append("<IfTrue>\n"); //$NON-NLS-1$
-		ifTrue.toString(buffer, TAB + TAB + tab);
-		buffer.append("\n").append(TAB).append(tab).append("</IfTrue>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		if (ifTrue != null) {
+			buffer.append(TAB).append(tab).append("<IfTrue>\n"); //$NON-NLS-1$
+			ifTrue.toString(buffer, TAB + TAB + tab);
+			buffer.append("\n").append(TAB).append(tab).append("</IfTrue>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 		buffer.append(TAB).append(tab).append("<IfFalse>\n"); //$NON-NLS-1$
 		ifFalse.toString(buffer, TAB + TAB + tab);
 		buffer.append("\n").append(TAB).append(tab).append("</IfFalse>\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -151,7 +162,7 @@ public class ConditionalExpression extends Expression {
 	/**
 	 * Returns the "then" part of this conditional expression.
 	 * 
-	 * @return the "then" expression node
+	 * @return the "then" expression node. This method may return <code>null</code> for PHP 5.3 and greater.
 	 */ 
 	public Expression getIfTrue() {
 		return ifTrue;
@@ -169,7 +180,7 @@ public class ConditionalExpression extends Expression {
 	 * </ul>
 	 */ 
 	public void setIfTrue(Expression expression) {
-		if (expression == null) {
+		if (ast.apiLevel().isLessThan(PHPVersion.PHP5_3) && expression == null) {
 			throw new IllegalArgumentException();
 		}
 		ASTNode oldChild = this.ifTrue;

@@ -101,6 +101,7 @@ public abstract class ASTNode implements Visitable {
 	public static final int USE_STATEMENT = 67;
 	public static final int GOTO_LABEL = 68;
 	public static final int GOTO_STATEMENT = 69;
+	public static final int LAMBDA_FUNCTION_DECLARATION = 70;
 	
 	/** Internal convenience constant indicating that there is definite risk of cycles.
 	 */

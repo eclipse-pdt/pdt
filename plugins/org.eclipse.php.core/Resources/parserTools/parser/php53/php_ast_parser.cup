@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.6 2009/01/18 19:35:05 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.7 2009/01/19 17:24:24 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -210,6 +210,8 @@ non terminal List[] new_elseif_list;
 non terminal Statement else_single;
 non terminal Statement new_else_single;
 non terminal List parameter_list;
+non terminal List lexical_vars;
+non terminal List lexical_var_list;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal List function_call_parameter_list;
@@ -246,6 +248,7 @@ non terminal VariableBase assignment_list_element;
 non terminal List array_pair_list;
 non terminal List non_empty_array_pair_list;
 non terminal List encaps_list;
+non terminal List backticks_expr;
 non terminal VariableBase encaps_var;
 non terminal Expression encaps_var_offset;
 non terminal Expression internal_functions_in_yacc;
@@ -1253,10 +1256,9 @@ optional_class_type ::=
 	RESULT = null;
 :}
 
-| T_STRING:className
+| fully_qualified_class_name:className
 {:
-	Identifier classId = new Identifier(classNameleft, classNameright, parser.ast, className);
-	RESULT = classId;
+	RESULT = className;
 :}
 
 | T_ARRAY:array
@@ -1888,6 +1890,11 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	RESULT = new ConditionalExpression(conditionleft, ifFalseright, parser.ast, condition , ifTrue, ifFalse); 
 :}
 
+| expr:condition T_QUESTION_MARK T_NEKUDOTAIM expr:ifFalse
+{: 
+	RESULT = new ConditionalExpression(conditionleft, ifFalseright, parser.ast, condition , null, ifFalse); 
+:}
+
 | internal_functions_in_yacc:expr
 {:
 	RESULT = expr;
@@ -1957,7 +1964,7 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	RESULT = expr;
 :}
 
-| T_BACKQUATE:start encaps_list:list T_BACKQUATE:end
+| T_BACKQUATE:start backticks_expr:list T_BACKQUATE:end
 {:
 	BackTickExpression backTickExpression = new BackTickExpression(startleft, endright, parser.ast, list);
 	RESULT = backTickExpression;
@@ -1973,6 +1980,70 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	FunctionName name = new FunctionName(startleft, startright, parser.ast, id);
 	FunctionInvocation result = new FunctionInvocation(startleft, exprright, parser.ast, name, expList);
 	RESULT = result;
+:}
+
+| T_FUNCTION:start is_reference:isReference
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+	Block block = new Block(blockStartleft, blockEndright, parser.ast, statementList);
+	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(startleft, blockEndright, parser.ast, paramList, varsList, block, isReference.booleanValue(), false);
+	RESULT = functionDeclaration;
+:}
+
+| T_STATIC:start T_FUNCTION is_reference:isReference
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_CURLY_OPEN:blockStart inner_statement_list:statementList T_CURLY_CLOSE:blockEnd
+{:
+	Block block = new Block(blockStartleft, blockEndright, parser.ast, statementList);
+	LambdaFunctionDeclaration functionDeclaration = new LambdaFunctionDeclaration(startleft, blockEndright, parser.ast, paramList, varsList, block, isReference.booleanValue(), true);
+	RESULT = functionDeclaration;
+:}
+;
+
+lexical_vars ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+
+| T_USE:start T_OPEN_PARENTHESE lexical_var_list:list T_CLOSE_PARENTHESE:end
+{:
+	RESULT = list;
+:}
+;
+
+lexical_var_list ::=
+lexical_var_list:list T_COMMA T_VARIABLE:var
+{:
+	Variable v = new Variable(varleft, varright, parser.ast, var);
+	list.add(v);
+	RESULT = list;
+:}
+
+| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
+{:
+	Variable v = new Variable(varleft, varright, parser.ast, var);
+	Reference ref_var = new Reference (refleft, varright, parser.ast, v);
+	list.add(ref_var);
+	RESULT = list;
+:}
+
+| T_VARIABLE:var
+{:
+	List list = new LinkedList();
+	Variable v = new Variable(varleft, varright, parser.ast, var);
+	list.add(v);
+	RESULT = list;
+:}
+
+| T_REFERENCE:ref T_VARIABLE:var
+{:
+	List list = new LinkedList();
+	Variable v = new Variable(varleft, varright, parser.ast, var);
+	Reference ref_var = new Reference (refleft, varright, parser.ast, v);
+	list.add(ref_var);
+	RESULT = list;
 :}
 ;
 
@@ -2093,6 +2164,27 @@ exit_expr ::=
 {:
 	RESULT = expr;	
 :}
+;
+
+backticks_expr ::=
+/* empty */
+{:
+	RESULT = new LinkedList();
+:}
+
+| T_ENCAPSED_AND_WHITESPACE:string
+{:
+	List list = new LinkedList();
+	Scalar scalar = new Scalar(stringleft, stringright, parser.ast, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	list.add(scalar);
+	RESULT = list;
+:}
+
+| encaps_list:list
+{:
+	RESULT = list;
+:}
+
 ;
 
 ctor_arguments ::=
@@ -2672,9 +2764,20 @@ encaps_list:list encaps_var:var
 	RESULT = list;
 :}
 
-| /* empty */
+| encaps_var:var
 {:
-	RESULT = new LinkedList();
+	List list = new LinkedList();
+	list.add(var);
+	RESULT = list;
+:}
+
+| T_ENCAPSED_AND_WHITESPACE:string encaps_var:var
+{:
+	List list = new LinkedList();
+	Scalar scalar = new Scalar(stringleft, stringright, parser.ast, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING);
+	list.add(scalar);
+	list.add(var);
+	RESULT = list;
 :}
 ;
 
