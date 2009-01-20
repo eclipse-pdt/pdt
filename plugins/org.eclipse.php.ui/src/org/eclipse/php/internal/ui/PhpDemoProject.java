@@ -26,7 +26,7 @@ import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * This is a factory project class for the PHP Demo 
- * use -phpdemo for gettingthis  
+ * use -pd for gettingthis  
  */
 public class PhpDemoProject {
 
