@@ -49,17 +49,26 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(StaticConstantAccess staticDispatch) {
-		checkIdentifier(staticDispatch.getClassName());
+		Expression className = staticDispatch.getClassName();
+		if (className instanceof Identifier) {
+			checkIdentifier((Identifier) className);
+		}
 		return false;
 	}
 
 	public boolean visit(StaticFieldAccess staticDispatch) {
-		checkIdentifier(staticDispatch.getClassName());
+		Expression className = staticDispatch.getClassName();
+		if (className instanceof Identifier) {
+			checkIdentifier((Identifier) className);
+		}
 		return false;
 	}
 
 	public boolean visit(StaticMethodInvocation staticDispatch) {
-		checkIdentifier(staticDispatch.getClassName());
+		Expression className = staticDispatch.getClassName();
+		if (className instanceof Identifier) {
+			checkIdentifier((Identifier) className);
+		}
 		return false;
 	}
 
