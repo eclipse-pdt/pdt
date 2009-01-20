@@ -23,11 +23,17 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  * Represents namespace name:
  * <pre>e.g.<pre>MyNamespace;
  *MyProject\Sub\Level;
+ *namespace\MyProject\Sub\Level;
  */
 public class NamespaceName extends Expression {
 	
 	protected ASTNode.NodeList<Identifier> segments = new ASTNode.NodeList<Identifier>(ELEMENTS_PROPERTY);
+	
+	/** Whether the namespace name has '\' prefix, which means it relates to the global scope */
 	private boolean global;
+	
+	/** Whether the namespace name has 'namespace' prefix, which means it relates to the current namespace scope */
+	private boolean current;
 	
 	/**
 	 * The "namespace" structural property of this node type.
@@ -36,6 +42,8 @@ public class NamespaceName extends Expression {
 		new ChildListPropertyDescriptor(NamespaceName.class, "segments", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor GLOBAL_PROPERTY = 
 		new SimplePropertyDescriptor(UseStatementPart.class, "global", Boolean.class, MANDATORY); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor CURRENT_PROPERTY = 
+		new SimplePropertyDescriptor(UseStatementPart.class, "current", Boolean.class, MANDATORY); //$NON-NLS-1$
 	
 	/**
 	 * A list of property descriptors (element type: 
@@ -47,10 +55,11 @@ public class NamespaceName extends Expression {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		properyList.add(ELEMENTS_PROPERTY);
 		properyList.add(GLOBAL_PROPERTY);
+		properyList.add(CURRENT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global) {
+	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global, boolean current) {
 		super(start, end, ast);
 
 		if (segments == null) {
@@ -61,9 +70,10 @@ public class NamespaceName extends Expression {
 		}
 		
 		this.global = global;
+		this.current = current;
 	}
 	
-	public NamespaceName(int start, int end, AST ast, List segments, boolean global) {
+	public NamespaceName(int start, int end, AST ast, List segments, boolean global, boolean current) {
 		super(start, end, ast);
 
 		if (segments == null) {
@@ -75,6 +85,7 @@ public class NamespaceName extends Expression {
 		}
 		
 		this.global = global;
+		this.current = current;
 	}
 
 	public void childrenAccept(Visitor visitor) {
@@ -101,6 +112,7 @@ public class NamespaceName extends Expression {
 		buffer.append(tab).append("<NamespaceName"); //$NON-NLS-1$
 		appendInterval(buffer);
 		buffer.append(" global='").append(global).append('\'');
+		buffer.append(" current='").append(current).append('\'');
 		buffer.append(">\n"); //$NON-NLS-1$
 		for (ASTNode node : this.segments) {
 			node.toString(buffer, TAB + tab);
@@ -130,7 +142,23 @@ public class NamespaceName extends Expression {
 	}
 	
 	public void setGlobal(boolean global) {
+		preValueChange(GLOBAL_PROPERTY);
 		this.global = global;
+		postValueChange(GLOBAL_PROPERTY);
+	}
+	
+	/**
+	 * Returns whether this namespace name has current namespace context (starts with 'namespace')
+	 * @return
+	 */
+	public boolean isCurrent() {
+		return current;
+	}
+	
+	public void setCurrent(boolean current) {
+		preValueChange(CURRENT_PROPERTY);
+		this.current = current;
+		postValueChange(CURRENT_PROPERTY);
 	}
 
 	/**
@@ -154,8 +182,9 @@ public class NamespaceName extends Expression {
 	 */
 	ASTNode clone0(AST target) {
 		final List segments = ASTNode.copySubtrees(target, segments());
-		boolean global = isGlobal();
-		final NamespaceName result = new NamespaceName(this.getStart(), this.getEnd(), target, segments, global);
+		final boolean global = isGlobal();
+		final boolean current = isCurrent();
+		final NamespaceName result = new NamespaceName(this.getStart(), this.getEnd(), target, segments, global, current);
 		return result;
 	}
 	
@@ -170,6 +199,14 @@ public class NamespaceName extends Expression {
 				return isGlobal();
 			} else {
 				setGlobal(value);
+				return false;
+			}
+		}
+		if (property == CURRENT_PROPERTY) {
+			if (get) {
+				return isCurrent();
+			} else {
+				setCurrent(value);
 				return false;
 			}
 		}

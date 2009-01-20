@@ -872,7 +872,9 @@ public class ASTMatcher {
 			return false;
 		}
 		NamespaceName o = (NamespaceName) other;
-		return safeSubtreeListMatch(node.segments(), o.segments());
+		return safeEquals(node.isGlobal(), o.isGlobal())
+			&& safeEquals(node.isCurrent(), o.isCurrent())
+			&& safeSubtreeListMatch(node.segments(), o.segments());
 	}
 
 	public boolean match(UseStatementPart node, Object other) {

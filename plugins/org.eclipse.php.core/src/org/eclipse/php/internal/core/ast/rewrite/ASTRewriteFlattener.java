@@ -450,6 +450,9 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		if (namespaceName.isGlobal()) {
 			result.append("\\");
 		}
+		if (namespaceName.isCurrent()) {
+			result.append("namespace\\");
+		}
 		List<Identifier> segments = namespaceName.segments();
 		Iterator<Identifier> it = segments.iterator();
 		while (it.hasNext()) {

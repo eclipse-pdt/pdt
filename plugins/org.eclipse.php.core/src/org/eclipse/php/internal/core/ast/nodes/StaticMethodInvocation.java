@@ -32,7 +32,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(StaticMethodInvocation.class, "className", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(StaticMethodInvocation.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor METHOD_PROPERTY = 
 		new ChildPropertyDescriptor(StaticMethodInvocation.class, "method", FunctionInvocation.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
@@ -55,7 +55,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 	}
 	
 
-	public StaticMethodInvocation(int start, int end, AST ast, Identifier className, FunctionInvocation method) {
+	public StaticMethodInvocation(int start, int end, AST ast, Expression className, FunctionInvocation method) {
 		super(start, end, ast, className);
 
 		if (method == null) {
@@ -170,7 +170,7 @@ public class StaticMethodInvocation extends StaticDispatch {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Identifier className = ASTNode.copySubtree(target, getClassName());
+		final Expression className = ASTNode.copySubtree(target, getClassName());
 		final FunctionInvocation method = ASTNode.copySubtree(target, getMethod());
 		final StaticMethodInvocation result = new StaticMethodInvocation(getStart(), getEnd(), target, className, method);
 		return result;

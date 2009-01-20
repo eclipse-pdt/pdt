@@ -16,14 +16,14 @@ package org.eclipse.php.internal.core.ast.nodes;
  */
 public abstract class StaticDispatch extends VariableBase {
 
-	private Identifier className;
+	private Expression className;
 
 	/**
 	 * The structural property of this node type.
 	 */
 	abstract ChildPropertyDescriptor getClassNameProperty();
 	
-	public StaticDispatch(int start, int end, AST ast, Identifier className) {
+	public StaticDispatch(int start, int end, AST ast, Expression className) {
 		super(start, end, ast);
 
 		if (className == null) {
@@ -36,12 +36,12 @@ public abstract class StaticDispatch extends VariableBase {
 		super(ast);
 	}
 
-	public Identifier getClassName() {
+	public Expression getClassName() {
 		return className;
 	}
 
 	/**
-	 * Sets the class name identifier
+	 * Sets the class name expression
 	 * 
 	 * @param name the class name of this dispatch
 	 * @exception IllegalArgumentException if:
@@ -51,7 +51,7 @@ public abstract class StaticDispatch extends VariableBase {
 	 * <li>a cycle in would be created</li>
 	 * </ul>
 	 */ 
-	public void setClassName(Identifier name) {
+	public void setClassName(Expression name) {
 		if (name == null) {
 			throw new IllegalArgumentException();
 		}
@@ -67,7 +67,7 @@ public abstract class StaticDispatch extends VariableBase {
 			if (get) {
 				return getClassName();
 			} else {
-				setClassName((Identifier) child);
+				setClassName((Expression) child);
 				return null;
 			}
 		}

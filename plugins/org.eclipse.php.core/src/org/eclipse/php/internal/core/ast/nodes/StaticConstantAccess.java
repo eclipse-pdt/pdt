@@ -30,7 +30,7 @@ public class StaticConstantAccess extends StaticDispatch {
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(StaticConstantAccess.class, "className", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(StaticConstantAccess.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor CONSTANT_PROPERTY = 
 		new ChildPropertyDescriptor(StaticConstantAccess.class, "parameterType", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 
@@ -52,7 +52,7 @@ public class StaticConstantAccess extends StaticDispatch {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}	
 	
-	public StaticConstantAccess(int start, int end, AST ast, Identifier className, Identifier constant) {
+	public StaticConstantAccess(int start, int end, AST ast, Expression className, Identifier constant) {
 		super(start, end, ast, className);
 
 		if (constant == null) {
@@ -121,7 +121,7 @@ public class StaticConstantAccess extends StaticDispatch {
 	}
 	
 	/**
-	 * Sets the class name identifier
+	 * Sets the constant name identifier
 	 * 
 	 * @param name the class name of this dispatch
 	 * @exception IllegalArgumentException if:
@@ -170,7 +170,7 @@ public class StaticConstantAccess extends StaticDispatch {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Identifier className = ASTNode.copySubtree(target, getClassName());
+		final Expression className = ASTNode.copySubtree(target, getClassName());
 		final Identifier constant = ASTNode.copySubtree(target, getConstant());
 		final StaticConstantAccess result = new StaticConstantAccess(getStart(),getEnd(), target, className, constant);
 		return result;

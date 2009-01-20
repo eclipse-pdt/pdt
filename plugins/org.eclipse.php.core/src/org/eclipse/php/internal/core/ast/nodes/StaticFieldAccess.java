@@ -31,7 +31,7 @@ public class StaticFieldAccess extends StaticDispatch {
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(StaticFieldAccess.class, "className", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(StaticFieldAccess.class, "className", Expression.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor FIELD_PROPERTY = 
 		new ChildPropertyDescriptor(StaticFieldAccess.class, "field", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 
@@ -55,7 +55,7 @@ public class StaticFieldAccess extends StaticDispatch {
 	}
 	
 	
-	public StaticFieldAccess(int start, int end, AST ast, Identifier className, Variable field) {
+	public StaticFieldAccess(int start, int end, AST ast, Expression className, Variable field) {
 		super(start, end, ast, className);
 
 		if (field == null) {
@@ -165,7 +165,7 @@ public class StaticFieldAccess extends StaticDispatch {
 
 	@Override
 	ASTNode clone0(AST target) {
-		final Identifier name = ASTNode.copySubtree(target, getClassName());
+		final Expression name = ASTNode.copySubtree(target, getClassName());
 		final Variable field = ASTNode.copySubtree(target, getField());
 		final StaticFieldAccess result = new StaticFieldAccess(getStart(), getEnd(), target, name, field);
 		return result;
