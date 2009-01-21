@@ -18,6 +18,8 @@ import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.format.FormatterUtils;
 import org.eclipse.php.internal.ui.Logger;
@@ -30,6 +32,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 
 /**
  * TODO : move this auto strategy to DLTK?
@@ -326,14 +331,49 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		if (c.offset < 2 || d.getLength() == 0) {
 			return;
 		}
+
+		// Check the case that '/' is printed inside of a comment block
 		try {
 			if ("* ".equals(d.get(c.offset - 2, 2))) { //$NON-NLS-1$
-				// modify document command
-				c.length++;
-				c.offset--;
+
+				int offset = c.offset;
+				IStructuredDocumentRegion sdRegion = ((IStructuredDocument) d).getRegionAtCharacterOffset(offset);
+				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
+				
+				if (tRegion instanceof ITextRegionContainer) {
+					tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(offset);
+				}
+				int regionStart = sdRegion.getStartOffset(tRegion);
+
+				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
+					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+					int regionOffset = offset - regionStart;
+
+					ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
+					int phpScriptEndOffset = scriptRegion.getLength();
+					boolean isSpaceDeletionNeeded = false;
+					do {
+						int currentRegionEndOffset = commentRegion.getEnd();
+						commentRegion = scriptRegion.getPhpToken(currentRegionEndOffset);
+						String tokenType = commentRegion.getType();
+						if (tokenType.equals(PHPRegionTypes.PHP_COMMENT_END) || PHPRegionTypes.PHPDOC_COMMENT_END.equals(tokenType) ) {
+							break;
+						} else if (currentRegionEndOffset >= phpScriptEndOffset) {
+							isSpaceDeletionNeeded = true;
+							break;
+						}
+					} while (true);
+
+					if (isSpaceDeletionNeeded) {
+						//perform the actual work
+						c.length++;
+						c.offset--;
+						return;
+					}
+				}
 			}
 		} catch (BadLocationException excp) {
-			// stop work
+			Logger.logException(excp);
 		}
 	}
 
