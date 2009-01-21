@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 		return null;
 	}
 	
-	public List<TypeReference> getInterfaceList() {
+	public Collection<TypeReference> getInterfaceList() {
 		return interfaceList;
 	}
 	

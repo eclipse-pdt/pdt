@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -32,18 +33,14 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 public class TryStatement extends Statement {
 
 	private final Block tryStatement;
-	private final CatchClause[] catchClauses;
+	private final List<CatchClause> catchClauses;
 
-	private TryStatement(int start, int end, Block tryStatement, CatchClause[] catchClauses) {
+	public TryStatement(int start, int end, Block tryStatement, List<CatchClause> catchClauses) {
 		super(start, end);
 
 		assert tryStatement != null && catchClauses != null;
 		this.tryStatement = tryStatement;
 		this.catchClauses = catchClauses;
-	}
-
-	public TryStatement(int start, int end, Block tryStatement, List<CatchClause> catchClauses) {
-		this(start, end, tryStatement, catchClauses == null ? null : (CatchClause[]) catchClauses.toArray(new CatchClause[catchClauses.size()]));
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -61,7 +58,7 @@ public class TryStatement extends Statement {
 		return ASTNodeKinds.TRY_STATEMENT;
 	}
 
-	public CatchClause[] getCatchClauses() {
+	public Collection<CatchClause> getCatchClauses() {
 		return catchClauses;
 	}
 

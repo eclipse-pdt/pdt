@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -31,27 +32,17 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class ForStatement extends Statement {
 
-	private final Expression[] initializations;
-	private final Expression[] conditions;
-	private final Expression[] increasements;
+	private final List<? extends Expression> initializations;
+	private final List<? extends Expression> conditions;
+	private final List<? extends Expression> increasements;
 	private final Statement action;
 
-	private ForStatement(int start, int end, Expression[] initializations, Expression[] conditions, Expression[] increasements, Statement action) {
-		super(start, end);
-
+	public ForStatement(int start, int end, List<? extends Expression> initializations, List<? extends Expression> conditions, List<? extends Expression> increasements, Statement action) {
 		assert initializations != null && conditions != null && increasements != null && action != null;
 		this.initializations = initializations;
 		this.conditions = conditions;
 		this.increasements = increasements;
 		this.action = action;
-	}
-
-	public ForStatement(int start, int end, List<? extends Expression> initializations, List<? extends Expression> conditions, List<? extends Expression> increasements, Statement action) {
-		this(start, end,
-			initializations == null ? null : (Expression[]) initializations.toArray(new Expression[initializations.size()]),
-			conditions == null ? null : (Expression[]) conditions.toArray(new Expression[conditions.size()]),
-			increasements == null ? null : (Expression[]) increasements.toArray(new Expression[increasements.size()]),
-		action);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception  {
@@ -79,15 +70,15 @@ public class ForStatement extends Statement {
 		return action;
 	}
 
-	public Expression[] getConditions() {
+	public Collection<? extends Expression> getConditions() {
 		return conditions;
 	}
 
-	public Expression[] getIncreasements() {
+	public Collection<? extends Expression> getIncreasements() {
 		return increasements;
 	}
 
-	public Expression[] getInitializations() {
+	public Collection<? extends Expression> getInitializations() {
 		return initializations;
 	}
 

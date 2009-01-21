@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -32,20 +33,16 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 public class SwitchCase extends Statement {
 
 	private final Expression value;
-	private final Statement[] actions;
+	private final List<? extends Expression> actions;
 	private final boolean isDefault;
 
-	public SwitchCase(int start, int end, Expression value, Statement[] actions, boolean isDefault) {
+	public SwitchCase(int start, int end, Expression value, List<? extends Expression> actions, boolean isDefault) {
 		super(start, end);
 
 		assert actions != null;
 		this.value = value;
 		this.actions = actions;
 		this.isDefault = isDefault;
-	}
-
-	public SwitchCase(int start, int end, Expression value, List<? extends Expression> actions, boolean isDefault) {
-		this(start, end, value, actions == null ? null : (Statement[]) actions.toArray(new Statement[actions.size()]), isDefault);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -65,7 +62,7 @@ public class SwitchCase extends Statement {
 		return ASTNodeKinds.SWITCH_CASE;
 	}
 
-	public Statement[] getActions() {
+	public Collection<? extends Expression> getActions() {
 		return actions;
 	}
 

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -24,17 +25,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class BackTickExpression extends Expression {
 
-	private final Expression[] expressions;
+	private final List<? extends Expression> expressions;
 
-	public BackTickExpression(int start, int end, Expression[] expressions) {
+	public BackTickExpression(int start, int end, List<? extends Expression> expressions) {
 		super(start, end);
 
 		assert expressions != null;
 		this.expressions = expressions;
-	}
-
-	public BackTickExpression(int start, int end, List<Expression> expressions) {
-		this(start, end, expressions == null ? null : expressions.toArray(new Expression[expressions.size()]));
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -51,7 +48,7 @@ public class BackTickExpression extends Expression {
 		return ASTNodeKinds.BACK_TICK_EXPRESSION;
 	}
 
-	public Expression[] getExpressions() {
+	public Collection<? extends Expression> getExpressions() {
 		return expressions;
 	}
 

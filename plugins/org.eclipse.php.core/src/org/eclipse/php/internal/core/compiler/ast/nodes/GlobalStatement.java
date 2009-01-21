@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -27,17 +28,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class GlobalStatement extends Statement {
 
-	private final Expression[] variables;
+	private final List<? extends Expression> variables;
 
-	private GlobalStatement(int start, int end, Expression[] variables) {
+	public GlobalStatement(int start, int end, List<? extends Expression> variables) {
 		super(start, end);
 
 		assert variables != null;
 		this.variables = variables;
-	}
-
-	public GlobalStatement(int start, int end, List<? extends Expression> variables) {
-		this(start, end, variables == null ? null : variables.toArray(new Expression[variables.size()]));
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -54,7 +51,7 @@ public class GlobalStatement extends Statement {
 		return ASTNodeKinds.GLOBAL_STATEMENT;
 	}
 
-	public Expression[] getVariables() {
+	public Collection<? extends Expression> getVariables() {
 		return variables;
 	}
 

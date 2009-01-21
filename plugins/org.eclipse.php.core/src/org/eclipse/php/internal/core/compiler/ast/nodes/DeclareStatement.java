@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -25,31 +26,24 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class DeclareStatement extends Statement {
 
-	private final String[] directiveNames;
-	private final Expression[] directiveValues;
+	private final List<String> directiveNames;
+	private final List<? extends Expression> directiveValues;
 	private final Statement action;
 
-	private DeclareStatement(int start, int end, String[] directiveNames, Expression[] directiveValues, Statement action) {
+	public DeclareStatement(int start, int end, List<String> directiveNames, List<? extends Expression> directiveValues, Statement action) {
 		super(start, end);
 
-		assert directiveNames != null && directiveValues != null && directiveNames.length == directiveValues.length;
+		assert directiveNames != null && directiveValues != null && directiveNames.size() == directiveValues.size();
 		this.directiveNames = directiveNames;
 		this.directiveValues = directiveValues;
 		this.action = action;
 	}
 
-	public DeclareStatement(int start, int end, List<String> directiveNames, List<? extends Expression> directiveValues, Statement action) {
-		this(start, end,
-			directiveNames == null ? null : (String[]) directiveNames.toArray(new String[directiveNames.size()]),
-			directiveValues == null ? null : (Expression[]) directiveValues.toArray(new Expression[directiveValues.size()]),
-		action);
-	}
-
 	public void traverse(ASTVisitor visitor) throws Exception {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
-			for (int i = 0; i < directiveNames.length; i++) {
-				directiveValues[i].traverse(visitor);
+			for (Expression directiveValue : directiveValues) {
+				directiveValue.traverse(visitor);
 			}
 			action.traverse(visitor);
 		}
@@ -64,11 +58,11 @@ public class DeclareStatement extends Statement {
 		return action;
 	}
 
-	public String[] getDirectiveNames() {
+	public Collection<String> getDirectiveNames() {
 		return directiveNames;
 	}
 
-	public Expression[] getDirectiveValues() {
+	public Collection<? extends Expression> getDirectiveValues() {
 		return directiveValues;
 	}
 

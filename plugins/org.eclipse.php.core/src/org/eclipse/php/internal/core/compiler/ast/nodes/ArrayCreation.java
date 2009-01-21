@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -25,17 +26,13 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class ArrayCreation extends Expression {
 
-	private final ArrayElement[] elements;
+	private final List<ArrayElement> elements;
 
-	private ArrayCreation(int start, int end, ArrayElement[] elements) {
+	public ArrayCreation(int start, int end, List<ArrayElement> elements) {
 		super(start, end);
 
 		assert elements != null;
 		this.elements = elements;
-	}
-
-	public ArrayCreation(int start, int end, List<ArrayElement> elements) {
-		this(start, end, elements == null ? null : elements.toArray(new ArrayElement[elements.size()]));
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -52,7 +49,7 @@ public class ArrayCreation extends Expression {
 		return ASTNodeKinds.ARRAY_CREATION;
 	}
 
-	public ArrayElement[] getElements() {
+	public Collection<ArrayElement> getElements() {
 		return elements;
 	}
 
