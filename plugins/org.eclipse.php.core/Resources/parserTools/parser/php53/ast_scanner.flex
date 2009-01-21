@@ -1023,8 +1023,12 @@ yybegin(ST_DOCBLOCK);
     }
  
  	int textLength = text.length();
-	int heredocLength = heredoc.length();
-	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
+ 	String tmpHeredoc = heredoc;
+	if (tmpHeredoc.charAt(0) == '\'') {
+		tmpHeredoc = tmpHeredoc.substring(1, tmpHeredoc.length()-1);
+	}
+	int heredocLength = tmpHeredoc.length();
+	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(tmpHeredoc)) {
 		yypushback(2);
        	yybegin(ST_END_HEREDOC);
        	// we need to remove the closing label from the symbol value.

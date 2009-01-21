@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.9 2009/01/21 09:44:26 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.10 2009/01/21 12:51:19 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -229,7 +229,7 @@ non terminal Expression expr_without_variable;
 non terminal VariableBase function_call;
 non terminal Expression exit_expr;
 non terminal List ctor_arguments;
-non terminal Scalar common_scalar;
+non terminal Expression common_scalar;
 non terminal Expression static_scalar;
 non terminal Expression scalar;
 non terminal List static_array_pair_list;
@@ -2197,6 +2197,11 @@ T_LNUMBER:scalar
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, "__FILE__", Scalar.TYPE_SYSTEM);
 :}
 
+| T_DIR:scalar
+{:
+	RESULT = new Scalar(scalarleft, scalarright, parser.ast, "__DIR__", Scalar.TYPE_SYSTEM);
+:}
+
 | T_CLASS_C:scalar
 {:
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, "__CLASS__", Scalar.TYPE_SYSTEM);
@@ -2211,6 +2216,24 @@ T_LNUMBER:scalar
 {:
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, "__FUNCTION__", Scalar.TYPE_SYSTEM);
 :}
+
+| T_NS_C:scalar
+{:
+	RESULT = new Scalar(scalarleft, scalarright, parser.ast, "__NAMESPACE__", Scalar.TYPE_SYSTEM);
+:}
+
+| T_START_HEREDOC:s T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
+{:
+	List list = new LinkedList();
+	list.add(new Scalar(stringleft, stringright, parser.ast, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING));
+	RESULT = new Quote(sleft, eright, parser.ast, list, Quote.QT_NOWDOC);
+:}
+
+| T_START_HEREDOC:s T_END_HEREDOC:e
+{:
+	RESULT = new Quote(sleft, eright, parser.ast, new LinkedList(), Quote.QT_NOWDOC);
+:}
+
 ;
 
 static_scalar ::=  /* compile-time evaluated scalars */
@@ -2219,9 +2242,23 @@ common_scalar:scalar
 	RESULT = scalar;
 :}
 
-| string_st:str
+| namespace_name:list
 {:
-	RESULT = new Scalar(strleft, strright, parser.ast, str, Scalar.TYPE_STRING);
+	if (list.size() == 1) {
+		RESULT = new Scalar(listleft, listright, parser.ast, ((Identifier)list.get(0)).getName(), Scalar.TYPE_STRING);
+	} else {
+		RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, false);
+	}
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, false, true);
+:}
+
+| T_NS_SEPARATOR:s namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, true, false);
 :}
 
 | T_PLUS:s static_scalar:expr
@@ -2253,21 +2290,35 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 :}
 ;
 
+	
 scalar ::=
-string_st:scalar
-{: 
-	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_STRING);
-:}
-
-| T_STRING_VARNAME:scalar
+T_STRING_VARNAME:scalar
 {:
-	// TODO: check if this is a scalar
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, scalar, Scalar.TYPE_STRING);
 :}
 
 | class_constant:classConstant
 {:
 	RESULT = classConstant;
+:}
+
+| namespace_name:list
+{:
+	if (list.size() == 1) {
+		RESULT = new Scalar(listleft, listright, parser.ast, ((Identifier)list.get(0)).getName(), Scalar.TYPE_STRING);
+	} else {
+		RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, false);
+	}
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, false, true);
+:}
+
+| T_NS_SEPARATOR:s namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, true, false);
 :}
 
 | common_scalar:scalar

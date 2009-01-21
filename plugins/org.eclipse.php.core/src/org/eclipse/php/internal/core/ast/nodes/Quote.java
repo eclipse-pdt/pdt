@@ -34,6 +34,7 @@ public class Quote extends Expression {
 	public static final int QT_QUOTE = 0;
 	public static final int QT_SINGLE = 1;
 	public static final int QT_HEREDOC = 2;
+	public static final int QT_NOWDOC = 3;
 
 	private final ASTNode.NodeList<Expression> expressions = new ASTNode.NodeList<Expression>(EXPRESSIONS_PROPERTY);
 	private int quoteType;
@@ -84,6 +85,8 @@ public class Quote extends Expression {
 				return "single"; //$NON-NLS-1$
 			case QT_HEREDOC:
 				return "heredoc"; //$NON-NLS-1$
+			case QT_NOWDOC:
+				return "nowdoc"; //$NON-NLS-1$
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -156,7 +159,7 @@ public class Quote extends Expression {
 	
 	/**
 	 * The quote type see {@link #QT_HEREDOC}, {@link #QT_QUOTE}, 
-	 * {@link #QT_SINGLE}
+	 * {@link #QT_SINGLE}, {@link #QT_NOWDOC}
 	 * @return quote type
 	 */
 	public int getQuoteType() {
@@ -175,7 +178,7 @@ public class Quote extends Expression {
 	 * </ul>
 	 */
 	public final void setQuoteType(int value) {
-		if (value != QT_HEREDOC && value != QT_QUOTE && value != QT_SINGLE) {
+		if (value != QT_HEREDOC && value != QT_QUOTE && value != QT_SINGLE && value != QT_NOWDOC) {
 			throw new IllegalArgumentException();
 		}
 		
