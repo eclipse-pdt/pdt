@@ -83,7 +83,6 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	public boolean visit(ClassDeclaration classDeclaration) {
 		checkIdentifier(classDeclaration.getName());
 		checkSuper(classDeclaration.getSuperClass(), classDeclaration.interfaces());
-
 		return true;
 	}
 
@@ -95,12 +94,18 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	public boolean visit(CatchClause catchStatement) {
-		checkIdentifier(catchStatement.getClassName());
+		Expression className = catchStatement.getClassName();
+		if (className instanceof Identifier) {
+			checkIdentifier((Identifier) className);
+		}
 		return true;
 	}
 
 	public boolean visit(FormalParameter formalParameter) {
-		checkIdentifier(formalParameter.getParameterType());
+		Expression className = formalParameter.getParameterType();
+		if (className instanceof Identifier) {
+			checkIdentifier((Identifier) className);
+		}
 		return true;
 	}
 
@@ -124,9 +129,9 @@ public class ClassNameOccurrencesFinder extends AbstractOccurrencesFinder {
 	 * @param superClass
 	 * @param interfaces
 	 */
-	private void checkSuper(Identifier superClass, List<Identifier> interfaces) {
-		if (superClass != null) {
-			checkIdentifier(superClass);
+	private void checkSuper(Expression superClass, List<Identifier> interfaces) {
+		if (superClass instanceof Identifier) {
+			checkIdentifier((Identifier) superClass);
 		}
 
 		if (interfaces != null) {
