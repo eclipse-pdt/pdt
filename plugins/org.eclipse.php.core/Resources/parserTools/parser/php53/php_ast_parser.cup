@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.8 2009/01/20 15:09:47 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.9 2009/01/21 09:44:26 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +22,7 @@ parser code {:
   
 	public final void setAST (AST ast) {
 		this.ast = ast;
-	}	
+	}
 
 	public Dispatch createDispatch(VariableBase dispatcher, VariableBase property) {
 		Dispatch dispatch = null;
@@ -51,9 +51,9 @@ parser code {:
 		//	else System.err.println("");
 	    // else 
 	   	//	System.err.println("");
-    }	
+    }
 	
-	
+
 	public void report_fatal_error(
     String   message, 
     Object   info)
@@ -258,7 +258,8 @@ non terminal Integer interface_entry;
 non terminal List interface_extends_list;
 
 non terminal VariableBase w_variable;
-non terminal Identifier fully_qualified_class_name;
+non terminal Expression class_name;
+non terminal NamespaceName fully_qualified_class_name;
 non terminal List class_variable_declaration;
 non terminal List constant_declaration;
 non terminal Integer method_modifiers;
@@ -276,10 +277,10 @@ non terminal CatchClause additional_catch;
 non terminal FunctionDeclaration unticked_function_declaration_statement;
 non terminal Statement unticked_class_declaration_statement;
 non terminal Integer class_entry_type;
-non terminal Identifier extends_from;
+non terminal Expression extends_from;
 non terminal List implements_list;
 non terminal List interface_list;
-non terminal Identifier optional_class_type;
+non terminal Expression optional_class_type;
 non terminal VariableBase r_variable;
 non terminal Integer variable_modifiers;
 non terminal VariableBase rw_variable;
@@ -1984,7 +1985,7 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 			new NamespaceName(sleft, listright, parser.ast, list, true, false)), parameters);
 :}
 
-| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:fn T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {: 
 	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className, 
 		new FunctionInvocation(fnleft, eright, parser.ast,
@@ -1992,7 +1993,7 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 				new Identifier(fnleft, fnright, parser.ast, fn)), parameters)); 
 :}
 
-| fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:reflectionName T_OPEN_PARENTHESE function_call_parameter_list:parameters T_CLOSE_PARENTHESE:e
 {: 
 	RESULT = new StaticMethodInvocation(classNameleft, eright, parser.ast, className, 
 		new FunctionInvocation(reflectionNameleft, eright, parser.ast, 
@@ -2021,10 +2022,42 @@ namespace_name:list T_OPEN_PARENTHESE function_call_parameter_list:parameters T_
 :}
 ;
 
-fully_qualified_class_name ::=
-T_STRING:className
+class_name ::=
+T_STATIC:s
 {:
-	RESULT = new Identifier(classNameleft, classNameright, parser.ast, className);
+	RESULT = new Identifier(sleft, sright, parser.ast, "static");
+:}
+
+| namespace_name:list
+{:
+	RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, false);
+:}
+
+| T_NAMESPACE T_NS_SEPARATOR namespace_name:list
+{:
+	RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, true);
+:}
+
+| T_NS_SEPARATOR namespace_name:list
+{:
+	RESULT = new NamespaceName(listleft, listright, parser.ast, list, true, false);
+:}
+;
+
+fully_qualified_class_name ::=
+namespace_name:list
+{:
+	RESULT = new NamespaceName(listleft, listright, parser.ast, list, false, false);
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, false, true);
+:}
+
+| T_NS_SEPARATOR:s namespace_name:list
+{:
+	RESULT = new NamespaceName(sleft, listright, parser.ast, list, true, false);
 :}
 ;
 
@@ -2213,10 +2246,9 @@ common_scalar:scalar
 ;
 
 static_class_constant ::=
-T_STRING:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
+class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
-	RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, 
-		new Identifier(classNameleft, classNameright, parser.ast, className), 
+	RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className, 
 		new Identifier(varNameleft, varNameright, parser.ast, varName)); 
 :}
 ;
@@ -2413,7 +2445,7 @@ reference_variable:var
 ;
 
 static_member ::=
-fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
+class_name:className T_PAAMAYIM_NEKUDOTAYIM variable_without_objects:var
 {:
 	RESULT = new StaticFieldAccess(classNameleft, varright, parser.ast, className, var);
 :}
@@ -2793,7 +2825,13 @@ variable:var
 ;
 
 class_constant ::=
-fully_qualified_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
+class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
+{:
+	RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className, 
+		new Identifier(varNameleft, varNameright, parser.ast, varName)); 
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
 	RESULT = new StaticConstantAccess(classNameleft, varNameright, parser.ast, className, 
 		new Identifier(varNameleft, varNameright, parser.ast, varName)); 

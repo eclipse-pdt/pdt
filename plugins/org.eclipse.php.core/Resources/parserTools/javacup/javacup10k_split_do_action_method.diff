@@ -1,0 +1,74 @@
+# This patch splits the main do_action() method in order to solve the JVM memory limitation problem
+# 
+--- java_cup_v10k.old/java_cup/emit.java	1999-07-24 15:51:33.000000000 +0300
++++ java_cup_v10k/java_cup/emit.java	2009-01-21 11:12:13.000000000 +0200
+@@ -340,7 +340,7 @@
+       out.println("    this.parser = parser;");
+       out.println("  }");
+ 
+-      /* action method head */
++      /* main action method head */
+       out.println();
+       out.println("  /** Method with the actual generated action code. */");
+       out.println("  public final java_cup.runtime.Symbol " + 
+@@ -352,6 +352,38 @@
+       out.println("    throws java.lang.Exception");
+       out.println("    {");
+ 
++      /* split action code into several methods because of the JVM limitation of method size to 64KB */
++      final int splitBase = 100;
++      for (int splitIdx = 0; splitIdx < production.number(); splitIdx += splitBase) {
++    	  if (splitIdx > 0) {
++    		  out.print("      else ");
++    	  }
++    	  if (splitIdx + splitBase < production.number()) {
++    		  out.println("      if (" + pre("act_num") + " < " + (splitIdx + splitBase) + ") {");
++    	  } else {
++    		  out.println(" {");
++    	  }
++    	  out.println("        return " + pre("do_action") + ((splitIdx + splitBase) / splitBase) + "(");
++    	  out.println("             " + pre("act_num, ") + pre("parser,") + pre("stack,") + pre("top") + ");");
++    	  out.println("      }");
++      }
++      out.println("    }");
++      out.println();
++      
++      for (int splitIdx = 0; splitIdx < production.number(); splitIdx += splitBase) {
++      
++    	  /* splitted action method head */
++	      out.println();
++	      out.println("  /** Method with the actual generated action code. */");
++	      out.println("  public final java_cup.runtime.Symbol " + 
++			     pre("do_action") + ((splitIdx + splitBase)/splitBase) + "(");
++	      out.println("    int                        " + pre("act_num,"));
++	      out.println("    java_cup.runtime.lr_parser " + pre("parser,"));
++	      out.println("    java.util.Stack            " + pre("stack,"));
++	      out.println("    int                        " + pre("top)"));
++	      out.println("    throws java.lang.Exception");
++	      out.println("    {");
++	
+       /* declaration of result symbol */
+       /* New declaration!! now return Symbol
+ 	 6/13/96 frankf */
+@@ -365,9 +397,9 @@
+       out.println("        {");
+ 
+       /* emit action code for each production as a separate case */
+-      for (Enumeration p = production.all(); p.hasMoreElements(); )
+-	{
+-	  prod = (production)p.nextElement();
++	      
++	      for (int prodIdx = splitIdx; prodIdx < production.number() && prodIdx < splitIdx + splitBase; ++prodIdx) {
++	    	  prod = (production)production.find(prodIdx);
+ 
+ 	  /* case label */
+           out.println("          /*. . . . . . . . . . . . . . . . . . . .*/");
+@@ -471,6 +503,8 @@
+       /* end of method */
+       out.println("    }");
+ 
++      }
++
+       /* end of class */
+       out.println("}");
+       out.println();

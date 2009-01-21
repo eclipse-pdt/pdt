@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
  */
 public class CatchClause extends Statement {
 
-	private Identifier className;
+	private Expression className;
 	private Variable variable;
 	private Block body;
 
@@ -33,7 +33,7 @@ public class CatchClause extends Statement {
 	 * The structural property of this node type.
 	 */
 	public static final ChildPropertyDescriptor CLASS_NAME_PROPERTY = 
-		new ChildPropertyDescriptor(CatchClause.class, "className", Identifier.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+		new ChildPropertyDescriptor(CatchClause.class, "className", Expression.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor VARIABLE_PROPERTY = 
 		new ChildPropertyDescriptor(CatchClause.class, "variable", Variable.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildPropertyDescriptor BODY_PROPERTY = 
@@ -54,10 +54,16 @@ public class CatchClause extends Statement {
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 
-	public CatchClause(int start, int end, AST ast, Identifier className, Variable variable, Block statement) {
+	public CatchClause(int start, int end, AST ast, Expression className, Variable variable, Block statement) {
 		super(start, end, ast);
 
-		assert className != null && variable != null && statement != null;
+		if (variable == null || statement == null) {
+			throw new IllegalArgumentException();
+		}
+		if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
+			throw new IllegalArgumentException();
+		}
+		
 		this.className = className;
 		this.variable = variable;
 		this.body = statement;
@@ -130,7 +136,7 @@ public class CatchClause extends Statement {
 	 * 
 	 * @return the exception variable declaration node
 	 */ 
-	public Identifier getClassName() {
+	public Expression getClassName() {
 		return this.className;
 	}
 		
@@ -145,8 +151,8 @@ public class CatchClause extends Statement {
 	 * <li>a cycle in would be created</li>
 	 * </ul>
 	 */ 
-	public void setClassName(Identifier className) {
-		if (className == null) {
+	public void setClassName(Expression className) {
+		if (!(className instanceof Identifier) && !(className instanceof NamespaceName)) {
 			throw new IllegalArgumentException();
 		}
 		ASTNode oldChild = this.className;
@@ -228,10 +234,10 @@ public class CatchClause extends Statement {
 	@Override
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final Identifier identifier = ASTNode.copySubtree(target, getClassName());
+		final Expression className = ASTNode.copySubtree(target, getClassName());
 		final Variable variable = ASTNode.copySubtree(target, getVariable());
 		
-		CatchClause result = new CatchClause(this.getStart(), this.getEnd(), target, identifier, variable, body);
+		CatchClause result = new CatchClause(this.getStart(), this.getEnd(), target, className, variable, body);
 		return result;
 	}
 
@@ -249,7 +255,7 @@ public class CatchClause extends Statement {
 			if (get) {
 				return getClassName();
 			} else {
-				setClassName((Identifier) child);
+				setClassName((Expression) child);
 				return null;
 			}
 		}

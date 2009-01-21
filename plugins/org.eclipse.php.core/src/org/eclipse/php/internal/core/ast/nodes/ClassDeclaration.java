@@ -37,21 +37,16 @@ public class ClassDeclaration extends TypeDeclaration {
 	public static final int MODIFIER_FINAL = 2;
 
 	private int modifier;
-	private Identifier superClass;
-	
+	private Expression superClass;
+
 	/**
 	 * The structural property of this node type.
 	 */
-	public static final ChildPropertyDescriptor NAME_PROPERTY = 
-		new ChildPropertyDescriptor(ClassDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = 
-		new ChildListPropertyDescriptor(ClassDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor BODY_PROPERTY = 
-		new ChildPropertyDescriptor(ClassDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
-	public static final ChildPropertyDescriptor SUPER_CLASS_PROPERTY = 
-		new ChildPropertyDescriptor(ClassDeclaration.class, "superClass", Identifier.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
-		new SimplePropertyDescriptor(ClassDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor NAME_PROPERTY = new ChildPropertyDescriptor(ClassDeclaration.class, "name", Identifier.class, MANDATORY, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildListPropertyDescriptor INTERFACES_PROPERTY = new ChildListPropertyDescriptor(ClassDeclaration.class, "interfaces", Identifier.class, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor BODY_PROPERTY = new ChildPropertyDescriptor(ClassDeclaration.class, "body", Block.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
+	public static final ChildPropertyDescriptor SUPER_CLASS_PROPERTY = new ChildPropertyDescriptor(ClassDeclaration.class, "superClass", Expression.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = new SimplePropertyDescriptor(ClassDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 
 	@Override
 	protected ChildPropertyDescriptor getBodyProperty() {
@@ -66,15 +61,15 @@ public class ClassDeclaration extends TypeDeclaration {
 	@Override
 	protected ChildPropertyDescriptor getNameProperty() {
 		return NAME_PROPERTY;
-	}	
-	
+	}
+
 	/**
 	 * A list of property descriptors (element type: 
 	 * {@link StructuralPropertyDescriptor}),
 	 * or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(5);
 		propertyList.add(NAME_PROPERTY);
@@ -83,9 +78,9 @@ public class ClassDeclaration extends TypeDeclaration {
 		propertyList.add(SUPER_CLASS_PROPERTY);
 		propertyList.add(MODIFIER_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
-	private ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Identifier superClass, Identifier[] interfaces, Block body) {
+	}
+
+	private ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass, Identifier[] interfaces, Block body) {
 		super(start, end, ast, className, interfaces, body);
 
 		setModifier(modifier);
@@ -97,18 +92,18 @@ public class ClassDeclaration extends TypeDeclaration {
 	public ClassDeclaration(AST ast) {
 		super(ast);
 	}
-	
-	public ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Identifier superClass, List interfaces, Block body) {
+
+	public ClassDeclaration(int start, int end, AST ast, int modifier, Identifier className, Expression superClass, List interfaces, Block body) {
 		this(start, end, ast, modifier, className, superClass, interfaces == null ? null : (Identifier[]) interfaces.toArray(new Identifier[interfaces.size()]), body);
 	}
-	
+
 	public void accept0(Visitor visitor) {
 		final boolean visit = visitor.visit(this);
 		if (visit) {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
 		getName().accept(visitor);
@@ -198,7 +193,7 @@ public class ClassDeclaration extends TypeDeclaration {
 	public int getModifier() {
 		return modifier;
 	}
-	
+
 	/**
 	 * Sets the modifier of this class declaration
 	 * 
@@ -214,9 +209,9 @@ public class ClassDeclaration extends TypeDeclaration {
 		preValueChange(MODIFIER_PROPERTY);
 		this.modifier = value;
 		postValueChange(MODIFIER_PROPERTY);
-	}	
+	}
 
-	public Identifier getSuperClass() {
+	public Expression getSuperClass() {
 		return superClass;
 	}
 
@@ -230,21 +225,24 @@ public class ClassDeclaration extends TypeDeclaration {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
-	public void setSuperClass(Identifier id) {
+	 */
+	public void setSuperClass(Expression id) {
+		if (!(id instanceof Identifier) && !(id instanceof NamespaceName)) {
+			throw new IllegalArgumentException();
+		}
 		// an Assignment may occur inside a Expression - must check cycles
 		ASTNode oldChild = this.superClass;
-		preReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY );
+		preReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY);
 		this.superClass = id;
 		postReplaceChild(oldChild, id, SUPER_CLASS_PROPERTY);
-	}	
-	
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == SUPER_CLASS_PROPERTY) {
 			if (get) {
 				return getSuperClass();
 			} else {
-				setSuperClass((Identifier) child);
+				setSuperClass((Expression) child);
 				return null;
 			}
 		}
@@ -264,8 +262,7 @@ public class ClassDeclaration extends TypeDeclaration {
 		// allow default implementation to flag the error
 		return super.internalGetSetIntProperty(property, get, child);
 	}
-	
-	
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
@@ -277,11 +274,11 @@ public class ClassDeclaration extends TypeDeclaration {
 	@Override
 	ASTNode clone0(AST target) {
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final Identifier superName = ASTNode.copySubtree(target, getSuperClass());
+		final Expression superName = ASTNode.copySubtree(target, getSuperClass());
 		final int modifier = getModifier();
 		final List interfaces = ASTNode.copySubtrees(target, interfaces());
 		final Identifier name = ASTNode.copySubtree(target, getName());
-		
+
 		final ClassDeclaration result = new ClassDeclaration(getStart(), getEnd(), target, modifier, name, superName, interfaces, body);
 		return result;
 	}
@@ -289,5 +286,5 @@ public class ClassDeclaration extends TypeDeclaration {
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
-	}	
+	}
 }
