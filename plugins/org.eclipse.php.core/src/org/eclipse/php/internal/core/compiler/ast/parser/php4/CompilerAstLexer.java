@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.compiler.ast.parser.php5;
+package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 
 import java.io.InputStream;
 import java.util.regex.Matcher;
@@ -19,23 +19,22 @@ import java_cup.runtime.Symbol;
 import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
-import org.eclipse.php.internal.core.ast.scanner.php5.ParserConstants;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Comment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
 import org.eclipse.php.internal.core.compiler.ast.parser.DocumentorLexer;
 
-public class PhpCompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php5.PhpAstLexer {
+public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.php4.PhpAstLexer {
 
 	private static final Pattern VAR_COMMENT_PATTERN = Pattern.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
 	private PHPDocBlock latestDocBlock;
 	private VarComment latestVarComment;
 
-	public PhpCompilerAstLexer(InputStream in) {
+	public CompilerAstLexer(InputStream in) {
 		super(in);
 	}
 
-	public PhpCompilerAstLexer(java.io.Reader in) {
+	public CompilerAstLexer(java.io.Reader in) {
 		super(in);
 	}
 
@@ -69,9 +68,6 @@ public class PhpCompilerAstLexer extends org.eclipse.php.internal.core.ast.scann
 		getCommentList().add(comment);
 	}
 
-	protected void addVarComment() {
-	}
-
 	protected IDocumentorLexer getDocumentorLexer(java.io.Reader reader) {
 		IDocumentorLexer lexer = new DocumentorLexer(reader);
 		return lexer;
@@ -89,20 +85,14 @@ public class PhpCompilerAstLexer extends org.eclipse.php.internal.core.ast.scann
 		Symbol symbol = super.createSymbol(symbolNumber);
 
 		switch (symbolNumber) {
-			case ParserConstants.T_FUNCTION:
-			case ParserConstants.T_CONST:
-			case ParserConstants.T_VAR:
-			case ParserConstants.T_CLASS:
-			case ParserConstants.T_INTERFACE:
-			case ParserConstants.T_STATIC:
-			case ParserConstants.T_ABSTRACT:
-			case ParserConstants.T_FINAL:
-			case ParserConstants.T_PRIVATE:
-			case ParserConstants.T_PROTECTED:
-			case ParserConstants.T_PUBLIC:
+			case CompilerParserConstants.T_FUNCTION:
+			case CompilerParserConstants.T_CONST:
+			case CompilerParserConstants.T_VAR:
+			case CompilerParserConstants.T_CLASS:
+			case CompilerParserConstants.T_STATIC:
 				symbol.value = latestDocBlock;
 				break;
-			case ParserConstants.T_EQUAL:
+			case CompilerParserConstants.T_EQUAL:
 				symbol.value = latestVarComment;
 				latestVarComment = null;
 				break;

@@ -4,7 +4,7 @@
 		<uptodate
 			property="upToDate"
 			srcfile="php_compiler_ast_parser.cup"
-			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4/PhpAstParser.java" />
+			targetfile="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4/CompilerAstParser.java" />
 	</target>
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
@@ -17,23 +17,23 @@
 			<arg value="-expect"/>
 			<arg value="4"/>
 			<arg value="-parser"/>
-			<arg value="PhpAstParser"/>
+			<arg value="CompilerAstParser"/>
 			<arg value="-symbols"/>
-			<arg value="PhpParserConstants"/>
+			<arg value="CompilerParserConstants"/>
 			<arg value="-interface"/>
 		</java>
 		
 		<replace
-			file="PhpAstParser.java"
+			file="CompilerAstParser.java"
 			token="extends java_cup.runtime.lr_parser"
 			value="extends AbstractASTParser"/>
 
 		<move
-			file="PhpAstParser.java"
+			file="CompilerAstParser.java"
 			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4"/>
 
 		<move
-			file="PhpParserConstants.java"
+			file="CompilerParserConstants.java"
 			todir="../../../../src/org/eclipse/php/internal/core/compiler/ast/parser/php4"/>
 
 	</target>

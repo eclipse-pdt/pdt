@@ -28,8 +28,8 @@ public class PhpSourceParser extends AbstractPHPSourceParser {
 	}
 
 	public ModuleDeclaration parse(Reader in, IProblemReporter reporter) throws Exception {
-		PhpCompilerAstLexer lexer = new PhpCompilerAstLexer(in);
-		PhpAstParser parser = new PhpAstParser(lexer);
+		CompilerAstLexer lexer = new CompilerAstLexer(in);
+		CompilerAstParser parser = new CompilerAstParser(lexer);
 		parser.setProblemReporter(reporter);
 
 		return parse(parser);

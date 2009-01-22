@@ -12,13 +12,13 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 import java.io.InputStream;
 
-public class PhpCompilerAstLexer extends org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpCompilerAstLexer {
+public class CompilerAstLexer extends org.eclipse.php.internal.core.compiler.ast.parser.php5.CompilerAstLexer {
 
-	public PhpCompilerAstLexer(InputStream in) {
+	public CompilerAstLexer(InputStream in) {
 		super(in);
 	}
 	
-	public PhpCompilerAstLexer(java.io.Reader in) {
+	public CompilerAstLexer(java.io.Reader in) {
 		super(in);
 	}
 }
