@@ -111,7 +111,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 					browserTitle.append(debugURL.getPath());
 
 					IWorkbenchBrowserSupport browserSupport = PlatformUI.getWorkbench().getBrowserSupport();
-					IWebBrowser browser = browserSupport.createBrowser(browserStyle, null, browserTitle.toString(), browserTitle.toString());
+					IWebBrowser browser = browserSupport.createBrowser(browserStyle, "PDTDebuggerBrowser", browserTitle.toString(), browserTitle.toString());
 
 					if (PHPDebugPlugin.DEBUG) {
 						System.out.println("Opening URL in a browser: " + debugURL.toString());
@@ -276,6 +276,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				while (inputStream.read() != -1) {
 					// do nothing on the content returned by standard stream
 				}
+				inputStream.close();
 			}
 		} catch (UnknownHostException e) {
 			Logger.logException("Unknown host: " + requestURL.getHost(), e);

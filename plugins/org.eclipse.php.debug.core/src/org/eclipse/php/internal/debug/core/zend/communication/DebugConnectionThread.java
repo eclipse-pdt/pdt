@@ -90,7 +90,6 @@ public class DebugConnectionThread implements Runnable {
 	private CommunicationClient communicationClient;
 	private CommunicationAdministrator administrator;
 	private IDebugMessage CONNECTION_CLOSED_MSG = new DummyDebugMessage();
-	protected boolean isDebugMode = System.getProperty("loggingDebug") != null; //$NON-NLS-1$
 	private IntHashtable requestsTable;
 	private IntHashtable responseTable;
 	private Hashtable<Integer, ResponseHandler> responseHandlers;
@@ -194,7 +193,7 @@ public class DebugConnectionThread implements Runnable {
 		} catch (SocketException se) {
 			// probably because the remote host disconnected
 			// Just log a warning (might be removed in the near future)
-			if (isDebugMode) {
+			if (PHPDebugPlugin.DEBUG) {
 				Logger.log(Logger.WARNING, se.getMessage(), se);
 			}
 		} catch (Exception exc) {
@@ -209,7 +208,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @return A response for the delivered request.
 	 */
 	public Object sendRequest(Object request) throws Exception {
-		if (isDebugMode) {
+		if (PHPDebugPlugin.DEBUG) {
 			System.out.println("Sending syncrhonic request: " + request);
 		}
 		try {
@@ -234,7 +233,7 @@ public class DebugConnectionThread implements Runnable {
 				synchronized (request) {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
-						if (isDebugMode) {
+						if (PHPDebugPlugin.DEBUG) {
 							System.out.println("Response is null. Waiting " + ((21 - timeoutCount) * peerResponseTimeout) + " milliseconds"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						if (timeoutCount == 15) { // Display a progress dialog after a quarter of the assigned time have passed.
@@ -253,7 +252,7 @@ public class DebugConnectionThread implements Runnable {
 				// if the response is null. it means that there is no answer from the server.
 				// This can be because on the peerResponseTimeout.
 				if (response == null && isConnected()) {
-					if (isDebugMode) {
+					if (PHPDebugPlugin.DEBUG) {
 						System.out.println("Communication problems (response is null)"); //$NON-NLS-1$
 					}
 					// Handle time out will stop the communication if need to stop.
@@ -271,7 +270,7 @@ public class DebugConnectionThread implements Runnable {
 				}
 			}
 			PHPLaunchUtilities.hideWaitForDebuggerMessage();
-			if (isDebugMode) {
+			if (PHPDebugPlugin.DEBUG) {
 				System.out.println("Received response: " + response); //$NON-NLS-1$
 			}
 			return response;
@@ -290,7 +289,7 @@ public class DebugConnectionThread implements Runnable {
 	 * @param responseHandler
 	 */
 	public void sendRequest(Object request, ResponseHandler responseHandler) {
-		if (isDebugMode) {
+		if (PHPDebugPlugin.DEBUG) {
 			System.out.println("Sending asynchronic request: " + request);
 		}
 		int msgId = lastRequestID++;
@@ -836,7 +835,7 @@ public class DebugConnectionThread implements Runnable {
 				try {
 					IDebugMessage newInputMessage = (IDebugMessage) inputMessageQueue.queueOut();
 
-					if (isDebugMode) {
+					if (PHPDebugPlugin.DEBUG) {
 						System.out.println("New message received: " + newInputMessage);
 					}
 
@@ -874,7 +873,7 @@ public class DebugConnectionThread implements Runnable {
 								IDebugMessageHandler messageHandler = createMessageHandler(newInputMessage);
 
 								if (messageHandler != null) {
-									if (isDebugMode) {
+									if (PHPDebugPlugin.DEBUG) {
 										System.out.println("Creating message handler: " + messageHandler.getClass().getName().replaceFirst(".*\\.", ""));
 									}
 									// handle the request
@@ -1100,7 +1099,7 @@ public class DebugConnectionThread implements Runnable {
 							}
 						}
 					} catch (InterruptedException e) {
-						if (isDebugMode) {
+						if (PHPDebugPlugin.DEBUG) {
 							System.out.println("interrupted: inWork = " + inWork + ", isAlive = " + isAlive); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
@@ -1116,7 +1115,7 @@ public class DebugConnectionThread implements Runnable {
 					int num = in.readInt();
 					if (num < 0) {
 						shutDown();
-						if (isDebugMode) {
+						if (PHPDebugPlugin.DEBUG) {
 							System.out.println("Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
 						}
 						Logger.log(Logger.ERROR, "Socket error (length is negative): possibly Server is SSL, Client is not."); //$NON-NLS-1$
