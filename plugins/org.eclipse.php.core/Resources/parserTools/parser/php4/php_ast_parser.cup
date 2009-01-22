@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.10 2009/01/13 14:34:44 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.11 2009/01/22 11:15:34 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -542,9 +542,9 @@ T_CURLY_OPEN:token inner_statement_list:statementList T_CURLY_CLOSE:end
 	RESULT = error;	
 :}
 
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-	// TODO: var comment should be added as ast node
+	RESULT = statement;
 :}
 ;
 
@@ -1049,9 +1049,9 @@ T_CURLY_OPEN:bodyStart inner_statement_list:statementList T_CURLY_CLOSE:end
 	RESULT = methodDeclaration;
 :}
 /* old_function support was removed */
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-
+	RESULT = statement;
 :}
 ;
 

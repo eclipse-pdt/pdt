@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.3 2009/01/22 08:32:17 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.4 2009/01/22 11:15:33 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -406,9 +406,9 @@ unticked_statement:statement
 {: 
 	RESULT = statement; 
 :}
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-	// TODO: var comment should be added as ast node
+	RESULT = statement;
 :}
 | error:theError /* error statement */
 {:
@@ -1450,9 +1450,9 @@ method_body:body
 	methodDeclaration.setDeclaringTypeName(type.getName());
 :}
 
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-
+	RESULT = statement;
 :}
 | error:theError /* error statement */
 {:

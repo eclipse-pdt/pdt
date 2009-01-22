@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.10 2009/01/21 12:51:19 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.11 2009/01/22 11:15:33 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -712,9 +712,9 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
 	RESULT = error;	
 :}
 
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-	// TODO: var comment should be added as parser.ast node
+	RESULT = statement;
 :}
 ;
 
@@ -1364,9 +1364,9 @@ method_body:body
 	RESULT = new MethodDeclaration(methodStart, bodyright, parser.ast, modifier.intValue(), functionDeclaration, true);
 :}
 
-| T_VAR_COMMENT:varComment
+| T_VAR_COMMENT:varComment unticked_statement:statement
 {:
-
+	RESULT = statement;
 :}
 ;
 
