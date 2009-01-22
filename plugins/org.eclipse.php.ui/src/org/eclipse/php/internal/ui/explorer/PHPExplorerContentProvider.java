@@ -91,6 +91,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 				IResource resource = ((IOpenable) parentElement).getResource();
 				if (resource instanceof IContainer) {
 
+					// contributed by Toshihiro Izumi 
+					if (!resource.isAccessible()) {
+						return NO_CHILDREN;
+					}
+
 					IResource[] resChildren = ((IContainer) resource).members();
 					ArrayList<Object> returnChlidren = new ArrayList<Object>();
 
@@ -129,11 +134,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 		return NO_CHILDREN;
 	}
 
-	/**
-	 * 
-	 * @author apeled, ncohen
-	 *
-	 */
 	protected class IncludePathContainer extends BuildPathContainer {
 		private IncludePath[] fIncludePath;
 
