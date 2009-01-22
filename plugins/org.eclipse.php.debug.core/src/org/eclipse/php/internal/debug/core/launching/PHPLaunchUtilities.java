@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -41,6 +39,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.preferences.CorePreferenceConstants;
@@ -742,5 +741,31 @@ public class PHPLaunchUtilities {
 			value = preferencesSupport.getWorkspacePreferencesValue(CorePreferenceConstants.Keys.EDITOR_USE_ASP_TAGS);
 		}
 		return Boolean.valueOf(value).booleanValue();
+	}
+	
+
+	/**
+	 * Generates debug query from parameters for the GET method. This method encodes debug parameters.
+	 * @param launch
+	 * @return
+	 */
+	public static String generateQuery(ILaunch launch, IDebugParametersInitializer debugParametersInitializer) {
+		StringBuffer buf = new StringBuffer();
+
+		Hashtable<String, String> parameters = debugParametersInitializer.getDebugParameters(launch);
+		Enumeration<String> e = parameters.keys();
+
+		while (e.hasMoreElements()) {
+			String key = (String) e.nextElement();
+			buf.append(key).append('=');
+			try {
+				buf.append(URLEncoder.encode((String) parameters.get(key), "UTF-8"));
+			} catch (UnsupportedEncodingException exc) {
+			}
+			if (e.hasMoreElements()) {
+				buf.append('&'); //$NON-NLS-1$
+			}
+		}
+		return buf.toString();
 	}
 }

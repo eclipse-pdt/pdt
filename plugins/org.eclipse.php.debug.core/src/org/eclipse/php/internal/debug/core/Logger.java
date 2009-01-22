@@ -145,7 +145,7 @@ public class Logger {
     }
 
     public static void debugMSG(String msg) {
-        if (PHPDebugPlugin.DebugPHP)
+        if (PHPDebugPlugin.DEBUG)
             System.out.println(msg);
     }
 }

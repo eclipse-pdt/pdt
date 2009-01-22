@@ -41,8 +41,6 @@ public class PHPDebugPlugin extends Plugin {
 	//The shared instance.
 	private static PHPDebugPlugin plugin;
 	private static final String BASE_URL = "http://localhost";
-	private static String fPHPDebugPerspective = "org.eclipse.php.debug.ui.PHPDebugPerspective";
-	private static String fDebugPerspective = "org.eclipse.debug.ui.DebugPerspective";
 	private static boolean fIsSupportingMultipleDebugAllPages = true;
 	private boolean fInitialAutoRemoveLaunches;
 	private static boolean fLaunchChangedAutoRemoveLaunches;
@@ -53,13 +51,8 @@ public class PHPDebugPlugin extends Plugin {
 	public PHPDebugPlugin() {
 		plugin = this;
 	}
-
-	public static final boolean DebugPHP;
-
-	static {
-		String value = Platform.getDebugOption("org.eclipse.php.debug.core/debug"); //$NON-NLS-1$
-		DebugPHP = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-	}
+	
+	public static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.php.debug.core/debug")).booleanValue(); //$NON-NLS-1$
 
 	/**
 	 * This method is called upon plug-in activation

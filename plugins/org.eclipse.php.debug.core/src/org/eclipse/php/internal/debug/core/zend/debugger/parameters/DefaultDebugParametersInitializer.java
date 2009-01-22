@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.debugger.parameters;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
 
 import org.eclipse.core.runtime.CoreException;
@@ -17,6 +19,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
+import org.eclipse.php.debug.core.debugger.parameters.IWebDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -24,16 +27,16 @@ import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 /**
  * Default debug parameters initializer.
  */
-public class DefaultDebugParametersInitializer extends AbstractDebugParametersInitializer {
+public class DefaultDebugParametersInitializer extends AbstractDebugParametersInitializer implements IWebDebugParametersInitializer {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.debug.core.debugger.parameters.IDebugParametersInitializer#generateQueryParameters(org.eclipse.debug.core.ILaunch)
 	 */
-	public Hashtable generateQueryParameters(ILaunch launch) {
-		Hashtable parameters = new Hashtable();
+	public Hashtable<String, String> getDebugParameters(ILaunch launch) {
+		Hashtable<String, String> parameters = new Hashtable<String, String>();
 		parameters.put(START_DEBUG, "1");
 
-		Object port = launch.getAttribute(IDebugParametersKeys.PORT);
+		String port = launch.getAttribute(IDebugParametersKeys.PORT);
 		if (port != null) {
 			parameters.put(DEBUG_PORT, port);
 		} else {
@@ -88,9 +91,14 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 	 * (non-Javadoc)
 	 * @see org.eclipse.php.debug.core.debugger.parameters.IDebugParametersInitializer#getRequestURL(org.eclipse.debug.core.ILaunch)
 	 */
-	public String getRequestURL(ILaunch launch) {
+	public URL getRequestURL(ILaunch launch) {
 		String url = launch.getAttribute(IDebugParametersKeys.ORIGINAL_URL);
-		return url != null ? url.trim() : "";
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			Logger.logException("Malformed URL: " + url, e);
+		}
+		return null;
 	}
 
 	public boolean getBooleanValue(String value) {
@@ -98,5 +106,25 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 			return Boolean.valueOf(value).booleanValue();
 		}
 		return false;
+	}
+
+	public Hashtable<String, String> getRequestCookies(ILaunch launch) {
+		return null;
+	}
+
+	public Hashtable<String, String> getRequestHeaders(ILaunch launch) {
+		return null;
+	}
+
+	public String getRequestMethod() {
+		return null;
+	}
+
+	public Hashtable<String, String> getRequestParameters(ILaunch launch) {
+		return null;
+	}
+
+	public String getRequestRawData(ILaunch launch) {
+		return null;
 	}
 }

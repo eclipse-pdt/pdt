@@ -472,11 +472,11 @@ public class DebugConnectionThread implements Runnable {
 	 * @return The session id, or -1 if non was located in the query.
 	 */
 	protected int getSessionID(String query) {
-		int indx = query.lastIndexOf(AbstractDebugParametersInitializer.DEBUG_SESSION_ID);
+		int indx = query.lastIndexOf(AbstractDebugParametersInitializer.DEBUG_SESSION_ID + "=");
 		if (indx < 0) {
 			return -1;
 		}
-		indx += AbstractDebugParametersInitializer.DEBUG_SESSION_ID.length();
+		indx += AbstractDebugParametersInitializer.DEBUG_SESSION_ID.length() + 1;
 		query = query.substring(indx);
 		indx = query.indexOf('&');
 		if (indx > -1) {

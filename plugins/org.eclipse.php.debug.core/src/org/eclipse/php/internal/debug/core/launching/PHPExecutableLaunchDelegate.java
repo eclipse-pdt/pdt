@@ -66,7 +66,7 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 
 			String phpExeString = new File(phpExe).getAbsolutePath();
 			String fileName = new File(fileToDebug).getAbsolutePath();
-			String query = parametersInitializer.generateQuery(launch);
+			String query = PHPLaunchUtilities.generateQuery(launch, parametersInitializer);
 			String iniFileLocation = launch.getAttribute(IDebugParametersKeys.PHP_INI_LOCATION);
 			String workingDir = new File(fileToDebug).getParentFile().getAbsolutePath();
 
