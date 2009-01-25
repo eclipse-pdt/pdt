@@ -172,6 +172,7 @@ public class CodeAssistUtils {
 					}
 				} else if (startsWithIgnoreCase(methodName, prefix)) {
 					methods.add(typeMethod);
+					methodNames.add(methodName.toLowerCase());
 				}
 			}
 
