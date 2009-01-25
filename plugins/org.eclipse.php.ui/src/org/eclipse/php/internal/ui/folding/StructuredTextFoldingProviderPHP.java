@@ -1297,8 +1297,15 @@ public class StructuredTextFoldingProviderPHP implements IStructuredTextFoldingP
 				collapse= ctx.collapseTypes();
 				break;
 			case IModelElement.METHOD:
+				collapse = ctx.collapseMembers();
+				break;
 			case IModelElement.FIELD:
-				collapse= ctx.collapseMembers();
+				// class fields should be folded as well 
+				IModelElement parent = element.getParent();
+				if (parent != null && parent.getElementType() != IModelElement.TYPE) {
+					return;
+				}
+				collapse = ctx.collapseMembers();
 				break;
 			default:
 				return;
