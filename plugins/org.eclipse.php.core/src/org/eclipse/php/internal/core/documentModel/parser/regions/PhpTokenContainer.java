@@ -161,12 +161,26 @@ public class PhpTokenContainer {
 		newIterator.next(); // ignore the first state change (it is identical to the original one)
 
 		// goto the previous before adding
-		if (oldIterator.nextIndex() != 1) {
-			oldIterator.previous();
-		}
+		setIterator(oldIterator, fromOffset, toOffset);
+		
 		while (newIterator.hasNext()) {
 			oldIterator.add(newIterator.next());
 		}
+	}
+
+	private void setIterator(ListIterator<LexerStateChange> oldIterator, int fromOffset, int toOffset) {
+		if (oldIterator.nextIndex() != 1) {
+			oldIterator.previous();
+		} else {
+			return;
+		}
+		
+		LexerStateChange next = oldIterator.next();
+		int offset = next.getOffset();
+		if (offset > fromOffset) {
+			oldIterator.previous();			
+		}
+		
 	}
 
 	public synchronized ListIterator<ContextRegion> removeTokensSubList(ITextRegion tokenStart, ITextRegion tokenEnd) {
