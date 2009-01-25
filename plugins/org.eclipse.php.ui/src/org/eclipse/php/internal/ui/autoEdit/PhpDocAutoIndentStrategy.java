@@ -157,7 +157,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			c.text = buf.toString();
 
 		} catch (BadLocationException excp) {
-			// stop work
+			Logger.logException(excp);
 		}
 	}
 
@@ -195,6 +195,25 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		return new Region(lineOffset, indentEnd - lineOffset);
 	}
 
+	/**
+	 * 
+	 * Returns the range of the Scriptdoc prefix on the given line in
+	 * <code>document</code>. The prefix greedily matches the following regex
+	 * pattern: <code>\w*</code>, that is, any number of whitespace
+	 * characters, until non first non white space character.
+	 *
+	 * @param document the document to which <code>line</code> refers
+	 * @param line the line from which to extract the prefix range
+	 * @return an <code>IRegion</code> describing the range of the prefix on the given line
+	 * @throws BadLocationException if accessing the document fails
+	 */
+	private IRegion findCommentBlockStartPrefixRange(IDocument document, IRegion line) throws BadLocationException {
+		int lineOffset = line.getOffset();
+		int lineEnd = lineOffset + line.getLength();
+		int indentEnd = findEndOfWhiteSpace(document, lineOffset, lineEnd);
+		return new Region(lineOffset, indentEnd - lineOffset);
+	}
+	
 	/**
 	 * Creates the Scriptdoc tags for newly inserted comments.
 	 *
@@ -337,17 +356,25 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 			if ("* ".equals(d.get(c.offset - 2, 2))) { //$NON-NLS-1$
 
 				int offset = c.offset;
-				IStructuredDocumentRegion sdRegion = ((IStructuredDocument) d).getRegionAtCharacterOffset(offset);
-				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(offset);
-				
+
+				int fixedOffset = offset;
+				if (offset == d.getLength()) {
+					fixedOffset -= 1;
+				}
+				IStructuredDocumentRegion sdRegion = ((IStructuredDocument) d).getRegionAtCharacterOffset(fixedOffset);
+
+				ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(fixedOffset);
+
+				int regionOffset = offset;
 				if (tRegion instanceof ITextRegionContainer) {
-					tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(offset);
+					tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(fixedOffset);
+					regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
 				}
 				int regionStart = sdRegion.getStartOffset(tRegion);
 
 				if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
 					IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
-					int regionOffset = offset - regionStart;
+					regionOffset -= scriptRegion.getStart();
 
 					ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
 					int phpScriptEndOffset = scriptRegion.getLength();
@@ -356,7 +383,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 						int currentRegionEndOffset = commentRegion.getEnd();
 						commentRegion = scriptRegion.getPhpToken(currentRegionEndOffset);
 						String tokenType = commentRegion.getType();
-						if (tokenType.equals(PHPRegionTypes.PHP_COMMENT_END) || PHPRegionTypes.PHPDOC_COMMENT_END.equals(tokenType) ) {
+						if (tokenType.equals(PHPRegionTypes.PHP_COMMENT_END) || PHPRegionTypes.PHPDOC_COMMENT_END.equals(tokenType)) {
 							break;
 						} else if (currentRegionEndOffset >= phpScriptEndOffset) {
 							isSpaceDeletionNeeded = true;
@@ -434,14 +461,80 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 
 		if (command.text != null) {
 			if (command.length == 0) {
+				// get legal end of line set
 				String[] lineDelimiters = document.getLegalLineDelimiters();
+				// get the the last index of end of line in the command
 				int index = TextUtilities.endsWith(lineDelimiters, command.text);
+				int offset = command.offset;
+
+				// if end of line exists in the command
 				if (index > -1) {
 					// ends with line delimiter
-					if (lineDelimiters[index].equals(command.text))
+					if (lineDelimiters[index].equals(command.text)) {
+						try {
+							IStructuredDocumentRegion sdRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);
+							//in case we're at the end of file, go on char back to be in region
+							int fixedOffset = offset;
+							if (offset == document.getLength()) {
+								fixedOffset -= 1;
+							}
+							ITextRegion tRegion = sdRegion.getRegionAtCharacterOffset(fixedOffset);
+
+							int regionOffset = offset;
+							//if netsed html/php structure exists
+							if (tRegion instanceof ITextRegionContainer) {
+								tRegion = ((ITextRegionContainer) tRegion).getRegionAtCharacterOffset(fixedOffset);
+								//update region offset for in order to get phpdoc region later
+								regionOffset -= (sdRegion.getStartOffset(tRegion) + tRegion.getStart());
+							}
+
+							if (tRegion != null && tRegion instanceof IPhpScriptRegion) {
+								IPhpScriptRegion scriptRegion = (IPhpScriptRegion) tRegion;
+
+								//update region offset for in order to get phpdoc region later
+								regionOffset -= scriptRegion.getStart();
+
+								ITextRegion commentRegion = scriptRegion.getPhpToken(regionOffset);
+
+								String tokenType = commentRegion.getType();
+								if (document.getLength() == offset && (tokenType.equals(PHPRegionTypes.PHPDOC_COMMENT_END) || tokenType.equals(PHPRegionTypes.PHP_COMMENT_END)) && document.get(offset - 2, 2).equals("*/")) {
+
+									ITextRegion region = commentRegion;
+									//go up in document and search for the first line containing PHPDOC_COMMENT_START/PHP_COMMENT_START tag
+									do {
+										if (region.getType() == PHPRegionTypes.PHPDOC_COMMENT_START || region.getType() == PHPRegionTypes.PHP_COMMENT_START || region.getStart() <= scriptRegion.getStart()) {
+											break;
+										}
+										//get previous region
+										region = scriptRegion.getPhpToken(region.getStart() - lineDelimiters[index].length());
+
+									} while (true);
+
+									//get the line region
+									IRegion line = document.getLineInformationOfOffset(region.getStart());
+									StringBuffer buf = new StringBuffer(command.text);
+									//extract indentation from the found line
+									IRegion prefix = findCommentBlockStartPrefixRange(document, line);
+									//build indentation based on the prefix length
+									String indentation = document.get(prefix.getOffset(), prefix.getLength());
+									buf.append(indentation);
+									//perform the actual work
+									command.shiftsCaret = false;
+									command.caretOffset = command.offset + buf.length();
+									command.text = buf.toString();
+									return;
+								}
+							}
+						} catch (BadLocationException e) {
+							Logger.logException(e);
+						}
+
 						// just the line delimiter
-						indentAfterNewLine(document, command);
-					return;
+						if (lineDelimiters[index].equals(command.text)) {
+							indentAfterNewLine(document, command);
+						}
+						return;
+					}
 				}
 			}
 
