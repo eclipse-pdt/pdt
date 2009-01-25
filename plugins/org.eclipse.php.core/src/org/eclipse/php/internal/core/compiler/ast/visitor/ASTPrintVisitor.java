@@ -26,6 +26,7 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement.UsePart;
 import org.eclipse.php.internal.core.util.XMLWriter;
 
 /**
@@ -144,8 +145,8 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ClassConstantDeclaration s) throws Exception {
-		xmlWriter.endTag("ClassConstantDeclaration");
+	public boolean endvisit(ConstantDeclaration s) throws Exception {
+		xmlWriter.endTag("ConstantDeclaration");
 		return true;
 	}
 
@@ -441,6 +442,26 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.endTag("ModuleDeclaration");
 		return true;
 	}
+	
+	public boolean endvisit(NamespaceDeclaration s) throws Exception {
+		xmlWriter.endTag("NamespaceDeclaration");
+		return true;
+	}
+	
+	public boolean endvisit(UseStatement s) throws Exception {
+		xmlWriter.endTag("UseStatement");
+		return true;
+	}
+	
+	public boolean endvisit(GotoLabel s) throws Exception {
+		xmlWriter.endTag("GotoLabel");
+		return true;
+	}
+	
+	public boolean endvisit(GotoStatement s) throws Exception {
+		xmlWriter.endTag("GotoStatement");
+		return true;
+	}
 
 	public boolean visit(ArrayCreation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
@@ -500,9 +521,9 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		return true;
 	}
 
-	public boolean visit(ClassConstantDeclaration s) throws Exception {
+	public boolean visit(ConstantDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
-		xmlWriter.startTag("ClassConstantDeclaration", parameters);
+		xmlWriter.startTag("ConstantDeclaration", parameters);
 		return true;
 	}
 
@@ -540,9 +561,12 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		s.getCondition().traverse(this);
 		xmlWriter.endTag("Condition");
 
-		xmlWriter.startTag("IfTrue", new HashMap<String, String>());
-		s.getIfTrue().traverse(this);
-		xmlWriter.endTag("IfTrue");
+		Expression ifTrue = s.getIfTrue();
+		if (ifTrue != null) {
+			xmlWriter.startTag("IfTrue", new HashMap<String, String>());
+			ifTrue.traverse(this);
+			xmlWriter.endTag("IfTrue");
+		}
 
 		Expression falseExp = s.getIfFalse();
 		if (falseExp != null) {
@@ -918,6 +942,41 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(ModuleDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("ModuleDeclaration", parameters);
+		return true;
+	}
+
+	public boolean visit(NamespaceDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
+		xmlWriter.startTag("NamespaceDeclaration", parameters);
+		return true;
+	}
+
+	public boolean visit(UseStatement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("UseStatement", parameters);
+
+		for (UsePart part : s.getParts()) {
+			Map<String, String> usePartParams = new HashMap<String, String>();
+			usePartParams.put("namespace", part.namespace);
+			usePartParams.put("alias", part.alias);
+			xmlWriter.startTag("UsePart", usePartParams);
+			xmlWriter.endTag("UsePart");
+		}
+		return true;
+	}
+
+	public boolean visit(GotoLabel s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("label", s.getLabel());
+		xmlWriter.startTag("GotoLabel", parameters);
+		return true;
+	}
+
+	public boolean visit(GotoStatement s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("label", s.getLabel());
+		xmlWriter.startTag("GotoStatement", parameters);
 		return true;
 	}
 }

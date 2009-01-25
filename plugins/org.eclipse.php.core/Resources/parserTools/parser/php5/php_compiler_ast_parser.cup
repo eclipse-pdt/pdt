@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.24 2009/01/22 11:15:33 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.25 2009/01/25 19:00:24 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1414,7 +1414,7 @@ variable_modifiers:modifier class_variable_declaration:decList T_SEMICOLON
 		}
 		int start = constant.sourceStart();
 		int end = (initializer == null ? constant.sourceEnd() : initializer.sourceEnd());
-		parser.addDeclarationStatement(new ClassConstantDeclaration(constant, initializer, decListleft, end, docBlock));
+		parser.addDeclarationStatement(new ConstantDeclaration(constant, initializer, decListleft, end, docBlock));
 	}
 :}
 

@@ -33,16 +33,25 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 	}
 
 	protected AbstractPHPSourceParser createParser(String fileName) {
+		PHPVersion phpVersion = PHPVersion.PHP5; // default
+		
 		IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fileName);
 		if (resource != null) {
 			IProject project = resource.getProject();
 			if (project.isAccessible()) {
-				PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-				if (PHPVersion.PHP4 == phpVersion) {
-					return new org.eclipse.php.internal.core.compiler.ast.parser.php4.PhpSourceParser(fileName);
-				}
+				phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
 			}
 		}
-		return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(fileName);
+		
+		if (PHPVersion.PHP4 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php4.PhpSourceParser(fileName);
+		}
+		if (PHPVersion.PHP5 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser(fileName);
+		}
+		if (PHPVersion.PHP5_3 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser(fileName);
+		}
+		throw new IllegalStateException("Unknown PHP version!");
 	}
 }

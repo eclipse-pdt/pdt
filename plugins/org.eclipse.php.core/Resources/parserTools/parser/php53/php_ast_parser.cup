@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.11 2009/01/22 11:15:33 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.12 2009/01/25 19:00:24 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,7 +129,7 @@ terminal  T_METHOD_C;
 terminal  T_FUNC_C;
 terminal  T_LINE;
 terminal  String T_FILE;
-terminal  T_START_HEREDOC;
+terminal  String T_START_HEREDOC;
 terminal  T_END_HEREDOC;
 terminal  T_DOLLAR_OPEN_CURLY_BRACES;
 terminal  T_CURLY_OPEN_WITH_DOLAR;
@@ -419,17 +419,6 @@ statement:statement
 {:
 	RESULT = new ConstantDeclaration(listleft, eright, parser.ast, list);
 :}
-
-| T_STRING:label T_NEKUDOTAIM:e
-{:
-	RESULT = new GotoLabel(labelleft, eright, parser.ast, new Identifier(labelleft, labelright, parser.ast, label));
-:}
-
-| T_GOTO:s T_STRING:label T_SEMICOLON:e
-{:
-	RESULT = new GotoStatement(sleft, eright, parser.ast, new Identifier(labelleft, labelright, parser.ast, label));
-:}
-
 ;
 
 use_declarations ::=
@@ -521,6 +510,10 @@ statement ::=
 unticked_statement:statement
 {: 
 	RESULT = statement; 
+:}
+| T_STRING:label T_NEKUDOTAIM:e
+{:
+	RESULT = new GotoLabel(labelleft, eright, parser.ast, new Identifier(labelleft, labelright, parser.ast, label));
 :}
 ;
 
@@ -704,6 +697,11 @@ T_CURLY_OPEN:catchBlockStart inner_statement_list:catchList T_CURLY_CLOSE:catchB
 | T_THROW:token expr:expr T_SEMICOLON:e
 {: 
 	RESULT = new ThrowStatement(tokenleft, eright, parser.ast, expr); 
+:}
+
+| T_GOTO:s T_STRING:label T_SEMICOLON:e
+{:
+	RESULT = new GotoStatement(sleft, eright, parser.ast, new Identifier(labelleft, labelright, parser.ast, label));
 :}
 
 | error:theError /* error statement */
@@ -2222,16 +2220,16 @@ T_LNUMBER:scalar
 	RESULT = new Scalar(scalarleft, scalarright, parser.ast, "__NAMESPACE__", Scalar.TYPE_SYSTEM);
 :}
 
-| T_START_HEREDOC:s T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
+| T_START_HEREDOC:label T_ENCAPSED_AND_WHITESPACE:string T_END_HEREDOC:e
 {:
 	List list = new LinkedList();
 	list.add(new Scalar(stringleft, stringright, parser.ast, string, string == null ? Scalar.TYPE_UNKNOWN : Scalar.TYPE_STRING));
-	RESULT = new Quote(sleft, eright, parser.ast, list, Quote.QT_NOWDOC);
+	RESULT = new Quote(labelleft, eright, parser.ast, list, label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC);
 :}
 
-| T_START_HEREDOC:s T_END_HEREDOC:e
+| T_START_HEREDOC:label T_END_HEREDOC:e
 {:
-	RESULT = new Quote(sleft, eright, parser.ast, new LinkedList(), Quote.QT_NOWDOC);
+	RESULT = new Quote(labelleft, eright, parser.ast, new LinkedList(), label.charAt(0) == '\'' ? Quote.QT_NOWDOC : Quote.QT_HEREDOC);
 :}
 
 ;

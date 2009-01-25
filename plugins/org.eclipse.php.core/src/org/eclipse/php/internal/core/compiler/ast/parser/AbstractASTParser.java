@@ -73,7 +73,7 @@ abstract public class AbstractASTParser extends lr_parser {
 	 * Report on errors that will be added to the AST as statements
 	 */
 	public void reportError() {
-		program.setHasErros(true);
+		program.setHasErrors(true);
 	}
 	
 	public void reportError(ASTError error) {
@@ -215,7 +215,8 @@ abstract public class AbstractASTParser extends lr_parser {
 	public Statement pendingStatement = null;
 
 	public void addDeclarationStatement(Statement s) {
-		if (declarations.isEmpty()) { // no need to add the declaration to the ModuleDeclaration at this point.
+		if (declarations.isEmpty()) {
+			// we don't add top level statements to the program node this way
 			return;
 		}
 		Statement node = declarations.peek();

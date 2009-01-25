@@ -69,7 +69,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
-	public boolean endvisit(ClassConstantDeclaration s) throws Exception {
+	public boolean endvisit(ConstantDeclaration s) throws Exception {
 		endvisitGeneral(s);
 		return false;
 	}
@@ -354,6 +354,26 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return false;
 	}
 
+	public boolean endvisit(NamespaceDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(UseStatement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(GotoLabel s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
+	public boolean endvisit(GotoStatement s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
+
 	public boolean visit(ArrayCreation s) throws Exception {
 		return visitGeneral(s);
 	}
@@ -390,7 +410,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
-	public boolean visit(ClassConstantDeclaration s) throws Exception {
+	public boolean visit(ConstantDeclaration s) throws Exception {
 		return visitGeneral(s);
 	}
 
@@ -619,6 +639,22 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		return visitGeneral(s);
 	}
 
+	public boolean visit(UseStatement s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(NamespaceDeclaration s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(GotoLabel s) throws Exception {
+		return visitGeneral(s);
+	}
+
+	public boolean visit(GotoStatement s) throws Exception {
+		return visitGeneral(s);
+	}
+
 	public boolean endvisit(ASTNode s) throws Exception {
 		if (s.getClass().equals(ArrayCreation.class)) {
 			return endvisit((ArrayCreation) s);
@@ -647,8 +683,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(CatchClause.class)) {
 			return endvisit((CatchClause) s);
 		}
-		if (s.getClass().equals(ClassConstantDeclaration.class)) {
-			return endvisit((ClassConstantDeclaration) s);
+		if (s.getClass().equals(ConstantDeclaration.class)) {
+			return endvisit((ConstantDeclaration) s);
 		}
 		if (s.getClass().equals(ClassDeclaration.class)) {
 			return endvisit((ClassDeclaration) s);
@@ -818,11 +854,20 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(SimpleReference.class)) {
 			return endvisit((SimpleReference) s);
 		}
+		if (s.getClass().equals(UseStatement.class)) {
+			return endvisit((UseStatement) s);
+		}
+		if (s.getClass().equals(GotoLabel.class)) {
+			return endvisit((GotoLabel) s);
+		}
+		if (s.getClass().equals(GotoStatement.class)) {
+			return endvisit((GotoStatement) s);
+		}
 		return true;
 	}
 
 	public boolean endvisit(Expression s) throws Exception {
-		return endvisit((ASTNode)s);
+		return endvisit((ASTNode) s);
 	}
 
 	public boolean endvisit(MethodDeclaration s) throws Exception {
@@ -833,7 +878,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(Statement s) throws Exception {
-		return endvisit((ASTNode)s);
+		return endvisit((ASTNode) s);
 	}
 
 	public boolean endvisit(TypeDeclaration s) throws Exception {
@@ -842,6 +887,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s instanceof InterfaceDeclaration) {
 			return endvisit((InterfaceDeclaration) s);
+		}
+		if (s instanceof NamespaceDeclaration) {
+			return endvisit((NamespaceDeclaration) s);
 		}
 		return true;
 	}
@@ -874,8 +922,8 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(CatchClause.class)) {
 			return visit((CatchClause) s);
 		}
-		if (s.getClass().equals(ClassConstantDeclaration.class)) {
-			return visit((ClassConstantDeclaration) s);
+		if (s.getClass().equals(ConstantDeclaration.class)) {
+			return visit((ConstantDeclaration) s);
 		}
 		if (s.getClass().equals(ClassDeclaration.class)) {
 			return visit((ClassDeclaration) s);
@@ -1045,11 +1093,20 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		if (s.getClass().equals(SimpleReference.class)) {
 			return visit((SimpleReference) s);
 		}
+		if (s.getClass().equals(UseStatement.class)) {
+			return visit((UseStatement) s);
+		}
+		if (s.getClass().equals(GotoLabel.class)) {
+			return visit((GotoLabel) s);
+		}
+		if (s.getClass().equals(GotoStatement.class)) {
+			return visit((GotoStatement) s);
+		}
 		return true;
 	}
 
 	public boolean visit(Expression s) throws Exception {
-		return visit((ASTNode)s);
+		return visit((ASTNode) s);
 	}
 
 	public boolean visit(MethodDeclaration s) throws Exception {
@@ -1060,7 +1117,7 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(Statement s) throws Exception {
-		return visit((ASTNode)s);
+		return visit((ASTNode) s);
 	}
 
 	public boolean visit(TypeDeclaration s) throws Exception {
@@ -1069,6 +1126,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s instanceof InterfaceDeclaration) {
 			return visit((InterfaceDeclaration) s);
+		}
+		if (s instanceof NamespaceDeclaration) {
+			return visit((NamespaceDeclaration) s);
 		}
 		return true;
 	}

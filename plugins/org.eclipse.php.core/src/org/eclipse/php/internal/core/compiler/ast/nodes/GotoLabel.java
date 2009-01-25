@@ -11,58 +11,35 @@
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents conditional expression
- * Holds the condition, if true expression and if false expression
- * each on e can be any expression
- * <pre>e.g.<pre> (bool) $a ? 3 : 4
- * $a > 0 ? $a : -$a
+ * Represents a goto label.
+ * <pre>e.g.
+ * LABEL:
  */
-public class ConditionalExpression extends Expression {
+public class GotoLabel extends Statement {
 
-	private final Expression condition;
-	private final Expression ifTrue;
-	private final Expression ifFalse;
+	private String label;
 
-	public ConditionalExpression(int start, int end, Expression condition, Expression ifTrue, Expression ifFalse) {
+	public GotoLabel(int start, int end, String label) {
 		super(start, end);
-
-		assert condition != null && ifFalse != null;
-		this.condition = condition;
-		this.ifTrue = ifTrue;
-		this.ifFalse = ifFalse;
+		this.label = label;
 	}
-
+	
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
-			condition.traverse(visitor);
-			if (ifTrue != null) {
-				ifTrue.traverse(visitor);
-			}
-			ifFalse.traverse(visitor);
-		}
+		visitor.visit(this);
 		visitor.endvisit(this);
 	}
 
+	public String getLabel() {
+		return label;
+	}
+	
 	public int getKind() {
-		return ASTNodeKinds.CONDITIONAL_EXPRESSION;
-	}
-
-	public Expression getCondition() {
-		return condition;
-	}
-
-	public Expression getIfFalse() {
-		return ifFalse;
-	}
-
-	public Expression getIfTrue() {
-		return ifTrue;
+		return ASTNodeKinds.GOTO_LABEL;
 	}
 
 	/**

@@ -27,7 +27,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ClassConstantDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -174,7 +174,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			return visitGeneral(node);
 		}
 
-		public boolean visit(ClassConstantDeclaration node) throws Exception {
+		public boolean visit(ConstantDeclaration node) throws Exception {
 			if (!interesting(node)) {
 				return false;
 			}
@@ -196,8 +196,8 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		}
 
 		public boolean endvisit(Statement s) throws Exception {
-			if (s instanceof ClassConstantDeclaration) {
-				return visit((ClassConstantDeclaration)s);
+			if (s instanceof ConstantDeclaration) {
+				return visit((ConstantDeclaration)s);
 			}
 			return visitGeneral(s);
 		}

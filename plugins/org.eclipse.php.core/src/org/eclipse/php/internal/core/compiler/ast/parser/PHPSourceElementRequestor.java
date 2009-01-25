@@ -368,7 +368,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	public boolean visit(ClassConstantDeclaration declaration) throws Exception {
+	public boolean visit(ConstantDeclaration declaration) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 		info.modifiers = Modifiers.AccConstant | Modifiers.AccPublic | Modifiers.AccFinal;
 		ConstantReference constantName = declaration.getConstantName();
@@ -380,7 +380,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	public boolean endvisit(ClassConstantDeclaration declaration) throws Exception {
+	public boolean endvisit(ConstantDeclaration declaration) throws Exception {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
 	}
@@ -443,8 +443,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(FieldDeclaration.class.getName())) {
 			return visit((FieldDeclaration) node);
 		}
-		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
-			return visit((ClassConstantDeclaration) node);
+		if (clasName.equals(ConstantDeclaration.class.getName())) {
+			return visit((ConstantDeclaration) node);
 		}
 		if (clasName.equals(CatchClause.class.getName())) {
 			return visit((CatchClause) node);
@@ -467,8 +467,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (clasName.equals(FieldDeclaration.class.getName())) {
 			return endvisit((FieldDeclaration) node);
 		}
-		if (clasName.equals(ClassConstantDeclaration.class.getName())) {
-			return endvisit((ClassConstantDeclaration) node);
+		if (clasName.equals(ConstantDeclaration.class.getName())) {
+			return endvisit((ConstantDeclaration) node);
 		}
 		if (clasName.equals(CatchClause.class.getName())) {
 			return endvisit((CatchClause) node);

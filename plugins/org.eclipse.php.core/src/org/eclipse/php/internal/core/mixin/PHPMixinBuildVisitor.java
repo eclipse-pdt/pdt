@@ -339,8 +339,8 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(Statement node) throws Exception {
-		if (node instanceof ClassConstantDeclaration) {
-			return visit((ClassConstantDeclaration) node);
+		if (node instanceof ConstantDeclaration) {
+			return visit((ConstantDeclaration) node);
 		}
 		if (node instanceof PHPFieldDeclaration) {
 			return visit((PHPFieldDeclaration) node);
@@ -444,7 +444,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return visitGeneral(parameter);
 	}
 
-	public boolean visit(ClassConstantDeclaration decl) throws Exception {
+	public boolean visit(ConstantDeclaration decl) throws Exception {
 		IField obj = null;
 		String name = decl.getConstantName().getName();
 		if (moduleAvailable) {

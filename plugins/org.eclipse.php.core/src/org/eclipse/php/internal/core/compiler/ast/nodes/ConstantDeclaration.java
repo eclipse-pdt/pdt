@@ -18,17 +18,17 @@ import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents a class constant declaration
+ * Represents a class/namespace constant declaration
  * <pre>e.g.<pre> const MY_CONST = 5;
  * const MY_CONST = 5, YOUR_CONSTANT = 8;
  */
-public class ClassConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration {
+public class ConstantDeclaration extends Declaration implements IPHPDocAwareDeclaration {
 
 	private final ConstantReference constant;
 	private final Expression initializer;
 	private PHPDocBlock phpDoc;
 
-	public ClassConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end, PHPDocBlock phpDoc) {
+	public ConstantDeclaration(ConstantReference constant, Expression initializer, int start, int end, PHPDocBlock phpDoc) {
 		super(start, end);
 
 		assert constant != null;

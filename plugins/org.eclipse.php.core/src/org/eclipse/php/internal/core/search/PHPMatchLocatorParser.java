@@ -38,8 +38,8 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		if (node instanceof FieldDeclaration) {
 			locator.match((FieldDeclaration) node, getNodeSet());
 		}
-		else if (node instanceof ClassConstantDeclaration) {
-			ClassConstantDeclaration constDecl = (ClassConstantDeclaration) node;
+		else if (node instanceof ConstantDeclaration) {
+			ConstantDeclaration constDecl = (ConstantDeclaration) node;
 			ConstantReference constantName = constDecl.getConstantName();
 			FieldDeclaration decl = new FieldDeclaration(constantName.getName(), constantName.sourceStart(), constantName.sourceEnd(), constDecl.sourceStart(), constDecl.sourceEnd());
 			decl.setModifiers(Modifiers.AccConstant);

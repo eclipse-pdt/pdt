@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
@@ -25,7 +28,7 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 public class PHPModuleDeclaration extends ModuleDeclaration {
 
 	private List<ASTError> errors;
-	private boolean hasErros;
+	private boolean hasErrors;
 
 	public PHPModuleDeclaration(int start, int end, List<Statement> statements, List<ASTError> errors) {
 		super(end - start, true);
@@ -34,7 +37,10 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 		setEnd(end);
 		this.errors = errors;
 	}
-	
+
+	/**
+	 * This method goes over the AST and builds a list of types and methods declared in this file
+	 */
 	@SuppressWarnings("unchecked")
 	public void doRebuild() {
 		List statements = getStatements();
@@ -75,6 +81,10 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 		}
 	}
 	
+	public void addStatement(Statement statement) {
+		super.addStatement(statement);
+	}
+	
 	/**
 	 * We don't print anything - we use {@link ASTPrintVisitor} instead
 	 */
@@ -104,12 +114,15 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 		return errorsList;
 	}
 
-	public boolean hasErros() {
-		return hasErros || !errors.isEmpty();
+	public boolean hasErrors() {
+		return hasErrors || !errors.isEmpty();
 	}
 
-	public void setHasErros(boolean hasErros) {
-		this.hasErros = hasErros;
+	/**
+	 * This method fires a flag that says that this file has compilation errors
+	 */
+	public void setHasErrors(boolean hasErrors) {
+		this.hasErrors = hasErrors;
 	}
 	
 	private class ErrorSearcher extends ASTVisitor{

@@ -948,7 +948,9 @@ yybegin(ST_DOCBLOCK);
   	} else {
     	yybegin(ST_START_HEREDOC);
     }
-    return createSymbol(ParserConstants.T_START_HEREDOC);
+    Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
+    sym.value = heredoc;
+    return sym;
 }
 
 <ST_IN_SCRIPTING>[`] {

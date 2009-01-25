@@ -81,5 +81,9 @@ public interface ASTNodeKinds {
 	public static final int REFLECTION_STATIC_METHOD_INVOCATION = 66;
 	public static final int PHP_DOC_BLOCK = 67;
 	public static final int PHP_DOC_TAG = 68;
+	public static final int NAMESPACE_DECLARATION = 69;
+	public static final int USE_STATEMENT = 70;
+	public static final int GOTO_LABEL = 71;
+	public static final int GOTO_STATEMENT = 72;
 
 }

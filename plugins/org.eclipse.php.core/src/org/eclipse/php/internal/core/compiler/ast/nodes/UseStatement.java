@@ -10,59 +10,63 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.nodes;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.expressions.Expression;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.utils.CorePrinter;
 import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
- * Represents conditional expression
- * Holds the condition, if true expression and if false expression
- * each on e can be any expression
- * <pre>e.g.<pre> (bool) $a ? 3 : 4
- * $a > 0 ? $a : -$a
+ * Represent a 'use' statement.
+ * <pre>e.g.<pre>
+ * use A;
+ * use A as B;
+ * use \A\B as C;
  */
-public class ConditionalExpression extends Expression {
+public class UseStatement extends Statement {
+	
+	public static class UsePart {
+		
+		public String namespace;
+		public String alias;
+		
+		public UsePart(String namespace, String alias) {
+			this.namespace = namespace;
+			this.alias = alias;
+		}
 
-	private final Expression condition;
-	private final Expression ifTrue;
-	private final Expression ifFalse;
-
-	public ConditionalExpression(int start, int end, Expression condition, Expression ifTrue, Expression ifFalse) {
-		super(start, end);
-
-		assert condition != null && ifFalse != null;
-		this.condition = condition;
-		this.ifTrue = ifTrue;
-		this.ifFalse = ifFalse;
+		public String toString() {
+			StringBuilder buf = new StringBuilder("[USE: ").append(namespace);
+			if (alias != null) {
+				buf.append(" AS ").append(alias);
+			}
+			buf.append("]");
+			return buf.toString();
+		}
 	}
 
+	private List<UsePart> parts;
+
+	public UseStatement(int start, int end, List<UsePart> parts) {
+		super(start, end);
+
+		assert parts != null;
+		this.parts = parts;
+	}
+	
 	public void traverse(ASTVisitor visitor) throws Exception {
-		final boolean visit = visitor.visit(this);
-		if (visit) {
-			condition.traverse(visitor);
-			if (ifTrue != null) {
-				ifTrue.traverse(visitor);
-			}
-			ifFalse.traverse(visitor);
-		}
+		visitor.visit(this);
 		visitor.endvisit(this);
 	}
 
 	public int getKind() {
-		return ASTNodeKinds.CONDITIONAL_EXPRESSION;
+		return ASTNodeKinds.USE_STATEMENT;
 	}
 
-	public Expression getCondition() {
-		return condition;
-	}
-
-	public Expression getIfFalse() {
-		return ifFalse;
-	}
-
-	public Expression getIfTrue() {
-		return ifTrue;
+	public Collection<UsePart> getParts() {
+		return parts;
 	}
 
 	/**
