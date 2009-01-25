@@ -22,7 +22,6 @@ import org.eclipse.php.internal.ui.preferences.util.Key;
 import org.eclipse.php.internal.ui.util.StatusInfo;
 import org.eclipse.php.internal.ui.util.ValuedCombo;
 import org.eclipse.php.internal.ui.util.ValuedCombo.Entry;
-import org.eclipse.php.internal.ui.wizards.operations.PHPCreationDataModelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -36,6 +35,10 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlock {
 
+	public static final String[] PHP_VERSION_VALUES = { PHPVersion.PHP4.getAlias(), PHPVersion.PHP5.getAlias(), PHPVersion.PHP5_3.getAlias() };
+
+	public static final String[] PHP_VERSION_DESCRIPTIONS = { PHPUIMessages.getString("PHPCreationDataModelProvider.0"), PHPUIMessages.getString("PHPCreationDataModelProvider.1"), PHPUIMessages.getString("PHPCreationDataModelProvider.2") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	
 	private static final Key PREF_PHP_VERSION = getPHPCoreKey(Keys.PHP_VERSION);
 	private static final Key PREF_ASP_TAGS = getPHPCoreKey(Keys.EDITOR_USE_ASP_TAGS);
 	private IStatus fTaskTagsStatus;
@@ -144,9 +147,9 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 
 	private List prepareVersionEntryList() {
 		ArrayList entryList = new ArrayList();
-		for (int i = 0; i < PHPCreationDataModelProvider.PHP_VERSION_DESCRIPTIONS.length; i++) {
-			String description = PHPCreationDataModelProvider.PHP_VERSION_DESCRIPTIONS[i];
-			String value = PHPCreationDataModelProvider.PHP_VERSION_VALUES[i];
+		for (int i = 0; i < PHP_VERSION_DESCRIPTIONS.length; i++) {
+			String description = PHP_VERSION_DESCRIPTIONS[i];
+			String value = PHP_VERSION_VALUES[i];
 			Entry entry = new ValuedCombo.Entry(value, description);
 			entryList.add(entry);
 		}
@@ -154,10 +157,10 @@ public class PHPVersionConfigurationBlock extends PHPCoreOptionsConfigurationBlo
 	}
 
 	private void setPhpVersionValue(String value) {
-		String[] values = PHPCreationDataModelProvider.PHP_VERSION_VALUES;
+		String[] values = PHP_VERSION_VALUES;
 		for (int i = 0; i < values.length; i++) {
 			if (values[i].equals(value)) {
-				versionCombo.setText(PHPCreationDataModelProvider.PHP_VERSION_DESCRIPTIONS[i]);
+				versionCombo.setText(PHP_VERSION_DESCRIPTIONS[i]);
 				setValue(PREF_PHP_VERSION, values[i]);
 				validateSettings(PREF_PHP_VERSION, null, null);
 				return;
