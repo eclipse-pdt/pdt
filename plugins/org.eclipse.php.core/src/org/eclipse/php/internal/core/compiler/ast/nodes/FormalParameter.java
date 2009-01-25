@@ -56,7 +56,7 @@ public class FormalParameter extends Argument {
 	}
 
 	public FormalParameter(int start, int end, SimpleReference type, final VariableReference parameterName) {
-		this(start, end, type, parameterName, null, false);
+		this(start, end, type, parameterName, null, true);
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {

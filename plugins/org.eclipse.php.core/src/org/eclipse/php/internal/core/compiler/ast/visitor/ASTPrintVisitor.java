@@ -12,10 +12,7 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.LinkedHashMap;
+import java.util.*;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -460,6 +457,11 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	
 	public boolean endvisit(GotoStatement s) throws Exception {
 		xmlWriter.endTag("GotoStatement");
+		return true;
+	}
+	
+	public boolean endvisit(LambdaFunctionDeclaration s) throws Exception {
+		xmlWriter.endTag("LambdaFunctionDeclaration");
 		return true;
 	}
 
@@ -978,5 +980,31 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		parameters.put("label", s.getLabel());
 		xmlWriter.startTag("GotoStatement", parameters);
 		return true;
+	}
+
+	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("isReference", Boolean.toString(s.isReference()));
+		parameters.put("isStatic", Boolean.toString(s.isStatic()));
+		xmlWriter.startTag("LambdaFunctionDeclaration", parameters);
+		
+		xmlWriter.startTag("Arguments", new HashMap<String, String>());
+		for (FormalParameter p : s.getArguments()) {
+			p.traverse(this);
+		}
+		xmlWriter.endTag("Arguments");
+		
+		Collection<? extends Expression> lexicalVars = s.getLexicalVars();
+		if (lexicalVars != null) {
+			xmlWriter.startTag("LexicalVars", new HashMap<String, String>());
+			for (Expression var : lexicalVars) {
+				var.traverse(this);
+			}
+			xmlWriter.endTag("LexicalVars");
+		}
+		
+		s.getBody().traverse(this);
+		
+		return false;
 	}
 }

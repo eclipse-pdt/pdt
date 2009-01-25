@@ -373,6 +373,11 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		endvisitGeneral(s);
 		return false;
 	}
+	
+	public boolean endvisit(LambdaFunctionDeclaration s) throws Exception {
+		endvisitGeneral(s);
+		return false;
+	}
 
 	public boolean visit(ArrayCreation s) throws Exception {
 		return visitGeneral(s);
@@ -654,6 +659,10 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 	public boolean visit(GotoStatement s) throws Exception {
 		return visitGeneral(s);
 	}
+	
+	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
+		return visitGeneral(s);
+	}
 
 	public boolean endvisit(ASTNode s) throws Exception {
 		if (s.getClass().equals(ArrayCreation.class)) {
@@ -862,6 +871,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s.getClass().equals(GotoStatement.class)) {
 			return endvisit((GotoStatement) s);
+		}
+		if (s.getClass().equals(LambdaFunctionDeclaration.class)) {
+			return endvisit((LambdaFunctionDeclaration) s);
 		}
 		return true;
 	}
@@ -1101,6 +1113,9 @@ public abstract class PHPASTVisitor extends ASTVisitor {
 		}
 		if (s.getClass().equals(GotoStatement.class)) {
 			return visit((GotoStatement) s);
+		}
+		if (s.getClass().equals(LambdaFunctionDeclaration.class)) {
+			return visit((LambdaFunctionDeclaration) s);
 		}
 		return true;
 	}

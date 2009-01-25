@@ -85,5 +85,6 @@ public interface ASTNodeKinds {
 	public static final int USE_STATEMENT = 70;
 	public static final int GOTO_LABEL = 71;
 	public static final int GOTO_STATEMENT = 72;
+	public static final int LAMBDA_FUNCTION = 73;
 
 }

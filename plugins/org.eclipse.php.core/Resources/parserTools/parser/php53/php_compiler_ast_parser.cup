@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.5 2009/01/25 19:00:24 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.6 2009/01/25 19:51:05 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -189,6 +189,8 @@ non terminal List[] new_elseif_list;
 non terminal Statement else_single;
 non terminal Statement new_else_single;
 non terminal List parameter_list;
+non terminal List lexical_vars;
+non terminal List lexical_var_list;
 non terminal List non_empty_parameter_list;
 non terminal FormalParameter parameter;
 non terminal PHPCallArgumentsList function_call_parameter_list;
@@ -2216,6 +2218,63 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	SimpleReference name = new SimpleReference(startleft, startright, "print");
 	PHPCallExpression result = new PHPCallExpression(startleft, exprright, null, name, list);
 	RESULT = result;
+:}
+
+| T_FUNCTION:s is_reference:isReference
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
+{:
+	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList, 
+		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), false);
+:}
+
+| T_STATIC:s T_FUNCTION is_reference:isReference
+T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
+T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
+{:
+	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList, 
+		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), true);
+:}
+;
+
+lexical_vars ::=
+/* empty */
+{:
+	RESULT = null;
+:}
+
+| T_USE:s T_OPEN_PARENTHESE lexical_var_list:list T_CLOSE_PARENTHESE:e
+{:
+	RESULT = list;
+:}
+;
+
+lexical_var_list ::=
+lexical_var_list:list T_COMMA T_VARIABLE:var
+{:
+	VariableReference v = new VariableReference(varleft, varright, var);
+	list.add(v);
+	RESULT = list;
+:}
+
+| lexical_var_list:list T_COMMA T_REFERENCE:ref T_VARIABLE:var
+{:
+	list.add(new ReferenceExpression (refleft, varright, new VariableReference(varleft, varright, var)));
+	RESULT = list;
+:}
+
+| T_VARIABLE:var
+{:
+	List list = new LinkedList();
+	list.add(new VariableReference(varleft, varright, var));
+	RESULT = list;
+:}
+
+| T_REFERENCE:ref T_VARIABLE:var
+{:
+	List list = new LinkedList();
+	list.add(new ReferenceExpression (refleft, varright, new VariableReference(varleft, varright, var)));
+	RESULT = list;
 :}
 ;
 
