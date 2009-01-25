@@ -163,16 +163,16 @@ public class CodeAssistUtils {
 		try {
 			IMethod[] typeMethods = type.getMethods();
 			for (IMethod typeMethod : typeMethods) {
-				String methodName = typeMethod.getElementName();
+				String methodName = typeMethod.getElementName().toLowerCase();
 				if (exactName) {
-					if (methodName.equalsIgnoreCase(prefix)) {
+					if (methodName.equals(prefix)) {
 						methods.add(typeMethod);
-						methodNames.add(methodName.toLowerCase());
+						methodNames.add(methodName);
 						break;
 					}
 				} else if (startsWithIgnoreCase(methodName, prefix)) {
 					methods.add(typeMethod);
-					methodNames.add(methodName.toLowerCase());
+					methodNames.add(methodName);
 				}
 			}
 
