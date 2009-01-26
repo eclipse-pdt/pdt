@@ -405,8 +405,7 @@ ${cursor}</template>
 	id="org.eclipse.php.ui.editor.templates.newPhp.author"
 	context="newPhp"
 	enabled="true">&lt;?php
-${cursor}
-?&gt;</template>
+${cursor}</template>
 
 <template
 	name="New PHP file - HTML frameset"
