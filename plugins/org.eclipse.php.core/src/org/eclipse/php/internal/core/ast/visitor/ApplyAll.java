@@ -293,6 +293,34 @@ public abstract class ApplyAll extends AbstractVisitor {
 	public boolean visit(WhileStatement whileStatement) {
 		return apply(whileStatement);
 	}
+
+	public boolean visit(NamespaceName name) {
+		return apply(name);
+	}
+
+	public boolean visit(NamespaceDeclaration decl) {
+		return apply(decl);
+	}
+
+	public boolean visit(UseStatementPart usePart) {
+		return apply(usePart);
+	}
+
+	public boolean visit(UseStatement statement) {
+		return apply(statement);
+	}
+
+	public boolean visit(LambdaFunctionDeclaration func) {
+		return apply(func);
+	}
+
+	public boolean visit(GotoLabel gotoLabel) {
+		return apply(gotoLabel);
+	}
+
+	public boolean visit(GotoStatement gotoStatement) {
+		return apply(gotoStatement);
+	}
 	
 	public void endVisit(ArrayAccess arrayAccess) {
 		endVisitNode(arrayAccess);
@@ -548,5 +576,33 @@ public abstract class ApplyAll extends AbstractVisitor {
 
 	public void endVisit(Assignment assignment) {
 		endVisitNode(assignment);
+	}
+
+	public void endVisit(NamespaceName name) {
+		endVisitNode(name);
+	}
+
+	public void endVisit(NamespaceDeclaration decl) {
+		endVisitNode(decl);
+	}
+
+	public void endVisit(UseStatementPart part) {
+		endVisitNode(part);
+	}
+
+	public void endVisit(UseStatement useStatement) {
+		endVisitNode(useStatement);
+	}
+
+	public void endVisit(LambdaFunctionDeclaration func) {
+		endVisitNode(func);
+	}
+
+	public void endVisit(GotoStatement gotoStatement) {
+		endVisitNode(gotoStatement);
+	}
+
+	public void endVisit(GotoLabel gotoLabel) {
+		endVisitNode(gotoLabel);
 	}
 }

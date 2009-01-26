@@ -2825,6 +2825,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 							newStart = "\"";
 							newEnd = "\"";
 							break;
+						case Quote.QT_NOWDOC:
+							newStart = "<<<'Heredoc'\n";
+							newEnd = "\nHeredoc;\n";
+							break;
 						case Quote.QT_HEREDOC:
 							newStart = "<<<Heredoc\n";
 							newEnd = "\nHeredoc;\n";
@@ -2931,6 +2935,130 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			rewriteVariableDollar(variable);
 		}
 		return rewriteRequiredNodeVisit(variable, Variable.NAME_PROPERTY);
+	}
+
+	public boolean visit(GotoLabel gotoLabel) {
+		return rewriteRequiredNodeVisit(gotoLabel, GotoLabel.NAME_PROPERTY);
+	}
+
+	public boolean visit(GotoStatement gotoStatement) {
+		return rewriteRequiredNodeVisit(gotoStatement, GotoStatement.LABEL_PROPERTY);
+	}
+
+	public boolean visit(LambdaFunctionDeclaration lambdaFunctionDeclaration) {
+		if (!hasChildrenChanges(lambdaFunctionDeclaration)) {
+			return doVisitUnchangedChildren(lambdaFunctionDeclaration);
+		}
+
+		// Reference
+		RewriteEvent event = getEvent(lambdaFunctionDeclaration, LambdaFunctionDeclaration.IS_REFERENCE_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			boolean isReference = (Boolean) event.getNewValue();
+
+			try {
+				TextEditGroup editGroup = getEditGroup(event);
+				// we need to remove everything between the word 'function' to the start of the function's
+				// name and then place a blank or an &.
+				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8 is the 'function' keyword length
+				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
+				doTextRemove(startDeletionFrom, startOffset - startDeletionFrom, editGroup);
+				if (isReference) {
+					// we need to insert the &
+					doTextInsert(startDeletionFrom, " & ", editGroup);
+				} else {
+					doTextInsert(startDeletionFrom, " ", editGroup);
+				}
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		}
+
+		// Parameters
+		if (isChanged(lambdaFunctionDeclaration, LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY)) {
+			try {
+				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8 is the 'function' keyword length
+				int startOffset = getLeftParenthesesStartPosition(startDeletionFrom);
+				rewriteNodeList(lambdaFunctionDeclaration, LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY, startOffset, "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		} else {
+			voidVisit(lambdaFunctionDeclaration, LambdaFunctionDeclaration.FORMAL_PARAMETERS_PROPERTY);
+		}
+		
+		// Lexical vars
+		if (isChanged(lambdaFunctionDeclaration, LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY)) {
+			try {
+				int startDeletionFrom = lambdaFunctionDeclaration.getStart() + 8; // 8 is the 'function' keyword length
+				int startOffset = getRightBraceStartPosition(startDeletionFrom) + 1;
+				rewriteNodeList(lambdaFunctionDeclaration, LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY, startOffset, " as ", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+			} catch (CoreException e) {
+				handleException(e);
+			}
+		} else {
+			voidVisit(lambdaFunctionDeclaration, LambdaFunctionDeclaration.LEXICAL_VARIABLES_PROPERTY);
+		}
+		
+		// Body
+		rewriteRequiredNode(lambdaFunctionDeclaration, LambdaFunctionDeclaration.BODY_PROPERTY);
+		
+		return false;
+	}
+
+	public boolean visit(NamespaceDeclaration namespaceDeclaration) {
+		return rewriteRequiredNodeVisit(namespaceDeclaration, NamespaceDeclaration.NAME_PROPERTY, NamespaceDeclaration.BODY_PROPERTY);
+	}
+
+	public boolean visit(NamespaceName namespaceName) {
+
+		// Make the necessary changes to add or remove the '\' and 'namespace' prefixes
+		RewriteEvent event = getEvent(namespaceName, NamespaceName.GLOBAL_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			TextEditGroup editGroup = getEditGroup(event);
+			if ((Boolean) event.getNewValue()) {
+				// Add the '\' to the namespace name
+				this.doTextInsert(namespaceName.getStart(), "\\", editGroup);
+			} else {
+				// Remove the '\' from the namespace name
+				this.doTextRemove(namespaceName.getStart(), 1, editGroup);
+			}
+		}
+		event = getEvent(namespaceName, NamespaceName.CURRENT_PROPERTY);
+		if (event != null && event.getChangeKind() == RewriteEvent.REPLACED) {
+			TextEditGroup editGroup = getEditGroup(event);
+			if ((Boolean) event.getNewValue()) {
+				// Add the 'namespace' to the namespace name
+				this.doTextInsert(namespaceName.getStart(), "namespace\\", editGroup);
+			} else {
+				// Remove the 'namespace' from the namespace name
+				this.doTextRemove(namespaceName.getStart(), 10, editGroup);
+			}
+		}
+		
+		int pos = namespaceName.getStart();
+		if (namespaceName.isGlobal()) {
+			pos += 1;
+		}
+		if (namespaceName.isCurrent()) {
+			pos += 10;
+		}
+		
+		if (isChanged(namespaceName, NamespaceName.ELEMENTS_PROPERTY)) {
+			rewriteNodeList(namespaceName, NamespaceName.ELEMENTS_PROPERTY, pos, "", "\\");
+		} else {
+			voidVisit(namespaceName, NamespaceName.ELEMENTS_PROPERTY);
+		}
+		
+		return false;
+	}
+
+	public boolean visit(UseStatement useStatement) {
+		rewriteNodeList(useStatement, UseStatement.PARTS_PROPERTY, useStatement.getStart(), "", ", "); //$NON-NLS-1$ //$NON-NLS-2$
+		return false;
+	}
+
+	public boolean visit(UseStatementPart useStatementPart) {
+		return rewriteRequiredNodeVisit(useStatementPart, UseStatementPart.NAME_PROPERTY, UseStatementPart.ALIAS_PROPERTY);  
 	}
 
 	/**

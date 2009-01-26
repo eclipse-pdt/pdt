@@ -220,14 +220,6 @@ public interface Visitor {
 	
 	public void endVisit(ListVariable listVariable);
 	
-	public boolean visit(NamespaceName namespaceName);
-
-	public void endVisit(NamespaceName namespaceName);
-	
-	public boolean visit(NamespaceDeclaration namespaceDeclaration);
-	
-	public void endVisit(NamespaceDeclaration namespaceDeclaration);
-
 	public boolean visit(MethodDeclaration methodDeclaration);
 
 	public void endVisit(MethodDeclaration methodDeclaration);
@@ -235,6 +227,14 @@ public interface Visitor {
 	public boolean visit(MethodInvocation methodInvocation);
 	
 	public void endVisit(MethodInvocation methodInvocation);
+	
+	public boolean visit(NamespaceName namespaceName);
+
+	public void endVisit(NamespaceName namespaceName);
+	
+	public boolean visit(NamespaceDeclaration namespaceDeclaration);
+	
+	public void endVisit(NamespaceDeclaration namespaceDeclaration);
 
 	public boolean visit(ParenthesisExpression parenthesisExpression);
 

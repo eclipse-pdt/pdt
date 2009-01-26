@@ -58,6 +58,10 @@ public class NamespaceName extends Expression {
 		properyList.add(CURRENT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
+	
+	public NamespaceName(AST ast) {
+		super(ast);
+	}
 
 	public NamespaceName(int start, int end, AST ast, Identifier[] segments, boolean global, boolean current) {
 		super(start, end, ast);

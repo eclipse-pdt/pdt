@@ -49,6 +49,10 @@ public class NamespaceDeclaration extends Statement {
 		properyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
+	
+	public NamespaceDeclaration(AST ast) {
+		super(ast);
+	}
 
 	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body) {
 		super(start, end, ast);

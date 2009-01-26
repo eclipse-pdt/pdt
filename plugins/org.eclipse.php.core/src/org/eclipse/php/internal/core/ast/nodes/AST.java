@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -2445,5 +2446,93 @@ public class AST {
 		whileStatement.setBody(body);
 		return whileStatement;
 	}
+	
+	/**
+	 * Creates a new {@link NamespaceName}.
+	 * @param name
+	 * @param isglobal - Whether the namespace has a '\' prefix
+	 * @param iscurrent - Whether the namespace has a 'namespace' prefix
+	 * @return A new NamespaceName.
+	 */
+	public NamespaceName newNamespaceDeclaration(final Collection<Identifier> segments, final boolean isglobal, final boolean iscurrent) {
+		NamespaceName namespaceName = new NamespaceName(this);
+		namespaceName.segments().addAll(segments);
+		namespaceName.setGlobal(isglobal);
+		namespaceName.setCurrent(iscurrent);
+		return namespaceName;
+	}
 
+	/**
+	 * Creates a new {@link NamespaceDeclaration}.
+	 * @param name
+	 * @param body
+	 * @return A new NamespaceDeclaration.
+	 */
+	public NamespaceDeclaration newNamespaceDeclaration(NamespaceName name, Block body) {
+		NamespaceDeclaration namespaceDeclaration = new NamespaceDeclaration(this);
+		namespaceDeclaration.setName(name);
+		namespaceDeclaration.setBody(body);
+		return namespaceDeclaration;
+	}
+	
+	/**
+	 * Creates a new {@link UseStatementPart}.
+	 * @param name
+	 * @param alias
+	 * @return A new UseStatementPart.
+	 */
+	public UseStatementPart newUseStatementPart(NamespaceName name, Identifier alias) {
+		UseStatementPart usePart = new UseStatementPart(this);
+		usePart.setName(name);
+		usePart.setAlias(alias);
+		return usePart;
+	}
+	
+	/**
+	 * Creates a new {@link UseStatement}.
+	 * @param parts
+	 * @return A new UseStatement.
+	 */
+	public UseStatement newUseStatement(Collection<UseStatementPart> parts) {
+		UseStatement useStatement = new UseStatement(this);
+		useStatement.parts().addAll(parts);
+		return useStatement;
+	}
+
+	/**
+	 * Creates a new {@link GotoLabel}.
+	 * @param label
+	 * @return A new GotoLabel.
+	 */
+	public GotoLabel newGotoLabel(Identifier label) {
+		GotoLabel gotoLabel = new GotoLabel(this);
+		gotoLabel.setName(label);
+		return gotoLabel;
+	}
+	
+	/**
+	 * Creates a new {@link GotoStatement}.
+	 * @param label
+	 * @return A new GotoStatement.
+	 */
+	public GotoStatement newGotoStatement(Identifier label) {
+		GotoStatement gotoStatement = new GotoStatement(this);
+		gotoStatement.setLabel(label);
+		return gotoStatement;
+	}
+	
+	/**
+	 * Creates a new {@link LambdaFunctionDeclaration}.
+	 * @param label
+	 * @return A new LambdaFunctionDeclaration.
+	 */
+	public LambdaFunctionDeclaration newLambdaFunctionDeclaration(final Collection<FormalParameter> formalParameters, final Collection<Variable> lexicalVars, final Block body, final boolean isReference, final boolean isStatic) {
+		LambdaFunctionDeclaration lfDeclaration = new LambdaFunctionDeclaration(this);
+		lfDeclaration.setBody(body);
+		lfDeclaration.setIsReference(isReference);
+		lfDeclaration.setIsStatic(isStatic);
+		lfDeclaration.formalParameters().addAll(formalParameters);
+		lfDeclaration.lexicalVariables().addAll(lexicalVars);
+		return lfDeclaration;
+	}
 }

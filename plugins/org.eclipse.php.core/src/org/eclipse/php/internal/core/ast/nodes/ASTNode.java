@@ -592,6 +592,10 @@ public abstract class ASTNode implements Visitable {
 				return FunctionName.class;
 			case GLOBAL_STATEMENT:
 				return GlobalStatement.class;
+			case GOTO_LABEL:
+				return GotoLabel.class;
+			case GOTO_STATEMENT:
+				return GotoStatement.class;
 			case IDENTIFIER:
 				return Identifier.class;
 			case IF_STATEMENT:
@@ -608,6 +612,8 @@ public abstract class ASTNode implements Visitable {
 				return InstanceOfExpression.class;
 			case INTERFACE_DECLARATION:
 				return InterfaceDeclaration.class;
+			case LAMBDA_FUNCTION_DECLARATION:
+				return LambdaFunctionDeclaration.class;
 			case LIST_VARIABLE:
 				return ListVariable.class;
 			case METHOD_DECLARATION:
