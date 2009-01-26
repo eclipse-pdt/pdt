@@ -56,7 +56,7 @@ public class VariableDeclarationEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
-		if (state != GoalState.PRUNED && result != null && result != UnknownType.INSTANCE) {
+		if (this.result == null && state != GoalState.PRUNED && result != null && result != UnknownType.INSTANCE) {
 			this.result = (IEvaluatedType) result;
 		}
 		return IGoal.NO_GOALS;
