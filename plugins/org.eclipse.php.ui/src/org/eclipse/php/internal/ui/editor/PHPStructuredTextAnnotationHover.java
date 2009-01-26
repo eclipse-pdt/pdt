@@ -13,9 +13,7 @@ package org.eclipse.php.internal.ui.editor;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.text.BadLocationException;
@@ -227,7 +225,7 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 	@Override
 	public String getHoverInfo(ISourceViewer sourceViewer, int lineNumber) {
 		// get all the marker messages
-		List<String> messages = getMarkerMessages(sourceViewer, lineNumber);
+		List<String> messages = dropDuplicateMessages(getMarkerMessages(sourceViewer, lineNumber));
 
 		List<ITemporaryAnnotation> temporaryAnnotations = getTemporaryAnnotationsForLine(sourceViewer, lineNumber);
 		for (int i = 0; i < temporaryAnnotations.size(); i++) {
@@ -249,6 +247,17 @@ public class PHPStructuredTextAnnotationHover extends StructuredTextAnnotationHo
 			return formatHoverText(messages.get(0).toString(), sourceViewer);
 		else
 			return null;
+	}
+	
+	private List<String> dropDuplicateMessages(List<String> messages) {
+		Set<String> rt = new HashSet<String>();
+		for (Iterator<String> i = messages.iterator(); i.hasNext();) {
+			String message = i.next();
+			if (!rt.contains(message)) {
+				rt.add(message);
+			}
+		}
+		return new ArrayList<String>(rt);
 	}
 
 	private int getHoverWidth(Display display) {
