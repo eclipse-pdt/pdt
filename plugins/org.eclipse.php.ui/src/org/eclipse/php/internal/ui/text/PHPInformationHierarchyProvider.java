@@ -10,21 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 
+import org.eclipse.dltk.compiler.env.ISourceType;
+import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.Member;
-import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceType;
-import org.eclipse.dltk.internal.ui.actions.SelectionConverter;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
-import org.eclipse.dltk.internal.ui.editor.ModelTextSelection;
 import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
-import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Identifier;
 import org.eclipse.php.internal.core.ast.nodes.Program;
@@ -89,16 +88,16 @@ public class PHPInformationHierarchyProvider implements IInformationProvider, II
 			if (inputModelElement instanceof ISourceModule && subject != null) {
 				ISourceModule sourceModule = (ISourceModule) inputModelElement;
 				IModelElement modelElement = getSelectionModelElement(subject.getOffset(), subject.getLength(), sourceModule);
-				
-				if (modelElement != null ) {
-					if (modelElement instanceof SourceType){
+
+				if (modelElement != null) {
+					if (modelElement instanceof ISourceType) {
 						return modelElement;
 					}
-					if(modelElement instanceof Member){ 
-						return ((Member) modelElement).getDeclaringType();
+					if (modelElement instanceof IMember) {
+						return modelElement;
 					}
 				} else { // if no element - returns null
-					return null;							
+					return null;
 				}
 			}
 		}

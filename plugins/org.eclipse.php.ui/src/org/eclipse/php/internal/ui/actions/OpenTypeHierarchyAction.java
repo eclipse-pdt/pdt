@@ -22,14 +22,16 @@ package org.eclipse.php.internal.ui.actions;
  *******************************************************************************/
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.ui.DLTKUIMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionMessages;
 import org.eclipse.dltk.internal.ui.actions.ActionUtil;
+import org.eclipse.dltk.internal.ui.actions.OpenActionUtil;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
-import org.eclipse.dltk.internal.ui.typehierarchy.OpenTypeHierarchyUtil;
+import org.eclipse.dltk.internal.ui.typehierarchy.TypeHierarchyViewPart;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
+import org.eclipse.dltk.ui.util.ExceptionHandler;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -43,7 +45,9 @@ import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.corext.dom.NodeFinder;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.ui.editor.SharedASTProvider;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.texteditor.IUpdate;
 
 /**
@@ -108,7 +112,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			if (firstElement instanceof IMethod) {
 				setEnabled(((IMethod) firstElement).getParent() instanceof IType);
 			} else {
-				setEnabled(firstElement instanceof IType ||  firstElement instanceof IField) ;
+				setEnabled(firstElement instanceof IType || firstElement instanceof IField);
 			}
 		}
 	}
@@ -232,7 +236,42 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 			getShell().getDisplay().beep();
 			return;
 		}
-		OpenTypeHierarchyUtil.open(elements, getSite().getWorkbenchWindow());
+		open(elements, getSite().getWorkbenchWindow());
+	}
+
+	public static TypeHierarchyViewPart open(IModelElement[] candidates, IWorkbenchWindow window) {
+		Assert.isNotNull(candidates);
+		Assert.isTrue(candidates.length != 0);
+
+		IModelElement input = null;
+		if (candidates.length > 1) {
+			String title = DLTKUIMessages.OpenTypeHierarchyUtil_selectionDialog_title;
+			String message = DLTKUIMessages.OpenTypeHierarchyUtil_selectionDialog_message;
+			input = OpenActionUtil.selectModelElement(candidates, window.getShell(), title, message);
+		} else {
+			input = candidates[0];
+		}
+
+		if (input == null)
+			return null;
+
+		return openInViewPart(window, input);
+	}
+
+	private static TypeHierarchyViewPart openInViewPart(IWorkbenchWindow window, IModelElement input) {
+		IWorkbenchPage page = window.getActivePage();
+		try {
+			TypeHierarchyViewPart result = (TypeHierarchyViewPart) page.findView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
+			if (result != null) {
+				result.clearNeededRefresh(); // avoid refresh of old hierarchy on 'becomes visible'
+			}
+			result = (TypeHierarchyViewPart) page.showView(DLTKUIPlugin.ID_TYPE_HIERARCHY);
+			result.setInputElement(input);
+			return result;
+		} catch (CoreException e) {
+			ExceptionHandler.handle(e, window.getShell(), DLTKUIMessages.OpenTypeHierarchyUtil_error_open_view, e.getMessage());
+		}
+		return null;
 	}
 
 	private static String getDialogTitle() {
