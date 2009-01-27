@@ -95,14 +95,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration type) throws Exception {
-		// Check whether this node is a namespace without block. In this case we don't
-		// pop it back until we meet another namespace declaration or EOF in order to place
-		// following statements under it.
-		if (pendingNsDeclaration == null && type instanceof NamespaceDeclaration) {
+		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
-			if (namespaceDecl.getBody().getStatements().size() == 0) {
-				pendingNsDeclaration = namespaceDecl;
+			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) { // we don't handle global namespaces
 				return true;
+			}
+			
+			// Check whether this node is a namespace without block. In this case we don't
+			// pop it back until we meet another namespace declaration or EOF in order to place
+			// following statements under it.
+			if (pendingNsDeclaration == null) {
+				if (namespaceDecl.getBody().getStatements().size() == 0) {
+					pendingNsDeclaration = namespaceDecl;
+					return true;
+				}
 			}
 		}
 		
@@ -185,9 +191,15 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 	
 	public boolean visit(TypeDeclaration type) throws Exception {
-		if (pendingNsDeclaration != null && type instanceof NamespaceDeclaration) {
-			endvisit(pendingNsDeclaration);
-			pendingNsDeclaration = null;
+		if (type instanceof NamespaceDeclaration) {
+			NamespaceDeclaration nsDecl = (NamespaceDeclaration) type;
+			if (pendingNsDeclaration != null) {
+				endvisit(pendingNsDeclaration);
+				pendingNsDeclaration = null;
+			}
+			if (nsDecl.getName() == NamespaceDeclaration.GLOBAL) { // we don't handle global namespaces
+				return true;
+			}
 		}
 		
 		// In case we are entering a nested element 
