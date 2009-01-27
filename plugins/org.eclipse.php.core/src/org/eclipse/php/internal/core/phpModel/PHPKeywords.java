@@ -10,30 +10,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
-
-
+/**
+ * This class is used for retrieval PHP keywords information for the given PHP version 
+ */
 public class PHPKeywords {
 
-	private static final String OPEN_BLOCK_SUFFIX = " {";
-	private static final String PAAMAYIM_NEKUDOTAYIM_SUFFIX = "::";
-	private static final String WS_QUOTES_SEMICOLON_SUFFIX = " '';";
-	private static final String EMPTY_SUFFIX = "";
-	private static final String COLON_SUFFIX = ":";
-	private static final String WHITESPACE_COLON_SUFFIX = " :";
-	private static final String SEMICOLON_SUFFIX = ";";
-	private static final String WHITESPACE_PARENTESES_SUFFIX = " ()";
-	private static final String WHITESPACE_SUFFIX = " ";
-	private static final String PARENTESES_SUFFIX = "()";
-
-	public static class KeywordData {
+	/**
+	 * This class contains code assist auto-complete information about keyword
+	 */
+	public static class KeywordData implements Comparable<KeywordData> {
 		public String name;
 		public String suffix;
 		public int suffixOffset;
@@ -76,219 +67,47 @@ public class PHPKeywords {
 			}
 			return true;
 		}
+
+		public int compareTo(KeywordData o) {
+			return this.name.compareTo(o.name); 
+		}
 	}
 
-	/**
-	 * Sorted array of PHP4 keywords and their auto-complete information.
-	 */
-	private static final KeywordData[] keywordsPhp4 = {
-		new KeywordData("and", WHITESPACE_SUFFIX, 1),
-		new KeywordData("array", PARENTESES_SUFFIX, 1),
-		new KeywordData("as", WHITESPACE_SUFFIX, 1),
-		new KeywordData("break", EMPTY_SUFFIX, 0),
-		new KeywordData("case", WHITESPACE_COLON_SUFFIX, 2),
-		new KeywordData("class", WHITESPACE_SUFFIX, 1),
-		new KeywordData("const", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("continue", EMPTY_SUFFIX, 0),
-		new KeywordData("declare", PARENTESES_SUFFIX, 1),
-		new KeywordData("default", COLON_SUFFIX, 1),
-		new KeywordData("die", PARENTESES_SUFFIX, 1),
-		new KeywordData("do", WHITESPACE_SUFFIX, 1),
-		new KeywordData("echo", WHITESPACE_SUFFIX, 1),
-		new KeywordData("elseif", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("else", WHITESPACE_SUFFIX, 1),
-		new KeywordData("empty", PARENTESES_SUFFIX, 1),
-		new KeywordData("enddeclare", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endforeach", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endfor", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endif", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endswitch", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endwhile", SEMICOLON_SUFFIX, 1),
-		new KeywordData("eval", PARENTESES_SUFFIX, 1),
-		new KeywordData("exit", PARENTESES_SUFFIX, 1),
-		new KeywordData("extends", WHITESPACE_SUFFIX, 1),
-		new KeywordData("false", EMPTY_SUFFIX, 0),
-		new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("function", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("global", WHITESPACE_SUFFIX, 1),
-		new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("include_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("isset", PARENTESES_SUFFIX, 1),
-		new KeywordData("list", PARENTESES_SUFFIX, 1),
-		new KeywordData("new", WHITESPACE_SUFFIX, 1),
-		new KeywordData("null", EMPTY_SUFFIX, 0),
-		new KeywordData("old_function", WHITESPACE_SUFFIX, 1),
-		new KeywordData("or", WHITESPACE_SUFFIX, 1),
-		new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
-		new KeywordData("print", WHITESPACE_SUFFIX, 1),
-		new KeywordData("require_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("return", WHITESPACE_SUFFIX, 1),
-		new KeywordData("static", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("true", EMPTY_SUFFIX, 0),
-		new KeywordData("unset", PARENTESES_SUFFIX, 1),
-		new KeywordData("var", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("while", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("xor", WHITESPACE_SUFFIX, 1),
-	};
+	private static final Map<IProject, PHPKeywords> instances = new HashMap<IProject, PHPKeywords>();
+	private Collection<KeywordData> keywordData;
 	
-	/**
-	 * Sorted array of PHP5 keywords and their auto-complete information.
-	 */
-	private static final KeywordData[] keywordsPhp5 = {
-		new KeywordData("abstract", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("and", WHITESPACE_SUFFIX, 1),
-		new KeywordData("array", PARENTESES_SUFFIX, 1),
-		new KeywordData("as", WHITESPACE_SUFFIX, 1),
-		new KeywordData("break", EMPTY_SUFFIX, 0),
-		new KeywordData("case", WHITESPACE_COLON_SUFFIX, 2),
-		new KeywordData("catch", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("class", WHITESPACE_SUFFIX, 1),
-		new KeywordData("clone", WHITESPACE_SUFFIX, 1),
-		new KeywordData("const", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("continue", EMPTY_SUFFIX, 0),
-		new KeywordData("declare", PARENTESES_SUFFIX, 1),
-		new KeywordData("default", COLON_SUFFIX, 1),
-		new KeywordData("die", PARENTESES_SUFFIX, 1),
-		new KeywordData("do", WHITESPACE_SUFFIX, 1),
-		new KeywordData("echo", WHITESPACE_SUFFIX, 1),
-		new KeywordData("elseif", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("else", WHITESPACE_SUFFIX, 1),
-		new KeywordData("empty", PARENTESES_SUFFIX, 1),
-		new KeywordData("enddeclare", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endforeach", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endfor", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endif", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endswitch", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endwhile", SEMICOLON_SUFFIX, 1),
-		new KeywordData("eval", PARENTESES_SUFFIX, 1),
-		new KeywordData("exit", PARENTESES_SUFFIX, 1),
-		new KeywordData("extends", WHITESPACE_SUFFIX, 1),
-		new KeywordData("false", EMPTY_SUFFIX, 0),
-		new KeywordData("final", WHITESPACE_SUFFIX, 1),
-		new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("function", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("global", WHITESPACE_SUFFIX, 1),
-		new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("implements", WHITESPACE_SUFFIX, 1),
-		new KeywordData("include_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("instanceof", WHITESPACE_SUFFIX, 1),
-		new KeywordData("interface", WHITESPACE_SUFFIX, 1),
-		new KeywordData("isset", PARENTESES_SUFFIX, 1),
-		new KeywordData("list", PARENTESES_SUFFIX, 1),
-		new KeywordData("new", WHITESPACE_SUFFIX, 1),
-		new KeywordData("null", EMPTY_SUFFIX, 0),
-		new KeywordData("or", WHITESPACE_SUFFIX, 1),
-		new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
-		new KeywordData("print", WHITESPACE_SUFFIX, 1),
-		new KeywordData("private", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("protected", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("public", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("require_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("return", WHITESPACE_SUFFIX, 1),
-		new KeywordData("self", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
-		new KeywordData("static", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("throw", WHITESPACE_SUFFIX, 1),
-		new KeywordData("true", EMPTY_SUFFIX, 0),
-		new KeywordData("try", OPEN_BLOCK_SUFFIX, 2),
-		new KeywordData("unset", PARENTESES_SUFFIX, 1),
-		new KeywordData("var", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("while", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("xor", WHITESPACE_SUFFIX, 1),
-	};
-	
-	/**
-	 * Sorted array of PHP5.3 keywords and their auto-complete information.
-	 */
-	private static final KeywordData[] keywordsPhp5_3 = {
-		new KeywordData("abstract", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("and", WHITESPACE_SUFFIX, 1),
-		new KeywordData("array", PARENTESES_SUFFIX, 1),
-		new KeywordData("as", WHITESPACE_SUFFIX, 1),
-		new KeywordData("break", EMPTY_SUFFIX, 0),
-		new KeywordData("case", WHITESPACE_COLON_SUFFIX, 2),
-		new KeywordData("catch", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("class", WHITESPACE_SUFFIX, 1),
-		new KeywordData("clone", WHITESPACE_SUFFIX, 1),
-		new KeywordData("const", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("continue", EMPTY_SUFFIX, 0),
-		new KeywordData("declare", PARENTESES_SUFFIX, 1),
-		new KeywordData("default", COLON_SUFFIX, 1),
-		new KeywordData("die", PARENTESES_SUFFIX, 1),
-		new KeywordData("do", WHITESPACE_SUFFIX, 1),
-		new KeywordData("echo", WHITESPACE_SUFFIX, 1),
-		new KeywordData("elseif", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("else", WHITESPACE_SUFFIX, 1),
-		new KeywordData("empty", PARENTESES_SUFFIX, 1),
-		new KeywordData("enddeclare", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endforeach", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endfor", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endif", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endswitch", SEMICOLON_SUFFIX, 1),
-		new KeywordData("endwhile", SEMICOLON_SUFFIX, 1),
-		new KeywordData("eval", PARENTESES_SUFFIX, 1),
-		new KeywordData("exit", PARENTESES_SUFFIX, 1),
-		new KeywordData("extends", WHITESPACE_SUFFIX, 1),
-		new KeywordData("false", EMPTY_SUFFIX, 0),
-		new KeywordData("final", WHITESPACE_SUFFIX, 1),
-		new KeywordData("foreach", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("for", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("function", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("global", WHITESPACE_SUFFIX, 1),
-		new KeywordData("goto", WHITESPACE_SUFFIX, 1),
-		new KeywordData("if", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("implements", WHITESPACE_SUFFIX, 1),
-		new KeywordData("include_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("include", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("instanceof", WHITESPACE_SUFFIX, 1),
-		new KeywordData("interface", WHITESPACE_SUFFIX, 1),
-		new KeywordData("isset", PARENTESES_SUFFIX, 1),
-		new KeywordData("list", PARENTESES_SUFFIX, 1),
-		new KeywordData("namespace", WHITESPACE_SUFFIX, 1),
-		new KeywordData("new", WHITESPACE_SUFFIX, 1),
-		new KeywordData("null", EMPTY_SUFFIX, 0),
-		new KeywordData("or", WHITESPACE_SUFFIX, 1),
-		new KeywordData("parent", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
-		new KeywordData("print", WHITESPACE_SUFFIX, 1),
-		new KeywordData("private", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("protected", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("public", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("require_once", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("require", WS_QUOTES_SEMICOLON_SUFFIX, 2),
-		new KeywordData("return", WHITESPACE_SUFFIX, 1),
-		new KeywordData("self", PAAMAYIM_NEKUDOTAYIM_SUFFIX, 2),
-		new KeywordData("static", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("switch", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("throw", WHITESPACE_SUFFIX, 1),
-		new KeywordData("true", EMPTY_SUFFIX, 0),
-		new KeywordData("try", OPEN_BLOCK_SUFFIX, 2),
-		new KeywordData("unset", PARENTESES_SUFFIX, 1),
-		new KeywordData("use", WHITESPACE_SUFFIX, 1),
-		new KeywordData("var", WHITESPACE_SUFFIX, 1, true),
-		new KeywordData("while", WHITESPACE_PARENTESES_SUFFIX, 2),
-		new KeywordData("xor", WHITESPACE_SUFFIX, 1),
-	};
-	
-	public static KeywordData[] getKeywordDataByProject(IProject project) {
-		PHPVersion version = PhpVersionProjectPropertyHandler.getVersion(project);
-		if (PHPVersion.PHP4 == version) {
-			return keywordsPhp4;
+	private PHPKeywords(IPHPKeywordsInitializer keywordsInitializer) {
+		keywordData = new TreeSet<KeywordData>();
+		keywordsInitializer.initialize(keywordData);
+		keywordsInitializer.initializeSpecific(keywordData);
+	}
+
+	public static PHPKeywords getInstance(IProject project) {
+		synchronized (instances) {
+			if (!instances.containsKey(project)) {
+				PHPVersion version = PhpVersionProjectPropertyHandler.getVersion(project);
+				PHPKeywords instance;
+				if (PHPVersion.PHP4 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_4());
+				} else if (PHPVersion.PHP5 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_5());
+				} else if (PHPVersion.PHP5_3 == version) {
+					instance = new PHPKeywords(new KeywordInitializerPHP_5_3());
+				} else {
+					throw new IllegalArgumentException("No PHP version defined for project!");
+				}
+				instances.put(project, instance);
+			}
 		}
-		if (PHPVersion.PHP5 == version) {
-			return keywordsPhp5;
-		}
-		return keywordsPhp5_3;
+		return instances.get(project);
 	}
 	
-	public static Collection<KeywordData> findByPrefix(IProject project, String prefix) {
-		KeywordData[] keywordData = getKeywordDataByProject(project);
+	/**
+	 * Returns a list of keyword code assist auto-complete information by prefix
+	 * @param prefix
+	 * @return keywords info list
+	 */
+	public Collection<KeywordData> findByPrefix(String prefix) {
 		List<KeywordData> result = new LinkedList<KeywordData>();
 		for (KeywordData data : keywordData) {
 			if (data.name.startsWith(prefix)) {
@@ -298,8 +117,12 @@ public class PHPKeywords {
 		return result;
 	}
 	
-	public static Collection<String> findNamesByPrefix(IProject project, String prefix) {
-		KeywordData[] keywordData = getKeywordDataByProject(project);
+	/**
+	 * Returns a list of keywords by prefix
+	 * @param prefix
+	 * @return keywords info list
+	 */
+	public Collection<String> findNamesByPrefix(String prefix) {
 		List<String> result = new LinkedList<String>();
 		for (KeywordData data : keywordData) {
 			if (data.name.startsWith(prefix)) {

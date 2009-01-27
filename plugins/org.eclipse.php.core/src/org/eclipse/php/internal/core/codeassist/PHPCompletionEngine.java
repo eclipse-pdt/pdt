@@ -674,7 +674,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int relevanceMethod = RELEVANCE_METHOD;
 
 		if (showKeywords) {
-			Collection<KeywordData> keywordsList = PHPKeywords.findByPrefix(sourceModule.getScriptProject().getProject(), prefix);
+			Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject()).findByPrefix(prefix);
 			for (KeywordData k : keywordsList) {
 				if (!inClass || (inClass && k.isClassKeyword)) {
 					reportKeyword(k.name, k.suffix, relevanceKeyword--);
