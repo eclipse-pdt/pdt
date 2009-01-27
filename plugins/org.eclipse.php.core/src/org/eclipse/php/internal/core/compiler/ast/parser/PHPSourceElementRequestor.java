@@ -48,6 +48,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
 	
+	protected TypeDeclaration pendingNsDeclaration = null;
+	
 	/**
 	 * Deferred elements that are 
 	 */
@@ -93,6 +95,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration type) throws Exception {
+		// Check whether this node is a namespace without block. In this case we don't
+		// pop it back until we meet another namespace declaration or EOF in order to place
+		// following statements under it.
+		if (pendingNsDeclaration == null && type instanceof NamespaceDeclaration) {
+			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
+			if (namespaceDecl.getBody().getStatements().size() == 0) {
+				pendingNsDeclaration = namespaceDecl;
+				return true;
+			}
+		}
+		
 		declarations.pop();
 
 		// resolve more type member declarations
@@ -172,6 +185,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 	
 	public boolean visit(TypeDeclaration type) throws Exception {
+		if (pendingNsDeclaration != null && type instanceof NamespaceDeclaration) {
+			endvisit(pendingNsDeclaration);
+			pendingNsDeclaration = null;
+		}
+		
 		// In case we are entering a nested element 
 		if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
 			deferredDeclarations.add(type);
@@ -179,7 +197,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		
 		declarations.push(type);
-
+		
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(type);
 		}
@@ -529,6 +547,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			for (Declaration deferred : declarations) {
 				deferred.traverse(this);
 			}
+		}
+		
+		if (pendingNsDeclaration != null) {
+			endvisit(pendingNsDeclaration);
 		}
 		
 		return super.endvisit(declaration);
