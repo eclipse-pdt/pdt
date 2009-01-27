@@ -335,19 +335,20 @@ public class DebugConnectionThread implements Runnable {
 	 * The cleaning will be done by InputMessageHandler on termination.
 	 */
 	public synchronized void closeConnection() {
-		Logger.debugMSG("[" + this + "] DebugConnectionThread: Starting closeConnection"); //$NON-NLS-1$ //$NON-NLS-2$
+		Logger.debugMSG("DebugConnectionThread: Clean socket"); //$NON-NLS-1$ //$NON-NLS-2$
 		cleanSocket();
 
-		Logger.debugMSG("[" + this + "] DebugConnectionThread: Thread interrupt"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (theThread.isAlive()) {
+			Logger.debugMSG("DebugConnectionThread: Thread interrupt"); //$NON-NLS-1$ //$NON-NLS-2$
 			theThread.interrupt();
 		}
 
-		Logger.debugMSG("[" + this + "] DebugConnectionThread: closing the socket"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (socket != null) {
 			try {
-				if (!socket.isClosed())
+				if (!socket.isClosed()) {
+					Logger.debugMSG("DebugConnectionThread: closing the socket"); //$NON-NLS-1$ //$NON-NLS-2$
 					socket.close();
+				}
 			} catch (Exception exc) {
 				PHPDebugPlugin.log(exc);
 			}
@@ -966,12 +967,6 @@ public class DebugConnectionThread implements Runnable {
 			Logger.logException(e);
 		}
 		return false;
-	}
-
-	public String toString() {
-		String className = getClass().getName();
-		className = className.substring(className.lastIndexOf('.') + 1);
-		return className + "@" + Integer.toHexString(hashCode()); //$NON-NLS-1$
 	}
 
 	/**

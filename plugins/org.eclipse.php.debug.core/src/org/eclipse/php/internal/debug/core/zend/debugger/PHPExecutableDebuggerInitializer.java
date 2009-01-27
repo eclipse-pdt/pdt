@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.debug.core.DebugPlugin;
@@ -108,11 +109,19 @@ public class PHPExecutableDebuggerInitializer {
 
 			// Make sure that we have executable permissions on the file.
 			PHPexes.changePermissions(new File(phpCmdArray[0]));
+			
+			if (PHPDebugPlugin.DEBUG) {
+				System.out.println ("Executing: " + Arrays.toString(phpCmdArray));
+				System.out.println ("Process environment: " + Arrays.toString(environmetVars));
+			}
 
 			// Execute the command line.
 			Process p;
 			File workingDirFile = new File(workingDir);
 			if (workingDirFile.exists()) {
+				if (PHPDebugPlugin.DEBUG) {
+					System.out.println("Working directory: " + workingDir);
+				}
 				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars, workingDirFile);
 			} else {
 				p = Runtime.getRuntime().exec(phpCmdArray, environmetVars);
@@ -136,6 +145,13 @@ public class PHPExecutableDebuggerInitializer {
 				}
 			});
 			DebugPlugin.log(e);
+		} finally {
+			// Remove temporary directory
+			if (phpIniLocation != null) {
+				File phpIniFile = new File(phpIniLocation);
+				phpIniFile.delete();
+				phpIniFile.getParentFile().delete();
+			}
 		}
 	}
 
@@ -217,6 +233,9 @@ public class PHPExecutableDebuggerInitializer {
 				c = in.read(buff);
 				while (c != -1) {
 					c = in.read(buff);
+					if (PHPDebugPlugin.DEBUG) {
+						System.out.println(new String(buff));
+					}
 				}
 			} catch (IOException exc) {
 				PHPDebugPlugin.log(exc);

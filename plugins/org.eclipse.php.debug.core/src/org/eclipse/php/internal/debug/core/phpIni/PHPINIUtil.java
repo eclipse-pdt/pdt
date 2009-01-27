@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.phpIni;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +64,16 @@ public class PHPINIUtil {
 					m.addEntry(ZEND_EXTENSION, extensionPath);
 				}
 			}
+			m.close();
+		} catch (IOException e) {
+			PHPDebugPlugin.log(e);
+		}
+	}
+	
+	private static void modifyExtensionDir(File phpIniFile, String extensionPath) {
+		try {
+			INIFileModifier m = new INIFileModifier(phpIniFile);
+			m.addEntry("extension_dir", extensionPath, true);
 			m.close();
 		} catch (IOException e) {
 			PHPDebugPlugin.log(e);
@@ -129,8 +136,24 @@ public class PHPINIUtil {
 			if (debuggerFile.exists()) {
 				modifyDebuggerExtensionPath(tempIniFile, debuggerFile.getAbsolutePath());
 			}
+			
+			modifyExtensionDir(tempIniFile, debuggerFile.getParentFile().getAbsolutePath());
 		}
-
+		
+		if (PHPDebugPlugin.DEBUG) {
+			System.out.println ("\nPHP.ini contents:\n---------------------");
+			try {
+				BufferedReader r = new BufferedReader(new FileReader(tempIniFile));
+				String line;
+				while ((line = r.readLine()) != null) {
+					System.out.println(line);
+				}
+				r.close();
+				System.out.println();
+			} catch (IOException e) {
+			}
+		}
+		
 		return tempIniFile;
 	}
 

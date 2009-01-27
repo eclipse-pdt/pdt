@@ -381,7 +381,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 		fTerminated = true;
 		fSuspended = false;
 		fLastcmd = "terminate";
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling closeDebugSession()");
+		Logger.debugMSG("PHPDebugTarget: Calling closeDebugSession()");
 		debugger.closeDebugSession();
 
 		terminated();
@@ -394,7 +394,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	public void terminated() {
 		fTerminated = true;
 		fSuspended = false;
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling debugger.closeConnection();");
+		Logger.debugMSG("PHPDebugTarget: Calling debugger.closeConnection()");
 		if (!fTermainateCalled) {
 			debugger.closeConnection();
 		}
@@ -411,10 +411,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 		} catch (DebugException e) {
 			// PHPprocess doesn't throw this exception
 		}
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling removeBreakpointListener(this);");
+		Logger.debugMSG("PHPDebugTarget: Calling removeBreakpointListener(this);");
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(this);
 		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointManagerListener(this);
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Firing terminate");
+		Logger.debugMSG("PHPDebugTarget: Firing terminate");
 		fireTerminateEvent();
 
 		// Refresh the launch-viewer to display the debug elements in their real terminated state.
@@ -619,7 +619,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 					}
 
 					runtimeBreakpoint.setFileName(fileName);
-					Logger.debugMSG("[" + this + "] PHPDebugTarget: Setting Breakpoint - File " + fileName + " Line Number " + lineNumber);
+					Logger.debugMSG("PHPDebugTarget: Setting Breakpoint - File " + fileName + " Line Number " + lineNumber);
 					debugger.addBreakpoint(bp.getRuntimeBreakpoint(), fBreakpointAddedResponseHandler);
 				}
 			} catch (CoreException e1) {
@@ -641,7 +641,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 			fLastcmd = "breakpointRemoved";
 			PHPLineBreakpoint bp = (PHPLineBreakpoint) breakpoint;
 			Breakpoint runtimeBreakpoint = bp.getRuntimeBreakpoint();
-			Logger.debugMSG("[" + this + "] PHPDebugTarget: Removing Breakpoint - File " + runtimeBreakpoint.getFileName() + " Line Number " + runtimeBreakpoint.getLineNumber());
+			Logger.debugMSG("PHPDebugTarget: Removing Breakpoint - File " + runtimeBreakpoint.getFileName() + " Line Number " + runtimeBreakpoint.getLineNumber());
 			fStatus = debugger.removeBreakpoint(runtimeBreakpoint, fBreakpointRemovedResponseHandler);
 			if (!fStatus && debugger.isActive()) {
 				Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.removeBreakpoint return false");
@@ -815,7 +815,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 */
 	protected void stepReturn() throws DebugException {
 		fLastcmd = "stepReturn";
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: stepReturn ");
+		Logger.debugMSG("PHPDebugTarget: stepReturn ");
 		// Fix for bug #163780 - Debugger irregular state control
 		// Call for the resumed before the debugger.stepOut
 		int detail = DebugEvent.STEP_RETURN;
@@ -834,7 +834,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 */
 	protected void stepOver() throws DebugException {
 		fLastcmd = "stepOver";
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: stepOver");
+		Logger.debugMSG("PHPDebugTarget: stepOver");
 		// Fix for bug #163780 - Debugger irregular state control
 		// Call for the resumed before the debugger.stepOver
 		int detail = DebugEvent.STEP_OVER;
@@ -852,7 +852,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 *             if the request fails
 	 */
 	protected void stepInto() throws DebugException {
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: stepInto ");
+		Logger.debugMSG("PHPDebugTarget: stepInto ");
 		fLastcmd = "stepInto";
 		// Fix for bug #163780 - Debugger irregular state control
 		// Call for the resumed before the debugger.stepInto
@@ -1072,12 +1072,6 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 
 	public org.eclipse.php.internal.debug.core.zend.debugger.Debugger.StartResponseHandler getStartResponseHandler() {
 		return fStartResponseHandler;
-	}
-
-	public String toString() {
-		String className = getClass().getName();
-		className = className.substring(className.lastIndexOf('.') + 1);
-		return className + "@" + Integer.toHexString(hashCode());
 	}
 
 	public ContextManager getContextManager() {

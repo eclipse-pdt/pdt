@@ -24,7 +24,6 @@ import org.eclipse.php.internal.debug.core.preferences.PHPDebuggersRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpProxyHandler;
-import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.osgi.framework.BundleContext;

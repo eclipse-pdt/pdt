@@ -80,7 +80,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 				fDebugTarget.started();
 				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
-					Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.start return false");
+					Logger.log(Logger.ERROR, "ServerDebugHandler: debugger.start return false");
 					try {
 						fDebugTarget.disconnect();
 					} catch (DebugException e) {
@@ -108,7 +108,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 
 				fStatus = getRemoteDebugger().start(fDebugTarget.getStartResponseHandler());
 				if (!fStatus) {
-					Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.start return false");
+					Logger.log(Logger.ERROR, "ServerDebugHandler: debugger.start return false");
 				}
 				fDebugTarget.setLastCommand("start");
 			} else {
@@ -123,7 +123,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		fDebugTarget.setLastStop(lineNumber);
 		fDebugTarget.setLastFileName(fileName);
 		String fLastcmd = fDebugTarget.getLastCommand();
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: lastCMD " + fLastcmd);
+		Logger.debugMSG("ServerDebugHandler: lastCMD " + fLastcmd);
 
 		fDebugTarget.setBreakpoints(new IBreakpoint[] {});
 
@@ -158,55 +158,37 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	}
 
 	public void sessionEnded() {
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Starting sessionEnded()");
+		Logger.debugMSG("ServerDebugHandler: Starting sessionEnded()");
 		super.sessionEnded();
 
 	}
 
 	public void connectionClosed() {
-		Logger.debugMSG("[" + this + "] PHPDebugTarget:Starting connectionClosed()");
+		Logger.debugMSG("ServerDebugHandler: Starting connectionClosed()");
 		super.connectionClosed();
 		fRemoteDebugger.finish();
 		//		if (fDebugTarget.isPHPCGI()) {
-		//			Logger.debugMSG("PHPDebugTarget: Calling Terminated() for PHP CGI");
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminated()");
+		//			Logger.debugMSG("ServerDebugHandler: Calling Terminated() for PHP CGI");
+		Logger.debugMSG("ServerDebugHandler: Calling Terminated()");
 		fDebugTarget.terminated();
 		//		}
 	}
 
 	public void handleScriptEnded() {
-		Logger.debugMSG("[" + this + "] PHPDebugTarget: handleScriptEnded");
+		Logger.debugMSG("ServerDebugHandler: handleScriptEnded");
 		try {
-			Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminate()");
+			Logger.debugMSG("ServerDebugHandler: Calling Terminate()");
 			fDebugTarget.terminate();
 
 		} catch (DebugException e1) {
-			Logger.logException("PHPDebugTarget: terminate failed", e1);
+			Logger.logException("ServerDebugHandler: terminate failed", e1);
 		}
 	}
 
 	public void multipleBindOccured() {
 		super.multipleBindOccured();
-		Logger.log(Logger.WARNING, "PHPDebugTarget: Multiple Bind Occured");
-
-		//		Hashtable usedPorts = fDebugTarget.getUsedPorts();
-		//		synchronized (usedPorts) {
-		//			usedPorts.remove(String.valueOf(fDebugTarget.getRequestPort()));
-		//		}
-		/*            fRequestPort++;
-		 debugger.setDebugPort(fRequestPort);
-		 if (fIsPHPCGI){
-		 try {
-		 debugPHPExecutable(fPHPExe, fFileToDebug.getLocation().toString(), fRequestPort, fIsStopAtFirstLine);
-		 } catch (DebugException e) {
-		 // Not likely to happened, since this is the second time we found the file.
-		 Logger.logException("PHPDebugTarget: Debugger didn't find file to debug.", e);
-		 }
-		 }else {
-		 runPHPWebServer(fURL, fRequestPort, fIsStopAtFirstLine);
-		 terminated();
-
-		 }    */
+		Logger.log(Logger.WARNING, "ServerDebugHandler: Multiple Bind Occured");
+		
 		String errorMessage = PHPDebugCoreMessages.DebuggerDebugPortInUse_1;
 		fRemoteDebugger.closeConnection();
 		fDebugTarget.fireError(errorMessage, null);

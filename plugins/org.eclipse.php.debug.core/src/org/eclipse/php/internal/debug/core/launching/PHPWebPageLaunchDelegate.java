@@ -15,27 +15,10 @@ import java.text.MessageFormat;
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
@@ -274,22 +257,16 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		private ILaunch launch;
 
 		public RunDispatchJobWebServer(ILaunch launch) {
-			super("runPHPWebServer");
+			super("RunDispatchJobWebServer");
 			this.launch = launch;
 			setSystem(true);
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
 			initiateDebug(launch);
-			Logger.debugMSG("[" + this + "] PHPDebugTarget: Calling Terminated()");
+			Logger.debugMSG("Terminating debug session: calling PHPDebugTarget.terminate()");
 			terminated();
 			return Status.OK_STATUS;
-		}
-
-		public String toString() {
-			String className = getClass().getName();
-			className = className.substring(className.lastIndexOf('.') + 1);
-			return className + "@" + Integer.toHexString(hashCode());
 		}
 	}
 

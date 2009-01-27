@@ -31,7 +31,7 @@ public class INIFileModifier {
 
 	private static final String GLOBAL_SECTION = "__global__"; //$NON-NLS-1$
 	private static final Pattern SECTION_PATTERN = Pattern.compile("\\[([^\\]]+)\\]"); //$NON-NLS-1$
-	private static final Pattern NAME_VAL_PATTERN = Pattern.compile("(\\w+)=(.*)"); //$NON-NLS-1$
+	private static final Pattern NAME_VAL_PATTERN = Pattern.compile("([\\w]+)\\s*=\\s*(.*)"); //$NON-NLS-1$
 
 	class INIFileSection {
 		String name;
@@ -70,7 +70,19 @@ public class INIFileModifier {
 
 		read();
 	}
-
+	
+	/**
+	 * Adds new entry to the INI file.
+	 * New entry will be added to the default (unnamed) section
+	 *
+	 * @param name Entry name
+	 * @param value Value name
+	 * @param replace Whether to replace the old entry
+	 */
+	public void addEntry(String name, String value, boolean replace) {
+		addEntry(GLOBAL_SECTION, name, value, replace, null);
+	}
+	
 	/**
 	 * Adds new entry to the INI file.
 	 * New entry will be added to the default (unnamed) section, no old entries will be replaced

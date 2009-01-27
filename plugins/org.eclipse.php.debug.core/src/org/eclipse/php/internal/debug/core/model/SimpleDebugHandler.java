@@ -20,68 +20,62 @@ import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
 public abstract class SimpleDebugHandler implements IDebugHandler {
 
 	public void ready(String fileName, int lineNumber) {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: ready: " + fileName + " " + lineNumber);
+		Logger.debugMSG("PHPSimpleDebugHandler: ready: " + fileName + " " + lineNumber);
 	}
 
 	public void debugChanged() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: debugChanged");
+		Logger.debugMSG("PHPSimpleDebugHandler: debugChanged");
 	}
 
 	public void debuggerErrorOccured(DebugError debugError) {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: debuggerErrorOccured: " + debugError);
+		Logger.debugMSG("PHPSimpleDebugHandler: debuggerErrorOccured: " + debugError);
 	}
 
 	public void sessionStarted(String remoteFile, String uri, String query, String options) {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: sessionStarted ");
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        fileName: " + remoteFile);
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        uri: " + uri);
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler:        query: " + query);
-		Logger.debugMSG("[" + this + "]  PHPSimpleDebugHandler:       options: " + options);
+		Logger.debugMSG("PHPSimpleDebugHandler: sessionStarted ");
+		Logger.debugMSG("                       fileName: " + remoteFile);
+		Logger.debugMSG("                       uri: " + uri);
+		Logger.debugMSG("                       query: " + query);
+		Logger.debugMSG("                       options: " + options);
 	}
 
 	public void sessionEnded() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: sessionEnded");
+		Logger.debugMSG("PHPSimpleDebugHandler: sessionEnded");
 	}
 
 	public void connectionTimedout() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: connectionTimedout");
+		Logger.debugMSG("PHPSimpleDebugHandler: connectionTimedout");
 	}
 
 	public void multipleBindOccured() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: multipleBindOccured");
+		Logger.debugMSG("PHPSimpleDebugHandler: multipleBindOccured");
 	}
 
 	public void handleScriptEnded() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: handleScriptEnded");
+		Logger.debugMSG("PHPSimpleDebugHandler: handleScriptEnded");
 	}
 
 	public void connectionEstablished() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: connectionEstablished");
+		Logger.debugMSG("PHPSimpleDebugHandler: connectionEstablished");
 	}
 
 	public void connectionClosed() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: connectionClosed");
+		Logger.debugMSG("PHPSimpleDebugHandler: connectionClosed");
 	}
 
 	public void newOutput(String output) {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: newOutput " + output);
+		Logger.debugMSG("PHPSimpleDebugHandler: newOutput " + output);
 	}
 
 	public void newHeaderOutput(String output) {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: newHeaderOutput " + output);
+		Logger.debugMSG("PHPSimpleDebugHandler: newHeaderOutput " + output);
 	}
 
 	public void parsingErrorOccured(DebugError debugError) {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: parsingErrorOccured " + debugError);
+		Logger.debugMSG("PHPSimpleDebugHandler: parsingErrorOccured " + debugError);
 	}
 
 	public void wrongDebugServer() {
-		Logger.debugMSG("[" + this + "] PHPSimpleDebugHandler: wrongDebugServer");
-	}
-
-	public String toString() {
-		String className = getClass().getName();
-		className = className.substring(className.lastIndexOf('.') + 1);
-		return className + "@" + Integer.toHexString(hashCode());
+		Logger.debugMSG("PHPSimpleDebugHandler: wrongDebugServer");
 	}
 }
