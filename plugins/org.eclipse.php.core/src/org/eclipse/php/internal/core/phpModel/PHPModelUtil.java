@@ -19,6 +19,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IMember;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
@@ -118,4 +120,22 @@ public class PHPModelUtil {
 		final IProjectNature nature = project.getNature(PHPNature.ID);
 		return nature != null;
 	}	
+	
+	/**
+	 * Retrieves the source module related to the provide model element
+	 * @param element
+	 * @return the source module related to the provide model element
+	 */
+	public static final ISourceModule getSourceModule(IModelElement element) {
+		if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+			return (ISourceModule) element;
+		}
+		
+		if (element instanceof IMember) {
+			return ((IMember) element).getSourceModule();
+		}
+		
+		return null;
+	}
+	
 }
