@@ -170,7 +170,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		}
 	}
-
+	
 	public boolean visit(TypeDeclaration type) throws Exception {
 		// In case we are entering a nested element 
 		if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
@@ -194,6 +194,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			if (phpDoc != null && phpDoc.getTags(PHPDocTag.INTERNAL).length > 0) {
 				ti.modifiers |= IPHPModifiers.Internal;
 			}
+		}
+		
+		// check whether this is a namespace
+		if (typeDeclaration instanceof NamespaceDeclaration) {
+			ti.modifiers |= Modifiers.AccNameSpace;
 		}
 	}
 

@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.7 2009/01/25 20:32:28 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.8 2009/01/27 13:24:29 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -578,15 +578,15 @@ unticked_statement:statement
 {:
 	RESULT = new GotoLabel(labelleft, endright, label);
 :}
-| T_VAR_COMMENT:varComment unticked_statement:statement
-{:
-	RESULT = statement;
-:}
 | error:theError /* error statement */
 {:
 	parser.reportError();
 	ASTError error = new ASTError(theErrorleft, theErrorright);
 	RESULT = error;	
+:}
+| T_VAR_COMMENT:varComment unticked_statement:statement
+{:
+	RESULT = statement;
 :}
 ;
 
@@ -801,7 +801,6 @@ additional_catches:catchesList
 {:
 	RESULT = new GotoStatement(startleft, endright, label);
 :}
-
 ;
 
 additional_catches ::=
@@ -897,7 +896,6 @@ is_reference ::=
 {:
 	RESULT = Boolean.FALSE;
 :}
-
 | T_REFERENCE
 {:
 	RESULT = Boolean.TRUE;
@@ -1002,17 +1000,23 @@ error
 |
 ;
 
+/* Here go all elements that trigger the class closure */
 class_closure ::=
-T_CURLY_CLOSE
-|
-unticked_statement:statement /* error recovery */ 
-{: 
+T_CURLY_CLOSE /* normal behaviour */
+
+/* error recovery - function declaration closes current class */
+/* XXX: This is disabled for now because of lambda functions
+function_declaration_statement:statement 
+{:
 	RESULT = statement;
 :}
-|class_declaration_statement:statement /* error recovery */
-{: 
+*/
+
+/* error recovery - another class declaration closes current class */
+| class_declaration_statement:statement
+{:
 	RESULT = statement;
-:} 
+:}
 ;
 
 class_entry_type ::=
@@ -1020,12 +1024,10 @@ T_CLASS:value
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccDefault, value); 
 :}
-               
 | T_ABSTRACT:value T_CLASS
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccAbstract, value);
 :}        
-
 | T_FINAL:value T_CLASS   
 {:
 	RESULT = parser.new ModifierDocPair(Modifiers.AccFinal, value);
@@ -1037,7 +1039,6 @@ extends_from ::=
 {:
 	RESULT = null;
 :}
-
 | T_EXTENDS fully_qualified_class_name:className
 {:
 	RESULT = className;
@@ -1062,7 +1063,6 @@ interface_extends_list ::=
 	List list = new LinkedList();
 	RESULT = list;
 :}
-
 | T_EXTENDS interface_list:list
 {:
 	RESULT = list;
@@ -1420,10 +1420,9 @@ optional_class_type ::=
 	RESULT = null;
 :}
 
-| T_STRING:className
+| fully_qualified_class_name:className
 {:
-	TypeReference reference = new TypeReference(classNameleft, classNameright, className);
-	RESULT = reference;
+	RESULT = className;
 :}
 
 | T_ARRAY:array
@@ -1650,7 +1649,6 @@ T_SEMICOLON:end /* abstract method */
 	methodDeclaration.setEnd(endright);
 	RESULT = null;
 :}
-
 | T_CURLY_OPEN:start inner_statement_list:statementList T_CURLY_CLOSE:end
 {:
 	PHPMethodDeclaration methodDeclaration = (PHPMethodDeclaration)parser.declarations.peek();
@@ -1790,14 +1788,14 @@ class_variable_declaration:list T_COMMA T_VARIABLE:var
 ;
 
 constant_declaration ::=
-constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar:expr
+constant_declaration:list T_COMMA T_STRING:constName T_EQUAL static_scalar:expr
 {:
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
 	list.add(new ASTNode[] {constId, expr});
 	RESULT = list;
 :}
 
-| T_CONST:value string_st:constName T_EQUAL static_scalar:expr
+| T_CONST:value T_STRING:constName T_EQUAL static_scalar:expr
 {:
 	List list = new LinkedList();
 	ConstantReference constId = new ConstantReference(constNameleft, constNameright, constName);
@@ -2305,7 +2303,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	RESULT = new PHPCallExpression(sepleft, endright, null, name, parameters); 
 :}
 
-| class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {: 
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
@@ -2322,7 +2320,7 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 	RESULT = functionInvocation;
 :}
 
-| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {: 
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
@@ -2370,9 +2368,21 @@ T_STATIC:s
 ;
 
 fully_qualified_class_name ::=
-T_STRING:className
+namespace_name:className
 {:
-	TypeReference name = new TypeReference(classNameleft, classNameright, className);
+	TypeReference name = new TypeReference(classNameleft, classNameright, className.toString());
+	RESULT = name;
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:buf
+{:
+	TypeReference name = new TypeReference(sleft, bufright, "namespace\\" + buf.toString());
+	RESULT = name;
+:}
+
+| T_NS_SEPARATOR:s namespace_name:buf
+{:
+	TypeReference name = new TypeReference(sleft, bufright, '\\' + buf.toString());
 	RESULT = name;
 :}
 ;
@@ -2566,10 +2576,24 @@ common_scalar:scalar
 	RESULT = scalar;
 :}
 
-| string_st:str
+| namespace_name:buf
 {:
-	Scalar s = new Scalar(strleft, strright, str, Scalar.TYPE_STRING);
-	RESULT = s;	
+	String namespace = buf.toString();
+	if (namespace.indexOf('\\') == -1) {
+		RESULT = new Scalar(bufleft, bufright, namespace, Scalar.TYPE_STRING);
+	} else {
+		RESULT = new TypeReference(bufleft, bufright, namespace);
+	}
+:}
+
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:buf
+{:
+	RESULT = new TypeReference(sleft, bufright, "namespace\\" + buf.toString());
+:}
+
+| T_NS_SEPARATOR:s namespace_name:buf
+{:
+	RESULT = new TypeReference(sleft, bufright, '\\' + buf.toString());
 :}
 
 | T_PLUS:start static_scalar:expr
@@ -2597,7 +2621,7 @@ common_scalar:scalar
 ;
 
 static_class_constant ::=
-class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
+class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
 	ConstantReference vname = new ConstantReference(varNameleft, varNameright, varName);
 	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, vname); 
@@ -2606,35 +2630,42 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
 ;
 
 scalar ::=
-string_st:scalar
-{: 
-	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
-	RESULT = s;
-:}
-
-| T_STRING_VARNAME:scalar
+T_STRING_VARNAME:scalar
 {:
 	// TODO: check if this is a scalar
 	Scalar s = new Scalar(scalarleft, scalarright, scalar, Scalar.TYPE_STRING);
 	RESULT = s;
 :}
-
 | class_constant:classConstant
 {:
 	RESULT = classConstant;
 :}
-
+| namespace_name:buf
+{:
+	String namespace = buf.toString();
+	if (namespace.indexOf('\\') == -1) {
+		RESULT = new Scalar(bufleft, bufright, namespace, Scalar.TYPE_STRING);
+	} else {
+		RESULT = new TypeReference(bufleft, bufright, namespace);
+	}
+:}
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:buf
+{:
+	RESULT = new TypeReference(sleft, bufright, "namespace\\" + buf.toString());
+:}
+| T_NS_SEPARATOR:s namespace_name:buf
+{:
+	RESULT = new TypeReference(sleft, bufright, '\\' + buf.toString());
+:}
 | common_scalar:scalar
 {:
 	RESULT = scalar;
 :}
-
 | T_QUATE:start encaps_list:list T_QUATE:end
 {:
 	Quote quote = new Quote(startleft, endright, list, Quote.QT_QUOTE);
 	RESULT = quote;
 :}
-
 | T_START_HEREDOC:start encaps_list:list T_END_HEREDOC:end
 {:
 	Quote hereDoc = new Quote(startleft, endright, list, Quote.QT_HEREDOC);
@@ -3248,20 +3279,18 @@ variable:var
 ;
 
 class_constant ::=
-class_name:className T_PAAMAYIM_NEKUDOTAYIM string_st:varName
+class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
 	ConstantReference name = new ConstantReference(varNameleft, varNameright, varName);
 	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, name); 
 	RESULT = constant;
 :}
-
 | variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:varName
 {:
 	ConstantReference name = new ConstantReference(varNameleft, varNameright, varName);
 	StaticConstantAccess constant = new StaticConstantAccess(classNameleft, varNameright, className, name); 
 	RESULT = constant; 
 :}
-
 ;
 
 tracked_variable ::=
