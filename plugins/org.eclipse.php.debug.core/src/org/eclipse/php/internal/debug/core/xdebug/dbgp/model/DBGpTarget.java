@@ -20,6 +20,8 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.debug.core.sourcelookup.ISourceContainer;
+import org.eclipse.debug.core.sourcelookup.containers.ProjectSourceContainer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -30,6 +32,8 @@ import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
+import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceLookupDirector;
+import org.eclipse.php.internal.debug.core.sourcelookup.containers.PHPCompositeSourceContainer;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpoint;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpBreakpointFacade;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
@@ -305,16 +309,24 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 						else {
 							// this was a remotely initiated launch as we don't have a scriptName
 							try {
-								DebugSearchEngine.find(pathMapper, initScript, null, this);
+								PathEntry pe = DebugSearchEngine.find(pathMapper, initScript, null, this);
+								if (pe != null) {
+									Object container = pe.getContainer();
+									if (container != null && container instanceof IResource) {
+										IResource res = (IResource)container;
+										IProject prj = res.getProject();
+										PHPSourceLookupDirector dir = (PHPSourceLookupDirector)getLaunch().getSourceLocator();
+										//ISourceContainer[] containers = new ISourceContainer[] {new ProjectSourceContainer(prj, false)};
+										ISourceContainer[] containers = new ISourceContainer[] {new PHPCompositeSourceContainer(prj, null)};									
+										dir.setSourceContainers(containers);
+									}
+								}
 							} catch (Exception e) {
 							}
-							
 						}
-						
 					}
 				}
 			}
-
 		}
 	}
 
