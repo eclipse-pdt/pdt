@@ -10,19 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.phpModel;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMember;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 
@@ -126,8 +121,32 @@ public class PHPModelUtil {
 	 * @param element
 	 * @return the source module related to the provide model element
 	 */
-	public static final ISourceModule getSourceModule(IModelElement element) {
-		if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+	public static final ISourceModule getSourceModule(Object element) {
+		
+		if (element instanceof IFile) {
+			return (ISourceModule) DLTKCore.create((IFile) element);
+		}
+		
+		if (element instanceof IModelElement) {
+			getSourceModule((IModelElement) element);
+		}
+		
+		if (element instanceof String) {
+			getSourceModule((String) element);
+		}
+
+		return null;
+	}
+
+	/**
+	 * retrieves the source module from a model element
+	 * @param element
+	 * @return source module 
+	 */
+	public static ISourceModule getSourceModule(IModelElement element) {
+		IModelElement mElement = (IModelElement) element;
+		
+		if (mElement.getElementType() == IModelElement.SOURCE_MODULE) {
 			return (ISourceModule) element;
 		}
 		
@@ -135,6 +154,19 @@ public class PHPModelUtil {
 			return ((IMember) element).getSourceModule();
 		}
 		
+		return null;
+	}
+
+	/**
+	 * retrieves the source module from a path 
+	 * @param element
+	 * @return source module   
+	 */
+	public static ISourceModule getSourceModule(String element) {
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(element));
+		if (resource != null && resource instanceof IFile) {
+			return (ISourceModule) DLTKCore.create((IFile) resource);
+		}
 		return null;
 	}
 	
