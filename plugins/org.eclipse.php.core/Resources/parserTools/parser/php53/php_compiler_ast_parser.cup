@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.8 2009/01/27 13:24:29 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.9 2009/01/28 17:22:20 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -449,12 +449,11 @@ namespace_body:body
 ;
 
 named_namespace_body ::=
-T_SEMICOLON:end /* namespace without body */
+T_SEMICOLON:end /* unbracketed syntax */
 {:
 	NamespaceDeclaration namespaceDeclaration = (NamespaceDeclaration)parser.declarations.pop();
-	namespaceDeclaration.getBody().setStart(endright);
-	namespaceDeclaration.getBody().setEnd(endright);
 	namespaceDeclaration.setEnd(endright);
+	namespaceDeclaration.setBracketed(false);
 	RESULT = namespaceDeclaration;
 :}
 | namespace_body:body

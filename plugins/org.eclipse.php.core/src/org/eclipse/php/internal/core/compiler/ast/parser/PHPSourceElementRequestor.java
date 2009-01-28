@@ -47,8 +47,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
-	
-	protected TypeDeclaration pendingNsDeclaration = null;
+	private NamespaceDeclaration pendingNS;
 	
 	/**
 	 * Deferred elements that are 
@@ -76,6 +75,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		extensions = requestors.toArray(new PHPSourceElementRequestorExtension[requestors.size()]);
 	}
+	
+	protected ISourceElementRequestor getRequestor() {
+		return fRequestor;
+	}
 
 	public MethodDeclaration getCurrentMethod() {
 		Declaration currDecleration = declarations.peek();
@@ -97,18 +100,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
-			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) { // we don't handle global namespaces
+			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) {
 				return true;
 			}
 			
-			// Check whether this node is a namespace without block. In this case we don't
-			// pop it back until we meet another namespace declaration or EOF in order to place
-			// following statements under it.
-			if (pendingNsDeclaration == null) {
-				if (namespaceDecl.getBody().getStatements().size() == 0) {
-					pendingNsDeclaration = namespaceDecl;
-					return true;
-				}
+			if (pendingNS == null && !namespaceDecl.isBracketed()) { // unbracketed syntax
+				pendingNS = namespaceDecl;
+				return true;
+			}
+			
+			if (type == pendingNS) {
+				pendingNS = null;
 			}
 		}
 		
@@ -192,13 +194,16 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
-			NamespaceDeclaration nsDecl = (NamespaceDeclaration) type;
-			if (pendingNsDeclaration != null) {
-				endvisit(pendingNsDeclaration);
-				pendingNsDeclaration = null;
-			}
-			if (nsDecl.getName() == NamespaceDeclaration.GLOBAL) { // we don't handle global namespaces
+			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
+			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) {
 				return true;
+			}
+
+			if (!namespaceDecl.isBracketed()) { // unbracketed syntax
+				if (pendingNS != null) {
+					endvisit(pendingNS);
+					pendingNS = null;
+				}
 			}
 		}
 		
@@ -560,9 +565,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				deferred.traverse(this);
 			}
 		}
-		
-		if (pendingNsDeclaration != null) {
-			endvisit(pendingNsDeclaration);
+
+		if (pendingNS != null) {
+			endvisit(pendingNS);
 		}
 		
 		return super.endvisit(declaration);

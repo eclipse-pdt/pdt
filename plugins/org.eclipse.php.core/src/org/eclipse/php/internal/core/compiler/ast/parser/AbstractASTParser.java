@@ -227,8 +227,6 @@ abstract public class AbstractASTParser extends lr_parser {
 			block = ((MethodDeclaration) node).getBody();
 		} else if (node instanceof Block) {
 			block = (Block) node;
-		} else {
-			return;
 		}
 		block.addStatement(s);
 		block.setEnd(s.sourceEnd());

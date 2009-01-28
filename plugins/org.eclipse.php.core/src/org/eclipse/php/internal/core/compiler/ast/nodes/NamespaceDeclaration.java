@@ -30,16 +30,23 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 
 	public static final String GLOBAL = "__global__namespace__"; //$NON-NLS-1$
 	private PHPDocBlock phpDoc;
+	private boolean braketed = true;
 
 	public NamespaceDeclaration(int start, int end, int nameStart, int nameEnd, String className, Block body, PHPDocBlock phpDoc) {
 		super(className, nameStart, nameEnd, start, end);
 		this.phpDoc = phpDoc;
-		
-		// If there's no body - create a fake one that will hold the namespace statements
 		if (body == null) {
 			body = new Block(start, end);
 		}
 		setBody(body);
+	}
+	
+	public void setBracketed(boolean bracketed) {
+		this.braketed = bracketed;
+	}
+	
+	public boolean isBracketed() {
+		return braketed;
 	}
 	
 	public PHPDocBlock getPHPDoc() {
@@ -47,6 +54,7 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	}
 	
 	public void addStatement(Statement statement) {
+		// If there's no body - create one that will hold the namespace statements
 		getBody().addStatement(statement);
 	}
 
