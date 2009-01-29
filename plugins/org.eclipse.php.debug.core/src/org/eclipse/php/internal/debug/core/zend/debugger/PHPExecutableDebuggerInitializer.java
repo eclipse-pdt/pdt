@@ -149,8 +149,8 @@ public class PHPExecutableDebuggerInitializer {
 			// Remove temporary directory
 			if (phpIniLocation != null) {
 				File phpIniFile = new File(phpIniLocation);
-				phpIniFile.delete();
-				phpIniFile.getParentFile().delete();
+				phpIniFile.deleteOnExit();
+				phpIniFile.getParentFile().deleteOnExit();
 			}
 		}
 	}
