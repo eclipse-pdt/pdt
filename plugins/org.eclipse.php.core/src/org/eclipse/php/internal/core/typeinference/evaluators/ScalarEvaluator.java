@@ -16,7 +16,6 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.FixedAnswerEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
@@ -42,7 +41,7 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 					simpleType = SimpleType.TYPE_NULL;
 					break;
 				}
-				// checking specific case for "return this;" statement
+				// checking specific case for "return $this;" statement
 				if ("this".equalsIgnoreCase(scalar.getValue())) {
 					IContext context = goal.getContext();
 					if (context instanceof MethodContext) {
