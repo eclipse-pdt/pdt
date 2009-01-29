@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.10 2009/01/29 07:59:22 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.11 2009/01/29 12:00:23 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.*;
 
 parser code {:
- 
+
 	class ModifierDocPair {
 		public int modifier;
 		public PHPDocBlock doc;
@@ -454,6 +454,12 @@ T_SEMICOLON:end /* unbracketed syntax */
 	NamespaceDeclaration namespaceDeclaration = (NamespaceDeclaration)parser.declarations.pop();
 	namespaceDeclaration.setEnd(endright);
 	namespaceDeclaration.setBracketed(false);
+	
+	parser.metUnbracketedNSDecl = true;
+	if (parser.metBracketedNSDecl) {
+		parser.reportError(new ASTError(namespaceDeclaration.sourceStart(), endright), "Cannot mix bracketed namespace declarations with unbracketed namespace declarations");
+	}
+	
 	RESULT = namespaceDeclaration;
 :}
 | namespace_body:body
@@ -471,6 +477,12 @@ T_CURLY_OPEN:start namespace_statement_list:statementList T_CURLY_CLOSE:end
 	namespaceDeclaration.getBody().getStatements().clear();
 	namespaceDeclaration.getBody().acceptStatements(statementList);
 	namespaceDeclaration.setEnd(endright);
+	
+	parser.metBracketedNSDecl = true;
+	if (parser.metUnbracketedNSDecl) {
+		parser.reportError(new ASTError(namespaceDeclaration.sourceStart(), endright), "Cannot mix bracketed namespace declarations with unbracketed namespace declarations");
+	}
+	
 	RESULT = namespaceDeclaration;
 :}
 | error:theError

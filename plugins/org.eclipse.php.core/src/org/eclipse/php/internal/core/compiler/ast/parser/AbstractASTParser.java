@@ -28,6 +28,7 @@ import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 
 abstract public class AbstractASTParser extends lr_parser {
@@ -35,6 +36,18 @@ abstract public class AbstractASTParser extends lr_parser {
 	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<Statement>(), new LinkedList<ASTError>());
 	private IProblemReporter problemReporter;
 	private String fileName;
+	
+	/** This is a place holder for statements that were found after unclosed classes */
+	public Statement pendingStatement = null;
+	
+	/** Whether we've met the unbracketed namespace declaration in this file */
+	public boolean metUnbracketedNSDecl;
+	
+	/** Whether we've met the bracketed namespace declaration in this file */
+	public boolean metBracketedNSDecl;
+	
+	/** Top declarations stack */
+	public Stack<Statement> declarations = new Stack<Statement>();
 
 	public AbstractASTParser() {
 		super();
@@ -100,14 +113,16 @@ abstract public class AbstractASTParser extends lr_parser {
 	}
 
 	public void addStatement(Statement s) {
+		int kind = s.getKind();
+		if (kind != ASTNodeKinds.EMPTY_STATEMENT && kind != ASTNodeKinds.NAMESPACE_DECLARATION && metBracketedNSDecl) {
+			reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "No code may exist outside of namespace {}");
+		}
 		getStatements().add(s);
 	}
 
 	public PHPModuleDeclaration getModuleDeclaration() {
 		return program;
 	}
-
-	public Stack<Statement> declarations = new Stack<Statement>();
 
 	public void report_error(String message, Object info) {
 		if (info instanceof Symbol) {
@@ -211,11 +226,14 @@ abstract public class AbstractASTParser extends lr_parser {
 		// throw new Exception("Can't recover from previous error(s)");
 	}
 
-	/* This is a place holder for statements that were found after unclosed classes */
-	public Statement pendingStatement = null;
-
 	public void addDeclarationStatement(Statement s) {
 		if (declarations.isEmpty()) {
+			if (s.getKind() == ASTNodeKinds.NAMESPACE_DECLARATION) {
+				if (program.getStatements().size() > 0 && !metBracketedNSDecl && !metUnbracketedNSDecl) {
+					reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "Namespace declaration statement has to be the very first statement in the script");
+				}
+			}
+			
 			// we don't add top level statements to the program node this way
 			return;
 		}
