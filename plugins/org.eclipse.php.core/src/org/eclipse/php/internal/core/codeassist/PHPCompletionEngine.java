@@ -939,15 +939,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				IMethod[] methods = CodeAssistUtils.getTypeMethods(type, prefix, mask);
 				for (IMethod method : methods) {
 					try {
-						int flags = method.getFlags();
-						if ((members & NON_STATIC_MEMBERS) != 0) {
-							if (!PHPFlags.isInternal(flags) && (showNonStrictOptions || isThisVar || !PHPFlags.isPrivate(flags))) {
-								reportMethod((IMethod) method, relevanceMethod--);
+						if (PHPFlags.isNamespace(type.getFlags())) {
+							reportMethod((IMethod) method, relevanceMethod--);
+						} else {
+							int flags = method.getFlags();
+							if ((members & NON_STATIC_MEMBERS) != 0) {
+								if (!PHPFlags.isInternal(flags) && (showNonStrictOptions || isThisVar || !PHPFlags.isPrivate(flags))) {
+									reportMethod((IMethod) method, relevanceMethod--);
+								}
 							}
-						}
-						if ((members & STATIC_MEMBERS) != 0) {
-							if ((phpVersion.isLessThan(PHPVersion.PHP5) || showNonStrictOptions || PHPFlags.isStatic(flags)) && !PHPFlags.isInternal(flags)) {
-								reportMethod(method, relevanceMethod--);
+							if ((members & STATIC_MEMBERS) != 0) {
+								if ((phpVersion.isLessThan(PHPVersion.PHP5) || showNonStrictOptions || PHPFlags.isStatic(flags)) && !PHPFlags.isInternal(flags)) {
+									reportMethod(method, relevanceMethod--);
+								}
 							}
 						}
 					} catch (ModelException e) {
