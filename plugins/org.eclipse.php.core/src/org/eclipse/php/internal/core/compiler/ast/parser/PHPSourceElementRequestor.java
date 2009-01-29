@@ -36,6 +36,7 @@ import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {

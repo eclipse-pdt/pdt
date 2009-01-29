@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.compiler.ast.nodes;
+package org.eclipse.php.internal.core.compiler;
 
 import org.eclipse.dltk.ast.Modifiers;
 

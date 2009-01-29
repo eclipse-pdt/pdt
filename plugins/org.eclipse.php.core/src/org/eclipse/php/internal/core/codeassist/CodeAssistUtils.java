@@ -15,7 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
@@ -33,6 +32,7 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.mixin.PHPMixinParser;
@@ -264,7 +264,7 @@ public class CodeAssistUtils {
 				for (IField typeField : typeFields) {
 					String elementName = typeField.getElementName();
 					int flags = typeField.getFlags();
-					if ((flags & Modifiers.AccConstant) != 0) {
+					if (PHPFlags.isConstant(flags)) {
 						if (exactName) {
 							if (elementName.equals(prefix)) {
 								fields.add(typeField);
@@ -535,10 +535,9 @@ public class CodeAssistUtils {
 		IMethod method = getContainerMethodData(sourceModule, offset);
 
 		if (type != null && method != null) {
-			int modifiers;
 			try {
-				modifiers = type.getFlags();
-				if ((modifiers & Modifiers.AccAbstract) == 0 && (modifiers & Modifiers.AccInterface) == 0) {
+				int flags = type.getFlags();
+				if (!PHPFlags.isAbstract(flags) && !PHPFlags.isInterface(flags) && !PHPFlags.isInterface(flags)) {
 					return type;
 				}
 			} catch (ModelException e) {
@@ -724,10 +723,11 @@ public class CodeAssistUtils {
 		for (IModelElement c : elements) {
 			IType type = (IType) c;
 			try {
-				if ((mask & ONLY_INTERFACES) != 0 && (type.getFlags() & Modifiers.AccInterface) == 0) {
+				int flags = type.getFlags();
+				if ((mask & ONLY_INTERFACES) != 0 && !PHPFlags.isInternal(flags)) {
 					continue;
 				}
-				if ((mask & ONLY_CLASSES) != 0 && (type.getFlags() & Modifiers.AccInterface) != 0) {
+				if ((mask & ONLY_CLASSES) != 0 && (PHPFlags.isInterface(flags) || PHPFlags.isNamespace(flags))) {
 					continue;
 				}
 				filteredElements.add(type);
@@ -1175,7 +1175,7 @@ public class CodeAssistUtils {
 					//					IType t2 = ((IMember)o2).getDeclaringType();
 					if (t1 != null) {
 						try {
-							if ((t1.getFlags() & Modifiers.AccInterface) != 0) {
+							if (PHPFlags.isInterface(t1.getFlags())) {
 								return -1;
 							}
 						} catch (Exception e) {

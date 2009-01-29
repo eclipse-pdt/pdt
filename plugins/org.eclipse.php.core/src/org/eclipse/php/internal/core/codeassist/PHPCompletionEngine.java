@@ -30,7 +30,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPModifiers;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
@@ -59,6 +59,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private static final String IMPLEMENTS = "implements"; //$NON-NLS-1$
 	private static final String EXTENDS = "extends"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
+	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
 	private static final String CLASS = "class"; //$NON-NLS-1$
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final String DESTRUCTOR = "__destruct"; //$NON-NLS-1$
@@ -519,7 +520,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 					for (IType type : returnTypes) {
 						try {
-							if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), className) && (type.getFlags() & IPHPModifiers.Internal) == 0) {
+							if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), className) && !PHPFlags.isInternal(type.getFlags())) {
 								reportType(type, relevanceClass--, EMPTY);
 							}
 						} catch (ModelException e) {
@@ -774,8 +775,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			IModelElement[] functions = CodeAssistUtils.getGlobalMethods(sourceModule, prefix, mask);
 			for (IModelElement function : functions) {
 				try {
-					if ((((IMethod) function).getFlags() & IPHPModifiers.Internal) == 0) {
-						reportMethod((IMethod) function, relevanceMethod--);
+					IMethod method = (IMethod) function;
+					int flags = method.getFlags();
+					if (!PHPFlags.isInternal(flags)) {
+						reportMethod(method, relevanceMethod--);
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG_COMPLETION) {
@@ -822,8 +825,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				IType[] classes = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 				for (IType type : classes) {
 					try {
-						if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
-							reportType(type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
+						int flags = type.getFlags();
+						if (!PHPFlags.isInternal(flags)) {
+							if (PHPFlags.isNamespace(flags)) {
+								reportType(type, relevanceClass--, NS_SEPARATOR);
+							} else {
+								reportType(type, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
+							}
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {
@@ -926,12 +934,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					try {
 						int flags = method.getFlags();
 						if ((members & NON_STATIC_MEMBERS) != 0) {
-							if ((flags & IPHPModifiers.Internal) == 0 && (showNonStrictOptions || isThisVar || (flags & Modifiers.AccPrivate) == 0)) {
+							if (!PHPFlags.isInternal(flags) && (showNonStrictOptions || isThisVar || !PHPFlags.isPrivate(flags))) {
 								reportMethod((IMethod) method, relevanceMethod--);
 							}
 						}
 						if ((members & STATIC_MEMBERS) != 0) {
-							if ((!isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) && (flags & IPHPModifiers.Internal) == 0) {
+							if ((!isPHP5 || showNonStrictOptions || PHPFlags.isStatic(flags)) && !PHPFlags.isInternal(flags)) {
 								reportMethod(method, relevanceMethod--);
 							}
 						}
@@ -953,10 +961,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					boolean isConstant = (flags & Modifiers.AccConstant) != 0;
 
 					if ((members & NON_STATIC_MEMBERS) != 0) {
-						if ((flags & Modifiers.AccStatic) == 0) {
+						if (!PHPFlags.isStatic(flags)) {
 							if ((flags & Modifiers.AccConstant) != 0) {
 								reportField(field, relevanceConst--, true);
-							} else if (showNonStrictOptions || isThisVar || (flags & Modifiers.AccPrivate) == 0) {
+							} else if (showNonStrictOptions || isThisVar || !PHPFlags.isPrivate(flags)) {
 								reportField(field, relevanceVar--, true);
 							}
 						}
@@ -1030,7 +1038,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					IType[] classes = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 					for (IType type : classes) {
 						try {
-							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+							if (!PHPFlags.isInternal(type.getFlags())) {
 								reportType(type, relevanceClass--, WHITESPACE_SUFFIX);
 							}
 						} catch (ModelException e) {
@@ -1114,7 +1122,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 			try {
 				int flags = superMethod.getFlags();
-				if ((flags & Modifiers.AccFinal) == 0 && (flags & Modifiers.AccPrivate) == 0 && (flags & Modifiers.AccStatic) == 0 && (flags & IPHPModifiers.Internal) == 0) {
+				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags) && !PHPFlags.isStatic(flags) && !PHPFlags.isInternal(flags)) {
 					reportMethod(superMethod, relevanceMethod--);
 				}
 			} catch (ModelException e) {
@@ -1233,7 +1241,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		int relevanceClass = RELEVANCE_CLASS;
 		for (IType i : interfaces) {
 			try {
-				if ((i.getFlags() & IPHPModifiers.Internal) == 0) {
+				if (!PHPFlags.isInternal(i.getFlags())) {
 					reportType(i, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
@@ -1300,7 +1308,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		IType[] classes = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 		for (IType type : classes) {
 			try {
-				if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+				if (!PHPFlags.isInternal(type.getFlags())) {
 					reportType(type, relevanceClass--, EMPTY);
 				}
 			} catch (ModelException e) {
@@ -1394,7 +1402,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					}
 					try {
 						if (ctor != null) {
-							if ((ctor.getFlags() & IPHPModifiers.AccPrivate) == 0 || type.equals(enclosingClass)) {
+							if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
 								FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
 									public boolean isConstructor() throws ModelException {
 										return true;
@@ -1404,7 +1412,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 								reportMethod(ctorMethod, relevanceClass--);
 							}
 						} else {
-							if ((type.getFlags() & IPHPModifiers.Internal) == 0) {
+							if (!PHPFlags.isInternal(type.getFlags())) {
 								reportType(type, relevanceClass--, hasOpenBraceAtEnd ? EMPTY : BRACKETS_SUFFIX);
 							}
 						}
@@ -1432,7 +1440,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				IType[] typeElements = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 				for (IType typeElement : typeElements) {
 					try {
-						if ((typeElement.getFlags() & IPHPModifiers.Internal) == 0) {
+						if (!PHPFlags.isInternal(typeElement.getFlags())) {
 							reportType(typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
@@ -1459,7 +1467,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				typeElements = CodeAssistUtils.getGlobalTypes(sourceModule, prefix, mask);
 				for (IType typeElement : typeElements) {
 					try {
-						if ((typeElement.getFlags() & IPHPModifiers.Internal) == 0) {
+						if (!PHPFlags.isInternal(typeElement.getFlags())) {
 							reportType(typeElement, relevanceClass--, EMPTY);
 						}
 					} catch (ModelException e) {
