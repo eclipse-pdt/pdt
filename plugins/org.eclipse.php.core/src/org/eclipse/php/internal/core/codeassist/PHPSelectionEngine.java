@@ -46,21 +46,22 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
 
 public class PHPSelectionEngine extends ScriptSelectionEngine {
 
-	private static final String OPEN_BRACE = "(";
-	private static final String PROTECTED = "protected";
-	private static final String PUBLIC = "public";
-	private static final String PAAMAYIM_NEKUDOTAIM = "::";
-	private static final String CONST = "const";
-	private static final String THIS = "this";
-	private static final String STATIC = "static";
-	private static final String PRIVATE = "private";
-	private static final String VAR = "var";
-	private static final String IMPLEMENTS = "implements";
-	private static final String EXTENDS = "extends";
-	private static final String NEW = "new";
-	private static final String INTERFACE = "interface";
-	private static final String CLASS = "class";
-	private static final String FUNCTION = "function";
+	private static final String OPEN_BRACE = "("; //$NON-NLS-1$
+	private static final String PROTECTED = "protected"; //$NON-NLS-1$
+	private static final String PUBLIC = "public"; //$NON-NLS-1$
+	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
+	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
+	private static final String CONST = "const"; //$NON-NLS-1$
+	private static final String THIS = "this"; //$NON-NLS-1$
+	private static final String STATIC = "static"; //$NON-NLS-1$
+	private static final String PRIVATE = "private"; //$NON-NLS-1$
+	private static final String VAR = "var"; //$NON-NLS-1$
+	private static final String IMPLEMENTS = "implements"; //$NON-NLS-1$
+	private static final String EXTENDS = "extends"; //$NON-NLS-1$
+	private static final String NEW = "new"; //$NON-NLS-1$
+	private static final String INTERFACE = "interface"; //$NON-NLS-1$
+	private static final String CLASS = "class"; //$NON-NLS-1$
+	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final IModelElement[] EMPTY = {};
 
 	public IAssistParser getParser() {
@@ -153,7 +154,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								for (IModelElement element : elements) {
 									if (element instanceof IType) {
 										IType type = (IType) element;
-										methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(type, callExpression.getName(), CodeAssistUtils.EXACT_NAME)));
+										methods.addAll(Arrays.asList(CodeAssistUtils.getTypeMethods(type, callExpression.getName(), CodeAssistUtils.EXACT_NAME)));
 									}
 								}
 							}
@@ -373,7 +374,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// We are at class trigger:
-						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
+						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord) || NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
 							return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME));
 						}
 
@@ -384,7 +385,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							if (types != null && types.length > 0) {
 								List<IMethod> methods = new LinkedList<IMethod>();
 								for (IType t : types) {
-									methods.addAll(Arrays.asList(CodeAssistUtils.getClassMethods(t, elementName, CodeAssistUtils.EXACT_NAME)));
+									methods.addAll(Arrays.asList(CodeAssistUtils.getTypeMethods(t, elementName, CodeAssistUtils.EXACT_NAME)));
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
@@ -419,7 +420,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							});
 							for (IType t : types) {
-								fields.addAll(Arrays.asList(CodeAssistUtils.getClassFields(t, elementName, CodeAssistUtils.EXACT_NAME)));
+								fields.addAll(Arrays.asList(CodeAssistUtils.getTypeFields(t, elementName, CodeAssistUtils.EXACT_NAME)));
 							}
 							return fields.toArray(new IModelElement[fields.size()]);
 						}

@@ -10,6 +10,8 @@ import org.eclipse.php.internal.core.phpModel.PHPKeywords.KeywordData;
 public class KeywordInitializerPHP_5 extends KeywordInitializerPHP_4 {
 
 	public void initialize(Collection<KeywordData> list) {
+		super.initialize(list);
+		
 		list.add(new KeywordData("abstract", WHITESPACE_SUFFIX, 1, true));
 		list.add(new KeywordData("catch", WHITESPACE_PARENTESES_SUFFIX, 2));
 		list.add(new KeywordData("clone", WHITESPACE_SUFFIX, 1));

@@ -103,20 +103,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		"staticvar", "subpackage", "todo", "tutorial", "uses", "var", "version" };
 
 	protected static final char[] phpDelimiters = new char[] { '?', ':', ';', '|', '^', '&', '<', '>', '+', '-', '.', '*', '/', '%', '!', '~', '[', ']', '(', ')', '{', '}', '@', '\n', '\t', ' ', ',', '$', '\'', '\"' };
-	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 
 	private static final Pattern extendsPattern = Pattern.compile("\\Wextends\\W", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern implementsPattern = Pattern.compile("\\Wimplements", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 	private static final Pattern catchPattern = Pattern.compile("catch\\s[^{]*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
-	protected boolean isPHP5;
 	protected ISourceModule sourceModule;
 	protected boolean explicit;
 	private Preferences pluginPreferences;
 	private boolean hasWhitespaceAtEnd;
 	private boolean hasOpenBraceAtEnd;
 	private boolean hasPaamayimNekudotaimAtEnd;
+	private boolean hasNSSeparatorAtEnd;
 	private int wordEndOffset;
 	private String nextWord;
 	private IStructuredDocument document;
@@ -124,6 +123,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	private IPhpScriptRegion phpScriptRegion;
 	private ITextRegionCollection regionContainer;
 	private Set<IModelElement> processedElements = new HashSet<IModelElement>();
+	private PHPVersion phpVersion;
 
 	enum States {
 		CATCH, NEW, INSTANCEOF
@@ -213,8 +213,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		this.sourceModule = sourceModule;
 
-		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
-		isPHP5 = phpVersion == PHPVersion.PHP5;
+		phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
 
 		// Find the structured document region:
 		IStructuredDocumentRegion sdRegion = document.getRegionAtCharacterOffset(offset);
@@ -399,11 +398,16 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 			nextWord = document.get(regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
 
-			hasOpenBraceAtEnd = hasPaamayimNekudotaimAtEnd = false;
+			hasOpenBraceAtEnd = hasPaamayimNekudotaimAtEnd = hasNSSeparatorAtEnd = false;
+			
 			if (OPEN_BRACE.equals(nextWord)) {
 				hasOpenBraceAtEnd = true;
-			} else if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
+			}
+			else if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
 				hasPaamayimNekudotaimAtEnd = true;
+			}
+			else if (NS_SEPARATOR.equals(nextWord)) {
+				hasNSSeparatorAtEnd = true;
 			}
 
 			if (!hasWhitespaceAtEnd && isNewOrInstanceofStatement(firstWord, lastWord, offset, type)) {
@@ -849,11 +853,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		if (startFunctionPosition <= 2) {
 			return false;
 		}
+		
 		boolean isClassTriger = false;
 		boolean isParent = false;
+		
 		String triggerText = statementText.subSequence(startFunctionPosition - 2, startFunctionPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
-		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
+		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM) || triggerText.endsWith(NS_SEPARATOR)) {
 			isClassTriger = true;
 			if (startFunctionPosition >= 8) {
 				String parentText = statementText.subSequence(startFunctionPosition - 8, startFunctionPosition - 2).toString();
@@ -865,7 +871,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 
-		if (internalPHPRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || internalPHPRegion.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
+		if (internalPHPRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || internalPHPRegion.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
+				|| internalPHPRegion.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
 			try {
 				ITextRegion nextRegion = phpScriptRegion.getPhpToken(internalPHPRegion.getEnd());
 				wordEndOffset = regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
@@ -929,7 +936,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		for (IType type : className) {
 			if (!prefix.startsWith(DOLLAR)) {
-				IMethod[] methods = CodeAssistUtils.getClassMethods(type, prefix, mask);
+				IMethod[] methods = CodeAssistUtils.getTypeMethods(type, prefix, mask);
 				for (IMethod method : methods) {
 					try {
 						int flags = method.getFlags();
@@ -939,7 +946,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 							}
 						}
 						if ((members & STATIC_MEMBERS) != 0) {
-							if ((!isPHP5 || showNonStrictOptions || PHPFlags.isStatic(flags)) && !PHPFlags.isInternal(flags)) {
+							if ((phpVersion.isLessThan(PHPVersion.PHP5) || showNonStrictOptions || PHPFlags.isStatic(flags)) && !PHPFlags.isInternal(flags)) {
 								reportMethod(method, relevanceMethod--);
 							}
 						}
@@ -951,7 +958,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 				}
 			}
 
-			IModelElement[] fields = CodeAssistUtils.getClassFields(type, prefix, mask);
+			IModelElement[] fields = CodeAssistUtils.getTypeFields(type, prefix, mask);
 			int relevanceVar = RELEVANCE_VAR;
 			int relevanceConst = RELEVANCE_CONST;
 			for (IModelElement element : fields) {
@@ -970,7 +977,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 						}
 					}
 					if ((members & STATIC_MEMBERS) != 0) {
-						if (isConstant || !isPHP5 || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
+						if (isConstant || phpVersion.isLessThan(PHPVersion.PHP5) || showNonStrictOptions || (flags & Modifiers.AccStatic) != 0) {
 							if (isConstant) {
 								reportField(field, relevanceConst--, false);
 							} else {
@@ -1134,11 +1141,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		List<String> functions = new LinkedList<String>();
 		functions.addAll(Arrays.asList(magicFunctions));
-		if (isPHP5) {
+		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
 			functions.addAll(Arrays.asList(magicFunctionsPhp5));
 		}
 		functions.add(classData.getElementName());
-		if (isPHP5) {
+		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
 			functions.add(CONSTRUCTOR);
 			functions.add(DESTRUCTOR);
 		}
@@ -1257,7 +1264,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 
 		int relevanceKeyword = RELEVANCE_KEYWORD;
 
-		if (isPHP5) {
+		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
 			if (EXTENDS.startsWith(prefix)) {
 				reportKeyword(EXTENDS, EMPTY, relevanceKeyword--);
 			}
@@ -1272,7 +1279,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 	}
 
 	protected void showImplementsList(String prefix, int offset) {
-		if (isPHP5) {
+		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
 			this.setSourceRange(offset - prefix.length(), offset);
 
 			int relevanceKeyword = RELEVANCE_KEYWORD;
@@ -1685,9 +1692,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (type instanceof FakeGroupType) {
 				proposal.setCompletion(elementName.substring(0, elementName.length() - 1).toCharArray());
 				relevance = 10000001;
-			} else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix) {
+			}
+			else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix || hasNSSeparatorAtEnd && NS_SEPARATOR == suffix) {
 				proposal.setCompletion(elementName.toCharArray());
-			} else {
+			}
+			else {
 				proposal.setCompletion((elementName + suffix).toCharArray());
 			}
 

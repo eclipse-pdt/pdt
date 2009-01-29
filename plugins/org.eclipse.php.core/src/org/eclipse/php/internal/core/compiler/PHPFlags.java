@@ -11,7 +11,7 @@ package org.eclipse.php.internal.core.compiler;
 
 import org.eclipse.dltk.core.Flags;
 
-public class PHPFlags extends Flags {
+public class PHPFlags extends Flags implements IPHPModifiers {
 
 	/**
 	 * Returns whether the given integer includes the <code>internal</code> modifier.
@@ -20,7 +20,7 @@ public class PHPFlags extends Flags {
 	 * @return <code>true</code> if the <code>internal</code> modifier is included
 	 */
 	public static boolean isInternal(int flags) {
-		return (flags & AccInterface) != 0;
+		return (flags & Internal) != 0;
 	}
 
 	/**

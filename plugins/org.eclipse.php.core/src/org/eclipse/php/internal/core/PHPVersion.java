@@ -55,4 +55,8 @@ public enum PHPVersion {
 	public boolean isLessThan(PHPVersion phpVersion) {
 		return ordinal() < phpVersion.ordinal();
 	}
+	
+	public boolean isGreaterThan(PHPVersion phpVersion) {
+		return ordinal() > phpVersion.ordinal();
+	}
 }

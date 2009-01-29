@@ -66,19 +66,24 @@ public class CodeAssistUtils {
 	public static final int ONLY_CURRENT_FILE = 1 << 2;
 
 	/**
-	 * Whether to retrieve only classes excluding interfaces (when asking for types)
+	 * Whether to retrieve only classes excluding interfaces and namespaces (when asking for types)
 	 */
 	public static final int ONLY_CLASSES = 1 << 3;
 
 	/**
-	 * Whether to retrieve only interfaces excluding classes (when asking for types)
+	 * Whether to retrieve only interfaces excluding classes and namespaces (when asking for types)
 	 */
 	public static final int ONLY_INTERFACES = 1 << 4;
+	
+	/**
+	 * Whether to retrieve only namespaces excluding classes and interfaces 
+	 */
+	public static final int ONLY_NAMESPACES = 1 << 5;
 
 	/**
 	 * Whether to retrieve only variables excluding constants (when asking for fields)
 	 */
-	public static final int ONLY_VARIABLES = 1 << 5;
+	public static final int ONLY_VARIABLES = 1 << 6;
 
 	/**
 	 * Whether to use PHPDoc in type inference
@@ -89,7 +94,7 @@ public class CodeAssistUtils {
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
-	protected static final String CLASS_FUNCTIONS_TRIGGER = PAAMAYIM_NEKUDOTAIM; //$NON-NLS-1$
+	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
 	
@@ -156,7 +161,7 @@ public class CodeAssistUtils {
 	 * @param mask
 	 * @return
 	 */
-	public static IMethod[] getClassMethods(IType type, String prefix, int mask) {
+	public static IMethod[] getTypeMethods(IType type, String prefix, int mask) {
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		final Set<String> methodNames = new HashSet<String>();
 		boolean exactName = (mask & EXACT_NAME) != 0;
@@ -165,7 +170,7 @@ public class CodeAssistUtils {
 			for (IMethod typeMethod : typeMethods) {
 				String methodName = typeMethod.getElementName().toLowerCase();
 				if (exactName) {
-					if (methodName.equals(prefix)) {
+					if (methodName.equalsIgnoreCase(prefix)) {
 						methods.add(typeMethod);
 						methodNames.add(methodName);
 						break;
@@ -204,7 +209,7 @@ public class CodeAssistUtils {
 	 * @param mask
 	 * @return
 	 */
-	public static IField[] getClassFields(IType type, String prefix, int mask) {
+	public static IField[] getTypeFields(IType type, String prefix, int mask) {
 		boolean exactName = (mask & EXACT_NAME) != 0;
 		boolean searchConstants = (mask & ONLY_VARIABLES) == 0;
 
@@ -309,7 +314,7 @@ public class CodeAssistUtils {
 		if (types != null) {
 			for (IType type : types) {
 				PHPClassType classType = new PHPClassType(type.getElementName());
-				IField[] fields = getClassFields(type, propertyName, CASE_SENSITIVE | ONLY_VARIABLES);
+				IField[] fields = getTypeFields(type, propertyName, CASE_SENSITIVE | ONLY_VARIABLES);
 
 				Set<String> processedFields = new HashSet<String>();
 				for (IField field : fields) {
@@ -391,7 +396,7 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IType[] getFunctionReturnType(IType type, String functionName) {
-		IMethod[] classMethod = getClassMethods(type, functionName, EXACT_NAME);
+		IMethod[] classMethod = getTypeMethods(type, functionName, EXACT_NAME);
 		if (classMethod.length > 0) {
 			return getFunctionReturnType(classMethod[0]);
 		}
@@ -578,15 +583,22 @@ public class CodeAssistUtils {
 		if (endPosition < 2) {
 			return EMPTY_TYPES;
 		}
+		
 		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
-		} else if (triggerText.equals(CLASS_FUNCTIONS_TRIGGER)) {
+		}
+		else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
-		} else {
+		}
+		else if (triggerText.endsWith(NS_SEPARATOR)) {
+			triggerText = NS_SEPARATOR;
+			isClassTriger = true;
+		}
+		else {
 			return EMPTY_TYPES;
 		}
 
-		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 2);
+		int propertyEndPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - triggerText.length());
 		int lastObjectOperator = PHPTextSequenceUtilities.getPrivousTriggerIndex(statementText, propertyEndPosition);
 
 		if (lastObjectOperator == -1) {
@@ -594,7 +606,7 @@ public class CodeAssistUtils {
 			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset, line);
 		}
 
-		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, lastObjectOperator + 2);
+		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, lastObjectOperator + triggerText.length());
 		String propertyName = statementText.subSequence(propertyStartPosition, propertyEndPosition).toString();
 		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset, line);
 
@@ -724,10 +736,13 @@ public class CodeAssistUtils {
 			IType type = (IType) c;
 			try {
 				int flags = type.getFlags();
-				if ((mask & ONLY_INTERFACES) != 0 && !PHPFlags.isInternal(flags)) {
+				if ((mask & ONLY_INTERFACES) != 0 && !PHPFlags.isInterface(flags)) {
 					continue;
 				}
 				if ((mask & ONLY_CLASSES) != 0 && (PHPFlags.isInterface(flags) || PHPFlags.isNamespace(flags))) {
+					continue;
+				}
+				if ((mask & ONLY_NAMESPACES) != 0 && !PHPFlags.isNamespace(flags)) {
 					continue;
 				}
 				filteredElements.add(type);
@@ -749,6 +764,26 @@ public class CodeAssistUtils {
 	 * @param mask
 	 */
 	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, int mask) {
+		int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
+		if (nsIdx != -1) {
+			String nsName = prefix.substring(0, nsIdx);
+			prefix = prefix.substring(nsIdx + 1);
+			
+			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME);
+			List<IModelElement> methods = new LinkedList<IModelElement>();
+			for (IType ns : namespaces) {
+				try {
+					if (PHPFlags.isNamespace(ns.getFlags())) {
+						methods.addAll(Arrays.asList(getTypeMethods(ns, prefix, mask)));
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
+				}
+			}
+			return methods.toArray(new IModelElement[methods.size()]);
+		}
 		return getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.METHOD, mask);
 	}
 
