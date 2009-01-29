@@ -19,10 +19,11 @@ import java.net.UnknownHostException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr;
 import org.eclipse.php.internal.debug.core.xdebug.XDebugPreferenceMgr.AcceptRemoteSession;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
@@ -36,11 +37,11 @@ public class DBGpProxyHandler {
 
 	private boolean registered = false;
 	private String currentIdeKey = null;
-	private String proxyHost = "";
+	private String proxyHost = ""; //$NON-NLS-1$
 	private int proxyPort = DEFAULT_PROXY_PORT;
 	private int idePort = -1;
 	private int errorCode = 0;
-	private String errorMsg = "";
+	private String errorMsg = ""; //$NON-NLS-1$
 	private boolean multisession = false;
 	
 	private static final int DEFAULT_PROXY_PORT = 9001;
@@ -76,7 +77,7 @@ public class DBGpProxyHandler {
 		//	    </error>
 		//	</proxyinit>
 		if (!registered) {
-			DBGpResponse resp = sendcmd("proxyinit -p " + idePort + " -k " + currentIdeKey + " -m " + (multisession ? "1" : "0"));
+			DBGpResponse resp = sendcmd("proxyinit -p " + idePort + " -k " + currentIdeKey + " -m " + (multisession ? "1" : "0")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			if (resp != null) {
 				if (resp.getType() == DBGpResponse.PROXY_INIT && resp.getErrorCode() == DBGpResponse.ERROR_OK) {
 					registered = true;
@@ -98,11 +99,11 @@ public class DBGpProxyHandler {
 		//
 		//	proxystop -k ide_key
 		if (registered) {
-			DBGpResponse resp = sendcmd("proxystop" + " -k " + currentIdeKey);
+			DBGpResponse resp = sendcmd("proxystop" + " -k " + currentIdeKey); //$NON-NLS-1$ //$NON-NLS-2$
 			registered = false;
-			String isOk = DBGpResponse.getAttribute(resp.getParentNode(), "success");
-			if (isOk == null || !isOk.equals("1")) {
-				DBGpLogger.logWarning("Unexpected response from proxystop. ErrorCode=" + resp.getErrorCode() + ". msg=" + resp.getErrorMessage(), this, null);
+			String isOk = DBGpResponse.getAttribute(resp.getParentNode(), "success"); //$NON-NLS-1$
+			if (isOk == null || !isOk.equals("1")) { //$NON-NLS-1$
+				DBGpLogger.logWarning("Unexpected response from proxystop. ErrorCode=" + resp.getErrorCode() + ". msg=" + resp.getErrorMessage(), this, null); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
@@ -161,7 +162,7 @@ public class DBGpProxyHandler {
 			}
 			
 			if (proxyPort == XDebugPreferenceMgr.getPort()) {
-				displayErrorMessage("proxy port cannot be the same as debug port.\nproxy use disabled");
+				displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_0); //$NON-NLS-1$
 				XDebugPreferenceMgr.setUseProxy(false);
 			}
 			else {
@@ -170,12 +171,12 @@ public class DBGpProxyHandler {
 					// if jit we must register with the proxy straight away rather than wait
 					// for the first launch
 					
-					Job job = new Job("register with proxy") {
+					Job job = new Job("register with proxy") { //$NON-NLS-1$
 
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
 							if (registerWithProxy() == false) {
-								displayErrorMessage("Unable to connect to proxy\n" + getErrorMsg());
+								displayErrorMessage(PHPDebugCoreMessages.XDebug_DBGpProxyHandler_1 + getErrorMsg()); //$NON-NLS-1$
 								XDebugPreferenceMgr.setUseProxy(false);
 							}
 							return Status.OK_STATUS;
@@ -235,9 +236,9 @@ public class DBGpProxyHandler {
 			InputStream is = s.getInputStream();
 			OutputStream os = s.getOutputStream();
 			if (DBGpLogger.debugCmd()) {
-				DBGpLogger.debug("cmd: " + cmd);
+				DBGpLogger.debug("cmd: " + cmd); //$NON-NLS-1$
 			}
-			os.write(cmd.getBytes("ASCII")); //command will always be ASCII
+			os.write(cmd.getBytes("ASCII")); //command will always be ASCII //$NON-NLS-1$
 			os.flush();
 			byte[] resp = readResponse(is);
 			dbgpResp = new DBGpResponse();
@@ -251,7 +252,7 @@ public class DBGpProxyHandler {
 			if (dbgpResp == null) {
 				errorCode = 9999;
 				if (ioe instanceof EOFException) {
-					errorMsg = "invalid response from proxy.";
+					errorMsg = PHPDebugCoreMessages.XDebug_DBGpProxyHandler_2; //$NON-NLS-1$
 				}
 				else {
 					errorMsg = ioe.getMessage();
@@ -280,7 +281,7 @@ public class DBGpProxyHandler {
 		}
 		byteArray = baos.toByteArray(); 
 		if (DBGpLogger.debugResp()) {
-			DBGpLogger.debug("Response: " + new String(byteArray, "ASCII"));
+			DBGpLogger.debug("Response: " + new String(byteArray, "ASCII")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return byteArray;
 	}	
@@ -297,7 +298,7 @@ public class DBGpProxyHandler {
 			toAppend = java.util.UUID.randomUUID().toString();
 			
 		}
-		return DBGpSessionHandler.IDEKEY_PREFIX + "_" + toAppend;
+		return DBGpSessionHandler.IDEKEY_PREFIX + "_" + toAppend; //$NON-NLS-1$
 	}
 
 
@@ -313,7 +314,7 @@ public class DBGpProxyHandler {
 	private void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
+				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.XDebug_DBGpProxyHandler_3, message); //$NON-NLS-1$
 			}
 		});
 	}	

@@ -32,6 +32,7 @@ public class PHPCompositeSourceContainer extends CompositeSourceContainer {
 	private IProject project;
 
 	public PHPCompositeSourceContainer(IProject project, ILaunchConfiguration configuration) {
+		//DBGpTarget passes null for the ILaunchConfiguration here.
 		this.project = project;
 	}
 

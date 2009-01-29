@@ -103,6 +103,12 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugMessage_remoteSessionTitle;	
 	public static String XDebugMessage_remoteSessionPrompt;
 	
+	//proxy Handler
+	public static String XDebug_DBGpProxyHandler_0;
+	public static String XDebug_DBGpProxyHandler_1;
+	public static String XDebug_DBGpProxyHandler_2;
+	public static String XDebug_DBGpProxyHandler_3;
+	
     static {
         // load message values from bundle file
         NLS.initializeMessages(BUNDLE_NAME, PHPDebugCoreMessages.class);
