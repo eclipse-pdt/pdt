@@ -10,20 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.evaluators;
 
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.evaluation.types.SimpleType;
+import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.FixedAnswerEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.typeinference.MethodContext;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 
 public class ScalarEvaluator extends FixedAnswerEvaluator {
 
 	public ScalarEvaluator(IGoal goal, Scalar scalar) {
-		super(goal, evaluateScalar(scalar));
+		super(goal, evaluateScalar(goal, scalar));
 	}
 
-	private static Object evaluateScalar(Scalar scalar) {
+	private static Object evaluateScalar(IGoal goal, Scalar scalar) {
 		int scalarType = scalar.getScalarType();
-		
+
 		int simpleType = SimpleType.TYPE_NONE;
 		switch (scalarType) {
 			case Scalar.TYPE_INT:
@@ -35,6 +42,23 @@ public class ScalarEvaluator extends FixedAnswerEvaluator {
 					simpleType = SimpleType.TYPE_NULL;
 					break;
 				}
+				// checking specific case for "return this;" statement
+				if ("this".equalsIgnoreCase(scalar.getValue())) {
+					IContext context = goal.getContext();
+					if (context instanceof MethodContext) {
+						MethodDeclaration methodNode = ((MethodContext) context).getMethodNode();
+						if (methodNode != null) {
+							String declaringTypeName = methodNode.getDeclaringTypeName();
+							if (declaringTypeName != null) {
+								IEvaluatedType resolved = PHPSimpleTypes.fromString(declaringTypeName);
+								if (resolved == null) {
+									return new PHPClassType(declaringTypeName);
+								}
+							}
+						}
+					}
+				}
+
 			case Scalar.TYPE_SYSTEM:
 				simpleType = SimpleType.TYPE_STRING;
 				break;
