@@ -916,7 +916,6 @@ public class ASTMatcher {
 		LambdaFunctionDeclaration o = (LambdaFunctionDeclaration) other;
 		
 		return (safeEquals(node.isReference(), o.isReference())
-				&& safeEquals(node.isStatic(), o.isStatic())
 				&& safeSubtreeMatch(node.getBody(), o.getBody())
 				&& safeSubtreeListMatch(node.formalParameters(), o.formalParameters())
 				&& safeSubtreeListMatch(node.lexicalVariables(), o.lexicalVariables()));

@@ -30,12 +30,11 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 public class LambdaFunctionDeclaration extends Expression {
 
 	private final boolean isReference;
-	private final boolean isStatic;
 	private final List<? extends Expression> lexicalVars;
 	protected List<FormalParameter> arguments = new LinkedList<FormalParameter>();
 	private Block body = new Block();
 
-	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters, List<? extends Expression> lexicalVars, Block body, final boolean isReference, final boolean isStatic) {
+	public LambdaFunctionDeclaration(int start, int end, List<FormalParameter> formalParameters, List<? extends Expression> lexicalVars, Block body, final boolean isReference) {
 		super(start, end);
 
 		if (formalParameters != null) {
@@ -45,7 +44,6 @@ public class LambdaFunctionDeclaration extends Expression {
 
 		this.lexicalVars = lexicalVars;
 		this.isReference = isReference;
-		this.isStatic = isStatic;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {
@@ -82,10 +80,6 @@ public class LambdaFunctionDeclaration extends Expression {
 
 	public boolean isReference() {
 		return isReference;
-	}
-
-	public boolean isStatic() {
-		return isStatic;
 	}
 
 	/**

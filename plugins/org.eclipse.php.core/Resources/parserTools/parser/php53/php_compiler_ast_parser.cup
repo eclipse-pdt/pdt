@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.9 2009/01/28 17:22:20 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.10 2009/01/29 07:59:22 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -2224,15 +2224,7 @@ T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsL
 T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
 {:
 	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList, 
-		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), false);
-:}
-
-| T_STATIC:s T_FUNCTION is_reference:isReference
-T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE lexical_vars:varsList
-T_CURLY_OPEN:blockStart inner_statement_list:list T_CURLY_CLOSE:blockEnd
-{:
-	RESULT = new LambdaFunctionDeclaration(sleft, blockEndright, paramList, varsList, 
-		new Block(blockStartleft, blockEndright, list), isReference.booleanValue(), true);
+		new Block(blockStartleft, blockEndright, list), isReference.booleanValue());
 :}
 ;
 

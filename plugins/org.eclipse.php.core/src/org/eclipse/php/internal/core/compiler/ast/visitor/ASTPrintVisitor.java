@@ -985,7 +985,6 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 	public boolean visit(LambdaFunctionDeclaration s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("isReference", Boolean.toString(s.isReference()));
-		parameters.put("isStatic", Boolean.toString(s.isStatic()));
 		xmlWriter.startTag("LambdaFunctionDeclaration", parameters);
 		
 		xmlWriter.startTag("Arguments", new HashMap<String, String>());

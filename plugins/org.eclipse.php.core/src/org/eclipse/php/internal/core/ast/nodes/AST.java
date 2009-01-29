@@ -2530,7 +2530,6 @@ public class AST {
 		LambdaFunctionDeclaration lfDeclaration = new LambdaFunctionDeclaration(this);
 		lfDeclaration.setBody(body);
 		lfDeclaration.setIsReference(isReference);
-		lfDeclaration.setIsStatic(isStatic);
 		lfDeclaration.formalParameters().addAll(formalParameters);
 		lfDeclaration.lexicalVariables().addAll(lexicalVars);
 		return lfDeclaration;

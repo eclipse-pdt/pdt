@@ -29,7 +29,6 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class LambdaFunctionDeclaration extends Expression {
 
 	private boolean isReference;
-	private boolean isStatic;
 	private final ASTNode.NodeList<FormalParameter> formalParameters = new ASTNode.NodeList<FormalParameter>(FORMAL_PARAMETERS_PROPERTY);
 	private final ASTNode.NodeList<Expression> lexicalVariables = new ASTNode.NodeList<Expression>(LEXICAL_VARIABLES_PROPERTY);
 	private Block body;
@@ -39,8 +38,6 @@ public class LambdaFunctionDeclaration extends Expression {
 	 */
 	public static final SimplePropertyDescriptor IS_REFERENCE_PROPERTY = 
 		new SimplePropertyDescriptor(LambdaFunctionDeclaration.class, "isReference", Boolean.class, OPTIONAL); //$NON-NLS-1$
-	public static final SimplePropertyDescriptor IS_STATIC_PROPERTY = 
-		new SimplePropertyDescriptor(LambdaFunctionDeclaration.class, "isStatic", Boolean.class, OPTIONAL); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor FORMAL_PARAMETERS_PROPERTY = 
 		new ChildListPropertyDescriptor(LambdaFunctionDeclaration.class, "formalParameters", FormalParameter.class, NO_CYCLE_RISK); //$NON-NLS-1$
 	public static final ChildListPropertyDescriptor LEXICAL_VARIABLES_PROPERTY = 
@@ -57,14 +54,13 @@ public class LambdaFunctionDeclaration extends Expression {
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(4);
 		propertyList.add(IS_REFERENCE_PROPERTY);
-		propertyList.add(IS_STATIC_PROPERTY);
 		propertyList.add(FORMAL_PARAMETERS_PROPERTY);
 		propertyList.add(LEXICAL_VARIABLES_PROPERTY);
 		propertyList.add(BODY_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
 	}	
 	
-	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body, final boolean isReference, final boolean isStatic) {
+	public LambdaFunctionDeclaration(int start, int end, AST ast, List formalParameters, List lexicalVars, Block body, final boolean isReference) {
 		super(start, end, ast);
 		
 		if (formalParameters == null) {
@@ -72,7 +68,6 @@ public class LambdaFunctionDeclaration extends Expression {
 		}
 		
 		setIsReference(isReference);
-		setIsStatic(isStatic);
 		
 		Iterator<FormalParameter> paramIt = formalParameters.iterator();
 		while (paramIt.hasNext()) {
@@ -246,32 +241,6 @@ public class LambdaFunctionDeclaration extends Expression {
 		postValueChange(IS_REFERENCE_PROPERTY);
 	}
 	
-
-	/**
-	 * True if this lambda function is static
-	 * @return True if this lambda function is static
-	 */
-	public boolean isStatic() {
-		return isStatic;
-	}
-	
-	/**
-	 * Sets to true if this lambda function is static
-	 * 
-	 * @param value whether this lambda function is static 
-	 * @exception IllegalArgumentException if:
-	 * <ul>
-	 * <li>the node belongs to a different AST</li>
-	 * <li>the node already has a parent</li>
-	 * <li>a cycle in would be created</li>
-	 * </ul>
-	 */
-	public final void setIsStatic(boolean value) {
-		preValueChange(IS_STATIC_PROPERTY);
-		this.isReference = value;
-		postValueChange(IS_STATIC_PROPERTY);
-	}
-	
 	/* (omit javadoc for this method)
 	 * Method declared on ASTNode.
 	 */
@@ -281,14 +250,6 @@ public class LambdaFunctionDeclaration extends Expression {
 				return isReference();
 			} else {
 				setIsReference(value);
-				return false;
-			}
-		}
-		if (property == IS_STATIC_PROPERTY) {
-			if (get) {
-				return isStatic();
-			} else {
-				setIsStatic(value);
 				return false;
 			}
 		}
@@ -332,9 +293,8 @@ public class LambdaFunctionDeclaration extends Expression {
 		final List formalParams = ASTNode.copySubtrees(target, formalParameters());
 		final List lexicalVars = ASTNode.copySubtrees(target, lexicalVariables());
 		final boolean isRef = isReference();
-		final boolean isStatic = isStatic();
 		
-		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(getStart(), getEnd(), target, formalParams, lexicalVars, body, isRef, isStatic);
+		final LambdaFunctionDeclaration result = new LambdaFunctionDeclaration(getStart(), getEnd(), target, formalParams, lexicalVars, body, isRef);
 		return result;
 	}
 

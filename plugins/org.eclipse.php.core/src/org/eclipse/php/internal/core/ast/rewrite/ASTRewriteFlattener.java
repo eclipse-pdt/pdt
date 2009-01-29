@@ -699,9 +699,6 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 	
 	public boolean visit(LambdaFunctionDeclaration functionDeclaration) {
-		if (functionDeclaration.isStatic()) {
-			result.append(" static");
-		}
 		result.append(" function ");
 		if (functionDeclaration.isReference()) {
 			result.append('&');
