@@ -143,7 +143,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			if (parametersInitializer instanceof IWebDebugParametersInitializer) {
 				IWebDebugParametersInitializer webParametersInitializer = (IWebDebugParametersInitializer) parametersInitializer;
 
-				String requestMethod = webParametersInitializer.getRequestMethod();
+				String requestMethod = webParametersInitializer.getRequestMethod(launch);
 				// Initialize with additional GET parameters
 				if (requestMethod == IWebDebugParametersInitializer.GET_METHOD) {
 					Hashtable<String, String> requestParameters = webParametersInitializer.getRequestParameters(launch);

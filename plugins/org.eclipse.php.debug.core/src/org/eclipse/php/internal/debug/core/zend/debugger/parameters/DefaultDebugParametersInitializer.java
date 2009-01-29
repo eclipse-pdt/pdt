@@ -116,7 +116,7 @@ public class DefaultDebugParametersInitializer extends AbstractDebugParametersIn
 		return null;
 	}
 
-	public String getRequestMethod() {
+	public String getRequestMethod(ILaunch launch) {
 		return null;
 	}
 
