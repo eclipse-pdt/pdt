@@ -97,9 +97,11 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_idekey;
 	public static String XDebugConfigurationDialog_proxy;
 
-	//messages
+	//DBGpTarget messages
 	public static String XDebugMessage_debugError;	
 	public static String XDebugMessage_unexpectedTermination;
+	
+	//XDebug Communication Demon msgs
 	public static String XDebugMessage_remoteSessionTitle;	
 	public static String XDebugMessage_remoteSessionPrompt;
 	
