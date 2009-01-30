@@ -286,47 +286,78 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 				if (pathMapper != null) {
 					if (pathMapper.getLocalFile(initScript) == null) {
 						if (projectScript != null) {
-							VirtualPath vpScr = new VirtualPath(projectScript);
-							VirtualPath vpInit = new VirtualPath(initScript);
-							//TODO: What happens if there is a difference in case ?
-							if (vpScr.getLastSegment().equals(vpInit.getLastSegment())) {
-								PathEntry pe = new PathEntry(projectScript, PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace().getRoot());
-								pathMapper.addEntry(initScript, pe);
-							} else {
-								// ok, the initial script doesn't match what was passed into
-								// the launch, need to locate the required script.
-								// it may be possible to determine it from the project name
-								// so long as the project name is part of the web server file
-								// structure, so we could try this.
-								//TODO see if the scriptName is part of the init structure, if
-								//so we could workout the local file.
-								try {
-									DebugSearchEngine.find(initScript, this);
-								} catch (Exception e) {
-								}
-							}
+							// we have a project script so it must be a PDT launch
+							handlePDTSessionInitiation(initScript);
 						}
 						else {
-							// this was a remotely initiated launch as we don't have a scriptName
-							try {
-								PathEntry pe = DebugSearchEngine.find(pathMapper, initScript, null, this);
-								if (pe != null) {
-									Object container = pe.getContainer();
-									if (container != null && container instanceof IResource) {
-										IResource res = (IResource)container;
-										IProject prj = res.getProject();
-										PHPSourceLookupDirector dir = (PHPSourceLookupDirector)getLaunch().getSourceLocator();
-										//ISourceContainer[] containers = new ISourceContainer[] {new ProjectSourceContainer(prj, false)};
-										ISourceContainer[] containers = new ISourceContainer[] {new PHPCompositeSourceContainer(prj, null)};									
-										dir.setSourceContainers(containers);
-									}
-								}
-							} catch (Exception e) {
-							}
+							// this was a remotely initiated launch as we don't have a project script
+							handleRemoteSessionInitiation(initScript);
 						}
 					}
 				}
 			}
+		}
+	}
+
+	/**
+	 * handle a PDT launch debug initiation session
+	 * @param initScript the initial script being executed
+	 */
+	private void handlePDTSessionInitiation(String initScript) {
+		VirtualPath vpScr = new VirtualPath(projectScript);
+		VirtualPath vpInit = new VirtualPath(initScript);
+		//TODO: What happens if there is a difference in case ?
+		if (vpScr.getLastSegment().equals(vpInit.getLastSegment())) {
+			PathEntry pe = new PathEntry(projectScript, PathEntry.Type.WORKSPACE, ResourcesPlugin.getWorkspace().getRoot());
+			pathMapper.addEntry(initScript, pe);
+		} else {
+			// ok, the initial script doesn't match what was passed into
+			// the launch, need to locate the required script.
+			// it may be possible to determine it from the project name
+			// so long as the project name is part of the web server file
+			// structure, so we could try this.
+			//TODO see if the scriptName is part of the init structure, if
+			//so we could workout the local file.
+			try {
+				DebugSearchEngine.find(initScript, this);
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	/**
+	 * handle a Remotely Initiated launch debug session
+	 * @param initScript the initial script being executed
+	 */
+	
+	private void handleRemoteSessionInitiation(String initScript) {
+		try {
+			PathEntry pe = DebugSearchEngine.find(pathMapper, initScript, null, this);
+			if (pe != null) {
+				Object container = pe.getContainer();
+				if (container != null && container instanceof IResource) {
+					IResource res = (IResource)container;
+					IProject prj = res.getProject();
+					PHPSourceLookupDirector dir = (PHPSourceLookupDirector)getLaunch().getSourceLocator();
+					//ISourceContainer[] containers = new ISourceContainer[] {new ProjectSourceContainer(prj, false)};
+					ISourceContainer[] containers = new ISourceContainer[] {new PHPCompositeSourceContainer(prj, null)};									
+					dir.setSourceContainers(containers);
+				}
+			}
+			else {
+				//either no file was found, or the user pressed the stop debugger 
+				if (isTerminated() == false) {
+					// stop wasn't pressed
+					Display.getDefault().asyncExec(new Runnable() {
+						public void run() {
+							MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.XDebugMessage_debugError, "No appropriate file located or no file selected. Debug Terminated"); 
+						}
+					});
+					session.endSession();
+					terminateDebugTarget(true);
+				}
+			}
+		} catch (Exception e) {
 		}
 	}
 
@@ -649,7 +680,8 @@ public class DBGpTarget extends DBGpElement implements IPHPDebugTarget, IDBGpDeb
 						// ignore any exceptions here
 					}
 				} else {
-					//TODO: This code may be redundant
+					// this is still required as we could enter terminateDebugTarget without 
+					// session.endSession being called eg when stop debugger is pressed on the DebugSearchEngine Dialog.
 					if (session != null) {
 						session.endSession();
 					}
