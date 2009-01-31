@@ -21,6 +21,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.xdebug.IDELayerFactory;
@@ -56,7 +57,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 			if (XDebugLaunchListener.getInstance().isWebLaunchActive()) {
-				displayErrorMessage("Web Launch Already Running");
+				displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_0);
 				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 				return;
 			}
@@ -64,10 +65,10 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 
 		// Resolve the Server
-		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, ""));
+		Server server = ServersManager.getServer(configuration.getAttribute(Server.NAME, "")); //$NON-NLS-1$
 		if (server == null) {
-			Logger.log(Logger.ERROR, "Launch configuration could not find server");
-			displayErrorMessage("Could not launch.\nInvalid server configuration.");
+			Logger.log(Logger.ERROR, "Launch configuration could not find server"); //$NON-NLS-1$
+			displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_1); //$NON-NLS-1$
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 			return;
 		}
@@ -80,7 +81,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			proj = ResourcesPlugin.getWorkspace().getRoot().getProject(filePath.segment(0));
 		} catch (Throwable t) {
 			if (proj == null) {
-				Logger.logException("Could not execute the debug (Project is null).", t);
+				Logger.logException("Could not execute the debug (Project is null).", t); //$NON-NLS-1$
 				DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 				return;
 			}
@@ -110,7 +111,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// Generate a session id for this launch and start the listener
 		// then create the start and stop debug URLs
 		String[] startStopURLs;
-		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes());
+		String baseURL = new String(configuration.getAttribute(Server.BASE_URL, "").getBytes()); //$NON-NLS-1$
 		IDBGpDebugTarget target = null;
 
 		if (mode.equals(ILaunchManager.DEBUG_MODE)) {
@@ -119,7 +120,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			if (DBGpProxyHandler.instance.useProxy()) {
 				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
 				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
-					displayErrorMessage("Unable to connect to proxy\n" + DBGpProxyHandler.instance.getErrorMsg());
+					displayErrorMessage(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_2 + DBGpProxyHandler.instance.getErrorMsg()); 
 					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 					return;					
 				}
@@ -149,7 +150,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 
 		// load the URL into the appropriate web browser
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
-		subMonitor.beginTask("Launching browser", 10);
+		subMonitor.beginTask(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_3, 10); //$NON-NLS-1$
 
 		Display.getDefault().syncExec(new Runnable() {
 			public void run() {
@@ -160,7 +161,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 						DBGpUtils.openInternalBrowserView(startURL);
 					}
 				} catch (Exception t) {
-					Logger.logException("Error initializing the web browser.", t);
+					Logger.logException("Error initializing the web browser.", t); //$NON-NLS-1$
 					exception[0] = t;
 				}
 			}
@@ -172,7 +173,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 		if (exception[0] == null) {
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				launch.addDebugTarget(target);
-				subMonitor.subTask("waiting for XDebug session");
+				subMonitor.subTask(PHPDebugCoreMessages.XDebug_WebLaunchConfigurationDelegate_4); //$NON-NLS-1$
 				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences(), monitor);
 			}
 			else {
@@ -181,7 +182,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 			}
 		} else {
 			// display an error about not being able to launch a browser
-			Logger.logException("we have an exception on the browser", exception[0]);
+			Logger.logException("we have an exception on the browser", exception[0]); //$NON-NLS-1$
 			if (mode.equals(ILaunchManager.DEBUG_MODE)) {
 				DBGpSessionHandler.getInstance().removeSessionListener((IDBGpSessionListener)target);
 			}
@@ -198,7 +199,7 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
+				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.XDebugMessage_debugError, message);
 			}
 		});
 	}
@@ -221,14 +222,14 @@ public class XDebugWebLaunchConfigurationDelegate extends LaunchConfigurationDel
 	public String[] generateStartStopDebugURLs(String baseURL, String sessionId, String ideKey) {
 		String[] startStopURLs = new String[2];
 
-		if (baseURL.indexOf("?") > -1) {
-			baseURL += "&";
+		if (baseURL.indexOf("?") > -1) { //$NON-NLS-1$
+			baseURL += "&"; //$NON-NLS-1$
 		} else {
-			baseURL += "?";
+			baseURL += "?"; //$NON-NLS-1$
 		}
 
-		startStopURLs[0] = baseURL + "XDEBUG_SESSION_START=" + ideKey + "&KEY=" + sessionId;
-		startStopURLs[1] = baseURL + "XDEBUG_SESSION_STOP_NO_EXEC=" + ideKey + "&KEY=" + sessionId;
+		startStopURLs[0] = baseURL + "XDEBUG_SESSION_START=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
+		startStopURLs[1] = baseURL + "XDEBUG_SESSION_STOP_NO_EXEC=" + ideKey + "&KEY=" + sessionId; //$NON-NLS-1$ //$NON-NLS-2$
 		return startStopURLs;
 	}
 }

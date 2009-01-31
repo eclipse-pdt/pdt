@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
@@ -56,7 +57,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		final String phpScriptString = configuration.getAttribute(IPHPDebugConstants.ATTR_FILE, (String) null);
 		if (phpScriptString == null || phpScriptString.trim().length() == 0) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			displayErrorMessage("No script specified");
+			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_0); //$NON-NLS-1$
 			return;
 		}
 		if (monitor.isCanceled()) {
@@ -70,7 +71,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		final IResource scriptRes = workspaceRoot.findMember(filePath);
 		if (scriptRes == null) {
 			DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-			displayErrorMessage("Specified script cannot be found");  //TODO: NLS
+			displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_1);
 			return;
 		}
 	
@@ -153,7 +154,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			if (DBGpProxyHandler.instance.useProxy()) {
 				ideKey = DBGpProxyHandler.instance.getCurrentIdeKey();
 				if (DBGpProxyHandler.instance.registerWithProxy() == false) {
-					displayErrorMessage("Unable to connect to proxy\n" + DBGpProxyHandler.instance.getErrorMsg());
+					displayErrorMessage(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_2 + DBGpProxyHandler.instance.getErrorMsg()); //$NON-NLS-1$
 					DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
 					return;					
 				}
@@ -171,7 +172,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		}
 
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 30);
-		subMonitor.beginTask("Launching script", 10);
+		subMonitor.beginTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_3, 10); //$NON-NLS-1$
 
 		//determine the working directory. default is the location of the script
 		IPath workingPath = phpFile.removeLastSegments(1);
@@ -180,8 +181,8 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		boolean found = false;
 		for (int i = 0; i < envVarString.length && !found; i++) {
 			String envEntity = envVarString[i];
-			String[] elements = envEntity.split("=");
-			if (elements.length > 0 && elements[0].equals("XDEBUG_WORKING_DIR")) {
+			String[] elements = envEntity.split("="); //$NON-NLS-1$
+			if (elements.length > 0 && elements[0].equals("XDEBUG_WORKING_DIR")) { //$NON-NLS-1$
 				found = true;
 				workingPath = new Path(elements[1]);
 				File temp = workingPath.makeAbsolute().toFile();
@@ -232,7 +233,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 			if (mode.equals(ILaunchManager.DEBUG_MODE) && target != null) {
 				target.setProcess(eclipseProcessWrapper);
 				launch.addDebugTarget(target);
-				subMonitor.subTask("waiting for XDebug session");
+				subMonitor.subTask(PHPDebugCoreMessages.XDebug_ExeLaunchConfigurationDelegate_4); //$NON-NLS-1$
 				target.waitForInitialSession((DBGpBreakpointFacade) IDELayerFactory.getIDELayer(), XDebugPreferenceMgr.createSessionPreferences(), monitor);
 			}
 
@@ -258,11 +259,11 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 		// create XDebug required environment variables, need the
 		// session handler to start listening and generate a session id
 
-		String configEnv = "XDEBUG_CONFIG=remote_enable=1 idekey=" + ideKey;
-		String extraDBGpEnv = "DBGP_IDEKEY=" + ideKey;
-		String sessEnv = "DBGP_COOKIE=" + sessionID;
+		String configEnv = "XDEBUG_CONFIG=remote_enable=1 idekey=" + ideKey; //$NON-NLS-1$
+		String extraDBGpEnv = "DBGP_IDEKEY=" + ideKey; //$NON-NLS-1$
+		String sessEnv = "DBGP_COOKIE=" + sessionID; //$NON-NLS-1$
 
-		Logger.debugMSG("env=" + configEnv + ", Cookie=" + sessEnv);
+		Logger.debugMSG("env=" + configEnv + ", Cookie=" + sessEnv); //$NON-NLS-1$ //$NON-NLS-2$
 
 		String[] envVarString = PHPLaunchUtilities.getEnvironment(configuration, new String[] { configEnv, extraDBGpEnv, sessEnv, getLibraryPath(phpExe) });
 		return envVarString;
@@ -291,7 +292,7 @@ public class XDebugExeLaunchConfigurationDelegate extends LaunchConfigurationDel
 	protected void displayErrorMessage(final String message) {
 		Display.getDefault().asyncExec(new Runnable() {
 			public void run() {
-				MessageDialog.openError(Display.getDefault().getActiveShell(), "Debug Error", message);
+				MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.XDebugMessage_debugError, message);
 			}
 		});
 	}

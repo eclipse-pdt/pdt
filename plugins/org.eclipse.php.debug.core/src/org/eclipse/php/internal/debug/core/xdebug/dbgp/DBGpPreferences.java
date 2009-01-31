@@ -34,9 +34,6 @@ public class DBGpPreferences {
 
 	private Map preferences = new HashMap();
 
-	private static final String TRUE = "true";
-	private static final String FALSE = "false";
-
 	public void setValue(String name, int value) {
 		preferences.put(name, value);
 	}

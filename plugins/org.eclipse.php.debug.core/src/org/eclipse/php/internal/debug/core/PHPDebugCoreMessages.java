@@ -97,6 +97,8 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebugConfigurationDialog_idekey;
 	public static String XDebugConfigurationDialog_proxy;
 
+	//General XDebug messages
+	
 	//DBGpTarget messages
 	public static String XDebugMessage_debugError;	
 	public static String XDebugMessage_unexpectedTermination;
@@ -110,6 +112,19 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_DBGpProxyHandler_1;
 	public static String XDebug_DBGpProxyHandler_2;
 	public static String XDebug_DBGpProxyHandler_3;
+	
+	public static String XDebug_ExeLaunchConfigurationDelegate_0;
+	public static String XDebug_ExeLaunchConfigurationDelegate_1;
+	public static String XDebug_ExeLaunchConfigurationDelegate_2;
+	public static String XDebug_ExeLaunchConfigurationDelegate_3;
+	public static String XDebug_ExeLaunchConfigurationDelegate_4;
+
+	public static String XDebug_WebLaunchConfigurationDelegate_0;
+	public static String XDebug_WebLaunchConfigurationDelegate_1;
+	public static String XDebug_WebLaunchConfigurationDelegate_2;
+	public static String XDebug_WebLaunchConfigurationDelegate_3;
+	public static String XDebug_WebLaunchConfigurationDelegate_4;
+	
 	
     static {
         // load message values from bundle file
