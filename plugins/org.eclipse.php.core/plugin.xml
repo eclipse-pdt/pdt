@@ -162,13 +162,13 @@
 	
 	<extension point="org.eclipse.dltk.core.completionEngine">
 		<completionEngine
-			class="org.eclipse.php.core.codeassist.PHPCompletionEngine" nature="org.eclipse.php.core.PHPNature"
+			class="org.eclipse.php.internal.core.codeassist.PHPCompletionEngine" nature="org.eclipse.php.core.PHPNature"
 			priority="0">
 		</completionEngine>
 	</extension>
 	
 	<extension point="org.eclipse.dltk.core.selectionEngine">
-		<selectionEngine class="org.eclipse.php.core.codeassist.PHPSelectionEngine"
+		<selectionEngine class="org.eclipse.php.internal.core.codeassist.PHPSelectionEngine"
 			nature="org.eclipse.php.core.PHPNature" priority="0">
 		</selectionEngine>
 	</extension>
