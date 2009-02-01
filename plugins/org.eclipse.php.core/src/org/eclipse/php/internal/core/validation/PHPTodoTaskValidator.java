@@ -9,9 +9,9 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.preferences.TaskTagsProvider;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -37,7 +37,7 @@ public class PHPTodoTaskValidator extends AbstractValidator {
 
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		// process only PHP files
-		if (resource.getType() != IResource.FILE || !(PHPModelUtil.isPhpFile((IFile) resource))) {
+		if (resource.getType() != IResource.FILE || !(PHPToolkitUtil.isPhpFile((IFile) resource))) {
 			return null;
 		}
 

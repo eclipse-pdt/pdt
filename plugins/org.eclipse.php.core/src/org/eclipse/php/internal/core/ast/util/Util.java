@@ -49,7 +49,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
@@ -671,7 +671,7 @@ public class Util {
 				IResource member = members[i];
 				if (member.getType() == IResource.FOLDER) {
 					return findFirstClassFile((IFolder)member);
-				} else if (PHPModelUtil.hasPhpExtention(member.getName())) {
+				} else if (PHPToolkitUtil.hasPhpExtention(member.getName())) {
 					return (IFile) member;
 				}
 			}

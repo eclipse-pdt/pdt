@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.phpModel;
+package org.eclipse.php.internal.core;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.Assert;
@@ -21,7 +21,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.project.PHPNature;
 
-public class PHPModelUtil {
+public class PHPToolkitUtil {
 	
 	public static boolean isPhpElement(final IModelElement modelElement) {
 		Assert.isNotNull(modelElement);

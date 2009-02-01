@@ -20,7 +20,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.util.ProjectBackwardCompatibilityUtil;
 import org.osgi.framework.BundleContext;
@@ -111,7 +110,7 @@ public class PHPCorePlugin extends Plugin {
 				continue ProjectsIterate;
 			}
 			// verify that the project is a PHP project
-			if (PHPModelUtil.isPhpProject(project)) {
+			if (PHPToolkitUtil.isPhpProject(project)) {
 				IProjectDescription projectDescription = project.getDescription();
 				ICommand[] commands = projectDescription.getBuildSpec();
 				// check if the Script Builder is installed

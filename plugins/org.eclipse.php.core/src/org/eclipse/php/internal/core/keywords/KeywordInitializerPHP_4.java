@@ -1,8 +1,8 @@
-package org.eclipse.php.internal.core.phpModel;
+package org.eclipse.php.internal.core.keywords;
 
 import java.util.Collection;
 
-import org.eclipse.php.internal.core.phpModel.PHPKeywords.KeywordData;
+import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
 
 /**
  * Keywords initializer for PHP 4.x

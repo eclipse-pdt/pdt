@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.phpModel;
+package org.eclipse.php.internal.core.keywords;
 
 import java.util.*;
 
