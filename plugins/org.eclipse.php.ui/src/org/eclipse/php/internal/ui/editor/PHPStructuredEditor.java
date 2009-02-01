@@ -56,6 +56,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.ast.locator.PhpElementConciliator;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Expression;
@@ -66,7 +67,6 @@ import org.eclipse.php.internal.core.documentModel.dom.IImplForPhp;
 import org.eclipse.php.internal.core.documentModel.parser.PhpSourceParser;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.preferences.PreferencesSupport;
@@ -2016,7 +2016,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 
 		if (resource instanceof IFile) {
-			if (PHPModelUtil.isPhpFile((IFile) resource)) {
+			if (PHPToolkitUtil.isPhpFile((IFile) resource)) {
 
 				PhpSourceParser.editFile.set(resource);
 
