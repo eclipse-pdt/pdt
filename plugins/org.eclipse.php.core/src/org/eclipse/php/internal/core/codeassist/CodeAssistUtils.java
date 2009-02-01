@@ -590,10 +590,6 @@ public class CodeAssistUtils {
 		else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
 		}
-		else if (triggerText.endsWith(NS_SEPARATOR)) {
-			triggerText = NS_SEPARATOR;
-			isClassTriger = true;
-		}
 		else {
 			return EMPTY_TYPES;
 		}

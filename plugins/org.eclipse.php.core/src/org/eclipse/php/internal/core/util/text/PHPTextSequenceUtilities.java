@@ -240,6 +240,17 @@ public class PHPTextSequenceUtilities {
 		}
 		return -1;
 	}
+	
+	public static int readNamespaceStartIndex(CharSequence textSequence, int startPosition) {
+		while (startPosition > 0) {
+			char ch = textSequence.charAt(startPosition - 1);
+			if (!Character.isLetterOrDigit(ch) && ch != '_' && ch != '\\') {
+				break;
+			}
+			startPosition--;
+		}
+		return startPosition;
+	}
 
 	public static int readIdentifierStartIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
 		while (startPosition > 0) {

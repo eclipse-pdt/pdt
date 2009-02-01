@@ -203,7 +203,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 					}
 				}
 			}
-			
+
 		} finally {
 			processedElements.clear();
 		}
@@ -379,6 +379,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			int line = document.getLineOfOffset(offset);
+
+			if (isNamespaceElementCompletion(statementText, offset, line, lastWord, startPosition)) {
+				return;
+			}
+
 			if (isClassFunctionCompletion(statementText, offset, line, lastWord, startPosition)) {
 				// the current position is in class function.
 				return;
@@ -399,14 +404,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			nextWord = document.get(regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getStart(), nextRegion.getTextLength());
 
 			hasOpenBraceAtEnd = hasPaamayimNekudotaimAtEnd = hasNSSeparatorAtEnd = false;
-			
+
 			if (OPEN_BRACE.equals(nextWord)) {
 				hasOpenBraceAtEnd = true;
-			}
-			else if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
+			} else if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) {
 				hasPaamayimNekudotaimAtEnd = true;
-			}
-			else if (NS_SEPARATOR.equals(nextWord)) {
+			} else if (NS_SEPARATOR.equals(nextWord)) {
 				hasNSSeparatorAtEnd = true;
 			}
 
@@ -848,18 +851,83 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 		return;
 	}
 
+	protected boolean isNamespaceElementCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition) {
+		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
+			return false;
+		}
+		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition);
+		if (startFunctionPosition < 1) {
+			return false;
+		}
+
+		String triggerText = statementText.subSequence(startFunctionPosition - 1, startFunctionPosition).toString();
+		if (NS_SEPARATOR.equals(triggerText)) {
+
+			if (internalPHPRegion.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
+				try {
+					ITextRegion nextRegion = phpScriptRegion.getPhpToken(internalPHPRegion.getEnd());
+					wordEndOffset = regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
+				} catch (BadLocationException e) {
+				}
+			}
+
+			if (startFunctionPosition == 1) { // global namespace - only the '\' is present
+				getRegularCompletion(functionName, offset, false);
+				return true;
+			}
+
+			int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition - 1);
+			int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace);
+			String nsName = statementText.subSequence(nsNameStart, endNamespace).toString();
+			
+			int relevanceConst = RELEVANCE_CONST;
+			int relevanceClass = RELEVANCE_CLASS;
+			int relevanceMethod = RELEVANCE_METHOD;
+			
+			this.setSourceRange(offset - functionName.length(), offset);
+
+			IType[] namespaces = CodeAssistUtils.getGlobalTypes(sourceModule, nsName, CodeAssistUtils.EXACT_NAME);
+			for (IType ns : namespaces) {
+				try {
+					for (IModelElement child : ns.getChildren()) {
+						if (CodeAssistUtils.startsWithIgnoreCase(child.getElementName(), functionName)) {
+							if (child.getElementType() == IModelElement.TYPE) {
+								reportType((IType) child, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
+							}
+							else if (child.getElementType() == IModelElement.METHOD) {
+								reportMethod((IMethod) child, relevanceMethod--);
+							}
+							else if (child.getElementType() == IModelElement.FIELD) {
+								IField field = (IField) child;
+								if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+									reportField(field, relevanceConst--, false);
+								}
+							}
+						}
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	protected boolean isClassFunctionCompletion(TextSequence statementText, int offset, int line, String functionName, int startFunctionPosition) {
 		startFunctionPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition);
 		if (startFunctionPosition <= 2) {
 			return false;
 		}
-		
+
 		boolean isClassTriger = false;
 		boolean isParent = false;
-		
+
 		String triggerText = statementText.subSequence(startFunctionPosition - 2, startFunctionPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
-		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM) || triggerText.endsWith(NS_SEPARATOR)) {
+		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
 			if (startFunctionPosition >= 8) {
 				String parentText = statementText.subSequence(startFunctionPosition - 8, startFunctionPosition - 2).toString();
@@ -871,8 +939,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return false;
 		}
 
-		if (internalPHPRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || internalPHPRegion.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM
-				|| internalPHPRegion.getType() == PHPRegionTypes.PHP_NS_SEPARATOR) {
+		if (internalPHPRegion.getType() == PHPRegionTypes.PHP_OBJECT_OPERATOR || internalPHPRegion.getType() == PHPRegionTypes.PHP_PAAMAYIM_NEKUDOTAYIM) {
 			try {
 				ITextRegion nextRegion = phpScriptRegion.getPhpToken(internalPHPRegion.getEnd());
 				wordEndOffset = regionContainer.getStartOffset() + phpScriptRegion.getStart() + nextRegion.getTextEnd();
@@ -1584,7 +1651,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		processedElements.add(method);
-		
+
 		if (relevance < 1) {
 			relevance = 1;
 		}
@@ -1655,7 +1722,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		processedElements.add(type);
-		
+
 		if (relevance < 1) {
 			relevance = 1;
 		}
@@ -1696,11 +1763,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			if (type instanceof FakeGroupType) {
 				proposal.setCompletion(elementName.substring(0, elementName.length() - 1).toCharArray());
 				relevance = 10000001;
-			}
-			else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix || hasNSSeparatorAtEnd && NS_SEPARATOR == suffix) {
+			} else if (hasPaamayimNekudotaimAtEnd && PAAMAYIM_NEKUDOTAIM == suffix || hasNSSeparatorAtEnd && NS_SEPARATOR == suffix) {
 				proposal.setCompletion(elementName.toCharArray());
-			}
-			else {
+			} else {
 				proposal.setCompletion((elementName + suffix).toCharArray());
 			}
 
@@ -1732,7 +1797,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			return;
 		}
 		processedElements.add(field);
-		
+
 		if (relevance < 1) {
 			relevance = 1;
 		}
