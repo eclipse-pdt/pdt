@@ -27,9 +27,9 @@ import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
@@ -113,7 +113,7 @@ public class PHPResourceContentProvider implements ITreeContentProvider {
 	//filter out non PHP files
 	private boolean isResourceFiltered(IResource member) {
 		if (member instanceof IFile) {
-			return !PHPModelUtil.isPhpFile((IFile) member);
+			return !PHPToolkitUtil.isPhpFile((IFile) member);
 		}
 		return false;
 	}

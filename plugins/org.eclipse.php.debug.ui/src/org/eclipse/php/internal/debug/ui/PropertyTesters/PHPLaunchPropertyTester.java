@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
-import org.eclipse.php.internal.core.phpModel.PHPModelUtil;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.ui.IEditorInput;
 
 /**
@@ -55,17 +55,17 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 					if (obj instanceof IEditorInput) {
 						IModelElement modelElement = DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj);
 						if (modelElement != null) {
-							return PHPModelUtil.isPhpElement(modelElement);
+							return PHPToolkitUtil.isPhpElement(modelElement);
 						}
 					}
 					else if (obj instanceof IAdaptable) {
 						IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
 						if (resource instanceof IFile) {
-							return PHPModelUtil.isPhpFile((IFile)resource);
+							return PHPToolkitUtil.isPhpFile((IFile)resource);
 						}
 						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
 						if (modelElement != null) {
-							return PHPModelUtil.isPhpElement(modelElement);
+							return PHPToolkitUtil.isPhpElement(modelElement);
 						}
 					}
 				}
