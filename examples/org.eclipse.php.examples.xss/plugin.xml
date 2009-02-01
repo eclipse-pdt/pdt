@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.core.buildParticipant">
+      <buildParticipant
+            class="org.eclipse.php.examples.xss.BuildParticipantFactory"
+            id="org.eclipse.php.examples.xss.buildParticipant"
+            name="XSS Protection"
+            nature="org.eclipse.php.core.PHPNature">
+      </buildParticipant>
+   </extension>
+
+</plugin>

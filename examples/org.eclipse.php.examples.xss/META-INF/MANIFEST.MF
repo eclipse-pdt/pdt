@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XSS Validation Plug-in
+Bundle-SymbolicName: org.eclipse.php.examples.xss;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.php.examples.xss.XSSPlugin
+Bundle-Vendor: Zend Technologies
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.dltk.core,
+ org.eclipse.dltk.validators.core,
+ org.eclipse.php.core
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
