@@ -17,6 +17,7 @@ import org.eclipse.php.debug.core.debugger.handlers.IDebugMessageHandler;
 import org.eclipse.php.debug.core.debugger.messages.IDebugMessage;
 import org.eclipse.php.internal.core.util.FileUtils;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
+import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
 import org.eclipse.php.internal.debug.core.preferences.stepFilters.DebugStepFilterController;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
@@ -29,25 +30,26 @@ public class ReadyNotificationHandler implements IDebugMessageHandler {
 		ReadyNotification readyNotification = (ReadyNotification) message;
 
 		String currentFile = readyNotification.getFileName();
-		if (debugTarget.isStepFiltersEnabled()) {
-			String localPath = ((RemoteDebugger) debugTarget.getRemoteDebugger()).convertToLocalFilename(currentFile);
-			if (DebugStepFilterController.getInstance().isFiltered(localPath)) {// file is filtered
-				try {
-					if (!isBreakPointExistInFile(debugTarget, currentFile)) {//file has a B.P
-						// skip this step and continue the next 'Step Into'
-						debugTarget.getRemoteDebugger().stepInto();
-						return;
+		try {
+			if (debugTarget.isStepFiltersEnabled()) {
+				String localPath = ((RemoteDebugger) debugTarget.getRemoteDebugger()).convertToLocalFilename(currentFile);
+				if (DebugStepFilterController.getInstance().isFiltered(localPath)) {// file is filtered
+					try {
+						if (!isBreakPointExistInFile(debugTarget, currentFile)) {//file has a B.P
+							// skip this step and continue the next 'Step Into'
+							debugTarget.getRemoteDebugger().stepInto();
+							return;
+						}
+					} catch (CoreException ce) {
+						PHPDebugPlugin.log(ce);
 					}
-				} catch (CoreException ce) {
-					return;
 				}
 			}
+		} finally {
+			int currentLine = readyNotification.getLineNumber();
+			IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
+			debugHandler.ready(currentFile, currentLine);
 		}
-
-		int currentLine = readyNotification.getLineNumber();
-		IDebugHandler debugHandler = debugTarget.getRemoteDebugger().getDebugHandler();
-		debugHandler.ready(currentFile, currentLine);
-
 	}
 
 	// check if the currentFile has a breakpoint

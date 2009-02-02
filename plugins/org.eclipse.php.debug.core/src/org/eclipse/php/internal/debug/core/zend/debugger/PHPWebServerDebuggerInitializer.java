@@ -143,12 +143,27 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 			if (parametersInitializer instanceof IWebDebugParametersInitializer) {
 				IWebDebugParametersInitializer webParametersInitializer = (IWebDebugParametersInitializer) parametersInitializer;
 
-				String requestMethod = webParametersInitializer.getRequestMethod(launch);
+				StringBuilder getParams = new StringBuilder("?");
+				
+				// Initialize debug parameters (using cookies):
+				Hashtable<String, String> debugParameters = parametersInitializer.getDebugParameters(launch);
+				if (debugParameters != null) {
+					Enumeration<String> k = debugParameters.keys();
+					while (k.hasMoreElements()) {
+						String key = k.nextElement();
+						String value = debugParameters.get(key);
+						getParams.append(URLEncoder.encode(key, URL_ENCODING)).append('=').append(URLEncoder.encode(value, URL_ENCODING));
+						if (k.hasMoreElements()) {
+							getParams.append('&');
+						}
+					}
+				}
+				
 				// Initialize with additional GET parameters
+				String requestMethod = webParametersInitializer.getRequestMethod(launch);
 				if (requestMethod == IWebDebugParametersInitializer.GET_METHOD) {
 					Hashtable<String, String> requestParameters = webParametersInitializer.getRequestParameters(launch);
 					if (requestParameters != null) {
-						StringBuilder getParams = new StringBuilder("?");
 						Enumeration<String> k = requestParameters.keys();
 						while (k.hasMoreElements()) {
 							String key = k.nextElement();
@@ -158,9 +173,10 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 								getParams.append('&');
 							}
 						}
-						requestURL = new URL(requestURL.getProtocol(), requestURL.getHost(), requestURL.getPort(), requestURL.getPath() + getParams.toString());
 					}
 				}
+
+				requestURL = new URL(requestURL.getProtocol(), requestURL.getHost(), requestURL.getPort(), requestURL.getPath() + getParams.toString());
 
 				// Open the connection:
 				if (PHPDebugPlugin.DEBUG) {
@@ -173,22 +189,6 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				if (requestMethod != null) {
 					urlConection.setRequestMethod(requestMethod);
 				}
-
-				StringBuilder cookieBuf = new StringBuilder();
-				// Initialize debug parameters (using cookies):
-				Hashtable<String, String> debugParameters = parametersInitializer.getDebugParameters(launch);
-				if (debugParameters != null) {
-					Enumeration<String> k = debugParameters.keys();
-					while (k.hasMoreElements()) {
-						String key = k.nextElement();
-						String value = debugParameters.get(key);
-						cookieBuf.append(URLEncoder.encode(key, URL_ENCODING)).append('=').append(URLEncoder.encode(value, URL_ENCODING));
-						if (k.hasMoreElements()) {
-							cookieBuf.append("; ");
-						}
-					}
-				}
-
 
 				// Add additional headers
 				Hashtable<String, String> headers = webParametersInitializer.getRequestHeaders(launch);
@@ -207,6 +207,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				// Set cookies
 				Hashtable<String, String> cookies = webParametersInitializer.getRequestCookies(launch);
 				if (cookies != null) {
+					StringBuilder cookieBuf = new StringBuilder();
 					Enumeration<String> k = cookies.keys();
 					while (k.hasMoreElements()) {
 						String key = k.nextElement();
@@ -216,12 +217,11 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 							cookieBuf.append("; ");
 						}
 					}
+					if (PHPDebugPlugin.DEBUG) {
+						System.out.println("Setting cookies: " + cookieBuf.toString());
+					}
+					urlConection.addRequestProperty("Cookie", cookieBuf.toString());
 				}
-
-				if (PHPDebugPlugin.DEBUG) {
-					System.out.println("Setting cookies: " + cookieBuf.toString());
-				}
-				urlConection.addRequestProperty("Cookie", cookieBuf.toString());
 
 				DataOutputStream outputStream = new DataOutputStream(urlConection.getOutputStream());
 				try {

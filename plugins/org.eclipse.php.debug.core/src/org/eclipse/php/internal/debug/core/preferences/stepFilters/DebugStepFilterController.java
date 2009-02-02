@@ -14,10 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.InvalidRegistryObjectException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.util.FileUtils;
@@ -95,8 +92,11 @@ public class DebugStepFilterController implements IDebugStepFilterPrefListener {
 				//check if the given path is inside an include path variable container
 				else if ((currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_VAR) || currentFilter.getType() == IStepFilterTypes.PHP_INCLUDE_PATH_VAR_FOLDER) {
 					
-					String includePathVarPath = DLTKCore.getResolvedVariablePath(new Path(currentFilter.getPath())).toOSString();
-					filterResult = FileUtils.checkIfContainerOfFile(includePathVarPath, path);
+					IPath resolvedVariablePath = DLTKCore.getResolvedVariablePath(new Path(currentFilter.getPath()));
+					if (resolvedVariablePath != null) {
+						String includePathVarPath = resolvedVariablePath.toOSString();
+						filterResult = FileUtils.checkIfContainerOfFile(includePathVarPath, path);
+					}
 					break;
 				}
 			}
