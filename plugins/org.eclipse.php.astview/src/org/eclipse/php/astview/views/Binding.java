@@ -12,9 +12,6 @@ package org.eclipse.php.astview.views;
 
 import java.util.ArrayList;
 
-import javax.lang.model.type.*;
-
-import org.eclipse.php.astview.ASTViewPlugin;
 import org.eclipse.php.internal.core.ast.nodes.IBinding;
 import org.eclipse.php.internal.core.ast.nodes.IMethodBinding;
 import org.eclipse.php.internal.core.ast.nodes.ITypeBinding;
