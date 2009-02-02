@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
 import org.eclipse.php.internal.core.codeassist.FakeGroupType;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -49,6 +50,8 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	private static final String FIELD_SEEALSO = "See Also";
 	private static final String FIELD_EXTENDS = "Extends";
 	private static final String FIELD_IMPLEMENTS = "Implements";
+	private static final String FIELD_NAMESPACE = "Namespace";
+	private static final String FIELD_INTERFACE = "Interface";
 
 	public Reader getInfo(IMember element, boolean lookIntoParents, boolean lookIntoExternal) {
 		StringBuilder buf = new StringBuilder(DL_START);
@@ -91,9 +94,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 			// append the class name if it exists
 			IType declaringType = element.getDeclaringType();
-			if (declaringType != null) {
-				appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
-			}
+			appendTypeInfoRow(declaringType, buf);
 
 			buf.append(builtinDoc);
 			return true;
@@ -116,9 +117,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		// append the class name if it exists
 		IType declaringType = method.getDeclaringType();
-		if (declaringType != null) {
-			appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
-		}
+		appendTypeInfoRow(declaringType, buf);
 
 		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(module, method);
@@ -217,9 +216,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		// append the class name if it exists
 		IType declaringType = field.getDeclaringType();
-		if (declaringType != null) {
-			appendDefinitionRow(FIELD_CLASS, declaringType.getElementName(), buf);
-		}
+		appendTypeInfoRow(declaringType, buf);
 
 		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		ASTNode node = PHPModelUtils.getNodeByField(module, field);
@@ -234,6 +231,27 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		// append description if it exists
 		appendShortDescription(doc, buf);
+	}
+	
+	private void appendTypeInfoRow(IType type, StringBuilder buf) {
+		if (type == null) {
+			return;
+		}
+		
+		int flags = 0;
+		try {
+			flags = type.getFlags();
+		} catch (ModelException e) {
+		}
+		if (PHPFlags.isNamespace(flags)) {
+			appendDefinitionRow(FIELD_NAMESPACE, type.getElementName(), buf);
+		}
+		else if (PHPFlags.isInterface(flags)) {
+			appendDefinitionRow(FIELD_INTERFACE, type.getElementName(), buf);
+		}
+		else {
+			appendDefinitionRow(FIELD_CLASS, type.getElementName(), buf);
+		}
 	}
 
 	private static String nl2br(String str) {
