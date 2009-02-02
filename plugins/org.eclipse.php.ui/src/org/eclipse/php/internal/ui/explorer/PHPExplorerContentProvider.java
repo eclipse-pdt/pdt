@@ -23,6 +23,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.dltk.internal.core.ExternalProjectFragment;
 import org.eclipse.dltk.internal.core.ExternalScriptFolder;
+import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
@@ -39,24 +40,26 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
  */
 public class PHPExplorerContentProvider extends ScriptExplorerContentProvider implements IIncludepathListener /*, IResourceChangeListener*/{
 
-
 	public PHPExplorerContentProvider(boolean provideMembers) {
 		super(provideMembers);
 		IncludePathManager.getInstance().registerIncludepathListener(this);
 		setIsFlatLayout(false);
 	}
-	
+
 	public void setIsFlatLayout(final boolean state) {
-		super.setIsFlatLayout(false); 
+		super.setIsFlatLayout(false);
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
 		IncludePathManager.getInstance().unregisterIncludepathListener(this);
 	}
-	
-	
+
+	private Object[] getNonPhpProjects(final IScriptModel model) throws ModelException {
+		return model.getForeignResources();
+	}
+
 	@Override
 	public Object[] getChildren(Object parentElement) {
 
@@ -74,6 +77,14 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 			}
 		}
 		try {
+
+			// aggregate php projects and non php projects (includes closed ones)
+			if (parentElement instanceof IScriptModel) {
+				return StandardModelElementContentProvider.concatenate(
+					getScriptProjects((IScriptModel) parentElement), 
+					getNonPhpProjects((IScriptModel) parentElement));
+			}
+
 			// Handles SourceModule and downwards as well as ExternalProjectFragments (i.e language model)
 			if (parentElement instanceof ISourceModule || !(parentElement instanceof IOpenable) || parentElement instanceof ExternalProjectFragment) {
 				if (parentElement instanceof IFolder) {
