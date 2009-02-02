@@ -29,13 +29,14 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -63,6 +64,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static final String CLASS = "class"; //$NON-NLS-1$
 	private static final String FUNCTION = "function"; //$NON-NLS-1$
 	private static final IModelElement[] EMPTY = {};
+	private PHPVersion phpVersion;
 
 	public IAssistParser getParser() {
 		return null;
@@ -75,6 +77,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		ISourceModule sourceModule = (ISourceModule) sourceUnit.getModelElement();
+		phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
 
 		// First, try to resolve using AST (if we have parsed it well):
 		try {
@@ -233,13 +236,18 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
-					return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((TypeReference) node).getName()), (ISourceModuleContext) context);
+					String name = ((TypeReference) node).getName();
+					IType[] globalTypes = CodeAssistUtils.getGlobalTypes(sourceModule, name, CodeAssistUtils.EXACT_NAME);
+					if (globalTypes == null || globalTypes.length == 0) { // This can be a constant in PHP 5.3
+						return CodeAssistUtils.getGlobalFields(sourceModule, name, CodeAssistUtils.EXACT_NAME);
+					}
+					return globalTypes;
 				}
 				else if (node instanceof ClassInstanceCreation) {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
-						return PHPTypeInferenceUtils.getModelElements(new PHPClassType(((SimpleReference) className).getName()), (ISourceModuleContext) context);
+						return CodeAssistUtils.getGlobalTypes(sourceModule, ((SimpleReference) node).getName(), CodeAssistUtils.EXACT_NAME);
 					}
 				}
 			}
@@ -267,12 +275,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					int elementStart = container.getStartOffset() + phpScriptRegion.getStart() + tRegion.getStart();
 					TextSequence statement = PHPTextSequenceUtilities.getStatement(elementStart + tRegion.getLength(), sRegion, true);
 					int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statement, statement.length());
-					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, endPosition, true);
+					int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, endPosition, true);
 					String elementName = statement.subSequence(startPosition, endPosition).toString();
 
 					// Determine previous word:
 					int prevWordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statement, startPosition);
-					int prevWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statement, prevWordEnd, false);
+					int prevWordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statement, prevWordEnd, false);
 					String prevWord = statement.subSequence(prevWordStart, prevWordEnd).toString();
 
 					// Determine next word:

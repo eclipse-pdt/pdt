@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
@@ -153,7 +154,7 @@ public class PHPTextSequenceUtilities {
 		}
 		return -1;
 	}
-	
+
 	public static int getMethodEndIndex(CharSequence textSequence, int offset) {
 		int length = textSequence.length();
 		while (offset < length && Character.isWhitespace(textSequence.charAt(offset))) {
@@ -240,16 +241,78 @@ public class PHPTextSequenceUtilities {
 		}
 		return -1;
 	}
-	
-	public static int readNamespaceStartIndex(CharSequence textSequence, int startPosition) {
+
+	public static int readNamespaceStartIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
+		boolean onBackslash = false;
+		boolean onWhitespace = false;
+		
 		while (startPosition > 0) {
 			char ch = textSequence.charAt(startPosition - 1);
-			if (!Character.isLetterOrDigit(ch) && ch != '_' && ch != '\\') {
-				break;
+			if (!Character.isLetterOrDigit(ch) && ch != '_') {
+				if (ch == '\\') {
+					if (onBackslash) {
+						break;
+					}
+					onBackslash = true;
+					onWhitespace = false;
+				}
+				else if (Character.isWhitespace(ch)) {
+					onWhitespace = true;
+					onBackslash = false;
+				}
+				else {
+					break;
+				}
+			} else {
+				if (onWhitespace) {
+					break;
+				}
+				onBackslash = false;
+				onWhitespace = false;
 			}
 			startPosition--;
 		}
-		return startPosition;
+		if (includeDollar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
+			startPosition--;
+		}
+		return readForwardSpaces(textSequence, startPosition);
+	}
+	
+	public static int readNamespaceEndIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
+		boolean onBackslash = false;
+		boolean onWhitespace = false;
+		
+		int length = textSequence.length();
+		if (includeDollar && startPosition < length && textSequence.charAt(startPosition) == '$') {
+			startPosition++;
+		}
+		while (startPosition < length) {
+			char ch = textSequence.charAt(startPosition);
+			if (!Character.isLetterOrDigit(ch) && ch != '_') {
+				if (ch == '\\') {
+					if (onBackslash) {
+						break;
+					}
+					onBackslash = true;
+					onWhitespace = false;
+				}
+				else if (Character.isWhitespace(ch)) {
+					onWhitespace = true;
+					onBackslash = false;
+				}
+				else {
+					break;
+				}
+			} else {
+				if (onWhitespace) {
+					break;
+				}
+				onBackslash = false;
+				onWhitespace = false;
+			}
+			startPosition++;
+		}
+		return readBackwardSpaces(textSequence, startPosition);
 	}
 
 	public static int readIdentifierStartIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
@@ -281,26 +344,40 @@ public class PHPTextSequenceUtilities {
 		return startPosition;
 	}
 	
+	public static int readIdentifierStartIndex(PHPVersion phpVersion, CharSequence textSequence, int startPosition, boolean includeDollar) {
+		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) { 
+			return PHPTextSequenceUtilities.readIdentifierStartIndex(textSequence, startPosition, includeDollar);
+		}
+		return PHPTextSequenceUtilities.readNamespaceStartIndex(textSequence, startPosition, includeDollar);
+	}
+	
+	public static int readIdentifierEndIndex(PHPVersion phpVersion, CharSequence textSequence, int startPosition, boolean includeDollar) {
+		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) { 
+			return PHPTextSequenceUtilities.readIdentifierEndIndex(textSequence, startPosition, includeDollar);
+		}
+		return PHPTextSequenceUtilities.readNamespaceEndIndex(textSequence, startPosition, includeDollar);
+	}
+
 	/**
 	 * Tries to find identifier enclosing given position.
 	 * @param contents
 	 * @param pos
 	 * @return
 	 */
-	public static ISourceRange getEnclosingIdentifier (CharSequence textSequence, int pos) {
+	public static ISourceRange getEnclosingIdentifier(CharSequence textSequence, int pos) {
 		if (pos < 0 || pos >= textSequence.length())
 			return null;
-		
+
 		int start = readIdentifierStartIndex(textSequence, pos, true);
 		int end = readIdentifierEndIndex(textSequence, pos, true);
-		
+
 		if (start > end)
 			return null;
-		
+
 		return new SourceRange(start, end - start + 1);
 	}
-	
-	public static int readBackwardSpaces(TextSequence textSequence, int startPosition) {
+
+	public static int readBackwardSpaces(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv > 0; rv--) {
 			if (!Character.isWhitespace(textSequence.charAt(rv - 1))) {
@@ -310,7 +387,7 @@ public class PHPTextSequenceUtilities {
 		return rv;
 	}
 
-	public static int readForwardSpaces(TextSequence textSequence, int startPosition) {
+	public static int readForwardSpaces(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			if (!Character.isWhitespace(textSequence.charAt(rv))) {
@@ -326,7 +403,7 @@ public class PHPTextSequenceUtilities {
 	 * @param startPosition - The current position in the text sequence to start from 
 	 * @param delims        - The array of delimiters
 	 */
-	public static int readForwardUntilDelim(TextSequence textSequence, int startPosition, char[] delims) {
+	public static int readForwardUntilDelim(CharSequence textSequence, int startPosition, char[] delims) {
 		int rv = startPosition;
 		for (; rv < textSequence.length(); rv++) {
 			char c = textSequence.charAt(rv);
@@ -350,7 +427,7 @@ public class PHPTextSequenceUtilities {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static int getPrivousTriggerIndex(TextSequence textSequence, int startPosition) {
+	public static int getPrivousTriggerIndex(CharSequence textSequence, int startPosition) {
 		int rv = startPosition;
 		int bracketsNum = 0;
 		char inStringMode = 0;
@@ -423,7 +500,7 @@ public class PHPTextSequenceUtilities {
 		return -1;
 	}
 
-	public static int readIdentifierListStartIndex(TextSequence textSequence, int endPosition) {
+	public static int readIdentifierListStartIndex(CharSequence textSequence, int endPosition) {
 		int startPosition = endPosition;
 		int listStartPosition = startPosition;
 		boolean beforeWhitespace = false;

@@ -74,7 +74,7 @@ public class CodeAssistUtils {
 	 * Whether to retrieve only interfaces excluding classes and namespaces (when asking for types)
 	 */
 	public static final int ONLY_INTERFACES = 1 << 4;
-	
+
 	/**
 	 * Whether to retrieve only namespaces excluding classes and interfaces 
 	 */
@@ -97,7 +97,7 @@ public class CodeAssistUtils {
 	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
-	
+
 	private static final IModelElement[] EMPTY = new IModelElement[0];
 	private static final IType[] EMPTY_TYPES = new IType[0];
 
@@ -583,14 +583,12 @@ public class CodeAssistUtils {
 		if (endPosition < 2) {
 			return EMPTY_TYPES;
 		}
-		
+
 		String triggerText = statementText.subSequence(endPosition - 2, endPosition).toString();
 		if (triggerText.equals(OBJECT_FUNCTIONS_TRIGGER)) {
-		}
-		else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
+		} else if (triggerText.equals(PAAMAYIM_NEKUDOTAIM)) {
 			isClassTriger = true;
-		}
-		else {
+		} else {
 			return EMPTY_TYPES;
 		}
 
@@ -726,6 +724,39 @@ public class CodeAssistUtils {
 	 * @param mask
 	 */
 	public static IType[] getGlobalTypes(ISourceModule sourceModule, String prefix, int mask) {
+
+		if ((mask & ONLY_NAMESPACES) == 0) {
+			// Check whether the type name has a namespace prefix:
+			int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
+			if (nsIdx != -1) {
+				String nsName = prefix.substring(0, nsIdx);
+				prefix = prefix.substring(nsIdx + 1);
+
+				IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | ONLY_NAMESPACES);
+				List<IType> types = new LinkedList<IType>();
+				for (IType ns : namespaces) {
+					try {
+						for (IType t : ns.getTypes()) {
+							String typeName = t.getElementName();
+							if ((mask & EXACT_NAME) != 0) {
+								if (typeName.equalsIgnoreCase(prefix)) {
+									types.add(t);
+									break;
+								}
+							} else if (startsWithIgnoreCase(typeName, prefix)) {
+								types.add(t);
+							}
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
+					}
+				}
+				return types.toArray(new IType[types.size()]);
+			}
+		}
+
 		IModelElement[] elements = getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.TYPE, mask);
 		List<IType> filteredElements = new LinkedList<IType>();
 		for (IModelElement c : elements) {
@@ -760,23 +791,16 @@ public class CodeAssistUtils {
 	 * @param mask
 	 */
 	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, int mask) {
+		// Check whether the method has a namespace prefix:
 		int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
 		if (nsIdx != -1) {
 			String nsName = prefix.substring(0, nsIdx);
 			prefix = prefix.substring(nsIdx + 1);
-			
-			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME);
+
+			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | ONLY_NAMESPACES);
 			List<IModelElement> methods = new LinkedList<IModelElement>();
 			for (IType ns : namespaces) {
-				try {
-					if (PHPFlags.isNamespace(ns.getFlags())) {
-						methods.addAll(Arrays.asList(getTypeMethods(ns, prefix, mask)));
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
-				}
+				methods.addAll(Arrays.asList(getTypeMethods(ns, prefix, mask)));
 			}
 			return methods.toArray(new IModelElement[methods.size()]);
 		}
@@ -792,6 +816,19 @@ public class CodeAssistUtils {
 	 * @param mask
 	 */
 	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, int mask) {
+		// Check whether the field has a namespace prefix:
+		int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
+		if (nsIdx != -1) {
+			String nsName = prefix.substring(0, nsIdx);
+			prefix = prefix.substring(nsIdx + 1);
+
+			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | ONLY_NAMESPACES);
+			List<IModelElement> fields = new LinkedList<IModelElement>();
+			for (IType ns : namespaces) {
+				fields.addAll(Arrays.asList(getTypeFields(ns, prefix, mask)));
+			}
+			return fields.toArray(new IModelElement[fields.size()]);
+		}
 		return getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.FIELD, mask);
 	}
 
@@ -849,6 +886,7 @@ public class CodeAssistUtils {
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				private Set<String> processedVars = new HashSet<String>();
+
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IModelElement element = (IModelElement) match.getElement();
 					String elementName = element.getElementName();
@@ -1051,17 +1089,16 @@ public class CodeAssistUtils {
 			try {
 				if (elementType == IDLTKSearchConstants.TYPE) {
 					final HandleFactory handleFactory = new HandleFactory();
-					searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(),
-						pattern.getMatchRule(), IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
-							public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-								Openable openable = handleFactory.createOpenable(path, scope);
-								elements.add(new FakeType(openable, new String(simpleTypeName), modifiers));
-							}
+					searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), pattern.getMatchRule(), IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
+						public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+							Openable openable = handleFactory.createOpenable(path, scope);
+							elements.add(new FakeType(openable, new String(simpleTypeName), modifiers));
+						}
 					}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 				} else {
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-	
+
 							IModelElement element = (IModelElement) match.getElement();
 							// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
 							if (element instanceof SourceModule) {

@@ -877,27 +877,25 @@ public class PHPCompletionEngine extends ScriptCompletionEngine {
 			}
 
 			int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startFunctionPosition - 1);
-			int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace);
+			int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
 			String nsName = statementText.subSequence(nsNameStart, endNamespace).toString();
-			
+
 			int relevanceConst = RELEVANCE_CONST;
 			int relevanceClass = RELEVANCE_CLASS;
 			int relevanceMethod = RELEVANCE_METHOD;
-			
+
 			this.setSourceRange(offset - functionName.length(), offset);
 
-			IType[] namespaces = CodeAssistUtils.getGlobalTypes(sourceModule, nsName, CodeAssistUtils.EXACT_NAME);
+			IType[] namespaces = CodeAssistUtils.getGlobalTypes(sourceModule, nsName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_NAMESPACES);
 			for (IType ns : namespaces) {
 				try {
 					for (IModelElement child : ns.getChildren()) {
 						if (CodeAssistUtils.startsWithIgnoreCase(child.getElementName(), functionName)) {
 							if (child.getElementType() == IModelElement.TYPE) {
 								reportType((IType) child, relevanceClass--, PAAMAYIM_NEKUDOTAIM);
-							}
-							else if (child.getElementType() == IModelElement.METHOD) {
+							} else if (child.getElementType() == IModelElement.METHOD) {
 								reportMethod((IMethod) child, relevanceMethod--);
-							}
-							else if (child.getElementType() == IModelElement.FIELD) {
+							} else if (child.getElementType() == IModelElement.FIELD) {
 								IField field = (IField) child;
 								if ((field.getFlags() & Modifiers.AccConstant) != 0) {
 									reportField(field, relevanceConst--, false);
