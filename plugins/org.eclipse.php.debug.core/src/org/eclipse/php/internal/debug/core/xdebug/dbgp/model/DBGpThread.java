@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IStep;
 import org.eclipse.debug.core.model.IThread;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
 /**
  * Currently this implementation is for a single threaded
@@ -36,7 +37,8 @@ public class DBGpThread extends DBGpElement implements IThread {
 	 */
 	public String getName() throws DebugException {
 		// PHP only has one thread, so no special naming required
-		return "PHP Thread";
+		// PHP Thread
+		return PHPDebugCoreMessages.XDebug_DBGpThread_0;
 	}
 
 	/*

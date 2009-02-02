@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.DBGpLogger;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpUtils;
@@ -26,11 +27,11 @@ import org.w3c.dom.Node;
 public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 
 	private DBGpThread owningThread;
-	private String qualifiedFile = ""; // fully qualified name of the file this stack frame is in
+	private String qualifiedFile = ""; // fully qualified name of the file this stack frame is in //$NON-NLS-1$
 	private String stackLevel; // the level of this stack frame   
 	private String fileName; // workspace file relative to project, null if not in workspace
 	private int lineNo; // line within the file of this stack frame
-	private String name = ""; // string to display in debugger for this stack frame
+	private String name = ""; // string to display in debugger for this stack frame //$NON-NLS-1$
 	//private IVariable[] variables; // variables exposed to this stack frame
 
 	public DBGpStackFrame(DBGpThread threadOwner, Node stackData) {
@@ -59,20 +60,22 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 		</response>       
 		       */
 
-		String line = DBGpResponse.getAttribute(stackData, "lineno");
-		stackLevel = DBGpResponse.getAttribute(stackData, "level");
+		String line = DBGpResponse.getAttribute(stackData, "lineno"); //$NON-NLS-1$
+		stackLevel = DBGpResponse.getAttribute(stackData, "level"); //$NON-NLS-1$
 		lineNo = Integer.parseInt(line);
-		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename"));
+		qualifiedFile = DBGpUtils.getFilenameFromURIString(DBGpResponse.getAttribute(stackData, "filename")); //$NON-NLS-1$
 		qualifiedFile = ((DBGpTarget) getDebugTarget()).mapToWorkspaceFileIfRequired(qualifiedFile);
 		// check to see if the file exists in the workspace
 		IFile[] fileFound = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(qualifiedFile));
+		//lineno
+		String whereAndLine = DBGpResponse.getAttribute(stackData, "where") + " : " + PHPDebugCoreMessages.XDebug_DBGpStackFrame_0 + " " + lineNo; //$NON-NLS-1$ //$NON-NLS-2$ 
 		if (fileFound.length > 0) {
 			IFile file = fileFound[0];
 			fileName = file.getProjectRelativePath().toString();
-			name = fileName + "." + DBGpResponse.getAttribute(stackData, "where") + " : lineno " + lineNo;
+			name = fileName + "." + whereAndLine;
 		} else {
 			fileName = null;
-			name = qualifiedFile + "." + DBGpResponse.getAttribute(stackData, "where") + " : lineno " + lineNo;
+			name = qualifiedFile + "." + whereAndLine;
 		}
 	}
 
@@ -98,7 +101,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
 	 */
 	public int getLineNumber() throws DebugException {
-		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo );
+		DBGpLogger.debug(this.hashCode() + "::DBGpStackFrame=" + lineNo ); //$NON-NLS-1$
 		return lineNo;
 	}
 
@@ -140,7 +143,7 @@ public class DBGpStackFrame extends DBGpElement implements IStackFrame {
 	 */
 	public IVariable[] getVariables() throws DebugException {
 		// see equals() as to where variables cannot be cached in the stack frame
-		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo);
+		DBGpLogger.debug("getting variables for stackframe on line: " + lineNo); //$NON-NLS-1$
 		IVariable[] variables = ((DBGpTarget) getDebugTarget()).getVariables(stackLevel);
 		return variables;
 	}

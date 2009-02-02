@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.model.DebugOutput;
 import org.eclipse.php.internal.debug.core.model.IPHPDebugTarget;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
@@ -160,7 +161,8 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IPHPDebugTarg
 	}
 
 	public String getName() throws DebugException {
-		return "MultiSession Manager";
+		//Multisession Manager
+		return PHPDebugCoreMessages.XDebug_DBGpMultiSessionTarget_0;
 	}
 
 	/*
@@ -443,13 +445,13 @@ public class DBGpMultiSessionTarget extends DBGpElement implements IPHPDebugTarg
 
 		try {
 			if (browser != null) {
-				DBGpLogger.debug("browser is not null, sending " + stopDebugURL);
+				DBGpLogger.debug("browser is not null, sending " + stopDebugURL); //$NON-NLS-1$
 				browser.openURL(new URL(stopDebugURL));
 			} else {
 				DBGpUtils.openInternalBrowserView(stopDebugURL);
 			}
 		} catch (PartInitException e) {
-			DBGpLogger.logException("Failed to send stop URL: " + stopDebugURL, this, e);
+			DBGpLogger.logException("Failed to send stop URL: " + stopDebugURL, this, e); //$NON-NLS-1$
 		} catch (MalformedURLException e) {
 			// this should never happen, if it does I want it in the log
 			// as something will need to be fixed

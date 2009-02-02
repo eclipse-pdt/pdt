@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,21 +18,22 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 
 public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 
-	static final String PHP_BOOL = "bool";
-	static final String PHP_INT = "int";
-	static final String PHP_FLOAT = "float";
-	static final String PHP_STRING = "string"; //size attribute
-	static final String PHP_NULL = "null"; // unknown variable type
-	static final String PHP_ARRAY = "array"; // children, numchildren, page, pagesize, recursive attribute
-	static final String PHP_OBJECT = "object"; //children, classname, numchildren, page, pagesize, recursive attribute
-	static final String PHP_RESOURCE = "resource"; // pre-rendered string for information, cannot be changed
-	static final String PHP_UNINIT = "uninitialized";
+	static final String PHP_BOOL = "bool"; //$NON-NLS-1$
+	static final String PHP_INT = "int"; //$NON-NLS-1$
+	static final String PHP_FLOAT = "float"; //$NON-NLS-1$
+	static final String PHP_STRING = "string"; //size attribute //$NON-NLS-1$
+	static final String PHP_NULL = "null"; // unknown variable type //$NON-NLS-1$
+	static final String PHP_ARRAY = "array"; // children, numchildren, page, pagesize, recursive attribute //$NON-NLS-1$
+	static final String PHP_OBJECT = "object"; //children, classname, numchildren, page, pagesize, recursive attribute //$NON-NLS-1$
+	static final String PHP_RESOURCE = "resource"; // pre-rendered string for information, cannot be changed //$NON-NLS-1$
+	static final String PHP_UNINIT = "uninitialized"; //$NON-NLS-1$
 
 	private DBGpValue value;
 	private String name;
@@ -48,16 +49,16 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 
 		// we could have a property which has no name, fullname or type
 		// as a result of an expression evaluation
-		name = DBGpResponse.getAttribute(property, "name");
-		setFullName(DBGpResponse.getAttribute(property, "fullname"));
+		name = DBGpResponse.getAttribute(property, "name"); //$NON-NLS-1$
+		setFullName(DBGpResponse.getAttribute(property, "fullname")); //$NON-NLS-1$
 
 		// hopefully this will put the $ at appropriate point in the variable name
 		if (getFullName().length() > 1 && name.equals(getFullName().substring(1))) {
 			name = getFullName();
 		}
 
-		setAddress(DBGpResponse.getAttribute(property, "address"));
-		type = DBGpResponse.getAttribute(property, "type");
+		setAddress(DBGpResponse.getAttribute(property, "address")); //$NON-NLS-1$
+		type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
 
 		if (type.equals(PHP_BOOL)) {
 			value = new DBGpBoolValue(this, property);
@@ -66,7 +67,7 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 		} else if (type.equals(PHP_FLOAT)) {
 			value = new DBGpNumValue(this, property, PHP_FLOAT);
 		} else if (type.equals(PHP_STRING)) {
-			String size = DBGpResponse.getAttribute(property, "size");
+			String size = DBGpResponse.getAttribute(property, "size"); //$NON-NLS-1$
 			int strByteLen = -1;
 			try {
 				strByteLen = Integer.parseInt(size);
@@ -132,7 +133,8 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 		// BUG in eclipse 3.2: Cell modification doesn't call verify Value and it should. 
 		// It does if you use the editor pane.
 		if (!verifyValue(expression)) {
-			Status stat = new Status(Status.WARNING, PHPDebugPlugin.ID, "setValue called, but verifyValue failed");
+			//setValue called, but verifyValue failed
+			Status stat = new Status(Status.WARNING, PHPDebugPlugin.ID, PHPDebugCoreMessages.XDebug_DBGpVariable_0);
 			throw new DebugException(stat);
 			//DebugUIPlugin.errorDialog(Display.getDefault().getActiveShell(), ActionMessages.AssignValueAction_2, MessageFormat.format(ActionMessages.AssignValueAction_3, new String[] {expression, name}), new StatusInfo(IStatus.ERROR, ActionMessages.AssignValueAction_4));  //           
 		} else {
@@ -141,7 +143,8 @@ public class DBGpVariable extends DBGpBaseVariable implements IVariable {
 				value.setValue(expression);
 				fireChangeEvent(DebugEvent.CONTENT);
 			} else {
-				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, DebugException.TARGET_REQUEST_FAILED, "program under debug rejected value change", null));
+				//program under debug rejected value change
+				throw new DebugException(new Status(IStatus.ERROR, PHPDebugPlugin.ID, DebugException.TARGET_REQUEST_FAILED, PHPDebugCoreMessages.XDebug_DBGpVariable_1, null));
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.php.internal.debug.core.xdebug.dbgp.model;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.xdebug.dbgp.protocol.DBGpResponse;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,7 +34,7 @@ public class DBGpContainerValue extends DBGpValue {
 		setModifiable(false);
 		if (property != null) {
 			parseData(property);
-			genValueString("");
+			genValueString(""); //$NON-NLS-1$
 		}
 	}
 
@@ -50,21 +51,21 @@ public class DBGpContainerValue extends DBGpValue {
 		// that DBGpVariable is not set to null here otherwise it will attempt
 		// to defer the info. This is ok for no children as page will be set to
 		// -1
-		String type = DBGpResponse.getAttribute(property, "type");
+		String type = DBGpResponse.getAttribute(property, "type"); //$NON-NLS-1$
 		if (type.equals(DBGpVariable.PHP_OBJECT)) {
 			containerType = IS_OBJECT;
-			className = DBGpResponse.getAttribute(property, "classname");
+			className = DBGpResponse.getAttribute(property, "classname"); //$NON-NLS-1$
 		}
 
-		String numChildStr = DBGpResponse.getAttribute(property, "numchildren");
+		String numChildStr = DBGpResponse.getAttribute(property, "numchildren"); //$NON-NLS-1$
 		numChild = 0;
 		if (numChildStr != null && numChildStr.trim().length() != 0) {
 			numChild = Integer.parseInt(numChildStr);
 		}
 		String pageStr = null;
 		String pageSizeStr = null;
-		pageStr = DBGpResponse.getAttribute(property, "page");
-		pageSizeStr = DBGpResponse.getAttribute(property, "pagesize");
+		pageStr = DBGpResponse.getAttribute(property, "page"); //$NON-NLS-1$
+		pageSizeStr = DBGpResponse.getAttribute(property, "pagesize"); //$NON-NLS-1$
 		//TODO: currently getMaxChildren returns 0, may need to look into this.
 		pageSize = ((DBGpTarget) getDebugTarget()).getMaxChildren();
 		if (pageSizeStr != null && pageSizeStr.trim().length() != 0) {
@@ -146,10 +147,11 @@ public class DBGpContainerValue extends DBGpValue {
 				if (className != null && className.trim().length() != 0) {
 					setValueString(className);
 				} else {
-					setValueString("Unknown Object Type");
+					//Unknown object type
+					setValueString(PHPDebugCoreMessages.XDebug_DBGpContainerValue_0);
 				}
 			} else {
-				setValueString("Array [" + numChild + "]");
+				setValueString("Array [" + numChild + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

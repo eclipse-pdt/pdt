@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,7 +112,7 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_DBGpProxyHandler_1;
 	public static String XDebug_DBGpProxyHandler_2;
 	public static String XDebug_DBGpProxyHandler_3;
-	
+
 	public static String XDebug_ExeLaunchConfigurationDelegate_0;
 	public static String XDebug_ExeLaunchConfigurationDelegate_1;
 	public static String XDebug_ExeLaunchConfigurationDelegate_2;
@@ -124,6 +124,21 @@ public class PHPDebugCoreMessages extends NLS {
 	public static String XDebug_WebLaunchConfigurationDelegate_2;
 	public static String XDebug_WebLaunchConfigurationDelegate_3;
 	public static String XDebug_WebLaunchConfigurationDelegate_4;
+	
+	public static String XDebug_DBGpTarget_0;
+	public static String XDebug_DBGpTarget_1;
+	public static String XDebug_DBGpTarget_2;
+	public static String XDebug_DBGpContainerValue_0;
+	public static String XDebug_DBGpMultiSessionTarget_0;
+	public static String XDebug_DBGpStackFrame_0;
+	public static String XDebug_DBGpStringValue_0;
+	public static String XDebug_DBGpThread_0;
+	public static String XDebug_DBGpVariable_0;
+	public static String XDebug_DBGpVariable_1;
+	public static String XDebug_IDBGpModelConstants_0;
+	public static String XDebug_IDBGpModelConstants_1;	
+	
+
 	
 	
     static {
