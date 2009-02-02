@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IProjectFragment;
 import org.eclipse.dltk.core.IScriptProject;
@@ -29,17 +30,19 @@ import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.ui.IWorkbenchSite;
 
+/**
+ * Include path removal action 
+ */
 public class RemoveFromIncludepathAction extends Action implements ISelectionChangedListener {
-	private final IWorkbenchSite fSite;
-	private List fSelectedElements;
+
+	private List<Object> fSelectedElements;
 
 	// BuildpathContainer iff isEnabled()
 
 	public RemoveFromIncludepathAction(IWorkbenchSite site) {
 		super("Remove from Include Path", DLTKPluginImages.DESC_ELCL_REMOVE_FROM_BP);
 		setToolTipText(NewWizardMessages.NewSourceContainerWorkbookPage_ToolBar_RemoveFromCP_tooltip);
-		fSite = site;
-		fSelectedElements = new ArrayList();
+		fSelectedElements = new ArrayList<Object>();
 	}
 
 	/**
@@ -47,7 +50,6 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 	 */
 	public void run() {
 
-		final IScriptProject project;
 		Object object = fSelectedElements.get(0);
 		if (object instanceof ExternalProjectFragment) {
 			ExternalProjectFragment projFragment = (ExternalProjectFragment) object;
@@ -59,12 +61,25 @@ public class RemoveFromIncludepathAction extends Action implements ISelectionCha
 			}
 		} else if (object instanceof IProjectFragment) {
 			IProjectFragment root = (IProjectFragment) object;
-			project = root.getScriptProject();
 		} else {
+			assert object instanceof IncludePath; 
+
 			IncludePath includePath = (IncludePath) object;
 			try {
 				if (includePath.isBuildpath())
 					IncludePathManager.getInstance().removeEntryFromIncludePath(includePath.getProject(), (IBuildpathEntry) (includePath.getEntry()));
+				else {
+					IProject proj = includePath.getProject();
+					IncludePathManager manager = IncludePathManager.getInstance();
+					IncludePath[] paths = manager.getIncludePaths(proj);
+					List<IncludePath> entries = new ArrayList<IncludePath>();
+					for (IncludePath path : paths) {
+						if (!path.equals(includePath)) {
+							entries.add(path);
+						}
+					}
+					manager.setIncludePath(proj, entries.toArray(new IncludePath[entries.size()]));
+				}
 			} catch (ModelException e) {
 				Logger.logException("Could not remove buildPathEntry", e);
 			}
