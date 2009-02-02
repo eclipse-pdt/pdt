@@ -403,7 +403,7 @@ public class ASTView extends ViewPart implements IShowInSource {
 		try {
 			String level = fDialogSettings.get(SETTINGS_JLS);
 			if (level == null) {
-				level = PHPVersion.PHP5.name(); 
+				level = PHPVersion.PHP5.getAlias(); 
 			}
 			if (level.equals(PHP4.getAlias()) || level.equals(PHP5.getAlias()) ) {
 				fCurrentASTLevel= level;
