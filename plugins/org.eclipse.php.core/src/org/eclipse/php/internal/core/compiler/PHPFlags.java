@@ -42,4 +42,14 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isConstant(int flags) {
 		return (flags & AccConstant) != 0;
 	}
+
+	/**
+	 * Returns whether the given integer includes the <code>class</code> modifier.
+	 *
+	 * @param flags the flags
+	 * @return <code>true</code> if the <code>class</code> modifier is included
+	 */
+	public static boolean isClass(int flags) {
+		return !isNamespace(flags) && !isInterface(flags);
+	}
 }
