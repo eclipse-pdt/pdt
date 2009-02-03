@@ -164,6 +164,10 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		// append the file name
 		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
+		
+		// append the namespace name if it exists
+		IType declaringType = type.getDeclaringType();
+		appendTypeInfoRow(declaringType, buf);
 
 		ModuleDeclaration module = SourceParserUtil.getModuleDeclaration(sourceModule);
 		TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(module, type);
