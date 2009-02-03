@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.internal.core.SourceRange;
 
 /**
  * Completion reporter accepts elements to be added into completion proposals list.
@@ -30,27 +31,31 @@ public interface ICompletionReporter {
 	 * Reports type: interface, namespace or class
 	 * @param type PHP class, interface or function
 	 * @param suffix Suffix to uppend after completion will be inserted
+	 * @param replaceRange The range in the document to be replaced with the completion proposal text
 	 */
-	public void reportType(IType type, String suffix);
+	public void reportType(IType type, String suffix, SourceRange replaceRange);
 	
 	/**
 	 * Reports method or function
 	 * @param method PHP method or function
 	 * @param suffix Suffix to uppend after completion will be inserted
+	 * @param replaceRange The range in the document to be replaced with the completion proposal text
 	 */
-	public void reportMethod(IMethod method, String suffix);
+	public void reportMethod(IMethod method, String suffix, SourceRange replaceRange);
 	
 	/**
 	 * Reports field: variable, constant
 	 * @param field PHP variable or constant
 	 * @param suffix Suffix to uppend after completion will be inserted
+	 * @param replaceRange The range in the document to be replaced with the completion proposal text
 	 */
-	public void reportField(IField field, String suffix);
+	public void reportField(IField field, String suffix, SourceRange replaceRange);
 	
 	/**
 	 * Reports PHP keyword
 	 * @param keyword PHP keyword string
 	 * @param suffix Suffix to uppend after completion will be inserted
+	 * @param replaceRange The range in the document to be replaced with the completion proposal text
 	 */
-	public void reportKeyword(String keyword, String suffix);
+	public void reportKeyword(String keyword, String suffix, SourceRange replaceRange);
 }

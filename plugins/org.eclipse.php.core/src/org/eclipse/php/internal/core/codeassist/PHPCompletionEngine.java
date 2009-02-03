@@ -14,6 +14,7 @@ import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContextResolver;
@@ -29,7 +30,7 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  * @author michael
  */
 public class PHPCompletionEngine extends ScriptCompletionEngine implements ICompletionReporter {
-	
+
 	private int relevanceKeyword;
 	private int relevanceMethod;
 	private int relevanceClass;
@@ -37,23 +38,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	private int relevanceConst;
 
 	public void complete(ISourceModule module, int position, int i) {
-		
+
 		relevanceKeyword = RELEVANCE_KEYWORD;
 		relevanceMethod = RELEVANCE_METHOD;
 		relevanceClass = RELEVANCE_CLASS;
 		relevanceVar = RELEVANCE_VAR;
 		relevanceConst = RELEVANCE_CONST;
-		
+
 		try {
 			ICompletionContextResolver resolver = CompletionContextResolver.getActive();
-			ICompletionContext context = resolver.resolve(
-				(org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
-			
-			if (context != null) {
+
+			ICompletionContext completionContext = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
+			if (completionContext != null) {
+
 				ICompletionStrategyFactory completionStrategyFactory = CompletionStrategyFactory.getActive();
-				ICompletionStrategy completionStrategy = completionStrategyFactory.create(context);
+
+				ICompletionStrategy completionStrategy = completionStrategyFactory.create(completionContext);
 				if (completionStrategy != null) {
-					completionStrategy.apply(context, this);
+					completionStrategy.apply(completionContext, this);
 				}
 			}
 		} catch (Exception e) {
@@ -62,7 +64,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 		}
 	}
-	
+
 	private int nextKeywordRelevance() {
 		int relevance = relevanceKeyword--;
 		if (relevance < 1) {
@@ -70,7 +72,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 		return relevance;
 	}
-	
+
 	private int nextMethodRelevance() {
 		int relevance = relevanceMethod--;
 		if (relevance < 1) {
@@ -78,7 +80,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 		return relevance;
 	}
-	
+
 	private int nextClassRelevance() {
 		int relevance = relevanceClass--;
 		if (relevance < 1) {
@@ -86,7 +88,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 		return relevance;
 	}
-	
+
 	private int nextVariableRelevance() {
 		int relevance = relevanceVar--;
 		if (relevance < 1) {
@@ -94,7 +96,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 		return relevance;
 	}
-	
+
 	private int nextConstantRelevance() {
 		int relevance = relevanceConst--;
 		if (relevance < 1) {
@@ -103,7 +105,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		return relevance;
 	}
 
-	public void reportField(IField field, String suffix) {
+	public void reportField(IField field, String suffix, SourceRange replaceRange) {
 		int flags = 0;
 		try {
 			flags = field.getFlags();
@@ -112,20 +114,34 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 				e.printStackTrace();
 			}
 		}
-		int relevance = PHPFlags.isConstant(flags) ? nextConstantRelevance() : nextVariableRelevance(); 
-	}
-	
-	public void reportKeyword(String keyword, String suffix) {
-		int relevance = nextKeywordRelevance();
+		int relevance = PHPFlags.isConstant(flags) ? nextConstantRelevance() : nextVariableRelevance();
 	}
 
-	public void reportMethod(IMethod method, String suffix) {
-		int relevance = nextVariableRelevance();		
+	public void reportKeyword(String keyword, String suffix, SourceRange replaceRange) {
+		noProposal = false;
+		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
+
+			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
+			proposal.setName(keyword.toCharArray());
+			proposal.setCompletion((keyword + suffix).toCharArray());
+			proposal.setRelevance(nextKeywordRelevance());
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+
+			this.requestor.accept(proposal);
+			
+			if (DEBUG) {
+				this.printDebug(proposal);
+			}
+		}
 	}
 
-	public void reportType(IType type, String suffix) {
+	public void reportMethod(IMethod method, String suffix, SourceRange replaceRange) {
+		int relevance = nextVariableRelevance();
 	}
-	
+
+	public void reportType(IType type, String suffix, SourceRange replaceRange) {
+	}
+
 	protected int getEndOfEmptyToken() {
 		return 0;
 	}

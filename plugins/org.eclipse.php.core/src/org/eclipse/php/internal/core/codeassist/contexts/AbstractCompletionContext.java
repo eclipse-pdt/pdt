@@ -42,14 +42,13 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 	private CompletionRequestor requestor;
 	private ISourceModule sourceModule;
+	private int offset;
 	private PHPVersion phpVersion;
 	private IStructuredDocument document;
 	private IStructuredDocumentRegion structuredDocumentRegion;
 	private ITextRegionCollection regionCollection;
 	private IPhpScriptRegion phpScriptRegion;
 	private String partitionType;
-	private TextSequence statementText;
-	private boolean whitespaceBeforeCursor;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (sourceModule == null) {
@@ -58,6 +57,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
+		this.offset = offset;
 		this.phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
 
 		try {
@@ -75,14 +75,6 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 
 							partitionType = determinePartitionType(regionCollection, phpScriptRegion, offset);
 							if (partitionType != null) {
-
-								statementText = PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
-
-								// determine whether there are whitespaces before the cursor
-								int statementLength = statementText.length();
-								int statementEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength);
-								whitespaceBeforeCursor = statementLength != statementEnd;
-
 								return true;
 							}
 						}
@@ -303,18 +295,22 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
 	public TextSequence getStatementText() {
-		return statementText;
+		return PHPTextSequenceUtilities.getStatement(offset, structuredDocumentRegion, true);
 	}
 
 	/**
 	 * Returns whether there are whitespace characters before the cursor where code assist was being invoked
 	 * @return <code>true</code> if there are whitespace characters before the cursor
-	 * @see #isValid(ISourceModule, int, CompletionRequestor)
 	 */
 	public boolean hasWhitespaceBeforeCursor() {
-		return whitespaceBeforeCursor;
+		TextSequence statementText = getStatementText();
+		
+		// determine whether there are whitespaces before the cursor
+		int statementLength = statementText.length();
+		int statementEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength);
+		return statementLength != statementEnd;
 	}
-	
+
 	/**
 	 * Returns completion requestor
 	 * @return completion requestor (see {@link CompletionRequestor})
@@ -322,5 +318,49 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public CompletionRequestor getCompletionRequestor() {
 		return requestor;
+	}
+	
+	/**
+	 * Returns offset of the cursor position when code assist was invoked
+	 * @return offset
+	 */
+	public int getOffset() {
+		return offset;
+	}
+	
+	/**
+	 * Returns PHP token under offset
+	 * @return PHP token
+	 * @throws BadLocationException 
+	 */
+	public ITextRegion getPHPToken() throws BadLocationException {
+		return phpScriptRegion.getPhpToken(offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1);
+	}
+
+	/**
+	 * Returns next PHP token after offset
+	 * @return PHP token
+	 * @throws BadLocationException 
+	 */
+	public ITextRegion getNextPHPToken() throws BadLocationException {
+		ITextRegion nextPhpToken = getPHPToken();
+		do {
+			nextPhpToken = phpScriptRegion.getPhpToken(nextPhpToken.getEnd());
+			if (!PHPPartitionTypes.isPHPCommentState(nextPhpToken.getType()) && nextPhpToken.getType() != PHPRegionTypes.WHITESPACE) {
+				break;
+			}
+		}
+		while (nextPhpToken.getEnd() < phpScriptRegion.getLength());
+		
+		return nextPhpToken;
+	}
+	
+	/**
+	 * Returns next word after the cursor position
+	 * @throws BadLocationException 
+	 */
+	public String getNextWord() throws BadLocationException {
+		ITextRegion nextPHPToken = getNextPHPToken();
+		return document.get(regionCollection.getStartOffset() + phpScriptRegion.getStart() + nextPHPToken.getStart(), nextPHPToken.getTextLength());
 	}
 }
