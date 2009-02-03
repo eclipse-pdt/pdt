@@ -1,0 +1,109 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.core.codeassist.contexts;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
+
+/**
+ * Default implementation of the {@link ICompletionContextResolver}
+ * @author michael
+ */
+public class CompletionContextResolver implements ICompletionContextResolver {
+
+	private static ICompletionContextResolver instance;
+	private Collection<ICompletionContext> contexts;
+
+	/**
+	 * Constructs default completion context resolver
+	 */
+	public CompletionContextResolver() {
+		contexts = new LinkedList<ICompletionContext>();
+		initCompletionContexts(contexts);
+	}
+
+	/**
+	 * Returns active completion context resolver. By default returns this class instance,
+	 * but may be overriden using extension point.
+	 * 
+	 * @return {@link ICompletionContextResolver}
+	 */
+	public static ICompletionContextResolver getActive() {
+		if (instance == null) { // not synchronized since we don't care about creating multiple instances of resolvers in worst case
+
+			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.completionContextResolvers");
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals("resolver")) {
+					try {
+						instance = (ICompletionContextResolver) element.createExecutableExtension("class");
+					} catch (CoreException e) {
+						PHPCorePlugin.log(e);
+					}
+				}
+			}
+			if (instance == null) {
+				instance = new CompletionContextResolver();
+			}
+		}
+		return instance;
+	}
+
+	/**
+	 * Initializes given collection with known completion contexts
+	 * @param contexts
+	 */
+	protected void initCompletionContexts(Collection<ICompletionContext> contexts) {
+		contexts.addAll(Arrays.asList(new ICompletionContext[] {
+			new AfterPHPDocTagContext(),
+			new ArrayKeyContext(),
+			new CatchTypeContext(),
+			new CatchVariableContext(),
+			new ClassExtendsContext(),
+			new ClassImplementsContext(),
+			new ClassInstantiationContext(),
+			new ClassObjMemberContext(),
+			new ClassStatementContext(),
+			new ClassStaticMemberContext(),
+			new FunctionParameterTypeContext(),
+			new FunctionParameterValueContext(),
+			new FunctionParameterVariableContext(),
+			new GlobalStatementContext(),
+			new InstanceOfContext(),
+			new InterfaceExtendsContext(),
+			new PHPDocTagContext(),
+			new UseAliasContext(),
+			new UseNameContext(),
+			new VariableContext(),
+		}));
+		
+	}
+
+	public ICompletionContext resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException {
+		// find correct completion context according to known information:
+		for (ICompletionContext context : contexts) {
+			if (context.isValid(sourceModule, offset, requestor)) {
+				return context; // return first valid context
+			}
+		}
+		return null;
+	}
+}

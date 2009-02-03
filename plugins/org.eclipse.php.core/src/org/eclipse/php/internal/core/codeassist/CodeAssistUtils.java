@@ -66,24 +66,29 @@ public class CodeAssistUtils {
 	public static final int ONLY_CURRENT_FILE = 1 << 2;
 
 	/**
-	 * Whether to retrieve only classes excluding interfaces and namespaces (when asking for types)
+	 * Exclude classes when looking for types in {@link #getGlobalTypes(ISourceModule, String, int)}
 	 */
-	public static final int ONLY_CLASSES = 1 << 3;
+	public static final int EXCLUDE_CLASSES = 1 << 3;
 
 	/**
-	 * Whether to retrieve only interfaces excluding classes and namespaces (when asking for types)
+	 * Exclude interfaces when looking for types in {@link #getGlobalTypes(ISourceModule, String, int)}
 	 */
-	public static final int ONLY_INTERFACES = 1 << 4;
+	public static final int EXCLUDE_INTERFACES = 1 << 4;
 
 	/**
-	 * Whether to retrieve only namespaces excluding classes and interfaces 
+	 * Exclude namespaces when looking for types in {@link #getGlobalTypes(ISourceModule, String, int)} 
 	 */
-	public static final int ONLY_NAMESPACES = 1 << 5;
-
+	public static final int EXCLUDE_NAMESPACES = 1 << 5;
+	
 	/**
-	 * Whether to retrieve only variables excluding constants (when asking for fields)
+	 * Exclude constants when looking for fields in {@link #getGlobalFields(ISourceModule, String, int)}
 	 */
-	public static final int ONLY_VARIABLES = 1 << 6;
+	public static final int EXCLUDE_CONSTANTS = 1 << 6;
+	
+	/**
+	 * Exclude variables (retreive only constants) when looking for fields in {@link #getGlobalFields(ISourceModule, String, int)}
+	 */
+	public static final int EXCLUDE_VARIABLES = 1 << 7;
 
 	/**
 	 * Whether to use PHPDoc in type inference
@@ -211,7 +216,7 @@ public class CodeAssistUtils {
 	 */
 	public static IField[] getTypeFields(IType type, String prefix, int mask) {
 		boolean exactName = (mask & EXACT_NAME) != 0;
-		boolean searchConstants = (mask & ONLY_VARIABLES) == 0;
+		boolean searchConstants = (mask & EXCLUDE_CONSTANTS) == 0;
 
 		final Set<IField> fields = new TreeSet<IField>(new AlphabeticComparator());
 		try {
@@ -314,7 +319,7 @@ public class CodeAssistUtils {
 		if (types != null) {
 			for (IType type : types) {
 				PHPClassType classType = new PHPClassType(type.getElementName());
-				IField[] fields = getTypeFields(type, propertyName, CASE_SENSITIVE | ONLY_VARIABLES);
+				IField[] fields = getTypeFields(type, propertyName, CASE_SENSITIVE | EXCLUDE_CONSTANTS);
 
 				Set<String> processedFields = new HashSet<String>();
 				for (IField field : fields) {
@@ -725,16 +730,27 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getGlobalTypes(ISourceModule sourceModule, String prefix, int mask) {
 
-		if ((mask & ONLY_NAMESPACES) == 0) {
+		if ((mask & EXCLUDE_CLASSES) == 0 || (mask & EXCLUDE_INTERFACES) == 0) {
 			// Check whether the type name has a namespace prefix:
 			int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
 			if (nsIdx != -1) {
 				String nsName = prefix.substring(0, nsIdx);
 				prefix = prefix.substring(nsIdx + 1);
 
-				IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | ONLY_NAMESPACES);
+				IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXCLUDE_CLASSES | EXCLUDE_INTERFACES);
 				List<IType> types = new LinkedList<IType>();
+
 				for (IType ns : namespaces) {
+					if (prefix.length() == 0 && ns.getElementName().equalsIgnoreCase(nsName)) {
+						continue;
+					}
+					types.add(ns);
+				}
+				
+				for (IType ns : namespaces) {
+					if (!ns.getElementName().equalsIgnoreCase(nsName)) {
+						continue;
+					}
 					try {
 						for (IType t : ns.getTypes()) {
 							String typeName = t.getElementName();
@@ -763,13 +779,13 @@ public class CodeAssistUtils {
 			IType type = (IType) c;
 			try {
 				int flags = type.getFlags();
-				if ((mask & ONLY_INTERFACES) != 0 && !PHPFlags.isInterface(flags)) {
+				if ((mask & EXCLUDE_CLASSES) != 0 && PHPFlags.isClass(flags)) {
 					continue;
 				}
-				if ((mask & ONLY_CLASSES) != 0 && (PHPFlags.isInterface(flags) || PHPFlags.isNamespace(flags))) {
+				if ((mask & EXCLUDE_INTERFACES) != 0 && PHPFlags.isInterface(flags)) {
 					continue;
 				}
-				if ((mask & ONLY_NAMESPACES) != 0 && !PHPFlags.isNamespace(flags)) {
+				if ((mask & EXCLUDE_NAMESPACES) != 0 && PHPFlags.isNamespace(flags)) {
 					continue;
 				}
 				filteredElements.add(type);
@@ -797,7 +813,7 @@ public class CodeAssistUtils {
 			String nsName = prefix.substring(0, nsIdx);
 			prefix = prefix.substring(nsIdx + 1);
 
-			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | ONLY_NAMESPACES);
+			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | EXCLUDE_CLASSES | EXCLUDE_INTERFACES);
 			List<IModelElement> methods = new LinkedList<IModelElement>();
 			for (IType ns : namespaces) {
 				methods.addAll(Arrays.asList(getTypeMethods(ns, prefix, mask)));
@@ -822,7 +838,7 @@ public class CodeAssistUtils {
 			String nsName = prefix.substring(0, nsIdx);
 			prefix = prefix.substring(nsIdx + 1);
 
-			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | ONLY_NAMESPACES);
+			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | EXCLUDE_CLASSES | EXCLUDE_INTERFACES);
 			List<IModelElement> fields = new LinkedList<IModelElement>();
 			for (IType ns : namespaces) {
 				fields.addAll(Arrays.asList(getTypeFields(ns, prefix, mask)));
@@ -980,17 +996,16 @@ public class CodeAssistUtils {
 				// Build the mixin request key:
 				String[] elementNames;
 				if (elementType == IDLTKSearchConstants.TYPE) {
-					if ((mask & ONLY_CLASSES) != 0) {
-						elementNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString());
-					} else if ((mask & ONLY_INTERFACES) != 0) {
-						elementNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString());
-					} else {
-						String[] classNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString());
-						String[] interfaceNames = mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString());
-						elementNames = new String[classNames.length + interfaceNames.length];
-						System.arraycopy(classNames, 0, elementNames, 0, classNames.length);
-						System.arraycopy(interfaceNames, 0, elementNames, classNames.length, interfaceNames.length);
+					
+					List<String> elementNamesList = new LinkedList<String>();
+					if ((mask & EXCLUDE_CLASSES) == 0) {
+						elementNamesList.addAll(Arrays.asList(mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString())));
 					}
+					if ((mask & EXCLUDE_INTERFACES) == 0) {
+						elementNamesList.addAll(Arrays.asList(mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString())));
+					}
+					elementNames = elementNamesList.toArray(new String[elementNamesList.size()]);
+					
 				} else {
 					elementNames = mixinModel.findKeys(new StringBuilder(MixinModel.SEPARATOR).append(prefix).append(WILDCARD).toString());
 				}

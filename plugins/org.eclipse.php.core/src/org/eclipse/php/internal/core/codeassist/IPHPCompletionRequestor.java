@@ -13,13 +13,24 @@ package org.eclipse.php.internal.core.codeassist;
 import org.eclipse.jface.text.IDocument;
 
 /**
- * This is a PHP related completion requestor interface.
+ * PHP related completion requestor helps to understand how code assist was invoked:
+ * explicitly by the user or using automatic triggering mechanism. In addition, it passes
+ * all needed information from the code assist invoking part in the UI plug-in to the
+ * completion engine in the Core plug-in.
  * 
  * @author michael
  */
 public interface IPHPCompletionRequestor {
 
+	/**
+	 * Returns document of the editor where code assist was invoked
+	 * @return editor document
+	 */
 	public IDocument getDocument();
 	
+	/**
+	 * Returns <code>true</code> if code assist was invoked excplicitly by user, otherwise <code>false</code>
+	 * @return whether code assist invoked explicitly
+	 */
 	public boolean isExplicit();
 }

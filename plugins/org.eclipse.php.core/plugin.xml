@@ -162,7 +162,7 @@
 	
 	<extension point="org.eclipse.dltk.core.completionEngine">
 		<completionEngine
-			class="org.eclipse.php.internal.core.codeassist.PHPCompletionEngine" nature="org.eclipse.php.core.PHPNature"
+			class="org.eclipse.php.internal.core.codeassist.OldPHPCompletionEngine" nature="org.eclipse.php.core.PHPNature"
 			priority="0">
 		</completionEngine>
 	</extension>

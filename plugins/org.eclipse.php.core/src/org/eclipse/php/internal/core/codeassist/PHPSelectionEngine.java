@@ -312,7 +312,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// Class instantiation:
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
-							return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_CLASSES);
+							return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.EXCLUDE_INTERFACES);
 						}
 
 						// Handle extends and implements:
@@ -456,12 +456,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static IModelElement[] getGeneralizationTypes(ISourceModule sourceModule, boolean isClassDeclaration, String generalization, String elementName) {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
-				return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_CLASSES);
+				return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.EXCLUDE_INTERFACES);
 			}
-			return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_INTERFACES);
+			return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.EXCLUDE_CLASSES | CodeAssistUtils.EXCLUDE_NAMESPACES);
 		}
 		if (IMPLEMENTS.equalsIgnoreCase(generalization)) { //$NON-NLS-1$ //$NON-NLS-2$
-			return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.ONLY_INTERFACES);
+			return CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.EXCLUDE_CLASSES | CodeAssistUtils.EXCLUDE_NAMESPACES);
 		}
 		return null;
 	}
