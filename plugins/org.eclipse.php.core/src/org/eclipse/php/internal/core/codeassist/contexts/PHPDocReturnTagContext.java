@@ -12,24 +12,24 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-
 
 /**
- * This context represents state when staying in a PHPDoc block.
- * <br/>Example:
+ * This context represents the state when staying after 'return' tag in PHPDoc block
+ * <br/>Examples:
  * <pre>
- *   /**
- *    * |
+ *   1. /**
+ *       * @return |
+ *   2. /**
+ *       * @return Ty|
  * </pre>
  * @author michael
  */
-public abstract class PHPDocContext extends AbstractCompletionContext {
+public class PHPDocReturnTagContext extends PHPDocTagContext {
 	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return getPartitionType() == PHPPartitionTypes.PHP_DOC;
+		return "return".equalsIgnoreCase(getTagName());
 	}
 }

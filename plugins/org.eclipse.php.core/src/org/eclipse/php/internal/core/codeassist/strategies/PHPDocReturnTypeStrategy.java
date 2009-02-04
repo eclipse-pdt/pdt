@@ -10,20 +10,22 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
 
 /**
- * Completion strategy resolves completion proposals according to completion context.
+ * This strategy completes variable names in 'param' PHPDoc tag
  * @author michael
  */
-public interface ICompletionStrategy {
+public class PHPDocReturnTypeStrategy extends FunctionReturnTypesStrategy {
+	
+	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+		if (!(context instanceof PHPDocTagContext)) {
+			return;
+		}
+		super.apply(context, reporter);
+	}
 
-	/**
-	 * Applies completion strategy for the given context
-	 * @param context Completion context
-	 * @param reporter Where model elements will be reported
-	 * @throws Exception
-	 */
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws Exception;
 }

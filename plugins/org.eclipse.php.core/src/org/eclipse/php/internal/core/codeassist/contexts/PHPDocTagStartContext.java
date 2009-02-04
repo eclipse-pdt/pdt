@@ -12,23 +12,27 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
- * This context represents the state when staying in a line of a PHPDoc after the PHPDoc tag.
- * <br/>Example:
+ * This context represents the state when staying inside of a PHPDoc tag.
+ * <br/>Examples:
  * <pre>
- *   /**
- *    * @sometag |
+ *   1. /**
+ *       * @|
+ *       
+ *   2. /**
+ *       * @t|
  * </pre>
  * @author michael
  */
-public class AfterPHPDocTagContext extends PHPDocContext {
-
+public class PHPDocTagStartContext extends PHPDocTagContext {
+	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+		TextSequence statementText = getStatementText();
+		return statementText.toString().endsWith(getTagName());
 	}
 }

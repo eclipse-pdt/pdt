@@ -336,6 +336,22 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	public ITextRegion getPHPToken() throws BadLocationException {
 		return phpScriptRegion.getPhpToken(offset - regionCollection.getStartOffset() - phpScriptRegion.getStart() - 1);
 	}
+	
+	/**
+	 * Returns the word on which code assist was invoked
+	 * @return prefix
+	 * @throws BadLocationException
+	 */
+	public String getPrefix() throws BadLocationException {
+		if (hasWhitespaceBeforeCursor()) {
+			return ""; //$NON-NLS-1$
+		}
+		TextSequence statementText = getStatementText();
+		int statementLength = statementText.length();
+		int prefixEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
+		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, prefixEnd, true);
+		return statementText.subSequence(prefixStart, prefixEnd).toString();
+	}
 
 	/**
 	 * Returns next PHP token after offset

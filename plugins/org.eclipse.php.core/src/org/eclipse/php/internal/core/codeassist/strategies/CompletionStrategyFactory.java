@@ -14,9 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContextResolver;
-import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
+import org.eclipse.php.internal.core.codeassist.contexts.*;
 
 /**
  * Default implementation of the {@link ICompletionStrategyFactory}
@@ -52,12 +50,18 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		return instance;
 	}
 
-	public ICompletionStrategy create(ICompletionContext context) {
+	public ICompletionStrategy[] create(ICompletionContext context) {
 
 		Class<? extends ICompletionContext> contextClass = context.getClass();
 
-		if (contextClass == PHPDocTagContext.class) {
-			return new PHPDocTagStrategy();
+		if (contextClass == PHPDocTagStartContext.class) {
+			return new ICompletionStrategy[] { new PHPDocTagStrategy() };
+		}
+		if (contextClass == PHPDocParamTagContext.class) {
+			return new ICompletionStrategy[] { new PHPDocParamVariableStrategy() };
+		}
+		if (contextClass == PHPDocReturnTagContext.class) {
+			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy() };
 		}
 
 		return null;

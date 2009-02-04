@@ -73,7 +73,9 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 	 */
 	protected void initCompletionContexts(Collection<ICompletionContext> contexts) {
 		contexts.addAll(Arrays.asList(new ICompletionContext[] {
-			new AfterPHPDocTagContext(),
+			new PHPDocTagStartContext(),
+			new PHPDocParamTagContext(),
+			new PHPDocReturnTagContext(),
 			new ArrayKeyContext(),
 			new CatchTypeContext(),
 			new CatchVariableContext(),
@@ -89,7 +91,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			new GlobalStatementContext(),
 			new InstanceOfContext(),
 			new InterfaceExtendsContext(),
-			new PHPDocTagContext(),
+			new PHPDocTagStartContext(),
 			new UseAliasContext(),
 			new UseNameContext(),
 			new VariableContext(),

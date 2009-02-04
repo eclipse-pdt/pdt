@@ -19,9 +19,9 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 public interface ICompletionStrategyFactory {
 
 	/**
-	 * Creates completion strategy for the given context.
+	 * Creates completion strategies for the given context.
 	 * @param context Completion context
-	 * @return completion strategy or <code>null</code> in case no strategy could be found for the given context
+	 * @return completion strategies or empty list in case no strategy could be found for the given context
 	 */
-	public ICompletionStrategy create(ICompletionContext context);
+	public ICompletionStrategy[] create(ICompletionContext context);
 }

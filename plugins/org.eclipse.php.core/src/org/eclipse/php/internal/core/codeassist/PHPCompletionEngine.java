@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
@@ -36,6 +39,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	private int relevanceClass;
 	private int relevanceVar;
 	private int relevanceConst;
+	private Set<IModelElement> processedElements = new HashSet<IModelElement>();
 
 	public void complete(ISourceModule module, int position, int i) {
 
@@ -53,8 +57,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 				ICompletionStrategyFactory completionStrategyFactory = CompletionStrategyFactory.getActive();
 
-				ICompletionStrategy completionStrategy = completionStrategyFactory.create(completionContext);
-				if (completionStrategy != null) {
+				for (ICompletionStrategy completionStrategy : completionStrategyFactory.create(completionContext)) {
 					completionStrategy.apply(completionContext, this);
 				}
 			}
@@ -62,6 +65,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			if (DLTKCore.DEBUG) {
 				e.printStackTrace();
 			}
+		} finally {
+			processedElements.clear();
 		}
 	}
 
@@ -106,6 +111,11 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	}
 
 	public void reportField(IField field, String suffix, SourceRange replaceRange) {
+		if (processedElements.contains(field)) {
+			return;
+		}
+		processedElements.add(field);
+
 		int flags = 0;
 		try {
 			flags = field.getFlags();
@@ -115,10 +125,31 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 		}
 		int relevance = PHPFlags.isConstant(flags) ? nextConstantRelevance() : nextVariableRelevance();
+		
+		noProposal = false;
+		
+		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
+			
+			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
+			proposal.setName(field.getElementName().toCharArray());
+			proposal.setCompletion((field.getElementName() + suffix).toCharArray());
+			proposal.setModelElement(field);
+			proposal.setFlags(flags);
+			proposal.setRelevance(relevance);
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+
+			this.requestor.accept(proposal);
+			
+			if (DEBUG) {
+				this.printDebug(proposal);
+			}
+		}
 	}
 
 	public void reportKeyword(String keyword, String suffix, SourceRange replaceRange) {
+		
 		noProposal = false;
+		
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 
 			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
@@ -136,10 +167,141 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	}
 
 	public void reportMethod(IMethod method, String suffix, SourceRange replaceRange) {
-		int relevance = nextVariableRelevance();
+		if (processedElements.contains(method)) {
+			return;
+		}
+		processedElements.add(method);
+
+		noProposal = false;
+		
+		if (!requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
+			
+			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_DECLARATION, actualCompletionPosition);
+
+			// show method parameter names:
+			String[] params = null;
+			try {
+				params = method.getParameters();
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
+			}
+			if (params != null && params.length > 0) {
+				char[][] args = new char[params.length][];
+				for (int i = 0; i < params.length; ++i) {
+					args[i] = params[i].toCharArray();
+				}
+				proposal.setParameterNames(args);
+			}
+			
+			String elementName = method.getElementName();
+			String completionName = elementName;
+
+			proposal.setModelElement(method);
+			proposal.setName(elementName.toCharArray());
+			
+			int relevance = nextMethodRelevance();
+
+			if (method instanceof FakeGroupMethod) {
+				// remove the trailing '*' from the group name
+				completionName = elementName.substring(0, elementName.length() - 1);
+				
+				// put the group to the top of list
+				relevance = RELEVANCE_KEYWORD + 1;
+			}
+			proposal.setCompletion((completionName + suffix).toCharArray());
+
+			try {
+				proposal.setIsConstructor(elementName.equals("__construct") || method.isConstructor());
+				proposal.setFlags(method.getFlags());
+			} catch (ModelException e) {
+				if (DEBUG) {
+					e.printStackTrace();
+				}
+			}
+
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setRelevance(relevance);
+			
+			this.requestor.accept(proposal);
+			
+			if (DEBUG) {
+				this.printDebug(proposal);
+			}
+		}
+
 	}
 
 	public void reportType(IType type, String suffix, SourceRange replaceRange) {
+		if (processedElements.contains(type)) {
+			return;
+		}
+		processedElements.add(type);
+
+		noProposal = false;
+		
+		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
+
+			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
+
+			// Support parameter names for constructor:
+			if (requestor.isContextInformationMode()) {
+				try {
+					for (IMethod method : type.getMethods()) {
+						if (method.isConstructor()) {
+							String[] params = method.getParameters();
+							if (params != null && params.length > 0) {
+								char[][] args = new char[params.length][];
+								for (int i = 0; i < params.length; ++i) {
+									args[i] = params[i].toCharArray();
+								}
+								proposal.setParameterNames(args);
+							}
+							break;
+						}
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			String elementName = type.getElementName();
+			String completionName = elementName;
+			
+			proposal.setModelElement(type);
+			proposal.setName(elementName.toCharArray());
+
+			int relevance = nextClassRelevance();
+			
+			if (type instanceof FakeGroupType) {
+				// remove '*' from the fake group type name
+				completionName = elementName.substring(0, elementName.length() - 1);
+
+				// put groups on the top of list
+				relevance = RELEVANCE_KEYWORD + 1;
+			}
+			proposal.setCompletion((completionName + suffix).toCharArray());
+
+			try {
+				proposal.setFlags(type.getFlags());
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
+			}
+
+			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+			proposal.setRelevance(relevance);
+			
+			this.requestor.accept(proposal);
+			
+			if (DEBUG) {
+				this.printDebug(proposal);
+			}
+		}
 	}
 
 	protected int getEndOfEmptyToken() {
