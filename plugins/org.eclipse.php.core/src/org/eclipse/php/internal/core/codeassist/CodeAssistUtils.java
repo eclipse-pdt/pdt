@@ -1233,7 +1233,7 @@ public class CodeAssistUtils {
 	 * This class not only used for sorting elements alphabetically, but it also gives
 	 * priority to the elements declared in current file. 
 	 */
-	static class AlphabeticComparator implements Comparator<IModelElement> {
+	public static class AlphabeticComparator implements Comparator<IModelElement> {
 
 		private ISourceModule currentFile;
 

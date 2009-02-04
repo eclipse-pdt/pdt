@@ -63,6 +63,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == PHPDocReturnTagContext.class) {
 			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy() };
 		}
+		if (contextClass == ArrayKeyContext.class) {
+			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy() };
+		}
 
 		return null;
 	}

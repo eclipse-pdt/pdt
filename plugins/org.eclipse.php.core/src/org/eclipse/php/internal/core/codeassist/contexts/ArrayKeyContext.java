@@ -11,7 +11,13 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 /**
@@ -27,6 +33,7 @@ import org.eclipse.dltk.core.ISourceModule;
 public class ArrayKeyContext extends AbstractCompletionContext {
 	
 	private String arrayVarName;
+	private boolean hasQuotes;
 
 	/**
 	 * Returns array variable name
@@ -35,15 +42,55 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 	public String getArrayVarName() {
 		return arrayVarName;
 	}
-
-	public void setArrayVarName(String arrayVarName) {
-		this.arrayVarName = arrayVarName;
-	}
 	
+	/**
+	 * Returns whether there are quotes around array key
+	 * @return
+	 */
+	public boolean hasQuotes() {
+		return hasQuotes;
+	}
+
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+		try {
+			ITextRegion phpToken = getPHPToken();
+			
+			TextSequence statementText = getStatementText();
+			int length = statementText.length();
+			int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, length);
+			int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText, endPosition, true);
+			
+			hasQuotes = false;
+			
+			if (PHPPartitionTypes.isPHPQuotesState(phpToken.getType())) {
+				hasQuotes = true;
+
+				endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
+				if (endPosition == 0 || (statementText.charAt(endPosition - 1) != '\"' && statementText.charAt(endPosition - 1) != '\'')) {
+					return false;
+				}
+				startPosition = endPosition - 1;
+			}
+			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
+			if (endPosition == 0 || statementText.charAt(endPosition - 1) != '[') {
+				return false;
+			}
+			
+			endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition - 1);
+			startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(getPhpVersion(), statementText, endPosition, true);
+			arrayVarName = statementText.subSequence(startPosition, endPosition).toString();
+			if (!arrayVarName.startsWith("$")) {
+				return false;
+			}
+			
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		return true;
 	}
 }
