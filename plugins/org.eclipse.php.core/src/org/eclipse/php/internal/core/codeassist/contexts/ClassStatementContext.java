@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 
 
 /**
@@ -30,6 +29,22 @@ public class ClassStatementContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
+
+		// check whether enclosing element is class
+		try {
+			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			while (enclosingElement instanceof IField) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			if (enclosingElement instanceof IType) {
+				return true;
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		
 		return false;
 	}
 }

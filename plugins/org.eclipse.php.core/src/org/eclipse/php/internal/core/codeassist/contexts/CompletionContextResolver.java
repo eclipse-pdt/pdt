@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -100,13 +101,14 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 		
 	}
 
-	public ICompletionContext resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException {
-		// find correct completion context according to known information:
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException {
+		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
+		// find correct completion contexts according to known information:
 		for (ICompletionContext context : contexts) {
 			if (context.isValid(sourceModule, offset, requestor)) {
-				return context; // return first valid context
+				result.add(context);
 			}
 		}
-		return null;
+		return result.toArray(new ICompletionContext[result.size()]);
 	}
 }

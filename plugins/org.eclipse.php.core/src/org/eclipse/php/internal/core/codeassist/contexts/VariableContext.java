@@ -11,8 +11,9 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-
+import org.eclipse.jface.text.BadLocationException;
 
 /**
  * This context represents state when staying in a variable completion.
@@ -25,10 +26,19 @@ import org.eclipse.dltk.core.ISourceModule;
  * @author michael
  */
 public class VariableContext extends GlobalStatementContext {
-	
+
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
+		}
+
+		try {
+			String prefix = getPrefix();
+			return prefix.startsWith("$"); //$NON-NLS-1$
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}

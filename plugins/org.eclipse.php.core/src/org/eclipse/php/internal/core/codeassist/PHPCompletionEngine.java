@@ -51,14 +51,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 		try {
 			ICompletionContextResolver resolver = CompletionContextResolver.getActive();
+			ICompletionStrategyFactory strategyFactory = CompletionStrategyFactory.getActive();
 
-			ICompletionContext completionContext = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
-			if (completionContext != null) {
-
-				ICompletionStrategyFactory completionStrategyFactory = CompletionStrategyFactory.getActive();
-
-				for (ICompletionStrategy completionStrategy : completionStrategyFactory.create(completionContext)) {
-					completionStrategy.apply(completionContext, this);
+			ICompletionContext[] contexts = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
+			Set<ICompletionStrategy> processedStrategies = new HashSet<ICompletionStrategy>();
+			
+			for (ICompletionContext context : contexts) {
+				
+				for (ICompletionStrategy strategy : strategyFactory.create(context)) {
+					
+					if (!processedStrategies.contains(strategy)) {
+						strategy.apply(context, this);
+						processedStrategies.add(strategy);
+					}
 				}
 			}
 		} catch (Exception e) {

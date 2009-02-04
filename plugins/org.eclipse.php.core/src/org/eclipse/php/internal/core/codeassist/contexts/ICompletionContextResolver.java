@@ -27,15 +27,15 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 public interface ICompletionContextResolver {
 
 	/**
-	 * Returns completion context for the given offset in the document.
+	 * Returns completion contexts for the given offset in the document.
 	 * @param sourceModule Source module of the file where code assist was requested 
 	 * @param offset Cursor offset where code assist was requested
 	 * @param requestor Completion requestor ({@link CompletionRequestor})
-	 * @return completion context or <code>null</code> in case it could not be found
+	 * @return completion contexts or empty list in case no completion context could be found
 	 * @throws BadLocationException 
 	 * @throws CoreException 
 	 * @throws IOException 
 	 * @throws ResourceAlreadyExists 
 	 */
-	public ICompletionContext resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException;
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException;
 }

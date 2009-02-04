@@ -65,7 +65,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == ArrayKeyContext.class) {
 			// If array has quotes or double-quotes around the key - show only builtin keys:
-			if (((ArrayKeyContext)context).hasQuotes()) {
+			if (((ArrayKeyContext) context).hasQuotes()) {
 				return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy() };
 			}
 			// Otherwise - show all global elements also:
@@ -80,6 +80,15 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		}
 		if (contextClass == MethodNameContext.class) {
 			return new ICompletionStrategy[] { new MethodNameStrategy() };
+		}
+		if (contextClass == VariableContext.class) {
+			return new ICompletionStrategy[] { new GlobalVariablesStrategy() };
+		}
+		if (contextClass == ClassStatementContext.class) {
+			return new ICompletionStrategy[] { new ClassKeywordsStrategy() };
+		}
+		if (contextClass == GlobalStatementContext.class) {
+			return new ICompletionStrategy[] { new GlobalKeywordsStrategy(), new GlobalVariablesStrategy(), new GlobalClassesStrategy() };
 		}
 
 		return null;

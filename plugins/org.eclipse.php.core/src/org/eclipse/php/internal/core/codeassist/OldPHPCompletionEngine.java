@@ -38,6 +38,7 @@ import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegi
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.keywords.PHPKeywords;
+import org.eclipse.php.internal.core.keywords.PHPKeywords.Context;
 import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.FakeField;
@@ -684,7 +685,7 @@ public class OldPHPCompletionEngine extends ScriptCompletionEngine {
 		if (showKeywords) {
 			Collection<KeywordData> keywordsList = PHPKeywords.getInstance(sourceModule.getScriptProject().getProject()).findByPrefix(prefix);
 			for (KeywordData k : keywordsList) {
-				if (!inClass || (inClass && k.isClassKeyword)) {
+				if (!inClass || (inClass && k.context == Context.CLASS_BODY)) {
 					reportKeyword(k.name, k.suffix, relevanceKeyword--);
 				}
 			}
