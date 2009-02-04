@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  * This strategy completes global elements: classes, functions, variables, etc... 
  * @author michael
  */
-public class GlobalElementStrategy implements ICompletionStrategy {
+public class GlobalElementStrategy extends AbstractCompletionStrategy {
 	
 	protected final static String[] PHP_VARIABLES = { "$_COOKIE", "$_ENV", "$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", "$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", "$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", "$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", };
 
@@ -45,7 +45,7 @@ public class GlobalElementStrategy implements ICompletionStrategy {
 		completeGlobalVariables(abstractContext, reporter, prefix);
 	}
 
-	public void completeGlobalVariables(AbstractCompletionContext context, ICompletionReporter reporter, String prefix) {
+	public void completeGlobalVariables(AbstractCompletionContext context, ICompletionReporter reporter, String prefix) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
 
 		int mask = 0;
@@ -58,7 +58,7 @@ public class GlobalElementStrategy implements ICompletionStrategy {
 		Set<IModelElement> variables = new TreeSet<IModelElement>(new CodeAssistUtils.AlphabeticComparator());
 		variables.addAll(Arrays.asList(CodeAssistUtils.getGlobalFields(context.getSourceModule(), prefix, mask)));
 		
-		SourceRange replaceRange = new SourceRange(context.getOffset() - prefix.length(), prefix.length());
+		SourceRange replaceRange = getReplacementRange(context);
 
 		for (IModelElement var : variables) {
 			reporter.reportField((IField) var, "", replaceRange);

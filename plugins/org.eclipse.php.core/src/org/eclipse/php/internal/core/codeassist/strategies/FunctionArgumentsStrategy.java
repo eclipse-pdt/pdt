@@ -32,7 +32,7 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  * This strategy completes variable names taken from function parameters list.
  * @author michael
  */
-public class FunctionArgumentsStrategy implements ICompletionStrategy {
+public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
 
 	@SuppressWarnings("unchecked")
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
@@ -50,7 +50,7 @@ public class FunctionArgumentsStrategy implements ICompletionStrategy {
 		if (declaration instanceof MethodDeclaration) {
 
 			String prefix = abstractContext.getPrefix();
-			SourceRange replaceRange = new SourceRange(offset - prefix.length(), prefix.length());
+			SourceRange replaceRange = getReplacementRange(abstractContext);
 			String suffix = ""; //$NON-NLS-1$
 
 			List<Argument> arguments = ((MethodDeclaration) declaration).getArguments();

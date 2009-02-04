@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 
 
@@ -31,5 +32,13 @@ public abstract class PHPDocContext extends AbstractCompletionContext {
 			return false;
 		}
 		return getPartitionType() == PHPPartitionTypes.PHP_DOC;
+	}
+
+	public int getPrefixEnd() throws BadLocationException {
+		int prefixEnd = getOffset();
+		while (!Character.isWhitespace(getDocument().getChar(prefixEnd))) {
+			++prefixEnd;
+		}
+		return prefixEnd;
 	}
 }

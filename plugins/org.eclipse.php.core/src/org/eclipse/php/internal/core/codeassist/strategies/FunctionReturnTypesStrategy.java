@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
  * This strategy completes type determined from function return type.
  * @author michael
  */
-public class FunctionReturnTypesStrategy implements ICompletionStrategy {
+public class FunctionReturnTypesStrategy extends AbstractCompletionStrategy {
 
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
 
@@ -49,7 +49,7 @@ public class FunctionReturnTypesStrategy implements ICompletionStrategy {
 				if (returnTypes != null) {
 
 					String className = abstractContext.getPrefix();
-					SourceRange replaceRange = new SourceRange(offset - className.length(), className.length());
+					SourceRange replaceRange = getReplacementRange(abstractContext);
 
 					for (IType type : returnTypes) {
 						try {

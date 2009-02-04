@@ -93,4 +93,12 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 		}
 		return true;
 	}
+	
+	public int getPrefixEnd() throws BadLocationException {
+		int prefixEnd = super.getPrefixEnd();
+		if (hasQuotes) {
+			--prefixEnd;
+		}
+		return prefixEnd;
+	}
 }

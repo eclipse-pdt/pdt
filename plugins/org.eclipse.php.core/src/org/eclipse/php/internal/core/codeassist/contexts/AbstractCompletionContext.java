@@ -352,6 +352,16 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int prefixStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, prefixEnd, true);
 		return statementText.subSequence(prefixStart, prefixEnd).toString();
 	}
+	
+	/**
+	 * Returns the end of the word on which code assist was invoked
+	 * @return 
+	 * @throws BadLocationException 
+	 */
+	public int getPrefixEnd() throws BadLocationException {
+		ITextRegion phpToken = getPHPToken();
+		return regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
+	}
 
 	/**
 	 * Returns next PHP token after offset
@@ -359,16 +369,16 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 * @throws BadLocationException 
 	 */
 	public ITextRegion getNextPHPToken() throws BadLocationException {
-		ITextRegion nextPhpToken = getPHPToken();
+		ITextRegion phpToken = getPHPToken();
 		do {
-			nextPhpToken = phpScriptRegion.getPhpToken(nextPhpToken.getEnd());
-			if (!PHPPartitionTypes.isPHPCommentState(nextPhpToken.getType()) && nextPhpToken.getType() != PHPRegionTypes.WHITESPACE) {
+			phpToken = phpScriptRegion.getPhpToken(phpToken.getEnd());
+			if (!PHPPartitionTypes.isPHPCommentState(phpToken.getType()) && phpToken.getType() != PHPRegionTypes.WHITESPACE) {
 				break;
 			}
 		}
-		while (nextPhpToken.getEnd() < phpScriptRegion.getLength());
+		while (phpToken.getEnd() < phpScriptRegion.getLength());
 		
-		return nextPhpToken;
+		return phpToken;
 	}
 	
 	/**

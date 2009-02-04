@@ -54,7 +54,7 @@ public class BuiltinArrayKeysStrategy extends GlobalElementStrategy {
 				mask |= CodeAssistUtils.EXACT_NAME;
 			}
 			IModelElement[] elements = CodeAssistUtils.getGlobalFields(arrayContext.getSourceModule(), prefix, mask);
-			SourceRange replaceRange = new SourceRange(arrayContext.getOffset() - prefix.length(), prefix.length());
+			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
 				reporter.reportField(field, "", replaceRange); //NON-NLS-1
@@ -68,13 +68,13 @@ public class BuiltinArrayKeysStrategy extends GlobalElementStrategy {
 		}
 	}
 
-	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables, String prefix) {
+	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables, String prefix) throws BadLocationException {
 		reportVariables(reporter, context, variables, prefix, false);
 	}
 	
-	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables, String prefix, boolean removeDollar) {
+	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables, String prefix, boolean removeDollar) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
-		SourceRange replaceRange = new SourceRange(context.getOffset() - prefix.length(), prefix.length());
+		SourceRange replaceRange = getReplacementRange(context);
 		for (String variable : variables) {
 			if (removeDollar) {
 				variable = variable.substring(1);

@@ -22,7 +22,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  * This strategy completes PHPDoc tag names. 
  * @author michael
  */
-public class PHPDocTagStrategy implements ICompletionStrategy {
+public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
 	public static final String[] PHPDOC_TAGS = { "abstract", "access", "author", "category", "copyright", "deprecated", "example", "final", "filesource", "global", "ignore", "internal", "license", "link", "method", "name", "package", "param", "property", "return", "see", "since", "static",
 		"staticvar", "subpackage", "todo", "tutorial", "uses", "var", "version" };
@@ -35,7 +35,7 @@ public class PHPDocTagStrategy implements ICompletionStrategy {
 		String tagName = tagContext.getTagName();
 		CompletionRequestor requestor = tagContext.getCompletionRequestor();
 
-		SourceRange replaceRange = new SourceRange(tagContext.getOffset() - tagName.length(), tagName.length());
+		SourceRange replaceRange = getReplacementRange(tagContext);
 		String suffix = ""; //$NON-NLS-1$
 
 		for (String nextTag : PHPDOC_TAGS) {
