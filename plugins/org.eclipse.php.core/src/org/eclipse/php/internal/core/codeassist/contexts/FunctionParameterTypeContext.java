@@ -29,6 +29,8 @@ public class FunctionParameterTypeContext extends FunctionParameterContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+
+		char triggerChar = getTriggerChar();
+		return triggerChar == '(' || triggerChar == ',';
 	}
 }

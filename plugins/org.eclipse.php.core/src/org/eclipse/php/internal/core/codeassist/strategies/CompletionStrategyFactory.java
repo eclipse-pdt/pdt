@@ -64,7 +64,19 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy() };
 		}
 		if (contextClass == ArrayKeyContext.class) {
-			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy() };
+			// If array has quotes or double-quotes around the key - show only builtin keys:
+			if (((ArrayKeyContext)context).hasQuotes()) {
+				return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy() };
+			}
+			// Otherwise - show all global elements also:
+			// Example: $array[foo()], $array[$otherVar]
+			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(), new GlobalVariablesStrategy(), new GlobalClassesStrategy() };
+		}
+		if (contextClass == FunctionParameterTypeContext.class) {
+			return new ICompletionStrategy[] { new GlobalClassesStrategy() };
+		}
+		if (contextClass == FunctionParameterValueContext.class) {
+			return new ICompletionStrategy[] { new GlobalConstantsStrategy() };
 		}
 
 		return null;

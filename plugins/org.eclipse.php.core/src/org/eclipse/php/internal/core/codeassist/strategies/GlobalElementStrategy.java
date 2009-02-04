@@ -10,71 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.SourceRange;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
-import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.typeinference.FakeField;
 
 /**
  * This strategy completes global elements: classes, functions, variables, etc... 
  * @author michael
  */
-public class GlobalElementStrategy extends AbstractCompletionStrategy {
-	
-	protected final static String[] PHP_VARIABLES = { "$_COOKIE", "$_ENV", "$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", "$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", "$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", "$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", };
-
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
-		
-		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		String prefix = abstractContext.getPrefix();
-		
-		completeGlobalVariables(abstractContext, reporter, prefix);
-	}
-
-	public void completeGlobalVariables(AbstractCompletionContext context, ICompletionReporter reporter, String prefix) throws BadLocationException {
-		CompletionRequestor requestor = context.getCompletionRequestor();
-
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
-		if (!showVarsFromOtherFiles()) {
-			mask |= CodeAssistUtils.ONLY_CURRENT_FILE;
-		}
-		Set<IModelElement> variables = new TreeSet<IModelElement>(new CodeAssistUtils.AlphabeticComparator());
-		variables.addAll(Arrays.asList(CodeAssistUtils.getGlobalFields(context.getSourceModule(), prefix, mask)));
-		
-		SourceRange replaceRange = getReplacementRange(context);
-
-		for (IModelElement var : variables) {
-			reporter.reportField((IField) var, "", replaceRange);
-		}
-		
-		for (String variable : PHP_VARIABLES) {
-			if (variable.startsWith(prefix)) {
-				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", replaceRange); //NON-NLS-1
-				}
-			}
-		}
-		return;
-	}
-	
-	private boolean showVarsFromOtherFiles() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, true, null);
-	}
+public abstract class GlobalElementStrategy extends AbstractCompletionStrategy {
 }

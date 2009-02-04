@@ -26,7 +26,7 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  * This strategy completes builtin array keys, like in _SERVER.
  * @author michael
  */
-public class BuiltinArrayKeysStrategy extends GlobalElementStrategy {
+public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
 	protected final static String[] SERVER_VARS = { "DOCUMENT_ROOT", "GATEWAY_INTERFACE", "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING", "HTTP_ACCEPT_LANGUAGE", "HTTP_CONNECTION", "HTTP_HOST", "HTTP_USER_AGENT", "PATH", "PATH_TRANSLATED", "PHP_SELF", "QUERY_STRING", "REMOTE_ADDR", "REMOTE_PORT",
 		"REQUEST_METHOD", "REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME", "SERVER_ADDR", "SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT", "SERVER_PROTOCOL", "SERVER_SIGNATURE", "SERVER_SOFTWARE", };
@@ -60,11 +60,7 @@ public class BuiltinArrayKeysStrategy extends GlobalElementStrategy {
 				reporter.reportField(field, "", replaceRange); //NON-NLS-1
 			}
 
-			reportVariables(reporter, arrayContext, PHP_VARIABLES, prefix, true);
-		}
-
-		if (!arrayContext.hasQuotes()) {
-			super.apply(arrayContext, reporter);
+			reportVariables(reporter, arrayContext, GlobalVariablesStrategy.PHP_VARIABLES, prefix, true);
 		}
 	}
 
