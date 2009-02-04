@@ -78,6 +78,9 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == FunctionParameterValueContext.class) {
 			return new ICompletionStrategy[] { new GlobalConstantsStrategy() };
 		}
+		if (contextClass == MethodNameContext.class) {
+			return new ICompletionStrategy[] { new MethodNameStrategy() };
+		}
 
 		return null;
 	}
