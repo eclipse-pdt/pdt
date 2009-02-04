@@ -22,25 +22,43 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProje
 public class PHPKeywords {
 
 	/**
+	 * Keyword context information (where this keyword may be used)
+	 */
+	public enum Context {
+
+		/** Keyword may be used in class body */
+		CLASS_BODY,
+
+		/** Keyword may be used in global context */
+		GLOBAL
+	}
+
+	/**
 	 * This class contains code assist auto-complete information about keyword
 	 */
 	public static class KeywordData implements Comparable<KeywordData> {
 		public String name;
 		public String suffix;
 		public int suffixOffset;
-		public boolean isClassKeyword;
+		public Context context = Context.GLOBAL;
 
+		/**
+		 * Constructs keyword data with default context: {@link Context#GLOBAL}
+		 * @param name
+		 * @param suffix
+		 * @param suffixOffset
+		 */
 		public KeywordData(String name, String suffix, int suffixOffset) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
 		}
-		
-		public KeywordData(String name, String suffix, int suffixOffset, boolean isClassKeyword) {
+
+		public KeywordData(String name, String suffix, int suffixOffset, Context context) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;
-			this.isClassKeyword = isClassKeyword;
+			this.context = context;
 		}
 
 		public int hashCode() {
@@ -69,13 +87,13 @@ public class PHPKeywords {
 		}
 
 		public int compareTo(KeywordData o) {
-			return this.name.compareTo(o.name); 
+			return this.name.compareTo(o.name);
 		}
 	}
 
 	private static final Map<IProject, PHPKeywords> instances = new HashMap<IProject, PHPKeywords>();
 	private Collection<KeywordData> keywordData;
-	
+
 	private PHPKeywords(IPHPKeywordsInitializer keywordsInitializer) {
 		keywordData = new TreeSet<KeywordData>();
 		keywordsInitializer.initialize(keywordData);
@@ -101,7 +119,7 @@ public class PHPKeywords {
 		}
 		return instances.get(project);
 	}
-	
+
 	/**
 	 * Returns a list of keyword code assist auto-complete information by prefix
 	 * @param prefix
@@ -116,7 +134,7 @@ public class PHPKeywords {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Returns a list of keywords by prefix
 	 * @param prefix
