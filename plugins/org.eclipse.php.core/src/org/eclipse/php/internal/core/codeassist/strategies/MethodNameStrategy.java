@@ -61,7 +61,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 			try {
 				int flags = superMethod.getFlags();
 				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags) && !PHPFlags.isStatic(flags) && !PHPFlags.isInternal(flags)) {
-					reporter.reportMethod(superMethod, "", replaceRange);
+					reporter.reportMethod(superMethod, "()", replaceRange);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
@@ -90,7 +90,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 			if (CodeAssistUtils.startsWithIgnoreCase(function, prefix)) {
 				if (!requestor.isContextInformationMode() || function.length() == prefix.length()) {
 					FakeMethod fakeMethod = new FakeMethod((ModelElement) declaringClass, function);
-					reporter.reportMethod(fakeMethod, "", replaceRange);
+					reporter.reportMethod(fakeMethod, "()", replaceRange);
 				}
 			}
 		}
