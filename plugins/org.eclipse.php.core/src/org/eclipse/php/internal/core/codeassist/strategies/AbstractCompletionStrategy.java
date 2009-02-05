@@ -20,6 +20,15 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * @author michael
  */
 public abstract class AbstractCompletionStrategy implements ICompletionStrategy {
+	
+	private IElementFilter elementFilter;
+	
+	public AbstractCompletionStrategy() {
+	}
+	
+	public AbstractCompletionStrategy(IElementFilter elementFilter) {
+		this.elementFilter = elementFilter;
+	}
 
 	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
 
@@ -35,5 +44,21 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 
 		SourceRange replacementRange = new SourceRange(start, length);
 		return replacementRange;
+	}
+
+	/**
+	 * Returns element filter that will be used for filtering out model elements from proposals list
+	 * @return
+	 */
+	public IElementFilter getElementFilter() {
+		return elementFilter;
+	}
+
+	/**
+	 * Sets element filter that will be used for filtering out model elements from proposals list
+	 * @param elementFilter
+	 */
+	public void setElementFilter(IElementFilter elementFilter) {
+		this.elementFilter = elementFilter;
 	}
 }

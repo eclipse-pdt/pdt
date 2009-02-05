@@ -11,7 +11,9 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
 
 
 /**
@@ -29,6 +31,18 @@ public class ClassInstantiationContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
+		
+		try {
+			String previousWord = getPreviousWord();
+			if ("new".equalsIgnoreCase(previousWord)) {
+				return true;
+			}
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		
 		return false;
 	}
 }

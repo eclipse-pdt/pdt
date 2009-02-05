@@ -10,17 +10,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 
 /**
  * Default implementation of the {@link ICompletionContextResolver}
@@ -97,12 +98,18 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 		}));
 	}
 
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException {
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
 		// find correct completion contexts according to known information:
 		for (ICompletionContext context : contexts) {
-			if (context.isValid(sourceModule, offset, requestor)) {
-				result.add(context);
+			try {
+				if (context.isValid(sourceModule, offset, requestor)) {
+					result.add(context);
+				}
+			} catch (Exception e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace(); // allow processing of other contexts
+				}
 			}
 		}
 		

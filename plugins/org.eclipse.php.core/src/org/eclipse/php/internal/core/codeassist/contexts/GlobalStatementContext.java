@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  * </pre>
  * @author michael
  */
-public class GlobalStatementContext extends StatementContext {
+public final class GlobalStatementContext extends StatementContext {
 	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -48,7 +48,7 @@ public class GlobalStatementContext extends StatementContext {
 		}
 		return true;
 	}
-	
+
 	public boolean isExclusive() {
 		return true;
 	}

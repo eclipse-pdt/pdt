@@ -11,9 +11,18 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 
+
 /**
  * This strategy completes global elements: classes, functions, variables, etc... 
  * @author michael
  */
 public abstract class GlobalElementStrategy extends AbstractCompletionStrategy {
+
+	public GlobalElementStrategy() {
+		super();
+	}
+
+	public GlobalElementStrategy(IElementFilter elementFilter) {
+		super(elementFilter);
+	}
 }

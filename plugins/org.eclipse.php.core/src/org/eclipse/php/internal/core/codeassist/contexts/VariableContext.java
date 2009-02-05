@@ -25,7 +25,7 @@ import org.eclipse.jface.text.BadLocationException;
  * </pre>
  * @author michael
  */
-public class VariableContext extends GlobalStatementContext {
+public class VariableContext extends StatementContext {
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {

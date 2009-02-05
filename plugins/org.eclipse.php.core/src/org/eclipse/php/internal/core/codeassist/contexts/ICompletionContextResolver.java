@@ -37,5 +37,5 @@ public interface ICompletionContextResolver {
 	 * @throws IOException 
 	 * @throws ResourceAlreadyExists 
 	 */
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException;
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor);
 }

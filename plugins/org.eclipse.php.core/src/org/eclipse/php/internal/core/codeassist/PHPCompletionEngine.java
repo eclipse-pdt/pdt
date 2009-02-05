@@ -57,18 +57,18 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			Set<ICompletionStrategy> processedStrategies = new HashSet<ICompletionStrategy>();
 			
 			for (ICompletionContext context : contexts) {
-				
 				for (ICompletionStrategy strategy : strategyFactory.create(context)) {
-					
 					if (!processedStrategies.contains(strategy)) {
-						strategy.apply(context, this);
+						try {
+							strategy.apply(context, this);
+						} catch (Exception e) {
+							if (DLTKCore.DEBUG_COMPLETION) {
+								e.printStackTrace();
+							}
+						}
 						processedStrategies.add(strategy);
 					}
 				}
-			}
-		} catch (Exception e) {
-			if (DLTKCore.DEBUG) {
-				e.printStackTrace();
 			}
 		} finally {
 			processedElements.clear();

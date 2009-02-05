@@ -93,6 +93,12 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == CatchTypeContext.class) {
 			return new ICompletionStrategy[] { new GlobalClassesStrategy() };
 		}
+		if (contextClass == ClassInstantiationContext.class) {
+			return new ICompletionStrategy[] { new ClassInstantiationStrategy() };	
+		}
+		if (contextClass == InstanceOfContext.class) {
+			return new ICompletionStrategy[] { new InstanceOftrategy() };	
+		}
 
 		return null;
 	}

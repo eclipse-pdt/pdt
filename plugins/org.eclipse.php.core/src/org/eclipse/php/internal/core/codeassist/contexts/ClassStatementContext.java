@@ -23,7 +23,7 @@ import org.eclipse.dltk.core.*;
  * </pre>
  * @author michael
  */
-public class ClassStatementContext extends StatementContext {
+public final class ClassStatementContext extends StatementContext {
 	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -47,7 +47,7 @@ public class ClassStatementContext extends StatementContext {
 		
 		return false;
 	}
-	
+
 	public boolean isExclusive() {
 		return true;
 	}

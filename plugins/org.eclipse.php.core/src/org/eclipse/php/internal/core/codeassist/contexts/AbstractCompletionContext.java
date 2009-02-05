@@ -333,6 +333,29 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	}
 	
 	/**
+	 * Returns previous word before the cursor position
+	 * @throws BadLocationException 
+	 */
+	public String getPreviousWord() throws BadLocationException {
+		TextSequence statementText = getStatementText();
+		
+		int statementLength = statementText.length();
+		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
+		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
+		
+		if (hasWhitespaceBeforeCursor()) {
+			return previousWord;
+		}
+		
+		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read whitespace
+		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
+		
+		return previousWord;
+	}
+	
+	/**
 	 * Returns PHP token under offset
 	 * @return PHP token
 	 * @throws BadLocationException 
