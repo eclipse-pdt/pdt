@@ -11,10 +11,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -98,7 +95,6 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			new UseNameContext(),
 			new VariableContext(),
 		}));
-		
 	}
 
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) throws BadLocationException, ResourceAlreadyExists, IOException, CoreException {
@@ -109,6 +105,18 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 				result.add(context);
 			}
 		}
+		
+		// remove exclusive contexts:
+		if (result.size() > 1) {
+			List<ICompletionContext> filteredResult = new LinkedList<ICompletionContext>();
+			for (ICompletionContext context : result) {
+				if (!context.isExclusive()) {
+					filteredResult.add(context);
+				}
+			}
+			result = filteredResult;
+		}
+		
 		return result.toArray(new ICompletionContext[result.size()]);
 	}
 }

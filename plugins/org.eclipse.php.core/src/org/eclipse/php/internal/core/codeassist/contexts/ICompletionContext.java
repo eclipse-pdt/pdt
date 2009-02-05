@@ -33,4 +33,9 @@ public interface ICompletionContext {
 	 */
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor);
 
+	/**
+	 * Whether this context may be applied only if it's the only context that was found.
+	 * @return <code>true</code> if this context is exclusive, otherwise <code>false</code>
+	 */
+	public boolean isExclusive();
 }

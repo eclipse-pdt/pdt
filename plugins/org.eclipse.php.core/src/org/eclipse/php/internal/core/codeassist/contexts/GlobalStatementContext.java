@@ -48,4 +48,8 @@ public class GlobalStatementContext extends StatementContext {
 		}
 		return true;
 	}
+	
+	public boolean isExclusive() {
+		return true;
+	}
 }

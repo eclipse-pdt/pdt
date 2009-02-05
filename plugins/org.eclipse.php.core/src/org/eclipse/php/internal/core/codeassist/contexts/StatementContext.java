@@ -22,5 +22,5 @@ package org.eclipse.php.internal.core.codeassist.contexts;
  * </pre>
  * @author michael
  */
-public abstract class StatementContext extends AbstractCompletionContext {
+public abstract class StatementContext extends CodeContext {
 }

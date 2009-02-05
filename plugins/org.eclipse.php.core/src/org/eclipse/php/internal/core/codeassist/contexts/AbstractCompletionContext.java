@@ -89,6 +89,10 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		}
 		return false;
 	}
+	
+	public boolean isExclusive() {
+		return false;
+	}
 
 	/**
 	 * Determines the structured document region of the place in PHP code where completion was requested

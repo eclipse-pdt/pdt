@@ -47,4 +47,8 @@ public class ClassStatementContext extends StatementContext {
 		
 		return false;
 	}
+	
+	public boolean isExclusive() {
+		return true;
+	}
 }

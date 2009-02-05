@@ -70,7 +70,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			}
 			// Otherwise - show all global elements also:
 			// Example: $array[foo()], $array[$otherVar]
-			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(), new GlobalVariablesStrategy(), new GlobalClassesStrategy(), new GlobalFunctionsStrategy() };
+			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(), new GlobalElementsCompositeStrategy(false) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
 			return new ICompletionStrategy[] { new GlobalClassesStrategy() };
@@ -88,7 +88,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new ClassKeywordsStrategy() };
 		}
 		if (contextClass == GlobalStatementContext.class) {
-			return new ICompletionStrategy[] { new GlobalKeywordsStrategy(), new GlobalVariablesStrategy(), new GlobalClassesStrategy(), new GlobalFunctionsStrategy() };
+			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(true) };
+		}
+		if (contextClass == CatchTypeContext.class) {
+			return new ICompletionStrategy[] { new GlobalClassesStrategy() };
 		}
 
 		return null;

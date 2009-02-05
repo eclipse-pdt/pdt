@@ -12,6 +12,8 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
 /**
@@ -24,11 +26,34 @@ import org.eclipse.dltk.core.ISourceModule;
  * @author michael
  */
 public class CatchTypeContext extends CatchContext {
-	
+
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+		
+		int classEnd = getCatchStart() + 5; // "catch"
+		TextSequence statementText = getStatementText();
+		statementText = statementText.subTextSequence(classEnd, statementText.length());
+
+		int startPosition = 0;
+		for (; startPosition < statementText.length(); startPosition++) {
+			if (statementText.charAt(startPosition) == '(') {
+				break;
+			}
+		}
+		if (startPosition == statementText.length()) {
+			// the current position is before the '('
+			return false;
+		}
+		
+		startPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, startPosition + 1); // + 1 for the '('
+		int endPosition = PHPTextSequenceUtilities.readIdentifierEndIndex(getPhpVersion(), statementText, startPosition, false);
+//		String className = statementText.subSequence(startPosition, endPosition).toString();
+
+		if (endPosition != statementText.length()) {
+			return false;
+		}
+		return true;
 	}
 }
