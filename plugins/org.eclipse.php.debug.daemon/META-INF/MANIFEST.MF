@@ -4,12 +4,12 @@ Bundle-Name: PDT Debug Daemon Plug-in
 Bundle-SymbolicName: org.eclipse.php.debug.daemon; singleton:=true
 Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: org.eclipse.php.internal.debug.daemon.DaemonPlugin
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
- org.eclipse.ui;bundle-version="3.4.0"
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Eclipse.org
 Export-Package: org.eclipse.php.debug.daemon.communication,
- org.eclipse.php.internal.debug.daemon,
- org.eclipse.php.internal.debug.daemon.communication,
- org.eclipse.php.internal.debug.daemon.startup
+ org.eclipse.php.internal.debug.daemon;x-internal:=true,
+ org.eclipse.php.internal.debug.daemon.communication;x-internal:=true,
+ org.eclipse.php.internal.debug.daemon.startup;x-internal:=true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
