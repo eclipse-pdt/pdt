@@ -275,7 +275,7 @@ public class PHPTextSequenceUtilities {
 		if (includeDollar && startPosition > 0 && textSequence.charAt(startPosition - 1) == '$') {
 			startPosition--;
 		}
-		return readForwardSpaces(textSequence, startPosition);
+		return startPosition >= 0 ? readForwardSpaces(textSequence, startPosition) : startPosition;
 	}
 	
 	public static int readNamespaceEndIndex(CharSequence textSequence, int startPosition, boolean includeDollar) {
@@ -312,7 +312,7 @@ public class PHPTextSequenceUtilities {
 			}
 			startPosition++;
 		}
-		return readBackwardSpaces(textSequence, startPosition);
+		return startPosition >= 0 ? readBackwardSpaces(textSequence, startPosition) : startPosition;
 	}
 
 	public static int readIdentifierStartIndex(CharSequence textSequence, int startPosition, boolean includeDolar) {
