@@ -56,7 +56,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  * The first page of the <code>SimpleProjectWizard</code>.
  */
 public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProjectCreateWizardPage {
-	protected PHPProjectWizardFirstPage() {
+	public PHPProjectWizardFirstPage() {
 		super(PAGE_NAME);
 		setPageComplete(false);
 		setTitle(NewWizardMessages.ScriptProjectWizardFirstPage_page_title);
@@ -159,13 +159,13 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 	 * @return
 	 */
 	public boolean hasPhpSourceFolder() {
-		return fLayoutGroup.isDetailedLayout();
+		return fLayoutGroup != null && fLayoutGroup.isDetailedLayout();
 	}
 
 	/**
 	 * Initialize a grid layout with the default Dialog settings.
 	 */
-	protected GridLayout initGridLayout(GridLayout layout, boolean margins) {
+	public GridLayout initGridLayout(GridLayout layout, boolean margins) {
 		layout.horizontalSpacing = convertHorizontalDLUsToPixels(IDialogConstants.HORIZONTAL_SPACING);
 		layout.verticalSpacing = convertVerticalDLUsToPixels(IDialogConstants.VERTICAL_SPACING);
 		if (margins) {

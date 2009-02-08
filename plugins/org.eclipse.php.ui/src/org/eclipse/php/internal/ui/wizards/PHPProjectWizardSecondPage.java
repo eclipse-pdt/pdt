@@ -70,11 +70,11 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage implements IPHPProjectCreateWizardPage {
 
 	private static final String FILENAME_PROJECT = ".project"; //$NON-NLS-1$
-	private static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
+	protected static final String FILENAME_BUILDPATH = ".buildpath"; //$NON-NLS-1$
 
 	protected final PHPProjectWizardFirstPage fFirstPage;
 
-	private URI fCurrProjectLocation; // null if location is platform location
+	protected URI fCurrProjectLocation; // null if location is platform location
 	protected IProject fCurrProject;
 
 	private boolean fKeepContent;
@@ -247,7 +247,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 			configureScriptProject(new SubProgressMonitor(monitor, 30));
 
 			//checking and adding JS nature,libs, include path if needed
-			addJsSupport(monitor);
+			if (fFirstPage.fJavaScriptSupportGroup.shouldSupportJavaScript()) {
+				addJavaScriptNature(monitor);
+			}
 
 			// setting PHP4/5 and ASP-Tags :
 			setPhpLangOptions();
@@ -281,33 +283,46 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	 * new project settings, helper
 	 * @return array of IncludePath's, size=1, and includes only the project's root-dir include path
 	 */
-	private IncludePath[] setProjectBaseIncludepath() {
+	protected IncludePath[] setProjectBaseIncludepath() {
 		return new IncludePath[] { new IncludePath(fCurrProject, fCurrProject) };
 	}
 
-	protected void addJsSupport(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
-		if (fFirstPage.fJavaScriptSupportGroup.shouldSupportJavaScript()) {
-			JsWebNature jsWebNature = new JsWebNature(fCurrProject, new SubProgressMonitor(monitor, 1));
-			jsWebNature.configure();
+	/**
+	 * @param monitor
+	 * @throws CoreException
+	 * @throws JavaScriptModelException
+	 */
+	protected void addJavaScriptNature(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
+		JsWebNature jsWebNature = new JsWebNature(fCurrProject, new SubProgressMonitor(monitor, 1));
+		jsWebNature.configure();
 
-			ArrayList<IIncludePathEntry> newJsClassPathsList = new ArrayList<IIncludePathEntry>();
-			// Adding all JS libs
-			newJsClassPathsList.addAll(Arrays.asList(jsWebNature.getJavaProject().getRawIncludepath()));
-			// Adding proj root as JS build path
-			IPath[] exclusionPatterns = ClasspathEntry.EXCLUDE_NONE;
-			if (fFirstPage.hasPhpSourceFolder()) {
-				//if we have PHP source folder, we exclude it from JS build path
-				exclusionPatterns = new IPath[] { new Path(getPreferenceStore().getString(PreferenceConstants.SRCBIN_SRCNAME)) };
-			}
-			newJsClassPathsList.add(JavaScriptCore.newSourceEntry(fCurrProject.getFullPath(), exclusionPatterns));
-
-			jsWebNature.getJavaProject().setRawIncludepath((IIncludePathEntry[]) newJsClassPathsList.toArray(new IIncludePathEntry[] {}), monitor);
+		ArrayList<IIncludePathEntry> newJsClassPathsList = new ArrayList<IIncludePathEntry>();
+		// Adding all JS libs
+		newJsClassPathsList.addAll(Arrays.asList(jsWebNature.getJavaProject().getRawIncludepath()));
+		// Adding proj root as JS build path
+		IPath[] exclusionPatterns = ClasspathEntry.EXCLUDE_NONE;
+		if (fFirstPage.hasPhpSourceFolder()) {
+			//if we have PHP source folder, we exclude it from JS build path
+			exclusionPatterns = new IPath[] { new Path(getPreferenceStore().getString(PreferenceConstants.SRCBIN_SRCNAME)) };
 		}
+		newJsClassPathsList.add(JavaScriptCore.newSourceEntry(fCurrProject.getFullPath(), exclusionPatterns));
+
+		jsWebNature.getJavaProject().setRawIncludepath((IIncludePathEntry[]) newJsClassPathsList.toArray(new IIncludePathEntry[] {}), monitor);
 	}
 
 	@Override
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
+		String scriptNature = getScriptNature();
+		setScriptNature(monitor, scriptNature);
+	}
 
+	/**
+	 * @param monitor
+	 * @param scriptNature
+	 * @throws CoreException
+	 * @throws InterruptedException
+	 */
+	protected void setScriptNature(IProgressMonitor monitor, String scriptNature) throws CoreException, InterruptedException {
 		if (monitor == null) {
 			monitor = new NullProgressMonitor();
 		}
@@ -317,14 +332,13 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 
 		try {
 			IProject project = getScriptProject().getProject();
-			BuildpathsBlock.addScriptNature(project, new SubProgressMonitor(monitor, 1), getScriptNature());
+			BuildpathsBlock.addScriptNature(project, new SubProgressMonitor(monitor, 1), scriptNature);
 			//getBuildPathsBlock().configureScriptProject(new SubProgressMonitor(monitor, 5));
 		} catch (OperationCanceledException e) {
 			throw new InterruptedException();
 		} finally {
 			monitor.done();
 		}
-
 	}
 
 	protected BuildpathDetector createBuildpathDetector(IProgressMonitor monitor, IDLTKLanguageToolkit toolkit) throws CoreException {
@@ -341,14 +355,14 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 		return PHPUiPlugin.getDefault().getPreferenceStore();
 	}
 
-	private URI getProjectLocationURI() throws CoreException {
+	protected URI getProjectLocationURI() throws CoreException {
 		if (fFirstPage.isInWorkspace()) {
 			return null;
 		}
 		return fFirstPage.getLocationURI();
 	}
 
-	private void rememberExistingFiles(URI projectLocation) throws CoreException {
+	protected void rememberExistingFiles(URI projectLocation) throws CoreException {
 		fDotProjectBackup = null;
 		fDotBuildpathBackup = null;
 
