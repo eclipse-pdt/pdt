@@ -350,6 +350,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		if (wordStart == -1 || wordEnd == -1) {
+			return "";
+		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
 		
 		return previousWord;

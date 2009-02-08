@@ -116,8 +116,16 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			}
 		}
 	}
+
+	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
+		SourceRange replacementRange = super.getReplacementRange(context);
+		if (replacementRange.getLength() > 0) {
+			return new SourceRange(replacementRange.getOffset(), replacementRange.getLength() - 1);
+		}
+		return replacementRange;
+	}
 	
 	public String getSuffix() {
-		return ""; //$NON-NLS-1$
+		return "::"; //$NON-NLS-1$
 	}
 }

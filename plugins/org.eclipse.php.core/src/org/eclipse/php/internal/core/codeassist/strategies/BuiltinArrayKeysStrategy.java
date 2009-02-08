@@ -49,7 +49,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 		} else if (arrayVarName.equals("$_SESSION") || arrayVarName.equals("$HTTP_SESSION_VARS")) { //NON-NLS-1 //NON-NLS-2
 			reportVariables(reporter, arrayContext, SESSION_VARS, prefix);
 		} else if (arrayVarName.equals("$GLOBALS")) { //NON-NLS-1
-			int mask = 0;
+			int mask = CodeAssistUtils.EXCLUDE_CONSTANTS;
 			if (requestor.isContextInformationMode()) {
 				mask |= CodeAssistUtils.EXACT_NAME;
 			}
@@ -57,7 +57,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
-				reporter.reportField(field, "", replaceRange, false); //NON-NLS-1
+				reporter.reportField(field, "", replaceRange, true); //NON-NLS-1
 			}
 
 			reportVariables(reporter, arrayContext, GlobalVariablesStrategy.PHP_VARIABLES, prefix, true);

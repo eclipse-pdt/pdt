@@ -109,10 +109,18 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy() };	
 		}
 		if (contextClass == ClassExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy() };	
+			return new ICompletionStrategy[] { new GlobalClassesStrategy() {
+				public String getSuffix() {
+					return ""; //$NON-NLS-1$
+				}
+			}};	
 		}
 		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalInterfacesStrategy() };	
+			return new ICompletionStrategy[] { new GlobalInterfacesStrategy() {
+				public String getSuffix() {
+					return ""; //$NON-NLS-1$
+				}
+			}};	
 		}
 		
 		return null;
