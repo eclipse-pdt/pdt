@@ -52,7 +52,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			IField field = (IField) constant;
 			try {
 				if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-					reporter.reportField(field, "", replaceRange);
+					reporter.reportField(field, "", replaceRange, false);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {

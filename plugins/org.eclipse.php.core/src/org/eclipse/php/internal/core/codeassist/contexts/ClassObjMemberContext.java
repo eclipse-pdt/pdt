@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
 /**
@@ -27,10 +28,34 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class ClassObjMemberContext extends ClassMemberContext {
 	
+	private boolean isThisCall;
+	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+		if (getTriggerType() != Trigger.OBJECT) {
+			return false;
+		}
+		
+		isThisCall = false;
+		
+		int elementStart = getElementStart();
+		int lhsIndex = elementStart - "$this".length() - getTriggerType().getName().length();
+		if (lhsIndex == 0) {
+			TextSequence statementText = getStatementText();
+			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
+			if (parentText.equals("$this")) { //$NON-NLS-1$
+				isThisCall = true;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns whether the left hand side is a variable '$this'
+	 */
+	public boolean isThisCall() {
+		return isThisCall;
 	}
 }

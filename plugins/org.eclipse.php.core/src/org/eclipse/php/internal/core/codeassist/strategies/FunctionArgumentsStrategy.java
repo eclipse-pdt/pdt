@@ -58,7 +58,7 @@ public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
 				String argumentVar = arg.getName();
 				if (argumentVar.startsWith(prefix)) {
 					if (!requestor.isContextInformationMode() || argumentVar.length() == prefix.length()) {
-						reporter.reportField(new FakeField((ModelElement) sourceModule, argumentVar, 0, 0), suffix, replaceRange);
+						reporter.reportField(new FakeField((ModelElement) sourceModule, argumentVar, 0, 0), suffix, replaceRange, false);
 					}
 				}
 			}

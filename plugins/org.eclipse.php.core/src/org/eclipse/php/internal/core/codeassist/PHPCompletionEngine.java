@@ -115,7 +115,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		return relevance;
 	}
 
-	public void reportField(IField field, String suffix, SourceRange replaceRange) {
+	public void reportField(IField field, String suffix, SourceRange replaceRange, boolean removeDollar) {
 		if (processedElements.contains(field)) {
 			return;
 		}
@@ -137,7 +137,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			
 			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
 			proposal.setName(field.getElementName().toCharArray());
-			proposal.setCompletion((field.getElementName() + suffix).toCharArray());
+			
+			String completion = field.getElementName() + suffix;
+			if (removeDollar && completion.startsWith("$")) {
+				completion = completion.substring(1);
+			}
+			proposal.setCompletion(completion.toCharArray());
+			
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
 			proposal.setRelevance(relevance);

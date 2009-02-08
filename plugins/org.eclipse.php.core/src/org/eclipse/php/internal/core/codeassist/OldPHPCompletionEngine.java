@@ -946,7 +946,7 @@ public class OldPHPCompletionEngine extends ScriptCompletionEngine {
 			}
 		}
 
-		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset, line);
+		IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statementText, startFunctionPosition, offset);
 		if (types != null) {
 			if (hasWhitespaceAtEnd && functionName.length() > 0) {
 				// check if current position is between the end of a function call and open bracket.

@@ -57,7 +57,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
-				reporter.reportField(field, "", replaceRange); //NON-NLS-1
+				reporter.reportField(field, "", replaceRange, false); //NON-NLS-1
 			}
 
 			reportVariables(reporter, arrayContext, GlobalVariablesStrategy.PHP_VARIABLES, prefix, true);
@@ -77,7 +77,7 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			}
 			if (variable.startsWith(prefix)) {
 				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", replaceRange); //NON-NLS-1
+					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", replaceRange, false); //NON-NLS-1
 				}
 			}
 		}

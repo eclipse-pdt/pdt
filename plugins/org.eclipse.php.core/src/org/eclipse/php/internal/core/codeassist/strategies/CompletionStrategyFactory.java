@@ -99,7 +99,10 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == InstanceOfContext.class) {
 			return new ICompletionStrategy[] { new InstanceOftrategy() };	
 		}
-
+		if (contextClass == ClassStaticMemberContext.class || contextClass == ClassObjMemberContext.class) {
+			return new ICompletionStrategy[] { new ClassFieldsStrategy(), new ClassMethodsStrategy() };	
+		}
+		
 		return null;
 	}
 

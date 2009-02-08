@@ -48,8 +48,9 @@ public interface ICompletionReporter {
 	 * @param field PHP variable or constant
 	 * @param suffix Suffix to uppend after completion will be inserted
 	 * @param replaceRange The range in the document to be replaced with the completion proposal text
+	 * @param removeDollar Remove dollar from the variable in completion
 	 */
-	public void reportField(IField field, String suffix, SourceRange replaceRange);
+	public void reportField(IField field, String suffix, SourceRange replaceRange, boolean removeDollar);
 	
 	/**
 	 * Reports PHP keyword

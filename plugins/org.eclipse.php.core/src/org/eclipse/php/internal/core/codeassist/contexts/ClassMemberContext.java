@@ -12,7 +12,9 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -34,14 +36,26 @@ public abstract class ClassMemberContext extends StatementContext {
 	/**
 	 * Trigger type of the member invocation
 	 */
-	enum Trigger {
+	public enum Trigger {
 		/** Class trigger type: '::' */
-		CLASS,
+		CLASS("::"),
 		/** Object trigger type: '->' */
-		OBJECT,
+		OBJECT("->"),
+		;
+		
+		String name;
+		Trigger(String name) {
+			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
+		}
 	}
 
 	private Trigger triggerType;
+	private IType[] types;
+	private int elementStart;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -51,14 +65,14 @@ public abstract class ClassMemberContext extends StatementContext {
 		TextSequence statementText = getStatementText();
 		int totalLength = statementText.length();
 		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
-		int startPosition = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
+		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
 
-		startPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, startPosition);
-		if (startPosition <= 2) { // there's no trigger of length less than 2 characters
+		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart);
+		if (elementStart <= 2) { // there's no trigger of length less than 2 characters
 			return false;
 		}
 
-		String triggerText = statementText.subSequence(startPosition - 2, startPosition).toString();
+		String triggerText = statementText.subSequence(elementStart - 2, elementStart).toString();
 		if (triggerText.equals("->")) {
 			triggerType = Trigger.OBJECT;
 		} else if (triggerText.equals("::")) {
@@ -66,8 +80,34 @@ public abstract class ClassMemberContext extends StatementContext {
 		} else {
 			return false;
 		}
+		
+		types = CodeAssistUtils.getTypesFor(sourceModule, statementText, elementStart, offset);
+		if (types == null || types.length == 0) {
+			return false;
+		}
 
 		return true;
+	}
+	
+	/**
+	 * Returns the start position of class/object element relative to the text sequence.
+	 * @see #getStatementText()
+	 */
+	public int getElementStart() {
+		return elementStart;
+	}
+	
+	/**
+	 * Returns the left hand side possible types. For example:
+	 * <pre>
+	 * 1. $a->foo() : returns possible types of the $a
+	 * 2. A::foo() : returns the 'A' type
+	 * 3. $a->foo()->bar() : returns possible return types of method foo() in $a
+	 * etc...
+	 * </pre>
+	 */
+	public IType[] getLhsTypes() {
+		return types;
 	}
 
 	/**

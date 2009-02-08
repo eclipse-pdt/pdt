@@ -12,6 +12,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
 /**
@@ -27,10 +28,34 @@ import org.eclipse.dltk.core.ISourceModule;
  */
 public class ClassStaticMemberContext extends ClassMemberContext {
 	
+	private boolean isParentCall;
+	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+		if (getTriggerType() != Trigger.CLASS) {
+			return false;
+		}
+		
+		isParentCall = false;
+		
+		int elementStart = getElementStart();
+		int lhsIndex = elementStart - "parent".length() - getTriggerType().getName().length();
+		if (lhsIndex == 0) {
+			TextSequence statementText = getStatementText();
+			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
+			if (parentText.equals("parent")) { //$NON-NLS-1$
+				isParentCall = true;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns whether the left hand side is a word 'parent'
+	 */
+	public boolean isParentCall() {
+		return isParentCall;
 	}
 }

@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
@@ -312,10 +313,9 @@ public class CodeAssistUtils {
 	 * @param types
 	 * @param propertyName
 	 * @param offset
-	 * @param line
 	 * @return
 	 */
-	public static IType[] getVariableType(IType[] types, String propertyName, int offset, int line) {
+	public static IType[] getVariableType(IType[] types, String propertyName, int offset) {
 		if (types != null) {
 			for (IType type : types) {
 				PHPClassType classType = new PHPClassType(type.getElementName());
@@ -361,10 +361,9 @@ public class CodeAssistUtils {
 	 * @param sourceModule
 	 * @param variableName
 	 * @param position
-	 * @param line
 	 * @return
 	 */
-	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position, int line) {
+	public static IType[] getVariableType(ISourceModule sourceModule, String variableName, int position) {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, position);
 		if (context != null) {
@@ -577,10 +576,9 @@ public class CodeAssistUtils {
 	 * @param statementText
 	 * @param endPosition
 	 * @param offset
-	 * @param line
 	 * @return
 	 */
-	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset, int line) {
+	public static IType[] getTypesFor(ISourceModule sourceModule, TextSequence statementText, int endPosition, int offset) {
 		endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, endPosition); // read whitespace
 
 		boolean isClassTriger = false;
@@ -602,18 +600,18 @@ public class CodeAssistUtils {
 
 		if (lastObjectOperator == -1) {
 			// if there is no "->" or "::" in the left sequence then we need to calc the object type
-			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset, line);
+			return innerGetClassName(sourceModule, statementText, propertyEndPosition, isClassTriger, offset);
 		}
 
 		int propertyStartPosition = PHPTextSequenceUtilities.readForwardSpaces(statementText, lastObjectOperator + triggerText.length());
 		String propertyName = statementText.subSequence(propertyStartPosition, propertyEndPosition).toString();
-		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset, line);
+		IType[] types = getTypesFor(sourceModule, statementText, propertyStartPosition, offset);
 
 		int bracketIndex = propertyName.indexOf('(');
 
 		if (bracketIndex == -1) {
 			// meaning its a class variable and not a function
-			return getVariableType(types, propertyName, offset, line);
+			return getVariableType(types, propertyName, offset);
 		}
 
 		String functionName = propertyName.substring(0, bracketIndex).trim();
@@ -630,7 +628,7 @@ public class CodeAssistUtils {
 	/**
 	 * Getting an instance and finding its type.
 	 */
-	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset, int line) {
+	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset) {
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
@@ -669,7 +667,7 @@ public class CodeAssistUtils {
 		// if its object call calc the object type.
 		if (className.length() > 0 && className.charAt(0) == '$') {
 			int statementStart = offset - statementText.length();
-			return getVariableType(sourceModule, className, statementStart, line);
+			return getVariableType(sourceModule, className, statementStart);
 		}
 		// if its function call calc the return type.
 		if (statementText.charAt(propertyEndPosition - 1) == ')') {
@@ -988,7 +986,7 @@ public class CodeAssistUtils {
 		Set<String> elementsToSearch = new HashSet<String>();
 		Set<String> groups = new HashSet<String>();
 
-		boolean showGroupOptions = PHPCorePlugin.getDefault().getPluginPreferences().getBoolean(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS);
+		boolean showGroupOptions = Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false, null);
 		if (!prefix.startsWith("$") && !currentFileOnly && showGroupOptions && (elementType == IDLTKSearchConstants.TYPE || elementType == IDLTKSearchConstants.METHOD)) {
 			if (!exactName) {
 				MixinModel mixinModel = PHPMixinModel.getInstance(sourceModule.getScriptProject()).getRawModel();

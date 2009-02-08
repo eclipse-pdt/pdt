@@ -386,7 +386,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return PHPModelUtils.filterElements(sourceModule, CodeAssistUtils.getGlobalTypes(sourceModule, elementName, CodeAssistUtils.EXACT_NAME));
 						}
 
-						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset, sDoc.getLineOfOffset(offset));
+						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset);
 
 						// Is it function or method:
 						if (OPEN_BRACE.equals(nextWord) || PHPPartitionTypes.isPHPDocState(tRegion.getType())) { //$NON-NLS-1$
