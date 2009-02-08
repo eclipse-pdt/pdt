@@ -73,7 +73,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(), new GlobalElementsCompositeStrategy(false) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy() };
+			return new ICompletionStrategy[] { new GlobalTypesStrategy() };
 		}
 		if (contextClass == FunctionParameterValueContext.class) {
 			return new ICompletionStrategy[] { new GlobalConstantsStrategy() };
@@ -91,16 +91,28 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(true) };
 		}
 		if (contextClass == CatchTypeContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy() };
+			return new ICompletionStrategy[] { new GlobalTypesStrategy() };
 		}
 		if (contextClass == ClassInstantiationContext.class) {
 			return new ICompletionStrategy[] { new ClassInstantiationStrategy() };	
 		}
 		if (contextClass == InstanceOfContext.class) {
-			return new ICompletionStrategy[] { new InstanceOftrategy() };	
+			return new ICompletionStrategy[] { new InstanceOfStrategy() };	
 		}
 		if (contextClass == ClassStaticMemberContext.class || contextClass == ClassObjMemberContext.class) {
 			return new ICompletionStrategy[] { new ClassFieldsStrategy(), new ClassMethodsStrategy() };	
+		}
+		if (contextClass == ClassDeclarationKeywordContext.class) {
+			return new ICompletionStrategy[] { new ClassDeclarationKeywordsStrategy() };	
+		}
+		if (contextClass == InterfaceDeclarationKeywordContext.class) {
+			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy() };	
+		}
+		if (contextClass == ClassExtendsContext.class) {
+			return new ICompletionStrategy[] { new GlobalClassesStrategy() };	
+		}
+		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
+			return new ICompletionStrategy[] { new GlobalInterfacesStrategy() };	
 		}
 		
 		return null;

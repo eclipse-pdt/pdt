@@ -25,7 +25,7 @@ public class GlobalElementsCompositeStrategy implements ICompletionStrategy {
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 
 	public GlobalElementsCompositeStrategy(boolean includeKeywords) {
-		strategies.add(new GlobalClassesStrategy());
+		strategies.add(new GlobalTypesStrategy());
 		strategies.add(new GlobalFunctionsStrategy());
 		strategies.add(new GlobalVariablesStrategy());
 		strategies.add(new GlobalConstantsStrategy());

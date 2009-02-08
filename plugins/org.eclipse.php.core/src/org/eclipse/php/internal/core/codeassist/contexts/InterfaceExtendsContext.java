@@ -23,12 +23,12 @@ import org.eclipse.dltk.core.ISourceModule;
  * </pre>
  * @author michael
  */
-public class InterfaceExtendsContext extends TypeDeclarationContext {
+public class InterfaceExtendsContext extends InterfaceDeclarationContext {
 	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		return false;
+		return hasExtends();
 	}
 }

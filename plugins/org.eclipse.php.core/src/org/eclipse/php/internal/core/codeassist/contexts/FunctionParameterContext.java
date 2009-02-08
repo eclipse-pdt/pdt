@@ -39,10 +39,10 @@ public abstract class FunctionParameterContext extends FunctionDeclarationContex
 	protected char getTriggerChar() {
 		
 		TextSequence statementText = getStatementText();
-		int functionStart = getFunctionStart();
+		int functionEnd = getFunctionEnd();
 		
 		// are we inside parameters part in function declaration statement
-		for (int i = statementText.length() - 1; i >= functionStart ; i--) {
+		for (int i = statementText.length() - 1; i >= functionEnd ; i--) {
 			if (statementText.charAt(i) == '(') {
 				int j = statementText.length() - 1;
 				for (; j > i; j--) {

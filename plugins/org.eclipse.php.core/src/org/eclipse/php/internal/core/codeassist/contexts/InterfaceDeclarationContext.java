@@ -12,51 +12,32 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
 /**
- * This context represents the state when staying in a method declaration on the method name.
+ * This context represents the interface declaration context.
  * <br/>Examples:
  * <pre>
- *  1. function |
- *  2. function foo|
- *  etc... 
+ *  1. interface A extends |
+ *  2. interface A extends B|
  * </pre>
  * @author michael
  */
-public class MethodNameContext extends FunctionDeclarationContext {
+public abstract class InterfaceDeclarationContext extends TypeDeclarationContext {
 	
-	private IType declaringClass;
-
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
-		TextSequence statementText = getStatementText();
-		int functionEnd = getFunctionEnd();
-		
-		for (int i = statementText.length() - 1; i >= functionEnd; i--) {
-			if (statementText.charAt(i) == '(') {
+		int typeEnd = getTypeEnd();
+		if (typeEnd >= 10) {
+			TextSequence statementText = getStatementText();
+			String typeString = statementText.subSequence(typeEnd - 10, typeEnd - 1).toString();
+			if (!"interface".equals(typeString)) {
 				return false;
 			}
 		}
-		
-		declaringClass = CodeAssistUtils.getContainerClassData(getSourceModule(), statementText.getOriginalOffset(functionEnd));
-		if (declaringClass == null) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Returns the method class
-	 * @return
-	 */
-	public IType getDeclaringClass() {
-		return declaringClass;
+		return false;
 	}
 }

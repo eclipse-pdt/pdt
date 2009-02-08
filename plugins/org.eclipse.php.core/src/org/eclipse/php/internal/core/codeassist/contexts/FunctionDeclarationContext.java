@@ -28,7 +28,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  */
 public abstract class FunctionDeclarationContext extends DeclarationContext {
 	
-	private int functionStart;
+	private int functionEnd;
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -36,20 +36,19 @@ public abstract class FunctionDeclarationContext extends DeclarationContext {
 		}
 		
 		TextSequence statementText = getStatementText();
-		functionStart = PHPTextSequenceUtilities.isInFunctionDeclaration(statementText);
-		if (functionStart == -1) {
+		functionEnd = PHPTextSequenceUtilities.isInFunctionDeclaration(statementText);
+		if (functionEnd == -1) {
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * Returns the start offset of word 'function' in function declaration relative to the
-	 * statement text.
+	 * Returns the end offset of word 'function' in function declaration relative to the statement text.
 	 * @see #getStatementText()
 	 * @return
 	 */
-	public int getFunctionStart() {
-		return functionStart;
+	public int getFunctionEnd() {
+		return functionEnd;
 	}
 }

@@ -24,7 +24,7 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  * This strategy completes global classes after 'new' statement 
  * @author michael
  */
-public class ClassInstantiationStrategy extends GlobalClassesStrategy {
+public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
 		

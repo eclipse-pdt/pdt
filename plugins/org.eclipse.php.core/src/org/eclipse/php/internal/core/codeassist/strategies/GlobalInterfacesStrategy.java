@@ -20,13 +20,13 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  * This strategy completes global classes 
  * @author michael
  */
-public class GlobalClassesStrategy extends GlobalTypesStrategy {
+public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
 
-	public GlobalClassesStrategy() {
+	public GlobalInterfacesStrategy() {
 		super(new IElementFilter() {
 			public boolean filter(IModelElement element) {
 				try {
-					return !PHPFlags.isClass(((IType)element).getFlags());
+					return !PHPFlags.isInterface(((IType)element).getFlags());
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG_COMPLETION) {
 						e.printStackTrace();

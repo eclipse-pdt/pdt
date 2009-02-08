@@ -12,51 +12,33 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
 /**
- * This context represents the state when staying in a method declaration on the method name.
+ * This context represents the class declaration state.
  * <br/>Examples:
  * <pre>
- *  1. function |
- *  2. function foo|
- *  etc... 
+ *  1. class A implements |
+ *  2. class A implements B|
  * </pre>
  * @author michael
  */
-public class MethodNameContext extends FunctionDeclarationContext {
+public abstract class ClassDeclarationContext extends TypeDeclarationContext {
 	
-	private IType declaringClass;
-
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
-		TextSequence statementText = getStatementText();
-		int functionEnd = getFunctionEnd();
-		
-		for (int i = statementText.length() - 1; i >= functionEnd; i--) {
-			if (statementText.charAt(i) == '(') {
+		int typeEnd = getTypeEnd();
+		if (typeEnd >= 6) {
+			TextSequence statementText = getStatementText();
+			String typeString = statementText.subSequence(typeEnd - 6, typeEnd - 1).toString();
+			if (!"class".equals(typeString)) {
 				return false;
 			}
 		}
 		
-		declaringClass = CodeAssistUtils.getContainerClassData(getSourceModule(), statementText.getOriginalOffset(functionEnd));
-		if (declaringClass == null) {
-			return false;
-		}
 		return true;
-	}
-
-	/**
-	 * Returns the method class
-	 * @return
-	 */
-	public IType getDeclaringClass() {
-		return declaringClass;
 	}
 }

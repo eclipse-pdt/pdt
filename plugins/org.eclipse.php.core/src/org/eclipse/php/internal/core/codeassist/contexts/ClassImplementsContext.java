@@ -23,11 +23,17 @@ import org.eclipse.dltk.core.ISourceModule;
  * </pre>
  * @author michael
  */
-public class ClassImplementsContext extends TypeDeclarationContext {
+public class ClassImplementsContext extends ClassDeclarationContext {
 	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
+		}
+		if (hasExtends() && hasImplements() && extendsMatcher.start() < implementsMatcher.start()) {
+			return true;
+		}
+		if (hasImplements()) {
+			return true;
 		}
 		return false;
 	}

@@ -11,52 +11,46 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
- * This context represents the state when staying in a method declaration on the method name.
- * <br/>Examples:
+ * This context represents the state when staying before extends/implements block
+ * for completion of 'extends' or 'implements' keywords.
+ * <br/>Example:
  * <pre>
- *  1. function |
- *  2. function foo|
- *  etc... 
+ *  class A |
  * </pre>
  * @author michael
  */
-public class MethodNameContext extends FunctionDeclarationContext {
-	
-	private IType declaringClass;
+public class ClassDeclarationKeywordContext extends ClassDeclarationContext {
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-		
+
 		TextSequence statementText = getStatementText();
-		int functionEnd = getFunctionEnd();
-		
-		for (int i = statementText.length() - 1; i >= functionEnd; i--) {
-			if (statementText.charAt(i) == '(') {
-				return false;
+		statementText = statementText.subTextSequence(getTypeIdentifierEnd(), statementText.length());
+
+		if (!hasExtends() && !hasImplements()) { // the cursor position is right after the class name 
+			return true;
+		}
+
+		if (!hasImplements()) { // check that the previous word is not a keyword
+			try {
+				String previousWord = getPreviousWord();
+				if (!"extends".equalsIgnoreCase(previousWord) && !"implements".equalsIgnoreCase(previousWord)) {
+					return true;
+				}
+			} catch (BadLocationException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
-		declaringClass = CodeAssistUtils.getContainerClassData(getSourceModule(), statementText.getOriginalOffset(functionEnd));
-		if (declaringClass == null) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Returns the method class
-	 * @return
-	 */
-	public IType getDeclaringClass() {
-		return declaringClass;
+		return false;
 	}
 }

@@ -19,7 +19,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * This strategy completes global classes after 'new' statement 
  * @author michael
  */
-public class InstanceOftrategy extends GlobalClassesStrategy {
+public class InstanceOfStrategy extends GlobalTypesStrategy {
 
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
 		super.apply(context, reporter);
