@@ -29,6 +29,7 @@ import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
@@ -129,8 +130,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 						// Add the language library
 						Object[] projectChildren = getProjectFragments(project);
 						for (Object modelElement : projectChildren) {
-							//adding only "external" fragments (so we won't double-add source-folders we get on the resource-wise visiting
-							if (modelElement instanceof BuildPathContainer) {
+							if (modelElement instanceof BuildPathContainer && ((BuildPathContainer) modelElement).getBuildpathEntry().getPath().equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
 								returnChlidren.add(modelElement);
 							}
 						}
