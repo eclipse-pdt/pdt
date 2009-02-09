@@ -43,8 +43,8 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 * Path of the language model for php projects
 	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
-
-	private static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
+	public static final Path LANGUAGE_CONTAINER_PATH = new Path(LanguageModelInitializer.CONTAINER_PATH);
+	public static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
 
 	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
 	private Map<IProject, PHPVersion> project2PhpVersion = new HashMap<IProject, PHPVersion>();
@@ -157,20 +157,17 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			return;
 		}
 
-		IPath containerPath = new Path(LanguageModelInitializer.CONTAINER_PATH);
-
 		boolean found = false;
-
 		IBuildpathEntry[] rawBuildpath = project.getRawBuildpath();
 		for (IBuildpathEntry entry : rawBuildpath) {
-			if (entry.isContainerEntry() && entry.getPath().equals(containerPath)) {
+			if (entry.isContainerEntry() && entry.getPath().equals(LANGUAGE_CONTAINER_PATH)) {
 				found = true;
 				break;
 			}
 		}
 
 		if (!found) {
-			IBuildpathEntry containerEntry = DLTKCore.newContainerEntry(containerPath);
+			IBuildpathEntry containerEntry = DLTKCore.newContainerEntry(LANGUAGE_CONTAINER_PATH);
 			int newSize = rawBuildpath.length + 1;
 			List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>(newSize);
 			newRawBuildpath.addAll(Arrays.asList(rawBuildpath));
