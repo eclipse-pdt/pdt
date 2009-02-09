@@ -68,6 +68,8 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 					}
 				}
 			}
+			
+			String suffix = getSuffix(concreteContext);
 			try {
 				if (ctor != null) {
 					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
@@ -77,12 +79,12 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 							}
 						};
 						ctorMethod.setParameters(ctor.getParameters());
-						reporter.reportMethod(ctorMethod, getSuffix(), replaceRange);
+						reporter.reportMethod(ctorMethod, suffix, replaceRange);
 					}
 				} else {
 					int flags = type.getFlags();
 					if (!PHPFlags.isInternal(flags) && PHPFlags.isClass(flags)) {
-						reporter.reportType(type, getSuffix(), replaceRange);
+						reporter.reportType(type, suffix, replaceRange);
 					}
 				}
 			} catch (ModelException e) {
@@ -95,8 +97,15 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 		addSelf(concreteContext, reporter);
 	}
 
-	public String getSuffix() {
-		return "()"; //$NON-NLS-1$
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		String nextWord = null;
+		try {
+			nextWord = abstractContext.getNextWord();
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-	
 }

@@ -39,7 +39,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	private int relevanceClass;
 	private int relevanceVar;
 	private int relevanceConst;
-	private Set<IModelElement> processedElements = new HashSet<IModelElement>();
+	private Set<? super Object> processedElements = new HashSet<Object>();
 
 	public void complete(ISourceModule module, int position, int i) {
 
@@ -158,6 +158,10 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	}
 
 	public void reportKeyword(String keyword, String suffix, SourceRange replaceRange) {
+		if (processedElements.contains(keyword)) {
+			return;
+		}
+		processedElements.add(keyword);
 		
 		noProposal = false;
 		

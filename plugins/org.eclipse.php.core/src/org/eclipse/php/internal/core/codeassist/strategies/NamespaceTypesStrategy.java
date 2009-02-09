@@ -10,42 +10,39 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 /**
- * This strategy completes global functions 
+ * This strategy completes namespace classes and interfaces
  * @author michael
  */
-public class GlobalFunctionsStrategy extends GlobalElementStrategy {
+public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 	
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
-		
-		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
-
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
+		if (!(context instanceof NamespaceMemberContext)) {
+			return;
 		}
-		
-		String prefix = abstractContext.getPrefix();
-		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(abstractContext.getSourceModule(), prefix, mask);
-		SourceRange replacementRange = getReplacementRange(abstractContext);
-		String suffix = getSuffix(abstractContext);
-		
-		for (IModelElement function : functions) {
+
+		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
+		String prefix = concreteContext.getPrefix();
+		String suffix = getSuffix(concreteContext);
+		SourceRange replaceRange = getReplacementRange(concreteContext);
+
+		for (IType ns : concreteContext.getNamespaces()) {
 			try {
-				IMethod method = (IMethod) function;
-				int flags = method.getFlags();
-				if (!PHPFlags.isInternal(flags)) {
-					reporter.reportMethod(method, suffix, replacementRange);
+				for (IType type : ns.getTypes()) {
+					if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
+						reporter.reportType(type, suffix, replaceRange);
+					}
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
@@ -53,6 +50,14 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 				}
 			}
 		}
+	}
+	
+	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
+		SourceRange replacementRange = super.getReplacementRange(context);
+		if (replacementRange.getLength() > 0) {
+			return new SourceRange(replacementRange.getOffset(), replacementRange.getLength() - 1);
+		}
+		return replacementRange;
 	}
 	
 	public String getSuffix(AbstractCompletionContext abstractContext) {
@@ -64,6 +69,6 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 				e.printStackTrace();
 			}
 		}
-		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

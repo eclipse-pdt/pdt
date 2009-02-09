@@ -73,7 +73,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(), new GlobalElementsCompositeStrategy(false) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
-			return new ICompletionStrategy[] { new GlobalTypesStrategy() };
+			return new ICompletionStrategy[] { new FunctionParameterTypeStrategy() };
 		}
 		if (contextClass == FunctionParameterValueContext.class) {
 			return new ICompletionStrategy[] { new GlobalConstantsStrategy() };
@@ -81,14 +81,14 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		if (contextClass == MethodNameContext.class) {
 			return new ICompletionStrategy[] { new MethodNameStrategy() };
 		}
-		if (contextClass == VariableContext.class) {
-			return new ICompletionStrategy[] { new GlobalVariablesStrategy() };
-		}
 		if (contextClass == ClassStatementContext.class) {
 			return new ICompletionStrategy[] { new ClassKeywordsStrategy() };
 		}
 		if (contextClass == GlobalStatementContext.class) {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(true) };
+		}
+		if (contextClass == GlobalMethodStatementContext.class) {
+			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(true), new LocalMethodVariablesStrategy() };
 		}
 		if (contextClass == CatchTypeContext.class) {
 			return new ICompletionStrategy[] { new GlobalTypesStrategy() };
@@ -109,18 +109,15 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy() };	
 		}
 		if (contextClass == ClassExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy() {
-				public String getSuffix() {
-					return ""; //$NON-NLS-1$
-				}
-			}};	
+			return new ICompletionStrategy[] { new GlobalClassesStrategy() };	
 		}
 		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalInterfacesStrategy() {
-				public String getSuffix() {
-					return ""; //$NON-NLS-1$
-				}
-			}};	
+			return new ICompletionStrategy[] { new GlobalInterfacesStrategy() };	
+		}
+		if (contextClass == NamespaceMemberContext.class) {
+			return new ICompletionStrategy[] {
+				new NamespaceElementsCompositeStrategy(((NamespaceMemberContext)context).isGlobal()) 
+			};
 		}
 		
 		return null;

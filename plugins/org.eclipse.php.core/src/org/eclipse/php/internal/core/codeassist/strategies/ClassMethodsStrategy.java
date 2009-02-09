@@ -16,9 +16,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.*;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
@@ -47,22 +45,26 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		boolean showNonStaticMembers = showNonStaticMembers(concreteContext);
 		boolean showNonStrictOptions = showNonStrictOptions();
 		boolean isThisCall = ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext)context).isThisCall());
+		boolean isParentCall = ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext)context).isParentCall());
+		
+		String suffix = getSuffix(concreteContext);
 		
 		for (IType type : concreteContext.getLhsTypes()) {
-			IMethod[] methods = CodeAssistUtils.getTypeMethods(type, prefix, mask);
+			IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, prefix, mask) 
+				: CodeAssistUtils.getTypeMethods(type, prefix, mask);
 
 			for (IMethod method : methods) {
 				try {
 					int flags = method.getFlags();
 					if (showNonStaticMembers) {
 						if (!PHPFlags.isInternal(flags) && (showNonStrictOptions || isThisCall || !PHPFlags.isPrivate(flags))) {
-							reporter.reportMethod((IMethod) method, getSuffix(), replaceRange);
+							reporter.reportMethod((IMethod) method, suffix, replaceRange);
 						}
 					}
 					if (showStaticMembers) {
 						if ((concreteContext.getPhpVersion().isLessThan(PHPVersion.PHP5)
 								|| showNonStrictOptions || PHPFlags.isStatic(flags)) && !PHPFlags.isInternal(flags)) {
-							reporter.reportMethod((IMethod) method, getSuffix(), replaceRange);
+							reporter.reportMethod((IMethod) method, suffix, replaceRange);
 						}
 					}
 				} catch (ModelException e) {
@@ -74,7 +76,15 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		}
 	}
 	
-	public String getSuffix() {
-		return "()";
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		String nextWord = null;
+		try {
+			nextWord = abstractContext.getNextWord();
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

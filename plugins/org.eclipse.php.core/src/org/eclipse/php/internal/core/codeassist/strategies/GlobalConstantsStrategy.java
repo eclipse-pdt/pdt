@@ -11,8 +11,9 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -27,45 +28,36 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * @author michael
  */
 public class GlobalConstantsStrategy extends GlobalElementStrategy {
-	
+
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
 		if (!showConstantAssist()) {
 			return;
 		}
-		
+
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		int mask = 0;
+		int mask = CodeAssistUtils.EXCLUDE_VARIABLES;
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
 		if (constantsCaseSensitive()) {
 			mask |= CodeAssistUtils.CASE_SENSITIVE;
 		}
-		
+
 		String prefix = abstractContext.getPrefix();
 		SourceRange replaceRange = getReplacementRange(abstractContext);
-		
+
 		IModelElement[] constants = CodeAssistUtils.getGlobalFields(abstractContext.getSourceModule(), prefix, mask);
 		for (IModelElement constant : constants) {
-			IField field = (IField) constant;
-			try {
-				if ((field.getFlags() & Modifiers.AccConstant) != 0) {
-					reporter.reportField(field, "", replaceRange, false);
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
-			}
+			reporter.reportField((IField) constant, "", replaceRange, false);
 		}
 	}
 
 	protected boolean constantsCaseSensitive() {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false, null);
 	}
-	
+
 	protected boolean showConstantAssist() {
 		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true, null);
 	}

@@ -44,10 +44,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		IType[] types = getTypes(abstractContext);
 		IElementFilter elementFilter = getElementFilter();
+		String suffix = getSuffix(abstractContext);
+		String nsSuffix = getNSSuffix(abstractContext);
+		
 		for (IType type : types) {
 			try {
-				if (!PHPFlags.isInternal(type.getFlags()) && (elementFilter == null || !elementFilter.filter(type))) {
-					reporter.reportType(type, getSuffix(), replacementRange);
+				int flags = type.getFlags();
+				if (!PHPFlags.isInternal(flags) && (elementFilter == null || !elementFilter.filter(type))) {
+					reporter.reportType(type, PHPFlags.isNamespace(flags) ? nsSuffix : suffix, replacementRange);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
@@ -124,8 +128,28 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		}
 		return replacementRange;
 	}
+
+	public String getNSSuffix(AbstractCompletionContext abstractContext) {
+		String nextWord = null;
+		try {
+			nextWord = abstractContext.getNextWord();
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		return "\\".equals(nextWord) ? "" : "\\"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
 	
-	public String getSuffix() {
-		return "::"; //$NON-NLS-1$
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		String nextWord = null;
+		try {
+			nextWord = abstractContext.getNextWord();
+		} catch (BadLocationException e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

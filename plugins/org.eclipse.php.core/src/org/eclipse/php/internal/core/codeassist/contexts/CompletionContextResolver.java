@@ -90,13 +90,13 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			new FunctionParameterVariableContext(),
 			new MethodNameContext(),
 			new GlobalStatementContext(),
+			new GlobalMethodStatementContext(),
 			new InstanceOfContext(),
 			new InterfaceExtendsContext(),
 			new InterfaceDeclarationKeywordContext(),
-			new PHPDocTagStartContext(),
 			new UseAliasContext(),
 			new UseNameContext(),
-			new VariableContext(),
+			new NamespaceMemberContext(),
 		}));
 	}
 

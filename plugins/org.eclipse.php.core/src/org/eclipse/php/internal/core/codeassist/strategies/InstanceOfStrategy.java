@@ -28,7 +28,7 @@ public class InstanceOfStrategy extends GlobalTypesStrategy {
 		addSelf(concreteContext, reporter);
 	}
 
-	public String getSuffix() {
+	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}
 }

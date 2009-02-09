@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
@@ -47,6 +48,7 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		boolean showNonStaticMembers = showNonStaticMembers(concreteContext);
 		boolean showNonStrictOptions = showNonStrictOptions();
 		boolean isThisCall = ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context).isThisCall());
+//		boolean isParentCall = ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext)context).isParentCall());
 
 		for (IType type : concreteContext.getLhsTypes()) {
 			IModelElement[] fields = CodeAssistUtils.getTypeFields(type, prefix, mask);
@@ -57,13 +59,13 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 					int flags = field.getFlags();
 					if (showNonStaticMembers && !PHPFlags.isStatic(flags)) {
 						if (PHPFlags.isConstant(flags) || showNonStrictOptions || isThisCall || !PHPFlags.isPrivate(flags)) {
-							reporter.reportField(field, getSuffix(), replaceRange, true);
+							reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
 						}
 					}
 					if (showStaticMembers) {
 						if (PHPFlags.isConstant(flags) || concreteContext.getPhpVersion().isLessThan(PHPVersion.PHP5) 
 								|| showNonStrictOptions || PHPFlags.isStatic(flags)) {
-							reporter.reportField(field, getSuffix(), replaceRange, false);
+							reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
 						}
 					}
 				} catch (ModelException e) {

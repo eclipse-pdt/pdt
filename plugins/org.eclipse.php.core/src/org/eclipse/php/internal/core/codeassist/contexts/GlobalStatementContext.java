@@ -38,7 +38,7 @@ public final class GlobalStatementContext extends StatementContext {
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
-			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags())) {
+			if ((enclosingElement instanceof IMethod) || (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType) enclosingElement).getFlags()))) {
 				return false;
 			}
 		} catch (ModelException e) {

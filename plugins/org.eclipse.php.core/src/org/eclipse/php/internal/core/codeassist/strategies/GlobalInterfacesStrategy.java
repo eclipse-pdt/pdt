@@ -14,6 +14,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
@@ -35,5 +36,9 @@ public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
 				return false;
 			}
 		});
+	}
+	
+	public String getSuffix(AbstractCompletionContext abstractContext) {
+		return ""; //$NON-NLS-1$
 	}
 }

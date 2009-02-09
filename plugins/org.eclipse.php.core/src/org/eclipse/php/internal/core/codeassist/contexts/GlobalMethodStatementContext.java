@@ -10,36 +10,53 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.dltk.core.*;
+
 
 /**
- * This context represents state when staying in a variable completion.
+ * This context represents state when staying in a method top level statement.
  * <br/>Examples:
  * <pre>
- *  1. $|
- *  2. $v|
+ *  1. |
+ *  2. pri|
+ *  3. $v|
  *  etc...
  * </pre>
  * @author michael
  */
-public class VariableContext extends StatementContext {
-
+public final class GlobalMethodStatementContext extends StatementContext {
+	
+	private IMethod enclosingMethod;
+	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-
+		
+		// check whether enclosing element is a method
 		try {
-			String prefix = getPrefix();
-			return prefix.startsWith("$"); //$NON-NLS-1$
-		} catch (BadLocationException e) {
+			IModelElement enclosingElement = sourceModule.getElementAt(offset);
+			while (enclosingElement instanceof IField) {
+				enclosingElement = enclosingElement.getParent();
+			}
+			if (!(enclosingElement instanceof IMethod)) {
+				return false; 
+			}
+			enclosingMethod = (IMethod) enclosingElement;
+		
+		} catch (ModelException e) {
 			if (DLTKCore.DEBUG_COMPLETION) {
 				e.printStackTrace();
 			}
 		}
-		return false;
+		return true;
+	}
+
+	public boolean isExclusive() {
+		return true;
+	}
+	
+	public IMethod getEnclosingMethod() {
+		return enclosingMethod;
 	}
 }

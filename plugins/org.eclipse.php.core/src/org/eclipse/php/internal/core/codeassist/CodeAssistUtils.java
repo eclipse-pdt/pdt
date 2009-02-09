@@ -80,12 +80,12 @@ public class CodeAssistUtils {
 	 * Exclude namespaces when looking for types in {@link #getGlobalTypes(ISourceModule, String, int)} 
 	 */
 	public static final int EXCLUDE_NAMESPACES = 1 << 5;
-	
+
 	/**
 	 * Exclude constants when looking for fields in {@link #getGlobalFields(ISourceModule, String, int)}
 	 */
 	public static final int EXCLUDE_CONSTANTS = 1 << 6;
-	
+
 	/**
 	 * Exclude variables (retreive only constants) when looking for fields in {@link #getGlobalFields(ISourceModule, String, int)}
 	 */
@@ -744,7 +744,7 @@ public class CodeAssistUtils {
 					}
 					types.add(ns);
 				}
-				
+
 				for (IType ns : namespaces) {
 					if (!ns.getElementName().equalsIgnoreCase(nsName)) {
 						continue;
@@ -971,7 +971,7 @@ public class CodeAssistUtils {
 	 * @param elementType Element type from {@link IDLTKSearchConstants}
 	 * @return
 	 */
-	private static IModelElement[] getGlobalElements(final ISourceModule sourceModule, final IDLTKSearchScope scope, String prefix, final int elementType, int mask) {
+	private static IModelElement[] getGlobalElements(final ISourceModule sourceModule, final IDLTKSearchScope scope, String prefix, final int elementType, final int mask) {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
 
@@ -994,7 +994,7 @@ public class CodeAssistUtils {
 				// Build the mixin request key:
 				String[] elementNames;
 				if (elementType == IDLTKSearchConstants.TYPE) {
-					
+
 					List<String> elementNamesList = new LinkedList<String>();
 					if ((mask & EXCLUDE_CLASSES) == 0) {
 						elementNamesList.addAll(Arrays.asList(mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString())));
@@ -1003,7 +1003,7 @@ public class CodeAssistUtils {
 						elementNamesList.addAll(Arrays.asList(mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString())));
 					}
 					elementNames = elementNamesList.toArray(new String[elementNamesList.size()]);
-					
+
 				} else {
 					elementNames = mixinModel.findKeys(new StringBuilder(MixinModel.SEPARATOR).append(prefix).append(WILDCARD).toString());
 				}
@@ -1117,6 +1117,20 @@ public class CodeAssistUtils {
 							if (element instanceof SourceModule) {
 								return;
 							}
+
+							if (element instanceof IField) {
+								try {
+									int flags = ((IField) element).getFlags();
+									if (((mask & EXCLUDE_CONSTANTS) != 0 && PHPFlags.isConstant(flags)) || ((mask & EXCLUDE_VARIABLES) != 0 && !PHPFlags.isConstant(flags))) {
+										return;
+									}
+								} catch (ModelException e) {
+									if (DLTKCore.DEBUG_COMPLETION) {
+										e.printStackTrace();
+									}
+								}
+							}
+
 							IModelElement parent = element.getParent();
 							// Global scope elements in PHP are those, which are not defined in class body,
 							// or it is a variable, and its parent - source module

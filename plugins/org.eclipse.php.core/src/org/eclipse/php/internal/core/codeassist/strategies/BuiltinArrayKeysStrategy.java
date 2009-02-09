@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -44,11 +42,16 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
 		String prefix = arrayContext.getPrefix();
 
+		// report server variables:
 		if (arrayVarName.equals("$_SERVER") || arrayVarName.equals("$HTTP_SERVER_VARS")) { //NON-NLS-1 //NON-NLS-2
 			reportVariables(reporter, arrayContext, SERVER_VARS, prefix);
-		} else if (arrayVarName.equals("$_SESSION") || arrayVarName.equals("$HTTP_SESSION_VARS")) { //NON-NLS-1 //NON-NLS-2
+		}
+		// report session variables:
+		else if (arrayVarName.equals("$_SESSION") || arrayVarName.equals("$HTTP_SESSION_VARS")) { //NON-NLS-1 //NON-NLS-2
 			reportVariables(reporter, arrayContext, SESSION_VARS, prefix);
-		} else if (arrayVarName.equals("$GLOBALS")) { //NON-NLS-1
+		}
+		// report global variables in special globals array:
+		else if (arrayVarName.equals("$GLOBALS")) { //NON-NLS-1
 			int mask = CodeAssistUtils.EXCLUDE_CONSTANTS;
 			if (requestor.isContextInformationMode()) {
 				mask |= CodeAssistUtils.EXACT_NAME;
@@ -57,7 +60,15 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
-				reporter.reportField(field, "", replaceRange, true); //NON-NLS-1
+				try {
+					ISourceRange sourceRange = field.getSourceRange();
+					FakeField fakeField = new FakeField((ModelElement) field.getParent(), field.getElementName().substring(1), sourceRange.getOffset(), sourceRange.getLength());
+					reporter.reportField(fakeField, "", replaceRange, true); //NON-NLS-1
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
+					}
+				}
 			}
 
 			reportVariables(reporter, arrayContext, GlobalVariablesStrategy.PHP_VARIABLES, prefix, true);
