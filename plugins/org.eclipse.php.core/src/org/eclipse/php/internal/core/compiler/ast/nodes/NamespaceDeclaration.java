@@ -56,8 +56,11 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 	public void addStatement(Statement statement) {
 		// If there's no body - create one that will hold the namespace statements
 		getBody().addStatement(statement);
+		
+		getBody().setEnd(statement.sourceEnd());
+		setEnd(statement.sourceEnd());
 	}
-
+	
 	public int getKind() {
 		return ASTNodeKinds.NAMESPACE_DECLARATION;
 	}

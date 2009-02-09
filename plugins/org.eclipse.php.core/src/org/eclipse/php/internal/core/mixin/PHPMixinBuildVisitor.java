@@ -566,6 +566,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(TypeDeclaration decl) throws Exception {
+		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).getName() == NamespaceDeclaration.GLOBAL) {
+			return false;
+		}
+		
 		IType obj = null;
 		if (moduleAvailable) {
 			IModelElement elementFor = findModelElementFor(decl);
@@ -596,6 +600,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration decl) throws Exception {
+		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).getName() == NamespaceDeclaration.GLOBAL) {
+			return false;
+		}
+		
 		scopes.pop();
 
 		endvisitGeneral(decl);

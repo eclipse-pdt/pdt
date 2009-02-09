@@ -311,7 +311,10 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		}
 
 		public boolean visit(TypeDeclaration node) throws Exception {
-			return false;
+			if (!(node instanceof NamespaceDeclaration)) {
+				return false;
+			}
+			return visitGeneral(node);
 		}
 
 		public boolean visit(MethodDeclaration node) throws Exception {
