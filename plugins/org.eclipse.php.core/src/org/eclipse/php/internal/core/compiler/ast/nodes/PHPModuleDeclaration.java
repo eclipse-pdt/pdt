@@ -61,9 +61,7 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 
 						public boolean visit(TypeDeclaration s) throws Exception {
 							parentStack.add(s);
-							if (s != node) {
-								getTypeList().add(s);
-							}
+							getTypeList().add(s);
 							return super.visit(s);
 						}
 						

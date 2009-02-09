@@ -29,6 +29,7 @@ import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
 
 abstract public class AbstractASTParser extends lr_parser {
@@ -39,6 +40,9 @@ abstract public class AbstractASTParser extends lr_parser {
 	
 	/** This is a place holder for statements that were found after unclosed classes */
 	public Statement pendingStatement = null;
+	
+	/** This is a latest non-bracketed namespace declaration */
+	public NamespaceDeclaration currentNamespace = null;
 	
 	/** Whether we've met the unbracketed namespace declaration in this file */
 	public boolean metUnbracketedNSDecl;
@@ -107,17 +111,17 @@ abstract public class AbstractASTParser extends lr_parser {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Statement> getStatements() {
-		return program.getStatements();
-	}
-
 	public void addStatement(Statement s) {
 		int kind = s.getKind();
 		if (kind != ASTNodeKinds.EMPTY_STATEMENT && kind != ASTNodeKinds.NAMESPACE_DECLARATION && metBracketedNSDecl) {
 			reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "No code may exist outside of namespace {}");
 		}
-		getStatements().add(s);
+		
+		if (currentNamespace != null && currentNamespace != s) {
+			currentNamespace.addStatement(s);
+		} else {
+			program.addStatement(s);
+		}
 	}
 
 	public PHPModuleDeclaration getModuleDeclaration() {

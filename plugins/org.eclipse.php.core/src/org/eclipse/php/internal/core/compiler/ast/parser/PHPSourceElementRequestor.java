@@ -48,7 +48,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
-	private NamespaceDeclaration pendingNS;
 	
 	/**
 	 * Deferred elements that are 
@@ -103,15 +102,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) {
 				return true;
-			}
-			
-			if (pendingNS == null && !namespaceDecl.isBracketed()) { // unbracketed syntax
-				pendingNS = namespaceDecl;
-				return true;
-			}
-			
-			if (type == pendingNS) {
-				pendingNS = null;
 			}
 		}
 		
@@ -198,13 +188,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
 			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) {
 				return true;
-			}
-
-			if (!namespaceDecl.isBracketed()) { // unbracketed syntax
-				if (pendingNS != null) {
-					endvisit(pendingNS);
-					pendingNS = null;
-				}
 			}
 		}
 		
@@ -566,11 +549,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				deferred.traverse(this);
 			}
 		}
-
-		if (pendingNS != null) {
-			endvisit(pendingNS);
-		}
-		
 		return super.endvisit(declaration);
 	}
 	

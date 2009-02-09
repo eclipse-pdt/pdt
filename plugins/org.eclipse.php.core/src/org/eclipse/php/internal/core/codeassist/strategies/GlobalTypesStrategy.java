@@ -89,6 +89,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		if (CodeAssistUtils.startsWithIgnoreCase("self", prefix)) {
 			if (!context.getCompletionRequestor().isContextInformationMode() || prefix.length() == 4) { // "self".length()
+				
+				String suffix = getSuffix(context);
+				
 				// get the class data for "self". In case of null, the self function will not be added
 				IType selfClassData = CodeAssistUtils.getSelfClassData(context.getSourceModule(), context.getOffset());
 				if (selfClassData != null) {
@@ -107,7 +110,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 								}
 							};
 							ctorMethod.setParameters(ctor.getParameters());
-							reporter.reportMethod(ctorMethod, "()", replaceRange);
+							reporter.reportMethod(ctorMethod, suffix, replaceRange);
 						} else {
 							reporter.reportMethod(new FakeMethod((ModelElement) selfClassData, "self"), "()", replaceRange);
 						}
