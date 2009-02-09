@@ -24,6 +24,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 /**
 * A PHP language parser for creating abstract syntax trees (ASTs).<p>
@@ -77,10 +78,15 @@ public class ASTParser {
 			return null;
 		}
 	}
-
+	
 	/**
 	* Factory methods for ASTParser
 	*/
+	public static ASTParser newParser(ISourceModule sourceModule) {
+		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
+		return newParser(phpVersion, sourceModule);
+	}
+
 	public static ASTParser newParser(PHPVersion version, ISourceModule sourceModule) {
 		if (sourceModule == null) {
 			throw new IllegalStateException("ASTParser - Can't parser with null ISourceModule");  
