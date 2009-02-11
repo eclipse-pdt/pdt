@@ -15,9 +15,9 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -70,9 +70,10 @@ public class NamespaceMemberContext extends StatementContext {
 		
 		int endNamespace = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart - 1);
 		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
-		String nsName = statementText.subSequence(nsNameStart, endNamespace).toString();
+		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
 		
-		namespaces = CodeAssistUtils.getGlobalTypes(sourceModule, nsName, CodeAssistUtils.EXACT_NAME | CodeAssistUtils.EXCLUDE_CLASSES | CodeAssistUtils.EXCLUDE_INTERFACES);
+		nsName = PHPTypeInferenceUtils.extractNamespaceName(nsName, sourceModule, offset);
+		namespaces = PHPTypeInferenceUtils.getNamespaces(nsName, sourceModule);
 		if (namespaces == null || namespaces.length == 0) {
 			return false;
 		}

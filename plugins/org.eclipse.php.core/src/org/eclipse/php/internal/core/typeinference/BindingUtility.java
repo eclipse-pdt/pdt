@@ -229,7 +229,7 @@ public class BindingUtility {
 			evaluatedTypesCache.put(sourceRange, getType(sourceRange, contextFinder.getContext(), contextFinder.getNode()));
 		}
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
-		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext());
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext(), sourceRange.getOffset());
 	}
 
 	private class SourceRange {

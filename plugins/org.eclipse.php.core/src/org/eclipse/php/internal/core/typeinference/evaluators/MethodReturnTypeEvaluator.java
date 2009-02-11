@@ -67,7 +67,7 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 				try {
 					IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getMethod(type.getElementName(), methodName);
 					if (elements.length == 0) {
-						elements = PHPModelUtils.getClassMethod(type, methodName, null);
+						elements = PHPModelUtils.getTypeHierarchyMethod(type, methodName, null);
 					}
 					for (IModelElement e : elements) {
 						methods.add((IMethod) e);

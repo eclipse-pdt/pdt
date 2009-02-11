@@ -13,7 +13,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
@@ -45,7 +45,7 @@ public class MethodNameContext extends FunctionDeclarationContext {
 			}
 		}
 		
-		declaringClass = CodeAssistUtils.getContainerClassData(getSourceModule(), statementText.getOriginalOffset(functionEnd));
+		declaringClass = PHPModelUtils.getCurrentType(getSourceModule(), statementText.getOriginalOffset(functionEnd));
 		if (declaringClass == null) {
 			return false;
 		}

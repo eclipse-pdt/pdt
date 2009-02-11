@@ -62,7 +62,7 @@ public class ModelElementResolver {
 		if (visitor.getNode() != null) {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(new ExpressionTypeGoal(visitor.getContext(), visitor.getNode()));
-			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (BasicContext) visitor.getContext());
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (BasicContext) visitor.getContext(), offset);
 		}
 
 		return modelElements;

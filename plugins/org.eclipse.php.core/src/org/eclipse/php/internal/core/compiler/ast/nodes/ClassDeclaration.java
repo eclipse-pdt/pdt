@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.ListModel;
+
 import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -95,15 +97,23 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	}
 	
 	public ASTListNode getSuperClasses() {
-		ASTListNode listNode = new ASTListNode(sourceStart(), sourceEnd());
+		ASTListNode listNode = new ASTListNode(sourceStart(), getBodyEnd());
+		int start = sourceStart();
 		if (superClass != null) {
 			listNode.addNode(superClass);
+			if (superClass.sourceStart() > start) {
+				start = superClass.sourceStart();
+			}
 		}
 		if (interfaceList != null) {
 			for (TypeReference iface : interfaceList) {
 				listNode.addNode(iface);
+				if (iface.sourceStart() > start) {
+					start = iface.sourceStart();
+				}
 			}
 		}
+		listNode.setStart(start);
 		return listNode;
 	}
 	

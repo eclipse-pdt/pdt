@@ -101,7 +101,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 			for (IType type : types) {
 				try {
-					for (PHPDocField doc : PHPModelUtils.getClassMethodDoc(type, methodName, null)) {
+					for (PHPDocField doc : PHPModelUtils.getTypeHierarchyMethodDoc(type, methodName, null)) {
 						docs.add(doc);
 					}
 				} catch (CoreException e) {

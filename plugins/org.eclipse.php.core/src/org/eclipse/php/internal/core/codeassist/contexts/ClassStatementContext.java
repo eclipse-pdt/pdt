@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 
 /**
@@ -36,7 +37,7 @@ public final class ClassStatementContext extends StatementContext {
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
-			if (enclosingElement instanceof IType) {
+			if (enclosingElement instanceof IType && !PHPFlags.isNamespace(((IType)enclosingElement).getFlags())) {
 				return true;
 			}
 		} catch (ModelException e) {

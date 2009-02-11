@@ -113,7 +113,7 @@ abstract public class AbstractASTParser extends lr_parser {
 
 	public void addStatement(Statement s) {
 		int kind = s.getKind();
-		if (kind != ASTNodeKinds.EMPTY_STATEMENT && kind != ASTNodeKinds.NAMESPACE_DECLARATION && metBracketedNSDecl) {
+		if (kind != ASTNodeKinds.EMPTY_STATEMENT && kind != ASTNodeKinds.DECLARE_STATEMENT && kind != ASTNodeKinds.NAMESPACE_DECLARATION && metBracketedNSDecl) {
 			reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "No code may exist outside of namespace {}");
 		}
 		
@@ -234,7 +234,16 @@ abstract public class AbstractASTParser extends lr_parser {
 		if (declarations.isEmpty()) {
 			if (s.getKind() == ASTNodeKinds.NAMESPACE_DECLARATION) {
 				if (program.getStatements().size() > 0 && !metBracketedNSDecl && !metUnbracketedNSDecl) {
-					reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "Namespace declaration statement has to be the very first statement in the script");
+					boolean justDeclarationNodes = true;
+					for (Object statement : program.getStatements()) {
+						if (((Statement)statement).getKind() != ASTNodeKinds.DECLARE_STATEMENT) {
+							justDeclarationNodes = false;
+							break;
+						}
+					}
+					if (!justDeclarationNodes) {
+						reportError(new ASTError(s.sourceStart(), s.sourceEnd()), "Namespace declaration statement has to be the very first statement in the script");
+					}
 				}
 			}
 			

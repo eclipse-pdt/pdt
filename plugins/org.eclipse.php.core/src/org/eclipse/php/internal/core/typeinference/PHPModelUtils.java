@@ -25,6 +25,7 @@ import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
@@ -33,6 +34,7 @@ import org.eclipse.php.internal.core.mixin.PHPMixinBuildVisitor;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPModelUtils {
 
@@ -70,7 +72,7 @@ public class PHPModelUtils {
 	 * @return method element or <code>null</code> in case it couldn't be found
 	 * @throws CoreException
 	 */
-	public static IMethod[] getClassMethod(IType type, String name, IProgressMonitor monitor) throws CoreException {
+	public static IMethod[] getTypeHierarchyMethod(IType type, String name, IProgressMonitor monitor) throws CoreException {
 		if (name == null) {
 			throw new NullPointerException();
 		}
@@ -96,7 +98,7 @@ public class PHPModelUtils {
 	 * @return method phpdoc element or <code>null</code> in case it couldn't be found
 	 * @throws CoreException
 	 */
-	public static PHPDocField[] getClassMethodDoc(IType type, String name, IProgressMonitor monitor) throws CoreException {
+	public static PHPDocField[] getTypeHierarchyMethodDoc(IType type, String name, IProgressMonitor monitor) throws CoreException {
 		if (name == null) {
 			throw new NullPointerException();
 		}
@@ -225,5 +227,125 @@ public class PHPModelUtils {
 			}
 		}
 		return elements;
+	}
+
+	/**
+	 * Returns the current namespace by the specified file and offset
+	 * @param sourceModule The file where current namespace is requested 
+	 * @param offset The offset where current namespace is requested
+	 * @return namespace element, or <code>null</code> if the scope is global under the specified cursor position
+	 */
+	public static IType getCurrentNamespace(ISourceModule sourceModule, int offset) {
+		try {
+			IModelElement currentNs = sourceModule.getElementAt(offset);
+			while (currentNs != null) {
+				if (currentNs instanceof IType && PHPFlags.isNamespace(((IType) currentNs).getFlags())) {
+					return (IType) currentNs;
+				}
+				currentNs = currentNs.getParent();
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the current class or interface by the specified file and offset
+	 * @param sourceModule The file where current namespace is requested 
+	 * @param offset The offset where current namespace is requested
+	 * @return type element, or <code>null</code> if the scope not a class or interface scope
+	 */
+	public static IType getCurrentType(ISourceModule sourceModule, int offset) {
+		try {
+			IModelElement currentType = sourceModule.getElementAt(offset);
+			while (currentType != null) {
+				if (currentType instanceof IType) {
+					if (!PHPFlags.isNamespace(((IType) currentType).getFlags())) {
+						return (IType) currentType;
+					}
+					break;
+				}
+				currentType = currentType.getParent();
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the current method or function by the specified file and offset
+	 * @param sourceModule The file where current namespace is requested 
+	 * @param offset The offset where current namespace is requested
+	 * @return method element, or <code>null</code> if the scope not a method scope
+	 */
+	public static IMethod getCurrentMethod(ISourceModule sourceModule, int offset) {
+		try {
+			IModelElement currentMethod = sourceModule.getElementAt(offset);
+			while (currentMethod != null) {
+				if (currentMethod instanceof IMethod) {
+					return (IMethod) currentMethod;
+				}
+				if (!(currentMethod instanceof IField)) {
+					break;
+				}
+				currentMethod = currentMethod.getParent();
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the type field element by name
+	 * @param type
+	 * @param elementName
+	 * @return a field or <code>null</code> in case there are no one
+	 * @throws ModelException
+	 */
+	public static IField getTypeField(IType type, String elementName) throws ModelException {
+		IField[] fields = type.getFields();
+		for (IField field : fields) {
+			if (field.getElementName().equalsIgnoreCase(elementName)) {
+				return field;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the type method element by name
+	 * @param type
+	 * @param elementName
+	 * @return a method or <code>null</code> in case there are no one
+	 * @throws ModelException
+	 */
+	public static IMethod getTypeMethod(IType type, String elementName) throws ModelException {
+		IMethod[] methods = type.getMethods();
+		for (IMethod method : methods) {
+			if (method.getElementName().equalsIgnoreCase(elementName)) {
+				return method;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the type inner type element by name
+	 * @param type
+	 * @param elementName
+	 * @return a type or <code>null</code> in case there are no one
+	 * @throws ModelException
+	 */
+	public static IType getTypeType(IType type, String elementName) throws ModelException {
+		IType[] types = type.getTypes();
+		for (IType t : types) {
+			if (t.getElementName().equalsIgnoreCase(elementName)) {
+				return t;
+			}
+		}
+		return null;
 	}
 }

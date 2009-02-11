@@ -12,8 +12,15 @@ package org.eclipse.php.internal.core.typeinference;
 
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
+/**
+ * This context provides argument type information to the context
+ */
 public interface IArgumentsContext {
 
+	/**
+	 * Returns evaluated type of the method argument by its name
+	 * @param name Argument name
+	 * @return
+	 */
 	IEvaluatedType getArgumentType(String name);
-
 }

@@ -10,18 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.evaluation.types.ModelClassType;
 import org.eclipse.dltk.evaluation.types.MultiTypeType;
@@ -31,8 +28,12 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPTypeInferenceUtils {
 
@@ -92,10 +93,17 @@ public class PHPTypeInferenceUtils {
 	/**
 	 * Converts IEvaluatedType to IModelElement, if found. This method filters elements using file network dependencies.
 	 * @param evaluatedType Evaluated type
-	 * @return model elements
+	 * @param context
+	 * @param offset
+	 * @return model elements or <code>null</code> in case no element could be found
 	 */
-	public static IModelElement[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context) {
-		IModelElement[] elements = null;
+	public static IModelElement[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
+		ISourceModule sourceModule = context.getSourceModule();
+		IModelElement[] elements = internalGetModelElements(evaluatedType, context, offset);
+		return PHPModelUtils.filterElements(sourceModule, elements);
+	}
+	
+	private static IModelElement[] internalGetModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		ISourceModule sourceModule = context.getSourceModule();
 
 		if (evaluatedType instanceof ModelClassType) {
@@ -120,20 +128,436 @@ public class PHPTypeInferenceUtils {
 				}
 				return result.toArray(new IModelElement[result.size()]);
 			} else {
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-				elements = PHPMixinModel.getInstance(scriptProject).getType(((PHPClassType) evaluatedType).getTypeName(), scope);
+				try {
+					return getTypes(evaluatedType.getTypeName(), sourceModule, offset);
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
 			}
 		} else if (evaluatedType instanceof AmbiguousType) {
 			List<IModelElement> tmpList = new LinkedList<IModelElement>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
-				IModelElement[] tmpArray = getModelElements(possibleType, context);
+				IModelElement[] tmpArray = internalGetModelElements(possibleType, context, offset);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}
 			}
-			elements = tmpList.toArray(new IModelElement[tmpList.size()]);
+			// the elements are filtered already
+			return tmpList.toArray(new IModelElement[tmpList.size()]);
 		}
-		return PHPModelUtils.filterElements(sourceModule, elements);
+		
+		return null;
+	}
+
+	/**
+	 * This method returns type corresponding to its name and the file where it was referenced.
+	 * The type name may contain also the namespace part, like: A\B\C or \A\B\C
+	 * @param typeName Tye fully qualified type name
+	 * @param sourceModule The file where the element is referenced
+	 * @param offset The offset where the element is referenced
+	 * @return a list of relevant IType elements, or <code>null</code> in case there's no IType found
+	 * @throws ModelException 
+	 */
+	public static IType[] getTypes(String typeName, ISourceModule sourceModule, int offset) throws ModelException {
+		if (typeName == null || typeName.length() == 0) {
+			return null;
+		}
+		String namespace = extractNamespaceName(typeName, sourceModule, offset);
+		typeName = extractElementName(typeName, namespace);
+		if (namespace != null) {
+			if (namespace.length() > 0) {
+				IType namespaceType = getNamespaceType(namespace, typeName, sourceModule);
+				if (namespaceType != null) {
+					return new IType[] { namespaceType };
+				}
+				return null;
+			}
+			// it's a global reference: \A
+		} else {
+			// look for the element in current namespace:
+			IType currentNamespace = getCurrentNamespace(sourceModule, offset);
+			if (currentNamespace != null) {
+				namespace = currentNamespace.getElementName();
+				IType namespaceType = getNamespaceType(namespace, typeName, sourceModule);
+				if (namespaceType != null) {
+					return new IType[] { namespaceType };
+				}
+				return null;
+			}
+		}
+		return getGlobalTypes(typeName, sourceModule);
+	}
+	
+	/**
+	 * This method returns method corresponding to its name and the file where it was referenced.
+	 * The method name may contain also the namespace part, like: A\B\foo() or \A\B\foo()
+	 * @param methodName Tye fully qualified method name
+	 * @param sourceModule The file where the element is referenced
+	 * @param offset The offset where the element is referenced
+	 * @return a list of relevant IMethod elements, or <code>null</code> in case there's no IMethod found
+	 * @throws ModelException 
+	 */
+	public static IMethod[] getMethods(String methodName, ISourceModule sourceModule, int offset) throws ModelException {
+		if (methodName == null || methodName.length() == 0) {
+			return null;
+		}
+		String namespace = extractNamespaceName(methodName, sourceModule, offset);
+		methodName = extractElementName(methodName, namespace);
+		if (namespace != null) {
+			if (namespace.length() > 0) {
+				IMethod namespaceMethod = getNamespaceMethod(namespace, methodName, sourceModule);
+				if (namespaceMethod != null) {
+					return new IMethod[] { namespaceMethod };
+				}
+				return null;
+			}
+			// it's a global reference: \foo()
+		} else {
+			// look for the element in current namespace:
+			IType currentNamespace = getCurrentNamespace(sourceModule, offset);
+			if (currentNamespace != null) {
+				namespace = currentNamespace.getElementName();
+				IMethod namespaceMethod = getNamespaceMethod(namespace, methodName, sourceModule);
+				if (namespaceMethod != null) {
+					return new IMethod[] { namespaceMethod };
+				}
+				// For functions and constants, PHP will fall back to global functions or constants if a namespaced function or constant does not exist:
+				return getGlobalMethods(methodName, sourceModule);
+			}
+		}
+		return getGlobalMethods(methodName, sourceModule);
+	}
+	
+	/**
+	 * This method returns field corresponding to its name and the file where it was referenced.
+	 * The field name may contain also the namespace part, like: A\B\C or \A\B\C
+	 * @param fieldName Tye fully qualified field name
+	 * @param sourceModule The file where the element is referenced
+	 * @param offset The offset where the element is referenced
+	 * @return a list of relevant IField elements, or <code>null</code> in case there's no IField found
+	 * @throws ModelException 
+	 */
+	public static IField[] getFields(String fieldName, ISourceModule sourceModule, int offset) throws ModelException {
+		if (fieldName == null || fieldName.length() == 0) {
+			return null;
+		}
+		if (!fieldName.startsWith("$")) { // variables are not supported by namespaces in PHP 5.3
+			String namespace = extractNamespaceName(fieldName, sourceModule, offset);
+			fieldName = extractElementName(fieldName, namespace);
+			if (namespace != null) {
+				if (namespace.length() > 0) {
+					IField namespaceField = getNamespaceField(namespace, fieldName, sourceModule);
+					if (namespaceField != null) {
+						return new IField[] { namespaceField };
+					}
+					return null;
+				}
+				// it's a global reference: \C
+			} else {
+				// look for the element in current namespace:
+				IType currentNamespace = getCurrentNamespace(sourceModule, offset);
+				if (currentNamespace != null) {
+					namespace = currentNamespace.getElementName();
+					IField namespaceField = getNamespaceField(namespace, fieldName, sourceModule);
+					if (namespaceField != null) {
+						return new IField[] { namespaceField };
+					}
+					// For functions and constants, PHP will fall back to global functions or constants if a namespaced function or constant does not exist:
+					return getGlobalFields(fieldName, sourceModule);
+				}
+			}
+		}
+		return getGlobalFields(fieldName, sourceModule);
+	}
+	
+	/**
+	 * Returns the current namespace by the specified file and offset
+	 * @param sourceModule The file where current namespace is requested 
+	 * @param sourceModule The offset where current namespace is requested
+	 * @return namespace element, or <code>null</code> if the scope is global under the specified cursor position
+	 */
+	public static IType getCurrentNamespace(ISourceModule sourceModule, int offset) {
+		try {
+			IModelElement currentNs = sourceModule.getElementAt(offset);
+			while (currentNs != null) {
+				if (currentNs instanceof IType && PHPFlags.isNamespace(((IType) currentNs).getFlags())) {
+					return (IType) currentNs;
+				}
+				currentNs = currentNs.getParent();
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+	
+	/**
+	 * Extracts the element name from the given fully qualified name
+	 * @param element Element name
+	 * @param namespace Namespace name
+	 * @return element name without the namespace prefix
+	 */
+	public static String extractElementName(String element, String namespace) {
+		if (namespace == null) {
+			return element;
+		}
+		if (namespace.length() == 0) { // global
+			element = element.substring(1);
+		} else {
+			if (element.charAt(0) == '\\') {
+				element = element.substring(1);
+			}
+			element = element.substring(namespace.length()).trim(); // there may be spaces around '\' in namespace name
+			if (element.charAt(0) == '\\') {
+				element = element.substring(1);
+			}
+		}
+		return element;
+	}
+
+	/**
+	 * Extracts the namespace name from the specified element name and resolves it using USE statements that present in the file.
+	 * @param elementName The name of the element, like: \A\B or A\B\C.
+	 * @param sourceModule Source module where the element is referenced
+	 * @param offset The offset where element is referenced
+	 * @return namespace name or <code>null</code> in case there's no namespace prefix in the element. In case of global namespace
+	 * 		this method returns an empty string: <code>""</code>
+	 */
+	public static String extractNamespaceName(String elementName, ISourceModule sourceModule, final int offset) {
+
+		boolean isGlobal = false;
+		if (elementName.charAt(0) == '\\') {
+			isGlobal = true;
+			elementName = elementName.substring(1);
+		}
+
+		int nsIndex = elementName.lastIndexOf('\\');
+		if (nsIndex != -1) {
+
+			String namespace = elementName.substring(0, nsIndex);
+			
+			if (!isGlobal && namespace.indexOf('\\') == -1) {
+				// it can be an alias - try to find relevant USE statement
+				final String namespaceAlias = namespace;
+				final String namespaceSource[] = new String[1];
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+				try {
+					moduleDeclaration.traverse(new ASTVisitor() {
+						boolean found;
+
+						public boolean visit(Statement s) throws Exception {
+							if (s instanceof UseStatement) {
+								UseStatement useStatement = (UseStatement) s;
+								for (UsePart usePart : useStatement.getParts()) {
+									String alias = usePart.alias;
+									if (alias == null) {
+										// In case there's no alias - the alias is the last segment of the namespace name:
+										int i = usePart.namespace.lastIndexOf('\\');
+										if (i != -1) {
+											alias = usePart.namespace.substring(i + 1);
+										} else {
+											// The use statement with non-compound name has no effect, but it may happen:
+											alias = usePart.namespace;
+										}
+									}
+									if (namespaceAlias.equalsIgnoreCase(alias)) {
+										namespaceSource[0] = usePart.namespace;
+										found = true;
+										break;
+									}
+								}
+							}
+							return visitGeneral(s);
+						}
+
+						public boolean visitGeneral(ASTNode node) throws Exception {
+							if (found || node.sourceStart() > offset) {
+								return false;
+							}
+							return super.visitGeneral(node);
+						}
+					});
+				} catch (Exception e) {
+					Logger.logException(e);
+					return null;
+				}
+				if (namespaceSource[0] != null) {
+					namespace = namespaceSource[0];
+				}
+			}
+			return namespace;
+		}
+		
+		return null;
+	}
+
+	/**
+	 * This method returns type declared unders specified namespace
+	 * @param namespace Namespace name
+	 * @param typeName Type name
+	 * @param sourceModule Source module where the type is referenced
+	 * @return type declarated in the specified namespace, or null if there is none
+	 * @throws ModelException 
+	 */
+	public static IType getNamespaceType(String namespace, String typeName, ISourceModule sourceModule) throws ModelException {
+		for (IType ns : getNamespaces(namespace, sourceModule)) {
+			IType type = PHPModelUtils.getTypeType(ns, typeName);
+			if (type != null) {
+				return type;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method returns method declared unders specified namespace
+	 * @param namespace Namespace name
+	 * @param methodName Method name
+	 * @param sourceModule Source module where the method is referenced
+	 * @return method declarated in the specified namespace, or null if there is none
+	 * @throws ModelException 
+	 */
+	public static IMethod getNamespaceMethod(String namespace, String methodName, ISourceModule sourceModule) throws ModelException {
+		for (IType ns : getNamespaces(namespace, sourceModule)) {
+			IMethod method = PHPModelUtils.getTypeMethod(ns, methodName);
+			if (method != null) {
+				return method;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method returns field declared unders specified namespace
+	 * @param namespace Namespace name
+	 * @param fieldName Field name
+	 * @param sourceModule Source module where the field is referenced
+	 * @return field declarated in the specified namespace, or null if there is none
+	 * @throws ModelException 
+	 */
+	public static IField getNamespaceField(String namespace, String fieldName, ISourceModule sourceModule) throws ModelException {
+		for (IType ns : getNamespaces(namespace, sourceModule)) {
+			IField field = PHPModelUtils.getTypeField(ns, fieldName);
+			if (field != null) {
+				return field;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This method returns namespace elements (IType) by specified name. The name must be fully qualified name (not alias)
+	 * @param namespace Namespace name
+	 * @param sourceModule The file where the namespace is referenced from
+	 * @return namespace element array
+	 */
+	public static IType[] getNamespaces(String namespace, ISourceModule sourceModule) {
+		final List<IType> namespaces = new LinkedList<IType>();
+		SearchEngine searchEngine = new SearchEngine();
+		SearchPattern pattern = SearchPattern.createPattern(namespace, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+		try {
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					IType element = (IType) match.getElement();
+					if (PHPFlags.isNamespace(element.getFlags())) {
+						namespaces.add(element);
+					}
+				}
+			}, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return (IType[]) namespaces.toArray(new IType[namespaces.size()]);
+	}
+
+	/**
+	 * This method returns type elements (IType) by the specified name. Namespaces are excluded.
+	 * The element must be declared in a global scope.
+	 * 
+	 * @param typeName Type name
+	 * @param sourceModule The file where the type is referenced from
+	 * @return type element array
+	 */
+	public static IType[] getGlobalTypes(String typeName, ISourceModule sourceModule) {
+		final List<IType> types = new LinkedList<IType>();
+		SearchEngine searchEngine = new SearchEngine();
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+		SearchPattern pattern = SearchPattern.createPattern(typeName, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+		try {
+			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					IType element = (IType) match.getElement();
+					if (!PHPFlags.isNamespace(element.getFlags())) {
+						types.add(element);
+					}
+				}
+			}, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+			return null;
+		}
+		return (IType[]) types.toArray(new IType[types.size()]);
+	}
+	
+
+	/**
+	 * This method returns method elements (IMethod) by specified name.
+	 * The element must be declared in a global scope.
+	 * 
+	 * @param methodName Method name
+	 * @param sourceModule The file where the method is referenced from
+	 * @return method element array
+	 */
+	public static IMethod[] getGlobalMethods(String methodName, ISourceModule sourceModule) {
+		final List<IMethod> methods = new LinkedList<IMethod>();
+		SearchEngine searchEngine = new SearchEngine();
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+		SearchPattern pattern = SearchPattern.createPattern(methodName, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+		try {
+			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					IMethod element = (IMethod) match.getElement();
+					if (!PHPFlags.isNamespace(element.getFlags())) {
+						methods.add(element);
+					}
+				}
+			}, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+			return null;
+		}
+		return (IMethod[]) methods.toArray(new IMethod[methods.size()]);
+	}
+	
+
+	/**
+	 * This method returns field elements (IField) by specified name.
+	 * The element must be declared in a global scope.
+	 * 
+	 * @param fieldName Field name
+	 * @param sourceModule The file where the field is referenced from
+	 * @return field element array
+	 */
+	public static IField[] getGlobalFields(String fieldName, ISourceModule sourceModule) {
+		final List<IField> fields = new LinkedList<IField>();
+		SearchEngine searchEngine = new SearchEngine();
+		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
+		SearchPattern pattern = SearchPattern.createPattern(fieldName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, PHPLanguageToolkit.getDefault());
+		try {
+			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					IField element = (IField) match.getElement();
+					fields.add(element);
+				}
+			}, null);
+		} catch (CoreException e) {
+			Logger.logException(e);
+			return null;
+		}
+		return (IField[]) fields.toArray(new IField[fields.size()]);
 	}
 }
