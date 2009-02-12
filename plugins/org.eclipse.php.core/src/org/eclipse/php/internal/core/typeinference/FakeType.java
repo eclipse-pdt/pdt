@@ -18,6 +18,10 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.dltk.internal.core.SourceType;
 
+/**
+ * This is a fake model element that can live independently from the DLTK model manager. 
+ * @author michael
+ */
 public class FakeType extends SourceType {
 
 	private int flags = Modifiers.AccPublic;

@@ -17,6 +17,10 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
+/**
+ * This is a factory for PHP simple types 
+ * @author michael
+ */
 public class PHPSimpleTypes {
 
 	private static final Map<String, IEvaluatedType> SIMPLE_TYPES;
@@ -46,6 +50,11 @@ public class PHPSimpleTypes {
 		SIMPLE_TYPES.put("null", NULL);
 	}
 
+	/**
+	 * Returns {@link IEvaluatedType} for the PHP simple type name
+	 * @param type
+	 * @return
+	 */
 	public static IEvaluatedType fromString(String type) {
 		return SIMPLE_TYPES.get(type.toLowerCase());
 	}

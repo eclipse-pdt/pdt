@@ -21,9 +21,9 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
 

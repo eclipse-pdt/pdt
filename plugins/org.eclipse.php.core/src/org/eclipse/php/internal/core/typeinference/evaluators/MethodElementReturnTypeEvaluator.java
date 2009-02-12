@@ -32,6 +32,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {

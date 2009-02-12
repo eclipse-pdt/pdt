@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPTypeInferenceUtils {
-
+	
 	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluatedTypes) {
 		MultiTypeType multiTypeType = new MultiTypeType();
 		for (IEvaluatedType type : evaluatedTypes) {

@@ -17,13 +17,13 @@ import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.ISourceModuleContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 public class MethodCallTypeEvaluator extends GoalEvaluator {
@@ -70,14 +70,14 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		// we've evaluated receiver, lets evaluate the method return type now (using PHP Doc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_METHOD_PHPDOC;
-			return new PHPDocMethodReturnTypeGoal(new InstanceContext((ISourceModuleContext) goal.getContext(), receiverType), expression.getName());
+			return new PHPDocMethodReturnTypeGoal(new TypeContext((ISourceModuleContext) goal.getContext(), receiverType), expression.getName());
 		}
 		if (state == STATE_WAITING_METHOD_PHPDOC) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 			}
 			state = STATE_WAITING_METHOD;
-			return new MethodReturnTypeGoal(new InstanceContext((ISourceModuleContext) goal.getContext(), receiverType), expression.getName(), new IEvaluatedType[0] /* arguments are not interesting us */);
+			return new MethodReturnTypeGoal(new TypeContext((ISourceModuleContext) goal.getContext(), receiverType), expression.getName(), new IEvaluatedType[0] /* arguments are not interesting us */);
 		}
 		if (state == STATE_WAITING_METHOD) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {

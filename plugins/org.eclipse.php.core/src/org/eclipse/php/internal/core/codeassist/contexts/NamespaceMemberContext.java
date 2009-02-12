@@ -74,10 +74,6 @@ public class NamespaceMemberContext extends StatementContext {
 		
 		nsName = PHPTypeInferenceUtils.extractNamespaceName(nsName, sourceModule, offset);
 		namespaces = PHPTypeInferenceUtils.getNamespaces(nsName, sourceModule);
-		if (namespaces == null || namespaces.length == 0) {
-			return false;
-		}
-
 		return true;
 	}
 	

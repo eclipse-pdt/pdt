@@ -10,14 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.goals.phpdoc;
 
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 
 public class PHPDocClassVariableGoal extends AbstractTypeGoal {
 
 	private String variableName;
 
-	public PHPDocClassVariableGoal(InstanceContext context, String variableName) {
+	public PHPDocClassVariableGoal(TypeContext context, String variableName) {
 		super(context);
 		this.variableName = variableName;
 	}

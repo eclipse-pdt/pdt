@@ -49,6 +49,10 @@ public class NamespaceDeclaration extends TypeDeclaration implements IPHPDocAwar
 		return braketed;
 	}
 	
+	public boolean isGlobal() {
+		return getName() == GLOBAL;
+	}
+	
 	public PHPDocBlock getPHPDoc() {
 		return phpDoc;
 	}

@@ -27,8 +27,10 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.context.INamespaceContext;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class TypeReferenceEvaluator extends GoalEvaluator {
 
@@ -41,7 +43,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] init() {
-		IContext context = goal.getContext();
+		final IContext context = goal.getContext();
 		String className = typeReference.getName();
 
 		if ("self".equals(className)) { //$NON-NLS-1$
@@ -49,12 +51,12 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
 				if (instanceType instanceof PHPClassType) {
-					result = new PHPClassType(instanceType.getTypeName());
+					result = instanceType;
 				}
 			}
 		} else if ("parent".equals(className)) { //$NON-NLS-1$
 			if (context instanceof MethodContext) {
-				MethodContext methodContext = (MethodContext) context;
+				final MethodContext methodContext = (MethodContext) context;
 				ModuleDeclaration rootNode = methodContext.getRootNode();
 				final MethodDeclaration methodDecl = methodContext.getMethodNode();
 				
@@ -69,7 +71,17 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 							if (s == methodDecl && currentType instanceof ClassDeclaration) {
 								ClassDeclaration classDecl = (ClassDeclaration) currentType;
 								for (String superClass : classDecl.getSuperClassNames()) {
-									types.add(new PHPClassType(superClass));
+									
+									String parentNamespace = null; 
+									if (context instanceof INamespaceContext) {
+										parentNamespace = ((INamespaceContext) context).getNamespace();
+									}
+									
+									if (superClass.indexOf(NamespaceReference.NAMESPACE_SEPARATOR) != -1 || parentNamespace == null) {
+										types.add(new PHPClassType(superClass));
+									} else if (parentNamespace != null) {
+										types.add(new PHPClassType(parentNamespace, superClass));
+									}
 								}
 								found = true;
 							}
@@ -103,7 +115,15 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				}
 			}
 		} else {
-			result = new PHPClassType(className);
+			String parentNamespace = null;
+			if (context instanceof INamespaceContext) {
+				parentNamespace = ((INamespaceContext) context).getNamespace();
+			}
+			if (parentNamespace != null) {
+				result = new PHPClassType(parentNamespace, className);
+			} else {
+				result = new PHPClassType(className);
+			}
 		}
 
 		return IGoal.NO_GOALS;

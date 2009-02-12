@@ -16,13 +16,13 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.ISourceModuleContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FieldAccess;
 import org.eclipse.php.internal.core.compiler.ast.nodes.StaticFieldAccess;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
@@ -93,7 +93,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 		// we've evaluated receiver, lets evaluate the method return type now (using PHPDoc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_FIELD_PHPDOC;
-			return new IGoal[] { new PHPDocClassVariableGoal(new InstanceContext((ISourceModuleContext) goal.getContext(), receiverType), variableName) };
+			return new IGoal[] { new PHPDocClassVariableGoal(new TypeContext((ISourceModuleContext) goal.getContext(), receiverType), variableName) };
 		}
 
 		if (state == STATE_WAITING_FIELD_PHPDOC) {
@@ -101,7 +101,7 @@ public class FieldAccessEvaluator extends GoalEvaluator {
 				result = previousResult;
 			}
 			state = STATE_WAITING_FIELD;
-			return new IGoal[] { new ClassVariableDeclarationGoal(new InstanceContext((ISourceModuleContext) goal.getContext(), receiverType), variableName) };
+			return new IGoal[] { new ClassVariableDeclarationGoal(new TypeContext((ISourceModuleContext) goal.getContext(), receiverType), variableName) };
 		}
 
 		if (state == STATE_WAITING_FIELD) {

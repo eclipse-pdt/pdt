@@ -26,7 +26,6 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.evaluation.types.SimpleType;
-import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -34,11 +33,11 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InstanceOfExpression;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
@@ -83,7 +82,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
 				LinkedList<ASTNode> declarations = varDecSearcher.getDeclarations();
-				if (varDecSearcher.needsMergingWithGlobalScope() || (declarations.isEmpty() && context.getClass() == BasicContext.class)) {
+				if (varDecSearcher.needsMergingWithGlobalScope() || (declarations.isEmpty() && context.getClass() == FileContext.class)) {
 					// collect all global variables, and merge results with existing declarations
 					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
 				}

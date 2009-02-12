@@ -83,7 +83,7 @@ public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 			Scalar scalar = (Scalar) expression;
 			return new ScalarEvaluator(exprGoal, scalar);
 		}
-		if (expressionClass == TypeReference.class) {
+		if (expressionClass == TypeReference.class || expressionClass == FullyQualifiedReference.class) {
 			TypeReference type = (TypeReference) expression;
 			return new TypeReferenceEvaluator(exprGoal, type);
 		}

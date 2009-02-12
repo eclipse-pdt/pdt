@@ -100,7 +100,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
-			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) {
+			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
 		}
@@ -186,7 +186,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
-			if (namespaceDecl.getName() == NamespaceDeclaration.GLOBAL) {
+			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
 		}

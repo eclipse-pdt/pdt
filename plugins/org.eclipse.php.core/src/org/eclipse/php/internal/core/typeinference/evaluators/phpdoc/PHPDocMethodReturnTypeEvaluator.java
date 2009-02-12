@@ -27,7 +27,6 @@ import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -39,6 +38,7 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 /**
@@ -68,7 +68,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 		IContext context = goal.getContext();
 		String methodName = typedGoal.getMethodName();
 
-		InstanceContext typedGontext = (InstanceContext) context;
+		TypeContext typedGontext = (TypeContext) context;
 		IEvaluatedType instanceType = typedGontext.getInstanceType();
 
 		Set<PHPDocField> docs = new HashSet<PHPDocField>();

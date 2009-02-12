@@ -17,13 +17,13 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
@@ -38,8 +38,8 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		return (MethodReturnTypeGoal) this.getGoal();
 	}
 
-	private InstanceContext getTypedContext() {
-		return (InstanceContext) this.getGoal().getContext();
+	private TypeContext getTypedContext() {
+		return (TypeContext) this.getGoal().getContext();
 	}
 
 	public Object produceResult() {
@@ -48,7 +48,7 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 
 	public IGoal[] init() {
 		MethodReturnTypeGoal typedGoal = getTypedGoal();
-		InstanceContext typedContext = getTypedContext();
+		TypeContext typedContext = getTypedContext();
 
 		final Set<IMethod> methods = new HashSet<IMethod>();
 

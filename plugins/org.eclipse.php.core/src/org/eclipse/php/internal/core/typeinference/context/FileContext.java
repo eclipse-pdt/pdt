@@ -1,0 +1,69 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.php.internal.core.typeinference.context;
+
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.ti.BasicContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+
+/**
+ * This is a context for PHP file (outside of classes or functions) 
+ * @author michael
+ */
+public class FileContext extends BasicContext implements INamespaceContext {
+	
+	private String namespaceName;
+	
+	/**
+	 * Creates file context where there's no declaring namespace
+	 * @param sourceModule
+	 * @param rootNode
+	 */
+	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode) {
+		super(sourceModule, rootNode);
+	}
+	
+	/**
+	 * Creates a file context for the specific offset
+	 * @param sourceModule
+	 * @param rootNode
+	 * @param offset
+	 */
+	public FileContext(ISourceModule sourceModule, ModuleDeclaration rootNode, int offset) {
+		super(sourceModule, rootNode);
+		IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+		if (currentNamespace != null) {
+			this.namespaceName = currentNamespace.getElementName();
+		}
+	}
+
+	public FileContext(ISourceModuleContext parent) {
+		super(parent);
+		if (parent instanceof INamespaceContext) {
+			namespaceName = ((INamespaceContext)parent).getNamespace();
+		}
+	}
+
+	public String getNamespace() {
+		return namespaceName;
+	}
+
+	/**
+	 * Sets the current namespace name
+	 * @param namespaceName
+	 */
+	public void setNamespace(String namespaceName) {
+		this.namespaceName = namespaceName;
+	}
+}

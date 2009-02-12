@@ -17,6 +17,10 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.internal.core.SourceRange;
 
+/**
+ * This is a fake model element that can live independently from the DLTK model manager. 
+ * @author michael
+ */
 public class FakeField extends SourceField {
 	private int offset;
 	private int length;

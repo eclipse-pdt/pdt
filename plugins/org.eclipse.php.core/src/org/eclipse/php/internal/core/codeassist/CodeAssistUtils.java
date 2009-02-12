@@ -24,20 +24,22 @@ import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.core.util.HandleFactory;
-import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.mixin.PHPMixinParser;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.context.FileContext;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
@@ -100,7 +102,6 @@ public class CodeAssistUtils {
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
-	private static final String NS_SEPARATOR = "\\"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern.compile("\\$GLOBALS[\\s]*\\[[\\s]*[\\'\\\"][\\w]+[\\'\\\"][\\s]*\\]"); //$NON-NLS-1$
 
@@ -321,6 +322,11 @@ public class CodeAssistUtils {
 				PHPClassType classType = new PHPClassType(type.getElementName());
 				IField[] fields = getTypeFields(type, propertyName, CASE_SENSITIVE | EXCLUDE_CONSTANTS);
 
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(type.getSourceModule(), null);
+				FileContext fileContext = new FileContext(type.getSourceModule(), moduleDeclaration, offset);
+				TypeContext typeContext = new TypeContext(fileContext, classType);
+				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
+				
 				Set<String> processedFields = new HashSet<String>();
 				for (IField field : fields) {
 
@@ -330,23 +336,18 @@ public class CodeAssistUtils {
 					}
 					processedFields.add(variableName);
 
-					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(field.getSourceModule(), null);
-					BasicContext sourceModuleContext = new BasicContext(field.getSourceModule(), moduleDeclaration);
-					InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
-					PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-
-					PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(instanceContext, variableName);
+					PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(typeContext, variableName);
 					IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
-					IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, offset);
+					IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 					if (modelElements != null) {
 						return modelElementsToTypes(modelElements);
 					}
 
-					ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(sourceModuleContext, types, variableName);
+					ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(fileContext, types, variableName);
 					evaluatedType = typeInferencer.evaluateType(goal);
 
-					modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, offset);
+					modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 					if (modelElements != null) {
 						return modelElementsToTypes(modelElements);
 					}
@@ -429,24 +430,21 @@ public class CodeAssistUtils {
 	public static IType[] getFunctionReturnType(IMethod method, int mask, int offset) {
 		PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 
-		IEvaluatedType classType = null;
-		if (method.getDeclaringType() != null) {
-			classType = new PHPClassType(method.getDeclaringType().getElementName());
-		}
 		org.eclipse.dltk.core.ISourceModule sourceModule = method.getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-		BasicContext sourceModuleContext = new BasicContext(sourceModule, moduleDeclaration);
+		FileContext fileContext = new FileContext(sourceModule, moduleDeclaration, offset);
 
-		InstanceContext instanceContext = new InstanceContext(sourceModuleContext, classType);
+		IType currentType = PHPModelUtils.getCurrentType(sourceModule, offset);
+		TypeContext instanceContext = new TypeContext(fileContext, currentType == null ? null : new PHPClassType(currentType.getElementName()));
+		
 		IEvaluatedType evaluatedType;
 		IModelElement[] modelElements;
-
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
 			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
-			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, offset);
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 			if (modelElements != null) {
 				return modelElementsToTypes(modelElements);
 			}
@@ -454,7 +452,7 @@ public class CodeAssistUtils {
 
 		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(instanceContext, method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
-		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, sourceModuleContext, offset);
+		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 		if (modelElements != null) {
 			return modelElementsToTypes(modelElements);
 		}
@@ -592,8 +590,10 @@ public class CodeAssistUtils {
 	 * Getting an instance and finding its type.
 	 */
 	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset) {
+		
+		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
 
-		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, propertyEndPosition, true);
+		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
 			if (className.equals(SELF)) { //$NON-NLS-1$
@@ -610,9 +610,13 @@ public class CodeAssistUtils {
 
 			if (className.length() > 0) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-				BasicContext context = new BasicContext(sourceModule, moduleDeclaration);
+				FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
 				IEvaluatedType type = new PHPClassType(className);
-				return modelElementsToTypes(PHPTypeInferenceUtils.getModelElements(type, context, offset));
+				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
+				if (modelElements != null) {
+					return modelElementsToTypes(modelElements);
+				}
+				return EMPTY_TYPES;
 			}
 		}
 		//check for $GLOBALS['myVar'] scenario
@@ -635,7 +639,7 @@ public class CodeAssistUtils {
 		// if its function call calc the return type.
 		if (statementText.charAt(propertyEndPosition - 1) == ')') {
 			int functionNameEnd = getFunctionNameEndOffset(statementText, propertyEndPosition - 1);
-			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, functionNameEnd, false);
+			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, functionNameEnd, false);
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			IType classData = PHPModelUtils.getCurrentType(sourceModule, offset);
@@ -691,49 +695,6 @@ public class CodeAssistUtils {
 	 */
 	public static IType[] getGlobalTypes(ISourceModule sourceModule, String prefix, int mask) {
 
-		if ((mask & EXCLUDE_CLASSES) == 0 || (mask & EXCLUDE_INTERFACES) == 0) {
-			// Check whether the type name has a namespace prefix:
-			int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
-			if (nsIdx != -1) {
-				String nsName = prefix.substring(0, nsIdx);
-				prefix = prefix.substring(nsIdx + 1);
-
-				IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXCLUDE_CLASSES | EXCLUDE_INTERFACES);
-				List<IType> types = new LinkedList<IType>();
-
-				for (IType ns : namespaces) {
-					if (prefix.length() == 0 && ns.getElementName().equalsIgnoreCase(nsName)) {
-						continue;
-					}
-					types.add(ns);
-				}
-
-				for (IType ns : namespaces) {
-					if (!ns.getElementName().equalsIgnoreCase(nsName)) {
-						continue;
-					}
-					try {
-						for (IType t : ns.getTypes()) {
-							String typeName = t.getElementName();
-							if ((mask & EXACT_NAME) != 0) {
-								if (typeName.equalsIgnoreCase(prefix)) {
-									types.add(t);
-									break;
-								}
-							} else if (startsWithIgnoreCase(typeName, prefix)) {
-								types.add(t);
-							}
-						}
-					} catch (ModelException e) {
-						if (DLTKCore.DEBUG_COMPLETION) {
-							e.printStackTrace();
-						}
-					}
-				}
-				return types.toArray(new IType[types.size()]);
-			}
-		}
-
 		IModelElement[] elements = getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.TYPE, mask);
 		List<IType> filteredElements = new LinkedList<IType>();
 		for (IModelElement c : elements) {
@@ -768,19 +729,6 @@ public class CodeAssistUtils {
 	 * @param mask
 	 */
 	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule, String prefix, int mask) {
-		// Check whether the method has a namespace prefix:
-		int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
-		if (nsIdx != -1) {
-			String nsName = prefix.substring(0, nsIdx);
-			prefix = prefix.substring(nsIdx + 1);
-
-			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | EXCLUDE_CLASSES | EXCLUDE_INTERFACES);
-			List<IModelElement> methods = new LinkedList<IModelElement>();
-			for (IType ns : namespaces) {
-				methods.addAll(Arrays.asList(getTypeMethods(ns, prefix, mask)));
-			}
-			return methods.toArray(new IModelElement[methods.size()]);
-		}
 		return getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.METHOD, mask);
 	}
 
@@ -793,19 +741,6 @@ public class CodeAssistUtils {
 	 * @param mask
 	 */
 	public static IModelElement[] getGlobalFields(ISourceModule sourceModule, String prefix, int mask) {
-		// Check whether the field has a namespace prefix:
-		int nsIdx = prefix.lastIndexOf(NS_SEPARATOR);
-		if (nsIdx != -1) {
-			String nsName = prefix.substring(0, nsIdx);
-			prefix = prefix.substring(nsIdx + 1);
-
-			IType[] namespaces = getGlobalTypes(sourceModule, nsName, EXACT_NAME | EXCLUDE_CLASSES | EXCLUDE_INTERFACES);
-			List<IModelElement> fields = new LinkedList<IModelElement>();
-			for (IType ns : namespaces) {
-				fields.addAll(Arrays.asList(getTypeFields(ns, prefix, mask)));
-			}
-			return fields.toArray(new IModelElement[fields.size()]);
-		}
 		return getGlobalElements(sourceModule, prefix, IDLTKSearchConstants.FIELD, mask);
 	}
 

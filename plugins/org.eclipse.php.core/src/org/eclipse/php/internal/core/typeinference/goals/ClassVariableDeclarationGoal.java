@@ -12,16 +12,16 @@ package org.eclipse.php.internal.core.typeinference.goals;
 
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 import org.eclipse.dltk.ti.goals.IGoal;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 
 public class ClassVariableDeclarationGoal extends AbstractTypeGoal implements IGoal {
 
 	private IType[] types;
 	private String variableName;
 
-	public ClassVariableDeclarationGoal(InstanceContext context, String variableName) {
+	public ClassVariableDeclarationGoal(TypeContext context, String variableName) {
 		super(context);
 		this.variableName = variableName;
 	}

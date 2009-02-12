@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -23,19 +21,13 @@ import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.evaluation.types.UnknownType;
-import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.ISourceModuleContext;
-import org.eclipse.dltk.ti.InstanceContext;
-import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 
 public class ASTUtils {
 	
@@ -207,15 +199,9 @@ public class ASTUtils {
 	 */
 	public static IContext findContext(final ISourceModule sourceModule, final ModuleDeclaration unit, final ASTNode target) {
 
-		class Visitor extends ASTVisitor {
-
+		ContextFinder visitor = new ContextFinder(sourceModule) {
 			private IContext context;
-			private Stack<IContext> contextStack = new Stack<IContext>();
 
-			/**
-			 * Returns found context
-			 * @return found context
-			 */
 			public IContext getContext() {
 				return context;
 			}
@@ -227,52 +213,7 @@ public class ASTUtils {
 				}
 				return context == null;
 			}
-
-			public boolean visit(ModuleDeclaration node) throws Exception {
-				contextStack.push(new BasicContext(sourceModule, node));
-				return visitGeneral(node);
-			}
-
-			public boolean visit(TypeDeclaration node) throws Exception {
-				contextStack.push(new InstanceContext((ISourceModuleContext) contextStack.peek(), new PHPClassType(node.getName())));
-				return visitGeneral(node);
-			}
-
-			@SuppressWarnings("unchecked")
-			public boolean visit(MethodDeclaration node) throws Exception {
-				List<String> argumentsList = new LinkedList<String>();
-				List<IEvaluatedType> argTypes = new LinkedList<IEvaluatedType>();
-				List<Argument> args = node.getArguments();
-				for (Argument a : args) {
-					argumentsList.add(a.getName());
-					argTypes.add(UnknownType.INSTANCE);
-				}
-				IContext parent = contextStack.peek();
-				ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
-				contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
-				return visitGeneral(node);
-			}
-
-			public boolean endvisit(ModuleDeclaration node) throws Exception {
-				contextStack.pop();
-				endvisitGeneral(node);
-				return true;
-			}
-
-			public boolean endvisit(TypeDeclaration node) throws Exception {
-				contextStack.pop();
-				endvisitGeneral(node);
-				return true;
-			}
-
-			public boolean endvisit(MethodDeclaration node) throws Exception {
-				contextStack.pop();
-				endvisitGeneral(node);
-				return true;
-			}
-		}
-
-		Visitor visitor = new Visitor();
+		};
 
 		try {
 			unit.traverse(visitor);
@@ -292,15 +233,9 @@ public class ASTUtils {
 	 */
 	public static IContext findContext(final ISourceModule sourceModule, final ModuleDeclaration unit, final int offset) {
 
-		class Visitor extends ASTVisitor {
-
+		ContextFinder visitor = new ContextFinder(sourceModule) {
 			private IContext context;
-			private Stack<IContext> contextStack = new Stack<IContext>();
 
-			/**
-			 * Returns found context
-			 * @return found context
-			 */
 			public IContext getContext() {
 				return context;
 			}
@@ -314,52 +249,7 @@ public class ASTUtils {
 				// search inside - we are looking for minimal node
 				return true;
 			}
-
-			public boolean visit(ModuleDeclaration node) throws Exception {
-				contextStack.push(new BasicContext(sourceModule, node));
-				return visitGeneral(node);
-			}
-
-			public boolean visit(TypeDeclaration node) throws Exception {
-				contextStack.push(new InstanceContext((ISourceModuleContext) contextStack.peek(), new PHPClassType(node.getName())));
-				return visitGeneral(node);
-			}
-
-			@SuppressWarnings("unchecked")
-			public boolean visit(MethodDeclaration node) throws Exception {
-				List<String> argumentsList = new LinkedList<String>();
-				List<IEvaluatedType> argTypes = new LinkedList<IEvaluatedType>();
-				List<Argument> args = node.getArguments();
-				for (Argument a : args) {
-					argumentsList.add(a.getName());
-					argTypes.add(UnknownType.INSTANCE);
-				}
-				IContext parent = contextStack.peek();
-				ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
-				contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
-				return visitGeneral(node);
-			}
-
-			public boolean endvisit(ModuleDeclaration node) throws Exception {
-				contextStack.pop();
-				endvisitGeneral(node);
-				return true;
-			}
-
-			public boolean endvisit(TypeDeclaration node) throws Exception {
-				contextStack.pop();
-				endvisitGeneral(node);
-				return true;
-			}
-
-			public boolean endvisit(MethodDeclaration node) throws Exception {
-				contextStack.pop();
-				endvisitGeneral(node);
-				return true;
-			}
-		}
-
-		Visitor visitor = new Visitor();
+		};
 
 		try {
 			unit.traverse(visitor);

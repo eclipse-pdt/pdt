@@ -10,22 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.Argument;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.SourceRefElement;
-import org.eclipse.dltk.ti.BasicContext;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 
@@ -298,21 +291,17 @@ public class BindingUtility {
 	/**
 	 * Finds binding context for the given AST node for internal usages only.
 	 */
-	private class ContextFinder extends ASTVisitor {
+	private class ContextFinder extends org.eclipse.php.internal.core.typeinference.context.ContextFinder {
 
 		private SourceRange sourceRange;
 		private IContext context;
 		private ASTNode node;
-		private Stack<IContext> contextStack = new Stack<IContext>();
 
 		public ContextFinder(SourceRange sourceRange) {
+			super(sourceModule);
 			this.sourceRange = sourceRange;
 		}
 
-		/**
-		 * Returns found context
-		 * @return found context
-		 */
 		public IContext getContext() {
 			return context;
 		}
@@ -336,49 +325,6 @@ public class BindingUtility {
 				}
 			}
 			// search inside - we are looking for minimal node
-			return true;
-		}
-
-		public boolean visit(ModuleDeclaration node) throws Exception {
-			contextStack.push(new BasicContext(sourceModule, node));
-			return visitGeneral(node);
-		}
-
-		public boolean visit(TypeDeclaration node) throws Exception {
-			contextStack.push(new InstanceContext((ISourceModuleContext) contextStack.peek(), new PHPClassType(node.getName())));
-			return visitGeneral(node);
-		}
-
-		@SuppressWarnings("unchecked")
-		public boolean visit(MethodDeclaration node) throws Exception {
-			List<String> argumentsList = new LinkedList<String>();
-			List<IEvaluatedType> argTypes = new LinkedList<IEvaluatedType>();
-			List<Argument> args = node.getArguments();
-			for (Argument a : args) {
-				argumentsList.add(a.getName());
-				argTypes.add(UnknownType.INSTANCE);
-			}
-			IContext parent = contextStack.peek();
-			ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
-			contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
-			return visitGeneral(node);
-		}
-
-		public boolean endvisit(ModuleDeclaration node) throws Exception {
-			contextStack.pop();
-			endvisitGeneral(node);
-			return true;
-		}
-
-		public boolean endvisit(TypeDeclaration node) throws Exception {
-			contextStack.pop();
-			endvisitGeneral(node);
-			return true;
-		}
-
-		public boolean endvisit(MethodDeclaration node) throws Exception {
-			contextStack.pop();
-			endvisitGeneral(node);
 			return true;
 		}
 	}

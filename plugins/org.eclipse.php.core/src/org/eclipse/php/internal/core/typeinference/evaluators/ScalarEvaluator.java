@@ -17,9 +17,9 @@ import org.eclipse.dltk.ti.goals.FixedAnswerEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class ScalarEvaluator extends FixedAnswerEvaluator {
 

@@ -13,8 +13,6 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.*;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -25,17 +23,17 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.internal.core.SourceField;
-import org.eclipse.dltk.ti.*;
+import org.eclipse.dltk.ti.GoalState;
+import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.MethodContext;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
@@ -102,7 +100,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 				if (!fileOffsets.isEmpty()) {
-					VariableDeclarationSearcher varSearcher = new VariableDeclarationSearcher(sourceModule, moduleDeclaration, fileOffsets, variableName);
+					VariableDeclarationSearcher varSearcher = new VariableDeclarationSearcher(sourceModule, fileOffsets, variableName);
 					try {
 						moduleDeclaration.traverse(varSearcher);
 
@@ -137,12 +135,9 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class VariableDeclarationSearcher extends ASTVisitor {
+	class VariableDeclarationSearcher extends ContextFinder {
 
-		private final ISourceModule sourceModule;
-		private final ModuleDeclaration moduleDeclaration;
 		private final String variableName;
-		private Stack<IContext> contextStack = new Stack<IContext>();
 		private Map<IContext, LinkedList<ASTNode>> contextToDeclarations = new HashMap<IContext, LinkedList<ASTNode>>();
 		private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
 		private int level = 0;
@@ -151,12 +146,15 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		private int currentEnd;
 		private boolean stopProcessing;
 
-		public VariableDeclarationSearcher(ISourceModule sourceModule, ModuleDeclaration moduleDeclaration, SortedSet<ISourceRange> offsets, String variableName) {
-			this.sourceModule = sourceModule;
-			this.moduleDeclaration = moduleDeclaration;
+		public VariableDeclarationSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets, String variableName) {
+			super(sourceModule);
 			this.variableName = variableName;
 			offsetsIt = offsets.iterator();
 			setNextRange();
+		}
+		
+		public IContext getContext() {
+			return null;
 		}
 
 		public Map<IContext, LinkedList<ASTNode>> getContextToDeclarationMap() {
@@ -278,57 +276,25 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		}
 
 		public boolean visit(TypeDeclaration node) throws Exception {
-			InstanceContext context = new InstanceContext(sourceModule, moduleDeclaration, new PHPClassType(node.getName()));
-			contextStack.push(context);
-			contextToDeclarations.put(context, new LinkedList<ASTNode>());
-			return visitGeneral(node);
-		}
-
-		public boolean endvisit(TypeDeclaration node) throws Exception {
-			contextStack.pop();
-
-			endvisitGeneral(node);
-			return true;
-		}
-
-		@SuppressWarnings("unchecked")
-		public boolean visit(MethodDeclaration node) throws Exception {
-			List<String> argumentsList = new LinkedList<String>();
-			List<IEvaluatedType> argTypes = new LinkedList<IEvaluatedType>();
-			List<Argument> args = node.getArguments();
-			for (Argument a : args) {
-				argumentsList.add(a.getName());
-				argTypes.add(UnknownType.INSTANCE);
+			super.visit(node);
+			if (!(node instanceof NamespaceDeclaration)) {
+				contextToDeclarations.put(contextStack.peek(), new LinkedList<ASTNode>());
 			}
-			MethodContext context = new MethodContext(contextStack.peek(), sourceModule, moduleDeclaration, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()]));
-			contextStack.push(context);
-			contextToDeclarations.put(context, new LinkedList<ASTNode>());
-
 			return visitGeneral(node);
 		}
 
-		public boolean endvisit(MethodDeclaration node) throws Exception {
-			contextStack.pop();
-
-			endvisitGeneral(node);
-			return true;
+		public boolean visit(MethodDeclaration node) throws Exception {
+			super.visit(node);
+			contextToDeclarations.put(contextStack.peek(), new LinkedList<ASTNode>());
+			return visitGeneral(node);
 		}
 
 		public boolean visit(ModuleDeclaration node) throws Exception {
-			BasicContext context = new BasicContext(sourceModule, node);
-			contextStack.push(context);
-			contextToDeclarations.put(context, new LinkedList<ASTNode>());
-
+			super.visit(node);
+			contextToDeclarations.put(contextStack.peek(), new LinkedList<ASTNode>());
 			return visitGeneral(node);
 		}
-
-		public boolean endvisit(ModuleDeclaration node) throws Exception {
-			contextStack.pop();
-
-			endvisitGeneral(node);
-			return true;
-		}
-
+		
 		public boolean visitGeneral(ASTNode node) throws Exception {
 			nodesStack.push(node);
 			return interesting(node);

@@ -82,10 +82,6 @@ public abstract class ClassMemberContext extends StatementContext {
 		}
 		
 		types = CodeAssistUtils.getTypesFor(sourceModule, statementText, elementStart, offset);
-		if (types == null || types.length == 0) {
-			return false;
-		}
-
 		return true;
 	}
 	

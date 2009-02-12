@@ -18,6 +18,10 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceMethod;
 import org.eclipse.dltk.internal.core.SourceRange;
 
+/**
+ * This is a fake model element that can live independently from the DLTK model manager. 
+ * @author michael
+ */
 public class FakeMethod extends SourceMethod {
 
 	private static final String[] NO_STRINGS = new String[0];

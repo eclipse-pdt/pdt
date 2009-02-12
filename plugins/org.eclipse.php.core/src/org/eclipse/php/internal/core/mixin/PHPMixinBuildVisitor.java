@@ -566,7 +566,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).getName() == NamespaceDeclaration.GLOBAL) {
+		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).isGlobal()) {
 			return false;
 		}
 		
@@ -600,7 +600,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).getName() == NamespaceDeclaration.GLOBAL) {
+		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).isGlobal()) {
 			return false;
 		}
 		

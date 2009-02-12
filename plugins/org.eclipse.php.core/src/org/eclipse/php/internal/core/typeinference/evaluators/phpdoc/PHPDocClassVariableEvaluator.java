@@ -18,7 +18,6 @@ import java.util.Set;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.InstanceContext;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -28,6 +27,7 @@ import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 
@@ -44,7 +44,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 	public IGoal[] init() {
 		PHPDocClassVariableGoal typedGoal = (PHPDocClassVariableGoal) goal;
-		InstanceContext context = (InstanceContext) typedGoal.getContext();
+		TypeContext context = (TypeContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
 
 		IType[] types = getTypes(context.getInstanceType(), context.getSourceModule());

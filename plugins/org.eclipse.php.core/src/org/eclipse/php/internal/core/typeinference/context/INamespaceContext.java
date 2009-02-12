@@ -8,19 +8,18 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.typeinference;
+package org.eclipse.php.internal.core.typeinference.context;
 
-import org.eclipse.dltk.ti.types.IEvaluatedType;
 
 /**
- * This context provides argument type information to the context
+ * This context contains information about current namespace
+ * @author michael
  */
-public interface IArgumentsContext {
+public interface INamespaceContext {
 
 	/**
-	 * Returns evaluated type of the method argument by its name
-	 * @param name Argument name
-	 * @return
+	 * Returns current namespace name or <code>null</code> if the context is outside of any namespaces
+	 * @return namespace name
 	 */
-	IEvaluatedType getArgumentType(String name);
+	public String getNamespace();
 }
