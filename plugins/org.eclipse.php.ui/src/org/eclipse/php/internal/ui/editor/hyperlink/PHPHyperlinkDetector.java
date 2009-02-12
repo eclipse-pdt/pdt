@@ -15,14 +15,12 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.editor.EditorUtility;
 import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
-import org.eclipse.dltk.internal.ui.text.ScriptWordFinder;
 import org.eclipse.dltk.ui.actions.OpenAction;
 import org.eclipse.dltk.ui.infoviews.ModelElementArray;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.xml.core.internal.Logger;
@@ -51,18 +49,13 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 			return null;
 		}
 		
+		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(input.getScriptProject().getProject());
+		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5); // PHP 5.3 and greater
+
 		IDocument document = textViewer.getDocument();
 		int offset = region.getOffset();
 		try {
-			while (offset > 0 && !Character.isJavaIdentifierPart(document.getChar(offset))) {
-				--offset;
-			}
-		} catch (BadLocationException e) {
-			Logger.logException(e);
-		}
-
-		try {
-			IRegion wordRegion = ScriptWordFinder.findWord(document, offset);
+			IRegion wordRegion = findWord(document, offset, namespacesSupported);
 			if (wordRegion == null)
 				return null;
 
@@ -79,6 +72,70 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 			}
 		} catch (ModelException e) {
 			return null;
+		}
+
+		return null;
+	}
+
+	private static IRegion findWord(IDocument document, int offset, boolean namespacesSupported) {
+
+		int start = -2;
+		int end = -1;
+
+		try {
+			int pos = offset;
+			char c;
+
+			int rightmostNsSeparator = -1;
+			while (pos >= 0) {
+				c = document.getChar(pos);
+				if (!Character.isJavaIdentifierPart(c) && (!namespacesSupported || c != '\\')) {
+					break;
+				}
+				if (namespacesSupported && c == '\\' && rightmostNsSeparator == -1) {
+					rightmostNsSeparator = pos;
+				}
+				--pos;
+			}
+			start = pos;
+
+			pos = offset;
+			int length = document.getLength();
+			
+			while (pos < length) {
+				c = document.getChar(pos);
+				if (!Character.isJavaIdentifierPart(c) && (!namespacesSupported || c != '\\')) {
+					break;
+				}
+				if (namespacesSupported && c == '\\') {
+					rightmostNsSeparator = pos;
+				}
+				++pos;
+			}
+			end = pos;
+			
+			if (rightmostNsSeparator != -1) {
+				if (rightmostNsSeparator > offset) {
+					end = rightmostNsSeparator;
+				}
+				else {
+					start = rightmostNsSeparator;
+				}
+			}
+
+		} catch (BadLocationException x) {
+		}
+
+		if (start >= -1 && end > -1) {
+			if (start == offset && end == offset) {
+				return new Region(offset, 0);
+			}
+			else if (start == offset) {
+				return new Region(start, end - start);
+			}
+			else {
+				return new Region(start + 1, end - start - 1);
+			}
 		}
 
 		return null;
