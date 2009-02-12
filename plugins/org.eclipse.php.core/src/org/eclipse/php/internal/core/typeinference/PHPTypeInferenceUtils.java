@@ -14,9 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
@@ -30,8 +28,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.wst.sse.core.internal.Logger;
 
@@ -341,51 +338,11 @@ public class PHPTypeInferenceUtils {
 			
 			if (!isGlobal && namespace.indexOf('\\') == -1) {
 				// it can be an alias - try to find relevant USE statement
-				final String namespaceAlias = namespace;
-				final String namespaceSource[] = new String[1];
+				
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-				try {
-					moduleDeclaration.traverse(new ASTVisitor() {
-						boolean found;
-
-						public boolean visit(Statement s) throws Exception {
-							if (s instanceof UseStatement) {
-								UseStatement useStatement = (UseStatement) s;
-								for (UsePart usePart : useStatement.getParts()) {
-									String alias = usePart.alias;
-									if (alias == null) {
-										// In case there's no alias - the alias is the last segment of the namespace name:
-										int i = usePart.namespace.lastIndexOf('\\');
-										if (i != -1) {
-											alias = usePart.namespace.substring(i + 1);
-										} else {
-											// The use statement with non-compound name has no effect, but it may happen:
-											alias = usePart.namespace;
-										}
-									}
-									if (namespaceAlias.equalsIgnoreCase(alias)) {
-										namespaceSource[0] = usePart.namespace;
-										found = true;
-										break;
-									}
-								}
-							}
-							return visitGeneral(s);
-						}
-
-						public boolean visitGeneral(ASTNode node) throws Exception {
-							if (found || node.sourceStart() > offset) {
-								return false;
-							}
-							return super.visitGeneral(node);
-						}
-					});
-				} catch (Exception e) {
-					Logger.logException(e);
-					return null;
-				}
-				if (namespaceSource[0] != null) {
-					namespace = namespaceSource[0];
+				UsePart usePart = ASTUtils.findUseStatement(moduleDeclaration, namespace, offset);
+				if (usePart != null) {
+					namespace = usePart.getNamespace().getFullyQualifiedName();
 				}
 			}
 			return namespace;

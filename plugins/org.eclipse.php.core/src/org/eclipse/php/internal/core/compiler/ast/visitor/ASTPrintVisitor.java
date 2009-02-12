@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.compiler.ast.visitor;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.*;
+
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.Declaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -23,7 +24,6 @@ import org.eclipse.dltk.ast.references.TypeReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement.UsePart;
 import org.eclipse.php.internal.core.util.XMLWriter;
 
 /**
@@ -409,6 +409,16 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 
 	public boolean endvisit(TypeReference s) throws Exception {
 		xmlWriter.endTag("TypeReference");
+		return true;
+	}
+	
+	public boolean endvisit(FullyQualifiedReference s) throws Exception {
+		xmlWriter.endTag("FullyQualifiedReference");
+		return true;
+	}
+
+	public boolean endvisit(NamespaceReference s) throws Exception {
+		xmlWriter.endTag("NamespaceReference");
 		return true;
 	}
 
@@ -920,6 +930,22 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		xmlWriter.startTag("TypeReference", parameters);
 		return true;
 	}
+	
+	public boolean visit(FullyQualifiedReference s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getFullyQualifiedName());
+		xmlWriter.startTag("FullyQualifiedReference", parameters);
+		return true;
+	}
+	
+	public boolean visit(NamespaceReference s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		parameters.put("name", s.getName());
+		parameters.put("global", Boolean.toString(s.isGlobal()));
+		parameters.put("local", Boolean.toString(s.isGlobal()));
+		xmlWriter.startTag("NamespaceReference", parameters);
+		return true;
+	}
 
 	public boolean visit(UnaryOperation s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
@@ -958,16 +984,25 @@ public class ASTPrintVisitor extends PHPASTVisitor {
 		Map<String, String> parameters = createInitialParameters(s);
 		xmlWriter.startTag("UseStatement", parameters);
 
-		for (UsePart part : s.getParts()) {
-			Map<String, String> usePartParams = new HashMap<String, String>();
-			usePartParams.put("namespace", part.namespace);
-			usePartParams.put("alias", part.alias);
-			xmlWriter.startTag("UsePart", usePartParams);
-			xmlWriter.endTag("UsePart");
+		xmlWriter.startTag("Parts", new HashMap<String, String>());
+		for (UsePart p : s.getParts()) {
+			p.traverse(this);
 		}
+		xmlWriter.endTag("Parts");
 		return true;
 	}
-
+	
+	public boolean visit(UsePart s) throws Exception {
+		Map<String, String> parameters = createInitialParameters(s);
+		xmlWriter.startTag("UsePart", parameters);
+		s.getNamespace().traverse(this);
+		if (s.getAlias() != null) {
+			s.getAlias().traverse(this);
+		}
+		xmlWriter.endTag("UsePart");
+		return true;
+	}
+	
 	public boolean visit(GotoLabel s) throws Exception {
 		Map<String, String> parameters = createInitialParameters(s);
 		parameters.put("label", s.getLabel());

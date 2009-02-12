@@ -27,26 +27,6 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
  */
 public class UseStatement extends Statement {
 	
-	public static class UsePart {
-		
-		public String namespace;
-		public String alias;
-		
-		public UsePart(String namespace, String alias) {
-			this.namespace = namespace;
-			this.alias = alias;
-		}
-
-		public String toString() {
-			StringBuilder buf = new StringBuilder("[USE: ").append(namespace);
-			if (alias != null) {
-				buf.append(" AS ").append(alias);
-			}
-			buf.append("]");
-			return buf.toString();
-		}
-	}
-
 	private List<UsePart> parts;
 
 	public UseStatement(int start, int end, List<UsePart> parts) {
@@ -57,8 +37,12 @@ public class UseStatement extends Statement {
 	}
 	
 	public void traverse(ASTVisitor visitor) throws Exception {
-		visitor.visit(this);
-		visitor.endvisit(this);
+		if (visitor.visit(this)) {
+			for (UsePart part : parts) {
+				part.traverse(visitor);
+			}
+			visitor.endvisit(this);
+		}
 	}
 
 	public int getKind() {

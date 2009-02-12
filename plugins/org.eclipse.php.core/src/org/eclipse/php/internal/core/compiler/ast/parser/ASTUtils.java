@@ -16,15 +16,11 @@ import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.Argument;
-import org.eclipse.dltk.ast.declarations.Declaration;
-import org.eclipse.dltk.ast.declarations.FieldDeclaration;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.statements.Block;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.evaluation.types.UnknownType;
@@ -36,6 +32,8 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.typeinference.MethodContext;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -438,5 +436,52 @@ public class ASTUtils {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Finds USE statement by the alias name
+	 * @param moduleDeclaration The AST root node
+	 * @param aliasName The alias name
+	 * @param offset Current position in the file (this is needed since we don't want to take USE statements placed below
+	 * 		current position into account
+	 * @return USE statement part node, or <code>null</code> in case relevant statement couldn't be found
+	 */
+	public static UsePart findUseStatement(ModuleDeclaration moduleDeclaration, final String aliasName, final int offset) {
+		final UsePart[] result = new UsePart[1];
+		try {
+			moduleDeclaration.traverse(new ASTVisitor() {
+				boolean found;
+
+				public boolean visit(Statement s) throws Exception {
+					if (s instanceof UseStatement) {
+						UseStatement useStatement = (UseStatement) s;
+						for (UsePart usePart : useStatement.getParts()) {
+							String alias = usePart.getAlias().getName();
+							if (alias == null) {
+								// In case there's no alias - the alias is the last segment of the namespace name:
+								alias = usePart.getNamespace().getName();
+							}
+							if (aliasName.equalsIgnoreCase(alias)) {
+								found = true;
+								result[0] = usePart;
+								break;
+							}
+						}
+					}
+					return visitGeneral(s);
+				}
+
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (found || node.sourceStart() > offset) {
+						return false;
+					}
+					return super.visitGeneral(node);
+				}
+			});
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		
+		return result[0];
 	}
 }

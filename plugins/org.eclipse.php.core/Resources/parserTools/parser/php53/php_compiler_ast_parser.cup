@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.15 2009/02/09 17:39:23 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.16 2009/02/12 11:53:03 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -161,8 +161,9 @@ terminal T_QUATE,T_BACKQUATE;
 /* Non terminals */
 
 non terminal ModuleDeclaration thestart;
-non terminal StringBuilder namespace_name;
-non terminal UseStatement.UsePart use_declaration;
+non terminal FullyQualifiedReference namespace_name;
+non terminal List namespace_name_list;
+non terminal UsePart use_declaration;
 non terminal List use_declarations;
 non terminal top_statement_list;
 non terminal List namespace_statement_list;
@@ -325,16 +326,40 @@ top_statement_list:statementList
 ;
 
 namespace_name ::=
+namespace_name_list:list
+{:
+	StringBuilder namespaceNameBuf = new StringBuilder();
+	FullyQualifiedReference fullyQualifiedName = null;
+	Iterator i = list.iterator();
+	while (i.hasNext()) {
+		String s = (String) i.next();
+		if (i.hasNext()) {
+			if (namespaceNameBuf.length() != 0) {
+				namespaceNameBuf.append('\\');
+			}
+			namespaceNameBuf.append(s);
+		} else {
+			NamespaceReference namespaceRef = (namespaceNameBuf.length() != 0) ? 
+				new NamespaceReference(listleft, listright, namespaceNameBuf.toString()) : null;
+			fullyQualifiedName = new FullyQualifiedReference(listleft, listright, s, namespaceRef);
+		}
+	}
+	RESULT = fullyQualifiedName;
+:}
+;
+
+namespace_name_list ::=
 string_st:name
 {:
-	StringBuilder buf = new StringBuilder(name);
-	RESULT = buf;
+	List list = new LinkedList();
+	list.add(name);
+	RESULT = list;
 :}
 |
-namespace_name:buf T_NS_SEPARATOR string_st:name
+namespace_name_list:list T_NS_SEPARATOR string_st:name
 {:
-	buf.append('\\').append(name);
-	RESULT = buf;
+	list.add(name);
+	RESULT = list;
 :}
 ;
 
@@ -404,7 +429,7 @@ statement:statement
 
 | T_NAMESPACE:start namespace_name:name
 {:
-	NamespaceDeclaration namespace = new NamespaceDeclaration(startleft, nameright, nameleft, nameright, name.toString(), null, null);
+	NamespaceDeclaration namespace = new NamespaceDeclaration(startleft, nameright, nameleft, nameright, name.getFullyQualifiedName(), null, null);
 	parser.addDeclarationStatement(namespace);
 	parser.declarations.push(namespace);
 :}
@@ -512,25 +537,33 @@ use_declarations:useDeclList T_COMMA use_declaration:useDecl
 use_declaration ::=
 namespace_name:name
 {:
-	UseStatement.UsePart usePart = new UseStatement.UsePart(name.toString(), null);
+	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
 | namespace_name:name T_AS T_STRING:aliasName
 {:
-	UseStatement.UsePart usePart = new UseStatement.UsePart(name.toString(), aliasName);
+	UsePart usePart = new UsePart(name, 
+		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
 :}
 
 | T_NS_SEPARATOR namespace_name:name
 {:
-	UseStatement.UsePart usePart = new UseStatement.UsePart('\\' + name.toString(), null);
+	if (name.getNamespace() != null) {
+		name.getNamespace().setGlobal(true);
+	}
+	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
 :}
 
 | T_NS_SEPARATOR namespace_name:name T_AS T_STRING:aliasName
 {:
-	UseStatement.UsePart usePart = new UseStatement.UsePart('\\' + name.toString(), aliasName);
+	if (name.getNamespace() != null) {
+		name.getNamespace().setGlobal(true);
+	}
+	UsePart usePart = new UsePart(name,
+		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
 	RESULT = usePart;
 :}
 ;
@@ -2288,24 +2321,27 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(functionNameleft, functionNameright, functionName.toString());
-	RESULT = new PHPCallExpression(functionNameleft, endright, null, name, parameters); 
+	RESULT = new PHPCallExpression(functionNameleft, endright, null, functionName, parameters); 
 :}
 
 | T_NAMESPACE:namespace T_NS_SEPARATOR namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(namespaceleft, functionNameright, "namespace\\" + functionName.toString());
-	RESULT = new PHPCallExpression(namespaceleft, endright, null, name, parameters); 
+	if (functionName.getNamespace() != null) {
+		functionName.getNamespace().setLocal(true);
+	}
+	RESULT = new PHPCallExpression(namespaceleft, endright, null, functionName, parameters); 
 :}
 
 | T_NS_SEPARATOR:sep namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	SimpleReference name = new SimpleReference(sepleft, functionNameright, '\\' + functionName.toString());
-	RESULT = new PHPCallExpression(sepleft, endright, null, name, parameters); 
+	if (functionName.getNamespace() != null) {
+		functionName.getNamespace().setGlobal(true);
+	}
+	RESULT = new PHPCallExpression(sepleft, endright, null, functionName, parameters); 
 :}
 
 | class_name:className T_PAAMAYIM_NEKUDOTAYIM T_STRING:functionName T_OPEN_PARENTHESE:start function_call_parameter_list:parameters T_CLOSE_PARENTHESE:end
@@ -2353,41 +2389,50 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 class_name ::=
 T_STATIC:s
 {:
-	RESULT = new TypeReference(sleft, sright, "static");
+	RESULT = new FullyQualifiedReference(sleft, sright, "static", null);
 :}
 
 | namespace_name:name
 {:
-	RESULT = new TypeReference(nameleft, nameright, name.toString());
+	RESULT = name;
 :}
 
 | T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	RESULT = new TypeReference(sleft, nameright, "namespace\\" + name.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
 :}
 
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	RESULT = new TypeReference(sleft, nameright, '\\' + name.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setGlobal(true);
+	}
+	RESULT = name;
 :}
 ;
 
 fully_qualified_class_name ::=
-namespace_name:className
+namespace_name:name
 {:
-	TypeReference name = new TypeReference(classNameleft, classNameright, className.toString());
 	RESULT = name;
 :}
 
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:buf
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	TypeReference name = new TypeReference(sleft, bufright, "namespace\\" + buf.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
 	RESULT = name;
 :}
 
-| T_NS_SEPARATOR:s namespace_name:buf
+| T_NS_SEPARATOR:s namespace_name:name
 {:
-	TypeReference name = new TypeReference(sleft, bufright, '\\' + buf.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setGlobal(true);
+	}
 	RESULT = name;
 :}
 ;
@@ -2580,24 +2625,29 @@ common_scalar:scalar
 	RESULT = scalar;
 :}
 
-| namespace_name:buf
+| namespace_name:name
 {:
-	String namespace = buf.toString();
-	if (namespace.indexOf('\\') == -1) {
-		RESULT = new Scalar(bufleft, bufright, namespace, Scalar.TYPE_STRING);
+	if (name.getNamespace() == null) {
+		RESULT = new Scalar(nameleft, nameright, name.getName(), Scalar.TYPE_STRING);
 	} else {
-		RESULT = new TypeReference(bufleft, bufright, namespace);
+		RESULT = name;
 	}
 :}
 
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:buf
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	RESULT = new TypeReference(sleft, bufright, "namespace\\" + buf.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
 :}
 
-| T_NS_SEPARATOR:s namespace_name:buf
+| T_NS_SEPARATOR:s namespace_name:name
 {:
-	RESULT = new TypeReference(sleft, bufright, '\\' + buf.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setGlobal(true);
+	}
+	RESULT = name;
 :}
 
 | T_PLUS:start static_scalar:expr
@@ -2644,22 +2694,27 @@ T_STRING_VARNAME:scalar
 {:
 	RESULT = classConstant;
 :}
-| namespace_name:buf
+| namespace_name:name
 {:
-	String namespace = buf.toString();
-	if (namespace.indexOf('\\') == -1) {
-		RESULT = new Scalar(bufleft, bufright, namespace, Scalar.TYPE_STRING);
+	if (name.getNamespace() == null) {
+		RESULT = new Scalar(nameleft, nameright, name.getName(), Scalar.TYPE_STRING);
 	} else {
-		RESULT = new TypeReference(bufleft, bufright, namespace);
+		RESULT = name;
 	}
 :}
-| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:buf
+| T_NAMESPACE:s T_NS_SEPARATOR namespace_name:name
 {:
-	RESULT = new TypeReference(sleft, bufright, "namespace\\" + buf.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setLocal(true);
+	}
+	RESULT = name;
 :}
-| T_NS_SEPARATOR:s namespace_name:buf
+| T_NS_SEPARATOR:s namespace_name:name
 {:
-	RESULT = new TypeReference(sleft, bufright, '\\' + buf.toString());
+	if (name.getNamespace() != null) {
+		name.getNamespace().setGlobal(true);
+	}
+	RESULT = name;
 :}
 | common_scalar:scalar
 {:
