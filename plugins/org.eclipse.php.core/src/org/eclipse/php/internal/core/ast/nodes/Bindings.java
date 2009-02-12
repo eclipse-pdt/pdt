@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 public class Bindings {
 
@@ -197,6 +201,74 @@ public class Bindings {
 				return method;
 		}
 		return null;
+	}
+	
+	/**
+	 * Finds the method specified by <code>methodName</code> and </code>parameters</code> in
+	 * the type hierarchy denoted by the given type. Returns <code>null</code> if no such method
+	 * exists. If the method is defined in more than one super type only the first match is 
+	 * returned. First the super class is examined and than the implemented interfaces.
+	 * @param type The type to search the method in
+	 * @param methodName The name of the method to find
+	 * @return the method binding representing the method
+	 */
+	public static IMethodBinding[] findAbstractMethodsInHierarchy(ITypeBinding type) {
+		
+		List<IMethodBinding> methodsToOVerride = new ArrayList<IMethodBinding>();
+		Set<String> overridenMethodsNames = new HashSet<String>();
+		collectAbstractMethodsInHierarchy(type, methodsToOVerride, overridenMethodsNames);
+		
+		return (IMethodBinding[]) methodsToOVerride.toArray(new IMethodBinding[methodsToOVerride.size()]);
+	}
+	
+	private static  void collectAbstractMethodsInHierarchy(ITypeBinding curr, List<IMethodBinding> methodsToOverride, Set<String> overridenMethodsNames) {
+
+		Set<IMethodBinding> tempMethods = new TreeSet<IMethodBinding>();
+		
+		// start of current IType method pass
+		if(curr != null) {
+			if (PHPFlags.isInterface(curr.getModifiers())) {
+				for (IMethodBinding methodBinding : curr.getDeclaredMethods()) {
+					if (!overridenMethodsNames.contains(methodBinding.getName())) {
+						methodsToOverride.add(methodBinding);
+						overridenMethodsNames.add(methodBinding.getName());
+					}
+				}
+			}
+			
+			//an abstract class
+			else if (PHPFlags.isAbstract(curr.getModifiers())) {
+				for (IMethodBinding methodBinding : curr.getDeclaredMethods()) {
+					if (!PHPFlags.isAbstract(methodBinding.getModifiers())) {
+						overridenMethodsNames.add(methodBinding.getName());
+					}else if (!overridenMethodsNames.contains(methodBinding.getName())) {
+						methodsToOverride.add(methodBinding);
+						overridenMethodsNames.add(methodBinding.getName());
+					}
+				}
+			}
+	
+			else {//add existing methods to exclude list
+				for (IMethodBinding methodBinding : curr.getDeclaredMethods()) {
+					if (!overridenMethodsNames.contains(methodBinding.getName())) {
+						overridenMethodsNames.add(methodBinding.getName());
+					}
+				}
+			}
+			
+			// end of current IType method pass
+			
+			//this class has a superclass
+			ITypeBinding superClassBinding = curr.getSuperclass();
+			if (superClassBinding != null && superClassBinding.getName() != null) {
+				collectAbstractMethodsInHierarchy(superClassBinding, methodsToOverride, overridenMethodsNames);;
+			}
+			//this class has interfaces
+			ITypeBinding[] interfaceBindings = curr.getInterfaces();
+			for(ITypeBinding interfaceBinding : interfaceBindings) {
+				collectAbstractMethodsInHierarchy(superClassBinding, methodsToOverride, overridenMethodsNames);;
+			}
+		}
 	}
 
 	/**

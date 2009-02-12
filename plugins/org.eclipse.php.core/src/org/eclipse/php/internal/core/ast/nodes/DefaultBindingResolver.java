@@ -415,7 +415,22 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	ITypeBinding resolveType(TypeDeclaration type) {
-		// TODO Auto-generated method stub
+		
+		IModelElement[] modelElements;
+		try {
+			modelElements = this.bindingUtil.getModelElement(type.getName().getStart(), type.getName().getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+			return null;
+		}
+
+		if (modelElements != null && modelElements.length > 0) {
+			for (IModelElement element : modelElements) {
+				if (element.getElementType() == IModelElement.TYPE) {
+					return new TypeBinding(this, new PHPClassType(element.getElementName()), modelElements);
+				}
+			}
+		}
 		return super.resolveType(type);
 	}
 
