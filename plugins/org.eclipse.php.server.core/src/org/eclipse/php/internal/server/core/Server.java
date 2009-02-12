@@ -36,6 +36,8 @@ public class Server implements IXMLPreferencesStorable {
 
 	private static final int DEFAULT_HTTP_PORT = 80;
 
+	public static final String LOCALSERVER = "localserver";
+
 	private ServerHelper helper;
 
 	/**
