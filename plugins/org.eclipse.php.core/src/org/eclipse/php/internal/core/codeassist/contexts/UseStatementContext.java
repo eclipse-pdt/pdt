@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.util.text.TextSequence;
+
 
 /**
  * This context represents the state when staying in a use statement.
@@ -24,4 +28,19 @@ package org.eclipse.php.internal.core.codeassist.contexts;
  * @author michael
  */
 public abstract class UseStatementContext extends StatementContext {
+	
+	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+		if (!super.isValid(sourceModule, offset, requestor)) {
+			return false;
+		}
+		
+		TextSequence statementText = getStatementText();
+		if (statementText.length() >= 4) {
+			if ("use".equals(statementText.subSequence(0, 3).toString()) && 
+					Character.isWhitespace(statementText.subSequence(3, 4).charAt(0))) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

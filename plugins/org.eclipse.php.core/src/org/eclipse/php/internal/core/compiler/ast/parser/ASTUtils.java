@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
@@ -331,7 +333,7 @@ public class ASTUtils {
 	/**
 	 * Finds USE statement by the alias name
 	 * @param moduleDeclaration The AST root node
-	 * @param aliasName The alias name
+	 * @param aliasName The alias name.
 	 * @param offset Current position in the file (this is needed since we don't want to take USE statements placed below
 	 * 		current position into account
 	 * @return USE statement part node, or <code>null</code> in case relevant statement couldn't be found
@@ -373,5 +375,36 @@ public class ASTUtils {
 		}
 		
 		return result[0];
+	}
+	
+	/**
+	 * Returns all USE statements declared before the specified offset
+	 * @param moduleDeclaration The AST root node
+	 * @param offset Current position in the file (this is needed since we don't want to take USE statements placed below
+	 * 		current position into account
+	 * @return USE statements list
+	 */
+	public static UseStatement[] getUseStatements(ModuleDeclaration moduleDeclaration, final int offset) {
+		final List<UseStatement> result = new LinkedList<UseStatement>();
+		try {
+			moduleDeclaration.traverse(new ASTVisitor() {
+				public boolean visit(Statement s) throws Exception {
+					if (s instanceof UseStatement) {
+						result.add((UseStatement) s);
+					}
+					return visitGeneral(s);
+				}
+
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (node.sourceStart() > offset) {
+						return false;
+					}
+					return super.visitGeneral(node);
+				}
+			});
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		return (UseStatement[]) result.toArray(new UseStatement[result.size()]);
 	}
 }

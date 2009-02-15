@@ -119,8 +119,11 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 				new NamespaceElementsCompositeStrategy(((NamespaceMemberContext)context).isGlobal()) 
 			};
 		}
+		if (contextClass == UseNameContext.class) {
+			return new ICompletionStrategy[] { new NamespacesStrategy() };
+		}
 		
-		return null;
+		return new ICompletionStrategy[] {};
 	}
 
 }
