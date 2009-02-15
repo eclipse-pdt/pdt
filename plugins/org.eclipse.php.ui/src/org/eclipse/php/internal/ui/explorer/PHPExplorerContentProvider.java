@@ -65,18 +65,11 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 	public Object[] getChildren(Object parentElement) {
 
 		if (parentElement instanceof IncludePath) {
-			Object entry = ((IncludePath) parentElement).getEntry();
+			final Object entry = ((IncludePath) parentElement).getEntry();
 			if (entry instanceof IBuildpathEntry) {
-				ArrayList<Object> res;
-				IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
-				IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
-				for (IProjectFragment projectFragment : findProjectFragments) {
-					//can be only one
-					return getChildren(projectFragment);
-				}
-				return getChildren(((BuildpathEntry) entry).getPath());
+				return getBuildPathEntryChildren(parentElement, entry);
 			}
-		}
+		} 
 		try {
 
 			// aggregate php projects and non php projects (includes closed ones)
@@ -91,7 +84,6 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 				if (parentElement instanceof IFolder) {
 					return ((IFolder) parentElement).members();
 				}
-
 				return super.getChildren(parentElement);
 			}
 
@@ -143,6 +135,21 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 		}
 
 		return NO_CHILDREN;
+	}
+
+	/**
+	 * @param parentElement
+	 * @param entry
+	 * @return
+	 */
+	private Object[] getBuildPathEntryChildren(Object parentElement, Object entry) {
+		IScriptProject scriptProject = DLTKCore.create(((IncludePath) parentElement).getProject());
+		IProjectFragment[] findProjectFragments = scriptProject.findProjectFragments((IBuildpathEntry) entry);
+		for (IProjectFragment projectFragment : findProjectFragments) {
+			//can be only one
+			return getChildren(projectFragment);
+		}
+		return getChildren(((BuildpathEntry) entry).getPath());
 	}
 
 	protected class IncludePathContainer extends BuildPathContainer {

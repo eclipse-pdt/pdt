@@ -1105,6 +1105,12 @@
             	id="org.eclipse.php.ui.todo">
       	</keywordReference>
        </page>
+	   <page
+		    name="%PhpLibraryPreferencePage.name"
+		    category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+		    class="org.eclipse.php.internal.ui.preferences.PhpLibraryPreferencePage"
+		    id="org.eclipse.dltk.php.preferences.UserLibraryPreferencePage">
+	   </page>
 	</extension>
 
 	<extension point="org.eclipse.ui.keywords">
@@ -1386,5 +1392,16 @@
 			id="org.eclipse.php.internal.ui.documentation.PHPDocumentationProvider"
 			nature="org.eclipse.php.core.PHPNature">
 		</provider>
-	</extension>	
+	</extension>
+	
+	<extension point="org.eclipse.dltk.ui.buildpathContainerPage">
+		<buildpathContainerPath
+			nature="org.eclipse.php.core.PHPNature"
+			name="User Library"
+			class="org.eclipse.dltk.internal.ui.wizards.buildpath.UserLibraryWizardPage"
+			id="org.eclipse.dltk.USER_LIBRARY">
+		</buildpathContainerPath>
+	</extension>
+	
+		
 </plugin>
