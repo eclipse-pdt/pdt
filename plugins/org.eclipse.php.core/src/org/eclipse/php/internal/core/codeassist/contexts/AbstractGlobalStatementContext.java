@@ -12,9 +12,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.util.text.TextSequence;
+import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 
 
 /**
@@ -29,13 +27,10 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
 		}
-
-		// global statement context may contain only identifier characters:
-		TextSequence statementText = getStatementText();
-		PHPVersion phpVersion = getPhpVersion();
-		for (int i = 0; i < statementText.length(); ++i) {
-			char ch = statementText.charAt(i);
-			if (!Character.isJavaIdentifierPart(ch) && (phpVersion.isLessThan(PHPVersion.PHP5_3) || ch != NamespaceReference.NAMESPACE_SEPARATOR)) {
+		
+		if (requestor instanceof IPHPCompletionRequestor) {
+			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
+			if (!phpCompletionRequestor.isExplicit()) {
 				return false;
 			}
 		}

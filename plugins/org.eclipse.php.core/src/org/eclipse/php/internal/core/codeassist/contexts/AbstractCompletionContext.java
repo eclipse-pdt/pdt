@@ -342,6 +342,9 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		int statementLength = statementText.length();
 		int wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, statementLength); // read whitespace
 		int wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
+		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
+			return "";
+		}
 		String previousWord = statementText.subSequence(wordStart, wordEnd).toString();
 		
 		if (hasWhitespaceBeforeCursor()) {
@@ -350,7 +353,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		
 		wordEnd = PHPTextSequenceUtilities.readBackwardSpaces(statementText, wordStart - 1); // read whitespace
 		wordStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, wordEnd, true);
-		if (wordStart == -1 || wordEnd == -1) {
+		if (wordStart < 0 || wordEnd < 0 || wordStart > wordEnd) {
 			return "";
 		}
 		previousWord = statementText.subSequence(wordStart, wordEnd).toString();
