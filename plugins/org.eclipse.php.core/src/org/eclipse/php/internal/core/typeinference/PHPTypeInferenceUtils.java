@@ -28,6 +28,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.wst.sse.core.internal.Logger;
@@ -163,7 +164,7 @@ public class PHPTypeInferenceUtils {
 			return null;
 		}
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
-		typeName = extractElementName(typeName, namespace);
+		typeName = extractElementName(typeName);
 		if (namespace != null) {
 			if (namespace.length() > 0) {
 				IType namespaceType = getNamespaceType(namespace, typeName, sourceModule);
@@ -202,7 +203,7 @@ public class PHPTypeInferenceUtils {
 			return null;
 		}
 		String namespace = extractNamespaceName(methodName, sourceModule, offset);
-		methodName = extractElementName(methodName, namespace);
+		methodName = extractElementName(methodName);
 		if (namespace != null) {
 			if (namespace.length() > 0) {
 				IMethod namespaceMethod = getNamespaceMethod(namespace, methodName, sourceModule);
@@ -243,7 +244,7 @@ public class PHPTypeInferenceUtils {
 		}
 		if (!fieldName.startsWith("$")) { // variables are not supported by namespaces in PHP 5.3
 			String namespace = extractNamespaceName(fieldName, sourceModule, offset);
-			fieldName = extractElementName(fieldName, namespace);
+			fieldName = extractElementName(fieldName);
 			if (namespace != null) {
 				if (namespace.length() > 0) {
 					IField namespaceField = getNamespaceField(namespace, fieldName, sourceModule);
@@ -294,23 +295,12 @@ public class PHPTypeInferenceUtils {
 	/**
 	 * Extracts the element name from the given fully qualified name
 	 * @param element Element name
-	 * @param namespace Namespace name
 	 * @return element name without the namespace prefix
 	 */
-	public static String extractElementName(String element, String namespace) {
-		if (namespace == null) {
-			return element;
-		}
-		if (namespace.length() == 0) { // global
-			element = element.substring(1);
-		} else {
-			if (element.charAt(0) == '\\') {
-				element = element.substring(1);
-			}
-			element = element.substring(namespace.length()).trim(); // there may be spaces around '\' in namespace name
-			if (element.charAt(0) == '\\') {
-				element = element.substring(1);
-			}
+	public static String extractElementName(String element) {
+		int i = element.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+		if (i != -1) {
+			element = element.substring(i + 1).trim();
 		}
 		return element;
 	}

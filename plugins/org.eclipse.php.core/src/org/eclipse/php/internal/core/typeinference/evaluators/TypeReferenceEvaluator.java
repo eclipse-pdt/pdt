@@ -23,12 +23,15 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.INamespaceContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
@@ -116,9 +119,21 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 			}
 		} else {
 			String parentNamespace = null;
+			
+			// Check current context - if we are under some namespace:
 			if (context instanceof INamespaceContext) {
 				parentNamespace = ((INamespaceContext) context).getNamespace();
 			}
+			
+			// If the namespace was prefixed explicitly - use it:
+			if (typeReference instanceof FullyQualifiedReference) {
+				String extractedNamespace = PHPTypeInferenceUtils.extractNamespaceName(((FullyQualifiedReference) typeReference).getFullyQualifiedName()
+					, ((ISourceModuleContext)context).getSourceModule(), typeReference.sourceStart());
+				if (extractedNamespace != null) {
+					parentNamespace = extractedNamespace;
+				}
+			}
+			
 			if (parentNamespace != null) {
 				result = new PHPClassType(parentNamespace, className);
 			} else {
