@@ -24,7 +24,7 @@ import org.eclipse.dltk.core.*;
  * </pre>
  * @author michael
  */
-public final class GlobalMethodStatementContext extends StatementContext {
+public final class GlobalMethodStatementContext extends AbstractGlobalStatementContext {
 	
 	private IMethod enclosingMethod;
 	
@@ -52,10 +52,6 @@ public final class GlobalMethodStatementContext extends StatementContext {
 		return true;
 	}
 
-	public boolean isExclusive() {
-		return true;
-	}
-	
 	public IMethod getEnclosingMethod() {
 		return enclosingMethod;
 	}
