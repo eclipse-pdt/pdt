@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -77,7 +80,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private String[] configuredContentTypes;
 	private LineStyleProvider fLineStyleProvider;
-	private StructuredContentAssistant fContentAssistant = null;
+	private StructuredContentAssistant fContentAssistant;
+	private PHPCompletionProcessor fCompletionProcessor;
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -149,7 +153,11 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType, PHPStructuredTextViewer viewer) {
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
-		processors.add(new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT));
+		
+		if (fCompletionProcessor == null) {
+			fCompletionProcessor = new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT);
+		}
+		processors.add(fCompletionProcessor);
 
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTENT_ASSIST_PROCESSOR_EXT);
 		for (int i = 0; i < elements.length; i++) {
