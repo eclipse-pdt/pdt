@@ -228,6 +228,28 @@ ${cursor}</template>
 </template>
 
 <template
+	name="lambda"
+	description="%description.php.lambdaStatement"
+	id="org.eclipse.php.ui.editor.templates.php.lambda"
+	context="php"
+	enabled="true"
+	autoinsert="false">function (${parameters}) use (${lexical_variables}) {
+	${cursor};
+}
+</template>
+
+<template
+	name="closure"
+	description="%description.php.lambdaStatement"
+	id="org.eclipse.php.ui.editor.templates.php.closure"
+	context="php"
+	enabled="true"
+	autoinsert="false">function (${parameters}) use (${lexical_variables}) {
+	${cursor};
+}
+</template>
+
+<template
 	name="cls"
 	description="%description.php.class"
 	id="org.eclipse.php.ui.editor.templates.php.cls"
@@ -386,6 +408,22 @@ ${cursor}</template>
 	enabled="true"
 	autoinsert="false">parent::__clone();
 </template>
+
+<template
+	name="use"
+	description="%description.php.use"
+	id="org.eclipse.php.ui.editor.templates.php.use"
+	context="php"
+	enabled="true"
+	autoinsert="false">use ${namespace} as ${alias};</template>
+
+<template
+	name="ns"
+	description="%description.php.ns"
+	id="org.eclipse.php.ui.editor.templates.php.ns"
+	context="php"
+	enabled="true"
+	autoinsert="false">namespace ${name};</template>
 
 <!--  php doc templates -->
 

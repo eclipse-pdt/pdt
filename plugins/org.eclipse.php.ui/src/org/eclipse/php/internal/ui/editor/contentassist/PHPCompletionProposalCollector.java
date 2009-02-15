@@ -13,6 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
+import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
@@ -42,6 +43,10 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 
 	protected ScriptCompletionProposal createScriptCompletionProposal(String completion, int replaceStart, int length, Image image, String displayString, int i, boolean isInDoc) {
 		return new PHPCompletionProposal(completion, replaceStart, length, image, displayString, i, isInDoc);
+	}
+	
+	protected CompletionProposalLabelProvider createLabelProvider() {
+		return new PHPCompletionProposalLabelProvider();
 	}
 
 	protected IScriptCompletionProposal createScriptCompletionProposal(CompletionProposal proposal) {

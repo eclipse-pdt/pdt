@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.ContentAssistInvocationContext;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProcessor;
@@ -57,11 +57,8 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 	}
 	
 	protected static char[] getAutoactivationTriggers() {
-		Preferences pluginPreferences = PHPCorePlugin.getDefault().getPluginPreferences();
-		if (pluginPreferences.contains(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP)) {
-			return pluginPreferences.getString(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP).trim().toCharArray();
-		}
-		return completionAutoActivationChars;
+		return Platform.getPreferencesService().getString(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, new String(completionAutoActivationChars), null)
+			.trim().toCharArray();
 	}
 
 	protected ContentAssistInvocationContext createContext(ITextViewer viewer, int offset) {

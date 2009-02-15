@@ -15,10 +15,11 @@ import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
 public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelProvider {
 
-	private static final String ENCLOSING_TYPE_SEPARATOR = "::"; //$NON-NLS-1$
+	private static final String ENCLOSING_TYPE_SEPARATOR = new String(new char[] { NamespaceReference.NAMESPACE_SEPARATOR }); //$NON-NLS-1$
 
 	protected String createMethodProposalLabel(CompletionProposal methodProposal) {
 		StringBuffer nameBuffer = new StringBuffer();
@@ -80,13 +81,11 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		IModelElement parent = type.getParent();
 		if (parent instanceof IType) {
 			IType type2 = (IType) parent;
-			nameBuffer.append(type2.getElementName()); // XXX, fqn may be
-			// better idea
+			nameBuffer.append(type2.getElementName());
 		} else {
 			nameBuffer.append(parent.getElementName());
 		}
 
 		return nameBuffer.toString();
 	}
-
 }
