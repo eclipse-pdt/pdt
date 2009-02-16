@@ -249,25 +249,30 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 				else if (node instanceof NamespaceReference) {
 					String name = ((NamespaceReference) node).getName();
-					name = PHPTypeInferenceUtils.extractNamespaceName(name, sourceModule, offset);
+					name = PHPTypeInferenceUtils.extractNamespaceName(name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset);
 					if (name != null) {
 						return PHPTypeInferenceUtils.getNamespaces(name, sourceModule);
 					}
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
-					String name = ((TypeReference) node).getName();
-					IType[] globalTypes = PHPTypeInferenceUtils.getTypes(name, sourceModule, offset);
-					if (globalTypes == null || globalTypes.length == 0) { // This can be a constant in PHP 5.3
-						return PHPTypeInferenceUtils.getFields(name, sourceModule, offset);
+					String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node).getFullyQualifiedName() : ((TypeReference) node).getName();
+					IType[] types = PHPTypeInferenceUtils.getTypes(name, sourceModule, offset);
+					if (types == null || types.length == 0) {
+						// This can be a constant or namespace in PHP 5.3:
+						types = PHPTypeInferenceUtils.getNamespaces(name, sourceModule);
+						if (types == null || types.length == 0) {
+							return PHPTypeInferenceUtils.getFields(name, sourceModule, offset);
+						}
 					}
-					return globalTypes;
+					return types;
 				}
 				else if (node instanceof ClassInstanceCreation) {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
-						return PHPTypeInferenceUtils.getTypes(((SimpleReference) className).getName(), sourceModule, offset);
+						String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node).getFullyQualifiedName() : ((SimpleReference) node).getName();
+						return PHPTypeInferenceUtils.getTypes(name, sourceModule, offset);
 					}
 				}
 			}
