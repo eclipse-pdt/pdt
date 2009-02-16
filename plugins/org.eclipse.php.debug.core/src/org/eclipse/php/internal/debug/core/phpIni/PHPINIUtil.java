@@ -23,11 +23,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 
 public class PHPINIUtil {
@@ -69,7 +69,7 @@ public class PHPINIUtil {
 			PHPDebugPlugin.log(e);
 		}
 	}
-	
+
 	private static void modifyExtensionDir(File phpIniFile, String extensionPath) {
 		try {
 			INIFileModifier m = new INIFileModifier(phpIniFile);
@@ -99,11 +99,9 @@ public class PHPINIUtil {
 		if (project != null) {
 			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
 			List<String> includePath = new ArrayList<String>(path.length);
-			
 			for (IncludePath pathObject : path) {
 				if (pathObject.isBuildpath()) {
 					IBuildpathEntry entry = (IBuildpathEntry) pathObject.getEntry();
-					
 					if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 						IPath entryPath = DLTKCore.getResolvedVariablePath(entry.getPath());
 						includePath.add(entryPath.toFile().getAbsolutePath());
@@ -117,6 +115,23 @@ public class PHPINIUtil {
 							}
 						} else {
 							includePath.add(entryPath.toOSString());
+						}
+					} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+						try {
+							// Retries the local paths from the container  
+							final IScriptProject scriptProject = DLTKCore.create(project);
+							final IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(entry.getPath(), scriptProject);
+							final IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries(scriptProject);
+							if (buildpathEntries != null) {
+								for (IBuildpathEntry iBuildpathEntry : buildpathEntries) {
+									final IPath localPath = EnvironmentPathUtils.getLocalPath(iBuildpathEntry.getPath());
+									includePath.add(localPath.toOSString());
+								}
+
+							}
+
+						} catch (ModelException e) {
+							Logger.logException(e);
 						}
 					}
 				} else {
@@ -136,12 +151,11 @@ public class PHPINIUtil {
 			if (debuggerFile.exists()) {
 				modifyDebuggerExtensionPath(tempIniFile, debuggerFile.getAbsolutePath());
 			}
-			
 			modifyExtensionDir(tempIniFile, debuggerFile.getParentFile().getAbsolutePath());
 		}
-		
+
 		if (PHPDebugPlugin.DEBUG) {
-			System.out.println ("\nPHP.ini contents:\n---------------------");
+			System.out.println("\nPHP.ini contents:\n---------------------");
 			try {
 				BufferedReader r = new BufferedReader(new FileReader(tempIniFile));
 				String line;
@@ -153,7 +167,7 @@ public class PHPINIUtil {
 			} catch (IOException e) {
 			}
 		}
-		
+
 		return tempIniFile;
 	}
 
@@ -217,7 +231,7 @@ public class PHPINIUtil {
 		if (!phpIniFile.exists() || !phpIniFile.canRead()) {
 			// Try to detect via library:
 			try {
-				Process p = Runtime.getRuntime().exec(new String[] { phpExeFile.getAbsolutePath(), "-i"});
+				Process p = Runtime.getRuntime().exec(new String[] { phpExeFile.getAbsolutePath(), "-i" });
 				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				String l;
 				while ((l = r.readLine()) != null) {
@@ -235,11 +249,11 @@ public class PHPINIUtil {
 			} catch (IOException e) {
 			}
 		}
-		
+
 		if (phpIniFile.exists() && phpIniFile.canRead()) {
 			return phpIniFile;
 		}
-		
+
 		return null;
 	}
 }
