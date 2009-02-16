@@ -79,8 +79,12 @@ public class PhpTemplateCompletionProcessor extends ScriptTemplateCompletionProc
 						if (sdRegion == null) { // empty file case
 							return false;
 						}
+						
 						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(offset);
-
+						if (textRegion == null) {
+							return false;
+						}
+						
 						ITextRegionCollection container = sdRegion;
 
 						if (textRegion instanceof ITextRegionContainer) {
