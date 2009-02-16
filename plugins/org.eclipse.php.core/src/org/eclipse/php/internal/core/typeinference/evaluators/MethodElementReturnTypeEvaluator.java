@@ -29,10 +29,13 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
-import org.eclipse.php.internal.core.typeinference.*;
-import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 
 public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
@@ -63,17 +66,7 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		}
 
 		if (decl != null) {
-			String[] parameters;
-			try {
-				parameters = method.getParameters();
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-				parameters = new String[0];
-			}
-
-			final IContext innerContext = new MethodContext(goal.getContext(), sourceModule, module, decl, parameters, new IEvaluatedType[0]);
+			final IContext innerContext = ASTUtils.findContext(sourceModule, module, decl);
 
 			ASTVisitor visitor = new ASTVisitor() {
 				public boolean visitGeneral(ASTNode node) throws Exception {
