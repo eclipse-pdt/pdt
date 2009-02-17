@@ -801,8 +801,6 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			//going forward from 1st page to 2nd one
 			if (currentPage instanceof IPHPProjectCreateWizardPage) {
 				((IPHPProjectCreateWizardPage) currentPage).initPage();
-			} else {
-				throw (new IllegalStateException());
 			}
 		}
 
