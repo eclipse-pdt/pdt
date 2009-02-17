@@ -348,7 +348,7 @@
 				<xsl:when test="failure | error">Error</xsl:when>
 			</xsl:choose>
 		</xsl:attribute>
-		<td><xsl:value-of select="@name"/></td>
+		<td><xsl:value-of select="@classname"/>.<xsl:value-of select="@name"/></td>
 		<xsl:choose>
 			<xsl:when test="failure">
 				<td>Failure</td>
