@@ -19,7 +19,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  * This strategy completes variable names in 'param' PHPDoc tag
  * @author michael
  */
-public class PHPDocReturnTypeStrategy extends FunctionReturnTypesStrategy {
+public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 	
 	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
 		if (!(context instanceof PHPDocTagContext)) {
