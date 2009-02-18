@@ -13,14 +13,11 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
-import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
  * This strategy completes class constants and variables.
@@ -44,29 +41,14 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		String prefix = concreteContext.getPrefix();
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
-		boolean showStaticMembers = showStaticMembers(concreteContext);
-		boolean showNonStaticMembers = showNonStaticMembers(concreteContext);
-		boolean showNonStrictOptions = showNonStrictOptions();
-		boolean isThisCall = ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext) context).isThisCall());
-//		boolean isParentCall = ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext)context).isParentCall());
-
 		for (IType type : concreteContext.getLhsTypes()) {
 			IModelElement[] fields = CodeAssistUtils.getTypeFields(type, prefix, mask);
 
 			for (IModelElement element : fields) {
 				IField field = (IField) element;
 				try {
-					int flags = field.getFlags();
-					if (showNonStaticMembers && !PHPFlags.isStatic(flags)) {
-						if (PHPFlags.isConstant(flags) || showNonStrictOptions || isThisCall || !PHPFlags.isPrivate(flags)) {
-							reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
-						}
-					}
-					if (showStaticMembers) {
-						if (PHPFlags.isConstant(flags) || concreteContext.getPhpVersion().isLessThan(PHPVersion.PHP5) 
-								|| showNonStrictOptions || PHPFlags.isStatic(flags)) {
-							reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
-						}
+					if (!isFiltered(field, concreteContext)) {
+						reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
 					}
 				} catch (ModelException e) {
 					if (DLTKCore.DEBUG_COMPLETION) {
@@ -76,6 +58,12 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 			}
 		}
 	}
+	
+	protected boolean showNonStaticMembers(ClassMemberContext context) {
+		return super.showNonStaticMembers(context) && !isParentCall(context);
+	}
+
+
 
 	public String getSuffix() {
 		return "";
