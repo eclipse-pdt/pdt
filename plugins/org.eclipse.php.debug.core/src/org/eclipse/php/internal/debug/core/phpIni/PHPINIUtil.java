@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,21 +80,17 @@ public class PHPINIUtil {
 		}
 	}
 
-	/**
-	 * Make some preparations before debug session:
-	 * <ul>
-	 * 	<li>Adds include path
-	 * 	<li>Modifies Zend Debugger path in the PHP configuration file
-	 * </ul>
-	 *
-	 * @param phpIniFile PHP configuration file instance
-	 * @param phpExePath Path to the PHP executable
-	 * @param project Current project
-	 * @return created temporary PHP configuration file
-	 */
-	public static File prepareBeforeDebug(File phpIniFile, String phpExePath, IProject project) {
-		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
 
+	/**
+	 * Adds/Creates the php ini file according to the project include path settings.
+	 * @param phpIniFile null or already existing ini file
+	 * @param project
+	 * @return the ini file
+	 */
+	public static File createPhpIniByProject(File phpIniFile, IProject project) {
+		
+		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
+		
 		// Modify include path:
 		if (project != null) {
 			IncludePath[] path = PHPSearchEngine.buildIncludePath(project);
@@ -144,6 +140,25 @@ public class PHPINIUtil {
 			}
 			modifyIncludePath(tempIniFile, includePath.toArray(new String[includePath.size()]));
 		}
+		return tempIniFile;
+	}
+	
+	/**
+	 * Make some preparations before debug session:
+	 * <ul>
+	 * 	<li>Adds include path
+	 * 	<li>Modifies Zend Debugger path in the PHP configuration file
+	 * </ul>
+	 *
+	 * @param phpIniFile PHP configuration file instance
+	 * @param phpExePath Path to the PHP executable
+	 * @param project Current project
+	 * @return created temporary PHP configuration file
+	 */
+	public static File prepareBeforeDebug(File phpIniFile, String phpExePath, IProject project) {
+		File tempIniFile = createTemporaryPHPINIFile(phpIniFile);
+
+		tempIniFile = createPhpIniByProject(phpIniFile, project);
 
 		// Modify Zend Debugger extension entry:
 		if (phpIniFile != null) {

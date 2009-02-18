@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
@@ -382,5 +384,29 @@ public class PHPexeItem {
 			buf.append(l).append('\n');
 		}
 		return buf.toString();
+	}
+	
+	/**
+	 * Executes the file in the context of the project
+	 * @param project
+	 * @return true if execution success
+	 */
+	public boolean execPhpScript(IProject project) {
+		boolean status = false;
+		
+		if (executable == null) {
+			throw new IllegalStateException("PHP executable path is null"); //$NON-NLS-1$
+		}
+		File tempPHPIni = PHPINIUtil.createPhpIniByProject(getDetectedINILocation(), project);
+
+		try {
+			PHPexes.changePermissions(executable);
+			exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", name); //$NON-NLS-1$ //$NON-NLS-2$
+		} catch (IOException e) {
+			DebugPlugin.log(e);
+			status = false;
+		}
+		
+		return status;
 	}
 }
