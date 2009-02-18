@@ -40,6 +40,8 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 	private Server server;
 	private ArrayList runtimeComposites;
 	private SelectionListener tabsListener;
+	private CTabFolder tabs;
+	private String tabID;
 
 	/**
 	 * Instantiate a new server edit dialog.
@@ -55,9 +57,21 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 		runtimeComposites = new ArrayList(3);
 	}
 
+	/**
+	 * Instantiate a new server edit dialog.
+	 *
+	 * @param parentShell the parent SWT shell
+	 * @param server An assigned IServer
+	 * @param init selected tabe ID.
+	 */
+	public ServerEditDialog(Shell parentShell, Server server, String tabID) {
+		this(parentShell, server);
+		this.tabID = tabID;
+	}
+
 	protected Control createDialogArea(Composite parent) {
 		// Create a tabbed container that will hold all the fragments
-		CTabFolder tabs = SWTUtil.createTabFolder(parent);
+		tabs = SWTUtil.createTabFolder(parent);
 		ICompositeFragmentFactory[] factories = WizardFragmentsFactoryRegistry.getFragmentsFactories(FRAGMENT_GROUP_ID);
 		for (ICompositeFragmentFactory element : factories) {
 			CTabItem tabItem = new CTabItem(tabs, SWT.BORDER);
@@ -65,6 +79,7 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 			fragment.setData(server);
 			tabItem.setText(fragment.getDisplayName());
 			tabItem.setControl(fragment);
+			tabItem.setData(fragment.getId());
 			runtimeComposites.add(fragment);
 		}
 
@@ -73,7 +88,24 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 
 		tabsListener = new TabsSelectionListener();
 		tabs.addSelectionListener(tabsListener);
+
+		//set the init selection of tabitem.
+		if (tabID != null) {
+			setSelect(tabID);
+		}
 		return tabs;
+	}
+
+	private void setSelect(String id) {
+		if (id == null) {
+			return;
+		}
+		for (int i = 0; i < tabs.getItemCount(); i++) {
+			if (id.equals(tabs.getItem(i).getData())) {
+				tabs.setSelection(i);
+				break;
+			}
+		}
 	}
 
 	/* (non-Javadoc)
@@ -169,8 +201,8 @@ public class ServerEditDialog extends TitleAreaDialog implements IControlHandler
 		}
 
 		public void widgetSelected(SelectionEvent e) {
-			CTabItem item = (CTabItem)e.item;
-			CompositeFragment fragment = (CompositeFragment)item.getControl();
+			CTabItem item = (CTabItem) e.item;
+			CompositeFragment fragment = (CompositeFragment) item.getControl();
 			setTitle(fragment.getTitle());
 			setDescription(fragment.getDescription());
 		}
