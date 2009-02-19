@@ -35,9 +35,15 @@ public class PHPClassType extends ClassType implements IClassType {
 		// detect the namespace prefix:
 		int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		if (i != -1) {
+			if (typeName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				// make the type name fully qualified:
+				typeName = new StringBuilder().append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName).toString();
+				i += 1;
+			}
 			this.namespace = typeName.substring(0, i);
+		} else {
+			this.typeName = typeName;
 		}
-		this.typeName = typeName;
 	}
 	
 	/**
@@ -48,8 +54,12 @@ public class PHPClassType extends ClassType implements IClassType {
 			throw new IllegalArgumentException();
 		}
 		
-		this.namespace = namespace;
+		// make the namespace fully qualified
+		if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+			namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
+		}
 		
+		this.namespace = namespace;
 		this.typeName = new StringBuilder(namespace)
 			.append(NamespaceReference.NAMESPACE_SEPARATOR).append(typeName).toString();
 	}

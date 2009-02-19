@@ -642,21 +642,23 @@ public class CodeAssistUtils {
 			int functionNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, functionNameEnd, false);
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
-			IType classData = PHPModelUtils.getCurrentType(sourceModule, offset);
-			if (classData != null) { //if its a clss function
-				return getFunctionReturnType(classData, functionName, offset);
-			}
-
-			// if its a non class function
-			Set<IType> returnTypes = new LinkedHashSet<IType>();
-			IModelElement[] functions = getGlobalMethods(sourceModule, functionName, EXACT_NAME);
-			for (IModelElement function : functions) {
-				IType[] types = getFunctionReturnType((IMethod) function, offset);
-				if (types != null) {
-					returnTypes.addAll(Arrays.asList(types));
+			try {
+				IMethod[] functions = PHPTypeInferenceUtils.getMethods(functionName, sourceModule, offset);
+				// if its a non class function
+				Set<IType> returnTypes = new LinkedHashSet<IType>();
+				for (IModelElement function : functions) {
+					IType[] types = getFunctionReturnType((IMethod) function, offset);
+					if (types != null) {
+						returnTypes.addAll(Arrays.asList(types));
+					}
+				}
+				return returnTypes.toArray(new IType[returnTypes.size()]);
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
 				}
 			}
-			return returnTypes.toArray(new IType[returnTypes.size()]);
+
 		}
 		return EMPTY_TYPES;
 	}
