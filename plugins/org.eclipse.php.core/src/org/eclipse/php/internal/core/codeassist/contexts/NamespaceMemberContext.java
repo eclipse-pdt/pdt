@@ -72,8 +72,7 @@ public class NamespaceMemberContext extends StatementContext {
 		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
 		
-		nsName = PHPTypeInferenceUtils.extractNamespaceName(nsName, sourceModule, offset);
-		namespaces = PHPTypeInferenceUtils.getNamespaces(nsName, sourceModule);
+		namespaces = PHPTypeInferenceUtils.getNamespaceOf(nsName, sourceModule, offset);
 		return true;
 	}
 	

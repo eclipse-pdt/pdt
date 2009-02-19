@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.18 2009/02/18 16:51:14 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.19 2009/02/19 04:03:33 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -553,8 +553,10 @@ namespace_name:name
 
 | T_NS_SEPARATOR namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setGlobal(true);
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	UsePart usePart = new UsePart(name, null);
 	RESULT = usePart;
@@ -562,8 +564,10 @@ namespace_name:name
 
 | T_NS_SEPARATOR namespace_name:name T_AS T_STRING:aliasName
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setGlobal(true);
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	UsePart usePart = new UsePart(name,
 		new SimpleReference(aliasNameleft, aliasNameright, aliasName));
@@ -2341,8 +2345,10 @@ namespace_name:functionName T_OPEN_PARENTHESE:start function_call_parameter_list
 {:
 	parameters.setStart(startright);
 	parameters.setEnd(endleft);
-	if (functionName.getNamespace() != null) {
-		functionName.getNamespace().setGlobal(true);
+	NamespaceReference namespace = functionName.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	RESULT = new PHPCallExpression(sepleft, endright, null, functionName, parameters); 
 :}
@@ -2410,8 +2416,10 @@ T_STATIC:s
 
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setGlobal(true);
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	RESULT = name;
 :}
@@ -2433,8 +2441,10 @@ namespace_name:name
 
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setGlobal(true);
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	RESULT = name;
 :}
@@ -2647,8 +2657,10 @@ common_scalar:scalar
 
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setGlobal(true);
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	RESULT = name;
 :}
@@ -2714,8 +2726,10 @@ T_STRING_VARNAME:scalar
 :}
 | T_NS_SEPARATOR:s namespace_name:name
 {:
-	if (name.getNamespace() != null) {
-		name.getNamespace().setGlobal(true);
+	NamespaceReference namespace = name.getNamespace();
+	if (namespace != null) {
+		namespace.setGlobal(true);
+		namespace.setStart(namespace.sourceStart() - 1);
 	}
 	RESULT = name;
 :}

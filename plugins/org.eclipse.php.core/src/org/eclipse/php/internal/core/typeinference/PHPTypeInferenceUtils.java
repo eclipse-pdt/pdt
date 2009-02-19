@@ -304,40 +304,75 @@ public class PHPTypeInferenceUtils {
 		}
 		return element;
 	}
+	
+	/**
+	 * Guess the namespace where the specified element is declared.
+	 * @param elementName The name of the element, like: \A\B, A\B, namespace\B, \B, etc...
+	 * @param sourceModule Source module where the element is referenced
+	 * @param offset The offset in file where the element is referenced
+	 * @return model elements of found namespace, otherwise <code>null</code> (global namespace)
+	 */
+	public static IType[] getNamespaceOf(String elementName, ISourceModule sourceModule, int offset) {
+		String namespace = extractNamespaceName(elementName, sourceModule, offset);
+		if (namespace != null && namespace.length() > 0) {
+			return getNamespaces(namespace, sourceModule);
+		}
+		return null;
+	}
 
 	/**
 	 * Extracts the namespace name from the specified element name and resolves it using USE statements that present in the file.
 	 * @param elementName The name of the element, like: \A\B or A\B\C.
 	 * @param sourceModule Source module where the element is referenced
 	 * @param offset The offset where element is referenced
-	 * @return namespace name or <code>null</code> in case there's no namespace prefix in the element. In case of global namespace
-	 * 		this method returns an empty string: <code>""</code>
+	 * @return namespace name:
+	 * 	<pre>
+	 *   1. <code>""</code> (empty string) indicates global namespace
+	 *   2. non-empty string indicates a real namespace
+	 *   3. <code>null</code> indicates that there's no namespace prefix in element name
+	 *  </pre>
 	 */
 	public static String extractNamespaceName(String elementName, ISourceModule sourceModule, final int offset) {
 
 		boolean isGlobal = false;
-		if (elementName.charAt(0) == '\\') {
+		if (elementName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			isGlobal = true;
 			elementName = elementName.substring(1);
 		}
-
-		int nsIndex = elementName.lastIndexOf('\\');
+		
+		int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		if (nsIndex != -1) {
-
 			String namespace = elementName.substring(0, nsIndex);
 			
-			if (!isGlobal && namespace.indexOf('\\') == -1) {
-				// it can be an alias - try to find relevant USE statement
+			if (!isGlobal) {
+				// 1. It can be a special 'namespace' keyword, which points to the current namespace:
+				if ("namespace".equalsIgnoreCase(namespace)) {
+					IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+					return currentNamespace.getElementName();
+				}
 				
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-				UsePart usePart = ASTUtils.findUseStatement(moduleDeclaration, namespace, offset);
-				if (usePart != null) {
-					namespace = usePart.getNamespace().getFullyQualifiedName();
+				// 2. it can be an alias - try to find relevant USE statement
+				if (namespace.indexOf('\\') == -1) {
+					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+					UsePart usePart = ASTUtils.findUseStatement(moduleDeclaration, namespace, offset);
+					if (usePart != null) {
+						return usePart.getNamespace().getFullyQualifiedName();
+					}
+				}
+				
+				// 3. it can be a sub-namespace of the current namespace:
+				IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+				if (currentNamespace != null) {
+					return new StringBuilder(currentNamespace.getElementName())
+							.append(NamespaceReference.NAMESPACE_SEPARATOR).append(namespace).toString();
 				}
 			}
+			
+			// global namespace:
 			return namespace;
 		}
 		
+		// no namespace prefix in element name:
 		return null;
 	}
 

@@ -249,10 +249,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 				else if (node instanceof NamespaceReference) {
 					String name = ((NamespaceReference) node).getName();
-					name = PHPTypeInferenceUtils.extractNamespaceName(name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset);
-					if (name != null) {
-						return PHPTypeInferenceUtils.getNamespaces(name, sourceModule);
-					}
+					return PHPTypeInferenceUtils.getNamespaceOf(name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset);
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
