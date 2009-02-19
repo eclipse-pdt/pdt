@@ -611,7 +611,7 @@ public class CodeAssistUtils {
 			if (className.length() > 0) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 				FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
-				IEvaluatedType type = new PHPClassType(className);
+				IEvaluatedType type = PHPTypeInferenceUtils.createEvaluatedType(className, sourceModule, offset);
 				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
 				if (modelElements != null) {
 					return modelElementsToTypes(modelElements);

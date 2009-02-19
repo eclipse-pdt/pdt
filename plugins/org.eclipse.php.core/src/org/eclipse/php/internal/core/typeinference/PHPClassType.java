@@ -26,7 +26,9 @@ public class PHPClassType extends ClassType implements IClassType {
 	private String typeName;
 
 	/**
-	 * Constructs evaluated type for PHP class or interface that was declared under some namespace
+	 * Constructs evaluated type for PHP class or interface.
+	 * The type name can contain namespace part (namespace name must be real, and not point to the
+	 * alias or subnamespace under current namespace)
 	 */
 	public PHPClassType(String typeName) {
 		if (typeName == null) {

@@ -35,6 +35,22 @@ import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPTypeInferenceUtils {
 	
+	/**
+	 * Creates evaluated type for the given class name. If class name contains namespace parts,
+	 * the fully qualified name is resolved.
+	 * @param typeName Type name
+	 * @param sourceModule Source module where the type was referenced
+	 * @param offset Offset in file here the type was referenced
+	 * @return 
+	 */
+	public static PHPClassType createEvaluatedType(String typeName, ISourceModule sourceModule, int offset) {
+		String namespace = extractNamespaceName(typeName, sourceModule, offset);
+		if (namespace != null) {
+			return new PHPClassType(namespace, extractElementName(typeName));
+		}
+		return new PHPClassType(typeName);
+	}
+	
 	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluatedTypes) {
 		MultiTypeType multiTypeType = new MultiTypeType();
 		for (IEvaluatedType type : evaluatedTypes) {
