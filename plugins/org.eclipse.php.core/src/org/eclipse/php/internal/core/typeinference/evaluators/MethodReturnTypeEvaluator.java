@@ -53,7 +53,7 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		final Set<IMethod> methods = new HashSet<IMethod>();
 
 		String methodName = typedGoal.getMethodName();
-		IType[] types = getTypes(typedContext.getInstanceType(), typedContext.getSourceModule());
+		IType[] types = getTypes(typedContext.getInstanceType(), typedContext);
 
 		if (types.length == 0) {
 			IScriptProject scriptProject = typedContext.getSourceModule().getScriptProject();

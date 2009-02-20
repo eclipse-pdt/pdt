@@ -319,7 +319,7 @@ public class CodeAssistUtils {
 	public static IType[] getVariableType(IType[] types, String propertyName, int offset) {
 		if (types != null) {
 			for (IType type : types) {
-				PHPClassType classType = new PHPClassType(type.getElementName());
+				PHPClassType classType = PHPTypeInferenceUtils.createEvaluatedType(type);
 				IField[] fields = getTypeFields(type, propertyName, CASE_SENSITIVE | EXCLUDE_CONSTANTS);
 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(type.getSourceModule(), null);
@@ -339,9 +339,9 @@ public class CodeAssistUtils {
 					PHPDocClassVariableGoal phpDocGoal = new PHPDocClassVariableGoal(typeContext, variableName);
 					IEvaluatedType evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
-					IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
+					IType[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 					if (modelElements != null) {
-						return modelElementsToTypes(modelElements);
+						return modelElements;
 					}
 
 					ClassVariableDeclarationGoal goal = new ClassVariableDeclarationGoal(fileContext, types, variableName);
@@ -349,7 +349,7 @@ public class CodeAssistUtils {
 
 					modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
 					if (modelElements != null) {
-						return modelElementsToTypes(modelElements);
+						return modelElements;
 					}
 				}
 			}
@@ -373,25 +373,12 @@ public class CodeAssistUtils {
 			PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
 			IEvaluatedType evaluatedType = typeInferencer.evaluateType(goal);
 
-			IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, position);
+			IType[] modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, position);
 			if (modelElements != null) {
-				return modelElementsToTypes(modelElements);
+				return modelElements;
 			}
 		}
 		return EMPTY_TYPES;
-	}
-
-	/**
-	 * Converts model elements array to IType elements array
-	 * @param elements
-	 * @return
-	 */
-	public static IType[] modelElementsToTypes(IModelElement[] elements) {
-		List<IType> types = new ArrayList<IType>(elements.length);
-		for (IModelElement element : elements) {
-			types.add((IType) element);
-		}
-		return types.toArray(new IType[types.size()]);
 	}
 
 	/**
@@ -432,29 +419,27 @@ public class CodeAssistUtils {
 
 		org.eclipse.dltk.core.ISourceModule sourceModule = method.getSourceModule();
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
-		FileContext fileContext = new FileContext(sourceModule, moduleDeclaration, offset);
 
-		IType currentType = PHPModelUtils.getCurrentType(sourceModule, offset);
-		TypeContext instanceContext = new TypeContext(fileContext, currentType == null ? null : new PHPClassType(currentType.getElementName()));
+		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
 		
 		IEvaluatedType evaluatedType;
-		IModelElement[] modelElements;
+		IType[] modelElements;
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
 		if (usePhpDoc) {
-			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(instanceContext, method.getElementName());
+			PHPDocMethodReturnTypeGoal phpDocGoal = new PHPDocMethodReturnTypeGoal(context, method);
 			evaluatedType = typeInferencer.evaluateTypePHPDoc(phpDocGoal, 3000);
 
-			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
+			modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, offset);
 			if (modelElements != null) {
-				return modelElementsToTypes(modelElements);
+				return modelElements;
 			}
 		}
 
-		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(instanceContext, method);
+		MethodElementReturnTypeGoal methodGoal = new MethodElementReturnTypeGoal(context, method);
 		evaluatedType = typeInferencer.evaluateType(methodGoal);
-		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, fileContext, offset);
+		modelElements = PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) context, offset);
 		if (modelElements != null) {
-			return modelElementsToTypes(modelElements);
+			return modelElements;
 		}
 		return EMPTY_TYPES;
 	}
@@ -612,9 +597,9 @@ public class CodeAssistUtils {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 				FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
 				IEvaluatedType type = PHPTypeInferenceUtils.createEvaluatedType(className, sourceModule, offset);
-				IModelElement[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
+				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
 				if (modelElements != null) {
-					return modelElementsToTypes(modelElements);
+					return modelElements;
 				}
 				return EMPTY_TYPES;
 			}
@@ -1006,11 +991,13 @@ public class CodeAssistUtils {
 							}
 
 							IModelElement parent = element.getParent();
-							// Global scope elements in PHP are those, which are not defined in class body,
-							// or it is a variable, and its parent - source module
-							if ((element instanceof IField && parent instanceof org.eclipse.dltk.core.ISourceModule) || (!(element instanceof IField) && !(parent instanceof IType))) {
-								elements.add(element);
+							if (parent instanceof IType && !PHPFlags.isNamespace(((IType)parent).getFlags())) {
+								return; // The element is a class/interface member
 							}
+							if (parent instanceof IMethod && element instanceof IField) {
+								return; // The element is a local function variable
+							}
+							elements.add(element);
 						}
 					}, null);
 				}
@@ -1031,8 +1018,11 @@ public class CodeAssistUtils {
 				}
 			}
 		}
-		IModelElement[] result = elements.toArray(new IModelElement[elements.size()]);
-		return currentFileOnly ? result : PHPModelUtils.filterElements(sourceModule, result);
+		if (!currentFileOnly) {
+			Collection<IModelElement> result = PHPModelUtils.filterElements(sourceModule, elements);
+			return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
+		}
+		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
 	/**

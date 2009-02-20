@@ -21,8 +21,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.FormalParameter;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPMethodDeclaration;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
 public class FormalParameterEvaluator extends GoalEvaluator {
@@ -39,7 +38,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 
 		SimpleReference type = parameter.getParameterType();
 		if (type != null) {
-			result = new PHPClassType(type.getName());
+			result = PHPTypeInferenceUtils.createEvaluatedType(type);
 		} else {
 			IContext context = typedGoal.getContext();
 			if (context instanceof MethodContext) {
@@ -52,10 +51,7 @@ public class FormalParameterEvaluator extends GoalEvaluator {
 							SimpleReference[] references = tag.getReferences();
 							if (references.length == 2) {
 								if (references[0].getName().equals(parameter.getName())) {
-									result = PHPSimpleTypes.fromString(references[1].getName());
-									if (result == null) {
-										result = new PHPClassType(references[1].getName());
-									}
+									result = PHPTypeInferenceUtils.createEvaluatedType(references[1]);
 								}
 							}
 						}

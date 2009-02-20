@@ -10,26 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.goals.phpdoc;
 
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
 
 public class PHPDocMethodReturnTypeGoal extends AbstractTypeGoal {
 
-	private String methodName;
+	private IMethod method;
 
-	public PHPDocMethodReturnTypeGoal(IContext context, String methodName) {
+	public PHPDocMethodReturnTypeGoal(IContext context, IMethod methodName) {
 		super(context);
-		this.methodName = methodName;
+		this.method = methodName;
 	}
 
-	public String getMethodName() {
-		return methodName;
+	public IMethod getMethod() {
+		return method;
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
+		result = prime * result + ((method == null) ? 0 : method.hashCode());
 		return result;
 	}
 
@@ -44,11 +45,11 @@ public class PHPDocMethodReturnTypeGoal extends AbstractTypeGoal {
 			return false;
 		}
 		PHPDocMethodReturnTypeGoal other = (PHPDocMethodReturnTypeGoal) obj;
-		if (methodName == null) {
-			if (other.methodName != null) {
+		if (method == null) {
+			if (other.method != null) {
 				return false;
 			}
-		} else if (!methodName.equals(other.methodName)) {
+		} else if (!method.equals(other.method)) {
 			return false;
 		}
 		return true;

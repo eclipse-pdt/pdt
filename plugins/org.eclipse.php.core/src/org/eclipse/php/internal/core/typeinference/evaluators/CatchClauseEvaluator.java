@@ -7,7 +7,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.CatchClause;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
 public class CatchClauseEvaluator extends GoalEvaluator {
 
@@ -23,7 +23,7 @@ public class CatchClauseEvaluator extends GoalEvaluator {
 
 		SimpleReference type = catchClause.getClassName();
 		if (type != null) {
-			result = new PHPClassType(type.getName());
+			result = PHPTypeInferenceUtils.createEvaluatedType(type);
 		}
 		return IGoal.NO_GOALS;
 	}

@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
@@ -47,7 +46,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		TypeContext context = (TypeContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
 
-		IType[] types = getTypes(context.getInstanceType(), context.getSourceModule());
+		IType[] types = getTypes(context.getInstanceType(), context);
 
 		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 		for (IType type : types) {
@@ -74,10 +73,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
 					for (SimpleReference ref : references) {
-						IEvaluatedType type = PHPSimpleTypes.fromString(ref.getName());
-						if (type == null) {
-							type = new PHPClassType(ref.getName());
-						}
+						PHPClassType type = PHPTypeInferenceUtils.createEvaluatedType(ref);
 						evaluated.add(type);
 					}
 				}

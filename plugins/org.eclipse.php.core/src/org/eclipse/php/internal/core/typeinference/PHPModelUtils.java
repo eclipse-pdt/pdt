@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -168,7 +169,7 @@ public class PHPModelUtils {
 	 * @param elements
 	 * @return
 	 */
-	public static IModelElement[] filterElements(ISourceModule sourceModule, IModelElement[] elements) {
+	public static <T extends IModelElement> Collection<T> filterElements(ISourceModule sourceModule, Collection<T> elements) {
 		if (elements == null) {
 			return null;
 		}
@@ -178,7 +179,7 @@ public class PHPModelUtils {
 		int elementType = 0;
 		String elementName = null;
 		boolean fileNetworkFilter = true;
-		for (IModelElement element : elements) {
+		for (T element : elements) {
 			if (elementName == null) {
 				elementType = element.getElementType();
 				elementName = element.getElementName();
@@ -202,13 +203,13 @@ public class PHPModelUtils {
 	 * @param elements
 	 * @return
 	 */
-	private static IModelElement[] fileNetworkFilter(ISourceModule sourceModule, IModelElement[] elements) {
+	private static <T extends IModelElement> Collection<T> fileNetworkFilter(ISourceModule sourceModule, Collection<T> elements) {
 		
-		if (elements != null && elements.length > 0) {
-			List<IModelElement> filteredElements = new LinkedList<IModelElement>();
+		if (elements != null && elements.size() > 0) {
+			List<T> filteredElements = new LinkedList<T>();
 			
 			// If some of elements belong to current file return just it:
-			for (IModelElement element : elements) {
+			for (T element : elements) {
 				if (sourceModule.equals(element.getOpenable())) {
 					filteredElements.add(element);
 				}
@@ -216,14 +217,14 @@ public class PHPModelUtils {
 			if (filteredElements.size() == 0) {
 				// Filter by includes network
 				ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
-				for (IModelElement element : elements) {
+				for (T element : elements) {
 					if (LanguageModelInitializer.isLanguageModelElement(element) || referenceTree.find(((ModelElement)element).getSourceModule())) {
 						filteredElements.add(element);
 					}
 				}
 			}
 			if (filteredElements.size() > 0) {
-				elements = filteredElements.toArray(new IModelElement[filteredElements.size()]);
+				elements = filteredElements;
 			}
 		}
 		return elements;

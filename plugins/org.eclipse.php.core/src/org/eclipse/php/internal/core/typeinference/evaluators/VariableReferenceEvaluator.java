@@ -34,7 +34,6 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -64,7 +63,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 				MethodContext methodContext = (MethodContext) context;
 				IEvaluatedType instanceType = methodContext.getInstanceType();
 				if (instanceType != null) {
-					this.results.add(new PHPClassType(instanceType.getTypeName()));
+					this.results.add(instanceType);
 				} else {
 					this.results.add(new SimpleType(SimpleType.TYPE_NULL));
 				}

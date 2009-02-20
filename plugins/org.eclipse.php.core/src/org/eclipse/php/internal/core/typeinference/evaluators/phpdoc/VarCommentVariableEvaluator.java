@@ -17,8 +17,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.VarComment;
-import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.VarCommentVariableGoal;
 
 /**
@@ -45,12 +44,7 @@ public class VarCommentVariableEvaluator extends GoalEvaluator {
 
 				VariableReference variableReference = varComment.getVariableReference();
 				if (variableReference.getName().equals(variableName)) {
-
-					String typeName = varComment.getTypeReference().getName();
-					result = PHPSimpleTypes.fromString(typeName);
-					if (result == null) {
-						result = new PHPClassType(typeName);
-					}
+					result = PHPTypeInferenceUtils.createEvaluatedType(varComment.getTypeReference());
 				}
 			}
 		}

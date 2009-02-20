@@ -58,7 +58,14 @@ public abstract class ContextFinder extends ASTVisitor {
 				fileContext.setNamespace(node.getName());
 			}
 		} else {
-			contextStack.push(new TypeContext((ISourceModuleContext) contextStack.peek(), new PHPClassType(node.getName())));
+			ISourceModuleContext parentContext = (ISourceModuleContext) contextStack.peek();
+			PHPClassType instanceType;
+			if (parentContext instanceof INamespaceContext && ((INamespaceContext)parentContext).getNamespace() != null) {
+				instanceType = new PHPClassType(((INamespaceContext)parentContext).getNamespace(), node.getName());
+			} else {
+				instanceType = new PHPClassType(node.getName());
+			}
+			contextStack.push(new TypeContext(parentContext, instanceType));
 		}
 		return visitGeneral(node);
 	}

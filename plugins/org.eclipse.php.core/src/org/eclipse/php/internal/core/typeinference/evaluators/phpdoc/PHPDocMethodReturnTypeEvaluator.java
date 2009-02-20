@@ -19,14 +19,13 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.evaluation.types.AmbiguousType;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.IContext;
+import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -38,7 +37,6 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
 /**
@@ -65,55 +63,25 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		PHPDocMethodReturnTypeGoal typedGoal = (PHPDocMethodReturnTypeGoal) goal;
-		IContext context = goal.getContext();
-		String methodName = typedGoal.getMethodName();
-
-		TypeContext typedGontext = (TypeContext) context;
-		IEvaluatedType instanceType = typedGontext.getInstanceType();
+		ISourceModuleContext context = (ISourceModuleContext) goal.getContext();
+		IMethod method = typedGoal.getMethod();
 
 		Set<PHPDocField> docs = new HashSet<PHPDocField>();
 
-		if (instanceType instanceof PHPClassType || instanceType instanceof AmbiguousType) {
-
-			List<IType> types = new LinkedList<IType>();
-			if (instanceType instanceof AmbiguousType) {
-				AmbiguousType ambiguousType = (AmbiguousType) instanceType;
-				IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-				for (IEvaluatedType type : ambiguousType.getPossibleTypes()) {
-					if (type instanceof PHPClassType) {
-						PHPClassType classType = (PHPClassType) type;
-						IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getType(classType.getTypeName(), scope);
-						for (IModelElement c : classes) {
-							types.add((IType) c);
-						}
-					}
+		if (method.getDeclaringType() != null) {
+			try {
+				for (PHPDocField doc : PHPModelUtils.getTypeHierarchyMethodDoc(method.getDeclaringType(), method.getElementName(), null)) {
+					docs.add(doc);
 				}
-			} else {
-				IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-				PHPClassType classType = (PHPClassType) instanceType;
-				IModelElement[] classes = PHPMixinModel.getInstance(scriptProject).getType(classType.getTypeName(), scope);
-				for (IModelElement c : classes) {
-					types.add((IType) c);
-				}
-			}
-
-			for (IType type : types) {
-				try {
-					for (PHPDocField doc : PHPModelUtils.getTypeHierarchyMethodDoc(type, methodName, null)) {
-						docs.add(doc);
-					}
-				} catch (CoreException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
-					}
+			} catch (CoreException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
 				}
 			}
 		} else {
-			IScriptProject scriptProject = typedGontext.getSourceModule().getScriptProject();
+			IScriptProject scriptProject = context.getSourceModule().getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getFunctionDoc(methodName, scope);
+			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getFunctionDoc(method.getElementName(), scope);
 			for (IModelElement e : elements) {
 				docs.add((PHPDocField) e);
 			}
@@ -121,7 +89,7 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 		PHPDocField docFromSameFile = null;
 		for (PHPDocField doc : docs) {
-			if (doc.getSourceModule().equals(typedGontext.getSourceModule())) {
+			if (doc.getSourceModule().equals(context.getSourceModule())) {
 				docFromSameFile = doc;
 				break;
 			}
@@ -153,9 +121,6 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 		return IGoal.NO_GOALS;
 	}
-	
-
-
 
 	public Object produceResult() {
 		return PHPTypeInferenceUtils.combineTypes(evaluated);

@@ -168,7 +168,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return methods.toArray(new IModelElement[methods.size()]);
 						}
 					} else {
-						return PHPModelUtils.filterElements(sourceModule, PHPTypeInferenceUtils.getMethods(callExpression.getName(), sourceModule, offset));
+						IMethod[] methods = PHPTypeInferenceUtils.getMethods(callExpression.getName(), sourceModule, offset);
+						Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
+						return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 					}
 				}
 				// Static field or constant access:
@@ -413,7 +415,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							}
 
 							IModelElement[] elements = getGlobalOrMethodFields(sourceModule, offset, elementName);
-							return PHPModelUtils.filterElements(sourceModule, elements);
+							Collection<IModelElement> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
+							return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
 						}
 
 						// If we are at class constant definition:
@@ -429,8 +432,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							return PHPModelUtils.filterElements(sourceModule, 
-								PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset));
+							IType[] types = PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset);
+							Collection<IType> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(types));
+							return (IType[]) filtered.toArray(new IType[filtered.size()]);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
 							return PHPTypeInferenceUtils.getNamespaces(elementName, sourceModule);
@@ -447,7 +451,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							return PHPModelUtils.filterElements(sourceModule, PHPTypeInferenceUtils.getMethods(elementName, sourceModule, offset));
+							IMethod[] methods = PHPTypeInferenceUtils.getMethods(elementName, sourceModule, offset);
+							Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
+							return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 						}
 
 						if (types != null && types.length > 0) {
@@ -487,13 +493,16 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// This can be only global constant, if we've reached here:
-						IModelElement[] constants = PHPModelUtils.filterElements(sourceModule, PHPTypeInferenceUtils.getFields(elementName, sourceModule, offset));
-						if (constants.length > 0) {
-							return constants;
+						IField[] fields = PHPTypeInferenceUtils.getFields(elementName, sourceModule, offset);
+						Collection<IField> constants = PHPModelUtils.filterElements(sourceModule, Arrays.asList(fields));
+						if (constants.size() > 0) {
+							return (IField[]) constants.toArray(new IField[constants.size()]);
 						}
 
 						// Return class if nothing else found.
-						return PHPModelUtils.filterElements(sourceModule, PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset));
+						IType[] elements = PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset);
+						Collection<IType> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
+						return (IType[]) filtered.toArray(new IType[filtered.size()]);
 					}
 				}
 			}

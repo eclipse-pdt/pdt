@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallExpression;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.ISourceModuleContext;
@@ -22,6 +23,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -70,14 +72,30 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		// we've evaluated receiver, lets evaluate the method return type now (using PHP Doc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_METHOD_PHPDOC;
-			return new PHPDocMethodReturnTypeGoal(new TypeContext((ISourceModuleContext) goal.getContext(), receiverType), expression.getName());
+			TypeContext context = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
+			IModelElement[] types = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) goal.getContext(), 0);
+			String methodName = expression.getName();
+			for (IModelElement type : types) {
+				IMethod method;
+				try {
+					method = PHPModelUtils.getTypeMethod((IType) type, methodName);
+					if (method != null) {
+						return new PHPDocMethodReturnTypeGoal(context, method);
+					}
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
 		if (state == STATE_WAITING_METHOD_PHPDOC) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				result = previousResult;
 			}
 			state = STATE_WAITING_METHOD;
-			return new MethodReturnTypeGoal(new TypeContext((ISourceModuleContext) goal.getContext(), receiverType), expression.getName(), new IEvaluatedType[0] /* arguments are not interesting us */);
+			TypeContext context = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
+			return new MethodReturnTypeGoal(context, expression.getName(), new IEvaluatedType[0] /* arguments are not interesting us */);
 		}
 		if (state == STATE_WAITING_METHOD) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {

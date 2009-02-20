@@ -15,6 +15,7 @@ import java.util.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
@@ -28,6 +29,7 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
@@ -38,6 +40,7 @@ public class PHPTypeInferenceUtils {
 	/**
 	 * Creates evaluated type for the given class name. If class name contains namespace parts,
 	 * the fully qualified name is resolved.
+	 * 
 	 * @param typeName Type name
 	 * @param sourceModule Source module where the type was referenced
 	 * @param offset Offset in file here the type was referenced
@@ -47,6 +50,34 @@ public class PHPTypeInferenceUtils {
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
 		if (namespace != null) {
 			return new PHPClassType(namespace, extractElementName(typeName));
+		}
+		return new PHPClassType(typeName);
+	}
+	
+	/**
+	 * Creates evaluated type from the given IType.
+	 * @param type
+	 * @return
+	 */
+	public static PHPClassType createEvaluatedType(IType type) {
+		String elementName = type.getElementName();
+		IType namespace = type.getDeclaringType();
+		if (namespace != null) {
+			return new PHPClassType(namespace.getElementName(), elementName);
+		}
+		return new PHPClassType(elementName);
+	}
+	
+	/**
+	 * Create evaluated type object from the given name reference.
+	 * @param name
+	 * @return
+	 */
+	public static PHPClassType createEvaluatedType(SimpleReference name) {
+		String typeName = name instanceof FullyQualifiedReference ? ((FullyQualifiedReference)name).getFullyQualifiedName() : name.getName();
+		IEvaluatedType simpleType = PHPSimpleTypes.fromString(typeName);
+		if (simpleType != null) {
+			return (PHPClassType) simpleType;
 		}
 		return new PHPClassType(typeName);
 	}
@@ -111,22 +142,28 @@ public class PHPTypeInferenceUtils {
 	 * @param offset
 	 * @return model elements or <code>null</code> in case no element could be found
 	 */
-	public static IModelElement[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
+	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		ISourceModule sourceModule = context.getSourceModule();
-		IModelElement[] elements = internalGetModelElements(evaluatedType, context, offset);
-		return PHPModelUtils.filterElements(sourceModule, elements);
+		
+		IType[] elements = internalGetModelElements(evaluatedType, context, offset);
+		if (elements == null) {
+			return null;
+		}
+		
+		Collection<IType> filterElements = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
+		return filterElements.toArray(new IType[filterElements.size()]);
 	}
 	
-	private static IModelElement[] internalGetModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
+	private static IType[] internalGetModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		ISourceModule sourceModule = context.getSourceModule();
 
 		if (evaluatedType instanceof ModelClassType) {
-			return new IModelElement[] { ((ModelClassType) evaluatedType).getTypeDeclaration() };
+			return new IType[] { ((ModelClassType) evaluatedType).getTypeDeclaration() };
 		}
 		if (evaluatedType instanceof PHPClassType) {
 			IScriptProject scriptProject = sourceModule.getScriptProject();
 			if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
-				List<IModelElement> result = new LinkedList<IModelElement>();
+				List<IType> result = new LinkedList<IType>();
 				try {
 					IType[] types = sourceModule.getTypes();
 					for (IType t : types) {
@@ -140,7 +177,7 @@ public class PHPTypeInferenceUtils {
 						e.printStackTrace();
 					}
 				}
-				return result.toArray(new IModelElement[result.size()]);
+				return result.toArray(new IType[result.size()]);
 			} else {
 				try {
 					return getTypes(evaluatedType.getTypeName(), sourceModule, offset);
@@ -151,16 +188,16 @@ public class PHPTypeInferenceUtils {
 				}
 			}
 		} else if (evaluatedType instanceof AmbiguousType) {
-			List<IModelElement> tmpList = new LinkedList<IModelElement>();
+			List<IType> tmpList = new LinkedList<IType>();
 			IEvaluatedType[] possibleTypes = ((AmbiguousType) evaluatedType).getPossibleTypes();
 			for (IEvaluatedType possibleType : possibleTypes) {
-				IModelElement[] tmpArray = internalGetModelElements(possibleType, context, offset);
+				IType[] tmpArray = internalGetModelElements(possibleType, context, offset);
 				if (tmpArray != null) {
 					tmpList.addAll(Arrays.asList(tmpArray));
 				}
 			}
 			// the elements are filtered already
-			return tmpList.toArray(new IModelElement[tmpList.size()]);
+			return tmpList.toArray(new IType[tmpList.size()]);
 		}
 		
 		return null;
