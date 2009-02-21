@@ -26,8 +26,17 @@ public class PHPDocTagStrategy extends AbstractCompletionStrategy {
 
 	public static final String[] PHPDOC_TAGS = { "abstract", "access", "author", "category", "copyright", "deprecated", "example", "final", "filesource", "global", "ignore", "internal", "license", "link", "method", "name", "package", "param", "property", "return", "see", "since", "static",
 		"staticvar", "subpackage", "todo", "tutorial", "uses", "var", "version" };
+	
+	public PHPDocTagStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public PHPDocTagStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof PHPDocTagContext)) {
 			return;
 		}

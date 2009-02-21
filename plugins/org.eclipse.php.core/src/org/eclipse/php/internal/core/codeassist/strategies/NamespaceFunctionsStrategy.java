@@ -28,7 +28,16 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
  */
 public class NamespaceFunctionsStrategy extends NamespaceMembersStrategy {
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public NamespaceFunctionsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public NamespaceFunctionsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceMemberContext)) {
 			return;
 		}

@@ -11,12 +11,21 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
  * This strategy completes function parameter types
  * @author michael
  */
 public class FunctionParameterTypeStrategy extends GlobalTypesStrategy {
+
+	public FunctionParameterTypeStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public FunctionParameterTypeStrategy(ICompletionContext context) {
+		super(context);
+	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return " "; //$NON-NLS-1$

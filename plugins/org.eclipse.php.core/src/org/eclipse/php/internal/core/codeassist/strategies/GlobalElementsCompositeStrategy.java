@@ -24,19 +24,19 @@ public class GlobalElementsCompositeStrategy implements ICompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 
-	public GlobalElementsCompositeStrategy(boolean includeKeywords) {
-		strategies.add(new GlobalTypesStrategy());
-		strategies.add(new GlobalFunctionsStrategy());
-		strategies.add(new GlobalVariablesStrategy());
-		strategies.add(new GlobalConstantsStrategy());
+	public GlobalElementsCompositeStrategy(ICompletionContext context, boolean includeKeywords) {
+		strategies.add(new GlobalTypesStrategy(context));
+		strategies.add(new GlobalFunctionsStrategy(context));
+		strategies.add(new GlobalVariablesStrategy(context));
+		strategies.add(new GlobalConstantsStrategy(context));
 		if (includeKeywords) {
-			strategies.add(new GlobalKeywordsStrategy());
+			strategies.add(new GlobalKeywordsStrategy(context));
 		}
 	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws Exception {
+	public void apply(ICompletionReporter reporter) throws Exception {
 		for (ICompletionStrategy strategy : strategies) {
-			strategy.apply(context, reporter);
+			strategy.apply(reporter);
 		}
 	}
 }

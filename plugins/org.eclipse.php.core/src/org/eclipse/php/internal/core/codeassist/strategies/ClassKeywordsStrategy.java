@@ -26,9 +26,18 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 
 	private TextSequence statementText;
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public ClassKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public ClassKeywordsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		statementText = ((AbstractCompletionContext) context).getStatementText();
-		super.apply(context, reporter);
+		super.apply(reporter);
 	}
 
 	protected boolean filterKeyword(KeywordData keyword) {

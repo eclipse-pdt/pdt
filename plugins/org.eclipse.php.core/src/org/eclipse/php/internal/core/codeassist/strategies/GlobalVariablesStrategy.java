@@ -36,9 +36,18 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
 public class GlobalVariablesStrategy extends GlobalElementStrategy {
 	
 	protected final static String[] PHP_VARIABLES = { "$_COOKIE", "$_ENV", "$_FILES", "$_GET", "$_POST", "$_REQUEST", "$_SERVER", "$_SESSION", "$GLOBALS", "$HTTP_COOKIE_VARS", "$HTTP_ENV_VARS", "$HTTP_GET_VARS", "$HTTP_POST_FILES", "$HTTP_POST_VARS", "$HTTP_SERVER_VARS", "$HTTP_SESSION_VARS", };
+	
+	public GlobalVariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
-		
+	public GlobalVariablesStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+
+		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		String prefix = abstractContext.getPrefix();
 		

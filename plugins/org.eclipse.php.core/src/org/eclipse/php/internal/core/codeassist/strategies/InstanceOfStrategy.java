@@ -20,10 +20,19 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * @author michael
  */
 public class InstanceOfStrategy extends GlobalTypesStrategy {
+	
+	public InstanceOfStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
-		super.apply(context, reporter);
+	public InstanceOfStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		super.apply(reporter);
 		
+		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
 		addSelf(concreteContext, reporter);
 	}

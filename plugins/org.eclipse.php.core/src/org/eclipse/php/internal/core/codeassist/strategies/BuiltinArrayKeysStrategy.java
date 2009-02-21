@@ -30,8 +30,18 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 		"REQUEST_METHOD", "REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME", "SERVER_ADDR", "SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT", "SERVER_PROTOCOL", "SERVER_SIGNATURE", "SERVER_SOFTWARE", };
 
 	protected final static String[] SESSION_VARS = { "SID" };
+	
+	
+	public BuiltinArrayKeysStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public BuiltinArrayKeysStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof ArrayKeyContext)) {
 			return;
 		}

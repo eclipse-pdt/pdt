@@ -28,8 +28,17 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  * @author michael
  */
 public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
-	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+
+	public NamespaceConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public NamespaceConstantsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceMemberContext)) {
 			return;
 		}

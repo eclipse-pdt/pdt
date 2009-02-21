@@ -22,12 +22,23 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 public abstract class AbstractCompletionStrategy implements ICompletionStrategy {
 	
 	private IElementFilter elementFilter;
+	private ICompletionContext context;
 	
-	public AbstractCompletionStrategy() {
+	public AbstractCompletionStrategy(ICompletionContext context) {
+		this.context = context;
 	}
 	
-	public AbstractCompletionStrategy(IElementFilter elementFilter) {
+	public AbstractCompletionStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		this.context = context;
 		this.elementFilter = elementFilter;
+	}
+
+	/**
+	 * Return completion context
+	 * @return
+	 */
+	public ICompletionContext getContext() {
+		return context;
 	}
 
 	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {

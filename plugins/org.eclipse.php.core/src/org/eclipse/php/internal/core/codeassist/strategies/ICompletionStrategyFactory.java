@@ -20,8 +20,8 @@ public interface ICompletionStrategyFactory {
 
 	/**
 	 * Creates completion strategies for the given context.
-	 * @param context Completion context
+	 * @param contexts Completion contexts list
 	 * @return completion strategies or empty list in case no strategy could be found for the given context
 	 */
-	public ICompletionStrategy[] create(ICompletionContext context);
+	public ICompletionStrategy[] create(ICompletionContext[] contexts);
 }

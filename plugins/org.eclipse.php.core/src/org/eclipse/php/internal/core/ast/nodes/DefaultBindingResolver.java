@@ -22,7 +22,6 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 
 /**
  * @author Roy, 2008
@@ -97,7 +96,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	ITypeBinding getTypeBinding(IType type) {
 		if (type != null) {
-			return new TypeBinding(this, PHPTypeInferenceUtils.createEvaluatedType(type), type);
+			return new TypeBinding(this, PHPClassType.fromIType(type), type);
 		}
 		return null;
 	}
@@ -108,7 +107,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	@Override
 	ITypeBinding getTypeBinding(IType[] types) {
 		if (types != null && types.length > 0) {
-			return new TypeBinding(this, PHPTypeInferenceUtils.createEvaluatedType(types[0]), types);
+			return new TypeBinding(this, PHPClassType.fromIType(types[0]), types);
 		}
 		return null;
 	}
@@ -286,7 +285,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (modelElements.length > 0) {
 			for (IModelElement type : modelElements) {
 				if (type.getElementType() == IModelElement.TYPE) {
-					return new TypeBinding(this, PHPTypeInferenceUtils.createEvaluatedType((IType) type), modelElements);
+					return new TypeBinding(this, PHPClassType.fromIType((IType) type), modelElements);
 				}
 			}
 		}
@@ -428,7 +427,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (modelElements != null && modelElements.length > 0) {
 			for (IModelElement element : modelElements) {
 				if (element.getElementType() == IModelElement.TYPE) {
-					return new TypeBinding(this, PHPTypeInferenceUtils.createEvaluatedType((IType) element), modelElements);
+					return new TypeBinding(this, PHPClassType.fromIType((IType) element), modelElements);
 				}
 			}
 		}

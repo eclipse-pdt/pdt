@@ -22,8 +22,17 @@ import org.eclipse.php.internal.core.codeassist.contexts.InterfaceDeclarationKey
  * @author michael
  */
 public class InterfaceDeclarationKeywordsStrategy extends AbstractCompletionStrategy {
+	
+	public InterfaceDeclarationKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public InterfaceDeclarationKeywordsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof InterfaceDeclarationKeywordContext)) {
 			return;
 		}

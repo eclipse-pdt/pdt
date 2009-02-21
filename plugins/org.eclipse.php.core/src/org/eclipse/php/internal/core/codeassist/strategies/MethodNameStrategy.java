@@ -35,7 +35,16 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 	protected static final String[] MAGIC_METHODS = { "__get", "__set", "__call", "__sleep", "__wakeup", };
 	protected static final String[] MAGIC_METHODS_PHP5 = { "__isset", "__unset", "__toString", "__set_state", "__clone", "__autoload", };
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public MethodNameStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public MethodNameStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof MethodNameContext)) {
 			return;
 		}

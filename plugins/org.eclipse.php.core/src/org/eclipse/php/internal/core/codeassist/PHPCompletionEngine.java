@@ -54,19 +54,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			ICompletionStrategyFactory strategyFactory = CompletionStrategyFactory.getActive();
 
 			ICompletionContext[] contexts = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
-			Set<ICompletionStrategy> processedStrategies = new HashSet<ICompletionStrategy>();
-			
-			for (ICompletionContext context : contexts) {
-				for (ICompletionStrategy strategy : strategyFactory.create(context)) {
-					if (!processedStrategies.contains(strategy)) {
-						try {
-							strategy.apply(context, this);
-						} catch (Exception e) {
-							if (DLTKCore.DEBUG_COMPLETION) {
-								e.printStackTrace();
-							}
-						}
-						processedStrategies.add(strategy);
+			for (ICompletionStrategy strategy : strategyFactory.create(contexts)) {
+				try {
+					strategy.apply(this);
+				} catch (Exception e) {
+					if (DLTKCore.DEBUG_COMPLETION) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -130,27 +123,27 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			}
 		}
 		int relevance = PHPFlags.isConstant(flags) ? nextConstantRelevance() : nextVariableRelevance();
-		
+
 		noProposal = false;
-		
+
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
-			
+
 			CompletionProposal proposal = createProposal(CompletionProposal.FIELD_REF, actualCompletionPosition);
 			proposal.setName(field.getElementName().toCharArray());
-			
+
 			String completion = field.getElementName() + suffix;
 			if (removeDollar && completion.startsWith("$")) {
 				completion = completion.substring(1);
 			}
 			proposal.setCompletion(completion.toCharArray());
-			
+
 			proposal.setModelElement(field);
 			proposal.setFlags(flags);
 			proposal.setRelevance(relevance);
 			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
-			
+
 			if (DEBUG) {
 				this.printDebug(proposal);
 			}
@@ -162,9 +155,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			return;
 		}
 		processedElements.add(keyword);
-		
+
 		noProposal = false;
-		
+
 		if (!requestor.isIgnored(CompletionProposal.FIELD_REF)) {
 
 			CompletionProposal proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
@@ -174,7 +167,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 
 			this.requestor.accept(proposal);
-			
+
 			if (DEBUG) {
 				this.printDebug(proposal);
 			}
@@ -188,9 +181,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		processedElements.add(method);
 
 		noProposal = false;
-		
+
 		if (!requestor.isIgnored(CompletionProposal.METHOD_DECLARATION)) {
-			
+
 			CompletionProposal proposal = createProposal(CompletionProposal.METHOD_DECLARATION, actualCompletionPosition);
 
 			// show method parameter names:
@@ -209,19 +202,19 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 				}
 				proposal.setParameterNames(args);
 			}
-			
+
 			String elementName = method.getElementName();
 			String completionName = elementName;
 
 			proposal.setModelElement(method);
 			proposal.setName(elementName.toCharArray());
-			
+
 			int relevance = nextMethodRelevance();
 
 			if (method instanceof FakeGroupMethod) {
 				// remove the trailing '*' from the group name
 				completionName = elementName.substring(0, elementName.length() - 1);
-				
+
 				// put the group to the top of list
 				relevance = RELEVANCE_KEYWORD + 1;
 			}
@@ -238,9 +231,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
-			
+
 			this.requestor.accept(proposal);
-			
+
 			if (DEBUG) {
 				this.printDebug(proposal);
 			}
@@ -255,7 +248,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		processedElements.add(type);
 
 		noProposal = false;
-		
+
 		if (!requestor.isIgnored(CompletionProposal.TYPE_REF)) {
 
 			CompletionProposal proposal = createProposal(CompletionProposal.TYPE_REF, actualCompletionPosition);
@@ -285,12 +278,12 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 			String elementName = type.getElementName();
 			String completionName = elementName;
-			
+
 			proposal.setModelElement(type);
 			proposal.setName(elementName.toCharArray());
 
 			int relevance = nextClassRelevance();
-			
+
 			if (type instanceof FakeGroupType) {
 				// remove '*' from the fake group type name
 				completionName = elementName.substring(0, elementName.length() - 1);
@@ -310,9 +303,9 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
 			proposal.setRelevance(relevance);
-			
+
 			this.requestor.accept(proposal);
-			
+
 			if (DEBUG) {
 				this.printDebug(proposal);
 			}

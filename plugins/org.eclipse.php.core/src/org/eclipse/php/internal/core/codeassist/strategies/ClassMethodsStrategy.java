@@ -26,7 +26,16 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trig
  */
 public class ClassMethodsStrategy extends ClassMembersStrategy {
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public ClassMethodsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public ClassMethodsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof ClassMemberContext)) {
 			return;
 		}

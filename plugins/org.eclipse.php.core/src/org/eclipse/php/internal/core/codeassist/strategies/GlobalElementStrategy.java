@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+
 
 
 /**
@@ -18,11 +20,11 @@ package org.eclipse.php.internal.core.codeassist.strategies;
  */
 public abstract class GlobalElementStrategy extends AbstractCompletionStrategy {
 
-	public GlobalElementStrategy() {
-		super();
+	public GlobalElementStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
 	}
 
-	public GlobalElementStrategy(IElementFilter elementFilter) {
-		super(elementFilter);
+	public GlobalElementStrategy(ICompletionContext context) {
+		super(context);
 	}
 }

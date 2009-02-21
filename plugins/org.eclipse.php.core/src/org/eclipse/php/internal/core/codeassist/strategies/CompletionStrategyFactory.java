@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -50,77 +55,95 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 		return instance;
 	}
 
-	public ICompletionStrategy[] create(ICompletionContext context) {
+	public ICompletionStrategy[] create(ICompletionContext[] contexts) {
+		// don't allow creation of strategies of the same class:
+		Set<Class<? super ICompletionStrategy>> processed = new HashSet<Class<? super ICompletionStrategy>>();
+		
+		List<ICompletionStrategy> result = new LinkedList<ICompletionStrategy>();
+		
+		for (ICompletionContext context : contexts) {
+			ICompletionStrategy[] strategies = createStrategies(context, contexts);
+			
+			for (ICompletionStrategy strategy : strategies) {
+				if (!processed.contains(strategy.getClass())) {
+					result.add(strategy);
+				}
+			}
+		}
+		return (ICompletionStrategy[]) result.toArray(new ICompletionStrategy[result.size()]);
+	}
+
+	protected ICompletionStrategy[] createStrategies(ICompletionContext context, ICompletionContext[] allContexts) {
 
 		Class<? extends ICompletionContext> contextClass = context.getClass();
 
 		if (contextClass == PHPDocTagStartContext.class) {
-			return new ICompletionStrategy[] { new PHPDocTagStrategy() };
+			return new ICompletionStrategy[] { new PHPDocTagStrategy(context) };
 		}
 		if (contextClass == PHPDocParamTagContext.class) {
-			return new ICompletionStrategy[] { new PHPDocParamVariableStrategy() };
+			return new ICompletionStrategy[] { new PHPDocParamVariableStrategy(context) };
 		}
 		if (contextClass == PHPDocReturnTagContext.class) {
-			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy() };
+			return new ICompletionStrategy[] { new PHPDocReturnTypeStrategy(context) };
 		}
 		if (contextClass == ArrayKeyContext.class) {
 			// If array has quotes or double-quotes around the key - show only builtin keys:
 			if (((ArrayKeyContext) context).hasQuotes()) {
-				return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy() };
+				return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(context) };
 			}
 			// Otherwise - show all global elements also:
 			// Example: $array[foo()], $array[$otherVar]
-			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(), new GlobalElementsCompositeStrategy(false) };
+			return new ICompletionStrategy[] { new BuiltinArrayKeysStrategy(context), new GlobalElementsCompositeStrategy(context, false) };
 		}
 		if (contextClass == FunctionParameterTypeContext.class) {
-			return new ICompletionStrategy[] { new FunctionParameterTypeStrategy() };
+			return new ICompletionStrategy[] { new FunctionParameterTypeStrategy(context) };
 		}
 		if (contextClass == FunctionParameterValueContext.class) {
-			return new ICompletionStrategy[] { new GlobalConstantsStrategy() };
+			return new ICompletionStrategy[] { new GlobalConstantsStrategy(context) };
 		}
 		if (contextClass == MethodNameContext.class) {
-			return new ICompletionStrategy[] { new MethodNameStrategy() };
+			return new ICompletionStrategy[] { new MethodNameStrategy(context) };
 		}
 		if (contextClass == ClassStatementContext.class) {
-			return new ICompletionStrategy[] { new ClassKeywordsStrategy() };
+			return new ICompletionStrategy[] { new ClassKeywordsStrategy(context) };
 		}
 		if (contextClass == GlobalStatementContext.class) {
-			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(true) };
+			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(context, true) };
 		}
 		if (contextClass == GlobalMethodStatementContext.class) {
-			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(true), new LocalMethodVariablesStrategy() };
+			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(context, true), new LocalMethodVariablesStrategy(context) };
 		}
 		if (contextClass == CatchTypeContext.class) {
-			return new ICompletionStrategy[] { new GlobalTypesStrategy() };
+			return new ICompletionStrategy[] { new GlobalTypesStrategy(context) };
 		}
 		if (contextClass == ClassInstantiationContext.class) {
-			return new ICompletionStrategy[] { new ClassInstantiationStrategy() };	
+			return new ICompletionStrategy[] { new ClassInstantiationStrategy(context) };	
 		}
 		if (contextClass == InstanceOfContext.class) {
-			return new ICompletionStrategy[] { new InstanceOfStrategy() };	
+			return new ICompletionStrategy[] { new InstanceOfStrategy(context) };	
 		}
 		if (contextClass == ClassStaticMemberContext.class || contextClass == ClassObjMemberContext.class) {
-			return new ICompletionStrategy[] { new ClassFieldsStrategy(), new ClassMethodsStrategy() };	
+			return new ICompletionStrategy[] { new ClassFieldsStrategy(context), new ClassMethodsStrategy(context) };	
 		}
 		if (contextClass == ClassDeclarationKeywordContext.class) {
-			return new ICompletionStrategy[] { new ClassDeclarationKeywordsStrategy() };	
+			return new ICompletionStrategy[] { new ClassDeclarationKeywordsStrategy(context) };	
 		}
 		if (contextClass == InterfaceDeclarationKeywordContext.class) {
-			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy() };	
+			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy(context) };	
 		}
 		if (contextClass == ClassExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy() };	
+			return new ICompletionStrategy[] { new GlobalClassesStrategy(context) };	
 		}
 		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalInterfacesStrategy() };	
+			return new ICompletionStrategy[] { new GlobalInterfacesStrategy(context) };	
 		}
 		if (contextClass == NamespaceMemberContext.class) {
 			return new ICompletionStrategy[] {
-				new NamespaceElementsCompositeStrategy(((NamespaceMemberContext)context).isGlobal()) 
+				new NamespaceElementsCompositeStrategy(context, allContexts, ((NamespaceMemberContext)context).isGlobal()) 
 			};
 		}
 		if (contextClass == UseNameContext.class) {
-			return new ICompletionStrategy[] { new NamespacesStrategy() };
+			return new ICompletionStrategy[] { new NamespacesStrategy(context) };
 		}
 		
 		return new ICompletionStrategy[] {};

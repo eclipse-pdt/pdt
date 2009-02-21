@@ -21,11 +21,16 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  */
 public class PHPDocReturnTypeStrategy extends GlobalClassesStrategy {
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public PHPDocReturnTypeStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof PHPDocTagContext)) {
 			return;
 		}
-		super.apply(context, reporter);
+		super.apply(reporter);
 	}
 
 }

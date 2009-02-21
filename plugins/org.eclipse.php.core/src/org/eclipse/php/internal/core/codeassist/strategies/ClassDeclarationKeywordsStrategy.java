@@ -25,7 +25,16 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  */
 public class ClassDeclarationKeywordsStrategy extends AbstractCompletionStrategy {
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public ClassDeclarationKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public ClassDeclarationKeywordsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof ClassDeclarationKeywordContext)) {
 			return;
 		}

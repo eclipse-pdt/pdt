@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+
 
 
 /**
@@ -17,4 +19,12 @@ package org.eclipse.php.internal.core.codeassist.strategies;
  * @author michael
  */
 public abstract class NamespaceMembersStrategy extends AbstractCompletionStrategy {
+
+	public NamespaceMembersStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public NamespaceMembersStrategy(ICompletionContext context) {
+		super(context);
+	}
 }

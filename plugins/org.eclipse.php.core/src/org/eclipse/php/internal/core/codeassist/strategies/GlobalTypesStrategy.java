@@ -29,16 +29,18 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  * @author michael
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
-	
-	public GlobalTypesStrategy() {
+
+	public GlobalTypesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
 	}
-	
-	public GlobalTypesStrategy(IElementFilter elementFilter) {
-		super(elementFilter);
+
+	public GlobalTypesStrategy(ICompletionContext context) {
+		super(context);
 	}
-	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
+		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 

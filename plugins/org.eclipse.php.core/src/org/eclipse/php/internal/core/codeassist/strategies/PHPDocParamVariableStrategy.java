@@ -21,7 +21,16 @@ import org.eclipse.php.internal.core.codeassist.contexts.PHPDocTagContext;
  */
 public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public PHPDocParamVariableStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public PHPDocParamVariableStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof PHPDocTagContext)) {
 			return;
 		}
@@ -29,7 +38,7 @@ public class PHPDocParamVariableStrategy extends FunctionArgumentsStrategy {
 		
 		String prefix = tagContext.getPrefix();
 		if (prefix.startsWith("$")) { //$NON-NLS-1$
-			super.apply(tagContext, reporter);
+			super.apply(reporter);
 		}
 	}
 

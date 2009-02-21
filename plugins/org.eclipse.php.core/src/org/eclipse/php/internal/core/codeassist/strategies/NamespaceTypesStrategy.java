@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
@@ -27,21 +30,38 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
  */
 public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public NamespaceTypesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public NamespaceTypesStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof NamespaceMemberContext)) {
 			return;
 		}
 
 		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
-		String prefix = concreteContext.getPrefix();
 		String suffix = getSuffix(concreteContext);
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
-		for (IType ns : concreteContext.getNamespaces()) {
+		for (IType type : getTypes(concreteContext)) {
+			reporter.reportType(type, suffix, replaceRange);
+		}
+	}
+	
+	public IType[] getTypes(NamespaceMemberContext context) throws BadLocationException {
+		String prefix = context.getPrefix();
+
+		List<IType> result = new LinkedList<IType>();
+		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
 					if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
-						reporter.reportType(type, suffix, replaceRange);
+						result.add(type);
 					}
 				}
 			} catch (ModelException e) {
@@ -50,6 +70,7 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 				}
 			}
 		}
+		return (IType[]) result.toArray(new IType[result.size()]);
 	}
 	
 	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {

@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
  * Completion strategy resolves completion proposals according to completion context.
@@ -21,9 +20,8 @@ public interface ICompletionStrategy {
 
 	/**
 	 * Applies completion strategy for the given context
-	 * @param context Completion context
 	 * @param reporter Where model elements will be reported
 	 * @throws Exception
 	 */
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws Exception;
+	public void apply(ICompletionReporter reporter) throws Exception;
 }

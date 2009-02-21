@@ -33,11 +33,19 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  * @author michael
  */
 public class FunctionArgumentsStrategy extends AbstractCompletionStrategy {
+	
+	public FunctionArgumentsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public FunctionArgumentsStrategy(ICompletionContext context) {
+		super(context);
+	}
 
 	@SuppressWarnings("unchecked")
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
 
-		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
+		AbstractCompletionContext abstractContext = (AbstractCompletionContext) getContext();
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
 		int offset = abstractContext.getOffset();

@@ -319,7 +319,7 @@ public class CodeAssistUtils {
 	public static IType[] getVariableType(IType[] types, String propertyName, int offset) {
 		if (types != null) {
 			for (IType type : types) {
-				PHPClassType classType = PHPTypeInferenceUtils.createEvaluatedType(type);
+				PHPClassType classType = PHPClassType.fromIType(type);
 				IField[] fields = getTypeFields(type, propertyName, CASE_SENSITIVE | EXCLUDE_CONSTANTS);
 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(type.getSourceModule(), null);
@@ -596,7 +596,7 @@ public class CodeAssistUtils {
 			if (className.length() > 0) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 				FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
-				IEvaluatedType type = PHPTypeInferenceUtils.createEvaluatedType(className, sourceModule, offset);
+				IEvaluatedType type = PHPClassType.fromTypeName(className, sourceModule, offset);
 				IType[] modelElements = PHPTypeInferenceUtils.getModelElements(type, context, offset);
 				if (modelElements != null) {
 					return modelElements;

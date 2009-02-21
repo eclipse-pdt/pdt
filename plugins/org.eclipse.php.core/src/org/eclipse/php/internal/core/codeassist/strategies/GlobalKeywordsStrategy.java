@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.keywords.PHPKeywords.Context;
 import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
 
@@ -18,6 +19,14 @@ import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
  * @author michael
  */
 public class GlobalKeywordsStrategy extends KeywordsStrategy {
+	
+	public GlobalKeywordsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public GlobalKeywordsStrategy(ICompletionContext context) {
+		super(context);
+	}
 
 	protected boolean filterKeyword(KeywordData keyword) {
 		return keyword.context != Context.GLOBAL;

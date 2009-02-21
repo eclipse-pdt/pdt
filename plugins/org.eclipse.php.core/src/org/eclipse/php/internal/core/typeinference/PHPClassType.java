@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
+import org.eclipse.dltk.ast.references.SimpleReference;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.evaluation.types.IClassType;
 import org.eclipse.dltk.ti.types.ClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.mixin.PHPMixinParser;
 
@@ -88,6 +92,51 @@ public class PHPClassType extends ClassType implements IClassType {
 
 	public String getModelKey() {
 		return typeName + PHPMixinParser.CLASS_SUFFIX;
+	}
+	
+	/**
+	 * Creates evaluated type for the given class name. If class name contains namespace parts,
+	 * the fully qualified name is resolved.
+	 * 
+	 * @param typeName Type name
+	 * @param sourceModule Source module where the type was referenced
+	 * @param offset Offset in file here the type was referenced
+	 * @return 
+	 */
+	public static PHPClassType fromTypeName(String typeName, ISourceModule sourceModule, int offset) {
+		String namespace = PHPTypeInferenceUtils.extractNamespaceName(typeName, sourceModule, offset);
+		if (namespace != null) {
+			return new PHPClassType(namespace, PHPTypeInferenceUtils.extractElementName(typeName));
+		}
+		return new PHPClassType(typeName);
+	}
+	
+	/**
+	 * Creates evaluated type from the given IType.
+	 * @param type
+	 * @return
+	 */
+	public static PHPClassType fromIType(IType type) {
+		String elementName = type.getElementName();
+		IType namespace = type.getDeclaringType();
+		if (namespace != null) {
+			return new PHPClassType(namespace.getElementName(), elementName);
+		}
+		return new PHPClassType(elementName);
+	}
+	
+	/**
+	 * Create evaluated type object from the given name reference.
+	 * @param name
+	 * @return
+	 */
+	public static PHPClassType fromSimpleReference(SimpleReference name) {
+		String typeName = name instanceof FullyQualifiedReference ? ((FullyQualifiedReference)name).getFullyQualifiedName() : name.getName();
+		IEvaluatedType simpleType = PHPSimpleTypes.fromString(typeName);
+		if (simpleType != null) {
+			return (PHPClassType) simpleType;
+		}
+		return new PHPClassType(typeName);
 	}
 
 	public int hashCode() {

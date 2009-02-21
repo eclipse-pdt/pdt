@@ -17,6 +17,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 
@@ -24,20 +25,20 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  * This strategy completes global classes after 'new' statement 
  * @author michael
  */
-public class ClassInstantiationStrategy extends GlobalTypesStrategy {
+public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy {
 	
-	public ClassInstantiationStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public NamespaceClassInstantiationStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
-	public ClassInstantiationStrategy(ICompletionContext context) {
+	public NamespaceClassInstantiationStrategy(ICompletionContext context) {
 		super(context);
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		
 		ICompletionContext context = getContext();
-		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
+		NamespaceMemberContext concreteContext = (NamespaceMemberContext) context;
 		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
 		
 		IType enclosingClass = null;
@@ -102,8 +103,6 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 				}
 			}
 		}
-		
-		addSelf(concreteContext, reporter);
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

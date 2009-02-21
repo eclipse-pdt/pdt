@@ -244,7 +244,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						info.name = split[1];
 						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 9, removeParenthesis(split));
 						info.nameSourceStart = var.sourceStart();
-						info.nameSourceEnd = var.sourceEnd() - 1;
+						info.nameSourceEnd = var.sourceEnd();
 						info.declarationStart = info.nameSourceStart;
 						fRequestor.enterField(info);
 						fRequestor.exitField(info.nameSourceEnd);
@@ -259,10 +259,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 						ISourceElementRequestor.MethodInfo mi = new ISourceElementRequestor.MethodInfo();
 						mi.parameterNames = null;
 						mi.name = removeParenthesis(split);
-						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 5, removeParenthesis(split));
+						SimpleReference var = new SimpleReference(docTag.sourceStart(), docTag.sourceStart() + 6, removeParenthesis(split));
 						mi.modifiers = Modifiers.AccPublic;
 						mi.nameSourceStart = var.sourceStart();
-						mi.nameSourceEnd = var.sourceEnd() - 1;
+						mi.nameSourceEnd = var.sourceEnd();
 						mi.declarationStart = mi.nameSourceStart;
 						mi.isConstructor = false;
 

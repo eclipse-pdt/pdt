@@ -28,8 +28,17 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * @author michael
  */
 public class GlobalConstantsStrategy extends GlobalElementStrategy {
+	
+	public GlobalConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public GlobalConstantsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		ICompletionContext context = getContext();
 		if (!showConstantAssist()) {
 			return;
 		}

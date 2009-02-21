@@ -25,7 +25,17 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  */
 public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 	
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException {
+	public GlobalFunctionsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public GlobalFunctionsStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException {
+		
+		ICompletionContext context = getContext();
 		
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();

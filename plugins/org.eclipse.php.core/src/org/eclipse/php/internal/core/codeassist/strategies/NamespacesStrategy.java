@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
+import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
@@ -23,8 +24,8 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  */
 public class NamespacesStrategy extends GlobalTypesStrategy {
 
-	public NamespacesStrategy() {
-		super(new IElementFilter() {
+	public NamespacesStrategy(ICompletionContext context) {
+		super(context, new IElementFilter() {
 			public boolean filter(IModelElement element) {
 				try {
 					return !PHPFlags.isNamespace(((IType)element).getFlags());

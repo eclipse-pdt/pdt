@@ -19,6 +19,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassObjMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassStaticMemberContext;
+import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
@@ -29,6 +30,14 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  */
 public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	
+	public ClassMembersStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
+
+	public ClassMembersStrategy(ICompletionContext context) {
+		super(context);
+	}
+
 	protected boolean showStaticMembers(ClassMemberContext context) {
 		 return context.getTriggerType() == Trigger.CLASS || context.getPhpVersion().isGreaterThan(PHPVersion.PHP5);
 	}

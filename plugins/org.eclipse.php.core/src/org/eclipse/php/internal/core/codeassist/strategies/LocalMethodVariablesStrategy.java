@@ -26,8 +26,17 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  * @author michael
  */
 public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
+	
+	public LocalMethodVariablesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+		super(context, elementFilter);
+	}
 
-	public void apply(ICompletionContext context, ICompletionReporter reporter) throws BadLocationException, ModelException {
+	public LocalMethodVariablesStrategy(ICompletionContext context) {
+		super(context);
+	}
+
+	public void apply(ICompletionReporter reporter) throws BadLocationException, ModelException {
+		ICompletionContext context = getContext();
 		if (!(context instanceof GlobalMethodStatementContext)) {
 			return;
 		}
