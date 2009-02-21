@@ -33,8 +33,6 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.mixin.PHPDocField;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -77,18 +75,18 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
 						Object element = match.getElement();
 						if (element instanceof IMember) {
-							
+
 							IType declaringType = (IType) ((IMember) element).getAncestor(IModelElement.TYPE);
 							if (declaringType != null) {
-								
+
 								ISourceModule sourceModule = declaringType.getSourceModule();
 								ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 								TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, declaringType);
-	
+
 								if (typeDeclaration != null && element instanceof SourceRefElement) {
 									SourceRefElement sourceRefElement = (SourceRefElement) element;
 									ISourceRange sourceRange = sourceRefElement.getSourceRange();
-	
+
 									ClassDeclarationSearcher searcher = new ClassDeclarationSearcher(sourceModule, typeDeclaration, sourceRange.getOffset(), sourceRange.getLength(), null);
 									try {
 										moduleDeclaration.traverse(searcher);
@@ -154,11 +152,8 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 	 */
 	private void resolveMagicClassVariableDeclaration(IType[] types, String variableName) {
 		for (IType type : types) {
-			IScriptProject scriptProject = type.getScriptProject();
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getSourceModule());
-			final IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getClassDoc(type.getElementName(), scope);
-			for (IModelElement e : elements) {
-				final PHPDocBlock docBlock = ((PHPDocField) e).getDocBlock();
+			final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
+			if (docBlock != null) {
 				for (PHPDocTag tag : docBlock.getTags()) {
 					final int tagKind = tag.getTagKind();
 					if (tagKind == PHPDocTag.PROPERTY || tagKind == PHPDocTag.PROPERTY_READ || tagKind == PHPDocTag.PROPERTY_WRITE) {

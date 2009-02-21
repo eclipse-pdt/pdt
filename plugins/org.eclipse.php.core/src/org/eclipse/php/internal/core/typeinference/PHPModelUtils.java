@@ -27,10 +27,11 @@ import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.IPHPDocAwareDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.mixin.PHPDocField;
 import org.eclipse.php.internal.core.mixin.PHPMixinBuildVisitor;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
@@ -55,10 +56,8 @@ public class PHPModelUtils {
 			if (elements.length > 0) {
 				Object[] allObjects = elements[0].getAllObjects();
 				for (Object obj : allObjects) {
-					IModelElement element =  (IModelElement) ((PHPMixinElementInfo) obj).getObject();
-					if (!(element instanceof PHPDocField)) { // skip PHPDoc fields
-						return element;
-					}
+					IModelElement element = (IModelElement) ((PHPMixinElementInfo) obj).getObject();
+					return element;
 				}
 			}
 		}
@@ -99,7 +98,7 @@ public class PHPModelUtils {
 	 * @return method phpdoc element or <code>null</code> in case it couldn't be found
 	 * @throws CoreException
 	 */
-	public static PHPDocField[] getTypeHierarchyMethodDoc(IType type, String name, IProgressMonitor monitor) throws CoreException {
+	public static PHPDocBlock[] getTypeHierarchyMethodDoc(IType type, String name, IProgressMonitor monitor) throws CoreException {
 		if (name == null) {
 			throw new NullPointerException();
 		}
@@ -107,19 +106,90 @@ public class PHPModelUtils {
 		final IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
 		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 
-		final List<PHPDocField> docs = new LinkedList<PHPDocField>();
+		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
 		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 			public void acceptSearchMatch(SearchMatch match) throws CoreException {
 				IMethod method = (IMethod) match.getElement();
-				IScriptProject scriptProject = method.getScriptProject();
-				IModelElement[] methodDoc = PHPMixinModel.getInstance(scriptProject).getMethodDoc(method.getDeclaringType().getElementName(), method.getElementName(), SearchEngine.createSearchScope(scriptProject));
-				for (IModelElement doc : methodDoc) {
-					docs.add((PHPDocField) doc);
+				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+				if (docBlock != null) {
+					docs.add(docBlock);
 				}
 			}
 		}, monitor);
 
-		return docs.toArray(new PHPDocField[docs.size()]);
+		return docs.toArray(new PHPDocBlock[docs.size()]);
+	}
+
+	/**
+	 * Returns PHPDoc block associated with the given IType element
+	 * @param type
+	 * @return
+	 */
+	public static PHPDocBlock getDocBlock(IType type) {
+		if (type == null) {
+			return null;
+		}
+		try {
+			ISourceModule sourceModule = type.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			TypeDeclaration typeDeclaration = PHPModelUtils.getNodeByClass(moduleDeclaration, type);
+			if (typeDeclaration instanceof IPHPDocAwareDeclaration) {
+				return ((IPHPDocAwareDeclaration)typeDeclaration).getPHPDoc();
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns PHPDoc block associated with the given IField element
+	 * @param field
+	 * @return
+	 */
+	public static PHPDocBlock getDocBlock(IField field) {
+		if (field == null) {
+			return null;
+		}
+		try {
+			ISourceModule sourceModule = field.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			ASTNode fieldDeclaration = PHPModelUtils.getNodeByField(moduleDeclaration, field);
+			if (fieldDeclaration instanceof IPHPDocAwareDeclaration) {
+				return ((IPHPDocAwareDeclaration)fieldDeclaration).getPHPDoc();
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns PHPDoc block associated with the given IMethod element
+	 * @param method
+	 * @return
+	 */
+	public static PHPDocBlock getDocBlock(IMethod method) {
+		if (method == null) {
+			return null;
+		}
+		try {
+			ISourceModule sourceModule = method.getSourceModule();
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(moduleDeclaration, method);
+			if (methodDeclaration instanceof IPHPDocAwareDeclaration) {
+				return ((IPHPDocAwareDeclaration)methodDeclaration).getPHPDoc();
+			}
+		} catch (ModelException e) {
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 
 	public static MethodDeclaration getNodeByMethod(ModuleDeclaration rootNode, IMethod method) throws ModelException {
@@ -145,7 +215,7 @@ public class PHPModelUtils {
 		}
 		return (TypeDeclaration) visitor.getResult();
 	};
-	
+
 	public static ASTNode getNodeByField(ModuleDeclaration rootNode, IField field) throws ModelException {
 		DeclarationSearcher visitor = new DeclarationSearcher(rootNode, field, DeclarationType.FIELD);
 		try {
@@ -162,7 +232,7 @@ public class PHPModelUtils {
 		int includeMask = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES | IDLTKSearchScope.REFERENCED_PROJECTS | IDLTKSearchScope.SYSTEM_LIBRARIES;
 		return SearchEngine.createSearchScope(project, includeMask);
 	}
-	
+
 	/**
 	 * Leaves most 'suitable' for current source module elements
 	 * @param sourceModule
@@ -173,7 +243,7 @@ public class PHPModelUtils {
 		if (elements == null) {
 			return null;
 		}
-		
+
 		// Determine whether givent elements represent the same type and name,
 		// but declared in different files (determine filtering purpose):
 		int elementType = 0;
@@ -190,13 +260,13 @@ public class PHPModelUtils {
 				break;
 			}
 		}
-		
+
 		if (fileNetworkFilter) {
 			return fileNetworkFilter(sourceModule, elements);
 		}
 		return elements;
 	}
-	
+
 	/**
 	 * Filters model elements using file network.
 	 * @param sourceModule
@@ -204,10 +274,10 @@ public class PHPModelUtils {
 	 * @return
 	 */
 	private static <T extends IModelElement> Collection<T> fileNetworkFilter(ISourceModule sourceModule, Collection<T> elements) {
-		
+
 		if (elements != null && elements.size() > 0) {
 			List<T> filteredElements = new LinkedList<T>();
-			
+
 			// If some of elements belong to current file return just it:
 			for (T element : elements) {
 				if (sourceModule.equals(element.getOpenable())) {
@@ -218,7 +288,7 @@ public class PHPModelUtils {
 				// Filter by includes network
 				ReferenceTree referenceTree = FileNetworkUtility.buildReferencedFilesTree(sourceModule, null);
 				for (T element : elements) {
-					if (LanguageModelInitializer.isLanguageModelElement(element) || referenceTree.find(((ModelElement)element).getSourceModule())) {
+					if (LanguageModelInitializer.isLanguageModelElement(element) || referenceTree.find(((ModelElement) element).getSourceModule())) {
 						filteredElements.add(element);
 					}
 				}
@@ -229,16 +299,16 @@ public class PHPModelUtils {
 		}
 		return elements;
 	}
+	
 
 	/**
-	 * Returns the current namespace by the specified file and offset
-	 * @param sourceModule The file where current namespace is requested 
-	 * @param offset The offset where current namespace is requested
+	 * Returns the current namespace by the specified model element
+	 * @param element Model element
 	 * @return namespace element, or <code>null</code> if the scope is global under the specified cursor position
 	 */
-	public static IType getCurrentNamespace(ISourceModule sourceModule, int offset) {
+	public static IType getCurrentNamespace(IModelElement element) {
 		try {
-			IModelElement currentNs = sourceModule.getElementAt(offset);
+			IModelElement currentNs = element;
 			while (currentNs != null) {
 				if (currentNs instanceof IType && PHPFlags.isNamespace(((IType) currentNs).getFlags())) {
 					return (IType) currentNs;
@@ -250,7 +320,22 @@ public class PHPModelUtils {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Returns the current namespace by the specified file and offset
+	 * @param sourceModule The file where current namespace is requested 
+	 * @param offset The offset where current namespace is requested
+	 * @return namespace element, or <code>null</code> if the scope is global under the specified cursor position
+	 */
+	public static IType getCurrentNamespace(ISourceModule sourceModule, int offset) {
+		try {
+			return getCurrentNamespace(sourceModule.getElementAt(offset));
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+
 	/**
 	 * Returns the current class or interface by the specified file and offset
 	 * @param sourceModule The file where current namespace is requested 
@@ -298,7 +383,7 @@ public class PHPModelUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the type field element by name
 	 * @param type

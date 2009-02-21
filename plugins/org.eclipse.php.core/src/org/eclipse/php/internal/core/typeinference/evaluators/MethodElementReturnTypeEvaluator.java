@@ -19,8 +19,6 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -30,8 +28,6 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ReturnStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.mixin.PHPDocField;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -110,10 +106,8 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		}
 
 		IType type = (IType) parent;
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getSourceModule());
-		final IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getClassDoc(type.getElementName(), scope);
-		for (IModelElement e : elements) {
-			final PHPDocBlock docBlock = ((PHPDocField) e).getDocBlock();
+		final PHPDocBlock docBlock = PHPModelUtils.getDocBlock(type);
+		if (docBlock != null) {
 			for (PHPDocTag tag : docBlock.getTags()) {
 				final int tagKind = tag.getTagKind();
 				if (tagKind == PHPDocTag.METHOD) {
@@ -128,7 +122,6 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 				}
 			}
 		}
-
 	}
 
 	/**
@@ -138,19 +131,19 @@ public class MethodElementReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 	 * @return the type of the given variable
 	 */
 	private String getTypeBinding(String methodName, PHPDocTag docTag) {
-			final String[] split = docTag.getValue().trim().split("\\s+");
-			if (split.length < 2) {
-				return null;
-			}	
-			if (split[1].equals(methodName)) {
-				return split[0];
-			} else if (split[1].length() > 2 && split[1].endsWith("()")){
-				final String substring = split[1].substring(0, split[1].length() - 2);
-				return substring.equals(methodName) ? split[0] : null;
-			}
+		final String[] split = docTag.getValue().trim().split("\\s+");
+		if (split.length < 2) {
 			return null;
+		}
+		if (split[1].equals(methodName)) {
+			return split[0];
+		} else if (split[1].length() > 2 && split[1].endsWith("()")) {
+			final String substring = split[1].substring(0, split[1].length() - 2);
+			return substring.equals(methodName) ? split[0] : null;
+		}
+		return null;
 	}
-	
+
 	public IGoal[] subGoalDone(IGoal subgoal, Object result, GoalState state) {
 		if (state != GoalState.RECURSIVE && result != null) {
 			evaluated.add((IEvaluatedType) result);

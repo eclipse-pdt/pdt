@@ -23,8 +23,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.mixin.PHPDocField;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * A PHP function binding.
@@ -54,17 +53,13 @@ public class FunctionBinding implements IFunctionBinding {
 	 */
 	public ITypeBinding[] getExceptionTypes() {
 		// Get an array of PHPDocFields
-		IModelElement[] methodDoc = PHPMixinModel.getInstance(modelElement.getScriptProject()).getMethodDoc(modelElement.getDeclaringType().getElementName(), modelElement.getElementName());
 		ArrayList<ITypeBinding> exeptions = new ArrayList<ITypeBinding>();
-		for (IModelElement element : methodDoc) {
-			PHPDocField docField = (PHPDocField) element;
-			PHPDocBlock docBlock = docField.getDocBlock();
-			PHPDocTag[] docTags = docBlock.getTags();
-			for (PHPDocTag tag : docTags) {
-				if (tag.getTagKind() == PHPDocTag.THROWS) {
-					SimpleReference[] references = tag.getReferences();
-					// TODO - create ITypeBinding array from this SimpleReference array
-				}
+		PHPDocBlock docBlock = PHPModelUtils.getDocBlock(modelElement);
+		PHPDocTag[] docTags = docBlock.getTags();
+		for (PHPDocTag tag : docTags) {
+			if (tag.getTagKind() == PHPDocTag.THROWS) {
+				SimpleReference[] references = tag.getReferences();
+				// TODO - create ITypeBinding array from this SimpleReference array
 			}
 		}
 		return null;
@@ -123,7 +118,9 @@ public class FunctionBinding implements IFunctionBinding {
 		try {
 			return modelElement.getFlags() & VALID_MODIFIERS;
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG) { e.printStackTrace(); }
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 		return 0;
 	}

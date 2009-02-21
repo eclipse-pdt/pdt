@@ -22,8 +22,6 @@ public class PHPMixinElementInfo {
 	public static final int K_VARIABLE = 1 << 3;
 	public static final int K_CONSTANT = 1 << 4;
 	public static final int K_INCLUDE = 1 << 5;
-	public static final int K_PHPDOC = 1 << 6;
-	public static final int K_PHPDOC_FOR_CONSTANT = 1 << 7; // This is since consant and method elements are stored in the mixin under same key
 	public static final int K_NON_PHP = 1 << 10;
 
 	private int kind = 0;
@@ -111,13 +109,5 @@ public class PHPMixinElementInfo {
 
 	public static PHPMixinElementInfo createConstant(IField type) {
 		return new PHPMixinElementInfo(K_CONSTANT, type);
-	}
-
-	public static PHPMixinElementInfo createPHPDoc(IField docField) {
-		return new PHPMixinElementInfo(K_PHPDOC, docField);
-	}
-
-	public static PHPMixinElementInfo createPHPDocForConstant(IField type) {
-		return new PHPMixinElementInfo(K_PHPDOC_FOR_CONSTANT, type);
 	}
 }

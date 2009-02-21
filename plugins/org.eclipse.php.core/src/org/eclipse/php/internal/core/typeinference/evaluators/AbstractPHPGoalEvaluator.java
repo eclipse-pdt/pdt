@@ -33,7 +33,9 @@ public abstract class AbstractPHPGoalEvaluator extends GoalEvaluator {
 	 */
 	protected IType[] getTypes(IEvaluatedType instanceType, ISourceModuleContext context) {
 		IType[] types = PHPTypeInferenceUtils.getModelElements(instanceType, context, 0);
-
+		if (types == null) {
+			return new IType[0];
+		}
 		ISourceModule currentModule = context.getSourceModule();
 		if (currentModule != null) {
 			IType typeFromSameFile = null;

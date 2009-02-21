@@ -47,7 +47,6 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
  * 	<li><b>{class%{$field</b>		Class or Interface Variable</li>
  * 	<li><b>{class%{constant@</b>	Class or Interface Constant</li>
  * </ul>
- * <b>Note: PHPDoc keys are the same as their original element keys</b>
  * 
  * @author michael
  */
@@ -316,24 +315,6 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return scope.reportVariable(name, obj);
 	}
 
-	/**
-	 * Report PHPDoc node
-	 * @throws ModelException
-	 */
-	protected void reportPHPDoc(String key, PHPDocBlock phpDoc) throws ModelException {
-		IField phpDocField = new PHPDocField((ModelElement) sourceModule, phpDoc);
-		report(key, PHPMixinElementInfo.createPHPDoc(phpDocField));
-	}
-
-	/**
-	 * Report PHPDoc node for constant declaration
-	 * @throws ModelException
-	 */
-	protected void reportPHPDocForConstant(String key, PHPDocBlock phpDoc) throws ModelException {
-		IField phpDocField = new PHPDocField((ModelElement) sourceModule, phpDoc);
-		report(key, PHPMixinElementInfo.createPHPDocForConstant(phpDocField));
-	}
-
 	protected IModelElement findModelElementFor(ASTNode decl) throws ModelException {
 		return sourceModule.getElementAt(decl.sourceStart() + 1);
 	}
@@ -452,12 +433,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			obj = (IField) element;
 		}
 		Scope scope = scopes.peek();
-		String newKey = scope.reportConstant(ASTUtils.stripQuotes(name), obj);
-
-		PHPDocBlock doc = decl.getPHPDoc();
-		if (doc != null) {
-			reportPHPDocForConstant(newKey, doc);
-		}
+		scope.reportConstant(ASTUtils.stripQuotes(name), obj);
 
 		return visitGeneral(decl);
 	}
@@ -498,12 +474,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(PHPFieldDeclaration decl) throws Exception {
-		String newKey = reportVariableDeclaration(decl.getRef());
-
-		PHPDocBlock doc = decl.getPHPDoc();
-		if (doc != null) {
-			reportPHPDoc(newKey, doc);
-		}
+		reportVariableDeclaration(decl.getRef());
 		return visitGeneral(decl);
 	}
 
@@ -546,14 +517,6 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 		globalVariables.push(new HashSet<String>());
 
-		if (decl instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) decl;
-			PHPDocBlock doc = phpDocAwareDeclaration.getPHPDoc();
-			if (doc != null) {
-				reportPHPDoc(method, doc);
-			}
-		}
-
 		return visitGeneral(decl);
 	}
 
@@ -587,14 +550,6 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			newKey = scope.reportType(name, obj);
 		}
 		scopes.push(new ClassScope(decl, newKey));
-
-		if (decl instanceof IPHPDocAwareDeclaration) {
-			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) decl;
-			PHPDocBlock doc = phpDocAwareDeclaration.getPHPDoc();
-			if (doc != null) {
-				reportPHPDoc(newKey, doc);
-			}
-		}
 
 		return visitGeneral(decl);
 	}

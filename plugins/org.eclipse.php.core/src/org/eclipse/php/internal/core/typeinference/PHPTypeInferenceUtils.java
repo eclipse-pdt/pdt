@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPTypeInferenceUtils {
-	
+
 	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluatedTypes) {
 		MultiTypeType multiTypeType = new MultiTypeType();
 		for (IEvaluatedType type : evaluatedTypes) {
@@ -97,16 +97,16 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		ISourceModule sourceModule = context.getSourceModule();
-		
+
 		IType[] elements = internalGetModelElements(evaluatedType, context, offset);
 		if (elements == null) {
 			return null;
 		}
-		
+
 		Collection<IType> filterElements = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
 		return filterElements.toArray(new IType[filterElements.size()]);
 	}
-	
+
 	private static IType[] internalGetModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
 		ISourceModule sourceModule = context.getSourceModule();
 
@@ -152,7 +152,7 @@ public class PHPTypeInferenceUtils {
 			// the elements are filtered already
 			return tmpList.toArray(new IType[tmpList.size()]);
 		}
-		
+
 		return null;
 	}
 
@@ -194,7 +194,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return getGlobalTypes(typeName, sourceModule);
 	}
-	
+
 	/**
 	 * This method returns method corresponding to its name and the file where it was referenced.
 	 * The method name may contain also the namespace part, like: A\B\foo() or \A\B\foo()
@@ -234,7 +234,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return getGlobalMethods(methodName, sourceModule);
 	}
-	
+
 	/**
 	 * This method returns field corresponding to its name and the file where it was referenced.
 	 * The field name may contain also the namespace part, like: A\B\C or \A\B\C
@@ -276,7 +276,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return getGlobalFields(fieldName, sourceModule);
 	}
-	
+
 	/**
 	 * Returns the current namespace by the specified file and offset
 	 * @param sourceModule The file where current namespace is requested 
@@ -297,7 +297,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Extracts the element name from the given fully qualified name
 	 * @param element Element name
@@ -310,7 +310,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return element;
 	}
-	
+
 	/**
 	 * Guess the namespace where the specified element is declared.
 	 * @param elementName The name of the element, like: \A\B, A\B, namespace\B, \B, etc...
@@ -345,18 +345,18 @@ public class PHPTypeInferenceUtils {
 			isGlobal = true;
 			elementName = elementName.substring(1);
 		}
-		
+
 		int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		if (nsIndex != -1) {
 			String namespace = elementName.substring(0, nsIndex);
-			
+
 			if (!isGlobal) {
 				// 1. It can be a special 'namespace' keyword, which points to the current namespace:
 				if ("namespace".equalsIgnoreCase(namespace)) {
 					IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 					return currentNamespace.getElementName();
 				}
-				
+
 				// 2. it can be an alias - try to find relevant USE statement
 				if (namespace.indexOf('\\') == -1) {
 					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
@@ -365,19 +365,18 @@ public class PHPTypeInferenceUtils {
 						return usePart.getNamespace().getFullyQualifiedName();
 					}
 				}
-				
+
 				// 3. it can be a sub-namespace of the current namespace:
 				IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
 				if (currentNamespace != null) {
-					return new StringBuilder(currentNamespace.getElementName())
-							.append(NamespaceReference.NAMESPACE_SEPARATOR).append(namespace).toString();
+					return new StringBuilder(currentNamespace.getElementName()).append(NamespaceReference.NAMESPACE_SEPARATOR).append(namespace).toString();
 				}
 			}
-			
+
 			// global namespace:
 			return namespace;
 		}
-		
+
 		// no namespace prefix in element name:
 		return null;
 	}
@@ -480,7 +479,9 @@ public class PHPTypeInferenceUtils {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IType element = (IType) match.getElement();
 					if (!PHPFlags.isNamespace(element.getFlags())) {
-						types.add(element);
+						if (PHPModelUtils.getCurrentNamespace(element) == null) {
+							types.add(element);
+						}
 					}
 				}
 			}, null);
@@ -490,7 +491,6 @@ public class PHPTypeInferenceUtils {
 		}
 		return (IType[]) types.toArray(new IType[types.size()]);
 	}
-	
 
 	/**
 	 * This method returns method elements (IMethod) by specified name.
@@ -509,7 +509,8 @@ public class PHPTypeInferenceUtils {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IMethod element = (IMethod) match.getElement();
-					if (!PHPFlags.isNamespace(element.getFlags())) {
+					IModelElement parent = element.getParent();
+					if (parent instanceof ISourceModule || parent instanceof IMethod || parent instanceof IType && PHPFlags.isNamespace(((IType) parent).getFlags())) {
 						methods.add(element);
 					}
 				}
@@ -520,7 +521,6 @@ public class PHPTypeInferenceUtils {
 		}
 		return (IMethod[]) methods.toArray(new IMethod[methods.size()]);
 	}
-	
 
 	/**
 	 * This method returns field elements (IField) by specified name.
@@ -539,7 +539,10 @@ public class PHPTypeInferenceUtils {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IField element = (IField) match.getElement();
-					fields.add(element);
+					IModelElement parent = element.getParent();
+					if (parent instanceof ISourceModule || parent instanceof IType && PHPFlags.isNamespace(((IType) parent).getFlags())) {
+						fields.add(element);
+					}
 				}
 			}, null);
 		} catch (CoreException e) {

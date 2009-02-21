@@ -22,9 +22,8 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.mixin.PHPDocField;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.evaluators.AbstractPHPGoalEvaluator;
@@ -48,16 +47,17 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 
 		IType[] types = getTypes(context.getInstanceType(), context);
 
-		Set<PHPDocField> docs = new HashSet<PHPDocField>();
+		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
 		for (IType type : types) {
 			try {
 				// we look in whole hiearchy
 				ITypeHierarchy superHierarchy = type.newSupertypeHierarchy(null);
 				IType[] superTypes = superHierarchy.getAllTypes();
 				for (IType superType : superTypes) {
-					IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getVariableDoc(variableName, null, superType.getElementName());
-					for (IModelElement e : elements) {
-						docs.add((PHPDocField) e);
+					IField typeField = PHPModelUtils.getTypeField(superType, variableName);
+					PHPDocBlock docBlock = PHPModelUtils.getDocBlock(typeField);
+					if (docBlock != null) {
+						docs.add(docBlock);
 					}
 				}
 			} catch (ModelException e) {
@@ -67,9 +67,8 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 			}
 		}
 
-		for (PHPDocField doc : docs) {
-			PHPDocBlock docBlock = doc.getDocBlock();
-			for (PHPDocTag tag : docBlock.getTags()) {
+		for (PHPDocBlock doc : docs) {
+			for (PHPDocTag tag : doc.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.VAR) {
 					SimpleReference[] references = tag.getReferences();
 					for (SimpleReference ref : references) {

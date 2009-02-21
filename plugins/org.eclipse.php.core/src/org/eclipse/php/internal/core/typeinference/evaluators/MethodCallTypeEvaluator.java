@@ -74,17 +74,19 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 			state = STATE_WAITING_METHOD_PHPDOC;
 			TypeContext context = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
 			IModelElement[] types = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) goal.getContext(), 0);
-			String methodName = expression.getName();
-			for (IModelElement type : types) {
-				IMethod method;
-				try {
-					method = PHPModelUtils.getTypeMethod((IType) type, methodName);
-					if (method != null) {
-						return new PHPDocMethodReturnTypeGoal(context, method);
-					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG) {
-						e.printStackTrace();
+			if (types != null) {
+				String methodName = expression.getName();
+				for (IModelElement type : types) {
+					IMethod method;
+					try {
+						method = PHPModelUtils.getTypeMethod((IType) type, methodName);
+						if (method != null) {
+							return new PHPDocMethodReturnTypeGoal(context, method);
+						}
+					} catch (ModelException e) {
+						if (DLTKCore.DEBUG) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -100,7 +102,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		if (state == STATE_WAITING_METHOD) {
 			if (goalState != GoalState.PRUNED && previousResult != null && previousResult != UnknownType.INSTANCE) {
 				if (result != null) {
-					result = PHPTypeInferenceUtils.combineTypes(Arrays.asList(new IEvaluatedType[] {result, previousResult}));
+					result = PHPTypeInferenceUtils.combineTypes(Arrays.asList(new IEvaluatedType[] { result, previousResult }));
 				} else {
 					result = previousResult;
 				}

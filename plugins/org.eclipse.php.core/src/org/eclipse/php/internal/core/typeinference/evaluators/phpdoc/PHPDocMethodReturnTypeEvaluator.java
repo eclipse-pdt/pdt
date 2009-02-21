@@ -20,19 +20,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocTag;
-import org.eclipse.php.internal.core.mixin.PHPDocField;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
@@ -63,14 +56,12 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 
 	public IGoal[] init() {
 		PHPDocMethodReturnTypeGoal typedGoal = (PHPDocMethodReturnTypeGoal) goal;
-		ISourceModuleContext context = (ISourceModuleContext) goal.getContext();
 		IMethod method = typedGoal.getMethod();
 
-		Set<PHPDocField> docs = new HashSet<PHPDocField>();
-
+		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
 		if (method.getDeclaringType() != null) {
 			try {
-				for (PHPDocField doc : PHPModelUtils.getTypeHierarchyMethodDoc(method.getDeclaringType(), method.getElementName(), null)) {
+				for (PHPDocBlock doc : PHPModelUtils.getTypeHierarchyMethodDoc(method.getDeclaringType(), method.getElementName(), null)) {
 					docs.add(doc);
 				}
 			} catch (CoreException e) {
@@ -79,30 +70,13 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 				}
 			}
 		} else {
-			IScriptProject scriptProject = context.getSourceModule().getScriptProject();
-			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getFunctionDoc(method.getElementName(), scope);
-			for (IModelElement e : elements) {
-				docs.add((PHPDocField) e);
+			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+			if (docBlock != null) {
+				docs.add(docBlock);
 			}
 		}
-
-		PHPDocField docFromSameFile = null;
-		for (PHPDocField doc : docs) {
-			if (doc.getSourceModule().equals(context.getSourceModule())) {
-				docFromSameFile = doc;
-				break;
-			}
-		}
-		// If doc from the same file was found  - use it
-		if (docFromSameFile != null) {
-			docs.clear();
-			docs.add(docFromSameFile);
-		}
-
-		for (PHPDocField doc : docs) {
-			PHPDocBlock docBlock = doc.getDocBlock();
-			for (PHPDocTag tag : docBlock.getTags()) {
+		for (PHPDocBlock doc : docs) {
+			for (PHPDocTag tag : doc.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.RETURN) {
 					// @return datatype1|datatype2|...
 					for (SimpleReference reference : tag.getReferences()) {
