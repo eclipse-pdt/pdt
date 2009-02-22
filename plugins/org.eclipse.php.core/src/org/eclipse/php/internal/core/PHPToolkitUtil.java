@@ -128,7 +128,7 @@ public class PHPToolkitUtil {
 		}
 		
 		if (element instanceof IModelElement) {
-			getSourceModule((IModelElement) element);
+			return getSourceModule((IModelElement) element);
 		}
 		
 		if (element instanceof String) {
