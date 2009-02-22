@@ -132,7 +132,7 @@ public class PHPToolkitUtil {
 		}
 		
 		if (element instanceof String) {
-			getSourceModule((String) element);
+			return getSourceModule((String) element);
 		}
 
 		return null;
