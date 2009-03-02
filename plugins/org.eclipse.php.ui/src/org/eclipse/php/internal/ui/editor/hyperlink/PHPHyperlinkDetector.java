@@ -23,7 +23,6 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.xml.core.internal.Logger;
 
 public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 
@@ -77,7 +76,7 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 		return null;
 	}
 
-	private static IRegion findWord(IDocument document, int offset, boolean namespacesSupported) {
+	public static IRegion findWord(IDocument document, int offset, boolean namespacesSupported) {
 
 		int start = -2;
 		int end = -1;
