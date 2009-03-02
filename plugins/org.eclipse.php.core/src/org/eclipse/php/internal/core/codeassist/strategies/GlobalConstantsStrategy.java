@@ -11,9 +11,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCoreConstants;
@@ -22,6 +20,7 @@ import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
  * This strategy completes global constants 
@@ -59,7 +58,15 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 		IModelElement[] constants = CodeAssistUtils.getGlobalFields(abstractContext.getSourceModule(), prefix, mask);
 		for (IModelElement constant : constants) {
-			reporter.reportField((IField) constant, "", replaceRange, false);
+			try {
+				if (PHPFlags.isConstant(((IField)constant).getFlags())) {
+					reporter.reportField((IField) constant, "", replaceRange, false);
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

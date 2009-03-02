@@ -17,21 +17,19 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
 /**
- * This composite contains strategies that complete global elements
+ * This composite contains strategies that complete elements inside method
  * @author michael
  */
-public class GlobalElementsCompositeStrategy implements ICompletionStrategy {
+public class LocalMethodElementsCompositeStrategy implements ICompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 	
-	public GlobalElementsCompositeStrategy(ICompletionContext context, boolean includeKeywords) {
+	public LocalMethodElementsCompositeStrategy(ICompletionContext context) {
 		strategies.add(new GlobalTypesStrategy(context));
 		strategies.add(new GlobalFunctionsStrategy(context));
-		strategies.add(new GlobalVariablesStrategy(context));
+		strategies.add(new LocalMethodVariablesStrategy(context));
 		strategies.add(new GlobalConstantsStrategy(context));
-		if (includeKeywords) {
-			strategies.add(new GlobalKeywordsStrategy(context));
-		}
+		strategies.add(new GlobalKeywordsStrategy(context));
 	}
 
 	public void apply(ICompletionReporter reporter) throws Exception {

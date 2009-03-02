@@ -111,7 +111,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(context, true) };
 		}
 		if (contextClass == GlobalMethodStatementContext.class) {
-			return new ICompletionStrategy[] { new GlobalElementsCompositeStrategy(context, true), new LocalMethodVariablesStrategy(context) };
+			return new ICompletionStrategy[] { new LocalMethodElementsCompositeStrategy(context) };
 		}
 		if (contextClass == CatchTypeContext.class) {
 			return new ICompletionStrategy[] { new GlobalTypesStrategy(context) };
