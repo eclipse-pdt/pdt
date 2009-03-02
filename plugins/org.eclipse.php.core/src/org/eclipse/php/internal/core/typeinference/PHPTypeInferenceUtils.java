@@ -470,9 +470,20 @@ public class PHPTypeInferenceUtils {
 	 * @return type element array
 	 */
 	public static IType[] getGlobalTypes(String typeName, ISourceModule sourceModule) {
+		return getGlobalTypes(typeName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+	}
+	
+	/**
+	 * This method returns type elements (IType) by the specified name. Namespaces are excluded.
+	 * The element must be declared in a global scope.
+	 * 
+	 * @param typeName Type name
+	 * @param scope Search scope
+	 * @return type element array
+	 */
+	public static IType[] getGlobalTypes(String typeName, IDLTKSearchScope scope) {
 		final List<IType> types = new LinkedList<IType>();
 		SearchEngine searchEngine = new SearchEngine();
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 		SearchPattern pattern = SearchPattern.createPattern(typeName, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
@@ -501,9 +512,20 @@ public class PHPTypeInferenceUtils {
 	 * @return method element array
 	 */
 	public static IMethod[] getGlobalMethods(String methodName, ISourceModule sourceModule) {
+		return getGlobalMethods(methodName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+	}
+	
+	/**
+	 * This method returns method elements (IMethod) by specified name.
+	 * The element must be declared in a global scope.
+	 * 
+	 * @param methodName Method name
+	 * @param scope Search scope
+	 * @return method element array
+	 */
+	public static IMethod[] getGlobalMethods(String methodName, IDLTKSearchScope scope) {
 		final List<IMethod> methods = new LinkedList<IMethod>();
 		SearchEngine searchEngine = new SearchEngine();
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 		SearchPattern pattern = SearchPattern.createPattern(methodName, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
@@ -521,7 +543,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return (IMethod[]) methods.toArray(new IMethod[methods.size()]);
 	}
-
+	
 	/**
 	 * This method returns field elements (IField) by specified name.
 	 * The element must be declared in a global scope.
@@ -531,9 +553,20 @@ public class PHPTypeInferenceUtils {
 	 * @return field element array
 	 */
 	public static IField[] getGlobalFields(String fieldName, ISourceModule sourceModule) {
+		return getGlobalFields(fieldName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+	}
+
+	/**
+	 * This method returns field elements (IField) by specified name.
+	 * The element must be declared in a global scope.
+	 * 
+	 * @param fieldName Field name
+	 * @param scope Search scope
+	 * @return field element array
+	 */
+	public static IField[] getGlobalFields(String fieldName, IDLTKSearchScope scope) {
 		final List<IField> fields = new LinkedList<IField>();
 		SearchEngine searchEngine = new SearchEngine();
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule.getScriptProject());
 		SearchPattern pattern = SearchPattern.createPattern(fieldName, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH | SearchPattern.R_CASE_SENSITIVE, PHPLanguageToolkit.getDefault());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
