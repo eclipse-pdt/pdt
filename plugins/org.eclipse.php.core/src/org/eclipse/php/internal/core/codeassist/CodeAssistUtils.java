@@ -16,8 +16,12 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.*;
@@ -33,6 +37,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.mixin.PHPMixinParser;
@@ -738,7 +743,7 @@ public class CodeAssistUtils {
 	 * @param prefix Field name
 	 * @param mask
 	 */
-	public static IModelElement[] getMethodFields(IMethod method, String prefix, int mask) {
+	public static IModelElement[] getMethodFields(final IMethod method, String prefix, int mask) {
 
 		SearchEngine searchEngine = new SearchEngine();
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
@@ -753,13 +758,12 @@ public class CodeAssistUtils {
 			matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
 		}
 
+		final Set<String> processedVars = new HashSet<String>();
+		
 		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
-
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
 		try {
 			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				private Set<String> processedVars = new HashSet<String>();
-
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
 					IModelElement element = (IModelElement) match.getElement();
 					String elementName = element.getElementName();
@@ -774,6 +778,36 @@ public class CodeAssistUtils {
 				e.printStackTrace();
 			}
 		}
+		
+		// collect global variables
+		ModuleDeclaration rootNode = SourceParserUtil.getModuleDeclaration(method.getSourceModule());
+		try {
+			MethodDeclaration methodDeclaration = PHPModelUtils.getNodeByMethod(rootNode, method);
+			final String varPrefix = prefix;
+			methodDeclaration.traverse(new ASTVisitor() {
+				public boolean visit(Statement s) throws Exception {
+					if (s instanceof GlobalStatement) {
+						GlobalStatement globalStatement = (GlobalStatement) s;
+						for (Expression e : globalStatement.getVariables()) {
+							if (e instanceof VariableReference) {
+								VariableReference varReference = (VariableReference) e;
+								String varName = varReference.getName();
+								if (varName.startsWith(varPrefix) && !processedVars.contains(varName)) {
+									elements.add(new FakeField((ModelElement) method, varName, e.sourceStart(), e.sourceEnd() - e.sourceStart()));
+									processedVars.add(varName);
+								}
+							}
+						}
+					}
+					return super.visit(s);
+				}
+			});
+		} catch (Exception e) {
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
+		}
+		
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
