@@ -10,14 +10,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
@@ -36,10 +37,17 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	}
 
 	public void apply(IDocument document, char trigger, int offset) {
-		if (getModelElement() instanceof FakeGroupType) {
+		IModelElement modelElement = getModelElement();
+
+		if (modelElement instanceof FakeGroupType) {
 			AutoActivationTrigger.register(document);
 		}
+
+		UseStatementInjector injector = new UseStatementInjector(this);
+		offset = injector.inject(document, getTextViewer(), offset);
+
 		super.apply(document, trigger, offset);
+
 		setCursorPosition(calcCursorPosition());
 	}
 
@@ -59,7 +67,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		}
 		return replacementString.length();
 	}
-	
+
 	public IContextInformation getContextInformation() {
 		String displayString = getDisplayString();
 		if (displayString.indexOf('(') == -1) {
@@ -73,8 +81,7 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	}
 
 	protected boolean insertCompletion() {
-		Preferences pluginPreferences = PHPCorePlugin.getDefault().getPluginPreferences();
-		return pluginPreferences.getBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION);
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true, null);
 	}
 
 	protected ScriptTextTools getTextTools() {
