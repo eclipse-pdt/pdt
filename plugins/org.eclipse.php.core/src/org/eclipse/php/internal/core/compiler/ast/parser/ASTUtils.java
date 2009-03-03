@@ -335,10 +335,10 @@ public class ASTUtils {
 	 * @param moduleDeclaration The AST root node
 	 * @param aliasName The alias name.
 	 * @param offset Current position in the file (this is needed since we don't want to take USE statements placed below
-	 * 		current position into account
+	 * 		current position into account)
 	 * @return USE statement part node, or <code>null</code> in case relevant statement couldn't be found
 	 */
-	public static UsePart findUseStatement(ModuleDeclaration moduleDeclaration, final String aliasName, final int offset) {
+	public static UsePart findUseStatementByAlias(ModuleDeclaration moduleDeclaration, final String aliasName, final int offset) {
 		final UsePart[] result = new UsePart[1];
 		try {
 			moduleDeclaration.traverse(new ASTVisitor() {
@@ -378,10 +378,53 @@ public class ASTUtils {
 	}
 	
 	/**
+	 * Finds USE statement according to the given namespace name
+	 * @param moduleDeclaration The AST root node
+	 * @param namespace Namespace name
+	 * @param offset Current position in the file (this is needed since we don't want to take USE statements placed below
+	 * 		current position into account)
+	 * @return USE statement part node, or <code>null</code> in case relevant statement couldn't be found
+	 */
+	public static UsePart findUseStatementByNamespace(ModuleDeclaration moduleDeclaration, final String namespace, final int offset) {
+		final UsePart[] result = new UsePart[1];
+		try {
+			moduleDeclaration.traverse(new ASTVisitor() {
+				boolean found;
+
+				public boolean visit(Statement s) throws Exception {
+					if (s instanceof UseStatement) {
+						UseStatement useStatement = (UseStatement) s;
+						for (UsePart usePart : useStatement.getParts()) {
+							String ns = usePart.getNamespace().getFullyQualifiedName();
+							if (namespace.equalsIgnoreCase(ns)) {
+								found = true;
+								result[0] = usePart;
+								break;
+							}
+						}
+					}
+					return visitGeneral(s);
+				}
+
+				public boolean visitGeneral(ASTNode node) throws Exception {
+					if (found || node.sourceStart() > offset) {
+						return false;
+					}
+					return super.visitGeneral(node);
+				}
+			});
+		} catch (Exception e) {
+			Logger.logException(e);
+		}
+		
+		return result[0];
+	}
+	
+	/**
 	 * Returns all USE statements declared before the specified offset
 	 * @param moduleDeclaration The AST root node
 	 * @param offset Current position in the file (this is needed since we don't want to take USE statements placed below
-	 * 		current position into account
+	 * 		current position into account)
 	 * @return USE statements list
 	 */
 	public static UseStatement[] getUseStatements(ModuleDeclaration moduleDeclaration, final int offset) {

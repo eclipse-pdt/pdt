@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -998,7 +999,11 @@ public class CodeAssistUtils {
 					searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), pattern.getMatchRule(), IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
 						public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
 							Openable openable = handleFactory.createOpenable(path, scope);
-							elements.add(new FakeType(openable, new String(simpleTypeName), modifiers));
+							ModelElement parent = openable;
+							if (enclosingTypeNames.length > 0) {
+								parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
+							}
+							elements.add(new FakeType(parent, new String(simpleTypeName), modifiers));
 						}
 					}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
 				} else {

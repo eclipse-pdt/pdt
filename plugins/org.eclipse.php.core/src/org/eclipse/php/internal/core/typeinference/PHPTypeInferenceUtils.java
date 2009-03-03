@@ -360,7 +360,7 @@ public class PHPTypeInferenceUtils {
 				// 2. it can be an alias - try to find relevant USE statement
 				if (namespace.indexOf('\\') == -1) {
 					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-					UsePart usePart = ASTUtils.findUseStatement(moduleDeclaration, namespace, offset);
+					UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, namespace, offset);
 					if (usePart != null) {
 						return usePart.getNamespace().getFullyQualifiedName();
 					}
