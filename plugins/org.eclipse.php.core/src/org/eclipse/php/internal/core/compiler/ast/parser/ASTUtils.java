@@ -348,8 +348,10 @@ public class ASTUtils {
 					if (s instanceof UseStatement) {
 						UseStatement useStatement = (UseStatement) s;
 						for (UsePart usePart : useStatement.getParts()) {
-							String alias = usePart.getAlias().getName();
-							if (alias == null) {
+							String alias;
+							if (usePart.getAlias() != null) {
+								alias = usePart.getAlias().getName();
+							} else {
 								// In case there's no alias - the alias is the last segment of the namespace name:
 								alias = usePart.getNamespace().getName();
 							}

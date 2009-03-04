@@ -168,7 +168,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return methods.toArray(new IModelElement[methods.size()]);
 						}
 					} else {
-						IMethod[] methods = PHPTypeInferenceUtils.getMethods(callExpression.getName(), sourceModule, offset);
+						SimpleReference callName = callExpression.getCallName();
+						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference)callName).getFullyQualifiedName() : callName.getName();
+						IMethod[] methods = PHPTypeInferenceUtils.getMethods(methodName, sourceModule, offset);
 						Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
 						return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 					}
