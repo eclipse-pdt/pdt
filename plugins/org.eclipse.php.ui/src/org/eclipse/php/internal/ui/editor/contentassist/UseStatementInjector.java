@@ -65,11 +65,18 @@ public class UseStatementInjector {
 					IModelElement editorElement = ((PHPStructuredEditor) textEditor).getModelElement();
 					if (editorElement != null) {
 						ISourceModule sourceModule = ((ModelElement) editorElement).getSourceModule();
+						
+						String namespaceName = namespace.getElementName();
+						
+						IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
+						if (currentNamespace.getElementName().equals(namespaceName)) {
+							// no need to insert USE statement as we are already in the required namespace:
+							return offset;
+						}
 
 						ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 
 						// find existing use statement:
-						String namespaceName = namespace.getElementName();
 						UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, namespaceName, offset);
 						if (usePart == null) {
 
