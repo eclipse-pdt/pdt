@@ -3,6 +3,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -40,7 +41,8 @@ public class AutoActivationTrigger implements ISelectionChangedListener {
 	
 	public void selectionChanged(SelectionChangedEvent event) {
 		textViewer.removeSelectionChangedListener(this);
-		final long delay = PHPCorePlugin.getDefault().getPluginPreferences().getLong(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY);
+		
+		final long delay = Platform.getPreferencesService().getLong(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200, null);
 		new Timer("Temporary Completion Delay").schedule(new TimerTask() {
 			public void run() {
 				textViewer.getControl().getDisplay().asyncExec(new Runnable() {

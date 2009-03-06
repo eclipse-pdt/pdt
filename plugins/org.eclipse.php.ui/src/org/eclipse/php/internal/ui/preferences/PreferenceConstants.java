@@ -870,6 +870,11 @@ public class PreferenceConstants {
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_ALL = "cleanup.remove_trailing_whitespaces_all"; //$NON-NLS-1$
 	public static final String FORMAT_REMOVE_TRAILING_WHITESPACES_IGNORE_EMPTY = "cleanup.remove_trailing_whitespaces_ignore_empty"; //$NON-NLS-1$
 	public static final String PREF_OUTLINEMODE = "ChangeOutlineModeAction.selectedMode"; //$NON-NLS-1$
+	
+	/**
+	 * This setting controls whether to group elements by namespaces in PHP Explorer 
+	 */
+	public static final String EXPLORER_GROUP_BY_NAMESPACES = "PHPExplorerPart.groupByNamespaces"; //$NON-NLS-1$
 
 	public static IPreferenceStore getPreferenceStore() {
 		return PHPUiPlugin.getDefault().getPreferenceStore();
@@ -1015,6 +1020,8 @@ public class PreferenceConstants {
 
 		//default php outline mode
 		store.setDefault(PREF_OUTLINEMODE, PHPContentOutlineConfiguration.MODE_PHP);
+		
+		store.setDefault(EXPLORER_GROUP_BY_NAMESPACES, false);
 
 		// do more complicated stuff
 		PHPProjectLayoutPreferencePage.initDefaults(store);

@@ -36,6 +36,7 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 			}
 		}
 		filtered.add(new GenerateIncludePathActionGroup(getPart()));
+		filtered.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
 
 		super.setGroups(filtered.toArray(new ActionGroup[filtered.size()]));
 	}
