@@ -145,6 +145,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		return fPHPLocationGroup.isInWorkspace();
 	}
 
+	public boolean isInLocalServer() {
+		return fPHPLocationGroup.isInLocalServer();
+	}
+
 	public boolean getDetect() {
 		return fDetectGroup.mustDetect();
 	}
@@ -210,8 +214,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 						final IFileHandle directory = environment.getFile(location.append(getProjectName()));
 						fDetect = directory.isDirectory();
 					}
-				}
-				else {
+				} else {
 					IEnvironment environment = fPHPLocationGroup.getEnvironment();
 					if (location.toPortableString().length() > 0) {
 						final IFileHandle directory = environment.getFile(location);
@@ -329,11 +332,15 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			}
 			// check whether project already exists
 			final IProject handle = getProjectHandle();
-			if (handle.exists()) {
-				setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
-				setPageComplete(false);
-				return;
+
+			if (!isInLocalServer()) {
+				if (handle.exists()) {
+					setErrorMessage(NewWizardMessages.ScriptProjectWizardFirstPage_Message_projectAlreadyExists);
+					setPageComplete(false);
+					return;
+				}
 			}
+
 			final String location = fPHPLocationGroup.getLocation().toOSString();
 			// check whether location is empty
 			if (location.length() == 0) {
@@ -395,10 +402,10 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			fGroup.setText(PHPUIMessages.getString("JavaScriptSupportGroup_OptionBlockTitle"));
+			fGroup.setText(PHPUIMessages.getString("JavaScriptSupportGroup_OptionBlockTitle")); //$NON-NLS-1$
 
 			fEnableJavaScriptSupport = new Button(fGroup, SWT.CHECK | SWT.RIGHT);
-			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport"));
+			fEnableJavaScriptSupport.setText(PHPUIMessages.getString("JavaScriptSupportGroup_EnableSupport")); //$NON-NLS-1$
 			fEnableJavaScriptSupport.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			fEnableJavaScriptSupport.addSelectionListener(this);
 			fEnableJavaScriptSupport.setSelection(PHPUiPlugin.getDefault().getPreferenceStore().getBoolean((PreferenceConstants.JavaScriptSupportEnable)));
@@ -425,11 +432,11 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			final int numColumns = 3;
 
 			fStdRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fStdRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_ProjectSrc"));
+			fStdRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_ProjectSrc")); //$NON-NLS-1$
 			fStdRadio.setDialogFieldListener(this);
 
 			fSrcBinRadio = new SelectionButtonDialogField(SWT.RADIO);
-			fSrcBinRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_SrcResources"));
+			fSrcBinRadio.setLabelText(PHPUIMessages.getString("LayoutGroup_OptionBlock_SrcResources")); //$NON-NLS-1$
 			fSrcBinRadio.setDialogFieldListener(this);
 
 			//getting Preferences default choice
@@ -443,7 +450,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fGroup.setFont(composite.getFont());
 			fGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			fGroup.setLayout(initGridLayout(new GridLayout(numColumns, false), true));
-			fGroup.setText(PHPUIMessages.getString("LayoutGroup_OptionBlock_Title"));
+			fGroup.setText(PHPUIMessages.getString("LayoutGroup_OptionBlock_Title")); //$NON-NLS-1$
 
 			fStdRadio.doFillIntoGrid(fGroup, 3);
 			LayoutUtil.setHorizontalGrabbing(fStdRadio.getSelectionButton(null));
@@ -451,7 +458,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			fSrcBinRadio.doFillIntoGrid(fGroup, 2);
 
 			fPreferenceLink = new Link(fGroup, SWT.NONE);
-			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description"));
+			fPreferenceLink.setText(PHPUIMessages.getString("ToggleLinkingAction_link_description")); //$NON-NLS-1$
 			fPreferenceLink.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
 			fPreferenceLink.addSelectionListener(this);
 			fPreferenceLink.setEnabled(true);
@@ -527,6 +534,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		private int localEnv;
 		protected SelectionButtonDialogField fLocalServerRadio;
 		protected ComboDialogField fSeverLocationList;
+		private String[] docRootArray;
 		private static final String DIALOGSTORE_LAST_EXTERNAL_LOC = DLTKUIPlugin.PLUGIN_ID + ".last.external.project"; //$NON-NLS-1$
 
 		public LocationGroup(Composite composite) {
@@ -572,7 +580,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			for (int i = 0; i < servers.length; i++) {
 				String docRoot = servers[i].getDocumentRoot();
 				String isLocal = servers[i].getAttribute(Server.LOCALSERVER, null);
-				if (isLocal != null && docRoot != null && !"".equals(docRoot.trim())) {
+				if (isLocal != null && docRoot != null && !"".equals(docRoot.trim())) { //$NON-NLS-1$
 					docRoots.add(docRoot);
 				}
 			}
@@ -580,14 +588,14 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			if (docRoots.size() > 0) {
 				fLocalServerRadio = new SelectionButtonDialogField(SWT.RADIO);
 				fLocalServerRadio.setDialogFieldListener(this);
-				fLocalServerRadio.setLabelText("Create project in local Server");
+				fLocalServerRadio.setLabelText(PHPUIMessages.getString("PHPProjectWizardFirstPage.localServerLabel")); //$NON-NLS-1$
 				fLocalServerRadio.setSelection(false);
 				fLocalServerRadio.doFillIntoGrid(group, numColumns);
 				fSeverLocationList = new ComboDialogField(SWT.READ_ONLY);
 				fSeverLocationList.setLabelText(NewWizardMessages.ScriptProjectWizardFirstPage_LocationGroup_locationLabel_desc);
 				fSeverLocationList.doFillIntoGrid(group, numColumns);
 				fSeverLocationList.setEnabled(false);
-				String[] docRootArray = new String[docRoots.size()];
+				docRootArray = new String[docRoots.size()];
 				docRoots.toArray(docRootArray);
 				fSeverLocationList.setItems(docRootArray);
 				fSeverLocationList.selectItem(0);
@@ -625,15 +633,29 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 			if (isInWorkspace()) {
 				fLocation.setText(getDefaultPath(fNameGroup.getName()));
 			}
+			if (docRootArray != null && docRootArray.length > 0) {
+				int index = fSeverLocationList.getSelectionIndex();
+				String[] items = getDocItems(docRootArray);
+				fSeverLocationList.setItems(items);
+				fSeverLocationList.selectItem(index);
+			}
+
 			fireEvent();
+		}
+
+		private String[] getDocItems(String[] docRootArray) {
+			String[] items = new String[docRootArray.length];
+			for (int i = 0; i < docRootArray.length; i++) {
+				items[i] = docRootArray[i] + "\\" + fNameGroup.getName(); //$NON-NLS-1$
+			}
+			return items;
 		}
 
 		public IPath getLocation() {
 			if (isInWorkspace()) {
 				return Platform.getLocation();
 			}
-			if(isInLocalServer())
-			{
+			if (isInLocalServer()) {
 				return new Path(fSeverLocationList.getText());
 			}
 			return new Path(fLocation.getText().trim());
