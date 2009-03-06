@@ -17,25 +17,23 @@ import org.eclipse.dltk.core.builder.IBuildContext;
 import org.eclipse.dltk.core.builder.IBuildParticipant;
 
 /**
- * This build participant that just after the PHP builder, and validates
- * the PHP code for places where XSS can be applied (http://en.wikipedia.org/wiki/Cross-site_scripting)
+ * This build participant is invoked just after the PHP builder
+ * It validates the PHP code for places where XSS can be applied
+ * (http://en.wikipedia.org/wiki/Cross-site_scripting)
  */
 public class XSSProtectionParticipant implements IBuildParticipant {
 
 	public void build(IBuildContext context) throws CoreException {
 		// Current file is being built:
 		ISourceModule sourceModule = context.getSourceModule();
-		
 		// Get file AST:
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-		
 		// Run the validation visitor:
 		try {
 			moduleDeclaration.traverse(new XSSValidationVisitor(context));
 		} catch (Exception e) {
-			IStatus status = new Status(IStatus.ERROR, XSSPlugin.PLUGIN_ID, "An error has occurred while invoking XSS validator", e);
-			throw new CoreException(status);
+			throw new CoreException(new Status(
+				IStatus.ERROR, XSSPlugin.PLUGIN_ID, "An error has occurred while invoking XSS validator", e));
 		}
 	}
-
 }

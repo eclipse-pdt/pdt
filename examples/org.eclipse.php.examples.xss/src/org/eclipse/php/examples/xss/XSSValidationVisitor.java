@@ -33,6 +33,23 @@ public class XSSValidationVisitor extends PHPASTVisitor {
 	public XSSValidationVisitor(IBuildContext context) {
 		this.context = context;
 	}
+	
+	public boolean visit(PHPCallExpression node) throws Exception {
+		// Check the parent: it should be either isset() or htmlentities() call
+		if (node.getReceiver() == null) { // if this is a function call, not method
+			String funcName = node.getName();
+			if ("isset".equalsIgnoreCase(funcName) || "htmlentities".equalsIgnoreCase(funcName)) {
+				hasSafeCallInParent = true;
+			}
+		}
+		return visitGeneral(node);
+	}
+
+	public boolean endvisit(PHPCallExpression node) throws Exception {
+		hasSafeCallInParent = false;
+		endvisitGeneral(node);
+		return true;
+	}
 
 	/**
 	 * Checks whether this variable is a reference to the URL parameter.
@@ -59,22 +76,5 @@ public class XSSValidationVisitor extends PHPASTVisitor {
 			);
 		}
 		return super.visit(s);
-	}
-
-	public boolean visit(PHPCallExpression node) throws Exception {
-		// Check the parent: it should be either isset() or htmlentities() call
-		if (node.getReceiver() == null) { // if this is a function call, not method
-			String funcName = node.getName();
-			if ("isset".equalsIgnoreCase(funcName) || "htmlentities".equalsIgnoreCase(funcName)) {
-				hasSafeCallInParent = true;
-			}
-		}
-		return visitGeneral(node);
-	}
-
-	public boolean endvisit(PHPCallExpression node) throws Exception {
-		hasSafeCallInParent = false;
-		endvisitGeneral(node);
-		return true;
 	}
 }
