@@ -11,6 +11,8 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
@@ -69,7 +71,7 @@ public class UseStatementInjector {
 						String namespaceName = namespace.getElementName();
 						
 						IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
-						if (currentNamespace.getElementName().equals(namespaceName)) {
+						if (currentNamespace != null && currentNamespace.getElementName().equals(namespaceName)) {
 							// no need to insert USE statement as we are already in the required namespace:
 							return offset;
 						}
@@ -87,6 +89,21 @@ public class UseStatementInjector {
 							if (useStatements.length > 0) {
 								// insert after last use statement:
 								insertOffset = useStatements[useStatements.length - 1].sourceEnd();
+							} else if (currentNamespace != null) {
+								// insert after the namespace statement:
+								try {
+									TypeDeclaration namespaceNode = PHPModelUtils.getNodeByClass(moduleDeclaration, currentNamespace);
+									Statement firstStatement = (Statement) namespaceNode.getStatements().get(0);
+									insertOffset = firstStatement.sourceStart() - 1;
+									while (insertOffset > 0 && Character.isWhitespace(document.getChar(insertOffset))) {
+										insertOffset--;
+									}
+									insertOffset++;
+								} catch (Exception e) {
+									if (DLTKCore.DEBUG_COMPLETION) {
+										e.printStackTrace();
+									}
+								}
 							} else {
 								insertOffset = findPhpBlockOffset((IStructuredDocument) document);
 							}
