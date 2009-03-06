@@ -30,8 +30,8 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
  */
 public class PHPCodeTemplatePreferencePage extends PropertyAndPreferencePage {
 
-	public static final String PREF_ID= "org.eclipse.php.ui.preferences.CodeTemplatePreferencePage"; //$NON-NLS-1$
-	public static final String PROP_ID= "org.eclipse.php.ui.propertyPages.CodeTemplatePreferencePage"; //$NON-NLS-1$
+	public static final String PREF_ID= "org.eclipse.php.ui.preferences.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
+	public static final String PROP_ID= "org.eclipse.php.ui.propertyPages.PHPCodeTemplatePreferencePage"; //$NON-NLS-1$
 	
 	public static final String DATA_SELECT_TEMPLATE= "CodeTemplatePreferencePage.select_template"; //$NON-NLS-1$
 	
