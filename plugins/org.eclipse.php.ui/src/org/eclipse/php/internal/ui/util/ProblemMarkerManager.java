@@ -14,6 +14,7 @@ import java.util.HashSet;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.text.source.AnnotationModelEvent;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
@@ -128,7 +129,7 @@ public class ProblemMarkerManager implements IResourceChangeListener, IAnnotatio
 	 */
 	public void addListener(IProblemChangedListener listener) {
 		if (fListeners.isEmpty()) {
-			PHPUiPlugin.getWorkspace().addResourceChangeListener(this);
+			DLTKUIPlugin.getWorkspace().addResourceChangeListener(this);
 			//			PHPUiPlugin.getDefault().getCompilationUnitDocumentProvider().addGlobalAnnotationModelListener(this);
 		}
 		fListeners.add(listener);

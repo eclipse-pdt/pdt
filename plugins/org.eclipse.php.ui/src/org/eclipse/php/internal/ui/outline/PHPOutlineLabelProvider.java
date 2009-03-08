@@ -1,6 +1,6 @@
 package org.eclipse.php.internal.ui.outline;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.ui.ModelElementLabelProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -12,27 +12,23 @@ import org.eclipse.swt.graphics.Image;
 * (repeatedly) as the API evolves.
 */
 public class PHPOutlineLabelProvider extends XMLLabelProvider {
-	ModelElementLabelProvider fLabelProvider = null;
 	
+	private ILabelProvider modelElementLabelProvider;
+
+	public PHPOutlineLabelProvider(ILabelProvider modelElementLabelProvider) {
+		this.modelElementLabelProvider = modelElementLabelProvider;
+	}
 	
 	public Image getImage(Object o) {
 		if (o instanceof IModelElement) {
-			return getModelElementLabelProvider().getImage(o);
+			return modelElementLabelProvider.getImage(o);
 		}
 		return super.getImage(o);
 	}
 	
-	private ModelElementLabelProvider getModelElementLabelProvider() {
-		if (fLabelProvider == null) {
-			fLabelProvider = new ModelElementLabelProvider();
-		}
-		return fLabelProvider;
-	}
-	
-	
 	public String getText(Object o) {
 		if (o instanceof IModelElement) {
-			return getModelElementLabelProvider().getText(o);
+			return modelElementLabelProvider.getText(o);
 		}
 		return super.getText(o);
 	}

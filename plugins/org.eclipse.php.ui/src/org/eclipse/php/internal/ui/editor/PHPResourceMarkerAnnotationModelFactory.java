@@ -35,8 +35,6 @@ public class PHPResourceMarkerAnnotationModelFactory extends StructuredResourceM
 		IFile file = FileBuffers.getWorkspaceFileAtLocation(location);
 		if (file != null) {
 			model = new PHPResourceMarkerAnnotationModel(file);
-		} else {
-			model = new PHPResourceMarkerAnnotationModel(ResourcesPlugin.getWorkspace().getRoot(), location.toString());
 		}
 		return model;
 	}
