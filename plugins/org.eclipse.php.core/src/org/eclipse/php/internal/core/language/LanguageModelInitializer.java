@@ -44,7 +44,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
 	public static final Path LANGUAGE_CONTAINER_PATH = new Path(LanguageModelInitializer.CONTAINER_PATH);
-	public static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php%d"; //$NON-NLS-1$
+	public static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php"; //$NON-NLS-1$
 
 	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
 	private Map<IProject, PHPVersion> project2PhpVersion = new HashMap<IProject, PHPVersion>();
@@ -114,7 +114,13 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	}
 
 	private static String getLanguageLibraryPath(IScriptProject project, PHPVersion phpVersion) {
-		return String.format(LANGUAGE_LIBRARY_PATH, PHPVersion.PHP4 == phpVersion ? 4 : 5);
+		if (phpVersion == PHPVersion.PHP4) {
+			return LANGUAGE_LIBRARY_PATH + "4";
+		}
+		if (phpVersion == PHPVersion.PHP5) {
+			return LANGUAGE_LIBRARY_PATH + "5";
+		}
+		return LANGUAGE_LIBRARY_PATH + "5.3";
 	}
 
 	private static boolean isPHPProject(IScriptProject project) {
