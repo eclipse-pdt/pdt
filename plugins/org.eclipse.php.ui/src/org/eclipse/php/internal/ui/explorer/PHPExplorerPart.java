@@ -22,6 +22,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
+import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.NamespaceNode;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.contexts.IContextService;
@@ -50,7 +51,11 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			if (e1 instanceof IncludePath || e2 instanceof IncludePath) {
 				return -1;
 			}
-
+			
+			if (e1 instanceof NamespaceNode && e2 instanceof NamespaceNode) {
+				return ((NamespaceNode)e1).getElementName().compareTo(((NamespaceNode)e2).getElementName());
+			}
+			
 			// Fix #256585 - sort by resource name
 			Object c1 = e1;
 			if (e1 instanceof SourceModule) {

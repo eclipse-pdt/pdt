@@ -18,12 +18,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
-import org.eclipse.dltk.internal.core.BuildpathEntry;
-import org.eclipse.dltk.internal.core.ExternalProjectFragment;
-import org.eclipse.dltk.internal.core.ExternalScriptFolder;
+import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
@@ -104,9 +104,9 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 					if (!resource.isAccessible()) {
 						return NO_CHILDREN;
 					}
-					
+
 					ArrayList<Object> returnChlidren = new ArrayList<Object>();
-					
+
 					boolean groupByNamespace = PHPUiPlugin.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EXPLORER_GROUP_BY_NAMESPACES);
 					if (groupByNamespace && parentElement instanceof IScriptProject && supportsNamespaces((IScriptProject) parentElement)) {
 						returnChlidren.add(new GlobalNamespace((IScriptProject) parentElement));
@@ -122,7 +122,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 							}
 						}
 					}
-					
+
 					// Adding External libraries to the treeview :
 					if (parentElement instanceof IScriptProject) {
 						IScriptProject project = (IScriptProject) parentElement;
@@ -148,27 +148,36 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 
 		return NO_CHILDREN;
 	}
-	
+
 	private boolean supportsNamespaces(IScriptProject project) {
 		PHPVersion version = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
 		return version.isGreaterThan(PHPVersion.PHP5);
 	}
-	
-	protected Object[] getAllNamespaces(final IScriptProject project) throws ModelException {
-		final List<IType> namespaces = new LinkedList<IType>();
 
+	protected Object[] getAllNamespaces(final IScriptProject project) throws ModelException {
 		SearchEngine engine = new SearchEngine();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project, IDLTKSearchScope.SOURCES);
 		SearchParticipant[] participants = new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() };
 		SearchPattern pattern = SearchPattern.createPattern("*", IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
+		final Map<String, List<IType>> processedNamespaces = new HashMap<String, List<IType>>();
 		try {
 			engine.search(pattern, participants, scope, new SearchRequestor() {
 				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+
 					Object element = match.getElement();
 					if (element instanceof IType) {
 						IType type = (IType) element;
+						String elementName = type.getElementName();
+
 						if (PHPFlags.isNamespace(type.getFlags())) {
-							namespaces.add(type);
+							List<IType> result;
+							if (!processedNamespaces.containsKey(elementName)) {
+								result = new LinkedList<IType>();
+								processedNamespaces.put(elementName, result);
+							} else {
+								result = processedNamespaces.get(elementName);
+							}
+							result.add(type);
 						}
 					}
 				}
@@ -176,7 +185,13 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 		} catch (CoreException e) {
 			throw new ModelException(e);
 		}
-		return namespaces.toArray();
+		
+		List<IType> result = new LinkedList<IType>();
+		for (String namespaceName : processedNamespaces.keySet()) {
+			List<IType> list = processedNamespaces.get(namespaceName);
+			result.add(new NamespaceNode(project, namespaceName, list.toArray(new IType[list.size()])));
+		}
+		return result.toArray();
 	}
 
 	/**
@@ -221,5 +236,30 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 
 		postRefresh(resources, true, runnables);
 		this.executeRunnables(runnables);
+	}
+
+	static class NamespaceNode extends SourceType {
+		private IType[] namespaces;
+
+		public NamespaceNode(IScriptProject project, String name, IType[] namespaces) {
+			super((ModelElement) project, name);
+			this.namespaces = namespaces;
+		}
+
+		public IModelElement[] getChildren(IProgressMonitor monitor) throws ModelException {
+			List<IModelElement> children = new LinkedList<IModelElement>();
+			for (IType namespace : namespaces) {
+				children.addAll(Arrays.asList(namespace.getChildren()));
+			}
+			return children.toArray(new IModelElement[children.size()]);
+		}
+
+		public int getFlags() throws ModelException {
+			return Modifiers.AccNameSpace;
+		}
+
+		public boolean exists() {
+			return true;
+		}
 	}
 }
