@@ -268,7 +268,7 @@ function imap_bodystruct ($imap_stream, $msg_number, $section) {}
  * @param msg_number int <p>
  * The message number
  * </p>
- * @param part_number string <p>
+ * @param section string <p>
  * The part number. It is a string of integers delimited by period which
  * index into a body part list as per the IMAP4 specification
  * </p>
@@ -278,7 +278,7 @@ function imap_bodystruct ($imap_stream, $msg_number, $section) {}
  * @return string a particular section of the body of the specified messages as a
  * text string.
  */
-function imap_fetchbody ($imap_stream, $msg_number, $part_number, $options = null) {}
+function imap_fetchbody ($imap_stream, $msg_number, $section, $options = null) {}
 
 /**
  * Save a specific body section to a file
@@ -602,7 +602,7 @@ function imap_subscribe ($imap_stream, $mailbox) {}
 /**
  * Unsubscribe from a mailbox
  * @link http://php.net/manual/en/function.imap-unsubscribe.php
- * @param imap_stream string 
+ * @param imap_stream resource 
  * @param mailbox string <p>
  * The mailbox name, see imap_open for more
  * information
@@ -726,7 +726,7 @@ function imap_status ($imap_stream, $mailbox, $options) {}
  * Mailbox properties
  * <tr valign="top">
  * <td>Date</td>
- * <td>date of last change</td>
+ * <td>date of last change (current datetime)</td>
  * </tr>
  * <tr valign="top">
  * <td>Driver</td>
@@ -773,9 +773,9 @@ function imap_mailboxmsginfo ($imap_stream) {}
  * within an interval with the X:Y syntax
  * </p>
  * @param flag string <p>
- * The flags which you can set are \\Seen, 
- * \\Answered, \\Flagged,
- * \\Deleted, and \\Draft as
+ * The flags which you can set are \Seen, 
+ * \Answered, \Flagged,
+ * \Deleted, and \Draft as
  * defined by RFC2060.
  * </p>
  * @param options int[optional] <p>
@@ -799,7 +799,7 @@ function imap_setflag_full ($imap_stream, $sequence, $flag, $options = null) {}
  * The flags which you can unset are "\\Seen", "\\Answered", "\\Flagged",
  * "\\Deleted", and "\\Draft" (as defined by RFC2060)
  * </p>
- * @param options string[optional] <p>
+ * @param options int[optional] <p>
  * options are a bit mask and may contain
  * the single option:
  * ST_UID - The sequence argument contains UIDs

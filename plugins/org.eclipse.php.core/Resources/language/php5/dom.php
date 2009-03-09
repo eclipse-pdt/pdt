@@ -201,10 +201,10 @@ class DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -325,10 +325,10 @@ class DOMDocumentFragment extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -470,7 +470,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * @param node DOMNode[optional]
 	 */
-	public function saveXML (DOMNode $node) {}
+	public function saveXML (DOMNode $node = null) {}
 
 	/**
 	 * @param version[optional]
@@ -607,10 +607,10 @@ class DOMDocument extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -807,10 +807,10 @@ class DOMCharacterData extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -930,10 +930,10 @@ class DOMAttr extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1153,10 +1153,10 @@ class DOMElement extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1316,10 +1316,10 @@ class DOMText extends DOMCharacterData  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1465,10 +1465,10 @@ class DOMComment extends DOMCharacterData  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1524,9 +1524,9 @@ class DOMConfiguration  {
 
 	/**
 	 * @param name
-	 * @param value DOMUserData
+	 * @param value
 	 */
-	public function setParameter ($nameDOMUserData , $value) {}
+	public function setParameter ($name, $value) {}
 
 	/**
 	 * @param name[optional]
@@ -1535,9 +1535,9 @@ class DOMConfiguration  {
 
 	/**
 	 * @param name[optional]
-	 * @param value DOMUserData[optional]
+	 * @param value[optional]
 	 */
-	public function canSetParameter ($nameDOMUserData , $value) {}
+	public function canSetParameter ($name, $value) {}
 
 }
 
@@ -1669,10 +1669,10 @@ class DOMCdataSection extends DOMText  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1783,10 +1783,10 @@ class DOMDocumentType extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1904,10 +1904,10 @@ class DOMEntity extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -2023,10 +2023,10 @@ class DOMEntityReference extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key
@@ -2143,10 +2143,10 @@ class DOMProcessingInstruction extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data DOMUserData
+	 * @param data
 	 * @param handler
 	 */
-	public function setUserData ($keyDOMUserData , $data, $handler) {}
+	public function setUserData ($key, $data, $handler) {}
 
 	/**
 	 * @param key

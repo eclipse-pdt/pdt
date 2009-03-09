@@ -20,7 +20,6 @@ if (strstr(phpversion(), "5.3")) {
 	$phpDir = "php5.3";
 }
 
-
 // Parse arguments:
 $argv = $_SERVER["argv"];
 $argv0 = array_shift ($argv);

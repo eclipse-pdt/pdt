@@ -322,8 +322,8 @@ function get_parent_class ($object = null) {}
 /**
  * Checks if the class method exists
  * @link http://php.net/manual/en/function.method-exists.php
- * @param object object <p>
- * An object instance
+ * @param object mixed <p>
+ * An object instance or a class name
  * </p>
  * @param method_name string <p>
  * The method name
@@ -455,7 +455,7 @@ function is_a ($object, $class_name) {}
 function get_class_vars ($class_name) {}
 
 /**
- * Gets the public properties of the given object
+ * Gets the properties of the given object
  * @link http://php.net/manual/en/function.get-object-vars.php
  * @param object object <p>
  * An object instance.
@@ -528,10 +528,11 @@ function user_error () {}
  * error_handler will be called for every error
  * regardless to the setting of the error_reporting setting.
  * </p>
- * @return mixed a string containing the previously defined
- * error handler (if any), or &null; on error. If the previous handler
- * was a class method, this function will return an indexed array with
- * the class and the method name.
+ * @return mixed a string containing the previously defined error handler (if any). If
+ * the built-in error handler is used &null; is returned. &null; is also returned
+ * in case of an error such as an invalid callback. If the previous error handler
+ * was a class method, this function will return an indexed array with the class
+ * and the method name.
  */
 function set_error_handler ($error_handler, $error_types = null) {}
 
@@ -690,8 +691,8 @@ function get_extension_funcs ($module_name) {}
 /**
  * Returns an associative array with the names of all the constants and their values
  * @link http://php.net/manual/en/function.get-defined-constants.php
- * @param categorize mixed[optional] <p>
- * May be passed, causing this function to return a multi-dimensional
+ * @param categorize bool[optional] <p>
+ * Causing this function to return a multi-dimensional
  * array with categories in the keys of the first dimension and constants
  * and their values in the second dimension.
  * ]]>
@@ -729,10 +730,6 @@ function get_extension_funcs ($module_name) {}
  * )
  * ]]>
  * </p>
- * <p>
- * The value of the categorize parameter is irrelevant,
- * only its presence is considered.
- * </p>
  * @return array 
  */
 function get_defined_constants ($categorize = null) {}
@@ -740,7 +737,9 @@ function get_defined_constants ($categorize = null) {}
 /**
  * Generates a backtrace
  * @link http://php.net/manual/en/function.debug-backtrace.php
- * @param provide_object bool[optional] 
+ * @param provide_object bool[optional] <p>
+ * Whether or not to populate the "object" index. Defaults to true.
+ * </p>
  * @return array an associative array. The possible returned elements
  * are as follows:
  * </p>
@@ -992,7 +991,7 @@ define ('E_PARSE', 4);
 define ('E_NOTICE', 8);
 
 /**
- * Run-time notices. Enable to have PHP suggest changes
+ * Enable to have PHP suggest changes
  * to your code which will ensure the best interoperability
  * and forward compatibility of your code.
  * @link http://php.net/manual/en/errorfunc.constants.php
@@ -1063,7 +1062,14 @@ define ('TRUE', true);
 define ('FALSE', false);
 define ('NULL', null);
 define ('ZEND_THREAD_SAFE', false);
-define ('PHP_VERSION', "5.2.6");
+define ('PHP_VERSION', "5.2.9");
+define ('PHP_MAJOR_VERSION', 5);
+define ('PHP_MINOR_VERSION', 2);
+define ('PHP_RELEASE_VERSION', 9);
+define ('PHP_EXTRA_VERSION', "");
+define ('PHP_VERSION_ID', 50209);
+define ('PHP_ZTS', 0);
+define ('PHP_DEBUG', 0);
 define ('PHP_OS', "Linux");
 define ('PHP_SAPI', "cli");
 define ('DEFAULT_INCLUDE_PATH', ".:/usr/local/zend/share/pear");
@@ -1093,7 +1099,7 @@ define ('UPLOAD_ERR_NO_FILE', 4);
 define ('UPLOAD_ERR_NO_TMP_DIR', 6);
 define ('UPLOAD_ERR_CANT_WRITE', 7);
 define ('UPLOAD_ERR_EXTENSION', 8);
-define ('DEBUGGER_VERSION', "5.2.14");
+define ('DEBUGGER_VERSION', 5.2);
 define ('STDIN', "Resource id #1");
 define ('STDOUT', "Resource id #2");
 define ('STDERR', "Resource id #3");

@@ -2147,7 +2147,7 @@ function spl_autoload ($class_name, $file_extensions = null) {}
  * extensions to use in a single string with each extensions separated
  * by comma.
  * </p>
- * @return string A comma delimitated list of default file extensions for
+ * @return string A comma delimited list of default file extensions for
  * spl_autoload.
  */
 function spl_autoload_extensions ($file_extensions = null) {}
@@ -2235,7 +2235,7 @@ function spl_object_hash ($obj) {}
 /**
  * Copy the iterator into an array
  * @link http://php.net/manual/en/function.iterator-to-array.php
- * @param iterator IteratorAggregate <p>
+ * @param iterator Traversable <p>
  * The iterator being counted.
  * </p>
  * @param use_keys bool[optional] <p>
@@ -2247,7 +2247,7 @@ function iterator_to_array ($iterator, $use_keys = null) {}
 /**
  * Count the elements in an iterator
  * @link http://php.net/manual/en/function.iterator-count.php
- * @param iterator IteratorAggregate <p>
+ * @param iterator Traversable <p>
  * The iterator being counted.
  * </p>
  * @return int The number of elements in iterator.
@@ -2255,11 +2255,20 @@ function iterator_to_array ($iterator, $use_keys = null) {}
 function iterator_count ($iterator) {}
 
 /**
- * @param iterator Traversable
- * @param function
- * @param args[optional]
+ * Apply a user function to every element of an iterator
+ * @link http://php.net/manual/en/function.iterator-apply.php
+ * @param iterator Traversable <p>
+ * The class to walk through.
+ * </p>
+ * @param function callback <p>
+ * The callback function to call on every element.
+ * </p>
+ * @param args array[optional] <p>
+ * Arguments to pass to the callback function.
+ * </p>
+ * @return int the iteration count.
  */
-function iterator_apply (Traversable $iterator, $functionarray , $args = null) {}
+function iterator_apply ($iterator, $function, array $args = null) {}
 
 // End of SPL v.0.2
 ?>

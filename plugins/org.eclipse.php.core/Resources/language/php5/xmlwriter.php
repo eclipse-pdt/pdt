@@ -2,9 +2,6 @@
 
 // Start of xmlwriter v.0.1
 
-/**
- * @link http://php.net/manual/en/ref.xmlwriter.php
- */
 class XMLWriter  {
 
 	/**
@@ -13,10 +10,10 @@ class XMLWriter  {
 	 * @param uri string <p>
 	 * The URI of the resource for the output.
 	 * </p>
-	 * @return bool Object oriented style: Returns true on success or false on failure.
+	 * @return bool &style.oop;: Returns true on success or false on failure.
 	 * </p>
 	 * <p>
-	 * Procedural style: Returns a new xmlwriter resource for later use with the
+	 * &style.procedural;: Returns a new xmlwriter &resource; for later use with the
 	 * xmlwriter functions on success, false on error.
 	 */
 	public function openUri ($uri) {}
@@ -24,10 +21,10 @@ class XMLWriter  {
 	/**
 	 * Create new xmlwriter using memory for string output
 	 * @link http://php.net/manual/en/function.xmlwriter-open-memory.php
-	 * @return bool Object oriented style: Returns true on success or false on failure.
+	 * @return bool &style.oop;: Returns true on success or false on failure.
 	 * </p>
 	 * <p>
-	 * Procedural style: Returns a new xmlwriter resource for later use with the
+	 * &style.procedural;: Returns a new xmlwriter &resource; for later use with the
 	 * xmlwriter functions on success, false on error.
 	 */
 	public function openMemory () {}
@@ -185,7 +182,7 @@ class XMLWriter  {
 	public function writeElement ($name, $content = null) {}
 
 	/**
-	 * Write full namesapced element tag
+	 * Write full namespaced element tag
 	 * @link http://php.net/manual/en/function.xmlwriter-write-element-ns.php
 	 * @param prefix string <p>
 	 * The namespace prefix.
@@ -443,9 +440,13 @@ class XMLWriter  {
 	 * @param content string <p>
 	 * The content of the entity.
 	 * </p>
+	 * @param pe bool 
+	 * @param pubid string 
+	 * @param sysid string 
+	 * @param ndataid string 
 	 * @return bool Returns true on success or false on failure.
 	 */
-	public function writeDtdEntity ($name, $content) {}
+	public function writeDtdEntity ($name, $content, $pe, $pubid, $sysid, $ndataid) {}
 
 	/**
 	 * Returns current buffer
@@ -477,10 +478,10 @@ class XMLWriter  {
  * @param uri string <p>
  * The URI of the resource for the output.
  * </p>
- * @return bool Object oriented style: Returns true on success or false on failure.
+ * @return bool &style.oop;: Returns true on success or false on failure.
  * </p>
  * <p>
- * Procedural style: Returns a new xmlwriter resource for later use with the
+ * &style.procedural;: Returns a new xmlwriter &resource; for later use with the
  * xmlwriter functions on success, false on error.
  */
 function xmlwriter_open_uri ($uri) {}
@@ -488,10 +489,10 @@ function xmlwriter_open_uri ($uri) {}
 /**
  * Create new xmlwriter using memory for string output
  * @link http://php.net/manual/en/function.xmlwriter-open-memory.php
- * @return bool Object oriented style: Returns true on success or false on failure.
+ * @return bool &style.oop;: Returns true on success or false on failure.
  * </p>
  * <p>
- * Procedural style: Returns a new xmlwriter resource for later use with the
+ * &style.procedural;: Returns a new xmlwriter &resource; for later use with the
  * xmlwriter functions on success, false on error.
  */
 function xmlwriter_open_memory () {}
@@ -649,7 +650,7 @@ function xmlwriter_start_element_ns ($prefix, $name, $uri) {}
 function xmlwriter_write_element ($name, $content = null) {}
 
 /**
- * Write full namesapced element tag
+ * Write full namespaced element tag
  * @link http://php.net/manual/en/function.xmlwriter-write-element-ns.php
  * @param prefix string <p>
  * The namespace prefix.
@@ -907,9 +908,13 @@ function xmlwriter_end_dtd_entity () {}
  * @param content string <p>
  * The content of the entity.
  * </p>
+ * @param pe bool 
+ * @param pubid string 
+ * @param sysid string 
+ * @param ndataid string 
  * @return bool Returns true on success or false on failure.
  */
-function xmlwriter_write_dtd_entity ($name, $content) {}
+function xmlwriter_write_dtd_entity ($name, $content, $pe, $pubid, $sysid, $ndataid) {}
 
 /**
  * Returns current buffer

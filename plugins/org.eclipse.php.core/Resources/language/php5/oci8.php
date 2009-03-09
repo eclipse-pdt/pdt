@@ -600,6 +600,9 @@ function oci_fetch_assoc ($statement) {}
    numeric array, or both
  * @link http://php.net/manual/en/function.oci-fetch-array.php
  * @param statement resource <p>
+ * A valid OCI statement identifier.
+ * </p>
+ * @param mode int[optional] <p>
  * An optional second parameter can be any combination of the following
  * constants:
  * OCI_BOTH - return an array with both associative
@@ -615,7 +618,6 @@ function oci_fetch_assoc ($statement) {}
  * of the descriptor.
  * Default mode is OCI_BOTH.
  * </p>
- * @param mode int[optional] 
  * @return array an array with both associative and numeric indices, or false if
  * there are no more rows in the statement.
  */
@@ -1073,8 +1075,8 @@ function oci_rollback ($connection) {}
  * </p>
  * @param type int[optional] <p>
  * Valid values for type are: 
- * OCI_D_FILE, OCI_D_LOB and
- * OCI_D_ROWID.
+ * OCI_DTYPE_FILE, OCI_DTYPE_LOB and
+ * OCI_DTYPE_ROWID.
  * </p>
  * @return OCI-Lob a new LOB or FILE descriptor on success, false on error.
  */

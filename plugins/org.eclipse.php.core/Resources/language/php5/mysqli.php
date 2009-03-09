@@ -126,6 +126,8 @@ class mysqli  {
 
 	public function set_opt () {}
 
+	public function send_query () {}
+
 	public function slave_query () {}
 
 	public function ssl_set () {}
@@ -844,7 +846,7 @@ define ('MYSQLI_TYPE_TINY', 1);
 
 /**
  * <p>
- * Field is defined as INT
+ * Field is defined as SMALLINT
  * </p>
  * @link http://php.net/manual/en/mysqli.constants.php
  */

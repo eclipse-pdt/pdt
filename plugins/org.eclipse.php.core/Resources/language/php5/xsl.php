@@ -5,25 +5,25 @@
 class XSLTProcessor  {
 
 	/**
-	 * @param doc DOMDocument
+	 * @param doc
 	 */
-	public function importStylesheet (DOMDocument $doc) {}
+	public function importStylesheet ($doc) {}
 
 	/**
-	 * @param doc DOMNode
+	 * @param doc
 	 */
-	public function transformToDoc (DOMNode $doc) {}
+	public function transformToDoc ($doc) {}
 
 	/**
-	 * @param doc DOMDocument
+	 * @param doc
 	 * @param uri
 	 */
-	public function transformToUri (DOMDocument $doc, $uri) {}
+	public function transformToUri ($doc, $uri) {}
 
 	/**
-	 * @param doc DOMDocument
+	 * @param doc
 	 */
-	public function transformToXml (DOMDocument $doc) {}
+	public function transformToXml ($doc) {}
 
 	/**
 	 * @param namespace
@@ -60,13 +60,13 @@ define ('XSL_CLONE_ALWAYS', 1);
  * libxslt version like 10117. Available as of PHP 5.1.2.
  * @link http://php.net/manual/en/xsl.constants.php
  */
-define ('LIBXSLT_VERSION', 10117);
+define ('LIBXSLT_VERSION', 10124);
 
 /**
  * libxslt version like 1.1.17. Available as of PHP 5.1.2.
  * @link http://php.net/manual/en/xsl.constants.php
  */
-define ('LIBXSLT_DOTTED_VERSION', "1.1.17");
+define ('LIBXSLT_DOTTED_VERSION', "1.1.24");
 
 /**
  * libexslt version like 813. Available as of PHP 5.1.2.
@@ -78,7 +78,7 @@ define ('LIBEXSLT_VERSION', 813);
  * libexslt version like 1.1.17. Available as of PHP 5.1.2.
  * @link http://php.net/manual/en/xsl.constants.php
  */
-define ('LIBEXSLT_DOTTED_VERSION', "1.1.17");
+define ('LIBEXSLT_DOTTED_VERSION', "1.1.24");
 
 // End of xsl v.0.1
 ?>

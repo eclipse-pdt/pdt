@@ -413,6 +413,9 @@ function ldap_get_dn ($link_identifier, $result_entry_identifier) {}
  * and to get only values set it to 1.
  * </p>
  * @return array an array of all DN components.
+ * The first element in this array has count key and
+ * represents the number of returned values, next elements are numerically
+ * indexed DN components.
  */
 function ldap_explode_dn ($dn, $with_attrib) {}
 

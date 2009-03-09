@@ -29,6 +29,10 @@ function curl_copy_handle ($ch) {}
  * </p>
  * @return array an associative array with the following elements: 
  * <tr valign="top">
+ * <td>Indice</td>
+ * <td>Value description</td>
+ * </tr>
+ * <tr valign="top">
  * <td>version_number</td>
  * <td>cURL 24 bit version number</td>
  * </tr>
@@ -110,7 +114,7 @@ function curl_version ($age = null) {}
  * true to mark this as a new cookie "session". It will force libcurl
  * to ignore all cookies it is about to load that are "session cookies"
  * from the previous session. By default, libcurl always stores and
- * loads all cookies, independent if they are session cookies are not.
+ * loads all cookies, independent if they are session cookies or not.
  * Session cookies are cookies without expiry date and they are meant
  * to be alive and existing for this "session" only.
  * </td>
@@ -284,6 +288,8 @@ function curl_version ($age = null) {}
  * <td>CURLOPT_NOBODY</td>
  * <td>
  * true to exclude the body from the output.
+ * Request method is then set to HEAD. Changing this to false does
+ * not change it to GET.
  * </td>
  * <td>
  * </td>
@@ -629,7 +635,7 @@ function curl_version ($age = null) {}
  * CURLOPT_TIMEVALUE. If it hasn't been modified,
  * a "304 Not Modified" header will be returned
  * assuming CURLOPT_HEADER is true.
- * Use CURL_TIMECOND_ISUNMODSINCE for the reverse
+ * Use CURL_TIMECOND_IFUNMODSINCE for the reverse
  * effect. CURL_TIMECOND_IFMODSINCE is the
  * default.
  * </td>
@@ -797,7 +803,9 @@ function curl_version ($age = null) {}
  * <td>
  * The full data to post in a HTTP "POST" operation.
  * To post a file, prepend a filename with @ and
- * use the full path.
+ * use the full path. This can either be passed as a urlencoded 
+ * string like 'para1=val1&amp;para2=val2&amp;...' 
+ * or as an array with the field name as key and field data as value.
  * </td>
  * <td>
  * </td>
@@ -1176,7 +1184,7 @@ function curl_getinfo ($ch, $opt = null) {}
  * Return a string containing the last error for the current session
  * @link http://php.net/manual/en/function.curl-error.php
  * @param ch resource 
- * @return string the error number or '' (the empty string) if no
+ * @return string the error message or '' (the empty string) if no
  * error occurred.
  */
 function curl_error ($ch) {}
@@ -1269,7 +1277,7 @@ function curl_multi_getcontent ($ch) {}
  * </p>
  * @return array On success, returns an associative array for the message, false on failure.
  */
-function curl_multi_info_read ($mh, $msgs_in_queue = null) {}
+function curl_multi_info_read ($mh, &$msgs_in_queue = null) {}
 
 /**
  * Close a set of cURL handles
@@ -1307,11 +1315,11 @@ define ('CURLOPT_NETRC', 51);
  */
 define ('CURLOPT_FOLLOWLOCATION', 52);
 define ('CURLOPT_PUT', 54);
-define ('CURLOPT_MUTE', -2);
 define ('CURLOPT_USERPWD', 10005);
 define ('CURLOPT_PROXYUSERPWD', 10006);
 define ('CURLOPT_RANGE', 10007);
 define ('CURLOPT_TIMEOUT', 13);
+define ('CURLOPT_TIMEOUT_MS', 155);
 define ('CURLOPT_POSTFIELDS', 10015);
 define ('CURLOPT_REFERER', 10016);
 define ('CURLOPT_USERAGENT', 10018);
@@ -1353,7 +1361,6 @@ define ('CURLOPT_HTTPPROXYTUNNEL', 61);
 define ('CURLOPT_FILETIME', 69);
 define ('CURLOPT_WRITEFUNCTION', 20011);
 define ('CURLOPT_READFUNCTION', 20012);
-define ('CURLOPT_PASSWDFUNCTION', -3);
 define ('CURLOPT_HEADERFUNCTION', 20079);
 define ('CURLOPT_MAXREDIRS', 68);
 define ('CURLOPT_MAXCONNECTS', 71);
@@ -1363,6 +1370,7 @@ define ('CURLOPT_FORBID_REUSE', 75);
 define ('CURLOPT_RANDOM_FILE', 10076);
 define ('CURLOPT_EGDSOCKET', 10077);
 define ('CURLOPT_CONNECTTIMEOUT', 78);
+define ('CURLOPT_CONNECTTIMEOUT_MS', 156);
 define ('CURLOPT_SSL_VERIFYPEER', 64);
 define ('CURLOPT_CAINFO', 10065);
 define ('CURLOPT_CAPATH', 10097);
@@ -1400,8 +1408,8 @@ define ('CURLAUTH_BASIC', 1);
 define ('CURLAUTH_DIGEST', 2);
 define ('CURLAUTH_GSSNEGOTIATE', 4);
 define ('CURLAUTH_NTLM', 8);
-define ('CURLAUTH_ANY', -1);
-define ('CURLAUTH_ANYSAFE', -2);
+define ('CURLAUTH_ANY', -17);
+define ('CURLAUTH_ANYSAFE', -18);
 define ('CURLOPT_PROXYAUTH', 111);
 define ('CURLOPT_FTP_CREATE_MISSING_DIRS', 110);
 
@@ -1451,7 +1459,7 @@ define ('CURL_VERSION_IPV6', 1);
 define ('CURL_VERSION_KERBEROS4', 2);
 define ('CURL_VERSION_SSL', 4);
 define ('CURL_VERSION_LIBZ', 8);
-define ('CURLVERSION_NOW', 2);
+define ('CURLVERSION_NOW', 3);
 define ('CURLE_OK', 0);
 define ('CURLE_UNSUPPORTED_PROTOCOL', 1);
 define ('CURLE_FAILED_INIT', 2);

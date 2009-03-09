@@ -12,9 +12,15 @@
  * <p>
  * This function only works with UTF-8 encoded data.
  * </p>
+ * @param options int[optional] <p>
+ * Bitmask consisting of PHP_JSON_HEX_QUOT,
+ * PHP_JSON_HEX_TAG,
+ * PHP_JSON_HEX_AMP,
+ * PHP_JSON_HEX_APOS. Defaults to 0.
+ * </p>
  * @return string a JSON encoded string on success.
  */
-function json_encode ($value) {}
+function json_encode ($value, $options = null) {}
 
 /**
  * Decodes a JSON string
@@ -26,11 +32,13 @@ function json_encode ($value) {}
  * When true, returned objects will be converted into
  * associative arrays.
  * </p>
+ * @param depth int[optional] <p>
+ * </p>
  * @return mixed an object or if the optional
  * assoc parameter is true, an associative 
  * array is instead returned.
  */
-function json_decode ($json, $assoc = null) {}
+function json_decode ($json, $assoc = null, $depth = null) {}
 
 // End of json v.1.2.1
 ?>

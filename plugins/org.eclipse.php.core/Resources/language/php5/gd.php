@@ -1789,7 +1789,7 @@ function png2wbmp ($pngname, $wbmpname, $dest_height, $dest_width, $threshold) {
  * @param image resource 
  * @param filename string[optional] <p>
  * Path to the saved file. If not given, the raw image stream will be
- * outputed directly.
+ * outputted directly.
  * </p>
  * @param threshold int[optional] <p>
  * Threshold value, between 0 and 255 (inclusive).

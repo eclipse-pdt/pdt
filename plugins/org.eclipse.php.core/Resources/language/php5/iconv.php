@@ -107,6 +107,33 @@ function iconv_strlen ($str, $charset = null) {}
  * at the position, offset characters
  * away from the end of str.
  * </p>
+ * @param length int[optional] <p>
+ * If length is given and is positive, the return
+ * value will contain at most length characters
+ * of the portion that begins at offset
+ * (depending on the length of string).
+ * </p>
+ * <p>
+ * If negative length is passed,
+ * iconv_substr cuts the portion out of
+ * str from the offset'th
+ * character up to the character that is
+ * length characters away from the end of the string.
+ * In case offset is also negative, the start position
+ * is calculated beforehand according to the rule explained above.
+ * </p>
+ * @param charset string[optional] <p>
+ * If charset parameter is omitted,
+ * string are assumed to be encoded in
+ * iconv.internal_encoding.
+ * </p>
+ * <p>
+ * Note that offset and length
+ * parameters are always deemed to represent offsets that are
+ * calculated on the basis of the character set determined by
+ * charset, whilst the counterpart
+ * substr always takes these for byte offsets.
+ * </p>
  * @return string the portion of str specified by the
  * offset and length parameters.
  * </p>
@@ -114,7 +141,7 @@ function iconv_strlen ($str, $charset = null) {}
  * If str is shorter than offset
  * characters long, false will be returned.
  */
-function iconv_substr ($str, $offset) {}
+function iconv_substr ($str, $offset, $length = null, $charset = null) {}
 
 /**
  * Finds position of first occurrence of a needle within a haystack

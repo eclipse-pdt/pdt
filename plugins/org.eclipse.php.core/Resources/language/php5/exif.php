@@ -1,6 +1,6 @@
 <?php
 
-// Start of exif v.1.4 $Id: exif.php,v 1.7 2009/03/09 13:40:14 mspector Exp $
+// Start of exif v.1.4 $Id: exif.php,v 1.8 2009/03/09 13:51:30 mspector Exp $
 
 /**
  * Reads the <acronym>EXIF</acronym> headers from <acronym>JPEG</acronym> or <acronym>TIFF</acronym>
@@ -90,7 +90,7 @@ function read_exif_data ($filename, $sections_needed, $sub_arrays, $read_thumbna
 /**
  * Get the header name for an index
  * @link http://php.net/manual/en/function.exif-tagname.php
- * @param index string <p>
+ * @param index int <p>
  * The image index
  * </p>
  * @return string the header name, or false if index is
@@ -133,5 +133,5 @@ function exif_imagetype ($filename) {}
 
 define ('EXIF_USE_MBSTRING', 0);
 
-// End of exif v.1.4 $Id: exif.php,v 1.7 2009/03/09 13:40:14 mspector Exp $
+// End of exif v.1.4 $Id: exif.php,v 1.8 2009/03/09 13:51:30 mspector Exp $
 ?>

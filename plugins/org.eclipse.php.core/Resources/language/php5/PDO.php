@@ -105,7 +105,6 @@ class PDO  {
 	const FETCH_ORI_REL = 5;
 	const CURSOR_FWDONLY = 0;
 	const CURSOR_SCROLL = 1;
-	const PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT = 1000;
 	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
 	const MYSQL_ATTR_LOCAL_INFILE = 1001;
 	const MYSQL_ATTR_INIT_COMMAND = 1002;
@@ -113,6 +112,7 @@ class PDO  {
 	const MYSQL_ATTR_READ_DEFAULT_GROUP = 1004;
 	const MYSQL_ATTR_MAX_BUFFER_SIZE = 1005;
 	const MYSQL_ATTR_DIRECT_QUERY = 1006;
+	const PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT = 1000;
 
 
 	/**
@@ -232,7 +232,7 @@ class PDOStatement implements Traversable {
 	public function fetchAll ($how, $class_name, $ctor_args) {}
 
 	/**
-	 * @param class_name
+	 * @param class_name[optional]
 	 * @param ctor_args[optional]
 	 */
 	public function fetchObject ($class_name, $ctor_args) {}

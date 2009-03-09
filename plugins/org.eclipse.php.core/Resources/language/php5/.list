@@ -1,3 +1,4 @@
+Core.php
 PDO.php
 PDO_OCI.php
 Reflection.php
@@ -6,6 +7,10 @@ SQLite.php
 SimpleXML.php
 Zend Data Cache.php
 Zend Debugger.php
+Zend Download Server.php
+Zend Monitor.php
+Zend Optimizer+.php
+Zend Page Cache.php
 Zend Utils.php
 basic.php
 bcmath.php
@@ -15,6 +20,7 @@ ctype.php
 curl.php
 date.php
 dom.php
+ereg.php
 exif.php
 fileinfo.php
 filter.php
@@ -26,6 +32,7 @@ hash.php
 ibm_db2.php
 iconv.php
 imap.php
+intl.php
 json.php
 ldap.php
 libxml.php
@@ -49,10 +56,12 @@ pdo_pgsql.php
 pdo_sqlite.php
 pgsql.php
 posix.php
+readline.php
 session.php
 shmop.php
 soap.php
 sockets.php
+sqlite3.php
 standard.php
 sybase_ct.php
 sysvmsg.php

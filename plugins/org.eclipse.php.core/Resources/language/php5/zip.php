@@ -1,6 +1,6 @@
 <?php
 
-// Start of zip v.2.0.0
+// Start of zip v.1.8.11
 
 class ZipArchive  {
 	const CREATE = 1;
@@ -99,6 +99,8 @@ class ZipArchive  {
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public function close () {}
+
+	public function getStatusString () {}
 
 	/**
 	 * Add a new directory
@@ -358,7 +360,7 @@ class ZipArchive  {
 	 * The entries to extract. It accepts either a single entry name or
 	 * an array of names.
 	 * </p>
-	 * @return mixed Returns true on success or false on failure.
+	 * @return bool Returns true on success or false on failure.
 	 */
 	public function extractTo ($destination, $entries = null) {}
 
@@ -537,5 +539,5 @@ function zip_entry_compressedsize ($zip_entry) {}
  */
 function zip_entry_compressionmethod ($zip_entry) {}
 
-// End of zip v.2.0.0
+// End of zip v.1.8.11
 ?>
