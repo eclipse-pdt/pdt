@@ -17,6 +17,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -321,6 +322,7 @@ public class SaveAsDialog extends TitleAreaDialog {
 			cancelPressed();
 		} else if (NEW_PROJ_ID == buttonId) {
 			newProjectWizard = new PHPProjectCreationWizard();
+			newProjectWizard.init(PlatformUI.getWorkbench(), StructuredSelection.EMPTY);
 			WizardDialog dialog = new WizardDialog(getShell(), newProjectWizard);
 			if (dialog.open() == Window.OK) {
 				resourceGroup.refresh();

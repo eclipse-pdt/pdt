@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.io.File;
+
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
@@ -27,6 +30,7 @@ import org.eclipse.php.internal.ui.preferences.PHPTemplateStore;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.preferences.PHPTemplateStore.CompiledTemplate;
 import org.eclipse.ui.*;
+import org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
@@ -38,6 +42,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 
 	private IWorkbenchWindow fWindow;
+	private final static String UNTITLED_EDITOR_ID = "org.eclipse.php.untitledPhpEditor"; //$NON-NLS-1$
 	private final static String UNTITLED_PHP_DOC_PREFIX = "PHPDocument"; //$NON-NLS-1$
 
 	public UntitledPHPDocumentWizard() {
@@ -74,9 +79,16 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		IFileStore fileStore = queryFileStore();
 		IEditorInput input = createEditorInput(fileStore);
+		
+		//delete on exit
+		if(input instanceof NonExistingPHPFileEditorInput){
+			File f = ((NonExistingPHPFileEditorInput)input).getPath(input).toFile();
+			f.deleteOnExit();
+		}
+		
 		IWorkbenchPage page = fWindow.getActivePage();
 		try {
-			IEditorPart editor = page.openEditor(input, PHPUiConstants.PHP_EDITOR_ID);
+			IEditorPart editor = page.openEditor(input, UNTITLED_EDITOR_ID);
 			StructuredTextEditor textEditor = null;
 			if (editor instanceof StructuredTextEditor) {
 				textEditor = (StructuredTextEditor) editor;
@@ -98,12 +110,18 @@ public class UntitledPHPDocumentWizard extends Wizard implements INewWizard {
 			document.set(compiledTemplate.string);
 			documentProvider.saveDocument(null, textEditor.getEditorInput(), document, true);
 			textEditor.selectAndReveal(compiledTemplate.offset, 0);
+			
+			// set document dirty
+			document.replace(0, 0, "");	
 		} catch (PartInitException e) {
 			Logger.logException(e);
 			return false;
 		} catch (CoreException e) {
 			Logger.logException(e);
 			return false;
+		}catch (BadLocationException e) {
+			Logger.logException(e);
+			return true;
 		}
 		return true;
 	}

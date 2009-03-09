@@ -19,7 +19,6 @@ import org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput;
  * This Editor Input class should be used mainly for Untitled PHP Documents
  * @see org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput
  */
-//public class NonExistingPHPFileEditorInput implements IEditorInput, ILocationProvider {
 public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput {
 
 	public NonExistingPHPFileEditorInput(IFileStore fileStore, String namePrefix) {
