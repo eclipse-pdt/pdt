@@ -127,10 +127,20 @@ public class UseStatementInjector {
 
 								String namespacePrefix = alias + NamespaceReference.NAMESPACE_SEPARATOR;
 								String replacementString = proposal.getReplacementString();
+								
+								// Remove fully qualified namespace prefix form the replacement string:
+								if (replacementString.startsWith(namespaceName)) {
+									replacementString = replacementString.substring(namespaceName.length());
+									if (replacementString.length() > 0 && replacementString.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+										replacementString = replacementString.substring(1);
+									}
+								}
+								
+								// Add alias to the replacement string:
 								if (!replacementString.startsWith(namespacePrefix)) {
 									replacementString = namespacePrefix + replacementString;
-									proposal.setReplacementString(replacementString);
 								}
+								proposal.setReplacementString(replacementString);
 
 								int replacementOffset = proposal.getReplacementOffset() + useStatement.length();
 								offset += useStatement.length();
