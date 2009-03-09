@@ -15,8 +15,9 @@ class PDOException extends RuntimeException  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
+	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message, $code, $previous) {}
 
 	final public function getMessage () {}
 
@@ -27,6 +28,8 @@ class PDOException extends RuntimeException  {
 	final public function getLine () {}
 
 	final public function getTrace () {}
+
+	final public function getPrevious () {}
 
 	final public function getTraceAsString () {}
 
@@ -41,7 +44,7 @@ class PDO  {
 	const PARAM_STR = 2;
 	const PARAM_LOB = 3;
 	const PARAM_STMT = 4;
-	const PARAM_INPUT_OUTPUT = 2147483648;
+	const PARAM_INPUT_OUTPUT = -2147483648;
 	const PARAM_EVT_ALLOC = 0;
 	const PARAM_EVT_FREE = 1;
 	const PARAM_EVT_EXEC_PRE = 2;
@@ -105,14 +108,17 @@ class PDO  {
 	const FETCH_ORI_REL = 5;
 	const CURSOR_FWDONLY = 0;
 	const CURSOR_SCROLL = 1;
-	const PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT = 1000;
 	const MYSQL_ATTR_USE_BUFFERED_QUERY = 1000;
 	const MYSQL_ATTR_LOCAL_INFILE = 1001;
+	const MYSQL_ATTR_MAX_BUFFER_SIZE = 1005;
 	const MYSQL_ATTR_INIT_COMMAND = 1002;
 	const MYSQL_ATTR_READ_DEFAULT_FILE = 1003;
 	const MYSQL_ATTR_READ_DEFAULT_GROUP = 1004;
-	const MYSQL_ATTR_MAX_BUFFER_SIZE = 1005;
-	const MYSQL_ATTR_DIRECT_QUERY = 1006;
+	const MYSQL_ATTR_COMPRESS = 1006;
+	const MYSQL_ATTR_DIRECT_QUERY = 1007;
+	const MYSQL_ATTR_FOUND_ROWS = 1008;
+	const MYSQL_ATTR_IGNORE_SPACE = 1009;
+	const PGSQL_ATTR_DISABLE_NATIVE_PREPARED_STATEMENT = 1000;
 
 
 	/**
@@ -232,7 +238,7 @@ class PDOStatement implements Traversable {
 	public function fetchAll ($how, $class_name, $ctor_args) {}
 
 	/**
-	 * @param class_name
+	 * @param class_name[optional]
 	 * @param ctor_args[optional]
 	 */
 	public function fetchObject ($class_name, $ctor_args) {}

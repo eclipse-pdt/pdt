@@ -114,20 +114,28 @@ final class tidyNode  {
 /**
  * Returns the value of the specified configuration option for the tidy document
  * @link http://php.net/manual/en/function.tidy-getopt.php
+ * @param option
  */
-function tidy_getopt () {}
+function tidy_getopt ($option) {}
 
 /**
  * Parse a document stored in a string
  * @link http://php.net/manual/en/function.tidy-parse-string.php
+ * @param input
+ * @param config_options[optional]
+ * @param encoding[optional]
  */
-function tidy_parse_string () {}
+function tidy_parse_string ($input, $config_options, $encoding) {}
 
 /**
  * Parse markup in file or URI
  * @link http://php.net/manual/en/function.tidy-parse-file.php
+ * @param file
+ * @param config_options[optional]
+ * @param encoding[optional]
+ * @param use_include_path[optional]
  */
-function tidy_parse_file () {}
+function tidy_parse_file ($file, $config_options, $encoding, $use_include_path) {}
 
 /**
  * Return a string representing the parsed tidy markup
@@ -142,8 +150,9 @@ function tidy_get_output (tidy $object) {}
 /**
  * Return warnings and errors which occurred parsing the specified document
  * @link http://php.net/manual/en/function.tidy-get-error-buffer.php
+ * @param detailed[optional]
  */
-function tidy_get_error_buffer () {}
+function tidy_get_error_buffer ($detailed) {}
 
 /**
  * Execute configured cleanup and repair operations on parsed markup
@@ -154,14 +163,21 @@ function tidy_clean_repair () {}
 /**
  * Repair a string using an optionally provided configuration file
  * @link http://php.net/manual/en/function.tidy-repair-string.php
+ * @param data
+ * @param config_file[optional]
+ * @param encoding[optional]
  */
-function tidy_repair_string () {}
+function tidy_repair_string ($data, $config_file, $encoding) {}
 
 /**
  * Repair a file and return it as a string
  * @link http://php.net/manual/en/function.tidy-repair-file.php
+ * @param filename
+ * @param config_file[optional]
+ * @param encoding[optional]
+ * @param use_include_path[optional]
  */
-function tidy_repair_file () {}
+function tidy_repair_file ($filename, $config_file, $encoding, $use_include_path) {}
 
 /**
  * Run configured diagnostics on parsed and repaired markup
@@ -273,8 +289,9 @@ function tidy_get_html () {}
 /**
  * Returns a tidyNode Object starting from the &lt;body&gt; tag of the tidy parse tree
  * @link http://php.net/manual/en/function.tidy-get-body.php
+ * @param tidy
  */
-function tidy_get_body () {}
+function tidy_get_body ($tidy) {}
 
 /**
  * ob_start callback function to repair the buffer

@@ -55,13 +55,13 @@ function libxml_get_errors () {}
  * libxml version like 20605 or 20617
  * @link http://php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_VERSION', 20627);
+define ('LIBXML_VERSION', 20703);
 
 /**
  * libxml version like 2.6.5 or 2.6.17
  * @link http://php.net/manual/en/libxml.constants.php
  */
-define ('LIBXML_DOTTED_VERSION', "2.6.27");
+define ('LIBXML_DOTTED_VERSION', "2.7.3");
 
 /**
  * Substitute entities

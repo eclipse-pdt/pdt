@@ -173,7 +173,9 @@ function ftp_chmod ($ftp_stream, $mode, $filename) {}
  * @param ftp_stream resource <p>
  * The link identifier of the FTP connection.
  * </p>
- * @param filesize int 
+ * @param filesize int <p>
+ * The number of bytes to allocate.
+ * </p>
  * @param result string[optional] 
  * @return bool Returns true on success or false on failure.
  */

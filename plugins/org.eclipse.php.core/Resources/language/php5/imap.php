@@ -268,7 +268,7 @@ function imap_bodystruct ($imap_stream, $msg_number, $section) {}
  * @param msg_number int <p>
  * The message number
  * </p>
- * @param part_number string <p>
+ * @param section string <p>
  * The part number. It is a string of integers delimited by period which
  * index into a body part list as per the IMAP4 specification
  * </p>
@@ -278,7 +278,7 @@ function imap_bodystruct ($imap_stream, $msg_number, $section) {}
  * @return string a particular section of the body of the specified messages as a
  * text string.
  */
-function imap_fetchbody ($imap_stream, $msg_number, $part_number, $options = null) {}
+function imap_fetchbody ($imap_stream, $msg_number, $section, $options = null) {}
 
 /**
  * Save a specific body section to a file
@@ -602,7 +602,7 @@ function imap_subscribe ($imap_stream, $mailbox) {}
 /**
  * Unsubscribe from a mailbox
  * @link http://php.net/manual/en/function.imap-unsubscribe.php
- * @param imap_stream string 
+ * @param imap_stream resource 
  * @param mailbox string <p>
  * The mailbox name, see imap_open for more
  * information
@@ -726,7 +726,7 @@ function imap_status ($imap_stream, $mailbox, $options) {}
  * Mailbox properties
  * <tr valign="top">
  * <td>Date</td>
- * <td>date of last change</td>
+ * <td>date of last change (current datetime)</td>
  * </tr>
  * <tr valign="top">
  * <td>Driver</td>
@@ -773,9 +773,9 @@ function imap_mailboxmsginfo ($imap_stream) {}
  * within an interval with the X:Y syntax
  * </p>
  * @param flag string <p>
- * The flags which you can set are \\Seen, 
- * \\Answered, \\Flagged,
- * \\Deleted, and \\Draft as
+ * The flags which you can set are \Seen, 
+ * \Answered, \Flagged,
+ * \Deleted, and \Draft as
  * defined by RFC2060.
  * </p>
  * @param options int[optional] <p>
@@ -799,7 +799,7 @@ function imap_setflag_full ($imap_stream, $sequence, $flag, $options = null) {}
  * The flags which you can unset are "\\Seen", "\\Answered", "\\Flagged",
  * "\\Deleted", and "\\Draft" (as defined by RFC2060)
  * </p>
- * @param options string[optional] <p>
+ * @param options int[optional] <p>
  * options are a bit mask and may contain
  * the single option:
  * ST_UID - The sequence argument contains UIDs
@@ -1209,14 +1209,22 @@ function imap_mail ($to, $subject, $message, $additional_headers = null, $cc = n
 /**
  * &Alias; <function>imap_headerinfo</function>
  * @link http://php.net/manual/en/function.imap-header.php
+ * @param stream_id
+ * @param msg_no
+ * @param from_length[optional]
+ * @param subject_length[optional]
+ * @param default_host[optional]
  */
-function imap_header () {}
+function imap_header ($stream_id, $msg_no, $from_length, $subject_length, $default_host) {}
 
 /**
  * &Alias; <function>imap_list</function>
  * @link http://php.net/manual/en/function.imap-listmailbox.php
+ * @param stream_id
+ * @param ref
+ * @param pattern
  */
-function imap_listmailbox () {}
+function imap_listmailbox ($stream_id, $ref, $pattern) {}
 
 /**
  * Read the list of mailboxes, returning detailed information on each one
@@ -1272,14 +1280,21 @@ function imap_getmailboxes ($imap_stream, $ref, $pattern) {}
 /**
  * &Alias; <function>imap_listscan</function>
  * @link http://php.net/manual/en/function.imap-scanmailbox.php
+ * @param stream_id
+ * @param ref
+ * @param pattern
+ * @param content
  */
-function imap_scanmailbox () {}
+function imap_scanmailbox ($stream_id, $ref, $pattern, $content) {}
 
 /**
  * &Alias; <function>imap_lsub</function>
  * @link http://php.net/manual/en/function.imap-listsubscribed.php
+ * @param stream_id
+ * @param ref
+ * @param pattern
  */
-function imap_listsubscribed () {}
+function imap_listsubscribed ($stream_id, $ref, $pattern) {}
 
 /**
  * List all the subscribed mailboxes
@@ -1321,13 +1336,33 @@ function imap_listsubscribed () {}
  */
 function imap_getsubscribed ($imap_stream, $ref, $pattern) {}
 
-function imap_fetchtext () {}
+/**
+ * @param stream_id
+ * @param msg_no
+ * @param options[optional]
+ */
+function imap_fetchtext ($stream_id, $msg_no, $options) {}
 
-function imap_scan () {}
+/**
+ * @param stream_id
+ * @param ref
+ * @param pattern
+ * @param content
+ */
+function imap_scan ($stream_id, $ref, $pattern, $content) {}
 
-function imap_create () {}
+/**
+ * @param stream_id
+ * @param mailbox
+ */
+function imap_create ($stream_id, $mailbox) {}
 
-function imap_rename () {}
+/**
+ * @param stream_id
+ * @param old_name
+ * @param new_name
+ */
+function imap_rename ($stream_id, $old_name, $new_name) {}
 
 define ('NIL', 0);
 define ('IMAP_OPENTIMEOUT', 1);

@@ -1,6 +1,6 @@
 <?php
 
-// Start of Reflection v.0.1
+// Start of Reflection v.$Revision: 1.2 $
 
 /**
  * ReflectionException extends the standard Exception and is thrown by Reflection
@@ -19,8 +19,9 @@ class ReflectionException extends Exception  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
+	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public function __construct ($message, $code, $previous) {}
 
 	final public function getMessage () {}
 
@@ -31,6 +32,8 @@ class ReflectionException extends Exception  {
 	final public function getLine () {}
 
 	final public function getTrace () {}
+
+	final public function getPrevious () {}
 
 	final public function getTraceAsString () {}
 
@@ -74,35 +77,43 @@ class ReflectionFunctionAbstract implements Reflector {
 
 	abstract public function __toString () {}
 
+	public function inNamespace () {}
+
+	public function isClosure () {}
+
+	public function isDeprecated () {}
+
 	public function isInternal () {}
 
 	public function isUserDefined () {}
 
-	public function getName () {}
-
-	public function getFileName () {}
-
-	public function getStartLine () {}
-
-	public function getEndLine () {}
-
 	public function getDocComment () {}
 
-	public function getStaticVariables () {}
-
-	public function returnsReference () {}
-
-	public function getParameters () {}
-
-	public function getNumberOfParameters () {}
-
-	public function getNumberOfRequiredParameters () {}
+	public function getEndLine () {}
 
 	public function getExtension () {}
 
 	public function getExtensionName () {}
 
-	public function isDeprecated () {}
+	public function getFileName () {}
+
+	public function getName () {}
+
+	public function getNamespaceName () {}
+
+	public function getNumberOfParameters () {}
+
+	public function getNumberOfRequiredParameters () {}
+
+	public function getParameters () {}
+
+	public function getShortName () {}
+
+	public function getStartLine () {}
+
+	public function getStaticVariables () {}
+
+	public function returnsReference () {}
 
 }
 
@@ -144,35 +155,43 @@ class ReflectionFunction extends ReflectionFunctionAbstract implements Reflector
 
 	final private function __clone () {}
 
+	public function inNamespace () {}
+
+	public function isClosure () {}
+
+	public function isDeprecated () {}
+
 	public function isInternal () {}
 
 	public function isUserDefined () {}
 
-	public function getName () {}
-
-	public function getFileName () {}
-
-	public function getStartLine () {}
-
-	public function getEndLine () {}
-
 	public function getDocComment () {}
 
-	public function getStaticVariables () {}
-
-	public function returnsReference () {}
-
-	public function getParameters () {}
-
-	public function getNumberOfParameters () {}
-
-	public function getNumberOfRequiredParameters () {}
+	public function getEndLine () {}
 
 	public function getExtension () {}
 
 	public function getExtensionName () {}
 
-	public function isDeprecated () {}
+	public function getFileName () {}
+
+	public function getName () {}
+
+	public function getNamespaceName () {}
+
+	public function getNumberOfParameters () {}
+
+	public function getNumberOfRequiredParameters () {}
+
+	public function getParameters () {}
+
+	public function getShortName () {}
+
+	public function getStartLine () {}
+
+	public function getStaticVariables () {}
+
+	public function returnsReference () {}
 
 }
 
@@ -294,35 +313,43 @@ class ReflectionMethod extends ReflectionFunctionAbstract implements Reflector {
 
 	final private function __clone () {}
 
+	public function inNamespace () {}
+
+	public function isClosure () {}
+
+	public function isDeprecated () {}
+
 	public function isInternal () {}
 
 	public function isUserDefined () {}
 
-	public function getName () {}
-
-	public function getFileName () {}
-
-	public function getStartLine () {}
-
-	public function getEndLine () {}
-
 	public function getDocComment () {}
 
-	public function getStaticVariables () {}
-
-	public function returnsReference () {}
-
-	public function getParameters () {}
-
-	public function getNumberOfParameters () {}
-
-	public function getNumberOfRequiredParameters () {}
+	public function getEndLine () {}
 
 	public function getExtension () {}
 
 	public function getExtensionName () {}
 
-	public function isDeprecated () {}
+	public function getFileName () {}
+
+	public function getName () {}
+
+	public function getNamespaceName () {}
+
+	public function getNumberOfParameters () {}
+
+	public function getNumberOfRequiredParameters () {}
+
+	public function getParameters () {}
+
+	public function getShortName () {}
+
+	public function getStartLine () {}
+
+	public function getStaticVariables () {}
+
+	public function returnsReference () {}
 
 }
 
@@ -475,6 +502,12 @@ class ReflectionClass implements Reflector {
 
 	public function getExtensionName () {}
 
+	public function inNamespace () {}
+
+	public function getNamespaceName () {}
+
+	public function getShortName () {}
+
 }
 
 /**
@@ -626,6 +659,12 @@ class ReflectionObject extends ReflectionClass implements Reflector {
 
 	public function getExtensionName () {}
 
+	public function inNamespace () {}
+
+	public function getNamespaceName () {}
+
+	public function getShortName () {}
+
 }
 
 /**
@@ -687,6 +726,11 @@ class ReflectionProperty implements Reflector {
 
 	public function getDocComment () {}
 
+	/**
+	 * @param value
+	 */
+	public function setAccessible ($value) {}
+
 }
 
 /**
@@ -733,5 +777,5 @@ class ReflectionExtension implements Reflector {
 	public function info () {}
 
 }
-// End of Reflection v.0.1
+// End of Reflection v.$Revision: 1.2 $
 ?>

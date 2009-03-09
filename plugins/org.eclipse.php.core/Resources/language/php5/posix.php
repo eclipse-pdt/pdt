@@ -400,7 +400,8 @@ function posix_getgrgid ($gid) {}
  * @param username string <p>
  * An alphanumeric username.
  * </p>
- * @return array The array elements returned are:
+ * @return array On success an array with the following elements are returned, else 
+ * false is returned:
  * <table>
  * The user information array
  * <tr valign="top">

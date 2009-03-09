@@ -122,7 +122,7 @@ function bzerror ($bz) {}
  * @param workfactor int[optional] <p>
  * Controls how the compression phase behaves when presented with worst
  * case, highly repetitive, input data. The value can be between 0 and
- * 250 with 0 being a special case and 30 being the default value. 
+ * 250 with 0 being a special case and the default value. 
  * </p>
  * <p>
  * Regardless of the workfactor, the generated 

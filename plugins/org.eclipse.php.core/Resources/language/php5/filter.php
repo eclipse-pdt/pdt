@@ -37,7 +37,7 @@ function filter_input ($type, $variable_name, $filter = null, $options = null) {
  * </p>
  * @param filter int[optional] <p>
  * ID of a filter to use.
- * Defaults to FILTER_SANITIZE_STRING.
+ * Defaults to FILTER_DEFAULT.
  * </p>
  * @param options mixed[optional] <p>
  * Associative array of options or bitwise disjunction of flags. If filter

@@ -2,6 +2,448 @@
 
 // Start of SPL v.0.2
 
+class LogicException extends Exception  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class BadFunctionCallException extends LogicException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class BadMethodCallException extends BadFunctionCallException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class DomainException extends LogicException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class InvalidArgumentException extends LogicException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class LengthException extends LogicException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class OutOfRangeException extends LogicException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class RuntimeException extends Exception  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class OutOfBoundsException extends RuntimeException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class OverflowException extends RuntimeException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class RangeException extends RuntimeException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class UnderflowException extends RuntimeException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
+class UnexpectedValueException extends RuntimeException  {
+	protected $message;
+	protected $code;
+	protected $file;
+	protected $line;
+
+
+	final private function __clone () {}
+
+	/**
+	 * @param message[optional]
+	 * @param code[optional]
+	 * @param previous[optional]
+	 */
+	public function __construct ($message, $code, $previous) {}
+
+	final public function getMessage () {}
+
+	final public function getCode () {}
+
+	final public function getFile () {}
+
+	final public function getLine () {}
+
+	final public function getTrace () {}
+
+	final public function getPrevious () {}
+
+	final public function getTraceAsString () {}
+
+	public function __toString () {}
+
+}
+
 interface RecursiveIterator extends Iterator, Traversable {
 
 	abstract public function hasChildren () {}
@@ -580,7 +1022,84 @@ class EmptyIterator implements Iterator, Traversable {
 
 }
 
-class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Countable {
+class RecursiveTreeIterator extends RecursiveIteratorIterator implements OuterIterator, Traversable, Iterator {
+	const LEAVES_ONLY = 0;
+	const SELF_FIRST = 1;
+	const CHILD_FIRST = 2;
+	const CATCH_GET_CHILD = 16;
+	const BYPASS_CURRENT = 4;
+	const BYPASS_KEY = 8;
+	const PREFIX_LEFT = 0;
+	const PREFIX_MID_HAS_NEXT = 1;
+	const PREFIX_MID_LAST = 2;
+	const PREFIX_END_HAS_NEXT = 3;
+	const PREFIX_END_LAST = 4;
+	const PREFIX_RIGHT = 5;
+
+
+	/**
+	 * @param iterator Traversable
+	 * @param flags[optional]
+	 * @param caching_it_flags[optional]
+	 * @param mode[optional]
+	 */
+	public function __construct (Traversable $iterator, $flags, $caching_it_flags, $mode) {}
+
+	public function rewind () {}
+
+	public function valid () {}
+
+	public function key () {}
+
+	public function current () {}
+
+	public function next () {}
+
+	public function beginIteration () {}
+
+	public function endIteration () {}
+
+	public function callHasChildren () {}
+
+	public function callGetChildren () {}
+
+	public function beginChildren () {}
+
+	public function endChildren () {}
+
+	public function nextElement () {}
+
+	public function getPrefix () {}
+
+	/**
+	 * @param part
+	 * @param value
+	 */
+	public function setPrefixPart ($part, $value) {}
+
+	public function getEntry () {}
+
+	public function getPostfix () {}
+
+	public function getDepth () {}
+
+	/**
+	 * @param level[optional]
+	 */
+	public function getSubIterator ($level) {}
+
+	public function getInnerIterator () {}
+
+	/**
+	 * @param max_depth[optional]
+	 */
+	public function setMaxDepth ($max_depth) {}
+
+	public function getMaxDepth () {}
+
+}
+
+class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Serializable, Countable {
 	const STD_PROP_LIST = 1;
 	const ARRAY_AS_PROPS = 2;
 
@@ -644,6 +1163,13 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Counta
 	public function natsort () {}
 
 	public function natcasesort () {}
+
+	/**
+	 * @param serialized
+	 */
+	public function unserialize ($serialized) {}
+
+	public function serialize () {}
 
 	public function getIterator () {}
 
@@ -661,7 +1187,7 @@ class ArrayObject implements IteratorAggregate, Traversable, ArrayAccess, Counta
 
 }
 
-class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableIterator, Countable {
+class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableIterator, Serializable, Countable {
 	const STD_PROP_LIST = 1;
 	const ARRAY_AS_PROPS = 2;
 
@@ -725,6 +1251,13 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 	public function natsort () {}
 
 	public function natcasesort () {}
+
+	/**
+	 * @param serialized
+	 */
+	public function unserialize ($serialized) {}
+
+	public function serialize () {}
 
 	public function rewind () {}
 
@@ -743,7 +1276,9 @@ class ArrayIterator implements Iterator, Traversable, ArrayAccess, SeekableItera
 
 }
 
-class RecursiveArrayIterator extends ArrayIterator implements SeekableIterator, ArrayAccess, Traversable, Iterator, RecursiveIterator {
+class RecursiveArrayIterator extends ArrayIterator implements Serializable, SeekableIterator, ArrayAccess, Traversable, Iterator, RecursiveIterator {
+	const CHILD_ARRAYS_ONLY = 4;
+
 
 	public function hasChildren () {}
 
@@ -808,6 +1343,13 @@ class RecursiveArrayIterator extends ArrayIterator implements SeekableIterator, 
 	public function natsort () {}
 
 	public function natcasesort () {}
+
+	/**
+	 * @param serialized
+	 */
+	public function unserialize ($serialized) {}
+
+	public function serialize () {}
 
 	public function rewind () {}
 
@@ -909,7 +1451,7 @@ class SplFileInfo  {
 
 }
 
-class DirectoryIterator extends SplFileInfo implements Iterator, Traversable {
+class DirectoryIterator extends SplFileInfo implements Iterator, Traversable, SeekableIterator {
 
 	/**
 	 * @param path
@@ -934,6 +1476,11 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable {
 	public function current () {}
 
 	public function next () {}
+
+	/**
+	 * @param position
+	 */
+	public function seek ($position) {}
 
 	public function __toString () {}
 
@@ -1004,7 +1551,7 @@ class DirectoryIterator extends SplFileInfo implements Iterator, Traversable {
 
 }
 
-class RecursiveDirectoryIterator extends DirectoryIterator implements Traversable, Iterator, RecursiveIterator {
+class FilesystemIterator extends DirectoryIterator implements SeekableIterator, Traversable, Iterator {
 	const CURRENT_MODE_MASK = 240;
 	const CURRENT_AS_PATHNAME = 32;
 	const CURRENT_AS_FILEINFO = 0;
@@ -1013,6 +1560,8 @@ class RecursiveDirectoryIterator extends DirectoryIterator implements Traversabl
 	const KEY_AS_PATHNAME = 0;
 	const KEY_AS_FILENAME = 256;
 	const NEW_CURRENT_AND_KEY = 256;
+	const SKIP_DOTS = 4096;
+	const UNIX_PATHS = 8192;
 
 
 	/**
@@ -1029,16 +1578,12 @@ class RecursiveDirectoryIterator extends DirectoryIterator implements Traversabl
 
 	public function current () {}
 
+	public function getFlags () {}
+
 	/**
-	 * @param allow_links[optional]
+	 * @param flags[optional]
 	 */
-	public function hasChildren ($allow_links) {}
-
-	public function getChildren () {}
-
-	public function getSubPath () {}
-
-	public function getSubPathname () {}
+	public function setFlags ($flags) {}
 
 	public function getFilename () {}
 
@@ -1050,6 +1595,262 @@ class RecursiveDirectoryIterator extends DirectoryIterator implements Traversabl
 	public function isDot () {}
 
 	public function valid () {}
+
+	/**
+	 * @param position
+	 */
+	public function seek ($position) {}
+
+	public function __toString () {}
+
+	public function getPath () {}
+
+	public function getPathname () {}
+
+	public function getPerms () {}
+
+	public function getInode () {}
+
+	public function getSize () {}
+
+	public function getOwner () {}
+
+	public function getGroup () {}
+
+	public function getATime () {}
+
+	public function getMTime () {}
+
+	public function getCTime () {}
+
+	public function getType () {}
+
+	public function isWritable () {}
+
+	public function isReadable () {}
+
+	public function isExecutable () {}
+
+	public function isFile () {}
+
+	public function isDir () {}
+
+	public function isLink () {}
+
+	public function getLinkTarget () {}
+
+	public function getRealPath () {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function getFileInfo ($class_name) {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function getPathInfo ($class_name) {}
+
+	/**
+	 * @param open_mode[optional]
+	 * @param use_include_path[optional]
+	 * @param context[optional]
+	 */
+	public function openFile ($open_mode, $use_include_path, $context) {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function setFileClass ($class_name) {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function setInfoClass ($class_name) {}
+
+}
+
+class RecursiveDirectoryIterator extends FilesystemIterator implements Iterator, Traversable, SeekableIterator, RecursiveIterator {
+	const CURRENT_MODE_MASK = 240;
+	const CURRENT_AS_PATHNAME = 32;
+	const CURRENT_AS_FILEINFO = 0;
+	const CURRENT_AS_SELF = 16;
+	const KEY_MODE_MASK = 3840;
+	const KEY_AS_PATHNAME = 0;
+	const KEY_AS_FILENAME = 256;
+	const NEW_CURRENT_AND_KEY = 256;
+	const SKIP_DOTS = 4096;
+	const UNIX_PATHS = 8192;
+
+
+	/**
+	 * @param path
+	 * @param flags[optional]
+	 */
+	public function __construct ($path, $flags) {}
+
+	/**
+	 * @param allow_links[optional]
+	 */
+	public function hasChildren ($allow_links) {}
+
+	public function getChildren () {}
+
+	public function getSubPath () {}
+
+	public function getSubPathname () {}
+
+	public function rewind () {}
+
+	public function next () {}
+
+	public function key () {}
+
+	public function current () {}
+
+	public function getFlags () {}
+
+	/**
+	 * @param flags[optional]
+	 */
+	public function setFlags ($flags) {}
+
+	public function getFilename () {}
+
+	/**
+	 * @param suffix[optional]
+	 */
+	public function getBasename ($suffix) {}
+
+	public function isDot () {}
+
+	public function valid () {}
+
+	/**
+	 * @param position
+	 */
+	public function seek ($position) {}
+
+	public function __toString () {}
+
+	public function getPath () {}
+
+	public function getPathname () {}
+
+	public function getPerms () {}
+
+	public function getInode () {}
+
+	public function getSize () {}
+
+	public function getOwner () {}
+
+	public function getGroup () {}
+
+	public function getATime () {}
+
+	public function getMTime () {}
+
+	public function getCTime () {}
+
+	public function getType () {}
+
+	public function isWritable () {}
+
+	public function isReadable () {}
+
+	public function isExecutable () {}
+
+	public function isFile () {}
+
+	public function isDir () {}
+
+	public function isLink () {}
+
+	public function getLinkTarget () {}
+
+	public function getRealPath () {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function getFileInfo ($class_name) {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function getPathInfo ($class_name) {}
+
+	/**
+	 * @param open_mode[optional]
+	 * @param use_include_path[optional]
+	 * @param context[optional]
+	 */
+	public function openFile ($open_mode, $use_include_path, $context) {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function setFileClass ($class_name) {}
+
+	/**
+	 * @param class_name[optional]
+	 */
+	public function setInfoClass ($class_name) {}
+
+}
+
+class GlobIterator extends FilesystemIterator implements Iterator, Traversable, SeekableIterator, Countable {
+	const CURRENT_MODE_MASK = 240;
+	const CURRENT_AS_PATHNAME = 32;
+	const CURRENT_AS_FILEINFO = 0;
+	const CURRENT_AS_SELF = 16;
+	const KEY_MODE_MASK = 3840;
+	const KEY_AS_PATHNAME = 0;
+	const KEY_AS_FILENAME = 256;
+	const NEW_CURRENT_AND_KEY = 256;
+	const SKIP_DOTS = 4096;
+	const UNIX_PATHS = 8192;
+
+
+	/**
+	 * @param path
+	 * @param flags[optional]
+	 */
+	public function __construct ($path, $flags) {}
+
+	public function count () {}
+
+	public function rewind () {}
+
+	public function next () {}
+
+	public function key () {}
+
+	public function current () {}
+
+	public function getFlags () {}
+
+	/**
+	 * @param flags[optional]
+	 */
+	public function setFlags ($flags) {}
+
+	public function getFilename () {}
+
+	/**
+	 * @param suffix[optional]
+	 */
+	public function getBasename ($suffix) {}
+
+	public function isDot () {}
+
+	public function valid () {}
+
+	/**
+	 * @param position
+	 */
+	public function seek ($position) {}
 
 	public function __toString () {}
 
@@ -1491,11 +2292,64 @@ class SplTempFileObject extends SplFileObject implements SeekableIterator, Itera
 
 }
 
-class SimpleXMLIterator extends SimpleXMLElement implements Traversable, RecursiveIterator, Iterator, Countable {
+class SplDoublyLinkedList implements Iterator, Traversable, Countable, ArrayAccess {
+	const IT_MODE_LIFO = 2;
+	const IT_MODE_FIFO = 0;
+	const IT_MODE_DELETE = 1;
+	const IT_MODE_KEEP = 0;
+
+
+	public function pop () {}
+
+	public function shift () {}
+
+	/**
+	 * @param value
+	 */
+	public function push ($value) {}
+
+	/**
+	 * @param value
+	 */
+	public function unshift ($value) {}
+
+	public function top () {}
+
+	public function bottom () {}
+
+	public function count () {}
+
+	public function isEmpty () {}
+
+	/**
+	 * @param flags
+	 */
+	public function setIteratorMode ($flags) {}
+
+	public function getIteratorMode () {}
+
+	/**
+	 * @param index
+	 */
+	public function offsetExists ($index) {}
+
+	/**
+	 * @param index
+	 */
+	public function offsetGet ($index) {}
+
+	/**
+	 * @param index
+	 * @param newval
+	 */
+	public function offsetSet ($index, $newval) {}
+
+	/**
+	 * @param index
+	 */
+	public function offsetUnset ($index) {}
 
 	public function rewind () {}
-
-	public function valid () {}
 
 	public function current () {}
 
@@ -1503,553 +2357,352 @@ class SimpleXMLIterator extends SimpleXMLElement implements Traversable, Recursi
 
 	public function next () {}
 
-	public function hasChildren () {}
+	public function valid () {}
 
-	public function getChildren () {}
+}
+
+class SplQueue extends SplDoublyLinkedList implements ArrayAccess, Countable, Traversable, Iterator {
+	const IT_MODE_LIFO = 2;
+	const IT_MODE_FIFO = 0;
+	const IT_MODE_DELETE = 1;
+	const IT_MODE_KEEP = 0;
+
+
+	/**
+	 * @param value
+	 */
+	public function enqueue ($value) {}
+
+	public function dequeue () {}
+
+	public function pop () {}
+
+	public function shift () {}
+
+	/**
+	 * @param value
+	 */
+	public function push ($value) {}
+
+	/**
+	 * @param value
+	 */
+	public function unshift ($value) {}
+
+	public function top () {}
+
+	public function bottom () {}
 
 	public function count () {}
 
-	/**
-	 * Creates a new SimpleXMLElement object
-	 * @link http://php.net/manual/en/function.simplexml-element-construct.php
-	 */
-	final public function __construct () {}
+	public function isEmpty () {}
 
 	/**
-	 * Return a well-formed XML string based on SimpleXML element
-	 * @link http://php.net/manual/en/function.simplexml-element-asXML.php
-	 * @param filename string[optional] <p>
-	 * If specified, the function writes the data to the file rather than
-	 * returning it.
-	 * </p>
-	 * @return mixed If the filename isn't specified, this function
-	 * returns a string on success and false on error. If the
-	 * parameter is specified, it returns true if the file was written
-	 * successfully and false otherwise.
+	 * @param flags
 	 */
-	public function asXML ($filename = null) {}
+	public function setIteratorMode ($flags) {}
 
-	public function saveXML () {}
+	public function getIteratorMode () {}
 
 	/**
-	 * Runs XPath query on XML data
-	 * @link http://php.net/manual/en/function.simplexml-element-xpath.php
-	 * @param path string <p>
-	 * An XPath path
-	 * </p>
-	 * @return array an array of SimpleXMLElement objects or false in
-	 * case of an error.
+	 * @param index
 	 */
-	public function xpath ($path) {}
+	public function offsetExists ($index) {}
 
 	/**
-	 * Creates a prefix/ns context for the next XPath query
-	 * @link http://php.net/manual/en/function.simplexml-element-registerXPathNamespace.php
-	 * @param prefix string <p>
-	 * The namespace prefix to use in the XPath query for the namespace given in 
-	 * ns.
-	 * </p>
-	 * @param ns string <p>
-	 * The namespace to use for the XPath query. This must match a namespace in
-	 * use by the XML document or the XPath query using 
-	 * prefix will not return any results.
-	 * </p>
-	 * @return bool Returns true on success or false on failure.
+	 * @param index
 	 */
-	public function registerXPathNamespace ($prefix, $ns) {}
+	public function offsetGet ($index) {}
 
 	/**
-	 * Identifies an element's attributes
-	 * @link http://php.net/manual/en/function.simplexml-element-attributes.php
-	 * @param ns string[optional] <p>
-	 * An optional namespace for the retrieved attributes
-	 * </p>
-	 * @param is_prefix bool[optional] <p>
-	 * Default to false
-	 * </p>
-	 * @return SimpleXMLElement 
+	 * @param index
+	 * @param newval
 	 */
-	public function attributes ($ns = null, $is_prefix = null) {}
+	public function offsetSet ($index, $newval) {}
 
 	/**
-	 * Finds children of given node
-	 * @link http://php.net/manual/en/function.simplexml-element-children.php
-	 * @param ns string[optional] <p>
-	 * </p>
-	 * @param is_prefix bool[optional] <p>
-	 * Default to false
-	 * </p>
-	 * @return SimpleXMLElement 
+	 * @param index
 	 */
-	public function children ($ns = null, $is_prefix = null) {}
+	public function offsetUnset ($index) {}
 
-	/**
-	 * Returns namespaces used in document
-	 * @link http://php.net/manual/en/function.simplexml-element-getNamespaces.php
-	 * @param recursive bool[optional] <p>
-	 * If specified, returns all namespaces used in parent and child nodes. 
-	 * Otherwise, returns only namespaces used in root node.
-	 * </p>
-	 * @return array The getNamespaces method returns an array of 
-	 * namespace names with their associated URIs.
-	 */
-	public function getNamespaces ($recursive = null) {}
+	public function rewind () {}
 
-	/**
-	 * Returns namespaces declared in document
-	 * @link http://php.net/manual/en/function.simplexml-element-getDocNamespaces.php
-	 * @param recursive bool[optional] <p>
-	 * If specified, returns all namespaces declared in parent and child nodes. 
-	 * Otherwise, returns only namespaces declared in root node.
-	 * </p>
-	 * @return array The getDocNamespaces method returns an array 
-	 * of namespace names with their associated URIs.
-	 */
-	public function getDocNamespaces ($recursive = null) {}
+	public function current () {}
 
-	/**
-	 * Gets the name of the XML element
-	 * @link http://php.net/manual/en/function.simplexml-element-getName.php
-	 * @return string The getName method returns as a string the 
-	 * name of the XML tag referenced by the SimpleXMLElement object.
-	 */
-	public function getName () {}
+	public function key () {}
 
-	/**
-	 * Adds a child element to the XML node
-	 * @link http://php.net/manual/en/function.simplexml-element-addChild.php
-	 * @param name string <p>
-	 * The name of the child element to add.
-	 * </p>
-	 * @param value string[optional] <p>
-	 * If specified, the value of the child element.
-	 * </p>
-	 * @param namespace string[optional] <p>
-	 * If specified, the namespace to which the child element belongs.
-	 * </p>
-	 * @return SimpleXMLElement The addChild method returns a SimpleXMLElement
-	 * object representing the child added to the XML node.
-	 */
-	public function addChild ($name, $value = null, $namespace = null) {}
+	public function next () {}
 
-	/**
-	 * Adds an attribute to the SimpleXML element
-	 * @link http://php.net/manual/en/function.simplexml-element-addAttribute.php
-	 * @param name string <p>
-	 * The name of the attribute to add.
-	 * </p>
-	 * @param value string <p>
-	 * The value of the attribute.
-	 * </p>
-	 * @param namespace string[optional] <p>
-	 * If specified, the namespace to which the attribute belongs.
-	 * </p>
-	 * @return void 
-	 */
-	public function addAttribute ($name, $value, $namespace = null) {}
+	public function valid () {}
 
 }
 
-class LogicException extends Exception  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
+class SplStack extends SplDoublyLinkedList implements ArrayAccess, Countable, Traversable, Iterator {
+	const IT_MODE_LIFO = 2;
+	const IT_MODE_FIFO = 0;
+	const IT_MODE_DELETE = 1;
+	const IT_MODE_KEEP = 0;
 
 
-	final private function __clone () {}
+	public function pop () {}
+
+	public function shift () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param value
 	 */
-	public function __construct ($message, $code) {}
+	public function push ($value) {}
 
-	final public function getMessage () {}
+	/**
+	 * @param value
+	 */
+	public function unshift ($value) {}
 
-	final public function getCode () {}
+	public function top () {}
 
-	final public function getFile () {}
+	public function bottom () {}
 
-	final public function getLine () {}
+	public function count () {}
 
-	final public function getTrace () {}
+	public function isEmpty () {}
 
-	final public function getTraceAsString () {}
+	/**
+	 * @param flags
+	 */
+	public function setIteratorMode ($flags) {}
 
-	public function __toString () {}
+	public function getIteratorMode () {}
+
+	/**
+	 * @param index
+	 */
+	public function offsetExists ($index) {}
+
+	/**
+	 * @param index
+	 */
+	public function offsetGet ($index) {}
+
+	/**
+	 * @param index
+	 * @param newval
+	 */
+	public function offsetSet ($index, $newval) {}
+
+	/**
+	 * @param index
+	 */
+	public function offsetUnset ($index) {}
+
+	public function rewind () {}
+
+	public function current () {}
+
+	public function key () {}
+
+	public function next () {}
+
+	public function valid () {}
 
 }
 
-class BadFunctionCallException extends LogicException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
+class SplHeap implements Iterator, Traversable, Countable {
 
-
-	final private function __clone () {}
+	public function extract () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param value
 	 */
-	public function __construct ($message, $code) {}
+	public function insert ($value) {}
 
-	final public function getMessage () {}
+	public function top () {}
 
-	final public function getCode () {}
+	public function count () {}
 
-	final public function getFile () {}
+	public function isEmpty () {}
 
-	final public function getLine () {}
+	public function rewind () {}
 
-	final public function getTrace () {}
+	public function current () {}
 
-	final public function getTraceAsString () {}
+	public function key () {}
 
-	public function __toString () {}
+	public function next () {}
+
+	public function valid () {}
+
+	public function recoverFromCorruption () {}
+
+	abstract protected function compare () {}
 
 }
 
-class BadMethodCallException extends BadFunctionCallException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+class SplMinHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param a
+	 * @param b
 	 */
-	public function __construct ($message, $code) {}
+	protected function compare ($a, $b) {}
 
-	final public function getMessage () {}
+	public function extract () {}
 
-	final public function getCode () {}
+	/**
+	 * @param value
+	 */
+	public function insert ($value) {}
 
-	final public function getFile () {}
+	public function top () {}
 
-	final public function getLine () {}
+	public function count () {}
 
-	final public function getTrace () {}
+	public function isEmpty () {}
 
-	final public function getTraceAsString () {}
+	public function rewind () {}
 
-	public function __toString () {}
+	public function current () {}
+
+	public function key () {}
+
+	public function next () {}
+
+	public function valid () {}
+
+	public function recoverFromCorruption () {}
 
 }
 
-class DomainException extends LogicException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+class SplMaxHeap extends SplHeap implements Countable, Traversable, Iterator {
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param a
+	 * @param b
 	 */
-	public function __construct ($message, $code) {}
+	protected function compare ($a, $b) {}
 
-	final public function getMessage () {}
+	public function extract () {}
 
-	final public function getCode () {}
+	/**
+	 * @param value
+	 */
+	public function insert ($value) {}
 
-	final public function getFile () {}
+	public function top () {}
 
-	final public function getLine () {}
+	public function count () {}
 
-	final public function getTrace () {}
+	public function isEmpty () {}
 
-	final public function getTraceAsString () {}
+	public function rewind () {}
 
-	public function __toString () {}
+	public function current () {}
+
+	public function key () {}
+
+	public function next () {}
+
+	public function valid () {}
+
+	public function recoverFromCorruption () {}
 
 }
 
-class InvalidArgumentException extends LogicException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
+class SplPriorityQueue implements Iterator, Traversable, Countable {
+	const EXTR_BOTH = 3;
+	const EXTR_PRIORITY = 2;
+	const EXTR_DATA = 1;
 
-
-	final private function __clone () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param a
+	 * @param b
 	 */
-	public function __construct ($message, $code) {}
+	public function compare ($a, $b) {}
 
-	final public function getMessage () {}
+	/**
+	 * @param value
+	 * @param priority
+	 */
+	public function insert ($value, $priority) {}
 
-	final public function getCode () {}
+	/**
+	 * @param flags
+	 */
+	public function setExtractFlags ($flags) {}
 
-	final public function getFile () {}
+	public function top () {}
 
-	final public function getLine () {}
+	public function extract () {}
 
-	final public function getTrace () {}
+	public function count () {}
 
-	final public function getTraceAsString () {}
+	public function isEmpty () {}
 
-	public function __toString () {}
+	public function rewind () {}
+
+	public function current () {}
+
+	public function key () {}
+
+	public function next () {}
+
+	public function valid () {}
+
+	public function recoverFromCorruption () {}
 
 }
 
-class LengthException extends LogicException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
+class SplFixedArray implements Iterator, Traversable, ArrayAccess, Countable {
 
+	public function __construct () {}
 
-	final private function __clone () {}
+	public function count () {}
 
-	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class OutOfRangeException extends LogicException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+	public function toArray () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param data
+	 * @param save_indexes[optional]
 	 */
-	public function __construct ($message, $code) {}
+	public static function fromArray ($data, $save_indexes) {}
 
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class RuntimeException extends Exception  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+	public function getSize () {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param value
 	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class OutOfBoundsException extends RuntimeException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+	public function setSize ($value) {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param index
 	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class OverflowException extends RuntimeException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+	public function offsetExists ($index) {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param index
 	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class RangeException extends RuntimeException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+	public function offsetGet ($index) {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param index
+	 * @param newval
 	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class UnderflowException extends RuntimeException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
+	public function offsetSet ($index, $newval) {}
 
 	/**
-	 * @param message[optional]
-	 * @param code[optional]
+	 * @param index
 	 */
-	public function __construct ($message, $code) {}
+	public function offsetUnset ($index) {}
 
-	final public function getMessage () {}
+	public function rewind () {}
 
-	final public function getCode () {}
+	public function current () {}
 
-	final public function getFile () {}
+	public function key () {}
 
-	final public function getLine () {}
+	public function next () {}
 
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
-
-}
-
-class UnexpectedValueException extends RuntimeException  {
-	protected $message;
-	protected $code;
-	protected $file;
-	protected $line;
-
-
-	final private function __clone () {}
-
-	/**
-	 * @param message[optional]
-	 * @param code[optional]
-	 */
-	public function __construct ($message, $code) {}
-
-	final public function getMessage () {}
-
-	final public function getCode () {}
-
-	final public function getFile () {}
-
-	final public function getLine () {}
-
-	final public function getTrace () {}
-
-	final public function getTraceAsString () {}
-
-	public function __toString () {}
+	public function valid () {}
 
 }
 
@@ -2078,12 +2731,13 @@ interface SplSubject  {
 
 }
 
-class SplObjectStorage implements Countable, Iterator, Traversable, Serializable {
+class SplObjectStorage implements Countable, Iterator, Traversable, Serializable, ArrayAccess {
 
 	/**
 	 * @param object
+	 * @param inf[optional]
 	 */
-	public function attach ($object) {}
+	public function attach ($object, $inf) {}
 
 	/**
 	 * @param object
@@ -2094,6 +2748,23 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	 * @param object
 	 */
 	public function contains ($object) {}
+
+	/**
+	 * @param object
+	 */
+	public function addAll ($object) {}
+
+	/**
+	 * @param object
+	 */
+	public function removeAll ($object) {}
+
+	public function getInfo () {}
+
+	/**
+	 * @param info
+	 */
+	public function setInfo ($info) {}
 
 	public function count () {}
 
@@ -2113,6 +2784,70 @@ class SplObjectStorage implements Countable, Iterator, Traversable, Serializable
 	public function unserialize ($serialized) {}
 
 	public function serialize () {}
+
+	/**
+	 * @param object
+	 */
+	public function offsetExists ($object) {}
+
+	/**
+	 * @param object
+	 * @param info
+	 */
+	public function offsetSet ($object, $info) {}
+
+	/**
+	 * @param object
+	 */
+	public function offsetUnset ($object) {}
+
+	/**
+	 * @param object
+	 */
+	public function offsetGet ($object) {}
+
+}
+
+class MultipleIterator implements Iterator, Traversable {
+	const MIT_NEED_ANY = 0;
+	const MIT_NEED_ALL = 1;
+	const MIT_KEYS_NUMERIC = 0;
+	const MIT_KEYS_ASSOC = 2;
+
+
+	public function __construct () {}
+
+	public function getFlags () {}
+
+	public function setFlags () {}
+
+	/**
+	 * @param iterator Iterator
+	 * @param infos[optional]
+	 */
+	public function attachIterator (Iterator $iterator, $infos) {}
+
+	/**
+	 * @param iterator Iterator
+	 */
+	public function detachIterator (Iterator $iterator) {}
+
+	/**
+	 * @param iterator Iterator
+	 */
+	public function containsIterator (Iterator $iterator) {}
+
+	public function countIterators () {}
+
+	public function rewind () {}
+
+	public function valid () {}
+
+	public function key () {}
+
+	public function current () {}
+
+	public function next () {}
 
 }
 
@@ -2147,7 +2882,7 @@ function spl_autoload ($class_name, $file_extensions = null) {}
  * extensions to use in a single string with each extensions separated
  * by comma.
  * </p>
- * @return string A comma delimitated list of default file extensions for
+ * @return string A comma delimited list of default file extensions for
  * spl_autoload.
  */
 function spl_autoload_extensions ($file_extensions = null) {}
@@ -2235,7 +2970,7 @@ function spl_object_hash ($obj) {}
 /**
  * Copy the iterator into an array
  * @link http://php.net/manual/en/function.iterator-to-array.php
- * @param iterator IteratorAggregate <p>
+ * @param iterator Traversable <p>
  * The iterator being counted.
  * </p>
  * @param use_keys bool[optional] <p>
@@ -2247,7 +2982,7 @@ function iterator_to_array ($iterator, $use_keys = null) {}
 /**
  * Count the elements in an iterator
  * @link http://php.net/manual/en/function.iterator-count.php
- * @param iterator IteratorAggregate <p>
+ * @param iterator Traversable <p>
  * The iterator being counted.
  * </p>
  * @return int The number of elements in iterator.
@@ -2255,11 +2990,20 @@ function iterator_to_array ($iterator, $use_keys = null) {}
 function iterator_count ($iterator) {}
 
 /**
- * @param iterator Traversable
- * @param function
- * @param args[optional]
+ * Apply a user function to every element of an iterator
+ * @link http://php.net/manual/en/function.iterator-apply.php
+ * @param iterator Traversable <p>
+ * The class to walk through.
+ * </p>
+ * @param function callback <p>
+ * The callback function to call on every element.
+ * </p>
+ * @param args array[optional] <p>
+ * Arguments to pass to the callback function.
+ * </p>
+ * @return int the iteration count.
  */
-function iterator_apply (Traversable $iterator, $functionarray , $args = null) {}
+function iterator_apply ($iterator, $function, array $args = null) {}
 
 // End of SPL v.0.2
 ?>

@@ -151,6 +151,8 @@ function preg_match_all ($pattern, $subject, array &$matches, $flags = null, $of
  * \\0 or $0 refers to the text matched
  * by the whole pattern. Opening parentheses are counted from left to right
  * (starting from 1) to obtain the number of the capturing subpattern.
+ * To use backslash in replacement, it must be doubled
+ * ("\\\\" PHP string).
  * </p>
  * <p>
  * When working with a replacement pattern where a backreference is 
@@ -253,6 +255,15 @@ function preg_replace ($pattern, $replacement, $subject, $limit = null, &$count 
  * subject will be returned unchanged.
  */
 function preg_replace_callback ($pattern, $callback, $subject, $limit = null, &$count = null) {}
+
+/**
+ * @param regex
+ * @param replace
+ * @param subject[optional]
+ * @param limit[optional]
+ * @param count[optional]
+ */
+function preg_filter ($regex, $replace, $subject, $limit, &$count) {}
 
 /**
  * Split string by a regular expression
@@ -418,11 +429,20 @@ define ('PREG_RECURSION_LIMIT_ERROR', 3);
 define ('PREG_BAD_UTF8_ERROR', 4);
 
 /**
+ * Returned by preg_last_error if the offset didn't
+ * correspond to the begin of a valid UTF-8 code point (only when running
+ * a regex in UTF-8
+ * mode). Available since PHP 5.3.0.
+ * @link http://php.net/manual/en/pcre.constants.php
+ */
+define ('PREG_BAD_UTF8_OFFSET_ERROR', 5);
+
+/**
  * PCRE version and release date (e.g. "7.0 18-Dec-2006"). Available since
  * PHP 5.2.4.
  * @link http://php.net/manual/en/pcre.constants.php
  */
-define ('PCRE_VERSION', "7.6 2008-01-28");
+define ('PCRE_VERSION', "7.8 2008-09-05");
 
 // End of pcre v.
 ?>

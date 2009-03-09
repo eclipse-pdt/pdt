@@ -123,7 +123,8 @@ function gzread ($zp, $length) {}
  * (wb9) or a strategy: f for
  * filtered data as in wb6f, h for
  * Huffman only compression as in wb1h.
- * (See the description of deflateInit2 in zlib.h for 
+ * (See the description of deflateInit2
+ * in zlib.h for 
  * more information about the strategy parameter.)
  * </p>
  * @param use_include_path int[optional] <p>
@@ -161,10 +162,19 @@ function gzpassthru ($zp) {}
  * @param offset int <p>
  * The seeked offset.
  * </p>
+ * @param whence int[optional] <p>
+ * whence values are:
+ * SEEK_SET - Set position equal to offset bytes.
+ * SEEK_CUR - Set position to current location plus offset.
+ * </p>
+ * <p>
+ * If whence is not specified, it is assumed to be
+ * SEEK_SET.
+ * </p>
  * @return int Upon success, returns 0; otherwise, returns -1. Note that seeking
  * past EOF is not considered an error.
  */
-function gzseek ($zp, $offset) {}
+function gzseek ($zp, $offset, $whence = null) {}
 
 /**
  * Tell gz-file pointer read/write position

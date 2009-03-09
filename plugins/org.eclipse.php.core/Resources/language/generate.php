@@ -15,6 +15,12 @@ if (version_compare(phpversion(), "5.0.0") < 0) {
 $splitFiles = true;
 $phpdocDir = null;
 
+$phpDir = "php5";
+if (strstr(phpversion(), "5.3")) {
+	$phpDir = "php5.3";
+}
+
+
 // Parse arguments:
 $argv = $_SERVER["argv"];
 $argv0 = array_shift ($argv);
@@ -45,7 +51,7 @@ $processedFunctions = array();
 $processedClasses = array();
 $processedConstants = array();
 
-@mkdir ("php5");
+@mkdir ($phpDir);
 
 if (!$splitFiles) {
 	begin_file_output();
@@ -57,7 +63,7 @@ foreach ($extensions as $extName) {
 	}
 	print_extension (new ReflectionExtension ($extName));
 	if ($splitFiles) {
-		finish_file_output("php5/{$extName}.php");
+		finish_file_output("{$phpDir}/{$extName}.php");
 	}
 }
 
@@ -93,11 +99,11 @@ foreach ($intConstants as $name => $value) {
 	}
 }
 
-finish_file_output("php5/basic.php");
+finish_file_output("{$phpDir}/basic.php");
 
 // Create .list file
-$fp = fopen ("php5/.list", "w");
-foreach (glob("php5/*.php") as $f) {
+$fp = fopen ("{$phpDir}/.list", "w");
+foreach (glob("{$phpDir}/*.php") as $f) {
 	fwrite ($fp, basename($f));
 	fwrite ($fp, "\n");
 }
@@ -543,7 +549,9 @@ function print_constant ($name, $value = null, $tabs = 0) {
 }
 
 function escape_const_value ($value) {
-	if (!is_numeric ($value) && !is_bool ($value) && $value !== null) {
+	if (is_resource($value)) {
+		$value = "\"${value}\"";
+	} else if (!is_numeric ($value) && !is_bool ($value) && $value !== null) {
 		$value = '"'.addcslashes ($value, "\"\r\n\t").'"';
 	} else if ($value === null) {
 		$value = "null";
