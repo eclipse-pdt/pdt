@@ -571,7 +571,7 @@ function socket_recv ($socket, &$buf, $len, $flags) {}
  * </tr>
  * </table>
  * </p>
- * @return int socket_send returns the number of bytes sent, or false on error.
+ * @return int 
  */
 function socket_send ($socket, $buf, $len, $flags) {}
 
@@ -653,7 +653,7 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * Sends a message to a socket, whether it is connected or not
  * @link http://php.net/manual/en/function.socket-sendto.php
  * @param socket resource <p>
- * A valid socket resource created using socket_create.
+ * A valid socket ressource created using socket_create.
  * </p>
  * @param buf string <p>
  * The sent data will be taken from buffer buf.
@@ -704,7 +704,7 @@ function socket_recvfrom ($socket, &$buf, $len, $flags, &$name, &$port = null) {
  * will be sent.
  * </p>
  * @return int socket_sendto returns the number of bytes sent to the
- * remote host, or false if an error occurred.
+ * remote host or -1 if an error occured.
  */
 function socket_sendto ($socket, $buf, $len, $flags, $addr, $port = null) {}
 
@@ -986,28 +986,12 @@ function socket_last_error ($socket = null) {}
  */
 function socket_clear_error ($socket = null) {}
 
-/**
- * @param socket
- * @param level
- * @param optname
- */
-function socket_getopt ($socket, $level, $optname) {}
+function socket_getopt () {}
 
-/**
- * @param socket
- * @param level
- * @param optname
- * @param optval
- */
-function socket_setopt ($socket, $level, $optname, $optval) {}
+function socket_setopt () {}
 
 define ('AF_UNIX', 1);
 define ('AF_INET', 2);
-
-/**
- * Only available if compiled with IPv6 support.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('AF_INET6', 10);
 define ('SOCK_STREAM', 1);
 define ('SOCK_DGRAM', 2);
@@ -1018,17 +1002,7 @@ define ('MSG_OOB', 1);
 define ('MSG_WAITALL', 256);
 define ('MSG_PEEK', 2);
 define ('MSG_DONTROUTE', 4);
-
-/**
- * Not available on Windows platforms.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('MSG_EOR', 128);
-
-/**
- * Not available on Windows platforms.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('MSG_EOF', 512);
 define ('SO_DEBUG', 1);
 define ('SO_REUSEADDR', 2);
@@ -1047,599 +1021,108 @@ define ('SO_TYPE', 3);
 define ('SO_ERROR', 4);
 define ('SOL_SOCKET', 1);
 define ('SOMAXCONN', 128);
-define ('TCP_NODELAY', 1);
 define ('PHP_NORMAL_READ', 1);
 define ('PHP_BINARY_READ', 2);
-
-/**
- * Operation not permitted.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EPERM', 1);
-
-/**
- * No such file or directory.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOENT', 2);
-
-/**
- * Interrupted system call.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EINTR', 4);
-
-/**
- * I/O error.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EIO', 5);
-
-/**
- * No such device or address.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENXIO', 6);
-
-/**
- * Arg list too long.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_E2BIG', 7);
-
-/**
- * Bad file number.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADF', 9);
-
-/**
- * Try again.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EAGAIN', 11);
-
-/**
- * Out of memory.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOMEM', 12);
-
-/**
- * Permission denied.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EACCES', 13);
-
-/**
- * Bad address.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EFAULT', 14);
-
-/**
- * Block device required.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTBLK', 15);
-
-/**
- * Device or resource busy.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBUSY', 16);
-
-/**
- * File exists.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EEXIST', 17);
-
-/**
- * Cross-device link.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EXDEV', 18);
-
-/**
- * No such device.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENODEV', 19);
-
-/**
- * Not a directory.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTDIR', 20);
-
-/**
- * Is a directory.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EISDIR', 21);
-
-/**
- * Invalid argument.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EINVAL', 22);
-
-/**
- * File table overflow.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENFILE', 23);
-
-/**
- * Too many open files.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EMFILE', 24);
-
-/**
- * Not a typewriter.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTTY', 25);
-
-/**
- * No space left on device.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOSPC', 28);
-
-/**
- * Illegal seek.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ESPIPE', 29);
-
-/**
- * Read-only file system.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EROFS', 30);
-
-/**
- * Too many links.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EMLINK', 31);
-
-/**
- * Broken pipe.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EPIPE', 32);
-
-/**
- * File name too long.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENAMETOOLONG', 36);
-
-/**
- * No record locks available.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOLCK', 37);
-
-/**
- * Function not implemented.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOSYS', 38);
-
-/**
- * Directory not empty.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTEMPTY', 39);
-
-/**
- * Too many symbolic links encountered.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ELOOP', 40);
-
-/**
- * Operation would block.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EWOULDBLOCK', 11);
-
-/**
- * No message of desired type.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOMSG', 42);
-
-/**
- * Identifier removed.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EIDRM', 43);
-
-/**
- * Channel number out of range.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ECHRNG', 44);
-
-/**
- * Level 2 not synchronized.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EL2NSYNC', 45);
-
-/**
- * Level 3 halted.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EL3HLT', 46);
-
-/**
- * Level 3 reset.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EL3RST', 47);
-
-/**
- * Link number out of range.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ELNRNG', 48);
-
-/**
- * Protocol driver not attached.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EUNATCH', 49);
-
-/**
- * No CSI structure available.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOCSI', 50);
-
-/**
- * Level 2 halted.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EL2HLT', 51);
-
-/**
- * Invalid exchange.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADE', 52);
-
-/**
- * Invalid request descriptor.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADR', 53);
-
-/**
- * Exchange full.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EXFULL', 54);
-
-/**
- * No anode.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOANO', 55);
-
-/**
- * Invalid request code.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADRQC', 56);
-
-/**
- * Invalid slot.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADSLT', 57);
-
-/**
- * Device not a stream.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOSTR', 60);
-
-/**
- * No data available.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENODATA', 61);
-
-/**
- * Timer expired.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ETIME', 62);
-
-/**
- * Out of streams resources.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOSR', 63);
-
-/**
- * Machine is not on the network.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENONET', 64);
-
-/**
- * Object is remote.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EREMOTE', 66);
-
-/**
- * Link has been severed.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOLINK', 67);
-
-/**
- * Advertise error.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EADV', 68);
-
-/**
- * Srmount error.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ESRMNT', 69);
-
-/**
- * Communication error on send.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ECOMM', 70);
-
-/**
- * Protocol error.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EPROTO', 71);
-
-/**
- * Multihop attempted.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EMULTIHOP', 72);
-
-/**
- * Not a data message.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADMSG', 74);
-
-/**
- * Name not unique on network.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTUNIQ', 76);
-
-/**
- * File descriptor in bad state.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EBADFD', 77);
 define ('SOCKET_EREMCHG', 78);
-
-/**
- * Interrupted system call should be restarted.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ERESTART', 85);
-
-/**
- * Streams pipe error.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ESTRPIPE', 86);
-
-/**
- * Too many users.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EUSERS', 87);
-
-/**
- * Socket operation on non-socket.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTSOCK', 88);
-
-/**
- * Destination address required.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EDESTADDRREQ', 89);
-
-/**
- * Message too long.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EMSGSIZE', 90);
-
-/**
- * Protocol wrong type for socket.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EPROTOTYPE', 91);
 define ('SOCKET_ENOPROTOOPT', 92);
-
-/**
- * Protocol not supported.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EPROTONOSUPPORT', 93);
-
-/**
- * Socket type not supported.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ESOCKTNOSUPPORT', 94);
-
-/**
- * Operation not supported on transport endpoint.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EOPNOTSUPP', 95);
-
-/**
- * Protocol family not supported.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EPFNOSUPPORT', 96);
-
-/**
- * Address family not supported by protocol.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EAFNOSUPPORT', 97);
 define ('SOCKET_EADDRINUSE', 98);
-
-/**
- * Cannot assign requested address.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EADDRNOTAVAIL', 99);
-
-/**
- * Network is down.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENETDOWN', 100);
-
-/**
- * Network is unreachable.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENETUNREACH', 101);
-
-/**
- * Network dropped connection because of reset.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENETRESET', 102);
-
-/**
- * Software caused connection abort.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ECONNABORTED', 103);
-
-/**
- * Connection reset by peer.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ECONNRESET', 104);
-
-/**
- * No buffer space available.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOBUFS', 105);
-
-/**
- * Transport endpoint is already connected.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EISCONN', 106);
-
-/**
- * Transport endpoint is not connected.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOTCONN', 107);
-
-/**
- * Cannot send after transport endpoint shutdown.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ESHUTDOWN', 108);
-
-/**
- * Too many references: cannot splice.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ETOOMANYREFS', 109);
-
-/**
- * Connection timed out.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ETIMEDOUT', 110);
-
-/**
- * Connection refused.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ECONNREFUSED', 111);
-
-/**
- * Host is down.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EHOSTDOWN', 112);
-
-/**
- * No route to host.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EHOSTUNREACH', 113);
-
-/**
- * Operation already in progress.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EALREADY', 114);
-
-/**
- * Operation now in progress.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EINPROGRESS', 115);
-
-/**
- * Is a named type file.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EISNAM', 120);
-
-/**
- * Remote I/O error.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EREMOTEIO', 121);
-
-/**
- * Quota exceeded.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EDQUOT', 122);
-
-/**
- * No medium found.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_ENOMEDIUM', 123);
-
-/**
- * Wrong medium type.
- * @link http://php.net/manual/en/sockets.constants.php
- */
 define ('SOCKET_EMEDIUMTYPE', 124);
 define ('SOL_TCP', 6);
 define ('SOL_UDP', 17);

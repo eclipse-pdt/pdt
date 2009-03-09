@@ -383,13 +383,13 @@ function gmp_sign ($a) {}
 /**
  * Random number
  * @link http://php.net/manual/en/function.gmp-random.php
- * @param limiter int[optional] <p>
- * The limiter. Defaults to 20.
+ * @param limiter int <p>
+ * The limiter.
  * </p>
  * &gmp.parameter;
  * @return resource A random GMP number.
  */
-function gmp_random ($limiter = null) {}
+function gmp_random ($limiter) {}
 
 /**
  * Bitwise AND
@@ -484,17 +484,6 @@ function gmp_scan0 ($a, $start) {}
 function gmp_scan1 ($a, $start) {}
 
 /**
- * Tests if a bit is set
- * @link http://php.net/manual/en/function.gmp-testbit.php
- * @param a resource &gmp.parameter;
- * @param index int <p>
- * The bit to test
- * </p>
- * @return bool Returns true on success or false on failure.
- */
-function gmp_testbit ($a, $index) {}
-
-/**
  * Population count
  * @link http://php.net/manual/en/function.gmp-popcount.php
  * @param a resource &gmp.parameter;
@@ -534,7 +523,7 @@ define ('GMP_ROUND_MINUSINF', 2);
  * The GMP library version
  * @link http://php.net/manual/en/gmp.constants.php
  */
-define ('GMP_VERSION', "4.2.1");
+define ('GMP_VERSION', "4.2.2");
 
 // End of gmp v.
 ?>

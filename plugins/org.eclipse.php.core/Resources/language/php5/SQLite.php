@@ -9,77 +9,49 @@
 class SQLiteDatabase  {
 
 	/**
-	 * @param filename
-	 * @param mode[optional]
-	 * @param error_message[optional]
+	 * @param var1
+	 * @param var2
+	 * @param var3
 	 */
-	final public function __construct ($filename, $mode, &$error_message) {}
+	final public function __construct ($var1, $var2, &$var3) {}
 
 	/**
-	 * @param query
-	 * @param result_type[optional]
-	 * @param error_message[optional]
+	 * @param var1
+	 * @param var2
+	 * @param var3
 	 */
-	public function query ($query, $result_type, &$error_message) {}
+	public function query ($var1, $var2, &$var3) {}
 
 	/**
-	 * @param query
-	 * @param error_message[optional]
+	 * @param var1
+	 * @param var2
 	 */
-	public function queryExec ($query, &$error_message) {}
+	public function queryExec ($var1, &$var2) {}
+
+	public function arrayQuery () {}
+
+	public function singleQuery () {}
 
 	/**
-	 * @param query
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
+	 * @param var1
+	 * @param var2
+	 * @param var3
 	 */
-	public function arrayQuery ($query, $result_type, $decode_binary) {}
-
-	/**
-	 * @param query
-	 * @param first_row_only[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function singleQuery ($query, $first_row_only, $decode_binary) {}
-
-	/**
-	 * @param query
-	 * @param result_type[optional]
-	 * @param error_message[optional]
-	 */
-	public function unbufferedQuery ($query, $result_type, &$error_message) {}
+	public function unbufferedQuery ($var1, $var2, &$var3) {}
 
 	public function lastInsertRowid () {}
 
 	public function changes () {}
 
-	/**
-	 * @param funcname
-	 * @param step_func
-	 * @param finalize_func
-	 * @param num_args[optional]
-	 */
-	public function createAggregate ($funcname, $step_func, $finalize_func, $num_args) {}
+	public function createAggregate () {}
 
-	/**
-	 * @param funcname
-	 * @param callback
-	 * @param num_args[optional]
-	 */
-	public function createFunction ($funcname, $callback, $num_args) {}
+	public function createFunction () {}
 
-	/**
-	 * @param ms
-	 */
-	public function busyTimeout ($ms) {}
+	public function busyTimeout () {}
 
 	public function lastError () {}
 
-	/**
-	 * @param table_name
-	 * @param result_type[optional]
-	 */
-	public function fetchColumnTypes ($table_name, $result_type) {}
+	public function fetchColumnTypes () {}
 
 }
 
@@ -89,48 +61,21 @@ class SQLiteDatabase  {
  */
 final class SQLiteResult implements Iterator, Traversable, Countable {
 
-	/**
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function fetch ($result_type, $decode_binary) {}
+	public function fetch () {}
 
-	/**
-	 * @param class_name[optional]
-	 * @param ctor_params[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function fetchObject ($class_name, $ctor_params, $decode_binary) {}
+	public function fetchObject () {}
 
-	/**
-	 * @param decode_binary[optional]
-	 */
-	public function fetchSingle ($decode_binary) {}
+	public function fetchSingle () {}
 
-	/**
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function fetchAll ($result_type, $decode_binary) {}
+	public function fetchAll () {}
 
-	/**
-	 * @param index_or_name
-	 * @param decode_binary[optional]
-	 */
-	public function column ($index_or_name, $decode_binary) {}
+	public function column () {}
 
 	public function numFields () {}
 
-	/**
-	 * @param field_index
-	 */
-	public function fieldName ($field_index) {}
+	public function fieldName () {}
 
-	/**
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function current ($result_type, $decode_binary) {}
+	public function current () {}
 
 	public function key () {}
 
@@ -148,10 +93,7 @@ final class SQLiteResult implements Iterator, Traversable, Countable {
 
 	public function numRows () {}
 
-	/**
-	 * @param row
-	 */
-	public function seek ($row) {}
+	public function seek () {}
 
 }
 
@@ -161,48 +103,21 @@ final class SQLiteResult implements Iterator, Traversable, Countable {
  */
 final class SQLiteUnbuffered  {
 
-	/**
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function fetch ($result_type, $decode_binary) {}
+	public function fetch () {}
 
-	/**
-	 * @param class_name[optional]
-	 * @param ctor_params[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function fetchObject ($class_name, $ctor_params, $decode_binary) {}
+	public function fetchObject () {}
 
-	/**
-	 * @param decode_binary[optional]
-	 */
-	public function fetchSingle ($decode_binary) {}
+	public function fetchSingle () {}
 
-	/**
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function fetchAll ($result_type, $decode_binary) {}
+	public function fetchAll () {}
 
-	/**
-	 * @param index_or_name
-	 * @param decode_binary[optional]
-	 */
-	public function column ($index_or_name, $decode_binary) {}
+	public function column () {}
 
 	public function numFields () {}
 
-	/**
-	 * @param field_index
-	 */
-	public function fieldName ($field_index) {}
+	public function fieldName () {}
 
-	/**
-	 * @param result_type[optional]
-	 * @param decode_binary[optional]
-	 */
-	public function current ($result_type, $decode_binary) {}
+	public function current () {}
 
 	public function next () {}
 
@@ -222,9 +137,8 @@ final class SQLiteException extends RuntimeException  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
-	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message, $code) {}
 
 	final public function getMessage () {}
 
@@ -235,8 +149,6 @@ final class SQLiteException extends RuntimeException  {
 	final public function getLine () {}
 
 	final public function getTrace () {}
-
-	final public function getPrevious () {}
 
 	final public function getTraceAsString () {}
 
@@ -402,10 +314,8 @@ function sqlite_fetch_single ($decode_binary = null) {}
 /**
  * &Alias; <function>sqlite_fetch_single</function>
  * @link http://php.net/manual/en/function.sqlite-fetch-string.php
- * @param result
- * @param decode_binary[optional]
  */
-function sqlite_fetch_string ($result, $decode_binary) {}
+function sqlite_fetch_string () {}
 
 /**
  * Fetches all rows from a result set as an array of arrays
@@ -458,34 +368,30 @@ function sqlite_libencoding () {}
  * Returns the number of rows that were changed by the most
    recent SQL statement
  * @link http://php.net/manual/en/function.sqlite-changes.php
- * @param db
  * @return int 
  */
-function sqlite_changes ($db) {}
+function sqlite_changes () {}
 
 /**
  * Returns the rowid of the most recently inserted row
  * @link http://php.net/manual/en/function.sqlite-last-insert-rowid.php
- * @param db
  * @return int 
  */
-function sqlite_last_insert_rowid ($db) {}
+function sqlite_last_insert_rowid () {}
 
 /**
  * Returns the number of rows in a buffered result set
  * @link http://php.net/manual/en/function.sqlite-num-rows.php
- * @param result
  * @return int 
  */
-function sqlite_num_rows ($result) {}
+function sqlite_num_rows () {}
 
 /**
  * Returns the number of fields in a result set
  * @link http://php.net/manual/en/function.sqlite-num-fields.php
- * @param result
  * @return int 
  */
-function sqlite_num_fields ($result) {}
+function sqlite_num_fields () {}
 
 /**
  * Returns the name of a particular field
@@ -513,35 +419,31 @@ function sqlite_seek ($rownum) {}
 /**
  * Seek to the first row number
  * @link http://php.net/manual/en/function.sqlite-rewind.php
- * @param result
  * @return bool false if there are no rows in the result set, true otherwise.
  */
-function sqlite_rewind ($result) {}
+function sqlite_rewind () {}
 
 /**
  * Seek to the next row number
  * @link http://php.net/manual/en/function.sqlite-next.php
- * @param result
  * @return bool true on success, or false if there are no more rows.
  */
-function sqlite_next ($result) {}
+function sqlite_next () {}
 
 /**
  * Seek to the previous row number of a result set
  * @link http://php.net/manual/en/function.sqlite-prev.php
- * @param result
  * @return bool true on success, or false if there are no more previous rows.
  */
-function sqlite_prev ($result) {}
+function sqlite_prev () {}
 
 /**
  * Returns whether more rows are available
  * @link http://php.net/manual/en/function.sqlite-valid.php
- * @param result
  * @return bool true if there are more rows available from the
  * result handle, or false otherwise.
  */
-function sqlite_valid ($result) {}
+function sqlite_valid () {}
 
 /**
  * Finds whether or not more rows are available
@@ -557,11 +459,10 @@ function sqlite_has_more ($result) {}
 /**
  * Returns whether or not a previous row is available
  * @link http://php.net/manual/en/function.sqlite-has-prev.php
- * @param result
  * @return bool true if there are more previous rows available from the
  * result handle, or false otherwise.
  */
-function sqlite_has_prev ($result) {}
+function sqlite_has_prev () {}
 
 /**
  * Escapes a string for use as a query parameter
@@ -602,10 +503,9 @@ function sqlite_busy_timeout ($milliseconds) {}
 /**
  * Returns the error code of the last error for a database
  * @link http://php.net/manual/en/function.sqlite-last-error.php
- * @param db
  * @return int 
  */
-function sqlite_last_error ($db) {}
+function sqlite_last_error () {}
 
 /**
  * Returns the textual description of an error code

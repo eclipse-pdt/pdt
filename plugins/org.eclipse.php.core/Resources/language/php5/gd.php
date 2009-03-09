@@ -853,6 +853,16 @@ function imagecreatefromgif ($filename) {}
 
 /**
  * Create a new image from file or URL
+ * @link http://php.net/manual/en/function.imagecreatefromjpeg.php
+ * @param filename string <p>
+ * Path to the JPEG image.
+ * </p>
+ * @return resource an image resource identifier on success, false on errors.
+ */
+function imagecreatefromjpeg ($filename) {}
+
+/**
+ * Create a new image from file or URL
  * @link http://php.net/manual/en/function.imagecreatefromwbmp.php
  * @param filename string <p>
  * Path to the WBMP image.
@@ -950,6 +960,27 @@ function imagepng ($image, $filename = null, $quality = null, $filters = null) {
  * @return bool Returns true on success or false on failure.
  */
 function imagegif ($image, $filename = null) {}
+
+/**
+ * Output image to browser or file
+ * @link http://php.net/manual/en/function.imagejpeg.php
+ * @param image resource 
+ * @param filename string[optional] <p>
+ * The path to save the file to. If not set or &null;, the raw image stream
+ * will be outputted directly.
+ * </p>
+ * <p>
+ * To skip this argument in order to provide the 
+ * quality parameter, use &null;.
+ * </p>
+ * @param quality int[optional] <p>
+ * quality is optional, and ranges from 0 (worst
+ * quality, smaller file) to 100 (best quality, biggest file). The 
+ * default is the default IJG quality value (about 75).
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function imagejpeg ($image, $filename = null, $quality = null) {}
 
 /**
  * Output image to browser or file
@@ -1374,6 +1405,330 @@ function imagesy ($image) {}
 function imagedashedline ($image, $x1, $y1, $x2, $y2, $color) {}
 
 /**
+ * Give the bounding box of a text using TrueType fonts
+ * @link http://php.net/manual/en/function.imagettfbbox.php
+ * @param size float <p>
+ * The font size. Depending on your version of GD, this should be
+ * specified as the pixel size (GD1) or point size (GD2).
+ * </p>
+ * @param angle float <p>
+ * Angle in degrees in which text will be measured.
+ * </p>
+ * @param fontfile string <p>
+ * The name of the TrueType font file (can be a URL). Depending on
+ * which version of the GD library that PHP is using, it may attempt to
+ * search for files that do not begin with a leading '/' by appending
+ * '.ttf' to the filename and searching along a library-defined font path.
+ * </p>
+ * @param text string <p>
+ * The string to be measured.
+ * </p>
+ * @return array imagettfbbox returns an array with 8
+ * elements representing four points making the bounding box of the
+ * text:
+ * <tr valign="top">
+ * <td>0</td>
+ * <td>lower left corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td>lower left corner, Y position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td>lower right corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>3</td>
+ * <td>lower right corner, Y position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>4</td>
+ * <td>upper right corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>5</td>
+ * <td>upper right corner, Y position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>6</td>
+ * <td>upper left corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>7</td>
+ * <td>upper left corner, Y position</td>
+ * </tr>
+ * </p>
+ * <p>
+ * The points are relative to the text regardless of the
+ * angle, so "upper left" means in the top left-hand 
+ * corner seeing the text horizontally.
+ */
+function imagettfbbox ($size, $angle, $fontfile, $text) {}
+
+/**
+ * Write text to the image using TrueType fonts
+ * @link http://php.net/manual/en/function.imagettftext.php
+ * @param image resource 
+ * @param size float <p>
+ * The font size. Depending on your version of GD, this should be
+ * specified as the pixel size (GD1) or point size (GD2).
+ * </p>
+ * @param angle float <p>
+ * The angle in degrees, with 0 degrees being left-to-right reading text.
+ * Higher values represent a counter-clockwise rotation. For example, a 
+ * value of 90 would result in bottom-to-top reading text.
+ * </p>
+ * @param x int <p>
+ * The coordinates given by x and
+ * y will define the basepoint of the first
+ * character (roughly the lower-left corner of the character). This
+ * is different from the imagestring, where
+ * x and y define the
+ * upper-left corner of the first character. For example, "top left"
+ * is 0, 0.
+ * </p>
+ * @param y int <p>
+ * The y-ordinate. This sets the position of the fonts baseline, not the
+ * very bottom of the character.
+ * </p>
+ * @param color int <p>
+ * The color index. Using the negative of a color index has the effect of
+ * turning off antialiasing. See imagecolorallocate.
+ * </p>
+ * @param fontfile string <p>
+ * The path to the TrueType font you wish to use.
+ * </p>
+ * <p>
+ * Depending on which version of the GD library PHP is using, when
+ * fontfile does not begin with a leading
+ * / then .ttf will be appended
+ * to the filename and the library will attempt to search for that
+ * filename along a library-defined font path.
+ * </p>
+ * <p>
+ * When using versions of the GD library lower than 2.0.18, a space character,
+ * rather than a semicolon, was used as the 'path separator' for different font files.
+ * Unintentional use of this feature will result in the warning message:
+ * Warning: Could not find/open font. For these affected versions, the
+ * only solution is moving the font to a path which does not contain spaces.
+ * </p>
+ * <p>
+ * In many cases where a font resides in the same directory as the script using it
+ * the following trick will alleviate any include problems.
+ * ]]>
+ * </p>
+ * @param text string <p>
+ * The text string in UTF-8 encoding.
+ * </p>
+ * <p>
+ * May include decimal numeric character references (of the form:
+ * &amp;#8364;) to access characters in a font beyond position 127.
+ * The hexadecimal format (like &amp;#xA9;) is supported as of PHP 5.2.0.
+ * Strings in UTF-8 encoding can be passed directly.
+ * </p>
+ * <p>
+ * Named entities, such as &amp;copy;, are not supported. Consider using 
+ * html_entity_decode
+ * to decode these named entities into UTF-8 strings (html_entity_decode()
+ * supports this as of PHP 5.0.0).
+ * </p>
+ * <p>
+ * If a character is used in the string which is not supported by the
+ * font, a hollow rectangle will replace the character.
+ * </p>
+ * @return array an array with 8 elements representing four points making the
+ * bounding box of the text. The order of the points is lower left, lower 
+ * right, upper right, upper left. The points are relative to the text
+ * regardless of the angle, so "upper left" means in the top left-hand 
+ * corner when you see the text horizontally.
+ */
+function imagettftext ($image, $size, $angle, $x, $y, $color, $fontfile, $text) {}
+
+/**
+ * Give the bounding box of a text using fonts via freetype2
+ * @link http://php.net/manual/en/function.imageftbbox.php
+ * @param size float <p>
+ * The font size. Depending on your version of GD, this should be
+ * specified as the pixel size (GD1) or point size (GD2).
+ * </p>
+ * @param angle float <p>
+ * Angle in degrees in which text will be 
+ * measured.
+ * </p>
+ * @param fontfile string <p>
+ * The name of the TrueType font file (can be a URL). Depending on
+ * which version of the GD library that PHP is using, it may attempt to
+ * search for files that do not begin with a leading '/' by appending
+ * '.ttf' to the filename and searching along a library-defined font path.
+ * </p>
+ * @param text string <p>
+ * The string to be measured.
+ * </p>
+ * @param extrainfo array[optional] <p>
+ * <table>
+ * Possible array indexes for extrainfo
+ * <tr valign="top">
+ * <td>Key</td>
+ * <td>Type</td>
+ * <td>Meaning</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>linespacing</td>
+ * <td>float</td>
+ * <td>Defines drawing linespacing</td>
+ * </tr>
+ * </table>
+ * </p>
+ * @return array imageftbbox returns an array with 8
+ * elements representing four points making the bounding box of the
+ * text:
+ * <tr valign="top">
+ * <td>0</td>
+ * <td>lower left corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td>lower left corner, Y position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td>lower right corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>3</td>
+ * <td>lower right corner, Y position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>4</td>
+ * <td>upper right corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>5</td>
+ * <td>upper right corner, Y position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>6</td>
+ * <td>upper left corner, X position</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>7</td>
+ * <td>upper left corner, Y position</td>
+ * </tr>
+ * </p>
+ * <p>
+ * The points are relative to the text regardless of the
+ * angle, so "upper left" means in the top left-hand 
+ * corner seeing the text horizontally.
+ */
+function imageftbbox ($size, $angle, $fontfile, $text, array $extrainfo = null) {}
+
+/**
+ * Write text to the image using fonts using FreeType 2
+ * @link http://php.net/manual/en/function.imagefttext.php
+ * @param image resource 
+ * @param size float <p>
+ * The font size to use in points.
+ * </p>
+ * @param angle float <p> 
+ * The angle in degrees, with 0 degrees being left-to-right reading text.
+ * Higher values represent a counter-clockwise rotation. For example, a 
+ * value of 90 would result in bottom-to-top reading text.
+ * </p>
+ * @param x int <p>
+ * The coordinates given by x and
+ * y will define the basepoint of the first
+ * character (roughly the lower-left corner of the character). This
+ * is different from the imagestring, where
+ * x and y define the
+ * upper-left corner of the first character. For example, "top left"
+ * is 0, 0.
+ * </p>
+ * @param y int <p>
+ * The y-ordinate. This sets the position of the fonts baseline, not the
+ * very bottom of the character.
+ * </p>
+ * @param color int <p>
+ * The index of the desired color for the text, see 
+ * imagecolorexact.
+ * </p>
+ * @param fontfile string <p>
+ * The path to the TrueType font you wish to use.
+ * </p>
+ * <p>
+ * Depending on which version of the GD library PHP is using, when
+ * fontfile does not begin with a leading
+ * / then .ttf will be appended
+ * to the filename and the library will attempt to search for that
+ * filename along a library-defined font path.
+ * </p>
+ * <p>
+ * When using versions of the GD library lower than 2.0.18, a space character,
+ * rather than a semicolon, was used as the 'path separator' for different font files.
+ * Unintentional use of this feature will result in the warning message:
+ * Warning: Could not find/open font. For these affected versions, the
+ * only solution is moving the font to a path which does not contain spaces.
+ * </p>
+ * <p>
+ * In many cases where a font resides in the same directory as the script using it
+ * the following trick will alleviate any include problems.
+ * ]]>
+ * </p>
+ * @param text string <p>
+ * Text to be inserted into image. 
+ * </p>
+ * @param extrainfo array[optional] <p>
+ * <table>
+ * Possible array indexes for extrainfo
+ * <tr valign="top">
+ * <td>Key</td>
+ * <td>Type</td>
+ * <td>Meaning</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>linespacing</td>
+ * <td>float</td>
+ * <td>Defines drawing linespacing</td>
+ * </tr>
+ * </table>
+ * </p>
+ * @return array This function returns an array defining the four points of the box, starting in the lower left and moving counter-clockwise:
+ * <tr valign="top">
+ * <td>0</td>
+ * <td>lower left x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>1</td>
+ * <td>lower left y-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>2</td>
+ * <td>lower right x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>3</td>
+ * <td>lower right y-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>4</td>
+ * <td>upper right x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>5</td>
+ * <td>upper right y-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>6</td>
+ * <td>upper left x-coordinate</td>
+ * </tr>
+ * <tr valign="top">
+ * <td>7</td>
+ * <td>upper left y-coordinate</td>
+ * </tr>
+ */
+function imagefttext ($image, $size, $angle, $x, $y, $color, $fontfile, $text, array $extrainfo = null) {}
+
+/**
  * Return the image types supported by this PHP build
  * @link http://php.net/manual/en/function.imagetypes.php
  * @return int a bit-field corresponding to the image formats supported by the
@@ -1383,6 +1738,28 @@ function imagedashedline ($image, $x1, $y1, $x2, $y2, $color) {}
  * IMG_XPM.
  */
 function imagetypes () {}
+
+/**
+ * Convert JPEG image file to WBMP image file
+ * @link http://php.net/manual/en/function.jpeg2wbmp.php
+ * @param jpegname string <p>
+ * Path to JPEG file.
+ * </p>
+ * @param wbmpname string <p>
+ * Path to destination WBMP file.
+ * </p>
+ * @param dest_height int <p>
+ * Destination image height.
+ * </p>
+ * @param dest_width int <p>
+ * Destination image width.
+ * </p>
+ * @param threshold int <p>
+ * Threshold value, between 0 and 8 (inclusive).
+ * </p>
+ * @return bool Returns true on success or false on failure.
+ */
+function jpeg2wbmp ($jpegname, $wbmpname, $dest_height, $dest_width, $threshold) {}
 
 /**
  * Convert PNG image file to WBMP image file
@@ -1412,7 +1789,7 @@ function png2wbmp ($pngname, $wbmpname, $dest_height, $dest_width, $threshold) {
  * @param image resource 
  * @param filename string[optional] <p>
  * Path to the saved file. If not given, the raw image stream will be
- * outputted directly.
+ * outputed directly.
  * </p>
  * @param threshold int[optional] <p>
  * Threshold value, between 0 and 255 (inclusive).
@@ -1719,13 +2096,6 @@ define ('IMG_FILTER_MEAN_REMOVAL', 9);
  * @link http://php.net/manual/en/image.constants.php
  */
 define ('IMG_FILTER_SMOOTH', 10);
-
-/**
- * Special GD filter used by the imagefilter function. 
- * (Available as of PHP 5.3.0)
- * @link http://php.net/manual/en/image.constants.php
- */
-define ('IMG_FILTER_PIXELATE', 11);
 
 /**
  * The GD version PHP was compiled against.

@@ -210,7 +210,7 @@ function pg_ping ($connection = null) {}
 /**
  * Looks up a current parameter setting of the server.
  * @link http://php.net/manual/en/function.pg-parameter-status.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
@@ -226,7 +226,7 @@ function pg_ping ($connection = null) {}
  * @return string A string containing the value of the parameter, false on failure or invalid
  * param_name.
  */
-function pg_parameter_status ($connection = null, $param_name) {}
+function pg_parameter_status ($connection, $param_name) {}
 
 /**
  * Returns the current in-transaction status of the server.
@@ -247,12 +247,6 @@ function pg_transaction_status ($connection) {}
 /**
  * Execute a query
  * @link http://php.net/manual/en/function.pg-query.php
- * @param connection resource[optional] <p>
- * PostgreSQL database connection resource. When 
- * connection is not present, the default connection 
- * is used. The default connection is the last connection made by 
- * pg_connect or pg_pconnect.
- * </p>
  * @param query string <p>
  * The SQL statement or statements to be executed. When multiple statements are passed to the function,
  * they are automatically executed as one transaction, unless there are explicit BEGIN/COMMIT commands
@@ -260,19 +254,19 @@ function pg_transaction_status ($connection) {}
  * </p>
  * @return resource A query result resource on success, or false on failure.
  */
-function pg_query ($connection = null, $query) {}
+function pg_query ($query) {}
 
 /**
  * Submits a command to the server and waits for the result, with the ability to pass parameters separately from the SQL command text.
  * @link http://php.net/manual/en/function.pg-query-params.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
  * pg_connect or pg_pconnect.
  * </p>
  * @param query string <p>
- * The parameterized SQL statement. Must contain only a single statement.
+ * The parameterised SQL statement. Must contain only a single statement.
  * (multiple statements separated by semi-colons are not allowed.) If any parameters 
  * are used, they are referred to as $1, $2, etc.
  * </p>
@@ -283,13 +277,13 @@ function pg_query ($connection = null, $query) {}
  * </p>
  * @return resource A query result resource on success, or false on failure.
  */
-function pg_query_params ($connection = null, $query, array $params) {}
+function pg_query_params ($connection, $query, array $params) {}
 
 /**
  * Submits a request to create a prepared statement with the 
   given parameters, and waits for completion.
  * @link http://php.net/manual/en/function.pg-prepare.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
@@ -301,18 +295,18 @@ function pg_query_params ($connection = null, $query, array $params) {}
  * previously defined unnamed statement.
  * </p>
  * @param query string <p>
- * The parameterized SQL statement. Must contain only a single statement.
+ * The parameterised SQL statement. Must contain only a single statement.
  * (multiple statements separated by semi-colons are not allowed.) If any parameters 
  * are used, they are referred to as $1, $2, etc.
  * </p>
  * @return resource A query result resource on success, or false on failure.
  */
-function pg_prepare ($connection = null, $stmtname, $query) {}
+function pg_prepare ($connection, $stmtname, $query) {}
 
 /**
  * Sends a request to execute a prepared statement with given parameters, and waits for the result.
  * @link http://php.net/manual/en/function.pg-execute.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
@@ -335,7 +329,7 @@ function pg_prepare ($connection = null, $stmtname, $query) {}
  * </p>
  * @return resource A query result resource on success, or false on failure.
  */
-function pg_execute ($connection = null, $stmtname, array $params) {}
+function pg_execute ($connection, $stmtname, array $params) {}
 
 /**
  * Sends asynchronous query
@@ -359,7 +353,7 @@ function pg_send_query ($connection, $query) {}
  * PostgreSQL database connection resource.
  * </p>
  * @param query string <p>
- * The parameterized SQL statement. Must contain only a single statement.
+ * The parameterised SQL statement. Must contain only a single statement.
  * (multiple statements separated by semi-colons are not allowed.) If any parameters 
  * are used, they are referred to as $1, $2, etc.
  * </p>
@@ -389,7 +383,7 @@ function pg_send_query_params ($connection, $query, array $params) {}
  * previously defined unnamed statement.
  * </p>
  * @param query string <p>
- * The parameterized SQL statement. Must contain only a single statement.
+ * The parameterised SQL statement. Must contain only a single statement.
  * (multiple statements separated by semi-colons are not allowed.) If any parameters 
  * are used, they are referred to as $1, $2, etc.
  * </p>
@@ -947,19 +941,13 @@ function pg_last_notice ($connection) {}
 /**
  * Send a NULL-terminated string to PostgreSQL backend
  * @link http://php.net/manual/en/function.pg-put-line.php
- * @param connection resource[optional] <p>
- * PostgreSQL database connection resource. When 
- * connection is not present, the default connection 
- * is used. The default connection is the last connection made by 
- * pg_connect or pg_pconnect.
- * </p>
  * @param data string <p>
  * A line of text to be sent directly to the PostgreSQL backend. A NULL
  * terminator is added automatically.
  * </p>
  * @return bool Returns true on success or false on failure.
  */
-function pg_put_line ($connection = null, $data) {}
+function pg_put_line ($data) {}
 
 /**
  * Sync with PostgreSQL backend
@@ -1165,7 +1153,7 @@ function pg_lo_read_all ($large_object) {}
 /**
  * Import a large object from file
  * @link http://php.net/manual/en/function.pg-lo-import.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
@@ -1185,12 +1173,12 @@ function pg_lo_read_all ($large_object) {}
  * @return int The OID of the newly created large object, or
  * false on failure.
  */
-function pg_lo_import ($connection = null, $pathname, $object_id) {}
+function pg_lo_import ($connection, $pathname, $object_id) {}
 
 /**
  * Export a large object to file
  * @link http://php.net/manual/en/function.pg-lo-export.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
@@ -1205,7 +1193,7 @@ function pg_lo_import ($connection = null, $pathname, $object_id) {}
  * </p>
  * @return bool Returns true on success or false on failure.
  */
-function pg_lo_export ($connection = null, $oid, $pathname) {}
+function pg_lo_export ($connection, $oid, $pathname) {}
 
 /**
  * Seeks position within a large object
@@ -1284,7 +1272,7 @@ function pg_unescape_bytea ($data) {}
  * Determines the verbosity of messages returned by <function>pg_last_error</function> 
    and <function>pg_result_error</function>.
  * @link http://php.net/manual/en/function.pg-set-error-verbosity.php
- * @param connection resource[optional] <p>
+ * @param connection resource <p>
  * PostgreSQL database connection resource. When 
  * connection is not present, the default connection 
  * is used. The default connection is the last connection made by 
@@ -1299,7 +1287,7 @@ function pg_unescape_bytea ($data) {}
  * PGSQL_ERRORS_DEFAULT
  * or PGSQL_ERRORS_VERBOSE.
  */
-function pg_set_error_verbosity ($connection = null, $verbosity) {}
+function pg_set_error_verbosity ($connection, $verbosity) {}
 
 /**
  * Gets the client encoding
@@ -1317,12 +1305,6 @@ function pg_client_encoding ($connection = null) {}
 /**
  * Set the client encoding
  * @link http://php.net/manual/en/function.pg-set-client-encoding.php
- * @param connection resource[optional] <p>
- * PostgreSQL database connection resource. When 
- * connection is not present, the default connection 
- * is used. The default connection is the last connection made by 
- * pg_connect or pg_pconnect.
- * </p>
  * @param encoding string <p>
  * The required client encoding. One of SQL_ASCII, EUC_JP, 
  * EUC_CN, EUC_KR, EUC_TW, 
@@ -1336,7 +1318,7 @@ function pg_client_encoding ($connection = null) {}
  * </p>
  * @return int 0 on success or -1 on error.
  */
-function pg_set_client_encoding ($connection = null, $encoding) {}
+function pg_set_client_encoding ($encoding) {}
 
 /**
  * Get meta data for table
@@ -1479,151 +1461,55 @@ function pg_delete ($connection, $table_name, array $assoc_array, $options = nul
  */
 function pg_select ($connection, $table_name, array $assoc_array, $options = null) {}
 
-/**
- * @param connection[optional]
- * @param query[optional]
- */
-function pg_exec ($connection, $query) {}
+function pg_exec () {}
 
-/**
- * @param result
- */
-function pg_getlastoid ($result) {}
+function pg_getlastoid () {}
 
-/**
- * @param result
- */
-function pg_cmdtuples ($result) {}
+function pg_cmdtuples () {}
 
-/**
- * @param connection[optional]
- */
-function pg_errormessage ($connection) {}
+function pg_errormessage () {}
 
-/**
- * @param result
- */
-function pg_numrows ($result) {}
+function pg_numrows () {}
 
-/**
- * @param result
- */
-function pg_numfields ($result) {}
+function pg_numfields () {}
 
-/**
- * @param result
- * @param field_number
- */
-function pg_fieldname ($result, $field_number) {}
+function pg_fieldname () {}
 
-/**
- * @param result
- * @param field_number
- */
-function pg_fieldsize ($result, $field_number) {}
+function pg_fieldsize () {}
 
-/**
- * @param result
- * @param field_number
- */
-function pg_fieldtype ($result, $field_number) {}
+function pg_fieldtype () {}
 
-/**
- * @param result
- * @param field_name
- */
-function pg_fieldnum ($result, $field_name) {}
+function pg_fieldnum () {}
 
-/**
- * @param result
- * @param row[optional]
- * @param field_name_or_number[optional]
- */
-function pg_fieldprtlen ($result, $row, $field_name_or_number) {}
+function pg_fieldprtlen () {}
 
-/**
- * @param result
- * @param row[optional]
- * @param field_name_or_number[optional]
- */
-function pg_fieldisnull ($result, $row, $field_name_or_number) {}
+function pg_fieldisnull () {}
 
-/**
- * @param result
- */
-function pg_freeresult ($result) {}
+function pg_freeresult () {}
 
-/**
- * @param connection
- */
-function pg_result ($connection) {}
+function pg_result () {}
 
-/**
- * @param large_object
- */
-function pg_loreadall ($large_object) {}
+function pg_loreadall () {}
 
-/**
- * @param connection[optional]
- * @param large_object_id[optional]
- */
-function pg_locreate ($connection, $large_object_id) {}
+function pg_locreate () {}
 
-/**
- * @param connection[optional]
- * @param large_object_oid[optional]
- */
-function pg_lounlink ($connection, $large_object_oid) {}
+function pg_lounlink () {}
 
-/**
- * @param connection[optional]
- * @param large_object_oid[optional]
- * @param mode[optional]
- */
-function pg_loopen ($connection, $large_object_oid, $mode) {}
+function pg_loopen () {}
 
-/**
- * @param large_object
- */
-function pg_loclose ($large_object) {}
+function pg_loclose () {}
 
-/**
- * @param large_object
- * @param len[optional]
- */
-function pg_loread ($large_object, $len) {}
+function pg_loread () {}
 
-/**
- * @param large_object
- * @param buf
- * @param len[optional]
- */
-function pg_lowrite ($large_object, $buf, $len) {}
+function pg_lowrite () {}
 
-/**
- * @param connection[optional]
- * @param filename[optional]
- * @param large_object_oid[optional]
- */
-function pg_loimport ($connection, $filename, $large_object_oid) {}
+function pg_loimport () {}
 
-/**
- * @param connection[optional]
- * @param objoid[optional]
- * @param filename[optional]
- */
-function pg_loexport ($connection, $objoid, $filename) {}
+function pg_loexport () {}
 
-/**
- * @param connection[optional]
- */
-function pg_clientencoding ($connection) {}
+function pg_clientencoding () {}
 
-/**
- * @param connection[optional]
- * @param encoding[optional]
- */
-function pg_setclientencoding ($connection, $encoding) {}
+function pg_setclientencoding () {}
 
 
 /**

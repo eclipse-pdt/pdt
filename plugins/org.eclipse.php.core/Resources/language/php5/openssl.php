@@ -222,7 +222,7 @@ function openssl_x509_parse ($x509cert, $shortnames = null) {}
  * @param untrustedfile string[optional] <p>
  * If specified, this should be the name of a PEM encoded file holding
  * certificates that can be used to help verify the certificate, although
- * no trust is placed in the certificates that come from that file.
+ * no trust in placed in the certificates that come from that file.
  * </p>
  * @return int true if the certificate can be used for the intended purpose,
  * false if it cannot, or -1 on error.
@@ -312,7 +312,7 @@ function openssl_pkcs12_export_to_file ($x509, $filename, $priv_key, $pass, arra
 /**
  * Parse a PKCS#12 Certificate Store into an array
  * @link http://php.net/manual/en/function.openssl-pkcs12-read.php
- * @param pkcs12 string <p>
+ * @param PKCS12 mixed <p>
  * </p>
  * @param certs array <p>
  * On success, this will hold the Certificate Store Data.
@@ -322,7 +322,7 @@ function openssl_pkcs12_export_to_file ($x509, $filename, $priv_key, $pass, arra
  * </p>
  * @return bool Returns true on success or false on failure.
  */
-function openssl_pkcs12_read ($pkcs12, array &$certs, $pass) {}
+function openssl_pkcs12_read ($PKCS12, array &$certs, $pass) {}
 
 /**
  * Generates a CSR
@@ -488,29 +488,6 @@ function openssl_csr_get_subject ($csr, $use_shortnames = null) {}
  * @return resource 
  */
 function openssl_csr_get_public_key ($csr, $use_shortnames = null) {}
-
-/**
- * @param data
- * @param method
- * @param raw_output[optional]
- */
-function openssl_digest ($data, $method, $raw_output) {}
-
-/**
- * @param data
- * @param method
- * @param password
- * @param raw_output[optional]
- */
-function openssl_encrypt ($data, $method, $password, $raw_output) {}
-
-/**
- * @param data
- * @param method
- * @param password
- * @param raw_input[optional]
- */
-function openssl_decrypt ($data, $method, $password, $raw_input) {}
 
 /**
  * Generate signature
@@ -782,28 +759,6 @@ function openssl_public_encrypt ($data, &$crypted, $key, $padding = null) {}
 function openssl_public_decrypt ($data, &$decrypted, $key, $padding = null) {}
 
 /**
- * @param aliases[optional]
- */
-function openssl_get_md_methods ($aliases) {}
-
-/**
- * @param aliases[optional]
- */
-function openssl_get_cipher_methods ($aliases) {}
-
-/**
- * @param pub_key
- * @param dh_key
- */
-function openssl_dh_compute_key ($pub_key, $dh_key) {}
-
-/**
- * @param length
- * @param result_is_strong[optional]
- */
-function openssl_random_pseudo_bytes ($length, &$result_is_strong) {}
-
-/**
  * Return openSSL error message
  * @link http://php.net/manual/en/function.openssl-error-string.php
  * @return string an error message string, or false if there are no more error
@@ -811,8 +766,8 @@ function openssl_random_pseudo_bytes ($length, &$result_is_strong) {}
  */
 function openssl_error_string () {}
 
-define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.8j 07 Jan 2009");
-define ('OPENSSL_VERSION_NUMBER', 9470127);
+define ('OPENSSL_VERSION_TEXT', "OpenSSL 0.9.7d 17 Mar 2004");
+define ('OPENSSL_VERSION_NUMBER', 9465935);
 define ('X509_PURPOSE_SSL_CLIENT', 1);
 define ('X509_PURPOSE_SSL_SERVER', 2);
 define ('X509_PURPOSE_NS_SSL_SERVER', 3);
@@ -830,7 +785,6 @@ define ('OPENSSL_ALGO_SHA1', 1);
 define ('OPENSSL_ALGO_MD5', 2);
 define ('OPENSSL_ALGO_MD4', 3);
 define ('OPENSSL_ALGO_MD2', 4);
-define ('OPENSSL_ALGO_DSS1', 5);
 define ('PKCS7_DETACHED', 64);
 define ('PKCS7_TEXT', 1);
 define ('PKCS7_NOINTERN', 16);
@@ -852,7 +806,6 @@ define ('OPENSSL_CIPHER_3DES', 4);
 define ('OPENSSL_KEYTYPE_RSA', 0);
 define ('OPENSSL_KEYTYPE_DSA', 1);
 define ('OPENSSL_KEYTYPE_DH', 2);
-define ('OPENSSL_KEYTYPE_EC', 3);
 
 // End of openssl v.
 ?>

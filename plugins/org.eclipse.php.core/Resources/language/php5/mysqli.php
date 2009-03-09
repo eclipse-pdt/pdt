@@ -15,9 +15,8 @@ class mysqli_sql_exception extends RuntimeException  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
-	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message, $code) {}
 
 	final public function getMessage () {}
 
@@ -29,8 +28,6 @@ class mysqli_sql_exception extends RuntimeException  {
 
 	final public function getTrace () {}
 
-	final public function getPrevious () {}
-
 	final public function getTraceAsString () {}
 
 	public function __toString () {}
@@ -38,34 +35,14 @@ class mysqli_sql_exception extends RuntimeException  {
 }
 
 final class mysqli_driver  {
-	public $client_info;
-	public $client_version;
-	public $driver_version;
-	public $embedded;
-	public $reconnect;
-	public $report_mode;
+
+	public function embedded_server_start () {}
+
+	public function embedded_server_end () {}
 
 }
 
 class mysqli  {
-	public $affected_rows;
-	public $client_info;
-	public $client_version;
-	public $connect_errno;
-	public $connect_error;
-	public $errno;
-	public $error;
-	public $field_count;
-	public $host_info;
-	public $info;
-	public $insert_id;
-	public $server_info;
-	public $server_version;
-	public $sqlstate;
-	public $protocol_version;
-	public $thread_id;
-	public $warning_count;
-
 
 	public function autocommit () {}
 
@@ -81,9 +58,17 @@ class mysqli  {
 
 	public function connect () {}
 
+	public function debug () {}
+
+	public function disable_reads_from_master () {}
+
+	public function disable_rpl_parse () {}
+
 	public function dump_debug_info () {}
 
-	public function debug () {}
+	public function enable_reads_from_master () {}
+
+	public function enable_rpl_parse () {}
 
 	public function get_charset () {}
 
@@ -100,6 +85,8 @@ class mysqli  {
 	public function set_local_infile_default () {}
 
 	public function set_local_infile_handler () {}
+
+	public function master_query () {}
 
 	public function multi_query () {}
 
@@ -127,11 +114,19 @@ class mysqli  {
 
 	public function rollback () {}
 
+	public function rpl_parse_enabled () {}
+
+	public function rpl_probe () {}
+
+	public function rpl_query_type () {}
+
 	public function select_db () {}
 
 	public function set_charset () {}
 
 	public function set_opt () {}
+
+	public function slave_query () {}
 
 	public function ssl_set () {}
 
@@ -145,15 +140,9 @@ class mysqli  {
 
 	public function use_result () {}
 
-	public function refresh () {}
-
 }
 
 final class mysqli_warning  {
-	public $message;
-	public $sqlstate;
-	public $errno;
-
 
 	protected function __construct () {}
 
@@ -162,14 +151,8 @@ final class mysqli_warning  {
 }
 
 class mysqli_result  {
-	public $current_field;
-	public $field_count;
-	public $lengths;
-	public $num_rows;
-	public $type;
 
-
-	public function __construct () {}
+	public function mysqli_result () {}
 
 	public function close () {}
 
@@ -191,6 +174,8 @@ class mysqli_result  {
 
 	public function fetch_row () {}
 
+	public function field_count () {}
+
 	public function field_seek () {}
 
 	public function free_result () {}
@@ -198,18 +183,8 @@ class mysqli_result  {
 }
 
 class mysqli_stmt  {
-	public $affected_rows;
-	public $insert_id;
-	public $num_rows;
-	public $param_count;
-	public $field_count;
-	public $errno;
-	public $error;
-	public $sqlstate;
-	public $id;
 
-
-	public function __construct () {}
+	public function mysqli_stmt () {}
 
 	public function attr_get () {}
 
@@ -270,9 +245,44 @@ function mysqli_connect_error () {}
 
 function mysqli_data_seek () {}
 
+function mysqli_debug () {}
+
+/**
+ * Disable reads from master
+ * @link http://php.net/manual/en/function.mysqli-disable-reads-from-master.php
+ * @return void 
+ */
+function mysqli_disable_reads_from_master () {}
+
+/**
+ * Disable RPL parse
+ * @link http://php.net/manual/en/function.mysqli-disable-rpl-parse.php
+ * @param link mysqli 
+ * @return bool 
+ */
+function mysqli_disable_rpl_parse (mysqli $link) {}
+
 function mysqli_dump_debug_info () {}
 
-function mysqli_debug () {}
+/**
+ * Enable reads from master
+ * @link http://php.net/manual/en/function.mysqli-enable-reads-from-master.php
+ * @param link mysqli 
+ * @return bool 
+ */
+function mysqli_enable_reads_from_master (mysqli $link) {}
+
+/**
+ * Enable RPL parse
+ * @link http://php.net/manual/en/function.mysqli-enable-rpl-parse.php
+ * @param link mysqli 
+ * @return bool 
+ */
+function mysqli_enable_rpl_parse (mysqli $link) {}
+
+function mysqli_embedded_server_end () {}
+
+function mysqli_embedded_server_start () {}
 
 function mysqli_errno () {}
 
@@ -338,6 +348,15 @@ function mysqli_set_local_infile_default () {}
 
 function mysqli_set_local_infile_handler () {}
 
+/**
+ * Enforce execution of a query on the master in a master/slave setup
+ * @link http://php.net/manual/en/function.mysqli-master-query.php
+ * @param link mysqli 
+ * @param query string 
+ * @return bool 
+ */
+function mysqli_master_query (mysqli $link, $query) {}
+
 function mysqli_more_results () {}
 
 function mysqli_multi_query () {}
@@ -400,6 +419,30 @@ function mysqli_real_query () {}
 
 function mysqli_rollback () {}
 
+/**
+ * Check if RPL parse is enabled
+ * @link http://php.net/manual/en/function.mysqli-rpl-parse-enabled.php
+ * @param link mysqli 
+ * @return int 
+ */
+function mysqli_rpl_parse_enabled (mysqli $link) {}
+
+/**
+ * RPL probe
+ * @link http://php.net/manual/en/function.mysqli-rpl-probe.php
+ * @param link mysqli 
+ * @return bool 
+ */
+function mysqli_rpl_probe (mysqli $link) {}
+
+/**
+ * Returns RPL query type
+ * @link http://php.net/manual/en/function.mysqli-rpl-query-type.php
+ * @param query string 
+ * @return int 
+ */
+function mysqli_rpl_query_type ($query) {}
+
 function mysqli_select_db () {}
 
 function mysqli_set_charset () {}
@@ -441,6 +484,23 @@ function mysqli_stmt_reset () {}
 
 function mysqli_stmt_param_count () {}
 
+/**
+ * Send the query and return
+ * @link http://php.net/manual/en/function.mysqli-send-query.php
+ * @param query string 
+ * @return bool 
+ */
+function mysqli_send_query ($query) {}
+
+/**
+ * Force execution of a query on a slave in a master/slave setup
+ * @link http://php.net/manual/en/function.mysqli-slave-query.php
+ * @param link mysqli 
+ * @param query string 
+ * @return bool 
+ */
+function mysqli_slave_query (mysqli $link, $query) {}
+
 function mysqli_sqlstate () {}
 
 function mysqli_ssl_set () {}
@@ -461,9 +521,9 @@ function mysqli_stmt_num_rows () {}
 
 function mysqli_stmt_sqlstate () {}
 
-function mysqli_stmt_store_result () {}
-
 function mysqli_store_result () {}
+
+function mysqli_stmt_store_result () {}
 
 function mysqli_thread_id () {}
 
@@ -472,8 +532,6 @@ function mysqli_thread_safe () {}
 function mysqli_use_result () {}
 
 function mysqli_warning_count () {}
-
-function mysqli_refresh () {}
 
 /**
  * Alias for <function>mysqli_stmt_bind_param</function>
@@ -770,16 +828,6 @@ define ('MYSQLI_GROUP_FLAG', 32768);
 
 /**
  * <p>
- * Field is defined as ENUM. Available since PHP 5.3.0.
- * </p>
- * @link http://php.net/manual/en/mysqli.constants.php
- */
-define ('MYSQLI_ENUM_FLAG', 256);
-define ('MYSQLI_BINARY_FLAG', 128);
-define ('MYSQLI_NO_DEFAULT_VALUE_FLAG', 4096);
-
-/**
- * <p>
  * Field is defined as DECIMAL
  * </p>
  * @link http://php.net/manual/en/mysqli.constants.php
@@ -796,7 +844,7 @@ define ('MYSQLI_TYPE_TINY', 1);
 
 /**
  * <p>
- * Field is defined as SMALLINT
+ * Field is defined as INT
  * </p>
  * @link http://php.net/manual/en/mysqli.constants.php
  */
@@ -988,6 +1036,9 @@ define ('MYSQLI_TYPE_NEWDECIMAL', 246);
  */
 define ('MYSQLI_TYPE_BIT', 16);
 define ('MYSQLI_SET_CHARSET_NAME', 7);
+define ('MYSQLI_RPL_MASTER', 0);
+define ('MYSQLI_RPL_SLAVE', 1);
+define ('MYSQLI_RPL_ADMIN', 2);
 
 /**
  * <p>
@@ -1009,17 +1060,6 @@ define ('MYSQLI_REPORT_ERROR', 1);
 define ('MYSQLI_REPORT_STRICT', 2);
 define ('MYSQLI_REPORT_ALL', 255);
 define ('MYSQLI_REPORT_OFF', 0);
-define ('MYSQLI_DEBUG_TRACE_ENABLED', 0);
-define ('MYSQLI_SERVER_QUERY_NO_GOOD_INDEX_USED', 16);
-define ('MYSQLI_SERVER_QUERY_NO_INDEX_USED', 32);
-define ('MYSQLI_REFRESH_GRANT', 1);
-define ('MYSQLI_REFRESH_LOG', 2);
-define ('MYSQLI_REFRESH_TABLES', 4);
-define ('MYSQLI_REFRESH_HOSTS', 8);
-define ('MYSQLI_REFRESH_STATUS', 16);
-define ('MYSQLI_REFRESH_THREADS', 32);
-define ('MYSQLI_REFRESH_SLAVE', 64);
-define ('MYSQLI_REFRESH_MASTER', 128);
 
 // End of mysqli v.0.1
 ?>

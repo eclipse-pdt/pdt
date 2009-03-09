@@ -41,8 +41,8 @@ function ctype_cntrl ($text) {}
  * @param text string <p>
  * The tested string.
  * </p>
- * @return bool true if every character in the string
- * text is a decimal digit, false otherwise.
+ * @return bool true if every character in text is 
+ * a decimal digit, false otherwise.
  */
 function ctype_digit ($text) {}
 

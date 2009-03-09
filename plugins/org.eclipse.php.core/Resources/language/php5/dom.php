@@ -19,9 +19,8 @@ class DOMException extends Exception  {
 	/**
 	 * @param message[optional]
 	 * @param code[optional]
-	 * @param previous[optional]
 	 */
-	public function __construct ($message, $code, $previous) {}
+	public function __construct ($message, $code) {}
 
 	final public function getMessage () {}
 
@@ -32,8 +31,6 @@ class DOMException extends Exception  {
 	final public function getLine () {}
 
 	final public function getTrace () {}
-
-	final public function getPrevious () {}
 
 	final public function getTraceAsString () {}
 
@@ -204,10 +201,10 @@ class DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -215,8 +212,6 @@ class DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -330,10 +325,10 @@ class DOMDocumentFragment extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -341,8 +336,6 @@ class DOMDocumentFragment extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -477,7 +470,7 @@ class DOMDocument extends DOMNode  {
 	/**
 	 * @param node DOMNode[optional]
 	 */
-	public function saveXML (DOMNode $node = null) {}
+	public function saveXML (DOMNode $node) {}
 
 	/**
 	 * @param version[optional]
@@ -614,10 +607,10 @@ class DOMDocument extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -625,8 +618,6 @@ class DOMDocument extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -816,10 +807,10 @@ class DOMCharacterData extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -827,8 +818,6 @@ class DOMCharacterData extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -941,10 +930,10 @@ class DOMAttr extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -952,8 +941,6 @@ class DOMAttr extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1166,10 +1153,10 @@ class DOMElement extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1177,8 +1164,6 @@ class DOMElement extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1331,10 +1316,10 @@ class DOMText extends DOMCharacterData  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1342,8 +1327,6 @@ class DOMText extends DOMCharacterData  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1482,10 +1465,10 @@ class DOMComment extends DOMCharacterData  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1493,8 +1476,6 @@ class DOMComment extends DOMCharacterData  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1543,9 +1524,9 @@ class DOMConfiguration  {
 
 	/**
 	 * @param name
-	 * @param value
+	 * @param value DOMUserData
 	 */
-	public function setParameter ($name, $value) {}
+	public function setParameter ($nameDOMUserData , $value) {}
 
 	/**
 	 * @param name[optional]
@@ -1554,9 +1535,9 @@ class DOMConfiguration  {
 
 	/**
 	 * @param name[optional]
-	 * @param value[optional]
+	 * @param value DOMUserData[optional]
 	 */
-	public function canSetParameter ($name, $value) {}
+	public function canSetParameter ($nameDOMUserData , $value) {}
 
 }
 
@@ -1688,10 +1669,10 @@ class DOMCdataSection extends DOMText  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1699,8 +1680,6 @@ class DOMCdataSection extends DOMText  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1804,10 +1783,10 @@ class DOMDocumentType extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1815,8 +1794,6 @@ class DOMDocumentType extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -1927,10 +1904,10 @@ class DOMEntity extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -1938,8 +1915,6 @@ class DOMEntity extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -2048,10 +2023,10 @@ class DOMEntityReference extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -2059,8 +2034,6 @@ class DOMEntityReference extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -2170,10 +2143,10 @@ class DOMProcessingInstruction extends DOMNode  {
 
 	/**
 	 * @param key
-	 * @param data
+	 * @param data DOMUserData
 	 * @param handler
 	 */
-	public function setUserData ($key, $data, $handler) {}
+	public function setUserData ($keyDOMUserData , $data, $handler) {}
 
 	/**
 	 * @param key
@@ -2181,8 +2154,6 @@ class DOMProcessingInstruction extends DOMNode  {
 	public function getUserData ($key) {}
 
 	public function getNodePath () {}
-
-	public function getLineNo () {}
 
 	/**
 	 * @param exclusive[optional]
@@ -2244,8 +2215,6 @@ class DOMXPath  {
 	 * @param context DOMNode[optional]
 	 */
 	public function evaluate ($exprDOMNode , $context) {}
-
-	public function registerPhpFunctions () {}
 
 }
 

@@ -1,4 +1,3 @@
-Core.php
 PDO.php
 PDO_OCI.php
 Reflection.php
@@ -16,7 +15,6 @@ ctype.php
 curl.php
 date.php
 dom.php
-ereg.php
 exif.php
 fileinfo.php
 filter.php
@@ -55,7 +53,6 @@ session.php
 shmop.php
 soap.php
 sockets.php
-sqlite3.php
 standard.php
 sybase_ct.php
 sysvmsg.php

@@ -61,7 +61,7 @@ function session_save_path ($path = null) {}
  * session_start for that purpose. Depending on the
  * session handler, not all characters are allowed within the session id.
  * For example, the file session handler only allows characters in the
- * range a-z A-Z 0-9 , (comma) and - (minus)!
+ * range a-z, A-Z and 0-9!
  * </p>
  * When using session cookies, specifying an id
  * for session_id will always send a new cookie
@@ -138,7 +138,7 @@ function session_encode () {}
 /**
  * Initialize session data
  * @link http://php.net/manual/en/function.session-start.php
- * @return bool This function returns true if session was started with success otherwise false.
+ * @return bool This function always returns true.
  */
 function session_start () {}
 
@@ -211,7 +211,7 @@ function session_cache_limiter ($cache_limiter = null) {}
 /**
  * Return current cache expire
  * @link http://php.net/manual/en/function.session-cache-expire.php
- * @param new_cache_expire string[optional] <p>
+ * @param new_cache_expire int[optional] <p>
  * If new_cache_expire is given, the current cache
  * expire is replaced with new_cache_expire.
  * </p>
@@ -236,7 +236,7 @@ function session_cache_expire ($new_cache_expire = null) {}
  * slash ('/') for all paths on the domain.
  * </p>
  * @param domain string[optional] <p>
- * Cookie domain, for example 'www.php.net'. To make cookies visible 
+ * Cookie domain, for example 'www.php.net'. To make cookies visable 
  * on all subdomains then the domain must be prefixed with a dot like 
  * '.php.net'.
  * </p>

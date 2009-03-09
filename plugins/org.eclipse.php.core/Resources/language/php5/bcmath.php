@@ -26,7 +26,7 @@ function bcadd ($left_operand, $right_operand, $scale = null) {}
  * The right operand, as a string.
  * </p>
  * @param scale int[optional] 
- * @return string The result of the subtraction, as a string.
+ * @return string The result of the substraction, as a string.
  */
 function bcsub ($left_operand, $right_operand, $scale = null) {}
 
