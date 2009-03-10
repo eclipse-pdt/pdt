@@ -100,7 +100,7 @@ depFilesListExtras=
 		<property name="stagingHome" value="/home/data/httpd/download-staging.priv" />
 		<property name="projectPath" value="tools/pdt" />
 		<!-- user with write perms in staging dir & permission to run /usr/bin/sign -->
-		<property name="buildServerUser" value="apeled@build.eclipse.org" />
+		<property name="buildServerUser" value="mspector@build.eclipse.org" />
 		<condition property="sign">
 			<or>
 				<!-- want to enable/disable signing for a given build type? add/remove types here -->
