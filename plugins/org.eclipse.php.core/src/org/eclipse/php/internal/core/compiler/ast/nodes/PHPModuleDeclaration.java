@@ -60,12 +60,18 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 						}
 
 						public boolean visit(TypeDeclaration s) throws Exception {
+							if (s instanceof NamespaceDeclaration && ((NamespaceDeclaration)s).isGlobal()) {
+								return super.visit(s);
+							}
 							parentStack.add(s);
 							getTypeList().add(s);
 							return super.visit(s);
 						}
 						
 						public boolean endvisit(TypeDeclaration s) throws Exception {
+							if (s instanceof NamespaceDeclaration && ((NamespaceDeclaration)s).isGlobal()) {
+								return super.endvisit(s);
+							}
 							parentStack.pop();
 							return super.endvisit(s);
 						}

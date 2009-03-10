@@ -61,7 +61,7 @@ public class PHPClassType extends ClassType implements IClassType {
 		}
 		
 		// make the namespace fully qualified
-		if (namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+		if (namespace.length() > 0 && namespace.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
 			namespace = NamespaceReference.NAMESPACE_SEPARATOR + namespace;
 		}
 		

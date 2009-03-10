@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.Argument;
 import org.eclipse.dltk.ast.declarations.FieldDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -32,6 +33,13 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 
 	public PHPMatchLocatorParser(MatchLocator locator) {
 		super(locator);
+	}
+	
+	protected void visitTypeDeclaration(TypeDeclaration t) {
+		if (t instanceof NamespaceDeclaration && ((NamespaceDeclaration)t).isGlobal()) {
+			return;
+		}
+		super.visitTypeDeclaration(t);
 	}
 
 	protected void processStatement(ASTNode node, PatternLocator locator) {

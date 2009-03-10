@@ -31,6 +31,7 @@ import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.dltk.core.search.matching.MatchLocator;
 import org.eclipse.dltk.core.search.matching.PatternLocator;
 import org.eclipse.dltk.internal.core.search.matching.MatchingNodeSet;
+import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 
 public class PHPMatchLocator extends MatchLocator {
@@ -66,6 +67,9 @@ public class PHPMatchLocator extends MatchLocator {
 		}
 
 		public boolean visit(TypeDeclaration typeDeclaration) {
+			if (typeDeclaration instanceof NamespaceDeclaration && ((NamespaceDeclaration)typeDeclaration).isGlobal()) {
+				return false;
+			}
 			try {
 				char[] simpleName = typeDeclaration.getName().toCharArray();
 				int occurrenceCount = occurrencesCounts.get(simpleName);

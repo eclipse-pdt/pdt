@@ -169,6 +169,7 @@ public class PHPTypeInferenceUtils {
 		if (typeName == null || typeName.length() == 0) {
 			return null;
 		}
+		
 		String namespace = extractNamespaceName(typeName, sourceModule, offset);
 		typeName = extractElementName(typeName);
 		if (namespace != null) {
@@ -339,16 +340,28 @@ public class PHPTypeInferenceUtils {
 	 *  </pre>
 	 */
 	public static String extractNamespaceName(String elementName, ISourceModule sourceModule, final int offset) {
+		
+		// Check class name aliasing:
+		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+		UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, elementName, offset);
+		if (usePart != null) {
+			elementName = usePart.getNamespace().getFullyQualifiedName();
+			if (elementName.charAt(0) != NamespaceReference.NAMESPACE_SEPARATOR) {
+				elementName = NamespaceReference.NAMESPACE_SEPARATOR + elementName;
+			}
+		}
 
 		boolean isGlobal = false;
 		if (elementName.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
 			isGlobal = true;
-			elementName = elementName.substring(1);
 		}
 
 		int nsIndex = elementName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 		if (nsIndex != -1) {
 			String namespace = elementName.substring(0, nsIndex);
+			if (isGlobal && namespace.length() > 0) {
+				namespace = namespace.substring(1);
+			}
 
 			if (!isGlobal) {
 				// 1. It can be a special 'namespace' keyword, which points to the current namespace:
@@ -359,8 +372,7 @@ public class PHPTypeInferenceUtils {
 
 				// 2. it can be an alias - try to find relevant USE statement
 				if (namespace.indexOf('\\') == -1) {
-					ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-					UsePart usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, namespace, offset);
+					usePart = ASTUtils.findUseStatementByAlias(moduleDeclaration, namespace, offset);
 					if (usePart != null) {
 						return usePart.getNamespace().getFullyQualifiedName();
 					}
@@ -377,7 +389,6 @@ public class PHPTypeInferenceUtils {
 			return namespace;
 		}
 
-		// no namespace prefix in element name:
 		return null;
 	}
 
