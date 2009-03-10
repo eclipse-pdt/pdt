@@ -34,7 +34,7 @@
 	<property name="rssMessageLink" value="http://download.eclipse.org/tools/pdt/downloads/drops/${buildLabel}/results/TEST-php.html" />
 	<property name="rssOutputFile" value="center.xml" />
 	<property file="link.properties" />
-	<property name="devServerUser" value="${devServerUser}" />
+	<property name="devServerUser" value="mspector" />
 
 	<target name="createProject">
 		<RssAddProject projectName="${rssProjectName}" />
