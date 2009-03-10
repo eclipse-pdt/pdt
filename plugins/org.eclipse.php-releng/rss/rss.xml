@@ -65,7 +65,7 @@
 		<property name="target" value="rss/${rssOutputFile}" />
 
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats ${source} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/${target}" />
+			<arg line="-avz --stats ${source} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/${target}" />
 		</exec>
 	</target>
 
@@ -90,22 +90,22 @@
 		<chmod dir="${buildDirectory}" type="dir" perm="ugo+rx" includes="${buildLabel}*/**" />
 		<chmod dir="${buildDirectory}" type="dir" perm="ug+rwx" includes="${buildLabel}*/**" />
 		<exec dir="${buildDirectory}" executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats --include *.zip --exclude bldindex.html ${buildLabel} ${devServerUser}@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
+			<arg line="-avz --stats --include *.zip --exclude bldindex.html ${buildLabel} ${devServerUser}@dev.eclipse.org:~/downloads/tools/pdt/${remoteDirectory}" />
 		</exec>
 
 		<property name="source" value="${junitreport-html-file}" />
 		<property name="xml-source" value="${junitreport-xml-file}" />
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats ${source} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
+			<arg line="-avz --stats ${source} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
 		</exec>
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats ${xml-source} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
+			<arg line="-avz --stats ${xml-source} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/results/"/>
 		</exec>
 
 		
 		<!-- Uploads the map file (for dependencies) -->
 		<exec dir="." executable="rsync">
-			<arg line="-avz --password-file=$HOME/.pass --stats ${dependencies} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/"/>
+			<arg line="-avz --stats ${dependencies} ${devServerUser}@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/${remoteDirectory}/${buildLabel}/"/>
 		</exec>
 
 	</target>

@@ -2,7 +2,7 @@
 
 # find bugs report
 ./findbugs.sh
-rsync -avz --password-file=$HOME/.pass --stats FINDBUGS-php.html mspector@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/
+rsync -avz --stats FINDBUGS-php.html mspector@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/
 
 # analysis tool here
 export DISPLAY=:3
@@ -26,4 +26,4 @@ eclipse/eclipse -application org.eclipse.php.analysis.analysisapplication -data 
 cd results
 ant
 
-rsync -avz --password-file=$HOME/.pass --stats ANALYSIS-php.html mspector@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/
+rsync -avz --stats ANALYSIS-php.html mspector@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/

@@ -17,7 +17,7 @@
 
 	<echo message="Storing the report on the server" />
 	<exec dir="." executable="rsync">
-		<arg line="-avz --password-file=$HOME/.pass --stats ANALYSIS-php.html mspector@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/"/>
+		<arg line="-avz --stats ANALYSIS-php.html mspector@dev.eclipse.org:/home/data/httpd/download.eclipse.org/tools/pdt/downloads/drops/results/"/>
 	</exec>
 
 	<echo message="Sending an email to the group" />
