@@ -16,4 +16,5 @@ public interface IPHPModifiers extends Modifiers {
 
 	public static final int NonPhp = 2 << Modifiers.USER_MODIFIER;
 	public static final int Internal = 2 << (Modifiers.USER_MODIFIER + 1);
+	public static final int UseStatement = 2 << (Modifiers.USER_MODIFIER + 2);
 }
