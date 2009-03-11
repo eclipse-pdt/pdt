@@ -493,13 +493,15 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 				result.append("const "); // only for PHP 4
 			}
 		}
-		if (formalParameter.getParameterType() != null) {
+		Expression paramType = formalParameter.getParameterType();
+		if (paramType != null && paramType.getLength() > 0) {
 			formalParameter.getParameterType().accept(this);
 			result.append(' ');
 		}
 
 		formalParameter.getParameterName().accept(this);
-		if (formalParameter.getDefaultValue() != null) {
+		Expression defaultValue = formalParameter.getDefaultValue();
+		if (defaultValue != null && defaultValue.getLength() > 0) {
 			result.append(" = ");
 			formalParameter.getDefaultValue().accept(this);
 		}
@@ -600,13 +602,13 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(";\n "); //$NON-NLS-1$
 		return false;
 	}
-	
+
 	public boolean visit(GotoLabel gotoLabel) {
 		gotoLabel.getName().accept(this);
 		result.append(":\n "); //$NON-NLS-1$
 		return false;
 	}
-	
+
 	public boolean visit(GotoStatement gotoStatement) {
 		result.append("goto "); //$NON-NLS-1$
 		gotoStatement.getLabel().accept(this);
@@ -697,7 +699,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 		result.append(")"); //$NON-NLS-1$
 		return false;
 	}
-	
+
 	public boolean visit(LambdaFunctionDeclaration functionDeclaration) {
 		result.append(" function ");
 		if (functionDeclaration.isReference()) {
@@ -713,7 +715,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			}
 		}
 		result.append(')');
-		
+
 		List<Expression> lexicalVariables = functionDeclaration.lexicalVariables();
 		if (lexicalVariables.size() > 0) {
 			result.append(" use (");
@@ -726,7 +728,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			}
 			result.append(')');
 		}
-		
+
 		if (functionDeclaration.getBody() != null) {
 			functionDeclaration.getBody().accept(this);
 		}
