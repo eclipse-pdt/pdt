@@ -67,7 +67,6 @@
 			<newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard" />
 			<newWizardShortcut id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard" />
 			<newWizardShortcut id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard" />
-			<newWizardShortcut id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard" />
 			<newWizardShortcut id="org.eclipse.ui.editors.wizards.UntitledTextFileWizard" />
 
 			<showInPart id="org.eclipse.ui.views.ResourceNavigator" />
@@ -128,11 +127,6 @@
 			category="org.eclipse.php.project.ui" class="org.eclipse.php.internal.ui.wizards.PHPFileCreationWizard"
 			name="%wizard.name.0" icon="icons/full/obj16/add_php_file.gif" />
 		<primaryWizard id="org.eclipse.ui.wizards.new.folder" />
-		<wizard canFinishEarly="true" category="org.eclipse.php.project.ui"
-			class="org.eclipse.php.internal.ui.wizards.UntitledPHPDocumentWizard"
-			hasPages="false" icon="icons/full/obj16/add_php_file.gif"
-			id="org.eclipse.php.ui.wizards.UntitledPHPDocumentWizard" name="%wizard.name.1">
-		</wizard>
 	</extension>
 
 	<!--
@@ -890,8 +884,7 @@
 		<command categoryId="org.eclipse.ui.category.navigate"
 			description="%ActionDefinition.gotoMatchingBracket.description" id="org.eclipse.php.ui.editor.goto.matching.bracket"
 			name="%ActionDefinition.gotoMatchingBracket.name" />
-		<command id="org.eclipse.php.ui.NewUntitledPHPDocumentAction"
-			name="%command.name.1" />
+		
 
 		<!-- navigate -->
 		<command name="%ActionDefinition.openTypeHierarchy.name"
