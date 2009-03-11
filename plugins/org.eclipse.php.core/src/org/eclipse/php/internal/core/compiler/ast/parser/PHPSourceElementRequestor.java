@@ -10,15 +10,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.compiler.ast.parser;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.*;
 import org.eclipse.dltk.ast.expressions.CallArgumentsList;
@@ -39,26 +37,37 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
+/**
+ * This visitor builds DLTK model source elements.
+ * @author michael
+ */
 public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 
 	private static final String CONSTRUCTOR_NAME = "__construct";
-	/*
+	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
+
+	/**
 	 * This should replace the need for fInClass, fInMethod and fCurrentMethod
 	 * since in php the type declarations can be nested.
 	 */
 	protected Stack<Declaration> declarations = new Stack<Declaration>();
 	private PHPSourceElementRequestorExtension[] extensions;
-	
+
 	/**
-	 * Deferred elements that are 
+	 * Deferred elements that where declared in method/function but should
+	 * belong to the global scope. 
 	 */
-	protected List<Declaration> deferredDeclarations = new LinkedList<Declaration>();
-	
-	private static final Pattern WHITESPACE_SEPERATOR = Pattern.compile("\\s+");;
+	protected List<ASTNode> deferredDeclarations = new LinkedList<ASTNode>();
+
+	/**
+	 * This stack contains a set per method, where each set contains all global variables
+	 * names delcared through 'global' keyword inside this method.
+	 */
+	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, ISourceModule sourceModule) {
 		super(requestor);
-		
+
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, "phpSourceElementRequestors");
 		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(elements.length);
@@ -75,7 +84,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		extensions = requestors.toArray(new PHPSourceElementRequestorExtension[requestors.size()]);
 	}
-	
+
 	protected ISourceElementRequestor getRequestor() {
 		return fRequestor;
 	}
@@ -89,6 +98,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	public boolean endvisit(MethodDeclaration method) throws Exception {
+		methodGlobalVars.pop();
 		declarations.pop();
 
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
@@ -104,7 +114,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				return true;
 			}
 		}
-		
+
 		declarations.pop();
 
 		// resolve more type member declarations
@@ -117,8 +127,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return super.endvisit(type);
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean visit(MethodDeclaration method) throws Exception {
+
+		methodGlobalVars.add(new HashSet<String>());
+
 		Declaration parentDeclaration = null;
 		if (!declarations.empty()) {
 			parentDeclaration = declarations.peek();
@@ -130,7 +142,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			deferredDeclarations.add(method);
 			return false;
 		}
-		
+
 		if (parentDeclaration instanceof InterfaceDeclaration) {
 			method.setModifier(Modifiers.AccAbstract);
 		}
@@ -142,7 +154,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 
 		boolean visit = super.visit(method);
-		
+
 		if (visit) {
 			// Process method argument (local variable) declarations:
 			List<Argument> arguments = method.getArguments();
@@ -159,7 +171,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return visit;
 	}
-	
+
 	protected void modifyMethodInfo(MethodDeclaration methodDeclaration, ISourceElementRequestor.MethodInfo mi) {
 		Declaration parentDeclaration = null;
 
@@ -169,10 +181,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			parentDeclaration = declarations.peek();
 		}
 		declarations.push(methodDeclaration);
-		
-		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME)
-			|| (parentDeclaration instanceof ClassDeclaration && mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
-		
+
+		mi.isConstructor = mi.name.equalsIgnoreCase(CONSTRUCTOR_NAME) || (parentDeclaration instanceof ClassDeclaration && mi.name.equalsIgnoreCase(((ClassDeclaration) parentDeclaration).getName()));
+
 		// Check whether this method is marked as @internal
 		if (methodDeclaration instanceof IPHPDocAwareDeclaration) {
 			IPHPDocAwareDeclaration phpDocAwareDeclaration = (IPHPDocAwareDeclaration) methodDeclaration;
@@ -182,7 +193,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		}
 	}
-	
+
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
@@ -190,21 +201,21 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				return true;
 			}
 		}
-		
+
 		// In case we are entering a nested element 
 		if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
 			deferredDeclarations.add(type);
 			return false;
 		}
-		
+
 		declarations.push(type);
-		
+
 		for (PHPSourceElementRequestorExtension visitor : extensions) {
 			visitor.visit(type);
 		}
 		return super.visit(type);
 	}
-	
+
 	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
 		// Check whether this class is marked as @internal
 		if (typeDeclaration instanceof IPHPDocAwareDeclaration) {
@@ -214,7 +225,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				ti.modifiers |= IPHPModifiers.Internal;
 			}
 		}
-		
+
 		// check whether this is a namespace
 		if (typeDeclaration instanceof NamespaceDeclaration) {
 			ti.modifiers |= Modifiers.AccNameSpace;
@@ -291,11 +302,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
 	}
-	
+
 	public boolean endvisit(FieldDeclaration declaration) throws Exception {
 		return true;
 	}
-	
+
 	public boolean visit(PHPFieldDeclaration declaration) throws Exception {
 		// This is variable declaration:
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
@@ -308,7 +319,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fRequestor.enterField(info);
 		return true;
 	}
-	
+
 	public boolean visit(CatchClause catchClause) throws Exception {
 		ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 		info.modifiers = Modifiers.AccPublic;
@@ -325,7 +336,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		fRequestor.exitField(catchClause.sourceEnd() - 1);
 		return true;
 	}
-	
+
 	public boolean visit(ForEachStatement foreachStatement) throws Exception {
 		if (foreachStatement.getKey() instanceof VariableReference) {
 			SimpleReference var = (SimpleReference) foreachStatement.getKey();
@@ -351,11 +362,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		}
 		return true;
 	}
-	
+
 	public boolean endvisit(ForEachStatement foreachStatement) throws Exception {
 		return true;
 	}
-	
+
 	public boolean endvisit(PHPFieldDeclaration declaration) throws Exception {
 		fRequestor.exitField(declaration.sourceEnd() - 1);
 		return true;
@@ -369,9 +380,9 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				deferredDeclarations.add(constantDecl);
 				return false;
 			}
-			
-			visit((FieldDeclaration)constantDecl);
-			
+
+			visit((FieldDeclaration) constantDecl);
+
 		} else {
 			int argsCount = 0;
 			CallArgumentsList args = call.getArgs();
@@ -409,7 +420,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
 	public boolean visit(Assignment assignment) throws Exception {
 		Expression left = assignment.getVariable();
 		if (left instanceof FieldAccess) { // class variable ($this->a = .)
@@ -430,6 +440,14 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				}
 			}
 		} else if (left instanceof VariableReference) {
+
+			if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
+				if (methodGlobalVars.peek().contains(((VariableReference) left).getName())) {
+					deferredDeclarations.add(assignment);
+					return false;
+				}
+			}
+
 			ISourceElementRequestor.FieldInfo info = new ISourceElementRequestor.FieldInfo();
 			info.modifiers = Modifiers.AccPublic;
 			info.name = ((VariableReference) left).getName();
@@ -450,6 +468,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return true;
 	}
 
+	public boolean visit(GlobalStatement s) throws Exception {
+		if (!declarations.empty() && declarations.peek() instanceof MethodDeclaration) {
+			for (Expression var : s.getVariables()) {
+				if (var instanceof ReferenceExpression) {
+					var = ((ReferenceExpression) var).getVariable();
+				}
+				if (var instanceof SimpleReference) {
+					methodGlobalVars.peek().add(((SimpleReference) var).getName());
+				}
+			}
+		}
+		return true;
+	}
+
 	public boolean visit(TypeReference reference) throws Exception {
 		fRequestor.acceptTypeReference(reference.getName().toCharArray(), reference.sourceStart());
 		return true;
@@ -460,21 +492,24 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(node);
 		}
 
-		String clasName = node.getClass().getName();
-		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
+		Class<?> statementClass = node.getClass();
+		if (statementClass.equals(PHPFieldDeclaration.class)) {
 			return visit((PHPFieldDeclaration) node);
 		}
-		if (clasName.equals(FieldDeclaration.class.getName())) {
+		if (statementClass.equals(FieldDeclaration.class)) {
 			return visit((FieldDeclaration) node);
 		}
-		if (clasName.equals(ConstantDeclaration.class.getName())) {
+		if (statementClass.equals(ConstantDeclaration.class)) {
 			return visit((ConstantDeclaration) node);
 		}
-		if (clasName.equals(CatchClause.class.getName())) {
+		if (statementClass.equals(CatchClause.class)) {
 			return visit((CatchClause) node);
 		}
-		if (clasName.equals(ForEachStatement.class.getName())) {
+		if (statementClass.equals(ForEachStatement.class)) {
 			return visit((ForEachStatement) node);
+		}
+		if (statementClass.equals(GlobalStatement.class)) {
+			return visit((GlobalStatement) node);
 		}
 		return true;
 	}
@@ -484,20 +519,20 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.endvisit(node);
 		}
 
-		String clasName = node.getClass().getName();
-		if (clasName.equals(PHPFieldDeclaration.class.getName())) {
+		Class<?> statementClass = node.getClass();
+		if (statementClass.equals(PHPFieldDeclaration.class)) {
 			return endvisit((PHPFieldDeclaration) node);
 		}
-		if (clasName.equals(FieldDeclaration.class.getName())) {
+		if (statementClass.equals(FieldDeclaration.class)) {
 			return endvisit((FieldDeclaration) node);
 		}
-		if (clasName.equals(ConstantDeclaration.class.getName())) {
+		if (statementClass.equals(ConstantDeclaration.class)) {
 			return endvisit((ConstantDeclaration) node);
 		}
-		if (clasName.equals(CatchClause.class.getName())) {
+		if (statementClass.equals(CatchClause.class)) {
 			return endvisit((CatchClause) node);
 		}
-		if (clasName.equals(ForEachStatement.class.getName())) {
+		if (statementClass.equals(ForEachStatement.class)) {
 			return endvisit((ForEachStatement) node);
 		}
 		return true;
@@ -508,17 +543,17 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.visit(node);
 		}
 
-		String clasName = node.getClass().getName();
-		if (clasName.equals(Assignment.class.getName())) {
+		Class<?> expressionClass = node.getClass();
+		if (expressionClass.equals(Assignment.class)) {
 			return visit((Assignment) node);
 		}
-		if (clasName.equals(TypeReference.class.getName())) {
+		if (expressionClass.equals(TypeReference.class)) {
 			return visit((TypeReference) node);
 		}
-		if (clasName.equals(Include.class.getName())) {
+		if (expressionClass.equals(Include.class)) {
 			return visit((Include) node);
 		}
-		if (clasName.equals(PHPCallExpression.class.getName())) {
+		if (expressionClass.equals(PHPCallExpression.class)) {
 			return visit((PHPCallExpression) node);
 		}
 		return true;
@@ -529,28 +564,22 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			visitor.endvisit(node);
 		}
 
-		String clasName = node.getClass().getName();
-		if (clasName.equals(Assignment.class.getName())) {
+		Class<?> expressionClass = node.getClass();
+		if (expressionClass.equals(Assignment.class)) {
 			return endvisit((Assignment) node);
 		}
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.dltk.compiler.SourceElementRequestVisitor#endvisit(org.eclipse.dltk.ast.declarations.ModuleDeclaration)
-	 */
-	@Override
+
 	public boolean endvisit(ModuleDeclaration declaration) throws Exception {
 		while (deferredDeclarations != null && !deferredDeclarations.isEmpty()) {
-			final Declaration[] declarations = deferredDeclarations.toArray(new Declaration[deferredDeclarations.size()]);
+			final ASTNode[] declarations = deferredDeclarations.toArray(new ASTNode[deferredDeclarations.size()]);
 			deferredDeclarations.clear();
-			
-			for (Declaration deferred : declarations) {
+
+			for (ASTNode deferred : declarations) {
 				deferred.traverse(this);
 			}
 		}
 		return super.endvisit(declaration);
 	}
-	
-
 }
