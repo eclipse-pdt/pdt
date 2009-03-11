@@ -10,16 +10,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.input;
 
+import java.net.URI;
+
 import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.php.internal.core.ast.util.Util;
+import org.eclipse.ui.editors.text.ILocationProviderExtension;
 import org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput;
 
 /**
  * This Editor Input class should be used mainly for Untitled PHP Documents
  * @see org.eclipse.ui.internal.editors.text.NonExistingFileEditorInput
  */
-public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput {
+public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput implements ILocationProviderExtension {
 
 	public NonExistingPHPFileEditorInput(IFileStore fileStore, String namePrefix) {
 		super(fileStore, namePrefix);
@@ -35,5 +39,13 @@ public class NonExistingPHPFileEditorInput extends NonExistingFileEditorInput {
 	public String getName() {
 		String result = super.getName();
 		return result + "." + Util.defaultPhpExtension();
+	}
+
+	public URI getURI(Object element) {
+		IPath path = getPath(element);
+		if (path != null) {
+			return URIUtil.toURI(path);
+		}
+		return null;
 	}
 }
