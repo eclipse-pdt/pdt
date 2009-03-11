@@ -10,14 +10,27 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.compiler.IPHPModifiers;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
+import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
+import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.typeinference.FakeType;
+import org.eclipse.php.internal.core.typeinference.UseStatementElement;
+import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -96,7 +109,22 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	public Object[] getElements(Object parent) {
-		return getChildren(parent);
+		Object[] children = getChildren(parent);
+		
+		if (parent instanceof ISourceModule) {
+			ISourceModule sourceModule = (ISourceModule) parent;
+
+			PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
+			if (phpVersion.isGreaterThan(PHPVersion.PHP5)) {
+				
+				// if namespaces are supported, add use statements node:
+				Object[] newChildren = new Object[children.length + 1];
+				newChildren[0] = new UseStatementsNode(sourceModule);
+				System.arraycopy(children, 0, newChildren, 1, children.length);
+				children = newChildren;
+			}
+		}
+		return children;
 	}
 
 	public Object getParent(Object child) {
@@ -158,7 +186,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		if (element.getElementType() == IModelElement.FIELD) {
 			IField field = (IField) element;
 			try {
-				if ((field.getFlags() & Modifiers.AccConstant) != 0) {
+				if ((field.getFlags() & Modifiers.AccConstant) != 0 || (field.getFlags() & IPHPModifiers.UseStatement) != 0) {
 					return false;
 				}
 			} catch (ModelException e) {
@@ -252,5 +280,30 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 		}
 	}
-
+	
+	class UseStatementsNode extends FakeType {
+		
+		private ISourceModule sourceModule;
+		
+		public UseStatementsNode(ISourceModule sourceModule) {
+			super((ModelElement) sourceModule, PHPUIMessages.getString("PHPOutlineContentProvider_useStatementsNode"), 0); //$NON-NLS-1$
+			this.sourceModule = sourceModule;
+		}
+		
+		public IModelElement[] getChildren() throws ModelException {
+			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
+			List<UseStatementElement> elements = new LinkedList<UseStatementElement>();
+			for (UseStatement useStatement : useStatements) {
+				for (UsePart usePart : useStatement.getParts()) {
+					elements.add(new UseStatementElement((ModelElement) sourceModule, usePart));
+				}
+			}
+			return (UseStatementElement[]) elements.toArray(new UseStatementElement[elements.size()]);
+		}
+		
+		public boolean hasChildren() throws ModelException {
+			return getChildren().length > 0;
+		}
+	}
 }

@@ -10,23 +10,29 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.outline;
 
+import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.ui.DLTKPluginImages;
+import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.actions.SortAction;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
+import org.eclipse.php.internal.ui.outline.PHPOutlineContentProvider.UseStatementsNode;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
@@ -189,8 +195,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	public ILabelProvider getLabelProvider(final TreeViewer viewer) {
 		
 		if (fLabelProvider == null) {
-			AppearanceAwareLabelProvider labeProvider = new AppearanceAwareLabelProvider(AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY, AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS, fStore);
-			fLabelProvider = new DecoratingModelLabelProvider(labeProvider);
+			fLabelProvider = new DecoratingModelLabelProvider(
+				new PHPAppearanceAwareLabelProvider(
+					AppearanceAwareLabelProvider.DEFAULT_TEXTFLAGS | ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.ALL_CATEGORY,
+					AppearanceAwareLabelProvider.DEFAULT_IMAGEFLAGS,
+					fStore)
+			);
 		}
 
 		if (MODE_PHP == mode) {
@@ -248,13 +258,45 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		return null;
 	}
 
-	@Override
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		super.enableShowAttributes(showAttributes, treeViewer);
 		// fix bug #241111 - show attributes in outline
 		if (fLabelProviderHTML != null) {
 			// This option is only relevant for the HTML outline
 			fLabelProviderHTML.fShowAttributes = showAttributes;
+		}
+	}
+	
+	class UseStatementAwareImageProvider extends ScriptElementImageProvider {
+
+		public ImageDescriptor getBaseImageDescriptor(IModelElement element, int renderFlags) {
+			if (element instanceof UseStatementElement) {
+				return DLTKPluginImages.DESC_OBJS_IMPDECL;
+			}
+			if (element instanceof UseStatementsNode) {
+				return DLTKPluginImages.DESC_OBJS_IMPCONT;
+			}
+			return super.getBaseImageDescriptor(element, renderFlags);
+		}
+	}
+	
+	class PHPAppearanceAwareLabelProvider extends AppearanceAwareLabelProvider {
+
+		public PHPAppearanceAwareLabelProvider(IPreferenceStore store) {
+			super(store);
+			fImageLabelProvider = new UseStatementAwareImageProvider();
+		}
+
+		public PHPAppearanceAwareLabelProvider(long textFlags, int imageFlags, IPreferenceStore store) {
+			super(textFlags, imageFlags, store);
+			fImageLabelProvider = new UseStatementAwareImageProvider();
+		}
+		
+		public String getText(Object element) {
+			if (element instanceof UseStatementsNode) {
+				return "use statements";
+			}
+			return super.getText(element);
 		}
 	}
 }
