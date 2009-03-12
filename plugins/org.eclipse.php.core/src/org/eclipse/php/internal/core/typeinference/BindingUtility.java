@@ -246,7 +246,7 @@ public class BindingUtility {
 		public int getEnd() {
 			return length + offset;
 		}
-		
+
 		public int getLength() {
 			return length;
 		}
@@ -316,6 +316,9 @@ public class BindingUtility {
 
 		public boolean visitGeneral(ASTNode node) throws Exception {
 			if (node.sourceStart() > sourceRange.getEnd()) {
+				return false;
+			}
+			if (node.sourceEnd() < sourceRange.offset) {
 				return false;
 			}
 			if (node.sourceStart() <= sourceRange.offset && node.sourceEnd() >= sourceRange.getEnd()) {
