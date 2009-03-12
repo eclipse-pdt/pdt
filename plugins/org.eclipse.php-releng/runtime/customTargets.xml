@@ -8,7 +8,7 @@
 
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.php_feature" />
+			<property name="id" value="org.eclipse.php" />
 		</ant>
 	</target>
 
@@ -122,7 +122,7 @@
 	<target name="preAssemble">
 	</target>
 
-	<target name="assemble.org.eclipse.php_feature">
+	<target name="assemble.org.eclipse.php">
 		<ant antfile="${assembleScriptName}" />
 	</target>
 

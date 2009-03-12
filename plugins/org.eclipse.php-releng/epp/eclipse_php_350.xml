@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!--
+		Package Description information to be picked up by
+		www.eclipse.org/packages
+	-->
+	<!--
+		PackageName is the title of your package maintainer is the project or
+		persons that are maintaining the package iconurl is the fully
+		qualified URL to the icon you wish to use on the site (48x48)
+		bugzillaComponentID is used to gather bugzilla information about your
+		package. This should be given to you after provisioning of the package
+		is finished testPlan is the fully qualified URL to the test plan for
+		this package
+	-->
+
+	<packageMetaData
+		packageName="Eclipse IDE for PHP Developers"
+		maintainer="Eclipse Packaging Project"
+		iconurl="http://www.eclipse.org/downloads/images/classic2.jpg"
+		bugzillaComponentId="php-package"
+		testPlan="http://www.eclipse.org/some/url/testplan.html">
+		<!--
+			Description is wrapped in CDATA tags to all you to insert HTML code
+			if necessary
+		-->
+		<description><![CDATA[An IDE for PHP developers with Mylyn integration.]]></description>
+		<!--
+			packageTesters is a list of the people that are testing the package
+		-->
+		<packageTesters>
+			<tester>Michael Spector</tester>
+		</packageTesters>
+	</packageMetaData>
+
+	<!--
+		version, the RCP version to build. This is used to determine the file
+		name of the root file archives
+	-->
+	<rcp version="3.5M5" />
+
+	<!--
+		name, name of the product, used in naming the created files.
+	-->
+	<product name="eclipse-pdt-galileo-M4"
+		eclipseProductId="org.eclipse.platform.ide"
+		initialPerspectiveId="org.eclipse.php.perspective" />
+
+	<!-- url, pointing to an update site. -->
+	<updateSites>
+		<!-- local mirrors -->
+		<updateSite url="file:///home/data/httpd/download.eclipse.org/eclipse/updates/3.5/" />
+		<updateSite url="file:///home/data/httpd/download.eclipse.org/eclipse/updates/3.5milestones/" />
+		<updateSite url="file:///home/data/httpd/download.eclipse.org/releases/ganymede/" />
+		<updateSite url="file:///home/data/httpd/download.eclipse.org/technology/epp/updates/0.5milestones/" />
+
+		<!-- eclipse.org update sites -->
+		<!--
+			<updateSite url="file:///home/mknauer/mirror/eclipse/updates/3.5milestones/" />
+			<updateSite url="http://download.eclipse.org/eclipse/updates/3.5/" />
+			<updateSite url="http://download.eclipse.org/eclipse/updates/3.5milestones/" />
+			<updateSite url="http://download.eclipse.org/releases/ganymede/" />
+			<updateSite url="http://download.eclipse.org/releases/ganymede/staging/" />
+		-->
+	</updateSites>
+
+	<!-- id, a feature id. -->
+	<!-- version, the feature version. -->
+	<requiredFeatures>
+
+		<feature id="org.eclipse.platform" version="latest" />
+		<feature id="org.eclipse.cvs" version="latest" />
+	    <feature id="org.eclipse.php" version="latest" />
+	    <feature id="org.eclipse.mylyn_feature" version="latest" />
+	    <feature id="org.eclipse.mylyn.context_feature" version="latest" />
+	    <feature id="org.eclipse.mylyn.team_feature" version="latest" />
+		<feature id="org.eclipse.mylyn.ide_feature" version="latest" />
+	    <feature id="org.eclipse.mylyn.bugzilla_feature" version="latest" />
+	    <feature id="org.eclipse.emf.common" version="latest" />
+	    <feature id="org.eclipse.emf.common.ui" version="latest" />
+	    <feature id="org.eclipse.emf.ecore" version="latest" />
+	    <feature id="org.eclipse.emf.edit" version="latest" />
+	    <feature id="org.eclipse.emf.ecore.edit" version="latest" />
+	    <feature id="org.eclipse.emf.edit.ui" version="latest" />
+	    <feature id="org.eclipse.xsd" version="latest" />
+	    <feature id="org.eclipse.xsd.edit" version="latest" />
+	    <feature id="org.eclipse.gef" version="latest" />
+	    <feature id="org.eclipse.wst.common_ui.feature" version="latest" />
+	    <feature id="org.eclipse.wst.xml_ui.feature" version="latest" />
+	    <feature id="org.eclipse.emf" version="latest" />
+	    <feature id="org.eclipse.emf.ecore.sdo" version="latest" />
+	    <feature id="org.eclipse.wst" version="latest" />
+	    <feature id="org.eclipse.dltk.core" version="latest" />
+	    <feature id="org.eclipse.dltk.ui" version="latest" />
+	    <feature id="org.eclipse.epp.usagedata.feature" version="latest" />
+
+	</requiredFeatures>
+
+	<!--
+		folder, pointing to a folder containing the zipped root files for each
+		of the target platforms.
+	-->
+	<rootFileFolder
+		folder="/home/data/httpd/download.eclipse.org/eclipse/downloads/drops/S-3.5M5-200902021535" />
+
+	<!--
+		relativeFolder, names the subfolder of the base folder where the
+		update site will be created. This is configurable so that working
+		areas, especially root files, are reusable.
+	-->
+	<extensionSite relativeFolder="extension_site"></extensionSite>
+
+	<!--
+		Create archives for win32, linux, macosx platforms, antZip is default
+		format
+	-->
+	<targetPlatforms>
+		<platform os="win32" ws="win32" arch="x86">
+			<archiveFormat format="antZip"></archiveFormat>
+			<eclipseIniFileContent path="/eclipse/">-showsplash
+org.eclipse.platform
+--launcher.XXMaxPermSize
+256M
+-vmargs
+-Dosgi.requiredJavaVersion=1.5
+-Xms40m
+-Xmx256m</eclipseIniFileContent>
+		</platform>
+		<platform os="linux" ws="gtk" arch="x86">
+			<archiveFormat format="tar" />
+			<eclipseIniFileContent path="/eclipse/">-showsplash
+org.eclipse.platform
+-vmargs
+-Dosgi.requiredJavaVersion=1.5
+-Xms40m
+-Xmx256m</eclipseIniFileContent>
+		</platform>
+		<platform os="linux" ws="gtk" arch="x86_64">
+			<archiveFormat format="tar" />
+			<eclipseIniFileContent path="/eclipse/">-showsplash
+org.eclipse.platform
+-vmargs
+-Dosgi.requiredJavaVersion=1.5
+-Xms40m
+-Xmx256m</eclipseIniFileContent>
+		</platform>
+		<platform os="macosx" ws="carbon" arch="ppc">
+			<archiveFormat format="tar" />
+			<eclipseIniFileContent path="/eclipse/Eclipse.app/Contents/MacOS/">-showsplash
+org.eclipse.platform
+-vmargs
+-Xdock:icon=../Resources/Eclipse.icns
+-XstartOnFirstThread
+-Xms40m
+-Xmx256m
+-XX:MaxPermSize=256m
+-Dosgi.requiredJavaVersion=1.5
+-Dorg.eclipse.swt.internal.carbon.smallFonts</eclipseIniFileContent>
+		</platform>
+	</targetPlatforms>
+
+</configuration>
+

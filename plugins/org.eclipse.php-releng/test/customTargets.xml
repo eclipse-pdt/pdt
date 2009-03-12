@@ -8,7 +8,7 @@
 
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.php.test_feature" />
+			<property name="id" value="org.eclipse.php.test" />
 		</ant>
 	</target>
 
@@ -110,7 +110,7 @@
 	<target name="preAssemble">
 	</target>
 
-	<target name="assemble.org.eclipse.php.test_feature">
+	<target name="assemble.org.eclipse.php.test">
 		<ant antfile="${assembleScriptName}" />
 	</target>
 
@@ -164,7 +164,7 @@
 		<property name="test.properties" value="${workingDirectory}/pdt-testing/test.properties" />
 
 		<!--generate test.properties.  Custom Ant task contributed by org.eclipse.build.tools in org.eclipse.releng.basebuilder.-->
-		<generateTestProperties buildDirectory="${buildDirectory}" featureId="org.eclipse.php.test_feature" outputFile="${test.properties}" />
+		<generateTestProperties buildDirectory="${buildDirectory}" featureId="org.eclipse.php.test" outputFile="${test.properties}" />
 
 		<!--load the property file created with the directory names for all test plugins-->
 		<property file="${test.properties}" />
