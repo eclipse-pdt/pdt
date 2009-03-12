@@ -8,7 +8,7 @@
 	<target name="allElements">
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.php.test_feature" />
+			<property name="id" value="org.eclipse.php.test" />
 		</ant>
 	</target>
 
@@ -19,7 +19,7 @@
 	<!-- Add one target for each root element and each configuration -->
 	<!-- ===================================================================== -->
 
-	<target name="assemble.org.eclipse.php.test_feature">
+	<target name="assemble.org.eclipse.php.test">
 		<property name="archiveName"
 		          value="pdt-junit-tests-${buildAlias}.zip" />
 		<ant antfile="${assembleScriptName}" />
@@ -172,7 +172,7 @@
 		<property name="eclipse.home" value="../../.." />
 
 		<generateTestProperties buildDirectory="${buildDirectory}"
-		                        featureId="org.eclipse.php.test_feature"
+		                        featureId="org.eclipse.php.test"
 		                        outputFile="${workingDirectory}/testing/test.properties" />
 
 		<!--load the property file created with the directory names for all test plugins-->
