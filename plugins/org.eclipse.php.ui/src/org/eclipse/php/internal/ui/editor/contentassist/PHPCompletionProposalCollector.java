@@ -18,7 +18,7 @@ import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.swt.graphics.Image;
 
 public class PHPCompletionProposalCollector extends ScriptCompletionProposalCollector implements IPHPCompletionRequestor {
