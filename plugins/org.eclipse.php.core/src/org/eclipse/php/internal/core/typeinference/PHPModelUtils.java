@@ -344,15 +344,29 @@ public class PHPModelUtils {
 	 */
 	public static IType getCurrentType(ISourceModule sourceModule, int offset) {
 		try {
-			IModelElement currentType = sourceModule.getElementAt(offset);
-			while (currentType != null) {
-				if (currentType instanceof IType) {
-					if (!PHPFlags.isNamespace(((IType) currentType).getFlags())) {
-						return (IType) currentType;
+			getCurrentType(sourceModule.getElementAt(offset));
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the current class or interface by the specified file and offset
+	 * @param sourceModule The file where current namespace is requested 
+	 * @param offset The offset where current namespace is requested
+	 * @return type element, or <code>null</code> if the scope not a class or interface scope
+	 */
+	public static IType getCurrentType(IModelElement element) {
+		try {
+			while (element != null) {
+				if (element instanceof IType) {
+					if (!PHPFlags.isNamespace(((IType) element).getFlags())) {
+						return (IType) element;
 					}
 					break;
 				}
-				currentType = currentType.getParent();
+				element = element.getParent();
 			}
 		} catch (ModelException e) {
 			Logger.logException(e);

@@ -64,6 +64,10 @@ public class NamespaceDeclaration extends Statement {
 		
 		this.name = name;
 		this.body = body;
+		
+		if (body != null) {
+			body.setParent(this, BODY_PROPERTY);
+		}
 	}
 	
 	/**

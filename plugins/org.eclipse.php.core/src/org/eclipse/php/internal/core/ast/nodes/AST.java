@@ -2454,7 +2454,7 @@ public class AST {
 	 * @param iscurrent - Whether the namespace has a 'namespace' prefix
 	 * @return A new NamespaceName.
 	 */
-	public NamespaceName newNamespaceDeclaration(final Collection<Identifier> segments, final boolean isglobal, final boolean iscurrent) {
+	public NamespaceName newNamespaceName(final Collection<Identifier> segments, final boolean isglobal, final boolean iscurrent) {
 		NamespaceName namespaceName = new NamespaceName(this);
 		namespaceName.segments().addAll(segments);
 		namespaceName.setGlobal(isglobal);
