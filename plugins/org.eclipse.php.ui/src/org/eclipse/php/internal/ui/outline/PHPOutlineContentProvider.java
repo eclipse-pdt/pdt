@@ -203,6 +203,9 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	 */
 	protected class ElementChangedListener implements IElementChangedListener {
 
+		private int fUseStatements;
+		private int fNewUseStatements;
+
 		public void elementChanged(final ElementChangedEvent e) {
 
 			Control control = fOutlineViewer.getControl();
@@ -222,10 +225,13 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 								if (activeEditor instanceof PHPStructuredEditor) {
 									IModelElement base = ((PHPStructuredEditor) activeEditor).getModelElement();
 
+									ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((ISourceModule)base);
+									UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
+									fNewUseStatements = useStatements.length;
+									
 									IModelElementDelta delta = findElement(base, e.getDelta());
 									if (delta != null && fOutlineViewer != null) {
 										fOutlineViewer.refresh();
-										//								fOutlineViewer.reconcile(delta);
 									}
 								}
 							}
@@ -270,6 +276,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 
 		private boolean isPossibleStructuralChange(IModelElementDelta cuDelta) {
+			int oldValue = fUseStatements;
+			fUseStatements = fNewUseStatements;
+			if (oldValue != fNewUseStatements) {
+				return true;
+			}
+			
 			if (cuDelta.getKind() != IModelElementDelta.CHANGED) {
 				return true; // add or remove
 			}
