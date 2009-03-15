@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.eclipse.php.sdk_feature"
+      id="org.eclipse.php.sdk"
       label="%featureName"
       version="2.0.0.qualifier"
       provider-name="%providerName">
@@ -19,11 +19,11 @@
    </url>
 
    <includes
-         id="org.eclipse.php_feature"
+         id="org.eclipse.php"
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.php_feature.source"
+         id="org.eclipse.php.source"
          version="0.0.0"/>
 
 </feature>
