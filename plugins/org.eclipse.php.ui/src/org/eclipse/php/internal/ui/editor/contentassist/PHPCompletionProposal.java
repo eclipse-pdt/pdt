@@ -15,9 +15,9 @@ import org.eclipse.dltk.ui.text.ScriptTextTools;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.php.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.graphics.Image;
 
