@@ -53,7 +53,7 @@
    <features>
       <feature id="org.eclipse.emf" version="2.2.1.v200609210005"/>
       <feature id="org.eclipse.jem" version="1.2.2.v20061027_M----6zXJJzM1TEVU"/>
-      <feature id="org.eclipse.php_feature" version="0.7.0.qualifier"/>
+      <feature id="org.eclipse.php" version="0.7.0.qualifier"/>
       <feature id="org.eclipse.platform" version="3.2.1.r321_v20060921-b_XVA-INSQSyMtx"/>
       <feature id="org.eclipse.rcp" version="3.2.1.r321_v20060801-2ekW2BxmcpPUOoq"/>
       <feature id="org.eclipse.wst" version="1.5.2.v200610070620-X3Tmm8_VLz2EcCH"/>
