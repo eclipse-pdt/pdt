@@ -1,4 +1,4 @@
-package org.eclipse.php.internal.core.codeassist;
+package org.eclipse.php.core.codeassist;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;

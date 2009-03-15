@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.codeassist;
+package org.eclipse.php.core.codeassist;
 
 import java.util.*;
 import java.util.regex.Matcher;
