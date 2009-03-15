@@ -10,29 +10,28 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
-import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
-import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
+import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
+import org.eclipse.wst.html.core.internal.Logger;
 
 /**
  * This class injects USE statement if needed for the given completion proposal
@@ -44,6 +43,53 @@ public class UseStatementInjector {
 
 	public UseStatementInjector(ScriptCompletionProposal proposal) {
 		this.proposal = proposal;
+	}
+
+	private Collection<Identifier> createIdentifiers(AST ast, String namespaceName) {
+		String[] split = namespaceName.split("\\\\");
+		List<Identifier> identifiers = new ArrayList<Identifier>(split.length);
+		for (String s : split) {
+			identifiers.add(ast.newIdentifier(s));
+		}
+		return identifiers;
+	}
+
+	private NamespaceDeclaration getCurrentNamespace(Program program, int offset) {
+		ASTNode node = program.getElementAt(offset);
+		do {
+			switch (node.getType()) {
+				case ASTNode.NAMESPACE:
+					return (NamespaceDeclaration) node;
+			}
+			node = node.getParent();
+		} while (node != null);
+
+		return null;
+	}
+
+	private String getNamespaceName(NamespaceDeclaration namespaceDecl) {
+		StringBuilder nameBuf = new StringBuilder();
+		NamespaceName name = namespaceDecl.getName();
+		for (Identifier identifier : name.segments()) {
+			if (nameBuf.length() > 0) {
+				nameBuf.append('\\');
+			}
+			nameBuf.append(identifier.getName());
+		}
+		return nameBuf.toString();
+	}
+
+	private boolean needsAliasPrepend(IModelElement modelElement) throws ModelException {
+		if (modelElement instanceof IMethod) {
+			return ((IMethod) modelElement).getDeclaringType() == null;
+		}
+		if (modelElement instanceof IField) {
+			IField field = (IField) modelElement;
+			if (!PHPFlags.isConstant(field.getFlags())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -67,57 +113,44 @@ public class UseStatementInjector {
 					IModelElement editorElement = ((PHPStructuredEditor) textEditor).getModelElement();
 					if (editorElement != null) {
 						ISourceModule sourceModule = ((ModelElement) editorElement).getSourceModule();
-						
-						String namespaceName = namespace.getElementName();
-						
-						IType currentNamespace = PHPModelUtils.getCurrentNamespace(sourceModule, offset);
-						if (currentNamespace != null && currentNamespace.getElementName().equals(namespaceName)) {
-							// no need to insert USE statement as we are already in the required namespace:
-							return offset;
-						}
 
-						ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+						try {
+							String namespaceName = namespace.getElementName();
+							ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+							TextEdit edits = null;
 
-						// find existing use statement:
-						UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, namespaceName, offset);
-						if (usePart == null) {
+							// find existing use statement:
+							UsePart usePart = ASTUtils.findUseStatementByNamespace(moduleDeclaration, namespaceName, offset);
+							if (usePart == null) {
+								ASTParser parser = ASTParser.newParser(sourceModule);
+								parser.setSource(document.get().toCharArray());
 
-							// find the place where to insert the use statement:
-							int insertOffset = -1;
+								Program program = parser.createAST(null);
+								program.recordModifications();
 
-							UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, offset);
-							if (useStatements.length > 0) {
-								// insert after last use statement:
-								insertOffset = useStatements[useStatements.length - 1].sourceEnd();
-							} else if (currentNamespace != null) {
-								// insert after the namespace statement:
-								try {
-									TypeDeclaration namespaceNode = PHPModelUtils.getNodeByClass(moduleDeclaration, currentNamespace);
-									Statement firstStatement = (Statement) namespaceNode.getStatements().get(0);
-									insertOffset = firstStatement.sourceStart() - 1;
-									while (insertOffset > 0 && Character.isWhitespace(document.getChar(insertOffset))) {
-										insertOffset--;
+								AST ast = program.getAST();
+
+								NamespaceName newNamespaceName = ast.newNamespaceName(createIdentifiers(ast, namespaceName), false, false);
+								UseStatementPart newUseStatementPart = ast.newUseStatementPart(newNamespaceName, null);
+								org.eclipse.php.internal.core.ast.nodes.UseStatement newUseStatement = ast.newUseStatement(Arrays.asList(new UseStatementPart[] { newUseStatementPart }));
+
+								NamespaceDeclaration currentNamespace = getCurrentNamespace(program, offset);
+								if (currentNamespace != null) {
+									if (namespaceName.equals(getNamespaceName(currentNamespace))) {
+										return offset; // don't insert USE statement for current namespace
 									}
-									insertOffset++;
-								} catch (Exception e) {
-									if (DLTKCore.DEBUG_COMPLETION) {
-										e.printStackTrace();
-									}
+
+									// insert in the beginning of the current namespace:
+									currentNamespace.getBody().statements().add(0, newUseStatement);
+								} else {
+									// insert in the beginning of the document:
+									program.statements().add(0, newUseStatement);
 								}
-							} else {
-								insertOffset = findPhpBlockOffset((IStructuredDocument) document);
+								edits = program.rewrite(document, null);
+								edits.apply(document);
 							}
 
-							if (insertOffset > 0) {
-								String useStatement = new StringBuilder("\nuse ").append(namespaceName).append(";").toString();
-								try {
-									document.replace(insertOffset, 0, useStatement);
-								} catch (BadLocationException e) {
-									if (DLTKCore.DEBUG_COMPLETION) {
-										e.printStackTrace();
-									}
-								}
-
+							if (needsAliasPrepend(modelElement)) {
 								// update replacement string: add namespace alias prefix
 								int i = namespaceName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
 								String alias = namespaceName;
@@ -127,7 +160,7 @@ public class UseStatementInjector {
 
 								String namespacePrefix = alias + NamespaceReference.NAMESPACE_SEPARATOR;
 								String replacementString = proposal.getReplacementString();
-								
+
 								// Remove fully qualified namespace prefix form the replacement string:
 								if (replacementString.startsWith(namespaceName)) {
 									replacementString = replacementString.substring(namespaceName.length());
@@ -135,57 +168,28 @@ public class UseStatementInjector {
 										replacementString = replacementString.substring(1);
 									}
 								}
-								
+
 								// Add alias to the replacement string:
 								if (!replacementString.startsWith(namespacePrefix)) {
 									replacementString = namespacePrefix + replacementString;
 								}
 								proposal.setReplacementString(replacementString);
+							}
 
-								int replacementOffset = proposal.getReplacementOffset() + useStatement.length();
-								offset += useStatement.length();
+							if (edits != null) {
+								int replacementOffset = proposal.getReplacementOffset() + edits.getLength();
+								offset += edits.getLength();
 								proposal.setReplacementOffset(replacementOffset);
 							}
+
+						} catch (Exception e) {
+							Logger.logException(e);
 						}
 					}
 				}
 			}
 		}
-		
+
 		return offset;
 	}
-
-	/**
-	 * This function returns the start of first php block, if found, else -1 returned
-	 * @return injectOffset
-	 */
-	protected int findPhpBlockOffset(IStructuredDocument document) {
-		int injectOffset = -1;
-		IPhpScriptRegion scriptRegion = null;
-		ITextRegion[] subRegions = getStructuredDocumentsRegions(document);
-		if (subRegions != null) {
-			for (ITextRegion currentRegion : subRegions) {
-				if (currentRegion != null && currentRegion instanceof IPhpScriptRegion) {
-					scriptRegion = (IPhpScriptRegion) currentRegion;
-					if (scriptRegion.getType().equals(PHPRegionTypes.PHP_CONTENT)) {
-						injectOffset = scriptRegion.getStart();
-						return injectOffset;
-					}
-				}
-			}
-		}
-		return injectOffset;
-	}
-
-	protected ITextRegion[] getStructuredDocumentsRegions(IStructuredDocument document) {
-		IStructuredDocumentRegion[] subRegions = document.getStructuredDocumentRegions();
-		for (IStructuredDocumentRegion currentRegion : subRegions) {
-			if (currentRegion instanceof XMLStructuredDocumentRegion) {
-				ITextRegion[] textRegions = currentRegion.getRegions().toArray();
-				return textRegions;
-			}
-		}
-		return null;
-	}
-
 }
