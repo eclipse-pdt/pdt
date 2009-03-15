@@ -108,15 +108,18 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		return PHPContentOutlineConfiguration.NO_CHILDREN;
 	}
 
+	private boolean isNamespaceSupported(IModelElement modelElement) {
+		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(modelElement.getScriptProject().getProject());
+		return phpVersion.isGreaterThan(PHPVersion.PHP5);
+	}
+
 	public Object[] getElements(Object parent) {
 		Object[] children = getChildren(parent);
-		
+
 		if (parent instanceof ISourceModule) {
 			ISourceModule sourceModule = (ISourceModule) parent;
 
-			PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
-			if (phpVersion.isGreaterThan(PHPVersion.PHP5)) {
-				
+			if (isNamespaceSupported(sourceModule)) {
 				// if namespaces are supported, add use statements node:
 				Object[] newChildren = new Object[children.length + 1];
 				newChildren[0] = new UseStatementsNode(sourceModule);
@@ -203,8 +206,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	 */
 	protected class ElementChangedListener implements IElementChangedListener {
 
-		private int fUseStatements;
-		private int fNewUseStatements;
+		private int useStatementsCount;
+		private int useStatementsCountNew;
 
 		public void elementChanged(final ElementChangedEvent e) {
 
@@ -225,10 +228,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 								if (activeEditor instanceof PHPStructuredEditor) {
 									IModelElement base = ((PHPStructuredEditor) activeEditor).getModelElement();
 
-									ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((ISourceModule)base);
-									UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
-									fNewUseStatements = useStatements.length;
-									
+									if (isNamespaceSupported(base)) {
+										ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration((ISourceModule) base);
+										UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
+										useStatementsCountNew = useStatements.length;
+									}
+
 									IModelElementDelta delta = findElement(base, e.getDelta());
 									if (delta != null && fOutlineViewer != null) {
 										fOutlineViewer.refresh();
@@ -276,12 +281,12 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 		}
 
 		private boolean isPossibleStructuralChange(IModelElementDelta cuDelta) {
-			int oldValue = fUseStatements;
-			fUseStatements = fNewUseStatements;
-			if (oldValue != fNewUseStatements) {
+			int oldValue = useStatementsCount;
+			useStatementsCount = useStatementsCountNew;
+			if (oldValue != useStatementsCountNew) {
 				return true;
 			}
-			
+
 			if (cuDelta.getKind() != IModelElementDelta.CHANGED) {
 				return true; // add or remove
 			}
@@ -292,16 +297,16 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			return (flags & (IModelElementDelta.F_CONTENT | IModelElementDelta.F_FINE_GRAINED)) == IModelElementDelta.F_CONTENT;
 		}
 	}
-	
+
 	class UseStatementsNode extends FakeType {
-		
+
 		private ISourceModule sourceModule;
-		
+
 		public UseStatementsNode(ISourceModule sourceModule) {
 			super((ModelElement) sourceModule, PHPUIMessages.getString("PHPOutlineContentProvider_useStatementsNode"), 0); //$NON-NLS-1$
 			this.sourceModule = sourceModule;
 		}
-		
+
 		public IModelElement[] getChildren() throws ModelException {
 			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 			UseStatement[] useStatements = ASTUtils.getUseStatements(moduleDeclaration, moduleDeclaration.sourceEnd());
@@ -313,7 +318,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 			}
 			return (UseStatementElement[]) elements.toArray(new UseStatementElement[elements.size()]);
 		}
-		
+
 		public boolean hasChildren() throws ModelException {
 			return getChildren().length > 0;
 		}
