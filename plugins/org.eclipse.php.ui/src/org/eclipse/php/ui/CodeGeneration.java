@@ -19,6 +19,8 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.internal.core.MemberElementInfo;
+import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
@@ -218,7 +220,7 @@ public class CodeGeneration {
 					fieldType = varType.getName();
 				}
 			}
-			
+
 			if (null == fieldType) {
 				fieldType = "unknown_type";
 			}
@@ -326,11 +328,13 @@ public class CodeGeneration {
 	 * @return Returns the constructed comment or <code>null</code> if
 	 * the comment code template is empty. The returned string is unformatted and and has no indent (formatting required).
 	 * @throws CoreException Thrown when the evaluation of the code template fails.
+	 * Contributed by zhaozw - bug #255204 [regression] Parameters type is not displayed in Generated element comments doc block
 	 */
 	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter) throws CoreException {
 		//FIXME - 'retType' should be initialized to null after the 'getReturnType will be functional, so void/c'tor will not have 'return' tag
 		String retType = "unknown_type";
 		String[] typeParameterNames = null;
+		String[] parameterTypes = null;
 
 		try {
 			Program program = SharedASTProvider.getAST(method.getSourceModule(), SharedASTProvider.WAIT_YES, new NullProgressMonitor());
@@ -345,6 +349,15 @@ public class CodeGeneration {
 			} else if (elementAt instanceof FunctionDeclaration) {
 				FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
 				resolvedBinding = functionDeclaration.resolveFunctionBinding();
+
+				//get parameter type
+				parameterTypes = new String[functionDeclaration.formalParameters().size()];
+				int i = 0;
+				for (ASTNode node : functionDeclaration.formalParameters()) {
+					FormalParameter formalParameter = (FormalParameter) node;
+					String typeName = ((Identifier) formalParameter.getParameterType()).getName();
+					parameterTypes[i++] = typeName;
+				}
 			}
 			if (null != resolvedBinding) {
 				returnType = resolvedBinding.getReturnType();
@@ -362,6 +375,7 @@ public class CodeGeneration {
 
 				if (null != returnType) {
 					int i = 0;
+					typeParameterNames = new String[typeParametersTypes.length];
 					for (ITypeBinding type : typeParametersTypes) {
 						typeParameterNames[i++] = type.getName();
 					}
@@ -372,7 +386,12 @@ public class CodeGeneration {
 			Logger.logException(e);
 		}
 		String[] paramNames = method.getParameters();// ParameterNames();
-
+		// add parameter type before parameter name
+		for (int i = 0; i < paramNames.length; i++) {
+			if (null != parameterTypes[i]) {
+				paramNames[i] = parameterTypes[i] + " " + paramNames[i];
+			}
+		}
 		IType declaringType = method.getDeclaringType();
 		if (null != declaringType) {
 			return StubUtility.getMethodComment(method.getScriptProject(), declaringType.getElementName(), method.getElementName(), paramNames, retType, typeParameterNames, overridden, false, lineDelimiter);
