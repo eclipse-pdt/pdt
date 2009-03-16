@@ -63,7 +63,7 @@ public class UseStatementInjector {
 			}
 			node = node.getParent();
 		} while (node != null);
-
+		
 		return null;
 	}
 
@@ -139,7 +139,6 @@ public class UseStatementInjector {
 									if (namespaceName.equals(getNamespaceName(currentNamespace))) {
 										return offset; // don't insert USE statement for current namespace
 									}
-
 									// insert in the beginning of the current namespace:
 									currentNamespace.getBody().statements().add(0, newUseStatement);
 								} else {
