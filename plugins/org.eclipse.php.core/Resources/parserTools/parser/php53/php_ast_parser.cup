@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.ast.scanner.php53;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.14 2009/02/04 14:29:51 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.15 2009/03/16 16:55:26 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -346,7 +346,7 @@ T_STRING:n
 	RESULT = list;
 :}
 
-| 
+|
 namespace_name:list T_NS_SEPARATOR T_STRING:n
 {:
 	list.add(new Identifier(nleft, nright, parser.ast, n));
@@ -358,8 +358,17 @@ top_statement_list ::=
 top_statement_list:sList top_statement:statement
 {:
 	if(statement != null) {
-		sList.add(statement);
-	}		
+		if (!(statement instanceof NamespaceDeclaration) && sList.size() > 0) {
+			Statement lastStatement = (Statement) ((LinkedList) sList).getLast();
+			if (lastStatement instanceof NamespaceDeclaration) {
+				((NamespaceDeclaration)lastStatement).addStatement(statement);
+			} else {
+				sList.add(statement);
+			}
+		} else {
+			sList.add(statement);
+		}
+	}
 	RESULT = sList;
 :}
 
@@ -394,20 +403,20 @@ statement:statement
 | T_NAMESPACE:s namespace_name:list T_SEMICOLON:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast, 
-		new NamespaceName(listleft, listright, parser.ast, list, false, false), null);
+		new NamespaceName(listleft, listright, parser.ast, list, false, false), null, true);
 :}
 
 | T_NAMESPACE:s namespace_name:list T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast,
 		new NamespaceName(listleft, listright, parser.ast, list, false, false),  
-		new Block(tokenleft, eright, parser.ast, sList));
+		new Block(tokenleft, eright, parser.ast, sList), false);
 :}
 
 | T_NAMESPACE:s T_CURLY_OPEN:token top_statement_list:sList T_CURLY_CLOSE:e
 {:
 	RESULT = new NamespaceDeclaration(sleft, eright, parser.ast, null, 
-		new Block(tokenleft, eright, parser.ast, sList));
+		new Block(tokenleft, eright, parser.ast, sList), false);
 :}
 
 | T_USE:s use_declarations:list T_SEMICOLON:e

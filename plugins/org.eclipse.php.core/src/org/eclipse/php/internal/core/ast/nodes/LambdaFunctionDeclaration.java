@@ -137,8 +137,7 @@ public class LambdaFunctionDeclaration extends Expression {
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<LambdaFunctionDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(" isReference='").append(isReference).append("'"); //$NON-NLS-1$ //$NON-NLS-2$
-		buffer.append(" isStatic='").append(isReference).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		buffer.append(" isReference='").append(isReference).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		buffer.append(TAB).append(tab).append("<FormalParameters>\n"); //$NON-NLS-1$
 		for (ASTNode node : this.formalParameters) {

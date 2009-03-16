@@ -27,6 +27,7 @@ public class NamespaceDeclaration extends Statement {
 	
 	private NamespaceName name;
 	private Block body;
+	private boolean bracketed = true;
 	
 	/**
 	 * The "namespace" structural property of this node type.
@@ -36,6 +37,9 @@ public class NamespaceDeclaration extends Statement {
 	
 	public static final ChildPropertyDescriptor BODY_PROPERTY = 
 		new ChildPropertyDescriptor(NamespaceDeclaration.class, "body", Block.class, OPTIONAL, CYCLE_RISK); //$NON-NLS-1$
+	
+	public static final SimplePropertyDescriptor BRACKETED_PROPERTY = 
+		new SimplePropertyDescriptor(NamespaceDeclaration.class, "bracketed", Boolean.class, MANDATORY); //$NON-NLS-1$
 
 	/**
 	 * A list of property descriptors (element type: 
@@ -47,6 +51,7 @@ public class NamespaceDeclaration extends Statement {
 		List<StructuralPropertyDescriptor> properyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		properyList.add(NAME_PROPERTY);
 		properyList.add(BODY_PROPERTY);
+		properyList.add(BRACKETED_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(properyList);
 	}
 	
@@ -54,20 +59,48 @@ public class NamespaceDeclaration extends Statement {
 		super(ast);
 	}
 
-	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body) {
+	public NamespaceDeclaration(int start, int end, AST ast, NamespaceName name, Block body, boolean bracketed) {
 		super(start, end, ast);
 		
-		// Either name or body can be null, but not both of them
-		if (name == null && body == null) {
-			throw new IllegalArgumentException("Either namespace name or body must not be null");
+		if (bracketed && name == null) {
+			throw new IllegalArgumentException("Namespace name must not be null in a bracketed statement");
 		}
+		
+		this.bracketed = bracketed;
+		
+		if (body == null) {
+			body = new Block(start, end, ast, new ArrayList());
+		}
+		body.setParent(this, BODY_PROPERTY);
 		
 		this.name = name;
 		this.body = body;
+	}
+	
+	/**
+	 * Returns whether this namespace declaration has a bracketed syntax
+	 * @return
+	 */
+	public boolean isBracketed() {
+		return bracketed;
+	}
+	
+	public void setBracketed(boolean bracketed) {
+		preValueChange(BRACKETED_PROPERTY);
+		this.bracketed = bracketed;
+		postValueChange(BRACKETED_PROPERTY);
+	}
+	
+	public void addStatement(Statement statement) {
+		Block body = getBody();
+		body.statements().add(statement);
 		
-		if (body != null) {
-			body.setParent(this, BODY_PROPERTY);
-		}
+		int statementEnd = statement.getEnd();
+		int bodyStart = body.getStart();
+		body.setSourceRange(bodyStart, statementEnd - bodyStart);
+		
+		int namespaceStart = getStart();
+		setSourceRange(namespaceStart, statementEnd - namespaceStart);
 	}
 	
 	/**
@@ -130,9 +163,7 @@ public class NamespaceDeclaration extends Statement {
 			name.accept(visitor);
 		}
 		Block body = getBody();
-		if (body != null) {
-			body.accept(visitor);
-		}
+		body.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
@@ -142,9 +173,7 @@ public class NamespaceDeclaration extends Statement {
 			name.accept(visitor);
 		}
 		Block body = getBody();
-		if (body != null) {
-			body.accept(visitor);
-		}
+		body.accept(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
@@ -153,16 +182,14 @@ public class NamespaceDeclaration extends Statement {
 			name.accept(visitor);
 		}
 		Block body = getBody();
-		if (body != null) {
-			body.accept(visitor);
-		}
+		body.accept(visitor);
 		accept(visitor);
 	}
 
 	public void toString(StringBuffer buffer, String tab) {
 		buffer.append(tab).append("<NamespaceDeclaration"); //$NON-NLS-1$
 		appendInterval(buffer);
-		buffer.append(">\n");
+		buffer.append(" isBracketed='").append(bracketed).append("'>\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		NamespaceName name = getName();
 		if (name != null) {
@@ -171,10 +198,9 @@ public class NamespaceDeclaration extends Statement {
 		}
 		
 		Block body = getBody();
-		if (body != null) {
-			body.toString(buffer, TAB + tab);
-			buffer.append("\n"); //$NON-NLS-1$
-		}
+		body.toString(buffer, TAB + tab);
+		buffer.append("\n"); //$NON-NLS-1$
+
 		buffer.append(tab).append("</NamespaceDeclaration>"); //$NON-NLS-1$
 	}
 
@@ -204,13 +230,26 @@ public class NamespaceDeclaration extends Statement {
 	ASTNode clone0(AST target) {
 		final NamespaceName name = ASTNode.copySubtree(target, getName());
 		final Block body = ASTNode.copySubtree(target, getBody());
-		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name, body);
+		final boolean bracketed = isBracketed();
+		final NamespaceDeclaration result = new NamespaceDeclaration(this.getStart(), this.getEnd(), target, name, body, bracketed);
 		return result;
 	}
 	
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
+	}
+	
+	boolean internalGetSetBooleanProperty(SimplePropertyDescriptor property, boolean get, boolean value) {
+		if (property == BRACKETED_PROPERTY) {
+			if (get) {
+				return isBracketed();
+			} else {
+				setBracketed(value); 
+				return false;
+			}
+		}
+		return super.internalGetSetBooleanProperty(property, get, value);
 	}
 	
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
