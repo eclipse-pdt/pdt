@@ -180,7 +180,6 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 
 	protected Object internalGetParentGroupNode(final Object element) {
 		if (element instanceof IModelElement) {
-
 			IModelElement modelElement = (IModelElement) element;
 
 			if (OutlineUtils.isGlobalClass(modelElement))
@@ -192,8 +191,8 @@ public class ProjectOutlineContentProvider extends ScriptExplorerContentProvider
 			if (OutlineUtils.isConstant(modelElement))
 				return ProjectOutlineGroups.GROUP_CONSTANTS;
 
+			return ProjectOutlineGroups.GROUP_NAMESPACES;
 		}
-
 		return null;
 	}
 

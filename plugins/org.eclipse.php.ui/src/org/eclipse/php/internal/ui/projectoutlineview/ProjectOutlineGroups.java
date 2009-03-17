@@ -10,18 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.projectoutlineview;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IProjectFragment;
-import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -35,11 +34,11 @@ import org.eclipse.swt.graphics.Image;
  */
 public enum ProjectOutlineGroups {
 
-	GROUP_CLASSES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.classes") ), 
-	GROUP_CONSTANTS(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.constants") ), 
-	GROUP_FUNCTIONS(PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.functions") );
+	GROUP_CLASSES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.classes")),
+	GROUP_NAMESPACES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.namespaces")),
+	GROUP_CONSTANTS(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.constants")),
+	GROUP_FUNCTIONS(PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.functions"));
 
-	private static final String ASTRIX_STRING = "*";
 	private final Image image;
 	private final String text;
 
@@ -60,21 +59,8 @@ public enum ProjectOutlineGroups {
 
 	protected Object[] getChildren() {
 		if (ProjectOutlineContentProvider.scripProject != null) {
-			ArrayList<IProjectFragment> projectFragments = new ArrayList<IProjectFragment>();
 
-			// getting project's fragments
-			try {
-				for (IProjectFragment projectFragment : (((IScriptProject) ProjectOutlineContentProvider.scripProject).getProjectFragments())) {
-					if (projectFragment != null && !projectFragment.isExternal()) { //adding only non-external resources
-						projectFragments.add(projectFragment);
-					}
-				}
-			} catch (ModelException e) {
-				Logger.logException(e);
-			}
-			PHPMixinModel mixinModel = PHPMixinModel.getInstance((IScriptProject) ProjectOutlineContentProvider.scripProject);
-			// foreach fragment getting its children, 
-			// and then merging them into last fragments list
+			IDLTKSearchScope scope = SearchEngine.createSearchScope(ProjectOutlineContentProvider.scripProject, IDLTKSearchScope.SOURCES);
 
 			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
 				public int compare(IModelElement o1, IModelElement o2) {
@@ -85,28 +71,32 @@ public enum ProjectOutlineGroups {
 
 				}
 			});
+			switch (this) {
+				case GROUP_NAMESPACES:
+					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllNamespaces(scope)));
+					break;
 
-			for (IProjectFragment projectFragment : projectFragments) {
-				IDLTKSearchScope scope = SearchEngine.createSearchScope(projectFragment);
-				IModelElement[] children = null;
+				case GROUP_CLASSES:
+					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllTypes(scope)));
+					break;
 
-				switch (this) {
-					case GROUP_CLASSES:
-						children = mixinModel.getType(ASTRIX_STRING, scope);
-						break;
+				case GROUP_FUNCTIONS:
+					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllFunctions(scope)));
+					break;
 
-					case GROUP_FUNCTIONS:
-						children = mixinModel.getFunction(ASTRIX_STRING, scope);
-						break;
-
-					case GROUP_CONSTANTS:
-						children = mixinModel.getConstant(ASTRIX_STRING, null, scope);
-						break;
-				}
-
-				childrenList.addAll(Arrays.asList(children));
+				case GROUP_CONSTANTS:
+					IField[] fields = PHPTypeInferenceUtils.getAllFields(scope);
+					for (IField iField : fields) {
+						try {
+							if (PHPFlags.isConstant(iField.getFlags())) {
+								childrenList.add(iField);
+							}
+						} catch (ModelException e) {
+							Logger.logException(e);
+						}
+					}
+					break;
 			}
-
 			return childrenList.toArray();
 		}
 
