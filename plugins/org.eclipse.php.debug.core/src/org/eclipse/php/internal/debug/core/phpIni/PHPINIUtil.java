@@ -166,7 +166,7 @@ public class PHPINIUtil {
 			if (debuggerFile.exists()) {
 				modifyDebuggerExtensionPath(tempIniFile, debuggerFile.getAbsolutePath());
 			}
-			modifyExtensionDir(tempIniFile, debuggerFile.getParentFile().getAbsolutePath());
+			modifyExtensionDir(tempIniFile, new File(debuggerFile.getParentFile(), "ext").getAbsolutePath());
 		}
 
 		if (PHPDebugPlugin.DEBUG) {

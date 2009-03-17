@@ -334,7 +334,6 @@ public class PHPexes {
 	/**
 	 * Load the PHP executables that were defined in the extensions.
 	 */
-	@SuppressWarnings("unchecked")
 	private void loadExtensions() {
 		final IExtensionRegistry registry = Platform.getExtensionRegistry();
 		final IConfigurationElement[] elements = registry.getConfigurationElementsFor(PHPDebugPlugin.getID(), EXTENSION_POINT_NAME);
