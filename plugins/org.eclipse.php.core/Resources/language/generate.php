@@ -92,6 +92,10 @@ $intConstants['__LINE__'] = null;
 $intConstants['__CLASS__'] = null;
 $intConstants['__FUNCTION__'] = null;
 $intConstants['__METHOD__'] = null;
+if (version_compare(phpversion(), "5.3.0") >= 0) {
+	$intConstants['__DIR__'] = null;
+	$intConstants['__NAMESPACE__'] = null;
+}
 foreach ($intConstants as $name => $value) {
 	if (!@$processedConstants[$name]) {
 		print_constant ($name, $value);
