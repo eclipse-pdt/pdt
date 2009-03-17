@@ -73,4 +73,22 @@ define ('__FUNCTION__', null);
  * @link http://php.net/manual/en/language.constants.php
  */
 define ('__METHOD__', null);
+
+/**
+ * The directory of the file. If used inside an include, the directory
+ * of the included file is returned. This is equivalent to dirname(__FILE__).
+ * This directory name does not have a trailing slash unless it is the root
+ * directory. (Added in PHP 5.3.0.)
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__DIR__', null);
+
+/**
+ * The name of the current namespace (case-sensitive). This constant is
+ * defined in compile-time (Added in PHP 5.3.0).
+ * @link http://php.net/manual/en/language.constants.php
+ */
+define ('__NAMESPACE__', null);
+
+
 ?>
