@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -27,8 +26,10 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.core.search.indexing.IIndexConstants;
-import org.eclipse.dltk.internal.core.*;
-import org.eclipse.dltk.internal.core.util.HandleFactory;
+import org.eclipse.dltk.internal.core.AbstractSourceModule;
+import org.eclipse.dltk.internal.core.ModelElement;
+import org.eclipse.dltk.internal.core.ScriptProject;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -995,17 +996,7 @@ public class CodeAssistUtils {
 		if (pattern != null) {
 			try {
 				if (elementType == IDLTKSearchConstants.TYPE) {
-					final HandleFactory handleFactory = new HandleFactory();
-					searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), pattern.getMatchRule(), IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
-						public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-							Openable openable = handleFactory.createOpenable(path, scope);
-							ModelElement parent = openable;
-							if (enclosingTypeNames.length > 0) {
-								parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
-							}
-							elements.add(new FakeType(parent, new String(simpleTypeName), modifiers));
-						}
-					}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllTypes(prefix.toCharArray(), pattern.getMatchRule(), scope)));
 				} else {
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
