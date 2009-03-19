@@ -635,7 +635,7 @@ public class CodeAssistUtils {
 
 			String functionName = statementText.subSequence(functionNameStart, functionNameEnd).toString();
 			try {
-				IMethod[] functions = PHPTypeInferenceUtils.getMethods(functionName, sourceModule, offset);
+				IMethod[] functions = PHPTypeInferenceUtils.getFunctions(functionName, sourceModule, offset);
 				// if its a non class function
 				Set<IType> returnTypes = new LinkedHashSet<IType>();
 				for (IModelElement function : functions) {
@@ -996,7 +996,7 @@ public class CodeAssistUtils {
 		if (pattern != null) {
 			try {
 				if (elementType == IDLTKSearchConstants.TYPE) {
-					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllTypes(prefix.toCharArray(), pattern.getMatchRule(), scope)));
+					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getTypes(prefix.toCharArray(), pattern.getMatchRule(), scope)));
 				} else {
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {

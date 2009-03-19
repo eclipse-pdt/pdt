@@ -22,6 +22,7 @@ import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptSelectionEngine;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.IContext;
@@ -170,7 +171,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					} else {
 						SimpleReference callName = callExpression.getCallName();
 						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference)callName).getFullyQualifiedName() : callName.getName();
-						IMethod[] methods = PHPTypeInferenceUtils.getMethods(methodName, sourceModule, offset);
+						IMethod[] methods = PHPTypeInferenceUtils.getFunctions(methodName, sourceModule, offset);
 						Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
 						return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 					}
@@ -261,7 +262,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					IType[] types = PHPTypeInferenceUtils.getTypes(name, sourceModule, offset);
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
-						types = PHPTypeInferenceUtils.getNamespaces(name, sourceModule);
+						types = PHPTypeInferenceUtils.getNamespaces(name, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
 						if (types == null || types.length == 0) {
 							return PHPTypeInferenceUtils.getFields(name, sourceModule, offset);
 						}
@@ -439,7 +440,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							return (IType[]) filtered.toArray(new IType[filtered.size()]);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
-							return PHPTypeInferenceUtils.getNamespaces(elementName, sourceModule);
+							return PHPTypeInferenceUtils.getNamespaces(elementName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset);
@@ -453,7 +454,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							IMethod[] methods = PHPTypeInferenceUtils.getMethods(elementName, sourceModule, offset);
+							IMethod[] methods = PHPTypeInferenceUtils.getFunctions(elementName, sourceModule, offset);
 							Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
 							return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 						}

@@ -34,7 +34,7 @@ public class NamespaceElementsCompositeStrategy implements ICompletionStrategy {
 				break;
 			}
 		}
-
+		
 		if (isGlobalNamespace) {
 			if (!hasNewClassContext) {
 				strategies.add(new GlobalTypesStrategy(context));

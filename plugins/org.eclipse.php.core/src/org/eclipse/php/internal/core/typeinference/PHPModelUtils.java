@@ -344,7 +344,7 @@ public class PHPModelUtils {
 	 */
 	public static IType getCurrentType(ISourceModule sourceModule, int offset) {
 		try {
-			getCurrentType(sourceModule.getElementAt(offset));
+			return getCurrentType(sourceModule.getElementAt(offset));
 		} catch (ModelException e) {
 			Logger.logException(e);
 		}
