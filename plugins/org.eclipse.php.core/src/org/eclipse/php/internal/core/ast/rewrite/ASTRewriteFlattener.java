@@ -327,8 +327,22 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(Comment comment) {
-		// can't flatten, needs source
+		result.append(getComment(comment));
+		result.append("\n");
 		return false;
+	}
+
+	public String getComment(Comment comment) {
+		if (comment.getCommentType() == Comment.TYPE_SINGLE_LINE) {
+			return "//";
+		}
+		if (comment.getCommentType() == Comment.TYPE_MULTILINE) {
+			return "/* */";
+		}
+		if (comment.getCommentType() == Comment.TYPE_PHPDOC) {
+			return "/** */"; //$NON-NLS-1$"
+		}
+		return null;
 	}
 
 	public boolean visit(ConditionalExpression conditionalExpression) {
@@ -736,6 +750,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(MethodDeclaration methodDeclaration) {
+		Comment comment = methodDeclaration.getComment();
+		if (comment != null) {
+			comment.accept(this);
+		}
 		result.append(methodDeclaration.getModifierString());
 		methodDeclaration.getFunction().accept(this);
 		return false;

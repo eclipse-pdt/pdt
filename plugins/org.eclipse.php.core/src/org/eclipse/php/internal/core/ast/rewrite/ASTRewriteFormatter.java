@@ -311,8 +311,16 @@ import org.eclipse.text.edits.*;
 				prefix += "switch(1) {"; //$NON-NLS-1$
 				suffix = "}"; //$NON-NLS-1$
 			}
+			if (node instanceof MethodDeclaration) {
+				prefix += "class x{";
+				suffix = "}"; //$NON-NLS-1$
+			}
+
 		} else if (node instanceof Expression && node.getType() != ASTNode.SINGLE_FIELD_DECLARATION) {
 		} else if (node instanceof BodyDeclaration) {
+		} else if (node instanceof Comment) {
+			prefix += "class x{";
+			suffix = "}"; //$NON-NLS-1$
 		} else {
 			if (node.getType() == ASTNode.CATCH_CLAUSE) {
 				prefix += "try {}"; //$NON-NLS-1$

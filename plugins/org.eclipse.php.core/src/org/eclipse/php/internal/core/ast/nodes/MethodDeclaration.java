@@ -26,6 +26,7 @@ import org.eclipse.php.internal.core.ast.visitor.Visitor;
 public class MethodDeclaration extends BodyDeclaration {
 
 	private FunctionDeclaration function;
+	private Comment comment;
 
 	/**
 	 * The structural property of this node type.
@@ -34,7 +35,9 @@ public class MethodDeclaration extends BodyDeclaration {
 		new ChildPropertyDescriptor(MethodDeclaration.class, "function", FunctionDeclaration.class, MANDATORY, CYCLE_RISK); //$NON-NLS-1$
 	public static final SimplePropertyDescriptor MODIFIER_PROPERTY = 
 		new SimplePropertyDescriptor(MethodDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
-	
+	public static final ChildPropertyDescriptor COMMENT_PROPERTY = 
+		new ChildPropertyDescriptor(Comment.class, "comment", Comment.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
+
 	@Override
 	final SimplePropertyDescriptor getModifierProperty() {
 		return MODIFIER_PROPERTY;
@@ -46,14 +49,15 @@ public class MethodDeclaration extends BodyDeclaration {
 	 * or null if uninitialized.
 	 */
 	private static final List<StructuralPropertyDescriptor> PROPERTY_DESCRIPTORS;
-	
+
 	static {
 		List<StructuralPropertyDescriptor> propertyList = new ArrayList<StructuralPropertyDescriptor>(2);
 		propertyList.add(FUNCTION_PROPERTY);
 		propertyList.add(MODIFIER_PROPERTY);
+		propertyList.add(COMMENT_PROPERTY);
 		PROPERTY_DESCRIPTORS = Collections.unmodifiableList(propertyList);
-	}	
-	
+	}
+
 	public MethodDeclaration(int start, int end, AST ast, int modifier, FunctionDeclaration function, boolean shouldComplete) {
 		super(start, end, ast, modifier, shouldComplete);
 
@@ -77,19 +81,25 @@ public class MethodDeclaration extends BodyDeclaration {
 			childrenAccept(visitor);
 		}
 		visitor.endVisit(this);
-	}	
+	}
 
 	public void childrenAccept(Visitor visitor) {
+		if (comment != null)
+			comment.accept(visitor);
 		function.accept(visitor);
 	}
 
 	public void traverseTopDown(Visitor visitor) {
 		accept(visitor);
+		if (comment != null)
+			comment.traverseTopDown(visitor);
 		function.traverseTopDown(visitor);
 	}
 
 	public void traverseBottomUp(Visitor visitor) {
 		function.traverseBottomUp(visitor);
+		if (comment != null)
+			comment.traverseBottomUp(visitor);
 		accept(visitor);
 	}
 
@@ -114,7 +124,7 @@ public class MethodDeclaration extends BodyDeclaration {
 	public FunctionDeclaration getFunction() {
 		return function;
 	}
-	
+
 	/**
 	 * Sets the function of this declaration
 	 * 
@@ -125,7 +135,7 @@ public class MethodDeclaration extends BodyDeclaration {
 	 * <li>the node already has a parent</li>
 	 * <li>a cycle in would be created</li>
 	 * </ul>
-	 */ 
+	 */
 	public void setFunction(FunctionDeclaration expression) {
 		if (expression == null) {
 			throw new IllegalArgumentException();
@@ -135,7 +145,21 @@ public class MethodDeclaration extends BodyDeclaration {
 		this.function = expression;
 		postReplaceChild(oldChild, expression, FUNCTION_PROPERTY);
 	}
-	
+
+	public void setComment(Comment expression) {
+		if (expression == null) {
+			throw new IllegalArgumentException();
+		}
+		ASTNode oldChild = this.comment;
+		preReplaceChild(oldChild, expression, COMMENT_PROPERTY);
+		this.comment = expression;
+		postReplaceChild(oldChild, expression, COMMENT_PROPERTY);
+	}
+
+	public Comment getComment() {
+		return comment;
+	}
+
 	final ASTNode internalGetSetChildProperty(ChildPropertyDescriptor property, boolean get, ASTNode child) {
 		if (property == FUNCTION_PROPERTY) {
 			if (get) {
@@ -145,10 +169,19 @@ public class MethodDeclaration extends BodyDeclaration {
 				return null;
 			}
 		}
+		if (property == COMMENT_PROPERTY) {
+			if (get) {
+				return getComment();
+			} else {
+				setComment((Comment) child);
+				return null;
+			}
+
+		}
 		// allow default implementation to flag the error
 		return super.internalGetSetChildProperty(property, get, child);
-	}	
-	
+	}
+
 	/* 
 	 * Method declared on ASTNode.
 	 */
@@ -169,13 +202,13 @@ public class MethodDeclaration extends BodyDeclaration {
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return PROPERTY_DESCRIPTORS;
 	}
-	
+
 	/**
 	 * Resolves and returns the binding for this method 
 	 * 
 	 * @return the binding, or <code>null</code> if the binding cannot be 
 	 *    resolved
-	 */	
+	 */
 	public IMethodBinding resolveMethodBinding() {
 		return this.ast.getBindingResolver().resolveMethod(this);
 	}
