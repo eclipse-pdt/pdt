@@ -161,17 +161,15 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 				
 				// Initialize with additional GET parameters
 				String requestMethod = webParametersInitializer.getRequestMethod(launch);
-				if (requestMethod == IWebDebugParametersInitializer.GET_METHOD) {
+				if (IWebDebugParametersInitializer.GET_METHOD.equals(requestMethod)) {
 					Hashtable<String, String> requestParameters = webParametersInitializer.getRequestParameters(launch);
 					if (requestParameters != null) {
 						Enumeration<String> k = requestParameters.keys();
 						while (k.hasMoreElements()) {
 							String key = k.nextElement();
 							String value = requestParameters.get(key);
+							getParams.append('&');
 							getParams.append(URLEncoder.encode(key, URL_ENCODING)).append('=').append(URLEncoder.encode(value, URL_ENCODING));
-							if (k.hasMoreElements()) {
-								getParams.append('&');
-							}
 						}
 					}
 				}
