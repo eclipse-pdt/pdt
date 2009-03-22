@@ -80,7 +80,7 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 	 * @return true if it is a php element
 	 */
 	public boolean isPhpTag() {
-		return getNodeName() == PHPDOMModelParser.PHP_TAG_NAME;
+		return PHPDOMModelParser.PHP_TAG_NAME.equals(getNodeName());
 	}
 
 	public INodeAdapter getExistingAdapter(Object type) {
@@ -108,5 +108,10 @@ public class ElementImplForPhp extends ElementStyleImpl implements IAdaptable, I
 
 	public void setModelElement(IModelElement modelElement) {
 		this.modelElement = modelElement;
+	}
+	
+	@Override
+	public boolean isStartTagClosed() {
+		return isPhpTag() ? true : super.isStartTagClosed();
 	}
 }
