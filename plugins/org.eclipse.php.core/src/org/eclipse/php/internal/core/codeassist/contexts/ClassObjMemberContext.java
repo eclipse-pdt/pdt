@@ -42,9 +42,9 @@ public class ClassObjMemberContext extends ClassMemberContext {
 		
 		int elementStart = getElementStart();
 		int lhsIndex = elementStart - "$this".length() - getTriggerType().getName().length();
-		if (lhsIndex == 0) {
+		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
+			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
 			if (parentText.equals("$this")) { //$NON-NLS-1$
 				isThisCall = true;
 			}
