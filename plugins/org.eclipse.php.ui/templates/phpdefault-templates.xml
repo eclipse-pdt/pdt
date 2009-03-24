@@ -310,6 +310,18 @@ ${cursor}</template>
 </template>
 
 <template
+	name="try"
+	description="%description.php.try"
+	id="org.eclipse.php.ui.editor.templates.php.try"
+	context="php"
+	enabled="true"
+	autoinsert="false">try {
+	${cursor}
+} catch (${Exception} ${dollar}e) {
+}
+</template>
+
+<template
 	name="while"
 	description="%description.php.while"
 	id="org.eclipse.php.ui.editor.templates.php.while"
