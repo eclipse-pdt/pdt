@@ -279,18 +279,17 @@ public class PHPCorePlugin extends Plugin {
 				if (monitor != null) {
 					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 				}
-				engine.searchAllTypeNames(null, SearchPattern.R_EXACT_MATCH, "!@$#!@".toCharArray(), //$NON-NLS-1$
-					SearchPattern.R_PATTERN_MATCH | SearchPattern.R_CASE_SENSITIVE, IDLTKSearchConstants.TYPE, scope, new TypeNameRequestor() {
-						public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-							// no type to accept
+				engine.searchAllMethodNames("*".toCharArray(), SearchPattern.R_PATTERN_MATCH, IDLTKSearchConstants.DECLARATIONS,
+					scope, new MethodNameMatchRequestor() {
+						public void acceptMethodNameMatch(MethodNameMatch match) {
 						}
 					},
 					// will not activate index query caches if indexes are
 					// not ready, since it would take to long
 					// to wait until indexes are fully rebuild
-					IDLTKSearchConstants.CANCEL_IF_NOT_READY_TO_SEARCH, monitor == null ? null : new SubProgressMonitor(monitor, 49) // 49% of the time is spent in the
-					// dummy search
-					);
+					IDLTKSearchConstants.CANCEL_IF_NOT_READY_TO_SEARCH,
+					monitor == null ? null : new SubProgressMonitor(monitor, 49) // 49% of the time is spent in the dummy search
+				);
 			} catch (ModelException e) {
 				// /search failed: ignore
 			} catch (OperationCanceledException e) {
