@@ -13,6 +13,9 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.*;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -73,6 +76,13 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	}
 
 	public IModelElement[] select(org.eclipse.dltk.compiler.env.ISourceModule sourceUnit, int offset, int end) {
+		
+		IJobManager jobMan = Job.getJobManager();
+		Job[] build = jobMan.find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+		if (build != null && build.length > 0) {
+			// the build is running - exit
+			return EMPTY;
+		}
 
 		if (end < offset) {
 			end = offset + 1;

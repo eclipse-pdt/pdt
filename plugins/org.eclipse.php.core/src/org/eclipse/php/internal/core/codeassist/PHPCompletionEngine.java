@@ -13,6 +13,9 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.codeassist.IAssistParser;
 import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
@@ -42,6 +45,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	private Set<? super Object> processedElements = new HashSet<Object>();
 
 	public void complete(ISourceModule module, int position, int i) {
+
+		IJobManager jobMan = Job.getJobManager();
+		Job[] build = jobMan.find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+		if (build != null && build.length > 0) {
+			// the build is running - exit
+			return;
+		}
 
 		relevanceKeyword = RELEVANCE_KEYWORD;
 		relevanceMethod = RELEVANCE_METHOD;
