@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.ILineBreakpoint;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
@@ -45,8 +44,11 @@ import org.eclipse.php.internal.ui.containers.LocalFileStorageEditorInput;
 import org.eclipse.php.internal.ui.containers.ZipEntryStorageEditorInput;
 import org.eclipse.php.internal.ui.util.ImageDescriptorRegistry;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.FileStoreEditorInput;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 
@@ -287,19 +289,12 @@ public class XDebugModelPresentation extends LabelProvider implements IDebugMode
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.debug.ui.ISourcePresentation#getEditorId(org.eclipse.ui.IEditorInput,
-	 *      java.lang.Object)
-	 */
-	public String getEditorId(IEditorInput input, Object element) {
-		if (input instanceof PHPSourceNotFoundEditorInput) {
-			return "org.eclipse.php.debug.SourceNotFoundEditor"; //$NON-NLS-1$
+	public String getEditorId(IEditorInput input, Object inputObject) {
+		try {
+			IEditorDescriptor descriptor= IDE.getEditorDescriptor(input.getName());
+			return descriptor.getId();
+		} catch (PartInitException e) {
+			return null;
 		}
-		if (element instanceof IFile || element instanceof ILineBreakpoint || element instanceof ZipEntryStorage || element instanceof LocalFileStorage || element instanceof LocalFile) {
-			return "org.eclipse.php.editor"; //$NON-NLS-1$
-		}
-		return null;
 	}
 }
