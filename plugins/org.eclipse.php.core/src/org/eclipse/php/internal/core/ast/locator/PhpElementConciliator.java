@@ -61,10 +61,10 @@ public class PhpElementConciliator {
 
 		ASTNode parent = null;
 		// check if it is an identifier
-		if (locateNode.getType() == ASTNode.IDENTIFIER) {
+		if (locateNode.getType() == ASTNode.IDENTIFIER && ((Identifier) locateNode).getParent() instanceof Variable) {
 			parent = (Variable) ((Identifier) locateNode).getParent();
 			parent = parent.getParent();
-			
+
 		} else if (locateNode.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 			parent = (SingleFieldDeclaration) locateNode;
 		} else {
@@ -82,17 +82,15 @@ public class PhpElementConciliator {
 			}
 			return false;
 		}
-		
-		
 
 		if (parent.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 
 			// check for $this variable
 			final SingleFieldDeclaration variable = (SingleFieldDeclaration) parent;
 
-//			if (!variable. || variable.equals(THIS)) {
-//				return false;
-//			}
+			//			if (!variable. || variable.equals(THIS)) {
+			//				return false;
+			//			}
 
 			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION || parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 				return true;
@@ -184,7 +182,7 @@ public class PhpElementConciliator {
 		assert locateNode != null;
 		Variable parent = null;
 		// check if it is an identifier
-		if (locateNode.getType() == ASTNode.IDENTIFIER) {
+		if (locateNode.getType() == ASTNode.IDENTIFIER && ((Identifier) locateNode).getParent() instanceof Variable) {
 			parent = (Variable) ((Identifier) locateNode).getParent();
 		} else if (locateNode.getType() == ASTNode.VARIABLE) {
 			parent = (Variable) locateNode;
