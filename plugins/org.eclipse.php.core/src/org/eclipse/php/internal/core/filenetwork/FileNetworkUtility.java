@@ -84,7 +84,7 @@ public class FileNetworkUtility {
 	private static void internalBuildReferencingFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) {
 
 		ISourceModule file = root.getFile();
-		
+
 		List<PHPMixinModel> mixinModelInstances;
 		IScriptProject scriptProject = file.getScriptProject();
 		if (scriptProject != null) {
@@ -98,23 +98,25 @@ public class FileNetworkUtility {
 			mixinModelInstances = new ArrayList<PHPMixinModel>(1);
 			mixinModelInstances.add(PHPMixinModel.getWorkspaceInstance());
 		}
-		
+
 		for (PHPMixinModel mixinModel : mixinModelInstances) {
 			// Find all includes to the current source module in mixin:
 			IModelElement[] includes = mixinModel.getInclude(file.getPath().lastSegment());
 			for (IModelElement e : includes) {
 				IncludeField include = (IncludeField) e;
-	
+
 				// Candidate that includes the original source module:
 				ISourceModule referencingFile = include.getSourceModule();
-	
+
 				// Try to resolve include:
 				ISourceModule testFile = findSourceModule(referencingFile, include.getFilePath());
-	
+
 				// If this is the correct include (that means that included file is the original file):
 				if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
 					processedFiles.add(referencingFile);
-					root.addChild(new Node(referencingFile));
+					Node node = new Node(referencingFile);
+					node.addReferenceNode(include);
+					root.addChild(node);
 				}
 			}
 		}

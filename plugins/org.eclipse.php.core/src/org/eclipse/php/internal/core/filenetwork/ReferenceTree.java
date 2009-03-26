@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.filenetwork;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.dltk.core.IFileHierarchyInfo;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.php.internal.core.mixin.IncludeField;
 
 /**
  * This tree represents file references network
@@ -46,10 +46,11 @@ public class ReferenceTree implements IFileHierarchyInfo {
 		return root.find(sourceModule);
 	}
 
-	static class Node {
+	public static class Node {
 
 		final private ISourceModule file;
 		private Set<Node> children;
+		private List<IncludeField> referenceNodes = new ArrayList<IncludeField>();
 
 		public Node(ISourceModule file) {
 			assert file != null;
@@ -114,6 +115,14 @@ public class ReferenceTree implements IFileHierarchyInfo {
 			StringBuilder buf = new StringBuilder();
 			toString(buf, 0);
 			return buf.toString();
+		}
+
+		public void addReferenceNode(IncludeField include) {
+			this.referenceNodes.add( include);
+		}
+
+		public List<IncludeField> getReferenceNodes() {
+			return referenceNodes;
 		}
 	}
 

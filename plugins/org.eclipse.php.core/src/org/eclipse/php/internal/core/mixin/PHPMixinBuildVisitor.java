@@ -82,10 +82,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		public abstract String reportConstant(String name, IField object);
 
 		public abstract String reportType(String name, IType object);
-		
+
 		public abstract String reportInterface(String name, IType object);
 
-		public abstract String reportInclude(String filePath);
+		public abstract String reportInclude(String filePath, Include object);
 
 		public abstract String getClassKey();
 
@@ -110,7 +110,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		public String reportType(String name, IType object) {
 			return report(new StringBuilder(name).append(PHPMixinParser.CLASS_SUFFIX).toString(), PHPMixinElementInfo.createClass(object));
 		}
-		
+
 		public String reportInterface(String name, IType object) {
 			return report(new StringBuilder(name).append(PHPMixinParser.INTERFACE_SUFFIX).toString(), PHPMixinElementInfo.createInterface(object));
 		}
@@ -129,10 +129,12 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return "";
 		}
 
-		public String reportInclude(String filePath) {
+		public String reportInclude(String filePath, Include include) {
 			// Report include(), require(), require_once() and include_once():
 
 			IncludeField object = new IncludeField((ModelElement) sourceModule, filePath);
+			object.setOffset(include.getExpr().sourceStart());
+			object.setLength(include.getExpr().sourceEnd() - include.getExpr().sourceStart());
 
 			int i = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
 			if (i >= 0) {
@@ -160,7 +162,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			// There's no nested classes in PHP
 			return null;
 		}
-		
+
 		public String reportInterface(String name, IType obj) {
 			// There's no nested interfaces in PHP
 			return null;
@@ -185,7 +187,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return classKey;
 		}
 
-		public String reportInclude(String filePath) {
+		public String reportInclude(String filePath, Include include) {
 			// There's no possibility to include other files from within a class
 			return null;
 		}
@@ -211,7 +213,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			// Class defined in m(ethod belongs to the global scope:
 			return sourceModuleScope.reportType(name, obj);
 		}
-		
+
 		public String reportInterface(String name, IType obj) {
 			// Class defined in m(ethod belongs to the global scope:
 			return sourceModuleScope.reportInterface(name, obj);
@@ -239,9 +241,9 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			return methodKey;
 		}
 
-		public String reportInclude(String filePath) {
+		public String reportInclude(String filePath, Include include) {
 			// Included file in the method belongs to the global scope:
-			return sourceModuleScope.reportInclude(filePath);
+			return sourceModuleScope.reportInclude(filePath, include);
 		}
 	}
 
@@ -482,7 +484,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		Expression expr = include.getExpr();
 		if (expr instanceof Scalar) {
 			Scope scope = scopes.peek();
-			scope.reportInclude(ASTUtils.stripQuotes(((Scalar)expr).getValue()));
+			scope.reportInclude(ASTUtils.stripQuotes(((Scalar) expr).getValue()), include);
 		}
 		return visitGeneral(include);
 	}
@@ -529,10 +531,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).isGlobal()) {
+		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration) decl).isGlobal()) {
 			return false;
 		}
-		
+
 		IType obj = null;
 		if (moduleAvailable) {
 			IModelElement elementFor = findModelElementFor(decl);
@@ -555,10 +557,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration)decl).isGlobal()) {
+		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration) decl).isGlobal()) {
 			return false;
 		}
-		
+
 		scopes.pop();
 
 		endvisitGeneral(decl);
@@ -567,10 +569,10 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 
 	public static String restoreKeyByNode(ISourceModule sourceModule, ModuleDeclaration unit, final ASTNode node) {
 		final String elementKey[] = new String[1];
-		
+
 		PHPMixinBuildVisitor visitor = new PHPMixinBuildVisitor(unit, sourceModule, false, null) {
 			private String tmpKey;
-			
+
 			protected String report(String key, PHPMixinElementInfo object) {
 				tmpKey = key;
 				return super.report(key, object);
