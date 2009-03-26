@@ -279,7 +279,7 @@ public class PHPCorePlugin extends Plugin {
 				if (monitor != null) {
 					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 				}
-				engine.searchAllMethodNames("*".toCharArray(), SearchPattern.R_PATTERN_MATCH, IDLTKSearchConstants.DECLARATIONS,
+				engine.searchAllMethodNames("#@$%#^".toCharArray(), SearchPattern.R_EXACT_MATCH, IDLTKSearchConstants.DECLARATIONS,
 					scope, new MethodNameMatchRequestor() {
 						public void acceptMethodNameMatch(MethodNameMatch match) {
 						}
