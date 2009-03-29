@@ -67,6 +67,8 @@ public class PhpElementConciliator {
 
 		} else if (locateNode.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 			parent = (SingleFieldDeclaration) locateNode;
+		} else if (locateNode.getType() == ASTNode.VARIABLE) {
+			parent = locateNode.getParent();
 		} else {
 			return false;
 		}
@@ -84,14 +86,13 @@ public class PhpElementConciliator {
 		}
 
 		if (parent.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
-
 			// check for $this variable
-			final SingleFieldDeclaration variable = (SingleFieldDeclaration) parent;
+			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION || parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
+				return true;
+			}
+		}
 
-			//			if (!variable. || variable.equals(THIS)) {
-			//				return false;
-			//			}
-
+		if (parent.getType() == ASTNode.VARIABLE) {
 			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION || parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 				return true;
 			}
@@ -217,6 +218,10 @@ public class PhpElementConciliator {
 	 */
 	private static boolean isGlobalVariable(ASTNode locateNode) {
 		assert locateNode != null;
+
+		if (locateNode.getType() == ASTNode.VARIABLE && locateNode.getParent().getType() == ASTNode.GLOBAL_STATEMENT) {
+			return true;
+		}
 
 		// check if it is a GLOBALS['a'] direction
 		if (locateNode.getType() == ASTNode.SCALAR) {
