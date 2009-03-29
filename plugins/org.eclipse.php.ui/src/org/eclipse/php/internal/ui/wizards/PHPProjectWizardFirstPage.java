@@ -106,6 +106,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		setControl(composite);
 		Dialog.applyDialogFont(composite);
 
+		// set the focus to the project name
+		fNameGroup.postSetFocus();
+		
 		setHelpContext(composite);
 	}
 
@@ -600,8 +603,9 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 				fSeverLocationList.setItems(docRootArray);
 				fSeverLocationList.selectItem(0);
 				fLocalServerRadio.attachDialogField(fSeverLocationList);
+				fWorkspaceRadio.setSelection(false);
+				fLocalServerRadio.setSelection(true);
 			}
-
 		}
 
 		public boolean isInLocalServer() {
