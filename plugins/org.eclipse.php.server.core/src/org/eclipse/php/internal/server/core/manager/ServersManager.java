@@ -412,14 +412,21 @@ public class ServersManager implements PropertyChangeListener {
 		fireEvent(event);
 	}
 	
-	public final static Server getLocalServer() {
+	/**
+	 * Finds the local server corresponding to the given project
+	 * @param project
+	 */
+	public final static Server getLocalServer(IProject project) {
 		for (Server server : getServers()) {
 			final String documentRoot = server.getDocumentRoot();
 			if (documentRoot != null && documentRoot.length() > 0) {
-				return server;
+				final Path path = new Path(documentRoot);
+				final IPath fullPath = project.getLocation();
+				if (path.isPrefixOf(fullPath)) {
+					return server;
+				}
 			}
 		}
 		return null;
 	}
-	
 }
