@@ -14,11 +14,18 @@ import java.util.List;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
+import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
+import org.eclipse.php.internal.server.core.Server;
+import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.ui.IEditorInput;
 
 /**
@@ -27,7 +34,7 @@ import org.eclipse.ui.IEditorInput;
  * @author shalom
  */
 public class PHPLaunchPropertyTester extends PropertyTester {
-	
+
 	private static final String PROPERTY = "launchablePHP"; //$NON-NLS-1$
 
 	/**
@@ -50,18 +57,20 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			List<?> list = (List<?>) receiver;
 			if (list.size() > 0) {
 				Object obj = list.get(0);
-				
+
 				if (PROPERTY.equals(property)) {
 					if (obj instanceof IEditorInput) {
 						IModelElement modelElement = DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj);
 						if (modelElement != null) {
 							return PHPToolkitUtil.isPhpElement(modelElement);
 						}
-					}
-					else if (obj instanceof IAdaptable) {
+					} else if (obj instanceof IAdaptable) {
 						IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
-						if (resource instanceof IFile) {
-							return PHPToolkitUtil.isPhpFile((IFile)resource);
+						if (resource.getType() == IResource.FILE) {
+							return PHPToolkitUtil.isPhpFile((IFile) resource);
+						}
+						if (resource.getType() == IResource.PROJECT) {
+							return isWebPageProjectLaunch(args, resource);
 						}
 						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
 						if (modelElement != null) {
@@ -72,5 +81,27 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @param args
+	 * @param resource
+	 * @return true if this is a webpage project 
+	 */
+	private boolean isWebPageProjectLaunch(Object[] args, IResource resource) {
+		try {
+			for (Server server : ServersManager.getServers()) {
+				final String documentRoot = server.getDocumentRoot();
+				if (documentRoot != null && documentRoot.length() > 0) {
+					final Path path = new Path(documentRoot);
+					final IPath fullPath = ((IProject) resource).getLocation();
+					return path.isPrefixOf(fullPath) && args.length > 0 && "webPage".equals(args[0]) && PHPToolkitUtil.isPhpProject((IProject) resource);
+				}
+			}
+			return false;
+		} catch (CoreException e) {
+			PHPDebugUIPlugin.log(e);
+			return false;
+		}
 	}
 }
