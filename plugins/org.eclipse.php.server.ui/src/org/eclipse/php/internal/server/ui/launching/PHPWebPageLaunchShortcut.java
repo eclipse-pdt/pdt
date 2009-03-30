@@ -18,10 +18,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchShortcut;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -101,11 +98,6 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 					}
 				}
 
-				if (phpPathString == null) {
-					// Could not find target to launch
-					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
-				}
-
 				Server defaultServer = ServersManager.getDefaultServer(project);
 				if (defaultServer == null) {
 					PHPDebugPlugin.createDefaultPHPServer();
@@ -115,9 +107,31 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 						throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, "Could not create a defualt server for the launch.", null));
 					}
 				}
+				
+				boolean breakAtFirstLine = PHPProjectPreferences.getStopAtFirstLine(project);
+				String selectedURL = null;
+				boolean showDebugDialog = true;
+				if (obj instanceof IScriptProject) {
+					final PHPWebPageLaunchDialog dialog = new PHPWebPageLaunchDialog(mode, (IScriptProject) obj);
+					final int open = dialog.open();
+					if (open == PHPWebPageLaunchDialog.OK) {
+						defaultServer = dialog.getServer();
+						selectedURL = dialog.getPhpPathString();
+						phpPathString = dialog.getFilename();
+						breakAtFirstLine = dialog.isBreakAtFirstLine();
+						showDebugDialog = false;
+					} else {
+						continue;
+					}
+				}
+
+				if (phpPathString == null) {
+					// Could not find target to launch
+					throw new CoreException(new Status(IStatus.ERROR, PHPDebugUIPlugin.ID, IStatus.OK, PHPDebugUIMessages.launch_failure_no_target, null));
+				}
 
 				// Launch the app
-				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, defaultServer, mode, configType);
+				ILaunchConfiguration config = findLaunchConfiguration(project, phpPathString, selectedURL, defaultServer, mode, configType, breakAtFirstLine, showDebugDialog);
 				if (config != null) {
 					DebugUITools.launch(config, mode);
 				} else {
@@ -137,10 +151,11 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 
 	/**
 	 * Locate a configuration to relaunch for the given type.  If one cannot be found, create one.
+	 * @param breakAtFirstLine 
 	 *
 	 * @return a re-useable config or <code>null</code> if none
 	 */
-	static ILaunchConfiguration findLaunchConfiguration(IProject project, String fileName, Server server, String mode, ILaunchConfigurationType configType) {
+	static ILaunchConfiguration findLaunchConfiguration(IProject project, String fileName, String selectedURL, Server server, String mode, ILaunchConfigurationType configType, boolean breakAtFirstLine, boolean showDebugDialog) {
 		ILaunchConfiguration config = null;
 
 		try {
@@ -158,7 +173,7 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 			}
 
 			if (config == null) {
-				config = createConfiguration(project, fileName, server, configType, mode);
+				config = createConfiguration(project, fileName, selectedURL, server, configType, mode, breakAtFirstLine, showDebugDialog);
 			}
 		} catch (CoreException ce) {
 			ce.printStackTrace();
@@ -191,15 +206,19 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		return url;
 	}
 
-	/**
-	 * Create & return a new configuration
-	 */
-	static ILaunchConfiguration createConfiguration(IProject project, String fileName, Server server, ILaunchConfigurationType configType, String mode) throws CoreException {
+	static ILaunchConfiguration createConfiguration(IProject project, String fileName, String selectedURL, Server server, ILaunchConfigurationType configType, String mode, boolean breakAtFirstLine, boolean showDebugDialog) throws CoreException {
 		ILaunchConfiguration config = null;
 		if (!FileUtils.resourceExists(fileName)) {
 			return null;
 		}
-		String URL = server.getBaseURL() + new Path(fileName).toString();
+
+		String URL = null;
+		if (selectedURL != null) {
+			URL = selectedURL;
+		} else {
+			URL = server.getBaseURL() + new Path(fileName).toString();
+		}
+		
 		ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getNewConfigurationName(fileName));
 
 		// Set the debugger ID and the configuration delegate for this launch configuration
@@ -213,20 +232,22 @@ public class PHPWebPageLaunchShortcut implements ILaunchShortcut {
 		wc.setAttribute(Server.BASE_URL, URL);
 		wc.setAttribute(IPHPDebugConstants.RUN_WITH_DEBUG_INFO, PHPDebugPlugin.getDebugInfoOption());
 		wc.setAttribute(IPHPDebugConstants.OPEN_IN_BROWSER, PHPDebugPlugin.getOpenInBrowserOption());
-		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, PHPProjectPreferences.getStopAtFirstLine(project));
+		wc.setAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, breakAtFirstLine);
 
 		// Display a dialog for selecting the URL.
-		String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : (ILaunchManager.PROFILE_MODE.equals(mode) ? "Profile PHP Web Page" : "Run PHP Web Page"));
-		PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(wc, server, title);
-		launchDialog.setBlockOnOpen(true);
-		if (launchDialog.open() == PHPWebPageURLLaunchDialog.OK) {
-			// Save the user-given URL as part of the launch configuration.
-			config = wc.doSave();
-			return config;
+		if (showDebugDialog) {
+			String title = (ILaunchManager.DEBUG_MODE.equals(mode) ? "Debug PHP Web Page" : (ILaunchManager.PROFILE_MODE.equals(mode) ? "Profile PHP Web Page" : "Run PHP Web Page"));
+			PHPWebPageURLLaunchDialog launchDialog = new PHPWebPageURLLaunchDialog(wc, server, title);
+			launchDialog.setBlockOnOpen(true);
+			if (launchDialog.open() == PHPWebPageURLLaunchDialog.CANCEL) {
+				return null;
+			}
 		}
-		return null;
+		config = wc.doSave();
+		return config;
 	}
-
+	
+	
 	/**
 	 * Returns a name for a newly created launch configuration according to the given file name.
 	 * In case the name generation fails, return the "New_configuration" string.
