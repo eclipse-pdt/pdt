@@ -70,7 +70,7 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 							return PHPToolkitUtil.isPhpFile((IFile) resource);
 						}
 						if (resource.getType() == IResource.PROJECT) {
-							return isWebPageProjectLaunch(args, resource);
+							return isWebPageProjectLaunch(args, (IProject) resource);
 						}
 						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
 						if (modelElement != null) {
@@ -88,17 +88,13 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 * @param resource
 	 * @return true if this is a webpage project 
 	 */
-	private boolean isWebPageProjectLaunch(Object[] args, IResource resource) {
+	private boolean isWebPageProjectLaunch(Object[] args, IProject resource) {
 		try {
-			final Server localServer = ServersManager.getLocalServer();
+			final Server localServer = ServersManager.getLocalServer(resource);
 			if (localServer == null) {
 				return false;
 			}
-
-			final String documentRoot = localServer.getDocumentRoot();
-			final Path path = new Path(documentRoot);
-			final IPath fullPath = ((IProject) resource).getLocation();
-			return PHPToolkitUtil.isPhpProject((IProject) resource) && path.isPrefixOf(fullPath) && args.length > 0 && "webPage".equals(args[0]) ;
+			return PHPToolkitUtil.isPhpProject((IProject) resource) && args.length > 0 && "webPage".equals(args[0]) ;
 			
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);
