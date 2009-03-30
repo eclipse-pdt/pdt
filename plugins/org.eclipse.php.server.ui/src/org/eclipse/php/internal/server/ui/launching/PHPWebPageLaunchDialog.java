@@ -59,21 +59,7 @@ public class PHPWebPageLaunchDialog extends TitleAreaDialog {
 		// , "Launch Web Page",  null, "", INFORMATION, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 		this.mode = mode;
 		this.project = obj;
-		this.server = findLocalServer(obj);
-	}
-
-	private Server findLocalServer(IScriptProject obj) {
-		for (Server server : ServersManager.getServers()) {
-			final String documentRoot = server.getDocumentRoot();
-			if (documentRoot != null && documentRoot.length() > 0) {
-				final Path path = new Path(documentRoot);
-				final IPath fullPath = ((IProject) obj.getProject()).getLocation();
-				if (path.isPrefixOf(fullPath)) {
-					return server;
-				}
-			}
-		}
-		return null;
+		this.server = ServersManager.getLocalServer(obj.getProject());
 	}
 
 	/**
