@@ -90,15 +90,16 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 */
 	private boolean isWebPageProjectLaunch(Object[] args, IResource resource) {
 		try {
-			for (Server server : ServersManager.getServers()) {
-				final String documentRoot = server.getDocumentRoot();
-				if (documentRoot != null && documentRoot.length() > 0) {
-					final Path path = new Path(documentRoot);
-					final IPath fullPath = ((IProject) resource).getLocation();
-					return path.isPrefixOf(fullPath) && args.length > 0 && "webPage".equals(args[0]) && PHPToolkitUtil.isPhpProject((IProject) resource);
-				}
+			final Server localServer = ServersManager.getLocalServer();
+			if (localServer == null) {
+				return false;
 			}
-			return false;
+
+			final String documentRoot = localServer.getDocumentRoot();
+			final Path path = new Path(documentRoot);
+			final IPath fullPath = ((IProject) resource).getLocation();
+			return PHPToolkitUtil.isPhpProject((IProject) resource) && path.isPrefixOf(fullPath) && args.length > 0 && "webPage".equals(args[0]) ;
+			
 		} catch (CoreException e) {
 			PHPDebugUIPlugin.log(e);
 			return false;
