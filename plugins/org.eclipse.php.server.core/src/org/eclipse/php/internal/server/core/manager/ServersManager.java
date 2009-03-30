@@ -18,12 +18,15 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
 import org.eclipse.php.internal.server.core.Activator;
@@ -408,4 +411,15 @@ public class ServersManager implements PropertyChangeListener {
 		ServerManagerEvent event = new ServerManagerEvent(ServerManagerEvent.MANAGER_EVENT_MODIFIED, server, evt.getPropertyName(), oldValue, newValue);
 		fireEvent(event);
 	}
+	
+	public final static Server getLocalServer() {
+		for (Server server : getServers()) {
+			final String documentRoot = server.getDocumentRoot();
+			if (documentRoot != null && documentRoot.length() > 0) {
+				return server;
+			}
+		}
+		return null;
+	}
+	
 }
