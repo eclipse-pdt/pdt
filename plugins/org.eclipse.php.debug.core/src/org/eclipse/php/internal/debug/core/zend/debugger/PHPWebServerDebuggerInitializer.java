@@ -80,7 +80,7 @@ public class PHPWebServerDebuggerInitializer implements IDebuggerInitializer {
 		}
 
 		URL requestURL = parametersInitializer.getRequestURL(launch);
-		if (runWithDebug || !ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
+		if (runWithDebug && !ILaunchManager.RUN_MODE.equals(launch.getLaunchMode())) {
 			try {
 				String query = PHPLaunchUtilities.generateQuery(launch, parametersInitializer);
 				String url = requestURL.toString();
