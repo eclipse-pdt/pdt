@@ -174,7 +174,7 @@ public class ContextManager {
 		if (layers.length != prevLayers.length)
 			return false;
 
-		for (int i = 1; i < layers.length; i++) {
+		for (int i = 0; i < layers.length; i++) {
 			if (!compareLayer(layers[i], prevLayers[i]))
 				return false;
 		}
