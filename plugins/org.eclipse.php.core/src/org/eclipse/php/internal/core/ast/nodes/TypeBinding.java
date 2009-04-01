@@ -299,7 +299,7 @@ public class TypeBinding implements ITypeBinding {
 				IDLTKSearchScope scope = SearchEngine.createSearchScope(type.getScriptProject());
 
 				String[] superClassNames = type.getSuperClasses();
-				
+
 				if (superClassNames != null) {
 					for (String superClass : superClassNames) {
 						int matchRule = SearchPattern.R_EXACT_MATCH;
@@ -743,7 +743,27 @@ public class TypeBinding implements ITypeBinding {
 		if (this.elements == null) {
 			return otherBinding.elements == null;
 		}
-		return this.elements.equals(otherBinding.elements);
+
+		if (elements.length != otherBinding.elements.length) {
+			return false;
+		}
+
+		for (int i = 0; i < elements.length; i++) {
+			boolean hasEqual = false;
+			for (int j = 0; j < otherBinding.elements.length; j++) {
+				//if found equals, break the inner loop
+				if (elements[i].equals(otherBinding.elements[j])) {
+					hasEqual = true;
+					break;
+				}
+			}
+			//if no equal element found, return false.
+			if (!hasEqual) {
+				return false;
+			}
+
+		}
+		return true;
 
 	}
 
