@@ -34,6 +34,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 	protected static final String[] MAGIC_METHODS = { "__get", "__set", "__call", "__sleep", "__wakeup", };
 	protected static final String[] MAGIC_METHODS_PHP5 = { "__isset", "__unset", "__toString", "__set_state", "__clone", "__autoload", };
+	protected static final String[] MAGIC_METHODS_PHP5_3 = { "__callstatic", "__invoke", };
 	
 	public MethodNameStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
@@ -86,6 +87,9 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		functions.addAll(Arrays.asList(MAGIC_METHODS));
 		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
 			functions.addAll(Arrays.asList(MAGIC_METHODS_PHP5));
+		}
+		if (phpVersion.isGreaterThan(PHPVersion.PHP5)) {
+			functions.addAll(Arrays.asList(MAGIC_METHODS_PHP5_3));
 		}
 		
 		// Add constructors:
