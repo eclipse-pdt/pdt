@@ -63,7 +63,7 @@ public class UseStatementInjector {
 			}
 			node = node.getParent();
 		} while (node != null);
-		
+
 		return null;
 	}
 
@@ -101,6 +101,14 @@ public class UseStatementInjector {
 	 */
 	public int inject(IDocument document, ITextViewer textViewer, int offset) {
 		IModelElement modelElement = proposal.getModelElement();
+
+		try {
+			if (modelElement.getElementType() == IModelElement.TYPE && PHPFlags.isNamespace(((IType) modelElement).getFlags())) {
+				return offset;
+			}
+		} catch (ModelException e) {
+			Logger.logException(e);
+		}
 
 		// add use statement if needed:
 		IType namespace = PHPModelUtils.getCurrentNamespace(modelElement);
