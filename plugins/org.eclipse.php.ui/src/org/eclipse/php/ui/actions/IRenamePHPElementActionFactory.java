@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.ui.actions;
 
-import org.eclipse.php.internal.ui.actions.RenamePHPElementAction;
-import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.IActionDelegate;
 
 /**
  * Factory for {@link RenamePHPElementAction}
@@ -21,8 +19,6 @@ import org.eclipse.ui.IWorkbenchSite;
  */
 public interface IRenamePHPElementActionFactory {
 
-	public abstract RenamePHPElementAction createRenameAction(IWorkbenchSite site);
-
-	public abstract RenamePHPElementAction createRenameAction(PHPStructuredEditor editor);
+	public abstract IActionDelegate createRenameAction();
 	
 }

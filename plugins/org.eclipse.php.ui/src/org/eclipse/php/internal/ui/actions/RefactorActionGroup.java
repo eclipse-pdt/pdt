@@ -66,7 +66,7 @@ public class RefactorActionGroup extends ActionGroup {
 	private String fGroupName = IContextMenuConstants.GROUP_REORGANIZE;
 
 	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fMoveAction;
-	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fRenameAction;
+//	private org.eclipse.dltk.ui.actions.SelectionDispatchAction fRenameAction;
 
 	private UndoRedoActionGroup fUndoRedoActionGroup;
 
@@ -123,13 +123,6 @@ public class RefactorActionGroup extends ActionGroup {
 		ISelection selection = provider.getSelection();
 		fEditorActions = new ArrayList();
 
-		fRenameAction = new org.eclipse.dltk.internal.ui.actions.refactoring.RenameAction(editor.getEditorSite());
-		fRenameAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
-		fRenameAction.update(selection);
-		initAction(fRenameAction, provider, selection);
-		editor.setAction("RenameElement", fRenameAction); //$NON-NLS-1$		
-		fEditorActions.add(fRenameAction);
-
 		fMoveAction = new org.eclipse.dltk.internal.ui.actions.refactoring.MoveAction(editor.getEditorSite());
 		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		fMoveAction.update(selection);
@@ -150,10 +143,6 @@ public class RefactorActionGroup extends ActionGroup {
 		fMoveAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
 		initAction(fMoveAction, provider, selection);
 
-		fRenameAction = new org.eclipse.dltk.internal.ui.actions.refactoring.RenameAction(site);
-		fRenameAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
-		initAction(fRenameAction, provider, selection);
-
 		fKeyBindingService = keyBindingService;
 	}
 
@@ -163,17 +152,12 @@ public class RefactorActionGroup extends ActionGroup {
 		provider.addSelectionChangedListener(action);
 	}
 
-/*	private static void initAction(SelectionDispatchAction action, ISelectionProvider provider, ISelection selection) {
-		action.update(selection);
-		provider.addSelectionChangedListener(action);
-	}*/
 	/*
 	 * (non-Javadoc) Method declared in ActionGroup
 	 */
 	public void fillActionBars(IActionBars actionBars) {
 		super.fillActionBars(actionBars);
 		actionBars.setGlobalActionHandler(PHPActionConstants.MOVE, fMoveAction);
-		actionBars.setGlobalActionHandler(PHPActionConstants.RENAME, fRenameAction);
 		if (fUndoRedoActionGroup != null) {
 			fUndoRedoActionGroup.fillActionBars(actionBars);
 		}
@@ -185,7 +169,6 @@ public class RefactorActionGroup extends ActionGroup {
 	 * @param actionBars the action bar to register the move and rename action with
 	 */
 	public void retargetFileMenuActions(IActionBars actionBars) {
-		actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), fRenameAction);
 		actionBars.setGlobalActionHandler(ActionFactory.MOVE.getId(), fMoveAction);
 	}
 
@@ -203,7 +186,6 @@ public class RefactorActionGroup extends ActionGroup {
 	public void dispose() {
 		ISelectionProvider provider = fSite.getSelectionProvider();
 		disposeAction(fMoveAction, provider);
-		disposeAction(fRenameAction, provider);
 		if (fUndoRedoActionGroup != null) {
 			fUndoRedoActionGroup.dispose();
 		}
@@ -247,7 +229,6 @@ public class RefactorActionGroup extends ActionGroup {
 	private int fillRefactorMenu(IMenuManager refactorSubmenu) {
 		int added = 0;
 		refactorSubmenu.add(new Separator(GROUP_REORG));
-		added += addAction(refactorSubmenu, fRenameAction);
 		added += addAction(refactorSubmenu, fMoveAction);
 		refactorSubmenu.add(new Separator(GROUP_TYPE));
 		return added;

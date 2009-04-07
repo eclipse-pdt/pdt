@@ -163,6 +163,6 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	private void activateContext() {
 		IContextService contextService = (IContextService) getSite()
 				.getService(IContextService.class);
-		contextService.activateContext("org.eclipse.dltk.ui.scriptEditorScope");
+		contextService.activateContext("org.eclipse.php.ui.contexts.window");
 	}
 }
