@@ -17,6 +17,7 @@ import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
@@ -386,7 +387,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 						}
 					}
 					if (sourceModule != null) {
-						obj = new FakeField((ModelElement) sourceModule, name, constant.sourceStart(), constant.sourceEnd() - constant.sourceStart());
+						obj = new FakeField((ModelElement) sourceModule, name, constant.sourceStart(), constant.sourceEnd() - constant.sourceStart(), Modifiers.AccConstant);
 					}
 					Scope scope = scopes.peek();
 					scope.reportConstant(name, obj);
@@ -531,8 +532,8 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean visit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration) decl).isGlobal()) {
-			return false;
+		if (decl instanceof NamespaceDeclaration/* && ((NamespaceDeclaration) decl).isGlobal()*/) {
+			return true;
 		}
 
 		IType obj = null;
@@ -557,8 +558,8 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	public boolean endvisit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration && ((NamespaceDeclaration) decl).isGlobal()) {
-			return false;
+		if (decl instanceof NamespaceDeclaration/* && ((NamespaceDeclaration) decl).isGlobal()*/) {
+			return true;
 		}
 
 		scopes.pop();
