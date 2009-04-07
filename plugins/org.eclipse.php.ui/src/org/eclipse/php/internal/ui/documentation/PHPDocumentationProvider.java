@@ -15,6 +15,7 @@ import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -33,25 +34,25 @@ import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
-	private static final String DL_END = "</dl>"; //$NON-NLS-1$
-	private static final String DL_START = "<dl>"; //$NON-NLS-1$
-	private static final String DD_END = "</dd>"; //$NON-NLS-1$
-	private static final String DD_START = "<dd>"; //$NON-NLS-1$
-	private static final String DT_START = "<dt>"; //$NON-NLS-1$
-	private static final String DT_END = "</dt>"; //$NON-NLS-1$
-	private static final String FIELD_LOCATION = "Location";
-	private static final String FIELD_AUTHOR = "Author";
-	private static final String FIELD_CLASS = "Class";
-	private static final String FIELD_DESC = "Description";
-	private static final String FIELD_PARAMETERS = "Parameters";
-	private static final String FIELD_RETURNS = "Returns";
-	private static final String FIELD_THROWS = "Throws";
-	private static final String FIELD_DEPRECATED = "Deprecated";
-	private static final String FIELD_SEEALSO = "See Also";
-	private static final String FIELD_EXTENDS = "Extends";
-	private static final String FIELD_IMPLEMENTS = "Implements";
-	private static final String FIELD_NAMESPACE = "Namespace";
-	private static final String FIELD_INTERFACE = "Interface";
+	protected static final String DL_END = "</dl>"; //$NON-NLS-1$
+	protected static final String DL_START = "<dl>"; //$NON-NLS-1$
+	protected static final String DD_END = "</dd>"; //$NON-NLS-1$
+	protected static final String DD_START = "<dd>"; //$NON-NLS-1$
+	protected static final String DT_START = "<dt>"; //$NON-NLS-1$
+	protected static final String DT_END = "</dt>"; //$NON-NLS-1$
+	protected static final String FIELD_LOCATION = "Location";
+	protected static final String FIELD_AUTHOR = "Author";
+	protected static final String FIELD_CLASS = "Class";
+	protected static final String FIELD_DESC = "Description";
+	protected static final String FIELD_PARAMETERS = "Parameters";
+	protected static final String FIELD_RETURNS = "Returns";
+	protected static final String FIELD_THROWS = "Throws";
+	protected static final String FIELD_DEPRECATED = "Deprecated";
+	protected static final String FIELD_SEEALSO = "See Also";
+	protected static final String FIELD_EXTENDS = "Extends";
+	protected static final String FIELD_IMPLEMENTS = "Implements";
+	protected static final String FIELD_NAMESPACE = "Namespace";
+	protected static final String FIELD_INTERFACE = "Interface";
 
 	public Reader getInfo(IMember element, boolean lookIntoParents, boolean lookIntoExternal) {
 		StringBuilder buf = new StringBuilder(DL_START);
@@ -86,8 +87,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	private boolean appendBuiltinDoc(IMember element, StringBuilder buf) {
 		String builtinDoc = BuiltinDoc.getString(element.getElementName());
 		if (builtinDoc.length() > 0) {
-			ISourceModule sourceModule = element.getSourceModule();
-			String fileName = sourceModule.getElementName();
+			String fileName = getFileName(element);
 
 			// append the file name
 			appendDefinitionRow(FIELD_LOCATION, fileName, buf);
@@ -110,7 +110,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 
 		ISourceModule sourceModule = method.getSourceModule();
-		String fileName = sourceModule.getElementName();
+		String fileName = getFileName(method);
 
 		// append the file name
 		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
@@ -160,7 +160,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 
 		ISourceModule sourceModule = type.getSourceModule();
-		String fileName = sourceModule.getElementName();
+		String fileName = getFileName(type);
 
 		// append the file name
 		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
@@ -213,7 +213,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	private void appendFieldInfo(IField field, StringBuilder buf) throws ModelException {
 
 		ISourceModule sourceModule = field.getSourceModule();
-		String fileName = sourceModule.getElementName();
+		String fileName = getFileName(field);
 
 		// append the file name
 		appendDefinitionRow(FIELD_LOCATION, fileName, buf);
@@ -258,30 +258,30 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 	}
 
-	private static String nl2br(String str) {
+	protected String nl2br(String str) {
 		return str.replaceAll("\\n", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private static void appendDefinitionRow(String field, String data, StringBuilder buf) {
+	protected void appendDefinitionRow(String field, String data, StringBuilder buf) {
 		buf.append(DT_START).append(field).append(DT_END);
 		buf.append(DD_START).append(data).append(DD_END);
 	}
 
-	private static void appendDefinitionRows(String field, String[] data, StringBuilder buf) {
+	protected void appendDefinitionRows(String field, String[] data, StringBuilder buf) {
 		buf.append(DT_START).append(field).append(DT_END);
 		for (String row : data) {
 			buf.append(DD_START).append(row).append(DD_END);
 		}
 	}
 
-	private static void appendShortDescription(PHPDocBlock doc, StringBuilder buf) {
+	protected void appendShortDescription(PHPDocBlock doc, StringBuilder buf) {
 		String desc = doc.getShortDescription();
 		if (desc != null && desc.length() > 0) {
 			appendDefinitionRow(FIELD_DESC, nl2br(desc), buf);
 		}
 	}
 
-	private static void appendTagInfo(PHPDocBlock doc, int tagKind, String field, StringBuilder buf) {
+	protected void appendTagInfo(PHPDocBlock doc, int tagKind, String field, StringBuilder buf) {
 		PHPDocTag[] tags = getTags(doc, tagKind);
 		if (tags.length > 0) {
 			buf.append(DT_START).append(field).append(DT_END);
@@ -291,7 +291,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 		}
 	}
 
-	private static PHPDocTag[] getTags(PHPDocBlock doc, int kind) {
+	protected PHPDocTag[] getTags(PHPDocBlock doc, int kind) {
 		List<PHPDocTag> tags = new LinkedList<PHPDocTag>();
 		for (PHPDocTag tag : doc.getTags()) {
 			if (tag.getTagKind() == kind) {
@@ -299,5 +299,14 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 			}
 		}
 		return tags.toArray(new PHPDocTag[tags.size()]);
+	}
+	
+	protected String getFileName(IMember modelElement) {
+		IPath path = modelElement.getSourceModule().getPath();
+		String fileName = path.toOSString();
+		if (fileName.startsWith("\\") || fileName.startsWith("/")) {
+			fileName = fileName.substring(1);
+		}
+		return fileName;
 	}
 }
