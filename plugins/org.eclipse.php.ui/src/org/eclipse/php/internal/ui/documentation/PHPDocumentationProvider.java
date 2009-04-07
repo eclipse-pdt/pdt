@@ -21,6 +21,7 @@ import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
 import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
 import org.eclipse.php.internal.core.codeassist.FakeGroupType;
@@ -302,7 +303,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	}
 	
 	protected String getFileName(IMember modelElement) {
-		IPath path = modelElement.getSourceModule().getPath();
+		IPath path = EnvironmentPathUtils.getLocalPath(modelElement.getSourceModule().getPath());
 		String fileName = path.toOSString();
 		if (fileName.startsWith("\\") || fileName.startsWith("/")) {
 			fileName = fileName.substring(1);
