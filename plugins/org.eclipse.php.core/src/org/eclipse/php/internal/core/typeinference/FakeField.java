@@ -24,11 +24,24 @@ import org.eclipse.dltk.internal.core.SourceRange;
 public class FakeField extends SourceField {
 	private int offset;
 	private int length;
+	private int modifiers = Modifiers.AccPublic;
 
 	public FakeField(ModelElement parent, String name, int offset, int length) {
 		super(parent, name);
 		this.offset = offset;
 		this.length = length;
+	}
+	
+	public FakeField(ModelElement parent, String name, int offset, int length, int modifiers) {
+		super(parent, name);
+		this.offset = offset;
+		this.length = length;
+		this.modifiers = modifiers;
+	}
+	
+	public FakeField(ModelElement parent, String name, int modifiers) {
+		super(parent, name);
+		this.modifiers = modifiers;
 	}
 
 	public ISourceRange getNameRange() throws ModelException {
@@ -40,7 +53,7 @@ public class FakeField extends SourceField {
 	}
 	
 	public int getFlags() {
-		return Modifiers.AccPublic;
+		return modifiers;
 	}
 
 	public boolean equals(Object o) {
