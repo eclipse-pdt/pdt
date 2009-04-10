@@ -30,7 +30,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_BACKQUOTE
 %state ST_PHP_QUOTES_AFTER_VARIABLE
 %state ST_PHP_HEREDOC
-%state ST_PHP_START_HEREDOC
+%state ST_PHP_NOWDOC
 %state ST_PHP_END_HEREDOC
 %state ST_PHP_LOOKING_FOR_PROPERTY
 %state ST_PHP_VAR_OFFSET
@@ -38,7 +38,6 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
 %state ST_PHP_DOC_COMMENT
 %state ST_PHP_LINE_COMMENT
 %state ST_PHP_HIGHLIGHTING_ERROR
-%state ST_PHP_NOWDOC
 
 
 %{
@@ -70,7 +69,7 @@ import org.eclipse.php.internal.core.util.collections.IntHashtable;
     }
 
     protected boolean isHeredocState(int state){
-    	    	return state == ST_PHP_HEREDOC || state == ST_PHP_START_HEREDOC || state == ST_PHP_END_HEREDOC;
+    	    	return state == ST_PHP_HEREDOC || state == ST_PHP_END_HEREDOC || state == ST_PHP_NOWDOC;
     }
     
     public int[] getParamenters(){
@@ -726,7 +725,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|(["]{LABEL}["])){NEWLINE} {
+<ST_PHP_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
     int bprefix = (yytext().charAt(0) != '<') ? 1 : 0;
     int startString=3+bprefix;
     heredoc_len = yylength()-bprefix-3-1-(yytext().charAt(yylength()-2)=='\r'?1:0);
@@ -736,9 +735,16 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     }
     heredoc = yytext().substring(startString,heredoc_len+startString);
     if (heredoc.charAt(0) == '\'') {
+    	heredoc = heredoc.substring(1, heredoc_len-1);
+    	heredoc_len -= 2;
     	yybegin(ST_PHP_NOWDOC);
+    }
+    else if (heredoc.charAt(0) == '"') {
+    	heredoc = heredoc.substring(1, heredoc_len-1);
+    	heredoc_len -= 2;
+    	yybegin(ST_PHP_HEREDOC);
     } else {
-    	yybegin(ST_PHP_START_HEREDOC);
+    	yybegin(ST_PHP_HEREDOC);
     }
     return PHP_HEREDOC_TAG;
 }
@@ -748,12 +754,7 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
-<ST_PHP_START_HEREDOC>{ANY_CHAR} {
-	yypushback(1);
-	yybegin(ST_PHP_HEREDOC);
-}
-
-<ST_PHP_START_HEREDOC>{LABEL}";"?[\n\r] {
+<ST_PHP_HEREDOC>{LABEL}";"?[\n\r] {
     int label_len = yylength() - 1;
 
     if (yytext().charAt(label_len-1)==';') {
@@ -777,10 +778,10 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
 	   label_len--;
     }
     if (label_len > heredoc_len && yytext().substring(label_len - heredoc_len,label_len).equals(heredoc)) {
-    	   yypushback(1);
+    	yypushback(1);
         yybegin(ST_PHP_END_HEREDOC);
     }
-        return PHP_CONSTANT_ENCAPSED_STRING;
+    return PHP_CONSTANT_ENCAPSED_STRING;
 }
 
 <ST_PHP_END_HEREDOC>{ANY_CHAR} {
@@ -788,6 +789,23 @@ PHP_OPERATOR="=>"|"++"|"--"|"==="|"!=="|"=="|"!="|"<>"|"<="|">="|"+="|"-="|"*="|
     heredoc_len=0;
     yybegin(ST_PHP_IN_SCRIPTING);
     return PHP_CONSTANT_ENCAPSED_STRING;
+}
+
+<ST_PHP_NOWDOC>{LABEL}";"?[\n\r] {
+    int label_len = yylength() - 1;
+
+    if (yytext().charAt(label_len-1)==';') {
+	    label_len--;
+    }
+
+    if (label_len==heredoc_len && yytext().substring(0,label_len).equals(heredoc)) {
+        heredoc=null;
+        heredoc_len=0;
+        yybegin(ST_PHP_IN_SCRIPTING);
+        return PHP_HEREDOC_TAG;
+    } else {
+        return PHP_CONSTANT_ENCAPSED_STRING;
+    }
 }
 
 <ST_PHP_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
@@ -879,7 +897,7 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
    This rule must be the last in the section!!
    it should contain all the states.
    ============================================ */
-<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_START_HEREDOC,ST_PHP_END_HEREDOC>. {
+<ST_PHP_IN_SCRIPTING,ST_PHP_DOUBLE_QUOTES,ST_PHP_VAR_OFFSET,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_END_HEREDOC,ST_PHP_NOWDOC>. {
     yypushback(1);
     pushState(ST_PHP_HIGHLIGHTING_ERROR);
 }

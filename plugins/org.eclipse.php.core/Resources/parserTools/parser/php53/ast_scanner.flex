@@ -46,7 +46,6 @@ import org.eclipse.php.internal.core.PHPVersion;
 %state ST_DOUBLE_QUOTES
 %state ST_BACKQUOTE
 %state ST_HEREDOC
-%state ST_START_HEREDOC
 %state ST_END_HEREDOC
 %state ST_NOWDOC
 %state ST_LOOKING_FOR_PROPERTY
@@ -940,13 +939,21 @@ yybegin(ST_DOCBLOCK);
     return createSymbol(ParserConstants.T_QUATE);
 }
 
-<ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|(["]{LABEL}["])){NEWLINE} {
+<ST_IN_SCRIPTING>b?"<<<"{TABS_AND_SPACES}({LABEL}|([']{LABEL}['])|([\"]{LABEL}[\"])){NEWLINE} {
     int removeChars = (yytext().charAt(0) == 'b') ? 4 : 3;
     heredoc = yytext().substring(removeChars).trim();    // for 'b<<<' or '<<<'
+    int heredoc_len = heredoc.length();
     if (heredoc.charAt(0) == '\'') {
-		yybegin(ST_NOWDOC);
-  	} else {
-    	yybegin(ST_START_HEREDOC);
+    	heredoc = heredoc.substring(1, heredoc_len-1);
+    	heredoc_len -= 2;
+    	yybegin(ST_NOWDOC);
+    }
+    else if (heredoc.charAt(0) == '"') {
+    	heredoc = heredoc.substring(1, heredoc_len-1);
+    	heredoc_len -= 2;
+    	yybegin(ST_HEREDOC);
+    } else {
+    	yybegin(ST_HEREDOC);
     }
     Symbol sym = createFullSymbol(ParserConstants.T_START_HEREDOC);
     sym.value = heredoc;
@@ -958,12 +965,7 @@ yybegin(ST_DOCBLOCK);
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
-<ST_START_HEREDOC>{ANY_CHAR} {
-	yypushback(1);
-	yybegin(ST_HEREDOC);
-}
-
-<ST_START_HEREDOC>{LABEL}";"?[\n\r] {
+<ST_HEREDOC>{LABEL}";"?[\n\r] {
     String text = yytext();
     int length = text.length() - 1;
     text = text.trim();
@@ -1014,6 +1016,26 @@ yybegin(ST_DOCBLOCK);
 	return createSymbol(ParserConstants.T_END_HEREDOC);
 }
 
+<ST_NOWDOC>{LABEL}";"?[\n\r] {
+    String text = yytext();
+    int length = text.length() - 1;
+    text = text.trim();
+    
+    yypushback(1);
+    
+    if (text.endsWith(";")) {
+        text = text.substring(0, text.length() - 1);
+        yypushback(1);
+    }
+    if (text.equals(heredoc)) {
+        heredoc = null;
+        yybegin(ST_IN_SCRIPTING);
+        return createSymbol(ParserConstants.T_END_HEREDOC);
+    } else {
+    	yybegin(ST_HEREDOC);
+    }
+}
+
 <ST_NOWDOC>({NOWDOC_CHARS}+{NEWLINE}+|{NEWLINE}+){LABEL}";"?[\n\r] {
  	String text = yytext();
 
@@ -1025,12 +1047,8 @@ yybegin(ST_DOCBLOCK);
     }
  
  	int textLength = text.length();
- 	String tmpHeredoc = heredoc;
-	if (tmpHeredoc.charAt(0) == '\'') {
-		tmpHeredoc = tmpHeredoc.substring(1, tmpHeredoc.length()-1);
-	}
-	int heredocLength = tmpHeredoc.length();
-	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(tmpHeredoc)) {
+ 	int heredocLength = heredoc.length();
+	if (textLength > heredocLength && text.substring(textLength - heredocLength, textLength).equals(heredoc)) {
 		yypushback(2);
        	yybegin(ST_END_HEREDOC);
        	// we need to remove the closing label from the symbol value.
@@ -1097,6 +1115,6 @@ but jflex doesn't support a{n,} so we changed a{2,} to aa+
     return createSymbol(ParserConstants.T_BACKQUATE);
 }
 
-<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_START_HEREDOC,ST_END_HEREDOC,ST_VAR_OFFSET>{ANY_CHAR} {
+<ST_IN_SCRIPTING,YYINITIAL,ST_DOUBLE_QUOTES,ST_BACKQUOTE,ST_HEREDOC,ST_END_HEREDOC,ST_NOWDOC,ST_VAR_OFFSET>{ANY_CHAR} {
 	// do nothing
 }
