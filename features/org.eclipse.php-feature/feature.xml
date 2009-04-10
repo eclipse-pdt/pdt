@@ -21,6 +21,7 @@
 
    <requires>
       <import feature="org.eclipse.dltk.core" version="1.0.0" match="compatible"/>
+      <import feature="org.eclipse.wst" version="3.1.0" match="compatible"/>
    </requires>
 
    <plugin
