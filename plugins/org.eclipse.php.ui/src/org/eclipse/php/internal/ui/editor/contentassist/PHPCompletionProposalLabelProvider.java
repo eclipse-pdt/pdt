@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.dltk.core.CompletionProposal;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 
@@ -79,12 +76,20 @@ public class PHPCompletionProposalLabelProvider extends CompletionProposalLabelP
 		IType type = (IType) typeProposal.getModelElement();
 		nameBuffer.append(" - "); //$NON-NLS-1$
 		IModelElement parent = type.getParent();
-		if (parent instanceof IType) {
-			IType type2 = (IType) parent;
-			nameBuffer.append(type2.getElementName());
-		} else {
-			nameBuffer.append(parent.getElementName());
-		}
+		nameBuffer.append(parent.getElementName());
+
+		return nameBuffer.toString();
+	}
+
+	protected String createLabelWithTypeAndDeclaration(CompletionProposal proposal) {
+		StringBuffer nameBuffer = new StringBuffer();
+		
+		nameBuffer.append(proposal.getName());
+		
+		IField field = (IField) proposal.getModelElement();
+		nameBuffer.append(" - "); //$NON-NLS-1$
+		IModelElement parent = field.getParent();
+		nameBuffer.append(parent.getElementName());
 
 		return nameBuffer.toString();
 	}
