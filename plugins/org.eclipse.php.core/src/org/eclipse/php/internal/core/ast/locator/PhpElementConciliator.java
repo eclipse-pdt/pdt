@@ -191,7 +191,7 @@ public class PhpElementConciliator {
 		}
 
 		// check for not variables / or $this / or field declaration
-		if (!parent.isDollared() || parent.equals(THIS) || parent.getType() == ASTNode.FIELD_DECLARATION) {
+		if (!parent.isDollared() || isThisVariable(parent) || parent.getType() == ASTNode.FIELD_DECLARATION) {
 			return false;
 		}
 
@@ -209,6 +209,10 @@ public class PhpElementConciliator {
 			node = node.getParent();
 		}
 		return false;
+	}
+
+	private final static boolean isThisVariable(Variable variable) {
+		return (variable.isDollared() && variable.getName().getType() == ASTNode.IDENTIFIER && THIS.equalsIgnoreCase(((Identifier) variable.getName()).getName()));
 	}
 
 	/**
