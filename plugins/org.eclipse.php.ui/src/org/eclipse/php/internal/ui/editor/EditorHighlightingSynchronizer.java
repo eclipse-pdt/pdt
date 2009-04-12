@@ -1,12 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2005, 2009 Zend Technologies.
  * All rights reserved. This program and the accompanying materials
- * are the copyright of Zend Technologies and is protected under
- * copyright laws of the United States.
- * You must not copy, adapt or redistribute this document for 
- * any use. 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
+ * Contributors:
+ *   Zend and IBM - Initial implementation
  *******************************************************************************/
+
 package org.eclipse.php.internal.ui.editor;
 
 import org.eclipse.core.runtime.Assert;
