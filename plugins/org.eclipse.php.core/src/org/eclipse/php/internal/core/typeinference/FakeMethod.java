@@ -27,13 +27,14 @@ public class FakeMethod extends SourceMethod {
 	private static final String[] NO_STRINGS = new String[0];
 	private String receiver;
 	private String[] parameters = NO_STRINGS;
-	private String[] parameterInitializers = NO_STRINGS;
+	private String[] parameterInitializers = null;
 	private int flags = Modifiers.AccPublic;
 	private int offset;
 	private int length;
 	private boolean hasSpecialOffsets = false;
 	private int nameOffset;
 	private int nameLength;
+	private boolean isConstructor;
 
 	public String getReceiver() {
 		return receiver;
@@ -45,6 +46,11 @@ public class FakeMethod extends SourceMethod {
 
 	public FakeMethod(ModelElement parent, String name) {
 		super(parent, name);
+	}
+	
+	public FakeMethod(ModelElement parent, String name, int modifiers) {
+		super(parent, name);
+		this.flags = modifiers;
 	}
 
 	public FakeMethod(ModelElement parent, String name, int offset, int length, int nameOffset, int nameLength) {
@@ -94,5 +100,13 @@ public class FakeMethod extends SourceMethod {
 
 	public String[] getParameters() throws ModelException {
 		return parameters;
+	}
+	
+	public void setConstructor(boolean isConstructor) {
+		this.isConstructor = isConstructor;
+	}
+
+	public boolean isConstructor() throws ModelException {
+		return isConstructor;
 	}
 }

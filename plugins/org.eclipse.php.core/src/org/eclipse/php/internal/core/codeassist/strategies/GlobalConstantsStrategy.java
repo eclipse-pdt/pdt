@@ -59,7 +59,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		IModelElement[] constants = CodeAssistUtils.getGlobalFields(abstractContext.getSourceModule(), prefix, mask);
 		for (IModelElement constant : constants) {
 			try {
-				if (PHPFlags.isConstant(((IField)constant).getFlags())) {
+				if (!constant.getElementName().startsWith("$") && PHPFlags.isConstant(((IField)constant).getFlags())) {
 					reporter.reportField((IField) constant, "", replaceRange, false);
 				}
 			} catch (ModelException e) {

@@ -192,6 +192,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				mi.modifiers |= IPHPModifiers.Internal;
 			}
 		}
+		
+		if (fCurrentClass == null) {
+			mi.modifiers |= Modifiers.AccGlobal;
+		}
 	}
 
 	public boolean visit(TypeDeclaration type) throws Exception {

@@ -13,9 +13,11 @@ package org.eclipse.php.internal.core.typeinference;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
+import org.eclipse.dltk.compiler.CharOperation;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.evaluation.types.AmbiguousType;
@@ -39,7 +41,7 @@ import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPTypeInferenceUtils {
 
-	private static final char[] WILDCARD = { '*' };
+	private static final String WILDCARD = "*"; //$NON-NLS-1$
 
 	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluatedTypes) {
 		MultiTypeType multiTypeType = new MultiTypeType();
@@ -509,14 +511,14 @@ public class PHPTypeInferenceUtils {
 	 * @param scope Search scope
 	 * @return namespace element array
 	 */
-	public static IType[] getNamespaces(char[] prefix, int matchRule, final IDLTKSearchScope scope) {
+	public static IType[] getNamespaces(String prefix, int matchRule, final IDLTKSearchScope scope) {
 		final Collection<IType> elements = new LinkedList<IType>();
 
 		final HandleFactory handleFactory = new HandleFactory();
 		SearchEngine searchEngine = new SearchEngine();
 
 		try {
-			searchEngine.searchAllTypeNames(null, 0, prefix, matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
+			searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
 				public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
 					if (PHPFlags.isNamespace(modifiers)) {
 						Openable openable = handleFactory.createOpenable(path, scope);
@@ -541,23 +543,7 @@ public class PHPTypeInferenceUtils {
 	 * @return type element array
 	 */
 	public static IType[] getTypes(String typeName, IDLTKSearchScope scope) {
-		final List<IType> types = new LinkedList<IType>();
-		SearchEngine searchEngine = new SearchEngine();
-		SearchPattern pattern = SearchPattern.createPattern(typeName, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-		try {
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					IType element = (IType) match.getElement();
-					if (!PHPFlags.isNamespace(element.getFlags())) {
-						types.add(element);
-					}
-				}
-			}, null);
-		} catch (CoreException e) {
-			Logger.logException(e);
-			return null;
-		}
-		return (IType[]) types.toArray(new IType[types.size()]);
+		return getTypes(typeName, SearchPattern.R_EXACT_MATCH, scope);
 	}
 
 	/**
@@ -580,30 +566,49 @@ public class PHPTypeInferenceUtils {
 	 * @param scope Search scope
 	 * @return type element array
 	 */
-	public static IType[] getTypes(char[] prefix, int matchRule, final IDLTKSearchScope scope) {
-		final Collection<IType> elements = new LinkedList<IType>();
+	public static IType[] getTypes(String prefix, int matchRule, final IDLTKSearchScope scope) {
 
-		final HandleFactory handleFactory = new HandleFactory();
+		final Collection<IType> elements = new LinkedList<IType>();
 		SearchEngine searchEngine = new SearchEngine();
 
-		try {
-			searchEngine.searchAllTypeNames(null, 0, prefix, matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
-				public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-					Openable openable = handleFactory.createOpenable(path, scope);
-					ModelElement parent = openable;
-					if (enclosingTypeNames.length > 0) {
-						parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
+		if ((matchRule & SearchPattern.R_EXACT_MATCH) != 0) {
+			try {
+				SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						IType element = (IType) match.getElement();
+						if (!PHPFlags.isNamespace(element.getFlags())) {
+							elements.add(element);
+						}
 					}
-					elements.add(new FakeType(parent, new String(simpleTypeName), modifiers));
-				}
-			}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
-		} catch (ModelException e) {
-			Logger.logException(e);
+				}, null);
+			} catch (CoreException e) {
+				Logger.logException(e);
+				return null;
+			}
+		} else {
+			try {
+				final HandleFactory handleFactory = new HandleFactory();
+				searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
+					public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+						Openable openable = handleFactory.createOpenable(path, scope);
+						ModelElement parent = openable;
+						if (enclosingTypeNames.length > 0) {
+							parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
+						}
+						if (parent != null) {
+							elements.add(new FakeType(parent, new String(simpleTypeName), modifiers));
+						}
+					}
+				}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 		}
 
 		return (IType[]) elements.toArray(new IType[elements.size()]);
 	}
-	
+
 	/**
 	 * This method returns classes and interfaces
 	 * As this method can be heavy FakeType is returned.
@@ -613,7 +618,7 @@ public class PHPTypeInferenceUtils {
 	 * @param scope Search scope
 	 * @return type element array
 	 */
-	public static IType[] getClassesAndInterfaces(char[] prefix, int matchRule, final IDLTKSearchScope scope) {
+	public static IType[] getClassesAndInterfaces(String prefix, int matchRule, final IDLTKSearchScope scope) {
 		IType[] types = getTypes(prefix, matchRule, scope);
 		List<IType> result = new LinkedList<IType>();
 		for (IType type : types) {
@@ -627,7 +632,7 @@ public class PHPTypeInferenceUtils {
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
-	
+
 	/**
 	 * This method returns all classes and interfaces
 	 * As this method can be heavy FakeType is returned.
@@ -671,24 +676,53 @@ public class PHPTypeInferenceUtils {
 	 * @param scope Search scope
 	 * @return method element array
 	 */
-	public static IMethod[] getFunctions(String prefix, int matchRule, IDLTKSearchScope scope) {
+	public static IMethod[] getFunctions(String prefix, int matchRule, final IDLTKSearchScope scope) {
+
 		final List<IMethod> methods = new LinkedList<IMethod>();
 		SearchEngine searchEngine = new SearchEngine();
-		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-		try {
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					IMethod element = (IMethod) match.getElement();
-					IModelElement parent = element.getParent();
-					if (parent instanceof ISourceModule || parent instanceof IMethod || parent instanceof IType && PHPFlags.isNamespace(((IType) parent).getFlags())) {
-						methods.add(element);
+
+		if ((matchRule & SearchPattern.R_EXACT_MATCH) != 0) {
+			try {
+				SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
+				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+					public void acceptSearchMatch(SearchMatch match) throws CoreException {
+						IMethod element = (IMethod) match.getElement();
+						IModelElement parent = element.getParent();
+						if (parent instanceof ISourceModule || parent instanceof IMethod || parent instanceof IType && PHPFlags.isNamespace(((IType) parent).getFlags())) {
+							methods.add(element);
+						}
 					}
-				}
-			}, null);
-		} catch (CoreException e) {
-			Logger.logException(e);
-			return null;
+				}, new NullProgressMonitor());
+			} catch (CoreException e) {
+				Logger.logException(e);
+				return null;
+			}
+		} else {
+			final HandleFactory handleFactory = new HandleFactory();
+			try {
+				searchEngine.searchAllMethodNames(prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new MethodNameRequestor() {
+					public void acceptMethod(int modifiers, char[] packageName, char[] simpleMethodName, char[][] enclosingTypeNames, char[][] parameterNames, String path) {
+						if ((modifiers & Modifiers.AccGlobal) == 0) {
+							return;
+						}
+
+						Openable openable = handleFactory.createOpenable(path, scope);
+						ModelElement parent = openable;
+						if (enclosingTypeNames.length > 0) {
+							parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
+						}
+						FakeMethod method = new FakeMethod(parent, new String(simpleMethodName), modifiers);
+						if (parameterNames != null) {
+							method.setParameters(CharOperation.charArrayToStringArray(parameterNames));
+						}
+						methods.add(method);
+					}
+				}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, new NullProgressMonitor());
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
 		}
+
 		return (IMethod[]) methods.toArray(new IMethod[methods.size()]);
 	}
 
@@ -723,6 +757,7 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IField[] getFields(String prefix, int matchRule, IDLTKSearchScope scope) {
 		final List<IField> fields = new LinkedList<IField>();
+
 		SearchEngine searchEngine = new SearchEngine();
 		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 		try {

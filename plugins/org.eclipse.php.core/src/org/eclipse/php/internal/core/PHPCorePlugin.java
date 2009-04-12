@@ -279,10 +279,8 @@ public class PHPCorePlugin extends Plugin {
 				if (monitor != null) {
 					monitor.subTask(CoreMessages.PHPCorePlugin_initializingSearchEngine);
 				}
-				engine.searchAllMethodNames("#@$%#^".toCharArray(), SearchPattern.R_EXACT_MATCH, IDLTKSearchConstants.DECLARATIONS,
-					scope, new MethodNameMatchRequestor() {
-						public void acceptMethodNameMatch(MethodNameMatch match) {
-						}
+				engine.searchAllMethodNames("@$%#^".toCharArray(), SearchPattern.R_EXACT_MATCH, IDLTKSearchConstants.DECLARATIONS,
+					scope, new MethodNameRequestor() {
 					},
 					// will not activate index query caches if indexes are
 					// not ready, since it would take to long

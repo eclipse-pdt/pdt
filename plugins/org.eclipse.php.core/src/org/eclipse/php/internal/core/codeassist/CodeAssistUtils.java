@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
@@ -29,7 +30,6 @@ import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.ScriptProject;
-import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -105,7 +105,6 @@ public class CodeAssistUtils {
 	 */
 	public static final int USE_PHPDOC = 1 << 5;
 
-	private static final String SELF = "self"; //$NON-NLS-1$
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
 	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
@@ -333,7 +332,7 @@ public class CodeAssistUtils {
 				FileContext fileContext = new FileContext(type.getSourceModule(), moduleDeclaration, offset);
 				TypeContext typeContext = new TypeContext(fileContext, classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-				
+
 				Set<String> processedFields = new HashSet<String>();
 				for (IField field : fields) {
 
@@ -428,7 +427,7 @@ public class CodeAssistUtils {
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 
 		IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
-		
+
 		IEvaluatedType evaluatedType;
 		IType[] modelElements;
 		boolean usePhpDoc = (mask & USE_PHPDOC) != 0;
@@ -582,24 +581,18 @@ public class CodeAssistUtils {
 	 * Getting an instance and finding its type.
 	 */
 	private static IType[] innerGetClassName(ISourceModule sourceModule, TextSequence statementText, int propertyEndPosition, boolean isClassTriger, int offset) {
-		
+
 		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
 
 		int classNameStart = PHPTextSequenceUtilities.readIdentifierStartIndex(phpVersion, statementText, propertyEndPosition, true);
 		String className = statementText.subSequence(classNameStart, propertyEndPosition).toString();
 		if (isClassTriger) {
-			if (className.equals(SELF)) { //$NON-NLS-1$
-				IType classData = PHPModelUtils.getCurrentType(sourceModule, offset - 6); //the offset before self::
-				if (classData != null) {
-					return new IType[] { classData };
-				}
-			} else if (className.equals("parent")) { //$NON-NLS-1$
-				IType classData = PHPModelUtils.getCurrentType(sourceModule, offset - 8); //the offset before parent::
+			if ("self".equals(className) || "parent".equals(className) || (phpVersion.isGreaterThan(PHPVersion.PHP5) && "static".equals(className))) {
+				IType classData = PHPModelUtils.getCurrentType(sourceModule, offset - className.length() - 2); //the offset before "self::", "parent::" or "static::"
 				if (classData != null) {
 					return new IType[] { classData };
 				}
 			}
-
 			if (className.length() > 0) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule, null);
 				FileContext context = new FileContext(sourceModule, moduleDeclaration, offset);
@@ -761,7 +754,7 @@ public class CodeAssistUtils {
 		}
 
 		final Set<String> processedVars = new HashSet<String>();
-		
+
 		SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
 		try {
@@ -780,7 +773,7 @@ public class CodeAssistUtils {
 				e.printStackTrace();
 			}
 		}
-		
+
 		// collect global variables
 		ModuleDeclaration rootNode = SourceParserUtil.getModuleDeclaration(method.getSourceModule());
 		try {
@@ -809,7 +802,7 @@ public class CodeAssistUtils {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
@@ -996,18 +989,30 @@ public class CodeAssistUtils {
 		if (pattern != null) {
 			try {
 				if (elementType == IDLTKSearchConstants.TYPE) {
-					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getTypes(prefix.toCharArray(), pattern.getMatchRule(), scope)));
+					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getTypes(prefix, pattern.getMatchRule(), scope)));
+				} else if (elementType == IDLTKSearchConstants.METHOD) {
+					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(prefix, pattern.getMatchRule(), scope)));
 				} else {
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					if ((mask & EXCLUDE_CONSTANTS) == 0 && (mask & ONLY_CURRENT_FILE) == 0 && !prefix.startsWith(DOLLAR)) {
+						// workaround for fast searching global constants:
+						MixinModel mixinModel = PHPMixinModel.getInstance(sourceModule.getScriptProject()).getRawModel();
+						if (!prefix.endsWith(WILDCARD)) {
+							prefix += WILDCARD;
+						}
+						String[] keys = mixinModel.findKeys(MixinModel.SEPARATOR + prefix + PHPMixinParser.CONSTANT_SUFFIX);
+						for (String key : keys) {
+							String name = key.substring(1, key.indexOf(PHPMixinParser.CONSTANT_SUFFIX));
+							elements.add(new FakeField((ModelElement) sourceModule, name, Modifiers.AccConstant));
+						}
+					} else {
+						searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+							public void acceptSearchMatch(SearchMatch match) throws CoreException {
 
-							IModelElement element = (IModelElement) match.getElement();
-							// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
-							if (element instanceof SourceModule) {
-								return;
-							}
-
-							if (element instanceof IField) {
+								IModelElement element = (IModelElement) match.getElement();
+								// sometimes method reference is found instead of declaration (seems to be a bug in search engine):
+								if (!(element instanceof IField)) {
+									return;
+								}
 								try {
 									int flags = ((IField) element).getFlags();
 									if (((mask & EXCLUDE_CONSTANTS) != 0 && PHPFlags.isConstant(flags)) || ((mask & EXCLUDE_VARIABLES) != 0 && !PHPFlags.isConstant(flags))) {
@@ -1018,18 +1023,18 @@ public class CodeAssistUtils {
 										e.printStackTrace();
 									}
 								}
-							}
 
-							IModelElement parent = element.getParent();
-							if (parent instanceof IType && !PHPFlags.isNamespace(((IType)parent).getFlags())) {
-								return; // The element is a class/interface member
+								IModelElement parent = element.getParent();
+								if (parent instanceof IType && !PHPFlags.isNamespace(((IType) parent).getFlags())) {
+									return; // The element is a class/interface member
+								}
+								if (parent instanceof IMethod) {
+									return; // The element is a local function variable
+								}
+								elements.add(element);
 							}
-							if (parent instanceof IMethod && element instanceof IField) {
-								return; // The element is a local function variable
-							}
-							elements.add(element);
-						}
-					}, null);
+						}, null);
+					}
 				}
 			} catch (CoreException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
