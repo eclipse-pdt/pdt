@@ -66,10 +66,10 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						}
 					} else if (obj instanceof IAdaptable) {
 						IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
-						if (resource.getType() == IResource.FILE) {
+						if (resource != null && resource.getType() == IResource.FILE) {
 							return PHPToolkitUtil.isPhpFile((IFile) resource);
 						}
-						if (resource.getType() == IResource.PROJECT) {
+						if (resource != null && resource.getType() == IResource.PROJECT) {
 							return isWebPageProjectLaunch(args, (IProject) resource);
 						}
 						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
