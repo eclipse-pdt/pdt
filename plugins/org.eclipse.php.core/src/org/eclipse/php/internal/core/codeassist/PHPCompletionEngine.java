@@ -60,16 +60,28 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		relevanceConst = RELEVANCE_CONST;
 
 		try {
-			ICompletionContextResolver resolver = CompletionContextResolver.getActive();
-			ICompletionStrategyFactory strategyFactory = CompletionStrategyFactory.getActive();
+			ICompletionContextResolver[] contextResolvers = CompletionContextResolver.getActive();
+			ICompletionStrategyFactory[] strategyFactories = CompletionStrategyFactory.getActive();
 
-			ICompletionContext[] contexts = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
-			for (ICompletionStrategy strategy : strategyFactory.create(contexts)) {
-				try {
-					strategy.apply(this);
-				} catch (Exception e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
+			for (ICompletionContextResolver resolver : contextResolvers) {
+
+				ICompletionContext[] contexts = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
+				if (contexts != null) {
+					for (ICompletionStrategyFactory factory : strategyFactories) {
+
+						ICompletionStrategy[] strategies = factory.create(contexts);
+						if (strategies != null) {
+							for (ICompletionStrategy strategy : strategies) {
+								
+								try {
+									strategy.apply(this);
+								} catch (Exception e) {
+									if (DLTKCore.DEBUG_COMPLETION) {
+										e.printStackTrace();
+									}
+								}
+							}
+						}
 					}
 				}
 			}

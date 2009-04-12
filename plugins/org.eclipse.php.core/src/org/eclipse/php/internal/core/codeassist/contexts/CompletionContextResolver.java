@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -29,7 +26,7 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
  */
 public class CompletionContextResolver implements ICompletionContextResolver {
 
-	private static ICompletionContextResolver instance;
+	private static ICompletionContextResolver[] instances;
 	private Collection<ICompletionContext> contexts;
 
 	/**
@@ -44,26 +41,26 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 	 * Returns active completion context resolver. By default returns this class instance,
 	 * but may be overriden using extension point.
 	 * 
-	 * @return {@link ICompletionContextResolver}
+	 * @return array of active {@link ICompletionContextResolver}'s
 	 */
-	public static ICompletionContextResolver getActive() {
-		if (instance == null) { // not synchronized since we don't care about creating multiple instances of resolvers in worst case
+	public static ICompletionContextResolver[] getActive() {
+		if (instances == null) { // not synchronized since we don't care about creating multiple instances of resolvers in worst case
 
+			List<ICompletionContextResolver> resolvers = new LinkedList<ICompletionContextResolver>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.completionContextResolvers");
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("resolver")) {
 					try {
-						instance = (ICompletionContextResolver) element.createExecutableExtension("class");
+						resolvers.add((ICompletionContextResolver) element.createExecutableExtension("class"));
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}
 				}
 			}
-			if (instance == null) {
-				instance = new CompletionContextResolver();
-			}
+			resolvers.add(new CompletionContextResolver()); // add default
+			instances = (ICompletionContextResolver[]) resolvers.toArray(new ICompletionContextResolver[resolvers.size()]);
 		}
-		return instance;
+		return instances;
 	}
 
 	/**

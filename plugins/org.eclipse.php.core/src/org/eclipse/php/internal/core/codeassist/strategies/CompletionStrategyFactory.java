@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -27,32 +24,32 @@ import org.eclipse.php.internal.core.codeassist.contexts.*;
  */
 public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 
-	private static ICompletionStrategyFactory instance;
+	private static ICompletionStrategyFactory[] instances;
 
 	/**
 	 * Returns active completion strategy factory. By default returns this class instance,
 	 * but may be overriden using extension point.
 	 * 
-	 * @return {@link ICompletionContextResolver}
+	 * @return array of active {@link ICompletionContextResolver}'s
 	 */
-	public static ICompletionStrategyFactory getActive() {
-		if (instance == null) { // not synchronized since we don't care about creating multiple instances of factories in worst case
-
+	public static ICompletionStrategyFactory[] getActive() {
+		if (instances == null) { // not synchronized since we don't care about creating multiple instances of factories in worst case
+			
+			List<ICompletionStrategyFactory> factories = new LinkedList<ICompletionStrategyFactory>();
 			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.completionStrategyFactories");
 			for (IConfigurationElement element : elements) {
 				if (element.getName().equals("factory")) {
 					try {
-						instance = (ICompletionStrategyFactory) element.createExecutableExtension("class");
+						factories.add((ICompletionStrategyFactory) element.createExecutableExtension("class"));
 					} catch (CoreException e) {
 						PHPCorePlugin.log(e);
 					}
 				}
 			}
-			if (instance == null) {
-				instance = new CompletionStrategyFactory();
-			}
+			factories.add(new CompletionStrategyFactory());
+			instances = (ICompletionStrategyFactory[]) factories.toArray(new ICompletionStrategyFactory[factories.size()]);
 		}
-		return instance;
+		return instances;
 	}
 
 	public ICompletionStrategy[] create(ICompletionContext[] contexts) {
