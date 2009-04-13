@@ -16,7 +16,6 @@ import org.eclipse.dltk.ui.IDLTKUILanguageToolkit;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * An implementation of IDLTKUILanguageToolkit for PHP
@@ -29,10 +28,6 @@ public class PHPUILanguageToolkit extends AbstractDLTKUILanguageToolkit {
 		return sToolkit;
 	}
 	
-	protected AbstractUIPlugin getUIPLugin() {
-		return PHPUiPlugin.getDefault();
-	}
-
 	public IDLTKLanguageToolkit getCoreToolkit() {
 		return PHPLanguageToolkit.getDefault();
 	}
