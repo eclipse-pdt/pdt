@@ -20,6 +20,7 @@ import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
+import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.ui.documentation.IScriptDocumentationProvider;
@@ -54,6 +55,7 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 	protected static final String FIELD_IMPLEMENTS = "Implements";
 	protected static final String FIELD_NAMESPACE = "Namespace";
 	protected static final String FIELD_INTERFACE = "Interface";
+	protected static final String FIELD_TYPE = "Type";
 
 	public Reader getInfo(IMember element, boolean lookIntoParents, boolean lookIntoExternal) {
 		StringBuilder buf = new StringBuilder(DL_START);
@@ -236,6 +238,21 @@ public class PHPDocumentationProvider implements IScriptDocumentationProvider {
 
 		// append description if it exists
 		appendShortDescription(doc, buf);
+		
+		// append type information
+		for (PHPDocTag tag : doc.getTags()) {
+			if (tag.getTagKind() == PHPDocTag.VAR) {
+				SimpleReference[] references = tag.getReferences();
+				StringBuilder typeBuf = new StringBuilder();
+				for (SimpleReference ref : references) {
+					if (typeBuf.length() > 0) {
+						typeBuf.append(" | ");
+					}
+					typeBuf.append(ref.getName());
+				}
+				appendDefinitionRow(FIELD_TYPE, typeBuf.toString(), buf);
+			}
+		}
 	}
 	
 	private void appendTypeInfoRow(IType type, StringBuilder buf) {
