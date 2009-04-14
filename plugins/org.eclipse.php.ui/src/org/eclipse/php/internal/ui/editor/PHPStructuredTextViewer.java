@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.internal.text.SelectionProcessor;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -40,6 +41,7 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.configuration.PHPStructuredTextViewerConfiguration;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
+import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -76,6 +78,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	private IInformationPresenter fHierarchyPresenter;
 
 	private IAnnotationHover fProjectionAnnotationHover;
+	private boolean fireSelectionChanged = true;
 
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
@@ -238,9 +241,50 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			if (fHierarchyPresenter != null) {
 				fHierarchyPresenter.showInformation();
 			}
-		} else {
+		} else if(operation == DELETE){
+			StyledText textWidget= getTextWidget();
+			if (textWidget == null)
+				return;
+			ITextSelection textSelection= null;
+				if (redraws()) {
+					try {
+						textSelection= (ITextSelection) getSelection();
+						int length= textSelection.getLength();
+						if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
+							getTextWidget().invokeAction(ST.DELETE_NEXT);
+						else
+							deleteSelection(textSelection, textWidget);
+
+						if(fireSelectionChanged ){
+							Point range= textWidget.getSelectionRange();
+							fireSelectionChanged(range.x, range.y);
+						}
+
+					} catch (BadLocationException x) {
+						// ignore
+					}
+				}
+		}
+		else
+		{
 			super.doOperation(operation);
 		}
+	}
+	
+	public void setFireSelectionChanged(boolean fireSelectionChanged) {
+		this.fireSelectionChanged = fireSelectionChanged;
+	}
+
+	/**
+	 * Deletes the selection and sets the caret before the deleted range.
+	 * 
+	 * @param selection the selection to delete
+	 * @param textWidget the widget
+	 * @throws BadLocationException on document access failure
+	 * @since 3.5
+	 */
+	private void deleteSelection(ITextSelection selection, StyledText textWidget) throws BadLocationException {
+		new SelectionProcessor(this).doDelete(selection);
 	}
 
 	/* (non-Javadoc)
