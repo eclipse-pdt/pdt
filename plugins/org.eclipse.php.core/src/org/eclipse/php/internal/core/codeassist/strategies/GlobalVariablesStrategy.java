@@ -53,7 +53,7 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
-		int mask = 0;
+		int mask = CodeAssistUtils.EXCLUDE_CONSTANTS;
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}

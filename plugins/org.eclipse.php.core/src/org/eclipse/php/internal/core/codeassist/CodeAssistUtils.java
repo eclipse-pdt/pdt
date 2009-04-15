@@ -258,7 +258,10 @@ public class CodeAssistUtils {
 
 					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							fields.add((IField) match.getElement());
+							IField element = (IField) match.getElement();
+							if (element.getParent() instanceof IType) {
+								fields.add(element);
+							}
 						}
 					}, null);
 				}
@@ -268,7 +271,10 @@ public class CodeAssistUtils {
 
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-						fields.add((IField) match.getElement());
+						IField element = (IField) match.getElement();
+						if (element.getParent() instanceof IType) {
+							fields.add(element);
+						}
 					}
 				}, null);
 
