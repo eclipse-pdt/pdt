@@ -33,19 +33,34 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	}
 
 	/**
+	 * to be abstract eventually
+	 */
+	protected void initLegalContentTypes() {
+		super.initLegalContentTypes();
+
+		final int length = fSupportedTypes.length;
+		final String[] types = new String[fSupportedTypes.length + 1];
+
+		System.arraycopy(fSupportedTypes, 0, types, 0, length);
+		types[length] = PHPPartitionTypes.PHP_DEFAULT;
+
+		fSupportedTypes = types;
+	}
+
+	/**
 	 * @param regionType
 	 * @return
 	 */
 	private static final boolean isPhpRegion(final String regionType) {
 		return regionType == PHPRegionContext.PHP_OPEN || regionType == PHPRegionContext.PHP_CLOSE || regionType == PHPRegionContext.PHP_CONTENT;
 	}
-	
+
 	private final static String[] configuredContentTypes = new String[] { PHPPartitionTypes.PHP_DEFAULT, PHPPartitionTypes.PHP_SINGLE_LINE_COMMENT, PHPPartitionTypes.PHP_MULTI_LINE_COMMENT, PHPPartitionTypes.PHP_DOC, PHPPartitionTypes.PHP_QUOTED_STRING };
 
 	public static String[] getConfiguredContentTypes() {
 		return configuredContentTypes;
 	}
-	
+
 	public static boolean isPHPPartitionType(final String type) {
 		for (int i = 0; i < configuredContentTypes.length; i++)
 			if (configuredContentTypes[i].equals(type))
@@ -58,7 +73,7 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 	}
 
 	public ITypedRegion getPartition(int offset) {
-		
+
 		// in case we are in the end of document
 		// we return the partition of last region
 		int docLength = fStructuredDocument.getLength();
@@ -67,6 +82,5 @@ public class PHPStructuredTextPartitioner extends StructuredTextPartitionerForHT
 		}
 		return super.getPartition(offset);
 	}
-	
-	
+
 }
