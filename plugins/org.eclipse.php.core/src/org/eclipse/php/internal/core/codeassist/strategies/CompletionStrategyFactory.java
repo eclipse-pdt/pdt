@@ -114,7 +114,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new GlobalTypesStrategy(context) };
 		}
 		if (contextClass == ClassInstantiationContext.class) {
-			return new ICompletionStrategy[] { new ClassInstantiationStrategy(context) };	
+			return new ICompletionStrategy[] { new ClassInstantiationStrategy(context), new GlobalVariablesStrategy(context) };	
 		}
 		if (contextClass == InstanceOfContext.class) {
 			return new ICompletionStrategy[] { new InstanceOfStrategy(context) };	
