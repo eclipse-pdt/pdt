@@ -34,10 +34,10 @@ public abstract class InterfaceDeclarationContext extends TypeDeclarationContext
 		if (typeEnd >= 10) {
 			TextSequence statementText = getStatementText();
 			String typeString = statementText.subSequence(typeEnd - 10, typeEnd - 1).toString();
-			if (!"interface".equals(typeString)) {
-				return false;
+			if ("interface".equals(typeString)) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 }

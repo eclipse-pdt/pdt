@@ -34,11 +34,10 @@ public abstract class ClassDeclarationContext extends TypeDeclarationContext {
 		if (typeEnd >= 6) {
 			TextSequence statementText = getStatementText();
 			String typeString = statementText.subSequence(typeEnd - 6, typeEnd - 1).toString();
-			if (!"class".equals(typeString)) {
-				return false;
+			if ("class".equals(typeString)) {
+				return true;
 			}
-		}
-		
-		return true;
+		}		
+		return false;
 	}
 }
