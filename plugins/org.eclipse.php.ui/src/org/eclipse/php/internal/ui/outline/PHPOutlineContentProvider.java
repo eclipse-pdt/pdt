@@ -194,7 +194,10 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 				}
 			} catch (ModelException e) {
 			}
-			return (element.getParent().getElementType() != IModelElement.TYPE);
+			IModelElement parent = element.getParent();
+			if (parent != null) {
+				return (parent.getElementType() != IModelElement.TYPE);
+			}
 		}
 		return false;
 	}
