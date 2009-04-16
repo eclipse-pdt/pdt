@@ -161,7 +161,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		} else if (operation == CONTENTASSIST_PROPOSALS) {
 			// Handle javascript content assist when there is no support (instead of printing the stack trace)
 			if (config != null) {
-				IProject project =null;
+				IProject project = null;
 				boolean isJavaScriptRegion = false;
 				boolean hasJavaScriptNature = true;
 				try {
@@ -182,7 +182,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 					// Check if the containing project has JS nature or not
 					if (textEditor instanceof PHPStructuredEditor) {
 						IModelElement modelElement = ((PHPStructuredEditor) textEditor).getModelElement();
-						
+
 						if (modelElement != null) {
 							IScriptProject scriptProject = modelElement.getScriptProject();
 							project = scriptProject.getProject();
@@ -191,7 +191,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 							}
 						}
 					}
-					
+
 					// open dialog if required
 					if (isJavaScriptRegion && !hasJavaScriptNature) {
 						Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
@@ -241,36 +241,34 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 			if (fHierarchyPresenter != null) {
 				fHierarchyPresenter.showInformation();
 			}
-		} else if(operation == DELETE){
-			StyledText textWidget= getTextWidget();
+		} else if (operation == DELETE) {
+			StyledText textWidget = getTextWidget();
 			if (textWidget == null)
 				return;
-			ITextSelection textSelection= null;
-				if (redraws()) {
-					try {
-						textSelection= (ITextSelection) getSelection();
-						int length= textSelection.getLength();
-						if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
-							getTextWidget().invokeAction(ST.DELETE_NEXT);
-						else
-							deleteSelection(textSelection, textWidget);
+			ITextSelection textSelection = null;
+			if (redraws()) {
+				try {
+					textSelection = (ITextSelection) getSelection();
+					int length = textSelection.getLength();
+					if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
+						getTextWidget().invokeAction(ST.DELETE_NEXT);
+					else
+						deleteSelection(textSelection, textWidget);
 
-						if(fireSelectionChanged ){
-							Point range= textWidget.getSelectionRange();
-							fireSelectionChanged(range.x, range.y);
-						}
-
-					} catch (BadLocationException x) {
-						// ignore
+					if (fireSelectionChanged) {
+						Point range = textWidget.getSelectionRange();
+						fireSelectionChanged(range.x, range.y);
 					}
+
+				} catch (BadLocationException x) {
+					// ignore
 				}
-		}
-		else
-		{
+			}
+		} else {
 			super.doOperation(operation);
 		}
 	}
-	
+
 	public void setFireSelectionChanged(boolean fireSelectionChanged) {
 		this.fireSelectionChanged = fireSelectionChanged;
 	}
@@ -501,7 +499,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	IReconciler getReconciler() {
 		return fReconciler;
 	}
-	
+
 	/**
 	 * Prepends the text presentation listener at the beginning of the viewer's
 	 * list of text presentation listeners.  If the listener is already registered
@@ -516,9 +514,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		Assert.isNotNull(listener);
 
 		if (fTextPresentationListeners == null)
-			fTextPresentationListeners= new ArrayList();
+			fTextPresentationListeners = new ArrayList();
 
 		fTextPresentationListeners.remove(listener);
 		fTextPresentationListeners.add(0, listener);
-	}	
+	}
 }
