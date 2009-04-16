@@ -38,6 +38,6 @@ public abstract class InterfaceDeclarationContext extends TypeDeclarationContext
 				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 }
