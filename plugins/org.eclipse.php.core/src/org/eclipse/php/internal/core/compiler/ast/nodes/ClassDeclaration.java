@@ -95,18 +95,18 @@ public class ClassDeclaration extends TypeDeclaration implements IPHPDocAwareDec
 	}
 	
 	public ASTListNode getSuperClasses() {
-		ASTListNode listNode = new ASTListNode(sourceStart(), getBodyStart() - 1);
-		int start = sourceStart();
+		int start = getBodyStart() - 1;
+		ASTListNode listNode = new ASTListNode(start, start);
 		if (superClass != null) {
 			listNode.addNode(superClass);
-			if (superClass.sourceStart() > start) {
+			if (superClass.sourceStart() < start) {
 				start = superClass.sourceStart();
 			}
 		}
 		if (interfaceList != null) {
 			for (TypeReference iface : interfaceList) {
 				listNode.addNode(iface);
-				if (iface.sourceStart() > start) {
+				if (iface.sourceStart() < start) {
 					start = iface.sourceStart();
 				}
 			}
