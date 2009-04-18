@@ -27,9 +27,10 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
 
@@ -45,7 +46,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		ConstantDeclarationGoal typedGoal = (ConstantDeclarationGoal) goal;
 		String constantName = typedGoal.getConstantName();
 		String typeName = typedGoal.getTypeName();
-		
+
 		IDLTKSearchScope scope = null;
 		IScriptProject scriptProject = null;
 		ISourceModuleContext sourceModuleContext = (ISourceModuleContext) goal.getContext();
@@ -54,8 +55,23 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			scope = SearchEngine.createSearchScope(scriptProject);
 		}
 
-		PHPMixinModel mixinModel = scriptProject == null ? PHPMixinModel.getWorkspaceInstance() : PHPMixinModel.getInstance(scriptProject);
-		IModelElement[] elements = mixinModel.getConstant(constantName, typeName, scope);
+		if (scope == null) {
+			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+		}
+		IType[] types = PHPTypeInferenceUtils.getTypes(typeName, scope);
+		Set<IModelElement> elements = new HashSet<IModelElement>();
+		for (IType type : types) {
+			try {
+				IField field = type.getField(constantName);
+				if (field.exists() && PHPFlags.isConstant(field.getFlags())) {
+					elements.add(field);
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 
@@ -134,7 +150,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		}
 
 		public List<Scalar> getDeclarations() {
-			return declarations ;
+			return declarations;
 		}
 
 		private void setNextRange() {
@@ -197,7 +213,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 
 		public boolean endvisit(Statement s) throws Exception {
 			if (s instanceof ConstantDeclaration) {
-				return visit((ConstantDeclaration)s);
+				return visit((ConstantDeclaration) s);
 			}
 			return visitGeneral(s);
 		}

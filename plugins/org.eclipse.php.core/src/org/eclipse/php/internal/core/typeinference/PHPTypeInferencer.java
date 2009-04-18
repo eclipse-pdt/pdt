@@ -19,6 +19,7 @@ import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPGoalEvaluatorFactory;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
+import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
@@ -64,7 +65,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
-			if (goal instanceof MethodReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal || goal instanceof VariableTypeGoal) {
+			if (goal instanceof MethodReturnTypeGoal || goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal || goal instanceof VariableTypeGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

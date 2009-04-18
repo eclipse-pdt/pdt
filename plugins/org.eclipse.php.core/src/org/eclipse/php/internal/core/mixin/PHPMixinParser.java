@@ -23,8 +23,6 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 
 public class PHPMixinParser implements IMixinParser {
 
-	public static final String CLASS_SUFFIX = "%"; //$NON-NLS-1$
-	public static final String INTERFACE_SUFFIX = ">"; //$NON-NLS-1$
 	public static final String CONSTANT_SUFFIX = "@"; //$NON-NLS-1$
 	public static final String INCLUDE_SUFFIX = "#"; //$NON-NLS-1$
 

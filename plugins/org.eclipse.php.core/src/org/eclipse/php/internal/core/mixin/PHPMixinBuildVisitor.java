@@ -26,7 +26,10 @@ import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.mixin.IMixinRequestor;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.mixin.IMixinRequestor.ElementInfo;
@@ -57,80 +60,38 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	private ISourceModule sourceModule;
 	private boolean moduleAvailable;
 	private IMixinRequestor requestor;
-	private Stack<Scope> scopes = new Stack<Scope>();
 	private SourceModuleScope sourceModuleScope;
-	// private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
+	private Stack<ASTNode> parentStack = new Stack<ASTNode>();
 
 	/** Global variables stack */
 	private Stack<Set<String>> globalVariables = new Stack<Set<String>>();
 
 	private abstract class Scope {
-		private final ASTNode node;
 
-		public Scope(ASTNode node) {
+		public Scope() {
 			super();
-			this.node = node;
 		}
 
-		public ASTNode getNode() {
-			return node;
-		}
+		public abstract void reportVariable(String name, IField object);
 
-		public abstract String reportMethod(String name, IMethod object);
+		public abstract void reportConstant(String name, IField object);
 
-		public abstract String reportVariable(String name, IField object);
-
-		public abstract String reportConstant(String name, IField object);
-
-		public abstract String reportType(String name, IType object);
-
-		public abstract String reportInterface(String name, IType object);
-
-		public abstract String reportInclude(String filePath, Include object);
-
-		public abstract String getClassKey();
-
-		public abstract String getKey();
+		public abstract void reportInclude(String filePath, Include object);
 	}
 
 	private class SourceModuleScope extends Scope {
 
-		public SourceModuleScope(ModuleDeclaration node) {
-			super(node);
-		}
-
-		public String getClassKey() {
-			return "";
-		}
-
-		public String reportMethod(String name, IMethod object) {
-			// Report global function:
-			return report(new StringBuilder(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createMethod(object));
-		}
-
-		public String reportType(String name, IType object) {
-			return report(new StringBuilder(name).append(PHPMixinParser.CLASS_SUFFIX).toString(), PHPMixinElementInfo.createClass(object));
-		}
-
-		public String reportInterface(String name, IType object) {
-			return report(new StringBuilder(name).append(PHPMixinParser.INTERFACE_SUFFIX).toString(), PHPMixinElementInfo.createInterface(object));
-		}
-
-		public String reportVariable(String name, IField object) {
+		public void reportVariable(String name, IField object) {
 			// Report global variable:
-			return report(new StringBuilder(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createVariable(object));
+			report(new StringBuilder(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createVariable(object));
 		}
 
-		public String reportConstant(String name, IField object) {
+		public void reportConstant(String name, IField object) {
 			// Report global constant:
-			return report(new StringBuilder(MixinModel.SEPARATOR).append(name).append(PHPMixinParser.CONSTANT_SUFFIX).toString(), PHPMixinElementInfo.createConstant(object));
+			report(new StringBuilder(MixinModel.SEPARATOR).append(name).append(PHPMixinParser.CONSTANT_SUFFIX).toString(), PHPMixinElementInfo.createConstant(object));
 		}
 
-		public String getKey() {
-			return "";
-		}
-
-		public String reportInclude(String filePath, Include include) {
+		public void reportInclude(String filePath, Include include) {
 			// Report include(), require(), require_once() and include_once():
 
 			IncludeField object = new IncludeField((ModelElement) sourceModule, filePath);
@@ -141,110 +102,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			if (i >= 0) {
 				filePath = filePath.substring(i + 1);
 			}
-			return report(new StringBuilder(filePath).append(PHPMixinParser.INCLUDE_SUFFIX).toString(), PHPMixinElementInfo.createInclude(object));
-		}
-	}
-
-	private class ClassScope extends Scope {
-
-		private final String classKey;
-
-		public ClassScope(ASTNode node, String classKey) {
-			super(node);
-			this.classKey = classKey;
-		}
-
-		public String reportMethod(String name, IMethod object) {
-			// Report class method:
-			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append(name).toString(), PHPMixinElementInfo.createMethod(object));
-		}
-
-		public String reportType(String name, IType obj) {
-			// There's no nested classes in PHP
-			return null;
-		}
-
-		public String reportInterface(String name, IType obj) {
-			// There's no nested interfaces in PHP
-			return null;
-		}
-
-		public String reportVariable(String name, IField object) {
-			// Report class field:
-			PHPMixinElementInfo info = PHPMixinElementInfo.createVariable(object);
-			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append(name).toString(), info);
-		}
-
-		public String reportConstant(String name, IField object) {
-			// Report class constant:
-			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append(name).append(PHPMixinParser.CONSTANT_SUFFIX).toString(), PHPMixinElementInfo.createConstant(object));
-		}
-
-		public String getClassKey() {
-			return classKey;
-		}
-
-		public String getKey() {
-			return classKey;
-		}
-
-		public String reportInclude(String filePath, Include include) {
-			// There's no possibility to include other files from within a class
-			return null;
-		}
-	}
-
-	private class MethodScope extends Scope {
-
-		private final Scope classScope;
-		private final String methodKey;
-
-		public MethodScope(ASTNode node, Scope classScope, String methodKey) {
-			super(node);
-			this.classScope = classScope;
-			this.methodKey = methodKey;
-		}
-
-		public String reportMethod(String name, IMethod object) {
-			// Method defined in method belongs to the global scope:
-			return sourceModuleScope.reportMethod(name, object);
-		}
-
-		public String reportType(String name, IType obj) {
-			// Class defined in m(ethod belongs to the global scope:
-			return sourceModuleScope.reportType(name, obj);
-		}
-
-		public String reportInterface(String name, IType obj) {
-			// Class defined in m(ethod belongs to the global scope:
-			return sourceModuleScope.reportInterface(name, obj);
-		}
-
-		public String reportVariable(String name, IField obj) {
-			PHPMixinElementInfo info = PHPMixinElementInfo.createVariable(obj);
-			if (name.charAt(0) == '$') { // Method or function scope local variable (example: $a = ...)
-				return report(new StringBuilder(getKey()).append(MixinModel.SEPARATOR).append(name).toString(), info);
-			}
-			// Otherwise - it's a class variable ($this->a = ...):
-			return report(new StringBuilder(getClassKey()).append(MixinModel.SEPARATOR).append('$').append(name).toString(), info);
-		}
-
-		public String reportConstant(String name, IField object) {
-			// Constant defined inside of method is a part of global scope:
-			return sourceModuleScope.reportConstant(name, object);
-		}
-
-		public String getClassKey() {
-			return classScope.getClassKey();
-		}
-
-		public String getKey() {
-			return methodKey;
-		}
-
-		public String reportInclude(String filePath, Include include) {
-			// Included file in the method belongs to the global scope:
-			return sourceModuleScope.reportInclude(filePath, include);
+			report(new StringBuilder(filePath).append(PHPMixinParser.INCLUDE_SUFFIX).toString(), PHPMixinElementInfo.createInclude(object));
 		}
 	}
 
@@ -274,34 +132,29 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Report variable declaration in the current scope
-	 * @param var Variable declaration. Can either contain dollar or not (in case of field access declaration)
-	 * @return new model key
-	 * @throws Exception
-	 */
-	protected String reportVariableDeclaration(SimpleReference var) throws Exception {
-		return reportVariableDeclaration(var, scopes.peek());
-	}
-
-	/**
 	 * Report variable declaration in the given scope
 	 * @param var Variable declaration. Can either contain dollar or not (in case of field access declaration)
-	 * @param scope Scope that this variable is declared in
 	 * @return new model key
 	 * @throws Exception
 	 */
-	protected String reportVariableDeclaration(SimpleReference var, Scope scope) throws Exception {
-		if (scope == null) {
-			throw new NullPointerException("Scope must not be null");
-		}
-
+	protected void reportVariableDeclaration(SimpleReference var) throws Exception {
 		// Check whether this variable is global (that means it was previously declared as global):
-		if (var instanceof VariableReference) {
-			Set<String> globalVars = globalVariables.peek();
-			if (globalVars.contains(var.getName())) {
-				// Replace given scope with the global scope:
-				scope = sourceModuleScope;
+		boolean globalVariable = false;
+		if (!parentStack.isEmpty()) {
+			ASTNode parent = parentStack.peek();
+			if (parent instanceof MethodDeclaration) {
+				if (var instanceof VariableReference) {
+					Set<String> globalVars = globalVariables.peek();
+					if (globalVars.contains(var.getName())) {
+						globalVariable = true;
+					}
+				}
+			} else if (parent instanceof ModuleDeclaration) {
+				globalVariable = true;
 			}
+		}
+		if (!globalVariable) {
+			return;
 		}
 
 		IField obj = null;
@@ -315,7 +168,8 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		if (obj == null && sourceModule != null) {
 			obj = new FakeField((ModelElement) sourceModule, name, var.sourceStart(), var.sourceEnd() - var.sourceStart());
 		}
-		return scope.reportVariable(name, obj);
+
+		sourceModuleScope.reportVariable(name, obj);
 	}
 
 	protected IModelElement findModelElementFor(ASTNode decl) throws ModelException {
@@ -360,15 +214,6 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 		return visitGeneral(expr);
 	}
 
-	public boolean visitGeneral(ASTNode node) throws Exception {
-		// nodesStack.push(node);
-		return true;
-	}
-
-	public void endvisitGeneral(ASTNode node) throws Exception {
-		// nodesStack.pop();
-	}
-
 	@SuppressWarnings("unchecked")
 	public boolean visit(CallExpression expr) throws Exception {
 		if ("define".equalsIgnoreCase(expr.getName())) { //$NON-NLS-1$
@@ -389,8 +234,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 					if (sourceModule != null) {
 						obj = new FakeField((ModelElement) sourceModule, name, constant.sourceStart(), constant.sourceEnd() - constant.sourceStart(), Modifiers.AccConstant);
 					}
-					Scope scope = scopes.peek();
-					scope.reportConstant(name, obj);
+					sourceModuleScope.reportConstant(name, obj);
 				}
 			}
 		}
@@ -435,9 +279,7 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 			IModelElement element = findModelElementFor(decl);
 			obj = (IField) element;
 		}
-		Scope scope = scopes.peek();
-		scope.reportConstant(ASTUtils.stripQuotes(name), obj);
-
+		sourceModuleScope.reportConstant(ASTUtils.stripQuotes(name), obj);
 		return visitGeneral(decl);
 	}
 
@@ -484,86 +326,45 @@ public class PHPMixinBuildVisitor extends ASTVisitor {
 	public boolean visit(Include include) throws Exception {
 		Expression expr = include.getExpr();
 		if (expr instanceof Scalar) {
-			Scope scope = scopes.peek();
-			scope.reportInclude(ASTUtils.stripQuotes(((Scalar) expr).getValue()), include);
+			sourceModuleScope.reportInclude(ASTUtils.stripQuotes(((Scalar) expr).getValue()), include);
 		}
 		return visitGeneral(include);
 	}
 
 	public boolean visit(ModuleDeclaration s) throws Exception {
-		sourceModuleScope = new SourceModuleScope(s);
-		scopes.push(sourceModuleScope);
+		sourceModuleScope = new SourceModuleScope();
+		parentStack.push(s);
 		globalVariables.push(new HashSet<String>());
-
 		return visitGeneral(s);
 	}
 
 	public boolean endvisit(ModuleDeclaration s) throws Exception {
-		scopes.pop();
+		parentStack.pop();
 		globalVariables.pop();
-
 		endvisitGeneral(s);
 		return true;
 	}
 
 	public boolean visit(MethodDeclaration decl) throws Exception {
-		IMethod obj = null;
-		String name = decl.getName();
-		if (moduleAvailable) {
-			IModelElement element = findModelElementFor(decl);
-			obj = (IMethod) element;
-		}
-
-		Scope scope = scopes.peek();
-		String method = scope.reportMethod(name, obj);
-		scopes.push(new MethodScope(decl, scope, method));
-
+		parentStack.push(decl);
 		globalVariables.push(new HashSet<String>());
-
 		return visitGeneral(decl);
 	}
 
 	public boolean endvisit(MethodDeclaration decl) throws Exception {
-		scopes.pop();
+		parentStack.pop();
 		globalVariables.pop();
-
 		endvisitGeneral(decl);
 		return true;
 	}
 
 	public boolean visit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration/* && ((NamespaceDeclaration) decl).isGlobal()*/) {
-			return true;
-		}
-
-		IType obj = null;
-		if (moduleAvailable) {
-			IModelElement elementFor = findModelElementFor(decl);
-			obj = (IType) elementFor;
-		}
-
-		String name = decl.getName();
-		Scope scope = scopes.peek();
-		String newKey;
-		if (decl.getKind() == ASTNodeKinds.INTERFACE_DECLARATION) {
-			newKey = scope.reportInterface(name, obj);
-			// we report internal elements as they are under class always:
-			newKey = newKey.replace(PHPMixinParser.INTERFACE_SUFFIX, PHPMixinParser.CLASS_SUFFIX);
-		} else {
-			newKey = scope.reportType(name, obj);
-		}
-		scopes.push(new ClassScope(decl, newKey));
-
+		parentStack.push(decl);
 		return visitGeneral(decl);
 	}
 
 	public boolean endvisit(TypeDeclaration decl) throws Exception {
-		if (decl instanceof NamespaceDeclaration/* && ((NamespaceDeclaration) decl).isGlobal()*/) {
-			return true;
-		}
-
-		scopes.pop();
-
+		parentStack.pop();
 		endvisitGeneral(decl);
 		return true;
 	}

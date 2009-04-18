@@ -18,6 +18,7 @@ import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
+import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
@@ -46,7 +47,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		IType[] types = getTypes(abstractContext);
 		IElementFilter elementFilter = getElementFilter();
-		String suffix = getSuffix(abstractContext);
+		String suffix = types.length > 0 && types[0] instanceof FakeGroupType ? "": getSuffix(abstractContext);
 		String nsSuffix = getNSSuffix(abstractContext);
 		
 		for (IType type : types) {

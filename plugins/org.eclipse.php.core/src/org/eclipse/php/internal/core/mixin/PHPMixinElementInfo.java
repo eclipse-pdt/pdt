@@ -11,18 +11,13 @@
 package org.eclipse.php.internal.core.mixin;
 
 import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IType;
 
 public class PHPMixinElementInfo {
 
-	public static final int K_CLASS = 1 << 0;
-	public static final int K_INTERFACE = 1 << 1;
-	public static final int K_METHOD = 1 << 2;
-	public static final int K_VARIABLE = 1 << 3;
-	public static final int K_CONSTANT = 1 << 4;
-	public static final int K_INCLUDE = 1 << 5;
-	public static final int K_NON_PHP = 1 << 10;
+	public static final int K_VARIABLE = 1 << 1;
+	public static final int K_CONSTANT = 1 << 2;
+	public static final int K_INCLUDE = 1 << 3;
+	public static final int K_NON_PHP = 1 << 5;
 
 	private int kind = 0;
 	private Object object = null;
@@ -85,18 +80,6 @@ public class PHPMixinElementInfo {
 
 	public void setObject(Object object) {
 		this.object = object;
-	}
-
-	public static PHPMixinElementInfo createClass(IType type) {
-		return new PHPMixinElementInfo(K_CLASS, type);
-	}
-
-	public static PHPMixinElementInfo createInterface(IType type) {
-		return new PHPMixinElementInfo(K_INTERFACE, type);
-	}
-
-	public static PHPMixinElementInfo createMethod(IMethod m) {
-		return new PHPMixinElementInfo(K_METHOD, m);
 	}
 
 	public static PHPMixinElementInfo createInclude(IField includeField) {

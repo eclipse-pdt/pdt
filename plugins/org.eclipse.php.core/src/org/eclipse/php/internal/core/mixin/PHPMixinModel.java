@@ -96,107 +96,31 @@ public class PHPMixinModel implements IShutdownListener {
 		return filtered.toArray(new IModelElement[filtered.size()]);
 	}
 
-	public IModelElement[] getMethod(String className, String methodName) {
-		return getMethod(className, methodName, null);
-	}
-
-	public IModelElement[] getMethod(String className, String methodName, IDLTKSearchScope scope) {
-		if (className == null) {
-			return getFunction(methodName, scope);
-		}
-		IMixinElement[] elements = model.find(new StringBuilder(className).append(PHPMixinParser.CLASS_SUFFIX).append(MixinModel.SEPARATOR).append(methodName).toString());
-		return filterElements(elements, PHPMixinElementInfo.K_METHOD, scope);
-	}
-
-	public IModelElement[] getFunction(String functionName) {
-		return getFunction(functionName, null);
-	}
-
-	public IModelElement[] getFunction(String functionName, IDLTKSearchScope scope) {
-		IMixinElement[] elements = model.find(new StringBuilder(MixinModel.SEPARATOR).append(functionName).toString());
-		return filterElements(elements, PHPMixinElementInfo.K_METHOD, scope);
-	}
-
-	/**
-	 * This method returns classes as well as interfaces
-	 * @param className
-	 * @return
-	 */
-	public IModelElement[] getType(String className) {
-		return getType(className, null);
-	}
-
-	/**
-	 * This method returns classes as well as interfaces
-	 * @param className
-	 * @param scope
-	 * @return
-	 */
-	public IModelElement[] getType(String className, IDLTKSearchScope scope) {
-		IMixinElement[] classes = model.find(new StringBuilder(className).append(PHPMixinParser.CLASS_SUFFIX).toString());
-		IMixinElement[] interfaces = model.find(new StringBuilder(className).append(PHPMixinParser.INTERFACE_SUFFIX).toString());
-		IMixinElement[] elements = new IMixinElement[classes.length + interfaces.length];
-		System.arraycopy(classes, 0, elements, 0, classes.length);
-		System.arraycopy(interfaces, 0, elements, classes.length, interfaces.length);
-		return filterElements(elements, PHPMixinElementInfo.K_CLASS | PHPMixinElementInfo.K_INTERFACE, scope);
-	}
-	
-	public IModelElement[] getInterface(String className) {
-		return getInterface(className, null);
-	}
-	
-	public IModelElement[] getInterface(String className, IDLTKSearchScope scope) {
-		IMixinElement[] elements = model.find(new StringBuilder(className).append(PHPMixinParser.INTERFACE_SUFFIX).toString());
-		return filterElements(elements, PHPMixinElementInfo.K_INTERFACE, scope);
-	}
-	
-	public IModelElement[] getClass(String className) {
-		return getClass(className, null);
-	}
-	
-	public IModelElement[] getClass(String className, IDLTKSearchScope scope) {
-		IMixinElement[] elements = model.find(new StringBuilder(className).append(PHPMixinParser.CLASS_SUFFIX).toString());
-		return filterElements(elements, PHPMixinElementInfo.K_CLASS, scope);
-	}
-
-	private IMixinElement[] internalGetVariable(String variableName, String methodName, String typeName) {
-		StringBuilder buf = new StringBuilder();
-		if (typeName != null) {
-			// AClass%{classMethod{$methodVariable
-			buf.append(typeName).append(PHPMixinParser.CLASS_SUFFIX);
-		}
-		if (methodName != null) {
-			//{myFunction{$methodVar2
-			buf.append(MixinModel.SEPARATOR).append(methodName);
-		}
+	private IMixinElement[] internalGetVariable(String variableName) {
 		//{$globalVa
-		buf.append(MixinModel.SEPARATOR).append(variableName);
-		return model.find(buf.toString());
+		return model.find(MixinModel.SEPARATOR + variableName);
 	}
 
-	public IModelElement[] getVariable(String variableName, String methodName, String typeName) {
-		return getVariable(variableName, methodName, typeName, null);
+	public IModelElement[] getVariable(String variableName) {
+		return getVariable(variableName, null);
 	}
 
-	public IModelElement[] getVariable(String variableName, String methodName, String typeName, IDLTKSearchScope scope) {
-		return filterElements(internalGetVariable(variableName, methodName, typeName), PHPMixinElementInfo.K_VARIABLE, scope);
+	public IModelElement[] getVariable(String variableName, IDLTKSearchScope scope) {
+		return filterElements(internalGetVariable(variableName), PHPMixinElementInfo.K_VARIABLE, scope);
 	}
 
-	private IMixinElement[] internalGetConstant(String constantName, String typeName) {
+	private IMixinElement[] internalGetConstant(String constantName) {
 		StringBuilder buf = new StringBuilder();
-		if (typeName != null) {
-			buf.append(typeName).append(PHPMixinParser.CLASS_SUFFIX);
-		}
 		buf.append(MixinModel.SEPARATOR).append(constantName).append(PHPMixinParser.CONSTANT_SUFFIX);
 		return model.find(buf.toString());
 	}
 
-	public IModelElement[] getConstant(String constantName, String typeName) {
-		return getConstant(constantName, typeName, null);
+	public IModelElement[] getConstant(String constantName) {
+		return getConstant(constantName, null);
 	}
 
-	public IModelElement[] getConstant(String constantName, String typeName, IDLTKSearchScope scope) {
-		return filterElements(internalGetConstant(constantName, typeName), PHPMixinElementInfo.K_CONSTANT, scope);
+	public IModelElement[] getConstant(String constantName, IDLTKSearchScope scope) {
+		return filterElements(internalGetConstant(constantName), PHPMixinElementInfo.K_CONSTANT, scope);
 	}
 
 	public IModelElement[] getInclude(String fileName) {

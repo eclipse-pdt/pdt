@@ -26,7 +26,6 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.*;
-import org.eclipse.dltk.core.search.indexing.IIndexConstants;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.ScriptProject;
@@ -518,17 +517,6 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * Checks whether function with given name exists.
-	 * @param functionName
-	 * @param scriptProject 
-	 * @return
-	 */
-	public static boolean isFunctionCall(String functionName, IScriptProject scriptProject) {
-		IModelElement[] functions = scriptProject == null ? PHPMixinModel.getWorkspaceInstance().getFunction(functionName) : PHPMixinModel.getInstance(scriptProject).getFunction(functionName);
-		return functions.length > 0;
-	}
-
-	/**
 	 * This method finds types for the receiver in the statement text.
 	 * @param sourceModule
 	 * @param statementText
@@ -848,7 +836,7 @@ public class CodeAssistUtils {
 		if ((mask & EXACT_NAME) == 0 & (mask & ONLY_CURRENT_FILE) == 0 && isVariable) {
 			// search variables using mixin model:
 			PHPMixinModel mixinModel = scriptProject == null ? PHPMixinModel.getWorkspaceInstance() : PHPMixinModel.getInstance(scriptProject);
-			IModelElement[] variables = mixinModel.getVariable(prefix + WILDCARD, null, null, scope);
+			IModelElement[] variables = mixinModel.getVariable(prefix + WILDCARD, scope);
 			return variables == null ? EMPTY : filterOtherFilesElements(sourceModule, variables);
 		}
 
@@ -868,96 +856,11 @@ public class CodeAssistUtils {
 	private static IModelElement[] getGlobalElements(final ISourceModule sourceModule, final IDLTKSearchScope scope, String prefix, final int elementType, final int mask) {
 
 		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-
 		SearchEngine searchEngine = new SearchEngine();
-		SearchPattern pattern = null;
 
 		boolean exactName = (mask & EXACT_NAME) != 0;
 		boolean caseSensitive = (mask & CASE_SENSITIVE) != 0;
 		boolean currentFileOnly = (mask & ONLY_CURRENT_FILE) != 0;
-
-		// Group options:
-		Set<String> elementsToSearch = new HashSet<String>();
-		Set<String> groups = new HashSet<String>();
-
-		boolean showGroupOptions = Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false, null);
-		if (!prefix.startsWith("$") && !currentFileOnly && showGroupOptions && (elementType == IDLTKSearchConstants.TYPE || elementType == IDLTKSearchConstants.METHOD)) {
-			if (!exactName) {
-				MixinModel mixinModel = PHPMixinModel.getInstance(sourceModule.getScriptProject()).getRawModel();
-
-				// Build the mixin request key:
-				String[] elementNames;
-				if (elementType == IDLTKSearchConstants.TYPE) {
-
-					List<String> elementNamesList = new LinkedList<String>();
-					if ((mask & EXCLUDE_CLASSES) == 0) {
-						elementNamesList.addAll(Arrays.asList(mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.CLASS_SUFFIX).toString())));
-					}
-					if ((mask & EXCLUDE_INTERFACES) == 0) {
-						elementNamesList.addAll(Arrays.asList(mixinModel.findKeys(new StringBuilder(prefix).append(WILDCARD).append(PHPMixinParser.INTERFACE_SUFFIX).toString())));
-					}
-					elementNames = elementNamesList.toArray(new String[elementNamesList.size()]);
-
-				} else {
-					elementNames = mixinModel.findKeys(new StringBuilder(MixinModel.SEPARATOR).append(prefix).append(WILDCARD).toString());
-				}
-
-				// Filter Mixin result strings:
-				Set<String> elementNamesSet = new HashSet<String>();
-				for (String elementName : elementNames) {
-					if (elementType == IDLTKSearchConstants.TYPE) {
-						elementName = elementName.substring(0, elementName.length() - 1);
-					} else {
-						if (!Character.isJavaIdentifierPart(elementName.substring(elementName.length() - 1).charAt(0))) {
-							continue; // filter non-methods
-						}
-						elementName = elementName.substring(1);
-						if (elementName.indexOf(IIndexConstants.SEPARATOR) != -1) {
-							continue; // filter class members
-						}
-						if (elementName.charAt(0) == '$') {
-							continue; // filter variables
-						}
-					}
-					elementNamesSet.add(elementName);
-				}
-				elementNames = elementNamesSet.toArray(new String[elementNamesSet.size()]);
-
-				// Calculate minimal namespaces:
-				int prefixLength = prefix.length();
-				for (String elementName : elementNames) {
-					int nsIdx = elementName.substring(prefixLength).indexOf('_');
-					if ((nsIdx >= 0 && prefixLength > 0 || prefixLength == 0 && nsIdx > 0) && nsIdx < elementName.length() - 1) {
-						groups.add(elementName.substring(0, prefixLength + nsIdx));
-					}
-				}
-
-				// Calclulate classes to search:
-				List<String> filteredGroups = new LinkedList<String>();
-				for (String group : groups) {
-					List<String> filteredElements = new LinkedList<String>();
-					for (String elementName : elementNames) {
-						if (elementName.startsWith(group)) {
-							int underscore = elementName.lastIndexOf('_');
-							if (underscore < group.length()) {
-								elementsToSearch.add(elementName);
-							} else {
-								if (elementName.charAt(group.length()) == '_') {
-									filteredElements.add(elementName);
-								}
-							}
-						}
-					}
-					if (filteredElements.size() == 1) {
-						elementsToSearch.add(filteredElements.get(0));
-						filteredGroups.add(group);
-					}
-				}
-				for (String filteredGroup : filteredGroups) {
-					groups.remove(filteredGroup);
-				}
-			}
-		}
 
 		int matchRule;
 		if (prefix.length() == 0 && !exactName) {
@@ -975,21 +878,12 @@ public class CodeAssistUtils {
 			}
 		}
 
-		if (groups.size() > 0) {
-			if (elementsToSearch.size() > 0) {
-				StringBuilder buf = new StringBuilder();
-				int i = elementsToSearch.size();
-				for (String elementName : elementsToSearch) {
-					buf.append(elementName);
-					if (--i > 0) {
-						buf.append('|');
-					}
-				}
-				pattern = SearchPattern.createPattern(buf.toString(), elementType, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_REGEXP_MATCH, toolkit);
-			}
-		} else {
-			pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
+		boolean showGroupOptions = Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false, null);
+		if (!exactName && !currentFileOnly && showGroupOptions && !prefix.startsWith("$") && (elementType == IDLTKSearchConstants.TYPE || elementType == IDLTKSearchConstants.METHOD)) {
+			return getGroupOptions(sourceModule, prefix, elementType, mask, matchRule, scope);
 		}
+
+		SearchPattern pattern = SearchPattern.createPattern(prefix, elementType, IDLTKSearchConstants.DECLARATIONS, matchRule, toolkit);
 
 		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator(sourceModule));
 		if (pattern != null) {
@@ -1049,21 +943,80 @@ public class CodeAssistUtils {
 			}
 		}
 
-		if (showGroupOptions) {
-			for (String group : groups) {
-				String fakeElementName = new StringBuilder(group).append("_*").toString();
-				if (elementType == IDLTKSearchConstants.TYPE) {
-					elements.add(new FakeGroupType((ModelElement) sourceModule, fakeElementName));
-				} else if (elementType == IDLTKSearchConstants.METHOD) {
-					elements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
-				}
-			}
-		}
 		if (!currentFileOnly) {
 			Collection<IModelElement> result = PHPModelUtils.filterElements(sourceModule, elements);
 			return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
+	}
+
+	private static IModelElement[] getGroupOptions(ISourceModule sourceModule, String prefix, int elementType, int mask, int matchRule, IDLTKSearchScope scope) {
+		List<IModelElement> elements = new LinkedList<IModelElement>();
+		Set<String> groups = new HashSet<String>();
+
+		// Build the mixin request key:
+		if (elementType == IDLTKSearchConstants.TYPE) {
+			IType[] classesAndInterfaces = PHPTypeInferenceUtils.getClassesAndInterfaces(prefix, matchRule, scope);
+			try {
+				for (IType type : classesAndInterfaces) {
+					int flags = type.getFlags();
+					if ((mask & EXCLUDE_CLASSES) == 0 && PHPFlags.isClass(flags)) {
+						elements.add(type);
+					}
+					if ((mask & EXCLUDE_INTERFACES) == 0 && PHPFlags.isInterface(flags)) {
+						elements.add(type);
+					}
+				}
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(prefix, matchRule, scope)));
+		}
+
+		// Calculate minimal namespaces:
+		int prefixLength = prefix.length();
+		for (IModelElement element : elements) {
+			String elementName = element.getElementName();
+			int nsIdx = elementName.substring(prefixLength).indexOf('_');
+			if ((nsIdx >= 0 && prefixLength > 0 || prefixLength == 0 && nsIdx > 0) && nsIdx < elementName.length() - 1) {
+				groups.add(elementName.substring(0, prefixLength + nsIdx));
+			}
+		}
+
+		// Calclulate classes to search:
+		List<String> filteredGroups = new LinkedList<String>();
+		for (String group : groups) {
+			List<String> filteredElements = new LinkedList<String>();
+			for (IModelElement element : elements) {
+				String elementName = element.getElementName();
+				if (elementName.startsWith(group)) {
+					int underscore = elementName.lastIndexOf('_');
+					if (underscore == group.length()) {
+						filteredElements.add(elementName);
+					}
+				}
+			}
+			if (filteredElements.size() == 1) {
+				filteredGroups.add(group);
+			}
+		}
+		for (String filteredGroup : filteredGroups) {
+			groups.remove(filteredGroup);
+		}
+
+		List<IModelElement> groupElements = new LinkedList<IModelElement>();
+		for (String group : groups) {
+			String fakeElementName = new StringBuilder(group).append("_*").toString();
+			if (elementType == IDLTKSearchConstants.TYPE) {
+				groupElements.add(new FakeGroupType((ModelElement) sourceModule, fakeElementName));
+			} else if (elementType == IDLTKSearchConstants.METHOD) {
+				groupElements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
+			}
+		}
+		return (IModelElement[]) groupElements.toArray(new IModelElement[groupElements.size()]);
 	}
 
 	/**

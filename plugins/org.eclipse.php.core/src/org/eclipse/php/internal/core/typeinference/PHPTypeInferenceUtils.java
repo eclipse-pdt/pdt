@@ -519,7 +519,7 @@ public class PHPTypeInferenceUtils {
 
 		try {
 			searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
-				public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+				public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, char[][] superTypes, String path) {
 					if (PHPFlags.isNamespace(modifiers)) {
 						Openable openable = handleFactory.createOpenable(path, scope);
 						ModelElement parent = openable;
@@ -590,7 +590,7 @@ public class PHPTypeInferenceUtils {
 			try {
 				final HandleFactory handleFactory = new HandleFactory();
 				searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
-					public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
+					public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, char[][] superTypes, String path) {
 						Openable openable = handleFactory.createOpenable(path, scope);
 						ModelElement parent = openable;
 						if (enclosingTypeNames.length > 0) {

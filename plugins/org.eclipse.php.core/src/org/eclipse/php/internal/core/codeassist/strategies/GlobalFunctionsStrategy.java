@@ -14,6 +14,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
+import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
@@ -48,7 +49,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		String prefix = abstractContext.getPrefix();
 		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(abstractContext.getSourceModule(), prefix, mask);
 		SourceRange replacementRange = getReplacementRange(abstractContext);
-		String suffix = getSuffix(abstractContext);
+		String suffix = functions.length > 0 && functions[0] instanceof FakeGroupMethod ? "": getSuffix(abstractContext);
 		
 		for (IModelElement function : functions) {
 			try {

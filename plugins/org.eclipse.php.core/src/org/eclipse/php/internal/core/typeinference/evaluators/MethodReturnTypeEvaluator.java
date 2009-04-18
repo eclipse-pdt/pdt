@@ -13,14 +13,16 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.*;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
@@ -58,19 +60,21 @@ public class MethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
 		if (types.length == 0) {
 			IScriptProject scriptProject = typedContext.getSourceModule().getScriptProject();
 			IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-			IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getFunction(methodName, scope);
-			for (IModelElement e : elements) {
-				methods.add((IMethod) e);
+			IMethod[] functions = PHPTypeInferenceUtils.getFunctions(methodName, scope);
+			for (IMethod function : functions) {
+				methods.add(function);
 			}
 		} else {
 			for (IType type : types) {
 				try {
-					IModelElement[] elements = PHPMixinModel.getInstance(type.getScriptProject()).getMethod(type.getElementName(), methodName);
-					if (elements.length == 0) {
-						elements = PHPModelUtils.getTypeHierarchyMethod(type, methodName, null);
-					}
-					for (IModelElement e : elements) {
-						methods.add((IMethod) e);
+					IMethod method = type.getMethod(methodName);
+					if (method.exists()) {
+						methods.add(method);
+					} else {
+						IMethod[] elements = PHPModelUtils.getTypeHierarchyMethod(type, methodName, null);
+						for (IMethod m : elements) {
+							methods.add(m);
+						}
 					}
 				} catch (CoreException e) {
 					if (DLTKCore.DEBUG) {

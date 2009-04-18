@@ -64,7 +64,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		// Find all global variables from mixin
 		IScriptProject scriptProject = sourceModuleContext.getSourceModule().getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getVariable(variableName, null, null, scope);
+		IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getVariable(variableName, scope);
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 
 		Comparator<ISourceRange> sourceRangeComparator = new Comparator<ISourceRange>() {

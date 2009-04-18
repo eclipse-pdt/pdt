@@ -18,7 +18,6 @@ import org.eclipse.dltk.ti.types.ClassType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
-import org.eclipse.php.internal.core.mixin.PHPMixinParser;
 
 /**
  * This evaluated type represents PHP class or interface
@@ -91,7 +90,7 @@ public class PHPClassType extends ClassType implements IClassType {
 	}
 
 	public String getModelKey() {
-		return typeName + PHPMixinParser.CLASS_SUFFIX;
+		return typeName;
 	}
 	
 	/**
