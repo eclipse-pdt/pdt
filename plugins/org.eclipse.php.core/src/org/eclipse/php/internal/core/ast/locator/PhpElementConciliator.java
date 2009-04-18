@@ -446,6 +446,22 @@ public class PhpElementConciliator {
 	}
 
 	/**
+	 *
+	 * @param typeDeclaration the search scope.
+	 * @param name name to be searched.
+	 * @param type the ASTNode type.
+	 * @return true - if the TypeDeclaration has a class member already.
+	 */
+	public static boolean classMemeberAlreadyExists(TypeDeclaration typeDeclaration, final String name, int type) {
+		assert typeDeclaration != null && name != null;
+
+		final ClassMemberSearcher checkClassVisitor = new ClassMemberSearcher(name, type);
+		typeDeclaration.accept(checkClassVisitor);
+
+		return checkClassVisitor.classMemberAlreadyExists();
+	}
+
+	/**
 	 * @param path
 	 * @return true if the given path indicates a global variable
 	 */
@@ -614,6 +630,43 @@ public class PhpElementConciliator {
 	}
 
 	/**
+	 * Searches for class member with a given name and type, stops when found
+	 */
+	private static class ClassMemberSearcher extends ApplyAll {
+
+		private boolean exists = false;
+		private final String name;
+		private int type;
+
+		public ClassMemberSearcher(String name, int type) {
+			if (name == null) {
+				throw new IllegalArgumentException("member name should not be null"); ////$NON-NLS-1$
+			}
+			this.name = name;
+			this.type = type;
+		}
+
+		public boolean apply(ASTNode node) {
+			// stops when found - that's the reason to use ApplyAll
+			if (exists)
+				return false;
+
+			if (node.getType() == ASTNode.IDENTIFIER) {
+				final Identifier id = (Identifier) node;
+				if (name.equals(id.getName()) && id.getParent().getType() == type) {
+					exists = true;
+				}
+			}
+
+			return true;
+		}
+
+		public boolean classMemberAlreadyExists() {
+			return exists;
+		}
+	}
+
+	/**
 	 * Searches for global variable with a given name, stops when found
 	 */
 	private static class FunctionSearcher extends ApplyAll {
@@ -701,5 +754,4 @@ public class PhpElementConciliator {
 			return exists;
 		}
 	}
-
 }
