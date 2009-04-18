@@ -285,12 +285,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	protected OverrideIndicatorManager fOverrideIndicatorManager;
 
 	/**
-	 * Semantic highlighting manager
-	 * @since 3.0, protected as of 3.3
-	 */
-	protected SemanticHighlightingManager fSemanticManager;
-
-	/**
 	 * Stores the current IModelElement used as the outline input.
 	 */
 	private IModelElement fModelElement;
@@ -1109,7 +1103,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 		uninstallOccurrencesFinder();
 		uninstallOverrideIndicator();
-		uninstallSemanticHighlighting();
 
 		super.dispose();
 	}
@@ -1941,9 +1934,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (isMarkingOccurrences())
 			installOccurrencesFinder(true);
 
-		if (isSemanticHighlightingEnabled())
-			installSemanticHighlighting();
-
 		final IInformationControlCreator informationControlCreator = new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell shell) {
 				boolean cutDown = false;
@@ -2167,13 +2157,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				fStickyOccurrenceAnnotations = newBooleanValue;
 				return;
 			}
-			if (SemanticHighlightings.affectsEnablement(getPreferenceStore(), event)) {
-				if (isSemanticHighlightingEnabled())
-					installSemanticHighlighting();
-				else
-					uninstallSemanticHighlighting();
-				return;
-			}
 
 			if (affectsOverrideIndicatorAnnotations(event)) {
 				if (isShowingOverrideIndicators()) {
@@ -2188,15 +2171,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
-	}
-
-	/**
-	 * @return <code>true</code> if Semantic Highlighting is enabled.
-	 *
-	 * @since 3.0
-	 */
-	private boolean isSemanticHighlightingEnabled() {
-		return SemanticHighlightings.isEnabled(getPreferenceStore());
 	}
 
 	/**
@@ -2500,30 +2474,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				return lock;
 		}
 		return annotationModel;
-	}
-
-	/**
-	 * Install Semantic Highlighting.
-	 *
-	 * @since 3.0
-	 */
-	private void installSemanticHighlighting() {
-		if (fSemanticManager == null) {
-			fSemanticManager = new SemanticHighlightingManager();
-			fSemanticManager.install(this, (PHPStructuredTextViewer) getSourceViewer(), PHPUiPlugin.getDefault().getColorManager(), getPreferenceStore());
-		}
-	}
-
-	/**
-	 * Uninstall Semantic Highlighting.
-	 *
-	 * @since 3.0
-	 */
-	private void uninstallSemanticHighlighting() {
-		if (fSemanticManager != null) {
-			fSemanticManager.uninstall();
-			fSemanticManager = null;
-		}
 	}
 
 	/**
