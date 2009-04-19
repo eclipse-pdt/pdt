@@ -1,0 +1,10 @@
+--TEST--
+Test Comment Php Doc Block
+--FILE--
+<?php /** this is php doc block */ ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="37">
+	<EmptyStatement start="35" end="37">
+	</EmptyStatement>
+</ModuleDeclaration>
+

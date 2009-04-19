@@ -1,0 +1,23 @@
+--TEST--
+Test Static
+--FILE--
+<?php static $a; static $a, $b=6;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="35">
+	<StaticStatement start="6" end="16">
+		<VariableReference start="13" end="15" name="$a">
+		</VariableReference>
+	</StaticStatement>
+	<StaticStatement start="17" end="33">
+		<VariableReference start="24" end="26" name="$a">
+		</VariableReference>
+		<Assignment start="28" end="32" operator="=">
+			<VariableReference start="28" end="30" name="$b">
+			</VariableReference>
+			<Scalar start="31" end="32" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</StaticStatement>
+	<EmptyStatement start="33" end="35">
+	</EmptyStatement>
+</ModuleDeclaration>

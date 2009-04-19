@@ -1,0 +1,27 @@
+--TEST--
+Test Conditional Expression
+--FILE--
+<?php (bool)$a ? 3 : 4;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="25">
+	<ExpressionStatement start="6" end="23">
+		<ConditionalExpression start="6" end="22">
+			<Condition>
+				<CastExpression start="6" end="14" type="bool">
+					<VariableReference start="12" end="14" name="$a">
+					</VariableReference>
+				</CastExpression>
+			</Condition>
+			<IfTrue>
+				<Scalar start="17" end="18" type="int" value="3">
+				</Scalar>
+			</IfTrue>
+			<IfFalse>
+				<Scalar start="21" end="22" type="int" value="4">
+				</Scalar>
+			</IfFalse>
+		</ConditionalExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="23" end="25">
+	</EmptyStatement>
+</ModuleDeclaration>

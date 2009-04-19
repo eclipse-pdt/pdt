@@ -45,10 +45,11 @@ public class DomParserTests extends AbstractPDTTTest {
 
 	public static Test suite() {
 
-		TestSuite suite = new TestSuite("Auto Code Assist Tests");
+		TestSuite suite = new TestSuite("DOM Parser Tests");
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
+			final ASTParser newParser = ASTParser.newParser(phpVersion);
 
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 
@@ -58,7 +59,6 @@ public class DomParserTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new DomParserTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void runTest() throws Throwable {
-								ASTParser newParser = ASTParser.newParser(phpVersion);
 								newParser.setSource(pdttFile.getFile().trim().toCharArray());
 								Program program = newParser.createAST(new NullProgressMonitor());
 								

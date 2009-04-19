@@ -1,0 +1,27 @@
+--TEST--
+Test Dispatch Simple
+--FILE--
+<?php $a->$b; $myVar->{2}; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="29">
+	<ExpressionStatement start="6" end="13">
+		<FieldAccess start="6" end="12">
+			<VariableReference start="6" end="8" name="$a">
+			</VariableReference>
+			<VariableReference start="10" end="12" name="$b">
+			</VariableReference>
+		</FieldAccess>
+	</ExpressionStatement>
+	<ExpressionStatement start="14" end="26">
+		<FieldAccess start="14" end="25">
+			<VariableReference start="14" end="20" name="$myVar">
+			</VariableReference>
+			<ReflectionVariableReference start="22" end="25">
+				<Scalar start="23" end="24" type="int" value="2">
+				</Scalar>
+			</ReflectionVariableReference>
+		</FieldAccess>
+	</ExpressionStatement>
+	<EmptyStatement start="27" end="29">
+	</EmptyStatement>
+</ModuleDeclaration>

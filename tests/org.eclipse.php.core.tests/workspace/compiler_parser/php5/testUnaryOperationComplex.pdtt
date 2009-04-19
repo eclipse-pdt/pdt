@@ -1,0 +1,21 @@
+--TEST--
+Test Unary Operation Complex
+--FILE--
+<?php +-+-$b;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="15">
+	<ExpressionStatement start="6" end="13">
+		<UnaryOperation start="6" end="12" operator="+">
+			<UnaryOperation start="7" end="12" operator="-">
+				<UnaryOperation start="8" end="12" operator="+">
+					<UnaryOperation start="9" end="12" operator="-">
+						<VariableReference start="10" end="12" name="$b">
+						</VariableReference>
+					</UnaryOperation>
+				</UnaryOperation>
+			</UnaryOperation>
+		</UnaryOperation>
+	</ExpressionStatement>
+	<EmptyStatement start="13" end="15">
+	</EmptyStatement>
+</ModuleDeclaration>

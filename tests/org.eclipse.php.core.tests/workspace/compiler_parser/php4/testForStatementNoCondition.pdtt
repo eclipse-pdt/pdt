@@ -1,0 +1,45 @@
+--TEST--
+Test For Statement No Condition
+--FILE--
+<?php for ($i = 1; ; $i++) { if ($i > 10) {  break;  }  echo $i;} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="68">
+	<ForStatement start="0" end="0">
+		<Initializations>
+			<Assignment start="11" end="17" operator="=">
+				<VariableReference start="11" end="13" name="$i">
+				</VariableReference>
+				<Scalar start="16" end="17" type="int" value="1">
+				</Scalar>
+			</Assignment>
+		</Initializations>
+		<Conditions>
+		</Conditions>
+		<Increasements>
+			<PostfixExpression start="21" end="25" operator="++">
+				<VariableReference start="21" end="23" name="$i">
+				</VariableReference>
+			</PostfixExpression>
+		</Increasements>
+		<IfStatement start="29" end="54">
+			<Condition>
+				<InfixExpression start="33" end="40" operator="&gt;">
+					<VariableReference start="33" end="35" name="$i">
+					</VariableReference>
+					<Scalar start="38" end="40" type="int" value="10">
+					</Scalar>
+				</InfixExpression>
+			</Condition>
+			<TrueStatement>
+				<BreakStatement start="45" end="51">
+				</BreakStatement>
+			</TrueStatement>
+		</IfStatement>
+		<EchoStatement start="56" end="64">
+			<VariableReference start="61" end="63" name="$i">
+			</VariableReference>
+		</EchoStatement>
+	</ForStatement>
+	<EmptyStatement start="66" end="68">
+	</EmptyStatement>
+</ModuleDeclaration>

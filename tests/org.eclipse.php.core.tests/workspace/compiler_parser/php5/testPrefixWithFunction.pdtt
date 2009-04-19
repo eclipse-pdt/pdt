@@ -1,0 +1,19 @@
+--TEST--
+Test Prefix With Function
+--FILE--
+<?php --foo();?>
+--EXPECT--
+<ModuleDeclaration start="0" end="16">
+	<ExpressionStatement start="6" end="14">
+		<PrefixExpression start="6" end="13" operator="--">
+			<PHPCallExpression start="8" end="13">
+				<SimpleReference start="8" end="11" name="foo">
+				</SimpleReference>
+				<PHPCallArgumentsList start="12" end="12">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</PrefixExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="14" end="16">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,15 @@
+--TEST--
+Test Backtick Expression1
+--FILE--
+<?php `dir C:\Temp`; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="23">
+	<ExpressionStatement start="6" end="20">
+		<BackTickExpression start="6" end="19">
+			<Scalar start="7" end="18" type="string" value="dir C:\Temp">
+			</Scalar>
+		</BackTickExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="21" end="23">
+	</EmptyStatement>
+</ModuleDeclaration>

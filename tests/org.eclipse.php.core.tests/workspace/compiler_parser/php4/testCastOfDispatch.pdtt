@@ -1,0 +1,21 @@
+--TEST--
+Test Cast Of Dispatch
+--FILE--
+<?php (string) $b->foo(); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="28">
+	<ExpressionStatement start="6" end="25">
+		<CastExpression start="6" end="24" type="string">
+			<PHPCallExpression start="15" end="24">
+				<VariableReference start="15" end="17" name="$b">
+				</VariableReference>
+				<SimpleReference start="19" end="22" name="foo">
+				</SimpleReference>
+				<PHPCallArgumentsList start="23" end="23">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</CastExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="26" end="28">
+	</EmptyStatement>
+</ModuleDeclaration>

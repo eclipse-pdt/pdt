@@ -1,0 +1,23 @@
+--TEST--
+Test Quote With Offset String
+--FILE--
+<?php "this
+is $a[hello] quote";?>
+--EXPECT--
+<ModuleDeclaration start="0" end="34">
+	<ExpressionStatement start="6" end="32">
+		<Quote start="6" end="31" type="quote">
+			<Scalar start="7" end="15" type="string" value="this
+is ">
+			</Scalar>
+			<ArrayVariableReference start="15" end="24" type="array" name="$a">
+				<Scalar start="18" end="23" type="string" value="hello">
+				</Scalar>
+			</ArrayVariableReference>
+			<Scalar start="24" end="30" type="string" value=" quote">
+			</Scalar>
+		</Quote>
+	</ExpressionStatement>
+	<EmptyStatement start="32" end="34">
+	</EmptyStatement>
+</ModuleDeclaration>

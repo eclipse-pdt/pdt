@@ -1,6 +1,7 @@
 package org.eclipse.php.core.tests;
 
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
+import org.eclipse.php.core.tests.compiler_parser.CompilerParserTests;
 import org.eclipse.php.core.tests.dom_parser.DomParserTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
 import org.eclipse.php.core.tests.mixin.MixinTests;
@@ -17,6 +18,7 @@ public class AllTests {
 
 		// $JUnit-BEGIN$
 		suite.addTest(DomParserTests.suite());
+		suite.addTest(CompilerParserTests.suite());
 		suite.addTest(CodeAssistTests.suite());
 		suite.addTest(SelectionEngineTests.suite());
 		suite.addTest(MixinTests.suite());

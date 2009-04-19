@@ -1,0 +1,35 @@
+--TEST--
+Test Global Statement Simple
+--FILE--
+<?php global $a; global $$a; global ${foo()->bar()};?>
+--EXPECT--
+<ModuleDeclaration start="0" end="54">
+	<GlobalStatement start="6" end="16">
+		<VariableReference start="13" end="15" name="$a">
+		</VariableReference>
+	</GlobalStatement>
+	<GlobalStatement start="17" end="28">
+		<ReflectionVariableReference start="24" end="27">
+			<VariableReference start="25" end="27" name="$a">
+			</VariableReference>
+		</ReflectionVariableReference>
+	</GlobalStatement>
+	<GlobalStatement start="29" end="52">
+		<ReflectionVariableReference start="36" end="51">
+			<PHPCallExpression start="38" end="50">
+				<PHPCallExpression start="38" end="43">
+					<FullyQualifiedReference start="38" end="41" name="foo">
+					</FullyQualifiedReference>
+					<PHPCallArgumentsList start="42" end="42">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+				<SimpleReference start="45" end="48" name="bar">
+				</SimpleReference>
+				<PHPCallArgumentsList start="49" end="49">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</ReflectionVariableReference>
+	</GlobalStatement>
+	<EmptyStatement start="52" end="54">
+	</EmptyStatement>
+</ModuleDeclaration>

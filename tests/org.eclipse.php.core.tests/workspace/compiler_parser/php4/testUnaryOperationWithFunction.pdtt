@@ -1,0 +1,19 @@
+--TEST--
+Test Unary Operation With Function
+--FILE--
+<?php -foo();?>
+--EXPECT--
+<ModuleDeclaration start="0" end="15">
+	<ExpressionStatement start="6" end="13">
+		<UnaryOperation start="6" end="12" operator="-">
+			<PHPCallExpression start="7" end="12">
+				<SimpleReference start="7" end="10" name="foo">
+				</SimpleReference>
+				<PHPCallArgumentsList start="11" end="11">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</UnaryOperation>
+	</ExpressionStatement>
+	<EmptyStatement start="13" end="15">
+	</EmptyStatement>
+</ModuleDeclaration>

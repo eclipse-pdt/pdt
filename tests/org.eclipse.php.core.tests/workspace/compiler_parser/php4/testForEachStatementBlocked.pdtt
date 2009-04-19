@@ -1,0 +1,27 @@
+--TEST--
+Test For Each Statement Blocked
+--FILE--
+<?php foreach ($arr as $value): $value = $value * 2;endforeach; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="66">
+	<ForEachStatement start="6" end="63">
+		<VariableReference start="15" end="19" name="$arr">
+		</VariableReference>
+		<VariableReference start="23" end="29" name="$value">
+		</VariableReference>
+		<ExpressionStatement start="32" end="52">
+			<Assignment start="32" end="51" operator="=">
+				<VariableReference start="32" end="38" name="$value">
+				</VariableReference>
+				<InfixExpression start="41" end="51" operator="*">
+					<VariableReference start="41" end="47" name="$value">
+					</VariableReference>
+					<Scalar start="50" end="51" type="int" value="2">
+					</Scalar>
+				</InfixExpression>
+			</Assignment>
+		</ExpressionStatement>
+	</ForEachStatement>
+	<EmptyStatement start="64" end="66">
+	</EmptyStatement>
+</ModuleDeclaration>

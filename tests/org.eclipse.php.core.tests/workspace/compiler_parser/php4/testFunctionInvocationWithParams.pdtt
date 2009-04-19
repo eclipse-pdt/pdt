@@ -1,0 +1,43 @@
+--TEST--
+Test Function Invocation With Params
+--FILE--
+<?php $foo($a, 's<>&', 12, true, __CLASS__, &$x); $qq(&$y); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="62">
+	<ExpressionStatement start="6" end="49">
+		<ReflectionCallExpression start="6" end="48">
+			<VariableReference start="6" end="10" name="$foo">
+			</VariableReference>
+			<PHPCallArgumentsList start="11" end="47">
+				<VariableReference start="11" end="13" name="$a">
+				</VariableReference>
+				<Scalar start="15" end="21" type="string" value="&apos;s&lt;&gt;&amp;&apos;">
+				</Scalar>
+				<Scalar start="23" end="25" type="int" value="12">
+				</Scalar>
+				<Scalar start="27" end="31" type="string" value="true">
+				</Scalar>
+				<Scalar start="33" end="42" type="system" value="__CLASS__">
+				</Scalar>
+				<ReferenceExpression start="44" end="47">
+					<VariableReference start="45" end="47" name="$x">
+					</VariableReference>
+				</ReferenceExpression>
+			</PHPCallArgumentsList>
+		</ReflectionCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="50" end="59">
+		<ReflectionCallExpression start="50" end="58">
+			<VariableReference start="50" end="53" name="$qq">
+			</VariableReference>
+			<PHPCallArgumentsList start="54" end="57">
+				<ReferenceExpression start="54" end="57">
+					<VariableReference start="55" end="57" name="$y">
+					</VariableReference>
+				</ReferenceExpression>
+			</PHPCallArgumentsList>
+		</ReflectionCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="60" end="62">
+	</EmptyStatement>
+</ModuleDeclaration>

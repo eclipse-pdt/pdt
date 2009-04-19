@@ -1,0 +1,15 @@
+--TEST--
+Test Prefix Simple
+--FILE--
+<?php ++$a;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="13">
+	<ExpressionStatement start="6" end="11">
+		<PrefixExpression start="6" end="10" operator="++">
+			<VariableReference start="8" end="10" name="$a">
+			</VariableReference>
+		</PrefixExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="11" end="13">
+	</EmptyStatement>
+</ModuleDeclaration>

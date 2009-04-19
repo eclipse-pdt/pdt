@@ -1,0 +1,21 @@
+--TEST--
+Test Require Once
+--FILE--
+<?php require_once(A::foo());?>
+--EXPECT--
+<ModuleDeclaration start="0" end="31">
+	<ExpressionStatement start="6" end="29">
+		<Include start="6" end="28" type="require_once">
+			<StaticMethodInvocation start="19" end="27">
+				<TypeReference start="19" end="20" name="A">
+				</TypeReference>
+				<SimpleReference start="22" end="25" name="foo">
+				</SimpleReference>
+				<PHPCallArgumentsList start="26" end="26">
+				</PHPCallArgumentsList>
+			</StaticMethodInvocation>
+		</Include>
+	</ExpressionStatement>
+	<EmptyStatement start="29" end="31">
+	</EmptyStatement>
+</ModuleDeclaration>

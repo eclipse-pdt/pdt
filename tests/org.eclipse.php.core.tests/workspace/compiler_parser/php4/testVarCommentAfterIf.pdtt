@@ -1,0 +1,25 @@
+--TEST--
+Test Var Comment After If
+--FILE--
+<?php if (true) /* @var $a MyClass */
+ { echo $a; }; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="55">
+	<IfStatement start="6" end="51">
+		<Condition>
+			<Scalar start="10" end="14" type="string" value="true">
+			</Scalar>
+		</Condition>
+		<TrueStatement>
+			<EchoStatement start="41" end="49">
+				<VariableReference start="46" end="48" name="$a">
+				</VariableReference>
+			</EchoStatement>
+		</TrueStatement>
+	</IfStatement>
+	<EmptyStatement start="51" end="52">
+	</EmptyStatement>
+	<EmptyStatement start="53" end="55">
+	</EmptyStatement>
+</ModuleDeclaration>
+

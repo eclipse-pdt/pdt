@@ -1,0 +1,31 @@
+--TEST--
+Test Single Quote
+--FILE--
+<?php "'single ${$complex->quote()}'";?>
+--EXPECT--
+<ModuleDeclaration start="0" end="40">
+	<ExpressionStatement start="6" end="38">
+		<Quote start="6" end="37" type="quote">
+			<Scalar start="7" end="8" type="string" value="&apos;">
+			</Scalar>
+			<Scalar start="8" end="14" type="string" value="single">
+			</Scalar>
+			<Scalar start="14" end="15" type="string" value=" ">
+			</Scalar>
+			<ReflectionVariableReference start="15" end="35">
+				<PHPCallExpression start="17" end="34">
+					<VariableReference start="17" end="25" name="$complex">
+					</VariableReference>
+					<SimpleReference start="27" end="32" name="quote">
+					</SimpleReference>
+					<PHPCallArgumentsList start="33" end="33">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ReflectionVariableReference>
+			<Scalar start="35" end="36" type="string" value="&apos;">
+			</Scalar>
+		</Quote>
+	</ExpressionStatement>
+	<EmptyStatement start="38" end="40">
+	</EmptyStatement>
+</ModuleDeclaration>

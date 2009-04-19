@@ -1,0 +1,26 @@
+--TEST--
+Test Ternary Operator
+--FILE--
+<?php $a = $newValue ? : $defaultValue; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="42">
+	<ExpressionStatement start="6" end="39">
+		<Assignment start="6" end="38" operator="=">
+			<VariableReference start="6" end="8" name="$a">
+			</VariableReference>
+			<ConditionalExpression start="11" end="38">
+				<Condition>
+					<VariableReference start="11" end="20" name="$newValue">
+					</VariableReference>
+				</Condition>
+				<IfFalse>
+					<VariableReference start="25" end="38" name="$defaultValue">
+					</VariableReference>
+				</IfFalse>
+			</ConditionalExpression>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="40" end="42">
+	</EmptyStatement>
+</ModuleDeclaration>
+

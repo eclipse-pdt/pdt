@@ -1,0 +1,45 @@
+--TEST--
+Test Try Multi Catch Statement
+--FILE--
+<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; } catch (AnotherException $ea) { echo ''; } catch (AnotherException1 $ea1) {}  ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="163">
+	<TryStatement start="6" end="159">
+		<ExpressionStatement start="12" end="47">
+			<Assignment start="12" end="46" operator="=">
+				<VariableReference start="12" end="18" name="$error">
+				</VariableReference>
+				<Scalar start="21" end="46" type="string" value="&apos;Always throw this error&apos;">
+				</Scalar>
+			</Assignment>
+		</ExpressionStatement>
+		<CatchClause start="50" end="83">
+			<FullyQualifiedReference start="57" end="66" name="Exception">
+			</FullyQualifiedReference>
+			<VariableReference start="67" end="69" name="$e">
+			</VariableReference>
+			<EchoStatement start="73" end="81">
+				<Scalar start="78" end="80" type="string" value="&apos;&apos;">
+				</Scalar>
+			</EchoStatement>
+		</CatchClause>
+		<CatchClause start="84" end="125">
+			<FullyQualifiedReference start="91" end="107" name="AnotherException">
+			</FullyQualifiedReference>
+			<VariableReference start="108" end="111" name="$ea">
+			</VariableReference>
+			<EchoStatement start="115" end="123">
+				<Scalar start="120" end="122" type="string" value="&apos;&apos;">
+				</Scalar>
+			</EchoStatement>
+		</CatchClause>
+		<CatchClause start="126" end="159">
+			<FullyQualifiedReference start="133" end="150" name="AnotherException1">
+			</FullyQualifiedReference>
+			<VariableReference start="151" end="155" name="$ea1">
+			</VariableReference>
+		</CatchClause>
+	</TryStatement>
+	<EmptyStatement start="161" end="163">
+	</EmptyStatement>
+</ModuleDeclaration>

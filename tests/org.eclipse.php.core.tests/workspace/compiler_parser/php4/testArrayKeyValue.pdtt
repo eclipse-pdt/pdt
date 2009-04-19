@@ -1,0 +1,25 @@
+--TEST--
+Test Array Key Value
+--FILE--
+<?php array('Dodo'=>'Golo','Dafna'=>'Dodidu');?>
+--EXPECT--
+<ModuleDeclaration start="0" end="48">
+	<ExpressionStatement start="6" end="46">
+		<ArrayCreation start="6" end="45">
+			<ArrayElement start="12" end="26">
+				<Scalar start="12" end="18" type="string" value="&apos;Dodo&apos;">
+				</Scalar>
+				<Scalar start="20" end="26" type="string" value="&apos;Golo&apos;">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="27" end="44">
+				<Scalar start="27" end="34" type="string" value="&apos;Dafna&apos;">
+				</Scalar>
+				<Scalar start="36" end="44" type="string" value="&apos;Dodidu&apos;">
+				</Scalar>
+			</ArrayElement>
+		</ArrayCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="46" end="48">
+	</EmptyStatement>
+</ModuleDeclaration>

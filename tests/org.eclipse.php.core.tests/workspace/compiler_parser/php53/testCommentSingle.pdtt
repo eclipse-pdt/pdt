@@ -1,0 +1,11 @@
+--TEST--
+Test Comment Single
+--FILE--
+<?php // this is a single line comment 
+# this is a single line comment?>
+--EXPECT--
+<ModuleDeclaration start="0" end="73">
+	<EmptyStatement start="71" end="73">
+	</EmptyStatement>
+</ModuleDeclaration>
+

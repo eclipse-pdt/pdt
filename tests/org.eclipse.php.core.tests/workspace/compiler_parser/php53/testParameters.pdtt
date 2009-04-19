@@ -1,0 +1,39 @@
+--TEST--
+Test Parameters
+--FILE--
+<?php function test1(MyClass &$x){}; function test2(MyClass &$x = 1){}; function test3(&$x){};?>
+--EXPECT--
+<ModuleDeclaration start="0" end="96">
+	<PHPMethodDeclaration start="6" end="35" modifiers="" name="test1">
+		<FormalParameterByReference start="21" end="23" modifiers="">
+			<FullyQualifiedReference start="21" end="28" name="MyClass">
+			</FullyQualifiedReference>
+			<VariableReference start="30" end="32" name="$x">
+			</VariableReference>
+		</FormalParameterByReference>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="35" end="36">
+	</EmptyStatement>
+	<PHPMethodDeclaration start="37" end="70" modifiers="" name="test2">
+		<FormalParameterByReference start="52" end="67" modifiers="">
+			<FullyQualifiedReference start="52" end="59" name="MyClass">
+			</FullyQualifiedReference>
+			<VariableReference start="61" end="63" name="$x">
+			</VariableReference>
+			<Scalar start="66" end="67" type="int" value="1">
+			</Scalar>
+		</FormalParameterByReference>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="70" end="71">
+	</EmptyStatement>
+	<PHPMethodDeclaration start="72" end="93" modifiers="" name="test3">
+		<FormalParameterByReference start="87" end="89" modifiers="">
+			<VariableReference start="88" end="90" name="$x">
+			</VariableReference>
+		</FormalParameterByReference>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="93" end="94">
+	</EmptyStatement>
+	<EmptyStatement start="94" end="96">
+	</EmptyStatement>
+</ModuleDeclaration>

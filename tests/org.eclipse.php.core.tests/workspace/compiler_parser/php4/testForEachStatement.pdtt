@@ -1,0 +1,27 @@
+--TEST--
+Test For Each Statement
+--FILE--
+<?php foreach ($arr as $value) { $value = $value * 2; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="58">
+	<ForEachStatement start="6" end="55">
+		<VariableReference start="15" end="19" name="$arr">
+		</VariableReference>
+		<VariableReference start="23" end="29" name="$value">
+		</VariableReference>
+		<ExpressionStatement start="33" end="53">
+			<Assignment start="33" end="52" operator="=">
+				<VariableReference start="33" end="39" name="$value">
+				</VariableReference>
+				<InfixExpression start="42" end="52" operator="*">
+					<VariableReference start="42" end="48" name="$value">
+					</VariableReference>
+					<Scalar start="51" end="52" type="int" value="2">
+					</Scalar>
+				</InfixExpression>
+			</Assignment>
+		</ExpressionStatement>
+	</ForEachStatement>
+	<EmptyStatement start="56" end="58">
+	</EmptyStatement>
+</ModuleDeclaration>

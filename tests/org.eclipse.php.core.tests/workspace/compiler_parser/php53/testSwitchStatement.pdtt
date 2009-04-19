@@ -1,0 +1,39 @@
+--TEST--
+Test Switch Statement
+--FILE--
+<?php switch ($i) { case 0:    echo 'i equals 0';    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="145">
+	<SwitchStatement start="6" end="141">
+		<VariableReference start="14" end="16" name="$i">
+		</VariableReference>
+		<SwitchCase start="20" end="59">
+			<Scalar start="25" end="26" type="int" value="0">
+			</Scalar>
+			<EchoStatement start="31" end="49">
+				<Scalar start="36" end="48" type="string" value="&apos;i equals 0&apos;">
+				</Scalar>
+			</EchoStatement>
+			<BreakStatement start="53" end="59">
+			</BreakStatement>
+		</SwitchCase>
+		<SwitchCase start="60" end="101">
+			<Scalar start="65" end="66" type="int" value="1">
+			</Scalar>
+			<EchoStatement start="72" end="90">
+				<Scalar start="77" end="89" type="string" value="&apos;i equals 1&apos;">
+				</Scalar>
+			</EchoStatement>
+			<BreakStatement start="95" end="101">
+			</BreakStatement>
+		</SwitchCase>
+		<SwitchCase start="102" end="138">
+			<EchoStatement start="114" end="138">
+				<Scalar start="119" end="137" type="string" value="&apos;i not equals 0,1&apos;">
+				</Scalar>
+			</EchoStatement>
+		</SwitchCase>
+	</SwitchStatement>
+	<EmptyStatement start="143" end="145">
+	</EmptyStatement>
+</ModuleDeclaration>

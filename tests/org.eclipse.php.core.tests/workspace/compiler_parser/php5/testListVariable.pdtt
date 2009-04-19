@@ -1,0 +1,49 @@
+--TEST--
+Test List Variable
+--FILE--
+<?php list($a,$b)=1; list($a[1], list($b,$c))=$d; list(, ,$c)=1;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="66">
+	<ExpressionStatement start="6" end="20">
+		<Assignment start="6" end="19" operator="=">
+			<ListVariable start="6" end="17">
+				<VariableReference start="11" end="13" name="$a">
+				</VariableReference>
+				<VariableReference start="14" end="16" name="$b">
+				</VariableReference>
+			</ListVariable>
+			<Scalar start="18" end="19" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="21" end="49">
+		<Assignment start="21" end="48" operator="=">
+			<ListVariable start="21" end="45">
+				<ArrayVariableReference start="26" end="31" type="array" name="$a">
+					<Scalar start="29" end="30" type="int" value="1">
+					</Scalar>
+				</ArrayVariableReference>
+				<ListVariable start="33" end="44">
+					<VariableReference start="38" end="40" name="$b">
+					</VariableReference>
+					<VariableReference start="41" end="43" name="$c">
+					</VariableReference>
+				</ListVariable>
+			</ListVariable>
+			<VariableReference start="46" end="48" name="$d">
+			</VariableReference>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="50" end="64">
+		<Assignment start="50" end="63" operator="=">
+			<ListVariable start="50" end="61">
+				<VariableReference start="58" end="60" name="$c">
+				</VariableReference>
+			</ListVariable>
+			<Scalar start="62" end="63" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="64" end="66">
+	</EmptyStatement>
+</ModuleDeclaration>

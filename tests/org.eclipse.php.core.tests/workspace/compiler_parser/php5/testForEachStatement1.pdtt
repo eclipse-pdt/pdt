@@ -1,0 +1,45 @@
+--TEST--
+Test For Each Statement1
+--FILE--
+<?php foreach ($arr as $value) ; foreach (array(1, 2, 3, 4, 5) as $value); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="77">
+	<ForEachStatement start="6" end="32">
+		<VariableReference start="15" end="19" name="$arr">
+		</VariableReference>
+		<VariableReference start="23" end="29" name="$value">
+		</VariableReference>
+		<EmptyStatement start="31" end="32">
+		</EmptyStatement>
+	</ForEachStatement>
+	<ForEachStatement start="33" end="74">
+		<ArrayCreation start="42" end="62">
+			<ArrayElement start="48" end="49">
+				<Scalar start="48" end="49" type="int" value="1">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="51" end="52">
+				<Scalar start="51" end="52" type="int" value="2">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="54" end="55">
+				<Scalar start="54" end="55" type="int" value="3">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="57" end="58">
+				<Scalar start="57" end="58" type="int" value="4">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="60" end="61">
+				<Scalar start="60" end="61" type="int" value="5">
+				</Scalar>
+			</ArrayElement>
+		</ArrayCreation>
+		<VariableReference start="66" end="72" name="$value">
+		</VariableReference>
+		<EmptyStatement start="73" end="74">
+		</EmptyStatement>
+	</ForEachStatement>
+	<EmptyStatement start="75" end="77">
+	</EmptyStatement>
+</ModuleDeclaration>

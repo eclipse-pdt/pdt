@@ -1,0 +1,24 @@
+--TEST--
+Test Error Class Statement7
+--FILE--
+<?php class A {function f() a(); function g(){}}?>
+--EXPECT--
+<ModuleDeclaration start="0" end="50">
+	<ClassDeclaration start="6" end="48" modifiers="" name="A">
+		<PHPMethodDeclaration start="15" end="27" modifiers="public" name="f">
+		</PHPMethodDeclaration>
+		<ASTError start="27" end="27">
+		</ASTError>
+		<PHPMethodDeclaration start="33" end="47" modifiers="public" name="g">
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="48" end="50">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="26" end="27">
+		</ASTError>
+		<ASTError start="28" end="29">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>
+

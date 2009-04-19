@@ -1,0 +1,19 @@
+--TEST--
+Test Error Interface List5
+--FILE--
+<?php class A implements B, 3 {} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="35">
+	<ClassDeclaration start="6" end="32" modifiers="" name="A">
+		<FullyQualifiedReference start="25" end="26" name="B">
+		</FullyQualifiedReference>
+	</ClassDeclaration>
+	<EmptyStatement start="33" end="35">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="28" end="29">
+		</ASTError>
+		<ASTError start="26" end="27">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

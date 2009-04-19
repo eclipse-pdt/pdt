@@ -1,0 +1,21 @@
+--TEST--
+Test Instanceof With Function
+--FILE--
+<?php foo() instanceof $myClass;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="34">
+	<ExpressionStatement start="6" end="32">
+		<InstanceOfExpression start="6" end="31">
+			<PHPCallExpression start="6" end="11">
+				<SimpleReference start="6" end="9" name="foo">
+				</SimpleReference>
+				<PHPCallArgumentsList start="10" end="10">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<VariableReference start="23" end="31" name="$myClass">
+			</VariableReference>
+		</InstanceOfExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="32" end="34">
+	</EmptyStatement>
+</ModuleDeclaration>

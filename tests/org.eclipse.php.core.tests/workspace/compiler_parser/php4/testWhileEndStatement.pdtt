@@ -1,0 +1,27 @@
+--TEST--
+Test While End Statement
+--FILE--
+<?php while ($i <= 10):  echo $i;   $i++; endwhile; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="54">
+	<WhileStatement start="6" end="51">
+		<InfixExpression start="13" end="21" operator="&lt;=">
+			<VariableReference start="13" end="15" name="$i">
+			</VariableReference>
+			<Scalar start="19" end="21" type="int" value="10">
+			</Scalar>
+		</InfixExpression>
+		<EchoStatement start="25" end="33">
+			<VariableReference start="30" end="32" name="$i">
+			</VariableReference>
+		</EchoStatement>
+		<ExpressionStatement start="36" end="41">
+			<PostfixExpression start="36" end="40" operator="++">
+				<VariableReference start="36" end="38" name="$i">
+				</VariableReference>
+			</PostfixExpression>
+		</ExpressionStatement>
+	</WhileStatement>
+	<EmptyStatement start="52" end="54">
+	</EmptyStatement>
+</ModuleDeclaration>

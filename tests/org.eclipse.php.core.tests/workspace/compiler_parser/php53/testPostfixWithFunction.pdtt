@@ -1,0 +1,19 @@
+--TEST--
+Test Postfix With Function
+--FILE--
+<?php foo()--;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="16">
+	<ExpressionStatement start="6" end="14">
+		<PostfixExpression start="6" end="13" operator="--">
+			<PHPCallExpression start="6" end="11">
+				<FullyQualifiedReference start="6" end="9" name="foo">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="10" end="10">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</PostfixExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="14" end="16">
+	</EmptyStatement>
+</ModuleDeclaration>

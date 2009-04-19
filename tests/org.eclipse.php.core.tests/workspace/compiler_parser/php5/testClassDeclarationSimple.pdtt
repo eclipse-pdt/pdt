@@ -1,0 +1,12 @@
+--TEST--
+Test Class Declaration Simple
+--FILE--
+<?php class MyClass { } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="26">
+	<ClassDeclaration start="6" end="23" modifiers="" name="MyClass">
+	</ClassDeclaration>
+	<EmptyStatement start="24" end="26">
+	</EmptyStatement>
+</ModuleDeclaration>
+

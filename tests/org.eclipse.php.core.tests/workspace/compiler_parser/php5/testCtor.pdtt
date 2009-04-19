@@ -1,0 +1,21 @@
+--TEST--
+Test Ctor
+--FILE--
+<?php $a = new A; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="20">
+	<ExpressionStatement start="6" end="17">
+		<Assignment start="6" end="16" operator="=">
+			<VariableReference start="6" end="8" name="$a">
+			</VariableReference>
+			<ClassInstanceCreation start="11" end="16">
+				<TypeReference start="15" end="16" name="A">
+				</TypeReference>
+				<PHPCallArgumentsList start="16" end="16">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="18" end="20">
+	</EmptyStatement>
+</ModuleDeclaration>

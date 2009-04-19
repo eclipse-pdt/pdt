@@ -1,0 +1,21 @@
+--TEST--
+Test Class Var
+--FILE--
+<?php class gadi { public $a,$b=2 ; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="40">
+	<ClassDeclaration start="6" end="37" modifiers="" name="gadi">
+		<PHPFieldDeclaration start="26" end="28" modifiers="public">
+			<SimpleReference start="26" end="28" name="$a">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="29" end="33" modifiers="public">
+			<SimpleReference start="29" end="31" name="$b">
+			</SimpleReference>
+			<Scalar start="32" end="33" type="int" value="2">
+			</Scalar>
+		</PHPFieldDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="38" end="40">
+	</EmptyStatement>
+</ModuleDeclaration>

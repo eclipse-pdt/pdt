@@ -1,0 +1,89 @@
+--TEST--
+Test Static Scalar
+--FILE--
+<?php declare(guy=guy); declare(guy=+guy);declare(guy=-guy); declare(guy=array(1,guy)); declare(guy=obj::GADI); declare(guy=array(1,1=>guy)); declare(guy=array(1=>gadi)); declare(guy=array()); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="195">
+	<DeclareStatement start="6" end="23">
+		<Scalar start="18" end="21" type="string" value="guy">
+		</Scalar>
+		<EmptyStatement start="22" end="23">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="24" end="42">
+		<UnaryOperation start="36" end="40" operator="+">
+			<Scalar start="37" end="40" type="string" value="guy">
+			</Scalar>
+		</UnaryOperation>
+		<EmptyStatement start="41" end="42">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="42" end="60">
+		<UnaryOperation start="54" end="58" operator="-">
+			<Scalar start="55" end="58" type="string" value="guy">
+			</Scalar>
+		</UnaryOperation>
+		<EmptyStatement start="59" end="60">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="61" end="87">
+		<ArrayCreation start="73" end="85">
+			<ArrayElement start="79" end="80">
+				<Scalar start="79" end="80" type="int" value="1">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="81" end="84">
+				<Scalar start="81" end="84" type="string" value="guy">
+				</Scalar>
+			</ArrayElement>
+		</ArrayCreation>
+		<EmptyStatement start="86" end="87">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="88" end="111">
+		<StaticConstantAccess start="100" end="109">
+			<TypeReference start="100" end="103" name="obj">
+			</TypeReference>
+			<ConstantReference start="105" end="109" name="GADI">
+			</ConstantReference>
+		</StaticConstantAccess>
+		<EmptyStatement start="110" end="111">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="112" end="141">
+		<ArrayCreation start="124" end="139">
+			<ArrayElement start="130" end="131">
+				<Scalar start="130" end="131" type="int" value="1">
+				</Scalar>
+			</ArrayElement>
+			<ArrayElement start="132" end="138">
+				<Scalar start="132" end="133" type="int" value="1">
+				</Scalar>
+				<Scalar start="135" end="138" type="string" value="guy">
+				</Scalar>
+			</ArrayElement>
+		</ArrayCreation>
+		<EmptyStatement start="140" end="141">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="142" end="170">
+		<ArrayCreation start="154" end="168">
+			<ArrayElement start="160" end="167">
+				<Scalar start="160" end="161" type="int" value="1">
+				</Scalar>
+				<Scalar start="163" end="167" type="string" value="gadi">
+				</Scalar>
+			</ArrayElement>
+		</ArrayCreation>
+		<EmptyStatement start="169" end="170">
+		</EmptyStatement>
+	</DeclareStatement>
+	<DeclareStatement start="171" end="192">
+		<ArrayCreation start="183" end="190">
+		</ArrayCreation>
+		<EmptyStatement start="191" end="192">
+		</EmptyStatement>
+	</DeclareStatement>
+	<EmptyStatement start="193" end="195">
+	</EmptyStatement>
+</ModuleDeclaration>

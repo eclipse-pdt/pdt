@@ -1,0 +1,21 @@
+--TEST--
+Test Switch Statement2
+--FILE--
+<?php switch ($i){; case $x: default: }; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="43">
+	<SwitchStatement start="6" end="39">
+		<VariableReference start="14" end="16" name="$i">
+		</VariableReference>
+		<SwitchCase start="20" end="28">
+			<VariableReference start="25" end="27" name="$x">
+			</VariableReference>
+		</SwitchCase>
+		<SwitchCase start="29" end="37">
+		</SwitchCase>
+	</SwitchStatement>
+	<EmptyStatement start="39" end="40">
+	</EmptyStatement>
+	<EmptyStatement start="41" end="43">
+	</EmptyStatement>
+</ModuleDeclaration>

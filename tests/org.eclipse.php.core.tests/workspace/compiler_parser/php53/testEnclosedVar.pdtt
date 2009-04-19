@@ -1,0 +1,29 @@
+--TEST--
+Test Enclosed Var
+--FILE--
+<?php  ${a}; ${$a[1]}; $a[$b]; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="33">
+	<ExpressionStatement start="7" end="12">
+		<ReflectionVariableReference start="7" end="11">
+			<Scalar start="9" end="10" type="string" value="a">
+			</Scalar>
+		</ReflectionVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="13" end="22">
+		<ReflectionVariableReference start="13" end="21">
+			<ArrayVariableReference start="15" end="20" type="array" name="$a">
+				<Scalar start="18" end="19" type="int" value="1">
+				</Scalar>
+			</ArrayVariableReference>
+		</ReflectionVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="23" end="30">
+		<ArrayVariableReference start="23" end="29" type="array" name="$a">
+			<VariableReference start="26" end="28" name="$b">
+			</VariableReference>
+		</ArrayVariableReference>
+	</ExpressionStatement>
+	<EmptyStatement start="31" end="33">
+	</EmptyStatement>
+</ModuleDeclaration>

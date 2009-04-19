@@ -1,0 +1,24 @@
+--TEST--
+Test Backtick Expression
+--FILE--
+<?php `ls -l $dirname`; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="26">
+	<ExpressionStatement start="6" end="23">
+		<BackTickExpression start="6" end="22">
+			<Scalar start="7" end="9" type="string" value="ls">
+			</Scalar>
+			<Scalar start="9" end="11" type="string" value=" -">
+			</Scalar>
+			<Scalar start="11" end="12" type="string" value="l">
+			</Scalar>
+			<Scalar start="12" end="13" type="string" value=" ">
+			</Scalar>
+			<VariableReference start="13" end="21" name="$dirname">
+			</VariableReference>
+		</BackTickExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="24" end="26">
+	</EmptyStatement>
+</ModuleDeclaration>
+

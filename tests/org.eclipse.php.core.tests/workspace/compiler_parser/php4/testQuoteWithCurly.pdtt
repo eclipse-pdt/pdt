@@ -1,0 +1,33 @@
+--TEST--
+Test Quote With Curly
+--FILE--
+<?php $text = <<<EOF
+test{test}test
+EOF;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="43">
+	<ExpressionStatement start="6" end="40">
+		<Assignment start="6" end="39" operator="=">
+			<VariableReference start="6" end="11" name="$text">
+			</VariableReference>
+			<Quote start="14" end="39" type="heredoc">
+				<Scalar start="21" end="25" type="string" value="test">
+				</Scalar>
+				<Scalar start="25" end="26" type="string" value="{">
+				</Scalar>
+				<Scalar start="26" end="30" type="string" value="test">
+				</Scalar>
+				<Scalar start="30" end="31" type="string" value="}">
+				</Scalar>
+				<Scalar start="31" end="35" type="string" value="test">
+				</Scalar>
+				<Scalar start="35" end="36" type="string" value="
+">
+				</Scalar>
+			</Quote>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="41" end="43">
+	</EmptyStatement>
+</ModuleDeclaration>

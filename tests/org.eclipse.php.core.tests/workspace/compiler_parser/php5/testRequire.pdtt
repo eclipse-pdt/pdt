@@ -1,0 +1,21 @@
+--TEST--
+Test Require
+--FILE--
+<?php require($myClass->getFileName());?>
+--EXPECT--
+<ModuleDeclaration start="0" end="41">
+	<ExpressionStatement start="6" end="39">
+		<Include start="6" end="38" type="require">
+			<PHPCallExpression start="14" end="37">
+				<VariableReference start="14" end="22" name="$myClass">
+				</VariableReference>
+				<SimpleReference start="24" end="35" name="getFileName">
+				</SimpleReference>
+				<PHPCallArgumentsList start="36" end="36">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</Include>
+	</ExpressionStatement>
+	<EmptyStatement start="39" end="41">
+	</EmptyStatement>
+</ModuleDeclaration>

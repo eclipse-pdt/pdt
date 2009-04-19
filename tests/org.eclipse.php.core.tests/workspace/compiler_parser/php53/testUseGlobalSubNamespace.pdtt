@@ -1,0 +1,34 @@
+--TEST--
+Test Use Global Sub Namespace
+--FILE--
+<?php use \A\B\C; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="20">
+	<UseStatement start="6" end="17">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="11" end="16" name="\A\B\C">
+					<NamespaceReference start="10" end="14" name="\A\B" global="true" local="true">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+			</UsePart>
+			<FullyQualifiedReference start="11" end="16" name="\A\B\C">
+				<NamespaceReference start="10" end="14" name="\A\B" global="true" local="true">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="11" end="16" name="\A\B\C">
+				<NamespaceReference start="10" end="14" name="\A\B" global="true" local="true">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+		</UsePart>
+		<FullyQualifiedReference start="11" end="16" name="\A\B\C">
+			<NamespaceReference start="10" end="14" name="\A\B" global="true" local="true">
+			</NamespaceReference>
+		</FullyQualifiedReference>
+	</UseStatement>
+	<EmptyStatement start="18" end="20">
+	</EmptyStatement>
+</ModuleDeclaration>
+

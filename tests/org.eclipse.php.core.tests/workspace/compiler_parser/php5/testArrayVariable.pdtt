@@ -1,0 +1,45 @@
+--TEST--
+Test Array Variable
+--FILE--
+<?php $a[$b]; $a[1]; $a[$b][5][3]; $a[$b][5];?>
+--EXPECT--
+<ModuleDeclaration start="0" end="47">
+	<ExpressionStatement start="6" end="13">
+		<ArrayVariableReference start="6" end="12" type="array" name="$a">
+			<VariableReference start="9" end="11" name="$b">
+			</VariableReference>
+		</ArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="14" end="20">
+		<ArrayVariableReference start="14" end="19" type="array" name="$a">
+			<Scalar start="17" end="18" type="int" value="1">
+			</Scalar>
+		</ArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="21" end="34">
+		<ReflectionArrayVariableReference start="21" end="33">
+			<ReflectionArrayVariableReference start="21" end="30">
+				<ArrayVariableReference start="21" end="27" type="array" name="$a">
+					<VariableReference start="24" end="26" name="$b">
+					</VariableReference>
+				</ArrayVariableReference>
+				<Scalar start="28" end="29" type="int" value="5">
+				</Scalar>
+			</ReflectionArrayVariableReference>
+			<Scalar start="31" end="32" type="int" value="3">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="35" end="45">
+		<ReflectionArrayVariableReference start="35" end="44">
+			<ArrayVariableReference start="35" end="41" type="array" name="$a">
+				<VariableReference start="38" end="40" name="$b">
+				</VariableReference>
+			</ArrayVariableReference>
+			<Scalar start="42" end="43" type="int" value="5">
+			</Scalar>
+		</ReflectionArrayVariableReference>
+	</ExpressionStatement>
+	<EmptyStatement start="45" end="47">
+	</EmptyStatement>
+</ModuleDeclaration>

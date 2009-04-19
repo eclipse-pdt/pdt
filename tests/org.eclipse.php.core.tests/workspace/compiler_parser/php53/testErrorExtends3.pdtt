@@ -1,0 +1,19 @@
+--TEST--
+Test Error Extends3
+--FILE--
+<?php class A extends B, implements C {} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="43">
+	<ClassDeclaration start="6" end="40" modifiers="" name="A">
+		<FullyQualifiedReference start="22" end="23" name="B">
+		</FullyQualifiedReference>
+		<FullyQualifiedReference start="36" end="37" name="C">
+		</FullyQualifiedReference>
+	</ClassDeclaration>
+	<EmptyStatement start="41" end="43">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="23" end="24">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

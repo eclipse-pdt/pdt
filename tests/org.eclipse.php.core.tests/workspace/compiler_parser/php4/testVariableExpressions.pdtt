@@ -1,0 +1,89 @@
+--TEST--
+Test Variable Expressions
+--FILE--
+<?php $a >>= 5; $a ^= 6 ; $a |= 6 ; $a &= 6 ; $a %= 6 ; $a .= 6 ; $a /= 6 ; $a *= 6 ; $a *= 6 ; $c -= 5;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="106">
+	<ExpressionStatement start="6" end="15">
+		<Assignment start="6" end="14" operator="&gt;&gt;=">
+			<VariableReference start="6" end="8" name="$a">
+			</VariableReference>
+			<Scalar start="13" end="14" type="int" value="5">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="16" end="25">
+		<Assignment start="16" end="23" operator="^=">
+			<VariableReference start="16" end="18" name="$a">
+			</VariableReference>
+			<Scalar start="22" end="23" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="26" end="35">
+		<Assignment start="26" end="33" operator="|=">
+			<VariableReference start="26" end="28" name="$a">
+			</VariableReference>
+			<Scalar start="32" end="33" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="36" end="45">
+		<Assignment start="36" end="43" operator="&amp;=">
+			<VariableReference start="36" end="38" name="$a">
+			</VariableReference>
+			<Scalar start="42" end="43" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="46" end="55">
+		<Assignment start="46" end="53" operator="%=">
+			<VariableReference start="46" end="48" name="$a">
+			</VariableReference>
+			<Scalar start="52" end="53" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="56" end="65">
+		<Assignment start="56" end="63" operator=".=">
+			<VariableReference start="56" end="58" name="$a">
+			</VariableReference>
+			<Scalar start="62" end="63" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="66" end="75">
+		<Assignment start="66" end="73" operator="/=">
+			<VariableReference start="66" end="68" name="$a">
+			</VariableReference>
+			<Scalar start="72" end="73" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="76" end="85">
+		<Assignment start="76" end="83" operator="*=">
+			<VariableReference start="76" end="78" name="$a">
+			</VariableReference>
+			<Scalar start="82" end="83" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="86" end="95">
+		<Assignment start="86" end="93" operator="*=">
+			<VariableReference start="86" end="88" name="$a">
+			</VariableReference>
+			<Scalar start="92" end="93" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="96" end="104">
+		<Assignment start="96" end="103" operator="-=">
+			<VariableReference start="96" end="98" name="$c">
+			</VariableReference>
+			<Scalar start="102" end="103" type="int" value="5">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="104" end="106">
+	</EmptyStatement>
+</ModuleDeclaration>

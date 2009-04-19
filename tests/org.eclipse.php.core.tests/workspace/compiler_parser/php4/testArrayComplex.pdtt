@@ -1,0 +1,39 @@
+--TEST--
+Test Array Complex
+--FILE--
+<?php array($a, $b=>foo(), 1=>$myClass->getFirst());?>
+--EXPECT--
+<ModuleDeclaration start="0" end="54">
+	<ExpressionStatement start="6" end="52">
+		<ArrayCreation start="6" end="51">
+			<ArrayElement start="12" end="14">
+				<VariableReference start="12" end="14" name="$a">
+				</VariableReference>
+			</ArrayElement>
+			<ArrayElement start="16" end="25">
+				<VariableReference start="16" end="18" name="$b">
+				</VariableReference>
+				<PHPCallExpression start="20" end="25">
+					<SimpleReference start="20" end="23" name="foo">
+					</SimpleReference>
+					<PHPCallArgumentsList start="24" end="24">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ArrayElement>
+			<ArrayElement start="27" end="50">
+				<Scalar start="27" end="28" type="int" value="1">
+				</Scalar>
+				<PHPCallExpression start="30" end="50">
+					<VariableReference start="30" end="38" name="$myClass">
+					</VariableReference>
+					<SimpleReference start="40" end="48" name="getFirst">
+					</SimpleReference>
+					<PHPCallArgumentsList start="49" end="49">
+					</PHPCallArgumentsList>
+				</PHPCallExpression>
+			</ArrayElement>
+		</ArrayCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="52" end="54">
+	</EmptyStatement>
+</ModuleDeclaration>

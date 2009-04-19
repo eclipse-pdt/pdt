@@ -1,0 +1,15 @@
+--TEST--
+Test Echo Statement
+--FILE--
+<?php echo "hello ",$b;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="25">
+	<EchoStatement start="6" end="23">
+		<Scalar start="11" end="19" type="string" value="&quot;hello &quot;">
+		</Scalar>
+		<VariableReference start="20" end="22" name="$b">
+		</VariableReference>
+	</EchoStatement>
+	<EmptyStatement start="23" end="25">
+	</EmptyStatement>
+</ModuleDeclaration>

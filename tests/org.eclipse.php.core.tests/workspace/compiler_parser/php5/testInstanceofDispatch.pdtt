@@ -1,0 +1,21 @@
+--TEST--
+Test Instanceof Dispatch
+--FILE--
+<?php $a instanceof $b->$myClass;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="35">
+	<ExpressionStatement start="6" end="33">
+		<InstanceOfExpression start="6" end="32">
+			<VariableReference start="6" end="8" name="$a">
+			</VariableReference>
+			<FieldAccess start="20" end="32">
+				<VariableReference start="20" end="22" name="$b">
+				</VariableReference>
+				<VariableReference start="24" end="32" name="$myClass">
+				</VariableReference>
+			</FieldAccess>
+		</InstanceOfExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="33" end="35">
+	</EmptyStatement>
+</ModuleDeclaration>

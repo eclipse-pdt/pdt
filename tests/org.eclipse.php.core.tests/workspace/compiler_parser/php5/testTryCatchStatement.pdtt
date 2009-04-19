@@ -1,0 +1,29 @@
+--TEST--
+Test Try Catch Statement
+--FILE--
+<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; }  ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="87">
+	<TryStatement start="6" end="83">
+		<ExpressionStatement start="12" end="47">
+			<Assignment start="12" end="46" operator="=">
+				<VariableReference start="12" end="18" name="$error">
+				</VariableReference>
+				<Scalar start="21" end="46" type="string" value="&apos;Always throw this error&apos;">
+				</Scalar>
+			</Assignment>
+		</ExpressionStatement>
+		<CatchClause start="50" end="83">
+			<TypeReference start="57" end="66" name="Exception">
+			</TypeReference>
+			<VariableReference start="67" end="69" name="$e">
+			</VariableReference>
+			<EchoStatement start="73" end="81">
+				<Scalar start="78" end="80" type="string" value="&apos;&apos;">
+				</Scalar>
+			</EchoStatement>
+		</CatchClause>
+	</TryStatement>
+	<EmptyStatement start="85" end="87">
+	</EmptyStatement>
+</ModuleDeclaration>

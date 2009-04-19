@@ -1,0 +1,21 @@
+--TEST--
+Test Refernce Instanciation
+--FILE--
+<?php $b = &new MyClass();?>
+--EXPECT--
+<ModuleDeclaration start="0" end="28">
+	<ExpressionStatement start="6" end="26">
+		<Assignment start="6" end="25" operator="=&amp;">
+			<VariableReference start="6" end="8" name="$b">
+			</VariableReference>
+			<ClassInstanceCreation start="12" end="25">
+				<FullyQualifiedReference start="16" end="23" name="MyClass">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="24" end="24">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="26" end="28">
+	</EmptyStatement>
+</ModuleDeclaration>

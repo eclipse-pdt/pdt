@@ -1,0 +1,19 @@
+--TEST--
+Test Comment Var
+--FILE--
+<?php /* @var $a MyClass */
+$a =5; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="37">
+	<ExpressionStatement start="28" end="34">
+		<Assignment start="28" end="33" operator="=">
+			<VariableReference start="28" end="30" name="$a">
+			</VariableReference>
+			<Scalar start="32" end="33" type="int" value="5">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="35" end="37">
+	</EmptyStatement>
+</ModuleDeclaration>
+

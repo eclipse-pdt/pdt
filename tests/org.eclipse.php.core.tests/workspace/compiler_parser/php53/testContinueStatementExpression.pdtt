@@ -1,0 +1,13 @@
+--TEST--
+Test Continue Statement Expression
+--FILE--
+<?php continue $a;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="20">
+	<ContinueStatement start="6" end="18">
+		<VariableReference start="15" end="17" name="$a">
+		</VariableReference>
+	</ContinueStatement>
+	<EmptyStatement start="18" end="20">
+	</EmptyStatement>
+</ModuleDeclaration>

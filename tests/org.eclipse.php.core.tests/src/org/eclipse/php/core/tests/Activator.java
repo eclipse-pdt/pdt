@@ -65,8 +65,8 @@ public class Activator extends Plugin {
 	 * @return difference string or <code>null</code> in case expected result is equal to the actual.
 	 */
 	public static String compareContents(String expected, String actual) {
-		actual = actual.trim();
-		expected = expected.trim();
+		actual = actual.replaceAll("[\r\n]+", "\n").trim();
+		expected = expected.replaceAll("[\r\n]+", "\n").trim();
 		
 		int expectedDifference = StringUtils.indexOfDifference(actual, expected);
 		if (expectedDifference >= 0) {

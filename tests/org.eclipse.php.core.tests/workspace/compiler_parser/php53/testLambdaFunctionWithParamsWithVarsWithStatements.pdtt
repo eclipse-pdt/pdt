@@ -1,0 +1,39 @@
+--TEST--
+Test Lambda Function With Params With Vars With Statements
+--FILE--
+<?php $lambda = function ($param1, &$param2) use ($var1, &$var2) { echo TEST; }; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="83">
+	<ExpressionStatement start="6" end="80">
+		<Assignment start="6" end="79" operator="=">
+			<VariableReference start="6" end="13" name="$lambda">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="16" end="79" isReference="false">
+				<Arguments>
+					<FormalParameter start="26" end="33" modifiers="" isMandatory="true">
+						<VariableReference start="26" end="33" name="$param1">
+						</VariableReference>
+					</FormalParameter>
+					<FormalParameterByReference start="35" end="42" modifiers="">
+						<VariableReference start="36" end="43" name="$param2">
+						</VariableReference>
+					</FormalParameterByReference>
+				</Arguments>
+				<LexicalVars>
+					<VariableReference start="50" end="55" name="$var1">
+					</VariableReference>
+					<ReferenceExpression start="57" end="63">
+						<VariableReference start="58" end="63" name="$var2">
+						</VariableReference>
+					</ReferenceExpression>
+				</LexicalVars>
+				<EchoStatement start="67" end="77">
+					<Scalar start="72" end="76" type="string" value="TEST">
+					</Scalar>
+				</EchoStatement>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="81" end="83">
+	</EmptyStatement>
+</ModuleDeclaration>

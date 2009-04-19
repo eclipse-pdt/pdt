@@ -1,0 +1,25 @@
+--TEST--
+Test Hash Table Variable
+--FILE--
+<?php $a{'name'}; $a{'name'} = 6;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="35">
+	<ExpressionStatement start="6" end="17">
+		<ArrayVariableReference start="6" end="16" type="hashtable" name="$a">
+			<Scalar start="9" end="15" type="string" value="&apos;name&apos;">
+			</Scalar>
+		</ArrayVariableReference>
+	</ExpressionStatement>
+	<ExpressionStatement start="18" end="33">
+		<Assignment start="18" end="32" operator="=">
+			<ArrayVariableReference start="18" end="28" type="hashtable" name="$a">
+				<Scalar start="21" end="27" type="string" value="&apos;name&apos;">
+				</Scalar>
+			</ArrayVariableReference>
+			<Scalar start="31" end="32" type="int" value="6">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="33" end="35">
+	</EmptyStatement>
+</ModuleDeclaration>

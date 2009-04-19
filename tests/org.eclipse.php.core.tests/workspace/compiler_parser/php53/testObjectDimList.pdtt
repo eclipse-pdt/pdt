@@ -1,0 +1,65 @@
+--TEST--
+Test Object Dim List
+--FILE--
+<?php $obj = new StdClass(); $obj->foo = "bar"; print $obj->foo{2}; print $obj->foo[2]; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="90">
+	<ExpressionStatement start="6" end="28">
+		<Assignment start="6" end="27" operator="=">
+			<VariableReference start="6" end="10" name="$obj">
+			</VariableReference>
+			<ClassInstanceCreation start="13" end="27">
+				<FullyQualifiedReference start="17" end="25" name="StdClass">
+				</FullyQualifiedReference>
+				<PHPCallArgumentsList start="26" end="26">
+				</PHPCallArgumentsList>
+			</ClassInstanceCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="29" end="47">
+		<Assignment start="29" end="46" operator="=">
+			<FieldAccess start="29" end="38">
+				<VariableReference start="29" end="33" name="$obj">
+				</VariableReference>
+				<SimpleReference start="35" end="38" name="foo">
+				</SimpleReference>
+			</FieldAccess>
+			<Scalar start="41" end="46" type="string" value="&quot;bar&quot;">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="48" end="67">
+		<PHPCallExpression start="48" end="66">
+			<SimpleReference start="48" end="53" name="print">
+			</SimpleReference>
+			<PHPCallArgumentsList start="54" end="66">
+				<FieldAccess start="54" end="66">
+					<VariableReference start="54" end="58" name="$obj">
+					</VariableReference>
+					<ArrayVariableReference start="60" end="66" type="hashtable" name="foo">
+						<Scalar start="64" end="65" type="int" value="2">
+						</Scalar>
+					</ArrayVariableReference>
+				</FieldAccess>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="68" end="87">
+		<PHPCallExpression start="68" end="86">
+			<SimpleReference start="68" end="73" name="print">
+			</SimpleReference>
+			<PHPCallArgumentsList start="74" end="86">
+				<FieldAccess start="74" end="86">
+					<VariableReference start="74" end="78" name="$obj">
+					</VariableReference>
+					<ArrayVariableReference start="80" end="86" type="array" name="foo">
+						<Scalar start="84" end="85" type="int" value="2">
+						</Scalar>
+					</ArrayVariableReference>
+				</FieldAccess>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="88" end="90">
+	</EmptyStatement>
+</ModuleDeclaration>

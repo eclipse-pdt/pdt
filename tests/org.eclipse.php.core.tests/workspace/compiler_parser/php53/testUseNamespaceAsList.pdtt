@@ -1,0 +1,62 @@
+--TEST--
+Test Use Namespace As List
+--FILE--
+<?php use A\B\C as Z, Y as X; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="32">
+	<UseStatement start="6" end="29">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="10" end="15" name="A\B\C">
+					<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<SimpleReference start="19" end="20" name="Z">
+				</SimpleReference>
+			</UsePart>
+			<FullyQualifiedReference start="10" end="15" name="A\B\C">
+				<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<SimpleReference start="19" end="20" name="Z">
+			</SimpleReference>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="22" end="23" name="Y">
+				</FullyQualifiedReference>
+				<SimpleReference start="27" end="28" name="X">
+				</SimpleReference>
+			</UsePart>
+			<FullyQualifiedReference start="22" end="23" name="Y">
+			</FullyQualifiedReference>
+			<SimpleReference start="27" end="28" name="X">
+			</SimpleReference>
+		</Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="10" end="15" name="A\B\C">
+				<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<SimpleReference start="19" end="20" name="Z">
+			</SimpleReference>
+		</UsePart>
+		<FullyQualifiedReference start="10" end="15" name="A\B\C">
+			<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+			</NamespaceReference>
+		</FullyQualifiedReference>
+		<SimpleReference start="19" end="20" name="Z">
+		</SimpleReference>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="22" end="23" name="Y">
+			</FullyQualifiedReference>
+			<SimpleReference start="27" end="28" name="X">
+			</SimpleReference>
+		</UsePart>
+		<FullyQualifiedReference start="22" end="23" name="Y">
+		</FullyQualifiedReference>
+		<SimpleReference start="27" end="28" name="X">
+		</SimpleReference>
+	</UseStatement>
+	<EmptyStatement start="30" end="32">
+	</EmptyStatement>
+</ModuleDeclaration>
+

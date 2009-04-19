@@ -1,0 +1,35 @@
+--TEST--
+Test And Operation
+--FILE--
+<?php foo() & $a->bar(); $a & $b; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="36">
+	<ExpressionStatement start="6" end="24">
+		<InfixExpression start="6" end="23" operator="&amp;">
+			<PHPCallExpression start="6" end="11">
+				<SimpleReference start="6" end="9" name="foo">
+				</SimpleReference>
+				<PHPCallArgumentsList start="10" end="10">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<PHPCallExpression start="14" end="23">
+				<VariableReference start="14" end="16" name="$a">
+				</VariableReference>
+				<SimpleReference start="18" end="21" name="bar">
+				</SimpleReference>
+				<PHPCallArgumentsList start="22" end="22">
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="25" end="33">
+		<InfixExpression start="25" end="32" operator="&amp;">
+			<VariableReference start="25" end="27" name="$a">
+			</VariableReference>
+			<VariableReference start="30" end="32" name="$b">
+			</VariableReference>
+		</InfixExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="34" end="36">
+	</EmptyStatement>
+</ModuleDeclaration>

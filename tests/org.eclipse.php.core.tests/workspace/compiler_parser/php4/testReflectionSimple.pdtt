@@ -1,0 +1,15 @@
+--TEST--
+Test Reflection Simple
+--FILE--
+<?php $$a;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="12">
+	<ExpressionStatement start="6" end="10">
+		<ReflectionVariableReference start="6" end="9">
+			<VariableReference start="7" end="9" name="$a">
+			</VariableReference>
+		</ReflectionVariableReference>
+	</ExpressionStatement>
+	<EmptyStatement start="10" end="12">
+	</EmptyStatement>
+</ModuleDeclaration>

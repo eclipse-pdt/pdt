@@ -1,0 +1,18 @@
+--TEST--
+Test Error Class Statement8
+--FILE--
+<?php class A { function f(){}?>
+--EXPECT--
+<ModuleDeclaration start="0" end="32">
+	<ClassDeclaration start="6" end="32" modifiers="" name="A">
+		<PHPMethodDeclaration start="16" end="30" modifiers="public" name="f">
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="30" end="32">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="29" end="30">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>
+

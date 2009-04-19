@@ -1,0 +1,28 @@
+--TEST--
+Test Interface Declaration With Declarations
+--FILE--
+<?php interface MyInterface extends Interface1, Interface2 { const MY_CONSTANT = 3; public function myFunction($a); } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="120">
+	<InterfaceDeclaration start="6" end="117" modifiers="" name="MyInterface">
+		<FullyQualifiedReference start="36" end="46" name="Interface1">
+		</FullyQualifiedReference>
+		<FullyQualifiedReference start="48" end="58" name="Interface2">
+		</FullyQualifiedReference>
+		<ConstantDeclaration start="61" end="82" modifiers="">
+			<ConstantReference start="67" end="78" name="MY_CONSTANT">
+			</ConstantReference>
+			<Scalar start="81" end="82" type="int" value="3">
+			</Scalar>
+		</ConstantDeclaration>
+		<PHPMethodDeclaration start="84" end="115" modifiers="public" name="myFunction">
+			<FormalParameter start="111" end="113" modifiers="" isMandatory="true">
+				<VariableReference start="111" end="113" name="$a">
+				</VariableReference>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</InterfaceDeclaration>
+	<EmptyStatement start="118" end="120">
+	</EmptyStatement>
+</ModuleDeclaration>
+

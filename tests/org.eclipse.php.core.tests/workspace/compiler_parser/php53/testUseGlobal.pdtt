@@ -1,0 +1,26 @@
+--TEST--
+Test Use Global
+--FILE--
+<?php use \A; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="16">
+	<UseStatement start="6" end="13">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="11" end="12" name="A">
+				</FullyQualifiedReference>
+			</UsePart>
+			<FullyQualifiedReference start="11" end="12" name="A">
+			</FullyQualifiedReference>
+		</Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="11" end="12" name="A">
+			</FullyQualifiedReference>
+		</UsePart>
+		<FullyQualifiedReference start="11" end="12" name="A">
+		</FullyQualifiedReference>
+	</UseStatement>
+	<EmptyStatement start="14" end="16">
+	</EmptyStatement>
+</ModuleDeclaration>
+

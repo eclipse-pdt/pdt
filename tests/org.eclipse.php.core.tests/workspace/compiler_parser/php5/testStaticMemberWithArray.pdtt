@@ -1,0 +1,21 @@
+--TEST--
+Test Static Member With Array
+--FILE--
+<?php MyClass::$$a[5];?>
+--EXPECT--
+<ModuleDeclaration start="0" end="24">
+	<ExpressionStatement start="6" end="22">
+		<StaticFieldAccess start="6" end="21">
+			<TypeReference start="6" end="13" name="MyClass">
+			</TypeReference>
+			<ReflectionVariableReference start="15" end="21">
+				<ArrayVariableReference start="16" end="21" type="array" name="$a">
+					<Scalar start="19" end="20" type="int" value="5">
+					</Scalar>
+				</ArrayVariableReference>
+			</ReflectionVariableReference>
+		</StaticFieldAccess>
+	</ExpressionStatement>
+	<EmptyStatement start="22" end="24">
+	</EmptyStatement>
+</ModuleDeclaration>

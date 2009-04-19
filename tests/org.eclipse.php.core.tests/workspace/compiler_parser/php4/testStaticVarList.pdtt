@@ -1,0 +1,21 @@
+--TEST--
+Test Static Var List
+--FILE--
+<?php function Test(){ static $count = 0, $count1;}?>
+--EXPECT--
+<ModuleDeclaration start="0" end="53">
+	<PHPMethodDeclaration start="6" end="51" modifiers="" name="Test">
+		<StaticStatement start="23" end="50">
+			<Assignment start="30" end="40" operator="=">
+				<VariableReference start="30" end="36" name="$count">
+				</VariableReference>
+				<Scalar start="39" end="40" type="int" value="0">
+				</Scalar>
+			</Assignment>
+			<VariableReference start="42" end="49" name="$count1">
+			</VariableReference>
+		</StaticStatement>
+	</PHPMethodDeclaration>
+	<EmptyStatement start="51" end="53">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,45 @@
+--TEST--
+Test Assignment
+--FILE--
+<?php $a = 1; $a = $b + 1; $a += 1; $a <<= 1; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="48">
+	<ExpressionStatement start="6" end="13">
+		<Assignment start="6" end="12" operator="=">
+			<VariableReference start="6" end="8" name="$a">
+			</VariableReference>
+			<Scalar start="11" end="12" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="14" end="26">
+		<Assignment start="14" end="25" operator="=">
+			<VariableReference start="14" end="16" name="$a">
+			</VariableReference>
+			<InfixExpression start="19" end="25" operator="+">
+				<VariableReference start="19" end="21" name="$b">
+				</VariableReference>
+				<Scalar start="24" end="25" type="int" value="1">
+				</Scalar>
+			</InfixExpression>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="27" end="35">
+		<Assignment start="27" end="34" operator="+=">
+			<VariableReference start="27" end="29" name="$a">
+			</VariableReference>
+			<Scalar start="33" end="34" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="36" end="45">
+		<Assignment start="36" end="44" operator="&lt;&lt;=">
+			<VariableReference start="36" end="38" name="$a">
+			</VariableReference>
+			<Scalar start="43" end="44" type="int" value="1">
+			</Scalar>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="46" end="48">
+	</EmptyStatement>
+</ModuleDeclaration>

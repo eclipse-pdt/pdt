@@ -1,0 +1,55 @@
+--TEST--
+Test Empty For Statement
+--FILE--
+<?php for ($i = 1, $j = 0; $i <= 10; $j += $i, print $i, $i++); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="66">
+	<ForStatement start="0" end="0">
+		<Initializations>
+			<Assignment start="11" end="17" operator="=">
+				<VariableReference start="11" end="13" name="$i">
+				</VariableReference>
+				<Scalar start="16" end="17" type="int" value="1">
+				</Scalar>
+			</Assignment>
+			<Assignment start="19" end="25" operator="=">
+				<VariableReference start="19" end="21" name="$j">
+				</VariableReference>
+				<Scalar start="24" end="25" type="int" value="0">
+				</Scalar>
+			</Assignment>
+		</Initializations>
+		<Conditions>
+			<InfixExpression start="27" end="35" operator="&lt;=">
+				<VariableReference start="27" end="29" name="$i">
+				</VariableReference>
+				<Scalar start="33" end="35" type="int" value="10">
+				</Scalar>
+			</InfixExpression>
+		</Conditions>
+		<Increasements>
+			<Assignment start="37" end="45" operator="+=">
+				<VariableReference start="37" end="39" name="$j">
+				</VariableReference>
+				<VariableReference start="43" end="45" name="$i">
+				</VariableReference>
+			</Assignment>
+			<PHPCallExpression start="47" end="55">
+				<SimpleReference start="47" end="52" name="print">
+				</SimpleReference>
+				<PHPCallArgumentsList start="53" end="55">
+					<VariableReference start="53" end="55" name="$i">
+					</VariableReference>
+				</PHPCallArgumentsList>
+			</PHPCallExpression>
+			<PostfixExpression start="57" end="61" operator="++">
+				<VariableReference start="57" end="59" name="$i">
+				</VariableReference>
+			</PostfixExpression>
+		</Increasements>
+		<EmptyStatement start="62" end="63">
+		</EmptyStatement>
+	</ForStatement>
+	<EmptyStatement start="64" end="66">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,40 @@
+--TEST--
+Test Class Declaration With Declarations
+--FILE--
+<?php class MyClass extends SuperClass { var $myVar = 5, $yourVar; var $anotherOne; function myFunction($a, $b = 6) { }  } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="125">
+	<ClassDeclaration start="6" end="122" modifiers="" name="MyClass">
+		<FullyQualifiedReference start="28" end="38" name="SuperClass">
+		</FullyQualifiedReference>
+		<PHPFieldDeclaration start="45" end="55" modifiers="public">
+			<SimpleReference start="45" end="51" name="$myVar">
+			</SimpleReference>
+			<Scalar start="54" end="55" type="int" value="5">
+			</Scalar>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="57" end="65" modifiers="public">
+			<SimpleReference start="57" end="65" name="$yourVar">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPFieldDeclaration start="71" end="82" modifiers="public">
+			<SimpleReference start="71" end="82" name="$anotherOne">
+			</SimpleReference>
+		</PHPFieldDeclaration>
+		<PHPMethodDeclaration start="84" end="119" modifiers="public" name="myFunction">
+			<FormalParameter start="104" end="106" modifiers="" isMandatory="true">
+				<VariableReference start="104" end="106" name="$a">
+				</VariableReference>
+			</FormalParameter>
+			<FormalParameter start="108" end="114" modifiers="" isMandatory="false">
+				<VariableReference start="108" end="110" name="$b">
+				</VariableReference>
+				<Scalar start="113" end="114" type="int" value="6">
+				</Scalar>
+			</FormalParameter>
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="123" end="125">
+	</EmptyStatement>
+</ModuleDeclaration>
+

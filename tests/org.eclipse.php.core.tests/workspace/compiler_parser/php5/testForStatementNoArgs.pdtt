@@ -1,0 +1,17 @@
+--TEST--
+Test For Statement No Args
+--FILE--
+<?php for (; ; )  ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="20">
+	<ForStatement start="0" end="0">
+		<Initializations>
+		</Initializations>
+		<Conditions>
+		</Conditions>
+		<Increasements>
+		</Increasements>
+		<EmptyStatement start="18" end="20">
+		</EmptyStatement>
+	</ForStatement>
+</ModuleDeclaration>

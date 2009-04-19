@@ -1,0 +1,17 @@
+--TEST--
+Test Error Interface List2
+--FILE--
+<?php class A implements 3 {} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="32">
+	<ClassDeclaration start="6" end="29" modifiers="" name="A">
+	</ClassDeclaration>
+	<EmptyStatement start="30" end="32">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="25" end="26">
+		</ASTError>
+		<ASTError start="14" end="24">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

@@ -1,0 +1,29 @@
+--TEST--
+Test Use Filename
+--FILE--
+<?php use("c:\data\info.txt");  use "c:\data\info.txt";?>
+--EXPECT--
+<ModuleDeclaration start="0" end="57">
+	<ExpressionStatement start="6" end="30">
+		<PHPCallExpression start="6" end="29">
+			<SimpleReference start="6" end="9" name="use">
+			</SimpleReference>
+			<PHPCallArgumentsList start="9" end="29">
+				<Scalar start="9" end="29" type="string" value="&quot;c:\data\info.txt&quot;">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="32" end="55">
+		<PHPCallExpression start="32" end="54">
+			<SimpleReference start="32" end="35" name="use">
+			</SimpleReference>
+			<PHPCallArgumentsList start="36" end="54">
+				<Scalar start="36" end="54" type="string" value="&quot;c:\data\info.txt&quot;">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="55" end="57">
+	</EmptyStatement>
+</ModuleDeclaration>

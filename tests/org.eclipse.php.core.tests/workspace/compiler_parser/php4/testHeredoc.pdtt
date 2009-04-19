@@ -1,0 +1,35 @@
+--TEST--
+Test Heredoc
+--FILE--
+<?php <<<Heredoc
+  This is here documents 
+Heredoc;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="54">
+	<ExpressionStatement start="6" end="51">
+		<Quote start="6" end="50" type="heredoc">
+			<Scalar start="17" end="19" type="string" value="  ">
+			</Scalar>
+			<Scalar start="19" end="23" type="string" value="This">
+			</Scalar>
+			<Scalar start="23" end="24" type="string" value=" ">
+			</Scalar>
+			<Scalar start="24" end="26" type="string" value="is">
+			</Scalar>
+			<Scalar start="26" end="27" type="string" value=" ">
+			</Scalar>
+			<Scalar start="27" end="31" type="string" value="here">
+			</Scalar>
+			<Scalar start="31" end="32" type="string" value=" ">
+			</Scalar>
+			<Scalar start="32" end="41" type="string" value="documents">
+			</Scalar>
+			<Scalar start="41" end="43" type="string" value=" 
+">
+			</Scalar>
+		</Quote>
+	</ExpressionStatement>
+	<EmptyStatement start="52" end="54">
+	</EmptyStatement>
+</ModuleDeclaration>

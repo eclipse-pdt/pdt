@@ -1,0 +1,17 @@
+--TEST--
+Test Scalar
+--FILE--
+<?php "${guy}"; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="18">
+	<ExpressionStatement start="6" end="15">
+		<Quote start="6" end="14" type="quote">
+			<ReflectionVariableReference start="7" end="13">
+				<Scalar start="9" end="12" type="string" value="guy">
+				</Scalar>
+			</ReflectionVariableReference>
+		</Quote>
+	</ExpressionStatement>
+	<EmptyStatement start="16" end="18">
+	</EmptyStatement>
+</ModuleDeclaration>

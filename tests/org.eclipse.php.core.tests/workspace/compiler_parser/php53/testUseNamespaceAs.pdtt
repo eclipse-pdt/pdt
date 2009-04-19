@@ -1,0 +1,42 @@
+--TEST--
+Test Use Namespace As
+--FILE--
+<?php use A\B\C as Z; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="24">
+	<UseStatement start="6" end="21">
+		<Parts>
+			<UsePart start="0" end="0">
+				<FullyQualifiedReference start="10" end="15" name="A\B\C">
+					<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+					</NamespaceReference>
+				</FullyQualifiedReference>
+				<SimpleReference start="19" end="20" name="Z">
+				</SimpleReference>
+			</UsePart>
+			<FullyQualifiedReference start="10" end="15" name="A\B\C">
+				<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<SimpleReference start="19" end="20" name="Z">
+			</SimpleReference>
+		</Parts>
+		<UsePart start="0" end="0">
+			<FullyQualifiedReference start="10" end="15" name="A\B\C">
+				<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+				</NamespaceReference>
+			</FullyQualifiedReference>
+			<SimpleReference start="19" end="20" name="Z">
+			</SimpleReference>
+		</UsePart>
+		<FullyQualifiedReference start="10" end="15" name="A\B\C">
+			<NamespaceReference start="10" end="13" name="A\B" global="false" local="false">
+			</NamespaceReference>
+		</FullyQualifiedReference>
+		<SimpleReference start="19" end="20" name="Z">
+		</SimpleReference>
+	</UseStatement>
+	<EmptyStatement start="22" end="24">
+	</EmptyStatement>
+</ModuleDeclaration>
+

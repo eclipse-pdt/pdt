@@ -1,0 +1,19 @@
+--TEST--
+Test Class Instanciation Variable
+--FILE--
+<?php new $a('start');?>
+--EXPECT--
+<ModuleDeclaration start="0" end="24">
+	<ExpressionStatement start="6" end="22">
+		<ClassInstanceCreation start="6" end="21">
+			<VariableReference start="10" end="12" name="$a">
+			</VariableReference>
+			<PHPCallArgumentsList start="13" end="20">
+				<Scalar start="13" end="20" type="string" value="&apos;start&apos;">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="22" end="24">
+	</EmptyStatement>
+</ModuleDeclaration>

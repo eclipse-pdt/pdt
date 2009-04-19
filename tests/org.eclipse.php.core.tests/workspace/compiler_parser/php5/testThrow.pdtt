@@ -1,0 +1,19 @@
+--TEST--
+Test Throw
+--FILE--
+<?php  throw new Exception('Division by zero.'); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="51">
+	<ThrowStatement start="7" end="48">
+		<ClassInstanceCreation start="13" end="47">
+			<TypeReference start="17" end="26" name="Exception">
+			</TypeReference>
+			<PHPCallArgumentsList start="27" end="46">
+				<Scalar start="27" end="46" type="string" value="&apos;Division by zero.&apos;">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ThrowStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,15 @@
+--TEST--
+Test Empty Heredoc
+--FILE--
+<?php <<<Heredoc
+Heredoc;
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="28">
+	<ASTError start="6" end="28">
+	</ASTError>
+	<Errors>
+		<ASTError start="28" end="28">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

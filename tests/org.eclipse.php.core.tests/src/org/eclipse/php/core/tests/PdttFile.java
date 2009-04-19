@@ -1,7 +1,9 @@
 package org.eclipse.php.core.tests;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 import junit.framework.Assert;
 
@@ -33,13 +35,32 @@ public class PdttFile {
 	private String expected = "";
 
 	/**
-	 * Constructs new PdttFileReader
+	 * Constructs new PdttFile
 	 * @param fileName
 	 * @throws Exception
 	 */
 	public PdttFile(String fileName) throws Exception {
 		this.fileName = fileName;
 		parse();
+	}
+	
+	/**
+	 * Constructs new PdttFile
+	 * @param fileName .pdtt file name 
+	 * @param description Test description
+	 * @param configuration Config section
+	 * @param file PHP source code
+	 * @param expected Expected result
+	 */
+	public PdttFile(String fileName, String description, String configuration, String file, String expected) {
+		if (fileName == null || description == null || file == null || expected == null) {
+			throw new IllegalArgumentException();
+		}
+		this.fileName = fileName;
+		this.description = description;
+		this.configuration = configuration;
+		this.file = file;
+		this.expected = expected;
 	}
 
 	/**
@@ -99,6 +120,29 @@ public class PdttFile {
 			}
 			line = bReader.readLine();
 		}
+	}
+	
+	/**
+	 * Dumps this file back to the disk
+	 * @throws Exception
+	 */
+	public void write() throws Exception {
+		PrintWriter w = new PrintWriter(new FileWriter(fileName));
+		writeStates(w);
+		w.close();
+	}
+	
+	protected void writeStates(PrintWriter w) {
+		w.println("--TEST--");
+		w.println(description);
+		if (configuration != null) {
+			w.println("--CONFIG--");
+			w.println(configuration);
+		}
+		w.println("--FILE--");
+		w.println(file);
+		w.println("--EXPECT--");
+		w.println(expected);
 	}
 	
 	/**

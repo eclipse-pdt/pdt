@@ -1,0 +1,13 @@
+--TEST--
+Test Error Interface List3
+--FILE--
+<?php class A implements B {} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="32">
+	<ClassDeclaration start="6" end="29" modifiers="" name="A">
+		<FullyQualifiedReference start="25" end="26" name="B">
+		</FullyQualifiedReference>
+	</ClassDeclaration>
+	<EmptyStatement start="30" end="32">
+	</EmptyStatement>
+</ModuleDeclaration>

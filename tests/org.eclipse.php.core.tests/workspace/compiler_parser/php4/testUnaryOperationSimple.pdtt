@@ -1,0 +1,15 @@
+--TEST--
+Test Unary Operation Simple
+--FILE--
+<?php +$a;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="12">
+	<ExpressionStatement start="6" end="10">
+		<UnaryOperation start="6" end="9" operator="+">
+			<VariableReference start="7" end="9" name="$a">
+			</VariableReference>
+		</UnaryOperation>
+	</ExpressionStatement>
+	<EmptyStatement start="10" end="12">
+	</EmptyStatement>
+</ModuleDeclaration>

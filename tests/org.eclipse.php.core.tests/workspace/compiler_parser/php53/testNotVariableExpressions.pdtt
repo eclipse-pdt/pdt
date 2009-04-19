@@ -1,0 +1,127 @@
+--TEST--
+Test Not Variable Expressions
+--FILE--
+<?php 2||5 ; 2&&5; 2 OR 5 ; 2 AND 5; 2 XOR 5 ; 2|5; 2^5 ; 2/5; 2%5 ; 2<<5 ; 2>>5 ; !5 ; (double)6 ; (array)6; (object)7; (unset)5;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="132">
+	<ExpressionStatement start="6" end="12">
+		<InfixExpression start="6" end="10" operator="||">
+			<Scalar start="6" end="7" type="int" value="2">
+			</Scalar>
+			<Scalar start="9" end="10" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="13" end="18">
+		<InfixExpression start="13" end="17" operator="&amp;&amp;">
+			<Scalar start="13" end="14" type="int" value="2">
+			</Scalar>
+			<Scalar start="16" end="17" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="19" end="27">
+		<InfixExpression start="19" end="25" operator="or">
+			<Scalar start="19" end="20" type="int" value="2">
+			</Scalar>
+			<Scalar start="24" end="25" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="28" end="36">
+		<InfixExpression start="28" end="35" operator="and">
+			<Scalar start="28" end="29" type="int" value="2">
+			</Scalar>
+			<Scalar start="34" end="35" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="37" end="46">
+		<InfixExpression start="37" end="44" operator="xor">
+			<Scalar start="37" end="38" type="int" value="2">
+			</Scalar>
+			<Scalar start="43" end="44" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="47" end="51">
+		<InfixExpression start="47" end="50" operator="|">
+			<Scalar start="47" end="48" type="int" value="2">
+			</Scalar>
+			<Scalar start="49" end="50" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="52" end="57">
+		<InfixExpression start="52" end="55" operator="^">
+			<Scalar start="52" end="53" type="int" value="2">
+			</Scalar>
+			<Scalar start="54" end="55" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="58" end="62">
+		<InfixExpression start="58" end="61" operator="/">
+			<Scalar start="58" end="59" type="int" value="2">
+			</Scalar>
+			<Scalar start="60" end="61" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="63" end="68">
+		<InfixExpression start="63" end="66" operator="%">
+			<Scalar start="63" end="64" type="int" value="2">
+			</Scalar>
+			<Scalar start="65" end="66" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="69" end="75">
+		<InfixExpression start="69" end="73" operator="&lt;&lt;">
+			<Scalar start="69" end="70" type="int" value="2">
+			</Scalar>
+			<Scalar start="72" end="73" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="76" end="82">
+		<InfixExpression start="76" end="80" operator="&gt;&gt;">
+			<Scalar start="76" end="77" type="int" value="2">
+			</Scalar>
+			<Scalar start="79" end="80" type="int" value="5">
+			</Scalar>
+		</InfixExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="83" end="87">
+		<UnaryOperation start="83" end="85" operator="!">
+			<Scalar start="84" end="85" type="int" value="5">
+			</Scalar>
+		</UnaryOperation>
+	</ExpressionStatement>
+	<ExpressionStatement start="88" end="99">
+		<CastExpression start="88" end="97" type="real">
+			<Scalar start="96" end="97" type="int" value="6">
+			</Scalar>
+		</CastExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="100" end="109">
+		<CastExpression start="100" end="108" type="array">
+			<Scalar start="107" end="108" type="int" value="6">
+			</Scalar>
+		</CastExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="110" end="120">
+		<CastExpression start="110" end="119" type="object">
+			<Scalar start="118" end="119" type="int" value="7">
+			</Scalar>
+		</CastExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="121" end="130">
+		<CastExpression start="121" end="129" type="unset">
+			<Scalar start="128" end="129" type="int" value="5">
+			</Scalar>
+		</CastExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="130" end="132">
+	</EmptyStatement>
+</ModuleDeclaration>

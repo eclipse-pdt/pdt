@@ -1,0 +1,35 @@
+--TEST--
+Test Unset Vars
+--FILE--
+<?php unset($obj[2]); unset($foo1, $foo2, $foo3);?>
+--EXPECT--
+<ModuleDeclaration start="0" end="51">
+	<ExpressionStatement start="6" end="21">
+		<PHPCallExpression start="6" end="20">
+			<SimpleReference start="6" end="11" name="unset">
+			</SimpleReference>
+			<PHPCallArgumentsList start="12" end="19">
+				<ArrayVariableReference start="12" end="19" type="array" name="$obj">
+					<Scalar start="17" end="18" type="int" value="2">
+					</Scalar>
+				</ArrayVariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="22" end="49">
+		<PHPCallExpression start="22" end="48">
+			<SimpleReference start="22" end="27" name="unset">
+			</SimpleReference>
+			<PHPCallArgumentsList start="28" end="47">
+				<VariableReference start="28" end="33" name="$foo1">
+				</VariableReference>
+				<VariableReference start="35" end="40" name="$foo2">
+				</VariableReference>
+				<VariableReference start="42" end="47" name="$foo3">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

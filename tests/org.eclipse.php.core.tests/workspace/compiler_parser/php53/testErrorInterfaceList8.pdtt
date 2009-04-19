@@ -1,0 +1,19 @@
+--TEST--
+Test Error Interface List8
+--FILE--
+<?php interface A extends B, {} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="34">
+	<InterfaceDeclaration start="6" end="31" modifiers="" name="A">
+		<FullyQualifiedReference start="26" end="27" name="B">
+		</FullyQualifiedReference>
+	</InterfaceDeclaration>
+	<EmptyStatement start="32" end="34">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="29" end="30">
+		</ASTError>
+		<ASTError start="27" end="28">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

@@ -1,0 +1,43 @@
+--TEST--
+Test For Each Statement With Value
+--FILE--
+<?php foreach ($arr as $key => $value) { echo "Key: $key; Value: $value<br />
+"; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="85">
+	<ForEachStatement start="6" end="82">
+		<VariableReference start="15" end="19" name="$arr">
+		</VariableReference>
+		<VariableReference start="23" end="27" name="$key">
+		</VariableReference>
+		<VariableReference start="31" end="37" name="$value">
+		</VariableReference>
+		<EchoStatement start="41" end="80">
+			<Quote start="46" end="79" type="quote">
+				<Scalar start="47" end="50" type="string" value="Key">
+				</Scalar>
+				<Scalar start="50" end="52" type="string" value=": ">
+				</Scalar>
+				<VariableReference start="52" end="56" name="$key">
+				</VariableReference>
+				<Scalar start="56" end="58" type="string" value="; ">
+				</Scalar>
+				<Scalar start="58" end="63" type="string" value="Value">
+				</Scalar>
+				<Scalar start="63" end="65" type="string" value=": ">
+				</Scalar>
+				<VariableReference start="65" end="71" name="$value">
+				</VariableReference>
+				<Scalar start="71" end="72" type="string" value="&lt;">
+				</Scalar>
+				<Scalar start="72" end="74" type="string" value="br">
+				</Scalar>
+				<Scalar start="74" end="78" type="string" value=" /&gt;
+">
+				</Scalar>
+			</Quote>
+		</EchoStatement>
+	</ForEachStatement>
+	<EmptyStatement start="83" end="85">
+	</EmptyStatement>
+</ModuleDeclaration>

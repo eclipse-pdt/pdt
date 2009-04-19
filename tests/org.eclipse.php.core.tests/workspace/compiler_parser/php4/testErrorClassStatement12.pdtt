@@ -1,0 +1,13 @@
+--TEST--
+Test Error Class Statement12
+--FILE--
+<?php for(;;){  function f(){} for(;)  ?>
+--EXPECT--
+<ModuleDeclaration start="13" end="37">
+	<PHPMethodDeclaration start="16" end="30" modifiers="" name="f">
+	</PHPMethodDeclaration>
+	<Errors>
+		<ASTError start="36" end="37">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

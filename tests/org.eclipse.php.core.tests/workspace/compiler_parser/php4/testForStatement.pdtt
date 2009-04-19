@@ -1,0 +1,37 @@
+--TEST--
+Test For Statement
+--FILE--
+<?php for ($i = 1; $i <= 10; $i++) {  echo $i; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="51">
+	<ForStatement start="0" end="0">
+		<Initializations>
+			<Assignment start="11" end="17" operator="=">
+				<VariableReference start="11" end="13" name="$i">
+				</VariableReference>
+				<Scalar start="16" end="17" type="int" value="1">
+				</Scalar>
+			</Assignment>
+		</Initializations>
+		<Conditions>
+			<InfixExpression start="19" end="27" operator="&lt;=">
+				<VariableReference start="19" end="21" name="$i">
+				</VariableReference>
+				<Scalar start="25" end="27" type="int" value="10">
+				</Scalar>
+			</InfixExpression>
+		</Conditions>
+		<Increasements>
+			<PostfixExpression start="29" end="33" operator="++">
+				<VariableReference start="29" end="31" name="$i">
+				</VariableReference>
+			</PostfixExpression>
+		</Increasements>
+		<EchoStatement start="38" end="46">
+			<VariableReference start="43" end="45" name="$i">
+			</VariableReference>
+		</EchoStatement>
+	</ForStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

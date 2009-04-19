@@ -1,0 +1,43 @@
+--TEST--
+Test Class Instanciation Function
+--FILE--
+<?php new $a->$b(1, $a); new $a1->$b->$c(1);?>
+--EXPECT--
+<ModuleDeclaration start="0" end="46">
+	<ExpressionStatement start="6" end="24">
+		<ClassInstanceCreation start="6" end="23">
+			<FieldAccess start="10" end="16">
+				<VariableReference start="10" end="12" name="$a">
+				</VariableReference>
+				<VariableReference start="14" end="16" name="$b">
+				</VariableReference>
+			</FieldAccess>
+			<PHPCallArgumentsList start="17" end="22">
+				<Scalar start="17" end="18" type="int" value="1">
+				</Scalar>
+				<VariableReference start="20" end="22" name="$a">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<ExpressionStatement start="25" end="44">
+		<ClassInstanceCreation start="25" end="43">
+			<FieldAccess start="29" end="40">
+				<FieldAccess start="29" end="36">
+					<VariableReference start="29" end="32" name="$a1">
+					</VariableReference>
+					<VariableReference start="34" end="36" name="$b">
+					</VariableReference>
+				</FieldAccess>
+				<VariableReference start="38" end="40" name="$c">
+				</VariableReference>
+			</FieldAccess>
+			<PHPCallArgumentsList start="41" end="42">
+				<Scalar start="41" end="42" type="int" value="1">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="44" end="46">
+	</EmptyStatement>
+</ModuleDeclaration>

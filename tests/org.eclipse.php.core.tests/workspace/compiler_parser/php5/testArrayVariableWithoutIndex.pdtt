@@ -1,0 +1,13 @@
+--TEST--
+Test Array Variable Without Index
+--FILE--
+<?php $a[]; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="14">
+	<ExpressionStatement start="6" end="11">
+		<ArrayVariableReference start="6" end="10" type="array" name="$a">
+		</ArrayVariableReference>
+	</ExpressionStatement>
+	<EmptyStatement start="12" end="14">
+	</EmptyStatement>
+</ModuleDeclaration>

@@ -1,0 +1,23 @@
+--TEST--
+Test Method Modifiers
+--FILE--
+<?php class gadi { static function foo1(){} public function foo2(){} final function foo3(){} private function foo4(){} protected function foo5(){} abstract function foo5(){}}?>
+--EXPECT--
+<ModuleDeclaration start="0" end="176">
+	<ClassDeclaration start="6" end="174" modifiers="" name="gadi">
+		<PHPMethodDeclaration start="19" end="43" modifiers="static" name="foo1">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="44" end="68" modifiers="public" name="foo2">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="69" end="92" modifiers="final" name="foo3">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="93" end="118" modifiers="private" name="foo4">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="119" end="146" modifiers="protected" name="foo5">
+		</PHPMethodDeclaration>
+		<PHPMethodDeclaration start="147" end="173" modifiers="abstract" name="foo5">
+		</PHPMethodDeclaration>
+	</ClassDeclaration>
+	<EmptyStatement start="174" end="176">
+	</EmptyStatement>
+</ModuleDeclaration>

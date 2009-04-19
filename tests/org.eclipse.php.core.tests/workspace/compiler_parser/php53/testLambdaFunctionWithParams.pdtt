@@ -1,0 +1,27 @@
+--TEST--
+Test Lambda Function With Params
+--FILE--
+<?php $lambda = function ($param1, $param2) { }; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="51">
+	<ExpressionStatement start="6" end="48">
+		<Assignment start="6" end="47" operator="=">
+			<VariableReference start="6" end="13" name="$lambda">
+			</VariableReference>
+			<LambdaFunctionDeclaration start="16" end="47" isReference="false">
+				<Arguments>
+					<FormalParameter start="26" end="33" modifiers="" isMandatory="true">
+						<VariableReference start="26" end="33" name="$param1">
+						</VariableReference>
+					</FormalParameter>
+					<FormalParameter start="35" end="42" modifiers="" isMandatory="true">
+						<VariableReference start="35" end="42" name="$param2">
+						</VariableReference>
+					</FormalParameter>
+				</Arguments>
+			</LambdaFunctionDeclaration>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="49" end="51">
+	</EmptyStatement>
+</ModuleDeclaration>

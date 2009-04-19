@@ -1,0 +1,19 @@
+--TEST--
+Test Error Interface List4
+--FILE--
+<?php class A implements B, {} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="33">
+	<ClassDeclaration start="6" end="30" modifiers="" name="A">
+		<TypeReference start="25" end="26" name="B">
+		</TypeReference>
+	</ClassDeclaration>
+	<EmptyStatement start="31" end="33">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="28" end="29">
+		</ASTError>
+		<ASTError start="26" end="27">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

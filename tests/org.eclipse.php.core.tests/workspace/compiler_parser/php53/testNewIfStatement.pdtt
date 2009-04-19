@@ -1,0 +1,21 @@
+--TEST--
+Test New If Statement
+--FILE--
+<?php if ($a):   echo 'a is bigger than b'; endif; ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="53">
+	<IfStatement start="6" end="43">
+		<Condition>
+			<VariableReference start="10" end="12" name="$a">
+			</VariableReference>
+		</Condition>
+		<TrueStatement>
+			<EchoStatement start="17" end="43">
+				<Scalar start="22" end="42" type="string" value="&apos;a is bigger than b&apos;">
+				</Scalar>
+			</EchoStatement>
+		</TrueStatement>
+	</IfStatement>
+	<EmptyStatement start="51" end="53">
+	</EmptyStatement>
+</ModuleDeclaration>

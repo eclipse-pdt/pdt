@@ -1,0 +1,17 @@
+--TEST--
+Test Static Member Simple
+--FILE--
+<?php MyClass::$a;?>
+--EXPECT--
+<ModuleDeclaration start="0" end="20">
+	<ExpressionStatement start="6" end="18">
+		<StaticFieldAccess start="6" end="17">
+			<FullyQualifiedReference start="6" end="13" name="MyClass">
+			</FullyQualifiedReference>
+			<VariableReference start="15" end="17" name="$a">
+			</VariableReference>
+		</StaticFieldAccess>
+	</ExpressionStatement>
+	<EmptyStatement start="18" end="20">
+	</EmptyStatement>
+</ModuleDeclaration>

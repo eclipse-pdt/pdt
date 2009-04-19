@@ -1,0 +1,59 @@
+--TEST--
+Test Halt
+--FILE--
+<?php exit(); die(); __halt_compiler(); exit; exit(2); {__halt_compiler();} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="78">
+	<ExpressionStatement start="6" end="13">
+		<PHPCallExpression start="6" end="12">
+			<SimpleReference start="6" end="10" name="exit">
+			</SimpleReference>
+			<PHPCallArgumentsList start="10" end="10">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="14" end="20">
+		<PHPCallExpression start="14" end="19">
+			<SimpleReference start="14" end="17" name="die">
+			</SimpleReference>
+			<PHPCallArgumentsList start="17" end="17">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="21" end="39">
+		<PHPCallExpression start="21" end="38">
+			<SimpleReference start="21" end="36" name="__halt_compiler">
+			</SimpleReference>
+			<PHPCallArgumentsList start="37" end="37">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="40" end="45">
+		<PHPCallExpression start="40" end="44">
+			<SimpleReference start="40" end="44" name="exit">
+			</SimpleReference>
+			<PHPCallArgumentsList start="44" end="44">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="46" end="54">
+		<PHPCallExpression start="46" end="53">
+			<SimpleReference start="46" end="50" name="exit">
+			</SimpleReference>
+			<PHPCallArgumentsList start="51" end="52">
+				<Scalar start="51" end="52" type="int" value="2">
+				</Scalar>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<ExpressionStatement start="56" end="74">
+		<PHPCallExpression start="56" end="73">
+			<SimpleReference start="56" end="71" name="__halt_compiler">
+			</SimpleReference>
+			<PHPCallArgumentsList start="72" end="72">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="76" end="78">
+	</EmptyStatement>
+</ModuleDeclaration>

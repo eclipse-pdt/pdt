@@ -1,0 +1,17 @@
+--TEST--
+Test Class Instanciation Simple
+--FILE--
+<?php new MyClass();?>
+--EXPECT--
+<ModuleDeclaration start="0" end="22">
+	<ExpressionStatement start="6" end="20">
+		<ClassInstanceCreation start="6" end="19">
+			<TypeReference start="10" end="17" name="MyClass">
+			</TypeReference>
+			<PHPCallArgumentsList start="18" end="18">
+			</PHPCallArgumentsList>
+		</ClassInstanceCreation>
+	</ExpressionStatement>
+	<EmptyStatement start="20" end="22">
+	</EmptyStatement>
+</ModuleDeclaration>

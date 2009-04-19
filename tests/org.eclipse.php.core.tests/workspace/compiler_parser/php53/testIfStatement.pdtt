@@ -1,0 +1,49 @@
+--TEST--
+Test If Statement
+--FILE--
+<?php if ($a > $b) {   echo 'a is bigger than b';} elseif ($a == $b) {   echo 'a is equal to b';} else {   echo 'a is smaller than b';} ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="138">
+	<IfStatement start="6" end="135">
+		<Condition>
+			<InfixExpression start="10" end="17" operator="&gt;">
+				<VariableReference start="10" end="12" name="$a">
+				</VariableReference>
+				<VariableReference start="15" end="17" name="$b">
+				</VariableReference>
+			</InfixExpression>
+		</Condition>
+		<TrueStatement>
+			<EchoStatement start="23" end="49">
+				<Scalar start="28" end="48" type="string" value="&apos;a is bigger than b&apos;">
+				</Scalar>
+			</EchoStatement>
+		</TrueStatement>
+		<FalseStatement>
+			<IfStatement start="51" end="135">
+				<Condition>
+					<InfixExpression start="59" end="67" operator="==">
+						<VariableReference start="59" end="61" name="$a">
+						</VariableReference>
+						<VariableReference start="65" end="67" name="$b">
+						</VariableReference>
+					</InfixExpression>
+				</Condition>
+				<TrueStatement>
+					<EchoStatement start="73" end="96">
+						<Scalar start="78" end="95" type="string" value="&apos;a is equal to b&apos;">
+						</Scalar>
+					</EchoStatement>
+				</TrueStatement>
+				<FalseStatement>
+					<EchoStatement start="107" end="134">
+						<Scalar start="112" end="133" type="string" value="&apos;a is smaller than b&apos;">
+						</Scalar>
+					</EchoStatement>
+				</FalseStatement>
+			</IfStatement>
+		</FalseStatement>
+	</IfStatement>
+	<EmptyStatement start="136" end="138">
+	</EmptyStatement>
+</ModuleDeclaration>

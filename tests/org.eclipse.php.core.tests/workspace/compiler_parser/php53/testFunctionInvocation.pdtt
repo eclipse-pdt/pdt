@@ -1,0 +1,17 @@
+--TEST--
+Test Function Invocation
+--FILE--
+<?php foo();?>
+--EXPECT--
+<ModuleDeclaration start="0" end="14">
+	<ExpressionStatement start="6" end="12">
+		<PHPCallExpression start="6" end="11">
+			<FullyQualifiedReference start="6" end="9" name="foo">
+			</FullyQualifiedReference>
+			<PHPCallArgumentsList start="10" end="10">
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="12" end="14">
+	</EmptyStatement>
+</ModuleDeclaration>

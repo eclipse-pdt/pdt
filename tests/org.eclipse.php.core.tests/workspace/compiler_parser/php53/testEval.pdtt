@@ -1,0 +1,20 @@
+--TEST--
+Test Eval
+--FILE--
+<?php eval($a); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="18">
+	<ExpressionStatement start="6" end="15">
+		<PHPCallExpression start="6" end="14">
+			<SimpleReference start="6" end="10" name="eval">
+			</SimpleReference>
+			<PHPCallArgumentsList start="11" end="13">
+				<VariableReference start="11" end="13" name="$a">
+				</VariableReference>
+			</PHPCallArgumentsList>
+		</PHPCallExpression>
+	</ExpressionStatement>
+	<EmptyStatement start="16" end="18">
+	</EmptyStatement>
+</ModuleDeclaration>
+

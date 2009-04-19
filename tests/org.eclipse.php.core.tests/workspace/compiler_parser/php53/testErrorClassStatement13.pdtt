@@ -1,0 +1,17 @@
+--TEST--
+Test Error Class Statement13
+--FILE--
+<?php class A { public a; } ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="30">
+	<ClassDeclaration start="6" end="27" modifiers="" name="A">
+		<ASTError start="16" end="22">
+		</ASTError>
+	</ClassDeclaration>
+	<EmptyStatement start="28" end="30">
+	</EmptyStatement>
+	<Errors>
+		<ASTError start="23" end="24">
+		</ASTError>
+	</Errors>
+</ModuleDeclaration>

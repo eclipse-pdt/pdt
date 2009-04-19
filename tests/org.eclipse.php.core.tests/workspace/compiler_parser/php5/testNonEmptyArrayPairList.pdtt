@@ -1,0 +1,57 @@
+--TEST--
+Test Non Empty Array Pair List
+--FILE--
+<?php $arr = array(&$foo,&$qq); $arr1 = array(1=>&$qq(),3=>&$foo); ?>
+--EXPECT--
+<ModuleDeclaration start="0" end="69">
+	<ExpressionStatement start="6" end="31">
+		<Assignment start="6" end="30" operator="=">
+			<VariableReference start="6" end="10" name="$arr">
+			</VariableReference>
+			<ArrayCreation start="13" end="30">
+				<ArrayElement start="19" end="24">
+					<ReferenceExpression start="19" end="24">
+						<VariableReference start="20" end="24" name="$foo">
+						</VariableReference>
+					</ReferenceExpression>
+				</ArrayElement>
+				<ArrayElement start="25" end="29">
+					<ReferenceExpression start="25" end="29">
+						<VariableReference start="26" end="29" name="$qq">
+						</VariableReference>
+					</ReferenceExpression>
+				</ArrayElement>
+			</ArrayCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<ExpressionStatement start="32" end="66">
+		<Assignment start="32" end="65" operator="=">
+			<VariableReference start="32" end="37" name="$arr1">
+			</VariableReference>
+			<ArrayCreation start="40" end="65">
+				<ArrayElement start="46" end="55">
+					<Scalar start="46" end="47" type="int" value="1">
+					</Scalar>
+					<ReferenceExpression start="49" end="55">
+						<ReflectionCallExpression start="50" end="55">
+							<VariableReference start="50" end="53" name="$qq">
+							</VariableReference>
+							<PHPCallArgumentsList start="54" end="54">
+							</PHPCallArgumentsList>
+						</ReflectionCallExpression>
+					</ReferenceExpression>
+				</ArrayElement>
+				<ArrayElement start="56" end="64">
+					<Scalar start="56" end="57" type="int" value="3">
+					</Scalar>
+					<ReferenceExpression start="59" end="64">
+						<VariableReference start="60" end="64" name="$foo">
+						</VariableReference>
+					</ReferenceExpression>
+				</ArrayElement>
+			</ArrayCreation>
+		</Assignment>
+	</ExpressionStatement>
+	<EmptyStatement start="67" end="69">
+	</EmptyStatement>
+</ModuleDeclaration>

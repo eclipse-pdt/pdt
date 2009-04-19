@@ -1,0 +1,31 @@
+--TEST--
+Test Multiple Un Bracketed Namespaces2
+--FILE--
+<?php
+namespace NS1 {
+class A {}
+function bar() {}
+}
+namespace {
+class A {}
+function bar() {}
+}
+?>
+--EXPECT--
+<ModuleDeclaration start="0" end="98">
+	<NamespaceDeclaration start="6" end="52" modifiers="" name="NS1">
+		<ClassDeclaration start="22" end="32" modifiers="" name="A">
+		</ClassDeclaration>
+		<PHPMethodDeclaration start="33" end="50" modifiers="" name="bar">
+		</PHPMethodDeclaration>
+	</NamespaceDeclaration>
+	<NamespaceDeclaration start="53" end="95" modifiers="" name="__global__namespace__">
+		<ClassDeclaration start="65" end="75" modifiers="" name="A">
+		</ClassDeclaration>
+		<PHPMethodDeclaration start="76" end="93" modifiers="" name="bar">
+		</PHPMethodDeclaration>
+	</NamespaceDeclaration>
+	<EmptyStatement start="96" end="98">
+	</EmptyStatement>
+</ModuleDeclaration>
+
