@@ -1,0 +1,23 @@
+--TEST--
+Test Use Sub Namespace
+--FILE--
+<?php use A\B\C; ?> 
+--EXPECT--
+<Program start='0' length='19'>
+	<Statements>
+		<UseStatement start='6' length='10'>
+			<UseStatementPart start='10' length='5'>
+				<Name>
+					<NamespaceName start='10' length='5' global='false' current='false'>
+						<Identifier start='10' length='1' name='A'/>
+						<Identifier start='12' length='1' name='B'/>
+						<Identifier start='14' length='1' name='C'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<EmptyStatement start='17' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

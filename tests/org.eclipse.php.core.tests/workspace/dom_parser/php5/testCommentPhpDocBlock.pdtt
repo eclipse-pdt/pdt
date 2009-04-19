@@ -1,0 +1,13 @@
+--TEST--
+Test Comment Php Doc Block
+--FILE--
+<?php /** this is php doc block */ ?> 
+--EXPECT--
+<Program start='0' length='37'>
+	<Statements>
+		<EmptyStatement start='35' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='6' length='28' commentType='phpDoc'/>
+	</Comments>
+</Program>

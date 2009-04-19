@@ -1,0 +1,30 @@
+--TEST--
+Test Declare With Statement
+--FILE--
+<?php declare(ticks=2) { static $a; }; ?> 
+--EXPECT--
+<Program start='0' length='41'>
+	<Statements>
+		<DeclareStatement start='6' length='31'>
+			<Directives>
+				<Name>
+					<Identifier start='14' length='5' name='ticks'/>
+				</Name>
+				<Value>
+					<Scalar start='20' length='1' type='int' value='2'/>
+				</Value>
+			</Directives>
+			<Block start='23' length='14' isCurly='true'>
+				<StaticStatement start='25' length='10'>
+					<Variable start='32' length='2' isDollared='true'>
+						<Identifier start='33' length='1' name='a'/>
+					</Variable>
+				</StaticStatement>
+			</Block>
+		</DeclareStatement>
+		<EmptyStatement start='37' length='1'/>
+		<EmptyStatement start='39' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

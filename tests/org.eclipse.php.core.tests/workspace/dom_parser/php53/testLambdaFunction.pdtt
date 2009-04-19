@@ -1,0 +1,31 @@
+--TEST--
+Test Lambda Function
+--FILE--
+<?php $lambda = function () { }; ?>
+--EXPECT--
+<Program start='0' length='35'>
+	<Statements>
+		<ExpressionStatement start='6' length='26'>
+			<Assignment start='6' length='25' operator='='>
+				<Variable start='6' length='7' isDollared='true'>
+					<Identifier start='7' length='6' name='lambda'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='16' length='15' isReference='false'>
+						<FormalParameters>
+						</FormalParameters>
+						<LexicalVariables>
+						</LexicalVariables>
+						<FunctionBody>
+							<Block start='28' length='3' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='33' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

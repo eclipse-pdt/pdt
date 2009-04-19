@@ -1,0 +1,25 @@
+--TEST--
+Test Declare Simple
+--FILE--
+<?php declare(ticks=1) { };?> 
+--EXPECT--
+<Program start='0' length='29'>
+	<Statements>
+		<DeclareStatement start='6' length='20'>
+			<Directives>
+				<Name>
+					<Identifier start='14' length='5' name='ticks'/>
+				</Name>
+				<Value>
+					<Scalar start='20' length='1' type='int' value='1'/>
+				</Value>
+			</Directives>
+			<Block start='23' length='3' isCurly='true'>
+			</Block>
+		</DeclareStatement>
+		<EmptyStatement start='26' length='1'/>
+		<EmptyStatement start='27' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

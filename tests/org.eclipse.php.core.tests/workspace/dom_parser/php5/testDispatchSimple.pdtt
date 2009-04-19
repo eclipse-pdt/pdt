@@ -1,0 +1,26 @@
+--TEST--
+Test Dispatch Simple
+--FILE--
+<?php $a->$b;?>
+--EXPECT--
+<Program start='0' length='15'>
+	<Statements>
+		<ExpressionStatement start='6' length='7'>
+			<FieldAccess start='6' length='6'>
+				<Dispatcher>
+					<Variable start='6' length='2' isDollared='true'>
+						<Identifier start='7' length='1' name='a'/>
+					</Variable>
+				</Dispatcher>
+				<Property>
+					<Variable start='10' length='2' isDollared='true'>
+						<Identifier start='11' length='1' name='b'/>
+					</Variable>
+				</Property>
+			</FieldAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='13' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

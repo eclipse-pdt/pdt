@@ -1,0 +1,23 @@
+--TEST--
+Test Unary Operation With Function
+--FILE--
+<?php -foo();?>
+--EXPECT--
+<Program start='0' length='15'>
+	<Statements>
+		<ExpressionStatement start='6' length='7'>
+			<UnaryOperation start='6' length='6' operator='-'>
+				<FunctionInvocation start='7' length='5'>
+					<FunctionName start='7' length='3'>
+						<Identifier start='7' length='3' name='foo'/>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</UnaryOperation>
+		</ExpressionStatement>
+		<EmptyStatement start='13' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

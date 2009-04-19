@@ -1,0 +1,21 @@
+--TEST--
+Test Array Variable Without Index
+--FILE--
+<?php $a[]; ?>
+--EXPECT--
+<Program start='0' length='14'>
+	<Statements>
+		<ExpressionStatement start='6' length='5'>
+			<ArrayAccess start='6' length='4' type='array'>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<Index>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='12' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

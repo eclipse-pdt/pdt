@@ -1,0 +1,27 @@
+--TEST--
+Test Namespace Element Declarations
+--FILE--
+<?php namespace A; const C = 5; ?> 
+--EXPECT--
+<Program start='0' length='34'>
+	<Statements>
+		<NamespaceDeclaration start='6' length='28' isBracketed='true'>
+			<NamespaceName start='16' length='1' global='false' current='false'>
+				<Identifier start='16' length='1' name='A'/>
+			</NamespaceName>
+			<Block start='6' length='28' isCurly='true'>
+				<ConstantDeclaration start='19' length='12'>
+					<VariableName>
+						<Identifier start='25' length='1' name='C'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='29' length='1' type='int' value='5'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<EmptyStatement start='32' length='2'/>
+			</Block>
+		</NamespaceDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

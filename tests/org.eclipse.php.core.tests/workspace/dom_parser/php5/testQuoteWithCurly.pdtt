@@ -1,0 +1,28 @@
+--TEST--
+Test Quote With Curly
+--FILE--
+<?php $text = <<<EOF
+test{test}test
+EOF;
+?>
+--EXPECT--
+<Program start='0' length='43'>
+	<Statements>
+		<ExpressionStatement start='6' length='34'>
+			<Assignment start='6' length='33' operator='='>
+				<Variable start='6' length='5' isDollared='true'>
+					<Identifier start='7' length='4' name='text'/>
+				</Variable>
+				<Value>
+					<Quote start='14' length='25' type='heredoc'>
+						<Scalar start='21' length='17' type='string' value='test{test}test
+'/>
+					</Quote>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='41' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

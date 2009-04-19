@@ -1,0 +1,26 @@
+--TEST--
+Test Require Once
+--FILE--
+<?php require_once(A::FILE_NAME);?>
+--EXPECT--
+<Program start='0' length='35'>
+	<Statements>
+		<ExpressionStatement start='6' length='27'>
+			<Include start='6' length='26' kind='require_once'>
+				<ParenthesisExpression start='18' length='14'>
+					<StaticConstantAccess start='19' length='12'>
+						<ClassName>
+							<Identifier start='19' length='1' name='A'/>
+						</ClassName>
+						<Constant>
+							<Identifier start='22' length='9' name='FILE_NAME'/>
+						</Constant>
+					</StaticConstantAccess>
+				</ParenthesisExpression>
+			</Include>
+		</ExpressionStatement>
+		<EmptyStatement start='33' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

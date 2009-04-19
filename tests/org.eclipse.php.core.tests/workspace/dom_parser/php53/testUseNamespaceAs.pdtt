@@ -1,0 +1,26 @@
+--TEST--
+Test Use Namespace As
+--FILE--
+<?php use A\B\C as Z; ?> 
+--EXPECT--
+<Program start='0' length='24'>
+	<Statements>
+		<UseStatement start='6' length='15'>
+			<UseStatementPart start='10' length='10'>
+				<Name>
+					<NamespaceName start='10' length='5' global='false' current='false'>
+						<Identifier start='10' length='1' name='A'/>
+						<Identifier start='12' length='1' name='B'/>
+						<Identifier start='14' length='1' name='C'/>
+					</NamespaceName>
+				</Name>
+				<Alias>
+					<Identifier start='19' length='1' name='Z'/>
+				</Alias>
+			</UseStatementPart>
+		</UseStatement>
+		<EmptyStatement start='22' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

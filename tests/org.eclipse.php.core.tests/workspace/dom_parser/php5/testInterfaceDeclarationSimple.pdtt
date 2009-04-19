@@ -1,0 +1,21 @@
+--TEST--
+Test Interface Declaration Simple
+--FILE--
+<?php interface MyInterface { } ?> 
+--EXPECT--
+<Program start='0' length='34'>
+	<Statements>
+		<InterfaceDeclaration start='6' length='25'>
+			<InterfaceName>
+				<Identifier start='16' length='11' name='MyInterface'/>
+			</InterfaceName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='28' length='3' isCurly='true'>
+			</Block>
+		</InterfaceDeclaration>
+		<EmptyStatement start='32' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

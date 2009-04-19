@@ -1,0 +1,13 @@
+--TEST--
+Test Comment Multi
+--FILE--
+<?php /* this is multiline comment */ ?> 
+--EXPECT--
+<Program start='0' length='40'>
+	<Statements>
+		<EmptyStatement start='38' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='6' length='31' commentType='multiLine'/>
+	</Comments>
+</Program>

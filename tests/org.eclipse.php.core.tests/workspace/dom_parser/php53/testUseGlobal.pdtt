@@ -1,0 +1,21 @@
+--TEST--
+Test Use Global
+--FILE--
+<?php use \A; ?> 
+--EXPECT--
+<Program start='0' length='16'>
+	<Statements>
+		<UseStatement start='6' length='7'>
+			<UseStatementPart start='11' length='1'>
+				<Name>
+					<NamespaceName start='11' length='1' global='true' current='false'>
+						<Identifier start='11' length='1' name='A'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<EmptyStatement start='14' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

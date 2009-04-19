@@ -1,0 +1,29 @@
+--TEST--
+Test Class Constant
+--FILE--
+<?php $a = MyClass::MY_CONST; ?>
+--EXPECT--
+<Program start='0' length='32'>
+	<Statements>
+		<ExpressionStatement start='6' length='23'>
+			<Assignment start='6' length='22' operator='='>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<Value>
+					<StaticConstantAccess start='11' length='17'>
+						<ClassName>
+							<Identifier start='11' length='7' name='MyClass'/>
+						</ClassName>
+						<Constant>
+							<Identifier start='20' length='8' name='MY_CONST'/>
+						</Constant>
+					</StaticConstantAccess>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='30' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

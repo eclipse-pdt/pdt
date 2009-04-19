@@ -1,0 +1,17 @@
+--TEST--
+Test Break Statement
+--FILE--
+<?php break $a;?>
+--EXPECT--
+<Program start='0' length='17'>
+	<Statements>
+		<BreakStatement start='6' length='9'>
+			<Variable start='12' length='2' isDollared='true'>
+				<Identifier start='13' length='1' name='a'/>
+			</Variable>
+		</BreakStatement>
+		<EmptyStatement start='15' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

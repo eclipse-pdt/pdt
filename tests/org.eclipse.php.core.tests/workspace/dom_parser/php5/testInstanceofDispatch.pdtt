@@ -1,0 +1,33 @@
+--TEST--
+Test Instanceof Dispatch
+--FILE--
+<?php $a instanceof $b->$myClass;?>
+--EXPECT--
+<Program start='0' length='35'>
+	<Statements>
+		<ExpressionStatement start='6' length='27'>
+			<InstanceofExpression start='6' length='26'>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<ClassName start='20' length='12'>
+					<FieldAccess start='20' length='12'>
+						<Dispatcher>
+							<Variable start='20' length='2' isDollared='true'>
+								<Identifier start='21' length='1' name='b'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<Variable start='24' length='8' isDollared='true'>
+								<Identifier start='25' length='7' name='myClass'/>
+							</Variable>
+						</Property>
+					</FieldAccess>
+				</ClassName>
+			</InstanceofExpression>
+		</ExpressionStatement>
+		<EmptyStatement start='33' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

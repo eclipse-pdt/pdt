@@ -1,0 +1,29 @@
+--TEST--
+Test Static Member With Array
+--FILE--
+<?php MyClass::$$a[5];?>
+--EXPECT--
+<Program start='0' length='24'>
+	<Statements>
+		<ExpressionStatement start='6' length='16'>
+			<StaticFieldAccess start='6' length='15'>
+				<ClassName>
+					<Identifier start='6' length='7' name='MyClass'/>
+				</ClassName>
+				<ReflectionVariable start='15' length='6'>
+					<ArrayAccess start='16' length='5' type='array'>
+						<Variable start='16' length='2' isDollared='true'>
+							<Identifier start='17' length='1' name='a'/>
+						</Variable>
+						<Index>
+							<Scalar start='19' length='1' type='int' value='5'/>
+						</Index>
+					</ArrayAccess>
+				</ReflectionVariable>
+			</StaticFieldAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='22' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

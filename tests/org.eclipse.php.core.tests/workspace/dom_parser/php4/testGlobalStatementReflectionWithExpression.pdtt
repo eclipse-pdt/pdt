@@ -1,0 +1,23 @@
+--TEST--
+Test Global Statement Reflection With Expression
+--FILE--
+<?php global ${foo()}; ?>
+--EXPECT--
+<Program start='0' length='25'>
+	<Statements>
+		<GlobalStatement start='6' length='16'>
+			<ReflectionVariable start='13' length='8'>
+				<FunctionInvocation start='15' length='5'>
+					<FunctionName start='15' length='3'>
+						<Identifier start='15' length='3' name='foo'/>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</ReflectionVariable>
+		</GlobalStatement>
+		<EmptyStatement start='23' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

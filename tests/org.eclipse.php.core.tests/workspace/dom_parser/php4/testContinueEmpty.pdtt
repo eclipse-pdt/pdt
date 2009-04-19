@@ -1,0 +1,14 @@
+--TEST--
+Test Continue Empty
+--FILE--
+<?php continue;?>
+--EXPECT--
+<Program start='0' length='17'>
+	<Statements>
+		<ContinueStatement start='6' length='9'>
+		</ContinueStatement>
+		<EmptyStatement start='15' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

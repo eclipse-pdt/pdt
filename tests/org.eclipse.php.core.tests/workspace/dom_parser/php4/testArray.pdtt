@@ -1,0 +1,37 @@
+--TEST--
+Test Array
+--FILE--
+<?php array(1,2,3,);?>
+--EXPECT--
+<Program start='0' length='22'>
+	<Statements>
+		<ExpressionStatement start='6' length='14'>
+			<ArrayCreation start='6' length='13'>
+				<ArrayElement start='12' length='1'>
+					<Key>
+					</Key>
+					<Value>
+						<Scalar start='12' length='1' type='int' value='1'/>
+					</Value>
+				</ArrayElement>
+				<ArrayElement start='14' length='1'>
+					<Key>
+					</Key>
+					<Value>
+						<Scalar start='14' length='1' type='int' value='2'/>
+					</Value>
+				</ArrayElement>
+				<ArrayElement start='16' length='1'>
+					<Key>
+					</Key>
+					<Value>
+						<Scalar start='16' length='1' type='int' value='3'/>
+					</Value>
+				</ArrayElement>
+			</ArrayCreation>
+		</ExpressionStatement>
+		<EmptyStatement start='20' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

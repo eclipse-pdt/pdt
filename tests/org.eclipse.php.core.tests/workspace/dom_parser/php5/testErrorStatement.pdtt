@@ -1,0 +1,16 @@
+--TEST--
+Test Error Statement
+--FILE--
+<?php echo $384732;?> 
+--EXPECT--
+<Program start='0' length='21'>
+	<Statements>
+		<AstError start='6' length='6'/>
+		<ExpressionStatement start='12' length='7'>
+			<Scalar start='12' length='6' type='int' value='384732'/>
+		</ExpressionStatement>
+		<EmptyStatement start='19' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

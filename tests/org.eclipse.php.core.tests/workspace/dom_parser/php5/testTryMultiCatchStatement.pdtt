@@ -1,0 +1,52 @@
+--TEST--
+Test Try Multi Catch Statement
+--FILE--
+<?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; } catch (AnotherException $ea) { echo ''; }  ?>
+--EXPECT--
+<Program start='0' length='129'>
+	<Statements>
+		<TryStatement start='6' length='119'>
+			<Block start='10' length='39' isCurly='true'>
+				<ExpressionStatement start='12' length='35'>
+					<Assignment start='12' length='34' operator='='>
+						<Variable start='12' length='6' isDollared='true'>
+							<Identifier start='13' length='5' name='error'/>
+						</Variable>
+						<Value>
+							<Scalar start='21' length='25' type='string' value='&apos;Always throw this error&apos;'/>
+						</Value>
+					</Assignment>
+				</ExpressionStatement>
+			</Block>
+			<CatchClause start='50' length='33'>
+				<ClassName>
+					<Identifier start='57' length='9' name='Exception'/>
+				</ClassName>
+				<Variable start='67' length='2' isDollared='true'>
+					<Identifier start='68' length='1' name='e'/>
+				</Variable>
+				<Block start='71' length='12' isCurly='true'>
+					<EchoStatement start='73' length='8'>
+						<Scalar start='78' length='2' type='string' value='&apos;&apos;'/>
+					</EchoStatement>
+				</Block>
+			</CatchClause>
+			<CatchClause start='84' length='41'>
+				<ClassName>
+					<Identifier start='91' length='16' name='AnotherException'/>
+				</ClassName>
+				<Variable start='108' length='3' isDollared='true'>
+					<Identifier start='109' length='2' name='ea'/>
+				</Variable>
+				<Block start='113' length='12' isCurly='true'>
+					<EchoStatement start='115' length='8'>
+						<Scalar start='120' length='2' type='string' value='&apos;&apos;'/>
+					</EchoStatement>
+				</Block>
+			</CatchClause>
+		</TryStatement>
+		<EmptyStatement start='127' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

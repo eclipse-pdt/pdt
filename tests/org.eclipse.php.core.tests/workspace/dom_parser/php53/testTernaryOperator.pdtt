@@ -1,0 +1,33 @@
+--TEST--
+Test Ternary Operator
+--FILE--
+<?php $a = $newValue ? : $defaultValue; ?> 
+--EXPECT--
+<Program start='0' length='42'>
+	<Statements>
+		<ExpressionStatement start='6' length='33'>
+			<Assignment start='6' length='32' operator='='>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<Value>
+					<ConditionalExpression start='11' length='27'>
+						<Condition>
+							<Variable start='11' length='9' isDollared='true'>
+								<Identifier start='12' length='8' name='newValue'/>
+							</Variable>
+						</Condition>
+						<IfFalse>
+							<Variable start='25' length='13' isDollared='true'>
+								<Identifier start='26' length='12' name='defaultValue'/>
+							</Variable>
+						</IfFalse>
+					</ConditionalExpression>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='40' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

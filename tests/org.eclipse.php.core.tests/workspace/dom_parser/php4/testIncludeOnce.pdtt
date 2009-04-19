@@ -1,0 +1,21 @@
+--TEST--
+Test Include Once
+--FILE--
+<?php include_once($myFile);?>
+--EXPECT--
+<Program start='0' length='30'>
+	<Statements>
+		<ExpressionStatement start='6' length='22'>
+			<Include start='6' length='21' kind='include_once'>
+				<ParenthesisExpression start='18' length='9'>
+					<Variable start='19' length='7' isDollared='true'>
+						<Identifier start='20' length='6' name='myFile'/>
+					</Variable>
+				</ParenthesisExpression>
+			</Include>
+		</ExpressionStatement>
+		<EmptyStatement start='28' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

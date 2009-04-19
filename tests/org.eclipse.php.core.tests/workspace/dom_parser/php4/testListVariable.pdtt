@@ -1,0 +1,27 @@
+--TEST--
+Test List Variable
+--FILE--
+<?php list($a,$b)=1; ?>
+--EXPECT--
+<Program start='0' length='23'>
+	<Statements>
+		<ExpressionStatement start='6' length='14'>
+			<Assignment start='6' length='13' operator='='>
+				<List start='6' length='11'>
+					<Variable start='11' length='2' isDollared='true'>
+						<Identifier start='12' length='1' name='a'/>
+					</Variable>
+					<Variable start='14' length='2' isDollared='true'>
+						<Identifier start='15' length='1' name='b'/>
+					</Variable>
+				</List>
+				<Value>
+					<Scalar start='18' length='1' type='int' value='1'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='21' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

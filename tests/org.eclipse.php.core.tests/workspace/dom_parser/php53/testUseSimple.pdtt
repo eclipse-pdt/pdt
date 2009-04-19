@@ -1,0 +1,21 @@
+--TEST--
+Test Use Simple
+--FILE--
+<?php use A; ?> 
+--EXPECT--
+<Program start='0' length='15'>
+	<Statements>
+		<UseStatement start='6' length='6'>
+			<UseStatementPart start='10' length='1'>
+				<Name>
+					<NamespaceName start='10' length='1' global='false' current='false'>
+						<Identifier start='10' length='1' name='A'/>
+					</NamespaceName>
+				</Name>
+			</UseStatementPart>
+		</UseStatement>
+		<EmptyStatement start='13' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

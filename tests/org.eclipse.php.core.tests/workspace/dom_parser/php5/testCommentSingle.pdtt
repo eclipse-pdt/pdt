@@ -1,0 +1,15 @@
+--TEST--
+Test Comment Single
+--FILE--
+<?php // this is a single line comment 
+# this is a single line comment?> 
+--EXPECT--
+<Program start='0' length='73'>
+	<Statements>
+		<EmptyStatement start='71' length='2'/>
+	</Statements>
+	<Comments>
+		<Comment start='6' length='34' commentType='singleLine'/>
+		<Comment start='40' length='33' commentType='singleLine'/>
+	</Comments>
+</Program>

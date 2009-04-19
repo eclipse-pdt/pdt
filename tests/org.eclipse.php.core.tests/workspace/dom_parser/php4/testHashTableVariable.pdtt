@@ -1,0 +1,22 @@
+--TEST--
+Test Hash Table Variable
+--FILE--
+<?php $a{'name'}; ?>
+--EXPECT--
+<Program start='0' length='20'>
+	<Statements>
+		<ExpressionStatement start='6' length='11'>
+			<ArrayAccess start='6' length='10' type='hashtable'>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<Index>
+					<Scalar start='9' length='6' type='string' value='&apos;name&apos;'/>
+				</Index>
+			</ArrayAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='18' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

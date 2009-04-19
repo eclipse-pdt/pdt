@@ -1,0 +1,25 @@
+--TEST--
+Test Now Doc
+--FILE--
+<?php echo <<<'EOT'
+My name is "$name".I am printing some $foo->foo.
+Now, I am printing some {$foo->bar[1]}.
+This should not print a capital 'A': \x41
+EOT;
+?>
+--EXPECT--
+<Program start='0' length='158'>
+	<Statements>
+		<EchoStatement start='6' length='149'>
+			<Quote start='11' length='143' type='heredoc'>
+				<Scalar start='20' length='133' type='string' value='My name is "$name".I am printing some $foo-&gt;foo.
+Now, I am printing some {$foo-&gt;bar[1]}.
+This should not print a capital &apos;A&apos;: \x41
+'/>
+			</Quote>
+		</EchoStatement>
+		<EmptyStatement start='156' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

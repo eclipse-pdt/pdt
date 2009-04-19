@@ -1,0 +1,66 @@
+--TEST--
+Test Ref Lambda Function With Params With Vars With Statements
+--FILE--
+<?php $lambda = function & ($param1, &$param2) use ($var1, &$var2) { echo TEST; }; ?>
+--EXPECT--
+<Program start='0' length='85'>
+	<Statements>
+		<ExpressionStatement start='6' length='76'>
+			<Assignment start='6' length='75' operator='='>
+				<Variable start='6' length='7' isDollared='true'>
+					<Identifier start='7' length='6' name='lambda'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='16' length='65' isReference='true'>
+						<FormalParameters>
+							<FormalParameter start='28' length='7' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='28' length='7' isDollared='true'>
+										<Identifier start='29' length='6' name='param1'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='37' length='8' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Reference start='37' length='8'>
+										<Variable start='38' length='7' isDollared='true'>
+											<Identifier start='39' length='6' name='param2'/>
+										</Variable>
+									</Reference>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<LexicalVariables>
+							<Variable start='52' length='5' isDollared='true'>
+								<Identifier start='53' length='4' name='var1'/>
+							</Variable>
+							<Reference start='59' length='6'>
+								<Variable start='60' length='5' isDollared='true'>
+									<Identifier start='61' length='4' name='var2'/>
+								</Variable>
+							</Reference>
+						</LexicalVariables>
+						<FunctionBody>
+							<Block start='67' length='14' isCurly='true'>
+								<EchoStatement start='69' length='10'>
+									<Scalar start='74' length='4' type='string' value='TEST'/>
+								</EchoStatement>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='83' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

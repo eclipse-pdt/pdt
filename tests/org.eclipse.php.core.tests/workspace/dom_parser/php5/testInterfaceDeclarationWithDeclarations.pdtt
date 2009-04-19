@@ -1,0 +1,53 @@
+--TEST--
+Test Interface Declaration With Declarations
+--FILE--
+<?php interface MyInterface extends Interface1, Interface2 { const MY_CONSTANT = 3; public function myFunction($a); } ?> 
+--EXPECT--
+<Program start='0' length='120'>
+	<Statements>
+		<InterfaceDeclaration start='6' length='111'>
+			<InterfaceName>
+				<Identifier start='16' length='11' name='MyInterface'/>
+			</InterfaceName>
+			<Interfaces>
+				<Identifier start='36' length='10' name='Interface1'/>
+				<Identifier start='48' length='10' name='Interface2'/>
+			</Interfaces>
+			<Block start='59' length='58' isCurly='true'>
+				<ConstantDeclaration start='61' length='22'>
+					<VariableName>
+						<Identifier start='67' length='11' name='MY_CONSTANT'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='81' length='1' type='int' value='3'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<MethodDeclaration start='84' length='31' modifier='public'>
+					<FunctionDeclaration start='91' length='24' isReference='false'>
+						<FunctionName>
+							<Identifier start='100' length='10' name='myFunction'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='111' length='2' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='111' length='2' isDollared='true'>
+										<Identifier start='112' length='1' name='a'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</InterfaceDeclaration>
+		<EmptyStatement start='118' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,18 @@
+--TEST--
+Test Echo Statement
+--FILE--
+<?php echo "hello ",$b;?>
+--EXPECT--
+<Program start='0' length='25'>
+	<Statements>
+		<EchoStatement start='6' length='17'>
+			<Scalar start='11' length='8' type='string' value='"hello "'/>
+			<Variable start='20' length='2' isDollared='true'>
+				<Identifier start='21' length='1' name='b'/>
+			</Variable>
+		</EchoStatement>
+		<EmptyStatement start='23' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

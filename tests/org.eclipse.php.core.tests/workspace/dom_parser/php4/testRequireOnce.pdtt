@@ -1,0 +1,30 @@
+--TEST--
+Test Require Once
+--FILE--
+<?php require_once(A::foo());?>
+--EXPECT--
+<Program start='0' length='31'>
+	<Statements>
+		<ExpressionStatement start='6' length='23'>
+			<Include start='6' length='22' kind='require_once'>
+				<ParenthesisExpression start='18' length='10'>
+					<StaticMethodInvocation start='19' length='8'>
+						<ClassName>
+							<Identifier start='19' length='1' name='A'/>
+						</ClassName>
+						<FunctionInvocation start='22' length='5'>
+							<FunctionName start='22' length='3'>
+								<Identifier start='22' length='3' name='foo'/>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</StaticMethodInvocation>
+				</ParenthesisExpression>
+			</Include>
+		</ExpressionStatement>
+		<EmptyStatement start='29' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

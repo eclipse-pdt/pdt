@@ -1,0 +1,22 @@
+--TEST--
+Test Static Member Simple
+--FILE--
+<?php MyClass::$a;?>
+--EXPECT--
+<Program start='0' length='20'>
+	<Statements>
+		<ExpressionStatement start='6' length='12'>
+			<StaticFieldAccess start='6' length='11'>
+				<ClassName>
+					<Identifier start='6' length='7' name='MyClass'/>
+				</ClassName>
+				<Variable start='15' length='2' isDollared='true'>
+					<Identifier start='16' length='1' name='a'/>
+				</Variable>
+			</StaticFieldAccess>
+		</ExpressionStatement>
+		<EmptyStatement start='18' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

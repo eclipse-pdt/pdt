@@ -1,0 +1,47 @@
+--TEST--
+Test Dispatch Nested
+--FILE--
+<?php $myClass->foo()->bar();?>
+--EXPECT--
+<Program start='0' length='31'>
+	<Statements>
+		<ExpressionStatement start='6' length='23'>
+			<MethodInvocation start='6' length='22'>
+				<Dispatcher>
+					<MethodInvocation start='6' length='15'>
+						<Dispatcher>
+							<Variable start='6' length='8' isDollared='true'>
+								<Identifier start='7' length='7' name='myClass'/>
+							</Variable>
+						</Dispatcher>
+						<Property>
+							<FunctionInvocation start='16' length='5'>
+								<FunctionName start='16' length='3'>
+									<Variable start='16' length='3' isDollared='false'>
+										<Identifier start='16' length='3' name='foo'/>
+									</Variable>
+								</FunctionName>
+								<Parameters>
+								</Parameters>
+							</FunctionInvocation>
+						</Property>
+					</MethodInvocation>
+				</Dispatcher>
+				<Property>
+					<FunctionInvocation start='23' length='5'>
+						<FunctionName start='23' length='3'>
+							<Variable start='23' length='3' isDollared='false'>
+								<Identifier start='23' length='3' name='bar'/>
+							</Variable>
+						</FunctionName>
+						<Parameters>
+						</Parameters>
+					</FunctionInvocation>
+				</Property>
+			</MethodInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='29' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

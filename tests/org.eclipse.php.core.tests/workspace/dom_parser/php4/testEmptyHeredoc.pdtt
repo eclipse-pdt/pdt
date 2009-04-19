@@ -1,0 +1,18 @@
+--TEST--
+Test Empty Heredoc
+--FILE--
+<?php <<<Heredoc
+Heredoc;
+?>
+--EXPECT--
+<Program start='0' length='28'>
+	<Statements>
+		<ExpressionStatement start='6' length='19'>
+			<Quote start='6' length='18' type='heredoc'>
+			</Quote>
+		</ExpressionStatement>
+		<EmptyStatement start='26' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

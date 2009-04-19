@@ -1,0 +1,22 @@
+--TEST--
+Test Instanceof Simple
+--FILE--
+<?php $a instanceof MyClass;?>
+--EXPECT--
+<Program start='0' length='30'>
+	<Statements>
+		<ExpressionStatement start='6' length='22'>
+			<InstanceofExpression start='6' length='21'>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<ClassName start='20' length='7'>
+					<Identifier start='20' length='7' name='MyClass'/>
+				</ClassName>
+			</InstanceofExpression>
+		</ExpressionStatement>
+		<EmptyStatement start='28' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

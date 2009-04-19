@@ -1,0 +1,48 @@
+--TEST--
+Test Switch Statement
+--FILE--
+<?php switch ($i) { case 0:    echo 'i equals 0';    break; case 1:     echo 'i equals 1';     break; default:    echo 'i not equals 0,1';  }  ?>
+--EXPECT--
+<Program start='0' length='145'>
+	<Statements>
+		<SwitchStatement start='6' length='135'>
+			<Expression>
+				<Variable start='14' length='2' isDollared='true'>
+					<Identifier start='15' length='1' name='i'/>
+				</Variable>
+			</Expression>
+			<Block start='18' length='123' isCurly='true'>
+				<SwitchCase start='20' length='39' isDefault='false'>
+					<Value>
+						<Scalar start='25' length='1' type='int' value='0'/>
+					</Value>
+					<EchoStatement start='31' length='18'>
+						<Scalar start='36' length='12' type='string' value='&apos;i equals 0&apos;'/>
+					</EchoStatement>
+					<BreakStatement start='53' length='6'>
+					</BreakStatement>
+				</SwitchCase>
+				<SwitchCase start='60' length='41' isDefault='false'>
+					<Value>
+						<Scalar start='65' length='1' type='int' value='1'/>
+					</Value>
+					<EchoStatement start='72' length='18'>
+						<Scalar start='77' length='12' type='string' value='&apos;i equals 1&apos;'/>
+					</EchoStatement>
+					<BreakStatement start='95' length='6'>
+					</BreakStatement>
+				</SwitchCase>
+				<SwitchCase start='102' length='36' isDefault='true'>
+					<Value>
+					</Value>
+					<EchoStatement start='114' length='24'>
+						<Scalar start='119' length='18' type='string' value='&apos;i not equals 0,1&apos;'/>
+					</EchoStatement>
+				</SwitchCase>
+			</Block>
+		</SwitchStatement>
+		<EmptyStatement start='143' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

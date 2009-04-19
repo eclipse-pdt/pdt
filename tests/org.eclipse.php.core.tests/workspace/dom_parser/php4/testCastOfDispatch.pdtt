@@ -1,0 +1,34 @@
+--TEST--
+Test Cast Of Dispatch
+--FILE--
+<?php (string) $b->foo(); ?>
+--EXPECT--
+<Program start='0' length='28'>
+	<Statements>
+		<ExpressionStatement start='6' length='19'>
+			<CastExpression start='6' length='18' castType='string'>
+				<MethodInvocation start='15' length='9'>
+					<Dispatcher>
+						<Variable start='15' length='2' isDollared='true'>
+							<Identifier start='16' length='1' name='b'/>
+						</Variable>
+					</Dispatcher>
+					<Property>
+						<FunctionInvocation start='19' length='5'>
+							<FunctionName start='19' length='3'>
+								<Variable start='19' length='3' isDollared='false'>
+									<Identifier start='19' length='3' name='foo'/>
+								</Variable>
+							</FunctionName>
+							<Parameters>
+							</Parameters>
+						</FunctionInvocation>
+					</Property>
+				</MethodInvocation>
+			</CastExpression>
+		</ExpressionStatement>
+		<EmptyStatement start='26' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

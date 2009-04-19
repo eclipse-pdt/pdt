@@ -1,0 +1,32 @@
+--TEST--
+Test Quote With Offset String
+--FILE--
+<?php "this
+is $a[hello] quote";?>
+--EXPECT--
+<Program start='0' length='34'>
+	<Statements>
+		<ExpressionStatement start='6' length='26'>
+			<Quote start='6' length='25' type='quote'>
+				<Scalar start='7' length='4' type='string' value='this'/>
+				<Scalar start='11' length='1' type='string' value='
+'/>
+				<Scalar start='12' length='2' type='string' value='is'/>
+				<Scalar start='14' length='1' type='string' value=' '/>
+				<ArrayAccess start='15' length='9' type='array'>
+					<Variable start='15' length='2' isDollared='true'>
+						<Identifier start='16' length='1' name='a'/>
+					</Variable>
+					<Index>
+						<Identifier start='18' length='5' name='hello'/>
+					</Index>
+				</ArrayAccess>
+				<Scalar start='24' length='1' type='string' value=' '/>
+				<Scalar start='25' length='5' type='string' value='quote'/>
+			</Quote>
+		</ExpressionStatement>
+		<EmptyStatement start='32' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

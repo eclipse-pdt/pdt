@@ -1,0 +1,19 @@
+--TEST--
+Test Global Statement Reflection
+--FILE--
+<?php global $$a; ?>
+--EXPECT--
+<Program start='0' length='20'>
+	<Statements>
+		<GlobalStatement start='6' length='11'>
+			<ReflectionVariable start='13' length='3'>
+				<Variable start='14' length='2' isDollared='true'>
+					<Identifier start='15' length='1' name='a'/>
+				</Variable>
+			</ReflectionVariable>
+		</GlobalStatement>
+		<EmptyStatement start='18' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

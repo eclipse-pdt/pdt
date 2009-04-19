@@ -1,0 +1,71 @@
+--TEST--
+Test Function Declaration With Params
+--FILE--
+<?php function foo($a, int $b, $c = 5, int $d = 6) {} ?> 
+--EXPECT--
+<Program start='0' length='56'>
+	<Statements>
+		<FunctionDeclaration start='6' length='47' isReference='false'>
+			<FunctionName>
+				<Identifier start='15' length='3' name='foo'/>
+			</FunctionName>
+			<FormalParameters>
+				<FormalParameter start='19' length='2' isMandatory='false'>
+					<Type>
+					</Type>
+					<ParameterName>
+						<Variable start='19' length='2' isDollared='true'>
+							<Identifier start='20' length='1' name='a'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+					</DefaultValue>
+				</FormalParameter>
+				<FormalParameter start='23' length='6' isMandatory='false'>
+					<Type>
+						<Identifier start='23' length='3' name='int'/>
+					</Type>
+					<ParameterName>
+						<Variable start='27' length='2' isDollared='true'>
+							<Identifier start='28' length='1' name='b'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+					</DefaultValue>
+				</FormalParameter>
+				<FormalParameter start='31' length='6' isMandatory='false'>
+					<Type>
+					</Type>
+					<ParameterName>
+						<Variable start='31' length='2' isDollared='true'>
+							<Identifier start='32' length='1' name='c'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+						<Scalar start='36' length='1' type='int' value='5'/>
+					</DefaultValue>
+				</FormalParameter>
+				<FormalParameter start='39' length='10' isMandatory='false'>
+					<Type>
+						<Identifier start='39' length='3' name='int'/>
+					</Type>
+					<ParameterName>
+						<Variable start='43' length='2' isDollared='true'>
+							<Identifier start='44' length='1' name='d'/>
+						</Variable>
+					</ParameterName>
+					<DefaultValue>
+						<Scalar start='48' length='1' type='int' value='6'/>
+					</DefaultValue>
+				</FormalParameter>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='51' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<EmptyStatement start='54' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

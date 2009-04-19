@@ -1,0 +1,97 @@
+--TEST--
+Test Class Declaration With Declarations
+--FILE--
+<?php final class MyClass extends SuperClass implements Interface1, Interface2 { const MY_CONSTANT = 3; public static final $myVar = 5, $yourVar; var $anotherOne; private function myFunction(MyClass $a, $b = 6) { }  } ?> 
+--EXPECT--
+<Program start='0' length='220'>
+	<Statements>
+		<ClassDeclaration start='6' length='211' modifier='final'>
+			<ClassName>
+				<Identifier start='18' length='7' name='MyClass'/>
+			</ClassName>
+			<SuperClassName>
+				<Identifier start='34' length='10' name='SuperClass'/>
+			</SuperClassName>
+			<Interfaces>
+				<Identifier start='56' length='10' name='Interface1'/>
+				<Identifier start='68' length='10' name='Interface2'/>
+			</Interfaces>
+			<Block start='79' length='138' isCurly='true'>
+				<ConstantDeclaration start='81' length='22'>
+					<VariableName>
+						<Identifier start='87' length='11' name='MY_CONSTANT'/>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='101' length='1' type='int' value='3'/>
+					</InitialValue>
+				</ConstantDeclaration>
+				<FieldsDeclaration start='104' length='41' modifier='public static final'>
+					<VariableName>
+						<Variable start='124' length='6' isDollared='true'>
+							<Identifier start='125' length='5' name='myVar'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+						<Scalar start='133' length='1' type='int' value='5'/>
+					</InitialValue>
+					<VariableName>
+						<Variable start='136' length='8' isDollared='true'>
+							<Identifier start='137' length='7' name='yourVar'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<FieldsDeclaration start='146' length='16' modifier='public'>
+					<VariableName>
+						<Variable start='150' length='11' isDollared='true'>
+							<Identifier start='151' length='10' name='anotherOne'/>
+						</Variable>
+					</VariableName>
+					<InitialValue>
+					</InitialValue>
+				</FieldsDeclaration>
+				<MethodDeclaration start='163' length='51' modifier='private'>
+					<FunctionDeclaration start='171' length='43' isReference='false'>
+						<FunctionName>
+							<Identifier start='180' length='10' name='myFunction'/>
+						</FunctionName>
+						<FormalParameters>
+							<FormalParameter start='191' length='10' isMandatory='false'>
+								<Type>
+									<Identifier start='191' length='7' name='MyClass'/>
+								</Type>
+								<ParameterName>
+									<Variable start='199' length='2' isDollared='true'>
+										<Identifier start='200' length='1' name='a'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='203' length='6' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='203' length='2' isDollared='true'>
+										<Identifier start='204' length='1' name='b'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+									<Scalar start='208' length='1' type='int' value='6'/>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<FunctionBody>
+							<Block start='211' length='3' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</FunctionDeclaration>
+				</MethodDeclaration>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='218' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

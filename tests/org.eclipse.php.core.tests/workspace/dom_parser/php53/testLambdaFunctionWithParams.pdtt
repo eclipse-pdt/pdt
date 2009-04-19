@@ -1,0 +1,53 @@
+--TEST--
+Test Lambda Function With Params
+--FILE--
+<?php $lambda = function ($param1, $param2) { }; ?>
+--EXPECT--
+<Program start='0' length='51'>
+	<Statements>
+		<ExpressionStatement start='6' length='42'>
+			<Assignment start='6' length='41' operator='='>
+				<Variable start='6' length='7' isDollared='true'>
+					<Identifier start='7' length='6' name='lambda'/>
+				</Variable>
+				<Value>
+					<LambdaFunctionDeclaration start='16' length='31' isReference='false'>
+						<FormalParameters>
+							<FormalParameter start='26' length='7' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='26' length='7' isDollared='true'>
+										<Identifier start='27' length='6' name='param1'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+							<FormalParameter start='35' length='7' isMandatory='false'>
+								<Type>
+								</Type>
+								<ParameterName>
+									<Variable start='35' length='7' isDollared='true'>
+										<Identifier start='36' length='6' name='param2'/>
+									</Variable>
+								</ParameterName>
+								<DefaultValue>
+								</DefaultValue>
+							</FormalParameter>
+						</FormalParameters>
+						<LexicalVariables>
+						</LexicalVariables>
+						<FunctionBody>
+							<Block start='44' length='3' isCurly='true'>
+							</Block>
+						</FunctionBody>
+					</LambdaFunctionDeclaration>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='49' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

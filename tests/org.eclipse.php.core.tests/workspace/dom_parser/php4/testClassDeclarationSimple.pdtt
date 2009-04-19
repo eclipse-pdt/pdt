@@ -1,0 +1,23 @@
+--TEST--
+Test Class Declaration Simple
+--FILE--
+<?php class MyClass { } ?> 
+--EXPECT--
+<Program start='0' length='26'>
+	<Statements>
+		<ClassDeclaration start='6' length='17' modifier=''>
+			<ClassName>
+				<Identifier start='12' length='7' name='MyClass'/>
+			</ClassName>
+			<SuperClassName>
+			</SuperClassName>
+			<Interfaces>
+			</Interfaces>
+			<Block start='20' length='3' isCurly='true'>
+			</Block>
+		</ClassDeclaration>
+		<EmptyStatement start='24' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

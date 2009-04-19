@@ -1,0 +1,21 @@
+--TEST--
+Test Heredoc
+--FILE--
+<?php <<<Heredoc
+  This is here documents 
+Heredoc;
+?>
+--EXPECT--
+<Program start='0' length='54'>
+	<Statements>
+		<ExpressionStatement start='6' length='45'>
+			<Quote start='6' length='44' type='heredoc'>
+				<Scalar start='17' length='32' type='string' value='  This is here documents 
+'/>
+			</Quote>
+		</ExpressionStatement>
+		<EmptyStatement start='52' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

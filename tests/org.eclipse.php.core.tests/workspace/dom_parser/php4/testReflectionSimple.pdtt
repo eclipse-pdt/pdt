@@ -1,0 +1,19 @@
+--TEST--
+Test Reflection Simple
+--FILE--
+<?php $$a;?>
+--EXPECT--
+<Program start='0' length='12'>
+	<Statements>
+		<ExpressionStatement start='6' length='4'>
+			<ReflectionVariable start='6' length='3'>
+				<Variable start='7' length='2' isDollared='true'>
+					<Identifier start='8' length='1' name='a'/>
+				</Variable>
+			</ReflectionVariable>
+		</ExpressionStatement>
+		<EmptyStatement start='10' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

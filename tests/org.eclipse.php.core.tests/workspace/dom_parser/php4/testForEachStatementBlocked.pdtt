@@ -1,0 +1,43 @@
+--TEST--
+Test For Each Statement Blocked
+--FILE--
+<?php foreach ($arr as $value): $value = $value * 2;endforeach; ?>
+--EXPECT--
+<Program start='0' length='66'>
+	<Statements>
+		<ForEachStatement start='6' length='57'>
+			<Expression>
+				<Variable start='15' length='4' isDollared='true'>
+					<Identifier start='16' length='3' name='arr'/>
+				</Variable>
+			</Expression>
+			<Key>
+			</Key>
+			<Value>
+				<Variable start='23' length='6' isDollared='true'>
+					<Identifier start='24' length='5' name='value'/>
+				</Variable>
+			</Value>
+			<Block start='30' length='22' isCurly='false'>
+				<ExpressionStatement start='32' length='20'>
+					<Assignment start='32' length='19' operator='='>
+						<Variable start='32' length='6' isDollared='true'>
+							<Identifier start='33' length='5' name='value'/>
+						</Variable>
+						<Value>
+							<InfixExpression start='41' length='10' operator='*'>
+								<Variable start='41' length='6' isDollared='true'>
+									<Identifier start='42' length='5' name='value'/>
+								</Variable>
+								<Scalar start='50' length='1' type='int' value='2'/>
+							</InfixExpression>
+						</Value>
+					</Assignment>
+				</ExpressionStatement>
+			</Block>
+		</ForEachStatement>
+		<EmptyStatement start='64' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

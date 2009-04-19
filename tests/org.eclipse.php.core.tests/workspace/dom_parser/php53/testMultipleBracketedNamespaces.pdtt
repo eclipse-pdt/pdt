@@ -1,0 +1,77 @@
+--TEST--
+Test Multiple Bracketed Namespaces
+--FILE--
+<?php
+namespace NS1;
+class A {}
+function bar() {}
+namespace NS2;
+class A {}
+function bar() {}
+?> 
+--EXPECT--
+<Program start='0' length='96'>
+	<Statements>
+		<NamespaceDeclaration start='6' length='43' isBracketed='true'>
+			<NamespaceName start='16' length='3' global='false' current='false'>
+				<Identifier start='16' length='3' name='NS1'/>
+			</NamespaceName>
+			<Block start='6' length='43' isCurly='true'>
+				<ClassDeclaration start='21' length='10' modifier=''>
+					<ClassName>
+						<Identifier start='27' length='1' name='A'/>
+					</ClassName>
+					<SuperClassName>
+					</SuperClassName>
+					<Interfaces>
+					</Interfaces>
+					<Block start='29' length='2' isCurly='true'>
+					</Block>
+				</ClassDeclaration>
+				<FunctionDeclaration start='32' length='17' isReference='false'>
+					<FunctionName>
+						<Identifier start='41' length='3' name='bar'/>
+					</FunctionName>
+					<FormalParameters>
+					</FormalParameters>
+					<FunctionBody>
+						<Block start='47' length='2' isCurly='true'>
+						</Block>
+					</FunctionBody>
+				</FunctionDeclaration>
+			</Block>
+		</NamespaceDeclaration>
+		<NamespaceDeclaration start='50' length='46' isBracketed='true'>
+			<NamespaceName start='60' length='3' global='false' current='false'>
+				<Identifier start='60' length='3' name='NS2'/>
+			</NamespaceName>
+			<Block start='50' length='46' isCurly='true'>
+				<ClassDeclaration start='65' length='10' modifier=''>
+					<ClassName>
+						<Identifier start='71' length='1' name='A'/>
+					</ClassName>
+					<SuperClassName>
+					</SuperClassName>
+					<Interfaces>
+					</Interfaces>
+					<Block start='73' length='2' isCurly='true'>
+					</Block>
+				</ClassDeclaration>
+				<FunctionDeclaration start='76' length='17' isReference='false'>
+					<FunctionName>
+						<Identifier start='85' length='3' name='bar'/>
+					</FunctionName>
+					<FormalParameters>
+					</FormalParameters>
+					<FunctionBody>
+						<Block start='91' length='2' isCurly='true'>
+						</Block>
+					</FunctionBody>
+				</FunctionDeclaration>
+				<EmptyStatement start='94' length='2'/>
+			</Block>
+		</NamespaceDeclaration>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

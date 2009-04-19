@@ -1,0 +1,30 @@
+--TEST--
+Test Function Invocation With Params
+--FILE--
+<?php $foo($a, 's<>&', 12, true, __CLASS__); ?>
+--EXPECT--
+<Program start='0' length='47'>
+	<Statements>
+		<ExpressionStatement start='6' length='38'>
+			<FunctionInvocation start='6' length='37'>
+				<FunctionName start='6' length='4'>
+					<Variable start='6' length='4' isDollared='true'>
+						<Identifier start='7' length='3' name='foo'/>
+					</Variable>
+				</FunctionName>
+				<Parameters>
+					<Variable start='11' length='2' isDollared='true'>
+						<Identifier start='12' length='1' name='a'/>
+					</Variable>
+					<Scalar start='15' length='6' type='string' value='&apos;s&lt;&gt;&amp;&apos;'/>
+					<Scalar start='23' length='2' type='int' value='12'/>
+					<Scalar start='27' length='4' type='string' value='true'/>
+					<Scalar start='33' length='9' type='system' value='__CLASS__'/>
+				</Parameters>
+			</FunctionInvocation>
+		</ExpressionStatement>
+		<EmptyStatement start='45' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

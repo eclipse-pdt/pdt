@@ -1,0 +1,12 @@
+--TEST--
+Test In Line Html
+--FILE--
+<html> </html>
+--EXPECT--
+<Program start='0' length='14'>
+	<Statements>
+		<InLineHtml start='0' length='14'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

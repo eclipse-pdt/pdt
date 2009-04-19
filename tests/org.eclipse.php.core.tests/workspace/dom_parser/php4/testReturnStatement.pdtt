@@ -1,0 +1,14 @@
+--TEST--
+Test Return Statement
+--FILE--
+<?php return; ?>
+--EXPECT--
+<Program start='0' length='16'>
+	<Statements>
+		<ReturnStatement start='6' length='7'>
+		</ReturnStatement>
+		<EmptyStatement start='14' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

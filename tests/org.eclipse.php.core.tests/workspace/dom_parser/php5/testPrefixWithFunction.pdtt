@@ -1,0 +1,23 @@
+--TEST--
+Test Prefix With Function
+--FILE--
+<?php --foo();?>
+--EXPECT--
+<Program start='0' length='16'>
+	<Statements>
+		<ExpressionStatement start='6' length='8'>
+			<PrefixExpression start='6' length='7' operator='--'>
+				<FunctionInvocation start='8' length='5'>
+					<FunctionName start='8' length='3'>
+						<Identifier start='8' length='3' name='foo'/>
+					</FunctionName>
+					<Parameters>
+					</Parameters>
+				</FunctionInvocation>
+			</PrefixExpression>
+		</ExpressionStatement>
+		<EmptyStatement start='14' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

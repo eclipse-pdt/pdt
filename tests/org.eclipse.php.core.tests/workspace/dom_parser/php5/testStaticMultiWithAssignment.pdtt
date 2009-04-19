@@ -1,0 +1,25 @@
+--TEST--
+Test Static Multi With Assignment
+--FILE--
+<?php static $a, $b=6;?>
+--EXPECT--
+<Program start='0' length='24'>
+	<Statements>
+		<StaticStatement start='6' length='16'>
+			<Variable start='13' length='2' isDollared='true'>
+				<Identifier start='14' length='1' name='a'/>
+			</Variable>
+			<Assignment start='17' length='4' operator='='>
+				<Variable start='17' length='2' isDollared='true'>
+					<Identifier start='18' length='1' name='b'/>
+				</Variable>
+				<Value>
+					<Scalar start='20' length='1' type='int' value='6'/>
+				</Value>
+			</Assignment>
+		</StaticStatement>
+		<EmptyStatement start='22' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

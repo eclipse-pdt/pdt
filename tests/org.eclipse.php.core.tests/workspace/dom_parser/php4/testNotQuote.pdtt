@@ -1,0 +1,23 @@
+--TEST--
+Test Not Quote
+--FILE--
+<?php "This is".$not." a quote node";?>
+--EXPECT--
+<Program start='0' length='39'>
+	<Statements>
+		<ExpressionStatement start='6' length='31'>
+			<InfixExpression start='6' length='30' operator='.'>
+				<InfixExpression start='6' length='14' operator='.'>
+					<Scalar start='6' length='9' type='string' value='"This is"'/>
+					<Variable start='16' length='4' isDollared='true'>
+						<Identifier start='17' length='3' name='not'/>
+					</Variable>
+				</InfixExpression>
+				<Scalar start='21' length='15' type='string' value='" a quote node"'/>
+			</InfixExpression>
+		</ExpressionStatement>
+		<EmptyStatement start='37' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

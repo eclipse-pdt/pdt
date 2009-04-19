@@ -1,0 +1,32 @@
+--TEST--
+Test Array Key Value
+--FILE--
+<?php array('Dodo'=>'Golo','Dafna'=>'Dodidu');?>
+--EXPECT--
+<Program start='0' length='48'>
+	<Statements>
+		<ExpressionStatement start='6' length='40'>
+			<ArrayCreation start='6' length='39'>
+				<ArrayElement start='12' length='14'>
+					<Key>
+						<Scalar start='12' length='6' type='string' value='&apos;Dodo&apos;'/>
+					</Key>
+					<Value>
+						<Scalar start='20' length='6' type='string' value='&apos;Golo&apos;'/>
+					</Value>
+				</ArrayElement>
+				<ArrayElement start='27' length='17'>
+					<Key>
+						<Scalar start='27' length='7' type='string' value='&apos;Dafna&apos;'/>
+					</Key>
+					<Value>
+						<Scalar start='36' length='8' type='string' value='&apos;Dodidu&apos;'/>
+					</Value>
+				</ArrayElement>
+			</ArrayCreation>
+		</ExpressionStatement>
+		<EmptyStatement start='46' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

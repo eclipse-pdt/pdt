@@ -1,0 +1,15 @@
+--TEST--
+Test Error Block
+--FILE--
+<?php for () {} ?> 
+--EXPECT--
+<Program start='0' length='18'>
+	<Statements>
+		<AstError start='6' length='5'/>
+		<Block start='13' length='2' isCurly='true'>
+		</Block>
+		<EmptyStatement start='16' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

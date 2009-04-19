@@ -1,0 +1,17 @@
+--TEST--
+Test Static Simple
+--FILE--
+<?php static $a;?>
+--EXPECT--
+<Program start='0' length='18'>
+	<Statements>
+		<StaticStatement start='6' length='10'>
+			<Variable start='13' length='2' isDollared='true'>
+				<Identifier start='14' length='1' name='a'/>
+			</Variable>
+		</StaticStatement>
+		<EmptyStatement start='16' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,32 @@
+--TEST--
+Test Nested List Variable
+--FILE--
+<?php list($a, list($b,$c))=1;?>
+--EXPECT--
+<Program start='0' length='32'>
+	<Statements>
+		<ExpressionStatement start='6' length='24'>
+			<Assignment start='6' length='23' operator='='>
+				<List start='6' length='21'>
+					<Variable start='11' length='2' isDollared='true'>
+						<Identifier start='12' length='1' name='a'/>
+					</Variable>
+					<List start='15' length='11'>
+						<Variable start='20' length='2' isDollared='true'>
+							<Identifier start='21' length='1' name='b'/>
+						</Variable>
+						<Variable start='23' length='2' isDollared='true'>
+							<Identifier start='24' length='1' name='c'/>
+						</Variable>
+					</List>
+				</List>
+				<Value>
+					<Scalar start='28' length='1' type='int' value='1'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='30' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,46 @@
+--TEST--
+Test For Each Statement With Value
+--FILE--
+<?php foreach ($arr as $key => $value) { echo "Key: $key; Value: $value<br />
+"; } ?>
+--EXPECT--
+<Program start='0' length='85'>
+	<Statements>
+		<ForEachStatement start='6' length='76'>
+			<Expression>
+				<Variable start='15' length='4' isDollared='true'>
+					<Identifier start='16' length='3' name='arr'/>
+				</Variable>
+			</Expression>
+			<Key>
+				<Variable start='23' length='4' isDollared='true'>
+					<Identifier start='24' length='3' name='key'/>
+				</Variable>
+			</Key>
+			<Value>
+				<Variable start='31' length='6' isDollared='true'>
+					<Identifier start='32' length='5' name='value'/>
+				</Variable>
+			</Value>
+			<Block start='39' length='43' isCurly='true'>
+				<EchoStatement start='41' length='39'>
+					<Quote start='46' length='33' type='quote'>
+						<Scalar start='47' length='5' type='string' value='Key: '/>
+						<Variable start='52' length='4' isDollared='true'>
+							<Identifier start='53' length='3' name='key'/>
+						</Variable>
+						<Scalar start='56' length='9' type='string' value='; Value: '/>
+						<Variable start='65' length='6' isDollared='true'>
+							<Identifier start='66' length='5' name='value'/>
+						</Variable>
+						<Scalar start='71' length='7' type='string' value='&lt;br /&gt;
+'/>
+					</Quote>
+				</EchoStatement>
+			</Block>
+		</ForEachStatement>
+		<EmptyStatement start='83' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

@@ -1,0 +1,22 @@
+--TEST--
+Test Plus Assignment
+--FILE--
+<?php $a += 1;?>
+--EXPECT--
+<Program start='0' length='16'>
+	<Statements>
+		<ExpressionStatement start='6' length='8'>
+			<Assignment start='6' length='7' operator='+='>
+				<Variable start='6' length='2' isDollared='true'>
+					<Identifier start='7' length='1' name='a'/>
+				</Variable>
+				<Value>
+					<Scalar start='12' length='1' type='int' value='1'/>
+				</Value>
+			</Assignment>
+		</ExpressionStatement>
+		<EmptyStatement start='14' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>

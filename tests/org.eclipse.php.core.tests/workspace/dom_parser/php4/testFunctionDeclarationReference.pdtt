@@ -1,0 +1,23 @@
+--TEST--
+Test Function Declaration Reference
+--FILE--
+<?php function &foo() {} ?> 
+--EXPECT--
+<Program start='0' length='27'>
+	<Statements>
+		<FunctionDeclaration start='6' length='18' isReference='true'>
+			<FunctionName>
+				<Identifier start='16' length='3' name='foo'/>
+			</FunctionName>
+			<FormalParameters>
+			</FormalParameters>
+			<FunctionBody>
+				<Block start='22' length='2' isCurly='true'>
+				</Block>
+			</FunctionBody>
+		</FunctionDeclaration>
+		<EmptyStatement start='25' length='2'/>
+	</Statements>
+	<Comments>
+	</Comments>
+</Program>
