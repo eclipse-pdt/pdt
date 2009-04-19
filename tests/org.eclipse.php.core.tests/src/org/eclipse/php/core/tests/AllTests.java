@@ -5,6 +5,7 @@ import org.eclipse.php.core.tests.dom_parser.DomParserTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
 import org.eclipse.php.core.tests.mixin.MixinTests;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
+import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -20,6 +21,7 @@ public class AllTests {
 		suite.addTest(SelectionEngineTests.suite());
 		suite.addTest(MixinTests.suite());
 		suite.addTest(FileNetworkTests.suite());
+		suite.addTest(TypeInferenceTests.suite());
 
 		// $JUnit-END$
 		

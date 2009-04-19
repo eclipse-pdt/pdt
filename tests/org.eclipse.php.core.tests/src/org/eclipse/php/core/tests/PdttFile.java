@@ -12,6 +12,8 @@ import junit.framework.Assert;
  * <pre>
  * --TEST--
  * Tests a simple class name completion
+ * --CONFIG--
+ * Custom configuration
  * --FILE--
  * <? some PHP code ?>
  * --EXPECT--
@@ -20,11 +22,12 @@ import junit.framework.Assert;
  */
 public class PdttFile {
 
-	enum STATES {
-		TEST, FILE, EXPECT
+	protected enum STATES {
+		TEST, CONFIG, FILE, EXPECT
 	}
 
 	private String fileName;
+	private String configuration;
 	private String description;
 	private String file = "";
 	private String expected = "";
@@ -48,6 +51,14 @@ public class PdttFile {
 		return description;
 	}
 
+	/**
+	 * Returns the PHP file contents (--FILE-- section contents)
+	 * @return
+	 */
+	public String getConfiguration() {
+		return configuration;
+	}
+	
 	/**
 	 * Returns the PHP file contents (--FILE-- section contents)
 	 * @return
@@ -77,33 +88,64 @@ public class PdttFile {
 		STATES state = null;
 		while (line != null) {
 			if (line.startsWith("--")) {
-				if (line.equalsIgnoreCase("--TEST--")) {
-					state = STATES.TEST;
-				} else if (line.equalsIgnoreCase("--FILE--")) {
-					state = STATES.FILE;
-				} else if (line.equalsIgnoreCase("--EXPECT--")) {
-					state = STATES.EXPECT;
-				} else {
+				state = parseStateLine(line);
+				if (state == null) {
 					throw new Exception("Wrong state: " + line);
 				}
 			} else {
 				if (state != null) {
-					switch (state) {
-						case TEST:
-							this.description = line;
-							break;
-						case FILE:
-							this.file += (line + "\n");
-							break;
-						case EXPECT:
-							this.expected += (line + "\n");
-							break;
-						default:
-							break;
-					}
+					onState(state, line);
 				}
 			}
 			line = bReader.readLine();
+		}
+	}
+	
+	/**
+	 * Detects the state from the line
+	 * @param line
+	 * @return STATE
+	 */
+	protected STATES parseStateLine(String line) {
+		if (line.equalsIgnoreCase("--TEST--")) {
+			return STATES.TEST;
+		}
+		if (line.equalsIgnoreCase("--FILE--")) {
+			return STATES.FILE;
+		}
+		if (line.equalsIgnoreCase("--EXPECT--")) {
+			return STATES.EXPECT;
+		}
+		if (line.equalsIgnoreCase("--CONFIG--")) {
+			return STATES.CONFIG;
+		}
+		return null;
+	}
+
+	/**
+	 * This callback is called while processing state section
+	 * @param state
+	 * @param line
+	 */
+	protected void onState(STATES state, String line) {
+		switch (state) {
+			case TEST:
+				this.description = line;
+				break;
+			case FILE:
+				this.file += (line + "\n");
+				break;
+			case EXPECT:
+				this.expected += (line + "\n");
+				break;
+			case CONFIG:
+				if (this.configuration == null) {
+					this.configuration = "";
+				}
+				this.configuration += (line + "\n");
+				break;
+			default:
+				break;
 		}
 	}
 }

@@ -1,0 +1,6 @@
+--TEST--
+Test This
+--FILE--
+<?php class A{ function f() { testThis($this); } } ?>
+--EXPECT--
+A

@@ -1,0 +1,10 @@
+--TEST--
+Test Function Return Type PHP Doc
+--CONFIG--
+prune: heavyGoals
+--FILE--
+<?php /**
+* @return A
+*/ function foo() { return new B(); } testFunctionReturnTypePHPDoc(foo()); ?>
+--EXPECT--
+A

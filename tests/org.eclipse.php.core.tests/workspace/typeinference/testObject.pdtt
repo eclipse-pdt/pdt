@@ -1,0 +1,6 @@
+--TEST--
+Test Object
+--FILE--
+<?php $a = new A(); testObject($a); ?>
+--EXPECT--
+A

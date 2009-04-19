@@ -1,0 +1,6 @@
+--TEST--
+Test Class Var Constructor
+--FILE--
+<?php class A { function __construct() { $this->f = 5; } } $a = new A(); testClassVarConstructor($a->f); ?>
+--EXPECT--
+number

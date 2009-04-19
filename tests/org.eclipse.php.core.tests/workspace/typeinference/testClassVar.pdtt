@@ -1,0 +1,6 @@
+--TEST--
+Test Class Var
+--FILE--
+<?php class A { var $f = 5; } $a = new A(); testClassVar($a->f); ?>
+--EXPECT--
+number

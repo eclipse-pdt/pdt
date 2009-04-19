@@ -1,0 +1,6 @@
+--TEST--
+Test Cast String
+--FILE--
+<?php testCastString((string)3); ?>
+--EXPECT--
+string

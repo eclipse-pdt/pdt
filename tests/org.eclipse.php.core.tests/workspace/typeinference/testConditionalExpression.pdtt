@@ -1,0 +1,6 @@
+--TEST--
+Test Conditional Expression
+--FILE--
+<?php testConditionalExpression(true ? "str" : 5); ?>
+--EXPECT--
+Ambigous <string, number>

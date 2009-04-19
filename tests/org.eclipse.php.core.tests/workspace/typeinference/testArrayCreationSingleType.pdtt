@@ -1,0 +1,6 @@
+--TEST--
+Test Array Creation Single Type
+--FILE--
+<?php testArrayCreationSingleType(array(1, 2, 3, 4)); ?>
+--EXPECT--
+multitype:number

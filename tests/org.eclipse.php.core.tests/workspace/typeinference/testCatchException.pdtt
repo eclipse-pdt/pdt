@@ -1,0 +1,6 @@
+--TEST--
+Test Catch Exception
+--FILE--
+<?php try {} catch (A $exc) { testCatchException($exc); } ?>
+--EXPECT--
+A

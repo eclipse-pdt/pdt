@@ -1,0 +1,6 @@
+--TEST--
+Test Parent Field Access
+--FILE--
+<?php class A { static $a = 5; } class B extends A { function __construct() { testParentFieldAccess(parent::$a); }} ?>
+--EXPECT--
+number

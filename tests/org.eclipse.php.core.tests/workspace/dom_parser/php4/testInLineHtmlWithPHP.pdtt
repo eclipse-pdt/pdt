@@ -1,5 +1,5 @@
 --TEST--
-Test In Line Html With P H P
+Test In Line Html With PHP
 --FILE--
 <html> <?php ?> </html> <?php ?>
 --EXPECT--

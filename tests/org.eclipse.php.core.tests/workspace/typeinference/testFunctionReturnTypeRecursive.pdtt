@@ -1,0 +1,6 @@
+--TEST--
+Test Function Return Type Recursive
+--FILE--
+<?php function bar() { return 3; } function foo() { return bar(); } testFunctionReturnTypeRecursive(foo()); ?>
+--EXPECT--
+number
