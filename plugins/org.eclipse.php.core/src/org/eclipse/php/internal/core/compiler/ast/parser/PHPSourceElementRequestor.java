@@ -234,6 +234,11 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (typeDeclaration instanceof NamespaceDeclaration) {
 			ti.modifiers |= Modifiers.AccNameSpace;
 		}
+		
+		// modify class info if needed by extensions
+		for (PHPSourceElementRequestorExtension extension : extensions) {
+			extension.modifyClassInfo(typeDeclaration, ti);
+		}
 	}
 
 	/**

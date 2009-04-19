@@ -6,12 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     IBM Corporation - initial API and implementation
+ *     Zend Technologies - initial API and implementation
  *******************************************************************************/
 package org.eclipse.php.core;
 
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
+import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 
 public class PHPSourceElementRequestorExtension extends ASTVisitor {
@@ -36,5 +38,8 @@ public class PHPSourceElementRequestorExtension extends ASTVisitor {
 
 	public ISourceModule getSourceModule() {
 		return fSourceModule;
+	}
+
+	public void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
 	}
 }
