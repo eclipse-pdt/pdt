@@ -31,7 +31,7 @@
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
 		<property name="testtype" value="java-test" />
-		<property name="classname" value="org.eclipse.php.BareTestSuite" />
+		<property name="classname" value="org.eclipse.php.core.tests.AllTests" />
 
 		<ant target="${testtype}"
 		     antfile="${library-file}"
@@ -59,7 +59,7 @@
 	<target name="junits" depends="init">
 		<macrodef name="runTestSuite">
 			<attribute name="classname"
-			           default="org.eclipse.php.test.BareTestSuite" />
+			           default="org.eclipse.php.core.tests.AllTests" />
 			<attribute name="testtype" default="core-test" />
 			<sequential>
 				<antcall target="suite">
@@ -73,11 +73,7 @@
 		</macrodef>
 
 		<runTestSuite testtype="core-test"
-		              classname="org.eclipse.php.test.BareTestSuite" />
-		<runTestSuite testtype="core-test"
-		              classname="org.eclipse.php.test.HeadlessTestSuite" />
-		<runTestSuite testtype="ui-test"
-		              classname="org.eclipse.php.test.GUITestSuite" />
+		              classname="org.eclipse.php.core.tests.AllTests" />
 
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="includes" value="org*.xml" />
