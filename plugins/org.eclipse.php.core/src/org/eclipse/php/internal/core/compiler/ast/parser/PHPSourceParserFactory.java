@@ -43,6 +43,20 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 			}
 		}
 		
+		AbstractPHPSourceParser parser = createParser(fileName, phpVersion);
+		if (parser == null) {
+			throw new IllegalStateException("Unknown PHP version!");
+		}
+		return parser;
+	}
+	
+	/**
+	 * Create source parser for the given PHP file name and PHP version
+	 * @param fileName
+	 * @param phpVersion
+	 * @return source parser instance or <code>null</code> in case PHP version is incompatibleS
+	 */
+	public static AbstractPHPSourceParser createParser(String fileName, PHPVersion phpVersion) {
 		if (PHPVersion.PHP4 == phpVersion) {
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php4.PhpSourceParser(fileName);
 		}
@@ -52,6 +66,24 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 		if (PHPVersion.PHP5_3 == phpVersion) {
 			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser(fileName);
 		}
-		throw new IllegalStateException("Unknown PHP version!");
+		return null;
+	}
+	
+	/**
+	 * Create source parser for the PHP version
+	 * @param phpVersion
+	 * @return source parser instance or <code>null</code> in case PHP version is incompatibleS
+	 */
+	public static AbstractPHPSourceParser createParser(PHPVersion phpVersion) {
+		if (PHPVersion.PHP4 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php4.PhpSourceParser();
+		}
+		if (PHPVersion.PHP5 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser();
+		}
+		if (PHPVersion.PHP5_3 == phpVersion) {
+			return new org.eclipse.php.internal.core.compiler.ast.parser.php53.PhpSourceParser();
+		}
+		return null;
 	}
 }
