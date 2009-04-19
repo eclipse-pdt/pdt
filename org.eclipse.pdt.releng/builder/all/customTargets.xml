@@ -23,7 +23,7 @@
 				(eg., no examples), and be sure to create an ".all" feature which includes your 
 				SDK feature plus any other plugins/features not included in the SDK 
 			-->
-			<property name="id" value="org.eclipse.php.sdk_feature" />
+			<property name="id" value="org.eclipse.php.sdk" />
 		</ant>
 	</target>
 
@@ -39,7 +39,7 @@
 		(eg., no examples), and be sure to create an ".all" feature which includes your 
 		SDK feature plus any other plugins/features not included in the SDK 
 	-->
-	<target name="assemble.org.eclipse.php.sdk_feature">
+	<target name="assemble.org.eclipse.php.sdk">
 		<property name="archiveName" value="pdt-Master-${buildAlias}.zip" />
 		<ant antfile="${assembleScriptName}" />
 		<!-- ADD POST STEPS -->
