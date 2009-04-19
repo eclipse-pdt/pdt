@@ -1,0 +1,14 @@
+--TEST--
+Should NOT complete namespace elements using wrong namespace prefix
+--FILE--
+<?
+namespace NS;
+function AAA() {}
+class AAA {}
+const AAA = 5;
+$AAA = "";
+
+NS\|
+?>
+--EXPECT--
+

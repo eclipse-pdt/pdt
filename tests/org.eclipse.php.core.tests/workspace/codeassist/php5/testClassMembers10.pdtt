@@ -1,0 +1,6 @@
+--TEST--
+Test Inherited Static Method
+--FILE--
+<? class A { static function foo() } class B extends A {}    B::| ?>
+--EXPECT--
+method(foo)

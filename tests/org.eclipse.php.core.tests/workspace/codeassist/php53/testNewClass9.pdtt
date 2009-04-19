@@ -1,0 +1,14 @@
+--TEST--
+Should complete other namespace class instantiation using 'namespace' keyword prefix.
+--FILE--
+<?
+namespace NS;
+
+class AAAA {}
+function AAAA() {}
+const AAAA = 5;
+
+$a = new namespace\|
+?>
+--EXPECT--
+type(AAAA)

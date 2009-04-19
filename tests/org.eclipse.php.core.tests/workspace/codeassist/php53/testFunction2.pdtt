@@ -1,0 +1,14 @@
+--TEST--
+Should complete function defined in namespace method
+--FILE--
+<?
+namespace NS;
+class A {
+	function foo() {
+		function myFunction() {} 
+	}
+}
+myFu|
+?>
+--EXPECT--
+method(myFunction)

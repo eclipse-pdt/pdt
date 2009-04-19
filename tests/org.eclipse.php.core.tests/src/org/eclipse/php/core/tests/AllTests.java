@@ -1,5 +1,11 @@
 package org.eclipse.php.core.tests;
 
+import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
+import org.eclipse.php.core.tests.dom_parser.DomParserTests;
+import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
+import org.eclipse.php.core.tests.mixin.MixinTests;
+import org.eclipse.php.core.tests.selection.SelectionEngineTests;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -9,8 +15,14 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.php.core");
 
 		// $JUnit-BEGIN$
+		suite.addTest(DomParserTests.suite());
+		suite.addTest(CodeAssistTests.suite());
+		suite.addTest(SelectionEngineTests.suite());
+		suite.addTest(MixinTests.suite());
+		suite.addTest(FileNetworkTests.suite());
 
 		// $JUnit-END$
+		
 		return suite;
 	}
 }

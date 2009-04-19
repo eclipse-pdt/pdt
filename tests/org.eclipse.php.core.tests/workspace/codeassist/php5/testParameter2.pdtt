@@ -1,0 +1,6 @@
+--TEST--
+Test Method Parameter
+--FILE--
+<? class myClass { function foo(myC|) {} } ?>
+--EXPECT--
+type(myClass)

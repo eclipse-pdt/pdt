@@ -1,0 +1,17 @@
+--TEST--
+Should complete inherited class methods under namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	function foo(){}
+}
+class B extends A {
+	function bar(){}
+}
+$b = new B();
+$b->|
+?>
+--EXPECT--
+method(foo)
+method(bar)

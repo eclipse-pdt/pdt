@@ -1,0 +1,18 @@
+--TEST--
+Should complete namespace elements using namespace alias
+--FILE--
+<?
+namespace NS;
+function AAA() {}
+class AAA {}
+const AAA = 5;
+$AAA = "";
+
+namespace OtherNS;
+use NS as Z;
+Z\|
+?>
+--EXPECT--
+type(AAA)
+method(AAA)
+field(AAA)

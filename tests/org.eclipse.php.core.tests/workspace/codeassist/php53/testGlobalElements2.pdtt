@@ -1,0 +1,15 @@
+--TEST--
+Should complete global variables from other namespace
+--FILE--
+<?
+namespace NS {
+	define('TEST1', 0);
+	$TEST2 = '';
+}
+
+namespace {
+	$TEST|
+}
+?>
+--EXPECT--
+field($TEST2)

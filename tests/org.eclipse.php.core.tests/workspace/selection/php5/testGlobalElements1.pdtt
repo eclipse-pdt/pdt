@@ -1,0 +1,9 @@
+--TEST--
+Test Constant Selection
+--FILE--
+<?
+define('TEST1', 5);
+echo |TEST1|;
+?>
+--EXPECT--
+field(TEST1)

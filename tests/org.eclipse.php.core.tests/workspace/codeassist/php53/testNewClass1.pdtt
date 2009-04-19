@@ -1,0 +1,13 @@
+--TEST--
+Should complete class instantiation using current namespace notation
+--FILE--
+<?
+namespace NS;
+class AAAA {}
+function AAAA() {}
+const AAAA = 5;
+
+$a = new namespace\AA|
+?>
+--EXPECT--
+type(AAAA)

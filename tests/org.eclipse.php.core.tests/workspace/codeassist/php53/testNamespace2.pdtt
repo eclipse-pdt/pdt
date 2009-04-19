@@ -1,0 +1,11 @@
+--TEST--
+Should NOT complete global namespace names
+--FILE--
+<?
+	namespace MyNS1;
+	namespace MyNS2;
+	MyNS| 
+?>
+--EXPECT--
+type(MyNS1)
+type(MyNS2)

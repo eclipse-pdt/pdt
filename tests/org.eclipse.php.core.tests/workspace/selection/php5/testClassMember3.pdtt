@@ -1,0 +1,10 @@
+--TEST--
+Test Class Variable Selection
+--FILE--
+<?
+class A {
+	var $v|a|r;
+}
+?>
+--EXPECT--
+field($var)

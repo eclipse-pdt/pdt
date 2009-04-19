@@ -1,0 +1,19 @@
+--TEST--
+Test Singleton Instance
+--FILE--
+<?php
+class Singleton {
+	private static $_instance;
+	private function __construct() {}
+	public static function getInstance() {
+		if (self::$_instance instanceof self === false) {
+			self::$_instance = new self();
+		}
+		return self::$_instance;
+	}
+	public function foo() {
+	}
+} Singleton::getInstance()->|; ?>
+--EXPECT--
+method(foo)
+method(getInstance)

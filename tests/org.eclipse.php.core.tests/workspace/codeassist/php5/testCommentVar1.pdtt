@@ -1,0 +1,13 @@
+--TEST--
+Test Commented Variable With Class Type Methods
+--FILE--
+<?php 
+	class Foobar {
+		public function nonsense(){} 
+	} 
+	/* @var $obj Foobar */ 
+	$obj = null; 
+	$obj->|
+ ?>
+--EXPECT--
+method(nonsense)

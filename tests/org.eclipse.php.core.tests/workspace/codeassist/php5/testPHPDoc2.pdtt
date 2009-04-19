@@ -1,0 +1,14 @@
+--TEST--
+Test PHPDoc Function Return Type
+--FILE--
+<?php
+
+class MyClass1 {}
+class MyClass2 {}
+/**
+ * @return MyCl|
+ */
+function foo() { if (true) return new MyClass1(); else return new MyClass2(); } ?>
+--EXPECT--
+type(MyClass1)
+type(MyClass2)

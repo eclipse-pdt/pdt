@@ -1,0 +1,8 @@
+--TEST--
+Test In Class Declaration With Prefix
+--FILE--
+<? class A { p| } ?>
+--EXPECT--
+keyword(private)
+keyword(protected)
+keyword(public)

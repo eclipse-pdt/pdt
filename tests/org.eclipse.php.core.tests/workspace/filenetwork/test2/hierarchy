@@ -1,0 +1,9 @@
+/filenetwork/test2/a.php
+	|
+	+-> /filenetwork/test2/b.php
+		|
+		+-> /filenetwork/test2/c.php
+			|
+			+-> /filenetwork/test2/e.php
+		|
+		+-> /filenetwork/test2/d.php

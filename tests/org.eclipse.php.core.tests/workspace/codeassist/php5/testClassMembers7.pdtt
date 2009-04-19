@@ -1,0 +1,12 @@
+--TEST--
+Test Inherited Interface Methods
+--FILE--
+<? interface A { function a(); }
+   interface B extends A { function b(); }
+   function check(B $b) {
+       $b->|
+   }
+ ?>
+--EXPECT--
+method(a)
+method(b)

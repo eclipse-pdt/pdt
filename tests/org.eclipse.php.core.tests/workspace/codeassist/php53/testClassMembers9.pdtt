@@ -1,0 +1,36 @@
+--TEST--
+Show parent class members under namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	var $simpleField;
+	private $privateField;
+	protected $protectedField;
+	public $publicField;
+	static $staticField;
+	const CONSTANT_FIELD = 5;
+	static public function publicStaticFunction() {}
+	static protected function protectedStaticFunction() {}
+	static private function privateStaticFunction() {}
+	static function defaultStaticFunction() {}
+	public function publicNonStaticFunction() {}
+	protected function protectedNonStaticFunction() {}
+	private function privateNonStaticFunction() {}
+	function defaultNonStaticFunction() {}
+}
+class B extends A {
+	function __construct() {
+		parent::|
+	}
+}
+?>
+--EXPECT--
+field($staticField)
+field(CONSTANT_FIELD)
+method(publicStaticFunction)
+method(protectedStaticFunction)
+method(defaultStaticFunction)
+method(publicNonStaticFunction)
+method(protectedNonStaticFunction)
+method(defaultNonStaticFunction)

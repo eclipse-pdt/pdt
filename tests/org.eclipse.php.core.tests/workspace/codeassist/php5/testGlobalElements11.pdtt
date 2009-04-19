@@ -1,0 +1,14 @@
+--TEST--
+Should complete local function variables, should NOT complete global ones (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=253715) 
+--FILE--
+<?php
+$myvar3 = 'int@yahoo.com';
+function media(){
+   $myvar1 = 'music';
+   $myvar2 = 'messenger'; 
+   $myvar|
+}
+?>
+--EXPECT--
+field($myvar1)
+field($myvar2)

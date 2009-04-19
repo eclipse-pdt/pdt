@@ -1,0 +1,16 @@
+--TEST--
+Should complete namespace elements using fully qualified prefix
+--FILE--
+<?
+namespace NS;
+function AAA() {}
+class AAA {}
+const AAA = 5;
+$AAA = "";
+
+\NS\AA|
+?>
+--EXPECT--
+type(AAA)
+method(AAA)
+field(AAA)

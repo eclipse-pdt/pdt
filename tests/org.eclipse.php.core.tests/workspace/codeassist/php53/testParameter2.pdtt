@@ -1,0 +1,13 @@
+--TEST--
+Should comlete namespace constants in parameter initializers
+--FILE--
+<?
+namespace NS;
+const MY_CONST1 = 1;
+const MY_CONST2 = 2;
+
+function foo($a = MY_CON|) {} 
+?>
+--EXPECT--
+field(MY_CONST1)
+field(MY_CONST1)

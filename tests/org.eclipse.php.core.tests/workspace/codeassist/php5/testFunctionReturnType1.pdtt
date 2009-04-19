@@ -1,0 +1,22 @@
+--TEST--
+Test Function Return Multiple Types
+--FILE--
+<?
+class A {
+	function foo() {}
+}
+class B {
+	function bar() {}
+}
+function bar() {
+	if (t()) {
+		return new A();
+	} else {
+		return new B();
+	}
+}
+bar()->|
+?>
+--EXPECT--
+method(foo)
+method(bar)

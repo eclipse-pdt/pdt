@@ -1,0 +1,16 @@
+--TEST--
+Should complete inherited static fields under namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	const C = 5;
+	static $var2;
+	var $var1;
+}
+class B extends A {}
+B::|
+?>
+--EXPECT--
+field($var2)
+field(C)

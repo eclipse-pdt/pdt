@@ -1,0 +1,19 @@
+--TEST--
+Should complete sub-namespaces using prefix (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=267805)
+--FILE--
+<?php
+namespace NS;
+
+namespace NS\SubNS1;
+class A {
+}
+
+namespace NS\SubNS2;
+class B {
+}
+
+\NS\|
+?>
+--EXPECT--
+type(NS\SubNS1)
+type(NS\SubNS2)

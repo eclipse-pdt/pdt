@@ -1,0 +1,13 @@
+--TEST--
+Should complete class keywords with prefix under namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	p|
+}
+?>
+--EXPECT--
+keyword(private)
+keyword(protected)
+keyword(public)

@@ -1,0 +1,11 @@
+/filenetwork/test1/a.php
+	|
+	+-> /filenetwork/test1/b.php
+		|
+		+-> /filenetwork/test1/d.php
+			|
+			+-> /filenetwork/test1/c.php
+				|
+				+-> /filenetwork/test1/e.php
+	|
+	+-> /filenetwork/test1/g.php

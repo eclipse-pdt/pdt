@@ -1,0 +1,14 @@
+--TEST--
+
+--FILE--
+<? namespace NS;
+   interface A { function a(); }
+   namespace OtherNS;
+   interface B extends NS\A { function b(); }
+   function check(B $b) {
+       $b->|
+   }
+ ?>
+--EXPECT--
+method(a)
+method(b)

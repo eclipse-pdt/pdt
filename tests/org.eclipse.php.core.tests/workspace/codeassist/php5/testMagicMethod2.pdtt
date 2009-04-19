@@ -1,0 +1,9 @@
+--TEST--
+Test Magic Method With Binding
+--FILE--
+<? /**
+     * @method A foo()
+	  */ class A { function goo() { }  } ; $a = new A(); $a->foo()->|  ?>
+--EXPECT--
+method(foo)
+method(goo)

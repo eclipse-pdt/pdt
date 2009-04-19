@@ -1,0 +1,16 @@
+--TEST--
+Should complete other namespace class instantiation
+--FILE--
+<?
+namespace NS;
+
+class AAAA {}
+function AAAA() {}
+const AAAA = 5;
+
+namespace OtherNS;
+
+$a = new AA|
+?>
+--EXPECT--
+type(AAAA)

@@ -1,0 +1,11 @@
+--TEST--
+Test Nested Code With This
+--FILE--
+<?php
+class A {
+	function foo() { return $this; }
+};
+$a = new A();
+$a->foo()->|
+--EXPECT--
+method(foo)

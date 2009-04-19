@@ -1,0 +1,11 @@
+--TEST--
+Test Inherited Interface By Class Methods
+--FILE--
+<? interface A { function fa(); }
+   class B implements A { function fa() {} }
+   function check(B $b) {
+       $b->|
+   }
+ ?>
+--EXPECT--
+method(fa)

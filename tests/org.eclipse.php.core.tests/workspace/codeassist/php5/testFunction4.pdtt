@@ -1,0 +1,9 @@
+--TEST--
+Test Internal Function
+--FILE--
+<?
+/**
+ * @internal
+ */
+function myInternalFunction() {} myInter|?>
+--EXPECT--

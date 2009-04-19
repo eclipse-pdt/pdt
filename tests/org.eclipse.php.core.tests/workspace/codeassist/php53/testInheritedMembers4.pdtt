@@ -1,0 +1,13 @@
+--TEST--
+Should complete inherited static methods under namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	static function foo() {}
+}
+class B extends A {}
+B::|
+?>
+--EXPECT--
+method(foo)

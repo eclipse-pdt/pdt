@@ -1,0 +1,18 @@
+--TEST--
+Test Static Class Var Object Operator
+--FILE--
+<?
+class Person {
+	public $FirstName;
+	public $LastName;
+}
+class FooBase {}
+class Foo extends FooBase {
+	/**
+	 * @var Person
+	 */
+	public static $Person;
+} Foo::$Person->| ?>
+--EXPECT--
+field($FirstName)
+field($LastName)

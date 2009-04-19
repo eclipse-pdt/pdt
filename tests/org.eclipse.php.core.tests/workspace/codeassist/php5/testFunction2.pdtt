@@ -1,0 +1,6 @@
+--TEST--
+Test Function In Function
+--FILE--
+<? function foo() { function myFunction() {} } myF|?>
+--EXPECT--
+method(myFunction)

@@ -1,0 +1,8 @@
+--TEST--
+Test PHPFunction
+--FILE--
+<? print| ?>
+--EXPECT--
+method(print_r)
+method(printf)
+keyword(print)

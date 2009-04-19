@@ -1,0 +1,11 @@
+--TEST--
+Should complete global variable in function (bug: https://bugs.eclipse.org/bugs/show_bug.cgi?id=255635) 
+--FILE--
+<?
+function foo() {
+	global $myVar;
+	$myV|
+}
+?>
+--EXPECT--
+field($myVar)

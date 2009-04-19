@@ -1,0 +1,14 @@
+--TEST--
+Test Function Return Type
+--FILE--
+<?
+	class A {
+		function foo() {}
+	}
+	function bar() {
+		return new A();
+	}
+	bar()->|
+?>
+--EXPECT--
+method(foo)

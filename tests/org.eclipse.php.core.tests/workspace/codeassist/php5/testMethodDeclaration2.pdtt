@@ -1,0 +1,15 @@
+--TEST--
+Test Not Showing Existing Overridden Method
+--FILE--
+<?
+class A {
+	function myFoo() {}
+	function myBar() {}
+}
+class B extends A {
+	function myFoo() {}
+	function my|
+}
+?>
+--EXPECT--
+method(myBar)

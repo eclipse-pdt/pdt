@@ -1,0 +1,13 @@
+--TEST--
+Test Magic Property
+--FILE--
+<? /**
+     * @property mixed $a
+	  * @property-read int $b
+	  * @property-write array $c
+	  */ class A { function foo() { $this->| } } ?>
+--EXPECT--
+field($a)
+field($b)
+field($c)
+method(foo)

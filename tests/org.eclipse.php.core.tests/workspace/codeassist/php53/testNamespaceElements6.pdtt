@@ -1,0 +1,16 @@
+--TEST--
+Should complete namespace elements using 'namespace' prefix, which means: current namespace
+--FILE--
+<?
+namespace NS;
+function AAA() {}
+class AAA {}
+const AAA = 5;
+$AAA = "";
+
+namespace\|
+?>
+--EXPECT--
+type(AAA)
+method(AAA)
+field(AAA)

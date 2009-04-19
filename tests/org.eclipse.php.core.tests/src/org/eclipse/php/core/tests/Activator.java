@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -55,5 +56,29 @@ public class Activator extends Plugin {
 	public static InputStream openResource(String path) throws IOException {
 		URL url = getDefault().getBundle().getEntry(path);
 		return new BufferedInputStream(url.openStream());		
+	}
+	
+	/**
+	 * Compares expected result with the actual.
+	 * @param expected
+	 * @param actual
+	 * @return difference string or <code>null</code> in case expected result is equal to the actual.
+	 */
+	public static String compareContents(String expected, String actual) {
+		actual = actual.trim();
+		expected = expected.trim();
+		
+		int expectedDifference = StringUtils.indexOfDifference(actual, expected);
+		if (expectedDifference >= 0) {
+			int actualDifference = StringUtils.indexOfDifference(expected, actual);
+
+			StringBuilder errorBuf = new StringBuilder();
+			errorBuf.append("\nEXPECTED:\n--------------\n");
+			errorBuf.append(expected.substring(0, expectedDifference)).append("*****").append(expected.substring(expectedDifference));
+			errorBuf.append("\n\nACTUAL:\n--------------\n");
+			errorBuf.append(actual.substring(0, actualDifference)).append("*****").append(actual.substring(actualDifference));
+			return errorBuf.toString();
+		}
+		return null;
 	}
 }

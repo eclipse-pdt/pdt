@@ -1,0 +1,10 @@
+--TEST--
+Test Namespace Constant Selection
+--FILE--
+<?
+namespace NS;
+const foo = 5;
+\NS\|foo|;
+?>
+--EXPECT--
+field(foo)

@@ -1,0 +1,13 @@
+--TEST--
+Test Class In Function In Class
+--FILE--
+<?
+class A {
+	function foo() {
+		class MyClass {}
+	}
+}
+MyCla|
+?>
+--EXPECT--
+type(MyClass)

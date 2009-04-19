@@ -1,0 +1,6 @@
+--TEST--
+Test Internal Constant
+--FILE--
+<? function foo() { define('TEST1', 0); } TEST| ?>
+--EXPECT--
+field(TEST1)

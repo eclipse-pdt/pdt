@@ -1,0 +1,10 @@
+--TEST--
+Test class instantiation from variable (bug 269719)
+--FILE--
+<?php
+class A {
+}
+$aName = "A";
+$a = new $aN| 
+--EXPECT--
+field($aName)

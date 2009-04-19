@@ -1,0 +1,11 @@
+--TEST--
+Should complete global namespaces using camel case prefix 
+--FILE--
+<?
+	namespace VeryLongNamespace1;
+	namespace VeryLongNamespace2;
+	\VLN|
+?>
+--EXPECT--
+type(VeryLongNamespace1)
+type(VeryLongNamespace2)

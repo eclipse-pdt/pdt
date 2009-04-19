@@ -1,0 +1,12 @@
+--TEST--
+Test Field Access Selection
+--FILE--
+<?
+class A {
+	var $var;
+}
+$a = new A();
+|$a->var|;
+?>
+--EXPECT--
+field($var)

@@ -1,0 +1,12 @@
+--TEST--
+Test Function Return Multiple Types Doc
+--FILE--
+<? class A { function foo() {} }
+   class B { function bar() {} }
+/**
+ * @return A|B 
+ */
+function bar() { } bar()->| ?>
+--EXPECT--
+method(foo)
+method(bar)

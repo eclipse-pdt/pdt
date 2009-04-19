@@ -1,0 +1,39 @@
+--TEST--
+Test PHPDoc Tag
+--FILE--
+<?php
+/**
+ * @|
+ */
+function foo() {} ?>
+--EXPECT--
+keyword(abstract)
+keyword(access)
+keyword(author)
+keyword(category)
+keyword(copyright)
+keyword(deprecated)
+keyword(example)
+keyword(final)
+keyword(filesource)
+keyword(global)
+keyword(ignore)
+keyword(internal)
+keyword(license)
+keyword(link)
+keyword(method)
+keyword(name)
+keyword(package)
+keyword(param)
+keyword(property)
+keyword(return)
+keyword(see)
+keyword(since)
+keyword(static)
+keyword(staticvar)
+keyword(subpackage)
+keyword(todo)
+keyword(tutorial)
+keyword(uses)
+keyword(var)
+keyword(version)

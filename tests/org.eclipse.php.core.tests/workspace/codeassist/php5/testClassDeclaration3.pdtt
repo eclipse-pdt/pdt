@@ -1,0 +1,10 @@
+--TEST--
+Test Class Declaration Implements
+--FILE--
+<?
+interface testInterface {}
+class testClass{}
+class A implements test|
+?>
+--EXPECT--
+type(testInterface)

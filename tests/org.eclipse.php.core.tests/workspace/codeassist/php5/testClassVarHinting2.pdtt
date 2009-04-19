@@ -1,0 +1,15 @@
+--TEST--
+Test Class Var Hinting Hier
+--FILE--
+<?
+interface I { public function test(); }
+class TestBaseClass {
+	/**
+	 * @var I
+	 */
+	public $_testObject;
+}
+class TestClass extends TestBaseClass {}
+$test = new TestClass(); $test->_testObject->| ?>
+--EXPECT--
+method(test)

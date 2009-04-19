@@ -1,0 +1,14 @@
+--TEST--
+Should complete "self" reference in namespace class method 
+--FILE--
+<?
+namespace NS;
+class MyClass {
+	private function __construct() {}
+	function getInstance() {
+		return new sel| ;
+	}
+}
+?>
+--EXPECT--
+method(self)

@@ -1,0 +1,10 @@
+--TEST--
+Test Function Return Type Doc
+--FILE--
+<? class A { function foo() {} }
+/**
+ * @return A
+ */
+function bar() { } bar()->| ?>
+--EXPECT--
+method(foo)

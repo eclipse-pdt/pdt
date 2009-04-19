@@ -1,0 +1,9 @@
+--TEST--
+Test Function
+--FILE--
+<?
+function myFunction() {}
+myF|
+?>
+--EXPECT--
+method(myFunction)

@@ -1,0 +1,14 @@
+--TEST--
+Should complete class instantiation fully qualified name
+--FILE--
+<?
+namespace NS;
+
+class AAAA {}
+function AAAA() {}
+const AAAA = 5;
+
+$a = new \NS\AA|
+?>
+--EXPECT--
+type(AAAA)

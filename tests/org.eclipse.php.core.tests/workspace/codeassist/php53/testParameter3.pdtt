@@ -1,0 +1,11 @@
+--TEST--
+Should complete function parameter type in current namespace
+--FILE--
+<?
+namespace NS;
+class myClass {
+	function foo(myC|) {}
+}
+?>
+--EXPECT--
+type(myClass)

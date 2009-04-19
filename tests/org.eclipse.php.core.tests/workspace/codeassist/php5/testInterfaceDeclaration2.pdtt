@@ -1,0 +1,9 @@
+--TEST--
+Test Class Declaration Extends
+--FILE--
+<?
+interface testIface {} 
+interface otherIface extends test|
+?>
+--EXPECT--
+type(testIface)

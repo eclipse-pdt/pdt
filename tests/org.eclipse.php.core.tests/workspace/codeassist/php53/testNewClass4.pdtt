@@ -1,0 +1,13 @@
+--TEST--
+Test class instantiation in current namespace
+--FILE--
+<?
+namespace NS;
+class AAAA {}
+function AAAA() {}
+const AAAA = 5;
+
+$a = new AA|
+?>
+--EXPECT--
+type(AAAA)

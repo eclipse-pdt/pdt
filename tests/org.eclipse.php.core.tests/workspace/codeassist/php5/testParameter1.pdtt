@@ -1,0 +1,11 @@
+--TEST--
+Test Func Parameter Initializer
+--FILE--
+<?
+	define('MY_CONST1', 1);
+	define('MY_CONST2', 2);
+	function foo($a = MY_CO|) {}
+?>
+--EXPECT--
+field(MY_CONST1)
+field(MY_CONST2)

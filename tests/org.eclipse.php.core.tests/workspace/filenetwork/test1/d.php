@@ -1,0 +1,5 @@
+<?php
+
+include('b.php');
+
+?>

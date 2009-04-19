@@ -1,0 +1,12 @@
+--TEST--
+Test Constant Access Selection
+--FILE--
+<?
+class A {
+	const C = 5;
+}
+$a = new A();
+|$a->C|;
+?>
+--EXPECT--
+field(C)

@@ -1,0 +1,7 @@
+--TEST--
+Test Method Argument
+--FILE--
+<? function foo($arg1, $arg2) { $arg| } ?>
+--EXPECT--
+field($arg1)
+field($arg2)

@@ -1,0 +1,12 @@
+--TEST--
+Test New Class
+--FILE--
+<?
+class MyClass1 {}
+class MyClass2 {}
+class MyClass3 { private function __construct() {} }
+$a = new MyClass|
+?>
+--EXPECT--
+type(MyClass1)
+type(MyClass2)

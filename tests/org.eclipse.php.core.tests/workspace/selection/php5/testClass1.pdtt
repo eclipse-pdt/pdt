@@ -1,0 +1,10 @@
+--TEST--
+Test Class Selection
+--FILE--
+<?
+class MyClass {
+}
+|MyClass|::foo();
+?>
+--EXPECT--
+type(MyClass)

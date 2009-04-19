@@ -1,0 +1,10 @@
+--TEST--
+Test Class Declaration Extends
+--FILE--
+<?
+interface testInterface {} 
+class testClass{}
+class A extends test|
+?>
+--EXPECT--
+type(testClass)

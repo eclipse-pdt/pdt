@@ -7,7 +7,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -64,19 +63,9 @@ public class AbstractPDTTTest extends TestCase {
 	}
 
 	protected void assertContents(String expected, String actual) {
-		actual = actual.trim();
-		expected = expected.trim();
-		
-		int expectedDifference = StringUtils.indexOfDifference(actual, expected);
-		if (expectedDifference >= 0) {
-			int actualDifference = StringUtils.indexOfDifference(expected, actual);
-
-			StringBuilder errorBuf = new StringBuilder();
-			errorBuf.append("\nEXPECTED:\n--------------\n");
-			errorBuf.append(expected.substring(0, expectedDifference)).append("*****").append(expected.substring(expectedDifference));
-			errorBuf.append("\n\nACTUAL:\n--------------\n");
-			errorBuf.append(actual.substring(0, actualDifference)).append("*****").append(actual.substring(actualDifference));
-			fail(errorBuf.toString());
+		String diff = Activator.compareContents(expected, actual);
+		if (diff != null) {
+			fail(diff);
 		}
 	}
 

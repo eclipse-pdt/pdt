@@ -1,0 +1,10 @@
+--TEST--
+Test Class Method Selection
+--FILE--
+<?
+class A {
+	function f|oo|() {}
+}
+?>
+--EXPECT--
+method(foo)

@@ -1,0 +1,7 @@
+--TEST--
+Test Inherited Static Field
+--FILE--
+<? class A { const C = 5; static $var2; var $var1 } class B extends A {}    B::| ?>
+--EXPECT--
+field($var2)
+field(C)

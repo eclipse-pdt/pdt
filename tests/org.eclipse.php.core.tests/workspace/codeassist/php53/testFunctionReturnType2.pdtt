@@ -1,0 +1,17 @@
+--TEST--
+Should complete from function return type in other namespace
+--FILE--
+<?
+namespace NS;
+class A {
+	function foo() {}
+}
+function bar() {
+	return new A();
+}
+
+namespace OtherNS;
+\NS\bar()->|
+?>
+--EXPECT--
+method(foo)

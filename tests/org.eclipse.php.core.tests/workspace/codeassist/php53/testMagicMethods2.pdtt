@@ -1,0 +1,17 @@
+--TEST--
+Should complete PHPDoc magic methods binding under namespace
+--FILE--
+<?
+namespace NS;
+/**
+ * @method A foo()
+ */
+class A {
+	function goo() {
+		$this->foo()->|
+	}
+}
+?>
+--EXPECT--
+method(foo)
+method(goo)

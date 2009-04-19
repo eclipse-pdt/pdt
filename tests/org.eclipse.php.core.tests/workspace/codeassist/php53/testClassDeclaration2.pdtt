@@ -1,0 +1,12 @@
+--TEST--
+Should complete class names after 'implements' keyword in other namespace
+--FILE--
+<?
+namespace NS;
+interface testInterface {}
+class testClass {}
+
+namespace OtherNS;
+class A implements test| ?>
+--EXPECT--
+type(testInterface)
