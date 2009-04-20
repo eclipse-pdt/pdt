@@ -14,7 +14,8 @@ import java.io.Reader;
 import java.io.StringReader;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.Declaration;
@@ -30,7 +31,11 @@ import org.eclipse.php.internal.core.compiler.ast.parser.php5.PhpSourceParser;
  * These tests used for checking association between declaration AST node
  * and PHPDoc block assigned to it. 
  */
-public class PHPDocAwareDeclarationTests extends TestCase {
+public class PHPDocAwareDeclarationTests extends TestSuite {
+	
+	public static Test suite() {
+		return new TestSuite(PHPDocAwareDeclarationTests.class);
+	}
 
 	public void testVar() throws Exception {
 		String str = "<?php  class A { /** My class variable */ var $testVar; } ?>";
