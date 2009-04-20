@@ -47,9 +47,11 @@ public abstract class ContextFinder extends ASTVisitor {
 	abstract public IContext getContext();
 
 	public boolean visit(ModuleDeclaration node) throws Exception {
+		contextStack.push(new FileContext(sourceModule, node));
+		
 		boolean visitGeneral = visitGeneral(node);
-		if (visitGeneral) {
-			contextStack.push(new FileContext(sourceModule, node));
+		if (!visitGeneral) {
+			contextStack.pop();
 		}
 		return visitGeneral;
 	}
@@ -68,12 +70,16 @@ public abstract class ContextFinder extends ASTVisitor {
 			} else {
 				instanceType = new PHPClassType(node.getName());
 			}
+			
+			contextStack.push(new TypeContext(parentContext, instanceType));
+			
 			boolean visitGeneral = visitGeneral(node);
-			if (visitGeneral) {
-				contextStack.push(new TypeContext(parentContext, instanceType));
+			if (!visitGeneral) {
+				contextStack.pop();
 			}
 			return visitGeneral;
 		}
+		
 		return visitGeneral(node);
 	}
 
@@ -88,9 +94,12 @@ public abstract class ContextFinder extends ASTVisitor {
 		}
 		IContext parent = contextStack.peek();
 		ModuleDeclaration rootNode = ((ISourceModuleContext) parent).getRootNode();
+		
+		contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
+		
 		boolean visitGeneral = visitGeneral(node);
-		if (visitGeneral) {
-			contextStack.push(new MethodContext(parent, sourceModule, rootNode, node, argumentsList.toArray(new String[argumentsList.size()]), argTypes.toArray(new IEvaluatedType[argTypes.size()])));
+		if (!visitGeneral) {
+			contextStack.pop();
 		}
 		return visitGeneral;
 	}
