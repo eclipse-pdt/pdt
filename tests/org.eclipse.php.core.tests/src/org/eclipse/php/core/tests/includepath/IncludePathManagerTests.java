@@ -32,7 +32,6 @@ import org.eclipse.php.internal.core.project.PHPNature;
 
 public class IncludePathManagerTests extends SuiteOfTestCases {
 
-	protected IScriptProject scriptProject;
 	protected IProject project;
 
 	public IncludePathManagerTests(String name) {
@@ -44,10 +43,8 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 	}
 
 	public void setUpSuite() throws Exception {
-		if (scriptProject != null) {
+		if (project != null) {
 			project.delete(true, null);
-			scriptProject.close();
-			scriptProject = null;
 		}
 		super.setUpSuite();
 	}
@@ -58,13 +55,12 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 	}
 	
 	protected void setUp() throws Exception {
-		if (scriptProject == null) {
+		if (project == null) {
 			// Initialize include path manager:
 			IncludePathManager.getInstance();
 
 			project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
 			if (project.exists()) {
-				scriptProject = DLTKCore.create(project);
 				return;
 			}
 
@@ -75,12 +71,11 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 			IProjectDescription desc = project.getDescription();
 			desc.setNatureIds(new String[] { PHPNature.ID });
 			project.setDescription(desc, null);
-			
-			scriptProject = DLTKCore.create(project);
 		}
 	}
 	
 	public void testIncludePathGet() throws Exception {
+		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(new IBuildpathEntry[0], null);
 
 		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
@@ -91,6 +86,8 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 	public void testIncludePathGetAfterBPChange1() throws Exception {
 		IFolder folder = project.getFolder("a");
 		folder.create(true, true, null);
+		
+		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(new IBuildpathEntry[] {
 			DLTKCore.newSourceEntry(folder.getFullPath()) 
 		}, null);
@@ -102,6 +99,8 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 	// This test checks how buildpath changes are propogated to the include path:
 	public void testIncludePathGetAfterBPChange2() throws Exception {
 		String libraryPath = Platform.OS_WIN32.equals(Platform.getOS()) ? "C:\\Projects\\MyLibrary" : "/var/www/MyLibrary";
+		
+		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(new IBuildpathEntry[] {
 			DLTKCore.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(LocalEnvironment.getInstance(), new Path(libraryPath))) 
 		}, null);

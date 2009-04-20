@@ -7,22 +7,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.search.IDLTKSearchConstants;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.core.search.SearchMatch;
-import org.eclipse.dltk.core.search.SearchParticipant;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-
 /**
  * This is an abstract test for .pdtt tests
  * @author michael
@@ -67,33 +51,5 @@ public class AbstractPDTTTest extends TestCase {
 		if (diff != null) {
 			fail(diff);
 		}
-	}
-
-	protected static void waitForIndexer(IProject project) throws CoreException {
-		SearchEngine searchEngine = new SearchEngine();
-		IDLTKSearchScope scope = PHPModelUtils.createProjectSearchScope(DLTKCore.create(project));
-		SearchPattern pattern = SearchPattern.createPattern("*", IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-		searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-			public void acceptSearchMatch(SearchMatch match) throws CoreException {
-			}
-		}, null);
-	}
-
-	/**
-	 * Wait for autobuild notification to occur, that is for the autbuild to
-	 * finish.
-	 */
-	protected static void waitForAutoBuild() {
-		boolean wasInterrupted = false;
-		do {
-			try {
-				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-				wasInterrupted = false;
-			} catch (OperationCanceledException e) {
-				throw (e);
-			} catch (InterruptedException e) {
-				wasInterrupted = true;
-			}
-		} while (wasInterrupted);
 	}
 }

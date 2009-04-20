@@ -32,6 +32,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
+import org.eclipse.php.core.tests.Activator;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -62,8 +63,6 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-		
-		waitForAutoBuild();
 	}
 
 	public static void tearDownSuite() throws Exception {
@@ -206,8 +205,8 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		waitForAutoBuild();
-		waitForIndexer(project);
+		Activator.waitForAutoBuild();
+		Activator.waitForIndexer(project);
 
 		return offset;
 	}

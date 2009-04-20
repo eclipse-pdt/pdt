@@ -1,5 +1,6 @@
 package org.eclipse.php.core.tests;
 
+import org.eclipse.php.core.tests.binding.BindingTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_parser.CompilerParserTests;
 import org.eclipse.php.core.tests.dom_parser.DomParserTests;
@@ -39,6 +40,7 @@ public class AllTests {
 		suite.addTest(PHPDocAwareDeclarationTests.suite());
 		suite.addTest(IncludePathManagerTests.suite());
 		suite.addTest(ErrorReportingTests.suite());
+		suite.addTest(BindingTests.suite());
 		
 		// Document tests:
 		suite.addTest(FormatterTests.suite());
