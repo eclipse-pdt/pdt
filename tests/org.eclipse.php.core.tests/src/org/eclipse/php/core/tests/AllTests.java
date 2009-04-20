@@ -4,6 +4,7 @@ import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_parser.CompilerParserTests;
 import org.eclipse.php.core.tests.dom_parser.DomParserTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
+import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
 import org.eclipse.php.core.tests.mixin.MixinTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
 import org.eclipse.php.core.tests.phpdoc_parser.PHPDocAwareDeclarationTests;
@@ -32,6 +33,7 @@ public class AllTests {
 		suite.addTest(TypeInferenceTests.suite());
 		suite.addTest(PHPDocParserTests.suite());
 		suite.addTest(PHPDocAwareDeclarationTests.suite());
+		suite.addTest(IncludePathManagerTests.suite());
 
 		// $JUnit-END$
 		
