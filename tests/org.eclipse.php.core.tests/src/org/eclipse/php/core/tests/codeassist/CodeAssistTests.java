@@ -10,7 +10,7 @@
 package org.eclipse.php.core.tests.codeassist;
 
 import java.io.ByteArrayInputStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,7 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProje
 public class CodeAssistTests extends AbstractPDTTTest {
 
 	protected static final char OFFSET_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new HashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5/exclusive", "/workspace/codeassist/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53" });

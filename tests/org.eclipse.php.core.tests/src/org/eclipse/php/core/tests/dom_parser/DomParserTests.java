@@ -9,7 +9,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.dom_parser;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
@@ -26,7 +26,7 @@ import org.eclipse.php.internal.core.ast.nodes.Program;
 
 public class DomParserTests extends AbstractPDTTTest {
 
-	protected static final Map<PHPVersion, String[]> TESTS = new HashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP4, new String[] { "/workspace/dom_parser/php4" });
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/dom_parser/php5" });

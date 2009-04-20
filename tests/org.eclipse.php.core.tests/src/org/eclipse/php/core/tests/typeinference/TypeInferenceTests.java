@@ -11,7 +11,7 @@ package org.eclipse.php.core.tests.typeinference;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
@@ -46,7 +46,7 @@ import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 public class TypeInferenceTests extends AbstractPDTTTest {
 
 	protected static final int ENGINE_TIMEOUT = 100000;
-	protected static final Map<PHPVersion, String[]> TESTS = new HashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/typeinference" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/typeinference" });

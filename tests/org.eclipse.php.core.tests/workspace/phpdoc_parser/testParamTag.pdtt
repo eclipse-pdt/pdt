@@ -1,0 +1,25 @@
+--TEST--
+Test Param Tag
+--FILE--
+/**
+* Test param tag
+* @param $a Myclass holds my class
+* @param Myclass2 $b holds my class 2
+*/
+--EXPECT--
+<PHPDocBlock start="0" end="96" shortDescription="Test param tag">
+	<PHPDocTag start="23" end="56" tagKind="param" value=" $a Myclass holds my class
+">
+		<VariableReference start="30" end="32" name="$a">
+		</VariableReference>
+		<TypeReference start="33" end="40" name="Myclass">
+		</TypeReference>
+	</PHPDocTag>
+	<PHPDocTag start="58" end="94" tagKind="param" value=" Myclass2 $b holds my class 2
+">
+		<VariableReference start="74" end="76" name="$b">
+		</VariableReference>
+		<TypeReference start="65" end="73" name="Myclass2">
+		</TypeReference>
+	</PHPDocTag>
+</PHPDocBlock>

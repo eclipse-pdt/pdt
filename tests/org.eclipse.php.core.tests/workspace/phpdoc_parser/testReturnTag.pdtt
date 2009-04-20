@@ -1,0 +1,23 @@
+--TEST--
+Test Return Tag
+--FILE--
+/**
+* Test return tag
+* @param $p Some argument
+* @return Myclass2 Instance of my class
+*/
+--EXPECT--
+<PHPDocBlock start="0" end="90" shortDescription="Test return tag">
+	<PHPDocTag start="24" end="48" tagKind="param" value=" $p Some argument
+">
+		<VariableReference start="31" end="33" name="$p">
+		</VariableReference>
+		<TypeReference start="34" end="38" name="Some">
+		</TypeReference>
+	</PHPDocTag>
+	<PHPDocTag start="50" end="88" tagKind="return" value=" Myclass2 Instance of my class
+">
+		<TypeReference start="58" end="66" name="Myclass2">
+		</TypeReference>
+	</PHPDocTag>
+</PHPDocBlock>

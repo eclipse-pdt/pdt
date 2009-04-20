@@ -10,7 +10,7 @@
 package org.eclipse.php.core.tests.selection;
 
 import java.io.ByteArrayInputStream;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
@@ -38,7 +38,7 @@ import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProje
 public class SelectionEngineTests extends AbstractPDTTTest {
 
 	protected static final char SELECTION_CHAR = '|';
-	protected static final Map<PHPVersion, String[]> TESTS = new HashMap<PHPVersion, String[]>();
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
 		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/selection/php5" });
 		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/selection/php5", "/workspace/selection/php53" });

@@ -1,0 +1,17 @@
+--TEST--
+Test Return Multiple Tag
+--FILE--
+/**
+* Test return multiple types
+* @return MyClass|OtherClass 
+*/
+--EXPECT--
+<PHPDocBlock start="0" end="65" shortDescription="Test return multiple types">
+	<PHPDocTag start="35" end="63" tagKind="return" value=" MyClass|OtherClass 
+">
+		<TypeReference start="43" end="50" name="MyClass">
+		</TypeReference>
+		<TypeReference start="51" end="61" name="OtherClass">
+		</TypeReference>
+	</PHPDocTag>
+</PHPDocBlock>

@@ -1,0 +1,15 @@
+--TEST--
+Test Var Tag
+--FILE--
+/**
+* Test var tag
+* @var MyClass
+*/
+--EXPECT--
+<PHPDocBlock start="0" end="36" shortDescription="Test var tag">
+	<PHPDocTag start="21" end="34" tagKind="var" value=" MyClass
+">
+		<TypeReference start="26" end="33" name="MyClass">
+		</TypeReference>
+	</PHPDocTag>
+</PHPDocBlock>
