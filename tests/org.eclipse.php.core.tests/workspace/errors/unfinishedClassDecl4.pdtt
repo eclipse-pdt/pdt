@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished class declaration error reporting
+--FILE--
+<?php
+class A implements I, {}
+?>
+--EXPECT--
+[line=2, start=28, end=29] syntax error, unexpected '{', expecting 'identifier'

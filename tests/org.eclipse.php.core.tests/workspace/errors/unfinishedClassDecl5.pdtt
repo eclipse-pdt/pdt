@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished class declaration error reporting
+--FILE--
+<?php
+class A extends B, {}
+?>
+--EXPECT--
+[line=2, start=23, end=24] syntax error, unexpected ',', expecting '{'

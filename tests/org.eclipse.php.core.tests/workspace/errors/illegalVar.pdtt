@@ -1,0 +1,8 @@
+--TEST--
+Test illegal argument error reporting
+--FILE--
+<?php
+$4545;
+?>
+--EXPECT--
+[line=2, start=7, end=11] syntax error, unexpected '4545', expecting 'variable' or '$'

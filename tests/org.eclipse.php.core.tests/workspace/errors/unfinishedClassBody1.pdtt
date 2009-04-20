@@ -1,0 +1,9 @@
+--TEST--
+Test unfinished class body error reporting
+--FILE--
+<?php
+class A {
+$a = new A();
+?>
+--EXPECT--
+[line=4, start=14, end=15] syntax error, unfinished class declaration

@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished method declaration error reporting
+--FILE--
+<?php
+function foo() {
+?>
+--EXPECT--
+[line=3, start=25, end=28] syntax error, unexpected 'EOF'

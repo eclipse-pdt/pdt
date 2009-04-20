@@ -1,0 +1,10 @@
+--TEST--
+Test unfinished class declaration error reporting
+--FILE--
+<?php
+class A {
+5
+}
+?>
+--EXPECT--
+[line=4, start=18, end=19] syntax error, unexpected '}'

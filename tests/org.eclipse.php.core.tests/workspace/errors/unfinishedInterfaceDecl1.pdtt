@@ -1,0 +1,8 @@
+--TEST--
+Test unfinished interface declaration error reporting
+--FILE--
+<?php
+interface I extends {}
+?>
+--EXPECT--
+[line=2, start=26, end=27] syntax error, unexpected '{', expecting 'identifier'
