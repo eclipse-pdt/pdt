@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -29,7 +31,7 @@ public class PdttFile {
 	}
 
 	private String fileName;
-	private String configuration;
+	private Map<String, String> config = new HashMap<String, String>();
 	private String description;
 	private String file = "";
 	private String expected = "";
@@ -48,17 +50,17 @@ public class PdttFile {
 	 * Constructs new PdttFile
 	 * @param fileName .pdtt file name 
 	 * @param description Test description
-	 * @param configuration Config section
+	 * @param config Config section
 	 * @param file PHP source code
 	 * @param expected Expected result
 	 */
-	public PdttFile(String fileName, String description, String configuration, String file, String expected) {
+	public PdttFile(String fileName, String description, Map<String, String> config, String file, String expected) {
 		if (fileName == null || description == null || file == null || expected == null) {
 			throw new IllegalArgumentException();
 		}
 		this.fileName = fileName;
 		this.description = description;
-		this.configuration = configuration;
+		this.config = config;
 		this.file = file;
 		this.expected = expected;
 	}
@@ -73,11 +75,11 @@ public class PdttFile {
 	}
 
 	/**
-	 * Returns the PHP file contents (--FILE-- section contents)
+	 * Returns the configuration entries (--CONFIG-- section contents in format key:value)
 	 * @return
 	 */
-	public String getConfiguration() {
-		return configuration;
+	public Map<String, String> getConfig() {
+		return config;
 	}
 	
 	/**
@@ -135,9 +137,13 @@ public class PdttFile {
 	protected void writeStates(PrintWriter w) {
 		w.println("--TEST--");
 		w.println(description);
-		if (configuration != null) {
+		if (config != null) {
 			w.println("--CONFIG--");
-			w.println(configuration);
+			for (String key : config.keySet()) {
+				w.print(key);
+				w.print(':');
+				w.println(config.get(key));
+			}
 		}
 		w.println("--FILE--");
 		w.println(file);
@@ -170,8 +176,9 @@ public class PdttFile {
 	 * This callback is called while processing state section
 	 * @param state
 	 * @param line
+	 * @throws Exception 
 	 */
-	protected void onState(STATES state, String line) {
+	protected void onState(STATES state, String line) throws Exception {
 		switch (state) {
 			case TEST:
 				this.description = line;
@@ -183,10 +190,13 @@ public class PdttFile {
 				this.expected += (line + "\n");
 				break;
 			case CONFIG:
-				if (this.configuration == null) {
-					this.configuration = "";
+				int i = line.indexOf(':');
+				if (i == -1) {
+					throw new Exception("Wrong option in --CONFIG-- section: " + line);
 				}
-				this.configuration += (line + "\n");
+				String key = line.substring(0, i);
+				String value = line.substring(i + 1);
+				this.config.put(key.trim(), value.trim());
 				break;
 			default:
 				break;

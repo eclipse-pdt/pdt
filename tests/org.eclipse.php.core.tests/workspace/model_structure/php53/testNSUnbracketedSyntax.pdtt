@@ -1,0 +1,16 @@
+--TEST--
+Test namespace unbracketed syntax
+--FILE--
+<?php
+namespace A;
+function foo() {}
+
+namespace B;
+function bar() {}
+?>
+--EXPECT--
+FILE: test.php
+	NAMESPACE: A
+		FUNCTION: foo
+	NAMESPACE: B
+		FUNCTION: bar

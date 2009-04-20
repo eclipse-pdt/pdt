@@ -1,0 +1,16 @@
+--TEST--
+Test namespace bracketed syntax with global namespace
+--FILE--
+<?php
+namespace A {
+	function foo() {}
+}
+namespace {
+	function bar() {}
+}
+?>
+--EXPECT--
+FILE: test.php
+	NAMESPACE: A
+		FUNCTION: foo
+	FUNCTION: bar

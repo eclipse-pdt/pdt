@@ -144,14 +144,8 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 	}
 
 	private static String getPrunerType(PdttFile pdttFile) {
-		String config = pdttFile.getConfiguration();
-		if (config != null) {
-			config = config.trim();
-			if (config.startsWith("prune: ")) {
-				return config.substring("prune: ".length());
-			}
-		}
-		return null;
+		Map<String, String> config = pdttFile.getConfig();
+		return config.get("prune");
 	}
 
 	class ASTNodeSearcher extends ContextFinder {

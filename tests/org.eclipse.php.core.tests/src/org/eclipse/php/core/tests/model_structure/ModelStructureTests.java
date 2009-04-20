@@ -7,12 +7,12 @@
  *
  *
  *******************************************************************************/
-package org.eclipse.php.core.tests.codeassist;
+package org.eclipse.php.core.tests.model_structure;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import junit.extensions.TestSetup;
@@ -26,31 +26,32 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.dltk.core.CompletionProposal;
-import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IModelElementVisitor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
-import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
+import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
-public class CodeAssistTests extends AbstractPDTTTest {
+public class ModelStructureTests extends AbstractPDTTTest {
 
-	protected static final char OFFSET_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5/exclusive", "/workspace/codeassist/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/model_structure/php53" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("ModelStructureTests");
 		if (project.exists()) {
 			return;
 		}
@@ -72,7 +73,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		project = null;
 	}
 
-	public CodeAssistTests(String description) {
+	public ModelStructureTests(String description) {
 		super(description);
 	}
 
@@ -87,8 +88,8 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
-						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
-						phpVerSuite.addTest(new CodeAssistTests(phpVersion.getAlias() + " - /" + fileName) {
+						final PdttFile pdttFile = new PdttFile(fileName);
+						phpVerSuite.addTest(new ModelStructureTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
 								// set the project version
@@ -103,60 +104,14 @@ public class CodeAssistTests extends AbstractPDTTTest {
 							}
 
 							protected void runTest() throws Throwable {
-								CompletionProposal[] proposals = getProposals(pdttFile.getFile());
-								ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
-
-								boolean proposalsEqual = true;
-								if (proposals.length == expectedProposals.length) {
-									for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
-										boolean found = false;
-										for (CompletionProposal proposal : proposals) {
-											IModelElement modelElement = proposal.getModelElement();
-											if (modelElement == null) {
-												if (new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) { // keyword
-													found = true;
-													break;
-												}
-											} else if (modelElement.getElementType() == expectedProposal.type && modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
-												found = true;
-												break;
-											}
-										}
-										if (!found) {
-											proposalsEqual = false;
-											break;
-										}
-									}
-								} else {
-									proposalsEqual = false;
-								}
-
-								if (!proposalsEqual) {
-									StringBuilder errorBuf = new StringBuilder();
-									errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-									errorBuf.append(pdttFile.getExpected());
-									errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-									for (CompletionProposal p : proposals) {
-										IModelElement modelElement = p.getModelElement();
-										if (modelElement == null || modelElement.getElementName() == null) {
-											errorBuf.append("keyword(").append(p.getName()).append(")\n");
-										} else {
-											switch (modelElement.getElementType()) {
-												case IModelElement.FIELD:
-													errorBuf.append("field");
-													break;
-												case IModelElement.METHOD:
-													errorBuf.append("method");
-													break;
-												case IModelElement.TYPE:
-													errorBuf.append("type");
-													break;
-											}
-											errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
-										}
-									}
-									fail(errorBuf.toString());
-								}
+								ISourceModule sourceModule = createFile(pdttFile.getFile());
+								
+								ByteArrayOutputStream stream = new ByteArrayOutputStream();
+								PrintStream printStream = new PrintStream(stream);
+								sourceModule.accept(new PrintVisitor(printStream));
+								printStream.close();
+								
+								assertContents(pdttFile.getExpected(), stream.toString());
 							}
 						});
 					} catch (final Exception e) {
@@ -192,15 +147,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 	 * @return offset where's the offset character set. 
 	 * @throws Exception
 	 */
-	protected static int createFile(String data) throws Exception {
-		int offset = data.lastIndexOf(OFFSET_CHAR);
-		if (offset == -1) {
-			throw new IllegalArgumentException("Offset character is not set");
-		}
-
-		// replace the offset character
-		data = data.substring(0, offset) + data.substring(offset + 1);
-
+	protected static ISourceModule createFile(String data) throws Exception {
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -208,22 +155,67 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 		waitForAutoBuild();
 		waitForIndexer(project);
-
-		return offset;
-	}
-
-	protected static ISourceModule getSourceModule() {
+		
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	protected static CompletionProposal[] getProposals(String data) throws Exception {
-		int offset = createFile(data);
-		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
-		getSourceModule().codeComplete(offset, new CompletionRequestor() {
-			public void accept(CompletionProposal proposal) {
-				proposals.add(proposal);
+	class PrintVisitor implements IModelElementVisitor {
+		
+		private PrintStream stream;
+
+		public PrintVisitor(PrintStream stream) {
+			this.stream = stream;
+		}
+
+		public boolean visit(IModelElement element) {
+			try {
+				String tabs = getTabs(element);
+				stream.print(tabs);
+				
+				if (element.getElementType() == IModelElement.TYPE) {
+					IType type = (IType) element;
+					
+					int flags = type.getFlags();
+					if ((flags & Modifiers.AccInterface) != 0) {
+						stream.print("INTERFACE: ");
+					}
+					else if ((flags & Modifiers.AccNameSpace) != 0) {
+						stream.print("NAMESPACE: ");
+					}
+					else {
+						stream.print("CLASS: ");
+					}
+				}
+				else if (element.getElementType() == IModelElement.METHOD) {
+					IMethod method = (IMethod) element;
+					IType declaringType = method.getDeclaringType();
+					if (declaringType == null || (declaringType.getFlags() & Modifiers.AccNameSpace) != 0) {
+						stream.print("FUNCTION: ");
+					} else {
+						stream.print("METHOD: ");
+					}
+				}
+				else if (element.getElementType() == IModelElement.FIELD) {
+					stream.print("VARIABLE: ");
+				}
+				else if (element.getElementType() == IModelElement.SOURCE_MODULE) {
+					stream.print("FILE: ");
+				}
+				
+				stream.println(element.getElementName());
+				
+			} catch (ModelException e) {
 			}
-		});
-		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
+			return true;
+		}
+		
+		protected String getTabs(IModelElement e) {
+			StringBuilder buf = new StringBuilder();
+			while (e.getElementType() != IModelElement.SOURCE_MODULE) {
+				buf.append('\t');
+				e = e.getParent();
+			}
+			return buf.toString();
+		}
 	}
 }
