@@ -40,9 +40,10 @@ public class FileNetworkTests extends AbstractModelTests {
 	
 	public void setUpSuite() throws Exception {
 		deleteProject(PROJECT);
-		SCRIPT_PROJECT.close();
-		SCRIPT_PROJECT = null;
-
+		if (SCRIPT_PROJECT != null) {
+			SCRIPT_PROJECT.close();
+			SCRIPT_PROJECT = null;
+		}
 		super.setUpSuite();
 	}
 

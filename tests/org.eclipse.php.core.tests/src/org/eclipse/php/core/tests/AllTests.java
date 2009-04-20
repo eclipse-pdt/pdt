@@ -8,6 +8,7 @@ import org.eclipse.php.core.tests.mixin.MixinTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
 import org.eclipse.php.core.tests.phpdoc_parser.PHPDocAwareDeclarationTests;
 import org.eclipse.php.core.tests.phpdoc_parser.PHPDocParserTests;
+import org.eclipse.php.core.tests.search.SearchTests;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
 
@@ -26,6 +27,7 @@ public class AllTests {
 		suite.addTest(CodeAssistTests.suite());
 		suite.addTest(SelectionEngineTests.suite());
 		suite.addTest(MixinTests.suite());
+		suite.addTest(SearchTests.suite());
 		suite.addTest(FileNetworkTests.suite());
 		suite.addTest(TypeInferenceTests.suite());
 		suite.addTest(PHPDocParserTests.suite());
