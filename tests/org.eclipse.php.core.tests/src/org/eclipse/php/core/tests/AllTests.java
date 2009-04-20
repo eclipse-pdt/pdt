@@ -5,6 +5,7 @@ import org.eclipse.php.core.tests.compiler_parser.CompilerParserTests;
 import org.eclipse.php.core.tests.dom_parser.DomParserTests;
 import org.eclipse.php.core.tests.errors.ErrorReportingTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
+import org.eclipse.php.core.tests.formatter.FormatterTests;
 import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
 import org.eclipse.php.core.tests.mixin.MixinTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
@@ -23,6 +24,8 @@ public class AllTests {
 		TestSuite suite = new TestSuite("Test for org.eclipse.php.core");
 
 		// $JUnit-BEGIN$
+		
+		// Model tests:
 		suite.addTest(DomParserTests.suite());
 		suite.addTest(CompilerParserTests.suite());
 		suite.addTest(ModelStructureTests.suite());
@@ -36,7 +39,10 @@ public class AllTests {
 		suite.addTest(PHPDocAwareDeclarationTests.suite());
 		suite.addTest(IncludePathManagerTests.suite());
 		suite.addTest(ErrorReportingTests.suite());
-
+		
+		// Document tests:
+		suite.addTest(FormatterTests.suite());
+		
 		// $JUnit-END$
 		
 		return suite;

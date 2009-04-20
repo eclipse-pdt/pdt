@@ -1,0 +1,105 @@
+--TEST--
+Test formatting PHP with HTML mixed code
+--FILE--
+<?php
+	$pageTitle = 'My Page Title';
+?>
+<html>
+<head>
+<style type="text/css">
+<!--
+  p { text-align: justify;
+      font-family: Verdana, Arial, sans-serif; }
+
+  h4 { color: #ff4400; margin-top: 45px; }
+
+  a:link, a:visited, a:active { text-decoration: none;
+      font-weight: bold; color: #0000ff }
+
+a:hover {color:red; text-transform:uppercase; }
+-->
+</style>
+</head>
+<body>
+<table style="width: 100%;" border="0" cellpadding="2">
+<tbody>
+	<tr>
+		<td <?=$pageTitle ?>="left" width="60%">
+		<h1><?=$pageTitle ?> <br>
+		<font size="<?=$pageTitle ?>" color="#8080FF">PHP Development Tools</font></h1>
+		</td>
+		<![CDATA[
+			function matchwo(a,b)
+			{
+			if (a < b && a < 0) then
+			   {
+			   return 1
+			   }
+			else
+			   {
+			   return 0
+			   }
+			}
+		]]>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>
+--EXPECT--
+<?php
+$pageTitle = 'My Page Title';
+?>
+<html>
+<head>
+<style type="text/css">
+<!--
+p {
+	text-align: justify;
+	font-family: Verdana, Arial, sans-serif;
+}
+
+h4 {
+	color: #ff4400;
+	margin-top: 45px;
+}
+
+a:link,a:visited,a:active {
+	text-decoration: none;
+	font-weight: bold;
+	color: #0000ff
+}
+
+a:hover {
+	color: red;
+	text-transform: uppercase;
+}
+-->
+</style>
+</head>
+<body>
+<table style="width: 100%;" border="0" cellpadding="2">
+	<tbody>
+		<tr>
+			<td <?=$pageTitle ?>="left" width="60%">
+			<h1><?=$pageTitle ?> <br>
+			<font size="<?=$pageTitle ?>" color="#8080FF">PHP Development Tools</font></h1>
+			</td>
+			<![CDATA[
+			function matchwo(a,b)
+			{
+			if (a < b && a < 0) then
+			   {
+			   return 1
+			   }
+			else
+			   {
+			   return 0
+			   }
+			}
+		]]>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

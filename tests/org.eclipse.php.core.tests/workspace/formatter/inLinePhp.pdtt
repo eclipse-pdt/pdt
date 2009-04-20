@@ -1,0 +1,26 @@
+--TEST--
+Test formatting inline PHP code
+--FILE--
+<HTML>
+<Body>
+<Table>
+	<tr>
+		<td><?php
+						echo $b ;
+						?></td>
+	</tr>
+</Table>
+</Body>
+</HTML>
+--EXPECT--
+<HTML>
+<Body>
+<Table>
+	<tr>
+		<td><?php
+		echo $b ;
+		?></td>
+	</tr>
+</Table>
+</Body>
+</HTML>

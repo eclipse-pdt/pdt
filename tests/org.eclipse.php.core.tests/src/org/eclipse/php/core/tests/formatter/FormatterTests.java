@@ -7,7 +7,7 @@
  *
  *
  *******************************************************************************/
-package org.eclipse.php.core.tests.errors;
+package org.eclipse.php.core.tests.formatter;
 
 import java.io.ByteArrayInputStream;
 import java.util.LinkedHashMap;
@@ -19,27 +19,34 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PdttFile;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.core.project.PHPNature;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
-public class ErrorReportingTests extends AbstractPDTTTest {
+public class FormatterTests extends AbstractPDTTTest {
 
-	protected static final String[] TEST_DIRS = { "/workspace/errors" };
+	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
+	static {
+		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/formatter" });
+	};
 
 	protected static Map<PdttFile, IFile> filesMap = new LinkedHashMap<PdttFile, IFile>();
 	protected static IProject project;
 	protected static int count;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("ErrorReportingTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("FormatterTests");
 		if (project.exists()) {
 			return;
 		}
@@ -51,7 +58,7 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-		
+
 		for (PdttFile pdttFile : filesMap.keySet()) {
 			IFile file = createFile(pdttFile.getFile().trim());
 			filesMap.put(pdttFile, file);
@@ -59,7 +66,7 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 		
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-		
+
 		waitForAutoBuild();
 		waitForIndexer(project);
 	}
@@ -70,51 +77,65 @@ public class ErrorReportingTests extends AbstractPDTTTest {
 		project = null;
 	}
 
-	public ErrorReportingTests(String description) {
+	public FormatterTests(String description) {
 		super(description);
 	}
 
 	public static Test suite() {
 
-		TestSuite suite = new TestSuite("Error Reporting Tests");
+		TestSuite suite = new TestSuite("Formatter Tests");
 
-		for (String testsDirectory : TEST_DIRS) {
+		for (final PHPVersion phpVersion : TESTS.keySet()) {
+			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
 
-			for (final String fileName : getPDTTFiles(testsDirectory)) {
-				try {
-					final PdttFile pdttFile = new PdttFile(fileName);
-					filesMap.put(pdttFile, null);
-					
-					suite.addTest(new ErrorReportingTests("/" + fileName) {
+			for (String testsDirectory : TESTS.get(phpVersion)) {
 
-						protected void runTest() throws Throwable {
-							IFile file = filesMap.get(pdttFile);
+				for (final String fileName : getPDTTFiles(testsDirectory)) {
+					try {
+						final PdttFile pdttFile = new PdttFile(fileName);
+						filesMap.put(pdttFile, null);
+
+						phpVerSuite.addTest(new FormatterTests("/" + fileName) {
 							
-							StringBuilder buf = new StringBuilder();
-
-							IMarker[] markers = file.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ZERO);
-							for (IMarker marker : markers) {
-								buf.append("\n[line=");
-								buf.append(marker.getAttribute(IMarker.LINE_NUMBER));
-								buf.append(", start=");
-								buf.append(marker.getAttribute(IMarker.CHAR_START));
-								buf.append(", end=");
-								buf.append(marker.getAttribute(IMarker.CHAR_END));
-								buf.append("] ");
-								buf.append(marker.getAttribute(IMarker.MESSAGE)).append('\n');
+							protected void setUp() throws Exception {
+								PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
 							}
 
-							assertContents(pdttFile.getExpected(), buf.toString());
-						}
-					});
-				} catch (final Exception e) {
-					suite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
 							protected void runTest() throws Throwable {
-								throw e;
+								
+								IFile file = filesMap.get(pdttFile);
+								
+								IStructuredModel modelForEdit = StructuredModelManager.getModelManager().getModelForEdit(file);
+								try {
+									IDocument document = modelForEdit.getStructuredDocument();
+									String beforeFormat = document.get();
+
+									PhpFormatProcessorImpl formatter = new PhpFormatProcessorImpl();
+									formatter.formatDocument(document, 0, document.getLength());
+									
+									assertContents(pdttFile.getExpected(), document.get());
+
+									// change the document text as was before the formatting
+									document.set(beforeFormat);
+									modelForEdit.save();
+								} finally {
+									if (modelForEdit != null) {
+										modelForEdit.releaseFromEdit();
+									}
+								}
 							}
 						});
+					} catch (final Exception e) {
+						phpVerSuite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
+								protected void runTest() throws Throwable {
+									throw e;
+								}
+							});
+					}
 				}
+
 			}
+			suite.addTest(phpVerSuite);
 		}
 
 		// Create a setup wrapper

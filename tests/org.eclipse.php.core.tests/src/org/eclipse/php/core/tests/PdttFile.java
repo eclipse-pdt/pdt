@@ -110,7 +110,7 @@ public class PdttFile {
 		String line = bReader.readLine();
 		STATES state = null;
 		while (line != null) {
-			if (line.startsWith("--")) {
+			if (line.startsWith("--") && line.endsWith("--")) {
 				state = parseStateLine(line);
 				if (state == null) {
 					throw new Exception("Wrong state: " + line);
