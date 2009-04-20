@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.search;
 
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.dltk.core.ISearchPatternProcessor;
 import org.eclipse.dltk.core.search.AbstractSearchFactory;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.IMatchLocatorParser;
@@ -28,4 +29,7 @@ public class PHPSearchFactory extends AbstractSearchFactory {
 		return new PHPMatchLocator(pattern, requestor, scope, monitor);
 	}
 
+	public ISearchPatternProcessor createSearchPatternProcessor() {
+		return new PHPSearchPatternProcessor();
+	}
 }
