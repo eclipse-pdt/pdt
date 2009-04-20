@@ -62,6 +62,8 @@ import org.eclipse.php.internal.core.typeinference.FakeField;
 public class BindingTests extends SuiteOfTestCases {
 
 	protected IProject project;
+	private IFile testFile;
+	private int counter;
 
 	public BindingTests(String name) {
 		super(name);
@@ -72,9 +74,19 @@ public class BindingTests extends SuiteOfTestCases {
 	}
 
 	public void setUpSuite() throws Exception {
-		if (project != null) {
-			project.delete(true, null);
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("BindingTests");
+		if (project.exists()) {
+			return;
 		}
+
+		project.create(null);
+		project.open(null);
+
+		// configure nature
+		IProjectDescription desc = project.getDescription();
+		desc.setNatureIds(new String[] { PHPNature.ID });
+		project.setDescription(desc, null);
+		
 		super.setUpSuite();
 	}
 
@@ -84,21 +96,6 @@ public class BindingTests extends SuiteOfTestCases {
 	}
 
 	protected void setUp() throws Exception {
-		if (project == null) {
-
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject("BindingTests");
-			if (project.exists()) {
-				return;
-			}
-
-			project.create(null);
-			project.open(null);
-
-			// configure nature
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-		}
 	}
 
 	/**
@@ -118,7 +115,7 @@ public class BindingTests extends SuiteOfTestCases {
 	}
 
 	protected Program createAndParse(String code) throws Exception {
-		IFile testFile = project.getFile("test.php");
+		testFile = project.getFile("test" + (++counter) + ".php");
 		testFile.create(new ByteArrayInputStream(code.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
@@ -167,8 +164,7 @@ public class BindingTests extends SuiteOfTestCases {
 	}
 
 	protected void tearDown() throws Exception {
-		IFile file = project.getFile("test.php");
-		file.delete(true, new NullProgressMonitor());
+		testFile.delete(true, new NullProgressMonitor());
 	}
 
 	public void testBasicExpression() throws Exception {

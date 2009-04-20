@@ -43,35 +43,28 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 	}
 
 	public void setUpSuite() throws Exception {
-		if (project != null) {
-			project.delete(true, null);
+		// Initialize include path manager:
+		IncludePathManager.getInstance();
+
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
+		if (project.exists()) {
+			return;
 		}
+
+		project.create(null);
+		project.open(null);
+
+		// configure nature
+		IProjectDescription desc = project.getDescription();
+		desc.setNatureIds(new String[] { PHPNature.ID });
+		project.setDescription(desc, null);
+		
 		super.setUpSuite();
 	}
 
 	public void tearDownSuite() throws Exception {
 		project.delete(true, null);
 		super.tearDownSuite();
-	}
-	
-	protected void setUp() throws Exception {
-		if (project == null) {
-			// Initialize include path manager:
-			IncludePathManager.getInstance();
-
-			project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
-			if (project.exists()) {
-				return;
-			}
-
-			project.create(null);
-			project.open(null);
-
-			// configure nature
-			IProjectDescription desc = project.getDescription();
-			desc.setNatureIds(new String[] { PHPNature.ID });
-			project.setDescription(desc, null);
-		}
 	}
 	
 	public void testIncludePathGet() throws Exception {
