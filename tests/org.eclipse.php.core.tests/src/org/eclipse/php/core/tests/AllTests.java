@@ -1,5 +1,9 @@
 package org.eclipse.php.core.tests;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.eclipse.php.core.tests.ast_rewrite.ASTRewriteTests;
 import org.eclipse.php.core.tests.binding.BindingTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_parser.CompilerParserTests;
@@ -15,9 +19,6 @@ import org.eclipse.php.core.tests.phpdoc_parser.PHPDocParserTests;
 import org.eclipse.php.core.tests.search.SearchTests;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class AllTests {
 	
@@ -41,6 +42,7 @@ public class AllTests {
 		suite.addTest(IncludePathManagerTests.suite());
 		suite.addTest(ErrorReportingTests.suite());
 		suite.addTest(BindingTests.suite());
+		suite.addTest(ASTRewriteTests.suite());
 		
 		// Document tests:
 		suite.addTest(FormatterTests.suite());
