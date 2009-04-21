@@ -7,7 +7,7 @@
  *
  *
  *******************************************************************************/
-package org.eclipse.php.core.tests.phpdoc_parser;
+package org.eclipse.php.core.tests.compiler_ast.phpdoc;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;

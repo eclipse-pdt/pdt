@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.core.tests.phpdoc_parser;
+package org.eclipse.php.core.tests.compiler_ast.phpdoc;
 
 import java.io.Reader;
 import java.io.StringReader;

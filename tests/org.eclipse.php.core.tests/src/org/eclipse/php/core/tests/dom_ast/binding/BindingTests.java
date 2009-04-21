@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.core.tests.binding;
+package org.eclipse.php.core.tests.dom_ast.binding;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;

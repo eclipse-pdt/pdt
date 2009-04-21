@@ -7,7 +7,7 @@
  *
  *
  *******************************************************************************/
-package org.eclipse.php.core.tests.dom_parser;
+package org.eclipse.php.core.tests.dom_ast.parser;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

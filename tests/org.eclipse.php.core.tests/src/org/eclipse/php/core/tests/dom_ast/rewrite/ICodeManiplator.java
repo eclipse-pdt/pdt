@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.php.core.tests.ast_rewrite;
+package org.eclipse.php.core.tests.dom_ast.rewrite;
 
 import org.eclipse.php.internal.core.ast.nodes.Program;
 
