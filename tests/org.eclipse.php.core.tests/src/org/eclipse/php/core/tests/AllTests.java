@@ -7,6 +7,7 @@ import org.eclipse.php.core.tests.ast_rewrite.ASTRewriteTests;
 import org.eclipse.php.core.tests.binding.BindingTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistTests;
 import org.eclipse.php.core.tests.compiler_parser.CompilerParserTests;
+import org.eclipse.php.core.tests.document_lexer.DocumentLexerTests;
 import org.eclipse.php.core.tests.dom_parser.DomParserTests;
 import org.eclipse.php.core.tests.errors.ErrorReportingTests;
 import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
@@ -45,6 +46,7 @@ public class AllTests {
 		suite.addTest(ASTRewriteTests.suite());
 		
 		// Document tests:
+		suite.addTest(DocumentLexerTests.suite());
 		suite.addTest(FormatterTests.suite());
 		
 		// $JUnit-END$
