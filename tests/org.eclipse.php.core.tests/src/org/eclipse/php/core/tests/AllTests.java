@@ -10,6 +10,7 @@ import org.eclipse.php.core.tests.compiler_ast.phpdoc.PHPDocParserTests;
 import org.eclipse.php.core.tests.document.lexer.DocumentLexerTests;
 import org.eclipse.php.core.tests.document.partitioner.PHPPartitionerTests;
 import org.eclipse.php.core.tests.dom_ast.CommentMapperTests;
+import org.eclipse.php.core.tests.dom_ast.StaticScalarExpressionsTests;
 import org.eclipse.php.core.tests.dom_ast.binding.BindingTests;
 import org.eclipse.php.core.tests.dom_ast.matcher.ASTMatcherTests;
 import org.eclipse.php.core.tests.dom_ast.parser.DomParserTests;
@@ -38,6 +39,7 @@ public class AllTests {
 		suite.addTest(ASTRewriteTests.suite());
 		suite.addTest(ASTMatcherTests.suite());
 		suite.addTest(CommentMapperTests.suite());
+		suite.addTest(StaticScalarExpressionsTests.suite());
 		
 		suite.addTest(CodeAssistTests.suite());
 		suite.addTest(SelectionEngineTests.suite());
