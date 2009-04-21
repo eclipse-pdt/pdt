@@ -252,7 +252,7 @@
 		</exec>
 
 		<exec executable="ln">
-			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.test/bin" />
+			<arg line="-s /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.core.tests/@dot /opt/users/phpBuild/src/eclipse/plugins/org.eclipse.php.core.tests/bin" />
 		</exec>
 
 		<exec executable="ln">
