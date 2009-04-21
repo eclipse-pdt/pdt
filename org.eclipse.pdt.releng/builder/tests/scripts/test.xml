@@ -188,10 +188,10 @@
 		<delete file="${testPluginDir}_.jar" />
 	</target>
 
-	<target name="pdt" description="Runs the org.eclipse.php.test test.xml">
+	<target name="pdt" description="Runs the org.eclipse.php.core.tests test.xml">
 		<antcall target="runtests">
-			<param name="testPlugin" value="org.eclipse.php.test" />
-			<param name="report" value="org.eclipse.php.test" />
+			<param name="testPlugin" value="org.eclipse.php.core.tests" />
+			<param name="report" value="org.eclipse.php.core.tests" />
 		</antcall>
 
 	</target>

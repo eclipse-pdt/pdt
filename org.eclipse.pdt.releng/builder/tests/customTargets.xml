@@ -8,7 +8,7 @@
 	<target name="allElements">
 		<ant antfile="${genericTargets}" target="${target}">
 			<property name="type" value="feature" />
-			<property name="id" value="org.eclipse.php.test" />
+			<property name="id" value="org.eclipse.php.core.tests" />
 		</ant>
 	</target>
 
@@ -19,7 +19,7 @@
 	<!-- Add one target for each root element and each configuration -->
 	<!-- ===================================================================== -->
 
-	<target name="assemble.org.eclipse.php.test">
+	<target name="assemble.org.eclipse.php.core.tests">
 		<property name="archiveName"
 		          value="pdt-junit-tests-${buildAlias}.zip" />
 		<ant antfile="${assembleScriptName}" />

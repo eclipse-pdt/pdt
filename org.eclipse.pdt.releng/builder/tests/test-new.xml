@@ -7,7 +7,7 @@
 	<property name="eclipse-home" value="${basedir}\..\.." />
 
 	<!-- sets the properties eclipse-home, and library-file -->
-	<property name="plugin-name" value="org.eclipse.php.test" />
+	<property name="plugin-name" value="org.eclipse.php.core.tests" />
 	<property name="library-file"
 	          value="${eclipse-home}/dropins/eclipse/plugins/org.eclipse.test/library.xml" />
 
