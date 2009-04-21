@@ -523,7 +523,7 @@ public class PHPTypeInferenceUtils {
 					if (PHPFlags.isNamespace(modifiers)) {
 						Openable openable = handleFactory.createOpenable(path, scope);
 						ModelElement parent = openable;
-						elements.add(new FakeType(parent, new String(simpleTypeName), modifiers));
+						elements.add(new FakeType(parent, new String(simpleTypeName), modifiers, null));
 					}
 				}
 			}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
@@ -594,10 +594,10 @@ public class PHPTypeInferenceUtils {
 						Openable openable = handleFactory.createOpenable(path, scope);
 						ModelElement parent = openable;
 						if (enclosingTypeNames.length > 0) {
-							parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
+							parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace, null);
 						}
 						if (parent != null) {
-							elements.add(new FakeType(parent, new String(simpleTypeName), modifiers));
+							elements.add(new FakeType(parent, new String(simpleTypeName), modifiers, superTypes.length == 0 ? null : CharOperation.charArrayToStringArray(superTypes)));
 						}
 					}
 				}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
@@ -709,7 +709,7 @@ public class PHPTypeInferenceUtils {
 						Openable openable = handleFactory.createOpenable(path, scope);
 						ModelElement parent = openable;
 						if (enclosingTypeNames.length > 0) {
-							parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace);
+							parent = new FakeType(openable, new String(enclosingTypeNames[0]), Modifiers.AccNameSpace, null);
 						}
 						FakeMethod method = new FakeMethod(parent, new String(simpleMethodName), modifiers);
 						if (parameterNames != null) {

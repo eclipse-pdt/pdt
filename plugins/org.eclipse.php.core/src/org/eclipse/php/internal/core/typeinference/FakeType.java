@@ -30,20 +30,27 @@ public class FakeType extends SourceType {
 	private boolean hasSpecialOffsets = false;
 	private int nameOffset;
 	private int nameLength;
+	private String[] superClassNames;
 
-	public FakeType(ModelElement sourceModule, String name, int flags) {
+	public FakeType(ModelElement sourceModule, String name, int flags, String[] superClassNames) {
 		super(sourceModule, name);
 		this.flags = flags;
+		this.superClassNames = superClassNames;
 	}
 
-	public FakeType(ModelElement parent, String name, int flags, int offset, int length, int nameOffset, int nameLength) {
+	public FakeType(ModelElement parent, String name, int flags, String[] superClassNames, int offset, int length, int nameOffset, int nameLength) {
 		super(parent, name);
 		this.flags = flags;
 		this.offset = offset;
 		this.length = length;
 		this.nameOffset = nameOffset;
 		this.nameLength = nameLength;
+		this.superClassNames = superClassNames;
 		hasSpecialOffsets = true;
+	}
+	
+	public String[] getSuperClasses() throws ModelException {
+		return superClassNames;
 	}
 
 	public ISourceRange getNameRange() throws ModelException {
