@@ -1,0 +1,4829 @@
+--TEST--
+Test lexer states
+--FILE--
+<?php
+// php 4 redundancy
+
+print("hello world!\n"); //this is my comment?> <?print("this will be seen!");?><?
+try {
+    echo 1;
+    return;
+} catch(Exception $e) {
+    echo 2;
+} catch(Exception $e) {
+   echo 22;
+}
+echo 3;
+?>
+
+
+<?
+try {
+        echo 1;
+} catch(Exception $e) {
+        echo 2;
+        return;
+}
+echo 3;
+?>
+
+
+
+<?
+function test() 
+{ 
+        $fields['company'] = ''; 
+        $fields['contact'] = ''; 
+        $fields['email'] = ''; 
+         
+        return $fields; 
+}
+$x = test();
+var_dump($x);
+?>
+
+<?php
+
+function get_UID() {
+global $User;
+if (get_class($User)=='jwuser') {
+return ($User->uid);
+} else {
+return 0; 
+}
+}
+?>
+
+
+<? 
+function GetHelpline() {
+/**
+* Returns the helpline number set
+*/
+
+if ($this->GetCountry() == "uk") return
+$this->texts["text"]["helpline-en"];
+if ($this->GetCountry() == "ire") return
+$this->texts["text"]["helpline-ire"];
+if ($this->GetCountry() == "nz") return
+$this->texts["text"]["helpline-nz"];
+else return $this->texts["text"]["helpline-ot"];
+}
+?>
+
+
+<?
+function fromUpload($data) {
+	$img = new CImage;
+ 	$img->imageFilename = ObjectState::createID();
+ 	$img->imageMimeType = 'image/jpeg';
+ 	$img->uploadedFile = $data['tmp name'];
+ 	return $img;
+ }
+?>
+
+
+<?php
+
+    // Returns an indexed array of associative arrays (including keys 'key',
+    // 'name', 'desc', 'authorname', 'authorcontact', bool 'package_loaded',
+    // array 'modules', array 'loaded_modules') of all currently registered
+    // packages
+    function EnumeratePackages()
+    {
+        // The array that's holding our output
+        $out = array();
+
+        // Grab a Modules object
+        $m = &Modules::singleton();
+
+        // Go through our registry
+        foreach ($this->_registry as $package)
+        {
+            // Create the associative array for this element
+            $element = array(
+                'key' => $package->key,
+                'name' => $package->name,
+                'desc' => $package->desc,
+                'authorname' => $package->authorname,
+                'authorcontact' => $package->authorcontact,
+                'package_loaded' =>
+                    in_array($this->_loaded_packages, $package->key),
+                'modules' => $m->EnumModulesByKey($package->key),
+                'modules_loaded' => $m->EnumLoadedModulesByKey($package->key)
+                );
+
+            // Add element to output array
+            $out[$package->key] = $element;
+        }
+
+        // Return output array
+        return $out;
+    }
+
+?>
+
+
+<?php
+$db = ("John");
+	  	    
+function display(){
+	global $db;
+	var_dump($db);
+}
+
+display();
+?>
+
+
+<?
+function adds($var1, $var2){
+	$i= $var1+$var2;
+	if($i>10) 
+		return $i;
+	else
+		return(adds($i,$i));
+}
+?>
+
+<?php
+if(print("hello")){
+	print("\ngood\n");
+}
+
+?><?php
+/******************************************/
+/******currently doesn't work well!!!******/
+/******************************************/
+
+$a=array(1,3,"a",7,0,"b",9);
+
+if($a[0]){
+	print("that's good\n");
+}
+
+if($a[4]){
+	print("that's bad\n");
+}
+
+ if(($a=array(1,2))){
+ print("bye");
+ }
+
+
+?><?php
+
+print("hello world!\n"); //this is my comment?> <?print("this will be seen!");?><?php
+
+print("hello world!\n"); //this is my comment?> <?print("this will be seen!");?><?php
+if(print("hello")){
+	print("\ngood\n");
+}
+
+?><?php
+class Foo{
+	var $x;
+	function hell(){}
+}
+
+if($a=new Foo()){
+	print("bye");
+}
+?> <?php
+
+function hello($x,$y){
+	print("$x $y");
+}
+
+hello(1,&$a);
+?><?php
+$x=1;
+$y=0;
+
+if($x==1)
+if($y==0)
+print("hello");
+else print("else");
+?><?php
+define(foo,1);
+
+$a=foo;
+print("$a");
+
+
+define('boo',11);
+$b=boo;
+print("\n$b");
+?><?php
+define("foo");
+$a=foo;
+print("$a");
+?><?php
+$foo =2;
+$i=5;
+while($i)
+{
+	if($i<=0) break;
+	while($i)
+	{
+		if($i<=0) break;
+		while($i)
+		{
+			if($i<=0) break;
+			while($i)
+			{
+				if($i<=0) break;
+				break $foo;
+			}
+			print("level1\n");
+			--$i;
+		}
+		print("level2\n");
+		--$i;
+	}
+	print("level3\n");
+	--$i;
+}
+print("level 4 - end\n");
+?><?php
+while(1){
+	while(1){
+		while(1){
+			while(1){
+				while(1){
+					while(1){
+						break 1000;
+					}
+				}
+			}
+		}
+	}
+}
+
+print("the end");
+?>
+	<?php
+
+function hello_world($x,$y,$z)
+{
+	$z=$y=$x=0;
+	$y=$x;
+	$y=$z;
+	$z=$y;
+	$obj=new myClass();
+	$obj->myFunc(1,8);
+}
+
+class myClass{
+	var $a;
+	function myFunc($m,$n)
+	{
+		print("$m is the result");
+	}
+}
+
+hello_world(1,2,3);
+?><?
+
+function hello($x){
+	print("\nhello: $x\n");
+}
+
+function globalHello($y){
+	global $myVar;
+	print("\ngHello: $y\n");
+}
+
+hello(2);
+globalHello(4);
+
+?>
+<?php
+
+function useMe()
+{
+	if($x<10)
+	print("the value is: $x\n");
+}
+
+useMe(9);
+?>
+<?php
+while($a<7)
+{
+	print("ok");
+	$a++;
+}
+?>
+	<?php
+while($a<7)
+{
+	print("ok");
+	$a++;
+}
+?>
+	<?php
+class NumberClass{
+	function twoer()
+	{
+		$x=2;
+		return $x;
+	}
+	
+	function oner()
+	{
+		$x=3;
+		$x++;
+		return 1;
+	}
+}
+
+$a=new NumberClass();
+$res=$a->oner();
+print("$res");
+$res=$a->twoer();
+print("$res");
+?><?php
+function changeMe(&$x)
+{
+	$x=3;
+	print("changed to 3!\n");
+}
+
+function DONTchangeMe(&$x)
+{
+	print("i am what i am which is $x\n");
+}
+
+$varvar=99;
+DONTchangeMe($varvar);
+changeMe($varvar);
+?><?php
+function changeMe(&$x)
+{
+	$x=3;
+	print("changed to 3!\n");
+}
+
+function DONTchangeMe(&$x)
+{
+	print("i am what i am which is $x\n");
+}
+
+$varvar=99;
+DONTchangeMe($varvar);
+changeMe($varvar);
+?><?php
+function MyReTUrn($x)
+{
+	if($x>5)
+	return 1;
+	elseif($x>0)
+	return 2;
+	else
+	return;
+}
+
+$res=MyReTUrn(7);
+print("i got $res\n");
+?><?php
+function noResponse($x)
+{
+	if($x>0) {};
+}
+
+$x=noResponse(-9);
+print("$x");
+?><?php
+function noResponse($x)
+{
+	if($x>0) {};
+}
+
+$x=noResponse(-9);
+print("$x");
+?>?><?php
+$path='c:\Documents and Settings\dubi\Desktop\test\1.php';
+include($path);
+include_once($path);
+require($path);
+require_once($path);
+?>
+<?php
+
+$a=array(1,3,"a",7,0,"b",9);
+
+if($a[0]){
+	print("that's good\n");
+}
+
+if($a[4]){
+	print("that's bad\n");
+}
+
+if($a=array(1,5,"a",7)){
+	print("that's a mistake!\n");\
+}
+
+$c=0;	
+if($c=array(1,5,"a",7)){
+	print("that's a mistake!\n");
+}
+
+?><?
+$variable = 1;
+for($i=0;$i<10;$i++) {
+    $variable += $i;
+    if($variale > 10) { // typo here!
+        echo $i;
+    }
+}
+?><?
+if (time() %2 == 0){
+  $boolean = true;
+}
+else{
+  $boolean = false;
+}
+
+	
+if($boolean){
+  print ("Zugi\n");
+  exit ;
+}
+else{
+ print ("I zugi\n");
+ //if ($boolean==0)
+ exit;
+}
+?>
+
+abc 
+
+<?php
+if(1)
+{
+	print("hello");
+}
+else
+{
+	print("bye");
+}
+
+// php 5 examples
+interface INamed
+{
+   public function getName();
+}
+interface ISon
+{
+   public function getFather();
+}
+interface IFather
+{
+   public function getSons();
+}
+
+abstract class Named implements INamed
+{
+   protected $name;
+   public function __construct($name)
+   {
+       $this->name = $name;
+   }
+   public function __destruct()
+   {}
+   public function getName()
+   {
+       return $this->name;
+   }
+}
+abstract class Son implements ISon
+{
+   protected $father;
+   public function getFather()
+   {
+       return $this->father;
+   }
+   public function __construct(IFather $father = null)
+   {
+       $this->father = $father;
+   }
+   public function __destruct()
+   {}
+}
+abstract class Father implements IFather
+{
+   protected $sons = array();
+   public function getSons()
+   {
+       return $this->sons;
+   }
+   public function __construct($sons = array())
+   {
+       $this->sons = $sons;
+   }
+   public function __destruct()
+   {}
+}
+
+class Man implements INamed, ISon, IFather
+{
+   public function __construct($name, IFather $father = null, $sons = array())
+   {
+       // note: these are just __construct() calls - not real class initializations
+       Named::__construct($name);
+       Son::__construct($father);
+       Father::__construct($sons);
+   }
+   public function __destruct()
+   {
+       Named::__destruct();
+       Son::__destruct();
+       Father::__destruct();
+   }
+   public function getFather()
+   {
+       return Son::getFather();
+   }
+   public function getSons()
+   {
+       return Father::getSons();
+   }
+   public function getName()
+   {
+       return Named::getName();
+   }
+}
+
+$siarhej = new Man('Siaroh', new Man('Adas'), array(new Man('Seva')));
+
+var_dump($siarhej->getName());
+var_dump($siarhej->getFather()->getName());
+$siarhejSons = $siarhej->getSons();
+var_dump($siarhejSons[0]->getName());
+
+   
+class Employee {
+   
+	private $employeeid;
+    private $tiecolor;
+
+    function setEmployeeID($employeeid) {
+       $this->employeeid = $employeeid;
+    }
+    function getEmployeeID() {
+       return $this->employeeid;
+    }
+    function setTiecolor($tiecolor) {
+       $this->tiecolor = $tiecolor;
+    }
+    function getTiecolor() {
+       return $this->tiecolor;
+    }
+
+    function __clone() {
+       $this->tiecolor = "blue";
+    }
+}
+
+   $emp1 = new Employee();
+   $emp1->setEmployeeID("1111");   
+   $emp2 = clone $emp1;
+   $emp2->setEmployeeID("2222");
+
+   echo "emp employeeID: ".$emp1->getEmployeeID()."<br />";
+   echo "emp employeeID: ".$emp2->getEmployeeID()."<br />";
+   echo "emp tiecolor: ".$emp2->getTiecolor()."<br />";
+   
+class SelfExample
+{
+   // Hold an instance of the class
+   private static $instance;
+   
+   // A private constructor; prevents direct creation of object
+   private function __construct() 
+   {
+       echo 'I am constructed';
+   }
+
+   // The singleton method
+   public static function singleton() 
+   {
+       if (!isset(self::$instance)) {
+           $c = __CLASS__;
+           self::$instance = new $c;
+       }
+
+       return self::$instance;
+   }
+   
+   // Example method
+   public function bark()
+   {
+       echo 'Woof!';
+   }
+
+   // Prevent users to clone the instance
+   public function __clone()
+   {
+       trigger_error('Clone is not allowed.', E_USER_ERROR);
+   }
+
+}   
+
+class BaseClass {
+   public function test() {
+       echo "BaseClass::test() called\n";
+   }
+   
+   final public function moreTesting() {
+       echo "BaseClass::moreTesting() called\n";
+   }
+}
+
+class PageGenerator{
+    private $output='';
+    private $title;
+    public function __construct($title='Default Page'){
+        $this->title=$title;
+    }
+    public function doHeader(){
+        $this->output='<html><head><title>'.$this->title.'</title></head><body>';
+    }
+    public function addHTMLElement($htmlElement){
+        if(!$htmlElement instanceof HTMLElement){
+            throw new Exception('Invalid (X)HTML element');
+        }
+        $this->output.=$htmlElement->getHTML();
+    }
+    public function doFooter(){
+        $this->output.='</body></html>';
+    }
+    public function fetchHTML(){
+        return $this->output;
+    }
+}
+
+
+$page = new PageGenerator();
+$page->__construct("title");
+$page->doHeader();
+try {
+	$page->addHTMLElement("simple test");
+} catch (Exception $error){
+	// Do something
+}
+$page->doFooter();
+echo $page->fetchHTML();
+
+
+__halt_compiler();
+?>
+--EXPECT--
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| php 4 redundancy
+|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello world!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE| |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT|this is my comment|12
+PHP_CLOSETAG|?> |12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|print("this will be seen!");|12
+PHP_CLOSETAG|?>|12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|
+|1
+PHP_TRY|try|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_RETURN|return|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE| |1
+PHP_CATCH|catch|1
+PHP_TOKEN|(|1
+PHP_STRING|Exception|1
+WHITESPACE| |1
+PHP_VARIABLE|$e|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|2|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE| |1
+PHP_CATCH|catch|1
+PHP_TOKEN|(|1
+PHP_STRING|Exception|1
+WHITESPACE| |1
+PHP_VARIABLE|$e|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|22|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|3|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+|1
+PHP_TRY|try|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE| |1
+PHP_CATCH|catch|1
+PHP_TOKEN|(|1
+PHP_STRING|Exception|1
+WHITESPACE| |1
+PHP_VARIABLE|$e|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|2|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+        |1
+PHP_RETURN|return|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_NUMBER|3|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|test|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| 
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE| 
+        |1
+PHP_VARIABLE|$fields|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|'company'|1
+PHP_TOKEN|]|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|''|1
+PHP_SEMICOLON|;|1
+WHITESPACE| 
+        |1
+PHP_VARIABLE|$fields|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|'contact'|1
+PHP_TOKEN|]|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|''|1
+PHP_SEMICOLON|;|1
+WHITESPACE| 
+        |1
+PHP_VARIABLE|$fields|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|'email'|1
+PHP_TOKEN|]|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|''|1
+PHP_SEMICOLON|;|1
+WHITESPACE| 
+         
+        |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$fields|1
+PHP_SEMICOLON|;|1
+WHITESPACE| 
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$x|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_STRING|test|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|var_dump|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|get_UID|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+|1
+PHP_GLOBAL|global|1
+WHITESPACE| |1
+PHP_VARIABLE|$User|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_STRING|get_class|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$User|1
+PHP_TOKEN|)|1
+PHP_OPERATOR|==|1
+PHP_CONSTANT_ENCAPSED_STRING|'jwuser'|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$User|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|uid|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE| |1
+PHP_ELSE|else|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_NUMBER|0|1
+PHP_SEMICOLON|;|1
+WHITESPACE| 
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE| 
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|GetHelpline|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+|1
+PHPDOC_COMMENT_START|/**
+|11
+PHPDOC_COMMENT|*|11
+PHPDOC_COMMENT| |11
+PHPDOC_COMMENT|R|11
+PHPDOC_COMMENT|e|11
+PHPDOC_COMMENT|t|11
+PHPDOC_COMMENT|u|11
+PHPDOC_COMMENT|r|11
+PHPDOC_COMMENT|n|11
+PHPDOC_COMMENT|s|11
+PHPDOC_COMMENT| |11
+PHPDOC_COMMENT|t|11
+PHPDOC_COMMENT|h|11
+PHPDOC_COMMENT|e|11
+PHPDOC_COMMENT| |11
+PHPDOC_COMMENT|h|11
+PHPDOC_COMMENT|e|11
+PHPDOC_COMMENT|l|11
+PHPDOC_COMMENT|p|11
+PHPDOC_COMMENT|l|11
+PHPDOC_COMMENT|i|11
+PHPDOC_COMMENT|n|11
+PHPDOC_COMMENT|e|11
+PHPDOC_COMMENT| |11
+PHPDOC_COMMENT|n|11
+PHPDOC_COMMENT|u|11
+PHPDOC_COMMENT|m|11
+PHPDOC_COMMENT|b|11
+PHPDOC_COMMENT|e|11
+PHPDOC_COMMENT|r|11
+PHPDOC_COMMENT| |11
+PHPDOC_COMMENT|s|11
+PHPDOC_COMMENT|e|11
+PHPDOC_COMMENT|t|11
+PHPDOC_COMMENT|
+|11
+PHPDOC_COMMENT_END|*/|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|GetCountry|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_OPERATOR|==|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"uk"|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_RETURN|return|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|texts|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"text"|1
+PHP_TOKEN|]|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"helpline-en"|1
+PHP_TOKEN|]|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|GetCountry|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_OPERATOR|==|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"ire"|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_RETURN|return|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|texts|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"text"|1
+PHP_TOKEN|]|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"helpline-ire"|1
+PHP_TOKEN|]|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|GetCountry|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_OPERATOR|==|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"nz"|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_RETURN|return|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|texts|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"text"|1
+PHP_TOKEN|]|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"helpline-nz"|1
+PHP_TOKEN|]|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_ELSE|else|1
+WHITESPACE| |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|texts|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"text"|1
+PHP_TOKEN|]|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|"helpline-ot"|1
+PHP_TOKEN|]|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|fromUpload|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$data|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$img|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|CImage|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ 	|1
+PHP_VARIABLE|$img|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|imageFilename|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_STRING|ObjectState|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|createID|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ 	|1
+PHP_VARIABLE|$img|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|imageMimeType|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|'image/jpeg'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ 	|1
+PHP_VARIABLE|$img|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|uploadedFile|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$data|1
+PHP_TOKEN|[|1
+PHP_CONSTANT_ENCAPSED_STRING|'tmp name'|1
+PHP_TOKEN|]|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ 	|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$img|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+    |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Returns an indexed array of associative arrays (including keys 'key',
+|1
+WHITESPACE|    |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| 'name', 'desc', 'authorname', 'authorcontact', bool 'package_loaded',
+|1
+WHITESPACE|    |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| array 'modules', array 'loaded_modules') of all currently registered
+|1
+WHITESPACE|    |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| packages
+|1
+WHITESPACE|    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|EnumeratePackages|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+    |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| The array that's holding our output
+|1
+WHITESPACE|        |1
+PHP_VARIABLE|$out|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+        |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Grab a Modules object
+|1
+WHITESPACE|        |1
+PHP_VARIABLE|$m|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_TOKEN|&|1
+PHP_STRING|Modules|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|singleton|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+        |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Go through our registry
+|1
+WHITESPACE|        |1
+PHP_FOREACH|foreach|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|_registry|1
+WHITESPACE| |1
+PHP_AS|as|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_TOKEN|)|1
+WHITESPACE|
+        |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+            |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Create the associative array for this element
+|1
+WHITESPACE|            |1
+PHP_VARIABLE|$element|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'key'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|key|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'name'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|name|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'desc'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|desc|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'authorname'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|authorname|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'authorcontact'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|authorcontact|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'package_loaded'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE|
+                    |1
+PHP_STRING|in_array|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|_loaded_packages|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|key|1
+PHP_TOKEN|)|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'modules'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$m|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|EnumModulesByKey|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|key|1
+PHP_TOKEN|)|1
+PHP_TOKEN|,|1
+WHITESPACE|
+                |1
+PHP_CONSTANT_ENCAPSED_STRING|'modules_loaded'|1
+WHITESPACE| |1
+PHP_OPERATOR|=>|1
+WHITESPACE| |1
+PHP_VARIABLE|$m|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|EnumLoadedModulesByKey|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|key|1
+PHP_TOKEN|)|1
+WHITESPACE|
+                |1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+            |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Add element to output array
+|1
+WHITESPACE|            |1
+PHP_VARIABLE|$out|1
+PHP_TOKEN|[|1
+PHP_VARIABLE|$package|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|key|1
+PHP_TOKEN|]|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$element|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+        |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+        |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Return output array
+|1
+WHITESPACE|        |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$out|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLOSETAG|?>
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$db|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"John"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	  	    
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|display|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_GLOBAL|global|1
+WHITESPACE| |1
+PHP_VARIABLE|$db|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_STRING|var_dump|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$db|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_STRING|display|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|adds|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$var1|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_VARIABLE|$var2|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$var1|1
+PHP_TOKEN|+|1
+PHP_VARIABLE|$var2|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|>|1
+PHP_NUMBER|10|1
+PHP_TOKEN|)|1
+WHITESPACE| 
+		|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$i|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_ELSE|else|1
+WHITESPACE|
+		|1
+PHP_RETURN|return|1
+PHP_TOKEN|(|1
+PHP_STRING|adds|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|,|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello"|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"\ngood\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_COMMENT_START|/*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT_END|*/|1
+WHITESPACE|
+|1
+PHP_COMMENT_START|/*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|currently doesn't work well!!!|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT_END|*/|1
+WHITESPACE|
+|1
+PHP_COMMENT_START|/*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT|*|10
+PHP_COMMENT_END|*/|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|3|1
+PHP_TOKEN|,|1
+PHP_CONSTANT_ENCAPSED_STRING|"a"|1
+PHP_TOKEN|,|1
+PHP_NUMBER|7|1
+PHP_TOKEN|,|1
+PHP_NUMBER|0|1
+PHP_TOKEN|,|1
+PHP_CONSTANT_ENCAPSED_STRING|"b"|1
+PHP_TOKEN|,|1
+PHP_NUMBER|9|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|[|1
+PHP_NUMBER|0|1
+PHP_TOKEN|]|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"that's good\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|[|1
+PHP_NUMBER|4|1
+PHP_TOKEN|]|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"that's bad\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+ |1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|2|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+ |1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"bye"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello world!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE| |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT|this is my comment|12
+PHP_CLOSETAG|?> |12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|print("this will be seen!");|12
+PHP_CLOSETAG|?>|12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|php
+|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello world!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE| |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT|this is my comment|12
+PHP_CLOSETAG|?> |12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|print("this will be seen!");|12
+PHP_CLOSETAG|?>|12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|php
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello"|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"\ngood\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Foo|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VAR|var|1
+WHITESPACE| |1
+PHP_VARIABLE|$x|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|hell|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Foo|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"bye"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?> |1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|hello|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|,|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$x|4
+PHP_ENCAPSED_AND_WHITESPACE| |2
+PHP_VARIABLE|$y|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_STRING|hello|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_TOKEN|&|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_NUMBER|1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|=|1
+PHP_NUMBER|0|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_OPERATOR|==|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$y|1
+PHP_OPERATOR|==|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_ELSE|else|1
+WHITESPACE| |1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"else"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_STRING|define|1
+PHP_TOKEN|(|1
+PHP_STRING|foo|1
+PHP_TOKEN|,|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_STRING|foo|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$a|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+
+|1
+PHP_STRING|define|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|'boo'|1
+PHP_TOKEN|,|1
+PHP_NUMBER|11|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$b|1
+PHP_TOKEN|=|1
+PHP_STRING|boo|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_VARIABLE|$b|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_STRING|define|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"foo"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_STRING|foo|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$a|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$foo|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+PHP_NUMBER|2|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|=|1
+PHP_NUMBER|5|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_OPERATOR|<=|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_BREAK|break|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+		|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_OPERATOR|<=|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_BREAK|break|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+		|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|)|1
+WHITESPACE|
+		|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+			|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_OPERATOR|<=|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_BREAK|break|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+			|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|)|1
+WHITESPACE|
+			|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+				|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_OPERATOR|<=|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_BREAK|break|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+				|1
+PHP_BREAK|break|1
+WHITESPACE| |1
+PHP_VARIABLE|$foo|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+			|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+			|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"level1\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+			|1
+PHP_OPERATOR|--|1
+PHP_VARIABLE|$i|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+		|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+		|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"level2\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+		|1
+PHP_OPERATOR|--|1
+PHP_VARIABLE|$i|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"level3\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_OPERATOR|--|1
+PHP_VARIABLE|$i|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"level 4 - end\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+		|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+			|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+				|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+					|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+						|1
+PHP_BREAK|break|1
+WHITESPACE| |1
+PHP_NUMBER|1000|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+					|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+				|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+			|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+		|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+	|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"the end"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+	|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|hello_world|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|,|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|,|1
+PHP_VARIABLE|$z|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$z|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_NUMBER|0|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$x|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$z|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$z|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$y|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$obj|1
+PHP_TOKEN|=|1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|myClass|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$obj|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|myFunc|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|8|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|myClass|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VAR|var|1
+WHITESPACE| |1
+PHP_VARIABLE|$a|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|myFunc|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$m|1
+PHP_TOKEN|,|1
+PHP_VARIABLE|$n|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+		|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$m|4
+PHP_ENCAPSED_AND_WHITESPACE| is the result|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_STRING|hello_world|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|2|1
+PHP_TOKEN|,|1
+PHP_NUMBER|3|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|hello|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|\nhello: |2
+PHP_VARIABLE|$x|4
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|globalHello|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$y|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_GLOBAL|global|1
+WHITESPACE| |1
+PHP_VARIABLE|$myVar|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|\ngHello: |2
+PHP_VARIABLE|$y|4
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_STRING|hello|1
+PHP_TOKEN|(|1
+PHP_NUMBER|2|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|globalHello|1
+PHP_TOKEN|(|1
+PHP_NUMBER|4|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+|1
+PHP_CLOSETAG|?>
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|useMe|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|<|1
+PHP_NUMBER|10|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|the value is: |2
+PHP_VARIABLE|$x|4
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_STRING|useMe|1
+PHP_TOKEN|(|1
+PHP_NUMBER|9|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|<|1
+PHP_NUMBER|7|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"ok"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$a|1
+PHP_OPERATOR|++|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+	|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_WHILE|while|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|<|1
+PHP_NUMBER|7|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"ok"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$a|1
+PHP_OPERATOR|++|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+	|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|NumberClass|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|twoer|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+		|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_NUMBER|2|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+		|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$x|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+	
+	|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|oner|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+		|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_NUMBER|3|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+		|1
+PHP_VARIABLE|$x|1
+PHP_OPERATOR|++|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+		|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_NUMBER|1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|NumberClass|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$res|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$a|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|oner|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$res|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$res|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$a|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|twoer|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$res|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|changeMe|1
+PHP_TOKEN|(|1
+PHP_TOKEN|&|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_NUMBER|3|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"changed to 3!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|DONTchangeMe|1
+PHP_TOKEN|(|1
+PHP_TOKEN|&|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|i am what i am which is |2
+PHP_VARIABLE|$x|4
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$varvar|1
+PHP_TOKEN|=|1
+PHP_NUMBER|99|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|DONTchangeMe|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$varvar|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|changeMe|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$varvar|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|changeMe|1
+PHP_TOKEN|(|1
+PHP_TOKEN|&|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_NUMBER|3|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"changed to 3!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|DONTchangeMe|1
+PHP_TOKEN|(|1
+PHP_TOKEN|&|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|i am what i am which is |2
+PHP_VARIABLE|$x|4
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$varvar|1
+PHP_TOKEN|=|1
+PHP_NUMBER|99|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|DONTchangeMe|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$varvar|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|changeMe|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$varvar|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|MyReTUrn|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|>|1
+PHP_NUMBER|5|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_NUMBER|1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_ELSEIF|elseif|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|>|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE|
+	|1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_NUMBER|2|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+	|1
+PHP_ELSE|else|1
+WHITESPACE|
+	|1
+PHP_RETURN|return|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$res|1
+PHP_TOKEN|=|1
+PHP_STRING|MyReTUrn|1
+PHP_TOKEN|(|1
+PHP_NUMBER|7|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_ENCAPSED_AND_WHITESPACE|i got |2
+PHP_VARIABLE|$res|4
+PHP_ENCAPSED_AND_WHITESPACE|\n|2
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|noResponse|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|>|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_STRING|noResponse|1
+PHP_TOKEN|(|1
+PHP_TOKEN|-|1
+PHP_NUMBER|9|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$x|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|noResponse|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|>|1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$x|1
+PHP_TOKEN|=|1
+PHP_STRING|noResponse|1
+PHP_TOKEN|(|1
+PHP_TOKEN|-|1
+PHP_NUMBER|9|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"|2
+PHP_VARIABLE|$x|4
+PHP_CONSTANT_ENCAPSED_STRING|"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$path|1
+PHP_TOKEN|=|1
+PHP_CONSTANT_ENCAPSED_STRING|'c:\Documents and Settings\dubi\Desktop\test\1.php'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_INCLUDE|include|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$path|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_INCLUDE_ONCE|include_once|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$path|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_REQUIRE|require|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$path|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_REQUIRE_ONCE|require_once|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$path|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|3|1
+PHP_TOKEN|,|1
+PHP_CONSTANT_ENCAPSED_STRING|"a"|1
+PHP_TOKEN|,|1
+PHP_NUMBER|7|1
+PHP_TOKEN|,|1
+PHP_NUMBER|0|1
+PHP_TOKEN|,|1
+PHP_CONSTANT_ENCAPSED_STRING|"b"|1
+PHP_TOKEN|,|1
+PHP_NUMBER|9|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|[|1
+PHP_NUMBER|0|1
+PHP_TOKEN|]|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"that's good\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|[|1
+PHP_NUMBER|4|1
+PHP_TOKEN|]|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"that's bad\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$a|1
+PHP_TOKEN|=|1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|5|1
+PHP_TOKEN|,|1
+PHP_CONSTANT_ENCAPSED_STRING|"a"|1
+PHP_TOKEN|,|1
+PHP_NUMBER|7|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"that's a mistake!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+PHP_NS_SEPARATOR|\|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$c|1
+PHP_TOKEN|=|1
+PHP_NUMBER|0|1
+PHP_SEMICOLON|;|1
+WHITESPACE|	
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$c|1
+PHP_TOKEN|=|1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|,|1
+PHP_NUMBER|5|1
+PHP_TOKEN|,|1
+PHP_CONSTANT_ENCAPSED_STRING|"a"|1
+PHP_TOKEN|,|1
+PHP_NUMBER|7|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"that's a mistake!\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$variable|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_NUMBER|1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_FOR|for|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|=|1
+PHP_NUMBER|0|1
+PHP_SEMICOLON|;|1
+PHP_VARIABLE|$i|1
+PHP_TOKEN|<|1
+PHP_NUMBER|10|1
+PHP_SEMICOLON|;|1
+PHP_VARIABLE|$i|1
+PHP_OPERATOR|++|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_VARIABLE|$variable|1
+WHITESPACE| |1
+PHP_OPERATOR|+=|1
+WHITESPACE| |1
+PHP_VARIABLE|$i|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$variale|1
+WHITESPACE| |1
+PHP_TOKEN|>|1
+WHITESPACE| |1
+PHP_NUMBER|10|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE| |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| typo here!
+|1
+WHITESPACE|        |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_VARIABLE|$i|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_STRING|time|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_TOKEN|%|1
+PHP_NUMBER|2|1
+WHITESPACE| |1
+PHP_OPERATOR|==|1
+WHITESPACE| |1
+PHP_NUMBER|0|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+  |1
+PHP_VARIABLE|$boolean|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_TRUE|true|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ELSE|else|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+  |1
+PHP_VARIABLE|$boolean|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_FALSE|false|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+	
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$boolean|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+  |1
+PHP_PRINT|print|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"Zugi\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+  |1
+PHP_EXIT|exit|1
+WHITESPACE| |1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ELSE|else|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+ |1
+PHP_PRINT|print|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"I zugi\n"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+ |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT|if ($boolean==0)
+|1
+WHITESPACE| |1
+PHP_EXIT|exit|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>
+
+|1
+PHP_STRING|abc|1
+WHITESPACE| 
+
+|1
+PHP_TOKEN|<|1
+PHP_TOKEN|?|1
+PHP_STRING|php|1
+WHITESPACE|
+|1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_NUMBER|1|1
+PHP_TOKEN|)|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"hello"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ELSE|else|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_PRINT|print|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"bye"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| php 5 examples
+|1
+PHP_INTERFACE|interface|1
+WHITESPACE| |1
+PHP_STRING|INamed|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_INTERFACE|interface|1
+WHITESPACE| |1
+PHP_STRING|ISon|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getFather|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_INTERFACE|interface|1
+WHITESPACE| |1
+PHP_STRING|IFather|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getSons|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_ABSTRACT|abstract|1
+WHITESPACE| |1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Named|1
+WHITESPACE| |1
+PHP_IMPLEMENTS|implements|1
+WHITESPACE| |1
+PHP_STRING|INamed|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PROTECTED|protected|1
+WHITESPACE| |1
+PHP_VARIABLE|$name|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$name|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|name|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$name|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|name|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ABSTRACT|abstract|1
+WHITESPACE| |1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Son|1
+WHITESPACE| |1
+PHP_IMPLEMENTS|implements|1
+WHITESPACE| |1
+PHP_STRING|ISon|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PROTECTED|protected|1
+WHITESPACE| |1
+PHP_VARIABLE|$father|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getFather|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|father|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_STRING|IFather|1
+WHITESPACE| |1
+PHP_VARIABLE|$father|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_STRING|null|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|father|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$father|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_ABSTRACT|abstract|1
+WHITESPACE| |1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Father|1
+WHITESPACE| |1
+PHP_IMPLEMENTS|implements|1
+WHITESPACE| |1
+PHP_STRING|IFather|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PROTECTED|protected|1
+WHITESPACE| |1
+PHP_VARIABLE|$sons|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getSons|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|sons|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$sons|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|sons|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$sons|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Man|1
+WHITESPACE| |1
+PHP_IMPLEMENTS|implements|1
+WHITESPACE| |1
+PHP_STRING|INamed|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_STRING|ISon|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_STRING|IFather|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$name|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_STRING|IFather|1
+WHITESPACE| |1
+PHP_VARIABLE|$father|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_STRING|null|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_VARIABLE|$sons|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| note: these are just __construct() calls - not real class initializations
+|1
+WHITESPACE|       |1
+PHP_STRING|Named|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$name|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+       |1
+PHP_STRING|Son|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$father|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+       |1
+PHP_STRING|Father|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$sons|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_STRING|Named|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+       |1
+PHP_STRING|Son|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+       |1
+PHP_STRING|Father|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|__destruct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getFather|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_STRING|Son|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|getFather|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getSons|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_STRING|Father|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|getSons|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_STRING|Named|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_VARIABLE|$siarhej|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Man|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|'Siaroh'|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Man|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|'Adas'|1
+PHP_TOKEN|)|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_ARRAY|array|1
+PHP_TOKEN|(|1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Man|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|'Seva'|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+|1
+PHP_STRING|var_dump|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$siarhej|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|var_dump|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$siarhej|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getFather|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$siarhejSons|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$siarhej|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getSons|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_STRING|var_dump|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$siarhejSons|1
+PHP_TOKEN|[|1
+PHP_NUMBER|0|1
+PHP_TOKEN|]|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getName|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+   
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|Employee|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   
+	|1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_VARIABLE|$employeeid|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_VARIABLE|$tiecolor|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|setEmployeeID|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$employeeid|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|employeeid|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$employeeid|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getEmployeeID|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|employeeid|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|setTiecolor|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$tiecolor|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|tiecolor|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_VARIABLE|$tiecolor|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|getTiecolor|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|tiecolor|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+    |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__clone|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|tiecolor|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"blue"|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+   |1
+PHP_VARIABLE|$emp1|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Employee|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_VARIABLE|$emp1|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|setEmployeeID|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"1111"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|   
+   |1
+PHP_VARIABLE|$emp2|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_CLONE|clone|1
+WHITESPACE| |1
+PHP_VARIABLE|$emp1|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_VARIABLE|$emp2|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|setEmployeeID|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"2222"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+   |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"emp employeeID: "|1
+PHP_TOKEN|.|1
+PHP_VARIABLE|$emp1|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getEmployeeID|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|.|1
+PHP_CONSTANT_ENCAPSED_STRING|"<br />"|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"emp employeeID: "|1
+PHP_TOKEN|.|1
+PHP_VARIABLE|$emp2|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getEmployeeID|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|.|1
+PHP_CONSTANT_ENCAPSED_STRING|"<br />"|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"emp tiecolor: "|1
+PHP_TOKEN|.|1
+PHP_VARIABLE|$emp2|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getTiecolor|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_TOKEN|.|1
+PHP_CONSTANT_ENCAPSED_STRING|"<br />"|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|SelfExample|1
+WHITESPACE|
+|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Hold an instance of the class
+|1
+WHITESPACE|   |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_STATIC|static|1
+WHITESPACE| |1
+PHP_VARIABLE|$instance|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   
+   |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| A private constructor; prevents direct creation of object
+|1
+WHITESPACE|   |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| 
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|'I am constructed'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+   |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| The singleton method
+|1
+WHITESPACE|   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_STATIC|static|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|singleton|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| 
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_IF|if|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_TOKEN|!|1
+PHP_ISSET|isset|1
+PHP_TOKEN|(|1
+PHP_SELF|self|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_VARIABLE|$instance|1
+PHP_TOKEN|)|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+           |1
+PHP_VARIABLE|$c|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP__CLASS__|__CLASS__|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+           |1
+PHP_SELF|self|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_VARIABLE|$instance|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_VARIABLE|$c|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+       |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+       |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_SELF|self|1
+PHP_PAAMAYIM_NEKUDOTAYIM|::|1
+PHP_VARIABLE|$instance|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   
+   |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Example method
+|1
+WHITESPACE|   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|bark|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|'Woof!'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+   |1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Prevent users to clone the instance
+|1
+WHITESPACE|   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__clone|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE|
+   |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_STRING|trigger_error|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|'Clone is not allowed.'|1
+PHP_TOKEN|,|1
+WHITESPACE| |1
+PHP_STRING|E_USER_ERROR|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|   
+
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|BaseClass|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+   |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|test|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"BaseClass::test() called\n"|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+   
+   |1
+PHP_FINAL|final|1
+WHITESPACE| |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|moreTesting|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+       |1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_CONSTANT_ENCAPSED_STRING|"BaseClass::moreTesting() called\n"|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+   |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+|1
+PHP_CLASS|class|1
+WHITESPACE| |1
+PHP_STRING|PageGenerator|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+    |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_VARIABLE|$output|1
+PHP_TOKEN|=|1
+PHP_CONSTANT_ENCAPSED_STRING|''|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_PRIVATE|private|1
+WHITESPACE| |1
+PHP_VARIABLE|$title|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$title|1
+PHP_TOKEN|=|1
+PHP_CONSTANT_ENCAPSED_STRING|'Default Page'|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|title|1
+PHP_TOKEN|=|1
+PHP_VARIABLE|$title|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|doHeader|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|output|1
+PHP_TOKEN|=|1
+PHP_CONSTANT_ENCAPSED_STRING|'<html><head><title>'|1
+PHP_TOKEN|.|1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|title|1
+PHP_TOKEN|.|1
+PHP_CONSTANT_ENCAPSED_STRING|'</title></head><body>'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|addHTMLElement|1
+PHP_TOKEN|(|1
+PHP_VARIABLE|$htmlElement|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_IF|if|1
+PHP_TOKEN|(|1
+PHP_TOKEN|!|1
+PHP_VARIABLE|$htmlElement|1
+WHITESPACE| |1
+PHP_INSTANCEOF|instanceof|1
+WHITESPACE| |1
+PHP_STRING|HTMLElement|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+            |1
+PHP_THROW|throw|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|Exception|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|'Invalid (X)HTML element'|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+        |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+        |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|output|1
+PHP_OPERATOR|.=|1
+PHP_VARIABLE|$htmlElement|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|getHTML|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|doFooter|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|output|1
+PHP_OPERATOR|.=|1
+PHP_CONSTANT_ENCAPSED_STRING|'</body></html>'|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+    |1
+PHP_PUBLIC|public|1
+WHITESPACE| |1
+PHP_FUNCTION|function|1
+WHITESPACE| |1
+PHP_STRING|fetchHTML|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+        |1
+PHP_RETURN|return|1
+WHITESPACE| |1
+PHP_VARIABLE|$this|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|output|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+    |1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+
+
+|1
+PHP_VARIABLE|$page|1
+WHITESPACE| |1
+PHP_TOKEN|=|1
+WHITESPACE| |1
+PHP_NEW|new|1
+WHITESPACE| |1
+PHP_STRING|PageGenerator|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$page|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|__construct|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"title"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$page|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|doHeader|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_TRY|try|1
+WHITESPACE| |1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_VARIABLE|$page|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|addHTMLElement|1
+PHP_TOKEN|(|1
+PHP_CONSTANT_ENCAPSED_STRING|"simple test"|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE| |1
+PHP_CATCH|catch|1
+WHITESPACE| |1
+PHP_TOKEN|(|1
+PHP_STRING|Exception|1
+WHITESPACE| |1
+PHP_VARIABLE|$error|1
+PHP_TOKEN|)|1
+PHP_CURLY_OPEN|{|1
+WHITESPACE|
+	|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT| Do something
+|1
+PHP_CURLY_CLOSE|}|1
+WHITESPACE|
+|1
+PHP_VARIABLE|$page|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|doFooter|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_ECHO|echo|1
+WHITESPACE| |1
+PHP_VARIABLE|$page|1
+PHP_OBJECT_OPERATOR|->|8
+PHP_STRING|fetchHTML|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+
+
+|1
+PHP_HALT_COMPILER|__halt_compiler|1
+PHP_TOKEN|(|1
+PHP_TOKEN|)|1
+PHP_SEMICOLON|;|1
+WHITESPACE|
+|1
+PHP_CLOSETAG|?>|1

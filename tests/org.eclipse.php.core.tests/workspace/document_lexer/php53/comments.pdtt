@@ -1,0 +1,42 @@
+--TEST--
+Test lexer states
+--FILE--
+//This is a comment
+//<?This is also a comment?>
+//<?php And.. this is also a comment ?>
+/**
+ * This is a Doc Block
+ */
+--EXPECT--
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT|This is a comment
+|1
+PHP_LINE_COMMENT|//|12
+PHP_LINE_COMMENT|<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|This is also a comment|12
+PHP_CLOSETAG|?>
+|12
+PHP_LINE_COMMENT|//<|12
+PHP_LINE_COMMENT|?|12
+PHP_LINE_COMMENT|php And.. this is also a comment |12
+PHP_CLOSETAG|?>
+|12
+PHP_LINE_COMMENT|/**
+|1
+WHITESPACE| |1
+PHP_TOKEN|*|1
+WHITESPACE| |1
+PHP_STRING|This|1
+WHITESPACE| |1
+PHP_STRING|is|1
+WHITESPACE| |1
+PHP_STRING|a|1
+WHITESPACE| |1
+PHP_STRING|Doc|1
+WHITESPACE| |1
+PHP_STRING|Block|1
+WHITESPACE|
+ |1
+PHP_TOKEN|*|1
+PHP_TOKEN|/|1

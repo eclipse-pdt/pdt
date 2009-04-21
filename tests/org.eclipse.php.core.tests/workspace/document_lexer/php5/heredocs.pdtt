@@ -1,0 +1,28 @@
+--TEST--
+Test lexer states
+--FILE--
+<<<MY_MARKER
+Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER;
+<<<MY_MARKER_2
+Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER_2;
+--EXPECT--
+PHP_HEREDOC_TAG|<<<MY_MARKER
+|6
+PHP_CONSTANT_ENCAPSED_STRING|Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER;|7
+PHP_CONSTANT_ENCAPSED_STRING|
+|1
+PHP_HEREDOC_TAG|<<<MY_MARKER_2
+|6
+PHP_ENCAPSED_AND_WHITESPACE|Hello world
+Bye Bye world
+Bla Bla Bla
+MY_MARKER_2;|5

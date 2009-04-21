@@ -60,7 +60,9 @@ public class PdttFile {
 		}
 		this.fileName = fileName;
 		this.description = description;
-		this.config = config;
+		if (config != null) {
+			this.config = config;
+		}
 		this.file = file;
 		this.expected = expected;
 	}
@@ -110,7 +112,7 @@ public class PdttFile {
 		String line = bReader.readLine();
 		STATES state = null;
 		while (line != null) {
-			if (line.startsWith("--") && line.endsWith("--")) {
+			if (line.matches("--[A-Z]+--")) {
 				state = parseStateLine(line);
 				if (state == null) {
 					throw new Exception("Wrong state: " + line);
@@ -136,8 +138,8 @@ public class PdttFile {
 	
 	protected void writeStates(PrintWriter w) {
 		w.println("--TEST--");
-		w.println(description);
-		if (config != null) {
+		w.println(description.trim());
+		if (config != null && config.size() > 0) {
 			w.println("--CONFIG--");
 			for (String key : config.keySet()) {
 				w.print(key);
@@ -146,9 +148,9 @@ public class PdttFile {
 			}
 		}
 		w.println("--FILE--");
-		w.println(file);
+		w.println(file.trim());
 		w.println("--EXPECT--");
-		w.println(expected);
+		w.println(expected.trim());
 	}
 	
 	/**
