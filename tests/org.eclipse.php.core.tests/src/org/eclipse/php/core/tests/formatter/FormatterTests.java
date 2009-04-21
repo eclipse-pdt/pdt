@@ -31,7 +31,6 @@ import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
@@ -99,7 +98,7 @@ public class FormatterTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new FormatterTests("/" + fileName) {
 							
 							protected void setUp() throws Exception {
-								PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
+								Activator.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void runTest() throws Throwable {

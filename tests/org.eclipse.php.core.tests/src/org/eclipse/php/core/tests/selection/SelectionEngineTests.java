@@ -34,7 +34,6 @@ import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 public class SelectionEngineTests extends AbstractPDTTTest {
 
@@ -88,8 +87,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new SelectionEngineTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								// set the project version
-								PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
+								Activator.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void tearDown() throws Exception {

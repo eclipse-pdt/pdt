@@ -21,6 +21,8 @@ import org.eclipse.dltk.core.search.SearchParticipant;
 import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.osgi.framework.BundleContext;
 
@@ -123,5 +125,19 @@ public class Activator extends Plugin {
 				wasInterrupted = true;
 			}
 		} while (wasInterrupted);
+	}
+	
+	/**
+	 * Set project PHP version
+	 * @param project
+	 * @param phpVersion
+	 * @throws CoreException 
+	 */
+	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
+		if (phpVersion != PhpVersionProjectPropertyHandler.getVersion()) {
+			PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
+			Activator.waitForAutoBuild();
+			Activator.waitForIndexer(project);
+		}
 	}
 }

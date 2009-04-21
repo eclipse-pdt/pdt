@@ -39,7 +39,6 @@ import org.eclipse.php.core.tests.Activator;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 public class ModelStructureTests extends AbstractPDTTTest {
 
@@ -91,8 +90,7 @@ public class ModelStructureTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new ModelStructureTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								// set the project version
-								PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
+								Activator.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void tearDown() throws Exception {

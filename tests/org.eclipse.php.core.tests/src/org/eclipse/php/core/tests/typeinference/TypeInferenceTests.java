@@ -40,7 +40,6 @@ import org.eclipse.php.core.tests.Activator;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 
@@ -101,8 +100,7 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new TypeInferenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								// set the project version
-								PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
+								Activator.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void tearDown() throws Exception {
