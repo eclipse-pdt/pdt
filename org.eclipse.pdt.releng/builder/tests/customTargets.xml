@@ -19,7 +19,7 @@
 	<!-- Add one target for each root element and each configuration -->
 	<!-- ===================================================================== -->
 
-	<target name="assemble.org.eclipse.php.core.tests">
+	<target name="assemble.org.eclipse.php.test">
 		<property name="archiveName"
 		          value="pdt-junit-tests-${buildAlias}.zip" />
 		<ant antfile="${assembleScriptName}" />
