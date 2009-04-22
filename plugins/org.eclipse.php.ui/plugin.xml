@@ -1082,7 +1082,7 @@
 			id="org.eclipse.php.ui.preferences.PHPEditorPreferencePage" name="%phpEditorPageName">
 			<keywordReference id="org.eclipse.php.ui.editor" />
 		</page>
-		<page category="org.eclipse.php.ui.preferences.PHPBasePreferencePage"
+		<page category="org.eclipse.php.ui.preferences.PHPEditorPreferencePage"
 			class="org.eclipse.php.internal.ui.preferences.PHPTemplatesPreferencePage"
 			id="org.eclipse.php.ui.preferences.PHPTemplatesPreferencePage" name="%templatesPreferencePageName">
 			<keywordReference id="org.eclipse.php.ui.templates" />
