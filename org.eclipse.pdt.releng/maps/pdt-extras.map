@@ -3,6 +3,8 @@
 !*** Special entries from eclipse
 plugin@org.eclipse.test=v20070226,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
 fragment@org.eclipse.ant.optional.junit=v20050226,:pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse,
+plugin@org.eclipse.dltk.core.tests=v20090408-1322,:pserver:anonymous@dev.eclipse.org:/cvsroot/technology,,org.eclipse.dltk/core/tests/org.eclipse.dltk.core.tests
+plugin@org.apache.commons.lang=v2_4,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.orbit/org.apache.commons.lang
 
 !*** Project's plugins, features and fragments
 !*** plugin@org.eclipse.php.astview=HEAD,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.astview
