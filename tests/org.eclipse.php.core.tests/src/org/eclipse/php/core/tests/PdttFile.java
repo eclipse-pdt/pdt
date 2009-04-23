@@ -107,7 +107,7 @@ public class PdttFile {
 	 * @throws Exception 
 	 */
 	protected void parse() throws Exception {
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(Activator.openResource(fileName)));
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(PHPCoreTests.openResource(fileName)));
 
 		String line = bReader.readLine();
 		STATES state = null;

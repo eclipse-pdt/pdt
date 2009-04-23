@@ -25,7 +25,7 @@ public class AbstractPDTTTest extends TestCase {
 	
 		
 	protected static String[] getPDTTFiles(String testsDirectory) {
-		return getPDTTFiles(testsDirectory, Activator.getDefault().getBundle());
+		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault().getBundle());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -54,7 +54,7 @@ public class AbstractPDTTTest extends TestCase {
 	}
 
 	protected void assertContents(String expected, String actual) {
-		String diff = Activator.compareContents(expected, actual);
+		String diff = PHPCoreTests.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

@@ -12,12 +12,12 @@ package org.eclipse.php.core.tests.search;
 
 import org.eclipse.dltk.core.tests.model.AbstractSingleProjectSearchTests;
 import org.eclipse.dltk.core.tests.model.TestSearchResults;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 
 public class SearchTests extends AbstractSingleProjectSearchTests {
 
 	public SearchTests(String name) {
-		super(Activator.PLUGIN_ID, name, "search");
+		super(PHPCoreTests.PLUGIN_ID, name, "search");
 	}
 
 	public static Suite suite() {

@@ -36,7 +36,7 @@ import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -100,7 +100,7 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new TypeInferenceTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								Activator.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void tearDown() throws Exception {
@@ -189,8 +189,8 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 		try {
 			project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 			
-			Activator.waitForAutoBuild();
-			Activator.waitForIndexer(project);
+			PHPCoreTests.waitForAutoBuild();
+			PHPCoreTests.waitForIndexer(project);
 
 			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 			ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);

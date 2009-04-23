@@ -33,7 +33,7 @@ import org.eclipse.dltk.core.mixin.IMixinElement;
 import org.eclipse.dltk.core.mixin.MixinModel;
 import org.eclipse.dltk.core.search.IDLTKSearchConstants;
 import org.eclipse.dltk.core.tests.model.AbstractDLTKSearchTests;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.IAssertion;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.mixin.PHPMixinElementInfo;
@@ -55,10 +55,10 @@ public class MixinTests extends TestSuite {
 
 			tests = new MixinTest("PHP Mixin Tests");
 
-			Enumeration<String> entryPaths = Activator.getDefault().getBundle().getEntryPaths(testsDirectory);
+			Enumeration<String> entryPaths = PHPCoreTests.getDefault().getBundle().getEntryPaths(testsDirectory);
 			while (entryPaths.hasMoreElements()) {
 				final String path = (String) entryPaths.nextElement();
-				URL entry = Activator.getDefault().getBundle().getEntry(path);
+				URL entry = PHPCoreTests.getDefault().getBundle().getEntry(path);
 				try {
 					entry.openStream().close();
 				} catch (Exception e) {
@@ -168,7 +168,7 @@ public class MixinTests extends TestSuite {
 		StringBuffer buffer = new StringBuffer();
 		InputStream input = null;
 		try {
-			input = Activator.openResource(path);
+			input = PHPCoreTests.openResource(path);
 			char buff[] = new char[4096];
 			int len = 0;
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -191,7 +191,7 @@ public class MixinTests extends TestSuite {
 		private static final String SRC_PROJECT = "mixin";
 
 		public MixinTest(String name) {
-			super(Activator.PLUGIN_ID, name);
+			super(PHPCoreTests.PLUGIN_ID, name);
 		}
 		
 		public void setUpSuite() throws Exception {

@@ -19,7 +19,7 @@ import junit.framework.Assert;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.dltk.core.tests.model.AbstractSingleProjectSearchTests;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.search.SearchTests;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPStructuredTextPartitioner;
@@ -39,7 +39,7 @@ public class PHPPartitionerTests extends AbstractSingleProjectSearchTests {
 	private static final String PROJECT_NAME = "partitioner";
 	
 	public PHPPartitionerTests(String name) {
-		super(Activator.PLUGIN_ID, name, PROJECT_NAME);
+		super(PHPCoreTests.PLUGIN_ID, name, PROJECT_NAME);
 	}
 	
 	public static Suite suite() {

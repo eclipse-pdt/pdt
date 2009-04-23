@@ -26,7 +26,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.PdttFile;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.format.PhpFormatProcessorImpl;
@@ -67,8 +67,8 @@ public class FormatterTests extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		Activator.waitForAutoBuild();
-		Activator.waitForIndexer(project);
+		PHPCoreTests.waitForAutoBuild();
+		PHPCoreTests.waitForIndexer(project);
 	}
 
 	public static void tearDownSuite() throws Exception {
@@ -98,7 +98,7 @@ public class FormatterTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new FormatterTests("/" + fileName) {
 							
 							protected void setUp() throws Exception {
-								Activator.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void runTest() throws Throwable {

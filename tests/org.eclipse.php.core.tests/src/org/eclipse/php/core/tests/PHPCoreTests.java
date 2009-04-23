@@ -29,18 +29,18 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends Plugin {
+public class PHPCoreTests extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.php.core.tests";
 
 	// The shared instance
-	private static Activator plugin;
+	private static PHPCoreTests plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public PHPCoreTests() {
 	}
 
 	/*
@@ -66,7 +66,7 @@ public class Activator extends Plugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static PHPCoreTests getDefault() {
 		return plugin;
 	}
 
@@ -136,8 +136,8 @@ public class Activator extends Plugin {
 	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != PhpVersionProjectPropertyHandler.getVersion()) {
 			PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
-			Activator.waitForAutoBuild();
-			Activator.waitForIndexer(project);
+			PHPCoreTests.waitForAutoBuild();
+			PHPCoreTests.waitForIndexer(project);
 		}
 	}
 }

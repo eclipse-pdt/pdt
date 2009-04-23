@@ -29,7 +29,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
 import org.eclipse.php.internal.core.PHPVersion;
@@ -87,7 +87,7 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 						phpVerSuite.addTest(new SelectionEngineTests(phpVersion.getAlias() + " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								Activator.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
 							}
 
 							protected void tearDown() throws Exception {
@@ -195,8 +195,8 @@ public class SelectionEngineTests extends AbstractPDTTTest {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		Activator.waitForAutoBuild();
-		Activator.waitForIndexer(project);
+		PHPCoreTests.waitForAutoBuild();
+		PHPCoreTests.waitForIndexer(project);
 
 		return new SourceRange(left, right - left);
 	}

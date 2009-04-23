@@ -24,7 +24,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.tests.model.AbstractModelTests;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -35,7 +35,7 @@ public class FileNetworkTests extends AbstractModelTests {
 	protected IScriptProject SCRIPT_PROJECT;
 
 	public FileNetworkTests(String name) {
-		super(Activator.PLUGIN_ID, name);
+		super(PHPCoreTests.PLUGIN_ID, name);
 	}
 	
 	public void setUpSuite() throws Exception {
@@ -76,7 +76,7 @@ public class FileNetworkTests extends AbstractModelTests {
 	}
 	
 	protected void assertContents(String expected, String actual) {
-		String diff = Activator.compareContents(expected, actual);
+		String diff = PHPCoreTests.compareContents(expected, actual);
 		if (diff != null) {
 			fail(diff);
 		}

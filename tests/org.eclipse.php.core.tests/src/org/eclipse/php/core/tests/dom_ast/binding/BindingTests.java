@@ -28,7 +28,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
-import org.eclipse.php.core.tests.Activator;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Assignment;
@@ -120,8 +120,8 @@ public class BindingTests extends SuiteOfTestCases {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
 
-		Activator.waitForAutoBuild();
-		Activator.waitForIndexer(project);
+		PHPCoreTests.waitForAutoBuild();
+		PHPCoreTests.waitForIndexer(project);
 
 		PHPVersion version = PhpVersionProjectPropertyHandler.getVersion();
 		ISourceModule sourceModule = null;
