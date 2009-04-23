@@ -1,10 +1,5 @@
 package org.eclipse.php.core.tests;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -68,11 +63,6 @@ public class PHPCoreTests extends Plugin {
 	 */
 	public static PHPCoreTests getDefault() {
 		return plugin;
-	}
-
-	public static InputStream openResource(String path) throws IOException {
-		URL url = getDefault().getBundle().getEntry(path);
-		return new BufferedInputStream(url.openStream());		
 	}
 	
 	/**

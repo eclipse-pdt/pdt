@@ -9,6 +9,7 @@
  *******************************************************************************/
 package org.eclipse.php.core.tests.mixin;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -163,12 +164,17 @@ public class MixinTests extends TestSuite {
 			e.printStackTrace();
 		}
 	}
+	
+	public static InputStream openResource(String path) throws IOException {
+		URL url = PHPCoreTests.getDefault().getBundle().getEntry(path);
+		return new BufferedInputStream(url.openStream());		
+	}
 
 	private String loadContent(String path) throws IOException {
 		StringBuffer buffer = new StringBuffer();
 		InputStream input = null;
 		try {
-			input = PHPCoreTests.openResource(path);
+			input = openResource(path);
 			char buff[] = new char[4096];
 			int len = 0;
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));

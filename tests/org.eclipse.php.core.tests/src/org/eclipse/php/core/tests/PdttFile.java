@@ -1,13 +1,19 @@
 package org.eclipse.php.core.tests;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.Assert;
+
+import org.osgi.framework.Bundle;
 
 /**
  * Scripts are small units that provide a specific scenario to test
@@ -30,6 +36,7 @@ public class PdttFile {
 		TEST, CONFIG, FILE, EXPECT
 	}
 
+	private Bundle testBundle;
 	private String fileName;
 	private Map<String, String> config = new HashMap<String, String>();
 	private String description;
@@ -38,12 +45,23 @@ public class PdttFile {
 
 	/**
 	 * Constructs new PdttFile
+	 * @param testBundle The testing plug-in
+	 * @param fileName
+	 * @throws Exception
+	 */
+	public PdttFile(Bundle testBundle, String fileName) throws Exception {
+		this.testBundle = testBundle;
+		this.fileName = fileName;
+		parse();
+	}
+	
+	/**
+	 * Constructs new PdttFile using default bundle: {@link PHPCoreTests}
 	 * @param fileName
 	 * @throws Exception
 	 */
 	public PdttFile(String fileName) throws Exception {
-		this.fileName = fileName;
-		parse();
+		this(PHPCoreTests.getDefault().getBundle(), fileName);
 	}
 	
 	/**
@@ -101,13 +119,18 @@ public class PdttFile {
 		Assert.assertNotNull("File: " + fileName + " doesn't contain --EXPECT-- section", expected);
 		return expected;
 	}
+	
+	protected InputStream openResource(String path) throws IOException {
+		URL url = testBundle.getEntry(path);
+		return new BufferedInputStream(url.openStream());		
+	}
 
 	/**
 	 * Internal method for parsing a .pdtt test file
 	 * @throws Exception 
 	 */
 	protected void parse() throws Exception {
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(PHPCoreTests.openResource(fileName)));
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(openResource(fileName)));
 
 		String line = bReader.readLine();
 		STATES state = null;
