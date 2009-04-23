@@ -12,25 +12,15 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 
 import java.util.Arrays;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.expressions.CallExpression;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.evaluation.types.UnknownType;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
-import org.eclipse.dltk.ti.goals.MethodReturnTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.context.FileContext;
-import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
 
@@ -79,36 +69,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 		// we've evaluated receiver, lets evaluate the method return type now (using PHP Doc first):
 		if (state == STATE_GOT_RECEIVER) {
 			state = STATE_WAITING_METHOD_PHPDOC;
-			if (receiverType == null) {
-				IMethod[] functions = PHPTypeInferenceUtils.getFunctions(expression.getName(), SearchEngine.createSearchScope(((ISourceModuleContext) goal.getContext()).getSourceModule().getScriptProject()));
-				for (IMethod method : functions) {
-					return new PHPDocMethodReturnTypeGoal(new FileContext((ISourceModuleContext) goal.getContext()), method);
-				}
-			} else {
-				TypeContext context = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
-				IType[] types = PHPTypeInferenceUtils.getModelElements(receiverType, (ISourceModuleContext) goal.getContext(), 0);
-				if (types != null) {
-					String methodName = expression.getName();
-					for (IType type : types) {
-						try {
-							IMethod method = PHPModelUtils.getTypeMethod(type, methodName);
-							if (method == null) {
-								IMethod[] hierarchyMethods = PHPModelUtils.getTypeHierarchyMethod(type, methodName, null);
-								if (hierarchyMethods.length > 0) {
-									method = hierarchyMethods[0];
-								}
-							}
-							if (method != null) {
-								return new PHPDocMethodReturnTypeGoal(context, method);
-							}
-						} catch (CoreException e) {
-							if (DLTKCore.DEBUG) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-			}
+			return new PHPDocMethodReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName());
 		}
 		
 		// PHPDoc logic is done, start evaluating 'return' statements here:
@@ -118,15 +79,7 @@ public class MethodCallTypeEvaluator extends GoalEvaluator {
 				previousResult = null;
 			}
 			state = STATE_WAITING_METHOD;
-			if (receiverType == null) {
-				IMethod[] functions = PHPTypeInferenceUtils.getFunctions(expression.getName(), SearchEngine.createSearchScope(((ISourceModuleContext) goal.getContext()).getSourceModule().getScriptProject()));
-				for (IMethod method : functions) {
-					return new MethodElementReturnTypeGoal(new FileContext((ISourceModuleContext) goal.getContext()), method);
-				}
-			} else {
-				TypeContext context = new TypeContext((ISourceModuleContext) goal.getContext(), receiverType);
-				return new MethodReturnTypeGoal(context, expression.getName(), new IEvaluatedType[0] /* arguments are not interesting us */);
-			}
+			return new MethodElementReturnTypeGoal(typedGoal.getContext(), receiverType, expression.getName());
 		}
 		
 		if (state == STATE_WAITING_METHOD) {

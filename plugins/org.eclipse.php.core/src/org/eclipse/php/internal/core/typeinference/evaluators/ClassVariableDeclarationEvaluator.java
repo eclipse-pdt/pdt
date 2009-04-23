@@ -61,7 +61,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 
 		if (types == null) {
 			TypeContext context = (TypeContext) typedGoal.getContext();
-			types = getTypes(context.getInstanceType(), context);
+			types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context);
 		}
 
 		String variableName = typedGoal.getVariableName();

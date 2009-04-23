@@ -10,22 +10,17 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference.goals;
 
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.ti.IContext;
-import org.eclipse.dltk.ti.goals.AbstractTypeGoal;
+import org.eclipse.dltk.ti.types.IEvaluatedType;
 
-public class MethodElementReturnTypeGoal extends AbstractTypeGoal {
-	
-	private final IMethod methodElement;
+public class MethodElementReturnTypeGoal extends AbstractMethodReturnTypeGoal {
 
-	public IMethod getMethod() {
-		return methodElement;
+	public MethodElementReturnTypeGoal(IContext context, IEvaluatedType evaluatedType, String methodName) {
+		super(context, evaluatedType, methodName);
 	}
 
-	public MethodElementReturnTypeGoal(IContext context, IMethod methodElement) {
-		super(context);
-		Assert.isNotNull(methodElement);
-		this.methodElement = methodElement;
+	public MethodElementReturnTypeGoal(IContext context, IType[] types, String methodName) {
+		super(context, types, methodName);
 	}
 }

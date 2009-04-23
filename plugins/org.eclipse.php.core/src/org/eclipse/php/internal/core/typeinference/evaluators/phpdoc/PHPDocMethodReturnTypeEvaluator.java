@@ -16,12 +16,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.references.SimpleReference;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.ti.GoalState;
-import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.PHPDocBlock;
@@ -30,7 +27,7 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPSimpleTypes;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
+import org.eclipse.php.internal.core.typeinference.evaluators.AbstractMethodReturnTypeEvaluator;
 
 /**
  * This Evaluator process the phpdoc of a method to determine its 
@@ -38,7 +35,7 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodRetu
  *   
  * @see the PHPCodumentor spec at {@link http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumentor/tutorial_tags.return.pkg.html}  
  */
-public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
+public class PHPDocMethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator {
 
 	/**
 	 * Used for splitting the data types list of the returned tag
@@ -55,33 +52,21 @@ public class PHPDocMethodReturnTypeEvaluator extends GoalEvaluator {
 	}
 
 	public IGoal[] init() {
-		PHPDocMethodReturnTypeGoal typedGoal = (PHPDocMethodReturnTypeGoal) goal;
-		IMethod method = typedGoal.getMethod();
-
 		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
-		if (method.getDeclaringType() != null) {
-			try {
-				for (PHPDocBlock doc : PHPModelUtils.getTypeHierarchyMethodDoc(method.getDeclaringType(), method.getElementName(), null)) {
-					docs.add(doc);
-				}
-			} catch (CoreException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-			}
-		} else {
+		for (IMethod method : getMethods()) {
 			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
 			if (docBlock != null) {
 				docs.add(docBlock);
 			}
 		}
+
 		for (PHPDocBlock doc : docs) {
 			for (PHPDocTag tag : doc.getTags()) {
 				if (tag.getTagKind() == PHPDocTag.RETURN) {
 					// @return datatype1|datatype2|...
 					for (SimpleReference reference : tag.getReferences()) {
-						final String[] types = PIPE_PATTERN.split(reference.getName());
-						for (String typeName : types) {
+						final String[] typesNames = PIPE_PATTERN.split(reference.getName());
+						for (String typeName : typesNames) {
 							IEvaluatedType type = PHPSimpleTypes.fromString(typeName);
 							if (type == null) {
 								type = new PHPClassType(typeName);

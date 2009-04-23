@@ -45,7 +45,7 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		TypeContext context = (TypeContext) typedGoal.getContext();
 		String variableName = typedGoal.getVariableName();
 
-		IType[] types = getTypes(context.getInstanceType(), context);
+		IType[] types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context);
 
 		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
 		for (IType type : types) {

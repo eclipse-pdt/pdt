@@ -95,9 +95,19 @@ public class PHPTypeInferenceUtils {
 		}
 		return null;
 	}
+	
+	/**
+	 * Converts IEvaluatedType to IType, if found. This method filters elements using file network dependencies.
+	 * @param evaluatedType Evaluated type
+	 * @param context
+	 * @return model elements or <code>null</code> in case no element could be found
+	 */
+	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context) {
+		return PHPTypeInferenceUtils.getModelElements(evaluatedType, context, 0);
+	}
 
 	/**
-	 * Converts IEvaluatedType to IModelElement, if found. This method filters elements using file network dependencies.
+	 * Converts IEvaluatedType to IType, if found. This method filters elements using file network dependencies.
 	 * @param evaluatedType Evaluated type
 	 * @param context
 	 * @param offset
