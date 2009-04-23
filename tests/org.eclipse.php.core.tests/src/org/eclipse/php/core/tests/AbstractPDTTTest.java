@@ -7,6 +7,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.osgi.framework.Bundle;
+
 /**
  * This is an abstract test for .pdtt tests
  * @author michael
@@ -20,15 +22,20 @@ public class AbstractPDTTTest extends TestCase {
 	public AbstractPDTTTest(String name) {
 		super(name);
 	}
+	
+		
+	protected static String[] getPDTTFiles(String testsDirectory) {
+		return getPDTTFiles(testsDirectory, Activator.getDefault().getBundle());
+	}
 
 	@SuppressWarnings("unchecked")
-	protected static String[] getPDTTFiles(String testsDirectory) {
+		protected static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
 		List<String> files = new LinkedList<String>();
-		Enumeration<String> entryPaths = Activator.getDefault().getBundle().getEntryPaths(testsDirectory);
+		Enumeration<String> entryPaths = bundle.getEntryPaths(testsDirectory);
 		if (entryPaths != null) {
 			while (entryPaths.hasMoreElements()) {
 				final String path = (String) entryPaths.nextElement();
-				URL entry = Activator.getDefault().getBundle().getEntry(path);
+				URL entry = bundle.getEntry(path);
 				// check whether the file is readable:
 				try {
 					entry.openStream().close();
