@@ -10,22 +10,30 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.explorer;
 
-import org.eclipse.dltk.internal.core.SourceModule;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerContentProvider;
 import org.eclipse.dltk.internal.ui.navigator.ScriptExplorerLabelProvider;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
+import org.eclipse.dltk.internal.ui.scriptview.WorkingSetDropAdapter;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ModelElementSorter;
 import org.eclipse.dltk.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.IncludePathContainer;
 import org.eclipse.php.internal.ui.explorer.PHPExplorerContentProvider.NamespaceNode;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.part.PluginTransfer;
+import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 
 /**
  * PHP Explorer view part to display the projects, contained files and referenced folders/libraries.
@@ -58,12 +66,12 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 			
 			// Fix #256585 - sort by resource name
 			Object c1 = e1;
-			if (e1 instanceof SourceModule) {
-				c1 = ((SourceModule) e1).getResource();
+			if (e1 instanceof ISourceModule) {
+				c1 = ((ISourceModule) e1).getResource();
 			}
 			Object c2 = e2;
-			if (e2 instanceof SourceModule) {
-				c2 = ((SourceModule) e2).getResource();
+			if (e2 instanceof ISourceModule) {
+				c2 = ((ISourceModule) e2).getResource();
 			}
 			if (c1 != null && c2 != null) {
 				return super.compare(viewer, c1, c2);
@@ -153,8 +161,25 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 	public void createPartControl(Composite parent) {
 		// TODO Auto-generated method stub
 		super.createPartControl(parent);
+//		initDragAndDrop();
 		activateContext();
 	}
+	
+	private void initDragAndDrop() {
+		int ops= DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK | DND.DROP_DEFAULT;
+
+		Transfer[] transfers= new Transfer[] {
+			LocalSelectionTransfer.getInstance(),
+			FileTransfer.getInstance(),
+			PluginTransfer.getInstance()};
+		
+		TreeViewer viewer = getTreeViewer();
+//		viewer.addDragSupport(ops, transfers, new NavigatorDragAdapter(viewer));
+		NavigatorDropAdapter adapter = new PHPNavigatorDropAdapter(viewer);
+		adapter.setFeedbackEnabled(true);
+		viewer.addDropSupport(ops , transfers, adapter);
+	}
+
 	
 	/**
 	 * Activate a context that this view uses. It will be tied to this view
@@ -165,4 +190,12 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 				.getService(IContextService.class);
 		contextService.activateContext("org.eclipse.php.ui.contexts.window");
 	}
+	
+	
+	protected void initDrop() {
+		PHPViewerDropSupport dropSupport = new PHPViewerDropSupport(getTreeViewer());
+		dropSupport.addDropTargetListener(new WorkingSetDropAdapter(this));
+		dropSupport.start();
+	}
+
 }

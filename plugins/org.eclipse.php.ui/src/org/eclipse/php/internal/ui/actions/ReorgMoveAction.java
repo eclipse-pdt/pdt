@@ -12,57 +12,44 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.MoveFilesAndFoldersOperation;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
-public class ReorgMoveAction extends Action implements IPHPMoveActionDelegator {
+public class ReorgMoveAction implements IPHPActionDelegator {
 
-	private IStructuredSelection selectedResources; 
+	private static final String MOVE_ELEMENT_ACTION_ID = "org.eclipse.php.ui.actions.Move";
+	private IStructuredSelection selectedResources;
 	private Shell fShell;
-	private IContainer fTarget;
-	private IResource[] fSources;
-	
+	private IPHPActionDelegator moveActionDelegate;
 
-	public ReorgMoveAction() {
-		init();
-	}	
-	
-	public void init() {
-		setText(PHPUIMessages.getString("ReorgMoveAction_3"));
-		setDescription(PHPUIMessages.getString("ReorgMoveAction_4"));		
-		fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-		
-	}
-
-	public void setSelection(IStructuredSelection selection) {
-		selectedResources = selection;
-		
-	}
-	
 	public void run(IStructuredSelection selection) {
 		if (ActionUtils.containsOnlyProjects(selection.toList())) {
 			createWorkbenchAction(selection).run();
 			return;
 		}
-		if (selectedResources != null) {
+		if (selectedResources != null && !selectedResources.isEmpty()) {
 			createWorkbenchAction(selectedResources).run();
-
 		}
 	}
-	
-	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
 
-		List list = selection.toList();
+	private SelectionListenerAction createWorkbenchAction(IStructuredSelection selection) {
+		List<?> list = selection.toList();
 		SelectionListenerAction action = null;
+		if(fShell==null){
+			fShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+		}
+
 		if (list.size() == 0 || list.get(0) instanceof IProject) {
 			action = new PHPMoveProjectAction(fShell);
 			action.selectionChanged(selection);
@@ -74,20 +61,42 @@ public class ReorgMoveAction extends Action implements IPHPMoveActionDelegator {
 		return action;
 	}
 
-	public void runDrop(IStructuredSelection selection) {			
-		MoveFilesAndFoldersOperation operation = new MoveFilesAndFoldersOperation(fShell);
-    	operation.copyResources(fSources, fTarget);
+	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+		if (targetEditor != null) {
+			if (moveActionDelegate != null) {
+				moveActionDelegate.setActiveEditor(action, targetEditor);
+			} else {
+				IFileEditorInput input = (IFileEditorInput) targetEditor.getEditorInput();
+				IFile file = input.getFile();
+				selectedResources = new StructuredSelection(file);
+			}
+
+		}
 	}
 
-
-	public void setSources(IResource[] resources) {		
-		fSources = resources;
+	public void run(IAction action) {
+		if (moveActionDelegate != null) {
+			moveActionDelegate.run(action);
+		} else {
+			run(selectedResources);
+		}
 	}
 
-	public void setTarget(IContainer target) {
-		fTarget = target;
+	public void selectionChanged(IAction action, ISelection selection) {
+		if (moveActionDelegate != null) {
+			moveActionDelegate.selectionChanged(action, selection);
+		} else {
+			selectedResources = (IStructuredSelection) selection;
+		}
 	}
-	
-	
+
+	public void dispose() {
+
+	}
+
+	public void init(IWorkbenchWindow window) {
+		fShell = window.getShell();
+		moveActionDelegate = PHPActionDelegatorRegistry.getActionDelegator(MOVE_ELEMENT_ACTION_ID);
+	}
 
 }

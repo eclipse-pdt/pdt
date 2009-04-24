@@ -116,7 +116,6 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
-import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
@@ -288,7 +287,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * Stores the current IModelElement used as the outline input.
 	 */
 	private IModelElement fModelElement;
-	
+
 	/**
 	 * Internal implementation class for a change listener.
 	 * 
@@ -1766,10 +1765,10 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 
-//		action = new OpenDeclarationAction(resourceBundle, this);
-//		//action = new OpenHyperlinkAction(resourceBundle, "OpenAction_declaration_", this, getSourceViewer());
-//		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
-//		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
+		//		action = new OpenDeclarationAction(resourceBundle, this);
+		//		//action = new OpenHyperlinkAction(resourceBundle, "OpenAction_declaration_", this, getSourceViewer());
+		//		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
+		//		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
 
 		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
@@ -1800,13 +1799,13 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new ToggleExternalBreakpointAction(this, getVerticalRuler(), null));
 		}
 
-		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+		//		ActionGroup rg = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
 		ActionGroup jsg = new PHPSearchActionGroup(this);
 
 		// We have to keep the context menu group separate to have better
 		// control over positioning
-		fActionGroups = new CompositeActionGroup(new ActionGroup[] { rg, jsg });
-		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { rg, jsg });
+		fActionGroups = new CompositeActionGroup(new ActionGroup[] { jsg });
+		fContextMenuGroup = new CompositeActionGroup(new ActionGroup[] { jsg });
 	}
 
 	/**
@@ -2342,7 +2341,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * IScriptReconcilingListener methods - reconcile listeners
 	 */
 	private ListenerList fReconcilingListeners = new ListenerList(ListenerList.IDENTITY);
-	
+
 	public void addReconcileListener(IPhpScriptReconcilingListener reconcileListener) {
 		synchronized (fReconcilingListeners) {
 			fReconcilingListeners.add(reconcileListener);
@@ -2803,9 +2802,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		if (selection instanceof TextSelection) {
 			TextSelection textSelection = (TextSelection) selection;
 			if (textSelection instanceof IStructuredSelection) {
-				Object firstElement = ((IStructuredSelection)textSelection).getFirstElement();
+				Object firstElement = ((IStructuredSelection) textSelection).getFirstElement();
 				if (firstElement instanceof IImplForPhp) {
-					((IImplForPhp)firstElement).setModelElement(getModelElement());
+					((IImplForPhp) firstElement).setModelElement(getModelElement());
 				}
 			}
 			// PR 39995: [navigation] Forward history cleared after going back in navigation history:

@@ -19,8 +19,10 @@ import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
 import org.eclipse.dltk.ui.actions.IScriptEditorActionDefinitionIds;
 import org.eclipse.jface.action.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.internal.ui.actions.*;
-import org.eclipse.swt.SWT;
+import org.eclipse.php.internal.ui.actions.GotoMatchingBracketAction;
+import org.eclipse.php.internal.ui.actions.IPHPEditorActionDefinitionIds;
+import org.eclipse.php.internal.ui.actions.PHPActionConstants;
+import org.eclipse.php.internal.ui.actions.ToggleMarkOccurrencesAction;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -57,8 +59,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	private RetargetTextEditorAction fOpenTypeHierarchy;
 	private RetargetTextEditorAction fOpenCallHierarchy;
 	private RetargetTextEditorAction fOpenHierarchy;
-	private RetargetTextEditorAction fRename;
-	private RetargetTextEditorAction fMove;
 
 	private RetargetTextEditorAction fToggleComment = null;
 	private RetargetTextEditorAction fAddBlockComment = null;
@@ -102,12 +102,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fOpenHierarchy = new RetargetTextEditorAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy."); //$NON-NLS-1$
 		fOpenHierarchy.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 
-		fRename = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fRename.setActionDefinitionId(IPHPEditorActionDefinitionIds.RENAME_ELEMENT);
-
-		fMove = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
-		fMove.setActionDefinitionId(IPHPEditorActionDefinitionIds.MOVE_ELEMENT);
-
 		// source commands
 		fToggleComment = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fToggleComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.TOGGLE_COMMENT);
@@ -117,11 +111,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fRemoveBlockComment.setActionDefinitionId(IPHPEditorActionDefinitionIds.REMOVE_BLOCK_COMMENT);
 
 		fMarkOccurrencesAction = new ToggleMarkOccurrencesAction(resourceBundle);
-
-		// the refactor menu, add the menu itself to add all refactor actions
-		this.refactorMenu = new MenuManager(PHPUIMessages.getString("ActionContributorJSP_0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
-		refactorMenu.add(this.fRename);
-		refactorMenu.add(this.fMove);
 	}
 
 	protected void addToMenu(IMenuManager menu) {
@@ -198,12 +187,6 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 			PHPStructuredEditor phpEditor = (PHPStructuredEditor) part;
 			phpEditor.getActionGroup().fillActionBars(getActionBars());
 		}
-	}
-
-	public void setViewerSpecificContributionsEnabled(boolean enabled) {
-		super.setViewerSpecificContributionsEnabled(enabled);
-		this.fRename.setEnabled(enabled);
-		this.fMove.setEnabled(enabled);
 	}
 
 	/*

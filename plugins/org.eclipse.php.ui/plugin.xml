@@ -773,6 +773,13 @@
 	             label="Rename..."
 	             menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
 	       </action>
+	        <action
+	              class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"
+	              definitionId="org.eclipse.php.ui.edit.text.move.element"
+	              id="org.eclipse.php.ui.actions.Move"
+	              label="Move..."
+	              menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
+	        </action>
 	    </actionSet>
 	</extension>
 
@@ -920,8 +927,8 @@
 		<command name="%ActionDefinition.renameElement.name"
 			description="%ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.rename.element" />
-		<command name="%ActionDefinition.moveElement.name"
-			description="%ActionDefinition.moveElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
+		<command name="ActionDefinition.renameElement.name"
+			description="ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
 		<command name="%OpenDeclaration.name" description="%OpenDeclaration.description"
 			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.OpenDeclaration" />
@@ -993,6 +1000,8 @@
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
 		</key>
+		
+		
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V" />
@@ -1011,7 +1020,6 @@
 		</key>
 		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-
 		<!-- project -->
 		<!-- perspectives -->
 		<!-- views -->
@@ -1291,10 +1299,19 @@
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
 	             definitionId="org.eclipse.php.ui.edit.text.rename.element"
 	             id="org.eclipse.php.ui.refactoring.pop.rename"
-	             label="Rename"
+	             label="Rename..."
 	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
 	             tooltip="%OrganizeIncludes.label.tooltip">
 	       </action>
+	       <action
+	             class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"
+	             definitionId="org.eclipse.php.ui.edit.text.move.element"
+	             id="org.eclipse.php.ui.refactoring.pop.move"
+	             label="Move..."
+	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
+	             tooltip="">
+	       </action>
+	       
 	    </viewerContribution>
 	</extension>
 

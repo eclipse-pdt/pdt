@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.php.internal.ui.PHPUIMessages;
-import org.eclipse.php.ui.actions.IRenamePHPElementActionFactory;
 import org.eclipse.ui.*;
 
 public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActionDelegate {
@@ -33,16 +32,16 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 
 	public void init(IWorkbenchWindow window) {
 		if (window != null) {
-			// gets the right factory to the element rename refactoring
-			final IRenamePHPElementActionFactory actionDelegatorFactory = PHPActionDelegatorRegistry.getActionDelegatorFactory(RENAME_ELEMENT_ACTION_ID);
-			if (actionDelegatorFactory == null) {
+
+			final IPHPActionDelegator renameActionDelegate = PHPActionDelegatorRegistry.getActionDelegator(RENAME_ELEMENT_ACTION_ID);
+			if (renameActionDelegate == null) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					if (page.getActivePart() != null)
 						resourceAction = new RenameResourceAction(page.getActivePart().getSite());
 				}
 			} else {
-				fRenamePHPElement = actionDelegatorFactory.createRenameAction();
+				fRenamePHPElement = renameActionDelegate;
 				if (fRenamePHPElement instanceof IWorkbenchWindowActionDelegate) {
 					((IWorkbenchWindowActionDelegate) fRenamePHPElement).init(window);
 				}
