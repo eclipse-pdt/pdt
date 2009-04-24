@@ -445,6 +445,7 @@ public class BindingTests extends SuiteOfTestCases {
 		MethodInvocation methodInvocation = (MethodInvocation) statement.getExpression();
 
 		IMethodBinding methodBinding = methodInvocation.resolveMethodBinding();
+		Assert.assertNotNull(methodBinding);
 		Assert.assertTrue(methodBinding.getName().equals("foo"));
 
 		ITypeBinding declaringClass = methodBinding.getDeclaringClass();
@@ -467,6 +468,7 @@ public class BindingTests extends SuiteOfTestCases {
 
 		IMethodBinding methodBinding = staticMethodInvocation.resolveMethodBinding();
 
+		Assert.assertNotNull(methodBinding);
 		Assert.assertTrue(methodBinding.isConstructor() == false);
 		Assert.assertTrue(methodBinding.getName().equals("foo"));
 
@@ -489,7 +491,10 @@ public class BindingTests extends SuiteOfTestCases {
 		IBinding binding = identifier.resolveBinding();
 
 		Assert.assertNotNull(binding);
-		Assert.assertTrue(binding.getName().equals("a"));
+		
+		String name = binding.getName();
+		Assert.assertNotNull(name);
+		Assert.assertTrue(name.equals("a"));
 		Assert.assertTrue(binding.getKind() == IBinding.VARIABLE);
 	}
 

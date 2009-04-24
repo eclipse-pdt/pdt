@@ -94,6 +94,10 @@ public class ASTRewriteTests extends TestCase {
 	private AST ast;
 	private IDocument document;
 	private Program program;
+	
+	public ASTRewriteTests(String name) {
+		super(name);
+	}
 
 	public static TestSuite suite() {
 		return new TestSuite(new Class[] {
@@ -868,7 +872,7 @@ public class ASTRewriteTests extends TestCase {
 		Block body = ast.newBlock();
 		program.statements().add(0, ast.newFunctionDeclaration(name, formalParameters, body, true));
 		rewrite();
-		checkResult("<?php function &foo(int $a = 5, $b = 'boobo'){\n}\n?> ");
+		checkResult("<?php function &foo(int $a = 5,  $b = 'boobo') {\n}\n?> ");
 	}
 
 	public void testFunctionDeclarationChangeDefault1() throws Exception {
