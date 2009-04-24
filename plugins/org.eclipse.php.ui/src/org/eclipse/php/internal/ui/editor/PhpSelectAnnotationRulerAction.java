@@ -16,6 +16,7 @@ package org.eclipse.php.internal.ui.editor;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
+import org.eclipse.dltk.ui.text.ScriptCorrectionProcessorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -24,6 +25,7 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationAccessExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
+import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.swt.widgets.Event;
@@ -150,15 +152,14 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 			if (!includesRulerLine(position, document))
 				continue;
 
-			// TODO - Add the quick-fix support here.
-			//			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension && ((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
-			//			if (!isReadOnly && (((hasAssistLightbulb && annotation instanceof AssistAnnotation) || JavaCorrectionProcessor.hasCorrections(annotation)))) {
-			//				fPosition = position;
-			//				fAnnotation = annotation;
-			//				fHasCorrection = true;
-			//				layer = annotationLayer;
-			//				continue;
-			//			} else {
+			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension && ((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
+			if (!isReadOnly && hasCorrections(annotation)) {
+				fPosition = position;
+				fAnnotation = annotation;
+				fHasCorrection = true;
+				layer = annotationLayer;
+				continue;
+			}
 			AnnotationPreference preference = fAnnotationPreferenceLookup.getAnnotationPreference(annotation);
 			if (preference == null)
 				continue;
@@ -175,5 +176,9 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 				layer = annotationLayer;
 			}
 		}
+	}
+	
+	private boolean hasCorrections(Annotation annotation) {
+		return ScriptCorrectionProcessorManager.canFix(PHPNature.ID, annotation);
 	}
 }
