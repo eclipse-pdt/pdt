@@ -508,16 +508,16 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			}
 		}
 		Expression paramType = formalParameter.getParameterType();
-		if (paramType != null && paramType.getLength() > 0) {
-			formalParameter.getParameterType().accept(this);
+		if (paramType != null /*&& paramType.getLength() > 0*/) {
+			paramType.accept(this);
 			result.append(' ');
 		}
 
 		formalParameter.getParameterName().accept(this);
 		Expression defaultValue = formalParameter.getDefaultValue();
-		if (defaultValue != null && defaultValue.getLength() > 0) {
+		if (defaultValue != null /*&& defaultValue.getLength() > 0*/) {
 			result.append(" = ");
-			formalParameter.getDefaultValue().accept(this);
+			defaultValue.accept(this);
 		}
 		return false;
 	}

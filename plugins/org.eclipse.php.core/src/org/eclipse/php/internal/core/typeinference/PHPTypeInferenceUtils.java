@@ -41,6 +41,7 @@ import org.eclipse.wst.sse.core.internal.Logger;
 
 public class PHPTypeInferenceUtils {
 
+	private static final int MODE_MASK = SearchPattern.R_EXACT_MATCH | SearchPattern.R_PREFIX_MATCH | SearchPattern.R_PATTERN_MATCH | SearchPattern.R_REGEXP_MATCH;
 	private static final String WILDCARD = "*"; //$NON-NLS-1$
 
 	public static IEvaluatedType combineMultiType(Collection<IEvaluatedType> evaluatedTypes) {
@@ -581,7 +582,7 @@ public class PHPTypeInferenceUtils {
 		final Collection<IType> elements = new LinkedList<IType>();
 		SearchEngine searchEngine = new SearchEngine();
 
-		if ((matchRule & SearchPattern.R_EXACT_MATCH) != 0) {
+		if ((matchRule & MODE_MASK) == SearchPattern.R_EXACT_MATCH) {
 			try {
 				SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
@@ -599,7 +600,7 @@ public class PHPTypeInferenceUtils {
 		} else {
 			try {
 				final HandleFactory handleFactory = new HandleFactory();
-				searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
+				searchEngine.searchAllTypeNames("*".toCharArray(), SearchPattern.R_PATTERN_MATCH , prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
 					public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, char[][] superTypes, String path) {
 						Openable openable = handleFactory.createOpenable(path, scope);
 						ModelElement parent = openable;
@@ -691,7 +692,7 @@ public class PHPTypeInferenceUtils {
 		final List<IMethod> methods = new LinkedList<IMethod>();
 		SearchEngine searchEngine = new SearchEngine();
 
-		if ((matchRule & SearchPattern.R_EXACT_MATCH) != 0) {
+		if ((matchRule & MODE_MASK) == SearchPattern.R_EXACT_MATCH) {
 			try {
 				SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {

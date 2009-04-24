@@ -15,11 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
@@ -37,10 +33,16 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext()).getSourceModule();
 		IType[] types = typedGoal.getTypes();
 		String methodName = typedGoal.getMethodName();
-		
+
 		List<IMethod> methods = new LinkedList<IMethod>();
 		if (types == null) {
-			methods.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(methodName, SearchEngine.createSearchScope(sourceModule.getScriptProject()))));
+			try {
+				methods.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(methodName, sourceModule, 0)));
+			} catch (ModelException e) {
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
+			}
 		} else {
 			try {
 				for (IType type : types) {
@@ -61,7 +63,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 				}
 			}
 		}
-		
+
 		return (IMethod[]) methods.toArray(new IMethod[methods.size()]);
 	}
 }

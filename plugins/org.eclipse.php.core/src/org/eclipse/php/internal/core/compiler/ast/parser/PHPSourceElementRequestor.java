@@ -13,9 +13,13 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.dltk.ast.ASTListNode;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.*;
@@ -31,11 +35,15 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 /**
  * This visitor builds DLTK model source elements.
@@ -64,9 +72,23 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	 * names delcared through 'global' keyword inside this method.
 	 */
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
+	
+	protected NamespaceDeclaration fLastNamespace;
+	protected PHPVersion phpVersion;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, ISourceModule sourceModule) {
 		super(requestor);
+		
+		IProject project = null;
+		if (sourceModule instanceof IModelElement) {
+			project = ((IModelElement) sourceModule).getScriptProject().getProject();
+		} else {
+			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(sourceModule.getScriptFolder());
+			if (folder != null) {
+				project = folder.getProject();
+			}
+		}
+		phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
 
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, "phpSourceElementRequestors");
@@ -110,6 +132,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean endvisit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
+			fLastNamespace = null; // there are no nested namespaces
 			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
@@ -192,7 +215,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				mi.modifiers |= IPHPModifiers.Internal;
 			}
 		}
-		
+
 		if (fCurrentClass == null) {
 			mi.modifiers |= Modifiers.AccGlobal;
 		}
@@ -201,6 +224,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	public boolean visit(TypeDeclaration type) throws Exception {
 		if (type instanceof NamespaceDeclaration) {
 			NamespaceDeclaration namespaceDecl = (NamespaceDeclaration) type;
+			fLastNamespace = namespaceDecl;
 			if (namespaceDecl.isGlobal()) {
 				return true;
 			}
@@ -220,6 +244,40 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		return super.visit(type);
 	}
 
+	protected String[] processSuperClasses(TypeDeclaration type) {
+		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
+			return super.processSuperClasses(type);
+		}
+		
+		ASTListNode superClasses = type.getSuperClasses();
+		if (superClasses == null) {
+			return new String[] {};
+		}
+		List superClassNames = superClasses.getChilds();
+		List<String> result = new ArrayList<String>(superClassNames.size());
+		Iterator iterator = superClassNames.iterator();
+		while (iterator.hasNext()) {
+			Object nameNode = iterator.next();
+
+			String name;
+			if (nameNode instanceof FullyQualifiedReference) {
+				FullyQualifiedReference fullyQualifiedName = (FullyQualifiedReference) nameNode;
+				name = fullyQualifiedName.getFullyQualifiedName();
+				if (fullyQualifiedName.getNamespace() != null) {
+					if (name.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+						name = name.substring(1);
+					}
+				} else {
+					if (fLastNamespace != null) {
+						name = new StringBuilder(fLastNamespace.getName()).append(NamespaceReference.NAMESPACE_SEPARATOR).append(name).toString();
+					}
+				}
+				result.add(name);
+			}
+		}
+		return (String[]) result.toArray(new String[result.size()]);
+	}
+
 	protected void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
 		// Check whether this class is marked as @internal
 		if (typeDeclaration instanceof IPHPDocAwareDeclaration) {
@@ -234,7 +292,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 		if (typeDeclaration instanceof NamespaceDeclaration) {
 			ti.modifiers |= Modifiers.AccNameSpace;
 		}
-		
+
 		// modify class info if needed by extensions
 		for (PHPSourceElementRequestorExtension extension : extensions) {
 			extension.modifyClassInfo(typeDeclaration, ti);

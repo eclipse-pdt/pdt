@@ -308,7 +308,7 @@ public class FormalParameter extends ASTNode {
 	 * </ul>
 	 */
 	public void setParameterType(Expression id) {
-		if (!(id instanceof Identifier) && !(id instanceof NamespaceName)) {
+		if (id != null && !(id instanceof Identifier) && !(id instanceof NamespaceName)) {
 			throw new IllegalArgumentException();
 		}
 		//		// an Assignment may occur inside a Expression - must check cycles
