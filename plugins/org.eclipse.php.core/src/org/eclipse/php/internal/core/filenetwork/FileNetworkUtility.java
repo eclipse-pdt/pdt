@@ -115,7 +115,6 @@ public class FileNetworkUtility {
 				if (file.equals(testFile) && !processedFiles.contains(referencingFile)) {
 					processedFiles.add(referencingFile);
 					Node node = new Node(referencingFile);
-					node.addReferenceNode(include);
 					root.addChild(node);
 				}
 			}
@@ -149,7 +148,7 @@ public class FileNetworkUtility {
 		return new ReferenceTree(root);
 	}
 
-	private static void internalBuildReferencedFilesTree(Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) throws CoreException {
+	private static void internalBuildReferencedFilesTree(final Node root, Set<ISourceModule> processedFiles, IProgressMonitor monitor) throws CoreException {
 		ISourceModule sourceModule = root.getFile();
 
 		final List<String> includes = new LinkedList<String>();

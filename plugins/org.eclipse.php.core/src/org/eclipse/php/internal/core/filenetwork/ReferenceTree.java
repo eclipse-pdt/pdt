@@ -14,7 +14,7 @@ import java.util.*;
 
 import org.eclipse.dltk.core.IFileHierarchyInfo;
 import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.ISourceRange;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Include;
 import org.eclipse.php.internal.core.mixin.IncludeField;
 
 /**
@@ -50,7 +50,6 @@ public class ReferenceTree implements IFileHierarchyInfo {
 
 		final private ISourceModule file;
 		private Set<Node> children;
-		private List<IncludeField> referenceNodes = new ArrayList<IncludeField>();
 
 		public Node(ISourceModule file) {
 			assert file != null;
@@ -117,13 +116,6 @@ public class ReferenceTree implements IFileHierarchyInfo {
 			return buf.toString();
 		}
 
-		public void addReferenceNode(IncludeField include) {
-			this.referenceNodes.add( include);
-		}
-
-		public List<IncludeField> getReferenceNodes() {
-			return referenceNodes;
-		}
 	}
 
 	public boolean exists(ISourceModule file) {
