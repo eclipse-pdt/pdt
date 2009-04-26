@@ -151,6 +151,7 @@
 				</ant>
 			</then>
 		</if>
+		<!--
 		<if>
 			<isset property="orbitURL" />
 			<then>
@@ -161,6 +162,7 @@
 				</ant>
 			</then>
 		</if>
+		-->
 
 		<property name="dir" location="." />
 		<echo message="Unpack SDK + JUnit Tests (${dir}/pdt-*.zip) ..." />

@@ -186,16 +186,18 @@
 				</ant>
 			</then>
 		</if>
+		<!--
 		<if>
 			<isset property="orbitURL" />
 			<then>
 				<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
 					<property name="url" value="${orbitURL}" />
 					<property name="file" value="${orbitFile}" />
-						<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.apache.commons.lang/plugin.xml" />
+					<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.apache.commons.lang/plugin.xml" />
 				</ant>
 			</then>
 		</if>
+		-->
 	</target>
 	
 	<target name="checkParserGeneratorExists">
