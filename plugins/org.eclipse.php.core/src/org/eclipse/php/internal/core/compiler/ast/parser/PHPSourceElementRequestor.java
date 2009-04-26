@@ -13,9 +13,6 @@ package org.eclipse.php.internal.core.compiler.ast.parser;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -35,15 +32,11 @@ import org.eclipse.dltk.compiler.ISourceElementRequestor;
 import org.eclipse.dltk.compiler.SourceElementRequestVisitor;
 import org.eclipse.dltk.compiler.ISourceElementRequestor.TypeInfo;
 import org.eclipse.dltk.compiler.env.ISourceModule;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.internal.core.SourceModule;
 import org.eclipse.php.core.PHPSourceElementRequestorExtension;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
 
 /**
  * This visitor builds DLTK model source elements.
@@ -74,22 +67,10 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	protected Stack<Set<String>> methodGlobalVars = new Stack<Set<String>>();
 	
 	protected NamespaceDeclaration fLastNamespace;
-	protected PHPVersion phpVersion;
 
 	public PHPSourceElementRequestor(ISourceElementRequestor requestor, ISourceModule sourceModule) {
 		super(requestor);
 		
-		IProject project = null;
-		if (sourceModule instanceof IModelElement) {
-			project = ((IModelElement) sourceModule).getScriptProject().getProject();
-		} else {
-			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(sourceModule.getScriptFolder());
-			if (folder != null) {
-				project = folder.getProject();
-			}
-		}
-		phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
-
 		// Load PHP source element requester extensions
 		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHPCorePlugin.ID, "phpSourceElementRequestors");
 		List<PHPSourceElementRequestorExtension> requestors = new ArrayList<PHPSourceElementRequestorExtension>(elements.length);
@@ -244,10 +225,6 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 	}
 
 	protected String[] processSuperClasses(TypeDeclaration type) {
-		if (phpVersion.isLessThan(PHPVersion.PHP5_3)) {
-			return super.processSuperClasses(type);
-		}
-		
 		ASTListNode superClasses = type.getSuperClasses();
 		if (superClasses == null) {
 			return new String[] {};
@@ -272,6 +249,8 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 					}
 				}
 				result.add(name);
+			} else if (nameNode instanceof SimpleReference) {
+				result.add(((SimpleReference)nameNode).getName());
 			}
 		}
 		return (String[]) result.toArray(new String[result.size()]);

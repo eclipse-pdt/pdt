@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.core;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.dltk.ast.ASTVisitor;
 import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.compiler.ISourceElementRequestor;
