@@ -186,6 +186,16 @@
 				</ant>
 			</then>
 		</if>
+		<if>
+			<isset property="orbitURL" />
+			<then>
+				<ant target="getDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+					<property name="url" value="${orbitURL}" />
+					<property name="file" value="${orbitFile}" />
+						<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.apache.commons.lang/plugin.xml" />
+				</ant>
+			</then>
+		</if>
 	</target>
 	
 	<target name="checkParserGeneratorExists">
