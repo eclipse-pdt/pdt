@@ -26,10 +26,10 @@
 		</ant>
 
 		<!-- TODO: if your project requires more dependencies for testing, add them here -->
-		<echo message="Copy Eclipse, EMF, DTP, DLTK, GEF, WTP to ${executionDir}..." />
+		<echo message="Copy Eclipse, EMF, DTP, DLTK, GEF, WTP, ORBIT to ${executionDir}..." />
 		<copy todir="${executionDir}">
 			<fileset dir="${downloadsDir}"
-			         includes="${eclipseFile},${emfFile},${dtpFile},${dltkFile},${gefFile},${wtpFile}" />
+			         includes="${eclipseFile},${emfFile},${dtpFile},${dltkFile},${gefFile},${wtpFile},${orbitFile}" />
 		</copy>
 		<property name="shell" value="relengbuildgtk.sh" />
 
