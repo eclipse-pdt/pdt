@@ -40,15 +40,6 @@ public class PHPSourceElementRequestorExtension extends ASTVisitor {
 	public ISourceModule getSourceModule() {
 		return fSourceModule;
 	}
-
-	/**
-	 * This addition helps to filter out projects that don't need this requestor
-	 * @param project
-	 * @return true if need to be assigned as element requestor extension
-	 */
-	public boolean select(IProject project) {
-		return true;
-	}
 	
 	public void modifyClassInfo(TypeDeclaration typeDeclaration, TypeInfo ti) {
 	}

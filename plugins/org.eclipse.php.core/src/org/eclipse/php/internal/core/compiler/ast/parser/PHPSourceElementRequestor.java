@@ -98,10 +98,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 				PHPSourceElementRequestorExtension extension = (PHPSourceElementRequestorExtension) element.createExecutableExtension("class");
 				extension.setRequestor(fRequestor);
 				extension.setSourceModule(sourceModule);
-				// add the extension only if needed by project definition
-				if (extension.select(project)) {
-					requestors.add(extension);	
-				}
+				requestors.add(extension);	
 			} catch (CoreException e) {
 				Logger.logException(e);
 			}
