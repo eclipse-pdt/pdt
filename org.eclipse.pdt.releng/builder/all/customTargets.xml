@@ -69,7 +69,7 @@
 	<target name="postSetup" depends="init">
 		<!-- TODO: if your project requires more dependencies, add them here -->
 		<!-- TODO: if your project requires more dependencies, add them here; if it does not require all of these, remove those not required -->
-		<echo message="Download, then unpack: Eclipse, EMF, XSD, (DTP), DLTK, (RSE), GEF, WTP ..." />
+		<echo message="Download, then unpack: Eclipse, EMF, XSD, (DTP), DLTK, GEF, WTP ..." />
 		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
 			<property name="url" value="${eclipseURL}" />
 			<property name="file" value="${eclipseFile}" />
@@ -138,6 +138,7 @@
 				</ant>
 			</then>
 		</if>
+		<!--
 		<if>
 			<isset property="dltkrseURL" />
 			<then>
@@ -158,7 +159,7 @@
 				</ant>
 			</then>
 		</if>
-
+		-->
 		<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
 			<property name="url" value="${gefURL}" />
 			<property name="file" value="${gefFile}" />
@@ -185,7 +186,6 @@
 				</ant>
 			</then>
 		</if>
-
 	</target>
 	
 	<target name="checkParserGeneratorExists">
