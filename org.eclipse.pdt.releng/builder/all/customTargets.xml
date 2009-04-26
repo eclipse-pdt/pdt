@@ -189,7 +189,7 @@
 		<if>
 			<isset property="orbitURL" />
 			<then>
-				<ant target="getDependency" antfile="${getTestDependencies.xml}" dir="${common.releng.dir}">
+				<ant target="getDependency" antfile="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/getDependencies.xml">
 					<property name="url" value="${orbitURL}" />
 					<property name="file" value="${orbitFile}" />
 						<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.apache.commons.lang/plugin.xml" />
