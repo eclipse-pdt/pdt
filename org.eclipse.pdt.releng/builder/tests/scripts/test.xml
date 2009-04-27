@@ -165,7 +165,7 @@
 		-->
 
                 <!-- Copy needed 3rd party plug-ins -->
-                <copy todir="${dropins-home}/eclipse/plugins" verbose="true">
+                <copy todir="${dropins-home}/eclipse/plugins" flatten="true" verbose="true">
                         <fileset dir="${thirdPartyJarsDir}/">
                                 <include name="orbit-*/org.apache.commons.lang_2.3.0*.jar" />
                         </fileset>

@@ -200,7 +200,7 @@
 		-->
 
 		<!-- Copy needed 3rd party plug-ins -->
-		<copy todir="${buildDirectory}/plugins" verbose="true">
+		<copy todir="${buildDirectory}/plugins" flatten="true" verbose="true">
 			<fileset dir="${thirdPartyJarsDir}/">
 				<include name="orbit-*/org.apache.commons.lang_2.3.0*.jar" />
 			</fileset>
