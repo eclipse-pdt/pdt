@@ -64,8 +64,8 @@
 		<ant target="getTestDependency"
 		     antfile="${getTestDependencies.xml}"
 		     dir="${common.releng.dir}">
-			<property name="url" value="${wtpURL}" />
-			<property name="file" value="${wtpFile}" />
+			<property name="url" value="${wtpwstURL}" />
+			<property name="file" value="${wtpwstFile}" />
 			<property name="unpackDest" value="${dropins-home}" />
 		</ant>
 
