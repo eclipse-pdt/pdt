@@ -67,9 +67,20 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	/**
+	 * Text operation code for requesting the outline for the current input.
+	 */
+	public static final int SHOW_OUTLINE = 51;
+
+	/**
+	 * Text operation code for requesting the outline for the element at the current position.
+	 */
+	public static final int OPEN_STRUCTURE = 52;
+
+	/**
 	 * Text operation code for requesting the hierarchy for the current input.
 	 */
 	public static final int SHOW_HIERARCHY = 53;
+
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 
 	private SourceViewerConfiguration config;
@@ -103,170 +114,153 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		// save the last cursor position and the top visible line.
 		int selectionLength = selection.y - selection.x;
 		int topLine = getTextWidget().getTopIndex();
-		if (operation == FORMAT_DOCUMENT) {
-			try {
-				setRedraw(false);
-				// begin recording
-				beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
-				// format the whole document !
-				IRegion region = new Region(0, getDocument().getLength());
-				if (fContentFormatter instanceof IContentFormatterExtension) {
-					IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
-					IFormattingContext context = new FormattingContext();
-					context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
-					context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
-					extension.format(getDocument(), context);
-				} else {
-					fContentFormatter.format(getDocument(), region);
-				}
-			} finally {
-				// end recording
-				selection = getTextWidget().getSelection();
-
-				selectionLength = selection.y - selection.x;
-				endRecording(cursorPosition, selectionLength);
-				// return the cursor to its original position after the formatter change its position.
-				getTextWidget().setSelection(cursorPosition);
-				getTextWidget().setTopIndex(topLine);
-				setRedraw(true);
-			}
-		} else if (operation == PASTE) {
-			super.doOperation(operation);
-
-			// IStructuredDocument sDoc = (IStructuredDocument) getDocument();
-			// IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selection.x);
-			// ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selection.x);
-			//
-			// boolean shouldFormat = false;
-			//
-			// if (textRegion instanceof ITextRegionContainer) {
-			// textRegion = ((ITextRegionContainer) textRegion).getRegionAtCharacterOffset(selection.x);
-			// if (textRegion.getType() == PHPRegionContext.PHP_OPEN || textRegion.getType() ==
-			// PHPRegionContext.PHP_CLOSE || textRegion instanceof PhpScriptRegion) {
-			// shouldFormat = true;
-			// }
-			// } else if (textRegion.getType() == PHPRegionContext.PHP_CONTENT) {
-			// shouldFormat = true;
-			// }
-			// if(shouldFormat) {
-			// TextTransfer plainTextTransfer = TextTransfer.getInstance();
-			// String text = (String) new Clipboard(getTextWidget().getDisplay()).getContents(plainTextTransfer,
-			// DND.CLIPBOARD);
-			// IRegion region = new Region(selection.x, text.length());
-			// ((IStructuredDocument) getDocument()).getUndoManager().disableUndoManagement();
-			// fContentFormatter.format(getDocument(), region);
-			// ((IStructuredDocument) getDocument()).getUndoManager().enableUndoManagement();
-			// }
-		} else if (operation == CONTENTASSIST_PROPOSALS) {
-			// Handle javascript content assist when there is no support (instead of printing the stack trace)
-			if (config != null) {
-				IProject project = null;
-				boolean isJavaScriptRegion = false;
-				boolean hasJavaScriptNature = true;
+		switch (operation) {
+			case FORMAT_DOCUMENT:
 				try {
-					// Resolve the partition type
-					IStructuredDocument sDoc = (IStructuredDocument) getDocument();
-					// get the "real" offset - adjusted according to the projection
-					int selectionOffset = getSelectedRange().x;
-					IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
-					if (sdRegion == null) {
-						super.doOperation(operation);
-						return;
-					}
-					ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
-					if (textRegion instanceof ForeignRegion) {
-						isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
-					}
+					setRedraw(false);
+					// begin recording
+					beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
-					// Check if the containing project has JS nature or not
-					if (textEditor instanceof PHPStructuredEditor) {
-						IModelElement modelElement = ((PHPStructuredEditor) textEditor).getModelElement();
+					// format the whole document !
+					IRegion region = new Region(0, getDocument().getLength());
+					if (fContentFormatter instanceof IContentFormatterExtension) {
+						IContentFormatterExtension extension = (IContentFormatterExtension) fContentFormatter;
+						IFormattingContext context = new FormattingContext();
+						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
+						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
+						extension.format(getDocument(), context);
+					} else {
+						fContentFormatter.format(getDocument(), region);
+					}
+				} finally {
+					// end recording
+					selection = getTextWidget().getSelection();
 
-						if (modelElement != null) {
-							IScriptProject scriptProject = modelElement.getScriptProject();
-							project = scriptProject.getProject();
-							if (project != null && project.isAccessible() && project.getNature(JavaScriptCore.NATURE_ID) == null) {
-								hasJavaScriptNature = false;
+					selectionLength = selection.y - selection.x;
+					endRecording(cursorPosition, selectionLength);
+					// return the cursor to its original position after the formatter change its position.
+					getTextWidget().setSelection(cursorPosition);
+					getTextWidget().setTopIndex(topLine);
+					setRedraw(true);
+				}
+				return;
+				
+			case PASTE:
+				super.doOperation(operation);
+				return;
+
+			case CONTENTASSIST_PROPOSALS:
+				// Handle javascript content assist when there is no support (instead of printing the stack trace)
+				if (config != null) {
+					IProject project = null;
+					boolean isJavaScriptRegion = false;
+					boolean hasJavaScriptNature = true;
+					try {
+						// Resolve the partition type
+						IStructuredDocument sDoc = (IStructuredDocument) getDocument();
+						// get the "real" offset - adjusted according to the projection
+						int selectionOffset = getSelectedRange().x;
+						IStructuredDocumentRegion sdRegion = sDoc.getRegionAtCharacterOffset(selectionOffset);
+						if (sdRegion == null) {
+							super.doOperation(operation);
+							return;
+						}
+						ITextRegion textRegion = sdRegion.getRegionAtCharacterOffset(selectionOffset);
+						if (textRegion instanceof ForeignRegion) {
+							isJavaScriptRegion = (textRegion.getType() == DOMRegionContext.BLOCK_TEXT);
+						}
+
+						// Check if the containing project has JS nature or not
+						if (textEditor instanceof PHPStructuredEditor) {
+							IModelElement modelElement = ((PHPStructuredEditor) textEditor).getModelElement();
+
+							if (modelElement != null) {
+								IScriptProject scriptProject = modelElement.getScriptProject();
+								project = scriptProject.getProject();
+								if (project != null && project.isAccessible() && project.getNature(JavaScriptCore.NATURE_ID) == null) {
+									hasJavaScriptNature = false;
+								}
 							}
 						}
-					}
 
-					// open dialog if required
-					if (isJavaScriptRegion && !hasJavaScriptNature) {
-						Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
-						// Pop a question dialog - if the user selects 'Yes' JS Support is added, otherwise no change
-						int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", activeWorkbenchShell, PHPUIMessages.getString("PHPStructuredTextViewer.0"), null, PHPUIMessages.getString("PHPStructuredTextViewer.1"), OptionalMessageDialog.QUESTION, new String[] {
-							IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
+						// open dialog if required
+						if (isJavaScriptRegion && !hasJavaScriptNature) {
+							Shell activeWorkbenchShell = PHPUiPlugin.getActiveWorkbenchShell();
+							// Pop a question dialog - if the user selects 'Yes' JS Support is added, otherwise no change
+							int addJavaScriptSupport = OptionalMessageDialog.open("PROMPT_ADD_JAVASCRIPT_SUPPORT", activeWorkbenchShell, PHPUIMessages.getString("PHPStructuredTextViewer.0"), null, PHPUIMessages.getString("PHPStructuredTextViewer.1"), OptionalMessageDialog.QUESTION, new String[] {
+								IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL }, 0); //$NON-NLS-1$
 
-						// run the JSDT action for adding the JS nature
-						if (addJavaScriptSupport == 0 && project != null) {
-							SetupProjectsWizzard wiz = new SetupProjectsWizzard();
-							wiz.selectionChanged(null, new StructuredSelection(project));
-							wiz.run(null);
+							// run the JSDT action for adding the JS nature
+							if (addJavaScriptSupport == 0 && project != null) {
+								SetupProjectsWizzard wiz = new SetupProjectsWizzard();
+								wiz.selectionChanged(null, new StructuredSelection(project));
+								wiz.run(null);
+							}
+							return;
 						}
-						return;
-					}
 
-				} catch (CoreException e) {
-					Logger.logException(e);
-				}
-			}
-
-			// notifing the processors that the next request for completion is an explicit request
-			if (config != null) {
-				PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
-				IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
-				for (IContentAssistProcessor element : all) {
-					if (element instanceof PHPCompletionProcessor) {
-						((PHPCompletionProcessor) element).setExplicit(true);
+					} catch (CoreException e) {
+						Logger.logException(e);
 					}
 				}
-			}
-			super.doOperation(operation);
-			// }
-			// else if (operation == CONTENTASSIST_CONTEXT_INFORMATION) {
-			// if (fContentAssistant != null) {
-			// String err = fContentAssistant.showContextInformation();
-			// PlatformStatusLineUtil.displayErrorMessage(err);
-			// PlatformStatusLineUtil.addOneTimeClearListener();
-			// }
-		} else if (operation == QUICK_ASSIST) {
-			if (fOutlinePresenter != null) {
-				fOutlinePresenter.showInformation();
-			}
-		} else if (operation == SHIFT_LEFT) {
-			shift(false, false, true);
-		} else if (operation == SHOW_HIERARCHY) {
-			if (fHierarchyPresenter != null) {
-				fHierarchyPresenter.showInformation();
-			}
-		} else if (operation == DELETE) {
-			StyledText textWidget = getTextWidget();
-			if (textWidget == null)
+
+				// notifing the processors that the next request for completion is an explicit request
+				if (config != null) {
+					PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
+					IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
+					for (IContentAssistProcessor element : all) {
+						if (element instanceof PHPCompletionProcessor) {
+							((PHPCompletionProcessor) element).setExplicit(true);
+						}
+					}
+				}
+				super.doOperation(operation);
 				return;
-			ITextSelection textSelection = null;
-			if (redraws()) {
-				try {
-					textSelection = (ITextSelection) getSelection();
-					int length = textSelection.getLength();
-					if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
-						getTextWidget().invokeAction(ST.DELETE_NEXT);
-					else
-						deleteSelection(textSelection, textWidget);
-
-					if (fireSelectionChanged) {
-						Point range = textWidget.getSelectionRange();
-						fireSelectionChanged(range.x, range.y);
-					}
-
-				} catch (BadLocationException x) {
-					// ignore
+				
+			case SHOW_OUTLINE:
+				if (fOutlinePresenter != null) {
+					fOutlinePresenter.showInformation();
 				}
-			}
-		} else {
-			super.doOperation(operation);
+				return;
+				
+			case SHIFT_LEFT:
+				shift(false, false, true);
+				return;
+				
+			case SHOW_HIERARCHY:
+				if (fHierarchyPresenter != null) {
+					fHierarchyPresenter.showInformation();
+				}
+				return;
+				
+			case DELETE:
+				StyledText textWidget = getTextWidget();
+				if (textWidget == null)
+					return;
+				ITextSelection textSelection = null;
+				if (redraws()) {
+					try {
+						textSelection = (ITextSelection) getSelection();
+						int length = textSelection.getLength();
+						if (!textWidget.getBlockSelection() && (length == 0 || length == textWidget.getSelectionRange().y))
+							getTextWidget().invokeAction(ST.DELETE_NEXT);
+						else
+							deleteSelection(textSelection, textWidget);
+
+						if (fireSelectionChanged) {
+							Point range = textWidget.getSelectionRange();
+							fireSelectionChanged(range.x, range.y);
+						}
+
+					} catch (BadLocationException x) {
+						// ignore
+					}
+				}
+				return;
 		}
+		
+		super.doOperation(operation);
 	}
 
 	public void setFireSelectionChanged(boolean fireSelectionChanged) {
@@ -291,6 +285,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	public boolean canDoOperation(int operation) {
 		if (operation == SHOW_HIERARCHY) {
 			return fHierarchyPresenter != null;
+		}
+		if (operation == SHOW_OUTLINE) {
+			return fOutlinePresenter != null;
 		}
 		return super.canDoOperation(operation);
 	}

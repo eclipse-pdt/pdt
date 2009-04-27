@@ -16,7 +16,6 @@ package org.eclipse.php.internal.ui.editor;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 
-import org.eclipse.dltk.ui.text.ScriptCorrectionProcessorManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -25,9 +24,10 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationAccessExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRulerInfo;
-import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor;
+import org.eclipse.php.internal.ui.text.correction.QuickAssistLightBulbUpdater.AssistAnnotation;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.*;
@@ -106,14 +106,14 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 			initialize(fBundle, "PhpSelectAnnotationRulerAction.OpenSuperImplementation."); //$NON-NLS-1$
 			return;
 		}
-		// TODO - Add the quick-fix support here.
-		//		if (fHasCorrection) {
-		//			if (fAnnotation instanceof AssistAnnotation)
-		//				initialize(fBundle, "JavaSelectAnnotationRulerAction.QuickAssist."); //$NON-NLS-1$
-		//			else
-		//				initialize(fBundle, "JavaSelectAnnotationRulerAction.QuickFix."); //$NON-NLS-1$
-		//			return;
-		//		}
+
+		if (fHasCorrection) {
+			if (fAnnotation instanceof AssistAnnotation)
+				initialize(fBundle, "PhpSelectAnnotationRulerAction.QuickAssist."); //$NON-NLS-1$
+			else
+				initialize(fBundle, "PhpSelectAnnotationRulerAction.QuickFix."); //$NON-NLS-1$
+			return;
+		}
 
 		initialize(fBundle, "PhpSelectAnnotationRulerAction.GotoAnnotation."); //$NON-NLS-1$;
 		super.update();
@@ -131,7 +131,7 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 		if (model == null)
 			return;
 
-		boolean hasAssistLightbulb = false;// TODO - fStore.getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
+		boolean hasAssistLightbulb = fStore.getBoolean(PreferenceConstants.EDITOR_QUICKASSIST_LIGHTBULB);
 
 		Iterator iter = model.getAnnotationIterator();
 		int layer = Integer.MIN_VALUE;
@@ -153,32 +153,29 @@ public class PhpSelectAnnotationRulerAction extends SelectMarkerRulerAction {
 				continue;
 
 			boolean isReadOnly = fTextEditor instanceof ITextEditorExtension && ((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
-			if (!isReadOnly && hasCorrections(annotation)) {
+			if (!isReadOnly && (((hasAssistLightbulb && annotation instanceof AssistAnnotation) || PHPCorrectionProcessor.hasCorrections(annotation)))) {
 				fPosition = position;
 				fAnnotation = annotation;
 				fHasCorrection = true;
 				layer = annotationLayer;
 				continue;
-			}
-			AnnotationPreference preference = fAnnotationPreferenceLookup.getAnnotationPreference(annotation);
-			if (preference == null)
-				continue;
+			} else if (!fHasCorrection) {
+				AnnotationPreference preference = fAnnotationPreferenceLookup.getAnnotationPreference(annotation);
+				if (preference == null)
+					continue;
 
-			String key = preference.getVerticalRulerPreferenceKey();
-			if (key == null)
-				continue;
+				String key = preference.getVerticalRulerPreferenceKey();
+				if (key == null)
+					continue;
 
-			// if (fStore.getBoolean(key)) {
-			if (annotation instanceof OverrideIndicatorManager.OverrideIndicator) {
-				fPosition = position;
-				fAnnotation = annotation;
-				fHasCorrection = false;
-				layer = annotationLayer;
+				// if (fStore.getBoolean(key)) {
+				if (annotation instanceof OverrideIndicatorManager.OverrideIndicator) {
+					fPosition = position;
+					fAnnotation = annotation;
+					fHasCorrection = false;
+					layer = annotationLayer;
+				}
 			}
 		}
-	}
-	
-	private boolean hasCorrections(Annotation annotation) {
-		return ScriptCorrectionProcessorManager.canFix(PHPNature.ID, annotation);
 	}
 }

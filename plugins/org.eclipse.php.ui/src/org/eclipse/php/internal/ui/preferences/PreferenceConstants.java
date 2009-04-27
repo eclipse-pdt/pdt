@@ -844,6 +844,17 @@ public class PreferenceConstants {
 	//public static final String SRCBIN_SRCNAME = "org.eclipse.php.ui.wizards.srcBinFoldersSrcName"; //$NON-NLS-1$
 	public static final String SRCBIN_SRCNAME = "com.xore.dltk.ui.wizards.srcFoldersSrcName"; //$NON-NLS-1$
 	
+	/**
+	 * A named preference that controls if quick assist light bulbs are shown.
+	 * <p>
+	 * Value is of type <code>Boolean</code>: if <code>true</code> light bulbs are shown
+	 * for quick assists.
+	 * </p>
+	 *
+	 * @since 3.0
+	 */
+	public static final String EDITOR_QUICKASSIST_LIGHTBULB="org.eclipse.php.quickassist.lightbulb"; //$NON-NLS-1$
+	
 	
 	
 	public static final String JavaScriptSupportEnable = "org.eclipse.php.ui.wizards.JSsupport"; //$NON-NLS-1$

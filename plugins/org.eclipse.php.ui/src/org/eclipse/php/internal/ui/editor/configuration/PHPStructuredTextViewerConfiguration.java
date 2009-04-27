@@ -17,7 +17,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.internal.ui.typehierarchy.HierarchyInformationControl;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.*;
@@ -31,6 +31,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -50,6 +51,7 @@ import org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
 import org.eclipse.php.internal.ui.text.PHPInformationHierarchyProvider;
 import org.eclipse.php.internal.ui.text.PHPOutlineInformationControl;
+import org.eclipse.php.internal.ui.text.correction.PHPCorrectionAssistant;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
 import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
@@ -61,6 +63,7 @@ import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
+import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
@@ -82,6 +85,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private LineStyleProvider fLineStyleProvider;
 	private StructuredContentAssistant fContentAssistant;
 	private PHPCompletionProcessor fCompletionProcessor;
+	private IQuickAssistAssistant fQuickAssistant;
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -153,7 +157,7 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType, PHPStructuredTextViewer viewer) {
 		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
-		
+
 		if (fCompletionProcessor == null) {
 			fCompletionProcessor = new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT);
 		}
@@ -197,10 +201,10 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
 			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
 
-			Preferences preferences = PHPCorePlugin.getDefault().getPluginPreferences();
-			fContentAssistant.enableAutoActivation(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION));
-			fContentAssistant.setAutoActivationDelay(preferences.getInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY));
-			fContentAssistant.enableAutoInsert(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT));
+			IPreferencesService preferencesService = Platform.getPreferencesService();
+			fContentAssistant.enableAutoActivation(preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null));
+			fContentAssistant.setAutoActivationDelay(preferencesService.getInt(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 0, null));
+			fContentAssistant.enableAutoInsert(preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT, false, null));
 
 			// add content assist processors for each partition type
 			String[] types = getConfiguredContentTypes(sourceViewer);
@@ -507,5 +511,17 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 				return new PHPOutlineInformationControl(parent, shellStyle, treeStyle, commandId);
 			}
 		};
+	}
+	
+	/*
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getQuickAssistAssistant(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
+		if (fQuickAssistant == null) {
+			IQuickAssistAssistant assistant = new PHPCorrectionAssistant();
+			assistant.setQuickAssistProcessor(new CompoundQuickAssistProcessor());
+			fQuickAssistant = assistant;
+		}
+		return fQuickAssistant;
 	}
 }

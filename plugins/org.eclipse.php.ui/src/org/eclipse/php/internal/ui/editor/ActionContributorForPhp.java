@@ -91,7 +91,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 		fGotoMatchingBracket.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
 		fOpenDeclaration = new RetargetTextEditorAction(resourceBundle, "OpenAction_declaration_"); //$NON-NLS-1$
-		fOpenDeclaration.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration");
+		fOpenDeclaration.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
 		
 		fOpenTypeHierarchy = new RetargetTextEditorAction(resourceBundle, "OpenTypeHierarchy"); //$NON-NLS-1$
 		fOpenTypeHierarchy.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);

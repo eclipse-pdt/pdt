@@ -1,34 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	<extension-point id="phpElementFilters" name="PHP Element Filter"
-		schema="schema/phpElementFilters.exsd" />
-	<extension-point id="foldingStructureProviders"
-		name="%foldingStructureProvidersExtensionPoint" schema="schema/foldingStructureProviders.exsd" />
-	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover"
-		schema="schema/phpEditorTextHovers.exsd" />
-	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider"
-		schema="schema/phpTreeContentProviders.exsd" />
-	<extension-point id="phpManualSites" name="PHP Manual URL"
-		schema="schema/phpManualSites.exsd" />
-	<extension-point id="phpHyperlinkDetector" name="PHP Hyperlink Detector"
-		schema="schema/phpHyperlinkDetector.exsd" />
-	<extension-point id="phpTreeElementComparers" name="PHP Tree Element Comparer"
-		schema="schema/phpTreeElementComparers.exsd" />
-	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor"
-		schema="schema/actionFilterContributors.exsd" />
-	<extension-point id="phpWizardPages" name="PHP Wizard Page"
-		schema="schema/phpWizardPages.exsd" />
-	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block"
-		schema="schema/phpPreferencePageBlocks.exsd" />
-	<extension-point id="wizardAndCompositeFragments" name="Wizard and Composite Fragments"
-		schema="schema/wizardAndCompositeFragments.exsd" />
-	<extension-point id="phpActionDelegator" name="PHP Action Delegator"
-		schema="schema/phpActionDelegator.exsd" />
-	<extension-point id="phpFormatterProcessor" name="PHP Formatter Processor"
-		schema="schema/phpFormatterProcessor.exsd" />
-	<extension-point id="phpFormatterPrefBlock" name="PHP Formatter Preferences Block"
-		schema="schema/phpFormatterPrefBlock.exsd" />
+	<extension-point id="phpElementFilters" name="PHP Element Filter" schema="schema/phpElementFilters.exsd" />
+	<extension-point id="foldingStructureProviders" name="%foldingStructureProvidersExtensionPoint" schema="schema/foldingStructureProviders.exsd" />
+	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover" schema="schema/phpEditorTextHovers.exsd" />
+	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider" schema="schema/phpTreeContentProviders.exsd" />
+	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd" />
+	<extension-point id="phpHyperlinkDetector" name="PHP Hyperlink Detector" schema="schema/phpHyperlinkDetector.exsd" />
+	<extension-point id="phpTreeElementComparers" name="PHP Tree Element Comparer" schema="schema/phpTreeElementComparers.exsd" />
+	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd" />
+	<extension-point id="phpWizardPages" name="PHP Wizard Page" schema="schema/phpWizardPages.exsd" />
+	<extension-point id="phpPreferencePageBlocks" name="PHP Preference Page Block" schema="schema/phpPreferencePageBlocks.exsd" />
+	<extension-point id="wizardAndCompositeFragments" name="Wizard and Composite Fragments" schema="schema/wizardAndCompositeFragments.exsd" />
+	<extension-point id="phpActionDelegator" name="PHP Action Delegator" schema="schema/phpActionDelegator.exsd" />
+	<extension-point id="phpFormatterProcessor" name="PHP Formatter Processor" schema="schema/phpFormatterProcessor.exsd" />
+	<extension-point id="phpFormatterPrefBlock" name="PHP Formatter Preferences Block" schema="schema/phpFormatterPrefBlock.exsd" />
+	<extension-point id="quickFixProcessors" name="%quickFixProcessorExtensionPoint" schema="schema/quickFixProcessors.exsd"/>
+	<extension-point id="quickAssistProcessors" name="%quickAssistProcessorExtensionPoint" schema="schema/quickAssistProcessors.exsd"/>
 	
 	<!--PHP formatter processoer registration, for PHP Content:-->
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
@@ -90,13 +78,13 @@
 
 	<extension point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.eclipse.php.ui.views" />
-  <view
-        category="org.eclipse.php.ui.views"
-        class="org.eclipse.php.internal.ui.explorer.PHPExplorerPart"
-        icon="icons/full/obj16/php_explorer.gif"
-        id="org.eclipse.php.ui.explorer"
-        name="%view.name.0">
-  </view>
+        <view
+        	category="org.eclipse.php.ui.views"
+	        class="org.eclipse.php.internal.ui.explorer.PHPExplorerPart"
+        	icon="icons/full/obj16/php_explorer.gif"
+        	id="org.eclipse.php.ui.explorer"
+        	name="%view.name.0">
+        </view>
 		<view name="%view.name.1" category="org.eclipse.php.ui.views"
 			class="org.eclipse.php.internal.ui.functions.PHPFunctionsPart" icon="icons/full/obj16/phpfile.gif"
 			id="org.eclipse.php.ui.functions" />
@@ -177,6 +165,11 @@
 			value="XML_COMMENT_TEXT, PHP_CONTENT, XML_CONTENT" target="org.eclipse.php.core.phpsource" />
 		<provisionalDefinition type="activecontexts"
 			value="org.eclipse.php.core.phpsource" target="org.eclipse.php.core.phpsource" />
+		
+		<provisionalConfiguration
+			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"	
+            class="org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor"
+            target="org.eclipse.php.PHP_DEFAULT" />
 	</extension>
 
 
@@ -206,13 +199,26 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.editors.annotationTypes">
-		<type name="org.eclipse.php.ui.occurrences">
+		<type name="org.eclipse.php.ui.occurrences" />
+		<type name="org.eclipse.php.ui.occurrences.write"
+			super="org.eclipse.php.ui.occurrences">
 		</type>
-		<type name="org.eclipse.php.ui.occurrences.write">
-		</type>
+		<type name="org.eclipse.php.ui.overrideIndicator" />
 	</extension>
 
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+		<specification
+            annotationType="org.eclipse.php.ui.error"
+            annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
+        </specification>
+        <specification
+            annotationType="org.eclipse.php.ui.warning"
+            annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
+        </specification>
+        <specification
+            annotationType="org.eclipse.php.ui.info"
+            annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
+        </specification>
 		<specification annotationType="org.eclipse.php.ui.occurrences"
 			label="%ReadOccurrenceAnnotation.label" icon="icons/full/obj16/searchm_obj.gif"
 			textPreferenceKey="PHPReadOccurrenceIndication" textPreferenceValue="false"
@@ -930,14 +936,8 @@
 		<command name="ActionDefinition.renameElement.name"
 			description="ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
-		<command name="%OpenDeclaration.name" description="%OpenDeclaration.description"
-			categoryId="org.eclipse.ui.category.edit" id="org.eclipse.php.ui.edit.text.OpenDeclaration" />
-		<command name="%command.openType.name" description="%command.openType.description"
-			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.type" />
-		<command name="%command.openMethod.name" description="%command.openMethod.description"
-			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.method" />
 		<command name="%command.openFunctionsManual.name" description="%command.openFunctionsManual.description"
-			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.OpenFunctionsManualAction" />
+			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.php.open.manual" />
 		<command categoryId="org.eclipse.ui.category.edit"
 			description="%ActionDefinition.showJavadoc.description" id="org.eclipse.php.ui.edit.text.show.phpdoc"
 			name="%ActionDefinition.showJavadoc.name" />
@@ -959,13 +959,24 @@
 			description="%ActionDefinition.openTypeInHierarchy.description"
 			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.type.in.hierarchy">
 		</command>
+		
 		<command name="%ActionDefinition.openType.name" description="%ActionDefinition.openType.description"
-			categoryId="org.eclipse.ui.category.navigate" id="ActionDefinition.openType.name">
-		</command>
+			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.type" />
+			
+		<command name="%ActionDefinition.openMethod.description" description="%ActionDefinition.openMethod.description"
+			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.php.ui.navigate.open.method" />
+		
 		<command name="%ActionDefinition.open.hierarchy.name"
 			description="%ActionDefinition.open.hierarchy.description"
 			categoryId="org.eclipse.ui.category.navigate" id="org.eclipse.dltk.ui.edit.text.script.open.hierarchy">
 		</command>
+		
+		<command
+            name="%ActionDefinition.openEditor.name"
+            description="%ActionDefinition.openEditor.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.php.ui.edit.text.open.editor">
+      	</command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -1000,8 +1011,6 @@
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+R">
 		</key>
-		
-		
 		<key commandId="org.eclipse.php.ui.edit.text.move.element"
 			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
 			sequence="M2+M3+V" />
@@ -1018,7 +1027,7 @@
 			contextId="org.eclipse.php.ui.phpEditorScope" platform="carbon"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" sequence="COMMAND+ALT+V">
 		</key>
-		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.OpenDeclaration"
+		<key sequence="F3" commandId="org.eclipse.php.ui.edit.text.open.editor"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<!-- project -->
 		<!-- perspectives -->
@@ -1029,19 +1038,34 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key platform="carbon" sequence="COMMAND+ALT+Q P" commandId="org.eclipse.php.ui.explorer"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M1+M2+M" commandId="org.eclipse.php.ui.navigate.open.method"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M1+M2+M" commandId="org.eclipse.php.ui.navigate.open.method"
+			
+		<key
+			sequence="M1+M2+M"
+			commandId="org.eclipse.php.ui.navigate.open.method"
+			contextId="org.eclipse.php.ui.phpEditorScope"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M1+M2+T" commandId="org.eclipse.php.ui.navigate.open.type"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M1+M2+T" commandId="org.eclipse.php.ui.navigate.open.type"
+			
+		<key
+			sequence="M1+M2+M"
+			commandId="org.eclipse.php.ui.navigate.open.method"
+			contextId="org.eclipse.php.ui.contexts.window"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
-			contextId="org.eclipse.php.ui.contexts.window" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			
+		<key
+			sequence="M1+M2+T"
+			commandId="org.eclipse.php.ui.navigate.open.type"
+			contextId="org.eclipse.php.ui.phpEditorScope"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			
+		<key
+			sequence="M1+M2+T"
+			commandId="org.eclipse.php.ui.navigate.open.type"
+			contextId="org.eclipse.php.ui.contexts.window"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			
 		<key sequence="M1+M2+H" commandId="org.eclipse.php.ui.navigate.open.type.in.hierarchy"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
-		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.OpenFunctionsManualAction"
+		<key sequence="M2+F2" commandId="org.eclipse.php.ui.edit.text.php.open.manual"
 			contextId="org.eclipse.php.ui.phpEditorScope" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+M3+H"
 			commandId="org.eclipse.php.ui.edit.text.php.open.call.hierarchy"
@@ -1455,6 +1479,23 @@
 			</action>
 		</editorContribution>
 	</extension>
+	
+	<extension
+         point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="org.eclipse.php.core.phpsource.source.RulerContext"
+            id="org.eclipse.php.internal.ui.editor.QuickFixRulerMenuAction">
+         <action
+               label="%Dummy.label"
+               helpContextId="org.eclipse.php.ui.quick_fix_action"
+               class="org.eclipse.php.internal.ui.editor.PhpSelectRulerAction"
+               menubarPath="additions"
+               definitionId="org.eclipse.jdt.ui.edit.text.java.correction.assist.proposals"
+               id="org.eclipse.php.internal.ui.editor.PHPSelectRulerMenuAction">
+         </action>
+      </viewerContribution>
+   </extension>
+	
 	<extension id="PHPCompletionProposalComputer"
 		point="org.eclipse.dltk.ui.scriptCompletionProposalComputer">
 		<scriptCompletionProposalComputer
@@ -1465,19 +1506,21 @@
 			</partition>
 		</scriptCompletionProposalComputer>
 	</extension>
- <extension
-       point="org.eclipse.dltk.ui.scriptCompletionProposalSorters">
-    <proposalSorter
+	
+	<extension point="org.eclipse.dltk.ui.scriptCompletionProposalSorters">
+    	<proposalSorter
           class="org.eclipse.php.internal.ui.editor.contentassist.AlphabeticCompletionProposalSorter"
           id="org.eclipse.php.internal.ui.editor.contentassist.AlphabeticCompletionProposalSorter"
           name="Alphabetic Completion Proposal Sorter">
-    </proposalSorter>
- </extension>
+	    </proposalSorter>
+	</extension>
+
 	<extension point="org.eclipse.dltk.ui.language">
 		<language class="org.eclipse.php.internal.ui.PHPUILanguageToolkit"
 			nature="org.eclipse.php.core.PHPNature" priority="1">
 		</language>
 	</extension>
+
 	<extension point="org.eclipse.dltk.ui.scriptDocumentationProviders">
 		<provider
 			class="org.eclipse.php.internal.ui.documentation.PHPDocumentationProvider"

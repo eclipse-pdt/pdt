@@ -23,8 +23,11 @@ import org.eclipse.core.filebuffers.manipulation.RemoveTrailingWhitespaceOperati
 import org.eclipse.core.internal.filebuffers.Progress;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.actions.CompositeActionGroup;
 import org.eclipse.dltk.internal.ui.editor.DLTKEditorMessages;
@@ -372,9 +375,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	 * The editor selection changed listener.
 	 */
 	private EditorSelectionChangedListener fEditorSelectionChangedListener;
-	private IPreferencesPropagatorListener phpVersionListener;
+	private IPreferencesPropagatorListener fPhpVersionListener;
 	private IResourceChangeListener fResourceChangeListener;
-	private IPropertyChangeListener propertyChangeListener;
+	private IPreferenceChangeListener fPreferencesListener;
 
 	private void doSelectionChanged(ISelection selection) {
 		ISourceReference reference = null;
@@ -906,11 +909,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	}
 
 	private void initPHPVersionsListener() {
-		if (phpVersionListener != null) {
+		if (fPhpVersionListener != null) {
 			return;
 		}
 
-		phpVersionListener = new IPreferencesPropagatorListener() {
+		fPhpVersionListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
 				try {
 					// get the structured document and go over its regions
@@ -938,28 +941,30 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			}
 		};
 
-		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(phpVersionListener);
+		PhpVersionChangedHandler.getInstance().addPhpVersionChangedListener(fPhpVersionListener);
 
-		propertyChangeListener = new IPropertyChangeListener() {
-			public void propertyChange(org.eclipse.core.runtime.Preferences.PropertyChangeEvent event) {
-				String property = event.getProperty();
+		fPreferencesListener = new IPreferenceChangeListener() {
+			
+			public void preferenceChange(PreferenceChangeEvent event) {
+				String property = event.getKey();
 				if (PHPCoreConstants.CODEASSIST_AUTOACTIVATION.equals(property) || PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY.equals(property) || PHPCoreConstants.CODEASSIST_AUTOINSERT.equals(property)) {
 					ISourceViewer sourceViewer = getSourceViewer();
 					if (sourceViewer != null) {
 						PHPStructuredTextViewerConfiguration configuration = (PHPStructuredTextViewerConfiguration) getSourceViewerConfiguration();
 						if (configuration != null) {
 							StructuredContentAssistant contentAssistant = (StructuredContentAssistant) configuration.getPHPContentAssistant(sourceViewer);
-							Preferences preferences = PHPCorePlugin.getDefault().getPluginPreferences();
-							contentAssistant.enableAutoActivation(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION));
-							contentAssistant.setAutoActivationDelay(preferences.getInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY));
-							contentAssistant.enableAutoInsert(preferences.getBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT));
+							
+							IPreferencesService preferencesService = Platform.getPreferencesService();
+							contentAssistant.enableAutoActivation(preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null));
+							contentAssistant.setAutoActivationDelay(preferencesService.getInt(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 0, null));
+							contentAssistant.enableAutoInsert(preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOINSERT, false, null));
 						}
 					}
 				}
 			}
 		};
 
-		PHPCorePlugin.getDefault().getPluginPreferences().addPropertyChangeListener(propertyChangeListener);
+		new InstanceScope().getNode(PHPCorePlugin.ID).addPreferenceChangeListener(fPreferencesListener);
 	}
 
 	private void initResourceChangeListener() {
@@ -1078,12 +1083,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fResourceChangeListener);
 			fResourceChangeListener = null;
 		}
-		if (phpVersionListener != null) {
-			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(phpVersionListener);
-			phpVersionListener = null;
+		if (fPhpVersionListener != null) {
+			PhpVersionChangedHandler.getInstance().removePhpVersionChangedListener(fPhpVersionListener);
+			fPhpVersionListener = null;
 		}
-		if (propertyChangeListener != null) {
-			PHPCorePlugin.getDefault().getPluginPreferences().removePropertyChangeListener(propertyChangeListener);
+		if (fPreferencesListener != null) {
+			new InstanceScope().getNode(PHPCorePlugin.ID).removePreferenceChangeListener(fPreferencesListener);
 		}
 
 		if (fActivationListener != null) {
@@ -1733,25 +1738,22 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		}
 	}
 
-	@Override
 	protected void createActions() {
 		super.createActions();
 
 		final ResourceBundle resourceBundle = PHPUIMessages.getResourceBundle();
-		final ISourceViewer sourceViewer = getSourceViewer();
-		final SourceViewerConfiguration configuration = getSourceViewerConfiguration();
 
 		Action action = new GotoMatchingBracketAction(this);
 		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.GOTO_MATCHING_BRACKET);
 		setAction(GotoMatchingBracketAction.GOTO_MATCHING_BRACKET, action);
 
 		action = new OpenFunctionsManualAction(resourceBundle, this);
-		action.setActionDefinitionId("org.eclipse.php.ui.edit.OpenFunctionsManualAction"); //$NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_PHP_MANUAL); //$NON-NLS-1$
 		setAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, action);
 		markAsCursorDependentAction(ORG_ECLIPSE_PHP_UI_ACTIONS_OPEN_FUNCTIONS_MANUAL_ACTION, true);
 
 		action = new OpenDeclarationAction(resourceBundle, this);
-		action.setActionDefinitionId("org.eclipse.php.ui.edit.text.OpenDeclaration"); //$NON-NLS-1$
+		action.setActionDefinitionId(IPHPEditorActionDefinitionIds.OPEN_DECLARATION); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION, true);
 
@@ -1765,11 +1767,6 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, action);
 		markAsCursorDependentAction(IPHPEditorActionDefinitionIds.OPEN_CALL_HIERARCHY, true);
 
-		//		action = new OpenDeclarationAction(resourceBundle, this);
-		//		//action = new OpenHyperlinkAction(resourceBundle, "OpenAction_declaration_", this, getSourceViewer());
-		//		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
-		//		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
-
 		action = new TextOperationAction(DLTKEditorMessages.getBundleForConstructedKeys(), "OpenHierarchy.", this, PHPStructuredTextViewer.SHOW_HIERARCHY, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY);
 		setAction(IScriptEditorActionDefinitionIds.OPEN_HIERARCHY, action);
@@ -1780,8 +1777,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
 
-		resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowOutline.", this, ISourceViewer.QUICK_ASSIST); //$NON-NLS-1$
-		resAction.setActionDefinitionId("org.eclipse.pdt.ui.edit.text.php.show.outline"); //$NON-NLS-1$
+		resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowOutline.", this, PHPStructuredTextViewer.SHOW_OUTLINE); //$NON-NLS-1$
+		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_OUTLINE); //$NON-NLS-1$
 		setAction(IPHPEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
 
 		if (isExternal) {
@@ -2959,5 +2956,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 				progressMonitor.done();
 			}
 		}
+	}
+
+	public ISourceViewer getViewer() {
+		return super.getSourceViewer();
 	}
 }
