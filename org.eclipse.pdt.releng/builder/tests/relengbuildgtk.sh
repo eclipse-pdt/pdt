@@ -216,8 +216,9 @@ if [[ -f /tmp/.X${xport}-lock ]]; then rm -fr /tmp/.X${xport}-lock; fi
 
 if [[ ! -d $PWD/results ]]; then
 	echo "[relengbuild] No test results found in $PWD/results!";
-	echo "[relengbuild] Creating 'noclean' file to prevent cleanup after build completes."
-	echo "1" > $PWD/../../../noclean;
+	echo "[relengbuild] To debug what happened, run a debug build and set the -noclean flag true." 
+	#echo "[relengbuild] Creating 'noclean' file to prevent cleanup after build completes."
+	#echo "1" > $PWD/../../../noclean;
 else
 # if the build failed for some reason, don't clean up!
 xmls=`find $PWD/results/xml -name "*.xml"`;
@@ -228,8 +229,9 @@ for xml in $xmls; do
 		if [[ ! $testsPassed ]]; then
 			echo "[relengbuild] Found test failure(s) in $xml: "
 			echo "  "$(cat $xml | grep "<testsuite ");
-			echo "[relengbuild] Creating 'noclean' file to prevent cleanup after build completes."
-			echo "1" > $PWD/../../../noclean;
+			echo "[relengbuild] To debug what happened, run a debug build and set the -noclean flag true." 
+			#echo "[relengbuild] Creating 'noclean' file to prevent cleanup after build completes."
+			#echo "1" > $PWD/../../../noclean;
 			break;
 		fi
 	fi

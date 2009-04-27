@@ -19,6 +19,8 @@
 	<!-- Add one target for each root element and each configuration -->
 	<!-- ===================================================================== -->
 
+	<!-- TODO: if your project is not incubating, remove "incubation-" -->
+	<!-- TODO: if your project has no subprojects, change _PARENTPROJECTNAME_-${subprojectName} to _PARENTPROJECTNAME_ -->
 	<target name="assemble.org.eclipse.php.test">
 		<property name="archiveName"
 		          value="pdt-junit-tests-${buildAlias}.zip" />
@@ -26,10 +28,9 @@
 		<!-- ADD POST STEPS -->
 	</target>
 
-	<target name="getMapFiles">
+	<target name="getMapFiles" >
 		<copy todir="${buildDirectory}">
-			<fileset dir="${buildDirectory}/../org.eclipse.${subprojectName2}.releng"
-			         includes="**/maps/*.map" />
+			<fileset dir="${buildDirectory}/../org.eclipse.${subprojectName2}.releng" includes="**/maps/*.map"/>
 		</copy>
 		<antcall target="tagMapFiles" />
 	</target>
@@ -147,7 +148,7 @@
 	</target>
 
 	<target name="packageTestFramework">
-		<!--package automated test framework used in pdt builds-->
+		<!--package automated test framework used in _PARENTPROJECTNAME_-${subprojectName} builds-->
 
 		<property name="workingDirectory"
 		          value="${buildDirectory}/test.assembly" />
@@ -155,6 +156,7 @@
 
 		<!--unzip the junit tests-->
 		<mkdir dir="${workingDirectory}/eclipse/dropins/eclipse" />
+		<!-- TODO: if your project has no subprojects, change _PARENTPROJECTNAME_-${subprojectName} to _PARENTPROJECTNAME_ -->
 		<unzip dest="${workingDirectory}/eclipse/dropins/" overwrite="true">
 			<fileset dir="${buildDirectory}/${buildLabel}">
 				<include name="**/pdt-junit-tests*.zip" />
@@ -191,6 +193,8 @@
 		        includeEmptyDirs="true" />
 
 		<!-- rezip the JUnit plugin tests -->
+		<!-- TODO: if your project is not incubating, remove "incubation-" -->
+		<!-- TODO: if your project has no subprojects, change _PARENTPROJECTNAME_-${subprojectName} to _PARENTPROJECTNAME_ -->
 		<zip destfile="${workingDirectory}/testing/pdt-junit-tests-${buildAlias}.zip">
 			<zipfileset dir="${workingDirectory}/eclipse/dropins/eclipse"
 			            prefix="eclipse" />
@@ -210,10 +214,14 @@
 		      file="${buildDirectory}/../build.cfg" />
 
 		<!--create zip file of the automated testing framework-->
-		<zip destfile="${buildDirectory}/${buildLabel}/pdt-Automated-Tests-${buildAlias}.zip">
+		<!-- TODO: if your project is not incubating, remove "incubation-" -->
+		<!-- TODO: if your project has no subprojects, change _PARENTPROJECTNAME_-${subprojectName} to _PARENTPROJECTNAME_ -->
+		<zip destfile="${buildDirectory}/${buildLabel}/pdt-automated-tests-${buildAlias}.zip">
 			<zipfileset dir="${workingDirectory}/testing" prefix="testing" />
 		</zip>
 
+		<!-- TODO: if your project is not incubating, remove "incubation-" -->
+		<!-- TODO: if your project has no subprojects, change _PARENTPROJECTNAME_-${subprojectName} to _PARENTPROJECTNAME_ -->
 		<delete file="${buildDirectory}/${buildLabel}/pdt-junit-tests-${buildAlias}.zip" />
 	</target>
 
