@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: PDT Core Unit Tests
-Bundle-SymbolicName: org.eclipse.php.core.tests
-Bundle-Version: 1.0.0
+Bundle-SymbolicName: org.eclipse.php.core.tests;singleton:=true
+Bundle-Version: 2.1.0.qualifier
 Bundle-Activator: org.eclipse.php.core.tests.PHPCoreTests
 Require-Bundle: org.junit,
  org.eclipse.core.runtime,
