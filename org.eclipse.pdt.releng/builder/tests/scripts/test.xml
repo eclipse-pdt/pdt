@@ -17,6 +17,9 @@
 
 	<!-- The root of the eclipse dropins folder -->
 	<property name="dropins-home" value="${install}/eclipse/dropins" />
+	
+	<!-- The library.xml file -->
+	<property name="library-file" value="${dropins-home}/eclipse/plugins/org.eclipse.test/library.xml"/>
 
 	<!-- The directory that will contain the xml and html results from the tests that are run -->
 	<property name="results" value="${basedir}/results" />
