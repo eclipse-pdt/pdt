@@ -19,10 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.actions.MoveResourceAction;
 import org.eclipse.ui.actions.SelectionListenerAction;
 
@@ -66,9 +63,12 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 			if (moveActionDelegate != null) {
 				moveActionDelegate.setActiveEditor(action, targetEditor);
 			} else {
-				IFileEditorInput input = (IFileEditorInput) targetEditor.getEditorInput();
-				IFile file = input.getFile();
-				selectedResources = new StructuredSelection(file);
+				IEditorInput editorInput = targetEditor.getEditorInput();
+				if (editorInput instanceof IFileEditorInput ) {
+					IFileEditorInput input = (IFileEditorInput) editorInput;
+					IFile file = input.getFile();
+					selectedResources = new StructuredSelection(file);
+				}
 			}
 
 		}
