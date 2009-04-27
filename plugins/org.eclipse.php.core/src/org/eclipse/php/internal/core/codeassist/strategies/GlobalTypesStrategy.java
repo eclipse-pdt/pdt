@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -107,7 +104,9 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							}
 						}
 						if (ctor != null) {
-							FakeMethod ctorMethod = new FakeMethod((ModelElement) selfClassData, "self") {
+							ISourceRange sourceRange = selfClassData.getSourceRange();
+							FakeMethod ctorMethod = new FakeMethod((ModelElement) selfClassData, "self",
+								sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()) {
 								public boolean isConstructor() throws ModelException {
 									return true;
 								}
@@ -115,7 +114,10 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							ctorMethod.setParameters(ctor.getParameters());
 							reporter.reportMethod(ctorMethod, suffix, replaceRange);
 						} else {
-							reporter.reportMethod(new FakeMethod((ModelElement) selfClassData, "self"), "()", replaceRange);
+							ISourceRange sourceRange = selfClassData.getSourceRange();
+							reporter.reportMethod(new FakeMethod((ModelElement) selfClassData, "self",
+								sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()),
+								"()", replaceRange);
 						}
 					} catch (ModelException e) {
 						if (DLTKCore.DEBUG_COMPLETION) {

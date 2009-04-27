@@ -82,7 +82,9 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 			try {
 				if (ctor != null) {
 					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
-						FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName()) {
+						ISourceRange sourceRange = type.getSourceRange();
+						FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName(), 
+							sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()) {
 							public boolean isConstructor() throws ModelException {
 								return true;
 							}
