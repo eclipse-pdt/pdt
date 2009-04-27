@@ -16,7 +16,7 @@
 		<zipType name="projtests">
 			<platform id="T"
 			          name="All"
-			          fileName='&lt;a href="pdt-automated-tests-@build@.zip"&gt;pdt-automated-tests-@build@.zip&lt;/a&gt; &lt;font size="2"&gt;(size:@pdt-Automated-Tests-@build@.zip.size@ - checksum:&lt;a href="pdt-Automated-Tests-@build@.zip.md5"&gt;md5&lt;/a&gt;)&lt;/font&gt;'>
+			          fileName='&lt;a href="pdt-Automated-tests-@build@.zip"&gt;pdt-Automated-tests-@build@.zip&lt;/a&gt; &lt;font size="2"&gt;(size:@pdt-Automated-Tests-@build@.zip.size@ - checksum:&lt;a href="pdt-Automated-Tests-@build@.zip.md5"&gt;md5&lt;/a&gt;)&lt;/font&gt;'>
 			</platform>
 		</zipType>
 		<zipType name="projexamples">

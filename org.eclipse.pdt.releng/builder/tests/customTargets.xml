@@ -216,7 +216,7 @@
 		<!--create zip file of the automated testing framework-->
 		<!-- TODO: if your project is not incubating, remove "incubation-" -->
 		<!-- TODO: if your project has no subprojects, change _PARENTPROJECTNAME_-${subprojectName} to _PARENTPROJECTNAME_ -->
-		<zip destfile="${buildDirectory}/${buildLabel}/pdt-automated-tests-${buildAlias}.zip">
+		<zip destfile="${buildDirectory}/${buildLabel}/pdt-Automated-Tests-${buildAlias}.zip">
 			<zipfileset dir="${workingDirectory}/testing" prefix="testing" />
 		</zip>
 
