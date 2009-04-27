@@ -5,11 +5,9 @@
   <!-- Set a meaningful default value for when it is not. -->
   <property name="eclipse-home" value="${basedir}\..\.."/>
 
-  <!-- sets the properties eclipse-home, and library-file -->
+  <!-- sets the properties plugin-name, and library-file -->
   <property name="plugin-name" value="org.eclipse.php.core.tests"/>
   <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test/library.xml"/>
-
-  <property name="workspace" value="${basedir}/${plugin-name}/workspace"/>
 
   <!-- This target holds all initialization code that needs to be done for -->
   <!-- all tests that are to be run. Initialization for individual tests -->
@@ -23,20 +21,19 @@
 
   <!-- This target defines the tests that need to be run. -->
   <target name="suite">
-    <delete dir="${workspace}" quiet="true"/>
-    
+    <property name="pdt-folder" value="${eclipse-home}/pdt_folder"/>
+    <delete dir="${pdt-folder}" quiet="true"/>
     <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
-      <property name="data-dir" value="${workspace}"/>
+      <property name="data-dir" value="${pdt-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
       <property name="classname" value="org.eclipse.php.core.tests.AllTests"/>
     </ant>
   </target>
-    
+
   <!-- This target holds code to cleanup the testing environment after -->
   <!-- after all of the tests have been run. You can use this target to -->
   <!-- delete temporary files that have been created. -->
   <target name="cleanup">
-	<delete dir="${workspace}" quiet="true"/>
   </target>
 
   <!-- This target runs the test suite. Any actions that need to happen -->
@@ -47,8 +44,4 @@
       <property name="output-file" value="${plugin-name}.xml"/>
     </ant>
   </target>
-
 </project>
-
-
-
