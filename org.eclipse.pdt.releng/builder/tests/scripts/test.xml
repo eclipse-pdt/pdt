@@ -164,6 +164,13 @@
 		</if>
 		-->
 
+                <!-- Copy needed 3rd party plug-ins -->
+                <copy todir="${dropins-home}/eclipse/plugins" verbose="true">
+                        <fileset dir="${thirdPartyJarsDir}/">
+                                <include name="orbit-*/org.apache.commons.lang_2.3.0*.jar" />
+                        </fileset>
+                </copy>
+
 		<property name="dir" location="." />
 		<echo message="Unpack SDK + JUnit Tests (${dir}/pdt-*.zip) ..." />
 		<unzip dest="${dropins-home}" overwrite="true">

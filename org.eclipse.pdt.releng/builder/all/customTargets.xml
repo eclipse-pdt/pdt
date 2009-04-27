@@ -198,6 +198,13 @@
 			</then>
 		</if>
 		-->
+
+		<!-- Copy needed 3rd party plug-ins -->
+		<copy todir="${buildDirectory}/plugins" verbose="true">
+			<fileset dir="${thirdPartyJarsDir}/">
+				<include name="orbit-*/org.apache.commons.lang_2.3.0*.jar" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="checkParserGeneratorExists">
