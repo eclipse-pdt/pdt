@@ -12,7 +12,7 @@
    <license url="%licenseURL">
       %license
    </license>
-   
+
    <plugin
          id="org.eclipse.test"
          download-size="0"
@@ -37,8 +37,7 @@
          id="org.eclipse.php.core.tests"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.dltk.core.tests"
