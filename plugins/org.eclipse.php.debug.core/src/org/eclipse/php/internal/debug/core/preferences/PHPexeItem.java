@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
@@ -52,10 +51,10 @@ public class PHPexeItem {
 	/**
 	 * Constructs a new PHP executable item.
 	 *
-	 * @param name
-	 * @param phpDirectoryPath
-	 * @param config The configuration file location (can be null)
-	 * @param debuggerID
+	 * @param name PHP executable nice name (like: PHP 5.3 CGI)
+	 * @param executable PHP executable file
+	 * @param config The configuration file (php.ini) location (can be null)
+	 * @param debuggerID ID of debugger (see org.eclipse.php.debug.core.phpDebuggers extension point)
 	 */
 	public PHPexeItem(String name, String executable, String config, String debuggerID) {
 		this.name = name;
@@ -389,9 +388,10 @@ public class PHPexeItem {
 	/**
 	 * Executes the file in the context of the project
 	 * @param project
+	 * @param scriptFile Path to the PHP script
 	 * @return true if execution success
 	 */
-	public boolean execPhpScript(IProject project) {
+	public boolean execPhpScript(IProject project, String scriptFile) {
 		boolean status = false;
 		
 		if (executable == null) {
@@ -401,7 +401,7 @@ public class PHPexeItem {
 
 		try {
 			PHPexes.changePermissions(executable);
-			exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", name); //$NON-NLS-1$ //$NON-NLS-2$
+			exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v", scriptFile); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (IOException e) {
 			DebugPlugin.log(e);
 			status = false;
