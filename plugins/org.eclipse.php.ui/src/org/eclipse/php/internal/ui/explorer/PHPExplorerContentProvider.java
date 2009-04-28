@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.GlobalNamespace;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -150,7 +150,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 	}
 
 	private boolean supportsNamespaces(IScriptProject project) {
-		PHPVersion version = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
+		PHPVersion version = ProjectOptions.getPhpVersion(project.getProject());
 		return version.isGreaterThan(PHPVersion.PHP5);
 	}
 

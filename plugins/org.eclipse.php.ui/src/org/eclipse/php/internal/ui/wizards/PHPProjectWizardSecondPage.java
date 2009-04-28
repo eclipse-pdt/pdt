@@ -45,8 +45,7 @@ import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
-import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
@@ -481,8 +480,8 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	protected void setPhpLangOptions() {
 		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
 		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
-		UseAspTagsHandler.setUseAspTagsAsPhp(useASPTags, fCurrProject);
-		PhpVersionProjectPropertyHandler.setVersion(phpVersion, fCurrProject);
+		ProjectOptions.setSupportingAspTags(useASPTags, fCurrProject);
+		ProjectOptions.setPhpVersion(phpVersion, fCurrProject);
 	}
 
 	private void removeProject() {

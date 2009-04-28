@@ -20,7 +20,7 @@ import org.eclipse.dltk.ui.infoviews.ModelElementArray;
 import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
 import org.eclipse.ui.IEditorPart;
 
@@ -48,7 +48,7 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 			return null;
 		}
 		
-		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(input.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(input.getScriptProject().getProject());
 		boolean namespacesSupported = phpVersion.isGreaterThan(PHPVersion.PHP5); // PHP 5.3 and greater
 
 		IDocument document = textViewer.getDocument();

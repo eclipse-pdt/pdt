@@ -27,7 +27,7 @@ import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UsePart;
 import org.eclipse.php.internal.core.compiler.ast.nodes.UseStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeType;
 import org.eclipse.php.internal.core.typeinference.UseStatementElement;
 import org.eclipse.php.internal.ui.PHPUIMessages;
@@ -109,7 +109,7 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 	}
 
 	private boolean isNamespaceSupported(IModelElement modelElement) {
-		PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(modelElement.getScriptProject().getProject());
+		PHPVersion phpVersion = ProjectOptions.getPhpVersion(modelElement.getScriptProject().getProject());
 		return phpVersion.isGreaterThan(PHPVersion.PHP5);
 	}
 
