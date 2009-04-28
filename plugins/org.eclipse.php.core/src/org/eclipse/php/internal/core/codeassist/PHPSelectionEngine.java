@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -89,7 +89,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		}
 
 		ISourceModule sourceModule = (ISourceModule) sourceUnit.getModelElement();
-		phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
+		phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 
 		// First, try to resolve using AST (if we have parsed it well):
 		try {

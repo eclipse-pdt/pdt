@@ -25,7 +25,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -58,7 +58,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 		this.requestor = requestor;
 		this.sourceModule = sourceModule;
 		this.offset = offset;
-		this.phpVersion = PhpVersionProjectPropertyHandler.getVersion(sourceModule.getScriptProject().getProject());
+		this.phpVersion = ProjectOptions.getPhpVersion(sourceModule.getScriptProject().getProject());
 
 		try {
 			this.document = determineDocument(sourceModule, requestor);

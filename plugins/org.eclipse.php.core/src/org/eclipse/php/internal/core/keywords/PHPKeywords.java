@@ -14,7 +14,7 @@ import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 /**
  * This class is used for retrieval PHP keywords information for the given PHP version 
@@ -103,7 +103,7 @@ public class PHPKeywords {
 	public static PHPKeywords getInstance(IProject project) {
 		synchronized (instances) {
 			if (!instances.containsKey(project)) {
-				PHPVersion version = PhpVersionProjectPropertyHandler.getVersion(project);
+				PHPVersion version = ProjectOptions.getPhpVersion(project);
 				PHPKeywords instance;
 				if (PHPVersion.PHP4 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_4());

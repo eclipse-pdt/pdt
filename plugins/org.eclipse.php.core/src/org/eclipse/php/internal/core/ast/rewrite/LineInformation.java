@@ -13,12 +13,13 @@ package org.eclipse.php.internal.core.ast.rewrite;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 
 /**
  * 
  */
 public abstract class LineInformation {
-	
+
 	public static LineInformation create(final IDocument doc) {
 		return new LineInformation() {
 			public int getLineOfOffset(int offset) {
@@ -38,21 +39,21 @@ public abstract class LineInformation {
 			}
 		};
 	}
-	
-/*	public static LineInformation create(final Program astRoot) {
+
+	public static LineInformation create(final Program astRoot) {
 		return new LineInformation() {
 			public int getLineOfOffset(int offset) {
 				return astRoot.getLineNumber(offset) - 1;
 			}
+
 			public int getLineOffset(int line) {
 				return astRoot.getPosition(line + 1, 0);
 			}
 		};
 	}
-*/	
-	
-	
+
 	public abstract int getLineOfOffset(int offset);
+
 	public abstract int getLineOffset(int line);
-	
+
 }

@@ -22,8 +22,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.AbstractPhpLexer;
 import org.eclipse.php.internal.core.documentModel.parser.PhpLexerFactory;
 import org.eclipse.php.internal.core.documentModel.parser.Scanner.LexerState;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
-import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -269,7 +268,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 	 * @return a new lexer for the given project with the given stream
 	 */
 	private AbstractPhpLexer getPhpLexer(Reader stream, LexerState startState) {
-		final PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
+		final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
 		final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(stream, phpVersion);
 		lexer.initialize(ST_PHP_IN_SCRIPTING);
 		lexer.setPatterns(project);
@@ -278,7 +277,7 @@ public class PhpScriptRegion extends ForeignRegion implements IPhpScriptRegion {
 		if (startState != null) {
 			startState.restoreState(lexer);
 		}
-		lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
+		lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 		return lexer;
 	}
 

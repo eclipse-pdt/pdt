@@ -14,7 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.php.internal.core.ast.nodes.*;
@@ -174,7 +176,7 @@ public class ASTRewrite {
 
 	/**
 	 * Converts all modifications recorded by this rewriter into an object representing the the corresponding text
-	 * edits to the source of a {@link ITypeRoot} from which the AST was created from.
+	 * edits to the source of a {@link ISourceModule} from which the AST was created from.
 	 * The type root's source itself is not modified by this method call.
 	 * <p>
 	 * Important: This API can only be used if the modified AST has been created from a
@@ -205,9 +207,7 @@ public class ASTRewrite {
 	 * is thrown if the document passed does not correspond to the AST that is rewritten.
 	 *
 	 * @since 3.2
-
-	TODO: Rewrite action goes here
-
+	 */
 	public TextEdit rewriteAST() throws ModelException, IllegalArgumentException {
 		ASTNode rootNode= getRootNode();
 		if (rootNode == null) {
@@ -219,19 +219,19 @@ public class ASTRewrite {
 			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
 		}
 		Program astRoot= (Program) root;
-		ITypeRoot typeRoot = astRoot.getTypeRoot();
+		ISourceModule typeRoot = astRoot.getSourceModule();
 		if (typeRoot == null || typeRoot.getBuffer() == null) {
 			throw new IllegalArgumentException("This API can only be used if the AST is created from a compilation unit or class file"); //$NON-NLS-1$
 		}
 
 		char[] content= typeRoot.getBuffer().getCharacters();
+		Document document = new Document(new String(content));
 		LineInformation lineInfo= LineInformation.create(astRoot);
-		String lineDelim= typeRoot.findRecommendedLineSeparator();
-		Map options= typeRoot.getJavaProject().getOptions(true);
+		String lineDelim = TextUtilities.getDefaultLineDelimiter(document);
+		Map options= typeRoot.getScriptProject().getOptions(true);
 
-		return internalRewriteAST(content, lineInfo, lineDelim, astRoot.comments(), options, rootNode);
+		return internalRewriteAST(document, content, lineInfo, lineDelim, astRoot.comments(), options, rootNode);
 	}
-	 */
 
 	private TextEdit internalRewriteAST(IDocument document, char[] content, LineInformation lineInfo, String lineDelim, List commentNodes, Map options, ASTNode rootNode) {
 		TextEdit result = new MultiTextEdit();

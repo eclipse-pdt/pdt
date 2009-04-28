@@ -8,7 +8,7 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.project.properties.handlers;
+package org.eclipse.php.internal.core.project;
 
 import java.util.HashMap;
 import java.util.HashSet;

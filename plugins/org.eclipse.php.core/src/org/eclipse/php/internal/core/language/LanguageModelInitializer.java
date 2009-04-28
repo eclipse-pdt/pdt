@@ -30,8 +30,8 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionChangedHandler;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 
@@ -91,7 +91,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 				if (isPHPProject(scriptProject)) {
 
 					IProject project = scriptProject.getProject();
-					project2PhpVersion.put(project, PhpVersionProjectPropertyHandler.getVersion(project));
+					project2PhpVersion.put(project, ProjectOptions.getPhpVersion(project));
 
 					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { scriptProject }, new IBuildpathContainer[] { new LanguageModelContainer(containerPath) }, null);
 
@@ -141,7 +141,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (fragment != null) {
 			IScriptProject project = element.getScriptProject();
 			if (project != null) {
-				PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project.getProject());
+				PHPVersion phpVersion = ProjectOptions.getPhpVersion(project.getProject());
 				try {
 					IPath containerPath = getContainerPath(project, phpVersion);
 					return EnvironmentPathUtils.getLocalPath(fragment.getPath()).equals(containerPath);

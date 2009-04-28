@@ -19,7 +19,7 @@ import org.eclipse.dltk.ast.parser.ISourceParser;
 import org.eclipse.dltk.ast.parser.ISourceParserFactory;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 
 public class PHPSourceParserFactory extends AbstractSourceParser implements ISourceParserFactory, ISourceParser {
 
@@ -39,7 +39,7 @@ public class PHPSourceParserFactory extends AbstractSourceParser implements ISou
 		if (resource != null) {
 			IProject project = resource.getProject();
 			if (project.isAccessible()) {
-				phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
+				phpVersion = ProjectOptions.getPhpVersion(project);
 			}
 		}
 		
