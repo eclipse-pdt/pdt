@@ -17,7 +17,7 @@ import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.core.search.SearchRequestor;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.osgi.framework.BundleContext;
 
@@ -124,8 +124,8 @@ public class PHPCoreTests extends Plugin {
 	 * @throws CoreException 
 	 */
 	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
-		if (phpVersion != PhpVersionProjectPropertyHandler.getVersion()) {
-			PhpVersionProjectPropertyHandler.setVersion(phpVersion, project);
+		if (phpVersion != ProjectOptions.getDefaultPhpVersion()) {
+			ProjectOptions.setPhpVersion(phpVersion, project);
 			PHPCoreTests.waitForAutoBuild();
 			PHPCoreTests.waitForIndexer(project);
 		}

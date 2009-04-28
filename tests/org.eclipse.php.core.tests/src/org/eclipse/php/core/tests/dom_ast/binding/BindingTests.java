@@ -56,7 +56,7 @@ import org.eclipse.php.internal.core.ast.nodes.StaticFieldAccess;
 import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 public class BindingTests extends SuiteOfTestCases {
@@ -123,7 +123,7 @@ public class BindingTests extends SuiteOfTestCases {
 		PHPCoreTests.waitForAutoBuild();
 		PHPCoreTests.waitForIndexer(project);
 
-		PHPVersion version = PhpVersionProjectPropertyHandler.getVersion();
+		PHPVersion version = ProjectOptions.getDefaultPhpVersion();
 		ISourceModule sourceModule = null;
 		sourceModule = DLTKCore.createSourceModuleFrom(testFile);
 		ASTParser parser = ASTParser.newParser(new InputStreamReader(testFile.getContents()), version, false, sourceModule);
