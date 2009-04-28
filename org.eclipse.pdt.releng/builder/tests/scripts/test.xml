@@ -17,10 +17,7 @@
 
 	<!-- The root of the eclipse dropins folder -->
 	<!-- <property name="dropins-home" value="${install}/eclipse/dropins" /> -->
-	<property name="dropins-home" value="${eclipse-home}" />
-	
-	<!-- Installed plug-ins directory -->
-	<property name="pluginsDir" value="${eclipse-home}/plugins" />
+	<property name="dropins-home" value="${eclipse-home}/../" />
 	
 	<!-- The directory that will contain the xml and html results from the tests that are run -->
 	<property name="results" value="${basedir}/results" />
@@ -82,7 +79,7 @@
 		</unzip>
 
 		<property name="testPluginDir"
-		          value="${pluginsDir}/${testPlugin}" />
+		          value="${dropins-home}/eclipse/plugins/${testPlugin}" />
 		<available file="${testPluginDir}.jar" property="testPluginIsJarred" />
 		<antcall target="unpackTestPlugin" />
 	</target>
