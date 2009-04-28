@@ -114,7 +114,7 @@ depFilesListExtras=
 		<!-- additional requirement for PDT, since it packs all-in-ones based on Eclipse platform instead of SDK --> 
 		<propertyregex property="thisEclipseCVSClientFile"
 		               input="${eclipseFile}"
-		               regexp="(.+eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
+		               regexp="(eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
 		               replace="\1CVS-Client-\3.zip"
 		               casesensitive="false"
 		/>
