@@ -447,7 +447,8 @@ public class BindingLabelProvider extends LabelProvider {
 			else
 				getLocalVariableLabel(variable, flags, buffer);
 		}
-		return Strings.markLTR(buffer.toString());
+		// XXX: uncomment when next DLTK version releases
+		return buffer.toString(); // Strings.markLTR(buffer.toString());
 	}
 
 	/**
