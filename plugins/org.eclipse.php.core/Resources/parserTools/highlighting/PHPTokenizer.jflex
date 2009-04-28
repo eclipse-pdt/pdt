@@ -20,8 +20,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PhpScriptRegion;
-import org.eclipse.php.internal.core.project.properties.handlers.PhpVersionProjectPropertyHandler;
-import org.eclipse.php.internal.core.project.properties.handlers.UseAspTagsHandler;
+import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -239,7 +238,7 @@ private final String doScan(String searchString, boolean allowPHP, boolean requi
 			// spill over the end of the buffer while checking.
 			if(allowPHP && yy_startRead != fLastInternalBlockStart && yy_currentPos > 0 && yy_currentPos < yy_buffer.length - 1 &&
 					yy_buffer[yy_currentPos - 1] == '<' && 
-					(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && UseAspTagsHandler.useAspTagsAsPhp(project)))) {
+					(yy_buffer[yy_currentPos] == '?' || (yy_buffer[yy_currentPos] == '%' && ProjectOptions.isSupportingAspTags(project)))) {
 				fLastInternalBlockStart = yy_markedPos = yy_currentPos - 1;
 				yy_currentPos = yy_markedPos + 1;
 				int resumeState = yystate();
@@ -386,7 +385,7 @@ private final String doScanEndPhp(boolean isAsp, String searchContext, int exitS
  * @return a new lexer for the given project with the given stream initialized with current parameters
  */
 private AbstractPhpLexer getPhpLexer() {
-	final PHPVersion phpVersion = PhpVersionProjectPropertyHandler.getVersion(project);
+	final PHPVersion phpVersion = ProjectOptions.getPhpVersion(project);
 	final AbstractPhpLexer lexer = PhpLexerFactory.createLexer(yy_reader, phpVersion);
 	int[] currentParameters = getParamenters();
 	try {
@@ -400,7 +399,7 @@ private AbstractPhpLexer getPhpLexer() {
 	lexer.reset(yy_reader, yy_buffer, currentParameters);
 	lexer.setPatterns(project);
 
-	lexer.setAspTags(UseAspTagsHandler.useAspTagsAsPhp(project));
+	lexer.setAspTags(ProjectOptions.isSupportingAspTags(project));
 	return lexer;
 }
 
@@ -1719,7 +1718,7 @@ PHP_ASP_END=%>
 
 //PHP PROCESSING ACTIONS
 <YYINITIAL,ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_XML_COMMENT, ST_XML_ATTRIBUTE_VALUE_DQUOTED, ST_XML_ATTRIBUTE_VALUE_SQUOTED, ST_CDATA_TEXT, ST_BLOCK_TAG_INTERNAL_SCAN> {PHP_START} | {PHP_ASP_START} {
-    if (UseAspTagsHandler.useAspTagsAsPhp(project) ||yytext().charAt(1) != '%') {
+    if (ProjectOptions.isSupportingAspTags(project) ||yytext().charAt(1) != '%') {
 		//removeing trailing whitespaces for the php open
 		String phpStart = yytext();
 		int i = phpStart.length() - 1; 
@@ -1775,7 +1774,7 @@ PHP_ASP_END=%>
 	
 }
 <ST_PHP_CONTENT> .|\n|\r {
-	return doScanEndPhp(UseAspTagsHandler.useAspTagsAsPhp(project), PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
+	return doScanEndPhp(ProjectOptions.isSupportingAspTags(project), PHP_CONTENT, ST_PHP_CONTENT, ST_PHP_CONTENT);
 }
 
 . {
