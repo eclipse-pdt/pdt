@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.viewsupport;
 
-import org.eclipse.dltk.internal.corext.util.Strings;
 import org.eclipse.dltk.ui.DLTKPluginImages;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
@@ -20,6 +19,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.internal.ui.corext.util.Strings;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -447,8 +447,7 @@ public class BindingLabelProvider extends LabelProvider {
 			else
 				getLocalVariableLabel(variable, flags, buffer);
 		}
-		// XXX: uncomment when next DLTK version releases
-		return buffer.toString(); // Strings.markLTR(buffer.toString());
+		return Strings.markLTR(buffer.toString());
 	}
 
 	/**

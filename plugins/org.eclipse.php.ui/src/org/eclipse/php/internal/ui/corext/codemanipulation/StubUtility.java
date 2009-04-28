@@ -379,10 +379,9 @@ public class StubUtility {
 		}
 
 		String str = buffer.getString();
-		//FIXME - need to remove remarks after method is updated on DLTK 
-		/*if (Strings.containsOnlyWhitespaces(str)) {
+		if (Strings.containsOnlyWhitespaces(str)) {
 			return null;
-		}*/
+		}
 		TemplateVariable position = findVariable(buffer, CodeTemplateContextType.TAGS); // look if Javadoc tags have to be added
 		if (position == null) {
 			return str;
