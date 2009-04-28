@@ -1,4 +1,5 @@
 <project default="run">
+
 	<target name="init">
 
 		<!-- common releng helper scripts -->
@@ -111,10 +112,10 @@ depFilesListExtras=
 			</or>
 		</condition>
 
-		<!-- additional requirement for PDT, since it packs all-in-ones based on Eclipse platform instead of SDK --> 
+		<!-- additional requirement for PDT, since it packs all-in-ones based on Eclipse platform instead of SDK -->
 		<propertyregex property="thisEclipseCVSClientFile"
 		               input="${eclipseFile}"
-		               regexp="(.+eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
+		               regexp="(eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
 		               replace="\1CVS-Client-\3.zip"
 		               casesensitive="false"
 		/>
@@ -144,9 +145,9 @@ depFilesListExtras=
 		-->
 		<property name="allInOnePrefix" value="${projectName}-all-in-one" />
 		<property name="allInOnePlatforms" value="win32,linux-gtk,macosx-carbon" />
-		<property name="allInOneEclipseBase" value="platform"/>
+		<property name="allInOneEclipseBase" value="platform" />
 		<property name="allInOneInputs" value="${allZip}" />
-		<property name="allInOneInputExtras" value="${thisEclipseCVSClientFile}"/>
+		<property name="allInOneInputExtras" value="${thisEclipseCVSClientFile}" />
 		<property name="allInOneBuildTypes" value="S,R" />
 	</target>
 
