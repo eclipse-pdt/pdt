@@ -1,6 +1,5 @@
 <project default="run">
 	<target name="init">
-
 		<!-- common releng helper scripts -->
 		<property name="helper" value="${buildDirectory}/../org.eclipse.modeling.common.releng/scripts/buildAllHelper.xml" />
 
