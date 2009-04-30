@@ -104,7 +104,8 @@ public class ASTRewriteTests extends TestCase {
 		return new TestSuite(new Class[] {
 			ASTRewriteTests.class,
 			NodeDeletionTests.class,
-		});
+		},
+		ASTRewriteTests.class.getName());
 	}
 
 	////////////////////////// Tests //////////////////////////
