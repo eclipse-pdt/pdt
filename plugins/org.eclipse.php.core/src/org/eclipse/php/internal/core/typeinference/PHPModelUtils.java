@@ -227,6 +227,19 @@ public class PHPModelUtils {
 		}
 		return (ASTNode) visitor.getResult();
 	};
+	
+	public static ASTNode getNodeByElement(ModuleDeclaration rootNode, IModelElement element) throws ModelException {
+		switch (element.getElementType()) {
+			case IModelElement.TYPE:
+				return getNodeByClass(rootNode, (IType) element);
+			case IModelElement.METHOD:
+				return getNodeByMethod(rootNode, (IMethod) element);
+			case IModelElement.FIELD:
+				return getNodeByField(rootNode, (IField) element);
+			default:
+				throw new IllegalArgumentException("Unsupported element type: " + element.getClass().getName());	
+		}
+	}
 
 	public static IDLTKSearchScope createProjectSearchScope(IScriptProject project) {
 		int includeMask = IDLTKSearchScope.SOURCES | IDLTKSearchScope.APPLICATION_LIBRARIES | IDLTKSearchScope.REFERENCED_PROJECTS | IDLTKSearchScope.SYSTEM_LIBRARIES;
