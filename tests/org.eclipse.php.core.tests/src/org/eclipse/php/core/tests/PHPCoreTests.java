@@ -65,6 +65,15 @@ public class PHPCoreTests extends Plugin {
 		return plugin;
 	}
 	
+	private static String getDiffError(String expected, String actual, int expectedDiff, int actualDiff) {
+		StringBuilder errorBuf = new StringBuilder();
+		errorBuf.append("\nEXPECTED:\n--------------\n");
+		errorBuf.append(expected.substring(0, expectedDiff)).append("*****").append(expected.substring(expectedDiff));
+		errorBuf.append("\n\nACTUAL:\n--------------\n");
+		errorBuf.append(actual.substring(0, actualDiff)).append("*****").append(actual.substring(actualDiff));
+		return errorBuf.toString();
+	}
+	
 	/**
 	 * Compares expected result with the actual.
 	 * @param expected
@@ -75,16 +84,36 @@ public class PHPCoreTests extends Plugin {
 		actual = actual.replaceAll("[\r\n]+", "\n").trim();
 		expected = expected.replaceAll("[\r\n]+", "\n").trim();
 		
-		int expectedDifference = StringUtils.indexOfDifference(actual, expected);
-		if (expectedDifference >= 0) {
-			int actualDifference = StringUtils.indexOfDifference(expected, actual);
+		int expectedDiff = StringUtils.indexOfDifference(actual, expected);
+		if (expectedDiff >= 0) {
+			int actualDiff = StringUtils.indexOfDifference(expected, actual);
+			return getDiffError(expected, actual, expectedDiff, actualDiff);
+		}
+		return null;
+	}
+	
+	/**
+	 * Compares expected result with the actual ingoring whitespace characters
+	 * @param expected
+	 * @param actual
+	 * @return difference string or <code>null</code> in case expected result is equal to the actual.
+	 */
+	public static String compareContentsIgnoreWhitespace(String expected, String actual) {
+		String tmpExpected = expected;
+		String tmpActual = actual;
+		String diff = StringUtils.difference(tmpExpected, tmpActual);
+		while (diff.length() > 0) {
+			if (!Character.isWhitespace(diff.charAt(0))) {
+				int expectedDiff = StringUtils.indexOfDifference(tmpActual, tmpExpected) + (expected.length() - tmpExpected.length());
+				int actualDiff = StringUtils.indexOfDifference(tmpExpected, tmpActual) + (actual.length() - tmpActual.length());
+				return getDiffError(expected, actual, expectedDiff, actualDiff);
+			}
 
-			StringBuilder errorBuf = new StringBuilder();
-			errorBuf.append("\nEXPECTED:\n--------------\n");
-			errorBuf.append(expected.substring(0, expectedDifference)).append("*****").append(expected.substring(expectedDifference));
-			errorBuf.append("\n\nACTUAL:\n--------------\n");
-			errorBuf.append(actual.substring(0, actualDifference)).append("*****").append(actual.substring(actualDifference));
-			return errorBuf.toString();
+			String diff2 = StringUtils.difference(tmpActual, tmpExpected);
+			tmpActual = diff.trim();
+			tmpExpected = diff2.trim();
+			
+			diff = StringUtils.difference(tmpExpected, tmpActual);
 		}
 		return null;
 	}

@@ -20,6 +20,7 @@ import junit.framework.TestSuite;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.AST;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
@@ -1812,15 +1813,10 @@ public class ASTRewriteTests extends TestCase {
 	}
 	
 	private void checkResult(String expected) {
-		expected = expected.replaceAll("[\r\n]+", "\n").trim();
-		String actual = document.get().replaceAll("[\r\n]+", "\n").trim();
-		if (!expected.equals(actual)) {
-			StringBuilder buf = new StringBuilder();
-			buf.append("\nEXPECTED:\n-----------\n");
-			buf.append(expected);
-			buf.append("\nACTUAL:\n-----------\n");
-			buf.append(actual);
-			Assert.fail(buf.toString());
+		String actual = document.get();
+		String diff = PHPCoreTests.compareContentsIgnoreWhitespace(expected, actual);
+		if (diff != null) {
+			fail(diff);
 		}
 	}
 
