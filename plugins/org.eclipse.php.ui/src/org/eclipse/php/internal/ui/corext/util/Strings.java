@@ -11,6 +11,9 @@
 
 package org.eclipse.php.internal.ui.corext.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.LegacyActionTools;
 import org.eclipse.jface.text.BadLocationException;
@@ -21,14 +24,13 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.php.internal.core.ast.rewrite.IndentManipulation;
 
-
 /**
  * Helper class to provide String manipulation functions not available in standard JDK.
  */
 public class Strings {
 
-	private Strings(){}
-
+	private Strings() {
+	}
 
 	/**
 	 * Tells whether we have to use the {@link TextProcessor}
@@ -39,10 +41,9 @@ public class Strings {
 	 */
 	private static final boolean USE_TEXT_PROCESSOR;
 	static {
-		String testString= "args : String[]"; //$NON-NLS-1$
-		USE_TEXT_PROCESSOR= testString != TextProcessor.process(testString);
+		String testString = "args : String[]"; //$NON-NLS-1$
+		USE_TEXT_PROCESSOR = testString != TextProcessor.process(testString);
 	}
-
 
 	/**
 	 * Adds special marks so that that the given styled string is readable in a BIDI environment.
@@ -52,16 +53,16 @@ public class Strings {
 	 * @since 3.4
 	 */
 	public static StyledString markLTR(StyledString styledString) {
-		
+
 		/*
 		 * NOTE: For performance reasons we do not call  markLTR(styledString, null)
 		 */
-		
+
 		if (!USE_TEXT_PROCESSOR)
 			return styledString;
 
-		String inputString= styledString.getString();
-		String string= TextProcessor.process(inputString);
+		String inputString = styledString.getString();
+		String string = TextProcessor.process(inputString);
 		if (string != inputString)
 			insertMarks(styledString, inputString, string);
 		return styledString;
@@ -79,8 +80,8 @@ public class Strings {
 		if (!USE_TEXT_PROCESSOR)
 			return styledString;
 
-		String inputString= styledString.getString();
-		String string= TextProcessor.process(inputString, TextProcessor.getDefaultDelimiters() + additionalDelimiters);
+		String inputString = styledString.getString();
+		String string = TextProcessor.process(inputString, TextProcessor.getDefaultDelimiters() + additionalDelimiters);
 		if (string != inputString)
 			insertMarks(styledString, inputString, string);
 		return styledString;
@@ -95,13 +96,13 @@ public class Strings {
 	 * @since 3.5
 	 */
 	private static void insertMarks(StyledString styledString, String originalString, String processedString) {
-		int i= 0;
-		char orig= originalString.charAt(0);
-		int processedStringLength= originalString.length();
-		for (int processedIndex= 0; processedIndex < processedStringLength; processedIndex++) {
-			char processed= processedString.charAt(processedIndex);
+		int i = 0;
+		char orig = originalString.charAt(0);
+		int processedStringLength = originalString.length();
+		for (int processedIndex = 0; processedIndex < processedStringLength; processedIndex++) {
+			char processed = processedString.charAt(processedIndex);
 			if (orig == processed)
-				orig= originalString.charAt(++i);
+				orig = originalString.charAt(++i);
 			else
 				styledString.insert(processed, processedIndex);
 		}
@@ -146,11 +147,11 @@ public class Strings {
 	}
 
 	public static boolean startsWithIgnoreCase(String text, String prefix) {
-		int textLength= text.length();
-		int prefixLength= prefix.length();
+		int textLength = text.length();
+		int prefixLength = prefix.length();
 		if (textLength < prefixLength)
 			return false;
-		for (int i= prefixLength - 1; i >= 0; i--) {
+		for (int i = prefixLength - 1; i >= 0; i--) {
 			if (Character.toLowerCase(prefix.charAt(i)) != Character.toLowerCase(text.charAt(i)))
 				return false;
 		}
@@ -158,15 +159,15 @@ public class Strings {
 	}
 
 	public static String removeNewLine(String message) {
-		StringBuffer result= new StringBuffer();
-		int current= 0;
-		int index= message.indexOf('\n', 0);
+		StringBuffer result = new StringBuffer();
+		int current = 0;
+		int index = message.indexOf('\n', 0);
 		while (index != -1) {
 			result.append(message.substring(current, index));
 			if (current < index && index != 0)
 				result.append(' ');
-			current= index + 1;
-			index= message.indexOf('\n', current);
+			current = index + 1;
+			index = message.indexOf('\n', current);
 		}
 		result.append(message.substring(current));
 		return result.toString();
@@ -182,14 +183,14 @@ public class Strings {
 	 */
 	public static String[] convertIntoLines(String input) {
 		try {
-			ILineTracker tracker= new DefaultLineTracker();
+			ILineTracker tracker = new DefaultLineTracker();
 			tracker.set(input);
-			int size= tracker.getNumberOfLines();
-			String result[]= new String[size];
-			for (int i= 0; i < size; i++) {
-				IRegion region= tracker.getLineInformation(i);
-				int offset= region.getOffset();
-				result[i]= input.substring(offset, offset + region.getLength());
+			int size = tracker.getNumberOfLines();
+			String result[] = new String[size];
+			for (int i = 0; i < size; i++) {
+				IRegion region = tracker.getLineInformation(i);
+				int offset = region.getOffset();
+				result[i] = input.substring(offset, offset + region.getLength());
 			}
 			return result;
 		} catch (BadLocationException e) {
@@ -209,8 +210,8 @@ public class Strings {
 	 * @see java.lang.Character#isWhitespace(char)
 	 */
 	public static boolean containsOnlyWhitespaces(String s) {
-		int size= s.length();
-		for (int i= 0; i < size; i++) {
+		int size = s.length();
+		for (int i = 0; i < size; i++) {
 			if (!Character.isWhitespace(s.charAt(i)))
 				return false;
 		}
@@ -225,12 +226,12 @@ public class Strings {
 	 * @return the trimmed line
 	 */
 	public static String trimLeadingTabsAndSpaces(String line) {
-		int size= line.length();
-		int start= size;
-		for (int i= 0; i < size; i++) {
-			char c= line.charAt(i);
+		int size = line.length();
+		int start = size;
+		for (int i = 0; i < size; i++) {
+			char c = line.charAt(i);
 			if (!IndentManipulation.isIndentChar(c)) {
-				start= i;
+				start = i;
 				break;
 			}
 		}
@@ -243,12 +244,12 @@ public class Strings {
 	}
 
 	public static String trimTrailingTabsAndSpaces(String line) {
-		int size= line.length();
-		int end= size;
-		for (int i= size - 1; i >= 0; i--) {
-			char c= line.charAt(i);
+		int size = line.length();
+		int end = size;
+		for (int i = size - 1; i >= 0; i--) {
+			char c = line.charAt(i);
 			if (IndentManipulation.isIndentChar(c)) {
-				end= i;
+				end = i;
 			} else {
 				break;
 			}
@@ -271,9 +272,9 @@ public class Strings {
 	 * @return the number of indent units
 	 * @since 3.1
 	 */
-//	public static int computeIndentUnits(String line, IScriptProject project) {
-//		return IndentManipulation.measureIndentUnits(line, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project));
-//	}
+	//	public static int computeIndentUnits(String line, IScriptProject project) {
+	//		return IndentManipulation.measureIndentUnits(line, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project));
+	//	}
 
 	/**
 	 * Returns the indent of the given string in indentation units. Odd spaces
@@ -317,9 +318,9 @@ public class Strings {
 	 *
 	 * @since 3.1
 	 */
-//	public static String trimIndent(String line, int indentsToRemove, IScriptProject project) {
-//		return IndentManipulation.trimIndent(line, indentsToRemove, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project));
-//	}
+	//	public static String trimIndent(String line, int indentsToRemove, IScriptProject project) {
+	//		return IndentManipulation.trimIndent(line, indentsToRemove, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project));
+	//	}
 
 	/**
 	 * Removes the given number of indents from the line. Asserts that the given line
@@ -346,9 +347,9 @@ public class Strings {
 	 *        preferences, or <code>null</code> for global preferences
 	 * @since 3.1
 	 */
-//	public static void trimIndentation(String[] lines, IScriptProject project) {
-//		trimIndentation(lines, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), true);
-//	}
+	//	public static void trimIndentation(String[] lines, IScriptProject project) {
+	//		trimIndentation(lines, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), true);
+	//	}
 	/**
 	 * Removes the common number of indents from all lines. If a line
 	 * only consists out of white space it is ignored.
@@ -373,9 +374,9 @@ public class Strings {
 	 * @param considerFirstLine  If <code>considerFirstLine</code> is false the first line will be ignored.
 	 * @since 3.1
 	 */
-//	public static void trimIndentation(String[] lines, IScriptProject project, boolean considerFirstLine) {
-//		trimIndentation(lines, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), considerFirstLine);
-//	}
+	//	public static void trimIndentation(String[] lines, IScriptProject project, boolean considerFirstLine) {
+	//		trimIndentation(lines, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), considerFirstLine);
+	//	}
 
 	/**
 	 * Removes the common number of indents from all lines. If a line
@@ -388,33 +389,33 @@ public class Strings {
 	 * @since 3.1
 	 */
 	public static void trimIndentation(String[] lines, int tabWidth, int indentWidth, boolean considerFirstLine) {
-		String[] toDo= new String[lines.length];
+		String[] toDo = new String[lines.length];
 		// find indentation common to all lines
-		int minIndent= Integer.MAX_VALUE; // very large
-		for (int i= considerFirstLine ? 0 : 1; i < lines.length; i++) {
-			String line= lines[i];
+		int minIndent = Integer.MAX_VALUE; // very large
+		for (int i = considerFirstLine ? 0 : 1; i < lines.length; i++) {
+			String line = lines[i];
 			if (containsOnlyWhitespaces(line))
 				continue;
-			toDo[i]= line;
-			int indent= computeIndentUnits(line, tabWidth, indentWidth);
+			toDo[i] = line;
+			int indent = computeIndentUnits(line, tabWidth, indentWidth);
 			if (indent < minIndent) {
-				minIndent= indent;
+				minIndent = indent;
 			}
 		}
 
 		if (minIndent > 0) {
 			// remove this indent from all lines
-			for (int i= considerFirstLine ? 0 : 1; i < toDo.length; i++) {
-				String s= toDo[i];
+			for (int i = considerFirstLine ? 0 : 1; i < toDo.length; i++) {
+				String s = toDo[i];
 				if (s != null)
-					lines[i]= trimIndent(s, minIndent, tabWidth, indentWidth);
+					lines[i] = trimIndent(s, minIndent, tabWidth, indentWidth);
 				else {
-					String line= lines[i];
-					int indent= computeIndentUnits(line, tabWidth, indentWidth);
+					String line = lines[i];
+					int indent = computeIndentUnits(line, tabWidth, indentWidth);
 					if (indent > minIndent)
-						lines[i]= trimIndent(line, minIndent, tabWidth, indentWidth);
+						lines[i] = trimIndent(line, minIndent, tabWidth, indentWidth);
 					else
-						lines[i]= trimLeadingTabsAndSpaces(line);
+						lines[i] = trimLeadingTabsAndSpaces(line);
 				}
 			}
 		}
@@ -430,9 +431,9 @@ public class Strings {
 	 * @return the indent part of <code>line</code>, but no odd spaces
 	 * @since 3.1
 	 */
-//	public static String getIndentString(String line, IScriptProject project) {
-//		return IndentManipulation.extractIndentString(line, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project));
-//	}
+	//	public static String getIndentString(String line, IScriptProject project) {
+	//		return IndentManipulation.extractIndentString(line, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project));
+	//	}
 
 	/**
 	 * Returns that part of the indentation of <code>line</code> that makes up
@@ -449,17 +450,17 @@ public class Strings {
 	}
 
 	public static String[] removeTrailingEmptyLines(String[] sourceLines) {
-		int lastNonEmpty= findLastNonEmptyLineIndex(sourceLines);
-		String[] result= new String[lastNonEmpty + 1];
-		for (int i= 0; i < result.length; i++) {
-			result[i]= sourceLines[i];
+		int lastNonEmpty = findLastNonEmptyLineIndex(sourceLines);
+		String[] result = new String[lastNonEmpty + 1];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = sourceLines[i];
 		}
 		return result;
 	}
 
 	private static int findLastNonEmptyLineIndex(String[] sourceLines) {
-		for (int i= sourceLines.length - 1; i >= 0; i--) {
-			if (! sourceLines[i].trim().equals(""))//$NON-NLS-1$
+		for (int i = sourceLines.length - 1; i >= 0; i--) {
+			if (!sourceLines[i].trim().equals(""))//$NON-NLS-1$
 				return i;
 		}
 		return -1;
@@ -479,9 +480,9 @@ public class Strings {
 	 * @return the changed code
 	 * @since 3.1
 	 */
-//	public static String changeIndent(String code, int codeIndentLevel, IScriptProject project, String newIndent, String lineDelim) {
-//		return IndentManipulation.changeIndent(code, codeIndentLevel, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), newIndent, lineDelim);
-//	}
+	//	public static String changeIndent(String code, int codeIndentLevel, IScriptProject project, String newIndent, String lineDelim) {
+	//		return IndentManipulation.changeIndent(code, codeIndentLevel, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), newIndent, lineDelim);
+	//	}
 
 	/**
 	 * Change the indent of, possible muti-line, code range. The current indent is removed, a new indent added.
@@ -500,38 +501,37 @@ public class Strings {
 		return IndentManipulation.changeIndent(code, codeIndentLevel, tabWidth, indentWidth, newIndent, lineDelim);
 	}
 
-//	public static String trimIndentation(String source, IJavaProject project, boolean considerFirstLine) {
-//		return trimIndentation(source, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), considerFirstLine);
-//	}
+	//	public static String trimIndentation(String source, IJavaProject project, boolean considerFirstLine) {
+	//		return trimIndentation(source, CodeFormatterUtil.getTabWidth(project), CodeFormatterUtil.getIndentWidth(project), considerFirstLine);
+	//	}
 
 	public static String trimIndentation(String source, int tabWidth, int indentWidth, boolean considerFirstLine) {
 		try {
-			ILineTracker tracker= new DefaultLineTracker();
+			ILineTracker tracker = new DefaultLineTracker();
 			tracker.set(source);
-			int size= tracker.getNumberOfLines();
+			int size = tracker.getNumberOfLines();
 			if (size == 1)
 				return source;
-			String lines[]= new String[size];
-			for (int i= 0; i < size; i++) {
-				IRegion region= tracker.getLineInformation(i);
-				int offset= region.getOffset();
-				lines[i]= source.substring(offset, offset + region.getLength());
+			String lines[] = new String[size];
+			for (int i = 0; i < size; i++) {
+				IRegion region = tracker.getLineInformation(i);
+				int offset = region.getOffset();
+				lines[i] = source.substring(offset, offset + region.getLength());
 			}
 			Strings.trimIndentation(lines, tabWidth, indentWidth, considerFirstLine);
-			StringBuffer result= new StringBuffer();
-			int last= size - 1;
-			for (int i= 0; i < size; i++) {
+			StringBuffer result = new StringBuffer();
+			int last = size - 1;
+			for (int i = 0; i < size; i++) {
 				result.append(lines[i]);
 				if (i < last)
 					result.append(tracker.getLineDelimiter(i));
 			}
 			return result.toString();
 		} catch (BadLocationException e) {
-			Assert.isTrue(false,"Can not happend"); //$NON-NLS-1$
+			Assert.isTrue(false, "Can not happend"); //$NON-NLS-1$
 			return null;
 		}
 	}
-
 
 	/**
 	 * Concatenate the given strings into one strings using the passed line delimiter as a
@@ -541,8 +541,8 @@ public class Strings {
 	 * @return the concatenated lines
 	 */
 	public static String concatenate(String[] lines, String delimiter) {
-		StringBuffer buffer= new StringBuffer();
-		for (int i= 0; i < lines.length; i++) {
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < lines.length; i++) {
 			if (i > 0)
 				buffer.append(delimiter);
 			buffer.append(lines[i]);
@@ -561,12 +561,12 @@ public class Strings {
 	}
 
 	public static String removeTrailingCharacters(String text, char toRemove) {
-		int size= text.length();
-		int end= size;
-		for (int i= size - 1; i >= 0; i--) {
-			char c= text.charAt(i);
+		int size = text.length();
+		int end = size;
+		for (int i = size - 1; i >= 0; i--) {
+			char c = text.charAt(i);
 			if (c == toRemove) {
-				end= i;
+				end = i;
 			} else {
 				break;
 			}
@@ -581,5 +581,17 @@ public class Strings {
 
 	public static String removeMnemonicIndicator(String string) {
 		return LegacyActionTools.removeMnemonics(string);
+	}
+
+	/**
+	 * Removes all duplicate whitespaces from a given string
+	 * @param string
+	 * @return the trimmed string
+	 */
+	public static String removeDuplicateWhitespaces(String string) {
+		Pattern pattern = Pattern.compile("\\s+");
+		Matcher matcher = pattern.matcher(string);
+		matcher.find();
+		return matcher.replaceAll(" ");
 	}
 }
