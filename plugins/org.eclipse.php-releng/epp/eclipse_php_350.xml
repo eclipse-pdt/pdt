@@ -91,7 +91,6 @@
 	    <feature id="org.eclipse.emf.ecore.sdo" version="latest" />
 	    <feature id="org.eclipse.wst" version="latest" />
 	    <feature id="org.eclipse.dltk.core" version="latest" />
-	    <feature id="org.eclipse.dltk.ui" version="latest" />
 	    <feature id="org.eclipse.epp.usagedata.feature" version="latest" />
 
 	</requiredFeatures>
