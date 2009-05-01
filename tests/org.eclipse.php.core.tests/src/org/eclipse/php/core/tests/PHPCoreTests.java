@@ -103,13 +103,14 @@ public class PHPCoreTests extends Plugin {
 		String tmpActual = actual;
 		String diff = StringUtils.difference(tmpExpected, tmpActual);
 		while (diff.length() > 0) {
-			if (!Character.isWhitespace(diff.charAt(0))) {
+			String diff2 = StringUtils.difference(tmpActual, tmpExpected);
+			
+			if (!Character.isWhitespace(diff.charAt(0)) && !Character.isWhitespace(diff2.charAt(0))) {
 				int expectedDiff = StringUtils.indexOfDifference(tmpActual, tmpExpected) + (expected.length() - tmpExpected.length());
 				int actualDiff = StringUtils.indexOfDifference(tmpExpected, tmpActual) + (actual.length() - tmpActual.length());
 				return getDiffError(expected, actual, expectedDiff, actualDiff);
 			}
 
-			String diff2 = StringUtils.difference(tmpActual, tmpExpected);
 			tmpActual = diff.trim();
 			tmpExpected = diff2.trim();
 			
