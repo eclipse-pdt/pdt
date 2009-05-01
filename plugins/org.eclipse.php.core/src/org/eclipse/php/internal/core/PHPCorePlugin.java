@@ -16,6 +16,7 @@ import java.util.Hashtable;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.ModelManager;
@@ -53,13 +54,35 @@ public class PHPCorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		// start the include path manager
-		IncludePathManager.getInstance();
+		initializeAfterStart();
+	}
+	
+	/**
+	 * This method is used for later initialization. This trick should release plug-in start-up.
+	 */
+	void initializeAfterStart() {
+		Job job = new Job("") {
+			protected IStatus run(IProgressMonitor monitor) {
+				
+				// start the include path manager
+				IncludePathManager.getInstance();
 
-		// register the listener in charge of converting the projects - applies for projects being opened during work
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(fProjectConvertListener, IResourceChangeEvent.PRE_BUILD);
-		// run the conversion over all the projects in the workspace - all open projects will be converted
-		convertProjects();
+				// register the listener in charge of converting the projects - applies for projects being opened during work
+				ResourcesPlugin.getWorkspace().addResourceChangeListener(fProjectConvertListener, IResourceChangeEvent.PRE_BUILD);
+				
+				// run the conversion over all the projects in the workspace - all open projects will be converted
+				try {
+					convertProjects();
+				} catch (ModelException e) {
+					log(e);
+				} catch (CoreException e) {
+					log(e);
+				}
+				
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule(Job.LONG);
 	}
 
 	/*
