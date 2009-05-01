@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
@@ -115,18 +116,32 @@ public class PHPUiPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		final BundleContext ctx = context;
-
-		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				DNDUtils.initEditorSiteExternalDrop();
-				processCommandLine(ctx);
-			}
-		});
 		
-		if (PlatformUI.isWorkbenchRunning()) {
-			new InitializeAfterLoadJob().schedule(); // must be last call in start() method
-		}
+		initializeAfterStart(context);
+	}
+	
+	/**
+	 * This method is used for later initialization. This trick should release plug-in start-up.
+	 * @param context
+	 */
+	void initializeAfterStart(final BundleContext context) {
+		Job job = new Job("") {
+			protected IStatus run(IProgressMonitor monitor) {
+				
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						DNDUtils.initEditorSiteExternalDrop();
+						processCommandLine(context);
+					}
+				});
+				
+				if (PlatformUI.isWorkbenchRunning()) {
+					new InitializeAfterLoadJob().schedule(); // must be last call in start() method
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule(Job.LONG);
 	}
 	
 	static void initializeAfterLoad(IProgressMonitor monitor) {
