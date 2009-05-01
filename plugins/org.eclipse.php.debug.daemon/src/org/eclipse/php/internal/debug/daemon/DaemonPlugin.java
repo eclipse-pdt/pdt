@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.daemon;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.daemon.communication.CommunicationDaemonRegistry;
 import org.osgi.framework.BundleContext;
@@ -52,9 +50,23 @@ public class DaemonPlugin extends Plugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		startDaemons(null);
+		initializeAfterStart(context);
 	}
 
+	/**
+	 * This method is used for later initialization. This trick should release plug-in start-up.
+	 * @param context
+	 */
+	void initializeAfterStart(final BundleContext context) {
+		Job job = new Job("") {
+			protected IStatus run(IProgressMonitor monitor) {
+				startDaemons(null);
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule(Job.LONG);
+	}
+	
 	/**
 	 * Initializes and starts the daemons that has the given daemonID.
 	 * In case that the give id is null, starts all the registered daemons.
