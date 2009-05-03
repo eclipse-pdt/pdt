@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.dltk.ast.Modifiers;
+
 /**
  * Base class for class member declarations
  */
@@ -84,7 +86,8 @@ public abstract class BodyDeclaration extends Statement {
 	}
 
 	/**
-	 * This is a utility for member modifiers  
+	 * This is a utility for member modifiers 
+	 * @deprecated use DLTK {@link Modifiers} instead 
 	 */
 	public static class Modifier {
 		/**
