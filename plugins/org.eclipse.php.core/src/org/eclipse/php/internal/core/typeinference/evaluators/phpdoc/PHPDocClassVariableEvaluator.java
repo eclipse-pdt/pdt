@@ -46,23 +46,25 @@ public class PHPDocClassVariableEvaluator extends AbstractPHPGoalEvaluator {
 		String variableName = typedGoal.getVariableName();
 
 		IType[] types = PHPTypeInferenceUtils.getModelElements(context.getInstanceType(), context);
-
 		Set<PHPDocBlock> docs = new HashSet<PHPDocBlock>();
-		for (IType type : types) {
-			try {
-				// we look in whole hiearchy
-				ITypeHierarchy superHierarchy = type.newSupertypeHierarchy(null);
-				IType[] superTypes = superHierarchy.getAllTypes();
-				for (IType superType : superTypes) {
-					IField typeField = PHPModelUtils.getTypeField(superType, variableName);
-					PHPDocBlock docBlock = PHPModelUtils.getDocBlock(typeField);
-					if (docBlock != null) {
-						docs.add(docBlock);
+		
+		if (types != null) {
+			for (IType type : types) {
+				try {
+					// we look in whole hiearchy
+					ITypeHierarchy superHierarchy = type.newSupertypeHierarchy(null);
+					IType[] superTypes = superHierarchy.getAllTypes();
+					for (IType superType : superTypes) {
+						IField typeField = PHPModelUtils.getTypeField(superType, variableName);
+						PHPDocBlock docBlock = PHPModelUtils.getDocBlock(typeField);
+						if (docBlock != null) {
+							docs.add(docBlock);
+						}
 					}
-				}
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
+				} catch (ModelException e) {
+					if (DLTKCore.DEBUG) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

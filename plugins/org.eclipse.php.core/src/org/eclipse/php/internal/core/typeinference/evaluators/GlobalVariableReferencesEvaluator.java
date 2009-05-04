@@ -13,13 +13,9 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.*;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.ast.statements.Block;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
@@ -30,10 +26,10 @@ import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
-import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
+import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
@@ -100,7 +96,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 				if (!fileOffsets.isEmpty()) {
-					VariableDeclarationSearcher varSearcher = new VariableDeclarationSearcher(sourceModule, fileOffsets, variableName);
+					GlobalVariableDeclarationSearcher varSearcher = new GlobalVariableDeclarationSearcher(sourceModule, fileOffsets, variableName);
 					try {
 						moduleDeclaration.traverse(varSearcher);
 
@@ -135,29 +131,35 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class VariableDeclarationSearcher extends ContextFinder {
+	class GlobalVariableDeclarationSearcher extends VariableDeclarationSearcher {
 
 		private final String variableName;
-		private Map<IContext, LinkedList<ASTNode>> contextToDeclarations = new HashMap<IContext, LinkedList<ASTNode>>();
-		private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
-		private int level = 0;
 		private Iterator<ISourceRange> offsetsIt;
 		private int currentStart;
 		private int currentEnd;
 		private boolean stopProcessing;
+		
 
-		public VariableDeclarationSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets, String variableName) {
+		public GlobalVariableDeclarationSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets, String variableName) {
 			super(sourceModule);
 			this.variableName = variableName;
 			offsetsIt = offsets.iterator();
 			setNextRange();
 		}
 		
-		public IContext getContext() {
-			return null;
-		}
-
 		public Map<IContext, LinkedList<ASTNode>> getContextToDeclarationMap() {
+			Map<IContext, LinkedList<ASTNode>> contextToDeclarations = new HashMap<IContext, LinkedList<ASTNode>>();
+			for (IContext context : contextToDecl.keySet()) {
+				LinkedHashMap<String, LinkedList<ASTNode>> varToDeclList = contextToDecl.get(context);
+				LinkedList<ASTNode> list = varToDeclList.get(variableName);
+				if (list != null) {
+					int nullIdx;
+					while ((nullIdx = list.indexOf(null)) != -1) {
+						list.remove(nullIdx);
+					}
+					contextToDeclarations.put(context, list);
+				}
+			}
 			return contextToDeclarations;
 		}
 
@@ -171,137 +173,20 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			}
 		}
 
-		private boolean interesting(ASTNode node) {
+		protected boolean interesting(ASTNode node) {
 			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
 		}
-
-		private void increaseConditionalLevel() {
-			++level;
-		}
-
-		private void decreaseConditionalLevel() {
-			--level;
-		}
-
-		public boolean visit(Assignment node) throws Exception {
-			if (!interesting(node)) {
-				return false;
-			}
+		
+		protected void postProcessVarAssignment(Assignment node) {
+			super.postProcessVarAssignment(node);
+			
 			Expression variable = node.getVariable();
 			if (variable instanceof VariableReference) {
 				VariableReference variableReference = (VariableReference) variable;
 				if (variableName.equals(variableReference.getName())) {
-
-					LinkedList<ASTNode> decl = contextToDeclarations.get(contextStack.peek());
-
-					// remove all declarations of this variable from the inner blocks
-					while (decl.size() > level) {
-						decl.removeLast();
-					}
-					decl.addLast(node.getValue());
-
 					setNextRange();
 				}
 			}
-			return visitGeneral(node);
-		}
-
-		public boolean visit(Block s) throws Exception {
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				increaseConditionalLevel();
-			}
-			return visitGeneral(s);
-		}
-
-		public boolean visit(Statement node) throws Exception {
-			if (!interesting(node)) {
-				return false;
-			}
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				increaseConditionalLevel();
-			}
-			return visitGeneral(node);
-		}
-
-		public boolean visit(Expression node) throws Exception {
-			if (!interesting(node)) {
-				return false;
-			}
-			if (node instanceof Assignment) {
-				return visit((Assignment) node);
-			}
-			if (node instanceof Block) {
-				return visit((Block) node);
-			}
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof ConditionalExpression) {
-				increaseConditionalLevel();
-			}
-			return visitGeneral(node);
-		}
-
-		public boolean endvisit(Block s) throws Exception {
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				decreaseConditionalLevel();
-			}
-			endvisitGeneral(s);
-			return true;
-		}
-
-		public boolean endvisit(Statement s) throws Exception {
-			if (interesting(s)) {
-				ASTNode parent = nodesStack.peek();
-				if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-					decreaseConditionalLevel();
-				}
-			}
-			return visitGeneral(s);
-		}
-
-		public boolean endvisit(Expression e) throws Exception {
-			if (e instanceof Block) {
-				return endvisit((Block) e);
-			}
-			if (interesting(e)) {
-				ASTNode parent = nodesStack.peek();
-				if (parent instanceof ConditionalExpression) {
-					decreaseConditionalLevel();
-				}
-			}
-			endvisitGeneral(e);
-			return true;
-		}
-
-		public boolean visit(TypeDeclaration node) throws Exception {
-			super.visit(node);
-			if (!(node instanceof NamespaceDeclaration)) {
-				contextToDeclarations.put(contextStack.peek(), new LinkedList<ASTNode>());
-			}
-			return visitGeneral(node);
-		}
-
-		public boolean visit(MethodDeclaration node) throws Exception {
-			super.visit(node);
-			contextToDeclarations.put(contextStack.peek(), new LinkedList<ASTNode>());
-			return visitGeneral(node);
-		}
-
-		public boolean visit(ModuleDeclaration node) throws Exception {
-			super.visit(node);
-			contextToDeclarations.put(contextStack.peek(), new LinkedList<ASTNode>());
-			return visitGeneral(node);
-		}
-		
-		public boolean visitGeneral(ASTNode node) throws Exception {
-			nodesStack.push(node);
-			return interesting(node);
-		}
-
-		public void endvisitGeneral(ASTNode node) throws Exception {
-			nodesStack.pop();
 		}
 	}
 }

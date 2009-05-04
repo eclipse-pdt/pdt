@@ -13,18 +13,13 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Stack;
 
 import org.eclipse.dltk.ast.ASTNode;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
-import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
-import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
@@ -33,7 +28,9 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.*;
+import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
+import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
@@ -74,8 +71,8 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		try {
 			if (context instanceof ISourceModuleContext) {
 				ISourceModuleContext typedContext = (ISourceModuleContext) context;
-				ASTNode node = (context instanceof MethodContext) ? ((MethodContext)context).getMethodNode() : typedContext.getRootNode();
-				VariableDeclarationSearcher varDecSearcher = new VariableDeclarationSearcher(variableReference);
+				ASTNode node = /*(context instanceof MethodContext) ? ((MethodContext) context).getMethodNode() :*/ typedContext.getRootNode();
+				VariableDeclarationSearcher varDecSearcher = new VariableDeclarationSearcher(typedContext.getSourceModule(), variableReference);
 				node.traverse(varDecSearcher);
 
 				List<IGoal> subGoals = new LinkedList<IGoal>();
@@ -114,113 +111,56 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class VariableDeclarationSearcher extends ASTVisitor {
+	class VariableDeclarationSearcher extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
 
 		private final String variableName;
 		private final int variableOffset;
-		private LinkedList<ASTNode> declarations = new LinkedList<ASTNode>();
-		private int level = 0;
-		private Stack<ASTNode> nodesStack = new Stack<ASTNode>();
 		private int seenGlobal = 0;
 		private boolean mergeWithGlobalScope;
 		private int variableLevel;
+		private IContext variableContext;
 
-		public VariableDeclarationSearcher(VariableReference variableReference) {
+		public VariableDeclarationSearcher(ISourceModule sourceModule, VariableReference variableReference) {
+			super(sourceModule);
 			variableName = variableReference.getName();
 			variableOffset = variableReference.sourceStart();
 		}
 
 		public LinkedList<ASTNode> getDeclarations() {
+			LinkedList<ASTNode> declList = getDeclList(variableContext, variableName);
+			
 			int nullIdx;
 			// Remove all outer level declarations
 			for (int i = 0; i < variableLevel; ++i) {
-				declarations.set(i, null);
+				declList.set(i, null);
 			}
-			while ((nullIdx = declarations.indexOf(null)) != -1) {
-				declarations.remove(nullIdx);
+			while ((nullIdx = declList.indexOf(null)) != -1) {
+				declList.remove(nullIdx);
 			}
-			return declarations;
+			return declList;
 		}
 
 		public boolean needsMergingWithGlobalScope() {
 			return mergeWithGlobalScope;
 		}
 
-		public boolean visit(Assignment s) throws Exception {
-			Expression variable = s.getVariable();
+		protected void postProcessVarAssignment(Assignment node) {
+			super.postProcessVarAssignment(node);
+
+			Expression variable = node.getVariable();
 			if (variable instanceof VariableReference) {
 				VariableReference variableReference = (VariableReference) variable;
 				if (variableName.equals(variableReference.getName())) {
-					if (level <= seenGlobal) { // if current level is lower than one where global statement has been seen - all global vars where overriden
+					if (blockLevel <= seenGlobal) { // if current level is lower than one where global statement has been seen - all global vars where overriden
 						mergeWithGlobalScope = false;
 					}
-
-					// remove all declarations of this variable from the inner blocks
-					while (declarations.size() > level) {
-						declarations.removeLast();
-					}
-					declarations.addLast(s);
 				}
 			}
-			return visitGeneral(s);
-		}
-
-		private void increaseConditionalLevel() {
-			declarations.addLast(null);
-			++level;
-		}
-
-		private void decreaseConditionalLevel() {
-			--level;
-		}
-		
-		protected void chackForDeclarationInParent(ASTNode parent) {
-			if (parent instanceof IfStatement || parent instanceof WhileStatement) {
-				Expression condition = null;
-				if (parent instanceof IfStatement) {
-					condition = ((IfStatement)parent).getCondition();
-				} else {
-					condition = ((WhileStatement)parent).getCondition();
-				}
-				if (condition instanceof InstanceOfExpression) {
-					InstanceOfExpression i = (InstanceOfExpression) condition;
-					Expression variable = i.getExpr();
-					if (variable instanceof VariableReference) {
-						VariableReference variableReference = (VariableReference) variable;
-							if (variableName.equals(variableReference.getName())) {
-							while (declarations.size() > level) {
-								declarations.removeLast();
-							}
-							declarations.addLast(i.getClassName());
-						}
-					}
-				}
-			}
-			else if (parent instanceof CatchClause) {
-				CatchClause catchClause = (CatchClause) parent;
-				if (catchClause.getVariable().getName().equals(variableName)) {
-					declarations.addLast(catchClause);
-				}
-			}
-			else if (parent instanceof ForEachStatement) {
-				ForEachStatement foreachStatement = (ForEachStatement) parent;
-				if (foreachStatement.getValue() instanceof SimpleReference && ((SimpleReference)foreachStatement.getValue()).getName().equals(variableName)) {
-					declarations.addLast(foreachStatement);
-				}
-			} 
-		}
-
-		public boolean visit(Block s) throws Exception {
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				increaseConditionalLevel();
-				chackForDeclarationInParent(parent);
-			}
-			return visitGeneral(s);
 		}
 
 		public boolean visit(Statement s) throws Exception {
-			if (!shouldContinue(s)) {
+			boolean visit = super.visit(s);
+			if (!visit) {
 				return false;
 			}
 			if (s instanceof GlobalStatement) {
@@ -229,112 +169,25 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 					if (variable instanceof VariableReference) {
 						VariableReference variableReference = (VariableReference) variable;
 						if (variableReference.getName().equals(variableName)) {
-							seenGlobal = level;
+							seenGlobal = blockLevel;
 							mergeWithGlobalScope = true;
-
-							// remove all declarations, since global statement overrides them
-							for (int i = 0; i < declarations.size(); ++i) {
-								declarations.set(i, null);
-							}
-							return visitGeneral(s);
 						}
 					}
 				}
-			} else if (s instanceof FormalParameter) {
-				FormalParameter parameter = (FormalParameter) s;
-				if (parameter.getName().equals(variableName)) {
-					declarations.clear();
-					declarations.addLast(s);
-					return visitGeneral(s);
-				}
 			}
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				increaseConditionalLevel();
-				chackForDeclarationInParent(parent);
-			}
-			return visitGeneral(s);
+			return visit;
 		}
-
-		public boolean visit(Expression e) throws Exception {
-			if (!shouldContinue(e)) {
-				return false;
-			}
-			if (e instanceof Assignment) {
-				return visit((Assignment) e);
-			}
-			if (e instanceof Block) {
-				return visit((Block) e);
-			}
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof ConditionalExpression) {
-				increaseConditionalLevel();
-				chackForDeclarationInParent(parent);
-			}
-			return visitGeneral(e);
-		}
-
-		public boolean endvisit(Block s) throws Exception {
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				decreaseConditionalLevel();
-			}
-			endvisitGeneral(s);
-			return true;
-		}
-
-		public boolean endvisit(Statement s) throws Exception {
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-				decreaseConditionalLevel();
-			}
-			if (shouldContinue(s)) {
-				endvisitGeneral(s);
-			}
-			return true;
-		}
-
-		public boolean endvisit(Expression e) throws Exception {
-			if (e instanceof Block) {
-				return endvisit((Block) e);
-			}
-			ASTNode parent = nodesStack.peek();
-			if (parent instanceof ConditionalExpression) {
-				decreaseConditionalLevel();
-			}
-			if (shouldContinue(e)) {
-				endvisitGeneral(e);
-			}
-			return true;
-		}
-
-		public boolean visit(TypeDeclaration node) throws Exception {
-			if (!(node instanceof NamespaceDeclaration)) {
-				return false;
-			}
-			return visitGeneral(node);
-		}
-
-		public boolean visit(MethodDeclaration node) throws Exception {
-			if (nodesStack.isEmpty()) {
-				return visitGeneral(node);
-			}
-			return false;
-		}
-
+		
 		public boolean visitGeneral(ASTNode node) throws Exception {
-			nodesStack.push(node);
+			boolean visit = super.visitGeneral(node);
 			if (node.sourceStart() == variableOffset) {
-				variableLevel = level;
+				variableLevel = blockLevel;
+				variableContext = contextStack.peek();
 			}
-			return shouldContinue(node);
+			return visit;
 		}
 
-		public void endvisitGeneral(ASTNode node) throws Exception {
-			nodesStack.pop();
-		}
-
-		private boolean shouldContinue(ASTNode node) {
+		protected boolean interesting(ASTNode node) {
 			return node.sourceStart() < variableOffset;
 		}
 	}
