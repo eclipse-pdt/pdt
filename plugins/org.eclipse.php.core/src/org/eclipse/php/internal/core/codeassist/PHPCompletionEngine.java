@@ -13,7 +13,9 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.dltk.codeassist.IAssistParser;
@@ -72,7 +74,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 						ICompletionStrategy[] strategies = factory.create(contexts);
 						if (strategies != null) {
 							for (ICompletionStrategy strategy : strategies) {
-								
+
 								try {
 									strategy.apply(this);
 								} catch (Exception e) {
@@ -334,6 +336,32 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 	}
 
+	public void reportResource(IResource resource, IResource relative, String suffix, SourceRange replaceRange) {
+		if (processedElements.contains(resource)) {
+			return;
+		}
+		processedElements.add(resource);
+		noProposal = false;
+
+		final String elementName = resource.getProjectRelativePath().makeRelativeTo(relative.getProjectRelativePath()).toString();
+		CompletionProposal proposal = null;
+		if (resource.getType() == IResource.FOLDER && !requestor.isIgnored(CompletionProposal.PACKAGE_REF)) {
+			proposal = createProposal(CompletionProposal.PACKAGE_REF, actualCompletionPosition);
+		} else if (!requestor.isIgnored(CompletionProposal.KEYWORD)) {
+			proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
+		}
+		proposal.setName(resource.getName().toCharArray());
+		proposal.setCompletion((elementName + suffix).toCharArray());
+		proposal.setRelevance(nextKeywordRelevance());
+		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
+		proposal.setModelElement(DLTKCore.create(resource));
+
+		this.requestor.accept(proposal);
+		if (DEBUG) {
+			this.printDebug(proposal);
+		}
+	}
+
 	protected int getEndOfEmptyToken() {
 		return 0;
 	}
@@ -353,4 +381,5 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 	public IAssistParser getParser() {
 		return null;
 	}
+
 }

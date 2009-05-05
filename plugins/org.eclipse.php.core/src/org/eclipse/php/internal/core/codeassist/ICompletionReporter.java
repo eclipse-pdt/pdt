@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.SourceRange;
 
@@ -26,6 +30,14 @@ public interface ICompletionReporter {
 	public final static int RELEVANCE_CLASS = 100000;
 	public final static int RELEVANCE_VAR = 10000;
 	public final static int RELEVANCE_CONST = 1000;
+
+	/**
+	 * Reports a PHP resource (file or folder)
+	 * @param resource PHP file or folder
+	 * @param suffix Suffix to append after completion will be inserted
+	 * @param replaceRange The range in the document to be replaced with the completion proposal text
+	 */
+	public void reportResource(IResource resource, IResource relative, String suffix, SourceRange replaceRange);
 	
 	/**
 	 * Reports type: interface, namespace or class
