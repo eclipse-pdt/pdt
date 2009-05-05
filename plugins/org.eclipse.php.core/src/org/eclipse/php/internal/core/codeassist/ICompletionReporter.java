@@ -13,10 +13,7 @@ package org.eclipse.php.internal.core.codeassist;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.IField;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.ISourceModule;
-import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 
 /**
@@ -37,7 +34,7 @@ public interface ICompletionReporter {
 	 * @param suffix Suffix to append after completion will be inserted
 	 * @param replaceRange The range in the document to be replaced with the completion proposal text
 	 */
-	public void reportResource(IResource resource, IResource relative, String suffix, SourceRange replaceRange);
+	public void reportResource(IModelElement model, IPath relative, String suffix, SourceRange replaceRange);
 	
 	/**
 	 * Reports type: interface, namespace or class

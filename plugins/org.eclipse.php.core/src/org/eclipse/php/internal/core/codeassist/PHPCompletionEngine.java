@@ -13,7 +13,6 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.jobs.IJobManager;
@@ -336,25 +335,24 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		}
 	}
 
-	public void reportResource(IResource resource, IResource relative, String suffix, SourceRange replaceRange) {
-		if (processedElements.contains(resource)) {
+	public void reportResource(IModelElement model, IPath relative, String suffix, SourceRange replaceRange) {
+		if (processedElements.contains(model)) {
 			return;
 		}
-		processedElements.add(resource);
+		processedElements.add(model);
 		noProposal = false;
 
-		final String elementName = resource.getProjectRelativePath().makeRelativeTo(relative.getProjectRelativePath()).toString();
 		CompletionProposal proposal = null;
-		if (resource.getType() == IResource.FOLDER && !requestor.isIgnored(CompletionProposal.PACKAGE_REF)) {
+		if (model.getElementType() == IModelElement.SCRIPT_FOLDER && !requestor.isIgnored(CompletionProposal.PACKAGE_REF)) {
 			proposal = createProposal(CompletionProposal.PACKAGE_REF, actualCompletionPosition);
 		} else if (!requestor.isIgnored(CompletionProposal.KEYWORD)) {
 			proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 		}
-		proposal.setName(resource.getName().toCharArray());
-		proposal.setCompletion((elementName + suffix).toCharArray());
+		proposal.setName(model.getResource().getName().toCharArray());
+		proposal.setCompletion((relative.toString() + suffix).toCharArray());
 		proposal.setRelevance(nextKeywordRelevance());
 		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
-		proposal.setModelElement(DLTKCore.create(resource));
+		proposal.setModelElement(model);
 
 		this.requestor.accept(proposal);
 		if (DEBUG) {

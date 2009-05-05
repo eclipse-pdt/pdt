@@ -16,10 +16,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IScriptProject;
-import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -45,7 +44,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		String prefix = includeContext.getPrefix();
 		String suffix = getSuffix(includeContext);
 		SourceRange replaceRange = getReplacementRange(includeContext);
-		
+
 		final ISourceModule sourceModule = includeContext.getSourceModule();
 		if (sourceModule == null || sourceModule.getScriptProject() == null) {
 			if (DLTKCore.DEBUG_COMPLETION) {
@@ -53,21 +52,21 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 			}
 			return;
 		}
-		
+
 		final IScriptProject scriptProject = sourceModule.getScriptProject();
 		final IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(scriptProject.getProject());
-		
+
 		for (IncludePath includePath : includePaths) {
-			reportOnContainer(includePath, prefix, reporter, suffix, replaceRange);
+			reportOnContainer(includePath, prefix, reporter, suffix, replaceRange, sourceModule.getScriptProject());
 		}
 
 	}
 
-	private void reportOnContainer(IncludePath includePath, String prefix, ICompletionReporter reporter, String suffix, SourceRange replaceRange) {
-		
+	private void reportOnContainer(IncludePath includePath, String prefix, ICompletionReporter reporter, String suffix, SourceRange replaceRange, IScriptProject project) {
+
 		final boolean buildpath = includePath.isBuildpath();
 		final Object entry = includePath.getEntry();
-		
+
 		IPath prefixPath = new Path(prefix);
 		if (!buildpath && entry instanceof IContainer) {
 			IContainer container = (IContainer) entry;
@@ -82,17 +81,19 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 				if (removeLastSegments.segmentCount() > 0) {
 					container = container.getFolder(removeLastSegments);
 				}
-				
+
 				members = container.members();
 				for (IResource resource : members) {
 					final IPath relative = resource.getFullPath().makeRelativeTo(container.getFullPath());
 					if (isPrefix(lastSegmant, relative)) {
+						final IPath rel = resource.getFullPath().makeRelativeTo(((IContainer) entry).getFullPath());
+						final IModelElement modelElement = DLTKCore.create(resource);
 						if (resource.getType() == IResource.FILE) {
 							if (PHPToolkitUtil.isPhpFile((IFile) resource)) {
-								reporter.reportResource(resource, (IContainer) entry, suffix, replaceRange);
+								reporter.reportResource(modelElement, rel, suffix, replaceRange);
 							}
 						} else {
-								reporter.reportResource(resource, (IContainer) entry, suffix, replaceRange);	
+							reporter.reportResource(modelElement, rel, suffix, replaceRange);
 						}
 					}
 				}
@@ -101,30 +102,52 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 					e.printStackTrace();
 				}
 			}
+		} else if (buildpath) {
+			IBuildpathEntry buildpathEntry = (IBuildpathEntry) entry;
+			final int entryKind = buildpathEntry.getEntryKind();
+
+			switch (entryKind) {
+				case IBuildpathEntry.BPE_CONTAINER:
+					try {
+						IProjectFragment[] findProjectFragments = project.findProjectFragments((IBuildpathEntry) entry);
+						if (findProjectFragments == null) {
+							return;
+						}
+						for (IProjectFragment projectFragment : findProjectFragments) {
+							final IModelElement[] children = projectFragment.getChildren();
+							for (IModelElement element : children) {
+								final IPath path = element.getPath();
+							}
+						}
+					} catch (ModelException e) {
+						Logger.logException(e);
+					}
+					break;
+				default:
+
+			}
 		}
 	}
 
 	private boolean isPrefix(IPath prefixPath, IPath relative) {
 		String lastCurrentSegment = relative.lastSegment();
 		String lastPrefixSegment = prefixPath.lastSegment();
-		
+
 		if (lastCurrentSegment == null) {
 			lastCurrentSegment = ""; //$NON-NLS-1$
 		}
 		if (lastPrefixSegment == null) {
 			lastPrefixSegment = ""; //$NON-NLS-1$
-		}		
+		}
 		if (CodeAssistUtils.startsWithIgnoreCase(lastCurrentSegment, lastPrefixSegment)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$ 
 	}
-	
-	
 
 }
