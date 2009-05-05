@@ -13,10 +13,7 @@ package org.eclipse.php.internal.ui.editor.contentassist;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ui.ScriptElementImageDescriptor;
 import org.eclipse.dltk.ui.ScriptElementImageProvider;
-import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
-import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
-import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposal;
-import org.eclipse.dltk.ui.text.completion.ScriptCompletionProposalCollector;
+import org.eclipse.dltk.ui.text.completion.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
@@ -47,6 +44,17 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 	
 	protected CompletionProposalLabelProvider createLabelProvider() {
 		return new PHPCompletionProposalLabelProvider();
+	}
+	
+	@Override
+	protected IScriptCompletionProposal createPackageProposal(CompletionProposal proposal) {
+		final AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createPackageProposal(proposal);
+		final IModelElement modelElement = proposal.getModelElement();		
+		if (modelElement != null) {
+			scriptProposal.setProposalInfo(new ProposalInfo(modelElement.getScriptProject(),
+					new String(proposal.getName())));
+		}
+		return scriptProposal;
 	}
 
 	protected IScriptCompletionProposal createScriptCompletionProposal(CompletionProposal proposal) {
