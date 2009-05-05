@@ -41,10 +41,12 @@ public abstract class ContextFinder extends ASTVisitor {
 	}
 
 	/**
-	 * This method should return found context
+	 * This method must return found context
 	 * @return
 	 */
-	abstract public IContext getContext();
+	public IContext getContext() {
+		return null;
+	}
 
 	public boolean visit(ModuleDeclaration node) throws Exception {
 		contextStack.push(new FileContext(sourceModule, node));
