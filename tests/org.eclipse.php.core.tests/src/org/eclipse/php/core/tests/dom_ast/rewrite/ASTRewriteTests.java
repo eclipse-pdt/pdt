@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.core.tests.PHPCoreTests;
@@ -79,7 +80,6 @@ import org.eclipse.php.internal.core.ast.nodes.UnaryOperation;
 import org.eclipse.php.internal.core.ast.nodes.Variable;
 import org.eclipse.php.internal.core.ast.nodes.VariableBase;
 import org.eclipse.php.internal.core.ast.nodes.WhileStatement;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewrite;
 import org.eclipse.php.internal.core.ast.rewrite.ListRewrite;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
@@ -1754,7 +1754,7 @@ public class ASTRewriteTests extends TestCase {
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 2);
 		declarations.get(0).fields().add(ast.newSingleFieldDeclaration(ast.newVariable("b"), ast.newScalar("4")));
 		declarations.get(0).fields().get(0).getValue().delete();
-		declarations.get(1).setModifier(Modifier.PROTECTED | Modifier.FINAL);
+		declarations.get(1).setModifier(Modifiers.AccProtected| Modifiers.AccFinal);
 		rewrite();
 		checkResult("<?php class A { public $a, $b = 4; protected final $var; }?>");
 	}
@@ -1765,7 +1765,7 @@ public class ASTRewriteTests extends TestCase {
 		
 		List<MethodDeclaration> declarations = getAllOfType(program, MethodDeclaration.class);
 		Assert.assertTrue("Unexpected list size.", declarations.size() == 1);
-		declarations.get(0).setModifier(Modifier.PROTECTED | Modifier.ABSTRACT);
+		declarations.get(0).setModifier(Modifiers.AccProtected | Modifiers.AccAbstract);
 		declarations.get(0).getFunction().setFunctionName(ast.newIdentifier("bar"));
 		rewrite();
 		checkResult("<?php class A { protected abstract function bar(int $a){} }?> ");
