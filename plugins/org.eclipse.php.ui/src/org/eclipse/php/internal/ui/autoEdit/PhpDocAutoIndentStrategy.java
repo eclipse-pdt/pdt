@@ -12,7 +12,6 @@ package org.eclipse.php.internal.ui.autoEdit;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.util.MethodOverrideTester;
 import org.eclipse.dltk.ui.IWorkingCopyManager;
@@ -125,7 +124,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 							if (unit != null) {
 								try {
 									ScriptModelUtil.reconcile(unit);
-									PHPUiPlugin.getDefault().getASTProvider().reconciled(null, unit, new NullProgressMonitor());
+//									PHPUiPlugin.getDefault().getASTProvider().reconciled(null, unit, new NullProgressMonitor());
 									String partitionType = FormatterUtils.getPartitionType((IStructuredDocument) d, c.offset);
 									String commentBlockBody;
 									if (partitionType.equals(PHPPartitionTypes.PHP_DOC)) {

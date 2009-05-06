@@ -18,7 +18,7 @@ import org.eclipse.dltk.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.corext.util.Strings;
 import org.eclipse.php.internal.ui.util.PHPElementImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -37,20 +37,20 @@ public class BindingLabelProvider extends LabelProvider {
 		if (binding instanceof IMethodBinding && ((IMethodBinding) binding).isConstructor())
 			adornments|= PHPElementImageDescriptor.CONSTRUCTOR;
 		final int modifiers= binding.getModifiers();
-		if (Modifier.isAbstract(modifiers))
+		if (PHPFlags.isAbstract(modifiers))
 			adornments|= PHPElementImageDescriptor.ABSTRACT;
-		if (Modifier.isFinal(modifiers))
+		if (PHPFlags.isFinal(modifiers))
 			adornments|= PHPElementImageDescriptor.FINAL;
-//		if (Modifier.isSynchronized(modifiers))
+//		if (PHPFlags.isSynchronized(modifiers))
 //			adornments|= PHPElementImageDescriptor.SYNCHRONIZED;
-		if (Modifier.isStatic(modifiers))
+		if (PHPFlags.isStatic(modifiers))
 			adornments|= PHPElementImageDescriptor.STATIC;
 		if (binding.isDeprecated())
 			adornments|= PHPElementImageDescriptor.DEPRECATED;
 //		if (binding instanceof IVariableBinding && ((IVariableBinding) binding).isField()) {
-//			if (Modifier.isTransient(modifiers))
+//			if (PHPFlags.isTransient(modifiers))
 //				adornments|= PHPElementImageDescriptor.TRANSIENT;
-//			if (Modifier.isVolatile(modifiers))
+//			if (PHPFlags.isVolatile(modifiers))
 //				adornments|= PHPElementImageDescriptor.VOLATILE;
 //		}
 		return adornments;
@@ -69,7 +69,7 @@ public class BindingLabelProvider extends LabelProvider {
 		} else if (binding instanceof IMethodBinding) {
 //			ITypeBinding type= ((IMethodBinding) binding).getDeclaringClass();
 //			int modifiers= binding.getModifiers();
-//			if (type.isEnum() && (!Modifier.isPublic(modifiers) && !Modifier.isProtected(modifiers) && !Modifier.isPrivate(modifiers)) && ((IMethodBinding) binding).isConstructor())
+//			if (type.isEnum() && (!PHPFlags.isPublic(modifiers) && !PHPFlags.isProtected(modifiers) && !PHPFlags.isPrivate(modifiers)) && ((IMethodBinding) binding).isConstructor())
 //				return DLTKPluginImages.DESC_MISC_PRIVATE;
 			return getMethodImageDescriptor(binding.getModifiers());
 		} else if (binding instanceof IVariableBinding)
@@ -78,7 +78,7 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 	private static ImageDescriptor getClassImageDescriptor(int modifiers) {
-//		if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers))
+//		if (PHPFlags.isPublic(modifiers) || PHPFlags.isProtected(modifiers) || PHPFlags.isPrivate(modifiers))
 			return DLTKPluginImages.DESC_OBJS_CLASS;
 //		else
 //			return DLTKPluginImages.DESC_OBJS_CLASS_DEFAULT;
@@ -86,11 +86,11 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private static ImageDescriptor getFieldImageDescriptor(IVariableBinding binding) {
 		final int modifiers= binding.getModifiers();
-		if (Modifier.isPublic(modifiers)/* || binding.isEnumConstant()*/)
+		if (PHPFlags.isPublic(modifiers)/* || binding.isEnumConstant()*/)
 			return DLTKPluginImages.DESC_FIELD_PUBLIC;
-		if (Modifier.isProtected(modifiers))
+		if (PHPFlags.isProtected(modifiers))
 			return DLTKPluginImages.DESC_FIELD_PROTECTED;
-		if (Modifier.isPrivate(modifiers))
+		if (PHPFlags.isPrivate(modifiers))
 			return DLTKPluginImages.DESC_FIELD_PRIVATE;
 
 		return DLTKPluginImages.DESC_FIELD_DEFAULT;
@@ -145,40 +145,40 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 //	private static ImageDescriptor getInnerClassImageDescriptor(int modifiers) {
-//		if (Modifier.isPublic(modifiers))
+//		if (PHPFlags.isPublic(modifiers))
 //			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
-//		else if (Modifier.isPrivate(modifiers))
+//		else if (PHPFlags.isPrivate(modifiers))
 //			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
-//		else if (Modifier.isProtected(modifiers))
+//		else if (PHPFlags.isProtected(modifiers))
 //			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
 //		else
 //			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_DEFAULT;
 //	}
 
 //	private static ImageDescriptor getInnerInterfaceImageDescriptor(int modifiers) {
-//		if (Modifier.isPublic(modifiers))
+//		if (PHPFlags.isPublic(modifiers))
 //			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
-//		else if (Modifier.isPrivate(modifiers))
+//		else if (PHPFlags.isPrivate(modifiers))
 //			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
-//		else if (Modifier.isProtected(modifiers))
+//		else if (PHPFlags.isProtected(modifiers))
 //			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
 //		else
 //			return DLTKPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
 //	}
 
 	private static ImageDescriptor getInterfaceImageDescriptor(int modifiers) {
-//		if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers))
+//		if (PHPFlags.isPublic(modifiers) || PHPFlags.isProtected(modifiers) || PHPFlags.isPrivate(modifiers))
 			return DLTKPluginImages.DESC_OBJS_INTERFACE;
 //		else
 //			return DLTKPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
 	}
 
 	private static ImageDescriptor getMethodImageDescriptor(int modifiers) {
-		if (Modifier.isPublic(modifiers))
+		if (PHPFlags.isPublic(modifiers))
 			return DLTKPluginImages.DESC_METHOD_PUBLIC;
-		if (Modifier.isProtected(modifiers))
+		if (PHPFlags.isProtected(modifiers))
 			return DLTKPluginImages.DESC_METHOD_PROTECTED;
-		if (Modifier.isPrivate(modifiers))
+		if (PHPFlags.isPrivate(modifiers))
 			return DLTKPluginImages.DESC_METHOD_PRIVATE;
 
 		return DLTKPluginImages.DESC_METHOD_DEFAULT;

@@ -35,7 +35,7 @@ import org.eclipse.swt.graphics.Image;
 public enum ProjectOutlineGroups {
 
 	GROUP_CLASSES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.classes")),
-	GROUP_NAMESPACES(PHPPluginImages.DESC_OBJ_PHP_CLASSES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.namespaces")),
+	GROUP_NAMESPACES(PHPPluginImages.DESC_OBJ_PHP_NAMESPACES_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.namespaces")),
 	GROUP_CONSTANTS(PHPPluginImages.DESC_OBJ_PHP_CONSTANTS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.constants")),
 	GROUP_FUNCTIONS(PHPPluginImages.DESC_OBJ_PHP_FUNCTIONS_GROUP.createImage(), PHPUIMessages.getString("PHPProjectOutline.nodes.functions"));
 

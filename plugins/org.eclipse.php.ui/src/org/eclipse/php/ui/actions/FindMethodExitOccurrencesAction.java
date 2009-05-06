@@ -87,11 +87,7 @@ public class FindMethodExitOccurrencesAction extends org.eclipse.dltk.ui.actions
 			Program astRoot = ASTProvider.getASTProvider().getAST((ISourceModule) resolveEnclosingElement, SharedASTProvider.WAIT_YES, null);
 			setEnabled(astRoot != null && new MethodExitsFinder().initialize(astRoot, selection.getOffset(), selection.getLength()) == null);
 		} catch (ModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			PHPUiPlugin.log(e);
 		}
 	}
 	

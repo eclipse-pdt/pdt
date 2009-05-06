@@ -14,7 +14,7 @@
 package org.eclipse.php.internal.ui.search;
 
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
 /**
@@ -76,7 +76,7 @@ public class ImplementOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public boolean visit(MethodDeclaration methodDeclaration) {
 		IMethodBinding methodBinding = methodDeclaration.resolveMethodBinding();
-		if (methodBinding != null && !Modifier.isStatic(methodBinding.getModifiers())) {
+		if (methodBinding != null && !PHPFlags.isStatic(methodBinding.getModifiers())) {
 			IMethodBinding method = Bindings.findOverriddenMethodInHierarchy(fBinding, methodBinding);
 			if (method != null) {
 				Identifier name = methodDeclaration.getFunction().getFunctionName();

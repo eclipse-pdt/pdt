@@ -12,14 +12,8 @@
 package org.eclipse.php.internal.ui.corext;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.DoStatement;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.ForStatement;
-import org.eclipse.php.internal.core.ast.nodes.IfStatement;
-import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
-import org.eclipse.php.internal.core.ast.nodes.WhileStatement;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
+import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFlattener;
 import org.eclipse.php.internal.core.ast.visitor.ApplyAll;
 
@@ -34,7 +28,7 @@ public class ASTNodes {
 	public static final int PROBLEMS=				WARNING | ERROR;
 
 
-	private static final int CLEAR_VISIBILITY= ~(Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE);
+	private static final int CLEAR_VISIBILITY= ~(Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate);
 	
 	
 	private ASTNodes() {
