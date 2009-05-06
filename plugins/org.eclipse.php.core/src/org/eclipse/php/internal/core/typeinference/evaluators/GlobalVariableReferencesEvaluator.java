@@ -30,6 +30,8 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher;
+import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
+import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.DeclarationScope;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
@@ -96,16 +98,14 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 				if (!fileOffsets.isEmpty()) {
-					GlobalVariableDeclarationSearcher varSearcher = new GlobalVariableDeclarationSearcher(sourceModule, fileOffsets, variableName);
+					GlobalReferenceDeclSearcher varSearcher = new GlobalReferenceDeclSearcher(sourceModule, fileOffsets, variableName);
 					try {
 						moduleDeclaration.traverse(varSearcher);
 
-						Map<IContext, LinkedList<ASTNode>> contextToDeclarationMap = varSearcher.getContextToDeclarationMap();
-						Iterator<IContext> contextIt = contextToDeclarationMap.keySet().iterator();
-						while (contextIt.hasNext()) {
-							IContext c = contextIt.next();
-							for (ASTNode declaration : contextToDeclarationMap.get(c)) {
-								subGoals.add(new VariableDeclarationGoal(c, declaration));
+						DeclarationScope[] scopes = varSearcher.getScopes();
+						for (DeclarationScope s : scopes) {
+							for (Declaration decl : s.getDeclarations(variableName)) {
+								subGoals.add(new VariableDeclarationGoal(s.getContext(), decl.getNode()));
 							}
 						}
 					} catch (Exception e) {
@@ -131,38 +131,21 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class GlobalVariableDeclarationSearcher extends VariableDeclarationSearcher {
+	class GlobalReferenceDeclSearcher extends VariableDeclarationSearcher {
 
 		private final String variableName;
 		private Iterator<ISourceRange> offsetsIt;
 		private int currentStart;
 		private int currentEnd;
 		private boolean stopProcessing;
-		
 
-		public GlobalVariableDeclarationSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets, String variableName) {
+		public GlobalReferenceDeclSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets, String variableName) {
 			super(sourceModule);
 			this.variableName = variableName;
 			offsetsIt = offsets.iterator();
 			setNextRange();
 		}
 		
-		public Map<IContext, LinkedList<ASTNode>> getContextToDeclarationMap() {
-			Map<IContext, LinkedList<ASTNode>> contextToDeclarations = new HashMap<IContext, LinkedList<ASTNode>>();
-			for (IContext context : contextToDecl.keySet()) {
-				LinkedHashMap<String, LinkedList<ASTNode>> varToDeclList = contextToDecl.get(context);
-				LinkedList<ASTNode> list = varToDeclList.get(variableName);
-				if (list != null) {
-					int nullIdx;
-					while ((nullIdx = list.indexOf(null)) != -1) {
-						list.remove(nullIdx);
-					}
-					contextToDeclarations.put(context, list);
-				}
-			}
-			return contextToDeclarations;
-		}
-
 		private void setNextRange() {
 			if (offsetsIt.hasNext()) {
 				ISourceRange range = offsetsIt.next();
@@ -173,20 +156,20 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			}
 		}
 
-		protected boolean interesting(ASTNode node) {
-			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
-		}
-		
-		protected void postProcessVarAssignment(Assignment node) {
-			super.postProcessVarAssignment(node);
-			
-			Expression variable = node.getVariable();
-			if (variable instanceof VariableReference) {
-				VariableReference variableReference = (VariableReference) variable;
-				if (variableName.equals(variableReference.getName())) {
-					setNextRange();
+		protected void postProcess(Expression node) {
+			if (node instanceof Assignment) {
+				Expression variable = ((Assignment)node).getVariable();
+				if (variable instanceof VariableReference) {
+					VariableReference variableReference = (VariableReference) variable;
+					if (variableName.equals(variableReference.getName())) {
+						setNextRange();
+					}
 				}
 			}
+		}
+
+		protected boolean interesting(ASTNode node) {
+			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
 		}
 	}
 }

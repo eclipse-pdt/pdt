@@ -14,10 +14,12 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 /**
@@ -81,7 +83,8 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				}
 			}
 
-			reportVariables(reporter, arrayContext, GlobalVariablesStrategy.PHP_VARIABLES, prefix, true);
+			PHPVersion phpVersion = arrayContext.getPhpVersion();
+			reportVariables(reporter, arrayContext, PHPVariables.getVariables(phpVersion), prefix, true);
 		}
 	}
 

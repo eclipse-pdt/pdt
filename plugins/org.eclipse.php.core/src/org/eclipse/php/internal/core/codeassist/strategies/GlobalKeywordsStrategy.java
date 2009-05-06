@@ -11,8 +11,8 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.keywords.PHPKeywords.Context;
-import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords.Context;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
  * This strategy completes keywords that can be shown in a class body 

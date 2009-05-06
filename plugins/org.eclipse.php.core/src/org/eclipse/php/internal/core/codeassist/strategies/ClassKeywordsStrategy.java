@@ -14,8 +14,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.keywords.PHPKeywords.Context;
-import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords.Context;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**

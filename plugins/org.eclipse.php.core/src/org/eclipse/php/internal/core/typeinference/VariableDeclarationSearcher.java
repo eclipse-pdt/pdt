@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
 import java.util.*;
@@ -9,7 +19,6 @@ import org.eclipse.dltk.ast.declarations.TypeDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.SimpleReference;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.ast.statements.Block;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ti.IContext;
@@ -17,260 +26,433 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
 
 /**
- * This abstract visitor finds global/local variable declarations 
+ * This visitor builds local variable declarations tree for specified file.
+ * The resulting tree contains variable declarations list (one per {@link DeclarationScope}),
+ * where the list entries are possible variable declarations. Examples:
+ * <p>
+ * 1. Here are two possible declarations for "$a":<br/>
+ * <pre>
+ * $a = "some";
+ * if (someCondition()) {
+ * 	$a = "other";
+ * }
+ * </pre>
+ * <br/>
+ * </p>
+ * 
  * @author michael
- *
  */
 public class VariableDeclarationSearcher extends ContextFinder {
 
 	/**
-	 * The format of this map is the following:
-	 * <pre>
-	 * { scope => { variableName => (decl1, decl2 ...) } }   
-	 * </pre>
-	 * Where decl1, decl2 are variable declarations according to block structure level (if, switch, for, etc...) 
+	 * Scope variable declarations map
 	 */
-	protected Map<IContext, LinkedHashMap<String, LinkedList<ASTNode>>> contextToDecl = new HashMap<IContext, LinkedHashMap<String, LinkedList<ASTNode>>>();
-
+	private Map<IContext, DeclarationScope> scopes = new HashMap<IContext, DeclarationScope>();
+	
 	/**
 	 * Stack of processed AST nodes
 	 */
 	protected Stack<ASTNode> nodesStack = new Stack<ASTNode>();
-
-	protected int blockLevel = 0;
-
+	
 	public VariableDeclarationSearcher(ISourceModule sourceModule) {
 		super(sourceModule);
 	}
-
-	public IContext getContext() {
-		return null;
+	
+	/**
+	 * Override to invoke additional processing on this kind of node
+	 * @param node
+	 */
+	protected void postProcess(ModuleDeclaration node) {
 	}
 
+	public final boolean visit(ModuleDeclaration node) throws Exception {
+		if (!isInteresting(node)) {
+			return false;
+		}
+		
+		postProcess(node);
+		
+		return super.visit(node);
+	}
+
+	public final boolean endvisit(ModuleDeclaration node) throws Exception {
+		return super.endvisit(node);
+	}
+	
 	/**
-	 * Returns whether to proceed with processing of this node
+	 * Override to invoke additional processing on this kind of node
+	 * @param node
+	 */
+	protected void postProcess(TypeDeclaration node) {
+	}
+
+	public final boolean visit(TypeDeclaration node) throws Exception {
+		if (!isInteresting(node)) {
+			return false;
+		}
+		
+		postProcess(node);
+		
+		return super.visit(node);
+	}
+
+	public final boolean endvisit(TypeDeclaration node) throws Exception {
+		return super.endvisit(node);
+	}
+	
+	/**
+	 * Override to invoke additional processing on this kind of node
+	 * @param node
+	 */
+	protected void postProcess(MethodDeclaration node) {
+	}
+
+	public final boolean visit(MethodDeclaration node) throws Exception {
+		if (!isInteresting(node)) {
+			return false;
+		}
+		
+		postProcess(node);
+		
+		return super.visit(node);
+	}
+
+	public final boolean endvisit(MethodDeclaration node) throws Exception {
+		return super.endvisit(node);
+	}
+	
+	/**
+	 * Override to invoke additional processing on this kind of node
+	 * @param node
+	 */
+	protected void postProcess(Expression node) {
+	}
+
+	public final boolean visit(Expression node) throws Exception {
+		if (!isInteresting(node)) {
+			return false;
+		}
+		ASTNode parent = nodesStack.peek();
+		if (isConditional(parent)) {
+			getScope().enterInnerBlock((Statement) parent);
+		}
+		
+		if (node instanceof Assignment) {
+			Expression variable = ((Assignment)node).getVariable();
+			if (variable instanceof VariableReference) {
+				VariableReference varReference = (VariableReference) variable;
+				getScope().addDeclaration(varReference.getName(), node);
+			}
+		}
+		
+		postProcess(node);
+		
+		return super.visit(node);
+	}
+	
+	public final boolean endvisit(Expression node) throws Exception {
+		return super.endvisit(node);
+	}
+	
+	/**
+	 * Override to invoke additional processing on this kind of node
+	 * @param node
+	 */
+	protected void postProcess(Statement node) {
+	}
+
+	public final boolean visit(Statement node) throws Exception {
+		if (!isInteresting(node)) {
+			return false;
+		}
+
+		ASTNode parent = nodesStack.peek();
+		if (isConditional(parent)) {
+			getScope().enterInnerBlock((Statement) parent);
+		}
+		
+		if (node instanceof GlobalStatement) {
+			GlobalStatement globalStatement = (GlobalStatement) node;
+			for (Expression variable : globalStatement.getVariables()) {
+				if (variable instanceof VariableReference) {
+					VariableReference varReference = (VariableReference) variable;
+					getScope().addDeclaration(varReference.getName(), globalStatement);
+				}
+			}
+		}
+		else if (node instanceof FormalParameter) {
+			FormalParameter parameter = (FormalParameter) node;
+			getScope().addDeclaration(parameter.getName(), parameter);
+		}
+		else if (node instanceof CatchClause) {
+			CatchClause clause = (CatchClause) node;
+			VariableReference varReference = clause.getVariable();
+			getScope().addDeclaration(varReference.getName(), clause);
+		}
+		else if (node instanceof ForEachStatement) {
+			ForEachStatement foreachStatement = (ForEachStatement) node;
+			if (foreachStatement.getValue() instanceof SimpleReference) {
+				String variableName = ((SimpleReference) foreachStatement.getValue()).getName();
+				getScope().addDeclaration(variableName, foreachStatement);
+			}
+			if (foreachStatement.getKey() instanceof SimpleReference) {
+				String variableName = ((SimpleReference) foreachStatement.getKey()).getName();
+				getScope().addDeclaration(variableName, foreachStatement);
+			}
+		}
+		
+		postProcess(node);
+		
+		return super.visit(node);
+	}
+	
+	public final boolean endvisit(Statement node) throws Exception {
+		if (isConditional(node)) {
+			getScope().exitInnerBlock();
+		}
+		return super.endvisit(node);
+	}
+	
+	/**
+	 * Override to invoke additional processing on this kind of node
+	 * @param node
+	 */
+	protected void postProcessGeneral(ASTNode node) {
+	}
+
+	public final boolean visitGeneral(ASTNode node) throws Exception {
+		nodesStack.push(node);
+		
+		postProcessGeneral(node);
+		
+		return super.visitGeneral(node);
+	}
+
+	public final void endvisitGeneral(ASTNode node) throws Exception {
+		nodesStack.pop();
+		super.endvisitGeneral(node);
+	}
+	
+	/**
+	 * Returns whether the sub-tree of the given node should be processed.
+	 * By default it well process all nodes.
 	 * @param node
 	 * @return
 	 */
-	protected boolean interesting(ASTNode node) {
+	protected boolean isInteresting(ASTNode node) {
 		return true;
 	}
 
-	private void increaseBlockLevel() {
-		++blockLevel;
-	}
-
-	private void decreaseBlockLevel() {
-		--blockLevel;
-	}
-
-	private void insertDeclarationAfterBlockLevel(LinkedList<ASTNode> declList, ASTNode decl) {
-		// remove all declarations of this variable from the inner blocks
-		while (declList.size() > blockLevel) {
-			declList.removeLast();
-		}
-		while (declList.size() < blockLevel) {
-			declList.addLast(null);
-		}
-		declList.addLast(decl);
-	}
-
-	protected void postProcessVarAssignment(Assignment node) {
-	}
-
 	/**
-	 * Returns reference to the declarations list for given variable.
-	 * Current scope is used.
-	 * @param variableName
+	 * Checks whether the given AST node makes possible conditional branch
+	 * in variables declaration flow.
+	 * @param node
 	 * @return
 	 */
-	protected LinkedList<ASTNode> getDeclList(String variableName) {
-		return getDeclList(contextStack.peek(), variableName);
+	protected boolean isConditional(ASTNode node) {
+		return node instanceof CatchClause
+			|| node instanceof IfStatement
+			|| node instanceof ForStatement
+			|| node instanceof ForEachStatement
+			|| node instanceof SwitchCase
+			|| node instanceof WhileStatement;
+	}
+	
+	/**
+	 * Returns declaration scope for current context
+	 * @return 
+	 */
+	protected DeclarationScope getScope() {
+		return getScope(contextStack.peek());
 	}
 
 	/**
-	 * Returns reference to the declarations list for given variable and scope
+	 * Returns declaration scope for given context
 	 * @param context
-	 * @param variableName
+	 * @return 
+	 */
+	protected DeclarationScope getScope(IContext context) {
+		if (!scopes.containsKey(context)) {
+			scopes.put(context, new DeclarationScope(context));
+		}
+		return scopes.get(context);
+	}
+	
+	/**
+	 * Returns all declaration scopes
 	 * @return
 	 */
-	protected LinkedList<ASTNode> getDeclList(IContext context, String variableName) {
-		LinkedHashMap<String, LinkedList<ASTNode>> declMap = contextToDecl.get(context);
-		LinkedList<ASTNode> decl;
-		if (!declMap.containsKey(variableName)) {
-			declMap.put(variableName, decl = new LinkedList<ASTNode>());
-		} else {
-			decl = declMap.get(variableName);
+	public DeclarationScope[] getScopes() {
+		Collection<DeclarationScope> values = scopes.values();
+		return (DeclarationScope[]) values.toArray(new DeclarationScope[values.size()]);
+	}
+	
+	/**
+	 * Returns all declarations for the specified variable in the given context
+	 */
+	public Declaration[] getDeclarations(String varName, IContext context) {
+		return getScope(context).getDeclarations(varName);
+	}
+	
+	/**
+	 * This is a container for variable declaration
+	 * @author michael
+	 */
+	public class Declaration {
+		
+		private boolean global;
+		private ASTNode declNode;
+		
+		public Declaration(boolean global, ASTNode declNode) {
+			this.global = global;
+			this.declNode = declNode;
 		}
-		return decl;
+
+		/**
+		 * Whether this declaration actually belongs to global scope
+		 * - global $var was specified earlier.
+		 */
+		public boolean isGlobal() {
+			return global;
+		}
+
+		/**
+		 * Sets whether this declaration actually belongs to global scope
+		 * - global $var was specified earlier.
+		 */
+		public void setGlobal(boolean global) {
+			this.global = global;
+		}
+
+		/**
+		 * Returns the declaration node itself.
+		 */
+		public ASTNode getNode() {
+			return declNode;
+		}
+
+		/**
+		 * Sets the declaration node itself.
+		 */
+		public void setNode(ASTNode declNode) {
+			this.declNode = declNode;
+		}
 	}
 
-	public boolean visit(Assignment node) throws Exception {
-		if (!interesting(node)) {
-			return visitGeneral(node);
+	/**
+	 * Variable declaration scope. Each scope contains mapping between
+	 * variable name and its possible declarations. 
+	 * @author michael
+	 */
+	public class DeclarationScope {
+
+		private Map<String, LinkedList<Declaration>> decls = new HashMap<String, LinkedList<Declaration>>();
+		private IContext context;
+		private Stack<Statement> innerBlocks = new Stack<Statement>();
+
+		public DeclarationScope(IContext context) {
+			this.context = context;
 		}
-		Expression variable = node.getVariable();
-		if (variable instanceof VariableReference) {
-
-			VariableReference variableReference = (VariableReference) variable;
-			LinkedList<ASTNode> declList = getDeclList(variableReference.getName());
-			insertDeclarationAfterBlockLevel(declList, node);
-
-			postProcessVarAssignment(node);
+		
+		/**
+		 * Returns context associated with this scope
+		 * @return
+		 */
+		public IContext getContext() {
+			return context;
 		}
-		return visitGeneral(node);
-	}
 
-	public boolean visit(Block s) throws Exception {
-		ASTNode parent = nodesStack.peek();
-		if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-			increaseBlockLevel();
-			chackForDeclarationInParent(parent);
+		/**
+		 * This must be called when entering inner conditional block.
+		 */
+		public void enterInnerBlock(Statement s) {
+			if (!innerBlocks.isEmpty() && innerBlocks.peek() == s) {
+				return;
+			}
+			innerBlocks.push(s);
 		}
-		return visitGeneral(s);
-	}
 
-	public boolean visit(Statement node) throws Exception {
-		if (!interesting(node)) {
-			return visitGeneral(node);
+		/**
+		 * This must be called when exiting inner conditional block.
+		 */
+		public void exitInnerBlock() {
+			innerBlocks.pop();
 		}
-		if (node instanceof GlobalStatement) {
-			GlobalStatement globalStatement = (GlobalStatement) node;
-
-			for (Expression variable : globalStatement.getVariables()) {
-				if (variable instanceof VariableReference) {
-
-					VariableReference variableReference = (VariableReference) variable;
-					LinkedList<ASTNode> declList = getDeclList(variableReference.getName());
-
-					// remove all declarations, since global statement overrides them
-					for (int i = 0; i < declList.size(); ++i) {
-						declList.set(i, null);
+		
+		public int getInnerBlockLevel() {
+			return innerBlocks.size();
+		}
+		
+		/**
+		 * Returns all possible variable declarations
+		 * for the given variable name in current scope.
+		 * @param varName
+		 */
+		public Declaration[] getDeclarations(String varName) {
+			List<Declaration> result = new LinkedList<Declaration>();
+			LinkedList<Declaration> varDecls = decls.get(varName);
+			if (varDecls != null) {
+				for (Declaration decl : varDecls) {
+					if (decl != null) {
+						result.add(decl);
 					}
-					return visitGeneral(node);
 				}
 			}
-		} else if (node instanceof FormalParameter) {
-			FormalParameter parameter = (FormalParameter) node;
-			LinkedList<ASTNode> declList = getDeclList(parameter.getName());
-			declList.clear();
-			declList.addLast(node);
-			return visitGeneral(node);
+			return (Declaration[]) result.toArray(new Declaration[result.size()]);
 		}
-
-		ASTNode parent = nodesStack.peek();
-		if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-			increaseBlockLevel();
-			chackForDeclarationInParent(parent);
-		}
-		return visitGeneral(node);
-	}
-
-	public boolean visit(Expression node) throws Exception {
-		if (!interesting(node)) {
-			return visitGeneral(node);
-		}
-		if (node instanceof Assignment) {
-			return visit((Assignment) node);
-		}
-		if (node instanceof Block) {
-			return visit((Block) node);
-		}
-		ASTNode parent = nodesStack.peek();
-		if (parent instanceof ConditionalExpression) {
-			increaseBlockLevel();
-			chackForDeclarationInParent(parent);
-		}
-		return visitGeneral(node);
-	}
-
-	public boolean endvisit(Block s) throws Exception {
-		ASTNode parent = nodesStack.peek();
-		if (parent instanceof CatchClause || parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-			decreaseBlockLevel();
-		}
-		endvisitGeneral(s);
-		return true;
-	}
-
-	public boolean endvisit(Statement s) throws Exception {
-		ASTNode parent = nodesStack.peek();
-		if (parent instanceof IfStatement || parent instanceof ForStatement || parent instanceof ForEachStatement || parent instanceof SwitchCase || parent instanceof WhileStatement) {
-			decreaseBlockLevel();
-		}
-		endvisitGeneral(s);
-		return true;
-	}
-
-	public boolean endvisit(Expression e) throws Exception {
-		if (e instanceof Block) {
-			return endvisit((Block) e);
-		}
-		ASTNode parent = nodesStack.peek();
-		if (parent instanceof ConditionalExpression) {
-			decreaseBlockLevel();
-		}
-		endvisitGeneral(e);
-		return true;
-	}
-
-	public boolean visit(TypeDeclaration node) throws Exception {
-		boolean visit = super.visit(node);
-		if (!(node instanceof NamespaceDeclaration)) {
-			contextToDecl.put(contextStack.peek(), new LinkedHashMap<String, LinkedList<ASTNode>>());
-		}
-		return visit;
-	}
-
-	public boolean visit(MethodDeclaration node) throws Exception {
-		boolean visit = super.visit(node);
-		contextToDecl.put(contextStack.peek(), new LinkedHashMap<String, LinkedList<ASTNode>>());
-		return visit;
-	}
-
-	public boolean visit(ModuleDeclaration node) throws Exception {
-		boolean visit = super.visit(node);
-		contextToDecl.put(contextStack.peek(), new LinkedHashMap<String, LinkedList<ASTNode>>());
-		return visit;
-	}
-
-	public boolean visitGeneral(ASTNode node) throws Exception {
-		nodesStack.push(node);
-		return interesting(node);
-	}
-
-	public void endvisitGeneral(ASTNode node) throws Exception {
-		nodesStack.pop();
-	}
-
-	protected void chackForDeclarationInParent(ASTNode parent) {
-		if (parent instanceof IfStatement || parent instanceof WhileStatement) {
-			Expression condition = null;
-			if (parent instanceof IfStatement) {
-				condition = ((IfStatement) parent).getCondition();
-			} else {
-				condition = ((WhileStatement) parent).getCondition();
+		
+		/**
+		 * Adds possible variable declaration
+		 * @param varName Variable name
+		 * @param declNode AST declaration statement node
+		 */
+		public void addDeclaration(String varName, ASTNode declNode) {
+			LinkedList<Declaration> varDecls = decls.get(varName);
+			if (varDecls == null) {
+				varDecls = new LinkedList<Declaration>();
+				decls.put(varName, varDecls);
 			}
-			if (condition instanceof InstanceOfExpression) {
-				InstanceOfExpression i = (InstanceOfExpression) condition;
-				Expression variable = i.getExpr();
-				if (variable instanceof VariableReference) {
-					VariableReference variableReference = (VariableReference) variable;
-					LinkedList<ASTNode> declList = getDeclList(variableReference.getName());
-					insertDeclarationAfterBlockLevel(declList, i.getClassName());
+			
+			int level = innerBlocks.size();
+			
+			// skip all inner conditional blocks statements, since we've reached a re-declaration here
+			while (varDecls.size() > level + 1) {
+				varDecls.removeLast();
+			}
+
+			// preserve place for declarations in outer conditional blocks
+			// in case we haven't reached any declaration untill now
+			while (varDecls.size() < level) {
+				varDecls.addLast(null);
+			}
+
+			if (varDecls.size() > level) {
+				Declaration decl = varDecls.get(level);
+				if (decl != null) {
+					// replace existing declaration with a new one (leave 'isGlobal' flag the same)
+					decl.setNode(declNode);
+					return;
 				}
 			}
-		} else if (parent instanceof CatchClause) {
-			CatchClause catchClause = (CatchClause) parent;
-			LinkedList<ASTNode> declList = getDeclList(catchClause.getVariable().getName());
-			insertDeclarationAfterBlockLevel(declList, catchClause);
-		} else if (parent instanceof ForEachStatement) {
-			ForEachStatement foreachStatement = (ForEachStatement) parent;
-			if (foreachStatement.getValue() instanceof SimpleReference) {
-				String variableName = ((SimpleReference) foreachStatement.getValue()).getName();
-				LinkedList<ASTNode> declList = getDeclList(variableName);
-				insertDeclarationAfterBlockLevel(declList, foreachStatement);
+			// add new declaration
+			varDecls.addLast(new Declaration(declNode instanceof GlobalStatement, declNode));
+		}
+
+		public String toString() {
+			StringBuilder buf = new StringBuilder("Variable Declarations (").append(context).append("): \n\n");
+			Iterator<String> i = decls.keySet().iterator();
+			while (i.hasNext()) {
+				String varName = i.next();
+				buf.append(varName).append(" => { \n\n");
+				LinkedList<Declaration> varDecls = decls.get(varName);
+				if (varDecls != null) {
+					for (Declaration declNode : varDecls) {
+						buf.append(declNode.toString()).append(", \n\n");
+					}
+				}
+				buf.append("}, \n\n");
 			}
+			return buf.toString();
 		}
 	}
 }

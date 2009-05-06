@@ -28,10 +28,11 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
 import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
+import org.eclipse.php.internal.core.compiler.ast.nodes.InstanceOfExpression;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
@@ -72,22 +73,30 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 			if (context instanceof ISourceModuleContext) {
 				ISourceModuleContext typedContext = (ISourceModuleContext) context;
 				ASTNode node = /*(context instanceof MethodContext) ? ((MethodContext) context).getMethodNode() :*/ typedContext.getRootNode();
-				VariableDeclarationSearcher varDecSearcher = new VariableDeclarationSearcher(typedContext.getSourceModule(), variableReference);
+				LocalReferenceDeclSearcher varDecSearcher = new LocalReferenceDeclSearcher(typedContext.getSourceModule(), variableReference);
 				node.traverse(varDecSearcher);
 
 				List<IGoal> subGoals = new LinkedList<IGoal>();
 
-				LinkedList<ASTNode> declarations = varDecSearcher.getDeclarations();
-				if (varDecSearcher.needsMergingWithGlobalScope() || (declarations.isEmpty() && context.getClass() == FileContext.class)) {
+				Declaration[] decls = varDecSearcher.getDeclarations();
+				boolean mergeWithGlobalScope = false;
+				for (int i = 0; i < decls.length; ++i) {
+					Declaration decl = decls[i];
+					if (decl.getNode() instanceof GlobalStatement) {
+						mergeWithGlobalScope = true;
+					} else {
+						ASTNode declNode = decl.getNode();
+						if (declNode instanceof ForEachStatement) {
+							subGoals.add(new ForeachStatementGoal(context, ((ForEachStatement) declNode).getExpression()));
+						}
+						else {
+							subGoals.add(new VariableDeclarationGoal(context, declNode));
+						}
+					}
+				}
+				if (mergeWithGlobalScope || (decls.length == 0 && context.getClass() == FileContext.class)) {
 					// collect all global variables, and merge results with existing declarations
 					subGoals.add(new GlobalVariableReferencesGoal(context, variableReference.getName()));
-				}
-				for (ASTNode declaration : declarations) {
-					if (declaration instanceof ForEachStatement) {
-						subGoals.add(new ForeachStatementGoal(context, ((ForEachStatement) declaration).getExpression()));
-					} else {
-						subGoals.add(new VariableDeclarationGoal(context, declaration));
-					}
 				}
 				return subGoals.toArray(new IGoal[subGoals.size()]);
 			}
@@ -111,80 +120,49 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class VariableDeclarationSearcher extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
+	class LocalReferenceDeclSearcher extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
 
 		private final String variableName;
 		private final int variableOffset;
-		private int seenGlobal = 0;
-		private boolean mergeWithGlobalScope;
-		private int variableLevel;
 		private IContext variableContext;
+		private int variableLevel;
 
-		public VariableDeclarationSearcher(ISourceModule sourceModule, VariableReference variableReference) {
+		public LocalReferenceDeclSearcher(ISourceModule sourceModule, VariableReference variableReference) {
 			super(sourceModule);
 			variableName = variableReference.getName();
 			variableOffset = variableReference.sourceStart();
 		}
 
-		public LinkedList<ASTNode> getDeclarations() {
-			LinkedList<ASTNode> declList = getDeclList(variableContext, variableName);
-			
-			int nullIdx;
-			// Remove all outer level declarations
-			for (int i = 0; i < variableLevel; ++i) {
-				declList.set(i, null);
+		public Declaration[] getDeclarations() {
+			Declaration[] declarations = getScope(variableContext).getDeclarations(variableName);
+			if (variableLevel > 0 && variableLevel < declarations.length) {
+				Declaration[] newDecls = new Declaration[declarations.length - variableLevel];
+				System.arraycopy(declarations, variableLevel, newDecls, 0, newDecls.length);
+				declarations = newDecls;
 			}
-			while ((nullIdx = declList.indexOf(null)) != -1) {
-				declList.remove(nullIdx);
-			}
-			return declList;
+			return declarations;
 		}
 
-		public boolean needsMergingWithGlobalScope() {
-			return mergeWithGlobalScope;
-		}
-
-		protected void postProcessVarAssignment(Assignment node) {
-			super.postProcessVarAssignment(node);
-
-			Expression variable = node.getVariable();
-			if (variable instanceof VariableReference) {
-				VariableReference variableReference = (VariableReference) variable;
-				if (variableName.equals(variableReference.getName())) {
-					if (blockLevel <= seenGlobal) { // if current level is lower than one where global statement has been seen - all global vars where overriden
-						mergeWithGlobalScope = false;
+		protected void postProcess(Expression node) {
+			if (node instanceof InstanceOfExpression) {
+				InstanceOfExpression expr = (InstanceOfExpression)node;
+				if (expr.getExpr() instanceof VariableReference) {
+					VariableReference varReference = (VariableReference)expr.getExpr();
+					if (variableName.equals(varReference.getName())) {
+						getScope().addDeclaration(variableName, expr.getClassName());
 					}
 				}
 			}
-		}
-
-		public boolean visit(Statement s) throws Exception {
-			boolean visit = super.visit(s);
-			if (!visit) {
-				return false;
-			}
-			if (s instanceof GlobalStatement) {
-				GlobalStatement globalStatement = (GlobalStatement) s;
-				for (Expression variable : globalStatement.getVariables()) {
-					if (variable instanceof VariableReference) {
-						VariableReference variableReference = (VariableReference) variable;
-						if (variableReference.getName().equals(variableName)) {
-							seenGlobal = blockLevel;
-							mergeWithGlobalScope = true;
-						}
-					}
-				}
-			}
-			return visit;
 		}
 		
-		public boolean visitGeneral(ASTNode node) throws Exception {
-			boolean visit = super.visitGeneral(node);
+		protected void postProcessGeneral(ASTNode node) {
 			if (node.sourceStart() == variableOffset) {
-				variableLevel = blockLevel;
 				variableContext = contextStack.peek();
+				variableLevel = getScope(variableContext).getInnerBlockLevel();
 			}
-			return visit;
+		}
+
+		protected void postProcess(Statement node) {
 		}
 
 		protected boolean interesting(ASTNode node) {

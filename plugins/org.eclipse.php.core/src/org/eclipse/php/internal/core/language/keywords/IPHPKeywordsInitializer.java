@@ -8,11 +8,11 @@
  * Contributors:
  *   Zend and IBM - Initial implementation
  *******************************************************************************/
-package org.eclipse.php.internal.core.keywords;
+package org.eclipse.php.internal.core.language.keywords;
 
 import java.util.Collection;
 
-import org.eclipse.php.internal.core.keywords.PHPKeywords.KeywordData;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
  * This interface initializes a PHP keywords database with keywords for specific PHP language  
