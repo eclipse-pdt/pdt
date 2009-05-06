@@ -62,12 +62,12 @@ public class PhpElementConciliator {
 
 		ASTNode parent = null;
 		// check if it is an identifier
-		if (locateNode.getType() == ASTNode.IDENTIFIER && ((Identifier) locateNode).getParent() instanceof Variable) {
+		final int type = locateNode.getType();
+		if (type == ASTNode.IDENTIFIER && ((Identifier) locateNode).getParent() instanceof Variable) {
 			parent = (Variable) ((Identifier) locateNode).getParent();
 			parent = parent.getParent();
-
-		} else if (locateNode.getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
-			parent = (SingleFieldDeclaration) locateNode;
+		} else if (type == ASTNode.SINGLE_FIELD_DECLARATION || type == ASTNode.FIELD_DECLARATION || type == ASTNode.METHOD_DECLARATION) {
+			parent = locateNode;
 		} else {
 			parent = locateNode.getParent();
 		}
@@ -89,6 +89,10 @@ public class PhpElementConciliator {
 			if (parent.getParent().getType() == ASTNode.FIELD_DECLARATION || parent.getParent().getType() == ASTNode.SINGLE_FIELD_DECLARATION) {
 				return true;
 			}
+		}
+
+		if (parent.getType() == ASTNode.FIELD_DECLARATION || parent.getType() == ASTNode.METHOD_DECLARATION) {
+			return true;
 		}
 
 		if (parent.getType() == ASTNode.VARIABLE) {
@@ -117,12 +121,21 @@ public class PhpElementConciliator {
 	 */
 	private static boolean isConstant(ASTNode locateNode) {
 		assert locateNode != null;
-
+		Scalar scalar = null;
 		// check if it is an identifier
 		if (locateNode.getType() != ASTNode.SCALAR) {
-			return false;
+			if (locateNode.getType() == ASTNode.IDENTIFIER && "define".equals(((Identifier) locateNode).getName())) {
+				FunctionInvocation inv = (FunctionInvocation) locateNode.getParent().getParent();
+				List<Expression> parameters = inv.parameters();
+				if (parameters != null && parameters.size() > 0) {
+					scalar = (Scalar) parameters.get(0);
+				}
+			} else {
+				return false;
+			}
+		} else {
+			scalar = (Scalar) locateNode;
 		}
-		final Scalar scalar = (Scalar) locateNode;
 
 		// if it is not a dollared variable - it is not a global one
 		if (scalar.getScalarType() != Scalar.TYPE_STRING || scalar.getStringValue() == null) {
@@ -137,7 +150,11 @@ public class PhpElementConciliator {
 		}
 
 		// check if it is part of define
-		final ASTNode previous = locateNode.getParent();
+		ASTNode previous = locateNode.getParent();
+		if (previous.getType() == ASTNode.FUNCTION_NAME) {
+			previous = previous.getParent();
+		}
+
 		if (previous.getType() != ASTNode.FUNCTION_INVOCATION) {
 			return false;
 		}
@@ -377,16 +394,21 @@ public class PhpElementConciliator {
 	 */
 	private static boolean isFunction(ASTNode locateNode) {
 		assert locateNode != null;
+		ASTNode parent = null;
+		Identifier targetIdentifier = null;
 
-		// check if it is an identifier
-		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+		if (locateNode.getType() == ASTNode.FUNCTION_DECLARATION) {
+			parent = ((FunctionDeclaration) locateNode);
+			targetIdentifier = ((FunctionDeclaration) locateNode).getFunctionName();
+		} else if (locateNode.getType() == ASTNode.IDENTIFIER && !"define".equals(((Identifier) locateNode).getName())) {
+			targetIdentifier = (Identifier) locateNode;
+			parent = targetIdentifier.getParent();
+		} else {
 			return false;
 		}
-		final Identifier targetIdentifier = (Identifier) locateNode;
 
 		// check if it is a function
-		final ASTNode parent = targetIdentifier.getParent();
-		if (parent.getType() != ASTNode.FUNCTION_DECLARATION && parent.getType() != ASTNode.FUNCTION_NAME) {
+		if (parent.getType() != ASTNode.FUNCTION_DECLARATION && parent.getType() != ASTNode.FUNCTION_NAME || parent.getParent().getType() == ASTNode.METHOD_DECLARATION) {
 			return false;
 		}
 
