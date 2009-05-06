@@ -25,7 +25,8 @@
 		<ant dir="${antfile.dir}/highlighting/php4" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php5" antfile="generateHighlightingScanner.xml" />
 		<ant dir="${antfile.dir}/highlighting/php53" antfile="generateHighlightingScanner.xml" />
-		<ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" />
+		<!-- Disabled automatic generation, since JFlex 1.2.2 is not available for download -->
+		<!-- <ant dir="${antfile.dir}/highlighting/" antfile="generatePHPTokenizer.xml" /> -->
 		
 	</target>
 	

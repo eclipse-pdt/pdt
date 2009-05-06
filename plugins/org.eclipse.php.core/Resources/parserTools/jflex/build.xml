@@ -1,7 +1,7 @@
 <project name="Downloading JFlex from www.jflex.de" default="getJFlexJar">
 	
 	<target name="init">
-		<property name="jflexVersion" value="1.4.3" />
+		<property name="jflexVersion" value="1.4.1" />
 		<property name="jflex.work.dir" value="${java.io.tmpdir}/PDT_JFlex_files"/>
 		<mkdir dir="${jflex.work.dir}" />
 		<property name="jflexJar" value="${jflex.work.dir}/jflex-${jflexVersion}/lib/JFlex.jar" />
