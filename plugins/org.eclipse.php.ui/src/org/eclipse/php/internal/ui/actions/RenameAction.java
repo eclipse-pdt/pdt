@@ -16,6 +16,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.internal.core.documentModel.dom.ElementImplForPhp;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.ui.*;
 
@@ -33,15 +34,14 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 	public void init(IWorkbenchWindow window) {
 		if (window != null) {
 
-			final IPHPActionDelegator renameActionDelegate = PHPActionDelegatorRegistry.getActionDelegator(RENAME_ELEMENT_ACTION_ID);
-			if (renameActionDelegate == null) {
+			init();
+			if (fRenamePHPElement == null) {
 				IWorkbenchPage page = window.getActivePage();
 				if (page != null) {
 					if (page.getActivePart() != null)
 						resourceAction = new RenameResourceAction(page.getActivePart().getSite());
 				}
 			} else {
-				fRenamePHPElement = renameActionDelegate;
 				if (fRenamePHPElement instanceof IWorkbenchWindowActionDelegate) {
 					((IWorkbenchWindowActionDelegate) fRenamePHPElement).init(window);
 				}
@@ -50,9 +50,12 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 
 	}
 
+	private void init() {
+		fRenamePHPElement = PHPActionDelegatorRegistry.getActionDelegator(RENAME_ELEMENT_ACTION_ID);
+	}
+
 	public void run(IAction action) {
 		if (resourceAction != null) {
-
 			if (!selection.isEmpty()) {
 				Object object = ((IStructuredSelection) selection).getFirstElement();
 				IResource resource = null;
@@ -62,6 +65,10 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 
 				if (object instanceof IResource) {
 					resource = (IResource) object;
+				}
+
+				if (object instanceof ElementImplForPhp) {
+					resource = ((ElementImplForPhp) object).getModelElement().getResource();
 				}
 
 				if (resource != null) {
@@ -87,9 +94,13 @@ public class RenameAction implements IWorkbenchWindowActionDelegate, IEditorActi
 	}
 
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		if (targetEditor != null && resourceAction == null) {
+		if (fRenamePHPElement == null) {
+			init();
+		}
+		if (targetEditor != null && resourceAction == null && fRenamePHPElement == null) {
 			resourceAction = new RenameResourceAction(targetEditor.getSite());
 		}
+		
 		if (fRenamePHPElement instanceof IEditorActionDelegate) {
 			((IEditorActionDelegate) fRenamePHPElement).setActiveEditor(action, targetEditor);
 		}

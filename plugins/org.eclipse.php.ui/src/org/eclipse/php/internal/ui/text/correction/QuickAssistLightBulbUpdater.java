@@ -24,6 +24,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
+import org.eclipse.php.internal.ui.compare.MergeSourceViewer;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
 import org.eclipse.php.internal.ui.viewsupport.ISelectionListenerWithAST;
 import org.eclipse.php.internal.ui.viewsupport.SelectionListenerWithASTManager;
@@ -113,11 +114,13 @@ public class QuickAssistLightBulbUpdater {
 				doSelectionChanged(selection.getOffset(), selection.getLength(), astRoot);
 			}
 		};
-		SelectionListenerWithASTManager.getDefault().addListener(fEditor, fListener);
+		if (fEditor != null) {
+			SelectionListenerWithASTManager.getDefault().addListener(fEditor, fListener);
+		}
 	}
 
 	private void uninstallSelectionListener() {
-		if (fListener != null) {
+		if (fListener != null && fEditor!=null) {
 			SelectionListenerWithASTManager.getDefault().removeListener(fEditor, fListener);
 			fListener= null;
 		}
@@ -175,19 +178,35 @@ public class QuickAssistLightBulbUpdater {
 	}
 
 	private ISourceModule getCompilationUnit() {
-		ISourceModule elem = DLTKUIPlugin.getEditorInputModelElement(fEditor.getEditorInput());
-		if (elem instanceof ISourceModule) {
-			return (ISourceModule) elem;
+		if (fEditor != null) {
+			ISourceModule elem = DLTKUIPlugin.getEditorInputModelElement(fEditor.getEditorInput());
+			if (elem instanceof ISourceModule) {
+				return (ISourceModule) elem;
+			}
 		}
 		return null;
 	}
 
 	private IAnnotationModel getAnnotationModel() {
-		return DLTKUIPlugin.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		if (fEditor != null) {
+			return DLTKUIPlugin.getDocumentProvider().getAnnotationModel(fEditor.getEditorInput());
+		} else {
+			if (fViewer instanceof MergeSourceViewer) {
+				return ((MergeSourceViewer) fViewer).getAnnotationModel();
+			}
+			return null;
+		}
 	}
 
 	private IDocument getDocument() {
-		return DLTKUIPlugin.getDocumentProvider().getDocument(fEditor.getEditorInput());
+		if (fEditor != null) {
+			return DLTKUIPlugin.getDocumentProvider().getDocument(fEditor.getEditorInput());
+		} else {
+			if (fViewer instanceof MergeSourceViewer) {
+				return ((MergeSourceViewer) fViewer).getDocument();
+			}
+			return null;
+		}
 	}
 
 	private void doSelectionChanged(int offset, int length, Program astRoot) {
