@@ -32,18 +32,32 @@ public class VariableBinding implements IVariableBinding {
 	private static final int VALID_MODIFIERS = Modifiers.AccPublic | Modifiers.AccProtected | Modifiers.AccPrivate | Modifiers.AccDefault | Modifiers.AccConst | Modifiers.AccStatic | Modifiers.AccGlobal;
 
 	private final BindingResolver resolver;
-	private final IField modelElement;
+	private final IMember modelElement;
 	private boolean isFakeField;
 
 	private ITypeBinding declaringClassTypeBinding;
+	private int id;
+
+	private Variable varialbe;
+
+	public Variable getVarialbe() {
+		return varialbe;
+	}
 
 	/**
 	 * 
 	 */
-	public VariableBinding(BindingResolver resolver, IField modelElement) {
+	public VariableBinding(BindingResolver resolver, IMember modelElement) {
 		this.resolver = resolver;
 		this.modelElement = modelElement;
 		this.isFakeField = modelElement instanceof FakeField;
+	}
+
+	public VariableBinding(DefaultBindingResolver resolver, IMember modelElement, Variable variable) {
+		this.resolver = resolver;
+		this.modelElement = modelElement;
+		this.isFakeField = modelElement instanceof FakeField;
+		this.varialbe = variable;
 	}
 
 	/**
@@ -85,7 +99,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getDeclaringFunction()
 	 */
 	public IFunctionBinding getDeclaringFunction() {
-		// TODO Auto-generated method stub
+		// TODO ?
 		return null;
 	}
 
@@ -100,7 +114,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getType()
 	 */
 	public ITypeBinding getType() {
-		// TODO Auto-generated method stub
+		// TODO: Do we need type information for PHP Element?
 		return null;
 	}
 
@@ -108,15 +122,14 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#getVariableId()
 	 */
 	public int getVariableId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isField()
 	 */
 	public boolean isField() {
-		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField;
+		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField && getDeclaringClass() != null;
 	}
 
 	/* (non-Javadoc)
@@ -131,8 +144,7 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IVariableBinding#isLocal()
 	 */
 	public boolean isLocal() {
-		// TODO Auto-generated method stub
-		return false;
+		return IModelElement.FIELD == modelElement.getElementType() && !isFakeField && getDeclaringClass() == null;
 	}
 
 	/* (non-Javadoc)
@@ -168,7 +180,9 @@ public class VariableBinding implements IVariableBinding {
 			try {
 				return ((IField) modelElement).getFlags() & VALID_MODIFIERS;
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) { e.printStackTrace(); }
+				if (DLTKCore.DEBUG) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return 0;
@@ -185,6 +199,15 @@ public class VariableBinding implements IVariableBinding {
 	 * @see org.eclipse.php.internal.core.ast.nodes.IBinding#isDeprecated()
 	 */
 	public boolean isDeprecated() {
+		return false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof IVariableBinding) {
+			return this.modelElement == ((IVariableBinding) obj).getPHPElement();
+		}
+
 		return false;
 	}
 }

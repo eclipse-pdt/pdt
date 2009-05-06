@@ -457,10 +457,23 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	IVariableBinding resolveVariable(Variable variable) {
-		// TODO Auto-generated method stub
+		IModelElement modelElements = null;
+		try {
+			modelElements = bindingUtil.getFiledByPosition(variable.getStart(), variable.getLength());
+		} catch (ModelException e) {
+			Logger.log(IStatus.ERROR, e.toString());
+		} catch (Exception e) {
+			Logger.log(IStatus.ERROR, e.toString());
+		}
+
+		if (modelElements != null) {
+			if (modelElements.getElementType() == IModelElement.FIELD) {
+				return new VariableBinding(this, (IMember) modelElements, variable);
+			}
+
+		}
 		return super.resolveVariable(variable);
 	}
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveWellKnownType(java.lang.String)
 	 */

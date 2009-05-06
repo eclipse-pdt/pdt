@@ -120,7 +120,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		return IGoal.NO_GOALS;
 	}
 
-	class LocalReferenceDeclSearcher extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
+	public static class LocalReferenceDeclSearcher extends org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher {
 
 		private final String variableName;
 		private final int variableOffset;

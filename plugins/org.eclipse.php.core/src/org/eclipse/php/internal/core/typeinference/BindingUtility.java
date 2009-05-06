@@ -15,12 +15,15 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRefElement;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
+import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
+import org.eclipse.php.internal.core.typeinference.evaluators.VariableReferenceEvaluator;
 
 /**
  * This utility allows to determine types of expressions represented in AST tree.
@@ -223,6 +226,31 @@ public class BindingUtility {
 		}
 		IEvaluatedType evaluatedType = evaluatedTypesCache.get(sourceRange);
 		return PHPTypeInferenceUtils.getModelElements(evaluatedType, (ISourceModuleContext) contextFinder.getContext(), sourceRange.getOffset());
+	}
+
+	/**
+	 * get the IModelElement at the given position.
+	 * @param start
+	 * @param length
+	 * @return the IModelElement instance which represents a IField node, or null.
+	 * @throws Exception
+	 */
+	public IModelElement getFiledByPosition(int start, int length) throws Exception {
+		SourceRange sourceRange = new SourceRange(start, length);
+		ContextFinder contextFinder = getContext(sourceRange);
+		ASTNode node = contextFinder.getNode();
+
+		if (node instanceof VariableReference) {
+			VariableReferenceEvaluator.LocalReferenceDeclSearcher varDecSearcher = new VariableReferenceEvaluator.LocalReferenceDeclSearcher(sourceModule, (VariableReference) node);
+			rootNode.traverse(varDecSearcher);
+
+			Declaration[] decls = varDecSearcher.getDeclarations();
+			if (decls != null && decls.length > 0) {
+				return this.sourceModule.getElementAt(decls[0].getNode().sourceStart());
+			}
+		}
+
+		return null;
 	}
 
 	private class SourceRange {
