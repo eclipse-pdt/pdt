@@ -1,5 +1,7 @@
 <project name="Generates DOM AST Scanner for PHP 4" default="generateScanner" basedir=".">
 	
+	<import file="../../jflex/build.xml" />
+	
 	<target name="checkUpToDate">
 		<uptodate
 			property="upToDate"
@@ -7,8 +9,8 @@
 			targetfile="../../../../src/org/eclipse/php/internal/core/ast/scanner/php4/PhpAstLexer.java" />
 	</target>
 
-	<target name="generateScanner" depends="checkUpToDate" unless="upToDate">
-		<java jar="../../JFlex-1.4.1/JFlex.jar" fork="true">
+	<target name="generateScanner" depends="checkUpToDate, getJFlexJar" unless="upToDate">
+		<java jar="${jflexJar}" fork="true">
 			<arg value="-d" />
 			<arg value="../../../../src/org/eclipse/php/internal/core/ast/scanner/php4/" />
 			<arg value="-nobak" />
