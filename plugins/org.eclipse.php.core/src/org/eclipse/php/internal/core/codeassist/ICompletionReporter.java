@@ -30,7 +30,8 @@ public interface ICompletionReporter {
 
 	/**
 	 * Reports a PHP resource (file or folder)
-	 * @param resource PHP file or folder
+	 * @param model PHP file or folder
+	 * @param relative a relative PHP where this resource is added
 	 * @param suffix Suffix to append after completion will be inserted
 	 * @param replaceRange The range in the document to be replaced with the completion proposal text
 	 */

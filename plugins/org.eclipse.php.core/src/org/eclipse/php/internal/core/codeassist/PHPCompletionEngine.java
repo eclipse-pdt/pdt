@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.jobs.IJobManager;
@@ -348,7 +349,8 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		} else if (!requestor.isIgnored(CompletionProposal.KEYWORD)) {
 			proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 		}
-		proposal.setName(model.getResource().getName().toCharArray());
+
+		proposal.setName(relative.lastSegment().toCharArray());
 		proposal.setCompletion((relative.toString() + suffix).toCharArray());
 		proposal.setRelevance(nextKeywordRelevance());
 		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
