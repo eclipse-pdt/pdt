@@ -130,6 +130,15 @@ public class ASTParser {
 	public void setSource(Reader source) throws IOException {
 		this.ast.setSource(source);
 	}
+	
+	/**
+	 * Set the source from source module
+	 * @throws IOException
+	 * @throws ModelException 
+	 */
+	public void setSource(ISourceModule sourceModule) throws IOException, ModelException {
+		this.ast.setSource(new CharArrayReader(sourceModule.getSourceAsCharArray()));
+	}
 
 	/**
 	* This operation creates an abstract syntax tree for the given AST Factory

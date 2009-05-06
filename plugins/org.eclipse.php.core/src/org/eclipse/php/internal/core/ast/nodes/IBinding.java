@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 
 /**
@@ -141,8 +142,8 @@ public interface IBinding {
 	 * Use <code>isDeprecated</code> to find out whether a binding is deprecated.
 	 * </p>
 	 *
-	 * @return the bit-wise or of <code>Modifier</code> constants
-	 * @see Modifier
+	 * @return the bit-wise or of <code>Modifiers</code> constants
+	 * @see Modifiers
 	 */
 	public int getModifiers();
 

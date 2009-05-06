@@ -19,13 +19,13 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.compiler.util.ScannerHelper;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.BlockContext;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.NodeMarker;
 import org.eclipse.php.internal.core.ast.rewrite.ASTRewriteFormatter.Prefix;
@@ -35,6 +35,7 @@ import org.eclipse.php.internal.core.ast.rewrite.RewriteEventStore.CopySourceInf
 import org.eclipse.php.internal.core.ast.rewrite.TargetSourceRangeComputer.SourceRange;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.text.edits.*;
 
 /**
@@ -1112,17 +1113,17 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					break loop;
 				}
 				if (tok.sym == modifiers[0]) {
-					keep = Modifier.isPublic(newModifiers);
+					keep = PHPFlags.isPublic(newModifiers);
 				} else if (tok.sym == modifiers[1]) {
-					keep = Modifier.isPrivate(newModifiers);
+					keep = PHPFlags.isPrivate(newModifiers);
 				} else if (tok.sym == modifiers[2]) {
-					keep = Modifier.isProtected(newModifiers);
+					keep = PHPFlags.isProtected(newModifiers);
 				} else if (tok.sym == modifiers[3]) {
-					keep = Modifier.isStatic(newModifiers);
+					keep = PHPFlags.isStatic(newModifiers);
 				} else if (tok.sym == modifiers[4]) {
-					keep = Modifier.isAbstract(newModifiers);
+					keep = PHPFlags.isAbstract(newModifiers);
 				} else if (tok.sym == modifiers[5]) {
-					keep = Modifier.isFinal(newModifiers);
+					keep = PHPFlags.isFinal(newModifiers);
 				} else {
 					break loop;
 				}
@@ -1136,7 +1137,7 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 			int addedModifiers = newModifiers & ~oldModifiers;
 			if (addedModifiers != 0) {
 				if (startPos != nextStart) {
-					int visibilityModifiers = addedModifiers & (Modifier.PUBLIC | Modifier.PRIVATE | Modifier.PROTECTED);
+					int visibilityModifiers = addedModifiers & (Modifiers.AccPublic | Modifiers.AccPrivate | Modifiers.AccProtected);
 					if (visibilityModifiers != 0) {
 						StringBuffer buf = new StringBuffer();
 						ASTRewriteFlattener.printModifiers(visibilityModifiers, buf);

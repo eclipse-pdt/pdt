@@ -218,8 +218,8 @@ public class TypeBinding implements ITypeBinding {
 	 * the compiled modifiers are needed. Returns -1 if this type does not
 	 * represent a class or interface.
 	 *
-	 * @return the bit-wise or of <code>Modifier</code> constants
-	 * @see Modifier
+	 * @return the bit-wise or of <code>Modifiers</code> constants
+	 * @see Modifiers
 	 */
 	public int getModifiers() {
 		if (isClass()) {

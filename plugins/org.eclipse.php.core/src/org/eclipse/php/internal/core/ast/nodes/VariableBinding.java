@@ -15,7 +15,6 @@ package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 /**
@@ -161,8 +160,8 @@ public class VariableBinding implements IVariableBinding {
 	/**
 	 * Returns the modifiers for this binding.
 	 *
-	 * @return the bit-wise or of <code>Modifier</code> constants
-	 * @see Modifier
+	 * @return the bit-wise or of <code>Modifiers</code> constants
+	 * @see Modifiers
 	 */
 	public int getModifiers() {
 		if (isField()) {

@@ -52,4 +52,35 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isClass(int flags) {
 		return !isNamespace(flags) && !isInterface(flags);
 	}
+	
+	public static String toString(int mod) {
+		StringBuffer sb = new StringBuffer();
+
+		if ((mod & AccPublic) != 0) {
+			sb.append("public "); //$NON-NLS-1$
+		}
+		if ((mod & AccProtected) != 0) {
+			sb.append("protected "); //$NON-NLS-1$
+		}
+		if ((mod & AccPrivate) != 0) {
+			sb.append("private "); //$NON-NLS-1$
+		}
+
+		//Canonical order
+		if ((mod & AccAbstract) != 0) {
+			sb.append("abstract "); //$NON-NLS-1$
+		}
+		if ((mod & AccStatic) != 0) {
+			sb.append("static "); //$NON-NLS-1$
+		}
+		if ((mod & AccFinal) != 0) {
+			sb.append("final "); //$NON-NLS-1$
+		}
+
+		int len;
+		if ((len = sb.length()) > 0) { /* trim trailing space */
+			return sb.toString().substring(0, len - 1);
+		}
+		return ""; //$NON-NLS-1$
+	}
 }

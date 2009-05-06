@@ -2,21 +2,22 @@ package org.eclipse.php.internal.core.ast.scanner.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.13 2009/01/22 11:15:33 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.14 2009/05/06 14:31:22 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 import java.util.*;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.dltk.ast.Modifiers;
 
 parser code {:
-	protected final static Integer PUBLIC = new Integer(BodyDeclaration.Modifier.PUBLIC);
-	protected final static Integer PRIVATE = new Integer(BodyDeclaration.Modifier.PRIVATE);
-	protected final static Integer PROTECTED = new Integer(BodyDeclaration.Modifier.PROTECTED);
-	protected final static Integer ABSTRACT = new Integer(BodyDeclaration.Modifier.ABSTRACT);
-	protected final static Integer FINAL = new Integer(BodyDeclaration.Modifier.FINAL);
-	protected final static Integer STATIC = new Integer(BodyDeclaration.Modifier.STATIC);
+	protected final static Integer PUBLIC = new Integer(Modifiers.AccPublic);
+	protected final static Integer PRIVATE = new Integer(Modifiers.AccPrivate);
+	protected final static Integer PROTECTED = new Integer(Modifiers.AccProtected);
+	protected final static Integer ABSTRACT = new Integer(Modifiers.AccAbstract);
+	protected final static Integer FINAL = new Integer(Modifiers.AccFinal);
+	protected final static Integer STATIC = new Integer(Modifiers.AccStatic);
 	
 	AST ast;
   

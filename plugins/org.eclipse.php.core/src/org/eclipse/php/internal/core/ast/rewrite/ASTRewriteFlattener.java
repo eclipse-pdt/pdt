@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 public class ASTRewriteFlattener extends AbstractVisitor {
 
@@ -59,22 +59,22 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	 * @param buf The <code>StringBuffer</code> to write the result to.
 	 */
 	public static void printModifiers(int modifiers, StringBuffer buf) {
-		if (Modifier.isPublic(modifiers)) {
+		if (PHPFlags.isPublic(modifiers)) {
 			buf.append("public "); //$NON-NLS-1$
 		}
-		if (Modifier.isProtected(modifiers)) {
+		if (PHPFlags.isProtected(modifiers)) {
 			buf.append("protected "); //$NON-NLS-1$
 		}
-		if (Modifier.isPrivate(modifiers)) {
+		if (PHPFlags.isPrivate(modifiers)) {
 			buf.append("private "); //$NON-NLS-1$
 		}
-		if (Modifier.isStatic(modifiers)) {
+		if (PHPFlags.isStatic(modifiers)) {
 			buf.append("static "); //$NON-NLS-1$
 		}
-		if (Modifier.isAbstract(modifiers)) {
+		if (PHPFlags.isAbstract(modifiers)) {
 			buf.append("abstract "); //$NON-NLS-1$
 		}
-		if (Modifier.isFinal(modifiers)) {
+		if (PHPFlags.isFinal(modifiers)) {
 			buf.append("final "); //$NON-NLS-1$
 		}
 	}

@@ -11,6 +11,7 @@
 
 package org.eclipse.php.internal.core.ast.nodes;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 
 /**
@@ -131,8 +132,8 @@ public interface ITypeBinding extends IBinding {
 	 * the compiled modifiers are needed. Returns -1 if this type does not
 	 * represent a class or interface.
 	 *
-	 * @return the bit-wise or of <code>Modifier</code> constants
-	 * @see Modifier
+	 * @return the bit-wise or of <code>Modifiers</code> constants
+	 * @see Modifiers
 	 */
 	public int getModifiers();
 

@@ -2,21 +2,22 @@ package org.eclipse.php.internal.core.ast.scanner.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_ast_parser.cup,v 1.11 2009/01/22 11:15:34 mspector Exp $
+////    $Id: php_ast_parser.cup,v 1.12 2009/05/06 14:31:21 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 import java.util.*;
 import org.eclipse.php.internal.core.ast.nodes.*;
+import org.eclipse.dltk.ast.Modifiers;
 
 parser code {:
-	protected final static Integer PUBLIC = new Integer(BodyDeclaration.Modifier.PUBLIC);
-	protected final static Integer PRIVATE = new Integer(BodyDeclaration.Modifier.PRIVATE);
-	protected final static Integer PROTECTED = new Integer(BodyDeclaration.Modifier.PROTECTED);
-	protected final static Integer ABSTRACT = new Integer(BodyDeclaration.Modifier.ABSTRACT);
-	protected final static Integer FINAL = new Integer(BodyDeclaration.Modifier.FINAL);
-	protected final static Integer STATIC = new Integer(BodyDeclaration.Modifier.STATIC);
+	protected final static Integer PUBLIC = new Integer(Modifiers.AccPublic);
+	protected final static Integer PRIVATE = new Integer(Modifiers.AccPrivate);
+	protected final static Integer PROTECTED = new Integer(Modifiers.AccProtected);
+	protected final static Integer ABSTRACT = new Integer(Modifiers.AccAbstract);
+	protected final static Integer FINAL = new Integer(Modifiers.AccFinal);
+	protected final static Integer STATIC = new Integer(Modifiers.AccStatic);
 	
 	AST ast;
   
@@ -1036,7 +1037,7 @@ class_statement_list:list class_statement:classStatement
 class_statement ::=
 T_VAR:modifier class_variable_declaration:decList T_SEMICOLON:end
 {:
-	FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, parser.ast, BodyDeclaration.Modifier.PUBLIC, decList);
+	FieldsDeclaration fieldsDeclaration = new FieldsDeclaration(modifierleft, endright, parser.ast, Modifiers.AccPublic, decList);
 	RESULT = fieldsDeclaration;
 :}
 | T_FUNCTION:start is_reference:isReference string_st:functionName T_OPEN_PARENTHESE parameter_list:paramList T_CLOSE_PARENTHESE
@@ -1045,7 +1046,7 @@ T_CURLY_OPEN:bodyStart inner_statement_list:statementList T_CURLY_CLOSE:end
 	Identifier functionId = new Identifier(functionNameleft, functionNameright, parser.ast, functionName);
 	Block block = new Block(bodyStartleft, endright, parser.ast, statementList);
 	FunctionDeclaration functionDeclaration = new FunctionDeclaration(startleft, endright, parser.ast, functionId, paramList, block, isReference.booleanValue());
-	MethodDeclaration methodDeclaration = new MethodDeclaration(startleft, endright, parser.ast, BodyDeclaration.Modifier.PUBLIC, functionDeclaration);
+	MethodDeclaration methodDeclaration = new MethodDeclaration(startleft, endright, parser.ast, Modifiers.AccPublic, functionDeclaration);
 	RESULT = methodDeclaration;
 :}
 /* old_function support was removed */

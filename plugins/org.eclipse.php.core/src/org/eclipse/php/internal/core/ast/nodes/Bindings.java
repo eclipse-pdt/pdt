@@ -13,11 +13,6 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 public class Bindings {
@@ -325,7 +320,7 @@ public class Bindings {
 	 */
 	public static IMethodBinding findOverriddenMethod(IMethodBinding overriding, boolean testVisibility) {
 		int modifiers = overriding.getModifiers();
-		if (Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers) || overriding.isConstructor()) {
+		if (PHPFlags.isPrivate(modifiers) || PHPFlags.isStatic(modifiers) || overriding.isConstructor()) {
 			return null;
 		}
 
@@ -335,7 +330,7 @@ public class Bindings {
 		}
 		if (type.getSuperclass() != null) {
 			IMethodBinding res = findOverriddenMethodInHierarchy(type.getSuperclass(), overriding);
-			if (res != null && !Modifier.isPrivate(res.getModifiers())) {
+			if (res != null && !PHPFlags.isPrivate(res.getModifiers())) {
 				if (!testVisibility || isVisibleInHierarchy(res/*, overriding.getDeclaringClass().getPackage()*/)) {
 					return res;
 				}
@@ -354,9 +349,9 @@ public class Bindings {
 	public static boolean isVisibleInHierarchy(IMethodBinding member/*, IPackageBinding pack*/) {
 		int otherflags = member.getModifiers();
 		ITypeBinding declaringType = member.getDeclaringClass();
-		if (Modifier.isPublic(otherflags) || Modifier.isProtected(otherflags) || (declaringType != null && declaringType.isInterface())) {
+		if (PHPFlags.isPublic(otherflags) || PHPFlags.isProtected(otherflags) || (declaringType != null && declaringType.isInterface())) {
 			return true;
-		} else if (Modifier.isPrivate(otherflags)) {
+		} else if (PHPFlags.isPrivate(otherflags)) {
 			return false;
 		}
 		return declaringType != null /*&& pack == declaringType.getPackage()*/;

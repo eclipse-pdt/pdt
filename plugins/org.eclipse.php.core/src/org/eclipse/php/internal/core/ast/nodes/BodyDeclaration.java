@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
+import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
  * Base class for class member declarations
@@ -43,14 +44,14 @@ public abstract class BodyDeclaration extends Statement {
 	 * @param mod
 	 */
 	private static int completeModifier(int mod) {
-		if (!BodyDeclaration.Modifier.isPrivate(mod) && !BodyDeclaration.Modifier.isProtected(mod)) {
-			mod |= BodyDeclaration.Modifier.PUBLIC;
+		if (!PHPFlags.isPrivate(mod) && !PHPFlags.isProtected(mod)) {
+			mod |= Modifiers.AccPublic;
 		}
 		return mod;
 	}
 
 	public String getModifierString() {
-		return Modifier.toString(modifier);
+		return PHPFlags.toString(modifier);
 	}
 
 	public int getModifier() {
@@ -64,7 +65,7 @@ public abstract class BodyDeclaration extends Statement {
 	 * @exception IllegalArgumentException if the argument is incorrect
 	 */ 
 	public void setModifier(int modifier) {
-		if (Modifier.toString(modifier) == null) {
+		if (PHPFlags.toString(modifier) == null) {
 			throw new IllegalArgumentException("Invalid modifier");
 		}
 		preValueChange(getModifierProperty());
