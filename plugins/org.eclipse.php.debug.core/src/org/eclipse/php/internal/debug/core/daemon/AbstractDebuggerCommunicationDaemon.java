@@ -11,10 +11,13 @@
 package org.eclipse.php.internal.debug.core.daemon;
 
 import java.io.IOException;
-import java.net.*;
-import java.text.MessageFormat;
+import java.net.BindException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
@@ -133,7 +136,7 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 		final Display display = Display.getDefault();
 		display.asyncExec(new Runnable() {
 			public void run() {
-				final String message = MessageFormat.format(PHPDebugCoreMessages.Port_Error_Message_Message, new String[] { String.valueOf(port) });
+				final String message = NLS.bind(PHPDebugCoreMessages.Port_Error_Message_Message, new String[] { String.valueOf(port) });
 				MessageDialog.openWarning(display.getActiveShell(), PHPDebugCoreMessages.Port_Error_Message_Title, message);
 			}
 		});

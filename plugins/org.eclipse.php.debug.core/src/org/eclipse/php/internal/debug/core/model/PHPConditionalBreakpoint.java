@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
@@ -80,11 +81,11 @@ public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
         marker.setAttribute(IPHPDebugConstants.ConditionEnabled, new Boolean(enabled));
         int lineNumber = ((Integer) marker.getAttribute(IMarker.LINE_NUMBER)).intValue();
         if (enabled) {
-        	String message = MessageFormat.format(PHPDebugCoreMessages.ConditionalBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) });
-        	message +=  MessageFormat.format(PHPDebugCoreMessages.ConditionalBreakPointMessage_2, new String[] {condition});
+        	String message = NLS.bind(PHPDebugCoreMessages.ConditionalBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) });
+        	message +=  NLS.bind(PHPDebugCoreMessages.ConditionalBreakPointMessage_2, new String[] {condition});
             marker.setAttribute(IMarker.MESSAGE, message);
         } else {
-            marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) }));
+            marker.setAttribute(IMarker.MESSAGE, NLS.bind(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { marker.getResource().getName(), Integer.toString(lineNumber) }));
         }
         addConditionToBP();
         setConditionChanged(true);

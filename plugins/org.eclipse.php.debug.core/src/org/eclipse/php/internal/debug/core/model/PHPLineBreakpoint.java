@@ -10,19 +10,14 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.model;
 
-import java.text.MessageFormat;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.LineBreakpoint;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 
@@ -56,7 +51,7 @@ public class PHPLineBreakpoint extends LineBreakpoint {
                 marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
                 marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
                 marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
-                marker.setAttribute(IMarker.MESSAGE, MessageFormat.format(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));
+                marker.setAttribute(IMarker.MESSAGE, NLS.bind(PHPDebugCoreMessages.LineBreakPointMessage_1, new String[] { resource.getName(), Integer.toString(lineNumber) }));
                 setMarker(marker);
                 setEnabled(true);
                 register(true);

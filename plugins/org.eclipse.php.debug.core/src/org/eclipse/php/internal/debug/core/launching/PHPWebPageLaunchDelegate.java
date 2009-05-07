@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IMarkerDelta;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -20,6 +18,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.*;
 import org.eclipse.debug.core.model.*;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.core.debugger.parameters.IDebugParametersKeys;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.Logger;
@@ -145,7 +144,7 @@ public class PHPWebPageLaunchDelegate extends LaunchConfigurationDelegate {
 		if (server == null) {
 			Display.getDefault().asyncExec(new Runnable() {
 				public void run() {
-					MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle, MessageFormat.format(PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound, new String[] { serverName }));
+					MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.PHPLaunchUtilities_phpLaunchTitle, NLS.bind(PHPDebugCoreMessages.PHPWebPageLaunchDelegate_serverNotFound, new String[] { serverName }));
 					PHPLaunchUtilities.openLaunchConfigurationDialog(configuration, mode);
 				}
 			});
