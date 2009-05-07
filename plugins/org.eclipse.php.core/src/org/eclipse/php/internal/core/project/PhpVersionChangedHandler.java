@@ -33,7 +33,7 @@ public class PhpVersionChangedHandler implements IResourceChangeListener {
 	private static PhpVersionChangedHandler instance = new PhpVersionChangedHandler();
 
 	private PhpVersionChangedHandler() {
-		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER, store);
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 

@@ -1,1 +1,0 @@
-The bin/ directory contains pre-compiled JavaCUP-v10k with applied patch: javacup10k_split_do_action_method.diff

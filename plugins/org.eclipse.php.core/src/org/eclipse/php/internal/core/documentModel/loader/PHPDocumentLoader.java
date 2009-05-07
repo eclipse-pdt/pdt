@@ -92,8 +92,10 @@ public class PHPDocumentLoader extends HTMLDocumentLoader {
 				// integrity check for debugging "invalid" cases.
 				// the apprriate default we have, should equal what's in the
 				// detected field. (not sure this is always required)
-				if (DEBUG && appropriateDefault != null && !appropriateDefault.equals(detectedCharset)) {
-					Logger.log(Logger.INFO_DEBUG, "appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
+				if (DEBUG) {
+					if (appropriateDefault != null && !appropriateDefault.equals(detectedCharset)) {
+						Logger.log(Logger.INFO_DEBUG, "appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
+					}
 				}
 			}
 			return result;

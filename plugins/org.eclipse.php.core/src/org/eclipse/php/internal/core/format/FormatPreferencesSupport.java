@@ -52,7 +52,7 @@ public class FormatPreferencesSupport {
 
 	private FormatPreferencesSupport() {
 
-		preferencesPropagator = PreferencePropagatorFactory.getInstance().getPreferencePropagator(NODES_QUALIFIER, store);
+		preferencesPropagator = PreferencePropagatorFactory.getPreferencePropagator(NODES_QUALIFIER, store);
 		preferencesSupport = new PreferencesSupport(PHPCorePlugin.ID, store);
 	}
 
