@@ -148,10 +148,10 @@ public class ModelStructureTests extends AbstractPDTTTest {
 		testFile = project.getFile("test.php");
 		testFile.create(new ByteArrayInputStream(data.getBytes()), true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
+		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
-		PHPCoreTests.waitForIndexer(project);
 		
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}

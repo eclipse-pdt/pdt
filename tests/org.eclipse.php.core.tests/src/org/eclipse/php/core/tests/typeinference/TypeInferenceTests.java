@@ -187,10 +187,9 @@ public class TypeInferenceTests extends AbstractPDTTTest {
 		}
 
 		try {
-			project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-			
+			project.build(IncrementalProjectBuilder.FULL_BUILD, null);
+			PHPCoreTests.waitForIndexer();
 			PHPCoreTests.waitForAutoBuild();
-			PHPCoreTests.waitForIndexer(project);
 
 			ISourceModule sourceModule = DLTKCore.createSourceModuleFrom(file);
 			ModuleDeclaration moduleDecl = SourceParserUtil.getModuleDeclaration(sourceModule);

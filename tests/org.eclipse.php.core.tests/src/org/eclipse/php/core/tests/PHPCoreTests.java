@@ -7,18 +7,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.search.IDLTKSearchConstants;
-import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.core.search.SearchMatch;
-import org.eclipse.dltk.core.search.SearchParticipant;
-import org.eclipse.dltk.core.search.SearchPattern;
-import org.eclipse.dltk.core.search.SearchRequestor;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
+import org.eclipse.dltk.internal.core.ModelManager;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -119,14 +110,8 @@ public class PHPCoreTests extends Plugin {
 		return null;
 	}
 	
-	public static void waitForIndexer(IProject project) throws CoreException {
-		SearchEngine searchEngine = new SearchEngine();
-		IDLTKSearchScope scope = PHPModelUtils.createProjectSearchScope(DLTKCore.create(project));
-		SearchPattern pattern = SearchPattern.createPattern("*", IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_PATTERN_MATCH, PHPLanguageToolkit.getDefault());
-		searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-			public void acceptSearchMatch(SearchMatch match) throws CoreException {
-			}
-		}, null);
+	public static void waitForIndexer() {
+		ModelManager.getModelManager().getIndexManager().waitUntilReady();
 	}
 
 	/**
@@ -156,8 +141,8 @@ public class PHPCoreTests extends Plugin {
 	public static void setProjectPhpVersion(IProject project, PHPVersion phpVersion) throws CoreException {
 		if (phpVersion != ProjectOptions.getDefaultPhpVersion()) {
 			ProjectOptions.setPhpVersion(phpVersion, project);
-			PHPCoreTests.waitForAutoBuild();
-			PHPCoreTests.waitForIndexer(project);
+			waitForAutoBuild();
+			waitForIndexer();
 		}
 	}
 }

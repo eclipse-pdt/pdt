@@ -65,10 +65,10 @@ public class FormatterTests extends AbstractPDTTTest {
 		}
 		
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-		project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
+		PHPCoreTests.waitForIndexer();
 		PHPCoreTests.waitForAutoBuild();
-		PHPCoreTests.waitForIndexer(project);
 	}
 
 	public static void tearDownSuite() throws Exception {
