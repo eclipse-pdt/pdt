@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.dialogs.saveFiles;
 
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.dialogs.saveFiles.SaveFilesHandler.SaveFilesResult;
 import org.eclipse.php.internal.ui.util.ListContentProvider;
@@ -54,7 +54,7 @@ public class SaveFilesDialog extends ListSelectionDialog {
 				if (file == null) {
 					return title;
 				}
-				return MessageFormat.format("{0} [{1}]", new String[] {title, file.getFullPath().toString()}); //$NON-NLS-1$
+				return NLS.bind("{0} [{1}]", new String[] {title, file.getFullPath().toString()}); //$NON-NLS-1$
 			}
 		}, PHPUIMessages.getString("SaveFilesDialog.1")); //$NON-NLS-1$
 		this.promptAutoSave = promptAutoSave;

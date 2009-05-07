@@ -19,10 +19,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.php.internal.core.project.PHPNature;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * This is a factory project class for the PHP Demo 
@@ -82,7 +78,7 @@ public class PhpDemoProject {
 	}
 
 	private static IFile createFile(final IProject testProject, String filePath, String fileName) throws IOException, CoreException {
-		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin.getDefault().getPluginId()), new Path(filePath + fileName), null); 
+		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path(filePath + fileName), null); 
 		demoFileURL = FileLocator.resolve(demoFileURL);
 		IPath p = testProject.getFullPath();
 		p = p.append(fileName);
@@ -93,7 +89,7 @@ public class PhpDemoProject {
 	}
 
 	private static IFolder createFolder(final IProject testProject, String filePath, String folderName) throws IOException, CoreException {		
-		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin.getDefault().getPluginId()), new Path(filePath + folderName), null);
+		URL demoFileURL = FileLocator.find(Platform.getBundle(PHPUiPlugin.getPluginId()), new Path(filePath + folderName), null);
 		demoFileURL = FileLocator.resolve(demoFileURL);
 		IPath p = testProject.getFullPath();
 		p = p.append(folderName);

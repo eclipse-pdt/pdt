@@ -45,6 +45,7 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.wst.jsdt.internal.compiler.env.ICompilationUnit;
 
 public class StubUtility {
 
@@ -178,7 +179,7 @@ public class StubUtility {
 
 		CodeTemplateContext context = new CodeTemplateContext(template.getContextTypeId(), sp, lineDelimiter);
 		//		context.setCompilationUnitVariables(sp);
-		context.setVariable(CodeTemplateContextType.FILENAME , sp.getElementName());
+		context.setVariable(CodeTemplateContextType.FILENAME, sp.getElementName());
 		//context.setVariable(CodeTemplateContextType.TYPENAME , sp.getElementName());
 		return evaluateTemplate(context, template);
 	}
@@ -231,14 +232,11 @@ public class StubUtility {
 	 * Returns the parameters type names used in see tags. Currently, these are always fully qualified.
 	 */
 	public static String[] getParameterTypeNamesForSeeTag(IFunctionBinding binding) {
-		String[] typeParameterNames = null;
 		ITypeBinding[] typeParametersTypes = binding.getParameterTypes();
-
-		if (null != typeParametersTypes) {
-			int i = 0;
-			for (ITypeBinding type : typeParametersTypes) {
-				typeParameterNames[i++] = type.getName();
-			}
+		String[] typeParameterNames = new String[typeParametersTypes.length];
+		int i = 0;
+		for (ITypeBinding type : typeParametersTypes) {
+			typeParameterNames[i++] = type.getName();
 		}
 		return typeParameterNames;
 	}

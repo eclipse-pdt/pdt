@@ -420,8 +420,10 @@ public class LineStyleProviderForPhp extends AbstractLineStyleProvider implement
 
 				}
 
-				if (Debug.syntaxHighlighting && !handled) {
-					System.out.println("not handled in prepareRegions"); //$NON-NLS-1$
+				if (Debug.syntaxHighlighting) {
+					if (!handled) {
+						System.out.println("not handled in prepareRegions"); //$NON-NLS-1$
+					}
 				}
 			}
 			structuredDocumentRegion = structuredDocumentRegion.getNext();

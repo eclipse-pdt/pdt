@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
+import org.eclipse.dltk.ui.ModelElementLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -58,7 +59,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	 */
 	public OpenProjectAction(IWorkbenchSite site) {
 		super(site);
-		fWorkbenchAction = new OpenResourceAction(site.getShell());
+		fWorkbenchAction = new OpenResourceAction(site);
 		setText(fWorkbenchAction.getText());
 		setToolTipText(fWorkbenchAction.getToolTipText());
 		setEnabled(hasCloseProjects());
@@ -127,7 +128,7 @@ public class OpenProjectAction extends SelectionDispatchAction implements IResou
 	}
 
 	private void internalRun() {
-		ElementListSelectionDialog dialog = null; // new ElementListSelectionDialog(getShell(), new PHPElementLabelProvider());
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new ModelElementLabelProvider());
 		dialog.setTitle(PHPUIMessages.getString("OpenProjectAction_dialog_title"));
 		dialog.setMessage(PHPUIMessages.getString("OpenProjectAction_dialog_message"));
 		dialog.setElements(getClosedProjects());

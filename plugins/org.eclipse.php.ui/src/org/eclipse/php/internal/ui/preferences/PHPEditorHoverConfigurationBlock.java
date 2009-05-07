@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.preferences;
 
-import java.text.MessageFormat;
 import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
@@ -19,6 +18,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.text.hover.PHPEditorTextHoverDescriptor;
@@ -279,11 +279,11 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 					String insertString;
 
 					if (needsPrefixDelimiter && needsPostfixDelimiter)
-						insertString = MessageFormat.format(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter"), new String[] { Action.findModifierString(e.stateMask) });
+						insertString = NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifierAndDelimiter"), new String[] { Action.findModifierString(e.stateMask) });
 					else if (needsPrefixDelimiter)
-						insertString = MessageFormat.format(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier"), new String[] { Action.findModifierString(e.stateMask) });
+						insertString = NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertDelimiterAndModifier"), new String[] { Action.findModifierString(e.stateMask) });
 					else if (needsPostfixDelimiter)
-						insertString = MessageFormat.format(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter"), new String[] { Action.findModifierString(e.stateMask) });
+						insertString = NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_insertModifierAndDelimiter"), new String[] { Action.findModifierString(e.stateMask) });
 					else
 						insertString = Action.findModifierString(e.stateMask);
 
@@ -476,7 +476,7 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 
 	private void updateStatus(HoverConfig hoverConfig) {
 		if (hoverConfig != null && hoverConfig.fIsEnabled && hoverConfig.fStateMask == -1)
-			fStatus = new StatusInfo(IStatus.ERROR, MessageFormat.format(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValid"), new Object[] { hoverConfig.fModifierString }));
+			fStatus = new StatusInfo(IStatus.ERROR, NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValid"), new Object[] { hoverConfig.fModifierString }));
 		else
 			fStatus = new StatusInfo();
 
@@ -487,9 +487,9 @@ public class PHPEditorHoverConfigurationBlock implements IPreferenceConfiguratio
 				String label = getContributedHovers()[i].getLabel();
 				Integer stateMask = new Integer(fHoverConfigs[i].fStateMask);
 				if (fHoverConfigs[i].fStateMask == -1)
-					fStatus = new StatusInfo(IStatus.ERROR, MessageFormat.format(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValidForHover"), new String[] { fHoverConfigs[i].fModifierString, label }));
+					fStatus = new StatusInfo(IStatus.ERROR, NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_modifierIsNotValidForHover"), new String[] { fHoverConfigs[i].fModifierString, label }));
 				else if (stateMasks.containsKey(stateMask))
-					fStatus = new StatusInfo(IStatus.ERROR, MessageFormat.format(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_duplicateModifier"), new String[] { label, (String) stateMasks.get(stateMask) }));
+					fStatus = new StatusInfo(IStatus.ERROR, NLS.bind(PHPUIMessages.getString("PHPEditorHoverConfigurationBlock_duplicateModifier"), new String[] { label, (String) stateMasks.get(stateMask) }));
 				else
 					stateMasks.put(stateMask, label);
 			}

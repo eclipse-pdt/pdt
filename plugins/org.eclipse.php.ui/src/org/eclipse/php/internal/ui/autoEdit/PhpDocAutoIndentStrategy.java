@@ -577,7 +577,7 @@ public class PhpDocAutoIndentStrategy extends DefaultIndentLineAutoEditStrategy 
 		if (editor == null)
 			return null;
 
-		IWorkingCopyManager manager = PHPUiPlugin.getDefault().getWorkingCopyManager();
+		IWorkingCopyManager manager = PHPUiPlugin.getWorkingCopyManager();
 		ISourceModule unit = manager.getWorkingCopy(editor.getEditorInput());
 		if (unit == null)
 			return null;
