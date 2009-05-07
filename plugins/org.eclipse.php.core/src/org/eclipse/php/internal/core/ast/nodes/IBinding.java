@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import org.eclipse.dltk.ast.Modifiers;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 
 /**
  * A binding represents a named entity in the PHP language. The world of
