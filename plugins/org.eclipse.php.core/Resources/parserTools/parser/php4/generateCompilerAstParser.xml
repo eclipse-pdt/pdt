@@ -9,7 +9,7 @@
 
 	<target name="generateParser" depends="checkUpToDate" unless="upToDate">
 		<java 
-			classpath="../../../../bin"
+			classpath="../../javacup/bin"
 			classname="java_cup.Main"
 			input="php_compiler_ast_parser.cup"
 			fork="true">
