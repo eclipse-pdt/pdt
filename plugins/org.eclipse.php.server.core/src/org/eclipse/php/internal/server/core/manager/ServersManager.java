@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesReader;
 import org.eclipse.php.internal.core.util.preferences.XMLPreferencesWriter;
 import org.eclipse.php.internal.server.core.Activator;
@@ -248,7 +247,7 @@ public class ServersManager implements PropertyChangeListener {
 				manager.defaultServersMap.put(null, server);
 				manager.defaultServersMap.put(project, server);
 				manager.innerSaveDefaultServer(project, server);
-				manager.save();
+				ServersManager.save();
 			}
 		}
 
