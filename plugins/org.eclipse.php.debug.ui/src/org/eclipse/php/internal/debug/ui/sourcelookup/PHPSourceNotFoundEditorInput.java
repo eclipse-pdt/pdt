@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.sourcelookup;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.debug.core.DebugException;
@@ -19,6 +17,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.sourcelookup.PHPSourceNotFoundInput;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.php.internal.ui.containers.StorageEditorInput;
@@ -111,7 +110,7 @@ public class PHPSourceNotFoundEditorInput extends PlatformObject implements IEdi
 	 */
 	public String getToolTipText() {
 		if (fTooltipText == null) {
-			return MessageFormat.format(PHPDebugUIMessages.SourceNotFoundEditorInput_Source_not_found_for__0__2, new String[] { fFrameText }); 
+			return NLS.bind(PHPDebugUIMessages.SourceNotFoundEditorInput_Source_not_found_for__0__2, new String[] { fFrameText }); 
 		}
 		return fTooltipText;
 	}
