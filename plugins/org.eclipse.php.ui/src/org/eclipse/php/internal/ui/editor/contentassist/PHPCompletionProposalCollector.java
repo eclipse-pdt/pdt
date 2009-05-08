@@ -17,6 +17,7 @@ import org.eclipse.dltk.ui.text.completion.*;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
+import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
 
 public class PHPCompletionProposalCollector extends ScriptCompletionProposalCollector implements IPHPCompletionRequestor {
@@ -46,13 +47,21 @@ public class PHPCompletionProposalCollector extends ScriptCompletionProposalColl
 		return new PHPCompletionProposalLabelProvider();
 	}
 	
-	@Override
 	protected IScriptCompletionProposal createPackageProposal(CompletionProposal proposal) {
 		final AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createPackageProposal(proposal);
 		final IModelElement modelElement = proposal.getModelElement();		
 		if (modelElement != null) {
 			scriptProposal.setProposalInfo(new ProposalInfo(modelElement.getScriptProject(),
 					new String(proposal.getName())));
+		}
+		return scriptProposal;
+	}
+	
+	protected IScriptCompletionProposal createKeywordProposal(CompletionProposal proposal) {
+		AbstractScriptCompletionProposal scriptProposal = (AbstractScriptCompletionProposal) super.createKeywordProposal(proposal);
+		final IModelElement modelElement = proposal.getModelElement();		
+		if (modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE) {
+			scriptProposal.setImage(PHPPluginImages.get(PHPPluginImages.IMG_OBJS_PHP_FILE));
 		}
 		return scriptProposal;
 	}
