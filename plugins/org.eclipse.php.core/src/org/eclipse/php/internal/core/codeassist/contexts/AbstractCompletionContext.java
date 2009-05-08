@@ -24,6 +24,7 @@ import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
+import org.eclipse.php.internal.core.documentModel.parser.regions.PhpTokenContainer;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -393,7 +394,11 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	 */
 	public int getPrefixEnd() throws BadLocationException {
 		ITextRegion phpToken = getPHPToken();
-		return regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
+		int endOffset = regionCollection.getStartOffset() + phpScriptRegion.getStart() + phpToken.getTextEnd();
+		if (phpToken.getType() == PHPRegionTypes.PHP_CONSTANT_ENCAPSED_STRING) {
+			--endOffset;
+		}
+		return endOffset;
 	}
 
 	/**
