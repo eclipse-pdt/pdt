@@ -15,20 +15,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.AbstractSourceModule;
-import org.eclipse.php.internal.core.ast.nodes.ASTNode;
-import org.eclipse.php.internal.core.ast.nodes.ASTNodes;
-import org.eclipse.php.internal.core.ast.nodes.ClassDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.ClassName;
-import org.eclipse.php.internal.core.ast.nodes.Expression;
-import org.eclipse.php.internal.core.ast.nodes.FormalParameter;
-import org.eclipse.php.internal.core.ast.nodes.FunctionDeclaration;
-import org.eclipse.php.internal.core.ast.nodes.FunctionInvocation;
-import org.eclipse.php.internal.core.ast.nodes.IBinding;
-import org.eclipse.php.internal.core.ast.nodes.Identifier;
-import org.eclipse.php.internal.core.ast.nodes.Include;
-import org.eclipse.php.internal.core.ast.nodes.Program;
-import org.eclipse.php.internal.core.ast.nodes.StaticMethodInvocation;
-import org.eclipse.php.internal.core.ast.nodes.StructuralPropertyDescriptor;
+import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 
 public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
@@ -52,6 +39,9 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 		this.includeNode = getIncludeExpression(node);
 		if (this.includeNode != null) {
 			binding = includeNode.resolveBinding();
+			if (binding == null) {
+				return null;
+			}
 			source = binding.getPHPElement();
 			if (source != null) {
 				AbstractSourceModule module = (AbstractSourceModule) source;
@@ -80,6 +70,9 @@ public class IncludeOccurrencesFinder extends AbstractOccurrencesFinder {
 	}
 
 	protected void findOccurrences() {
+		if (source == null) {
+			return;
+		}
 		fDescription = Messages.format(INCLUDE_POINT_OF, this.source.getElementName());
 		getASTRoot().accept(this);
 		int offset = includeNode.getStart();
