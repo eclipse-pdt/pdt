@@ -143,7 +143,9 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 						reporter.reportResource(modelElement, rel, suffix, replaceRange);
 					}
 				} else {
-					reporter.reportResource(modelElement, rel, suffix, replaceRange);
+					if (resource.getName().charAt(0) != '.') { // filter dot resources
+						reporter.reportResource(modelElement, rel, suffix, replaceRange);
+					}
 				}
 			}
 		}
