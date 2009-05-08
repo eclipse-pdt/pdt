@@ -129,6 +129,8 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		if (prefixPathFolder.segmentCount() > 0) {
 			container = container.getFolder(prefixPathFolder);
 		}
+		
+		ICompletionContext context = getContext();
 
 		IResource[] members = container.members();
 		for (IResource resource : members) {
@@ -137,7 +139,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 				final IPath rel = resource.getFullPath().makeRelativeTo(((IContainer) entry).getFullPath());
 				final IModelElement modelElement = DLTKCore.create(resource);
 				if (resource.getType() == IResource.FILE) {
-					if (PHPToolkitUtil.isPhpFile((IFile) resource)) {
+					if (PHPToolkitUtil.isPhpFile((IFile) resource) && !modelElement.equals(((IncludeStatementContext)context).getSourceModule())) {
 						reporter.reportResource(modelElement, rel, suffix, replaceRange);
 					}
 				} else {

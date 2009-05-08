@@ -11,7 +11,6 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -67,7 +66,7 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		TextSequence statementText = getStatementText();
 		int prefixEnd = statementText.length();		
 		final TextSequence cutTextSequence = statementText.cutTextSequence(0, this.variantLength);
-		int prefixStart = PHPTextSequenceUtilities.readForwardSpaces(cutTextSequence, 0);
+		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(cutTextSequence, 0, new char[] {'\'', '"'});
 		return statementText.subSequence(this.variantLength + prefixStart + 1, prefixEnd).toString();
 	}	
 
