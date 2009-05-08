@@ -21,7 +21,6 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ArrayVariableReference;
-import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 
 public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 
@@ -34,7 +33,7 @@ public class ArrayVariableReferenceEvaluator extends GoalEvaluator {
 	public IGoal[] init() {
 		ExpressionTypeGoal typedGoal = (ExpressionTypeGoal) goal;
 		ArrayVariableReference reference = (ArrayVariableReference) typedGoal.getExpression();
-		return new IGoal[] { new VariableTypeGoal(goal.getContext(), new VariableReference(reference.sourceStart(), reference.sourceEnd(), reference.getName())) };
+		return new IGoal[] { new ExpressionTypeGoal(goal.getContext(), new VariableReference(reference.sourceStart(), reference.sourceEnd(), reference.getName())) };
 	}
 
 	public Object produceResult() {

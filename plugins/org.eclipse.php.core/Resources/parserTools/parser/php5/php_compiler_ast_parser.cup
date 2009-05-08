@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php5;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.26 2009/03/09 20:35:41 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.27 2009/05/08 22:01:09 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,6 +15,7 @@ import org.eclipse.dltk.ast.references.*;
 import org.eclipse.dltk.ast.statements.*;
 import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.compiler.ast.parser.*;
+import org.eclipse.php.internal.core.ast.scanner.php5.*;
 
 
 parser code {:
@@ -120,7 +121,7 @@ terminal String T_DEFINE;
 terminal String T_INCLUDE,T_INCLUDE_ONCE,T_EVAL,T_REQUIRE,T_REQUIRE_ONCE;
 terminal T_COMMA;
 terminal String T_LOGICAL_OR,T_LOGICAL_XOR,T_LOGICAL_AND,T_PRINT;
-terminal VarComment T_EQUAL;
+terminal T_EQUAL;
 terminal T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD_EQUAL,T_AND_EQUAL,T_OR_EQUAL,T_XOR_EQUAL,T_SL_EQUAL,T_SR_EQUAL;
 terminal T_QUESTION_MARK;
 terminal T_SEMICOLON;
@@ -303,6 +304,17 @@ thestart ::=
 top_statement_list:statementList
 {:
 	PHPModuleDeclaration program = parser.getModuleDeclaration();
+	
+	PhpAstLexer phpAstLexer = (PhpAstLexer) parser.getScanner();
+	List commentList = phpAstLexer.getCommentList();
+	Iterator i = commentList.iterator();
+	while (i.hasNext()) {
+		Object c = i.next();
+		if (c instanceof VarComment) {
+			program.getVarComments().add((VarComment)c);
+		}
+	}
+	
 	program.setStart(statementListleft);
 	program.setEnd(statementListright);
 	RESULT = program; 
@@ -402,7 +414,7 @@ unticked_statement:statement
 {: 
 	RESULT = statement; 
 :}
-| T_VAR_COMMENT:varComment unticked_statement:statement
+| T_VAR_COMMENT unticked_statement:statement
 {:
 	RESULT = statement;
 :}
@@ -1349,10 +1361,10 @@ static_var_list:list T_COMMA T_VARIABLE:var
 	RESULT = list;
 :}
 
-| static_var_list:list T_COMMA T_VARIABLE:var T_EQUAL:varComment static_scalar:expr
+| static_var_list:list T_COMMA T_VARIABLE:var T_EQUAL static_scalar:expr
 {:
 	VariableReference v = new VariableReference(varleft, varright, var); 
-	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr, varComment); 
+	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr); 
 	list.add(assignment);
 	RESULT = list;
 :}
@@ -1365,10 +1377,10 @@ static_var_list:list T_COMMA T_VARIABLE:var
 	RESULT = list;
 :}
 
-| T_VARIABLE:var T_EQUAL:varComment static_scalar:expr
+| T_VARIABLE:var T_EQUAL static_scalar:expr
 {:
 	VariableReference v = new VariableReference(varleft, varright, var); 
-	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr, varComment); 
+	Assignment assignment = new Assignment(varleft, exprright, v, Assignment.OP_EQUAL, expr); 
 	List list = new LinkedList();
 	list.add(assignment);
 	RESULT = list;
@@ -1446,7 +1458,7 @@ method_body:body
 	methodDeclaration.setDeclaringTypeName(type.getName());
 :}
 
-| T_VAR_COMMENT:varComment class_statement:statement
+| T_VAR_COMMENT class_statement:statement
 {:
 	RESULT = statement;
 :}
@@ -1672,24 +1684,24 @@ T_LIST:start T_OPEN_PARENTHESE assignment_list:varList T_CLOSE_PARENTHESE:close 
 	RESULT = list; 
 :}
 
-| variable:var T_EQUAL:varComment expr:expr
+| variable:var T_EQUAL expr:expr
 {: 
-	RESULT = new Assignment(varleft, exprright, var, Assignment.OP_EQUAL, expr, varComment); 
+	RESULT = new Assignment(varleft, exprright, var, Assignment.OP_EQUAL, expr); 
 :}
 
-| variable:var T_EQUAL:varComment T_REFERENCE:reftoken variable:refvar
+| variable:var T_EQUAL T_REFERENCE:reftoken variable:refvar
 {: 
-	RESULT = new Assignment(varleft, refvarright, var, Assignment.OP_REF_EQUAL, refvar, varComment); 
+	RESULT = new Assignment(varleft, refvarright, var, Assignment.OP_REF_EQUAL, refvar); 
 :}
 
-| variable:var T_EQUAL:varComment T_REFERENCE:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
+| variable:var T_EQUAL T_REFERENCE:reftoken T_NEW:start class_name_reference:className ctor_arguments:ctor
 {:
 	if (ctor.sourceStart() == 0) {
 		ctor.setStart(classNameright);
 		ctor.setEnd(classNameright);
 	}
 	ClassInstanceCreation classInstanceCreation = new ClassInstanceCreation(startleft, ctorright, className, ctor);
-	Assignment assignment = new Assignment(varleft, ctorright, var, Assignment.OP_REF_EQUAL, classInstanceCreation, varComment);
+	Assignment assignment = new Assignment(varleft, ctorright, var, Assignment.OP_REF_EQUAL, classInstanceCreation);
 	RESULT = assignment;
 :} 
 

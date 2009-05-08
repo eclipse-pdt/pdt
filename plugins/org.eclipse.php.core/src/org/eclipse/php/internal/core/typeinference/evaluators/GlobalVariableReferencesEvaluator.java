@@ -23,6 +23,7 @@ import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
+import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
@@ -33,7 +34,6 @@ import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.DeclarationScope;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
-import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
 /**
  * This evaluator finds all global declarations of the variable and produces {@link VariableDeclarationGoal} as a subgoal.
@@ -105,7 +105,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 						DeclarationScope[] scopes = varSearcher.getScopes();
 						for (DeclarationScope s : scopes) {
 							for (Declaration decl : s.getDeclarations(variableName)) {
-								subGoals.add(new VariableDeclarationGoal(s.getContext(), decl.getNode()));
+								subGoals.add(new ExpressionTypeGoal(s.getContext(), decl.getNode()));
 							}
 						}
 					} catch (Exception e) {

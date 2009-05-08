@@ -27,14 +27,11 @@ import org.eclipse.dltk.compiler.problem.IProblem;
 import org.eclipse.dltk.compiler.problem.IProblemReporter;
 import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.scanner.AstLexer;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTError;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ASTNodeKinds;
-import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceDeclaration;
-import org.eclipse.php.internal.core.compiler.ast.nodes.PHPModuleDeclaration;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 
 abstract public class AbstractASTParser extends lr_parser {
 
-	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<Statement>(), new LinkedList<ASTError>());
+	private PHPModuleDeclaration program = new PHPModuleDeclaration(0, 0, new LinkedList<Statement>(), new LinkedList<ASTError>(), new LinkedList<VarComment>());
 	private IProblemReporter problemReporter;
 	private String fileName;
 	

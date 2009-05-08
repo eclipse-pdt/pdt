@@ -29,7 +29,6 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 
 	private static final Pattern VAR_COMMENT_PATTERN = Pattern.compile("(.*)(\\$[^\\s]+)(\\s+)([^\\s]+).*");
 	private PHPDocBlock latestDocBlock;
-	private VarComment latestVarComment;
 
 	public CompilerAstLexer(InputStream in) {
 		super(in);
@@ -58,8 +57,6 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 			TypeReference typeReference = new TypeReference(typeStart, typeEnd, typeName);
 			VarComment varComment = new VarComment(start, end, varReference, typeReference);
 			getCommentList().add(varComment);
-
-			latestVarComment = varComment;
 		}
 	}
 
@@ -101,10 +98,6 @@ public class CompilerAstLexer extends org.eclipse.php.internal.core.ast.scanner.
 			case ParserConstants.T_PROTECTED:
 			case ParserConstants.T_PUBLIC:
 				symbol.value = latestDocBlock;
-				break;
-			case ParserConstants.T_EQUAL:
-				symbol.value = latestVarComment;
-				latestVarComment = null;
 				break;
 		}
 

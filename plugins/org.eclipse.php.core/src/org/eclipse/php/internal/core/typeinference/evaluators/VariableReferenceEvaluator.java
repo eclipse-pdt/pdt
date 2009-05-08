@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
@@ -28,16 +29,13 @@ import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.compiler.ast.nodes.ForEachStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
-import org.eclipse.php.internal.core.compiler.ast.nodes.InstanceOfExpression;
+import org.eclipse.php.internal.core.compiler.ast.nodes.*;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.typeinference.goals.ForeachStatementGoal;
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
-import org.eclipse.php.internal.core.typeinference.goals.VariableDeclarationGoal;
 
 /**
  * This evaluator finds all local variable declarations and produces the following sub-goals:
@@ -72,11 +70,21 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		try {
 			if (context instanceof ISourceModuleContext) {
 				ISourceModuleContext typedContext = (ISourceModuleContext) context;
-				ASTNode node = /*(context instanceof MethodContext) ? ((MethodContext) context).getMethodNode() :*/ typedContext.getRootNode();
+				ModuleDeclaration node = typedContext.getRootNode();
 				LocalReferenceDeclSearcher varDecSearcher = new LocalReferenceDeclSearcher(typedContext.getSourceModule(), variableReference);
 				node.traverse(varDecSearcher);
 
 				List<IGoal> subGoals = new LinkedList<IGoal>();
+				
+				List<VarComment> varComments = ((PHPModuleDeclaration)node).getVarComments();
+				for (VarComment varComment : varComments) {
+					if (varComment.sourceStart() > variableReference.sourceStart()) {
+						break;
+					}
+					if (varComment.getVariableReference().getName().equals(variableReference.getName())) {
+						return new IGoal[] { new ExpressionTypeGoal(context, varComment.getTypeReference()) };
+					}
+				}
 
 				Declaration[] decls = varDecSearcher.getDeclarations();
 				boolean mergeWithGlobalScope = false;
@@ -90,7 +98,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 							subGoals.add(new ForeachStatementGoal(context, ((ForEachStatement) declNode).getExpression()));
 						}
 						else {
-							subGoals.add(new VariableDeclarationGoal(context, declNode));
+							subGoals.add(new ExpressionTypeGoal(context, declNode));
 						}
 					}
 				}

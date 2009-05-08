@@ -53,13 +53,8 @@ public class Assignment extends Expression {
 	private final Expression variable;
 	private final int operator;
 	private final Expression value;
-	private final VarComment varComment;
 
 	public Assignment(int start, int end, Expression variable, int operator, Expression value) {
-		this(start, end, variable, operator, value, null);
-	}
-
-	public Assignment(int start, int end, Expression variable, int operator, Expression value, VarComment varComment) {
 		super(start, end);
 
 		assert variable != null && value != null;
@@ -67,11 +62,6 @@ public class Assignment extends Expression {
 		this.variable = variable;
 		this.operator = operator;
 		this.value = value;
-		this.varComment = varComment;
-	}
-
-	public VarComment getVarComment() {
-		return varComment;
 	}
 
 	public void traverse(ASTVisitor visitor) throws Exception {

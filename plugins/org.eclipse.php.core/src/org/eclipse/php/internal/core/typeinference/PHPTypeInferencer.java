@@ -19,10 +19,8 @@ import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.typeinference.evaluators.PHPGoalEvaluatorFactory;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
 import org.eclipse.php.internal.core.typeinference.goals.MethodElementReturnTypeGoal;
-import org.eclipse.php.internal.core.typeinference.goals.VariableTypeGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocClassVariableGoal;
 import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodReturnTypeGoal;
-import org.eclipse.php.internal.core.typeinference.goals.phpdoc.VarCommentVariableGoal;
 
 @SuppressWarnings("deprecation")
 public class PHPTypeInferencer extends DefaultTypeInferencer {
@@ -64,7 +62,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are heavy goals pruned
-			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal || goal instanceof VariableTypeGoal) {
+			if (goal instanceof MethodElementReturnTypeGoal || goal instanceof ClassVariableDeclarationGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);
@@ -82,7 +80,7 @@ public class PHPTypeInferencer extends DefaultTypeInferencer {
 
 		public boolean prune(IGoal goal, EvaluatorStatistics stat) {
 			// here are PHPDoc (liteweight) goals pruned
-			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal || goal instanceof VarCommentVariableGoal) {
+			if (goal instanceof PHPDocMethodReturnTypeGoal || goal instanceof PHPDocClassVariableGoal) {
 				return true;
 			}
 			return super.prune(goal, stat);

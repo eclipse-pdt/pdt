@@ -54,7 +54,6 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		return isIncludeStatement(statementText, "require_once") || isIncludeStatement(statementText, "require") || isIncludeStatement(statementText, "include_once") || isIncludeStatement(statementText, "include"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
-	@Override
 	public boolean isExclusive() {
 		return true;
 	}
@@ -68,6 +67,5 @@ public class IncludeStatementContext extends AbstractCompletionContext {
 		final TextSequence cutTextSequence = statementText.cutTextSequence(0, this.variantLength);
 		int prefixStart = PHPTextSequenceUtilities.readForwardUntilDelim(cutTextSequence, 0, new char[] {'\'', '"'});
 		return statementText.subSequence(this.variantLength + prefixStart + 1, prefixEnd).toString();
-	}	
-
+	}
 }

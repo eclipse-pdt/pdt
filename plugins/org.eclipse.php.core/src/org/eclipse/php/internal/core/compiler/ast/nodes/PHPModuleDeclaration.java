@@ -29,13 +29,15 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 
 	private List<ASTError> errors;
 	private boolean hasErrors;
+	private List<VarComment> varComments;
 
-	public PHPModuleDeclaration(int start, int end, List<Statement> statements, List<ASTError> errors) {
+	public PHPModuleDeclaration(int start, int end, List<Statement> statements, List<ASTError> errors, List<VarComment> varComments) {
 		super(end - start, true);
 		setStatements(statements);
 		setStart(start);
 		setEnd(end);
 		this.errors = errors;
+		this.varComments = varComments;
 	}
 
 	/**
@@ -127,6 +129,10 @@ public class PHPModuleDeclaration extends ModuleDeclaration {
 	 */
 	public void setHasErrors(boolean hasErrors) {
 		this.hasErrors = hasErrors;
+	}
+	
+	public List<VarComment> getVarComments() {
+		return varComments;
 	}
 	
 	private class ErrorSearcher extends ASTVisitor{
