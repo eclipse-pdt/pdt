@@ -1,5 +1,6 @@
 package org.eclipse.php.internal.ui.wizards;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -51,8 +52,8 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 
 	@Override
 	protected void updateProject(IProgressMonitor monitor) throws CoreException, InterruptedException {
-		fCurrProject = fFirstPage.getProjectHandle();
-		IScriptProject scriptProject = DLTKCore.create(fCurrProject);
+		IProject projectHandle = fFirstPage.getProjectHandle();
+		IScriptProject scriptProject = DLTKCore.create(projectHandle);
 		if (scriptProject != null) {
 			init(scriptProject, scriptProject.getRawBuildpath(), true);
 		} else {
