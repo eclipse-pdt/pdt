@@ -263,7 +263,11 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	}
 
 	private IProject getProject() {
-		return getScriptProject().getProject();
+		IScriptProject scriptProject = getScriptProject();
+		if (scriptProject != null) {
+			return scriptProject.getProject();	
+		}
+		return null;
 	}
 
 	@Override
