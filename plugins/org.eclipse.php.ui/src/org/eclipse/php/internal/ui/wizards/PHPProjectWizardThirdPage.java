@@ -5,9 +5,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IBuildpathEntry;
 import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.internal.ui.scriptview.BuildPathContainer;
+import org.eclipse.dltk.internal.ui.wizards.buildpath.BuildPathSupport;
 import org.eclipse.dltk.ui.util.IStatusChangeListener;
 import org.eclipse.dltk.ui.wizards.BuildpathsBlock;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.ui.IPHPHelpContextIds;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.preferences.includepath.PHPBuildPathsBlock;
@@ -55,7 +59,11 @@ public class PHPProjectWizardThirdPage extends PHPProjectWizardSecondPage {
 		IProject projectHandle = fFirstPage.getProjectHandle();
 		IScriptProject scriptProject = DLTKCore.create(projectHandle);
 		if (scriptProject != null) {
-			init(scriptProject, scriptProject.getRawBuildpath(), true);
+			IBuildpathEntry[] rawBuildpath = new IBuildpathEntry[0];
+			if (scriptProject.isOpen()) {
+				rawBuildpath = scriptProject.getRawBuildpath();
+			}
+			init(scriptProject, rawBuildpath, true);
 		} else {
 			throw (new IllegalStateException());
 		}
