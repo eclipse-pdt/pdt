@@ -299,19 +299,6 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	protected void addJavaScriptNature(IProgressMonitor monitor) throws CoreException, JavaScriptModelException {
 		JsWebNature jsWebNature = new JsWebNature(getProject(), new SubProgressMonitor(monitor, 1));
 		jsWebNature.configure();
-
-		ArrayList<IIncludePathEntry> newJsClassPathsList = new ArrayList<IIncludePathEntry>();
-		// Adding all JS libs
-		newJsClassPathsList.addAll(Arrays.asList(jsWebNature.getJavaProject().getRawIncludepath()));
-		// Adding proj root as JS build path
-		IPath[] exclusionPatterns = ClasspathEntry.EXCLUDE_NONE;
-		if (fFirstPage.hasPhpSourceFolder()) {
-			//if we have PHP source folder, we exclude it from JS build path
-			exclusionPatterns = new IPath[] { new Path(getPreferenceStore().getString(PreferenceConstants.SRCBIN_SRCNAME)) };
-		}
-		newJsClassPathsList.add(JavaScriptCore.newSourceEntry(getProject().getFullPath(), exclusionPatterns));
-
-		jsWebNature.getJavaProject().setRawIncludepath((IIncludePathEntry[]) newJsClassPathsList.toArray(new IIncludePathEntry[] {}), monitor);
 	}
 
 	@Override
