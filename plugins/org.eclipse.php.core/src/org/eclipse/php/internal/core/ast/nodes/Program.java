@@ -13,7 +13,10 @@ package org.eclipse.php.internal.core.ast.nodes;
 import java.util.*;
 
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ISourceReference;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.locator.Locator;
 import org.eclipse.php.internal.core.ast.match.ASTMatcher;
@@ -641,5 +644,20 @@ public class Program extends ASTNode {
 		}
 		// allow default implementation to flag the error
 		return super.internalGetChildListProperty(property);
+	}
+
+	/**
+	 * Finds an AST node by specified binding
+	 * @param binding
+	 * @return
+	 */
+	public ASTNode findDeclaringNode(IBinding binding) {
+		ISourceReference phpElement = (ISourceReference) binding.getPHPElement();
+		try {
+			return getElementAt(phpElement.getSourceRange().getOffset());
+		} catch (ModelException e) {
+			PHPCorePlugin.log(e);
+		}
+		return null;
 	}
 }
