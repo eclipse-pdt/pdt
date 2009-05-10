@@ -384,6 +384,14 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		}
 		
 		/**
+		 * Returns all declarations for all variables
+		 * @return
+		 */
+		public Map<String, LinkedList<Declaration>> getAllDeclarations() {
+			return decls;
+		}
+		
+		/**
 		 * Returns all possible variable declarations
 		 * for the given variable name in current scope.
 		 * @param varName
