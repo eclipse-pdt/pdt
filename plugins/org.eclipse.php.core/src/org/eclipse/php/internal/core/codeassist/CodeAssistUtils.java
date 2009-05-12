@@ -127,7 +127,7 @@ public class CodeAssistUtils {
 	public static IMethod[] getSuperClassMethods(IType type, String prefix, int mask) {
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		try {
-			if (type.getSuperClasses() != null) {
+			if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 				if (prefix.length() == 0) {
 					ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
 					IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
@@ -236,7 +236,7 @@ public class CodeAssistUtils {
 				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
 				searchTypes.addAll(Arrays.asList(allSuperclasses));
 
-			} else if (type.getSuperClasses() != null) {
+			} else if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 				SearchEngine searchEngine = new SearchEngine();
 				IDLTKSearchScope scope;
 				SearchPattern pattern;

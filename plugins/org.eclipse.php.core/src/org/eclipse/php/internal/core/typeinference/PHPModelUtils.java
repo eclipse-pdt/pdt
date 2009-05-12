@@ -77,15 +77,22 @@ public class PHPModelUtils {
 			throw new NullPointerException();
 		}
 
-		IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
-		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-
 		final List<IMethod> methods = new LinkedList<IMethod>();
-		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-			public void acceptSearchMatch(SearchMatch match) throws CoreException {
-				methods.add((IMethod) match.getElement());
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+			IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
+			SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+	
+			new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					methods.add((IMethod) match.getElement());
+				}
+			}, monitor);
+		} else {
+			IMethod method = type.getMethod(name);
+			if (method.exists()) {
+				methods.add(method);
 			}
-		}, monitor);
+		}
 
 		return methods.toArray(new IMethod[methods.size()]);
 	}
@@ -103,20 +110,14 @@ public class PHPModelUtils {
 			throw new NullPointerException();
 		}
 
-		final IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
-		SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-
 		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
-		new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-			public void acceptSearchMatch(SearchMatch match) throws CoreException {
-				IMethod method = (IMethod) match.getElement();
-				PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
-				if (docBlock != null) {
-					docs.add(docBlock);
-				}
+		
+		for (IMethod method : getTypeHierarchyMethod(type, name, monitor)) {
+			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+			if (docBlock != null) {
+				docs.add(docBlock);
 			}
-		}, monitor);
-
+		}
 		return docs.toArray(new PHPDocBlock[docs.size()]);
 	}
 

@@ -109,7 +109,7 @@ public class ClassVariableDeclarationEvaluator extends AbstractPHPGoalEvaluator 
 				scope = SearchEngine.createSearchScope(type);
 				searchEngine.search(pattern, participants, scope, requestor, null);
 
-				if (type.getSuperClasses() != null) {
+				if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 					scope = SearchEngine.createSuperHierarchyScope(type);
 					searchEngine.search(pattern, participants, scope, requestor, null);
 				}
