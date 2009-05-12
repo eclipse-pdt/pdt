@@ -1117,7 +1117,7 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	@Override
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
 		super.editorContextMenuAboutToShow(menu);
-
+		
 		if (fContextMenuGroup != null) {
 			ActionContext context = new ActionContext(getSelectionProvider().getSelection());
 			fContextMenuGroup.setContext(context);
@@ -1137,6 +1137,9 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_DECLARATION);
+			if (action != null)
+				menu.appendToGroup(openGroup, action);
+			action = getAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE);
 			if (action != null)
 				menu.appendToGroup(openGroup, action);
 			action = getAction(IPHPEditorActionDefinitionIds.OPEN_TYPE_HIERARCHY);
@@ -1778,8 +1781,8 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		setAction("ShowPHPDoc", resAction); //$NON-NLS-1$
 
 		resAction = new TextOperationAction(PHPUIMessages.getBundleForConstructedKeys(), "ShowOutline.", this, PHPStructuredTextViewer.SHOW_OUTLINE); //$NON-NLS-1$
-		resAction.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_OUTLINE); //$NON-NLS-1$
-		setAction(IPHPEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
+		resAction.setActionDefinitionId(IScriptEditorActionDefinitionIds.SHOW_OUTLINE); //$NON-NLS-1$
+		setAction(IScriptEditorActionDefinitionIds.SHOW_OUTLINE, resAction);
 
 		if (isExternal) {
 			// Override the way breakpoints are set on external files.

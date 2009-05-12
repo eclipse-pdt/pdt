@@ -989,7 +989,7 @@
 		<key platform="gtk" sequence="ESC CTRL+C" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.wst.sse.ui.toggle.comment" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<key sequence="M1+O" contextId="org.eclipse.php.ui.phpEditorScope"
-			commandId="org.eclipse.pdt.ui.edit.text.php.show.outline" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+			commandId="org.eclipse.dltk.ui.edit.text.script.show.outline" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
 		<!-- source -->
 		<key sequence="M1+M2+J" contextId="org.eclipse.php.ui.phpEditorScope"
 			commandId="org.eclipse.php.ui.edit.text.add.description" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
