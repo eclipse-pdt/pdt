@@ -75,7 +75,7 @@ public class ActionContributorForPhp extends ActionContributorHTML {
 	public ActionContributorForPhp() {
 		super();
 
-		ResourceBundle resourceBundle = PHPUIMessages.getBundleForConstructedKeys();
+		ResourceBundle resourceBundle = DLTKEditorMessages.getBundleForConstructedKeys();
 
 		fRetargetShowPHPDoc = new RetargetAction(PHPActionConstants.SHOW_PHP_DOC, PHPUIMessages.getString("ShowPHPDoc_label"));
 		fRetargetShowPHPDoc.setActionDefinitionId(IPHPEditorActionDefinitionIds.SHOW_PHPDOC);
