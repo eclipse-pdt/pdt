@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?pde version="3.1"?>
+<?pde version="3.5"?>
 
-<product name="%productName" id="org.eclipse.php.product" application="org.eclipse.ui.ide.workbench" useFeatures="true">
+<product name="PHP Development Tools" id="org.eclipse.php.product" application="org.eclipse.ui.ide.workbench" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <text>
@@ -9,7 +9,8 @@
       </text>
    </aboutInfo>
 
-   <configIni use="default"/>
+   <configIni use="default">
+   </configIni>
 
    <launcherArgs>
    </launcherArgs>
@@ -29,7 +30,7 @@
       <plugin id="org.eclipse.core.expressions"/>
       <plugin id="org.eclipse.core.resources"/>
       <plugin id="org.eclipse.core.resources.compatibility" fragment="true"/>
-      <plugin id="org.eclipse.core.resources.linux"/>
+      <plugin id="org.eclipse.core.resources.linux" fragment=""/>
       <plugin id="org.eclipse.core.runtime"/>
       <plugin id="org.eclipse.core.runtime.compatibility"/>
       <plugin id="org.eclipse.core.variables"/>
@@ -38,7 +39,7 @@
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.php"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86"/>
+      <plugin id="org.eclipse.swt.gtk.linux.x86" fragment=""/>
       <plugin id="org.eclipse.ui"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
@@ -46,19 +47,21 @@
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.update.configurator"/>
       <plugin id="org.eclipse.update.core"/>
-      <plugin id="org.eclipse.update.core.linux"/>
+      <plugin id="org.eclipse.update.core.linux" fragment=""/>
       <plugin id="org.eclipse.update.ui"/>
    </plugins>
 
    <features>
-      <feature id="org.eclipse.emf" version="2.2.1.v200609210005"/>
-      <feature id="org.eclipse.jem" version="1.2.2.v20061027_M----6zXJJzM1TEVU"/>
-      <feature id="org.eclipse.php_feature" version="0.7.0.qualifier"/>
-      <feature id="org.eclipse.platform" version="3.2.1.r321_v20060921-b_XVA-INSQSyMtx"/>
-      <feature id="org.eclipse.rcp" version="3.2.1.r321_v20060801-2ekW2BxmcpPUOoq"/>
-      <feature id="org.eclipse.wst" version="1.5.2.v200610070620-X3Tmm8_VLz2EcCH"/>
-      <feature id="org.eclipse.xsd" version="2.2.1.v200609210005"/>
-      <feature id="org.zend.php.debug_feature" version="0.1.6"/>
+      <feature id="org.eclipse.emf"/>
+      <feature id="org.eclipse.php"/>
+      <feature id="org.eclipse.platform"/>
+      <feature id="org.eclipse.wst"/>
+      <feature id="org.eclipse.xsd"/>
+      <feature id="org.eclipse.datatools.connectivity.feature"/>
+      <feature id="org.eclipse.datatools.enablement.feature"/>
+      <feature id="org.eclipse.datatools.modelbase.feature"/>
+      <feature id="org.eclipse.datatools.sqldevtools.feature"/>
    </features>
+
 
 </product>
