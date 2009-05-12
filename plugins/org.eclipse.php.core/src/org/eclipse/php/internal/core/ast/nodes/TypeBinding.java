@@ -22,7 +22,6 @@ import org.eclipse.dltk.evaluation.types.MultiTypeType;
 import org.eclipse.dltk.evaluation.types.SimpleType;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
-import org.eclipse.php.internal.core.ast.nodes.BodyDeclaration.Modifier;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
 public class TypeBinding implements ITypeBinding {
@@ -554,8 +553,12 @@ public class TypeBinding implements ITypeBinding {
 
 		boolean result = true;
 		for (IModelElement element : elements) {
+			IType type = (IType) element;
 			try {
-				ITypeHierarchy supertypeHierarchy = ((IType) element).newSupertypeHierarchy(new NullProgressMonitor());
+				if (type.getSuperClasses() == null || type.getSuperClasses().length == 0) {
+					continue;
+				}
+				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
 				for (IModelElement modelElement : otherElements) {
 					if (modelElement instanceof IType) {
