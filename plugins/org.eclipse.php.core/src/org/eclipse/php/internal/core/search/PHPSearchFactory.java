@@ -21,6 +21,8 @@ import org.eclipse.dltk.core.search.matching.MatchLocator;
 
 public class PHPSearchFactory extends AbstractSearchFactory {
 
+	private PHPSearchPatternProcessor phpSearchPatternProcessor = new PHPSearchPatternProcessor();
+	
 	public IMatchLocatorParser createMatchParser(MatchLocator locator) {
 		return new PHPMatchLocatorParser(locator);
 	}
@@ -30,6 +32,6 @@ public class PHPSearchFactory extends AbstractSearchFactory {
 	}
 
 	public ISearchPatternProcessor createSearchPatternProcessor() {
-		return new PHPSearchPatternProcessor();
+		return phpSearchPatternProcessor;
 	}
 }
