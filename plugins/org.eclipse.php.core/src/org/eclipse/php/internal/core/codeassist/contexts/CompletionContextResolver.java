@@ -27,14 +27,11 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 public class CompletionContextResolver implements ICompletionContextResolver {
 
 	private static ICompletionContextResolver[] instances;
-	private Collection<ICompletionContext> contexts;
 
 	/**
 	 * Constructs default completion context resolver
 	 */
 	public CompletionContextResolver() {
-		contexts = new LinkedList<ICompletionContext>();
-		initCompletionContexts(contexts);
 	}
 
 	/**
@@ -62,13 +59,9 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 		}
 		return instances;
 	}
-
-	/**
-	 * Initializes given collection with known completion contexts
-	 * @param contexts
-	 */
-	protected void initCompletionContexts(Collection<ICompletionContext> contexts) {
-		contexts.addAll(Arrays.asList(new ICompletionContext[] {
+	
+	public ICompletionContext[] createContexts() {
+		return new ICompletionContext[] {
 			new PHPDocTagStartContext(),
 			new PHPDocParamTagContext(),
 			new PHPDocReturnTagContext(),
@@ -96,13 +89,13 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 			new NamespaceMemberContext(),
 			new NamespaceNameContext(),
 			new IncludeStatementContext(),
-		}));
+		};
 	}
 
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
 		// find correct completion contexts according to known information:
-		for (ICompletionContext context : contexts) {
+		for (ICompletionContext context : createContexts()) {
 			try {
 				if (context.isValid(sourceModule, offset, requestor)) {
 					result.add(context);

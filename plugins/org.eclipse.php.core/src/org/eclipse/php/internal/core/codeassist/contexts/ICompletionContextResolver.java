@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.CompletionRequestor;
@@ -38,4 +39,10 @@ public interface ICompletionContextResolver {
 	 * @throws ResourceAlreadyExists 
 	 */
 	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor);
+	
+	/**
+	 * Creates known completion contexts
+	 * @param contexts
+	 */
+	public ICompletionContext[] createContexts();
 }
