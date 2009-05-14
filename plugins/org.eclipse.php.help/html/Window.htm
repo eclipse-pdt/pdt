@@ -29,9 +29,9 @@ td.whs10 { width:66.573%; border-top-style:Solid; border-top-color:#000000; bord
 td.whs11 { width:21.881%; border-left-width:1px; border-left-color:#000000; border-left-style:Solid; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; x-condition:PDT; }
 td.whs12 { width:11.546%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; x-condition:PDT; }
 td.whs13 { width:66.573%; border-right-width:1px; border-right-color:#000000; border-right-style:Solid; border-bottom-style:Solid; border-bottom-color:#000000; border-bottom-width:1px; padding-right:10px; padding-left:10px; x-condition:PDT; }
-p.whs14 { x-condition:PDT; }
-p.whs15 { font-weight:bold; x-condition:PDT; }
-img_whs16 { border:none; width:18px; height:17px; float:none; x-condition:PDT; border-style:none; }
+p.whs14 { font-weight:bold; x-condition:PDT; }
+img_whs15 { border:none; width:18px; height:17px; float:none; x-condition:PDT; border-style:none; }
+p.whs16 { x-condition:PDT; }
 table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs18 { width:7.093%; }
 col.whs19 { width:92.907%; }
@@ -82,7 +82,7 @@ if (window.gbWhTopic)
 	if (window.setRelStartPage)
 	{
 	addTocInfo("PDT Help\nReference\nPHP Perspective Menus\nWindow");
-addAvenueInfo("Zend Studio for Eclipse User Guide","Run.htm","Navigation.htm");
+addAvenueInfo("Zend Studio for Eclipse Help","Run.htm","Help.htm");
 
 	}
 
@@ -117,8 +117,8 @@ if (window.writeIntopicBar)
 <h1>Window Menu</h1>
 <div class="whs1">
 </div>
-<p>&nbsp;</p>
-<p>The Window menu allows you to customize your workbench display.</p>
+<p>The Window menu allows 
+ you to customize your workbench display.</p>
 <p>&nbsp;</p>
 <p class="whs2">The options available from the Window menu 
  are:</p>
@@ -160,9 +160,10 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="66.573%" class="whs13">
 <p>Opens a selected perspective, containing a selection of views.</p>
-<p class="whs14">See the Workbench User Guide for more on <a 
- href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-4.htm" 
- style="x-condition: PDT;">Perspectives</a>.</td></tr>
+<p>See the Workbench User Guide for more on <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-4.htm" 
+ style="x-condition: PDT, Product;">Perspectives</a>.</p>
+<div class="whs1">
+</div></td></tr>
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
 <p class="whs2">Show View</td>
@@ -170,12 +171,13 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td width="66.573%" class="whs13">
 <p>Displays a selected view.</p>
-<p class="whs14">See the Workbench User Guide for more on <a 
- href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm" 
- style="x-condition: PDT;">Views</a>.</td></tr>
+<p>See the Workbench User Guide for more on <a href="../../PLUGINS_ROOT/org.eclipse.platform.doc.user/concepts/concepts-5.htm" 
+ style="x-condition: PDT, Product;">Views</a>.</p>
+<div class="whs1">
+</div></td></tr>
 <tr valign="top" class="whs7">
 <td width="21.881%" class="whs11">
-<p class="whs15"><a name=Customize_Perspectives1></a>Customize 
+<p class="whs14"><a name=Customize_Perspectives1></a>Customize 
  Perspective</td>
 <td width="11.546%" class="whs12">
 <p>&nbsp;</td>
@@ -214,16 +216,16 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <td width="66.573%" class="whs13">
 <p>Closes all perspectives.</p>
 <p>No views or functionality will be available.</p>
-<p>Click the open perspective icon <img src="open_perspective.png" x-maintain-ratio="TRUE" width="18px" height="17px" border="0" class="img_whs16"> to open a perspective.</td></tr>
+<p>Click the open perspective icon <img src="open_perspective.png" x-maintain-ratio="TRUE" width="18px" height="17px" border="0" class="img_whs15"> to open a perspective.</td></tr>
 <tr valign="top" class="whs7">
 <td colspan="1" rowspan="1" width="21.881%" class="whs11">
-<p class="whs15"><a href="Navigation.htm" 
+<p class="whs14"><a href="Navigation.htm" 
  style="x-condition: PDT;">Navigation</a></td>
 <td colspan="1" rowspan="1" width="11.546%" class="whs12">
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="66.573%" class="whs13">
 <p>Allows quick access and Navigation between views and perspectives.</p>
-<p class="whs14">For a list of commands available from this 
+<p class="whs16">For a list of commands available from this 
  menu option, see the &quot;<a href="Navigation.htm" style="x-condition: PDT;">Navigation</a>&quot; 
  subtopic.</td></tr>
 <tr valign="top" class="whs7">
@@ -244,7 +246,7 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <p>&nbsp;</td>
 <td colspan="1" rowspan="1" width="66.573%" class="whs13">
 <p>Opens the preferences dialog to configure all aspects of the workspace.</p>
-<p class="whs14">See the PHP Preferences section for more on 
+<p class="whs16">See the PHP Preferences section for more on 
  <a href="Preferences.htm" style="x-condition: PDT;">PHP Preferences</a>.</td></tr>
 <script language='JavaScript'><!--
 if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) document.write("</table></table><table>");
@@ -283,14 +285,15 @@ if ((navigator.appName == "Netscape") && (parseInt(navigator.appVersion) == 4)) 
 <div placeholder id="footer" class="whs30">
  <p align="right" class="whs31"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
- the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
- Documentation</a> for the most up-to-date information.</p>
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
  <p align="right" class="whs32"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
  <p align="center" class="whs33">PHP Development 
- Tool</p>
+ Tools</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
 <!--

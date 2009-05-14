@@ -19,24 +19,33 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 h1.whs1 { x-condition:Online; }
 div.whs2 { float:none; }
 img_whs3 { border:none; width:539px; height:156px; float:none; border-style:none; }
-table.whs4 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+table.whs4 { x-cell-content-align:top; width:100%; border-spacing:0px; }
 col.whs5 { width:7.093%; }
 col.whs6 { width:92.907%; }
-tr.whs7 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs8 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+tr.whs7 { x-cell-content-align:top; }
+td.whs8 { width:7.093%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; border-top-style:none; }
 p.whs9 { font-size:6pt; }
-td.whs10 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs11 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs12 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs13 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs14 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-p.whs15 { font-weight:bold; }
-p.whs16 { font-weight:normal; }
-tr.whs17 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs18 { width:100%; }
-p.whs19 { text-align:right; x-condition:Product, Online; }
-p.whs20 { text-align:right; x-condition:Online; }
-p.whs21 { text-align:center; x-condition:PDT; text-decoration:underline; }
+td.whs10 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
+p.whs11 { font-weight:bold; }
+td.whs12 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; }
+img_whs13 { border:none; width:28px; height:33px; float:none; border-style:none; }
+td.whs14 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
+ol.whs15 { list-style:decimal; }
+td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs18 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs19 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs21 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs23 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs24 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs25 { font-weight:normal; }
+tr.whs26 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs27 { width:100%; }
+p.whs28 { text-align:right; x-condition:Product, Online; }
+p.whs29 { text-align:right; x-condition:Online; }
+p.whs30 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -70,7 +79,7 @@ if (window.gbWhTopic)
 	if (window.setRelStartPage)
 	{
 	addTocInfo("PDT Help\nReference\nPHP Preferences\nEditor Preferences");
-addAvenueInfo("Zend Studio for Eclipse User Guide","Launching.htm","Code_Assist.htm");
+addAvenueInfo("Zend Studio for Eclipse Help","Debug.htm","File_Network.htm");
 
 	}
 
@@ -107,63 +116,92 @@ if (window.writeIntopicBar)
 </div>
 <p>&nbsp;</p>
 <p>The Editor preferences page allows you to configure smart caret positioning 
- behaviour in the editor. Smart caret positioning determines where the 
- cursor will jump to when the Home and End keys are pressed.</p>
+ behavior in the editor. Smart caret positioning determines where the cursor 
+ will jump to when certain positioning keys (e.g. Home / End) are pressed.</p>
 <p>&nbsp;</p>
 <p>The Editor 
  Preferences page is accessed from Window | Preferences | PHP | Editor.</p>
 <p class=picture><img src="editor.png" x-maintain-ratio="TRUE" width="539px" height="156px" border="0" class="img_whs3"></p>
-<p>Choose whether to enable:</p>
-<ul><li class=p-ListBullet1><p class=ListBullet1>Smart caret positioning 
- at line start and end - If this checkbox is unmarked, the cursor will 
- jump to the beginning/end of a line when Home/End are pressed. If it is 
- marked, the cursor will jump to the beginning/end of the <span style="font-style: italic;"><I>typed</I></span> 
- line (i.e. ignoring the tabs at the beginning/end of a line).</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>Smart caret positioning 
- in PHP names - If this checkbox is marked, the cursor will jump to the 
- beginning/end of a PHP name when Home/End are pressed.</p></li>
-</ul>
-<p class=ListBullet1>&nbsp;</p>
-<p class=ListBullet1>Click Apply to apply your settings.</p>
-<p class=Note>Note:</p>
-<p class=NoteText>More editor settings can be accessed by clicking the 
- &quot;Text Editors&quot; link.</p>
+<p>&nbsp;</p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs4">
 <col class="whs5">
 <col class="whs6">
 
-<tr valign="top" class="whs7"><td colspan="1" rowspan="1" width="7.093%" class="whs8">
+<tr valign="top" class="whs7">
+<td colspan="1" rowspan="1" width="7.093%" class="whs8">
 <p class="whs9">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs10">
-<p>&nbsp;</td></tr>
-<tr valign="top" class="whs11"><td width="7.093%" class="whs12">
-<p class="whs9"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs13"></td>
+<p class="whs11">&nbsp;</td></tr>
+<tr valign="top" class="whs7">
+<td width="7.093%" class="whs12">
+<p class="whs9"><img src="ref_icon.png" x-maintain-ratio="TRUE" alt="Instructions on how to complete a procedure" width="28px" height="33px" border="0" class="img_whs13"></td>
 <td width="92.907%" class="whs14">
-<p class="whs15">Related Links:</p>
-<p class="whs16"><a href="Preferences.htm">PHP Preferences</a></p>
-<p class="whs16"><a HREF="Code_Assist.htm">Code Assist Preferences</a></p>
-<p class="whs16"><a HREF="Folding.htm">Folding Preferences</a></p>
-<p class="whs16"><a HREF="Hovers.htm">Hovers Preferences</a></p>
-<p class="whs16"><a HREF="Syntax_Coloring.htm">Syntax Coloring 
- Preferences</a></p>
-<p class="whs16"><a HREF="Task_Tags.htm">Task Tags Preferences</a></p>
-<p class="whs16"><a HREF="Typing.htm">Typing Preferences</a></td></tr>
-<tr valign="top" class="whs17"><td colspan="1" rowspan="1" width="7.093%" class="whs12">
+<p class="whs11">To configure Smart Caret Positioning Preferences</p>
+<ol type="1" class="whs15">
+	<li style="font-weight: bold; margin-left: -20px;" class=p><p>Mark 
+ the required checkboxes to configure the following options: </p></li>
+</ol>
+<ul><li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Smart 
+ caret positioning at line start and end - If this checkbox is unmarked, 
+ the cursor will jump to the beginning/end of a line when Home/End are 
+ pressed. If it is marked, the cursor will jump to the beginning/end of 
+ the <span style="font-style: italic;"><I>typed</I></span> line (i.e. ignoring 
+ the tabs at the beginning/end of a line).</p></li>
+	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Smart 
+ caret positioning in PHP names - If this checkbox is marked, the cursor 
+ will jump to the beginning/end of a 'word' within a PHP element (class 
+ / function / variable) when Ctrl + left arrow/right arrow are pressed. 
+ When unmarked, it will jump to the beginning/end of the whole element.</p></li>
+</ul>
+<ol start="2" type="1" class="whs15">
+	<li style="margin-left: -20px;" class=p><p>Click Apply to apply your 
+ settings.</p></li>
+</ol>
+<p class=Note>Note:</p>
+<p class=NoteText>More editor settings can be accessed by clicking the 
+ &quot;Text Editors&quot; link.</td></tr>
+<tr valign="top" class="whs7">
+<td rowspan="1" colspan="2" width="100%" class="whs16">
+<p>&nbsp;</td>
+</tr>
+</table>
+<table x-use-null-cells cellspacing="0" width="100%" class="whs17">
+<col class="whs5">
+<col class="whs6">
+
+<tr valign="top" class="whs18"><td colspan="1" rowspan="1" width="7.093%" class="whs19">
 <p class="whs9">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs14">
+<td colspan="1" rowspan="1" width="92.907%" class="whs20">
+<p>&nbsp;</td></tr>
+<tr valign="top" class="whs21"><td width="7.093%" class="whs22">
+<p class="whs9"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs23"></td>
+<td width="92.907%" class="whs24">
+<p class="whs11">Related Links:</p>
+<p class="whs25"><a href="Preferences.htm">PHP Preferences</a></p>
+<p class="whs25"><a HREF="Code_Assist.htm">Code Assist Preferences</a></p>
+<p class="whs25"><a HREF="Folding.htm">Folding Preferences</a></p>
+<p class="whs25"><a HREF="Hovers.htm">Hovers Preferences</a></p>
+<p class="whs25"><a HREF="Syntax_Coloring.htm">Syntax Coloring 
+ Preferences</a></p>
+<p class="whs25"><a HREF="Task_Tags.htm">Task Tags Preferences</a></p>
+<p class="whs25"><a HREF="Typing.htm">Typing Preferences</a></td></tr>
+<tr valign="top" class="whs26"><td colspan="1" rowspan="1" width="7.093%" class="whs22">
+<p class="whs9">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs24">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs18">
- <p align="right" class="whs19"><span 
+<div placeholder id="footer" class="whs27">
+ <p align="right" class="whs28"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
- the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
- Documentation</a> for the most up-to-date information.</p>
- <p align="right" class="whs20"><span style="background-color: #ffffff;"><a 
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
+ <p align="right" class="whs29"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs21">PHP Development 
- Tool</p>
+ <p align="center" class="whs30">PHP Development 
+ Tools</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
 <!--

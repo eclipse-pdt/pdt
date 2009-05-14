@@ -31,16 +31,18 @@ img_whs12 { border:none; width:28px; height:33px; float:none; border-style:none;
 td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs14 { list-style:decimal; }
 img_whs15 { border:none; width:398px; height:262px; float:none; border-style:none; }
-td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
-td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
-img_whs20 { border:none; width:28px; height:18px; float:none; border-style:none; }
-p.whs21 { x-condition:Online; }
-div.whs22 { width:100%; }
-p.whs23 { text-align:right; x-condition:Product, Online; }
-p.whs24 { text-align:right; x-condition:Online; }
-p.whs25 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs16 { margin-left:24px; x-condition:Studio_6; }
+ul.whs17 { list-style:decimal; }
+td.whs18 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs19 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+td.whs20 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; }
+td.whs21 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; }
+img_whs22 { border:none; width:28px; height:18px; float:none; border-style:none; }
+p.whs23 { x-condition:Online; }
+div.whs24 { width:100%; }
+p.whs25 { text-align:right; x-condition:Product, Online; }
+p.whs26 { text-align:right; x-condition:Online; }
+p.whs27 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -74,7 +76,7 @@ if (window.gbWhTopic)
 	if (window.setRelStartPage)
 	{
 	addTocInfo("PDT Help\nReference\nPHP Preferences\nPHP Servers Preferences");
-addAvenueInfo("Zend Studio for Eclipse User Guide","PHP_Manual.htm","Templates.htm");
+addAvenueInfo("Zend Studio for Eclipse Help","PHP_Manual.htm","Templates.htm");
 
 	}
 
@@ -157,18 +159,45 @@ if (window.writeIntopicBar)
 <ol start="5" type="1" class="whs14">
 	<li style="margin-left: -20px;" class=p><p>If you would like to map 
  a path on your server to a local path, click Add and enter: </p></li>
-	<li class=p-ListBullet1><p class=ListBullet1>The Path on your server.</p></li>
+	<li class=p-ListBullet1><p class=ListBullet1>The path on your server.</p></li>
 	<li class=p-ListBullet1><p class=ListBullet1>The path you would like 
  to map it to in your Workspace or on your File System.<br>
 	See <a HREF="Adding_a_Server_Path_Map.htm">Adding a Server Location 
  Path Map</a> for more information.</p></li>
 </ol>
 <ol start="6" type="1" class="whs14">
-	</ol>
+	<li style="margin-left: -20px; x-condition: Studio_7;" class=p><p>If 
+ you would like to enable integration with Zend Server, mark the 'Enable Zend Server &nbsp;Integration' 
+ checkbox and enter the relevant information: </p></li>
+	<li style="x-condition: Studio_7;" class=p-ListBullet1><p class=ListBullet1>URL 
+ Suffix - The suffix which should be added to the URL of your document 
+ root in order to browse to your Zend Server GUI.</p></li>
+	<li style="x-condition: Studio_7;" class=p-ListBullet1><p class=ListBullet1>Port 
+ number - Enter the port number you defined during Zend Server installation.<br>
+	See the <a href="http://www.zend.com/en/products/server/getting-started/server-faq#faq2" 
+ target=_blank>Zend Server FAQ</a> site for default port number settings.</p></li>
+	<li style="x-condition: Studio_7;" class=p-ListBullet1><p class=ListBullet1>Password 
+ - The password used to access your Zend Server GUI.</p></li>
+</ol>
+<ol start="7" type="1" class="whs14">
+	<li style="margin-left: -20px; x-condition: Studio_6;" class=p><p>If 
+ you would like to enable integration with Zend Platform, mark the 'Enable Platform Integration' checkbox and enter 
+ the relevant information: </p></li>
+</ol>
+<ul><li style="x-condition: Studio_6;" class=p-ListBullet1><p class=ListBullet1>Platform 
+ GUI</p></li>
+	<li style="x-condition: Studio_6;" class=p-ListBullet1><p class=ListBullet1>Authentication 
+ - Your Platform User Name and Password</p></li>
+</ul>
+<ol start="6" type="1" class="whs14">
+	<li style=" x-condition: Studio_6; " class=p><p class="whs16">For 
+ more, see Defining 
+ a Platform Server.</p></li>
+</ol>
 <ol start="8" type="1" class="whs14">
 	</ol>
-<ol start="8" type="1" class="whs14">
-	</ol>
+<ul start="8" type="1" class="whs17">
+	</ul>
 <ol start="10" type="1" class="whs14">
 	</ol>
 <ol start="6" type="1" class="whs14">
@@ -176,46 +205,47 @@ if (window.writeIntopicBar)
  style="x-condition: PDT;">Click Finish.</span></p></li>
 </ol></td></tr>
 <tr valign="top" class="whs6">
-<td rowspan="1" colspan="2" width="100%" class="whs16">
+<td rowspan="1" colspan="2" width="100%" class="whs18">
 <p>Your new server configuration will be added to the server list<span 
- style="x-condition: PDT;">.</span></td>
+ style="x-condition: PDT;">.</span><span style="x-condition: Studio_7;">Zend Server</span></td>
 </tr>
 </table>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs17">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs19">
 <col class="whs4">
 <col class="whs5">
 
 <tr valign="top" class="whs6">
-<td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<td colspan="1" rowspan="1" width="7.093%" class="whs20">
 <p class="whs8">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<td colspan="1" rowspan="1" width="92.907%" class="whs21">
 <p>&nbsp;</td></tr>
 <tr valign="top" class="whs6">
 <td width="7.093%" class="whs11">
-<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs20"></td>
+<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
 <td width="92.907%" class="whs13">
 <p class="whs10">Related Links:</p>
-<p class="whs21"><a href="Debugging.htm" style="x-condition: Online;">Debugging</a></p>
-<p class="whs21"><a href="Debugging_a_PHP_Web_Page.htm" 
+<p class="whs23"><a href="Debugging.htm" style="x-condition: Online;">Debugging</a></p>
+<p class="whs23"><a href="Debugging_a_PHP_Web_Page.htm" 
  style="x-condition: Online;">Debugging a PHP Web Page</a></p>
-<p class="whs21"><a HREF="Preferences.htm">PHP Preferences</a></td></tr>
+<p class="whs23"><a HREF="Preferences.htm">PHP Preferences</a></td></tr>
 <tr valign="top" class="whs6">
 <td colspan="1" rowspan="1" width="7.093%" class="whs11">
 <p class="whs8">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs13">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs22">
- <p align="right" class="whs23"><span 
+<div placeholder id="footer" class="whs24">
+ <p align="right" class="whs25"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
- the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
- Documentation</a> for the most up-to-date information.</p>
- <p align="right" class="whs24"><span style="background-color: #ffffff;"><a 
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
+ <p align="right" class="whs26"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs25">PHP Development 
- Tool</p>
+ <p align="center" class="whs27">PHP Development 
+ Tools</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
 <!--

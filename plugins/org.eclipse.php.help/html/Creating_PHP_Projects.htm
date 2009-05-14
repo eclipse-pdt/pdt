@@ -28,22 +28,25 @@ td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style
 img_whs10 { border:none; width:28px; height:33px; float:none; border-style:none; }
 td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; }
 ol.whs12 { list-style:decimal; }
-img_whs13 { border:none; width:388px; height:489px; float:none; border-style:none; }
-p.whs14 { font-weight:normal; }
-td.whs15 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-table.whs16 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-tr.whs17 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs18 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
-td.whs19 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs20 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs21 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs22 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs23 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-tr.whs24 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs25 { width:100%; }
-p.whs26 { text-align:right; x-condition:Product, Online; }
-p.whs27 { text-align:right; x-condition:Online; }
-p.whs28 { text-align:center; x-condition:PDT; text-decoration:underline; }
+img_whs13 { border:none; width:388px; height:489px; float:none; x-condition:PDT; border-style:none; }
+img_whs14 { border:none; width:387px; height:440px; float:none; border-style:none; }
+img_whs15 { border:none; width:401px; height:518px; float:none; border-style:none; }
+p.whs16 { font-weight:normal; }
+p.whs17 { x-condition:PDT_Studio_7; }
+td.whs18 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs19 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs20 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs21 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs22 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs23 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs24 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs25 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs26 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+tr.whs27 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs28 { width:100%; }
+p.whs29 { text-align:right; x-condition:Product, Online; }
+p.whs30 { text-align:right; x-condition:Online; }
+p.whs31 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -77,6 +80,7 @@ if (window.gbWhTopic)
 	if (window.setRelStartPage)
 	{
 	addTocInfo("PDT Help\nTasks\nCreating PHP Projects");
+addAvenueInfo("Zend Studio for Eclipse Help","phpDoc_Comments.htm","File_Creation.htm");
 
 	}
 
@@ -132,41 +136,64 @@ if (window.writeIntopicBar)
 	The New PHP Project wizard is displayed.</p></li>
 </ol>
 <p class=picture style="x-condition: PDT;"><img src="new_php_project_wizard.png" x-maintain-ratio="TRUE" width="388px" height="489px" border="0" class="img_whs13"></p>
+<p class=FIgureCaption style="x-condition: Studio_6;"><img src="new_php_project_wizard_studio.png" x-maintain-ratio="TRUE" width="387px" height="440px" border="0" class="img_whs14"></p>
+<p class=picture style="x-condition: Studio_7;"><img src="new_php_project_wizard_studio_7.png" x-maintain-ratio="TRUE" width="401px" height="518px" border="0" class="img_whs15"></p>
 <ol start="2" type="1" class="whs12">
-	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs14">Enter 
+	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs16">Enter 
  the following information:</p></li>
 	<li style="font-weight: normal; margin-left: -20px;" class=p-ListBullet1><p 
  class=ListBullet1>Project name - The required project name</p></li>
-	<li style="font-weight: normal; margin-left: -20px;" class=p-ListBullet1><p 
- class=ListBullet1>Contents - Select whether to:</p></li>
+	<li style="margin-left: -20px;  x-condition: Studio_6; " class=p-ListBullet1><p 
+ class=ListBullet1 style="x-condition: Studio_6;">Contents - Create the 
+ new project in the default workspace direcotry or unmark the checkbox 
+ to Browse to a different location.</p></li>
+	<li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p-ListBullet1><p 
+ class=ListBullet1 style="x-condition: PDT_Studio_7;">Contents - Select 
+ whether to:</p></li>
 </ol>
-<ul><li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Create 
- a new project in the workspace - Creates a new project with the specified 
- name.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Create 
- a project from existing source - opens an existing PHP project in the 
- workspace. Click Browse to select the existing project.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>PHP 
- Version - Select whether to:</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Use 
- default PHP settings - Uses the default PHP Interpreter settings.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Use 
- project specific settings - Select the PHP version to be used for the 
- project and whether ASP tags are used as PHP tags. See <a HREF="PHP_Interpreter.htm">PHP 
+<ul><li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p-ListBullet2><p 
+ class=ListBullet2 style="x-condition: PDT_Studio_7;">Create a new project 
+ in the workspace - Creates a new project in the workspace directory.</p></li>
+	<li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p-ListBullet2><p 
+ class=ListBullet2 style="x-condition: PDT_Studio_7;">Create a project 
+ from existing source - opens an existing PHP project in the workspace. 
+ Click Browse to select the existing project.</p></li>
+	<li style="margin-left: -20px;  x-condition: Studio_7; " class=p-ListBullet2><p 
+ class=ListBullet2 style="x-condition: Studio_7;">Create project on a local 
+ server - Creates the project on a local server. This option will only 
+ be available if a PHP server has been configured in the <a HREF="PHP_Servers.htm" 
+ style="x-condition: Studio_7;">PHP Servers Preferences</a> page.</p></li>
+	<li style="margin-left: -20px;  x-condition: Studio_6; " class=p-ListBullet1><p 
+ class=ListBullet1 style="x-condition: Studio_6;">PHP Version - Select 
+ whether to use the default PHP version settings or unmark the 'Enable 
+ project specific settings' chackbox to configure the PHP version used 
+ for this project.<br>
+	&nbsp;See <a href="PHP_Interpreter.htm" style="x-condition: Studio_6;">PHP 
  Interpreter Preferences</a> for more information.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>Project 
- Layout - Select whether to:</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Use 
- project as source folder - All resources within the project will be added 
- to the Build Path by default.</p></li>
-	<li style="margin-left: -20px;" class=p-ListBullet2><p class=ListBullet2>Create 
- separate folders for source files and public resources - Separate folders 
- will be created in which you can place resources which should be included 
- or excluded from the Build Path.<br>
-	See <a HREF="Configuring_Build_Paths.htm">Configuring a Project's PHP 
- Build Path</a> for more information.<br>
-	The default setting for this option can be configured from the <a HREF="New_Project_Layout_Preferences.htm">New 
- Project Layout Preferences</a> page.</p></li>
+	<li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p-ListBullet2><p 
+ class=ListBullet2 style="x-condition: PDT_Studio_7;">Use default PHP settings 
+ - Uses the default PHP Interpreter settings.</p></li>
+	<li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p-ListBullet2><p 
+ class=ListBullet2 style="x-condition: PDT_Studio_7;">Use project specific 
+ settings - Select the PHP version to be used for the project and whether 
+ ASP tags are used as PHP tags. See <a href="PHP_Interpreter.htm" style="x-condition: PDT_Studio_7;">PHP 
+ Interpreter Preferences</a> for more information.</p></li>
+</ul>
+<ul><li style="margin-left: -20px; x-condition: PDT_Studio_7;" class=p-ListBullet1><p 
+ class=ListBullet1>Project Layout - Select whether to:</p></li>
+	<li style="margin-left: -20px; x-condition: PDT_Studio_7;" class=p-ListBullet2><p 
+ class=ListBullet2>Use project as source folder - All resources within 
+ the project will be added to the Build Path by default.</p></li>
+	<li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p-ListBullet2><p 
+ class=ListBullet2 style="x-condition: PDT_Studio_7;">Create separate folders 
+ for source files and public resources - Separate folders will be created 
+ in which you can place resources which should be included or excluded 
+ from the Build Path.<br>
+	See <a HREF="Configuring_Build_Paths.htm" style="x-condition: PDT_Studio_7;">Configuring 
+ a Project's PHP Build Path</a> for more information.<br>
+	The default setting for this option can be configured from the <a HREF="New_Project_Layout_Preferences.htm" 
+ style="x-condition: PDT_Studio_7;">New Project Layout Preferences</a> 
+ page.</p></li>
 	<li style="margin-left: -20px;" class=p-ListBullet1><p class=ListBullet1>JavaScript 
  Support - Mark the 'Enable JavaScript support for this project' checkbox 
  for JavaScript functionality (e.g. JavaScript Code Assist options) to 
@@ -175,56 +202,60 @@ if (window.writeIntopicBar)
  JavaScript Support in PHP Projects</a> for more information.</p></li>
 </ul>
 <ol start="3" type="1" class="whs12">
-	<li style="margin-left: -20px;" class=p><p>Click Next to <a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm">Configure 
- the project's Include Path</a> (this can also be done following the project's 
+	<li style="margin-left: -20px;" class=p><p>Click Next to <a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm">configure 
+ the project's Include Path</a> (this can also be done following the project 
  creation).</p></li>
-	<li style="margin-left: -20px;" class=p><p>Click Next to <a HREF="Configuring_Build_Paths.htm">Configure 
- the project's PHP Build Path</a> (this can also be done following the 
- project's creation).</p></li>
+	</ol>
+<ol start="4" type="1" class="whs12">
+	<li style="margin-left: -20px;  x-condition: PDT_Studio_7; " class=p><p class="whs17">Click Next to <a HREF="Configuring_Build_Paths.htm" 
+ style="x-condition: PDT_Studio_7;">configure the project's PHP Build Path</a> 
+ (this can also be done following project creation).</p></li>
 	<li style="margin-left: -20px;" class=p><p>Click Finish.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs4">
-<td rowspan="1" colspan="2" width="100%" class="whs15">
+<td rowspan="1" colspan="2" width="100%" class="whs18">
 <p>The new PHP project will be created in your workspace and displayed 
  in <a HREF="PHP_Explorer_view.htm">PHP Explorer View</a>.</p>
 <p>You can now start to develop your application by <a HREF="File_Creation.htm">creating 
  PHP Files</a> or adding other resources to your project.</td>
 </tr>
 </table>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs16">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs19">
 <col class="whs2">
 <col class="whs3">
 
-<tr valign="top" class="whs17"><td colspan="1" rowspan="1" width="7.093%" class="whs18">
+<tr valign="top" class="whs20"><td colspan="1" rowspan="1" width="7.093%" class="whs21">
 <p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs19">
+<td colspan="1" rowspan="1" width="92.907%" class="whs22">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs20"><td width="7.093%" class="whs21">
-<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs22"></td>
-<td width="92.907%" class="whs23">
+<tr valign="top" class="whs23"><td width="7.093%" class="whs24">
+<p class="whs6"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs25"></td>
+<td width="92.907%" class="whs26">
 <p class="whs8">Related Links:</p>
 <p><a HREF="Creating_and_Uploading_a_Project.htm">Creating Projects and 
  Files</a></p>
 <p><a HREF="Getting_Started.htm">Getting Started</a></p>
-<p><a HREF="File_Creation.htm">Creating PHP Files</a><a HREF="Build_Paths.htm"><br>
+<p><a HREF="File_Creation.htm">Creating PHP Files</a><a HREF="Build_Paths.htm" 
+ style="x-condition: Online, PDT_Studio_7;"><br>
 PHP Build Path</a></p>
 <p><a HREF="Include_Paths.htm">PHP Include Paths</a></td></tr>
-<tr valign="top" class="whs24"><td colspan="1" rowspan="1" width="7.093%" class="whs21">
+<tr valign="top" class="whs27"><td colspan="1" rowspan="1" width="7.093%" class="whs24">
 <p class="whs6">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs23">
+<td colspan="1" rowspan="1" width="92.907%" class="whs26">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs25">
- <p align="right" class="whs26"><span 
+<div placeholder id="footer" class="whs28">
+ <p align="right" class="whs29"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
- the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
- Documentation</a> for the most up-to-date information.</p>
- <p align="right" class="whs27"><span style="background-color: #ffffff;"><a 
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
+ <p align="right" class="whs30"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs28">PHP Development 
- Tool</p>
+ <p align="center" class="whs31">PHP Development 
+ Tools</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
 <!--

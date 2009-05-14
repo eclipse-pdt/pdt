@@ -27,24 +27,28 @@ img_whs8 { border:none; width:28px; height:33px; float:none; border-style:none; 
 td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-top-style:none; border-right-style:none; }
 p.whs10 { font-weight:bold; }
 ol.whs11 { list-style:decimal; }
-p.whs12 { font-weight:normal; }
-img_whs13 { border:none; width:466px; height:252px; float:none; border-style:none; }
-ol.whs14 { list-style:lower-roman; }
-ol.whs15 { list-style:decimal; x-condition:PDT; }
-td.whs16 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
-table.whs17 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-tr.whs18 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs19 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
-td.whs20 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs21 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs23 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs24 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-tr.whs25 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs26 { width:100%; }
-p.whs27 { text-align:right; x-condition:Product, Online; }
-p.whs28 { text-align:right; x-condition:Online; }
-p.whs29 { text-align:center; x-condition:PDT; text-decoration:underline; }
+img_whs12 { border:none; width:466px; height:252px; float:none; border-style:none; }
+ol.whs13 { list-style:decimal; x-condition:PDT; }
+ol.whs14 { list-style:lower-roman; x-condition:PDT; }
+ol.whs15 { list-style:lower-roman; }
+p.whs16 { x-condition:PDT; }
+ol.whs17 { list-style:decimal; x-condition:Studio_6; }
+ol.whs18 { list-style:decimal; x-condition:PDT_Studio_7; }
+td.whs19 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
+table.whs20 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+tr.whs21 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs22 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+td.whs23 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs24 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs25 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs26 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs27 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs28 { x-condition:Online, PDT; }
+tr.whs29 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs30 { width:100%; }
+p.whs31 { text-align:right; x-condition:Product, Online; }
+p.whs32 { text-align:right; x-condition:Online; }
+p.whs33 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -78,7 +82,7 @@ if (window.gbWhTopic)
 	if (window.setRelStartPage)
 	{
 	addTocInfo("PDT Help\nTasks\nConfiguring a Project's PHP Include Path");
-addAvenueInfo("Zend Studio for Eclipse User Guide","Adding_a_Server_Path_Map.htm","Setting_your_Zend_Studio_for_Eclipse_to_be_an_Allowed_Host.htm");
+addAvenueInfo("Zend Studio for Eclipse Help","Debugging.htm","Adding_a_Server_Path_Map.htm");
 
 	}
 
@@ -128,47 +132,51 @@ if (window.writeIntopicBar)
 <td width="92.907%" class="whs9">
 <p class="whs10">To configure your project's Include Path:</p>
 <ol type="1" class="whs11">
-	<li style="margin-left: -20px;  font-weight: normal; " class=p><p class="whs12">In 
- PHP Explorer view, right-click the required project and select Include 
- Path | Configure Include Path...<br>
+	<li style="margin-left: -20px; font-weight: normal;" class=p><p>In 
+ PHP Explorer view, right-click the required project and select Configure 
+ Include Path<span 
+ style="x-condition: PDT;"> | Configure Include Path...</span><br>
 	-Or- right-click the project and select Properties | Include Path.<span 
  style="margin-left: 40px;"><br>
 	The project's PHP Include Path properties page will appear.</span></p></li>
 </ol>
-<p class=picture><img src="include_path_properties.png" x-maintain-ratio="TRUE" width="466px" height="252px" border="0" class="img_whs13"></p>
+<p class=picture style="x-condition: PDT_Studio_7;"><img src="include_path_properties.png" x-maintain-ratio="TRUE" width="466px" height="252px" border="0" class="img_whs12"></p>
 <ol start="2" type="1" class="whs11">
-	<li style="margin-left: -20px;  font-weight: bold; font-weight: normal; " 
- class=p><p class="whs12"><span style="font-weight: bold;"><B>To 
- configure source folders on your Include Path:</B></span></p></li>
+	<li style="margin-left: -20px; x-condition: PDT;  font-weight: bold; " 
+ class=p><p class="whs10">To configure source folders on your 
+ Include Path:</p></li>
 </ol>
-<ol start="1" type="1" class="whs11">
+<ol start="1" type="1" class="whs13">
 	<li style="list-style: lower-roman;" type=i class=p><p>Select the Source 
  tab.<br>
 	By default, all folders which are on your Include Path will be added 
  to your Build Path.</p></li>
 </ol>
-<p class=Note style="margin-left: 42px;"><span style="margin-left: 42px;">N</span>ote:</p>
-<p class=NoteText style="margin-left: 42px;">If your project root is on 
- your Include Path, all folders and resources contained within your project 
- will also be on the Include Path. To add only certain folders, remove 
- the project root from the Include Path and add only the required folders.</p>
+<p class=Note style="margin-left: 42px; x-condition: PDT;">Note:</p>
+<p class=NoteText style="margin-left: 42px; x-condition: PDT;">If your 
+ project root is on your Include Path, all folders and resources contained 
+ within your project will also be on the Include Path. To add only certain 
+ folders, remove the project root from the Include Path and add only the 
+ required folders.</p>
 <ol start="2" type="i" class="whs14">
 	<li class=p><p>To remove a folder, select it and click Remove.</p></li>
 </ol>
-<ol start="3" type="i" class="whs14">
-	<li class=p><p>To add a folder from your project, click the Add Folder 
- button and select the required folder.<br>
+<ol start="3" type="i" class="whs15">
+	<li style=" x-condition: PDT; " class=p><p class="whs16">To 
+ add a folder from your project, click the Add Folder button and select 
+ the required folder.<br>
 	A prompt will display, asking whether you would also like to add the 
- selected folder(s) to your <a HREF="Build_Paths.htm">Build Path</a>. <br>
+ selected folder(s) to your <a HREF="Build_Paths.htm" style="x-condition: PDT;">Build 
+ Path</a>. <br>
 	It is recommended that the resources on your Build Path match the resources 
  on your Include Path.</p></li>
-	<li class=p><p>Click Yes to add the folder(s) to your Build Path or 
- No for your Build Path to not be affected.</p></li>
+	<li style="x-condition: PDT;" class=p><p>Click Yes to add the folder(s) 
+ to your Build Path or No for your Build Path to not be affected.</p></li>
 </ol>
-<ol start="3" type="1" class="whs11">
-	<li style="margin-left: -20px;  font-weight: bold; " class=p><p><span 
- style="font-weight: bold;"><B>To add another project from your workspace 
- to your Include Path:</B></span></p></li>
+<ol start="2" type="1" class="whs11">
+	<li style="margin-left: -20px;  font-weight: bold; " class=p><p class="whs10">To 
+ add a<span style="x-condition: PDT;">nother</span> project from your workspace 
+ to your Include Path:</p></li>
 </ol>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman;" type=i class=p><p>&nbsp;Select 
@@ -179,22 +187,22 @@ if (window.writeIntopicBar)
  you would like to add and click OK.<br>
 	The selected project(s) will be added to your project's Include Path.</p></li>
 </ol>
-<ol start="4" type="1" class="whs11">
+<ol start="3" type="1" class="whs17">
 	</ol>
-<ol start="4" type="1" class="whs15">
+<ol start="4" type="1" class="whs18">
 	<li style="margin-left: -20px;  font-weight: bold; " class=p><p class="whs10">To 
  add a library to your Include Path:</p></li>
 </ol>
 <ol start="1" type="1" class="whs11">
-	<li style="list-style: lower-roman; x-condition: PDT;" type=i class=p><p>Select 
- the Libraries tab.</p></li>
-	<li style="list-style: lower-roman; x-condition: PDT;" type=i class=p><p>Click 
- Add Library.<br>
+	<li style="list-style: lower-roman; x-condition: PDT_Studio_7;" type=i 
+ class=p><p>Select the Libraries tab.</p></li>
+	<li style="list-style: lower-roman; x-condition: PDT_Studio_7;" type=i 
+ class=p><p>Click Add Library.<br>
 	The Add Library dialog appears.</p></li>
-	<li style="list-style: lower-roman; x-condition: PDT;" type=i class=p><p>Select 
- the required Library (if available) and click OK.</p></li>
+	<li style="list-style: lower-roman; x-condition: PDT_Studio_7;" type=i 
+ class=p><p>Select the required Library (if available) and click OK.</p></li>
 </ol>
-<ol start="5" type="1" class="whs11">
+<ol start="4" type="1" class="whs11">
 	<li style="margin-left: -20px;  font-weight: bold; " class=p><p><span 
  style="font-weight: bold;"><B>To add external folders to your Include Path:</B></span></p></li>
 </ol>
@@ -212,12 +220,12 @@ if (window.writeIntopicBar)
 <p class=Note style="margin-left: 24px;">Note:</p>
 <p class=NoteText style="margin-left: 24px;">The library is a read-only 
  file and will not be available for editing.</p>
-<ol start="6" type="1" class="whs11">
+<ol start="5" type="1" class="whs11">
 	<li style="margin-left: -20px;" class=p><p>Select the Order tab. This 
  determines the order in which resources will be searched for in require/include 
  calls.<br>
 	See <a HREF="Include_Paths.htm">Include Paths</a> for more information 
- on the order for which files are searched for in require/include calls.<br>
+ on the order for which files are searched for.<br>
 	If applicable, it is recommended that elements appear in the same order 
  as they do in your php.ini.</p></li>
 	<li style="margin-left: -20px;" class=p><p>If necessary, rearrange 
@@ -227,41 +235,43 @@ if (window.writeIntopicBar)
  added and are in the right order, click OK.</p></li>
 </ol></td></tr>
 <tr valign="top" class="whs5">
-<td rowspan="1" colspan="2" width="100%" class="whs16">
+<td rowspan="1" colspan="2" width="100%" class="whs19">
 <p>All the selected elements will be added to the project's include path.</td>
 </tr>
 </table>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs17">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs20">
 <col class="whs3">
 <col class="whs4">
 
-<tr valign="top" class="whs18"><td colspan="1" rowspan="1" width="7.093%" class="whs19">
+<tr valign="top" class="whs21"><td colspan="1" rowspan="1" width="7.093%" class="whs22">
 <p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs20">
+<td colspan="1" rowspan="1" width="92.907%" class="whs23">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs21"><td width="7.093%" class="whs22">
-<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs23"></td>
-<td width="92.907%" class="whs24">
+<tr valign="top" class="whs24"><td width="7.093%" class="whs25">
+<p class="whs7"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs26"></td>
+<td width="92.907%" class="whs27">
 <p><span style="font-weight: bold;"><B>Related Links:</B></span><a HREF="Include_Paths.htm"><br>
 PHP Include Paths</a></p>
-<p><a HREF="Build_Paths.htm">PHP Build Path</a></p>
+<p class="whs28"><a HREF="Build_Paths.htm" style="x-condition: Online, PDT;">PHP 
+ Build Path</a></p>
 <p><a HREF="Path_Variables.htm">Path Variables Preferences</a></td></tr>
-<tr valign="top" class="whs25"><td colspan="1" rowspan="1" width="7.093%" class="whs22">
+<tr valign="top" class="whs29"><td colspan="1" rowspan="1" width="7.093%" class="whs25">
 <p class="whs7">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs24">
+<td colspan="1" rowspan="1" width="92.907%" class="whs27">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs26">
- <p align="right" class="whs27"><span 
+<div placeholder id="footer" class="whs30">
+ <p align="right" class="whs31"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
- the Zend Product <a href="http://files.zend.com/help/" style="color: #000000; x-condition: Product, Online;">Online 
- Documentation</a> for the most up-to-date information.</p>
- <p align="right" class="whs28"><span style="background-color: #ffffff;"><a 
+ the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
+ style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
+ for the most up-to-date information.</p>
+ <p align="right" class="whs32"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs29">PHP Development 
- Tool</p>
+ <p align="center" class="whs33">PHP Development 
+ Tools</p>
  </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
