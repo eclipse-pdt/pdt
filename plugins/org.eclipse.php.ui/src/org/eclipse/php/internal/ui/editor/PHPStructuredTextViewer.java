@@ -516,4 +516,18 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		fTextPresentationListeners.remove(listener);
 		fTextPresentationListeners.add(0, listener);
 	}
+	
+	/**
+	 * Sends out a text selection changed event to all registered listeners and
+	 * registers the selection changed event to be sent out to all post selection
+	 * listeners.
+	 *
+	 * @param offset the offset of the newly selected range in the visible document
+	 * @param length the length of the newly selected range in the visible document
+	 */
+	protected void selectionChanged(int offset, int length) {
+		if (fireSelectionChanged) {
+			super.selectionChanged(offset, length);
+		}
+	}
 }
