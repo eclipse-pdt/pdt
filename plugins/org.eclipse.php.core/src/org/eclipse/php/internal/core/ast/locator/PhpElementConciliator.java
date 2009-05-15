@@ -175,12 +175,15 @@ public class PhpElementConciliator {
 	private static boolean isClassName(ASTNode locateNode) {
 		assert locateNode != null;
 
-		// check if it is an identifier
-		if (locateNode.getType() != ASTNode.IDENTIFIER) {
+		ASTNode parent = null;
+		if (locateNode.getType() == ASTNode.CLASS_DECLARATION || locateNode.getType() == ASTNode.INTERFACE_DECLARATION) {
+			parent = locateNode;
+		} else if (locateNode.getType() == ASTNode.IDENTIFIER) {
+			parent = locateNode.getParent();
+		} else {
 			return false;
 		}
-
-		ASTNode parent = locateNode.getParent();
+		
 		final int parentType = parent.getType();
 		if (parentType == ASTNode.CLASS_NAME || parentType == ASTNode.CLASS_DECLARATION || parentType == ASTNode.INTERFACE_DECLARATION || parentType == ASTNode.CATCH_CLAUSE || parentType == ASTNode.FORMAL_PARAMETER) {
 			return true;
