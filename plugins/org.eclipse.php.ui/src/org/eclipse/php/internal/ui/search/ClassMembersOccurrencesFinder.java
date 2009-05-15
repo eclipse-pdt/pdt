@@ -12,6 +12,7 @@ package org.eclipse.php.internal.ui.search;
 
 import java.util.List;
 
+import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.Logger;
@@ -121,11 +122,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			parent = parent.getParent();
 		}
 		if (declaration != null) {
-			try {
-				return (IType) declaration.getProgramRoot().getSourceModule().getType(declaration.getName().getName());
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
+			final ISourceModule source = declaration.getProgramRoot().getSourceModule();
+			return source != null ? source.getType(declaration.getName().getName()) : null;
 		}
 		return null;
 	}
