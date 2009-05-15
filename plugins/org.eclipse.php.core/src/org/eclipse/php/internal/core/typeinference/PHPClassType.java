@@ -129,11 +129,11 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * @param name
 	 * @return
 	 */
-	public static PHPClassType fromSimpleReference(SimpleReference name) {
+	public static IEvaluatedType fromSimpleReference(SimpleReference name) {
 		String typeName = name instanceof FullyQualifiedReference ? ((FullyQualifiedReference)name).getFullyQualifiedName() : name.getName();
 		IEvaluatedType simpleType = PHPSimpleTypes.fromString(typeName);
 		if (simpleType != null) {
-			return (PHPClassType) simpleType;
+			return simpleType;
 		}
 		return new PHPClassType(typeName);
 	}

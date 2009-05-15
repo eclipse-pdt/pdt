@@ -560,9 +560,11 @@ public class TypeBinding implements ITypeBinding {
 				}
 				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
-				for (IModelElement modelElement : otherElements) {
-					if (modelElement instanceof IType) {
-						result &= supertypeHierarchy.contains((IType) modelElement);
+				if (otherElements != null) {
+					for (IModelElement modelElement : otherElements) {
+						if (modelElement instanceof IType) {
+							result &= supertypeHierarchy.contains((IType) modelElement);
+						}
 					}
 				}
 			} catch (ModelException e) {
