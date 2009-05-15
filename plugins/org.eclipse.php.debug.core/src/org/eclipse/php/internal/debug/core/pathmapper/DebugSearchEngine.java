@@ -47,8 +47,10 @@ import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeLi
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.environment.EnvironmentManager;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
@@ -207,7 +209,7 @@ public class DebugSearchEngine {
 					if (file != null && file.exists()) {
 						for (IncludePath includePath : includePaths) {
 							if (includePath.getEntry() instanceof IContainer) {
-								IContainer container = (IContainer)includePath.getEntry();
+								IContainer container = (IContainer) includePath.getEntry();
 								if (container.getFullPath().isPrefixOf(file.getFullPath())) {
 									localFile[0] = new PathEntry(file.getFullPath().toString(), Type.WORKSPACE, file.getParent());
 									pathMapper.addEntry(remoteFile, localFile[0]);
@@ -269,26 +271,39 @@ public class DebugSearchEngine {
 									}
 								}
 							}
-						}
-						else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
 							entryPath = DLTKCore.getResolvedVariablePath(entryPath);
 							if (entryPath != null) {
 								File entryDir = entryPath.toFile();
 								find(entryDir, abstractPath, entry, results);
 							}
+						} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+							IScriptProject project = DLTKCore.create(currentProject);
+							try {
+								IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(entry.getPath(), project);
+								IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries(project);
+								if (buildpathEntries != null && buildpathEntries.length > 0) {
+									entryPath = EnvironmentPathUtils.getLocalPath(buildpathEntries[0].getPath());
+									if (entryPath != null) {
+										find(entryPath.toFile(), abstractPath, entry, results);
+									}
+								}
+							} catch (ModelException e) {
+								PHPDebugPlugin.log(e);
+							}
+
 						}
 					}
 				}
 
-				boolean foundInWorkspace = results.size()> 0;
+				boolean foundInWorkspace = results.size() > 0;
 
 				//search in opened editors
 				searchOpenedEditors(results, abstractPath);
 
 				if (!foundInWorkspace && results.size() == 1 && abstractPath.equals(results.getFirst().getAbstractPath())) {
 					localFile[0] = results.getFirst();
-				}
-				else if (results.size() > 0) {
+				} else if (results.size() > 0) {
 					Collections.sort(results, new BestMatchPathComparator(abstractPath));
 					localFile[0] = filterItems(abstractPath, results.toArray(new PathEntry[results.size()]), debugTarget);
 					if (localFile[0] != null) {
@@ -312,12 +327,12 @@ public class DebugSearchEngine {
 	private static void searchOpenedEditors(LinkedList<PathEntry> results, VirtualPath remotePath) {
 		// Collect open editor references:
 		List<IEditorReference> editors = new ArrayList<IEditorReference>(0);
-		IWorkbench workbench= PlatformUI.getWorkbench();
-		IWorkbenchWindow[] windows= workbench.getWorkbenchWindows();
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		for (IWorkbenchWindow element : windows) {
-			IWorkbenchPage[] pages= element.getPages();
+			IWorkbenchPage[] pages = element.getPages();
 			for (IWorkbenchPage element2 : pages) {
-				IEditorReference[] references= element2.getEditorReferences();
+				IEditorReference[] references = element2.getEditorReferences();
 				editors.addAll(Arrays.asList(references));
 			}
 		}
@@ -331,7 +346,7 @@ public class DebugSearchEngine {
 				continue;
 			}
 			if (editorInput instanceof FileStoreEditorInput) {
-				File file = new File(((IURIEditorInput)editorInput).getURI());
+				File file = new File(((IURIEditorInput) editorInput).getURI());
 				if (file.exists() && file.getName().equalsIgnoreCase(remotePath.getLastSegment())) {
 					results.add(new PathEntry(file.getAbsolutePath(), PathEntry.Type.EXTERNAL, file.getParentFile()));
 				}
@@ -373,7 +388,8 @@ public class DebugSearchEngine {
 				}
 			}
 			Collection<IPathEntryFilter> l = filtersMap.values();
-			while (l.remove(null)); // remove null elements
+			while (l.remove(null))
+				; // remove null elements
 			filters = l.toArray(new IPathEntryFilter[filtersMap.size()]);
 		}
 		return filters;
