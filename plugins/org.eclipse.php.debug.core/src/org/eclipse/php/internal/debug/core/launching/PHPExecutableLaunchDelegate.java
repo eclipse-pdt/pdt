@@ -202,9 +202,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			// Set library search path:
 			if (!WINDOWS) {
 				StringBuffer buf = new StringBuffer();
-				
-				PHPexeItem.exportTo(buf, phpExeFile);
-				
+				if (System.getProperty("os.name").startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
+					buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
+				} else {
+					buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
+				}
+				buf.append('=');
+				buf.append(phpExeFile.getParent());
 				String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
 				if (envp != null) {
 					System.arraycopy(envp, 0, envpNew, 0, envp.length);
