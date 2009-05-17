@@ -319,8 +319,8 @@ public class PHPexeItem {
 		StringBuffer buf = new StringBuffer();
 		try {
 			PHPexes.changePermissions(executable);
-			
-			PHPexeItem.exportTo(buf, executable);
+
+			PHPexeItem.getLibVarriable(buf, executable);
 
 			// Detect version and type:
 			String output = exec(buf.toString(), executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -342,7 +342,7 @@ public class PHPexeItem {
 					name = "PHP " + version + " (" + sapiType + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 			} else {
-				PHPDebugPlugin.logErrorMessage("Can't determine version of the PHP executable");  //$NON-NLS-1$	
+				PHPDebugPlugin.logErrorMessage("Can't determine version of the PHP executable"); //$NON-NLS-1$	
 				this.executable = null;
 				return;
 			}
@@ -372,7 +372,7 @@ public class PHPexeItem {
 		}
 	}
 
-	public static void exportTo(StringBuffer buf, File executable) {
+	public static void getLibVarriable(StringBuffer buf, File executable) {
 		final String os = Platform.getOS();
 		if (!os.equals(Platform.OS_WIN32)) {
 			boolean isMac = os.equals(Platform.OS_MACOSX);
@@ -393,7 +393,12 @@ public class PHPexeItem {
 	 * @throws IOException
 	 */
 	private static String exec(String env, String... cmd) throws IOException {
-		Process p = Runtime.getRuntime().exec(cmd, new String[]{env});
+		String[] envParams = null;
+		if (env != null && env.length() > 0) {
+			envParams = new String[] { env };
+		}
+		
+		Process p = Runtime.getRuntime().exec(cmd, envParams);
 		BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		StringBuilder buf = new StringBuilder();
 		String l;
@@ -402,7 +407,7 @@ public class PHPexeItem {
 		}
 		return buf.toString();
 	}
-	
+
 	/**
 	 * Executes the file in the context of the project
 	 * @param project
@@ -411,7 +416,7 @@ public class PHPexeItem {
 	 */
 	public boolean execPhpScript(IProject project, String scriptFile) {
 		boolean status = false;
-		
+
 		if (executable == null) {
 			throw new IllegalStateException("PHP executable path is null"); //$NON-NLS-1$
 		}
@@ -424,7 +429,7 @@ public class PHPexeItem {
 			DebugPlugin.log(e);
 			status = false;
 		}
-		
+
 		return status;
 	}
 }
