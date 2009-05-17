@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.ui.text.IProblemRequestorExtension;
@@ -27,6 +28,8 @@ import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.ast.nodes.ASTParser;
 import org.eclipse.php.internal.core.ast.nodes.Program;
+import org.eclipse.php.internal.core.project.ProjectOptions;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.editor.IPhpScriptReconcilingListener;
 import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
@@ -131,10 +134,12 @@ public class PhpReconcilingStrategy implements IValidator, ISourceValidator {
 				unit.reconcile(true, null, fProgressMonitor);
 			}
 			if (isASTNeeded) {
-				ASTParser newParser = ASTParser.newParser(PHPVersion.PHP5, unit);
+				PHPVersion phpVersion = ProjectOptions.getPhpVersion(unit.getScriptProject().getProject());
+				ASTParser newParser = ASTParser.newParser(phpVersion, unit);
 				Program createdAST = newParser.createAST(null);
 				if (createdAST != null && document != null) {
 					createdAST.setSourceModule(unit);
+					createdAST.setSourceRange(0, document.getLength());					
 					createdAST.setLineEndTable(lineEndTable(document));
 				}
 				return createdAST;
