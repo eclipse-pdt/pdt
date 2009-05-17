@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
@@ -315,11 +316,14 @@ public class PHPexeItem {
 		// Create empty configuration file:
 		File tempPHPIni = PHPINIUtil.createTemporaryPHPINIFile();
 
+		StringBuffer buf = new StringBuffer();
 		try {
 			PHPexes.changePermissions(executable);
+			
+			PHPexeItem.exportTo(buf, executable);
 
 			// Detect version and type:
-			String output = exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
+			String output = exec(buf.toString(), executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
 			Matcher m = PHP_VERSION.matcher(output);
 			if (m.find()) {
 				version = m.group(1);
@@ -368,14 +372,28 @@ public class PHPexeItem {
 		}
 	}
 
+	public static void exportTo(StringBuffer buf, File executable) {
+		final String os = Platform.getOS();
+		if (!os.equals(Platform.OS_WIN32)) {
+			boolean isMac = os.equals(Platform.OS_MACOSX);
+			if (isMac) { //$NON-NLS-1$ //$NON-NLS-2$
+				buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
+			} else {
+				buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
+			}
+			buf.append('=');
+			buf.append(executable.getParent());
+		}
+	}
+
 	/**
 	 * Executes given command
 	 *
 	 * @param cmd Command array
 	 * @throws IOException
 	 */
-	private static String exec(String... cmd) throws IOException {
-		Process p = Runtime.getRuntime().exec(cmd);
+	private static String exec(String env, String... cmd) throws IOException {
+		Process p = Runtime.getRuntime().exec(cmd, new String[]{env});
 		BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		StringBuilder buf = new StringBuilder();
 		String l;
