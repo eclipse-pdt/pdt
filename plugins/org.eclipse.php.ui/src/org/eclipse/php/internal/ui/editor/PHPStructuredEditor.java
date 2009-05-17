@@ -111,6 +111,7 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.*;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -2478,6 +2479,11 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 	/**
 	 * Updates the occurrences annotations based on the current selection.
 	 * 
+	 * TODO : since {@link PHPStructuredEditor#aboutToBeChangedEvent} 
+	 *        currently doesn't work, we check if 
+	 *        " document.getLength() != astRoot.getEnd() "
+	 *        to identify if the document was not already reconciled  
+	 * 
 	 * @param selection
 	 *            the text selection
 	 * @param astRoot
@@ -2498,6 +2504,12 @@ public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScr
 		IDocument document = getSourceViewer().getDocument();
 		if (document == null)
 			return;
+		
+		// TODO: see the method comment, need to be removed once 
+		// PHPStructuredEditor#aboutToBeChangedEvent is used
+		if (document.getLength() != astRoot.getEnd()) {
+			return;
+		}
 
 		boolean hasChanged = false;
 		if (document instanceof IDocumentExtension4) {
