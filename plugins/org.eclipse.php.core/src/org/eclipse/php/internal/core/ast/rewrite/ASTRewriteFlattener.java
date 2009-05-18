@@ -11,6 +11,7 @@
 package org.eclipse.php.internal.core.ast.rewrite;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -80,7 +81,11 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	protected List getChildList(ASTNode parent, StructuralPropertyDescriptor childProperty) {
-		return (List) getAttribute(parent, childProperty);
+		Object ret = getAttribute(parent, childProperty);
+		if (ret instanceof List) {
+			return (List) ret;
+		}
+		return Collections.EMPTY_LIST;
 	}
 
 	protected ASTNode getChildNode(ASTNode parent, StructuralPropertyDescriptor childProperty) {
@@ -96,7 +101,10 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	protected Object getAttribute(ASTNode parent, StructuralPropertyDescriptor childProperty) {
-		return this.store.getNewValue(parent, childProperty);
+		if (store != null)
+			return this.store.getNewValue(parent, childProperty);
+
+		return null;
 	}
 
 	protected void visitList(ASTNode parent, StructuralPropertyDescriptor childProperty, String separator) {
@@ -196,10 +204,7 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 			result.append(":\n"); //$NON-NLS-1$
 		}
 
-		Statement[] statements = block.getStatements();
-		for (int i = 0; i < statements.length; i++) {
-			statements[i].accept(this);
-		}
+		visitList(block, Block.STATEMENTS_PROPERTY, null);
 
 		if (block.isCurly()) {
 			result.append("}\n"); //$NON-NLS-1$
@@ -410,8 +415,12 @@ public class ASTRewriteFlattener extends AbstractVisitor {
 	}
 
 	public boolean visit(ExpressionStatement expressionStatement) {
-		expressionStatement.getExpr().accept(this);
-		result.append(";\n"); //$NON-NLS-1$
+		if (expressionStatement.getExpression() != null) {
+			expressionStatement.getExpression().accept(this);
+			result.append(";\n"); //$NON-NLS-1$
+		} else {
+			result.append("Missing();");
+		}
 		return false;
 	}
 
