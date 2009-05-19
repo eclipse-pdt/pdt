@@ -123,7 +123,7 @@
 	<extension point="org.eclipse.dltk.core.buildParticipant">
       <buildParticipant
             class="org.eclipse.dltk.core.builder.ParserBuildParticipantFactory"
-            id="org.eclipse.dltk.ruby.buildParticipant.parser"
+            id="org.eclipse.php.core.buildParticipant.parser"
             name="%parserBuildParticipant.name"
             nature="org.eclipse.php.core.PHPNature">
       </buildParticipant>
