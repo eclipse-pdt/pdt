@@ -14,12 +14,16 @@
 package org.eclipse.php.internal.core.ast.nodes;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
 import org.eclipse.php.internal.core.typeinference.BindingUtility;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 
@@ -28,7 +32,6 @@ import org.eclipse.php.internal.core.typeinference.PHPClassType;
  * TODO : caching is a must have for this resolver
  */
 public class DefaultBindingResolver extends BindingResolver {
-
 
 	/*
 	 * Holds on binding tables that can be shared by several ASTs.
@@ -100,7 +103,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 		return null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.core.IType[])
 	 */
@@ -213,15 +216,17 @@ public class DefaultBindingResolver extends BindingResolver {
 		if (method == null || method.getFunction() == null) {
 			throw new IllegalArgumentException("Can not resolve null expression");
 		}
-		
+
 		try {
 			IModelElement elementAt = sourceModule.getElementAt(method.getStart());
 			if (elementAt instanceof IMethod) {
 				return getMethodBinding((IMethod) elementAt);
 			}
-			
+
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG) { e.printStackTrace(); }
+			if (DLTKCore.DEBUG) {
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -243,10 +248,10 @@ public class DefaultBindingResolver extends BindingResolver {
 		return new TypeBinding(this, type, modelElement);
 
 	}
-	
+
 	/* (non-Javadoc) 
 	 * @see BindingResolver#resolveInclude(Include)
-	 */ 
+	 */
 	IBinding resolveInclude(Include includeDeclaration) {
 		return new IncludeBinding(sourceModule, includeDeclaration);
 	}
@@ -291,7 +296,7 @@ public class DefaultBindingResolver extends BindingResolver {
 		}
 		return super.getTypeBinding(fieldDeclaration);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#getTypeBinding(org.eclipse.dltk.ti.types.IEvaluatedType)
 	 */
@@ -415,7 +420,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	 */
 	@Override
 	ITypeBinding resolveType(TypeDeclaration type) {
-		
+
 		IModelElement[] modelElements;
 		try {
 			modelElements = this.bindingUtil.getModelElement(type.getName().getStart(), type.getName().getLength());
@@ -459,7 +464,7 @@ public class DefaultBindingResolver extends BindingResolver {
 	IVariableBinding resolveVariable(Variable variable) {
 		IModelElement modelElements = null;
 		try {
-			modelElements = bindingUtil.getFiledByPosition(variable.getStart(), variable.getLength());
+			modelElements = bindingUtil.getFieldByPosition(variable.getStart(), variable.getLength());
 		} catch (ModelException e) {
 			Logger.log(IStatus.ERROR, e.toString());
 		} catch (Exception e) {
@@ -468,12 +473,14 @@ public class DefaultBindingResolver extends BindingResolver {
 
 		if (modelElements != null) {
 			if (modelElements.getElementType() == IModelElement.FIELD) {
-				return new VariableBinding(this, (IMember) modelElements, variable);
+				int id = LocalVariableIndex.perform(variable.getEnclosingBodyNode(), variable);
+				return new VariableBinding(this, (IMember) modelElements, variable, id);
 			}
 
 		}
 		return super.resolveVariable(variable);
 	}
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.php.internal.core.ast.nodes.BindingResolver#resolveWellKnownType(java.lang.String)
 	 */
@@ -482,4 +489,89 @@ public class DefaultBindingResolver extends BindingResolver {
 		// TODO Auto-generated method stub
 		return super.resolveWellKnownType(name);
 	}
+
+	private static class LocalVariableIndex extends AbstractVisitor {
+
+		private int fTopIndex;
+		// in case we are in the program scope
+		// we don't want to descend into function/class/interface scope
+		private static boolean isProgramScope = false;
+
+		private final Set<String> variablesSet = new HashSet<String>();
+		private Variable variable;
+
+		public LocalVariableIndex(Variable variable) {
+			this.variable = variable;
+		}
+
+		/**
+		 * Computes the maximum number of local variable declarations in the 
+		 * given body declaration.
+		 *  
+		 * @param node the body declaration. Must either be a method
+		 *  declaration or an initializer.
+		 * @return the maximum number of local variables
+		 */
+		public static int perform(ASTNode node, Variable variable) {
+			Assert.isTrue(node != null);
+
+			switch (node.getType()) {
+				case ASTNode.METHOD_DECLARATION:
+					isProgramScope = false;
+					return internalPerform(((MethodDeclaration) node).getFunction(), variable);
+				case ASTNode.FUNCTION_DECLARATION:
+					isProgramScope = false;
+					return internalPerform((FunctionDeclaration) node, variable);
+				case ASTNode.PROGRAM:
+					isProgramScope = true;
+					return internalPerform((Program) node, variable);
+				default:
+					Assert.isTrue(false);
+			}
+			return -1;
+		}
+
+		private static int internalPerform(ASTNode node, Variable variable) {
+			LocalVariableIndex counter = new LocalVariableIndex(variable);
+			node.accept(counter);
+			return counter.fTopIndex;
+		}
+
+		/**
+		 * Insert to the variables Name set each variable that is first encountered in the flow
+		 */
+		public boolean visit(Variable variable) {
+			Expression name = variable.getName();
+			if (variable.isDollared() && name.getType() == ASTNode.IDENTIFIER) {
+				String variableName = ((Identifier) name).getName();
+				if (!variableName.equalsIgnoreCase("this") && !variablesSet.contains(variableName)) {
+					String searchName = ((Identifier) this.variable.getName()).getName();
+					if (variableName.equals(searchName) && variable.getType() == this.variable.getType()) {
+						handleVariableBinding();
+					}
+
+					variablesSet.add(variableName);
+				}
+			}
+			return true;
+
+		}
+
+		public boolean visit(FunctionDeclaration function) {
+			return !isProgramScope;
+		}
+
+		public boolean visit(ClassDeclaration classDeclaration) {
+			return !isProgramScope;
+		}
+
+		public boolean visit(InterfaceDeclaration interfaceDeclaration) {
+			return !isProgramScope;
+		}
+
+		private void handleVariableBinding() {
+			fTopIndex = variablesSet.size();
+		}
+	}
+
 }

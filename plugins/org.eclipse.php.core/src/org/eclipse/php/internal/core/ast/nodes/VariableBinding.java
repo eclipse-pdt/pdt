@@ -53,11 +53,12 @@ public class VariableBinding implements IVariableBinding {
 		this.isFakeField = modelElement instanceof FakeField;
 	}
 
-	public VariableBinding(DefaultBindingResolver resolver, IMember modelElement, Variable variable) {
+	public VariableBinding(DefaultBindingResolver resolver, IMember modelElement, Variable variable, int id) {
 		this.resolver = resolver;
 		this.modelElement = modelElement;
 		this.isFakeField = modelElement instanceof FakeField;
 		this.varialbe = variable;
+		this.id = id;
 	}
 
 	/**

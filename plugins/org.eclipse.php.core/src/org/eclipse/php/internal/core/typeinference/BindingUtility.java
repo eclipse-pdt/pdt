@@ -235,7 +235,7 @@ public class BindingUtility {
 	 * @return the IModelElement instance which represents a IField node, or null.
 	 * @throws Exception
 	 */
-	public IModelElement getFiledByPosition(int start, int length) throws Exception {
+	public IModelElement getFieldByPosition(int start, int length) throws Exception {
 		SourceRange sourceRange = new SourceRange(start, length);
 		ContextFinder contextFinder = getContext(sourceRange);
 		ASTNode node = contextFinder.getNode();
