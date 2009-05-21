@@ -58,7 +58,7 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			if (left instanceof FieldAccess) { // class variable ($this->a = .)
 				FieldAccess fieldAccess = (FieldAccess) left;
 				Expression dispatcher = fieldAccess.getDispatcher();
-				if (dispatcher instanceof VariableReference && "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
+				if (dispatcher instanceof VariableReference){ // && "$this".equals(((VariableReference) dispatcher).getName())) { //$NON-NLS-1$
 					Expression field = fieldAccess.getField();
 					if (field instanceof SimpleReference) {
 						SimpleReference ref = (SimpleReference) field;
