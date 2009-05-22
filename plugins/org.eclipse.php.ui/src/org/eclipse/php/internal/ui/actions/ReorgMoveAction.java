@@ -86,7 +86,9 @@ public class ReorgMoveAction implements IPHPActionDelegator {
 		if (moveActionDelegate != null) {
 			moveActionDelegate.selectionChanged(action, selection);
 		} else {
-			selectedResources = (IStructuredSelection) selection;
+			if (selection instanceof IStructuredSelection){
+				selectedResources = (IStructuredSelection) selection;
+			}
 		}
 	}
 
