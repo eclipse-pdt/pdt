@@ -72,12 +72,6 @@ public class FormalParameter extends ASTNode {
 		PROPERTY_DESCRIPTORS_PHP4 = Collections.unmodifiableList(properyList);
 	}
 
-	/*
-	 * Indicates whether <code>optionalExpression</code> has been initialized.
-	 */
-	private boolean defaultInitialized = false;
-	private boolean parameterTypeInitialized = false;
-
 	@Override
 	List<StructuralPropertyDescriptor> internalStructuralPropertiesForType(PHPVersion apiLevel) {
 		return apiLevel == PHPVersion.PHP4 ? PROPERTY_DESCRIPTORS_PHP4 : PROPERTY_DESCRIPTORS_PHP5;
@@ -194,18 +188,6 @@ public class FormalParameter extends ASTNode {
 	 * @return default value of this parameter
 	 */
 	public Expression getDefaultValue() {
-		if (!this.defaultInitialized) {
-			// lazy init must be thread-safe for readers
-			synchronized (this) {
-				if (!this.defaultInitialized) {
-					preLazyInit();
-					this.defaultValue = ast.newIdentifier();
-					this.defaultValue.setSourceRange(getStart(), 0);
-					defaultInitialized = true;
-					postLazyInit(defaultValue, DEFAULT_VALUE_PROPERTY);
-				}
-			}
-		}
 		return defaultValue;
 	}
 
@@ -225,7 +207,6 @@ public class FormalParameter extends ASTNode {
 		ASTNode oldChild = this.defaultValue;
 		preReplaceChild(oldChild, value, DEFAULT_VALUE_PROPERTY);
 		this.defaultValue = value;
-		this.defaultInitialized = true;
 		postReplaceChild(oldChild, value, DEFAULT_VALUE_PROPERTY);
 	}
 
@@ -281,18 +262,6 @@ public class FormalParameter extends ASTNode {
 	 * @return the type of this parameter
 	 */
 	public Expression getParameterType() {
-		if (!this.parameterTypeInitialized) {
-			// lazy init must be thread-safe for readers
-			synchronized (this) {
-				if (!this.parameterTypeInitialized) {
-					preLazyInit();
-					this.parameterType = ast.newIdentifier();
-					this.parameterType.setSourceRange(getStart(), 0);
-					this.parameterTypeInitialized = true;
-					postLazyInit(parameterType, PARAMETER_TYPE_PROPERTY);
-				}
-			}
-		}
 		return parameterType;
 	}
 
@@ -315,7 +284,6 @@ public class FormalParameter extends ASTNode {
 		Expression oldChild = this.parameterType;
 		preReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 		this.parameterType = id;
-		parameterTypeInitialized = true;
 		postReplaceChild(oldChild, id, PARAMETER_TYPE_PROPERTY);
 	}
 
