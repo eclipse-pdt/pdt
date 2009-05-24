@@ -18,8 +18,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
@@ -53,18 +51,23 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 	 *  otherwise <code>false</code> is returned
 	 */
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof List) {
+		if (receiver instanceof List<?>) {
 			List<?> list = (List<?>) receiver;
 			if (list.size() > 0) {
 				Object obj = list.get(0);
 
 				if (PROPERTY.equals(property)) {
 					if (obj instanceof IEditorInput) {
-						IModelElement modelElement = DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj);
+						return test(DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj));
+					}
+					else if (obj instanceof IModelElement) {
+						return test((IModelElement) obj);
+					}
+					else if (obj instanceof IAdaptable) {
+						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
 						if (modelElement != null) {
-							return PHPToolkitUtil.isPhpElement(modelElement);
+							return test(modelElement);
 						}
-					} else if (obj instanceof IAdaptable) {
 						IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
 						if (resource != null && resource.getType() == IResource.FILE) {
 							return PHPToolkitUtil.isPhpFile((IFile) resource);
@@ -72,15 +75,15 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 						if (resource != null && resource.getType() == IResource.PROJECT) {
 							return isWebPageProjectLaunch(args, (IProject) resource);
 						}
-						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
-						if (modelElement != null) {
-							return PHPToolkitUtil.isPhpElement(modelElement);
-						}
 					}
 				}
 			}
 		}
 		return false;
+	}
+	
+	private boolean test(IModelElement modelElement) {
+		return modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE && PHPToolkitUtil.isPhpElement(modelElement);
 	}
 
 	/**
