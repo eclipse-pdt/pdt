@@ -59,10 +59,7 @@ public class DefaultServerTestMessageDialog extends MessageDialog {
 		link.setText("Click <a>here</a> for more information on setting up remote debugging."); //$NON-NLS-1$
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				try {
-					PlatformUI.getWorkbench().getHelpSystem().displayHelp(IPHPHelpContextIds.SETTING_UP_REMOTE_DEBUGGING);
-				} catch (Exception e) {
-				}
+				PlatformUI.getWorkbench().getHelpSystem().displayHelp(IPHPHelpContextIds.SETTING_UP_REMOTE_DEBUGGING);
 			}
 		});
 	}
