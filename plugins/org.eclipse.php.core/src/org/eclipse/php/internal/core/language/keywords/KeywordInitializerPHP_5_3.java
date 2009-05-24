@@ -12,6 +12,10 @@ public class KeywordInitializerPHP_5_3 extends KeywordInitializerPHP_5 {
 	public void initialize(Collection<KeywordData> list) {
 		super.initialize(list);
 		
+		// update "const" keyword
+		list.remove(new KeywordData("const", "", 0));
+		list.add(new KeywordData("const", WHITESPACE_SUFFIX, 1, PHPKeywords.CLASS_BODY | PHPKeywords.GLOBAL));
+		
 		list.add(new KeywordData("goto", WHITESPACE_SUFFIX, 1));
 		list.add(new KeywordData("namespace", WHITESPACE_SUFFIX, 1));
 		list.add(new KeywordData("use", WHITESPACE_SUFFIX, 1));

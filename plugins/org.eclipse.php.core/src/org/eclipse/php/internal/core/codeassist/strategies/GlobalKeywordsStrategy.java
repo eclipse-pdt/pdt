@@ -11,7 +11,7 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.language.keywords.PHPKeywords.Context;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 
 /**
@@ -29,7 +29,7 @@ public class GlobalKeywordsStrategy extends KeywordsStrategy {
 	}
 
 	protected boolean filterKeyword(KeywordData keyword) {
-		return keyword.context != Context.GLOBAL;
+		return (keyword.context & PHPKeywords.GLOBAL) == 0;
 	}
 	
 }

@@ -21,17 +21,11 @@ import org.eclipse.php.internal.core.project.ProjectOptions;
  */
 public class PHPKeywords {
 
-	/**
-	 * Keyword context information (where this keyword may be used)
-	 */
-	public enum Context {
+	/** Keyword may be used in class body */
+	public static final int CLASS_BODY = (1 << 0);
 
-		/** Keyword may be used in class body */
-		CLASS_BODY,
-
-		/** Keyword may be used in global context */
-		GLOBAL
-	}
+	/** Keyword may be used in global context */
+	public static final int GLOBAL = (1 << 1);
 
 	/**
 	 * This class contains code assist auto-complete information about keyword
@@ -40,7 +34,7 @@ public class PHPKeywords {
 		public String name;
 		public String suffix;
 		public int suffixOffset;
-		public Context context = Context.GLOBAL;
+		public int context = GLOBAL;
 
 		/**
 		 * Constructs keyword data with default context: {@link Context#GLOBAL}
@@ -54,7 +48,7 @@ public class PHPKeywords {
 			this.suffixOffset = suffixOffset;
 		}
 
-		public KeywordData(String name, String suffix, int suffixOffset, Context context) {
+		public KeywordData(String name, String suffix, int suffixOffset, int context) {
 			this.name = name;
 			this.suffix = suffix;
 			this.suffixOffset = suffixOffset;

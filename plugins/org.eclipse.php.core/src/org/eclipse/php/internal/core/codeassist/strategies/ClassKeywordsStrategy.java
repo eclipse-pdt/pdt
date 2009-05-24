@@ -14,7 +14,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.language.keywords.PHPKeywords.Context;
+import org.eclipse.php.internal.core.language.keywords.PHPKeywords;
 import org.eclipse.php.internal.core.language.keywords.PHPKeywords.KeywordData;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -41,7 +41,7 @@ public class ClassKeywordsStrategy extends KeywordsStrategy {
 	}
 
 	protected boolean filterKeyword(KeywordData keyword) {
-		if (keyword.context != Context.CLASS_BODY) {
+		if ((keyword.context & PHPKeywords.CLASS_BODY) == 0) {
 			return true;
 		}
 		// check whether this keyword is included in the statement already
