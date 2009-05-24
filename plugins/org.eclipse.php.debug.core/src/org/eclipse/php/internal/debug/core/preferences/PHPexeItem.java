@@ -316,14 +316,11 @@ public class PHPexeItem {
 		// Create empty configuration file:
 		File tempPHPIni = PHPINIUtil.createTemporaryPHPINIFile();
 
-		StringBuffer buf = new StringBuffer();
 		try {
 			PHPexes.changePermissions(executable);
 
-			PHPexeItem.getLibVarriable(buf, executable);
-
 			// Detect version and type:
-			String output = exec(buf.toString(), executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
+			String output = exec(executable.getAbsolutePath(), "-c", tempPHPIni.getParentFile().getAbsolutePath(), "-v"); //$NON-NLS-1$ //$NON-NLS-2$
 			Matcher m = PHP_VERSION.matcher(output);
 			if (m.find()) {
 				version = m.group(1);
@@ -372,7 +369,8 @@ public class PHPexeItem {
 		}
 	}
 
-	public static void getLibVarriable(StringBuffer buf, File executable) {
+	public static String getLibVarriable(File executable) {
+		StringBuilder buf = new StringBuilder();
 		final String os = Platform.getOS();
 		if (!os.equals(Platform.OS_WIN32)) {
 			boolean isMac = os.equals(Platform.OS_MACOSX);
@@ -384,6 +382,7 @@ public class PHPexeItem {
 			buf.append('=');
 			buf.append(executable.getParent());
 		}
+		return buf.toString();
 	}
 
 	/**
@@ -392,8 +391,9 @@ public class PHPexeItem {
 	 * @param cmd Command array
 	 * @throws IOException
 	 */
-	private static String exec(String env, String... cmd) throws IOException {
+	private static String exec(String... cmd) throws IOException {
 		String[] envParams = null;
+		String env = getLibVarriable(new File(cmd[0]));
 		if (env != null && env.length() > 0) {
 			envParams = new String[] { env };
 		}
