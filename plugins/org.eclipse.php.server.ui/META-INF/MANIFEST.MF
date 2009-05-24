@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.php.core,
  org.eclipse.php.debug.ui,
  org.eclipse.php.debug.core,
- org.eclipse.dltk.core
+ org.eclipse.dltk.core,
+ org.eclipse.help;bundle-version="3.4.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.internal.server;x-internal:=true,
  org.eclipse.php.internal.server.ui;x-internal:=true,
