@@ -113,7 +113,65 @@ public class PHPModelUtils {
 		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
 		
 		for (IMethod method : getTypeHierarchyMethod(type, name, monitor)) {
-			PHPDocBlock docBlock = PHPModelUtils.getDocBlock(method);
+			PHPDocBlock docBlock = getDocBlock(method);
+			if (docBlock != null) {
+				docs.add(docBlock);
+			}
+		}
+		return docs.toArray(new PHPDocBlock[docs.size()]);
+	}
+	
+
+	/**
+	 * Finds field by name in the class hierarchy
+	 * @param type Class element
+	 * @param name Field name
+	 * @param monitor Progress monitor
+	 * @return field element or <code>null</code> in case it couldn't be found
+	 * @throws CoreException
+	 */
+	public static IField[] getTypeHierarchyField(IType type, String name, IProgressMonitor monitor) throws CoreException {
+		if (name == null) {
+			throw new NullPointerException();
+		}
+
+		final List<IField> fields = new LinkedList<IField>();
+		if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
+			IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
+			SearchPattern pattern = SearchPattern.createPattern(name, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
+	
+			new SearchEngine().search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
+				public void acceptSearchMatch(SearchMatch match) throws CoreException {
+					fields.add((IField) match.getElement());
+				}
+			}, monitor);
+		} else {
+			IField field = type.getField(name);
+			if (field.exists()) {
+				fields.add(field);
+			}
+		}
+
+		return fields.toArray(new IField[fields.size()]);
+	}
+
+	/**
+	 * Finds field documentation by field name in the class hierarchy
+	 * @param type Class element
+	 * @param name Field name
+	 * @param monitor Progress monitor
+	 * @return field phpdoc element or <code>null</code> in case it couldn't be found
+	 * @throws CoreException
+	 */
+	public static PHPDocBlock[] getTypeHierarchyFieldDoc(IType type, String name, IProgressMonitor monitor) throws CoreException {
+		if (name == null) {
+			throw new NullPointerException();
+		}
+
+		final List<PHPDocBlock> docs = new LinkedList<PHPDocBlock>();
+		
+		for (IField field : getTypeHierarchyField(type, name, monitor)) {
+			PHPDocBlock docBlock = getDocBlock(field);
 			if (docBlock != null) {
 				docs.add(docBlock);
 			}
