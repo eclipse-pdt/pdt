@@ -22,6 +22,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IOpenable;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.search.*;
 import org.eclipse.dltk.internal.core.*;
 import org.eclipse.dltk.internal.ui.StandardModelElementContentProvider;
@@ -40,6 +42,10 @@ import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.php.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.wst.jsdt.core.*;
+import org.eclipse.wst.jsdt.internal.ui.packageview.PackageFragmentRootContainer;
+import org.eclipse.wst.jsdt.ui.ProjectLibraryRoot;
+import org.eclipse.wst.jsdt.ui.project.JsNature;
 
 /**
  * 
@@ -71,12 +77,22 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 
 	public Object[] getChildren(Object parentElement) {
 
+		// include path node
 		if (parentElement instanceof IncludePath) {
 			final Object entry = ((IncludePath) parentElement).getEntry();
 			if (entry instanceof IBuildpathEntry) {
 				return getBuildPathEntryChildren(parentElement, entry);
 			}
 		}
+
+		// JavaScript nodes 
+		if (parentElement instanceof ProjectLibraryRoot) {
+			return ((ProjectLibraryRoot) parentElement).getChildren();
+		}
+		if (parentElement instanceof PackageFragmentRootContainer) {
+			return getContainerPackageFragmentRoots((PackageFragmentRootContainer) parentElement, true);
+		}
+
 		try {
 
 			// aggregate php projects and non php projects (includes closed ones)
@@ -125,18 +141,26 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 
 					// Adding External libraries to the treeview :
 					if (parentElement instanceof IScriptProject) {
-						IScriptProject project = (IScriptProject) parentElement;
+						IScriptProject scriptProject = (IScriptProject) parentElement;
+						IProject project = scriptProject.getProject();
+
 						// Add include path node
-						IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project.getProject());
-						IncludePathContainer incPathContainer = new IncludePathContainer(project, includePaths);
+						IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(project);
+						IncludePathContainer incPathContainer = new IncludePathContainer(scriptProject, includePaths);
 						returnChlidren.add(incPathContainer);
 
 						// Add the language library
-						Object[] projectChildren = getProjectFragments(project);
+						Object[] projectChildren = getProjectFragments(scriptProject);
 						for (Object modelElement : projectChildren) {
 							if (modelElement instanceof BuildPathContainer && ((BuildPathContainer) modelElement).getBuildpathEntry().getPath().equals(LanguageModelInitializer.LANGUAGE_CONTAINER_PATH)) {
 								returnChlidren.add(modelElement);
 							}
+						}
+
+						boolean hasJsNature = JsNature.hasNature(project);
+						if (hasJsNature) {
+							ProjectLibraryRoot projectLibs = new ProjectLibraryRoot(JavaScriptCore.create(project));
+							returnChlidren.add(projectLibs);
 						}
 					}
 					return returnChlidren.toArray();
@@ -185,13 +209,57 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 		} catch (CoreException e) {
 			throw new ModelException(e);
 		}
-		
+
 		List<IType> result = new LinkedList<IType>();
 		for (String namespaceName : processedNamespaces.keySet()) {
 			List<IType> list = processedNamespaces.get(namespaceName);
 			result.add(new NamespaceNode(project, namespaceName, list.toArray(new IType[list.size()])));
 		}
 		return result.toArray();
+	}
+
+	private Object[] getContainerPackageFragmentRoots(PackageFragmentRootContainer container, boolean createFolder) {
+
+		Object[] children = container.getChildren();
+		if (children == null)
+			return new Object[0];
+
+		ArrayList<IJavaScriptElement> allChildren = new ArrayList<IJavaScriptElement>();
+		ArrayList expanded = new ArrayList();
+		expanded.addAll(Arrays.asList(children));
+
+		if (expanded == null || expanded.size() < 1)
+			return new Object[0];
+
+		Object next = expanded.remove(0);
+
+		while (next != null) {
+			try {
+				if (next instanceof IPackageFragment) {
+					expanded.addAll(Arrays.asList(((IPackageFragment) next).getChildren()));
+				} else if (next instanceof IPackageFragmentRoot) {
+					expanded.addAll(Arrays.asList(((IPackageFragmentRoot) next).getChildren()));
+				} else if (next instanceof IClassFile) {
+					List<IJavaScriptElement> newChildren = Arrays.asList(((IClassFile) next).getChildren());
+					allChildren.removeAll(newChildren);
+					allChildren.addAll(newChildren);
+				} else if (next instanceof IJavaScriptUnit) {
+					List<IJavaScriptElement> newChildren = Arrays.asList(((IJavaScriptUnit) next).getChildren());
+					allChildren.removeAll(newChildren);
+					allChildren.addAll(newChildren);
+
+				}
+			} catch (JavaScriptModelException ex) {
+				Logger.logException(ex);
+			}
+
+			if (expanded.size() > 0)
+				next = expanded.remove(0);
+			else
+				next = null;
+		}
+
+		return allChildren.toArray();
 	}
 
 	/**

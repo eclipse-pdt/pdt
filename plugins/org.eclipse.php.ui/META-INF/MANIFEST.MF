@@ -34,7 +34,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.jsdt.web.core,
  org.eclipse.wst.jsdt.web.ui,
  org.eclipse.php.server.core,
- org.eclipse.ltk.core.refactoring
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.wst.jsdt.ui;bundle-version="1.0.200"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.php.internal.ui;x-internal:=true,
  org.eclipse.php.internal.ui.actions;x-internal:=true,
