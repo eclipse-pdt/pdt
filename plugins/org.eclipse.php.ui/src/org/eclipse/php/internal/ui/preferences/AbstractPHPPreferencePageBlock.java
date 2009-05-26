@@ -12,9 +12,11 @@ package org.eclipse.php.internal.ui.preferences;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.php.ui.preferences.IPHPPreferencePageBlock;
 import org.eclipse.swt.SWT;
@@ -33,7 +35,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
  * @author shalom
  */
 public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePageBlock {
-
 
 	private String comparableName;
 
@@ -55,53 +56,56 @@ public abstract class AbstractPHPPreferencePageBlock implements IPHPPreferencePa
 		group.setLayout(layout);
 		return group;
 	}
-	
+
 	protected Button addCheckBox(Composite parent, String label, String prefKey, int horizontalIndent) {
-        Button checkBox = new Button(parent, SWT.CHECK);
-        checkBox.setText(label);
+		Button checkBox = new Button(parent, SWT.CHECK);
+		checkBox.setText(label);
 
-        GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        gd.horizontalIndent = horizontalIndent;
-        gd.horizontalSpan = 3;
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gd.horizontalIndent = horizontalIndent;
+		gd.horizontalSpan = 3;
 
-        checkBox.setLayoutData(gd);
-        checkBox.setData(prefKey);
-        return checkBox;
-    }
-	
+		checkBox.setLayoutData(gd);
+		checkBox.setData(prefKey);
+		return checkBox;
+	}
 
 	protected Label addLabelControl(Composite parent, String label, String key) {
-        Label labelControl = new Label(parent, SWT.WRAP);
-        labelControl.setText(label);
-        labelControl.setData(key);
-        labelControl.setLayoutData(new GridData());
-        return labelControl;
-    }
-	
+		Label labelControl = new Label(parent, SWT.WRAP);
+		labelControl.setText(label);
+		labelControl.setData(key);
+		labelControl.setLayoutData(new GridData());
+		return labelControl;
+	}
 
 	protected IScopeContext[] createPreferenceScopes(PreferencePage propertyPage) {
 		IProject project = getProject(propertyPage);
-        if (project != null) {
-            return new IScopeContext[] { new ProjectScope(project), new InstanceScope(), new DefaultScope() };
-        }
-        return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
+		if (project != null) {
+			return new IScopeContext[] { new ProjectScope(project), new InstanceScope(), new DefaultScope() };
+		}
+		return new IScopeContext[] { new InstanceScope(), new DefaultScope() };
 	}
-	
+
 	protected IProject getProject(PreferencePage preferencePage) {
 		if (preferencePage == null) {
 			return null;
 		}
-		PropertyPage propertyPage = (PropertyPage)preferencePage;
-        if (propertyPage.getElement() != null && propertyPage.getElement() instanceof IProject) {
-            return (IProject) propertyPage.getElement();
-        }
-        return null;
-    }
+		PropertyPage propertyPage = (PropertyPage) preferencePage;
+		IAdaptable element = propertyPage.getElement();
+		if (element != null) {
+			if (element instanceof IProject) {
+				return (IProject) element;
+			} else if (element instanceof IScriptProject) {
+				return ((IScriptProject) element).getProject();
+			}
+		}
+		return null;
+	}
 
 	public void setComparableName(String name) {
 		this.comparableName = name;
 	}
-	
+
 	public String getComparableName() {
 		return comparableName;
 	}

@@ -17,9 +17,11 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.jface.dialogs.ControlEnableState;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -208,8 +210,13 @@ public abstract class AbstractPHPPropertyPreferencePage extends PropertyPage imp
 	protected abstract String getPreferencePageID();
 
 	protected IProject getProject() {
-		if (getElement() != null && getElement() instanceof IProject) {
-			return (IProject) getElement();
+		IAdaptable element = getElement();
+		if (element != null) {
+			if (element instanceof IProject) {
+				return (IProject) element;
+			} else if (element instanceof IScriptProject) {
+				return ((IScriptProject) element).getProject();
+			}
 		}
 		return null;
 	}
