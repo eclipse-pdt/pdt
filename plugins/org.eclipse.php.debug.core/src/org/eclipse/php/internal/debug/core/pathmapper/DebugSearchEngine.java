@@ -12,35 +12,11 @@ package org.eclipse.php.internal.debug.core.pathmapper;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager.ContentTypeChangeEvent;
 import org.eclipse.core.runtime.content.IContentTypeManager.IContentTypeChangeListener;
@@ -48,9 +24,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.dltk.core.environment.IEnvironment;
 import org.eclipse.php.internal.core.documentModel.provisional.contenttype.ContentTypeIdForPHP;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
@@ -61,14 +35,7 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IURIEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 
 public class DebugSearchEngine {
@@ -281,11 +248,13 @@ public class DebugSearchEngine {
 							IScriptProject project = DLTKCore.create(currentProject);
 							try {
 								IBuildpathContainer buildpathContainer = DLTKCore.getBuildpathContainer(entry.getPath(), project);
-								IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries(project);
-								if (buildpathEntries != null && buildpathEntries.length > 0) {
-									entryPath = EnvironmentPathUtils.getLocalPath(buildpathEntries[0].getPath());
-									if (entryPath != null) {
-										find(entryPath.toFile(), abstractPath, entry, results);
+								if (buildpathContainer != null) {
+									IBuildpathEntry[] buildpathEntries = buildpathContainer.getBuildpathEntries(project);
+									if (buildpathEntries != null && buildpathEntries.length > 0) {
+										entryPath = EnvironmentPathUtils.getLocalPath(buildpathEntries[0].getPath());
+										if (entryPath != null) {
+											find(entryPath.toFile(), abstractPath, entry, results);
+										}
 									}
 								}
 							} catch (ModelException e) {
