@@ -110,45 +110,47 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 		}
 
 		// send found breakpoints with remote file name
-		if (isFirstFileToDebug) {
-			try {
-				boolean stopAtFirstLine = launchConfiguration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
-				if (stopAtFirstLine) {
-					Breakpoint bpToSend = new Breakpoint(remoteFileName, -1);
-					bpToSend.setType(Breakpoint.ZEND_STATIC_BREAKPOINT);
-					bpToSend.setLifeTime(Breakpoint.ZEND_ONETIME_BREAKPOINT);
-					debugTarget.getRemoteDebugger().addBreakpoint(bpToSend);
-				}
-			} catch (CoreException e) {
-				PHPDebugPlugin.log(e);
-			}
-		}
-		if (localPath != null && ILaunchManager.DEBUG_MODE.equals(debugTarget.getLaunch().getLaunchMode())) {
-			IBreakpoint[] breakPoints = findBreakpoints(localPath, debugTarget);
-
-			for (IBreakpoint bp : breakPoints) {
+		if (ILaunchManager.DEBUG_MODE.equals(debugTarget.getLaunch().getLaunchMode())) {
+			if (isFirstFileToDebug) {
 				try {
-					if (bp.isEnabled()) {
-						
-						PHPConditionalBreakpoint phpBP = (PHPConditionalBreakpoint) bp;
-						Breakpoint runtimeBreakpoint = phpBP.getRuntimeBreakpoint();
-						
-						int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
-						int bpID = runtimeBreakpoint.getID();
-						int bpType = runtimeBreakpoint.getType();
-						int bpLifeTime = runtimeBreakpoint.getLifeTime();
-						Breakpoint bpToSend = new Breakpoint(remoteFileName, lineNumber);
-						bpToSend.setID(bpID);
-						bpToSend.setType(bpType);
-						bpToSend.setLifeTime(bpLifeTime);
-						bpToSend.setConditionalFlag(runtimeBreakpoint.getConditionalFlag());
-						bpToSend.setExpression(runtimeBreakpoint.getExpression());
-						
+					boolean stopAtFirstLine = launchConfiguration.getAttribute(IDebugParametersKeys.FIRST_LINE_BREAKPOINT, false);
+					if (stopAtFirstLine) {
+						Breakpoint bpToSend = new Breakpoint(remoteFileName, -1);
+						bpToSend.setType(Breakpoint.ZEND_STATIC_BREAKPOINT);
+						bpToSend.setLifeTime(Breakpoint.ZEND_ONETIME_BREAKPOINT);
 						debugTarget.getRemoteDebugger().addBreakpoint(bpToSend);
-						runtimeBreakpoint.setID(bpToSend.getID());
 					}
 				} catch (CoreException e) {
 					PHPDebugPlugin.log(e);
+				}
+			}
+			if (localPath != null) {
+				IBreakpoint[] breakPoints = findBreakpoints(localPath, debugTarget);
+	
+				for (IBreakpoint bp : breakPoints) {
+					try {
+						if (bp.isEnabled()) {
+							
+							PHPConditionalBreakpoint phpBP = (PHPConditionalBreakpoint) bp;
+							Breakpoint runtimeBreakpoint = phpBP.getRuntimeBreakpoint();
+							
+							int lineNumber = (Integer) bp.getMarker().getAttribute(IMarker.LINE_NUMBER);
+							int bpID = runtimeBreakpoint.getID();
+							int bpType = runtimeBreakpoint.getType();
+							int bpLifeTime = runtimeBreakpoint.getLifeTime();
+							Breakpoint bpToSend = new Breakpoint(remoteFileName, lineNumber);
+							bpToSend.setID(bpID);
+							bpToSend.setType(bpType);
+							bpToSend.setLifeTime(bpLifeTime);
+							bpToSend.setConditionalFlag(runtimeBreakpoint.getConditionalFlag());
+							bpToSend.setExpression(runtimeBreakpoint.getExpression());
+							
+							debugTarget.getRemoteDebugger().addBreakpoint(bpToSend);
+							runtimeBreakpoint.setID(bpToSend.getID());
+						}
+					} catch (CoreException e) {
+						PHPDebugPlugin.log(e);
+					}
 				}
 			}
 		}
