@@ -141,10 +141,8 @@ public class StartProcessFileNotificationHandler implements IDebugMessageHandler
 						bpToSend.setID(bpID);
 						bpToSend.setType(bpType);
 						bpToSend.setLifeTime(bpLifeTime);
-						if (bpID == Breakpoint.ZEND_CONDITIONAL_BREAKPOINT) {
-							bpToSend.setConditionalFlag(runtimeBreakpoint.getConditionalFlag());
-							bpToSend.setExpression(runtimeBreakpoint.getExpression());
-						}
+						bpToSend.setConditionalFlag(runtimeBreakpoint.getConditionalFlag());
+						bpToSend.setExpression(runtimeBreakpoint.getExpression());
 						
 						debugTarget.getRemoteDebugger().addBreakpoint(bpToSend);
 						runtimeBreakpoint.setID(bpToSend.getID());
