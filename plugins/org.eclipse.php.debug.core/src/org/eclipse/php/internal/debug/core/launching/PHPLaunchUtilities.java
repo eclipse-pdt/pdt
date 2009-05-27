@@ -582,8 +582,8 @@ public class PHPLaunchUtilities {
 			Map<String, String> envMap = asAttributesMap(launchConfigurationEnvironment);
 			// Make sure that these settings override any additional settings, so add them to the
 			// additional environments map.
-			additionalEnvMap.putAll(envMap);
-			totalEnv = asAttributesArray(additionalEnvMap);
+			envMap.putAll(additionalEnvMap);
+			totalEnv = asAttributesArray(envMap);
 		} else {
 			// We have nothing in the environment tab, so we need to set currentEnv ourselves to the current environment
 			Map<String, String> nativeEnvironment = DebugPlugin.getDefault().getLaunchManager().getNativeEnvironmentCasePreserved();

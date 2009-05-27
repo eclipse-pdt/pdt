@@ -14,8 +14,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * A process crash detector is a {@link Runnable} that hooks a PHP process error stream and blocks until the process terminates.
@@ -47,14 +49,26 @@ public class ProcessCrashDetector implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		String str = null;
 		try {
 			while ((str = errorStream.readLine()) != null) {
 				builder.append(str);
 				builder.append('\n');
 			}
+//			if(builder.length() > 0) {
+//				Display.getDefault().asyncExec(new Runnable() {
+//					public void run() {
+//						MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_General_Error, builder.toString());
+//					}
+//				});
+//			}
 		} catch (IOException ioe) {
+		}finally{
+			try {
+				errorStream.close();
+			} catch (IOException e) {
+			}
 		}
 		try {
 			int exitValue = process.exitValue();
