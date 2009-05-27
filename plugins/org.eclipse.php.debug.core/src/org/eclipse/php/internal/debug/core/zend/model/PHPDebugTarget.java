@@ -470,14 +470,15 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 */
 	public void resume() throws DebugException {
 		fLastcmd = "resume";
+		// Fix for bug #163780 - Debugger irregular state control
+		// Call for the resumed before the debugger.stepOut
+		int detail = DebugEvent.CLIENT_REQUEST;
+		resumed(detail);
 		((PHPThread) getThreads()[0]).setStepping(false);
 		fStatus = debugger.go(fGoResponseHandler);
 		if (!fStatus) {
 			Logger.log(Logger.ERROR, "PHPDebugTarget: debugger.go return false");
 		}
-		int detail = DebugEvent.CLIENT_REQUEST;
-		resumed(detail);
-
 	}
 
 	/**
