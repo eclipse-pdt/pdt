@@ -110,45 +110,44 @@ depFilesListExtras=
 			</or>
 		</condition>
 
-		<!-- additional requirement for PDT, since it packs all-in-ones based on Eclipse platform instead of SDK --> 
+		<!-- Use EPP packages instead
+		< ! - - additional requirement for PDT, since it packs all-in-ones based on Eclipse platform instead of SDK - - > 
 		<propertyregex property="thisEclipseCVSClientFile"
 		               input="${eclipseFile}"
 		               regexp="(eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
 		               replace="\1CVS-Client-\3.zip"
 		               casesensitive="false"
 		/>
-		<!-- <echo message="this eclipseCVSClientFile = ${thisEclipseCVSClientFile}" /> -->
+		< ! - - <echo message="this eclipseCVSClientFile = ${thisEclipseCVSClientFile}" /> - - >
 		<if>
 			<not>
 				<available file="${downloadsDir}/${thisEclipseCVSClientFile}" type="file" />
 			</not>
 			<then>
-				<!-- <echo message="orig eclipseURL = ${eclipseURL}" /> -->
+				< ! - - <echo message="orig eclipseURL = ${eclipseURL}" /> - - >
 				<propertyregex property="thisEclipseCVSClientURL"
 				               input="${eclipseURL}"
 				               regexp="(.+eclipse-)(SDK-)(.+)(-linux-gtk\.tar\.gz)"
 				               replace="\1CVS-Client-\3.zip"
 				               casesensitive="false"
 				/>
-				<!-- <echo message="this eclipseCVSClientURL = ${thisEclipseCVSClientURL}" /> -->
+				< ! - - <echo message="this eclipseCVSClientURL = ${thisEclipseCVSClientURL}" /> - - >
 				<get src="${thisEclipseCVSClientURL}" dest="${downloadsDir}/${thisEclipseCVSClientFile}" usetimestamp="true" />
 				<touch file="${downloadsDir}/${thisEclipseCVSClientFile}" />
 			</then>
 		</if>
-
-		<!-- 
+		< ! - - 
 			define prefix for all-in-ones, platforms to build, what Eclipse base to use (SDK, platform), what project 
 			zip(s) should be used as input (in addition to eclipse base + all build dependencies, culled from ${depFilesList} 
-			in build.cfg), and for which build types to perform this step
-			
-			FOR NOW We stop providing the all-in-one as PHP joined EPP  
-		-->
+			in build.cfg), and for which build types to perform this step 
+		- - >
 		<property name="allInOnePrefix" value="${projectName}-all-in-one" />
 		<property name="allInOnePlatforms" value="win32,linux-gtk,macosx-carbon" />
 		<property name="allInOneEclipseBase" value="platform"/>
 		<property name="allInOneInputs" value="${allZip}" />
 		<property name="allInOneInputExtras" value="${thisEclipseCVSClientFile}"/>
-		<property name="allInOneBuildTypes" value="" />
+		<property name="allInOneBuildTypes" value="S,R" />
+		-->
 	</target>
 
 	<target name="buildAll">
@@ -223,7 +222,9 @@ depFilesListExtras=
 
 		<echo-timestamp />
 
-		<ant target="packAllInOnes" antfile="${helper}" />
+		<!-- Use EPP packages instead
+			<ant target="packAllInOnes" antfile="${helper}" />
+		-->
 
 		<delete file="${buildDirectory}/${buildLabel}/${allZip}" failonerror="true" quiet="true" />
 
