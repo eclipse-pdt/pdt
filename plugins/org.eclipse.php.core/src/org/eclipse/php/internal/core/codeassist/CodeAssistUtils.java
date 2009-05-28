@@ -958,6 +958,9 @@ public class CodeAssistUtils {
 				groups.add(elementName.substring(0, prefixLength + nsIdx));
 			}
 		}
+		
+		Set<IModelElement> outOfGroupsElements = new HashSet<IModelElement>();
+		outOfGroupsElements.addAll(elements);
 
 		// Calclulate classes to search:
 		List<String> filteredGroups = new LinkedList<String>();
@@ -970,6 +973,7 @@ public class CodeAssistUtils {
 					if (underscore == group.length()) {
 						filteredElements.add(elementName);
 					}
+					outOfGroupsElements.remove(element);
 				}
 			}
 			if (filteredElements.size() == 1) {
@@ -989,6 +993,10 @@ public class CodeAssistUtils {
 				groupElements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
 			}
 		}
+		
+		// Add all elements that don't fall into any group
+		groupElements.addAll(outOfGroupsElements);
+		
 		return (IModelElement[]) groupElements.toArray(new IModelElement[groupElements.size()]);
 	}
 
