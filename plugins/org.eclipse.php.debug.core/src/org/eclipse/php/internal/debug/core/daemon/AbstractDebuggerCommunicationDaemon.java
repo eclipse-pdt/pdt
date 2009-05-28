@@ -16,12 +16,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.debug.daemon.communication.ICommunicationDaemon;
 import org.eclipse.php.internal.debug.core.Logger;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * The debugger communication receiver holds a ServerSocket that remains open for the entire
@@ -133,13 +129,6 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 	public void handleMultipleBindingError() {
 		final int port = getReceiverPort();
 		Logger.log(Logger.ERROR, "The debug port " + port + " is in use. Please select a different port for the debugger.");
-		final Display display = Display.getDefault();
-		display.asyncExec(new Runnable() {
-			public void run() {
-				final String message = NLS.bind(PHPDebugCoreMessages.Port_Error_Message_Message, new String[] { String.valueOf(port) });
-				MessageDialog.openWarning(display.getActiveShell(), PHPDebugCoreMessages.Port_Error_Message_Title, message);
-			}
-		});
 	}
 
 	/**
