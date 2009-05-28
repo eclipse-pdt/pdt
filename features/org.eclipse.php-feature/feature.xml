@@ -25,8 +25,8 @@
       <import feature="org.eclipse.wst.jsdt.feature" version="1.1.0" match="compatible"/>
       <import feature="org.eclipse.wst.xml_ui.feature" version="3.1.0" match="compatible"/>
       <import feature="org.eclipse.wst.web_ui.feature" version="3.1.0" match="compatible"/>
-      <import feature="org.eclipse.wst.server_adapters" version="3.1.0" match="compatible"/>
       <import feature="org.eclipse.wst.xsl.feature" version="1.0.0" match="compatible"/>
+      <import feature="org.eclipse.wst.server_adapters.feature" version="3.1.0" match="compatible"/>
    </requires>
 
    <plugin
