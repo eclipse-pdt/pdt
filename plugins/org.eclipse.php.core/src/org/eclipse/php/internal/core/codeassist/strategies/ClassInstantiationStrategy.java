@@ -85,6 +85,11 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 			}
 			
 			try {
+				int flags = type.getFlags();
+				if (PHPFlags.isAbstract(flags)) {
+					continue;
+				}
+				
 				if (ctor != null) {
 					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
 						ISourceRange sourceRange = type.getSourceRange();
@@ -98,7 +103,6 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 						reporter.reportMethod(ctorMethod, suffix, replaceRange);
 					}
 				} else {
-					int flags = type.getFlags();
 					if (!PHPFlags.isInternal(flags) && PHPFlags.isClass(flags)) {
 						reporter.reportType(type, suffix, replaceRange);
 					}
