@@ -19,9 +19,6 @@ import org.eclipse.osgi.util.NLS;
 public class PHPDebugCoreMessages extends NLS {
     private static final String BUNDLE_NAME = "org.eclipse.php.internal.debug.core.PHPDebugCoreMessages";//$NON-NLS-1$
 
-    public static String DebugConnectionThread_oldDebuggerVersion;
-	public static String DebugServerTestEvent_success;
-	public static String DebugServerTestEvent_timeOutMessage;
     public static String LineBreakPointMessage_1;
     public static String ConditionalBreakPointMessage_1;
     public static String ConditionalBreakPointMessage_2;
@@ -42,8 +39,6 @@ public class PHPDebugCoreMessages extends NLS {
     public static String Debugger_Error_Message_3;
     public static String Debugger_Error_Crash_Message;
     public static String Debugger_Incompatible_Protocol;
-    public static String Port_Error_Message_Message;
-    public static String Port_Error_Message_Title;
 
 	public static String PHPLaunchUtilities_activeLaunchDetected;
 	public static String PHPLaunchUtilities_confirmation;
