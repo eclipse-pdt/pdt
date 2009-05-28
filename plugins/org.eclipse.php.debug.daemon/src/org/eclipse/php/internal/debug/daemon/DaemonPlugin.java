@@ -169,5 +169,4 @@ public class DaemonPlugin extends Plugin {
 	public static void logErrorMessage(String message) {
 		log(new Status(IStatus.ERROR, ID, INTERNAL_ERROR, message, null));
 	}
-
 }
