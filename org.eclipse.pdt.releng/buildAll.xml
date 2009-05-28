@@ -146,7 +146,7 @@ depFilesListExtras=
 		<property name="allInOneEclipseBase" value="platform"/>
 		<property name="allInOneInputs" value="${allZip}" />
 		<property name="allInOneInputExtras" value="${thisEclipseCVSClientFile}"/>
-		<property name="allInOneBuildTypes" value="S,R" />
+		<property name="allInOneBuildTypes" value="" />
 	</target>
 
 	<target name="buildAll">
