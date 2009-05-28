@@ -5,6 +5,7 @@ Test In Class Declaration
 --EXPECT--
 keyword(abstract)
 keyword(const)
+keyword(final)
 keyword(function)
 keyword(private)
 keyword(protected)

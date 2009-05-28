@@ -10,6 +10,7 @@ class A {
 --EXPECT--
 keyword(abstract)
 keyword(const)
+keyword(final)
 keyword(function)
 keyword(private)
 keyword(protected)
