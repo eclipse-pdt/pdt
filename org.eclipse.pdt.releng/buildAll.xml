@@ -139,7 +139,9 @@ depFilesListExtras=
 		<!-- 
 			define prefix for all-in-ones, platforms to build, what Eclipse base to use (SDK, platform), what project 
 			zip(s) should be used as input (in addition to eclipse base + all build dependencies, culled from ${depFilesList} 
-			in build.cfg), and for which build types to perform this step 
+			in build.cfg), and for which build types to perform this step
+			
+			FOR NOW We stop providing the all-in-one as PHP joined EPP  
 		-->
 		<property name="allInOnePrefix" value="${projectName}-all-in-one" />
 		<property name="allInOnePlatforms" value="win32,linux-gtk,macosx-carbon" />
