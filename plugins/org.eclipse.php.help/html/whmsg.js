@@ -1,4 +1,15 @@
-﻿//	WebHelp 5.10.002
+﻿/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
+//	WebHelp 5.10.002
 var WH_MSG_RESIZEPANE		=0x0100;
 var WH_MSG_SHOWPANE			=0x0101;
 var WH_MSG_HIDEPANE			=0x0102;
