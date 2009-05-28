@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 

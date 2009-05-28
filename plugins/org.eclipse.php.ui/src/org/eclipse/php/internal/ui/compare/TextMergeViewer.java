@@ -1,18 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2008 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     channingwalton@mac.com - curved line code
- *     gilles.querret@free.fr - fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=72995
- *     Max Weninger (max.weninger@windriver.com) - Bug 131895 [Edit] Undo in compare
- *     Max Weninger (max.weninger@windriver.com) - Bug 72936 [Viewers] Show line numbers in comparision
- *     Matt McCutchen (hashproduct+eclipse@gmail.com) - Bug 178968 [Viewers] Lines scrambled and different font size in compare
- *     Matt McCutchen (hashproduct+eclipse@gmail.com) - Bug 191524 [Viewers] Synchronize horizontal scrolling by # characters, not % of longest line
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.ui.compare;
 
