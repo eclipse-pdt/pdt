@@ -44,14 +44,14 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 
 		IType[] types = getTypes(abstractContext);
 		IElementFilter elementFilter = getElementFilter();
-		String suffix = types.length > 0 && types[0] instanceof FakeGroupType ? "": getSuffix(abstractContext);
+		String suffix = getSuffix(abstractContext);
 		String nsSuffix = getNSSuffix(abstractContext);
 		
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
 				if (!PHPFlags.isInternal(flags) && (elementFilter == null || !elementFilter.filter(type))) {
-					reporter.reportType(type, PHPFlags.isNamespace(flags) ? nsSuffix : suffix, replacementRange);
+					reporter.reportType(type, PHPFlags.isNamespace(flags) ? nsSuffix : type instanceof FakeGroupType ? "" : suffix, replacementRange);
 				}
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {

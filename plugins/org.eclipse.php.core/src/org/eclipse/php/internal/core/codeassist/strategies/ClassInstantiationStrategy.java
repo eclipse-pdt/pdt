@@ -14,6 +14,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
@@ -59,9 +60,13 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 		}
 		
 		SourceRange replaceRange = getReplacementRange(context);
-		
+		String defaultSuffix = getSuffix(concreteContext);
+
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
+
+			String suffix = type instanceof FakeGroupType ? "" : defaultSuffix;
+			
 			IMethod ctor = null;
 			if (requestor.isContextInformationMode()) {
 				try {
@@ -78,7 +83,6 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 				}
 			}
 			
-			String suffix = getSuffix(concreteContext);
 			try {
 				if (ctor != null) {
 					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
