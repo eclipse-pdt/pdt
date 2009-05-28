@@ -300,7 +300,4 @@ public class ChangeCorrectionProposal implements IScriptCompletionProposal, ICom
 	public void setCommandId(String commandId) {
 		fCommandId= commandId;
 	}
-
-
-
 }
