@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
- *   Zend and IBM - Initial implementation
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences.phps;
 
@@ -135,11 +136,15 @@ public class InstalledPHPsBlock {
 					case 1:
 						String debuggerName = PHPDebuggersRegistry.getDebuggerName(phpExe.getDebuggerID());
 						if (debuggerName == null) {
-							debuggerName = "";
+							debuggerName = ""; //$NON-NLS-1$
 						}
 						return debuggerName;
 					case 2:
-						return phpExe.getExecutable().getAbsolutePath();
+						File executable = phpExe.getExecutable();
+						if (executable == null) {
+							return ""; //$NON-NLS-1$
+						}
+						return executable.getAbsolutePath();
 				}
 			}
 			return element.toString();
