@@ -1,0 +1,14 @@
+--TEST--
+Should NOT complete abstract classes
+--FILE--
+<?php
+abstract class myclass1 {
+}
+final class myclass2 {
+}
+class myclass3 {
+}
+$a = new myclass|
+--EXPECT--
+type(myclass2)
+type(myclass3)
