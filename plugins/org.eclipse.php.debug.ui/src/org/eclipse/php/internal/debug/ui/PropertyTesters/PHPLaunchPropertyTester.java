@@ -60,15 +60,8 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 					if (obj instanceof IEditorInput) {
 						return test(DLTKUIPlugin.getEditorInputModelElement((IEditorInput) obj));
 					}
-					else if (obj instanceof IModelElement) {
-						return test((IModelElement) obj);
-					}
 					else if (obj instanceof IAdaptable) {
-						IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
-						if (modelElement != null) {
-							return test(modelElement);
-						}
-						IResource resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+						IResource resource = getResource((IAdaptable) obj);
 						if (resource != null && resource.getType() == IResource.FILE) {
 							return PHPToolkitUtil.isPhpFile((IFile) resource);
 						}
@@ -82,6 +75,15 @@ public class PHPLaunchPropertyTester extends PropertyTester {
 		return false;
 	}
 	
+	private IResource getResource(IAdaptable obj) {
+		IModelElement modelElement = (IModelElement) ((IAdaptable) obj).getAdapter(IModelElement.class);
+		if (modelElement != null) {
+			return modelElement.getResource();
+		} else {
+			return (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
+		}
+	}
+
 	private boolean test(IModelElement modelElement) {
 		return modelElement != null && modelElement.getElementType() == IModelElement.SOURCE_MODULE && PHPToolkitUtil.isPhpElement(modelElement);
 	}
