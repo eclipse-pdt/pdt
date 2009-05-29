@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.zend.model;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
@@ -25,6 +28,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
  */
 public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 
+	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
+	
     private PHPThread fThread;
     private String fName;
     private String fFileName;
@@ -38,6 +43,12 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
     }
 
     private void baseInit(IThread thread, String fileName, String funcName, int lineNumber, int id, String rName) {
+    	Matcher matcher = LAMBDA_FUNC_PATTERN.matcher(fileName);
+    	if (matcher.matches()) {
+    		fileName = matcher.group(1);
+    		lineNumber = Integer.parseInt(matcher.group(2));
+    	}
+    	
         fName = funcName;
         fFileName = fileName;
         fPC = lineNumber;
