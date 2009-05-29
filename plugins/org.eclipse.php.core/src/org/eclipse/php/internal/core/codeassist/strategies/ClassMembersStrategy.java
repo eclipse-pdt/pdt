@@ -51,6 +51,10 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		return ((context instanceof ClassObjMemberContext) && ((ClassObjMemberContext)context).isThisCall());
 	}
 	
+	protected boolean isSelfCall(ClassMemberContext context) {
+		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext)context).isSelfCall());
+	}
+	
 	protected boolean isParentCall(ClassMemberContext context) {
 		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext)context).isParentCall());
 	}
@@ -67,7 +71,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 	 * @throws ModelException
 	 */
 	protected boolean isVisible(IMember member, ClassMemberContext context) throws ModelException {
-		if (isThisCall(context)) {
+		if (isThisCall(context) || isSelfCall(context)) {
 			return true;
 		}
 		int flags = member.getFlags();

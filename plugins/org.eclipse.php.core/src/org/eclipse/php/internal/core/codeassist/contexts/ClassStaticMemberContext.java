@@ -30,6 +30,7 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 public class ClassStaticMemberContext extends ClassMemberContext {
 	
 	private boolean isParentCall;
+	private boolean isSelfCall;
 	
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
@@ -40,7 +41,6 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		}
 		
 		isParentCall = false;
-		
 		int elementStart = getElementStart();
 		int lhsIndex = elementStart - "parent".length() - getTriggerType().getName().length();
 		if (lhsIndex == 0) {
@@ -48,6 +48,16 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
 			if (parentText.equals("parent")) { //$NON-NLS-1$
 				isParentCall = true;
+			}
+		}
+		
+		isSelfCall = false;
+		lhsIndex = elementStart - "self".length() - getTriggerType().getName().length();
+		if (lhsIndex == 0) {
+			TextSequence statementText = getStatementText();
+			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
+			if (parentText.equals("self")) { //$NON-NLS-1$
+				isSelfCall = true;
 			}
 		}
 		return true;
@@ -58,5 +68,12 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 	 */
 	public boolean isParentCall() {
 		return isParentCall;
+	}
+	
+	/**
+	 * Returns whether the left hand side is a word 'self'
+	 */
+	public boolean isSelfCall() {
+		return isSelfCall;
 	}
 }
