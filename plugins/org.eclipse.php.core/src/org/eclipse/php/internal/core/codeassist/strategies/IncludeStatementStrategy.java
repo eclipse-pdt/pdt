@@ -24,7 +24,6 @@ import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
-import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.IncludeStatementContext;
 import org.eclipse.php.internal.core.includepath.IncludePath;
@@ -36,6 +35,8 @@ import org.eclipse.php.internal.core.includepath.IncludePathManager;
  * {@link IncludeStatementContext}
  */
 public class IncludeStatementStrategy extends AbstractCompletionStrategy {
+	
+	public final static String FOLDER_SEPARATOR = "/"; //$NON-NLS-1$
 
 	public IncludeStatementStrategy(ICompletionContext context) {
 		super(context);
@@ -49,7 +50,6 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 
 		IncludeStatementContext includeContext = (IncludeStatementContext) context;
 		String prefix = includeContext.getPrefix();
-		String suffix = getSuffix(includeContext);
 		SourceRange replaceRange = getReplacementRange(includeContext);
 
 		final ISourceModule sourceModule = includeContext.getSourceModule();
@@ -64,12 +64,12 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		final IncludePath[] includePaths = IncludePathManager.getInstance().getIncludePaths(scriptProject.getProject());
 
 		for (IncludePath includePath : includePaths) {
-			visitEntry(includePath, prefix, reporter, suffix, replaceRange, sourceModule.getScriptProject());
+			visitEntry(includePath, prefix, reporter, replaceRange, sourceModule.getScriptProject());
 		}
 
 	}
 
-	private void visitEntry(IncludePath includePath, String prefix, ICompletionReporter reporter, String suffix, SourceRange replaceRange, IScriptProject project) {
+	private void visitEntry(IncludePath includePath, String prefix, ICompletionReporter reporter, SourceRange replaceRange, IScriptProject project) {
 		// the root entry of this element
 		final Object entry = includePath.getEntry();
 
@@ -82,9 +82,9 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		}
 		try {
 			if (!includePath.isBuildpath()) {
-				addInternalEntries(reporter, suffix, replaceRange, entry, prefixPathFolder, lastSegmant);
+				addInternalEntries(reporter, replaceRange, entry, prefixPathFolder, lastSegmant);
 			} else {
-				addExternalEntries(reporter, suffix, replaceRange, project, entry, prefixPathFolder, lastSegmant);
+				addExternalEntries(reporter, replaceRange, project, entry, prefixPathFolder, lastSegmant);
 			}
 		} catch (CoreException e) {
 			Logger.logException(e);
@@ -92,7 +92,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		}
 	}
 
-	private void addExternalEntries(ICompletionReporter reporter, String suffix, SourceRange replaceRange, IScriptProject project, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws ModelException {
+	private void addExternalEntries(ICompletionReporter reporter, SourceRange replaceRange, IScriptProject project, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws ModelException {
 		switch (((IBuildpathEntry) entry).getEntryKind()) {
 			case IBuildpathEntry.BPE_CONTAINER:
 				final IProjectFragment[] findProjectFragments = project.findProjectFragments((IBuildpathEntry) entry);
@@ -104,7 +104,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 						if (element instanceof ScriptFolder) {
 							final IPath relative = ((ScriptFolder) element).getRelativePath();
 							if (relative.segmentCount() != 0 && isLastSegmantPrefix(lastSegmant, relative) && isPathPrefix(prefixPathFolder, relative)) {
-								reporter.reportResource(element, relative, suffix, replaceRange);
+								reporter.reportResource(element, relative, getSuffix(element), replaceRange);
 							}
 						}
 					}
@@ -115,7 +115,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 					for (IModelElement element : children) {
 						final IPath relative = element.getPath().makeRelativeTo(projectFragment.getPath());
 						if (isLastSegmantPrefix(lastSegmant, relative)) {
-							reporter.reportResource(element, relative, suffix, replaceRange);
+							reporter.reportResource(element, relative, getSuffix(element), replaceRange);
 						}
 					}
 				}
@@ -125,7 +125,7 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		}
 	}
 
-	private void addInternalEntries(ICompletionReporter reporter, String suffix, SourceRange replaceRange, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws CoreException {
+	private void addInternalEntries(ICompletionReporter reporter, SourceRange replaceRange, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws CoreException {
 		IContainer container = (IContainer) entry;
 		if (prefixPathFolder.segmentCount() > 0) {
 			container = container.getFolder(prefixPathFolder);
@@ -141,11 +141,11 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 				final IModelElement modelElement = DLTKCore.create(resource);
 				if (resource.getType() == IResource.FILE) {
 					if (PHPToolkitUtil.isPhpFile((IFile) resource) && !modelElement.equals(((IncludeStatementContext)context).getSourceModule())) {
-						reporter.reportResource(modelElement, rel, suffix, replaceRange);
+						reporter.reportResource(modelElement, rel, getSuffix(modelElement), replaceRange);
 					}
 				} else {
 					if (resource.getName().charAt(0) != '.') { // filter dot resources
-						reporter.reportResource(modelElement, rel, suffix, replaceRange);
+						reporter.reportResource(modelElement, rel, getSuffix(modelElement), replaceRange);
 					}
 				}
 			}
@@ -177,8 +177,8 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 		return false;
 	}
 
-	public String getSuffix(AbstractCompletionContext abstractContext) {
-		return ""; //$NON-NLS-1$ 
+	public String getSuffix(IModelElement modelElement) {
+		return modelElement.getElementType() == IModelElement.SOURCE_MODULE ? "" : FOLDER_SEPARATOR; //$NON-NLS-1$ 
 	}
 
 }
