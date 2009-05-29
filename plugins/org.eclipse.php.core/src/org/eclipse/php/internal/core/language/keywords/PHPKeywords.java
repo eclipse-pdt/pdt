@@ -38,7 +38,7 @@ public class PHPKeywords {
 		public int context = GLOBAL;
 
 		/**
-		 * Constructs keyword data with default context: {@link Context#GLOBAL}
+		 * Constructs keyword data with default context: {@link #GLOBAL}
 		 * @param name
 		 * @param suffix
 		 * @param suffixOffset
@@ -86,7 +86,7 @@ public class PHPKeywords {
 		}
 	}
 
-	private static final Map<IProject, PHPKeywords> instances = new HashMap<IProject, PHPKeywords>();
+	private static final Map<PHPVersion, PHPKeywords> instances = new HashMap<PHPVersion, PHPKeywords>();
 	private Collection<KeywordData> keywordData;
 
 	private PHPKeywords(IPHPKeywordsInitializer keywordsInitializer) {
@@ -96,9 +96,9 @@ public class PHPKeywords {
 	}
 
 	public static PHPKeywords getInstance(IProject project) {
+		PHPVersion version = ProjectOptions.getPhpVersion(project);
 		synchronized (instances) {
-			if (!instances.containsKey(project)) {
-				PHPVersion version = ProjectOptions.getPhpVersion(project);
+			if (!instances.containsKey(version)) {
 				PHPKeywords instance;
 				if (PHPVersion.PHP4 == version) {
 					instance = new PHPKeywords(new KeywordInitializerPHP_4());
@@ -109,10 +109,10 @@ public class PHPKeywords {
 				} else {
 					throw new IllegalArgumentException("No PHP version defined for project!");
 				}
-				instances.put(project, instance);
+				instances.put(version, instance);
 			}
 		}
-		return instances.get(project);
+		return instances.get(version);
 	}
 
 	/**
