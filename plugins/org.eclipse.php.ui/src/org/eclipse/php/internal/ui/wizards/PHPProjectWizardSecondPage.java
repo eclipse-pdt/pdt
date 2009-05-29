@@ -471,6 +471,9 @@ public class PHPProjectWizardSecondPage extends CapabilityConfigurationPage impl
 	}
 
 	protected void setPhpLangOptions() {
+		if (fFirstPage.fVersionGroup.fDefaultValues.isSelected()) {
+			return;
+		}
 		boolean useASPTags = fFirstPage.fVersionGroup.fConfigurationBlock.getUseAspTagsValue();
 		PHPVersion phpVersion = fFirstPage.fVersionGroup.fConfigurationBlock.getPHPVersionValue();
 		ProjectOptions.setSupportingAspTags(useASPTags, getProject());
