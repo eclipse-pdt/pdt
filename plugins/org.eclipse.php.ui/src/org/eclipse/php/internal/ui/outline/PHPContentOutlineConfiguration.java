@@ -19,6 +19,7 @@ import org.eclipse.dltk.ui.ScriptElementImageProvider;
 import org.eclipse.dltk.ui.ScriptElementLabels;
 import org.eclipse.dltk.ui.viewsupport.AppearanceAwareLabelProvider;
 import org.eclipse.dltk.ui.viewsupport.DecoratingModelLabelProvider;
+import org.eclipse.dltk.ui.viewsupport.ScriptUILabelProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -41,13 +42,15 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
-import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 
 /**
  * Configuration holder for the PHP outline at the WST outline 
  */
 public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {
+
+	public static final int MODE_PHP = 1;
+	public static final int MODE_HTML = 2;
 
 	protected PHPOutlineContentProvider fContentProvider = null;
 	protected JFaceNodeContentProvider fContentProviderHTML = null;
@@ -57,10 +60,12 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	private ChangeOutlineModeAction changeOutlineModeActionPHP;
 	private ChangeOutlineModeAction changeOutlineModeActionHTML;
 	static Object[] NO_CHILDREN = new Object[0];
+	private SortAction sortAction;
+	private ScriptUILabelProvider fSimpleLabelProvider;
+	//	private ShowGroupsAction fShowGroupsAction;
+	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
-	public static final int MODE_HTML = 2;
-
-	public static final int MODE_PHP = 1;
+	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
 	private int mode;
 
 	public PHPContentOutlineConfiguration() {
@@ -112,11 +117,6 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		}
 		return items;
 	}
-
-	private SortAction sortAction;
-	private JFaceNodeLabelProvider fSimpleLabelProvider;
-	//	private ShowGroupsAction fShowGroupsAction;
-	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
 	protected IContributionItem[] createToolbarContributions(final TreeViewer viewer) {
 		IContributionItem[] items;
@@ -236,7 +236,10 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 
 	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
 		if (fSimpleLabelProvider == null) {
-			getLabelProvider(treeViewer);
+			fSimpleLabelProvider = new ScriptUILabelProvider();
+			fSimpleLabelProvider.setTextFlags(ScriptElementLabels.DEFAULT_QUALIFIED | ScriptElementLabels.ROOT_POST_QUALIFIED | ScriptElementLabels.APPEND_ROOT_PATH |
+				ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES | ScriptElementLabels.M_APP_RETURNTYPE | ScriptElementLabels.M_EXCEPTIONS | 
+			 	ScriptElementLabels.F_APP_TYPE_SIGNATURE | ScriptElementLabels.T_TYPE_PARAMETERS);
 		}
 		return fSimpleLabelProvider;
 	}
