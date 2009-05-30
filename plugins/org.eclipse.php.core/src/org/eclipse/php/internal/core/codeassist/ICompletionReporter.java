@@ -11,10 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.internal.core.SourceRange;
 
 /**

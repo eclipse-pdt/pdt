@@ -12,8 +12,8 @@
 package org.eclipse.php.internal.core.codeassist.strategies;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
@@ -84,7 +84,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
 
 		// Add magic methods:
-		List<String> functions = new LinkedList<String>();
+		Set<String> functions = new TreeSet<String>();
 		functions.addAll(Arrays.asList(MAGIC_METHODS));
 		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
 			functions.addAll(Arrays.asList(MAGIC_METHODS_PHP5));
