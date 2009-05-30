@@ -95,6 +95,10 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 		}
 
 		try {
+			// don't show local method variables:
+			if (parentElement instanceof IMethod) {
+				return NO_CHILDREN;
+			}
 
 			// aggregate php projects and non php projects (includes closed ones)
 			if (parentElement instanceof IScriptModel) {
