@@ -379,17 +379,14 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 
 			if (enableFileSelection) {
 				final String phpFile = launchConfig.getAttribute(IPHPDebugConstants.ATTR_FILE, ""); //$NON-NLS-1$
-				if (!FileUtils.resourceExists(phpFile)) {
-					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
-					return false;
-				} else {//resource DOES exist
+				
+				if (FileUtils.resourceExists(phpFile)) {
 					IResource fileToData = ResourcesPlugin.getWorkspace().getRoot().findMember(phpFile);
 					//check if not a file (project, folder etc.)
 					if ((fileToData.getType() != IResource.FILE) || !PHPToolkitUtil.isPhpFile((IFile) fileToData)) {
 						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
 						return false;
 					}
-
 					//if valid PHP file, update text field data
 					else {
 						String dataLocation = ""; //$NON-NLS-1$
@@ -400,6 +397,16 @@ public class PHPExecutableLaunchTab extends AbstractLaunchConfigurationTab {
 						}
 						debugFileTextField.setData(dataLocation);
 					}
+				}
+				else if (new File(phpFile).exists()) {
+					if (!PHPToolkitUtil.hasPhpExtention(phpFile)) {
+						setErrorMessage(phpFile + PHPDebugUIMessages.PHPExecutableLaunchTab_isNotPHPFile);
+						return false;
+					}
+				}
+				else { //resource DOES NOT exist
+					setErrorMessage(PHPDebugUIMessages.PHP_File_Not_Exist);
+					return false;
 				}
 			}
 		} catch (final CoreException e) {
