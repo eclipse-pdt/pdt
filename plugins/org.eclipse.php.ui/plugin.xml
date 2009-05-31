@@ -219,15 +219,15 @@
 
 	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
 		<specification
-            annotationType="org.eclipse.php.ui.error"
+            annotationType="org.eclipse.dltk.ui.error"
             annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
         </specification>
         <specification
-            annotationType="org.eclipse.php.ui.warning"
+            annotationType="org.eclipse.dltk.ui.warning"
             annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
         </specification>
         <specification
-            annotationType="org.eclipse.php.ui.info"
+            annotationType="org.eclipse.dltk.ui.info"
             annotationImageProvider="org.eclipse.dltk.internal.ui.editor.ScriptAnnotationImageProvider">
         </specification>
 		<specification annotationType="org.eclipse.php.ui.occurrences"
