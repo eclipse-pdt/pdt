@@ -378,7 +378,10 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 			return;
 		}
 
-		((PHPThread) getThreads()[0]).setStepping(false);
+		IThread[] threads = getThreads();
+		if (threads != null && threads.length > 0) {
+			((PHPThread) threads[0]).setStepping(false);
+		}
 		fTerminated = true;
 		fSuspended = false;
 		fLastcmd = "terminate";
