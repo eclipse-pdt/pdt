@@ -902,7 +902,7 @@ public class PreferenceConstants {
 
 		// Show current line:
 		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, true);
-
+		
 		// Show line numbers:
 		editorStore.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, true);
 
@@ -959,6 +959,7 @@ public class PreferenceConstants {
 		store.setDefault(APPEARANCE_MEMBER_SORT_ORDER, "I,S,T,C,SV,SF,V,F"); //$NON-NLS-1$
 
 		store.setDefault(EDITOR_CORRECTION_INDICATION, true);
+		store.setDefault(org.eclipse.dltk.ui.PreferenceConstants.EDITOR_CORRECTION_INDICATION, true);
 		store.setDefault(EDITOR_SYNC_OUTLINE_ON_CURSOR_MOVE, true);
 		store.setDefault(EDITOR_ANNOTATION_ROLL_OVER, false);
 

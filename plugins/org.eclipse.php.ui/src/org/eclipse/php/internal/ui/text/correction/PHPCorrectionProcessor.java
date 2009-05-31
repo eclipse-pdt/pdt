@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.ui.DLTKUIPlugin;
 import org.eclipse.dltk.ui.editor.IScriptAnnotation;
+import org.eclipse.dltk.ui.text.IScriptCorrectionContext;
+import org.eclipse.dltk.ui.text.IScriptCorrectionProcessor;
 import org.eclipse.dltk.ui.text.MarkerResolutionProposal;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalComparator;
 import org.eclipse.dltk.ui.text.completion.IScriptCompletionProposal;
@@ -46,7 +48,7 @@ import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.SimpleMarkerAnnotation;
 
-public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassist.IQuickAssistProcessor {
+public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassist.IQuickAssistProcessor, IScriptCorrectionProcessor {
 
 	private static final String QUICKFIX_PROCESSOR_CONTRIBUTION_ID = "quickFixProcessors"; //$NON-NLS-1$
 	private static final String QUICKASSIST_PROCESSOR_CONTRIBUTION_ID = "quickAssistProcessors"; //$NON-NLS-1$
@@ -524,4 +526,20 @@ public class PHPCorrectionProcessor implements org.eclipse.jface.text.quickassis
 		return false;
 	}
 
+	public boolean canFix(IScriptAnnotation annotation) {
+		if (annotation instanceof Annotation) {
+			return canFix((Annotation) annotation);
+		}
+		return false;
+	}
+
+	public boolean canFix(IMarker marker) {
+		return false;
+	}
+
+	public void computeQuickAssistProposals(IScriptAnnotation annotation, IScriptCorrectionContext context) {
+	}
+
+	public void computeQuickAssistProposals(IMarker marker, IScriptCorrectionContext context) {
+	}
 }

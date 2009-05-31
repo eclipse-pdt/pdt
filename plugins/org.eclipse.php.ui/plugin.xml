@@ -1548,6 +1548,13 @@
 			id="org.eclipse.dltk.USER_LIBRARY">
 		</buildpathContainerPath>
 	</extension>
+ <extension
+       point="org.eclipse.dltk.ui.correctionProcessor">
+    <correctionProcessor
+          class="org.eclipse.php.internal.ui.text.correction.PHPCorrectionProcessor"
+          nature="org.eclipse.php.core.PHPNature">
+    </correctionProcessor>
+ </extension>
 	
 		
 </plugin>
