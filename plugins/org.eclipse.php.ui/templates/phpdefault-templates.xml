@@ -27,7 +27,7 @@
 
 <template name="filecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.filecomment" description="%CodeTemplates.filecomment" context="phpcomment" enabled="true">/**
  * 
- */</template>
+ */</template>
 
 <template name="typecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.typecomment" description="%CodeTemplates.typecomment" context="phpcomment" enabled="true">/**
  * @author ${user}
