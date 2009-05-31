@@ -23,16 +23,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.resources.*;
+import org.eclipse.core.runtime.*;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -56,16 +48,12 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.launching.PHPProcess;
+import org.eclipse.php.internal.debug.core.preferences.PHPDebugCorePreferenceNames;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.debugger.DebugMessagesRegistry;
 import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugMessageImpl;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionStartedNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.OutputNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.parameters.AbstractDebugParametersInitializer;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestController;
@@ -98,7 +86,7 @@ public class DebugConnectionThread implements Runnable {
 	private ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 	private DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 	private int lastRequestID = 1000;
-	protected int peerResponseTimeout = 500; // 0.5 seconds.
+	protected int debugResponseTimeout;
 	protected PHPDebugTarget debugTarget;
 	private Thread theThread;
 	private Map<Integer, IDebugMessageHandler> messageHandlers;
@@ -109,6 +97,10 @@ public class DebugConnectionThread implements Runnable {
 	 * @param socket
 	 */
 	public DebugConnectionThread(Socket socket) {
+		
+		Preferences prefs = PHPProjectPreferences.getModelPreferences();
+		debugResponseTimeout = prefs.getInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT);
+		
 		this.socket = socket;
 		requestsTable = new IntHashtable();
 		responseTable = new IntHashtable();
@@ -157,14 +149,6 @@ public class DebugConnectionThread implements Runnable {
 
 	public CommunicationAdministrator getCommunicationAdministrator() {
 		return administrator;
-	}
-
-	public int getPeerResponseTimeout() {
-		return peerResponseTimeout;
-	}
-
-	public void setPeerResponseTimeout(int peerResponseTimeout) {
-		this.peerResponseTimeout = peerResponseTimeout;
 	}
 
 	private IDebugMessageHandler createMessageHandler(IDebugMessage message) {
@@ -229,21 +213,22 @@ public class DebugConnectionThread implements Runnable {
 			}
 
 			IDebugResponseMessage response = null;
-			int timeoutCount = 20;
+			int timeoutTick = 500; // 0.5 of second
+			int waitedTime = 0;
 			while (response == null && isConnected()) {
 				synchronized (request) {
 					response = (IDebugResponseMessage) responseTable.remove(theMsg.getID());
 					if (response == null) {
 						if (PHPDebugPlugin.DEBUG) {
-							System.out.println("Response is null. Waiting " + ((21 - timeoutCount) * peerResponseTimeout) + " milliseconds"); //$NON-NLS-1$ //$NON-NLS-2$
+							System.out.println("Response is null. Waiting " + waitedTime + " milliseconds"); //$NON-NLS-1$ //$NON-NLS-2$
 						}
-						if (timeoutCount == 15) { // Display a progress dialog after a quarter of the assigned time have passed.
+						if (waitedTime > debugResponseTimeout / 4) { // Display a progress dialog after a quarter of the assigned time have passed.
 							// Display a message that we are waiting for the server response.
 							// In case that the response finally arrives, remove the message.
 							// In case we have a timeout, close the connection and display a different message.
 							PHPLaunchUtilities.showWaitForDebuggerMessage(this);
 						}
-						request.wait(peerResponseTimeout);
+						request.wait(timeoutTick);
 					}
 				}
 				if (response == null) {
@@ -258,8 +243,8 @@ public class DebugConnectionThread implements Runnable {
 					}
 					// Handle time out will stop the communication if need to stop.
 
-					if (timeoutCount > 0) {
-						timeoutCount--;
+					if (waitedTime < debugResponseTimeout - timeoutTick) {
+						waitedTime += timeoutTick;
 						handlePeerResponseTimeout();
 					} else {
 						closeConnection();

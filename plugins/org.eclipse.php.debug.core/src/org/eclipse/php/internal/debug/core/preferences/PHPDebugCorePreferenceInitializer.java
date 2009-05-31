@@ -38,6 +38,7 @@ public class PHPDebugCorePreferenceInitializer extends AbstractPreferenceInitial
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_IN_BROWSER, true);
 		node.putBoolean(PHPDebugCorePreferenceNames.OPEN_DEBUG_VIEWS, true);
 		node.putInt(PHPDebugCorePreferenceNames.ZEND_DEBUG_PORT, 10000);
+		node.putInt(PHPDebugCorePreferenceNames.DEBUG_RESPONSE_TIMEOUT, 50000); // 50 seconds
 		node.put(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, "UTF-8");
 		node.put(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, "UTF-8");
 		node.put(PHPDebugCorePreferenceNames.CONFIGURATION_DELEGATE_CLASS, PHPExecutableLaunchDelegate.class.getName());

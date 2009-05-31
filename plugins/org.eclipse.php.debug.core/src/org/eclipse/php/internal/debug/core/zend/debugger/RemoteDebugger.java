@@ -31,49 +31,11 @@ import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.pathmapper.DebugSearchEngine;
-import org.eclipse.php.internal.debug.core.pathmapper.PathEntry;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
-import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
-import org.eclipse.php.internal.debug.core.pathmapper.VirtualPath;
+import org.eclipse.php.internal.debug.core.pathmapper.*;
 import org.eclipse.php.internal.debug.core.preferences.PHPProjectPreferences;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
 import org.eclipse.php.internal.debug.core.zend.communication.ResponseHandler;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.AddBreakpointResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.AssignValueRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelAllBreakpointsResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.CancelBreakpointResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.DebugSessionClosedNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.EvalResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCWDResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackLiteResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetCallStackResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetStackVariableValueResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GetVariableValueResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.GoResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.PauseDebuggerResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.SetProtocolResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartProcessFileNotification;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StartResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepIntoResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOutResponse;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverRequest;
-import org.eclipse.php.internal.debug.core.zend.debugger.messages.StepOverResponse;
+import org.eclipse.php.internal.debug.core.zend.debugger.messages.*;
 import org.eclipse.php.internal.debug.core.zend.model.PHPDebugTarget;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.swt.widgets.Display;
@@ -138,10 +100,6 @@ public class RemoteDebugger implements IRemoteDebugger {
 
 	public void closeConnection() {
 		connection.closeConnection();
-	}
-
-	public void setPeerResponseTimeout(int timeout) {
-		connection.setPeerResponseTimeout(timeout);
 	}
 
 	public void connectionEstablished() {
