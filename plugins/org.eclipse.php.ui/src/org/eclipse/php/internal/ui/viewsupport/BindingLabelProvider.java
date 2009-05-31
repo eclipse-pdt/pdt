@@ -32,46 +32,45 @@ import org.eclipse.swt.graphics.Point;
  */
 public class BindingLabelProvider extends LabelProvider {
 
-
 	private static int getAdornmentFlags(IBinding binding) {
-		int adornments= 0;
+		int adornments = 0;
 		if (binding instanceof IMethodBinding && ((IMethodBinding) binding).isConstructor())
-			adornments|= PHPElementImageDescriptor.CONSTRUCTOR;
-		final int modifiers= binding.getModifiers();
+			adornments |= PHPElementImageDescriptor.CONSTRUCTOR;
+		final int modifiers = binding.getModifiers();
 		if (PHPFlags.isAbstract(modifiers))
-			adornments|= PHPElementImageDescriptor.ABSTRACT;
+			adornments |= PHPElementImageDescriptor.ABSTRACT;
 		if (PHPFlags.isFinal(modifiers))
-			adornments|= PHPElementImageDescriptor.FINAL;
-//		if (PHPFlags.isSynchronized(modifiers))
-//			adornments|= PHPElementImageDescriptor.SYNCHRONIZED;
+			adornments |= PHPElementImageDescriptor.FINAL;
+		//		if (PHPFlags.isSynchronized(modifiers))
+		//			adornments|= PHPElementImageDescriptor.SYNCHRONIZED;
 		if (PHPFlags.isStatic(modifiers))
-			adornments|= PHPElementImageDescriptor.STATIC;
+			adornments |= PHPElementImageDescriptor.STATIC;
 		if (binding.isDeprecated())
-			adornments|= PHPElementImageDescriptor.DEPRECATED;
-//		if (binding instanceof IVariableBinding && ((IVariableBinding) binding).isField()) {
-//			if (PHPFlags.isTransient(modifiers))
-//				adornments|= PHPElementImageDescriptor.TRANSIENT;
-//			if (PHPFlags.isVolatile(modifiers))
-//				adornments|= PHPElementImageDescriptor.VOLATILE;
-//		}
+			adornments |= PHPElementImageDescriptor.DEPRECATED;
+		//		if (binding instanceof IVariableBinding && ((IVariableBinding) binding).isField()) {
+		//			if (PHPFlags.isTransient(modifiers))
+		//				adornments|= PHPElementImageDescriptor.TRANSIENT;
+		//			if (PHPFlags.isVolatile(modifiers))
+		//				adornments|= PHPElementImageDescriptor.VOLATILE;
+		//		}
 		return adornments;
 	}
 
 	private static ImageDescriptor getBaseImageDescriptor(IBinding binding, int flags) {
 		if (binding instanceof ITypeBinding) {
-			ITypeBinding typeBinding= (ITypeBinding) binding;
+			ITypeBinding typeBinding = (ITypeBinding) binding;
 			if (typeBinding.isArray()) {
-				typeBinding= typeBinding.getElementType();
+				typeBinding = typeBinding.getElementType();
 			}
-//			if (typeBinding.isCapture()) {
-//				typeBinding.getWildcard();
-//			}
+			//			if (typeBinding.isCapture()) {
+			//				typeBinding.getWildcard();
+			//			}
 			return getTypeImageDescriptor(false /*typeBinding.getDeclaringClass() != null*/, typeBinding, flags);
 		} else if (binding instanceof IMethodBinding) {
-//			ITypeBinding type= ((IMethodBinding) binding).getDeclaringClass();
-//			int modifiers= binding.getModifiers();
-//			if (type.isEnum() && (!PHPFlags.isPublic(modifiers) && !PHPFlags.isProtected(modifiers) && !PHPFlags.isPrivate(modifiers)) && ((IMethodBinding) binding).isConstructor())
-//				return DLTKPluginImages.DESC_MISC_PRIVATE;
+			//			ITypeBinding type= ((IMethodBinding) binding).getDeclaringClass();
+			//			int modifiers= binding.getModifiers();
+			//			if (type.isEnum() && (!PHPFlags.isPublic(modifiers) && !PHPFlags.isProtected(modifiers) && !PHPFlags.isPrivate(modifiers)) && ((IMethodBinding) binding).isConstructor())
+			//				return DLTKPluginImages.DESC_MISC_PRIVATE;
 			return getMethodImageDescriptor(binding.getModifiers());
 		} else if (binding instanceof IVariableBinding)
 			return getFieldImageDescriptor((IVariableBinding) binding);
@@ -79,14 +78,14 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 	private static ImageDescriptor getClassImageDescriptor(int modifiers) {
-//		if (PHPFlags.isPublic(modifiers) || PHPFlags.isProtected(modifiers) || PHPFlags.isPrivate(modifiers))
-			return DLTKPluginImages.DESC_OBJS_CLASS;
-//		else
-//			return DLTKPluginImages.DESC_OBJS_CLASS_DEFAULT;
+		//		if (PHPFlags.isPublic(modifiers) || PHPFlags.isProtected(modifiers) || PHPFlags.isPrivate(modifiers))
+		return DLTKPluginImages.DESC_OBJS_CLASS;
+		//		else
+		//			return DLTKPluginImages.DESC_OBJS_CLASS_DEFAULT;
 	}
 
 	private static ImageDescriptor getFieldImageDescriptor(IVariableBinding binding) {
-		final int modifiers= binding.getModifiers();
+		final int modifiers = binding.getModifiers();
 		if (PHPFlags.isPublic(modifiers)/* || binding.isEnumConstant()*/)
 			return DLTKPluginImages.DESC_FIELD_PUBLIC;
 		if (PHPFlags.isProtected(modifiers))
@@ -105,7 +104,7 @@ public class BindingLabelProvider extends LabelProvider {
 		// qualification
 
 		if ((flags & ScriptElementLabels.F_FULLY_QUALIFIED) != 0) {
-			ITypeBinding declaringClass= binding.getDeclaringClass();
+			ITypeBinding declaringClass = binding.getDeclaringClass();
 			if (declaringClass != null) { // test for array.length
 				getTypeLabel(declaringClass, ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
 				buffer.append('.');
@@ -118,7 +117,7 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 		// post qualification
 		if ((flags & ScriptElementLabels.F_POST_QUALIFIED) != 0) {
-			ITypeBinding declaringClass= binding.getDeclaringClass();
+			ITypeBinding declaringClass = binding.getDeclaringClass();
 			if (declaringClass != null) { // test for array.length
 				buffer.append(ScriptElementLabels.CONCAT_STRING);
 				getTypeLabel(declaringClass, ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
@@ -132,7 +131,7 @@ public class BindingLabelProvider extends LabelProvider {
 			buffer.append(' ');
 		}
 		if (((flags & ScriptElementLabels.F_FULLY_QUALIFIED) != 0)) {
-			IFunctionBinding declaringMethod= binding.getDeclaringFunction();
+			IFunctionBinding declaringMethod = binding.getDeclaringFunction();
 			if (declaringMethod != null) {
 				getMethodLabel(declaringMethod, flags, buffer);
 				buffer.append('.');
@@ -145,33 +144,33 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 	}
 
-//	private static ImageDescriptor getInnerClassImageDescriptor(int modifiers) {
-//		if (PHPFlags.isPublic(modifiers))
-//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
-//		else if (PHPFlags.isPrivate(modifiers))
-//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
-//		else if (PHPFlags.isProtected(modifiers))
-//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
-//		else
-//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_DEFAULT;
-//	}
+	//	private static ImageDescriptor getInnerClassImageDescriptor(int modifiers) {
+	//		if (PHPFlags.isPublic(modifiers))
+	//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PUBLIC;
+	//		else if (PHPFlags.isPrivate(modifiers))
+	//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PRIVATE;
+	//		else if (PHPFlags.isProtected(modifiers))
+	//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_PROTECTED;
+	//		else
+	//			return DLTKPluginImages.DESC_OBJS_INNER_CLASS_DEFAULT;
+	//	}
 
-//	private static ImageDescriptor getInnerInterfaceImageDescriptor(int modifiers) {
-//		if (PHPFlags.isPublic(modifiers))
-//			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
-//		else if (PHPFlags.isPrivate(modifiers))
-//			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
-//		else if (PHPFlags.isProtected(modifiers))
-//			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
-//		else
-//			return DLTKPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
-//	}
+	//	private static ImageDescriptor getInnerInterfaceImageDescriptor(int modifiers) {
+	//		if (PHPFlags.isPublic(modifiers))
+	//			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PUBLIC;
+	//		else if (PHPFlags.isPrivate(modifiers))
+	//			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PRIVATE;
+	//		else if (PHPFlags.isProtected(modifiers))
+	//			return DLTKPluginImages.DESC_OBJS_INNER_INTERFACE_PROTECTED;
+	//		else
+	//			return DLTKPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
+	//	}
 
 	private static ImageDescriptor getInterfaceImageDescriptor(int modifiers) {
-//		if (PHPFlags.isPublic(modifiers) || PHPFlags.isProtected(modifiers) || PHPFlags.isPrivate(modifiers))
-			return DLTKPluginImages.DESC_OBJS_INTERFACE;
-//		else
-//			return DLTKPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
+		//		if (PHPFlags.isPublic(modifiers) || PHPFlags.isProtected(modifiers) || PHPFlags.isPrivate(modifiers))
+		return DLTKPluginImages.DESC_OBJS_INTERFACE;
+		//		else
+		//			return DLTKPluginImages.DESC_OBJS_INTERFACE_DEFAULT;
 	}
 
 	private static ImageDescriptor getMethodImageDescriptor(int modifiers) {
@@ -186,25 +185,24 @@ public class BindingLabelProvider extends LabelProvider {
 	}
 
 	private static void appendDimensions(int dim, StringBuffer buffer) {
-		for (int i=0 ; i < dim; i++) {
+		for (int i = 0; i < dim; i++) {
 			buffer.append('[').append(']');
 		}
 	}
 
-
 	private static void getMethodLabel(IFunctionBinding binding, long flags, StringBuffer buffer) {
 		// return type
-//		if ((flags & ScriptElementLabels.M_PRE_TYPE_PARAMETERS) != 0) {
-//			if (binding.isGenericMethod()) {
-//				ITypeBinding[] typeParameters= binding.getTypeParameters();
-//				if (typeParameters.length > 0) {
-//					getTypeParametersLabel(typeParameters, buffer);
-//					buffer.append(' ');
-//				}
-//			}
-//		}
+		//		if ((flags & ScriptElementLabels.M_PRE_TYPE_PARAMETERS) != 0) {
+		//			if (binding.isGenericMethod()) {
+		//				ITypeBinding[] typeParameters= binding.getTypeParameters();
+		//				if (typeParameters.length > 0) {
+		//					getTypeParametersLabel(typeParameters, buffer);
+		//					buffer.append(' ');
+		//				}
+		//			}
+		//		}
 		// return type
-		IMethodBinding methodBinding = binding instanceof IMethodBinding ? (IMethodBinding)binding : null;
+		IMethodBinding methodBinding = binding instanceof IMethodBinding ? (IMethodBinding) binding : null;
 		if (((flags & ScriptElementLabels.M_PRE_RETURNTYPE) != 0) && (methodBinding == null || !methodBinding.isConstructor())) {
 			getTypeLabel(binding.getReturnType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 			buffer.append(' ');
@@ -216,26 +214,25 @@ public class BindingLabelProvider extends LabelProvider {
 		}
 		buffer.append(binding.getName());
 		if ((flags & ScriptElementLabels.M_APP_TYPE_PARAMETERS) != 0) {
-//			if (binding.isParameterizedMethod()) {
-//				ITypeBinding[] typeArguments= binding.getTypeArguments();
-//				if (typeArguments.length > 0) {
-//					buffer.append(' ');
-//					getTypeArgumentsLabel(typeArguments, (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
-//				}
-//			}
+			//			if (binding.isParameterizedMethod()) {
+			//				ITypeBinding[] typeArguments= binding.getTypeArguments();
+			//				if (typeArguments.length > 0) {
+			//					buffer.append(' ');
+			//					getTypeArgumentsLabel(typeArguments, (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
+			//				}
+			//			}
 		}
-
 
 		// parameters
 		buffer.append('(');
 		if ((flags & ScriptElementLabels.M_PARAMETER_TYPES | ScriptElementLabels.M_PARAMETER_NAMES) != 0) {
-			ITypeBinding[] parameters= ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0) ? binding.getParameterTypes() : null;
+			ITypeBinding[] parameters = ((flags & ScriptElementLabels.M_PARAMETER_TYPES) != 0) ? binding.getParameterTypes() : null;
 			if (parameters != null) {
-				for (int index= 0; index < parameters.length; index++) {
+				for (int index = 0; index < parameters.length; index++) {
 					if (index > 0) {
 						buffer.append(ScriptElementLabels.COMMA_STRING);
 					}
-					ITypeBinding paramType= parameters[index];
+					ITypeBinding paramType = parameters[index];
 					if (binding.isVarargs() && (index == parameters.length - 1)) {
 						getTypeLabel(paramType.getElementType(), (flags & ScriptElementLabels.T_TYPE_PARAMETERS), buffer);
 						appendDimensions(paramType.getDimensions() - 1, buffer);
@@ -253,10 +250,10 @@ public class BindingLabelProvider extends LabelProvider {
 		buffer.append(')');
 
 		if ((flags & ScriptElementLabels.M_EXCEPTIONS) != 0) {
-			ITypeBinding[] exceptions= binding.getExceptionTypes();
+			ITypeBinding[] exceptions = binding.getExceptionTypes();
 			if (exceptions.length > 0) {
 				buffer.append(" throws "); //$NON-NLS-1$
-				for (int index= 0; index < exceptions.length; index++) {
+				for (int index = 0; index < exceptions.length; index++) {
 					if (index > 0) {
 						buffer.append(ScriptElementLabels.COMMA_STRING);
 					}
@@ -265,13 +262,13 @@ public class BindingLabelProvider extends LabelProvider {
 			}
 		}
 		if ((flags & ScriptElementLabels.M_APP_TYPE_PARAMETERS) != 0) {
-//			if (binding.isGenericMethod()) {
-				ITypeBinding[] typeParameters= binding.getParameterTypes();
-				if (typeParameters.length > 0) {
-					buffer.append(' ');
-					getTypeParametersLabel(typeParameters, buffer);
-				}
-//			}
+			//			if (binding.isGenericMethod()) {
+			ITypeBinding[] typeParameters = binding.getParameterTypes();
+			if (typeParameters.length > 0) {
+				buffer.append(' ');
+				getTypeParametersLabel(typeParameters, buffer);
+			}
+			//			}
 		}
 		if (((flags & ScriptElementLabels.M_APP_RETURNTYPE) != 0) && (methodBinding == null || !methodBinding.isConstructor())) {
 			buffer.append(ScriptElementLabels.DECL_STRING);
@@ -289,137 +286,133 @@ public class BindingLabelProvider extends LabelProvider {
 			return DLTKPluginImages.DESC_OBJS_ENUM;
 		else if (binding.isAnnotation())
 			return DLTKPluginImages.DESC_OBJS_ANNOTATION;
-		else*/ if (binding.isInterface()) {
+		else*/if (binding.isInterface()) {
 			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0)
 				return DLTKPluginImages.DESC_OBJS_INTERFACEALT;
-//			if (inner)
-//				return getInnerInterfaceImageDescriptor(binding.getModifiers());
+			//			if (inner)
+			//				return getInnerInterfaceImageDescriptor(binding.getModifiers());
 			return getInterfaceImageDescriptor(binding.getModifiers());
 		} else if (binding.isClass()) {
 			if ((flags & ScriptElementImageProvider.LIGHT_TYPE_ICONS) != 0)
 				return DLTKPluginImages.DESC_OBJS_CLASSALT;
-//			if (inner)
-//				return getInnerClassImageDescriptor(binding.getModifiers());
+			//			if (inner)
+			//				return getInnerClassImageDescriptor(binding.getModifiers());
 			return getClassImageDescriptor(binding.getModifiers());
-//		} else if (binding.isTypeVariable()) {
-//			return DLTKPluginImages.DESC_OBJS_TYPEVARIABLE;
+			//		} else if (binding.isTypeVariable()) {
+			//			return DLTKPluginImages.DESC_OBJS_TYPEVARIABLE;
 		}
 		// primitive type, wildcard
 		return null;
 	}
 
-
 	private static void getTypeLabel(ITypeBinding binding, long flags, StringBuffer buffer) {
-//		if ((flags & ScriptElementLabels.T_FULLY_QUALIFIED) != 0) {
-//			final IPackageBinding pack= binding.getPackage();
-//			if (pack != null && !pack.isUnnamed()) {
-//				buffer.append(pack.getName());
-//				buffer.append('.');
-//			}
-//		}
+		//		if ((flags & ScriptElementLabels.T_FULLY_QUALIFIED) != 0) {
+		//			final IPackageBinding pack= binding.getPackage();
+		//			if (pack != null && !pack.isUnnamed()) {
+		//				buffer.append(pack.getName());
+		//				buffer.append('.');
+		//			}
+		//		}
 		if ((flags & (ScriptElementLabels.T_FULLY_QUALIFIED | ScriptElementLabels.T_CONTAINER_QUALIFIED)) != 0) {
-//			final ITypeBinding declaring= binding.getDeclaringClass();
-//			if (declaring != null) {
-//				getTypeLabel(declaring, ScriptElementLabels.T_CONTAINER_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
-//				buffer.append('.');
-//			}
-//			final IMethodBinding declaringMethod= binding.getDeclaringMethod();
-//			if (declaringMethod != null) {
-//				getMethodLabel(declaringMethod, 0, buffer);
-//				buffer.append('.');
-//			}
+			//			final ITypeBinding declaring= binding.getDeclaringClass();
+			//			if (declaring != null) {
+			//				getTypeLabel(declaring, ScriptElementLabels.T_CONTAINER_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
+			//				buffer.append('.');
+			//			}
+			//			final IMethodBinding declaringMethod= binding.getDeclaringMethod();
+			//			if (declaringMethod != null) {
+			//				getMethodLabel(declaringMethod, 0, buffer);
+			//				buffer.append('.');
+			//			}
 		}
 
-//		if (binding.isCapture()) {
-//			getTypeLabel(binding.getWildcard(), flags & ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
-//		} else if (binding.isWildcardType()) {
-//			buffer.append('?');
-//			ITypeBinding bound= binding.getBound();
-//			if (bound != null) {
-//				if (binding.isUpperbound()) {
-//					buffer.append(" extends "); //$NON-NLS-1$
-//				} else {
-//					buffer.append(" super "); //$NON-NLS-1$
-//				}
-//				getTypeLabel(bound, flags & ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
-//			}
-//		} else
-	if (binding.isArray()) {
+		//		if (binding.isCapture()) {
+		//			getTypeLabel(binding.getWildcard(), flags & ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
+		//		} else if (binding.isWildcardType()) {
+		//			buffer.append('?');
+		//			ITypeBinding bound= binding.getBound();
+		//			if (bound != null) {
+		//				if (binding.isUpperbound()) {
+		//					buffer.append(" extends "); //$NON-NLS-1$
+		//				} else {
+		//					buffer.append(" super "); //$NON-NLS-1$
+		//				}
+		//				getTypeLabel(bound, flags & ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
+		//			}
+		//		} else
+		if (binding.isArray()) {
 			getTypeLabel(binding.getElementType(), flags & ScriptElementLabels.T_TYPE_PARAMETERS, buffer);
 			appendDimensions(binding.getDimensions(), buffer);
 		} else { // type variables, primitive, reftype
-			String name= binding.getTypeDeclaration().getName();
-			if (name.length() == 0) {
-//				if (binding.isEnum()) {
-//					buffer.append('{' + ScriptElementLabels.ELLIPSIS_STRING + '}');
-//				} else if (binding.isAnonymous()) {
-//					ITypeBinding[] superInterfaces= binding.getInterfaces();
-//					ITypeBinding baseType;
-//					if (superInterfaces.length > 0) {
-//						baseType= superInterfaces[0];
-//					} else {
-//						baseType= binding.getSuperclass();
-//					}
-//					if (baseType != null) {
-//						StringBuffer anonymBaseType= new StringBuffer();
-//						getTypeLabel(baseType, flags & ScriptElementLabels.T_TYPE_PARAMETERS, anonymBaseType);
-//						buffer.append(Messages.format(JavaUIMessages.ScriptElementLabels_anonym_type, anonymBaseType.toString()));
-//					} else {
-//						buffer.append(JavaUIMessages.ScriptElementLabels_anonym);
-//					}
-//				} else {
-					buffer.append("UNKNOWN"); //$NON-NLS-1$
-//				}
-			} else {
+			String name =  binding.getName();
+			if (name != null) {
 				buffer.append(name);
 			}
+			//				if (binding.isEnum()) {
+			//					buffer.append('{' + ScriptElementLabels.ELLIPSIS_STRING + '}');
+			//				} else if (binding.isAnonymous()) {
+			//					ITypeBinding[] superInterfaces= binding.getInterfaces();
+			//					ITypeBinding baseType;
+			//					if (superInterfaces.length > 0) {
+			//						baseType= superInterfaces[0];
+			//					} else {
+			//						baseType= binding.getSuperclass();
+			//					}
+			//					if (baseType != null) {
+			//						StringBuffer anonymBaseType= new StringBuffer();
+			//						getTypeLabel(baseType, flags & ScriptElementLabels.T_TYPE_PARAMETERS, anonymBaseType);
+			//						buffer.append(Messages.format(JavaUIMessages.ScriptElementLabels_anonym_type, anonymBaseType.toString()));
+			//					} else {
+			//						buffer.append(JavaUIMessages.ScriptElementLabels_anonym);
+			//					}
+			//				} else {
+			//				}
 
 			if ((flags & ScriptElementLabels.T_TYPE_PARAMETERS) != 0) {
-//				if (binding.isGenericType()) {
-//					getTypeParametersLabel(binding.getTypeParameters(), buffer);
-//				} else if (binding.isParameterizedType()) {
-//					getTypeArgumentsLabel(binding.getTypeArguments(), flags, buffer);
-//				}
+				//				if (binding.isGenericType()) {
+				//					getTypeParametersLabel(binding.getTypeParameters(), buffer);
+				//				} else if (binding.isParameterizedType()) {
+				//					getTypeArgumentsLabel(binding.getTypeArguments(), flags, buffer);
+				//				}
 			}
 		}
 
-
-//		if ((flags & ScriptElementLabels.T_POST_QUALIFIED) != 0) {
-//			final IMethodBinding declaringMethod= binding.getDeclaringMethod();
-//			final ITypeBinding declaringType= binding.getDeclaringClass();
-//			if (declaringMethod != null) {
-//				buffer.append(ScriptElementLabels.CONCAT_STRING);
-//				getMethodLabel(declaringMethod, ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
-//			} else if (declaringType != null) {
-//				buffer.append(ScriptElementLabels.CONCAT_STRING);
-//				getTypeLabel(declaringType, ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
-//			} else {
-//				final IPackageBinding pack= binding.getPackage();
-//				if (pack != null && !pack.isUnnamed()) {
-//					buffer.append(ScriptElementLabels.CONCAT_STRING);
-//					buffer.append(pack.getName());
-//				}
-//			}
-//		}
+		//		if ((flags & ScriptElementLabels.T_POST_QUALIFIED) != 0) {
+		//			final IMethodBinding declaringMethod= binding.getDeclaringMethod();
+		//			final ITypeBinding declaringType= binding.getDeclaringClass();
+		//			if (declaringMethod != null) {
+		//				buffer.append(ScriptElementLabels.CONCAT_STRING);
+		//				getMethodLabel(declaringMethod, ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
+		//			} else if (declaringType != null) {
+		//				buffer.append(ScriptElementLabels.CONCAT_STRING);
+		//				getTypeLabel(declaringType, ScriptElementLabels.T_FULLY_QUALIFIED | (flags & ScriptElementLabels.P_COMPRESSED), buffer);
+		//			} else {
+		//				final IPackageBinding pack= binding.getPackage();
+		//				if (pack != null && !pack.isUnnamed()) {
+		//					buffer.append(ScriptElementLabels.CONCAT_STRING);
+		//					buffer.append(pack.getName());
+		//				}
+		//			}
+		//		}
 	}
 
-//	private static void getTypeArgumentsLabel(ITypeBinding[] typeArgs, long flags, StringBuffer buf) {
-//		if (typeArgs.length > 0) {
-//			buf.append('<');
-//			for (int i = 0; i < typeArgs.length; i++) {
-//				if (i > 0) {
-//					buf.append(ScriptElementLabels.COMMA_STRING);
-//				}
-//				getTypeLabel(typeArgs[i], flags & ScriptElementLabels.T_TYPE_PARAMETERS, buf);
-//			}
-//			buf.append('>');
-//		}
-//	}
+	//	private static void getTypeArgumentsLabel(ITypeBinding[] typeArgs, long flags, StringBuffer buf) {
+	//		if (typeArgs.length > 0) {
+	//			buf.append('<');
+	//			for (int i = 0; i < typeArgs.length; i++) {
+	//				if (i > 0) {
+	//					buf.append(ScriptElementLabels.COMMA_STRING);
+	//				}
+	//				getTypeLabel(typeArgs[i], flags & ScriptElementLabels.T_TYPE_PARAMETERS, buf);
+	//			}
+	//			buf.append('>');
+	//		}
+	//	}
 
 	private static void getTypeParametersLabel(ITypeBinding[] typeParameters, StringBuffer buffer) {
 		if (typeParameters.length > 0) {
 			buffer.append('<');
-			for (int index= 0; index < typeParameters.length; index++) {
+			for (int index = 0; index < typeParameters.length; index++) {
 				if (index > 0) {
 					buffer.append(ScriptElementLabels.COMMA_STRING);
 				}
@@ -436,13 +429,13 @@ public class BindingLabelProvider extends LabelProvider {
 	 * @return the label of the binding
 	 */
 	public static String getBindingLabel(IBinding binding, long flags) {
-		StringBuffer buffer= new StringBuffer(60);
+		StringBuffer buffer = new StringBuffer(60);
 		if (binding instanceof ITypeBinding) {
 			getTypeLabel(((ITypeBinding) binding), flags, buffer);
 		} else if (binding instanceof IMethodBinding) {
 			getMethodLabel(((IMethodBinding) binding), flags, buffer);
 		} else if (binding instanceof IVariableBinding) {
-			final IVariableBinding variable= (IVariableBinding) binding;
+			final IVariableBinding variable = (IVariableBinding) binding;
 			if (variable.isField())
 				getFieldLabel(variable, flags, buffer);
 			else
@@ -458,19 +451,17 @@ public class BindingLabelProvider extends LabelProvider {
 	 * @return the image of the binding or null if there is no image
 	 */
 	public static ImageDescriptor getBindingImageDescriptor(IBinding binding, int imageFlags) {
-		ImageDescriptor baseImage= getBaseImageDescriptor(binding, imageFlags);
+		ImageDescriptor baseImage = getBaseImageDescriptor(binding, imageFlags);
 		if (baseImage != null) {
-			int adornmentFlags= getAdornmentFlags(binding);
-			Point size= ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0) ? ScriptElementImageProvider.SMALL_SIZE : ScriptElementImageProvider.BIG_SIZE;
+			int adornmentFlags = getAdornmentFlags(binding);
+			Point size = ((imageFlags & ScriptElementImageProvider.SMALL_ICONS) != 0) ? ScriptElementImageProvider.SMALL_SIZE : ScriptElementImageProvider.BIG_SIZE;
 			return new PHPElementImageDescriptor(baseImage, adornmentFlags, size);
 		}
 		return null;
 	}
 
-
-	public static final long DEFAULT_TEXTFLAGS= ScriptElementLabels.ALL_DEFAULT;
-	public static final int DEFAULT_IMAGEFLAGS= ScriptElementImageProvider.OVERLAY_ICONS;
-
+	public static final long DEFAULT_TEXTFLAGS = ScriptElementLabels.ALL_DEFAULT;
+	public static final int DEFAULT_IMAGEFLAGS = ScriptElementImageProvider.OVERLAY_ICONS;
 
 	final private long fTextFlags;
 	final private int fImageFlags;
@@ -489,9 +480,9 @@ public class BindingLabelProvider extends LabelProvider {
 	 * @param imageFlags Flags defined in {@link ScriptElementImageProvider}.
 	 */
 	public BindingLabelProvider(final long textFlags, final int imageFlags) {
-		fImageFlags= imageFlags;
-		fTextFlags= textFlags;
-		fRegistry= null;
+		fImageFlags = imageFlags;
+		fTextFlags = textFlags;
+		fRegistry = null;
 	}
 
 	/*
@@ -499,7 +490,7 @@ public class BindingLabelProvider extends LabelProvider {
 	 */
 	public Image getImage(Object element) {
 		if (element instanceof IBinding) {
-			ImageDescriptor baseImage= getBindingImageDescriptor((IBinding) element, fImageFlags);
+			ImageDescriptor baseImage = getBindingImageDescriptor((IBinding) element, fImageFlags);
 			if (baseImage != null) {
 				return getRegistry().get(baseImage);
 			}
@@ -509,7 +500,7 @@ public class BindingLabelProvider extends LabelProvider {
 
 	private ImageDescriptorRegistry getRegistry() {
 		if (fRegistry == null)
-			fRegistry= DLTKUIPlugin.getImageDescriptorRegistry();
+			fRegistry = DLTKUIPlugin.getImageDescriptorRegistry();
 		return fRegistry;
 	}
 
