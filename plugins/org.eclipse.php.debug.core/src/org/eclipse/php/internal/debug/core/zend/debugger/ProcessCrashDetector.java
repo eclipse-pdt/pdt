@@ -13,12 +13,11 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * A process crash detector is a {@link Runnable} that hooks a PHP process error stream and blocks until the process terminates.
@@ -32,7 +31,6 @@ import org.eclipse.swt.widgets.Display;
  */
 public class ProcessCrashDetector implements Runnable {
 
-	private BufferedReader errorStream;
 	private Process process;
 
 	/**
@@ -42,7 +40,6 @@ public class ProcessCrashDetector implements Runnable {
 	 */
 	public ProcessCrashDetector(Process p) {
 		this.process = p;
-		errorStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 	}
 
 	/*
@@ -50,33 +47,36 @@ public class ProcessCrashDetector implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		final StringBuilder builder = new StringBuilder();
-		String str = null;
 		try {
-			while ((str = errorStream.readLine()) != null) {
-				builder.append(str);
-				builder.append('\n');
-			}
-//			if(builder.length() > 0) {
-//				Display.getDefault().asyncExec(new Runnable() {
-//					public void run() {
-//						MessageDialog.openError(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_General_Error, builder.toString());
-//					}
-//				});
-//			}
-		} catch (IOException ioe) {
-		}finally{
-			try {
-				errorStream.close();
-			} catch (IOException e) {
-			}
-		}
-		try {
-			int exitValue = process.exitValue();
+			StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream());
+			StreamGobbler inputGobbler = new StreamGobbler(process.getInputStream());
+			
+			errorGobbler.start();
+			inputGobbler.start();
+			
+			int exitValue = process.waitFor();
 			if (exitValue > 255 || exitValue < 0) {
 				PHPLaunchUtilities.showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_General_Error, PHPDebugCoreMessages.Debugger_Error_Crash_Message);
 			}
 		} catch (Throwable t) {
+		}
+	}
+
+	class StreamGobbler extends Thread {
+		InputStream is;
+
+		StreamGobbler(InputStream is) {
+			this.is = is;
+		}
+
+		public void run() {
+			try {
+				InputStreamReader isr = new InputStreamReader(is);
+				BufferedReader br = new BufferedReader(isr);
+				while (br.readLine() != null);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
 		}
 	}
 }
