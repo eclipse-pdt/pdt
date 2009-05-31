@@ -183,22 +183,14 @@ public class PHPDebugArgumentsTab extends AbstractLaunchConfigurationTab {
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getErrorMessage()
 	 */
 	public String getErrorMessage() {
-		String m = super.getErrorMessage();
-		if (m == null) {
-			//return fWorkingDirectoryBlock.getErrorMessage();
-		}
-		return m;
+		return super.getErrorMessage();
 	}
 
 	/**
 	 * @see org.eclipse.debug.ui.ILaunchConfigurationTab#getMessage()
 	 */
 	public String getMessage() {
-		String m = super.getMessage();
-		if (m == null) {
-			m = PHPDebugUIMessages.DebugPHPArgumentsTab_unknownError;
-		}
-		return m;
+		return super.getMessage();
 	}
 
 	/* (non-Javadoc)
