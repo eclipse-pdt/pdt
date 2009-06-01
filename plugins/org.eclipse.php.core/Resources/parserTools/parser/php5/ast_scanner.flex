@@ -220,7 +220,7 @@ HEREDOC_CHARS=("{"*([^$\n\r\\{]|("\\"[^\n\r]))|{HEREDOC_LITERAL_DOLLAR}|({HEREDO
 	return createFullSymbol(ParserConstants.T_EXIT);
 }
 
-<ST_IN_SCRIPTING>"function"|"cfunction" {
+<ST_IN_SCRIPTING>"function" {
 	return createSymbol(ParserConstants.T_FUNCTION);
 }
 
