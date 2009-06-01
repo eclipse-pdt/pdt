@@ -78,7 +78,7 @@ public enum ProjectOutlineGroups {
 					break;
 
 				case GROUP_CLASSES:
-					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllTypes(scope)));
+					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllClassesAndInterfaces(scope)));
 					break;
 
 				case GROUP_FUNCTIONS:
