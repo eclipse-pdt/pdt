@@ -352,7 +352,7 @@ public class PHPTypeInferenceUtils {
 	public static IType[] getNamespaceOf(String elementName, ISourceModule sourceModule, int offset) {
 		String namespace = extractNamespaceName(elementName, sourceModule, offset);
 		if (namespace != null && namespace.length() > 0) {
-			return getNamespaces(namespace, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+			return getNamespaces(namespace, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
 		}
 		return null;
 	}
@@ -432,7 +432,7 @@ public class PHPTypeInferenceUtils {
 	 * @throws ModelException 
 	 */
 	public static IType getNamespaceType(String namespace, String typeName, ISourceModule sourceModule) throws ModelException {
-		for (IType ns : getNamespaces(namespace, SearchEngine.createSearchScope(sourceModule.getScriptProject()))) {
+		for (IType ns : getNamespaces(namespace, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()))) {
 			IType type = PHPModelUtils.getTypeType(ns, typeName);
 			if (type != null) {
 				return type;
@@ -451,7 +451,7 @@ public class PHPTypeInferenceUtils {
 	 * @throws ModelException 
 	 */
 	public static IMethod getNamespaceFunction(String namespace, String functionName, ISourceModule sourceModule) throws ModelException {
-		for (IType ns : getNamespaces(namespace, SearchEngine.createSearchScope(sourceModule.getScriptProject()))) {
+		for (IType ns : getNamespaces(namespace, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()))) {
 			IMethod function = PHPModelUtils.getTypeMethod(ns, functionName);
 			if (function != null) {
 				return function;
@@ -469,7 +469,7 @@ public class PHPTypeInferenceUtils {
 	 * @throws ModelException 
 	 */
 	public static IField getNamespaceField(String namespace, String fieldName, ISourceModule sourceModule) throws ModelException {
-		for (IType ns : getNamespaces(namespace, SearchEngine.createSearchScope(sourceModule.getScriptProject()))) {
+		for (IType ns : getNamespaces(namespace, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()))) {
 			IField field = PHPModelUtils.getTypeField(ns, fieldName);
 			if (field != null) {
 				return field;
@@ -479,75 +479,7 @@ public class PHPTypeInferenceUtils {
 	}
 
 	/**
-	 * This method returns namespace elements (IType) by specified name. The name must be fully qualified name (not alias)
-	 * @param namespace Namespace name
-	 * @param scope Search scope
-	 * @return namespace element array
-	 */
-	public static IType[] getNamespaces(String namespace, IDLTKSearchScope scope) {
-		final List<IType> namespaces = new LinkedList<IType>();
-		SearchEngine searchEngine = new SearchEngine();
-		SearchPattern pattern = SearchPattern.createPattern(namespace, IDLTKSearchConstants.TYPE, IDLTKSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH, PHPLanguageToolkit.getDefault());
-		try {
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-				public void acceptSearchMatch(SearchMatch match) throws CoreException {
-					IType element = (IType) match.getElement();
-					if (PHPFlags.isNamespace(element.getFlags())) {
-						namespaces.add(element);
-					}
-				}
-			}, null);
-		} catch (CoreException e) {
-			Logger.logException(e);
-		}
-		return (IType[]) namespaces.toArray(new IType[namespaces.size()]);
-	}
-
-	/**
-	 * This method returns all namespaces
-	 * As this method can be heavy FakeType is returned.
-	 * 
-	 * @param scope Search scope
-	 * @return namespace element array
-	 */
-	public static IType[] getAllNamespaces(final IDLTKSearchScope scope) {
-		return getNamespaces(WILDCARD, SearchPattern.R_PATTERN_MATCH, scope);
-	}
-
-	/**
-	 * This method returns namespaces by prefix.
-	 * As this method can be heavy FakeType is returned.
-	 * 
-	 * @param prefix Namespace prefix
-	 * @param matchRule Search match rule
-	 * @param scope Search scope
-	 * @return namespace element array
-	 */
-	public static IType[] getNamespaces(String prefix, int matchRule, final IDLTKSearchScope scope) {
-		final Collection<IType> elements = new LinkedList<IType>();
-
-		final HandleFactory handleFactory = new HandleFactory();
-		SearchEngine searchEngine = new SearchEngine();
-
-		try {
-			searchEngine.searchAllTypeNames(null, 0, prefix.toCharArray(), matchRule, IDLTKSearchConstants.DECLARATIONS, scope, new TypeNameRequestor() {
-				public void acceptType(int modifiers, char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, char[][] superTypes, String path) {
-					if (PHPFlags.isNamespace(modifiers)) {
-						Openable openable = handleFactory.createOpenable(path, scope);
-						ModelElement parent = openable;
-						elements.add(new FakeType(parent, new String(simpleTypeName), modifiers, null));
-					}
-				}
-			}, IDLTKSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
-		} catch (ModelException e) {
-			Logger.logException(e);
-		}
-
-		return (IType[]) elements.toArray(new IType[elements.size()]);
-	}
-
-	/**
-	 * This method returns type elements (IType) by the specified name. Namespaces are excluded.
+	 * This method returns type elements (IType) by the specified name (classes, interfaces and namespaces).
 	 * The element must be declared in a global scope.
 	 * 
 	 * @param typeName Type name
@@ -559,7 +491,7 @@ public class PHPTypeInferenceUtils {
 	}
 
 	/**
-	 * This method returns all types (classes and interfaces).
+	 * This method returns all types (classes, interfaces and namespaces).
 	 * As this method can be heavy FakeType is returned.
 	 * 
 	 * @param scope Search scope
@@ -589,9 +521,7 @@ public class PHPTypeInferenceUtils {
 				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
 					public void acceptSearchMatch(SearchMatch match) throws CoreException {
 						IType element = (IType) match.getElement();
-						if (!PHPFlags.isNamespace(element.getFlags())) {
-							elements.add(element);
-						}
+						elements.add(element);
 					}
 				}, null);
 			} catch (CoreException e) {
@@ -656,6 +586,115 @@ public class PHPTypeInferenceUtils {
 	 */
 	public static IType[] getAllClassesAndInterfaces(final IDLTKSearchScope scope) {
 		return getClassesAndInterfaces(WILDCARD, SearchPattern.R_PATTERN_MATCH, scope);
+	}
+	
+	/**
+	 * This method returns classes by names (namespaces and interfaces are excluded).
+	 * As this method can be heavy FakeType is returned.
+	 * 
+	 * @param prefix Type prefix
+	 * @param matchRule Search match rule
+	 * @param scope Search scope
+	 * @return type element array
+	 */
+	public static IType[] getClasses(String prefix, int matchRule, final IDLTKSearchScope scope) {
+		IType[] types = getTypes(prefix, matchRule, scope);
+		List<IType> result = new LinkedList<IType>();
+		for (IType type : types) {
+			try {
+				if (!PHPFlags.isNamespace(type.getFlags()) && !PHPFlags.isInterface(type.getFlags())) {
+					result.add(type);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return (IType[]) result.toArray(new IType[result.size()]);
+	}
+
+	/**
+	 * This method returns all classes (namespaces and interfaces are excluded)
+	 * As this method can be heavy FakeType is returned.
+	 * 
+	 * @param prefix Type prefix
+	 * @param matchRule Search match rule
+	 * @param scope Search scope
+	 * @return type element array
+	 */
+	public static IType[] getAllClasses(final IDLTKSearchScope scope) {
+		return getClasses(WILDCARD, SearchPattern.R_PATTERN_MATCH, scope);
+	}
+	
+	/**
+	 * This method returns interfaces by names (namespaces and classes are excluded).
+	 * As this method can be heavy FakeType is returned.
+	 * 
+	 * @param prefix Type prefix
+	 * @param matchRule Search match rule
+	 * @param scope Search scope
+	 * @return type element array
+	 */
+	public static IType[] getInterfaces(String prefix, int matchRule, final IDLTKSearchScope scope) {
+		IType[] types = getTypes(prefix, matchRule, scope);
+		List<IType> result = new LinkedList<IType>();
+		for (IType type : types) {
+			try {
+				if (PHPFlags.isInterface(type.getFlags())) {
+					result.add(type);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return (IType[]) result.toArray(new IType[result.size()]);
+	}
+
+	/**
+	 * This method returns all interfaces (namespaces and classes are excluded)
+	 * As this method can be heavy FakeType is returned.
+	 * 
+	 * @param prefix Type prefix
+	 * @param matchRule Search match rule
+	 * @param scope Search scope
+	 * @return type element array
+	 */
+	public static IType[] getAllInterfaces(final IDLTKSearchScope scope) {
+		return getInterfaces(WILDCARD, SearchPattern.R_PATTERN_MATCH, scope);
+	}
+	
+	/**
+	 * This method returns namespaces by prefix.
+	 * As this method can be heavy FakeType is returned.
+	 * 
+	 * @param prefix Namespace prefix
+	 * @param matchRule Search match rule
+	 * @param scope Search scope
+	 * @return namespace element array
+	 */
+	public static IType[] getNamespaces(String prefix, int matchRule, final IDLTKSearchScope scope) {
+		IType[] types = getTypes(prefix, matchRule, scope);
+		List<IType> result = new LinkedList<IType>();
+		for (IType type : types) {
+			try {
+				if (PHPFlags.isNamespace(type.getFlags())) {
+					result.add(type);
+				}
+			} catch (ModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return (IType[]) result.toArray(new IType[result.size()]);
+	}
+
+	/**
+	 * This method returns all namespaces
+	 * As this method can be heavy FakeType is returned.
+	 * 
+	 * @param scope Search scope
+	 * @return namespace element array
+	 */
+	public static IType[] getAllNamespaces(final IDLTKSearchScope scope) {
+		return getNamespaces(WILDCARD, SearchPattern.R_PATTERN_MATCH, scope);
 	}
 
 	/**

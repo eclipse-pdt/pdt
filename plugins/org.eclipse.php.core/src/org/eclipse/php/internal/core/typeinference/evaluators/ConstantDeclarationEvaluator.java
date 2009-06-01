@@ -22,6 +22,7 @@ import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
+import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -59,7 +60,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		if (scope == null) {
 			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
 		}
-		IType[] types = PHPTypeInferenceUtils.getTypes(typeName, scope);
+		IType[] types = PHPTypeInferenceUtils.getClassesAndInterfaces(typeName, SearchPattern.R_EXACT_MATCH, scope);
 		Set<IModelElement> elements = new HashSet<IModelElement>();
 		for (IType type : types) {
 			try {

@@ -2492,10 +2492,13 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					}
 					break;
 				case RewriteEvent.INSERTED:
-					Scalar scalar = (Scalar) event.getNewValue();
-					String scalarValue = scalar.getStringValue();
-					if (scalar != null) {
-						doTextInsert(formalParameter.getStart(), " = " + scalarValue, getEditGroup(event));
+					Identifier identifier = (Identifier) event.getNewValue();
+					String name = identifier.getName();
+					if (name != null) {
+						if (!name.endsWith(" ") && !name.endsWith("\t")) {
+							name += ' ';
+						}
+						doTextInsert(formalParameter.getStart(), name, getEditGroup(event));
 					}
 					break;
 				case RewriteEvent.REMOVED:
@@ -2519,13 +2522,10 @@ public final class ASTRewriteAnalyzer extends AbstractVisitor {
 					rewriteRequiredNode(formalParameter, FormalParameter.DEFAULT_VALUE_PROPERTY);
 					break;
 				case RewriteEvent.INSERTED:
-					Identifier identifier = (Identifier) event.getNewValue();
-					String name = identifier.getName();
-					if (name != null) {
-						if (!name.endsWith(" ") && !name.endsWith("\t")) {
-							name += ' ';
-						}
-						doTextInsert(formalParameter.getStart(), name, getEditGroup(event));
+					Scalar scalar = (Scalar) event.getNewValue();
+					String scalarValue = scalar.getStringValue();
+					if (scalar != null) {
+						doTextInsert(formalParameter.getStart(), " = " + scalarValue, getEditGroup(event));
 					}
 					break;
 				case RewriteEvent.REMOVED:
