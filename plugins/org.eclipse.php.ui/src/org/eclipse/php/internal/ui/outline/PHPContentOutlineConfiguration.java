@@ -63,6 +63,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	private SortAction sortAction;
 	private ScriptUILabelProvider fSimpleLabelProvider;
 	//	private ShowGroupsAction fShowGroupsAction;
+	private boolean fShowAttributes = false;
 	protected IPreferenceStore fStore = PHPUiPlugin.getDefault().getPreferenceStore();
 
 	/** See {@link #MODE_PHP}, {@link #MODE_HTML} */
@@ -186,6 +187,27 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 						}
 						return super.getElements(object);
 					}
+
+					@Override
+					public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+						if (newInput instanceof ISourceModule) {
+							IEditorPart activeEditor = PHPUiPlugin.getActiveEditor();
+							if (activeEditor instanceof StructuredTextEditor) {
+								StructuredTextEditor editor = (StructuredTextEditor) activeEditor;
+								IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+								IStructuredModel model = null;
+								try {
+									model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+								} finally {
+									if (model != null) {
+										model.releaseFromRead();
+									}
+								}
+								newInput = model;
+							}
+						}
+						super.inputChanged(viewer, oldInput, newInput);
+					}
 				};
 			}
 			viewer.setContentProvider(fContentProviderHTML);
@@ -210,6 +232,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 		else if (MODE_HTML == mode) {
 			if (fLabelProviderHTML == null) {
 				fLabelProviderHTML = new PHPOutlineLabelProvider(fLabelProvider);
+				fLabelProviderHTML.fShowAttributes = fShowAttributes;
 			}
 			viewer.setLabelProvider(fLabelProviderHTML);
 		}
@@ -269,6 +292,7 @@ public class PHPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 			// This option is only relevant for the HTML outline
 			fLabelProviderHTML.fShowAttributes = showAttributes;
 		}
+		fShowAttributes = showAttributes;
 	}
 	
 	class UseStatementAwareImageProvider extends ScriptElementImageProvider {
