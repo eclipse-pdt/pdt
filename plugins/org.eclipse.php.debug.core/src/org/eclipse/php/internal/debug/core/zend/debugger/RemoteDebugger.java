@@ -312,7 +312,11 @@ public class RemoteDebugger implements IRemoteDebugger {
 			}
 			resolvedFiles.put(resolvedFileKey, resolvedFile);
 		}
-		return resolvedFiles.get(resolvedFileKey);
+		String localFile = resolvedFiles.get(resolvedFileKey);
+		if (localFile == null) {
+			return remoteFile;
+		}
+		return localFile;
 	}
 
 	/**
