@@ -111,6 +111,7 @@ public class PHPDebugUIMessages extends NLS {
 	public static String PHPDebugPreferencesAddon_debugOutputEncoding;
 	public static String PHPDebugPreferencesAddon_debugTransferEncoding;
 	public static String PHPDebugPreferencesAddon_selectedEncoding;
+	public static String PHPDebugPreferencesAddon_unsupportedEncoding;
 
 	public static String PHPDebugPreferencesBlock_0;
 

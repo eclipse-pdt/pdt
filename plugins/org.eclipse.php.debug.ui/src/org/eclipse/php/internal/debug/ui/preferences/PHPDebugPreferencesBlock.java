@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.preferences;
 
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +39,8 @@ import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.php.internal.server.core.manager.ServersManager;
 import org.eclipse.php.internal.ui.preferences.AbstractPHPPreferencePageBlock;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -110,8 +114,8 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 					debuggerName = PHPDebuggersRegistry.getDebuggerName(debuggerId);
 					serverName = projectServerName;
 					stopAtFirstLine = node.getBoolean(PHPDebugCorePreferenceNames.STOP_AT_FIRST_LINE, stopAtFirstLine);
-					transferEncoding = node.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, ""); //$NON-NLS-1$
-					outputEncoding = node.get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, ""); //$NON-NLS-1$
+					transferEncoding = node.get(PHPDebugCorePreferenceNames.TRANSFER_ENCODING, transferEncoding); //$NON-NLS-1$
+					outputEncoding = node.get(PHPDebugCorePreferenceNames.OUTPUT_ENCODING, outputEncoding); //$NON-NLS-1$
 					phpExeName = node.get(PHPDebugCorePreferenceNames.DEFAULT_PHP, phpExeName);
 					// Check that if the project had a non-defined exe, and now there is one that is valid. we set
 					// it with the new valid default exe.
@@ -203,6 +207,20 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 
 		addLabelControl(encodingGroup, PHPDebugUIMessages.PHPDebugPreferencesAddon_debugOutputEncoding, PHPDebugCorePreferenceNames.OUTPUT_ENCODING);
 		fOutputEncodingSettings = addEncodingSettings(encodingGroup);
+
+		ModifyListener modifyListener = new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				boolean isValid = isValidEncoding(((Combo) e.getSource()).getText());
+				if (isValid) {
+					propertyPage.setErrorMessage(null);
+				} else {
+					propertyPage.setErrorMessage(PHPDebugUIMessages.PHPDebugPreferencesAddon_unsupportedEncoding);
+				}
+				propertyPage.setValid(isValid);
+			}
+		};
+		fDebugEncodingSettings.addModifyListener(modifyListener);
+		fOutputEncodingSettings.addModifyListener(modifyListener);
 
 		new Label(composite, SWT.NONE); // dummy label
 
@@ -417,5 +435,23 @@ public class PHPDebugPreferencesBlock extends AbstractPHPPreferencePageBlock {
 			debuggerId = debuggersIds.toArray()[selectedIndex].toString();
 		}
 		return debuggerId;
+	}
+
+	/**
+	 * Returns whether or not the given encoding is valid.
+	 * 
+	 * @param enc
+	 *            the encoding to validate
+	 * @return <code>true</code> if the encoding is valid, <code>false</code>
+	 *         otherwise
+	 * @see org.eclipse.ui.ide.dialogs.AbstractEncodingFieldEditor.isValidEncoding(String)
+	 */
+	private boolean isValidEncoding(String enc) {
+		try {
+			return Charset.isSupported(enc);
+		} catch (IllegalCharsetNameException e) {
+			// This is a valid exception
+			return false;
+		}
 	}
 }
