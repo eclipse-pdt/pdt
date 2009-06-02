@@ -984,21 +984,23 @@ public class CodeAssistUtils {
 		for (String filteredGroup : filteredGroups) {
 			groups.remove(filteredGroup);
 		}
-
-		List<IModelElement> groupElements = new LinkedList<IModelElement>();
-		for (String group : groups) {
-			String fakeElementName = new StringBuilder(group).append("_*").toString();
-			if (elementType == IDLTKSearchConstants.TYPE) {
-				groupElements.add(new FakeGroupType((ModelElement) sourceModule, fakeElementName));
-			} else if (elementType == IDLTKSearchConstants.METHOD) {
-				groupElements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
+		
+		if (groups.size() > 0) {
+			List<IModelElement> groupElements = new LinkedList<IModelElement>();
+			for (String group : groups) {
+				String fakeElementName = new StringBuilder(group).append("_*").toString();
+				if (elementType == IDLTKSearchConstants.TYPE) {
+					groupElements.add(new FakeGroupType((ModelElement) sourceModule, fakeElementName));
+				} else if (elementType == IDLTKSearchConstants.METHOD) {
+					groupElements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
+				}
 			}
+			
+			// Add all elements that don't fall into any group
+			groupElements.addAll(outOfGroupsElements);
+			return (IModelElement[]) groupElements.toArray(new IModelElement[groupElements.size()]);
 		}
-		
-		// Add all elements that don't fall into any group
-		groupElements.addAll(outOfGroupsElements);
-		
-		return (IModelElement[]) groupElements.toArray(new IModelElement[groupElements.size()]);
+		return (IModelElement[]) elements.toArray(new IModelElement[elements.size()]);
 	}
 
 	/**
