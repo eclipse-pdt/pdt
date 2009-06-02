@@ -40,7 +40,7 @@ public class MethodDeclaration extends BodyDeclaration {
 		new ChildPropertyDescriptor(Comment.class, "comment", Comment.class, OPTIONAL, NO_CYCLE_RISK); //$NON-NLS-1$
 
 	@Override
-	final SimplePropertyDescriptor getModifierProperty() {
+	public final SimplePropertyDescriptor getModifierProperty() {
 		return MODIFIER_PROPERTY;
 	}
 

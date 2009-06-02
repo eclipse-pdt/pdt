@@ -39,7 +39,7 @@ public class FieldsDeclaration extends BodyDeclaration {
 		new SimplePropertyDescriptor(FieldsDeclaration.class, "modifier", Integer.class, OPTIONAL); //$NON-NLS-1$
 	
 	@Override
-	final SimplePropertyDescriptor getModifierProperty() {
+	public final SimplePropertyDescriptor getModifierProperty() {
 		return MODIFIER_PROPERTY;
 	}
 	

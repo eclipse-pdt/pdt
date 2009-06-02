@@ -24,7 +24,7 @@ public abstract class BodyDeclaration extends Statement {
 	/**
 	 * Should be implemented by concrete implementations of body  
 	 */
-	abstract SimplePropertyDescriptor getModifierProperty();
+	public abstract SimplePropertyDescriptor getModifierProperty();
 	
 	public BodyDeclaration(int start, int end, AST ast, int modifier, boolean shouldComplete) {
 		super(start, end, ast);
