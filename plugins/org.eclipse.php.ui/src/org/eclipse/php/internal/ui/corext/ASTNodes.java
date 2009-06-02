@@ -40,8 +40,13 @@ public class ASTNodes {
 		node.accept(flattener);
 		return flattener.getResult();
 	}
-		
-	
+
+	public static String getQualifier(Identifier name) {
+//		if (name.isQualifiedName()) {
+//			return ((QualifiedName) name).getQualifier().getFullyQualifiedName();
+//		}
+		return ""; //$NON-NLS-1$
+	}
 
 	/**
 	 * Returns true if a node at a given location is a body of a control statement. Such body nodes are
