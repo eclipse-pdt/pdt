@@ -29,12 +29,12 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 			return false;
 		}
 		
-		if (requestor instanceof IPHPCompletionRequestor) {
-			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
-			if (!phpCompletionRequestor.isExplicit()) {
-				return false;
-			}
-		}
+//		if (requestor instanceof IPHPCompletionRequestor) {
+//			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
+//			if (!phpCompletionRequestor.isExplicit()) {
+//				return false;
+//			}
+//		}
 		
 		return true;
 	}
