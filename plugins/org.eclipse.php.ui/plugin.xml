@@ -316,11 +316,10 @@
 			markerId="org.eclipse.wst.html.core.validationMarker">
 			<include>
 				<rules>
-					<fileext caseSensitive="false" ext="php" />
-					<fileext caseSensitive="false" ext="php4" />
-					<fileext caseSensitive="false" ext="inc" />
-					<fileext caseSensitive="false" ext="php5" />
-					<fileext caseSensitive="false" ext="tpl" />
+     <contentType
+           exactMatch="true"
+           id="org.eclipse.php.core.phpsource">
+     </contentType>
 				</rules>
 			</include>
 			<group id="org.eclipse.wst.sse.core.structuredModelGroup" />
