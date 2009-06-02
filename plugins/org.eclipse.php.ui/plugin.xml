@@ -316,7 +316,6 @@
 			markerId="org.eclipse.wst.html.core.validationMarker">
 			<include>
 				<rules>
-					<contentType id="org.eclipse.wst.html.core.htmlsource"></contentType>
 					<fileext caseSensitive="false" ext="php" />
 					<fileext caseSensitive="false" ext="php4" />
 					<fileext caseSensitive="false" ext="inc" />
