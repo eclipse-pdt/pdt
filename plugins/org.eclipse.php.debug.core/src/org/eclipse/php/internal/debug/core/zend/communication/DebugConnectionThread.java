@@ -106,7 +106,7 @@ public class DebugConnectionThread implements Runnable {
 		responseTable = new IntHashtable();
 		responseHandlers = new Hashtable<Integer, ResponseHandler>();
 		messageHandlers = new HashMap<Integer, IDebugMessageHandler>();
-		theThread = new Thread(this);
+		theThread = new Thread(this, "PHP Debug Conection");
 		theThread.start();
 	}
 
@@ -692,7 +692,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 		
 		public void start() {
-			theThread = new Thread(this);
+			theThread = new Thread(this, "PHP Debug Message Handler");
 			// This makes the printing much faster.
 			theThread.setPriority(1);
 			theThread.start();
@@ -1002,7 +1002,7 @@ public class DebugConnectionThread implements Runnable {
 		}
 		
 		public void start() {
-			theThread = new Thread(this);
+			theThread = new Thread(this, "PHP Debug Message Reader");
 			theThread.start();
 			//Log.writeLog("Input Manager is started");
 		}
