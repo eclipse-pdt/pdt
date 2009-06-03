@@ -178,7 +178,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider im
 		return NO_CHILDREN;
 	}
 
-	private boolean supportsNamespaces(IScriptProject project) {
+	protected boolean supportsNamespaces(IScriptProject project) {
 		PHPVersion version = ProjectOptions.getPhpVersion(project.getProject());
 		return version.isGreaterThan(PHPVersion.PHP5);
 	}
