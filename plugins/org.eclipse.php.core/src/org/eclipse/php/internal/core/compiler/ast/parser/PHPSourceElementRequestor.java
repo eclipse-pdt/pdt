@@ -197,7 +197,7 @@ public class PHPSourceElementRequestor extends SourceElementRequestVisitor {
 			}
 		}
 
-		if (fCurrentClass == null) {
+		if (fCurrentClass == null || fCurrentClass == fLastNamespace) {
 			mi.modifiers |= Modifiers.AccGlobal;
 		}
 	}
