@@ -65,10 +65,11 @@ public enum ProjectOutlineGroups {
 
 			TreeSet<IModelElement> childrenList = new TreeSet<IModelElement>(new Comparator<IModelElement>() {
 				public int compare(IModelElement o1, IModelElement o2) {
-					if (0 != o1.getElementName().compareTo(o2.getElementName())) {
+					int res = o1.getElementName().compareTo(o2.getElementName());
+					if (res == 0) {
 						return (o1.getPath().toOSString() + o1.getElementName()).compareTo(o2.getPath().toOSString() + o2.getElementName());
 					}
-					return 0;
+					return res;
 
 				}
 			});
