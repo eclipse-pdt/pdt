@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.internal.ui.dialogs.OptionalMessageDialog;
@@ -34,6 +35,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.*;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
@@ -84,13 +86,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_;
 
-	private SourceViewerConfiguration config;
-	private ITextEditor textEditor;
+	private SourceViewerConfiguration fViewerConfiguration;
+	private ITextEditor fTextEditor;
 	private IInformationPresenter fOutlinePresenter;
 	private IInformationPresenter fHierarchyPresenter;
-
 	private IAnnotationHover fProjectionAnnotationHover;
-	private boolean fireSelectionChanged = true;
+	private boolean fFireSelectionChanged = true;
+	private DirtyModelStateUpdater fDirtyStateUpdater;
 
 	public PHPStructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
@@ -98,11 +100,21 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 	public PHPStructuredTextViewer(ITextEditor textEditor, Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
-		this.textEditor = textEditor;
+		this.fTextEditor = textEditor;
+		
+		fDirtyStateUpdater = new DirtyModelStateUpdater();
+		fDirtyStateUpdater.install();
 	}
 
 	public ITextEditor getTextEditor() {
-		return textEditor;
+		return fTextEditor;
+	}
+	
+	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset, int modelRangeLength) {
+		if (fDirtyStateUpdater != null) {
+			fDirtyStateUpdater.setDocument(document);
+		}
+		super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
 	}
 
 	/**
@@ -153,7 +165,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 
 			case CONTENTASSIST_PROPOSALS:
 				// Handle javascript content assist when there is no support (instead of printing the stack trace)
-				if (config != null) {
+				if (fViewerConfiguration != null) {
 					IProject project = null;
 					boolean isJavaScriptRegion = false;
 					boolean hasJavaScriptNature = true;
@@ -173,9 +185,19 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						}
 
 						// Check if the containing project has JS nature or not
-						if (textEditor instanceof PHPStructuredEditor) {
-							IModelElement modelElement = ((PHPStructuredEditor) textEditor).getModelElement();
+						if (fTextEditor instanceof PHPStructuredEditor) {
+							PHPStructuredEditor phpEditor = (PHPStructuredEditor) fTextEditor;
+							IModelElement modelElement = phpEditor.getModelElement();
 
+							// Wait until the editor is fully reconciled:
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=278992
+							while (fDirtyStateUpdater != null && fDirtyStateUpdater.isModelDirty()) {
+								try {
+									Thread.sleep(50);
+								} catch (InterruptedException e) {
+								}
+							}
+							
 							if (modelElement != null) {
 								IScriptProject scriptProject = modelElement.getScriptProject();
 								project = scriptProject.getProject();
@@ -207,8 +229,8 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 				}
 
 				// notifing the processors that the next request for completion is an explicit request
-				if (config != null) {
-					PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) config;
+				if (fViewerConfiguration != null) {
+					PHPStructuredTextViewerConfiguration structuredTextViewerConfiguration = (PHPStructuredTextViewerConfiguration) fViewerConfiguration;
 					IContentAssistProcessor[] all = structuredTextViewerConfiguration.getContentAssistProcessors(this, PHPPartitionTypes.PHP_DEFAULT);
 					for (IContentAssistProcessor element : all) {
 						if (element instanceof PHPCompletionProcessor) {
@@ -249,7 +271,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 						else
 							deleteSelection(textSelection, textWidget);
 
-						if (fireSelectionChanged) {
+						if (fFireSelectionChanged) {
 							Point range = textWidget.getSelectionRange();
 							fireSelectionChanged(range.x, range.y);
 						}
@@ -265,7 +287,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	}
 
 	public void setFireSelectionChanged(boolean fireSelectionChanged) {
-		this.fireSelectionChanged = fireSelectionChanged;
+		this.fFireSelectionChanged = fireSelectionChanged;
 	}
 
 	/**
@@ -385,7 +407,7 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (!(configuration instanceof PHPStructuredTextViewerConfiguration)) {
 			return;
 		}
-		config = configuration;
+		fViewerConfiguration = configuration;
 
 		PHPStructuredTextViewerConfiguration phpConfiguration = (PHPStructuredTextViewerConfiguration) configuration;
 		IContentAssistant newPHPAssistant = phpConfiguration.getPHPContentAssistant(this, true);
@@ -427,6 +449,9 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		if (fOutlinePresenter != null) {
 			fOutlinePresenter.uninstall();
 			fOutlinePresenter = null;
+		}
+		if (fDirtyStateUpdater != null) {
+			fDirtyStateUpdater.uninstall();
 		}
 		super.unconfigure();
 	}
@@ -527,8 +552,57 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 	 * @param length the length of the newly selected range in the visible document
 	 */
 	protected void selectionChanged(int offset, int length) {
-		if (fireSelectionChanged) {
+		if (fFireSelectionChanged) {
 			super.selectionChanged(offset, length);
+		}
+	}
+
+	class DirtyModelStateUpdater implements IDocumentListener, IPhpScriptReconcilingListener {
+		
+		private boolean fIsModelDirty;
+
+		public void install() {
+			if (fTextEditor instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor)fTextEditor).addReconcileListener(this);
+			}
+		}
+		
+		public void uninstall() {
+			if (fTextEditor instanceof PHPStructuredEditor) {
+				((PHPStructuredEditor)fTextEditor).removeReconcileListener(this);
+			}
+			IDocument oldDocument = getDocument();
+			if (oldDocument != null) {
+				oldDocument.removeDocumentListener(this);
+			}
+		}
+		
+		public void setDocument(IDocument document) {
+			IDocument oldDocument = getDocument();
+			if (oldDocument != null) {
+				oldDocument.removeDocumentListener(this);
+			}
+			if (document != null) {
+				document.addDocumentListener(this);
+			}
+		}
+		
+		public void documentAboutToBeChanged(DocumentEvent event) {
+			fIsModelDirty = true;
+		}
+	
+		public void documentChanged(DocumentEvent event) {
+		}
+	
+		public void aboutToBeReconciled() {
+		}
+	
+		public void reconciled(Program program, boolean forced, IProgressMonitor progressMonitor) {
+			fIsModelDirty = false;
+		}
+		
+		public boolean isModelDirty() {
+			return fIsModelDirty;
 		}
 	}
 }
