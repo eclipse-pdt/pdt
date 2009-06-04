@@ -11,15 +11,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
+import org.eclipse.php.internal.core.language.PHPMagicMethods;
 
 /**
  * This strategy completes class methods
@@ -56,13 +62,17 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		
 		String suffix = getSuffix(concreteContext);
 		
+		PHPVersion phpVersion = concreteContext.getPhpVersion();
+		Set<String> magicMethods = new HashSet<String>();
+		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
+		
 		for (IType type : concreteContext.getLhsTypes()) {
 			IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, prefix, mask) 
 				: CodeAssistUtils.getTypeMethods(type, prefix, mask);
 
 			for (IMethod method : methods) {
 				try {
-					if (!isFiltered(method, concreteContext)) {
+					if (!magicMethods.contains(method.getElementName()) && !isFiltered(method, concreteContext)) {
 						reporter.reportMethod((IMethod) method, suffix, replaceRange);
 					}
 				} catch (ModelException e) {

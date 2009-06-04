@@ -25,6 +25,7 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.MethodNameContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.language.PHPMagicMethods;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 
 /**
@@ -33,10 +34,6 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  */
 public class MethodNameStrategy extends AbstractCompletionStrategy {
 
-	protected static final String[] MAGIC_METHODS = { "__get", "__set", "__call", "__sleep", "__wakeup", };
-	protected static final String[] MAGIC_METHODS_PHP5 = { "__isset", "__unset", "__toString", "__set_state", "__clone", "__autoload", };
-	protected static final String[] MAGIC_METHODS_PHP5_3 = { "__callstatic", "__invoke", };
-	
 	public MethodNameStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
@@ -85,13 +82,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 		// Add magic methods:
 		Set<String> functions = new TreeSet<String>();
-		functions.addAll(Arrays.asList(MAGIC_METHODS));
-		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
-			functions.addAll(Arrays.asList(MAGIC_METHODS_PHP5));
-		}
-		if (phpVersion.isGreaterThan(PHPVersion.PHP5)) {
-			functions.addAll(Arrays.asList(MAGIC_METHODS_PHP5_3));
-		}
+		functions.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
 		
 		// Add constructors:
 		functions.add(declaringClass.getElementName());
