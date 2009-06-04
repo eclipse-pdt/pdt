@@ -13,7 +13,6 @@ package org.eclipse.php.internal.debug.core.zend.debugger;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Map;
@@ -129,10 +128,32 @@ public class PHPExecutableDebuggerInitializer {
 			}
 
 			// Attach a crash detector
-			new Thread(new ProcessCrashDetector(p)).start();
-
-			Runnable reader = new ProcessOutputReader(p);
-			new Thread(reader).start();
+			new Thread(new ProcessCrashDetector(p) {
+				public void run() {
+					super.run();
+					
+					// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the
+					// launch that was created, we can tell that there is something wrong, and probably there is no debugger
+					// installed (e.g. the debugger dll/so is not properly configured in the php.ini).
+					if (launch != null && launch.getDebugTarget() == null) {
+						String launchName = launch.getLaunchConfiguration().getName();
+						boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
+						String msg = null;
+						if (isRunMode) {
+							msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new Object[] { launchName });
+						} else {
+							msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new Object[] { launchName });
+						}
+						final String message = msg;
+						Display.getDefault().asyncExec(new Runnable() {
+							public void run() {
+								MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Launch_Error, message);
+								DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+							}
+						});
+					}
+				}
+			}).start();
 
 		} catch (final Exception e) {
 			final Display display = Display.getDefault();
@@ -163,104 +184,5 @@ public class PHPExecutableDebuggerInitializer {
 			attributes[index++] = entry.getKey() + '=' + entry.getValue();
 		}
 		return attributes;
-	}
-
-	//	private void initializeSystemEnvironmentVariables() throws IOException {
-	//		ArrayList<String> list = new ArrayList<String>();
-	//		Process p;
-	//		Runtime r = Runtime.getRuntime();
-	//		String OS = System.getProperty("os.name").toLowerCase();
-	//		if (OS.indexOf("windows") > -1) {
-	//			if (OS.indexOf("windows 9") > -1) {
-	//				p = r.exec("command.com /c set");
-	//			} else {
-	//				p = r.exec("cmd.exe /c set");
-	//			}
-	//		} else if (OS.indexOf("linux") > -1) {
-	//			p = r.exec("env");
-	//		} else if (OS.indexOf("unix") > -1) {
-	//			p = r.exec("/bin/env");
-	//		} else if (OS.indexOf("sunos") > -1) {
-	//			p = r.exec("/bin/env");
-	//		} else if (OS.indexOf("mac") > -1) {
-	//			try {
-	//				p = r.exec("env");
-	//			} catch (IOException e) {
-	//				p = r.exec("setenv");
-	//			}
-	//		} else if (OS.indexOf("freebsd") > -1) {
-	//			p = r.exec("set");
-	//		} else {
-	//			System.out.println("OS not known: " + OS);
-	//			systemEnvironmentVariables = new HashMap<String, String>(0);
-	//			return;
-	//		}
-	//		BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-	//		String line;
-	//		while ((line = br.readLine()) != null) {
-	//			list.add(line);
-	//		}
-	//		br.close();
-	//		systemEnvironmentVariables = new HashMap<String, String>();
-	//		for (int i = 0; i < list.size(); i++) {
-	//			String[] env = ((String) list.get(i)).split("=");
-	//			if (env.length == 2) {
-	//				systemEnvironmentVariables.put(env[0], env[1]);
-	//			} else {
-	//				if (env.length == 1) {
-	//					systemEnvironmentVariables.put(env[0], "");
-	//				}
-	//			}
-	//		}
-	//	}
-
-	// the reader reads the output of the process
-	private class ProcessOutputReader implements Runnable {
-		Process p;
-
-		ProcessOutputReader(Process p) {
-			this.p = p;
-		}
-
-		public void run() {
-			try {
-				byte buff[] = new byte[1000];
-				InputStream in = p.getInputStream();
-				int c = in.read(buff);
-				while (c > 0) {
-					c = in.read(buff);
-				}
-				in = p.getErrorStream();
-				c = in.read(buff);
-				while (c != -1) {
-					c = in.read(buff);
-					if (PHPDebugPlugin.DEBUG) {
-						System.out.println(new String(buff));
-					}
-				}
-			} catch (IOException exc) {
-				PHPDebugPlugin.log(exc);
-			}
-			// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the
-			// launch that was created, we can tell that there is something wrong, and probably there is no debugger
-			// installed (e.g. the debugger dll/so is not properly configured in the php.ini).
-			if (launch != null && launch.getDebugTarget() == null) {
-				String launchName = launch.getLaunchConfiguration().getName();
-				boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
-				String msg = null;
-				if (isRunMode) {
-					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new Object[] { launchName });
-				} else {
-					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new Object[] { launchName });
-				}
-				final String message = msg;
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Launch_Error, message);
-						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-					}
-				});
-			}
-		}
 	}
 }
