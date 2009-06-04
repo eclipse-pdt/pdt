@@ -925,7 +925,7 @@ public class CodeAssistUtils {
 	}
 
 	private static IModelElement[] getGroupOptions(ISourceModule sourceModule, String prefix, int elementType, int mask, int matchRule, IDLTKSearchScope scope) {
-		List<IModelElement> elements = new LinkedList<IModelElement>();
+		final Set<IModelElement> elements = new TreeSet<IModelElement>(new AlphabeticComparator());
 		Set<String> groups = new HashSet<String>();
 
 		// Build the mixin request key:
