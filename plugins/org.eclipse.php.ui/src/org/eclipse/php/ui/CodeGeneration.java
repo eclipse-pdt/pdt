@@ -12,6 +12,7 @@
 package org.eclipse.php.ui;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -342,23 +343,29 @@ public class CodeGeneration {
 			ITypeBinding returnType = null;
 			ITypeBinding[] typeParametersTypes = null;
 			IFunctionBinding resolvedBinding = null;
+			List<FormalParameter> formalParameters = null;
 
 			if (elementAt instanceof MethodDeclaration) {
 				MethodDeclaration methodDeclaration = (MethodDeclaration) elementAt;
 				resolvedBinding = methodDeclaration.resolveMethodBinding();
+				formalParameters = methodDeclaration.getFunction().formalParameters();
 			} else if (elementAt instanceof FunctionDeclaration) {
 				FunctionDeclaration functionDeclaration = (FunctionDeclaration) elementAt;
 				resolvedBinding = functionDeclaration.resolveFunctionBinding();
-
+				formalParameters = functionDeclaration.formalParameters();
+			}
+			
+			if (formalParameters != null) {
 				//get parameter type
-				parameterTypes = new String[functionDeclaration.formalParameters().size()];
+				parameterTypes = new String[formalParameters.size()];
 				int i = 0;
-				for (ASTNode node : functionDeclaration.formalParameters()) {
+				for (ASTNode node : formalParameters) {
 					FormalParameter formalParameter = (FormalParameter) node;
 					String typeName = ((Identifier) formalParameter.getParameterType()).getName();
 					parameterTypes[i++] = typeName;
 				}
 			}
+			
 			if (null != resolvedBinding) {
 				returnType = resolvedBinding.getReturnType();
 				if (null != returnType) {
@@ -388,7 +395,7 @@ public class CodeGeneration {
 		String[] paramNames = method.getParameters();// ParameterNames();
 		// add parameter type before parameter name
 		for (int i = 0; i < paramNames.length; i++) {
-			if (null != parameterTypes[i]) {
+			if (null != parameterTypes && null != parameterTypes[i]) {
 				paramNames[i] = parameterTypes[i] + " " + paramNames[i];
 			}
 		}
