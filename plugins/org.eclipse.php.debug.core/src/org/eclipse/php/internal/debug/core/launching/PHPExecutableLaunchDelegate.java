@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.debug.core.launching;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +42,8 @@ import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
 import org.eclipse.php.internal.debug.core.zend.debugger.ProcessCrashDetector;
 import org.eclipse.php.internal.debug.daemon.DaemonPlugin;
 import org.eclipse.swt.widgets.Display;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 	/** Constant value indicating if the current platform is Windows */

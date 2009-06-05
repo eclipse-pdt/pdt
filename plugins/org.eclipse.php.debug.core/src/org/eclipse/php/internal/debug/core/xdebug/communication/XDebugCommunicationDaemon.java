@@ -15,7 +15,6 @@
 package org.eclipse.php.internal.debug.core.xdebug.communication;
 
 import java.net.Socket;
-import java.text.MessageFormat;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
@@ -48,6 +47,8 @@ import org.eclipse.php.internal.ui.util.PerspectiveManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * XDebug communication daemon.

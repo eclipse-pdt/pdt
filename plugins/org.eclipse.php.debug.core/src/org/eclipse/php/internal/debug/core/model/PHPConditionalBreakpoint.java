@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.model;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -24,6 +23,8 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.php.internal.debug.core.IPHPDebugConstants;
 import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class PHPConditionalBreakpoint extends PHPLineBreakpoint {
 

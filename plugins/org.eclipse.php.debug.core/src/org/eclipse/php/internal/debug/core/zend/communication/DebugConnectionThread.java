@@ -17,7 +17,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -60,6 +59,8 @@ import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestCo
 import org.eclipse.php.internal.debug.core.zend.testConnection.DebugServerTestEvent;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * The debug connection thread is responsible of initializing and handle a single debug session that was
