@@ -239,7 +239,8 @@ public class PHPOutlineContentProvider implements ITreeContentProvider {
 									}
 
 									IModelElementDelta delta = findElement(base, e.getDelta());
-									if (delta != null && fOutlineViewer != null) {
+									if (delta != null && fOutlineViewer != null &&
+											fOutlineViewer.getControl() != null && !fOutlineViewer.getControl().isDisposed()) {
 										fOutlineViewer.refresh();
 									}
 								}
