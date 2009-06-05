@@ -11,19 +11,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.preferences;
 
-import java.util.Locale;
-
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 
+import com.ibm.icu.util.ULocale;
+
 public class CorePreferenceConstants {
 
 	public interface Keys {
 		public static final String PHP_VERSION = PHPCoreConstants.PHP_OPTIONS_PHP_VERSION;
-		public static final String EDITOR_USE_ASP_TAGS= "use_asp_tags_as_php"; //$NON-NLS-1$
+		public static final String EDITOR_USE_ASP_TAGS = "use_asp_tags_as_php"; //$NON-NLS-1$
 	}
 
 	/**
@@ -42,8 +42,8 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.FORMATTER_USE_TABS, true);
 		node.put(PHPCoreConstants.FORMATTER_INDENTATION_SIZE, PHPCoreConstants.DEFAULT_INDENTATION_SIZE);
 		node.putBoolean(PHPCoreConstants.CODEGEN_ADD_COMMENTS, true);
-		node.put(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE,Locale.getDefault().toString());
-		node.put(PHPCoreConstants.WORKSPACE_LOCALE, Locale.getDefault().toString());
+		node.put(PHPCoreConstants.WORKSPACE_DEFAULT_LOCALE, ULocale.getDefault().toString());
+		node.put(PHPCoreConstants.WORKSPACE_LOCALE, ULocale.getDefault().toString());
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
