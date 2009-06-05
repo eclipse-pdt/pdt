@@ -11,10 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.search;
 
-import java.text.Collator;
 import java.util.Comparator;
 
 import org.eclipse.ui.IWorkingSet;
+
+import com.ibm.icu.text.Collator;
 
 public class WorkingSetComparator implements Comparator {
 

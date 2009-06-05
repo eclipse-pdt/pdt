@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.util;
 
-import java.text.MessageFormat;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.*;
@@ -20,6 +19,8 @@ import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.osgi.framework.Bundle;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class CoreUtility {
 

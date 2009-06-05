@@ -11,9 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.text;
 
-import java.text.BreakIterator;
+
 import java.text.CharacterIterator;
+
 import org.eclipse.core.runtime.Assert;
+
+import com.ibm.icu.text.BreakIterator;
 
 /**
  * A PHP break iterator. It returns all breaks, including before and after

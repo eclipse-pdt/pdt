@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.ui.editor;
 
 import java.io.IOException;
-import java.text.BreakIterator;
 import java.text.CharacterIterator;
 import java.util.*;
 
@@ -125,6 +124,8 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutline
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
+
+import com.ibm.icu.text.BreakIterator;
 
 public class PHPStructuredEditor extends StructuredTextEditor implements IPhpScriptReconcilingListener {
 

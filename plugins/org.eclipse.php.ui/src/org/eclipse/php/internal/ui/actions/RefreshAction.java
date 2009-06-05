@@ -13,7 +13,6 @@ package org.eclipse.php.internal.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +33,8 @@ import org.eclipse.php.internal.ui.util.Resources;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class RefreshAction extends SelectionDispatchAction {
 
