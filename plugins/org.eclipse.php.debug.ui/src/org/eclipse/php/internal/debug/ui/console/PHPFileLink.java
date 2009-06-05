@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.console;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -26,13 +24,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIPlugin;
 import org.eclipse.php.internal.ui.util.EditorUtility;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.*;
 import org.eclipse.ui.console.IHyperlink;
 import org.eclipse.ui.ide.IDE;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  *

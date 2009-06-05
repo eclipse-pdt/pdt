@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.breakpoint.property;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.php.internal.debug.core.model.PHPConditionalBreakpoint;
@@ -25,6 +23,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class PHPBreakpointPropertyPage extends PropertyPage implements IWorkbenchPropertyPage {
 

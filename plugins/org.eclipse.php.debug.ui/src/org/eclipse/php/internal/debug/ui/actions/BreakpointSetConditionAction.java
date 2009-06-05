@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.actions;
 
-import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
@@ -41,6 +40,8 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+
+import com.ibm.icu.text.MessageFormat;
 
 public class BreakpointSetConditionAction implements IObjectActionDelegate {
 

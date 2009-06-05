@@ -12,7 +12,6 @@
 package org.eclipse.php.internal.debug.ui.presentation;
 
 import java.io.File;
-import java.text.MessageFormat;
 
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.internal.filesystem.local.LocalFile;
@@ -52,6 +51,8 @@ import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * Renders PHP debug elements

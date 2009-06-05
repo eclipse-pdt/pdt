@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.actions;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
@@ -29,6 +27,8 @@ import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.PHPDebugUIMessages;
 import org.eclipse.swt.widgets.Shell;
 import org.w3c.dom.Node;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * A variable value editor that prompts the user to set a primitive's value.

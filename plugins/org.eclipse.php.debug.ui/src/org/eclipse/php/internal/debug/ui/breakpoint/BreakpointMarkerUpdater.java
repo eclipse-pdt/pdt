@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.ui.breakpoint;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
@@ -20,6 +18,8 @@ import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.ui.Logger;
 import org.eclipse.php.internal.debug.ui.breakpoint.provider.PHPBreakpointProvider;
 import org.eclipse.ui.texteditor.IMarkerUpdater;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * Responsible for update the PHPConditionalBreakpointMarker info while saving the document.
