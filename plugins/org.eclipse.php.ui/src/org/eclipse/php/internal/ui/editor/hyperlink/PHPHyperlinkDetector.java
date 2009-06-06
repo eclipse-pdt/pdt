@@ -19,32 +19,28 @@ import org.eclipse.dltk.internal.ui.editor.ModelElementHyperlink;
 import org.eclipse.dltk.ui.actions.OpenAction;
 import org.eclipse.dltk.ui.infoviews.ModelElementArray;
 import org.eclipse.jface.text.*;
+import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.ui.editor.hover.IHyperlinkDetectorForPHP;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.php.internal.ui.editor.PHPStructuredEditor;
 
-public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
-
-	private IEditorPart fEditor;
-
-	/**
-	 * Creates a new PHP element hyperlink detector.
-	 */
-	public PHPHyperlinkDetector(IEditorPart editor) {
-		fEditor = editor;
-	}
+public class PHPHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	/*
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlinkDetector#detectHyperlinks(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion, boolean)
 	 */
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
+		PHPStructuredEditor editor = org.eclipse.php.internal.ui.util.EditorUtility.getPHPStructuredEditor(textViewer);
+		if (editor == null) {
+			return null;
+		}
+		
 		if (region == null) {
 			return null;
 		}
 
-		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, false);
+		IModelElement input = EditorUtility.getEditorInputModelElement(editor, false);
 		if (input == null) {
 			return null;
 		}
@@ -64,9 +60,9 @@ public class PHPHyperlinkDetector implements IHyperlinkDetectorForPHP {
 			if (elements != null && elements.length > 0) {
 				final IHyperlink link;
 				if (elements.length == 1) {
-					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(fEditor));
+					link = new ModelElementHyperlink(wordRegion, elements[0], new OpenAction(editor));
 				} else {
-					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements), new OpenAction(fEditor));
+					link = new ModelElementHyperlink(wordRegion, new ModelElementArray(elements), new OpenAction(editor));
 				}
 				return new IHyperlink[] { link };
 			}

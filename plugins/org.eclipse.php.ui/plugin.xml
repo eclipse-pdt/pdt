@@ -17,7 +17,6 @@
 	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover" schema="schema/phpEditorTextHovers.exsd" />
 	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider" schema="schema/phpTreeContentProviders.exsd" />
 	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd" />
-	<extension-point id="phpHyperlinkDetector" name="PHP Hyperlink Detector" schema="schema/phpHyperlinkDetector.exsd" />
 	<extension-point id="phpTreeElementComparers" name="PHP Tree Element Comparer" schema="schema/phpTreeElementComparers.exsd" />
 	<extension-point id="actionFilterContributors" name="PHP Action Filter Contributor" schema="schema/actionFilterContributors.exsd" />
 	<extension-point id="phpWizardPages" name="PHP Wizard Page" schema="schema/phpWizardPages.exsd" />
@@ -1396,10 +1395,24 @@
 	</extension>
 	
 	<!-- Hyperlink Detectors -->
-	<extension point="org.eclipse.php.ui.phpHyperlinkDetector">
-		<detector class="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
-			id="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
-			name="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"/>
+	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+   		<target id="org.eclipse.php.core.phpsource" name="PHP Editor">
+   			<context type="org.eclipse.ui.texteditor.ITextEditor" />
+   		</target>
+ 	</extension>
+	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+   			id="org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector"
+   			targetId="org.eclipse.php.core.phpsource"
+   			class="org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector"
+   			name="PHP Code Hyperlink Detector">
+   		</hyperlinkDetector>
+   		<hyperlinkDetector
+   			id="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
+   			targetId="org.eclipse.php.core.phpsource"
+   			class="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
+   			name="PHP Include Hyperlink Detector">
+   		</hyperlinkDetector>
 	</extension>
 
 	<!--PHP Working Set:-->
