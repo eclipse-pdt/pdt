@@ -286,7 +286,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
 						String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node).getFullyQualifiedName() : ((SimpleReference) node).getName();
-						return PHPTypeInferenceUtils.getTypes(name, sourceModule, offset);
+						return getConstructorsIfAny(extractClasses(PHPTypeInferenceUtils.getTypes(name, sourceModule, offset)));
 					}
 				}
 			}
@@ -368,7 +368,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// Class instantiation:
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
-							return extractClasses(PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset));
+							return getConstructorsIfAny(extractClasses(PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset)));
 						}
 
 						// Handle extends and implements:
@@ -592,6 +592,24 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
+	}
+	
+	private static IModelElement[] getConstructorsIfAny(IType[] types) throws ModelException {
+		List<IModelElement> result = new LinkedList<IModelElement>();
+		for (IType type : types) {
+			boolean hasConstructor = false;
+			for (IMethod method : type.getMethods()) {
+				if (method.isConstructor()) {
+					result.add(method);
+					hasConstructor = true;
+					break;
+				}
+			}
+			if (!hasConstructor) {
+				result.add(type);
+			}
+		}
+		return (IModelElement[]) result.toArray(new IModelElement[result.size()]);
 	}
 	
 	/**
