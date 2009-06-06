@@ -68,7 +68,7 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 			
 			int exitValue = process.waitFor();
 			if (exitValue > 255 || exitValue < 0) {
-				PHPLaunchUtilities.showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_General_Error, PHPDebugCoreMessages.Debugger_Error_Crash_Message);
+//				PHPLaunchUtilities.showDebuggerErrorMessage(PHPDebugCoreMessages.Debugger_General_Error, PHPDebugCoreMessages.Debugger_Error_Crash_Message);
 			}
 		} catch (Throwable t) {
 		} finally {
