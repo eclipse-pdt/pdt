@@ -42,8 +42,7 @@
  <template name="fieldcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.varcomment" description="%CodeTemplates.varcomment" context="phpcomment" enabled="true">/* @var ${field_type} */</template>
  
 <template name="methodcomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.methodcomment" description="%CodeTemplates.nonoverridingcomment" context="phpcomment" enabled="true">/**
- * Enter description here...
- * ${tags}
+ * ${cursor}${tags}
  */</template>
 
 <template name="overridecomment" id="org.eclipse.php.ui.editor.templates.php.codetemplates.overridecomment" description="%CodeTemplates.overridecomment" context="phpcomment" enabled="true">/* %CodeTemplates.overridecomment.nonjd
