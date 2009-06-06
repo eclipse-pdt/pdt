@@ -15,32 +15,25 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
- * This strategy completes global classes 
+ * This strategy results like {@link GlobalClassesStrategy}, but filters final classes.
  * @author michael
+ *
  */
-public class GlobalClassesStrategy extends GlobalTypesStrategy {
+public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 
-	public GlobalClassesStrategy(ICompletionContext context) {
-		this(context, new ClassesFilter());
+	public NonFinalClassesStrategy(ICompletionContext context) {
+		super(context, new NonFinalClassesFilter());
 	}
-	
-	public GlobalClassesStrategy(ICompletionContext context, IElementFilter elementFilter) {
-		super(context, elementFilter);
-	}
-	
-	public String getSuffix(AbstractCompletionContext abstractContext) {
-		return ""; //$NON-NLS-1$
-	}
-	
-	static class ClassesFilter implements IElementFilter {
+
+	static class NonFinalClassesFilter extends ClassesFilter {
+
 		public boolean filter(IModelElement element) {
 			try {
-				return !PHPFlags.isClass(((IType)element).getFlags());
+				return super.filter(element) || PHPFlags.isFinal(((IType)element).getFlags());
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG_COMPLETION) {
 					e.printStackTrace();
@@ -48,5 +41,6 @@ public class GlobalClassesStrategy extends GlobalTypesStrategy {
 			}
 			return false;
 		}
+		
 	}
 }

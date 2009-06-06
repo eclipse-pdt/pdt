@@ -130,7 +130,7 @@ public class CompletionStrategyFactory implements ICompletionStrategyFactory {
 			return new ICompletionStrategy[] { new InterfaceDeclarationKeywordsStrategy(context) };	
 		}
 		if (contextClass == ClassExtendsContext.class) {
-			return new ICompletionStrategy[] { new GlobalClassesStrategy(context) };	
+			return new ICompletionStrategy[] { new NonFinalClassesStrategy(context) };	
 		}
 		if (contextClass == ClassImplementsContext.class || contextClass == InterfaceExtendsContext.class) {
 			return new ICompletionStrategy[] { new GlobalInterfacesStrategy(context) };	
