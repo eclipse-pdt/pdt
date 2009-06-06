@@ -20,9 +20,9 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 
@@ -70,40 +70,7 @@ public class PHPSearchEngine {
 		IncludePath[] includePaths = buildIncludePath(currentProject);
 		for (IncludePath includePath : includePaths) {
 			if (includePath.isBuildpath()) {
-				IBuildpathEntry entry = (IBuildpathEntry) includePath.getEntry();
-				IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
-				if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
-					File entryDir = entryPath.toFile();
-					file = new File(entryDir, path);
-					if (file.exists()) {
-						return new IncludedFileResult(entry, file);
-					}	
-                } else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
-					entryPath = DLTKCore.getResolvedVariablePath(entryPath);
-					File entryDir = entryPath.toFile();
-					file = new File(entryDir, path);
-					if (file.exists()) {
-						return new IncludedFileResult(entry, file);
-					}
-				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
-					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-					IProject project = workspaceRoot.getProject(entryPath.segment(0));
-					if (project.isAccessible()) {
-						IResource resource = project.findMember(path);
-						if (resource instanceof IFile) {
-							return new ResourceResult((IFile) resource);
-						}
-					}
-				} else if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
-					IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-					IResource resource = workspaceRoot.findMember(entryPath);
-					if (resource instanceof IContainer) {
-						resource = ((IContainer)resource).findMember(path);
-						if (resource instanceof IFile) {
-							return new ResourceResult((IFile) resource);
-						}
-					}
-				}
+				return searchInBuildpathEntry(path, (IBuildpathEntry) includePath.getEntry(), currentProject);
 			} else {
 				IContainer container = (IContainer) includePath.getEntry();
 				IResource resource = container.findMember(path);
@@ -115,6 +82,66 @@ public class PHPSearchEngine {
 
 		// look at current script directory:
 		return searchExternalOrWorkspaceFile(currentScriptDir, path);
+	}
+
+	private static Result<?, ?> searchInBuildpathEntry(String path, IBuildpathEntry entry, IProject currentProject) {
+
+		IPath entryPath = EnvironmentPathUtils.getLocalPath(entry.getPath());
+		
+		if (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY) {
+			File entryDir = entryPath.toFile();
+			File file = new File(entryDir, path);
+			if (file.exists()) {
+				return new IncludedFileResult(entry, file);
+			}	
+        } else if (entry.getEntryKind() == IBuildpathEntry.BPE_VARIABLE) {
+			entryPath = DLTKCore.getResolvedVariablePath(entryPath);
+			File entryDir = entryPath.toFile();
+			File file = new File(entryDir, path);
+			if (file.exists()) {
+				return new IncludedFileResult(entry, file);
+			}
+		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT) {
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			IProject project = workspaceRoot.getProject(entryPath.segment(0));
+			if (project.isAccessible()) {
+				IResource resource = project.findMember(path);
+				if (resource instanceof IFile) {
+					return new ResourceResult((IFile) resource);
+				}
+			}
+		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_SOURCE) {
+			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+			IResource resource = workspaceRoot.findMember(entryPath);
+			if (resource instanceof IContainer) {
+				resource = ((IContainer)resource).findMember(path);
+				if (resource instanceof IFile) {
+					return new ResourceResult((IFile) resource);
+				}
+			}
+		} else if (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER) {
+			try {
+				IScriptProject scriptProject = DLTKCore.create(currentProject);
+				IBuildpathContainer container = DLTKCore.getBuildpathContainer(entry.getPath(), scriptProject);
+				if (container != null) {
+					IBuildpathEntry[] buildpathEntries = container.getBuildpathEntries(scriptProject);
+					if (buildpathEntries != null) {
+						for (IBuildpathEntry buildpathEntry : buildpathEntries) {
+							Result<?, ?> result = searchInBuildpathEntry(path, buildpathEntry, currentProject);
+							if (result != null) {
+								IProjectFragment[] projectFragments = scriptProject.findProjectFragments(entry);
+								((IncludedFileResult)result).setProjectFragments(projectFragments);
+								return result;
+							}
+						}
+					}
+				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
+			}
+		}
+		
+		return null;
 	}
 
 	private static Result<?, ?> searchExternalOrWorkspaceFile(String directory, String relativeFile) {
@@ -195,6 +222,14 @@ public class PHPSearchEngine {
 		public S getFile() {
 			return file;
 		}
+		
+		public void setContainer(T container) {
+			this.container = container;
+		}
+		
+		public void setFile(S file) {
+			this.file = file;
+		}
 	}
 
 	/**
@@ -210,8 +245,18 @@ public class PHPSearchEngine {
 	 * Result for included file (from Include Path)
 	 */
 	public static class IncludedFileResult extends Result<IBuildpathEntry, File> {
+		private IProjectFragment[] projectFragments;
+		
 		public IncludedFileResult(IBuildpathEntry container, File file) {
 			super(container, file);
+		}
+		
+		public void setProjectFragments(IProjectFragment[] projectFragments) {
+			this.projectFragments = projectFragments;
+		}
+		
+		public IProjectFragment[] getProjectFragments() {
+			return projectFragments;
 		}
 	}
 

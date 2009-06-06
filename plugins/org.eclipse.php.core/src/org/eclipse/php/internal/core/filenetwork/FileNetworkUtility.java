@@ -29,6 +29,7 @@ import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.mixin.IncludeField;
 import org.eclipse.php.internal.core.mixin.PHPMixinModel;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
+import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.Result;
 
@@ -204,7 +205,30 @@ public class FileNetworkUtility {
 			ResourceResult resResult = (ResourceResult) result;
 			IResource resource = resResult.getFile();
 			sourceModule = (ISourceModule) DLTKCore.create(resource);
-		} else {
+		}
+		else if (result instanceof IncludedFileResult) {
+			IncludedFileResult incResult = (IncludedFileResult) result;
+			IProjectFragment[] projectFragments = incResult.getProjectFragments();
+			if (projectFragments != null) {
+				String folderPath = ""; //$NON-NLS-1$
+				String moduleName = path;
+				int i = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+				if (i != -1) {
+					folderPath = path.substring(0, i);
+					moduleName = path.substring(i + 1);
+				}
+				for (IProjectFragment projectFragment : projectFragments) {
+					IScriptFolder scriptFolder = projectFragment.getScriptFolder(folderPath);
+					if (scriptFolder != null) {
+						sourceModule = scriptFolder.getSourceModule(moduleName);
+						if (sourceModule != null) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		else {
 			// XXX: add support for external files
 		}
 
