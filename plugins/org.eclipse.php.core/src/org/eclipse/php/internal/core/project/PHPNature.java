@@ -13,20 +13,16 @@ package org.eclipse.php.internal.core.project;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.dltk.core.*;
-import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.dltk.core.DLTKCore;
+import org.eclipse.dltk.core.IScriptProject;
+import org.eclipse.dltk.core.ScriptNature;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.includepath.IncludePath;
-import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 
 public class PHPNature extends ScriptNature {
