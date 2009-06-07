@@ -292,14 +292,23 @@ public class Bindings {
 	 * @return the method binding overridden the method
 	 */
 	public static IMethodBinding findOverriddenMethodInHierarchy(ITypeBinding type, IMethodBinding binding) {
+		return innerFindOverriddenMethodInHierarchy(type, binding, new HashSet<ITypeBinding>());
+	}
+	
+	public static IMethodBinding innerFindOverriddenMethodInHierarchy(ITypeBinding type, IMethodBinding binding, Set<ITypeBinding> processedTypes) {
+		if (!processedTypes.add(type)) {
+			return null;
+		}
+		
 		IMethodBinding method = findOverriddenMethodInType(type, binding);
 		if (method != null)
 			return method;
 		ITypeBinding superClass = type.getSuperclass();
 		if (superClass != null) {
 			method = findOverriddenMethodInHierarchy(superClass, binding);
-			if (method != null)
+			if (method != null) {
 				return method;
+			}
 		}
 		ITypeBinding[] interfaces = type.getInterfaces();
 		if (interfaces != null) {
