@@ -86,8 +86,4 @@ public class IncludePathUtils {
 	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IModelElement modelElement){
 		return getRelativeLocationFromIncludePath(project, modelElement.getPath());
 	}
-	
-	
-	
-	
 }
