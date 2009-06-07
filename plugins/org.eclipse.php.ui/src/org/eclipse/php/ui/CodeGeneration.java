@@ -20,8 +20,6 @@ import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.internal.core.MemberElementInfo;
-import org.eclipse.dltk.internal.core.SourceField;
 import org.eclipse.php.internal.core.ast.nodes.*;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.corext.codemanipulation.StubUtility;
@@ -333,6 +331,7 @@ public class CodeGeneration {
 	 */
 	public static String getMethodComment(IMethod method, IMethod overridden, String lineDelimiter) throws CoreException {
 		//FIXME - 'retType' should be initialized to null after the 'getReturnType will be functional, so void/c'tor will not have 'return' tag
+
 		String retType = "unknown_type";
 		String[] typeParameterNames = null;
 		String[] parameterTypes = null;
@@ -361,8 +360,11 @@ public class CodeGeneration {
 				int i = 0;
 				for (ASTNode node : formalParameters) {
 					FormalParameter formalParameter = (FormalParameter) node;
-					String typeName = ((Identifier) formalParameter.getParameterType()).getName();
-					parameterTypes[i++] = typeName;
+					Expression parameterType = formalParameter.getParameterType();
+					if (parameterType != null) {
+						String typeName = ((Identifier) parameterType).getName();
+						parameterTypes[i++] = typeName;
+					}
 				}
 			}
 			
@@ -392,11 +394,17 @@ public class CodeGeneration {
 		} catch (IOException e) {
 			Logger.logException(e);
 		}
-		String[] paramNames = method.getParameters();// ParameterNames();
+		
+		String[] paramNames = method.getParameters();
 		// add parameter type before parameter name
 		for (int i = 0; i < paramNames.length; i++) {
 			if (null != parameterTypes && null != parameterTypes[i]) {
 				paramNames[i] = parameterTypes[i] + " " + paramNames[i];
+//			} else {
+//				String parameterType = detectFromHungarianNotation(paramNames[i]);
+//				if (parameterType != null) {
+//					paramNames[i] = parameterType + " " + paramNames[i];
+//				}
 			}
 		}
 		IType declaringType = method.getDeclaringType();
@@ -405,6 +413,31 @@ public class CodeGeneration {
 		}
 		return StubUtility.getMethodComment(method.getScriptProject(), null, method.getElementName(), paramNames, retType, typeParameterNames, overridden, false, lineDelimiter);
 	}
+	
+//	/**
+//	 * Detect variable type from variable named using Hungarian notation
+//	 */
+//	private static String detectFromHungarianNotation(String paramName) {
+//		if (paramName.matches("\\$ch[A-Z].*")) {
+//			return "char";
+//		}
+//		if (paramName.matches("\\$ar[A-Z].*")) {
+//			return "array";
+//		}
+//		if (paramName.matches("\\$str[A-Z].*")) {
+//			return "string";
+//		}
+//		if (paramName.matches("\\$fl[A-Z].*")) {
+//			return "float";
+//		}
+//		if (paramName.matches("\\$n[A-Z].*")) {
+//			return "integer";
+//		}
+//		if (paramName.matches("\\$b[A-Z].*")) {
+//			return "boolean";
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Returns the comment for a method or constructor using the comment code templates (constructor / method / overriding method).
