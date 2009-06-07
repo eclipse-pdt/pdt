@@ -317,7 +317,7 @@ public class IncludePathManager {
 				resourcePath = resource.getFullPath();
 			}
 
-			if (resourcePath != null && resourcePath.toString().equals(entryPath.toString())) {
+			if (resourcePath != null && resourcePath.isPrefixOf(entryPath)) {
 				result = true;
 				break;
 			}
