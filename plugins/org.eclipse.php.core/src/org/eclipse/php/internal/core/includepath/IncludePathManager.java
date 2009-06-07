@@ -293,12 +293,9 @@ public class IncludePathManager {
 	 * @param resourcePath
 	 * @return
 	 */
-	public static boolean isInIncludePath(IProject project, IPath entryPath) {
-
-		boolean result = false;
-
+	public static IPath isInIncludePath(IProject project, IPath entryPath) {
 		if (entryPath == null) {
-			return false;
+			return null;
 		}
 
 		IncludePathManager includepathManager = IncludePathManager.getInstance();
@@ -318,12 +315,10 @@ public class IncludePathManager {
 			}
 
 			if (resourcePath != null && resourcePath.isPrefixOf(entryPath)) {
-				result = true;
-				break;
+				return resourcePath;
 			}
-
 		}
-		return result;
+		return null;
 	}
 
 	/**
