@@ -1316,6 +1316,7 @@
          tooltip="%openSearchDialogAction.tooltip">
 			</action>			
 		</objectContribution>
+		
 	    <viewerContribution
 	          id="org.eclipse.php.refactoring.ui.editorPopupContribution"
 	          targetID="org.eclipse.php.core.phpsource.source.EditorContext">
@@ -1343,8 +1344,21 @@
 	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
 	             tooltip="">
 	       </action>
-	       
 	    </viewerContribution>
+	    
+  		<objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.php.ui.projectSetup">
+			<action
+				class="org.eclipse.php.internal.ui.actions.SetupPHPProjectAction"
+				label="Add PHP Support..."
+				menubarPath="org.eclipse.ui.projectConfigure/additions"
+				enablesFor="+"
+				id="org.eclipse.php.internal.ui.actions.SetupPHPProjectAction">
+			</action>
+   		</objectContribution>
+
 	</extension>
 
 
