@@ -23,6 +23,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
+import org.eclipse.php.internal.core.util.text.TextSequence;
 
 
 /**
@@ -48,38 +49,49 @@ public class ClassObjMemberContext extends ClassMemberContext {
 			return false;
 		}
 		
-		IType[] types = getLhsTypes();
-		if (types != null && types.length > 0) {
-			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
-			if (moduleDeclaration != null) {
-				IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
-				if (context instanceof MethodContext) {
-					IEvaluatedType instanceType = ((MethodContext)context).getInstanceType();
-					if (instanceType instanceof PHPClassType) {
-						PHPClassType classType = (PHPClassType) instanceType;
-						String namespace = classType.getNamespace();
-						if (namespace != null && namespace.length() > 0) {
-							String typeName = classType.getTypeName();
-							int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
-							if (i != -1) {
-								typeName = typeName.substring(i + 1);
+		int elementStart = getElementStart();
+		int lhsIndex = elementStart - "$this".length() - getTriggerType().getName().length();
+		if (lhsIndex >= 0) {
+			TextSequence statementText = getStatementText();
+			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
+			if (parentText.equals("$this")) { //$NON-NLS-1$
+				isThisCall = true;
+			}
+		}
+
+		if (!isThisCall) {
+			IType[] types = getLhsTypes();
+			if (types != null && types.length > 0) {
+				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+				if (moduleDeclaration != null) {
+					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
+					if (context instanceof MethodContext) {
+						IEvaluatedType instanceType = ((MethodContext)context).getInstanceType();
+						if (instanceType instanceof PHPClassType) {
+							PHPClassType classType = (PHPClassType) instanceType;
+							String namespace = classType.getNamespace();
+							if (namespace != null && namespace.length() > 0) {
+								String typeName = classType.getTypeName();
+								int i = typeName.lastIndexOf(NamespaceReference.NAMESPACE_SEPARATOR);
+								if (i != -1) {
+									typeName = typeName.substring(i + 1);
+								}
+								if (namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
+									namespace = namespace.substring(1);
+								}
+								IType currentNamespace = PHPModelUtils.getCurrentNamespace(types[0]);
+								if (currentNamespace != null) {
+									isThisCall = namespace.equals(currentNamespace.getElementName()) 
+										&& typeName.equals(types[0].getElementName());
+								}
+							} else {
+								isThisCall = classType.getTypeName().equals(types[0].getElementName());
 							}
-							if (namespace.charAt(0) == NamespaceReference.NAMESPACE_SEPARATOR) {
-								namespace = namespace.substring(1);
-							}
-							IType currentNamespace = PHPModelUtils.getCurrentNamespace(types[0]);
-							if (currentNamespace != null) {
-								isThisCall = namespace.equals(currentNamespace.getElementName()) 
-									&& typeName.equals(types[0].getElementName());
-							}
-						} else {
-							isThisCall = classType.getTypeName().equals(types[0].getElementName());
 						}
 					}
 				}
 			}
 		}
-		
 		return true;
 	}
 	
