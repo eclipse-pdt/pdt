@@ -69,8 +69,7 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 					// for each removed source entry, check if it is part of the include path
 					// in case it is, add the entry to the removed elements list 
 					// and ask the user if he would like to remove it to the include path as well
-					
-					if (IncludePathManager.isInIncludePath(fCurrJProject.getProject(), element.getPath())) {
+					if (null != IncludePathManager.isInIncludePath(fCurrJProject.getProject(), element.getPath())) {
 						// add to removed elements list
 						fRemovedElements.add(element);
 					}

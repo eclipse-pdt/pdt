@@ -57,7 +57,7 @@ public class IncludePathUtils {
 	
 	
 	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IPath path){
-		if(IncludePathManager.isInIncludePath(project.getProject(), path)){
+		if(null != IncludePathManager.isInIncludePath(project.getProject(), path)){
 			IBuildpathEntry[] buildpath = null;
 			try {
 				buildpath = project.getRawBuildpath();
