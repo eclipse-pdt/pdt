@@ -57,30 +57,11 @@ public class IncludePathUtils {
 	
 	
 	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IPath path){
-		if(null != IncludePathManager.isInIncludePath(project.getProject(), path)){
-			IBuildpathEntry[] buildpath = null;
-			try {
-				buildpath = project.getRawBuildpath();
-			} catch (ModelException e) {
-				if (DLTKCore.DEBUG) {
-					e.printStackTrace();
-				}
-				return null;
-			}	
-
-			// go over the build path entries and for each one of the "sources"
-			// check if they are the same as the given include path entry or if they contain it 
-			for (IBuildpathEntry buildpathEntry : buildpath) {
-				if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE){
-					IPath buildPathEntryPath = buildpathEntry.getPath();
-					if (buildPathEntryPath.isPrefixOf(path)) {// || path.toString().equals(buildPathEntryPath.toString())){
-						return path.makeRelativeTo(buildPathEntryPath);
-					}
-				}
-			}
+		final IPath inIncludePath = IncludePathManager.isInIncludePath(project.getProject(), path);
+		if (inIncludePath != null) {
+			return path.makeRelativeTo(inIncludePath);
 		}
-		return null;
-		
+		return null;		
 	}
 	
 	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IModelElement modelElement){
