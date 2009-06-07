@@ -19,9 +19,7 @@ import java.io.InputStreamReader;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
-import org.eclipse.php.internal.debug.core.PHPDebugCoreMessages;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
-import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -95,6 +93,9 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 				
 				String line;
 				while ((line = br.readLine()) != null) {
+					if (!isError) {
+						continue;
+					}
 					if (console != null) {
 						if (os == null) {
 							os = console.newOutputStream();
