@@ -43,9 +43,9 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		isParentCall = false;
 		int elementStart = getElementStart();
 		int lhsIndex = elementStart - "parent".length() - getTriggerType().getName().length();
-		if (lhsIndex == 0) {
+		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
+			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
 			if (parentText.equals("parent")) { //$NON-NLS-1$
 				isParentCall = true;
 			}
@@ -53,9 +53,9 @@ public class ClassStaticMemberContext extends ClassMemberContext {
 		
 		isSelfCall = false;
 		lhsIndex = elementStart - "self".length() - getTriggerType().getName().length();
-		if (lhsIndex == 0) {
+		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
-			String parentText = statementText.subSequence(0, elementStart - getTriggerType().getName().length()).toString();
+			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
 			if (parentText.equals("self")) { //$NON-NLS-1$
 				isSelfCall = true;
 			}
