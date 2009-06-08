@@ -19,9 +19,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
+import org.eclipse.php.internal.debug.core.launching.PHPLaunchUtilities;
 import org.eclipse.php.internal.debug.core.phpIni.PHPINIUtil;
 
 /**
@@ -370,22 +370,6 @@ public class PHPexeItem {
 		}
 	}
 
-	public static String getLibVarriable(File executable) {
-		StringBuilder buf = new StringBuilder();
-		final String os = Platform.getOS();
-		if (!os.equals(Platform.OS_WIN32)) {
-			boolean isMac = os.equals(Platform.OS_MACOSX);
-			if (isMac) { //$NON-NLS-1$ //$NON-NLS-2$
-				buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
-			} else {
-				buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
-			}
-			buf.append('=');
-			buf.append(executable.getParent());
-		}
-		return buf.toString();
-	}
-
 	/**
 	 * Executes given command
 	 *
@@ -394,8 +378,8 @@ public class PHPexeItem {
 	 */
 	private static String exec(String... cmd) throws IOException {
 		String[] envParams = null;
-		String env = getLibVarriable(new File(cmd[0]));
-		if (env != null && env.length() > 0) {
+		String env = PHPLaunchUtilities.getLibrarySearchPathEnv(new File(cmd[0]).getParentFile());
+		if (env != null) {
 			envParams = new String[] { env };
 		}
 		

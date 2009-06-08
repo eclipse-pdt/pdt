@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.debug.core.launching;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -19,17 +20,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.variables.VariablesPlugin;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.*;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
@@ -60,14 +53,7 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPerspectiveDescriptor;
-import org.eclipse.ui.IPerspectiveRegistry;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.WorkbenchException;
+import org.eclipse.ui.*;
 
 /**
  * Utilities that are shared to all the PHP launches.
@@ -652,18 +638,73 @@ public class PHPLaunchUtilities {
 			}
 		}
 		env.put("QUERY_STRING", queryStringBuf.toString());
-
 		env.put("REDIRECT_STATUS", "1"); //$NON-NLS-1$
 		env.put("PHPRC", phpConfigDir); //$NON-NLS-1$
-		String OS = System.getProperty("os.name"); //$NON-NLS-1$
-		if (!OS.startsWith("Win")) { //$NON-NLS-1$
-			if (OS.startsWith("Mac")) { //$NON-NLS-1$
-				env.put("DYLD_LIBRARY_PATH", phpExeDir); //$NON-NLS-1$
-			} else {
-				env.put("LD_LIBRARY_PATH", phpExeDir); //$NON-NLS-1$
-			}
-		}
+		
+		appendLibrarySearchPathEnv(env, new File(phpExeDir));
+		
 		return env;
+	}
+	
+	/**
+	 * Appends needed environment variable that says where to look for 3rd party libraries
+	 * depending on the OS.
+	 * 
+	 * @param env Hash map to append environment variable to
+	 * @param phpExeDir Directory handle where PHP.exe is located 
+	 */
+	public static void appendLibrarySearchPathEnv(Map<String, String> env, File phpExeDir) {
+		String variable = getLibrarySearchEnvVariable();
+		if (variable == null) {
+			return;
+		}
+		String value = getLibrarySearchEnvValue(variable, phpExeDir);
+		env.put(variable, value);
+	}
+	
+	/**
+	 * Returns needed environment variable that says where to look for 3rd party libraries
+	 * depending on the OS.
+	 * 
+	 * @param phpExeDir Directory handle where PHP.exe is located
+	 * @return string containing variable=value for appending it to the process environment vars array 
+	 */
+	public static String getLibrarySearchPathEnv(File phpExeDir) {
+		String variable = getLibrarySearchEnvVariable();
+		if (variable == null) {
+			return null;
+		}
+		String value = getLibrarySearchEnvValue(variable, phpExeDir);
+		return new StringBuilder(variable).append('=').append(value).toString();
+	}
+	
+	private static String getLibrarySearchEnvValue(String variable, File phpExeDir) {
+		StringBuilder buf = new StringBuilder();
+		File libDirectory = new File(phpExeDir.getParentFile(), "lib");
+		if (libDirectory.exists()) {
+			buf.append(libDirectory.getAbsolutePath());
+		} else {
+			buf.append(phpExeDir.getAbsolutePath());
+		}
+		try {
+			String env = System.getenv(variable);
+			if (env != null) {
+				buf.append(File.pathSeparatorChar).append(env);
+			}
+		} catch (Throwable e) {
+		}
+		return buf.toString();
+	}
+	
+	private static String getLibrarySearchEnvVariable() {
+		String os = System.getProperty("os.name"); //$NON-NLS-1$
+		if (os.startsWith("Win")) { //$NON-NLS-1$
+			return null; // "PATH"; //$NON-NLS-1$
+		}
+		if (os.startsWith("Mac")) { //$NON-NLS-1$
+			return "DYLD_LIBRARY_PATH"; //$NON-NLS-1$
+		}
+		return "LD_LIBRARY_PATH"; //$NON-NLS-1$
 	}
 
 	/**

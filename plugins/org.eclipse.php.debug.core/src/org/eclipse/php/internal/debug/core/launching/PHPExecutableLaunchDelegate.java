@@ -202,20 +202,13 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			String[] cmdLine = PHPLaunchUtilities.getCommandLine(launch.getLaunchConfiguration(), phpExeString, phpConfigDir, fileName, sapiType == PHPexeItem.SAPI_CLI ? args : null);
 
 			// Set library search path:
-			if (!WINDOWS) {
-				StringBuffer buf = new StringBuffer();
-				if (System.getProperty("os.name").startsWith("Mac")) { //$NON-NLS-1$ //$NON-NLS-2$
-					buf.append("DYLD_LIBRARY_PATH"); //$NON-NLS-1$
-				} else {
-					buf.append("LD_LIBRARY_PATH"); //$NON-NLS-1$
-				}
-				buf.append('=');
-				buf.append(phpExeFile.getParent());
+			String libPath = PHPLaunchUtilities.getLibrarySearchPathEnv(phpExeFile.getParentFile());
+			if (libPath != null) {
 				String[] envpNew = new String[envp == null ? 1 : envp.length + 1];
 				if (envp != null) {
 					System.arraycopy(envp, 0, envpNew, 0, envp.length);
 				}
-				envpNew[envpNew.length - 1] = buf.toString();
+				envpNew[envpNew.length - 1] = libPath;
 				envp = envpNew;
 			}
 
