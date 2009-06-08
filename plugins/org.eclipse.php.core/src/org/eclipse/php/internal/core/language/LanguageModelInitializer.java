@@ -16,10 +16,7 @@ import java.net.URL;
 import java.util.*;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
@@ -45,7 +42,7 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
 	public static final Path LANGUAGE_CONTAINER_PATH = new Path(LanguageModelInitializer.CONTAINER_PATH);
-	public static final String LANGUAGE_LIBRARY_PATH = "Resources/language/php"; //$NON-NLS-1$
+	public static final String LANGUAGE_LIBRARY_PATH = "$nl$/Resources/language/php"; //$NON-NLS-1$
 
 	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
 	private Map<IProject, PHPVersion> project2PhpVersion = new HashMap<IProject, PHPVersion>();
@@ -107,7 +104,10 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	private static IPath getContainerPath(IScriptProject project, PHPVersion phpVersion) throws IOException {
 		String libraryPath = getLanguageLibraryPath(project, phpVersion);
 
-		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(), new Path(libraryPath), null);
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("$nl$", Platform.getNL());
+
+		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(), new Path(libraryPath), map);
 		URL resolved = FileLocator.resolve(url);
 		IPath path = Path.fromOSString(resolved.getFile());
 
