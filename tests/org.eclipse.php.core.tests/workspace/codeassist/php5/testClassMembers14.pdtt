@@ -1,0 +1,13 @@
+--TEST--
+Show self static variables
+--FILE--
+<?php
+class Abc {
+	private static $a_Core = array();
+	public function __destruct() {
+		unset(self::$|);
+	}
+}
+?>
+--EXPECT--
+field($a_Core)
