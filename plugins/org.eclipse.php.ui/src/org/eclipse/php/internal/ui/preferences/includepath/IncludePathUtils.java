@@ -61,7 +61,8 @@ public class IncludePathUtils {
 		if (inIncludePath != null) {
 			return path.makeRelativeTo(inIncludePath);
 		}
-		return null;		
+		// else return absolute
+		return path;		
 	}
 	
 	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IModelElement modelElement){
