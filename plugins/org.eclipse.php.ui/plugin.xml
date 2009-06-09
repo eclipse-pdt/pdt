@@ -13,7 +13,7 @@
 
 <plugin>
 	<extension-point id="phpElementFilters" name="PHP Element Filter" schema="schema/phpElementFilters.exsd" />
-	<extension-point id="foldingStructureProviders" name="%foldingStructureProvidersExtensionPoint" schema="schema/foldingStructureProviders.exsd" />
+	<extension-point id="foldingStructureProviders" name="Folding Structure Providers" schema="schema/foldingStructureProviders.exsd" />
 	<extension-point id="phpEditorTextHovers" name="PHP Editor Text Hover" schema="schema/phpEditorTextHovers.exsd" />
 	<extension-point id="phpTreeContentProviders" name="PHP Tree Content Provider" schema="schema/phpTreeContentProviders.exsd" />
 	<extension-point id="phpManualSites" name="PHP Manual URL" schema="schema/phpManualSites.exsd" />
@@ -27,6 +27,7 @@
 	<extension-point id="phpFormatterPrefBlock" name="PHP Formatter Preferences Block" schema="schema/phpFormatterPrefBlock.exsd" />
 	<extension-point id="quickFixProcessors" name="%quickFixProcessorExtensionPoint" schema="schema/quickFixProcessors.exsd"/>
 	<extension-point id="quickAssistProcessors" name="%quickAssistProcessorExtensionPoint" schema="schema/quickAssistProcessors.exsd"/>
+	
 	
 	<!--PHP formatter processoer registration, for PHP Content:-->
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
@@ -711,6 +712,18 @@
 	             id="org.eclipse.php.ui.explorer">
 	       </part>
 	    </actionSetPartAssociation>
+     <actionSetPartAssociation
+           targetID="org.eclipse.pdt.ui.SourceActionsSet">
+        <part
+              id="org.eclipse.php.ui.explorer">
+        </part>
+     </actionSetPartAssociation>
+     <actionSetPartAssociation
+           targetID="org.eclipse.pdt.ui.SourceActionsSet">
+        <part
+              id="org.eclipse.php.ui.projectOutline">
+        </part>
+     </actionSetPartAssociation>
 	</extension>
 
 
@@ -772,7 +785,7 @@
 				<separator name="extraSearchGroup" />
 			</menu>
 			<action definitionId="org.eclipse.php.ui.edit.text.search.method.exits"
-				label="MethodExitOccurrences.label" retarget="true"
+				label="%action.label" retarget="true"
 				id="org.eclipse.php.ui.actions.MethodExitOccurrences" />
 		</actionSet>
 	    <actionSet
@@ -784,24 +797,42 @@
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
 	             definitionId="org.eclipse.php.ui.edit.text.rename.element"
 	             id="org.eclipse.php.ui.refactoring.rename"
-	             label="Rename..."
+	             label="%action.label.3"
 	             menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
 	       </action>
 	        <action
 	              class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"
 	              definitionId="org.eclipse.php.ui.edit.text.move.element"
 	              id="org.eclipse.php.ui.actions.Move"
-	              label="Move..."
+	              label="%action.label.4"
 	              menubarPath="org.eclipse.pdt.ui.refactoring.menu/reorgGroup">
 	        </action>
 	    </actionSet>
+     <actionSet
+           id="org.eclipse.pdt.ui.SourceActionsSet"
+           label="%actionSet.label"
+           visible="false">
+        <menu
+              id="sourceMenuId"
+              label="%menu.label"
+              path="edit">
+        </menu>
+        <action
+              class="org.eclipse.php.internal.ui.actions.FormatDocumentAction"
+              definitionId="org.eclipse.wst.sse.ui.format.document"
+              id="org.eclipse.php.ui.action1"
+              label="%action.label.5"
+              menubarPath="sourceMenuId/format"
+              style="push">
+        </action>
+     </actionSet>
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
 		<!-- Contributing Actions/handlers to WST's Editor source menus -->
 		<menuContribution locationURI="menu:sourceMenuId?before=sourceBegin">
 			<command commandId="org.eclipse.php.ui.edit.text.add.description"
-				id="AddDescription" mnemonic="A" style="push">
+				id="AddDescription" mnemonic="%command.mnemonic" style="push">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="org.eclipse.php.ui.phpContentType.definition" />
 				</visibleWhen>
@@ -864,10 +895,10 @@
 				<separator name="format" visible="true"></separator>
 		</menuContribution>
 	    <menuContribution
-	          locationURI="menu:org.eclipse.ui.main.menu?after=org.eclipse.dltk.ui.source.menu">
+	          locationURI="menu:org.eclipse.ui.main.menu?after=sourceMenuId">
 	       <menu
 	             id="org.eclipse.pdt.ui.refactoring.menu"
-	             label="Refactor">
+	             label="%menu.label.0">
 	          <separator
 	                name="undoRedoGroup">
 	          </separator>
@@ -941,8 +972,8 @@
 		<command name="%ActionDefinition.renameElement.name"
 			description="%ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.rename.element" />
-		<command name="ActionDefinition.renameElement.name"
-			description="ActionDefinition.renameElement.description" categoryId="org.eclipse.php.ui.category.refactoring"
+		<command name="%command.name"
+			description="%command.description" categoryId="org.eclipse.php.ui.category.refactoring"
 			id="org.eclipse.php.ui.edit.text.move.element" />
 		<command name="%command.openFunctionsManual.name" description="%command.openFunctionsManual.description"
 			categoryId="org.eclipse.php.ui.category.source" id="org.eclipse.php.ui.edit.text.php.open.manual" />
@@ -1322,7 +1353,7 @@
 	          targetID="org.eclipse.php.core.phpsource.source.EditorContext">
 	       <menu
 	             id="org.eclipse.php.ui.refactor.menu"
-	             label="Refactor"
+	             label="%menu.label.1"
 	             path="Edit">
 	          <separator
 	                name="refactoringGroup">
@@ -1332,7 +1363,7 @@
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
 	             definitionId="org.eclipse.php.ui.edit.text.rename.element"
 	             id="org.eclipse.php.ui.refactoring.pop.rename"
-	             label="Rename..."
+	             label="%action.label.6"
 	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
 	             tooltip="%OrganizeIncludes.label.tooltip">
 	       </action>
@@ -1340,9 +1371,9 @@
 	             class="org.eclipse.php.internal.ui.actions.ReorgMoveAction"
 	             definitionId="org.eclipse.php.ui.edit.text.move.element"
 	             id="org.eclipse.php.ui.refactoring.pop.move"
-	             label="Move..."
+	             label="%action.label.7"
 	             menubarPath="org.eclipse.php.ui.refactor.menu/refactoringGroup"
-	             tooltip="">
+	             tooltip="%action.tooltip">
 	       </action>
 	    </viewerContribution>
 	    
@@ -1352,7 +1383,7 @@
             id="org.eclipse.php.ui.projectSetup">
 			<action
 				class="org.eclipse.php.internal.ui.actions.SetupPHPProjectAction"
-				label="Add PHP Support..."
+				label="%action.label.8"
 				menubarPath="org.eclipse.ui.projectConfigure/additions"
 				enablesFor="+"
 				id="org.eclipse.php.internal.ui.actions.SetupPHPProjectAction">
@@ -1410,7 +1441,7 @@
 	
 	<!-- Hyperlink Detectors -->
 	<extension point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
-   		<target id="org.eclipse.php.core.phpsource" name="PHP Editor">
+   		<target id="org.eclipse.php.core.phpsource" name="%target.name">
    			<context type="org.eclipse.ui.texteditor.ITextEditor" />
    		</target>
  	</extension>
@@ -1419,13 +1450,13 @@
    			id="org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector"
    			targetId="org.eclipse.php.core.phpsource"
    			class="org.eclipse.php.internal.ui.editor.hyperlink.PHPHyperlinkDetector"
-   			name="PHP Code Hyperlink Detector">
+   			name="%hyperlinkDetector.name">
    		</hyperlinkDetector>
    		<hyperlinkDetector
    			id="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
    			targetId="org.eclipse.php.core.phpsource"
    			class="org.eclipse.php.internal.ui.editor.hyperlink.IncludeHyperlinkDetector"
-   			name="PHP Include Hyperlink Detector">
+   			name="%hyperlinkDetector.name.0">
    		</hyperlinkDetector>
 	</extension>
 
@@ -1547,7 +1578,7 @@
     	<proposalSorter
           class="org.eclipse.php.internal.ui.editor.contentassist.AlphabeticCompletionProposalSorter"
           id="org.eclipse.php.internal.ui.editor.contentassist.AlphabeticCompletionProposalSorter"
-          name="Alphabetic Completion Proposal Sorter">
+          name="%proposalSorter.name">
 	    </proposalSorter>
 	</extension>
 
