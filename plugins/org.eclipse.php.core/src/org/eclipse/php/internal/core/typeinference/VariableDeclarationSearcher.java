@@ -377,7 +377,9 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		 * This must be called when exiting inner conditional block.
 		 */
 		public void exitInnerBlock() {
-			innerBlocks.pop();
+			if (!innerBlocks.isEmpty()) {
+				innerBlocks.pop();
+			}
 		}
 		
 		public int getInnerBlockLevel() {
