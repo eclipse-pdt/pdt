@@ -81,6 +81,8 @@ public class PHPExplorerPart extends ScriptExplorerPart {
 		}
 	}
 
+	
+	
 	protected class PHPExplorerWorkingSetAwareModelElementSorter extends PHPExplorerElementSorter {
 
 		public int compare(Viewer viewer, Object e1, Object e2) {

@@ -16,6 +16,7 @@ package org.eclipse.php.internal.ui.explorer;
 
 import java.util.ArrayList;
 
+import org.eclipse.dltk.internal.ui.actions.refactoring.RefactorActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.LayoutActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerActionGroup;
 import org.eclipse.dltk.internal.ui.scriptview.ScriptExplorerPart;
@@ -42,10 +43,13 @@ public class PHPExplorerActionGroup extends ScriptExplorerActionGroup {
 		// aggregate the PHP Explorer actions
 		final ArrayList<ActionGroup> filtered = new ArrayList<ActionGroup>(groups.length - 1);
 		for (int i = 0; i < groups.length; i++) {
-			if (!(groups[i] instanceof LayoutActionGroup || groups[i] instanceof GenerateActionGroup)) {
+			if (!(groups[i] instanceof LayoutActionGroup || groups[i] instanceof GenerateActionGroup
+					|| groups[i] instanceof RefactorActionGroup)) {
 				filtered.add(groups[i]);
 			}
 		}
+		
+		filtered.add(new PHPRefactorActionGroup(getPart()));
 		filtered.add(new GenerateIncludePathActionGroup(getPart()));
 		filtered.add(new NamespaceGroupingActionGroup(getPart().getTreeViewer()));
 
