@@ -98,7 +98,20 @@ public class PairCurlyBracketAutoEditStrategy implements IAfterNewLineAutoEditSt
 					}
 				} else if (currChar == CURLY_OPEN) {
 					tRegion = getPhpToken(sdRegion, regionStart + indexInText);
-					if (tRegion == null || tRegion.getType() != PHPRegionTypes.PHP_CURLY_OPEN) {
+					boolean found = false;
+					if (tRegion != null) {
+						if (tRegion.getType().equals(PHPRegionTypes.PHP_CURLY_OPEN)) {
+							found = true;
+						} else if (tRegion.getType().equals(PHPRegionTypes.PHP_TOKEN)
+								&& tRegion.getLength() == 2) {
+							ITextRegion reg = sdRegion.getRegionAtCharacterOffset(regionStart + indexInText);
+							int start = reg.getStart() + tRegion.getStart();
+							if (text.substring(start, start + 2).equals("${")) {
+								found = true;
+							}
+						}
+					}
+					if (!found) {
 						indexInText--;
 						continue;
 					}
