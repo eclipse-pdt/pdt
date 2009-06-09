@@ -81,6 +81,6 @@ Provide-Package: java_cup,
  org.eclipse.php.internal.core.util.text,
  org.eclipse.php.internal.core.validation
 Bundle-Vendor: Eclipse.org
-Bundle-ClassPath: Resources/parserTools/javacup/bin/
+Bundle-ClassPath: .,Resources/parserTools/javacup/bin/
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
