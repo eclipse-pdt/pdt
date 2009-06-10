@@ -37,8 +37,12 @@ public class CodeStylePreferencePage extends PropertyAndPreferencePage implement
 		super();
 	}
 
-	protected Control createContents(Composite parent) {
-		Composite comp = new Composite(parent, SWT.NONE);
+	public void init(IWorkbench workbench) {
+	}
+
+	@Override
+	protected Control createPreferenceContent(Composite composite) {
+		Composite comp = new Composite(composite, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -50,30 +54,23 @@ public class CodeStylePreferencePage extends PropertyAndPreferencePage implement
 		return comp;
 	}
 
-	public void init(IWorkbench workbench) {
-	}
-
-	@Override
-	protected Control createPreferenceContent(Composite composite) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	protected String getPreferencePageID() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String getPropertyPageID() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected boolean hasProjectSpecificOptions(IProject project) {
-		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isProjectPreferencePage() {
 		return false;
 	}
 
