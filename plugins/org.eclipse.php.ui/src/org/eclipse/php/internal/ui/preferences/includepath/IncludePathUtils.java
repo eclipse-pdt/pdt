@@ -14,7 +14,9 @@ package org.eclipse.php.internal.ui.preferences.includepath;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.internal.core.ExternalScriptProject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
@@ -56,7 +58,7 @@ public class IncludePathUtils {
 	}
 	
 	
-	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IPath path){
+	private static IPath getRelativeLocationFromIncludePath(IScriptProject project, IPath path){
 		final IPath inIncludePath = IncludePathManager.isInIncludePath(project.getProject(), path);
 		if (inIncludePath != null) {
 			return path.makeRelativeTo(inIncludePath);
@@ -65,7 +67,33 @@ public class IncludePathUtils {
 		return path;		
 	}
 	
+	/**
+	 * Resolves the model element entry include path relative to the project 
+	 * include path configuration.
+	 * 
+	 * @param project
+	 * @param modelElement
+	 * @return the resolved include path or {@link Path#EMPTY} if not found 
+	 */
 	public static IPath getRelativeLocationFromIncludePath(IScriptProject project, IModelElement modelElement){
-		return getRelativeLocationFromIncludePath(project, modelElement.getPath());
+		// workspace resource
+		if (modelElement.getResource() != null) {
+			return getRelativeLocationFromIncludePath(project, modelElement.getPath());
+		}
+
+		// built in element 
+		final IScriptProject elementProject = modelElement.getScriptProject();
+		if (elementProject != null && !elementProject.equals(project)) {
+			// TODO add project dependency 
+			return Path.EMPTY;
+		}
+
+		// library element
+		ISourceModule sourceModule = (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
+		IScriptFolder folder = (IScriptFolder) modelElement.getAncestor(IModelElement.SCRIPT_FOLDER);
+		if (sourceModule !=null && folder != null) {
+			return new Path(folder.getElementName() + sourceModule.getElementName());
+		}
+		return Path.EMPTY;
 	}
 }
