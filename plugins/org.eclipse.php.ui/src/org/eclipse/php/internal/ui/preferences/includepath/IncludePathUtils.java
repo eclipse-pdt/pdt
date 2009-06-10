@@ -92,7 +92,10 @@ public class IncludePathUtils {
 		ISourceModule sourceModule = (ISourceModule) modelElement.getAncestor(IModelElement.SOURCE_MODULE);
 		IScriptFolder folder = (IScriptFolder) modelElement.getAncestor(IModelElement.SCRIPT_FOLDER);
 		if (sourceModule !=null && folder != null) {
-			return new Path(folder.getElementName() + sourceModule.getElementName());
+			StringBuilder sb = new StringBuilder(folder.getElementName());
+			sb.append("/");
+			sb.append(sourceModule.getElementName());
+			return new Path(sb.toString());
 		}
 		return Path.EMPTY;
 	}
