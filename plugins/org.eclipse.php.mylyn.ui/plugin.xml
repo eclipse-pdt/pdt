@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension
+		point="org.eclipse.mylyn.context.ui.bridges">
+		<uiBridge
+			class="org.eclipse.dltk.internal.mylyn.DLTKUiBridge"
+			contentType="java"
+			activeSearchIcon="icons/elcl16/edge-ref-java.gif"
+			activeSearchLabel="%DLTKUiBridge.activeSearch.label" />
+		<preservedFilters
+			viewId="org.eclipse.php.ui.explorer">
+			<filter
+				class="org.eclipse.dltk.internal.mylyn.DLTKDeclarationsFilter">
+			</filter>
+			<filter
+				class="org.eclipse.dltk.internal.ui.filters.ClosedProjectFilter">
+			</filter>
+		</preservedFilters>
+		<preservedFilters
+			viewId="org.eclipse.ui.navigator.ProjectExplorer">
+		</preservedFilters>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.viewActions">
+
+		<viewContribution
+			id="org.eclipse.mylyn.dltk.explorer.contribution"
+			targetID="org.eclipse.php.ui.explorer">
+			<action
+				class="org.eclipse.dltk.internal.mylyn.actions.FocusPackageExplorerAction"
+				disabledIcon="icons/elcl16/focus-disabled.gif"
+				enablesFor="*"
+				icon="icons/elcl16/focus.gif"
+				id="org.eclipse.mylyn.dltk.actions.focus.packageExplorer"
+				label="%FocusPackageExplorerAction.label"
+				menubarPath="mylyn"
+				style="toggle"
+				toolbarPath="mylyn"
+				tooltip="%FocusPackageExplorerAction.tooltip">
+				<enablement>
+					<systemProperty
+						name="org.eclipse.mylyn.context.core.context.active"
+						value="true">
+					</systemProperty>
+				</enablement>
+			</action>
+		</viewContribution>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.popupMenus">
+		<viewerContribution
+			id="org.eclipse.mylyn.context.ui.browse.filtered.contribution"
+			targetID="org.eclipse.php.ui.explorer">
+			<action
+				class="org.eclipse.dltk.internal.mylyn.actions.ShowFilteredChildrenAction"
+				enablesFor="1"
+				icon="icons/etool16/browse-filtered.gif"
+				id="org.eclipse.dltk.mylyn.action.browse.filtered"
+				label="%ShowFilteredChildrenAction.label"
+				menubarPath="group.reorganize">
+			</action>
+			<visibility>
+				<systemProperty
+					name="org.eclipse.mylyn.context.core.context.active"
+					value="true">
+				</systemProperty>
+			</visibility>
+		</viewerContribution>
+	</extension>
+
+	<extension
+		point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.mylyn.dltk.actionSet">
+			<part
+				id="org.eclipse.php.internal.ui.editor.PHPStructuredEditor">
+			</part>
+		</actionSetPartAssociation>
+	</extension>
+
+	<extension
+		point="org.eclipse.dltk.ui.dltkElementFilters">
+		<filter
+			targetId="org.eclipse.php.ui.explorer"
+			name="%DLTKDeclarationsFilter.name"
+			enabled="false"
+			description="%DLTKDeclarationsFilter.description"
+			class="org.eclipse.dltk.internal.mylyn.DLTKDeclarationsFilter"
+			id="org.eclipse.dltk.mylyn.MembersFilter">
+		</filter>
+	</extension>
+
+</plugin>
