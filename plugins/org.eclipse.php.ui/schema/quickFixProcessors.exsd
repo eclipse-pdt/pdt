@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="com.zend.php.semanticanalysis.ui" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.php.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appinfo>
-         <meta.schema plugin="com.zend.php.semanticanalysis.ui" id="quickFixProcessors" name="Quick Fix Processor"/>
-      </appinfo>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.php.ui" id="quickFixProcessors" name="Quick Fix Processor"/>
+      </appInfo>
       <documentation>
-         This extension point allows to add a Quick Fix processor to offer new Quick Fixes on Java problems.
+         This extension point allows to add a Quick Fix processor to offer new Quick Fixes on PHP problems.
 &lt;p&gt;
 Since 3.2 an extension can specify which problem marker types it can handle. It will only get problems of these types to process.
-If no handled marker type are specified, the processor will only get problems of types org.eclipse.jdt.core.problem, org.eclipse.jdt.core.buildpath_problem and org.eclipse.jdt.core.task (compatible to the behaviour prior to 3.2).
+If no handled marker type are specified, the processor will only get problems of types org.eclipse.dltk.core.problem, org.eclipse.dltk.core.buildpath_problem and org.eclipse.dltk.core.task (compatible to the behaviour prior to 3.2).
 &lt;/p&gt;
 &lt;p&gt;
 This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Properties to test on are:
@@ -27,9 +27,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
 
    <element name="extension">
       <annotation>
-         <appinfo>
+         <appInfo>
             <meta.element />
-         </appinfo>
+         </appInfo>
       </annotation>
       <complexType>
          <sequence>
@@ -54,9 +54,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   an optional name of the extension instance
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -80,9 +80,9 @@ This extension point supports the &lt;code&gt;enablement&lt;/code&gt; tag. Prope
                <documentation>
                   a localized name of the Quick Fix processor
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute translatable="true"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
@@ -93,9 +93,9 @@ class must be public and implement
 &lt;samp&gt;com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickFixProcessor&lt;/samp&gt;
 with a public 0-argument constructor.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="java" basedOn=":com.zend.php.semanticanalysis.internal.ui.text.correction.IQuickFixProcessor"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -122,27 +122,27 @@ If no handled marker type are specified, the processor will get problems of type
                <documentation>
                   the marker type id of the marker type that can be handled by this processor. The processor will not handle marker subtypes.
                </documentation>
-               <appinfo>
+               <appInfo>
                   <meta.attribute kind="identifier" basedOn="org.eclipse.core.resources.markers/@id"/>
-               </appinfo>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
    </element>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="since"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          7.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="examples"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          The following is an example of a Quick Fix processor contribution:
 
@@ -172,9 +172,9 @@ If no handled marker type are specified, the processor will get problems of type
    </annotation>
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="apiInfo"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          The contributed class must implement &lt;code&gt;com.zend.php.semanticanalysis.ui.text.IQuickFixProcessor&lt;/code&gt;
       </documentation>
@@ -182,9 +182,9 @@ If no handled marker type are specified, the processor will get problems of type
 
 
    <annotation>
-      <appinfo>
+      <appInfo>
          <meta.section type="copyright"/>
-      </appinfo>
+      </appInfo>
       <documentation>
          Copyright (c) 2001, 2009 Zend Technologies Ltd
       </documentation>
