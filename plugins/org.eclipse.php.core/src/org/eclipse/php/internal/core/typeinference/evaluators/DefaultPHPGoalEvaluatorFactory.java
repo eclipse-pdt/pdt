@@ -30,9 +30,9 @@ import org.eclipse.php.internal.core.typeinference.goals.phpdoc.PHPDocMethodRetu
 public class DefaultPHPGoalEvaluatorFactory implements IGoalEvaluatorFactory {
 
 	public GoalEvaluator createEvaluator(IGoal goal) {
-
+		
 		Class<?> goalClass = goal.getClass();
-
+		
 		if (goalClass == ExpressionTypeGoal.class) {
 			ExpressionTypeGoal exprGoal = (ExpressionTypeGoal) goal;
 			return createExpressionEvaluator(exprGoal);

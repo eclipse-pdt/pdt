@@ -31,29 +31,24 @@ public class ForeachStatementGoal extends AbstractGoal {
 
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
 		return result;
 	}
 
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (!super.equals(obj))
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		ForeachStatementGoal other = (ForeachStatementGoal) obj;
 		if (expression == null) {
-			if (other.expression != null) {
+			if (other.expression != null)
 				return false;
-			}
-		} else if (!expression.equals(other.expression)) {
+		} else if (!expression.equals(other.expression))
 			return false;
-		}
 		return true;
 	}
 }

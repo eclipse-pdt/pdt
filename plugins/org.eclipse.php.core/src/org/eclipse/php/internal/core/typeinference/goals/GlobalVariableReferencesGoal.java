@@ -29,29 +29,24 @@ public class GlobalVariableReferencesGoal extends AbstractGoal {
 
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((variableName == null) ? 0 : variableName.hashCode());
 		return result;
 	}
 
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (!super.equals(obj))
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		GlobalVariableReferencesGoal other = (GlobalVariableReferencesGoal) obj;
 		if (variableName == null) {
-			if (other.variableName != null) {
+			if (other.variableName != null)
 				return false;
-			}
-		} else if (!variableName.equals(other.variableName)) {
+		} else if (!variableName.equals(other.variableName))
 			return false;
-		}
 		return true;
 	}
 }

@@ -60,7 +60,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((evaluatedType == null) ? 0 : evaluatedType.hashCode());
 		result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
 		result = prime * result + Arrays.hashCode(types);
@@ -70,7 +70,7 @@ public abstract class AbstractMethodReturnTypeGoal extends AbstractTypeGoal {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

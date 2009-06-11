@@ -87,9 +87,6 @@ public class MethodReturnTypeEvaluator extends AbstractMethodReturnTypeEvaluator
 						e.printStackTrace();
 					}
 				}
-				if (decl.getBody() != null) {
-					subGoals.add(new ExpressionTypeGoal(innerContext, decl.getBody()));
-				}
 			}
 			if (method != null) {
 				resolveMagicMethodDeclaration(method, methodName);

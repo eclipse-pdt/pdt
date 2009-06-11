@@ -67,4 +67,27 @@ public class FileContext extends BasicContext implements INamespaceContext {
 	public void setNamespace(String namespaceName) {
 		this.namespaceName = namespaceName;
 	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((namespaceName == null) ? 0 : namespaceName.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FileContext other = (FileContext) obj;
+		if (namespaceName == null) {
+			if (other.namespaceName != null)
+				return false;
+		} else if (!namespaceName.equals(other.namespaceName))
+			return false;
+		return true;
+	}
 }
