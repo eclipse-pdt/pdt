@@ -64,7 +64,7 @@ public class IncludePathUtils {
 			return path.makeRelativeTo(inIncludePath);
 		}
 		// else return absolute
-		return path;		
+		return Path.EMPTY;		
 	}
 	
 	/**
