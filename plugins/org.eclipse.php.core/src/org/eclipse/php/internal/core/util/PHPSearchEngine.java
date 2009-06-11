@@ -70,7 +70,10 @@ public class PHPSearchEngine {
 		IncludePath[] includePaths = buildIncludePath(currentProject);
 		for (IncludePath includePath : includePaths) {
 			if (includePath.isBuildpath()) {
-				return searchInBuildpathEntry(path, (IBuildpathEntry) includePath.getEntry(), currentProject);
+				Result<?, ?> searchInBuildpathEntry = searchInBuildpathEntry(path, (IBuildpathEntry) includePath.getEntry(), currentProject);
+				if (searchInBuildpathEntry != null) {
+					return searchInBuildpathEntry;	
+				}
 			} else {
 				IContainer container = (IContainer) includePath.getEntry();
 				IResource resource = container.findMember(path);
