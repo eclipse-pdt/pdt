@@ -36,6 +36,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.Logger;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.IChangeListener;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 /**
@@ -69,7 +71,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	 * @author nir.c
 	 * Wrapper composite, that un/register itself to any includepath changes
 	 */
-	private final class IncludePathComposite extends Composite implements IIncludepathListener {
+	private final class IncludePathComposite extends Composite implements IIncludepathListener, IChangeListener {
 
 		private IncludePathComposite(Composite parent, int style) {
 			super(parent, style);
@@ -78,12 +80,28 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 
 		@Override
 		public void dispose() {
+			if (fSourceContainerPage instanceof PHPIncludePathSourcePage) {
+				PHPIncludePathSourcePage page = (PHPIncludePathSourcePage) fSourceContainerPage;
+				page.unregisterAddedElementListener(this);
+			}
 			IncludePathManager.getInstance().unregisterIncludepathListener(this);
 			super.dispose();
 		}
 
 		public void refresh(IProject project) {
 			PHPIncludePathsBlock.this.updateUI();
+		}
+
+		public void update(boolean changed) {
+			try {
+				configureScriptProject(new NullProgressMonitor());
+				PHPIncludePathsBlock.this.updateUI();
+			} catch (OperationCanceledException e) {
+				PHPCorePlugin.log(e);
+			} catch (CoreException e) {
+				PHPCorePlugin.log(e);
+			}
+			
 		}
 	}
 
@@ -134,11 +152,10 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		item = new TabItem(folder, SWT.NONE);
 		item.setText(NewWizardMessages.BuildPathsBlock_tab_source);
 		item.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
-		//		if (fUseNewPage) {
-		//			fSourceContainerPage = new NewSourceContainerWorkbookPage(fBuildPathList, fRunnableContext, getPreferenceStore());
-		//		} else {
+
 		fSourceContainerPage = new PHPIncludePathSourcePage(fBuildPathList);
-		//		}
+		((PHPIncludePathSourcePage)fSourceContainerPage).registerAddedElementListener((IChangeListener)composite);
+
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
 
@@ -225,9 +242,12 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		//in case there are any, the user is prompted with a question 
 		if (addedElements.size() > 0) {
 			for (BPListElement listElement : addedElements) {
-				buildPathEntries.add(listElement.getBuildpathEntry());
+				if(!BuildPathUtils.isContainedInBuildpath(listElement.getPath(), fCurrScriptProject)) {
+					buildPathEntries.add(listElement.getBuildpathEntry());
+				}
 			}
-			// if the user chose to, the relevant entries are added to the buildpath 
+			
+			// if the user chose to, the relevant entries are added to the buildpath
 			try {
 				BuildPathUtils.addEntriesToBuildPath(fCurrScriptProject, buildPathEntries);
 			} catch (ModelException e) {

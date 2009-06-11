@@ -23,12 +23,15 @@ import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElementAttribute;
 import org.eclipse.dltk.internal.ui.wizards.dialogfields.ListDialogField;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
+import org.eclipse.ui.internal.IChangeListener;
 
 public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	private List<BPListElement> fRemovedElements = new ArrayList<BPListElement>();
 	private boolean removeFromIncludePath = false;
 
+	private List<IChangeListener> removedElementListeners = new ArrayList<IChangeListener>(1);
+	
 	public List<BPListElement> getRemovedElements() {
 		return fRemovedElements;
 	}
@@ -43,6 +46,10 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	@Override
 	protected void removeEntry() {
+		
+		//clear the list of all removed elements after window closed.
+		fRemovedElements.clear();
+		
 		List selElements = fFoldersList.getSelectedElements();
 		for (int i = selElements.size() - 1; i >= 0; i--) {
 			Object elem = selElements.get(i);
@@ -82,10 +89,25 @@ public class PHPBuildPathSourcePage extends PHPSourceContainerWorkbookPage {
 				}
 			}
 			if (fRemovedElements.size() > 0) {
+				fFoldersList.removeElements(fRemovedElements);
 				removeFromIncludePath = IncludePathUtils.openConfirmationDialog(getShell(), PHPUIMessages.getString("IncludePath.RemoveEntryTitle"), PHPUIMessages.getString("IncludePath.RemoveEntryFromIncludePathMessage")); //$NON-NLS-1$ ////$NON-NLS-2$
+				for (IChangeListener listener : removedElementListeners) {
+					listener.update(true);
+				}
 			}
 			fFoldersList.removeElements(selElements);
 		}
 	}
 
+	public void registerRemovedElementListener(IChangeListener listener) {
+		if(listener != null ){
+			removedElementListeners.add(listener);
+		}
+	}
+	
+	public void unregisterRemovedElementListener(IChangeListener listener) {
+		if(listener != null ){
+			removedElementListeners.remove(listener);
+		}
+	}
 }

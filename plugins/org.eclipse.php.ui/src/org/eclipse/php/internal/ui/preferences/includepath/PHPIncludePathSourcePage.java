@@ -34,6 +34,7 @@ import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.internal.IChangeListener;
 
 /**
  * Source page for the include path preference page
@@ -48,8 +49,10 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	protected int IDX_ADD_LINK = 2;
 	protected int IDX_EDIT = 3;
 
-	private List<BPListElement> fAddedElements = new ArrayList<BPListElement>();
-	private List<BPListElement> fRemovedElements = new ArrayList<BPListElement>();
+	private List<BPListElement> fAddedElements = new ArrayList<BPListElement>(1);
+
+	private List<IChangeListener> addedElementListeners = new ArrayList<IChangeListener>(1);
+
 	private boolean addToBuildPath = false;
 
 	public boolean shouldAddToBuildPath() {
@@ -58,10 +61,6 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	public List<BPListElement> getAddedElements() {
 		return fAddedElements;
-	}
-
-	public List<BPListElement> getRemovedElements() {
-		return fRemovedElements;
 	}
 
 	public PHPIncludePathSourcePage(ListDialogField buildpathList) {
@@ -195,6 +194,9 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 	}
 
 	protected void refresh(List insertedElements, List removedElements, List modifiedElements) {
+
+		fAddedElements.clear();
+
 		fFoldersList.addElements(insertedElements);
 
 		// for each added source entry, check if it is already a part of the buildpath
@@ -210,6 +212,9 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 		if (fAddedElements.size() > 0) {
 			addToBuildPath = IncludePathUtils.openConfirmationDialog(getShell(), PHPUIMessages.getString("IncludePath.AddEntryTitle"), PHPUIMessages.getString("IncludePath.AddEntryToBuildPathMessage")); //$NON-NLS-1$ ////$NON-NLS-2$
+			for (IChangeListener listener : addedElementListeners) {
+				listener.update(true);
+			}
 		}
 
 		for (Iterator iter = insertedElements.iterator(); iter.hasNext();) {
@@ -218,8 +223,6 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		}
 
 		fFoldersList.removeElements(removedElements);
-
-		fRemovedElements.addAll(removedElements);
 
 		for (Iterator iter = modifiedElements.iterator(); iter.hasNext();) {
 			BPListElement element = (BPListElement) iter.next();
@@ -233,4 +236,15 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		}
 	}
 
+	public void registerAddedElementListener(IChangeListener listener) {
+		if (listener != null) {
+			addedElementListeners.add(listener);
+		}
+	}
+
+	public void unregisterAddedElementListener(IChangeListener listener) {
+		if (listener != null) {
+			addedElementListeners.remove(listener);
+		}
+	}
 }

@@ -15,10 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.ui.dialogs.StatusUtil;
 import org.eclipse.dltk.internal.ui.wizards.buildpath.BPListElement;
@@ -28,9 +25,9 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.php.internal.core.Logger;
-import org.eclipse.php.internal.core.includepath.IIncludepathListener;
+import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -38,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.internal.IChangeListener;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 public class PHPBuildPathsBlock extends BuildpathsBlock {
@@ -46,7 +44,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	 * @author nir.c
 	 * Wrapper composite, that un/register itself to any buildpath changes
 	 */
-	private final class BuildPathComposite extends Composite implements IElementChangedListener {
+	private final class BuildPathComposite extends Composite implements IElementChangedListener, IChangeListener {
 
 		private BuildPathComposite(Composite parent, int style) {
 			super(parent, style);
@@ -55,12 +53,27 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 
 		@Override
 		public void dispose() {
+			
+		if (fSourceContainerPage instanceof PHPBuildPathSourcePage) {
+			PHPBuildPathSourcePage page = (PHPBuildPathSourcePage) fSourceContainerPage;
+			page.unregisterRemovedElementListener(this);
+		}
 			DLTKCore.removeElementChangedListener(this);
 			super.dispose();
 		}
 
 		public void elementChanged(ElementChangedEvent event) {
 			PHPBuildPathsBlock.this.updateUI();
+		}
+
+		public void update(boolean changed) {
+			try {
+				configureScriptProject(new NullProgressMonitor());
+				PHPBuildPathsBlock.this.updateUI();
+			} catch (OperationCanceledException e) {
+				PHPCorePlugin.log(e);
+			} catch (CoreException e) {
+				PHPCorePlugin.log(e);			}			
 		}
 	}
 	
@@ -88,6 +101,7 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		container.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
 		fSourceContainerPage = new PHPBuildPathSourcePage(fBuildPathList);
+		((PHPBuildPathSourcePage)fSourceContainerPage).registerRemovedElementListener((IChangeListener)container);
 		Control control = fSourceContainerPage.getControl(container);
 		control.setLayoutData(createGridData(GridData.FILL_BOTH, 1, 0));
 
@@ -107,8 +121,26 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 	}
 
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
+		removeEtnries();
 		adaptIncludePath();
+		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		super.configureScriptProject(monitor);
+	}
+	
+	private void removeEtnries() {
+		PHPBuildPathSourcePage buildPathSourcePage = (PHPBuildPathSourcePage) fSourceContainerPage;
+		List<BPListElement> removedElements = buildPathSourcePage.getRemovedElements();
+		if(removedElements.size() > 0) {
+			for (BPListElement element : removedElements) {
+				try {
+					if(BuildPathUtils.isContainedInBuildpath(element.getBuildpathEntry().getPath(), fCurrScriptProject)) {
+						BuildPathUtils.removeEntryFromBuildPath(fCurrScriptProject, element.getBuildpathEntry());
+					}
+				} catch (ModelException e) {
+					PHPCorePlugin.log(e);
+				}
+			}
+		}
 	}
 
 	/**
@@ -136,7 +168,9 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 		//in case there are any, the user is prompted with a question 
 		if (removedElements.size() > 0) {
 			for (BPListElement listElement : removedElements) {
-				buildPathEntries.add(listElement.getBuildpathEntry());
+				if(IncludePathManager.isInIncludePath(fCurrScriptProject.getProject(), listElement.getPath()) != null) {
+					buildPathEntries.add(listElement.getBuildpathEntry());
+				}
 			}
 			// if the user chose to, the relevant entries are removed from the include path 
 			try {
@@ -172,6 +206,4 @@ public class PHPBuildPathsBlock extends BuildpathsBlock {
 				fPathStatus, fBuildPathStatus
 		});
 	}
-	
-
 }
