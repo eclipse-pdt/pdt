@@ -112,6 +112,14 @@ public class PHPExecutableLaunchDelegate extends LaunchConfigurationDelegate {
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(file);
 			if (resource != null) {
 				project = resource.getProject();
+			} else {
+				String projectName = configuration.getAttribute(IPHPDebugConstants.ATTR_PROJECT_NAME, (String) null);
+				if (projectName != null) {
+					IProject resolved = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+					if (resolved != null && resolved.isAccessible()) {
+						project = resolved;	
+					}
+				}
 			}
 		}
 
