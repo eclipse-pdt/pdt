@@ -37,6 +37,7 @@ import org.eclipse.php.internal.core.typeinference.context.ContextFinder;
  * if (someCondition()) {
  * 	$a = "other";
  * }
+ * list($a, list($b)) = array(...)
  * </pre>
  * <br/>
  * </p>
@@ -140,10 +141,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		
 		if (node instanceof Assignment) {
 			Expression variable = ((Assignment)node).getVariable();
-			if (variable instanceof VariableReference) {
-				VariableReference varReference = (VariableReference) variable;
-				getScope().addDeclaration(varReference.getName(), node);
-			}
+			addDeclaredVariables(variable, node);
 		}
 		
 		postProcess(node);
@@ -151,6 +149,18 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		return super.visit(node);
 	}
 	
+	private void addDeclaredVariables(Expression variable, Expression node) {
+		if (variable instanceof VariableReference) {
+			VariableReference varReference = (VariableReference) variable;
+			getScope().addDeclaration(varReference.getName(), node);
+		} else if (variable instanceof ListVariable) {
+			ListVariable varReference = (ListVariable) variable;
+			for (Expression nestedVar : varReference.getVariables()) {
+				addDeclaredVariables(nestedVar, node);
+			}
+		}
+	}
+
 	public final boolean endvisit(Expression node) throws Exception {
 		return super.endvisit(node);
 	}
