@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JavaCUP Parser for PHP
+Bundle-SymbolicName: org.eclipse.php.core.parser
+Bundle-Version: 2.1.0.qualifier
+Bundle-Vendor: Eclipse.org
+Bundle-ClassPath: .
+Export-Package: java_cup,
+ java_cup.runtime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
