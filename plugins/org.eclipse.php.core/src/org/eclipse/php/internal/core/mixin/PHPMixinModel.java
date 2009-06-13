@@ -23,6 +23,9 @@ import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 
+/**
+ * @deprecated we should move to DLTK search mechanism, mixin is not needed for PHP.
+ */
 public class PHPMixinModel implements IShutdownListener {
 
 	private static final Map<IScriptProject, PHPMixinModel> instances = new HashMap<IScriptProject, PHPMixinModel>();
