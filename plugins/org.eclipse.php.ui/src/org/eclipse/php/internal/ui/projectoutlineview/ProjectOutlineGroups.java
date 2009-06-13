@@ -21,7 +21,7 @@ import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.ui.Logger;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
@@ -75,19 +75,19 @@ public enum ProjectOutlineGroups {
 			});
 			switch (this) {
 				case GROUP_NAMESPACES:
-					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllNamespaces(scope)));
+					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllNamespaces(scope)));
 					break;
 
 				case GROUP_CLASSES:
-					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllClassesAndInterfaces(scope)));
+					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllClassesAndInterfaces(scope)));
 					break;
 
 				case GROUP_FUNCTIONS:
-					childrenList.addAll(Arrays.asList(PHPTypeInferenceUtils.getAllFunctions(scope)));
+					childrenList.addAll(Arrays.asList(PHPModelUtils.getAllFunctions(scope)));
 					break;
 
 				case GROUP_CONSTANTS:
-					IField[] fields = PHPTypeInferenceUtils.getAllFields(scope);
+					IField[] fields = PHPModelUtils.getAllFields(scope);
 					for (IField iField : fields) {
 						try {
 							if (PHPFlags.isConstant(iField.getFlags())) {
