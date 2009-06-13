@@ -20,7 +20,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
 public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
@@ -38,7 +37,7 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 		List<IMethod> methods = new LinkedList<IMethod>();
 		if (types == null) {
 			try {
-				methods.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(methodName, sourceModule, 0)));
+				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(methodName, sourceModule, 0)));
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();

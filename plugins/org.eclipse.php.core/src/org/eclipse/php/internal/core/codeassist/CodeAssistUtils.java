@@ -863,9 +863,9 @@ public class CodeAssistUtils {
 		if (pattern != null) {
 			try {
 				if (elementType == IDLTKSearchConstants.TYPE) {
-					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getTypes(prefix, pattern.getMatchRule(), scope)));
+					elements.addAll(Arrays.asList(PHPModelUtils.getTypes(prefix, pattern.getMatchRule(), scope)));
 				} else if (elementType == IDLTKSearchConstants.METHOD) {
-					elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(prefix, pattern.getMatchRule(), scope)));
+					elements.addAll(Arrays.asList(PHPModelUtils.getFunctions(prefix, pattern.getMatchRule(), scope)));
 				} else {
 					if ((mask & EXCLUDE_CONSTANTS) == 0 && (mask & ONLY_CURRENT_FILE) == 0 && !prefix.startsWith(DOLLAR)) {
 						// workaround for fast searching global constants:
@@ -930,7 +930,7 @@ public class CodeAssistUtils {
 
 		// Build the mixin request key:
 		if (elementType == IDLTKSearchConstants.TYPE) {
-			IType[] classesAndInterfaces = PHPTypeInferenceUtils.getClassesAndInterfaces(prefix, matchRule, scope);
+			IType[] classesAndInterfaces = PHPModelUtils.getClassesAndInterfaces(prefix, matchRule, scope);
 			try {
 				for (IType type : classesAndInterfaces) {
 					int flags = type.getFlags();
@@ -947,7 +947,7 @@ public class CodeAssistUtils {
 				}
 			}
 		} else {
-			elements.addAll(Arrays.asList(PHPTypeInferenceUtils.getFunctions(prefix, matchRule, scope)));
+			elements.addAll(Arrays.asList(PHPModelUtils.getFunctions(prefix, matchRule, scope)));
 		}
 
 		// Calculate minimal namespaces:

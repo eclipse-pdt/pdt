@@ -183,7 +183,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					} else {
 						SimpleReference callName = callExpression.getCallName();
 						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference)callName).getFullyQualifiedName() : callName.getName();
-						IMethod[] methods = PHPTypeInferenceUtils.getFunctions(methodName, sourceModule, offset);
+						IMethod[] methods = PHPModelUtils.getFunctions(methodName, sourceModule, offset);
 						Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
 						return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 					}
@@ -266,17 +266,17 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 				else if (node instanceof NamespaceReference) {
 					String name = ((NamespaceReference) node).getName();
-					return PHPTypeInferenceUtils.getNamespaceOf(name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset);
+					return PHPModelUtils.getNamespaceOf(name + NamespaceReference.NAMESPACE_SEPARATOR, sourceModule, offset);
 				}
 				// Class/Interface reference:
 				else if (node instanceof TypeReference) {
 					String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node).getFullyQualifiedName() : ((TypeReference) node).getName();
-					IType[] types = PHPTypeInferenceUtils.getTypes(name, sourceModule, offset);
+					IType[] types = PHPModelUtils.getTypes(name, sourceModule, offset);
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
-						types = PHPTypeInferenceUtils.getNamespaces(name, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+						types = PHPModelUtils.getNamespaces(name, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
 						if (types == null || types.length == 0) {
-							return PHPTypeInferenceUtils.getFields(name, sourceModule, offset);
+							return PHPModelUtils.getFields(name, sourceModule, offset);
 						}
 					}
 					return types;
@@ -286,7 +286,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
 						String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node).getFullyQualifiedName() : ((SimpleReference) node).getName();
-						return getConstructorsIfAny(extractClasses(PHPTypeInferenceUtils.getTypes(name, sourceModule, offset)));
+						return getConstructorsIfAny(extractClasses(PHPModelUtils.getTypes(name, sourceModule, offset)));
 					}
 				}
 			}
@@ -368,7 +368,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// Class instantiation:
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
-							return getConstructorsIfAny(extractClasses(PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset)));
+							return getConstructorsIfAny(extractClasses(PHPModelUtils.getTypes(elementName, sourceModule, offset)));
 						}
 
 						// Handle extends and implements:
@@ -447,12 +447,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							IType[] types = PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset);
+							IType[] types = PHPModelUtils.getTypes(elementName, sourceModule, offset);
 							Collection<IType> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(types));
 							return (IType[]) filtered.toArray(new IType[filtered.size()]);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
-							return PHPTypeInferenceUtils.getNamespaces(elementName, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+							return PHPModelUtils.getNamespaces(elementName, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(sourceModule, statement, startPosition, offset);
@@ -466,7 +466,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							IMethod[] methods = PHPTypeInferenceUtils.getFunctions(elementName, sourceModule, offset);
+							IMethod[] methods = PHPModelUtils.getFunctions(elementName, sourceModule, offset);
 							Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
 							return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
 						}
@@ -508,14 +508,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						}
 
 						// This can be only global constant, if we've reached here:
-						IField[] fields = PHPTypeInferenceUtils.getFields(elementName, sourceModule, offset);
+						IField[] fields = PHPModelUtils.getFields(elementName, sourceModule, offset);
 						Collection<IField> constants = PHPModelUtils.filterElements(sourceModule, Arrays.asList(fields));
 						if (constants.size() > 0) {
 							return (IField[]) constants.toArray(new IField[constants.size()]);
 						}
 
 						// Return class if nothing else found.
-						IType[] elements = PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset);
+						IType[] elements = PHPModelUtils.getTypes(elementName, sourceModule, offset);
 						Collection<IType> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
 						return (IType[]) filtered.toArray(new IType[filtered.size()]);
 					}
@@ -532,12 +532,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 	private static IModelElement[] getGeneralizationTypes(ISourceModule sourceModule, boolean isClassDeclaration, String generalization, String elementName, int offset) throws ModelException {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
-				return extractClasses(PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset));
+				return extractClasses(PHPModelUtils.getTypes(elementName, sourceModule, offset));
 			}
-			return extractInterfaces(PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset));
+			return extractInterfaces(PHPModelUtils.getTypes(elementName, sourceModule, offset));
 		}
 		if (IMPLEMENTS.equalsIgnoreCase(generalization)) { //$NON-NLS-1$ //$NON-NLS-2$
-			return extractInterfaces(PHPTypeInferenceUtils.getTypes(elementName, sourceModule, offset));
+			return extractInterfaces(PHPModelUtils.getTypes(elementName, sourceModule, offset));
 		}
 		return null;
 	}
@@ -636,6 +636,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				e.printStackTrace();
 			}
 		}
-		return PHPTypeInferenceUtils.getFields(prefix, sourceModule, offset);
+		return PHPModelUtils.getFields(prefix, sourceModule, offset);
 	}
 }

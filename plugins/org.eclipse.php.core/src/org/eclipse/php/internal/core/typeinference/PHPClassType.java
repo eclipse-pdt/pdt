@@ -104,9 +104,9 @@ public class PHPClassType extends ClassType implements IClassType {
 	 * @return 
 	 */
 	public static PHPClassType fromTypeName(String typeName, ISourceModule sourceModule, int offset) {
-		String namespace = PHPTypeInferenceUtils.extractNamespaceName(typeName, sourceModule, offset);
+		String namespace = PHPModelUtils.extractNamespaceName(typeName, sourceModule, offset);
 		if (namespace != null) {
-			return new PHPClassType(namespace, PHPTypeInferenceUtils.extractElementName(typeName));
+			return new PHPClassType(namespace, PHPModelUtils.extractElementName(typeName));
 		}
 		return new PHPClassType(typeName);
 	}

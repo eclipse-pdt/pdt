@@ -18,7 +18,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -73,7 +73,7 @@ public class NamespaceMemberContext extends StatementContext {
 		int nsNameStart = PHPTextSequenceUtilities.readNamespaceStartIndex(statementText, endNamespace, false);
 		String nsName = statementText.subSequence(nsNameStart, elementStart).toString();
 		
-		namespaces = PHPTypeInferenceUtils.getNamespaceOf(nsName, sourceModule, offset);
+		namespaces = PHPModelUtils.getNamespaceOf(nsName, sourceModule, offset);
 		return true;
 	}
 	

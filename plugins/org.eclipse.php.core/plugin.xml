@@ -41,7 +41,7 @@
 	</extension>
 
 	<!-- PHP Content Type declaration -->
-	<extension point="org.eclipse.core.runtime.contentTypes">
+	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type base-type="org.eclipse.core.runtime.text"
 			file-extensions="php,php3,php4,php5,phtml,inc" id="phpsource" name="%content-type.name.0"
 			priority="high">
@@ -65,7 +65,7 @@
 	</extension>
 
 	<!-- Adding default "Eclipse text editor" for *.[ini,cfg] files -->
-	<extension point="org.eclipse.core.runtime.contentTypes">
+	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type base-type="org.eclipse.core.runtime.text"
 			file-extensions="ini,cfg" id="org.eclipse.ui.texteditor" name="Configurataion Files"
 			priority="high">

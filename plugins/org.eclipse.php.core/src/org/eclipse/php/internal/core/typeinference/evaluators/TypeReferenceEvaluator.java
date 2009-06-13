@@ -33,7 +33,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.ClassDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.FullyQualifiedReference;
 import org.eclipse.php.internal.core.compiler.ast.nodes.NamespaceReference;
 import org.eclipse.php.internal.core.typeinference.PHPClassType;
-import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.INamespaceContext;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 
@@ -132,7 +132,7 @@ public class TypeReferenceEvaluator extends GoalEvaluator {
 				String fullyQualifiedName = ((FullyQualifiedReference) typeReference).getFullyQualifiedName();
 				ISourceModule sourceModule = ((ISourceModuleContext) context).getSourceModule();
 				int offset = typeReference.sourceStart();
-				String extractedNamespace = PHPTypeInferenceUtils.extractNamespaceName(fullyQualifiedName, sourceModule, offset);
+				String extractedNamespace = PHPModelUtils.extractNamespaceName(fullyQualifiedName, sourceModule, offset);
 				if (extractedNamespace != null) {
 					parentNamespace = extractedNamespace;
 				}
