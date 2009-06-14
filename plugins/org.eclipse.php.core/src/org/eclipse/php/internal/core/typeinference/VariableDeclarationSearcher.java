@@ -69,6 +69,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 	public final boolean visit(ModuleDeclaration node) throws Exception {
 		if (!isInteresting(node)) {
+			visitGeneral(node);
 			return false;
 		}
 		
@@ -90,6 +91,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 	public final boolean visit(TypeDeclaration node) throws Exception {
 		if (!isInteresting(node)) {
+			visitGeneral(node);
 			return false;
 		}
 		
@@ -111,6 +113,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 	public final boolean visit(MethodDeclaration node) throws Exception {
 		if (!isInteresting(node)) {
+			visitGeneral(node);
 			return false;
 		}
 		
@@ -132,6 +135,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 	public final boolean visit(Expression node) throws Exception {
 		if (!isInteresting(node)) {
+			visitGeneral(node);
 			return false;
 		}
 		ASTNode parent = nodesStack.peek();
@@ -174,6 +178,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 	public final boolean visit(Statement node) throws Exception {
 		if (!isInteresting(node)) {
+			visitGeneral(node);
 			return false;
 		}
 
@@ -233,9 +238,7 @@ public class VariableDeclarationSearcher extends ContextFinder {
 
 	public final boolean visitGeneral(ASTNode node) throws Exception {
 		nodesStack.push(node);
-		
 		postProcessGeneral(node);
-		
 		return super.visitGeneral(node);
 	}
 

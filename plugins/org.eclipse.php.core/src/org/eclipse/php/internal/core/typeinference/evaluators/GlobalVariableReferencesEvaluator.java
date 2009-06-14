@@ -169,7 +169,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 			}
 		}
 
-		protected boolean interesting(ASTNode node) {
+		protected boolean isInteresting(ASTNode node) {
 			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
 		}
 	}
