@@ -30,9 +30,14 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IBuildpathEntry;
+import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
+import org.eclipse.dltk.internal.core.BuildpathChange;
+import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.php.internal.core.CoreMessages;
 import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -68,7 +73,7 @@ public class ProjectBackwardCompatibilityUtil {
 			}
 
 			// parse the includes xml 
-			Element cpElement;
+			Element cpElement = null;
 			final Reader reader = new StringReader(includePathXml);
 
 			try {
@@ -78,6 +83,10 @@ public class ProjectBackwardCompatibilityUtil {
 				throw new IOException(CoreMessages.getString("PHPProjectOptions_1"));
 			} finally {
 				reader.close();
+			}
+
+			if (cpElement == null) {
+				return buildpathEntries;
 			}
 
 			// convert each node in the xml into a build path entry 
@@ -116,6 +125,7 @@ public class ProjectBackwardCompatibilityUtil {
 		boolean isExported = element.getAttribute(TAG_EXPORTED).equals("true"); //$NON-NLS-1$
 		IBuildpathEntry entry = null;
 		IPath path = null;
+		String variableName = null;
 
 		int entryKind = entryKindFromString(entryKindAttr);
 		switch (entryKind) {
@@ -127,9 +137,23 @@ public class ProjectBackwardCompatibilityUtil {
 				break;
 			case IBuildpathEntry.BPE_LIBRARY:
 				if ("var".equalsIgnoreCase(entryKindAttr)) {
-					path = IncludePathVariableManager.instance().resolveVariablePath(pathAttr);
-					if (path != null) {
-						entry = DLTKCore.newExtLibraryEntry(path.makeAbsolute());
+					variableName = pathAttr; 
+					if (variableName != null && variableName.length() > 0) {
+						String resolvedPath = "";
+						Preferences pluginPreferences = PHPCorePlugin.getDefault().getPluginPreferences();
+						String pathString = pluginPreferences.getString(variableName);
+						//try to read from default values 
+						if(pathString != null) {
+							path = IncludePathVariableManager.instance().getIncludePathVariable(pathString);
+							//second chance, try to read from old workspace configuration
+							if(path == null) {
+								path = IncludePathVariableManager.instance().resolveVariablePath(variableName);
+							}
+						}
+						
+						if(path != null) {
+							entry = DLTKCore.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(LocalEnvironment.getInstance(), path));
+						}
 					}
 				} else {
 					entry = DLTKCore.newLibraryEntry(new Path(pathAttr).makeAbsolute());
