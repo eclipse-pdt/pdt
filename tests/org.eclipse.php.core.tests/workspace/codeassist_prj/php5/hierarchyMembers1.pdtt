@@ -1,0 +1,13 @@
+--TEST--
+Must complete public methods from hierarchy
+--FILE--
+<?php
+class MyManager extends Manager {
+}
+
+$manager = new MyManager();
+$manager->getGen|
+
+?>
+--EXPECT--
+method(getGender)

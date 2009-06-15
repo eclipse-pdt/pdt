@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.dltk.core.buildpathContainerInitializer">
+      <buildpathContainerInitializer
+            class="org.eclipse.php.core.tests.TestBuildpathInitializer"
+            id="org.eclipse.php.core.tests.PERSON">
+      </buildpathContainerInitializer>
+   </extension>
+
+</plugin>

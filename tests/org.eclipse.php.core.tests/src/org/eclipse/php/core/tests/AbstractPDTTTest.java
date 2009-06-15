@@ -25,7 +25,7 @@ import org.osgi.framework.Bundle;
  * @author michael
  */
 public class AbstractPDTTTest extends TestCase {
-	
+
 	public AbstractPDTTTest() {
 		super();
 	}
@@ -33,14 +33,13 @@ public class AbstractPDTTTest extends TestCase {
 	public AbstractPDTTTest(String name) {
 		super(name);
 	}
-	
-		
+
 	protected static String[] getPDTTFiles(String testsDirectory) {
 		return getPDTTFiles(testsDirectory, PHPCoreTests.getDefault().getBundle());
 	}
 
 	@SuppressWarnings("unchecked")
-		protected static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
+	protected static String[] getPDTTFiles(String testsDirectory, Bundle bundle) {
 		List<String> files = new LinkedList<String>();
 		Enumeration<String> entryPaths = bundle.getEntryPaths(testsDirectory);
 		if (entryPaths != null) {

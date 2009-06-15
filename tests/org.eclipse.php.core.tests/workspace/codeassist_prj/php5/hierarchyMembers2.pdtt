@@ -1,0 +1,12 @@
+--TEST--
+Must complete static field from hierarchy
+--FILE--
+<?php
+class MyManager extends Manager {
+}
+
+MyManager::$person|;
+
+?>
+--EXPECT--
+field($personCount)

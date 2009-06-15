@@ -33,6 +33,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.core.tests.AbstractPDTTTest;
 import org.eclipse.php.core.tests.PHPCoreTests;
 import org.eclipse.php.core.tests.codeassist.CodeAssistPdttFile.ExpectedProposal;
@@ -103,59 +104,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 							protected void runTest() throws Throwable {
 								CompletionProposal[] proposals = getProposals(pdttFile.getFile());
-								ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
-
-								boolean proposalsEqual = true;
-								if (proposals.length == expectedProposals.length) {
-									for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
-										boolean found = false;
-										for (CompletionProposal proposal : proposals) {
-											IModelElement modelElement = proposal.getModelElement();
-											if (modelElement == null) {
-												if (new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) { // keyword
-													found = true;
-													break;
-												}
-											} else if (modelElement.getElementType() == expectedProposal.type && modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
-												found = true;
-												break;
-											}
-										}
-										if (!found) {
-											proposalsEqual = false;
-											break;
-										}
-									}
-								} else {
-									proposalsEqual = false;
-								}
-
-								if (!proposalsEqual) {
-									StringBuilder errorBuf = new StringBuilder();
-									errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
-									errorBuf.append(pdttFile.getExpected());
-									errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
-									for (CompletionProposal p : proposals) {
-										IModelElement modelElement = p.getModelElement();
-										if (modelElement == null || modelElement.getElementName() == null) {
-											errorBuf.append("keyword(").append(p.getName()).append(")\n");
-										} else {
-											switch (modelElement.getElementType()) {
-												case IModelElement.FIELD:
-													errorBuf.append("field");
-													break;
-												case IModelElement.METHOD:
-													errorBuf.append("method");
-													break;
-												case IModelElement.TYPE:
-													errorBuf.append("type");
-													break;
-											}
-											errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
-										}
-									}
-									fail(errorBuf.toString());
-								}
+								compareProposals(proposals, pdttFile);
 							}
 						});
 					} catch (final Exception e) {
@@ -215,14 +164,78 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	protected static CompletionProposal[] getProposals(String data) throws Exception {
+	public static CompletionProposal[] getProposals(String data) throws Exception {
 		int offset = createFile(data);
+		return getProposals(offset);
+	}
+	
+	public static CompletionProposal[] getProposals(int offset) throws ModelException {
+		return getProposals(getSourceModule(), offset);
+	}
+	
+	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
-		getSourceModule().codeComplete(offset, new CompletionRequestor() {
+		sourceModule.codeComplete(offset, new CompletionRequestor() {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
 		});
 		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
+	}
+	
+	public static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {
+		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
+
+		boolean proposalsEqual = true;
+		if (proposals.length == expectedProposals.length) {
+			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
+				boolean found = false;
+				for (CompletionProposal proposal : proposals) {
+					IModelElement modelElement = proposal.getModelElement();
+					if (modelElement == null) {
+						if (new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) { // keyword
+							found = true;
+							break;
+						}
+					} else if (modelElement.getElementType() == expectedProposal.type && modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					proposalsEqual = false;
+					break;
+				}
+			}
+		} else {
+			proposalsEqual = false;
+		}
+
+		if (!proposalsEqual) {
+			StringBuilder errorBuf = new StringBuilder();
+			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf.append(pdttFile.getExpected());
+			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+			for (CompletionProposal p : proposals) {
+				IModelElement modelElement = p.getModelElement();
+				if (modelElement == null || modelElement.getElementName() == null) {
+					errorBuf.append("keyword(").append(p.getName()).append(")\n");
+				} else {
+					switch (modelElement.getElementType()) {
+						case IModelElement.FIELD:
+							errorBuf.append("field");
+							break;
+						case IModelElement.METHOD:
+							errorBuf.append("method");
+							break;
+						case IModelElement.TYPE:
+							errorBuf.append("type");
+							break;
+					}
+					errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
+				}
+			}
+			fail(errorBuf.toString());
+		}
 	}
 }

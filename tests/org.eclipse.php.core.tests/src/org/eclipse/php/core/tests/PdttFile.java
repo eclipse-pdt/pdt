@@ -13,6 +13,8 @@ package org.eclipse.php.core.tests;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,12 +49,21 @@ public class PdttFile {
 		TEST, CONFIG, FILE, EXPECT
 	}
 
-	private Bundle testBundle;
 	private String fileName;
+	private Bundle testBundle;
 	private Map<String, String> config = new HashMap<String, String>();
 	private String description;
 	private String file = "";
 	private String expected = "";
+
+	/**
+	 * Constructs new PdttFile using default bundle: {@link PHPCoreTests}
+	 * @param fileName
+	 * @throws Exception
+	 */
+	public PdttFile(String fileName) throws Exception {
+		this(PHPCoreTests.getDefault().getBundle(), fileName);
+	}
 
 	/**
 	 * Constructs new PdttFile
@@ -63,18 +74,16 @@ public class PdttFile {
 	public PdttFile(Bundle testBundle, String fileName) throws Exception {
 		this.testBundle = testBundle;
 		this.fileName = fileName;
-		parse();
+		InputStream reader = openResource(fileName);
+		try {
+			parse(reader);
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
 	}
-	
-	/**
-	 * Constructs new PdttFile using default bundle: {@link PHPCoreTests}
-	 * @param fileName
-	 * @throws Exception
-	 */
-	public PdttFile(String fileName) throws Exception {
-		this(PHPCoreTests.getDefault().getBundle(), fileName);
-	}
-	
+
 	/**
 	 * Constructs new PdttFile
 	 * @param fileName .pdtt file name 
@@ -112,7 +121,7 @@ public class PdttFile {
 	public Map<String, String> getConfig() {
 		return config;
 	}
-	
+
 	/**
 	 * Returns the PHP file contents (--FILE-- section contents)
 	 * @return
@@ -130,18 +139,23 @@ public class PdttFile {
 		Assert.assertNotNull("File: " + fileName + " doesn't contain --EXPECT-- section", expected);
 		return expected;
 	}
-	
+
 	protected InputStream openResource(String path) throws IOException {
+		File localFile = new File(path);
+		if (localFile.exists()) {
+			return new FileInputStream(localFile);
+		}
 		URL url = testBundle.getEntry(path);
-		return new BufferedInputStream(url.openStream());		
+		return new BufferedInputStream(url.openStream());
 	}
 
 	/**
 	 * Internal method for parsing a .pdtt test file
+	 * @param inputStream
 	 * @throws Exception 
 	 */
-	protected void parse() throws Exception {
-		BufferedReader bReader = new BufferedReader(new InputStreamReader(openResource(fileName)));
+	protected void parse(InputStream inputStream) throws Exception {
+		BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream));
 
 		String line = bReader.readLine();
 		STATES state = null;
@@ -159,7 +173,23 @@ public class PdttFile {
 			line = bReader.readLine();
 		}
 	}
-	
+
+	public void setConfig(Map<String, String> config) {
+		this.config = config;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public void setExpected(String expected) {
+		this.expected = expected;
+	}
+
 	/**
 	 * Dumps this file back to the disk
 	 * @throws Exception
@@ -169,7 +199,7 @@ public class PdttFile {
 		writeStates(w);
 		w.close();
 	}
-	
+
 	protected void writeStates(PrintWriter w) {
 		w.println("--TEST--");
 		w.println(description.trim());
@@ -186,7 +216,7 @@ public class PdttFile {
 		w.println("--EXPECT--");
 		w.println(expected.trim());
 	}
-	
+
 	/**
 	 * Detects the state from the line
 	 * @param line
