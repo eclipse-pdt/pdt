@@ -226,7 +226,9 @@ public class IncludePathManager {
 	}
 
 	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
-		return (entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
+		return (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER ||
+				entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || 
+				entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
 	}
 
 	/**
