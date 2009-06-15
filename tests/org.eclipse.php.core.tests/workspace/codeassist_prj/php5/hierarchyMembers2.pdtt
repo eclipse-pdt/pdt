@@ -1,7 +1,9 @@
 --TEST--
-Must complete static field from hierarchy
+Must complete static fields from hierarchy
 --FILE--
 <?php
+include "Manager.php"
+
 class MyManager extends Manager {
 }
 

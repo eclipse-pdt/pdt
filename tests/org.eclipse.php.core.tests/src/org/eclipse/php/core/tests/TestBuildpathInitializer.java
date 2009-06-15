@@ -31,29 +31,25 @@ import org.eclipse.php.internal.core.Logger;
 
 /**
  * Build path entries for test projects.
- * In order to add new library:
- * <p>
- * 1. Add new entry to plugin.xml<br/>
- * 2. Modify {@link #initialize(IPath, IScriptProject)}
- * </p>
+ * In order to add new library add new entry to plugin.xml where ID contains library folder after the last dot.
+ * Example:  org.eclipse.core.tests.LIBRARY.person ("person" - existing folder under libraries)
  * 
  * @author michael
  *
  */
 public class TestBuildpathInitializer extends BuildpathContainerInitializer {
 	
+	private static final String LIBRARY = ".LIBRARY."; //$NON-NLS-1$
+
 	public void initialize(IPath containerPath, IScriptProject project) throws CoreException {
 		
 		if (containerPath.segmentCount() > 0) {
 			String segment = containerPath.segment(0);
 			
-			IBuildpathContainer container = null;
-			if (segment.endsWith(".PERSON")) {
-				container = new BuildpathContainer("Person Library", containerPath, "libraries/person");
-			} 
-			// Add another libraries here:
-			
-			if (container != null) {
+			int i = segment.indexOf(LIBRARY);
+			if (i != -1) {
+				String library = segment.substring(i + LIBRARY.length());
+				BuildpathContainer container = new BuildpathContainer(library + " Library", containerPath, "libraries/" + library);
 				DLTKCore.setBuildpathContainer(
 					containerPath, 
 					new IScriptProject[] { project },

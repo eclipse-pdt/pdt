@@ -2,6 +2,8 @@
 Must complete public methods from hierarchy
 --FILE--
 <?php
+include "Manager.php";
+
 class MyManager extends Manager {
 }
 

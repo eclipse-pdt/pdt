@@ -16,7 +16,7 @@
          point="org.eclipse.dltk.core.buildpathContainerInitializer">
       <buildpathContainerInitializer
             class="org.eclipse.php.core.tests.TestBuildpathInitializer"
-            id="org.eclipse.php.core.tests.PERSON">
+            id="org.eclipse.php.core.tests.LIBRARY.person">
       </buildpathContainerInitializer>
    </extension>
 
