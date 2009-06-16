@@ -54,6 +54,22 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 			decl.setModifiers(Modifiers.AccConstant);
 			locator.match(decl, getNodeSet());
 		}
+		else if (node instanceof FieldAccess) {
+			Expression field = ((FieldAccess)node).getField();
+			if (field instanceof SimpleReference) {
+				SimpleReference ref = (SimpleReference) field;
+				SimpleReferenceLocation refLoc = new SimpleReferenceLocation(ref.sourceStart(), ref.sourceEnd(), '$' + ref.getName()); 
+				locator.match(refLoc, getNodeSet());
+			}
+		}
+		else if (node instanceof StaticFieldAccess) {
+			Expression field = ((StaticFieldAccess)node).getField();
+			if (field instanceof SimpleReference) {
+				SimpleReference ref = (SimpleReference) field;
+				SimpleReferenceLocation refLoc = new SimpleReferenceLocation(ref.sourceStart(), ref.sourceEnd(), '$' + ref.getName()); 
+				locator.match(refLoc, getNodeSet());
+			}
+		}
 		else if(node instanceof Assignment){
 			Expression left = ((Assignment)node).getVariable();
 			if (left instanceof FieldAccess) { // class variable ($this->a = .)
@@ -138,6 +154,21 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 		
 		public FieldDeclarationLocation(String name, int nameStart, int nameEnd, int declStart, int declEnd) {
 			super(name, nameStart, nameEnd, declStart, declEnd);
+		}
+
+		public boolean equals(Object obj) {
+			return locationEquals(this, obj);
+		}
+
+		public int hashCode() {
+			return this.sourceEnd() * 1001 + this.sourceEnd();
+		}
+	}
+	
+	private static final class SimpleReferenceLocation extends SimpleReference {
+		
+		private SimpleReferenceLocation(int start, int end, String name) {
+			super(start, end, name);
 		}
 
 		public boolean equals(Object obj) {
