@@ -789,9 +789,9 @@
 				id="org.eclipse.php.ui.actions.MethodExitOccurrences" />
 		</actionSet>
 	    <actionSet
-	          description="%ScriptCodingActionSet.description"
+	          description="%CodingActionSet.description"
 	          id="org.eclipse.pdt.ui.RefactoringActionSet"
-	          label="%ScriptCodingActionSet.label"
+	          label="%CodingActionSet.label"
 	          visible="false">
 	       <action
 	             class="org.eclipse.php.internal.ui.actions.RenameAction"
