@@ -4,7 +4,10 @@ Must complete public methods from hierarchy
 <?php
 include "Manager.php";
 
-$manager = new Manager();
+class MyManager extends Manager {
+}
+
+$manager = new MyManager();
 $manager->getGen|
 
 ?>
