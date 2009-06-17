@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="generator" content="Adobe RoboHelp - www.adobe.com">
-<title>PHP Include Paths</title>
+<title>Refactoring History</title>
 <link rel="stylesheet" href="default_ns.css"><script type="text/javascript" language="JavaScript" title="WebHelpSplitCss">
 <!--
 if (navigator.appName !="Netscape")
@@ -16,8 +16,8 @@ body { border-left-style:None; border-right-style:None; border-bottom-style:None
 -->
 </style><style type="text/css">
 <!--
-div.whs1 { float:none; }
-ol.whs2 { list-style:lower-roman; }
+h1.whs1 { color:#00709e; }
+img_whs2 { border:none; width:521px; height:371px; float:none; border-style:none; }
 table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 col.whs4 { width:7.093%; }
 col.whs5 { width:92.907%; }
@@ -29,12 +29,13 @@ tr.whs10 { x-cell-content-align:top; height:35px; x-condition:Online; }
 td.whs11 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
 img_whs12 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
 td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-p.whs14 { x-condition:Online, Studio_6; }
-tr.whs15 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs16 { width:100%; }
-p.whs17 { text-align:right; x-condition:Product, Online; }
-p.whs18 { text-align:right; x-condition:Online; }
-p.whs19 { text-align:center; x-condition:PDT; text-decoration:underline; }
+p.whs14 { font-weight:bold; }
+p.whs15 { font-weight:normal; }
+tr.whs16 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs17 { width:100%; }
+p.whs18 { text-align:right; x-condition:Product, Online; }
+p.whs19 { text-align:right; x-condition:Online; }
+p.whs20 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -67,9 +68,7 @@ if (window.gbWhTopic)
 {
 	if (window.setRelStartPage)
 	{
-	addTocInfo("PDT Help\nConcepts\nPHP Include Path");
-addAvenueInfo("Zend Studio for Eclipse Help","Breakpoints.htm","Path_Mapping.htm");
-
+	
 	}
 
 
@@ -100,56 +99,15 @@ if (window.writeIntopicBar)
 	writeIntopicBar(4);
 //-->
 </script>
-<h1>PHP Include Paths</h1>
-<div class="whs1">
-</div>
-<p>The PHP Include Path 
- is a set of locations that is used for finding resources referenced by 
- include/require statements.</p>
-<p class=Note style="x-condition: PDT;">Note:</p>
-<p class=NoteText style="x-condition: PDT;">Adding libraries or external 
- projects elements to your project's Include Path will also make elements 
- defined in these resources available as code assist options.</p>
-<p>Elements added to a project's Include Path affect the following:</p>
-<ul><li class=p-ListBullet1><p class=ListBullet1><a HREF="Running.htm">Running</a>/<a 
- HREF="Debugging.htm">Debugging</a> 
- - Files that are called with a '<a href="relative_path">relative path</a>' 
- will be searched for during runtime in the resources and order specified 
- in the include path.</p></li>
-	<li class=p-ListBullet1><p class=ListBullet1><a HREF="Using_Smart_Goto_Source.htm">Go 
- to source</a>- Files that are called with a '<a href="relative_path">relative 
- path</a>' &nbsp;will be searched for according to the 
- resources and order specified in the project's include path.</p></li>
-	</ul>
+<h1 class="whs1">Refactoring History</h1>
+<p>The Refactoring History Properties page allows you to view all refactoring 
+ operations that have been performed on the project.</p>
 <p>&nbsp;</p>
-<p>In 'include'/'require' calls, file locations can be defined in three 
- ways:</p>
-<ol type="i" class="whs2">
-	<li style="margin-left: -20px; list-style: lower-alpha;" type=a class=p><p><span 
- style="font-weight: bold;"><B>Absolute</B></span> <span style="font-weight: bold;"><B>Path</B></span>- 
- The exact file location is specified (e.g. C:\Documents and Settings\MyProject\myfolder\a.php). 
- During PHP Web Page Running/Debugging the <a HREF="Path_Mapping.htm">Path Mapping</a> 
- mechanism will be activated.</p></li>
-	<li style="margin-left: -20px; list-style: lower-alpha;" type=a class=p><p><span 
- style="font-weight: bold;"><B>Relative to the Current Working Directory</B></span> 
- - File names preceded with a &quot;./&quot; or a &quot;../&quot; These 
- will only be searched for relative to the PHP 'Current Working Directory'. 
- You can find out the location of your Current Working Directory by running 
- the command &quot;echo getcwd()&quot;.</p></li>
-	<li style="margin-left: -20px; list-style: lower-alpha;" type=a class=p><p><span 
- style="font-weight: bold;"><B><a name=relative_path></a>Relative</B></span> <span 
- style="font-weight: bold;"><B>Path</B></span> - Only the file name or partial 
- path is specified (e.g. /myfolder/a.php). In this case, PDT 
- will search for the file's path according to the resources and order configured 
- in the project's Include Path.<br>
-	If the path of the file being searched for exists in more than one 
- location, the file that is called will be the first one PDT 
- encounters during the search process.</p></li>
-	<ol type="i" class="whs2">
-		</ol>
-</ol>
-<p>See <a href="http://il2.php.net/manual/en/function.include.php">http://il2.php.net/manual/en/function.include.php</a> 
- for more on PHP's search mechanism.</p>
+<p>To access the Resource Properties page, right-click a PHP project in 
+ PHP Explorer view and select Properties | Refactoring History -or- select 
+ the project and from the menu bar go to Project | Properties | Refactoring 
+ History. </p>
+<p class=picture><img src="refactoring_history_properties.png" x-maintain-ratio="TRUE" width="521px" height="371px" border="0" class="img_whs2"></p>
 <table x-use-null-cells cellspacing="0" width="100%" class="whs3">
 <col class="whs4">
 <col class="whs5">
@@ -161,26 +119,29 @@ if (window.writeIntopicBar)
 <tr valign="top" class="whs10"><td width="7.093%" class="whs11">
 <p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs12"></td>
 <td width="92.907%" class="whs13">
-<p><span style="font-weight: bold;"><B>Related Links:</B></span><a HREF="Adding_Elements_to_a_Project_s_Include_Path.htm"><br>
-Configuring a Project's PHP Include Path</a></p>
-<p class="whs14"><a href="Path_Variables.htm" 
- style="x-condition: Online, Studio_6;">Path Variables Preferences</a></td></tr>
-<tr valign="top" class="whs15"><td colspan="1" rowspan="1" width="7.093%" class="whs11">
+<p class="whs14">Related Links:</p>
+<p class="whs15"><span 
+ style="font-weight: normal;">Refactoring</span></p>
+<p class="whs15"><a HREF="PHP_Project_Properties.htm" style="font-weight: normal;"><span 
+ style="font-weight: normal;">PHP Project Properties</a></span></p>
+<p class="whs15"><a HREF="Preferences.htm" style="font-weight: normal;">PHP 
+ Preferences</a></td></tr>
+<tr valign="top" class="whs16"><td colspan="1" rowspan="1" width="7.093%" class="whs11">
 <p class="whs8">&nbsp;</td>
 <td colspan="1" rowspan="1" width="92.907%" class="whs13">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs16">
- <p align="right" class="whs17"><span 
+<div placeholder id="footer" class="whs17">
+ <p align="right" class="whs18"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
  the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
  style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
  for the most up-to-date information.</p>
- <p align="right" class="whs18"><span style="background-color: #ffffff;"><a 
+ <p align="right" class="whs19"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
- <p align="center" class="whs19">PHP Development 
+ <p align="center" class="whs20">PHP Development 
  Tools</p>
  </div>
 <script type="text/javascript" language="javascript1.2">

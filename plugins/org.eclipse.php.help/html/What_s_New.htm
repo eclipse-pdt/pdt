@@ -13,25 +13,27 @@ if (navigator.appName !="Netscape")
 <style type="text/css">
 <!--
 p.whs1 { font-weight:bold; x-condition:PDT; }
-ul.whs2 { list-style:square; }
-table.whs3 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
-col.whs4 { width:7.093%; }
-col.whs5 { width:92.907%; }
-tr.whs6 { x-cell-content-align:top; height:16px; x-condition:Online; }
-td.whs7 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
-p.whs8 { font-size:6pt; }
-td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
-tr.whs10 { x-cell-content-align:top; height:35px; x-condition:Online; }
-td.whs11 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-img_whs12 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
-td.whs13 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
-p.whs14 { font-weight:bold; }
-p.whs15 { font-weight:normal; }
-tr.whs16 { x-cell-content-align:top; height:19px; x-condition:Online; }
-div.whs17 { width:100%; }
-p.whs18 { text-align:right; x-condition:Product, Online; }
-p.whs19 { text-align:right; x-condition:Online; }
-p.whs20 { text-align:center; x-condition:PDT; text-decoration:underline; }
+ul.whs2 { x-condition:PDT; }
+p.whs3 { x-condition:PDT; }
+ul.whs4 { list-style:square; }
+table.whs5 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
+col.whs6 { width:7.093%; }
+col.whs7 { width:92.907%; }
+tr.whs8 { x-cell-content-align:top; height:16px; x-condition:Online; }
+td.whs9 { width:7.093%; padding-right:10px; padding-left:10px; border-right-style:none; border-left-style:none; border-bottom-style:none; border-top-style:none; x-condition:Online; }
+p.whs10 { font-size:6pt; }
+td.whs11 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-top-style:none; x-condition:Online; }
+tr.whs12 { x-cell-content-align:top; height:35px; x-condition:Online; }
+td.whs13 { width:7.093%; padding-right:10px; padding-left:10px; border-left-style:none; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+img_whs14 { border:none; width:28px; height:18px; float:none; x-condition:Online; border-style:none; }
+td.whs15 { width:92.907%; padding-right:10px; padding-left:10px; border-right-style:none; border-bottom-style:none; x-condition:Online; }
+p.whs16 { font-weight:bold; }
+p.whs17 { font-weight:normal; }
+tr.whs18 { x-cell-content-align:top; height:19px; x-condition:Online; }
+div.whs19 { width:100%; }
+p.whs20 { text-align:right; x-condition:Product, Online; }
+p.whs21 { text-align:right; x-condition:Online; }
+p.whs22 { text-align:center; x-condition:PDT; text-decoration:underline; }
 -->
 </style><script type="text/javascript" language="JavaScript" title="WebHelpInlineScript">
 <!--
@@ -98,67 +100,92 @@ if (window.writeIntopicBar)
 //-->
 </script>
 <h1>What's New</h1>
-<p>&nbsp;</p>
-<p class="whs1">\The following new features 
+<p class="whs1">The following new features 
+ are avialable in PDT 2.1:</p>
+<ul class="whs2">
+	<li style="font-weight: bold; margin-left: -20px;" class=p-ListBullet1><p 
+ class=ListBullet1>PHP 5.3 Support:</p></li>
+</ul>
+<ul class="whs2">
+	<li style="font-weight: bold;" class=p><p>Ability to create a PHP project 
+ based on PHP 5.3.</p></li>
+	<li style="font-weight: bold;" class=p><p><a HREF="Syntax_Highlighting.htm">Syntax 
+ Coloring</a> and <a HREF="Real_Time_Error_Detection.htm">Validation</a> 
+ for PHP 5.3 in the editor</p></li>
+	<li style="font-weight: bold;  x-condition: PDT; " class=p><p class="whs3"><a 
+ href="Code_Assist_Concept.htm" style="x-condition: PDT;">Code Assist</a> 
+ for <a href="Code_Assist_Concept.htm#Namespaces" style="x-condition: PDT;">Namespaces</a></p></li>
+	<li style="font-weight: bold;  x-condition: PDT; " class=p><p class="whs3"><a 
+ href="Code_Assist_Concept.htm" style="x-condition: PDT;">Code Assist</a> 
+ for packages</p></li>
+	<li style="font-weight: bold;  x-condition: PDT; " class=p><p class="whs3">Namespace 
+ grouping in <a HREF="PHP_Explorer_view.htm">PHP Explorer</a></p></li>
+</ul>
+<p class="whs3">&nbsp;</p>
+<p class="whs1">The following new features 
  are available in PDT 2.0:</p>
 <ul><li style="margin-left: -20px;  x-condition: PDT; x-condition: PDT; " 
  class=p-ListBullet1><p class=ListBullet1 style="x-condition: PDT;"><a 
- HREF="Build_Paths.htm"><span style="x-condition: PDT;">PHP Build Path 
- Configuration</span></a></p></li>
+ HREF="Build_Paths.htm" style="x-condition: PDT;"><span style="x-condition: PDT;">PHP 
+ Build Path Configuration</span></a></p></li>
 	<li style="margin-left: -20px;  x-condition: PDT; x-condition: PDT; " 
  class=p-ListBullet1><p class=ListBullet1 style="x-condition: PDT;"><a 
- HREF="Override_Indicators.htm"><span style="x-condition: PDT;">Override 
+ HREF="Override_Indicators.htm" style="x-condition: PDT;"><span style="x-condition: PDT;">Override 
  Indicators</span></a></p></li>
 	<li style="margin-left: -20px;  x-condition: PDT; x-condition: PDT; " 
  class=p-ListBullet1><p class=ListBullet1 style="x-condition: PDT;"><a 
- HREF="Show_Type_Hierarchy.htm"><span style="x-condition: PDT;">Type Hierarchy</span></a></p></li>
+ HREF="Show_Type_Hierarchy.htm" style="x-condition: PDT;"><span style="x-condition: PDT;">Type 
+ Hierarchy</span></a></p></li>
 	<li style="margin-left: -20px;  x-condition: PDT; x-condition: PDT; " 
  class=p-ListBullet1><p class=ListBullet1 style="x-condition: PDT;"><a 
- HREF="Mark_Occurrences.htm"><span style="x-condition: PDT;">Mark Occurrences</span></a></p></li>
+ HREF="Mark_Occurrences.htm" style="x-condition: PDT;"><span style="x-condition: PDT;">Mark 
+ Occurrences</span></a></p></li>
 	<li style="margin-left: -20px;  x-condition: PDT; " class=p-ListBullet1><p 
- class=ListBullet1 style="font-weight: normal; x-condition: PDT;"><a HREF="Opening_Types_Methods.htm" 
- style="font-weight: normal; x-condition: PDT;">Open Type/Method</a></p></li>
-	<li style="margin-left: -20px; x-condition: PDT;" class=p-ListBullet1><p 
- class=ListBullet1><a HREF="Code_Assist_Concept.htm">Code Assist</a> Enhancements 
- - <a href="Code_Assist_Concept.htm#camelcase">Camel Case matches</a>, 
- <a href="Code_Assist_Concept.htm#magic_members">Magic Members support</a></p></li>
+ class=ListBullet1 style="x-condition: PDT;"><a HREF="Opening_Types_Methods.htm" 
+ style="x-condition: PDT;">Open Type/Method</a></p></li>
+	<li style="margin-left: -20px;  x-condition: PDT; " class=p-ListBullet1><p 
+ class=ListBullet1 style="x-condition: PDT;"><a HREF="Code_Assist_Concept.htm" 
+ style="x-condition: PDT;">Code Assist</a> Enhancements - <a href="Code_Assist_Concept.htm#camelcase" 
+ style="x-condition: PDT;">Camel Case matches</a>, <a href="Code_Assist_Concept.htm#magic_members" 
+ style="x-condition: PDT;">Magic Members support</a></p></li>
 </ul>
-<ul type="square" class="whs2">
+<ul type="square" class="whs4">
 	</ul>
-<table x-use-null-cells cellspacing="0" width="100%" class="whs3">
-<col class="whs4">
-<col class="whs5">
+<table x-use-null-cells cellspacing="0" width="100%" class="whs5">
+<col class="whs6">
+<col class="whs7">
 
-<tr valign="top" class="whs6"><td colspan="1" rowspan="1" width="7.093%" class="whs7">
-<p class="whs8">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs9">
+<tr valign="top" class="whs8"><td colspan="1" rowspan="1" width="7.093%" class="whs9">
+<p class="whs10">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs11">
 <p>&nbsp;</td></tr>
-<tr valign="top" class="whs10"><td width="7.093%" class="whs11">
-<p class="whs8"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs12"></td>
-<td width="92.907%" class="whs13">
-<p class="whs14">Related Links:</p>
-<p class="whs15"><a HREF="Getting_Started.htm"><span style="font-weight: normal;">Getting 
+<tr valign="top" class="whs12"><td width="7.093%" class="whs13">
+<p class="whs10"><img src="link_icon.png" x-maintain-ratio="TRUE" alt="Related Links" width="28px" height="18px" border="0" class="img_whs14"></td>
+<td width="92.907%" class="whs15">
+<p class="whs16">Related Links:</p>
+<p class="whs17"><a HREF="Getting_Started.htm"><span style="font-weight: normal;">Getting 
  Started</span></a></p>
-<p class="whs15"><a HREF="Basic_Tutorial.htm"><span style="font-weight: normal;">Basic 
+<p class="whs17"><a HREF="Basic_Tutorial.htm"><span style="font-weight: normal;">Basic 
  Tutorials</span></a></p>
 <p><a HREF="Quick_Start.htm" style="font-weight: normal;">Quick Start</a></td></tr>
-<tr valign="top" class="whs16"><td colspan="1" rowspan="1" width="7.093%" class="whs11">
-<p class="whs8">&nbsp;</td>
-<td colspan="1" rowspan="1" width="92.907%" class="whs13">
+<tr valign="top" class="whs18"><td colspan="1" rowspan="1" width="7.093%" class="whs13">
+<p class="whs10">&nbsp;</td>
+<td colspan="1" rowspan="1" width="92.907%" class="whs15">
 <p>&nbsp;</td></tr>
 </table>
-<div placeholder id="footer" class="whs17">
-<p align="right" class="whs18"><span 
+<div placeholder id="footer" class="whs19">
+ <p align="right" class="whs20"><span 
  style="background-color: #ffffff; x-condition: Online, Product;">V</span>iew 
  the Zend Product <a href="http://www.zend.com/en/resources/zend-documentation/Zend-Studio/zend-studio.htm" 
  style="color: #000000; x-condition: Product, Online;">Online Documentation</a> 
  for the most up-to-date information.</p>
-<p align="right" class="whs19"><span style="background-color: #ffffff;"><a 
+ <p align="right" class="whs21"><span style="background-color: #ffffff;"><a 
  href="javascript:crlf=&quot;
 &quot;;h=location.href;t=document.title;e = &quot;&quot; + (window.getSelection ? window.getSelection() : document.getSelection ? document.getSelection() : document.selection.createRange().text); if (e!=null) location=&quot;mailto:documentation@zend.com&quot; + &quot;?Subject= Feedback on &quot; + escape(t) + &quot;&amp;Body=&quot; + escape(e).replace(/ /g, &quot;+&quot;) + crlf + &quot; &quot;; void 0" 
  style="x-condition: Online;">Submit Documentation Feedback</a></span></p>
-<p align="center" class="whs20">PHP Development Tools</p>
-</div>
+ <p align="center" class="whs22">PHP Development 
+ Tools</p>
+ </div>
 <script type="text/javascript" language="javascript1.2">
 <!--
 highlightSearch();

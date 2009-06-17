@@ -28,12 +28,12 @@ td.whs9 { width:92.907%; padding-right:10px; padding-left:10px; border-bottom-st
 p.whs10 { font-weight:bold; }
 ol.whs11 { list-style:decimal; }
 img_whs12 { border:none; width:466px; height:252px; float:none; border-style:none; }
-ol.whs13 { list-style:decimal; x-condition:PDT; }
-ol.whs14 { list-style:lower-roman; x-condition:PDT; }
-ol.whs15 { list-style:lower-roman; }
-p.whs16 { x-condition:PDT; }
-ol.whs17 { list-style:decimal; x-condition:Studio_6; }
-ol.whs18 { list-style:decimal; x-condition:PDT_Studio_7; }
+p.whs13 { x-condition:PDT_Studio_7; font-weight:normal; }
+p.whs14 { font-weight:bold; x-condition:PDT_Studio_7; }
+ol.whs15 { list-style:decimal; x-condition:PDT_Studio_7; }
+p.whs16 { x-condition:PDT_Studio_7; }
+ol.whs17 { list-style:lower-roman; x-condition:PDT_Studio_7; }
+ol.whs18 { list-style:lower-roman; }
 td.whs19 { width:100%; padding-right:10px; padding-left:10px; border-bottom-style:none; border-right-style:none; border-left-style:none; }
 table.whs20 { x-cell-content-align:top; width:100%; x-condition:Online; border-spacing:0px; }
 tr.whs21 { x-cell-content-align:top; height:16px; x-condition:Online; }
@@ -141,43 +141,39 @@ if (window.writeIntopicBar)
 	The project's PHP Include Path properties page will appear.</span></p></li>
 </ol>
 <p class=picture style="x-condition: PDT_Studio_7;"><img src="include_path_properties.png" x-maintain-ratio="TRUE" width="466px" height="252px" border="0" class="img_whs12"></p>
-<ol start="2" type="1" class="whs11">
-	<li style="margin-left: -20px; x-condition: PDT;  font-weight: bold; " 
- class=p><p class="whs10">To configure source folders on your 
- Include Path:</p></li>
-</ol>
-<ol start="1" type="1" class="whs13">
-	<li style="list-style: lower-roman;" type=i class=p><p>Select the Source 
- tab.<br>
+<p>From this page you can configure the following:</p>
+<p class="whs13">&nbsp;</p>
+<p class="whs14">To configure source 
+ folders on your Include Path:</p>
+<ol start="1" type="1" class="whs15">
+	<li style="list-style: lower-roman; x-condition: PDT_Studio_7; " type=i 
+ class=p><p class="whs16">Select the Source tab.<br>
 	By default, all folders which are on your Include Path will be added 
- to your Build Path.</p></li>
+ to your <a href="Build_Paths.htm" style="x-condition: PDT_Studio_7;">Build 
+ Path</a>.</p></li>
 </ol>
-<p class=Note style="margin-left: 42px; x-condition: PDT;">Note:</p>
-<p class=NoteText style="margin-left: 42px; x-condition: PDT;">If your 
- project root is on your Include Path, all folders and resources contained 
+<p class=Note style="margin-left: 42px; x-condition: PDT_Studio_7;">Note:</p>
+<p class=NoteText style="margin-left: 42px; x-condition: PDT_Studio_7;">If 
+ your project root is on your Include Path, all folders and resources contained 
  within your project will also be on the Include Path. To add only certain 
  folders, remove the project root from the Include Path and add only the 
  required folders.</p>
-<ol start="2" type="i" class="whs14">
-	<li class=p><p>To remove a folder, select it and click Remove.</p></li>
+<ol start="2" type="i" class="whs17"><li class=p><p>To remove a folder, select it and click Remove.</p></li>
 </ol>
-<ol start="3" type="i" class="whs15">
-	<li style=" x-condition: PDT; " class=p><p class="whs16">To 
+<ol start="3" type="i" class="whs18">
+	<li style=" x-condition: PDT_Studio_7; " class=p><p class="whs16">To 
  add a folder from your project, click the Add Folder button and select 
  the required folder.<br>
 	A prompt will display, asking whether you would also like to add the 
- selected folder(s) to your <a HREF="Build_Paths.htm" style="x-condition: PDT;">Build 
+ selected folder(s) to your <a HREF="Build_Paths.htm" style="x-condition: PDT_Studio_7;">Build 
  Path</a>. <br>
 	It is recommended that the resources on your Build Path match the resources 
- on your Include Path.</p></li>
-	<li style="x-condition: PDT;" class=p><p>Click Yes to add the folder(s) 
- to your Build Path or No for your Build Path to not be affected.</p></li>
+ on your Include Path.<br>
+	Click Yes to add the folder(s) to your Build Path or No for your Build 
+ Path to not be affected.</p></li>
 </ol>
-<ol start="2" type="1" class="whs11">
-	<li style="margin-left: -20px;  font-weight: bold; " class=p><p class="whs10">To 
- add a<span style="x-condition: PDT;">nother</span> project from your workspace 
- to your Include Path:</p></li>
-</ol>
+<p class="whs10">To add a<span style="x-condition: PDT_Studio_7;">nother 
+ </span>project from your workspace to your Include Path:</p>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman;" type=i class=p><p>&nbsp;Select 
  the Projects tab.</p></li>
@@ -187,12 +183,8 @@ if (window.writeIntopicBar)
  you would like to add and click OK.<br>
 	The selected project(s) will be added to your project's Include Path.</p></li>
 </ol>
-<ol start="3" type="1" class="whs17">
-	</ol>
-<ol start="4" type="1" class="whs18">
-	<li style="margin-left: -20px;  font-weight: bold; " class=p><p class="whs10">To 
- add a library to your Include Path:</p></li>
-</ol>
+<p class="whs14">To add a library 
+ to your Include Path:</p>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman; x-condition: PDT_Studio_7;" type=i 
  class=p><p>Select the Libraries tab.</p></li>
@@ -202,10 +194,8 @@ if (window.writeIntopicBar)
 	<li style="list-style: lower-roman; x-condition: PDT_Studio_7;" type=i 
  class=p><p>Select the required Library (if available) and click OK.</p></li>
 </ol>
-<ol start="4" type="1" class="whs11">
-	<li style="margin-left: -20px;  font-weight: bold; " class=p><p><span 
- style="font-weight: bold;"><B>To add external folders to your Include Path:</B></span></p></li>
-</ol>
+<p><span style="font-weight: bold;"><B>To add external folders to your Include 
+ Path:</B></span></p>
 <ol start="1" type="1" class="whs11">
 	<li style="list-style: lower-roman;" type=i class=p><p>Select the Libraries 
  tab.</p></li>
@@ -220,17 +210,21 @@ if (window.writeIntopicBar)
 <p class=Note style="margin-left: 24px;">Note:</p>
 <p class=NoteText style="margin-left: 24px;">The library is a read-only 
  file and will not be available for editing.</p>
-<ol start="5" type="1" class="whs11">
-	<li style="margin-left: -20px;" class=p><p>Select the Order tab. This 
- determines the order in which resources will be searched for in require/include 
- calls.<br>
+<p class="whs10">To configure the order of elements on your 
+ Include Path:</p>
+<ol start="1" type="1" class="whs11">
+	<li style="margin-left: -20px; list-style: lower-roman;" type=i class=p><p>Select 
+ the Order tab. This determines the order in which resources will be searched 
+ for in require/include calls.<br>
 	See <a HREF="Include_Paths.htm">Include Paths</a> for more information 
  on the order for which files are searched for.<br>
 	If applicable, it is recommended that elements appear in the same order 
  as they do in your php.ini.</p></li>
-	<li style="margin-left: -20px;" class=p><p>If necessary, rearrange 
- the order of the entries. To do so, select an element and click Up or 
- Down to move it in the list.</p></li>
+	<li style="margin-left: -20px; list-style: lower-roman;" type=i class=p><p>If 
+ necessary, rearrange the order of the entries. To do so, select an element 
+ and click Up or Down to move it in the list.</p></li>
+</ol>
+<ol start="2" type="1" class="whs11">
 	<li style="margin-left: -20px;" class=p><p>Once all the elements are 
  added and are in the right order, click OK.</p></li>
 </ol></td></tr>
