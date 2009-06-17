@@ -97,7 +97,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		try {
 			IModelElement[] elements = internalASTResolve(sourceModule, offset, end);
 			if (elements != null) {
-				return elements;
+				Collection<IModelElement> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
+				return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
 			}
 		} catch (Exception e) {
 			if (DLTKCore.DEBUG_SELECTION) {
@@ -136,7 +137,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (document != null) {
 			IModelElement[] elements = internalResolve(document, sourceModule, offset, end);
 			if (elements != null) {
-				return elements;
+				Collection<IModelElement> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
+				return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
 			}
 		}
 
@@ -183,9 +185,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					} else {
 						SimpleReference callName = callExpression.getCallName();
 						String methodName = callName instanceof FullyQualifiedReference ? ((FullyQualifiedReference)callName).getFullyQualifiedName() : callName.getName();
-						IMethod[] methods = PHPModelUtils.getFunctions(methodName, sourceModule, offset);
-						Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
-						return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
+						return PHPModelUtils.getFunctions(methodName, sourceModule, offset);
 					}
 				}
 				// Static field or constant access:
@@ -429,9 +429,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 							}
 
-							IModelElement[] elements = getGlobalOrMethodFields(sourceModule, offset, elementName);
-							Collection<IModelElement> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
-							return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
+							return getGlobalOrMethodFields(sourceModule, offset, elementName);
 						}
 
 						// If we are at class constant definition:
@@ -447,9 +445,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
-							IType[] types = PHPModelUtils.getTypes(elementName, sourceModule, offset);
-							Collection<IType> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(types));
-							return (IType[]) filtered.toArray(new IType[filtered.size()]);
+							return PHPModelUtils.getTypes(elementName, sourceModule, offset);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
 							return PHPModelUtils.getNamespaces(elementName, SearchPattern.R_EXACT_MATCH, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
@@ -466,9 +462,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								}
 								return methods.toArray(new IMethod[methods.size()]);
 							}
-							IMethod[] methods = PHPModelUtils.getFunctions(elementName, sourceModule, offset);
-							Collection<IMethod> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(methods));
-							return (IMethod[]) filtered.toArray(new IMethod[filtered.size()]);
+							return PHPModelUtils.getFunctions(elementName, sourceModule, offset);
 						}
 
 						if (types != null && types.length > 0) {
@@ -509,15 +503,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 						// This can be only global constant, if we've reached here:
 						IField[] fields = PHPModelUtils.getFields(elementName, sourceModule, offset);
-						Collection<IField> constants = PHPModelUtils.filterElements(sourceModule, Arrays.asList(fields));
-						if (constants.size() > 0) {
-							return (IField[]) constants.toArray(new IField[constants.size()]);
+						if (fields != null && fields.length > 0) {
+							return fields;
 						}
 
 						// Return class if nothing else found.
-						IType[] elements = PHPModelUtils.getTypes(elementName, sourceModule, offset);
-						Collection<IType> filtered = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
-						return (IType[]) filtered.toArray(new IType[filtered.size()]);
+						return PHPModelUtils.getTypes(elementName, sourceModule, offset);
 					}
 				}
 			}

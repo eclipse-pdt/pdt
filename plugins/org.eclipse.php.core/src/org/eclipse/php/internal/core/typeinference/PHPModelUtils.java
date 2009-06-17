@@ -330,7 +330,7 @@ public class PHPModelUtils {
 		}
 
 		// Determine whether givent elements represent the same type and name,
-		// but declared in different files (determine filtering purpose):
+		// but declared in different files (determine whether filtering is needed):
 		int elementType = 0;
 		String elementName = null;
 		boolean fileNetworkFilter = true;
