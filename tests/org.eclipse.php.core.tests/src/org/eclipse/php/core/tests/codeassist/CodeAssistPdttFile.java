@@ -14,7 +14,6 @@ package org.eclipse.php.core.tests.codeassist;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.php.core.tests.PdttFile;
@@ -41,10 +40,6 @@ public class CodeAssistPdttFile extends PdttFile {
 
 	public CodeAssistPdttFile(String fileName) throws Exception {
 		super(fileName);
-	}
-	
-	public CodeAssistPdttFile(String fileName, String description, Map<String, String> config, String file, String expected) {
-		super(fileName, description, config, file, expected);
 	}
 
 	public ExpectedProposal[] getExpectedProposals() {

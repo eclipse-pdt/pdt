@@ -13,6 +13,7 @@ package org.eclipse.php.core.tests;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -26,6 +27,8 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 /**
@@ -37,6 +40,8 @@ import org.osgi.framework.Bundle;
  * Tests a simple class name completion
  * --CONFIG--
  * Custom configuration
+ * --PREFERENCES--
+ * Eclipse preference options to set before running this test
  * --FILE--
  * <? some PHP code ?>
  * --EXPECT--
@@ -46,12 +51,33 @@ import org.osgi.framework.Bundle;
 public class PdttFile {
 
 	protected enum STATES {
-		TEST, CONFIG, FILE, EXPECT
+
+		TEST("--TEST--"), CONFIG("--CONFIG--"), PREFERENCES("--PREFERENCES--"), FILE("--FILE--"), EXPECT("--EXPECT--");
+
+		private static class Names {
+			private static Map<String, STATES> map = new HashMap<String, STATES>();
+		}
+
+		String name;
+
+		STATES(String name) {
+			this.name = name;
+			Names.map.put(name.toLowerCase(), this);
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public static STATES byName(String name) {
+			return Names.map.get(name.toLowerCase());
+		}
 	}
 
 	private String fileName;
 	private Bundle testBundle;
 	private Map<String, String> config = new HashMap<String, String>();
+	private String preferences;
 	private String description;
 	private String file = "";
 	private String expected = "";
@@ -85,27 +111,6 @@ public class PdttFile {
 	}
 
 	/**
-	 * Constructs new PdttFile
-	 * @param fileName .pdtt file name 
-	 * @param description Test description
-	 * @param config Config section
-	 * @param file PHP source code
-	 * @param expected Expected result
-	 */
-	public PdttFile(String fileName, String description, Map<String, String> config, String file, String expected) {
-		if (fileName == null || description == null || file == null || expected == null) {
-			throw new IllegalArgumentException();
-		}
-		this.fileName = fileName;
-		this.description = description;
-		if (config != null) {
-			this.config = config;
-		}
-		this.file = file;
-		this.expected = expected;
-	}
-
-	/**
 	 * Returns the test description (--TEST-- section contents)
 	 * @return
 	 */
@@ -120,6 +125,16 @@ public class PdttFile {
 	 */
 	public Map<String, String> getConfig() {
 		return config;
+	}
+	
+	/**
+	 * Applies Eclipse preferences specified in --PREFERENCES-- option. 
+	 * @throws CoreException 
+	 */
+	public void applyPreferences() throws CoreException {
+		if (preferences != null) {
+			Platform.getPreferencesService().importPreferences(new ByteArrayInputStream(preferences.getBytes()));
+		}
 	}
 
 	/**
@@ -178,6 +193,10 @@ public class PdttFile {
 		this.config = config;
 	}
 
+	public void setPreferences(String preferences) {
+		this.preferences = preferences;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -201,19 +220,23 @@ public class PdttFile {
 	}
 
 	protected void writeStates(PrintWriter w) {
-		w.println("--TEST--");
+		w.println(STATES.TEST.getName());
 		w.println(description.trim());
 		if (config != null && config.size() > 0) {
-			w.println("--CONFIG--");
+			w.println(STATES.CONFIG.getName());
 			for (String key : config.keySet()) {
 				w.print(key);
 				w.print(':');
 				w.println(config.get(key));
 			}
 		}
-		w.println("--FILE--");
+		if (preferences != null) {
+			w.println(STATES.PREFERENCES.getName());
+			w.println(preferences.trim());
+		}
+		w.println(STATES.FILE.getName());
 		w.println(file.trim());
-		w.println("--EXPECT--");
+		w.println(STATES.EXPECT.getName());
 		w.println(expected.trim());
 	}
 
@@ -223,19 +246,7 @@ public class PdttFile {
 	 * @return STATE
 	 */
 	protected STATES parseStateLine(String line) {
-		if (line.equalsIgnoreCase("--TEST--")) {
-			return STATES.TEST;
-		}
-		if (line.equalsIgnoreCase("--FILE--")) {
-			return STATES.FILE;
-		}
-		if (line.equalsIgnoreCase("--EXPECT--")) {
-			return STATES.EXPECT;
-		}
-		if (line.equalsIgnoreCase("--CONFIG--")) {
-			return STATES.CONFIG;
-		}
-		return null;
+		return STATES.byName(line); 
 	}
 
 	/**
@@ -258,11 +269,14 @@ public class PdttFile {
 			case CONFIG:
 				int i = line.indexOf(':');
 				if (i == -1) {
-					throw new Exception("Wrong option in --CONFIG-- section: " + line);
+					throw new Exception("Wrong option in " + STATES.CONFIG.getName() + " section: " + line);
 				}
 				String key = line.substring(0, i);
 				String value = line.substring(i + 1);
 				this.config.put(key.trim(), value.trim());
+				break;
+			case PREFERENCES:
+				this.preferences += (line + "\n");
 				break;
 			default:
 				break;
