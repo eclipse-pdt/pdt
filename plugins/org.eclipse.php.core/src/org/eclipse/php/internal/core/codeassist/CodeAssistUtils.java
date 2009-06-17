@@ -126,37 +126,24 @@ public class CodeAssistUtils {
 	 * @return
 	 */
 	public static IMethod[] getSuperClassMethods(IType type, String prefix, int mask) {
+		boolean exactName = (mask & EXACT_NAME) != 0;
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		try {
 			if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
-				if (prefix.length() == 0) {
-					ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
-					IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
-					for (IType superClass : allSuperclasses) {
-						for (IMethod method : superClass.getMethods()) {
+				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
+				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
+				for (IType superClass : allSuperclasses) {
+					for (IMethod method : superClass.getMethods()) {
+						String methodName = method.getElementName();
+						if (exactName) {
+							if (methodName.equalsIgnoreCase(prefix)) {
+								methods.add(method);
+								break;
+							}
+						} else if (startsWithIgnoreCase(methodName, prefix)) {
 							methods.add(method);
 						}
 					}
-				} else {
-					SearchEngine searchEngine = new SearchEngine();
-					IDLTKSearchScope scope = SearchEngine.createSuperHierarchyScope(type);
-
-					int matchRule;
-					boolean exactName = (mask & EXACT_NAME) != 0;
-					if (prefix.length() == 0 && !exactName) {
-						prefix = WILDCARD;
-						matchRule = SearchPattern.R_PATTERN_MATCH;
-					} else {
-						matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-					}
-
-					SearchPattern pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.METHOD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							methods.add((IMethod) match.getElement());
-						}
-					}, null);
 				}
 			}
 		} catch (Exception e) {
@@ -230,58 +217,12 @@ public class CodeAssistUtils {
 		try {
 			List<IType> searchTypes = new LinkedList<IType>();
 
-			if (prefix.length() == 0) {
-				searchTypes.add(type);
-
+			searchTypes.add(type);
+			if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
 				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
 				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
 				searchTypes.addAll(Arrays.asList(allSuperclasses));
-
-			} else if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
-				SearchEngine searchEngine = new SearchEngine();
-				IDLTKSearchScope scope;
-				SearchPattern pattern;
-
-				int matchRule;
-				if (prefix.length() == 0 && !exactName) {
-					prefix = WILDCARD;
-					matchRule = SearchPattern.R_PATTERN_MATCH;
-				} else {
-					matchRule = exactName ? SearchPattern.R_EXACT_MATCH : SearchPattern.R_CAMELCASE_MATCH | SearchPattern.R_PREFIX_MATCH;
-				}
-
-				scope = SearchEngine.createSuperHierarchyScope(type);
-
-				if (searchConstants) {
-					// search for constants in hierarchy
-					pattern = SearchPattern.createPattern(prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-					searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match) throws CoreException {
-							IField element = (IField) match.getElement();
-							if (element.getParent() instanceof IType) {
-								fields.add(element);
-							}
-						}
-					}, null);
-				}
-
-				// search for variables in hierarchy
-				pattern = SearchPattern.createPattern(prefix.startsWith(DOLLAR) ? prefix : DOLLAR + prefix, IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS, matchRule, PHPLanguageToolkit.getDefault());
-
-				searchEngine.search(pattern, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, new SearchRequestor() {
-					public void acceptSearchMatch(SearchMatch match) throws CoreException {
-						IField element = (IField) match.getElement();
-						if (element.getParent() instanceof IType) {
-							fields.add(element);
-						}
-					}
-				}, null);
-
-			} else {
-				searchTypes.add(type);
 			}
-
 			for (IType searchType : searchTypes) {
 				IField[] typeFields = searchType.getFields();
 
@@ -289,6 +230,9 @@ public class CodeAssistUtils {
 					String elementName = typeField.getElementName();
 					int flags = typeField.getFlags();
 					if (PHPFlags.isConstant(flags)) {
+						if (!searchConstants) {
+							continue;
+						}
 						if (exactName) {
 							if (elementName.equals(prefix)) {
 								fields.add(typeField);
@@ -959,7 +903,7 @@ public class CodeAssistUtils {
 				groups.add(elementName.substring(0, prefixLength + nsIdx));
 			}
 		}
-		
+
 		Set<IModelElement> outOfGroupsElements = new HashSet<IModelElement>();
 		outOfGroupsElements.addAll(elements);
 
@@ -984,7 +928,7 @@ public class CodeAssistUtils {
 		for (String filteredGroup : filteredGroups) {
 			groups.remove(filteredGroup);
 		}
-		
+
 		if (groups.size() > 0) {
 			List<IModelElement> groupElements = new LinkedList<IModelElement>();
 			for (String group : groups) {
@@ -995,7 +939,7 @@ public class CodeAssistUtils {
 					groupElements.add(new FakeGroupMethod((ModelElement) sourceModule, fakeElementName));
 				}
 			}
-			
+
 			// Add all elements that don't fall into any group
 			groupElements.addAll(outOfGroupsElements);
 			return (IModelElement[]) groupElements.toArray(new IModelElement[groupElements.size()]);
