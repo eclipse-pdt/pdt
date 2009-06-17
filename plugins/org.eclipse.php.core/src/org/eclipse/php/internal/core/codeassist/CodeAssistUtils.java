@@ -307,7 +307,7 @@ public class CodeAssistUtils {
 								fields.add(typeField);
 								break;
 							}
-						} else if (elementName.startsWith(tmp)) {
+						} else if (startsWithIgnoreCase(elementName, tmp)) {
 							fields.add(typeField);
 						}
 					}
