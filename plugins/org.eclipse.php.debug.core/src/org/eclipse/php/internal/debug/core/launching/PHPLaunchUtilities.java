@@ -584,7 +584,7 @@ public class PHPLaunchUtilities {
 	/*
 	 * Returns a map of Strings parsed from a given array of attributes in a form of 'key=value'.
 	 */
-	private static Map<String, String> asAttributesMap(String[] attributesArray) {
+	public static Map<String, String> asAttributesMap(String[] attributesArray) {
 		Map<String, String> map = new HashMap<String, String>();
 		if (attributesArray == null) {
 			return map;
@@ -603,7 +603,7 @@ public class PHPLaunchUtilities {
 	/*
 	 * Returns an array of Strings in the form of 'key=value'
 	 */
-	private static String[] asAttributesArray(Map<String, String> attributesMap) {
+	public static String[] asAttributesArray(Map<String, String> attributesMap) {
 		String[] attributes = new String[attributesMap.size()];
 		int index = 0;
 		for (Map.Entry<String, String> entry : attributesMap.entrySet()) {
