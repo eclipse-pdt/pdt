@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 
 /**
@@ -39,4 +40,9 @@ public interface ICompletionContext {
 	 * @return <code>true</code> if this context is exclusive, otherwise <code>false</code>
 	 */
 	public boolean isExclusive();
+	
+	/**
+	 * This method is called by the completion engine when initializing this context
+	 */
+	public void init(CompletionCompanion companion); 
 }

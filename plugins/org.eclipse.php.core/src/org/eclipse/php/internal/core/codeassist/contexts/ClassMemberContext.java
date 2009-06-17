@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -65,9 +64,8 @@ public abstract class ClassMemberContext extends StatementContext {
 
 		TextSequence statementText = getStatementText();
 		int totalLength = statementText.length();
-		int endPosition = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength); // read whitespace
-		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, endPosition, true);
-
+		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, totalLength);
+		elementStart = PHPTextSequenceUtilities.readIdentifierStartIndex(statementText, elementStart, true);
 		elementStart = PHPTextSequenceUtilities.readBackwardSpaces(statementText, elementStart);
 		if (elementStart <= 2) { // there's no trigger of length less than 2 characters
 			return false;
@@ -82,7 +80,7 @@ public abstract class ClassMemberContext extends StatementContext {
 			return false;
 		}
 		
-		types = CodeAssistUtils.getTypesFor(sourceModule, statementText, elementStart, offset);
+		types = getCompanion().getRightHandType(this);
 		return true;
 	}
 	

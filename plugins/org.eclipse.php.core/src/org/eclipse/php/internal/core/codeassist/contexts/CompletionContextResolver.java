@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 
 /**
  * Default implementation of the {@link ICompletionContextResolver}
@@ -93,10 +94,12 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 		};
 	}
 
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor, CompletionCompanion companion) {
 		List<ICompletionContext> result = new LinkedList<ICompletionContext>();
 		// find correct completion contexts according to known information:
 		for (ICompletionContext context : createContexts()) {
+			context.init(companion);
+			
 			try {
 				if (context.isValid(sourceModule, offset, requestor)) {
 					result.add(context);

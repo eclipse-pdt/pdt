@@ -12,12 +12,12 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 
 /**
@@ -33,13 +33,14 @@ public interface ICompletionContextResolver {
 	 * @param sourceModule Source module of the file where code assist was requested 
 	 * @param offset Cursor offset where code assist was requested
 	 * @param requestor Completion requestor ({@link CompletionRequestor})
+	 * @param companion Shared instance of completion companion between all contexts
 	 * @return completion contexts or empty list in case no completion context could be found
 	 * @throws BadLocationException 
 	 * @throws CoreException 
 	 * @throws IOException 
 	 * @throws ResourceAlreadyExists 
 	 */
-	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor);
+	public ICompletionContext[] resolve(ISourceModule sourceModule, int offset, CompletionRequestor requestor, CompletionCompanion companion);
 	
 	/**
 	 * Creates known completion contexts

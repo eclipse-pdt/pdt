@@ -45,33 +45,28 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 
 	public void complete(ISourceModule module, int position, int i) {
 
-//		IJobManager jobMan = Job.getJobManager();
-//		Job[] build = jobMan.find(ResourcesPlugin.FAMILY_AUTO_BUILD);
-//		if (build != null && build.length > 0) {
-			// the build is running - exit
-//			return;
-//		}
-
 		relevanceKeyword = RELEVANCE_KEYWORD;
 		relevanceMethod = RELEVANCE_METHOD;
 		relevanceClass = RELEVANCE_CLASS;
 		relevanceVar = RELEVANCE_VAR;
 		relevanceConst = RELEVANCE_CONST;
-
+		
 		try {
 			ICompletionContextResolver[] contextResolvers = CompletionContextResolver.getActive();
 			ICompletionStrategyFactory[] strategyFactories = CompletionStrategyFactory.getActive();
+			
+			CompletionCompanion companion = new CompletionCompanion();
+			org.eclipse.dltk.core.ISourceModule sourceModule = (org.eclipse.dltk.core.ISourceModule) module.getModelElement();
 
 			for (ICompletionContextResolver resolver : contextResolvers) {
+				ICompletionContext[] contexts = resolver.resolve(sourceModule, position, requestor, companion);
 
-				ICompletionContext[] contexts = resolver.resolve((org.eclipse.dltk.core.ISourceModule) module.getModelElement(), position, requestor);
 				if (contexts != null) {
 					for (ICompletionStrategyFactory factory : strategyFactories) {
-
 						ICompletionStrategy[] strategies = factory.create(contexts);
+						
 						if (strategies != null) {
 							for (ICompletionStrategy strategy : strategies) {
-
 								try {
 									strategy.apply(this);
 								} catch (Exception e) {

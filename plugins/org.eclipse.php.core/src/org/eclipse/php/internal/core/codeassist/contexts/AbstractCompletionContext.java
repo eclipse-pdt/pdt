@@ -21,6 +21,7 @@ import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.php.internal.core.PHPVersion;
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
@@ -41,6 +42,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.*;
  */
 public abstract class AbstractCompletionContext implements ICompletionContext {
 
+	private CompletionCompanion companion;
 	private CompletionRequestor requestor;
 	private ISourceModule sourceModule;
 	private int offset;
@@ -50,6 +52,14 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 	private ITextRegionCollection regionCollection;
 	private IPhpScriptRegion phpScriptRegion;
 	private String partitionType;
+	
+	public void init(CompletionCompanion companion) {
+		this.companion = companion;
+	}
+	
+	protected CompletionCompanion getCompanion() {
+		return companion;
+	}
 
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (sourceModule == null) {
