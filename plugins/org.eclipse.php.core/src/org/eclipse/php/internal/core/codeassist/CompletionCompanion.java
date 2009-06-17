@@ -34,7 +34,7 @@ public class CompletionCompanion {
 	private Map<Integer, IType[]> rhTypesCache = new HashMap<Integer, IType[]>(); 
 	
 	/**
-	 * Caclulates type for right hand part in expression enclosed by given statement text.
+	 * Caclulates type for the left hand part in expression enclosed by given statement text.
 	 * <p>For example: 
 	 * <pre>
 	 * 1. If statement text contains "$a->foo()->" the result will be the return type of method 'foo'
@@ -46,7 +46,7 @@ public class CompletionCompanion {
 	 * @param context Completion context
 	 * @return right hand type(s) for the expression that encloses current offset
 	 */
-	public IType[] getRightHandType(ICompletionContext context) {
+	public IType[] getLeftHandType(ICompletionContext context) {
 		AbstractCompletionContext aContext = (AbstractCompletionContext) context;
 		int offset = aContext.getOffset();
 		if (!rhTypesCache.containsKey(offset)) {

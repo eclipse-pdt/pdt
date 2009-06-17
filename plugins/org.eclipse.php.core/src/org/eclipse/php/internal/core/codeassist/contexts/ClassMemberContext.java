@@ -80,7 +80,7 @@ public abstract class ClassMemberContext extends StatementContext {
 			return false;
 		}
 		
-		types = getCompanion().getRightHandType(this);
+		types = getCompanion().getLeftHandType(this);
 		return true;
 	}
 	
