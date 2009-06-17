@@ -70,6 +70,13 @@ public class PHPMatchLocatorParser extends MatchLocatorParser {
 				locator.match(refLoc, getNodeSet());
 			}
 		}
+		else if (node instanceof StaticConstantAccess) {
+			ConstantReference constantRef = ((StaticConstantAccess)node).getConstant();
+			locator.match(constantRef, getNodeSet());
+		}
+		/*else if (node instanceof ConstantReference) {
+			locator.match((ConstantReference)node, getNodeSet());
+		}*/
 		else if(node instanceof Assignment){
 			Expression left = ((Assignment)node).getVariable();
 			if (left instanceof FieldAccess) { // class variable ($this->a = .)
