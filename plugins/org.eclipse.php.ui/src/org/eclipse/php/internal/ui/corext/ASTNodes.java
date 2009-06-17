@@ -146,6 +146,9 @@ public class ASTNodes {
 	 * @param flags The flags to set
 	 */
 	public static void setFlagsToAST(ASTNode root, final int flags) {
+		if (root == null) {
+			return;
+		}
 		root.accept(new ApplyAll() {
 			protected boolean apply(ASTNode node) {
 				node.setFlags(node.getFlags() | flags);
