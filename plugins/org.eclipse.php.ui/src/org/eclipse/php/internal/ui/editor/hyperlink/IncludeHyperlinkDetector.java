@@ -60,13 +60,8 @@ public class IncludeHyperlinkDetector extends AbstractHyperlinkDetector {
 					if (expr instanceof Include) {
 						Expression fileExpr = ((Include) expr).getExpr();
 						if (fileExpr instanceof Scalar) {
-							IBuffer buffer = sourceModule.getBuffer();
-							if (buffer != null) {
-								int start = fileExpr.sourceStart();
-								int length = fileExpr.sourceEnd() - start;
-								file[0] = ASTUtils.stripQuotes(buffer.getText(start, length));
-								selectRegion[0] = new Region(start, length);
-							}
+							file[0] = ASTUtils.stripQuotes(((Scalar) fileExpr).getValue());
+							selectRegion[0] = new Region(fileExpr.sourceStart(), fileExpr.sourceEnd() - fileExpr.sourceStart());
 						}
 						found = true;
 						return false;
