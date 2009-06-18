@@ -79,13 +79,6 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 
 	public IModelElement[] select(org.eclipse.dltk.compiler.env.ISourceModule sourceUnit, int offset, int end) {
 		
-		IJobManager jobMan = Job.getJobManager();
-		Job[] build = jobMan.find(ResourcesPlugin.FAMILY_AUTO_BUILD);
-		if (build != null && build.length > 0) {
-			// the build is running - exit
-			return EMPTY;
-		}
-
 		if (end < offset) {
 			end = offset + 1;
 		}
