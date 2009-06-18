@@ -149,6 +149,16 @@
 			</then>
 		</if>
 		<if>
+			<isset property="dltktestsURL" />
+			<then>
+				<ant target="getDependency" antfile="${getDependencies.xml}">
+					<property name="url" value="${dltktestsURL}" />
+					<property name="file" value="${dltktestsFile}" />
+					<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.dltk.core.tests/plugin.xml" />
+				</ant>
+			</then>
+		</if>
+		<if>
 			<isset property="rseURL" />
 			<then>
 				<ant target="getDependency" antfile="${getDependencies.xml}">
