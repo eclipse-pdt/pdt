@@ -20,6 +20,7 @@ import org.eclipse.dltk.codeassist.ScriptCompletionEngine;
 import org.eclipse.dltk.compiler.env.ISourceModule;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.CompletionContextResolver;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContextResolver;
@@ -67,12 +68,13 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 						
 						if (strategies != null) {
 							for (ICompletionStrategy strategy : strategies) {
+								strategy.init(companion);
+								
 								try {
 									strategy.apply(this);
 								} catch (Exception e) {
-									if (DLTKCore.DEBUG_COMPLETION) {
-										e.printStackTrace();
-									}
+									PHPCorePlugin.log(e);
+									return; // stop processing other completions
 								}
 							}
 						}
@@ -134,9 +136,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 		try {
 			flags = field.getFlags();
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		int relevance = PHPFlags.isConstant(flags) ? nextConstantRelevance() : nextVariableRelevance();
 
@@ -207,9 +207,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			try {
 				params = method.getParameters();
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 			if (params != null && params.length > 0) {
 				char[][] args = new char[params.length][];
@@ -286,9 +284,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 						}
 					}
 				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
+					PHPCorePlugin.log(e);
 				}
 			}
 
@@ -312,9 +308,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			try {
 				proposal.setFlags(type.getFlags());
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 
 			proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());

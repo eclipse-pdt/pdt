@@ -105,9 +105,7 @@ public class CompletionContextResolver implements ICompletionContextResolver {
 					result.add(context);
 				}
 			} catch (Exception e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace(); // allow processing of other contexts
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 		

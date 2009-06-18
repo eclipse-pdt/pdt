@@ -101,9 +101,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return (IModelElement[]) filtered.toArray(new IModelElement[filtered.size()]);
 			}
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_SELECTION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 
 		// Use the old way by playing with document & buffer:
@@ -125,9 +123,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 			}
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_SELECTION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		} finally {
 			if (structuredModel != null) {
 				structuredModel.releaseFromRead();
@@ -215,9 +211,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 												fields.add(typeField);
 											}
 										} catch (ModelException e) {
-											if (DLTKCore.DEBUG_SELECTION) {
-												e.printStackTrace();
-											}
+											PHPCorePlugin.log(e);
 										}
 									}
 								}
@@ -253,9 +247,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 												fields.add(typeField);
 											}
 										} catch (ModelException e) {
-											if (DLTKCore.DEBUG_SELECTION) {
-												e.printStackTrace();
-											}
+											PHPCorePlugin.log(e);
 										}
 									}
 								}
@@ -488,9 +480,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										ISourceRange r2 = ((SourceRefElement)o2).getSourceRange();
 										return (int) Math.signum(r1.getOffset() - r2.getOffset());
 									} catch (ModelException e) {
-										if (DLTKCore.DEBUG_SELECTION) {
-											e.printStackTrace();
-										}
+										PHPCorePlugin.log(e);
 									}
 									return 0;
 								}
@@ -513,9 +503,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				}
 			}
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_SELECTION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return EMPTY;
 	}
@@ -561,9 +549,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					result.add(type);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_SELECTION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
@@ -577,9 +563,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					result.add(type);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_SELECTION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
@@ -623,9 +607,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 				return CodeAssistUtils.getMethodFields(method, prefix, CodeAssistUtils.EXACT_NAME);
 			}
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return PHPModelUtils.getFields(prefix, sourceModule, offset);
 	}

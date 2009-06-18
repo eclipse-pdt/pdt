@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -32,7 +33,7 @@ import org.eclipse.php.internal.core.language.PHPMagicMethods;
  * @author michael
  */
 public class ClassMethodsStrategy extends ClassMembersStrategy {
-	
+
 	public ClassMethodsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
@@ -57,33 +58,33 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 
 		String prefix = concreteContext.getPrefix();
 		SourceRange replaceRange = getReplacementRange(concreteContext);
-		
+
 		boolean isParentCall = isParentCall(concreteContext);
-		
+
 		String suffix = getSuffix(concreteContext);
-		
+
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
 		Set<String> magicMethods = new HashSet<String>();
 		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
-		
-		for (IType type : concreteContext.getLhsTypes()) {
-			IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, prefix, mask) 
-				: CodeAssistUtils.getTypeMethods(type, prefix, mask);
 
-			for (IMethod method : methods) {
-				try {
+		for (IType type : concreteContext.getLhsTypes()) {
+			try {
+				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
+
+				IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, hierarchy, prefix, mask)
+					: CodeAssistUtils.getTypeMethods(type, hierarchy, prefix, mask);
+
+				for (IMethod method : methods) {
 					if (!magicMethods.contains(method.getElementName()) && !isFiltered(method, concreteContext)) {
 						reporter.reportMethod((IMethod) method, suffix, replaceRange);
 					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
 				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
-	
+
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
 		return super.showNonStaticMembers(context) || context.getTriggerType() == Trigger.CLASS;
 	}
@@ -93,9 +94,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

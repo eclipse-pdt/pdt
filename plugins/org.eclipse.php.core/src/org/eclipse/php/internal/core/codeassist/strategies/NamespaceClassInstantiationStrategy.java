@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
@@ -55,9 +56,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 				}
 			}
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		
 		SourceRange replaceRange = getReplacementRange(context);
@@ -74,9 +73,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 						}
 					}
 				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
+					PHPCorePlugin.log(e);
 				}
 			}
 			
@@ -99,9 +96,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 					}
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
@@ -111,9 +106,7 @@ public class NamespaceClassInstantiationStrategy extends NamespaceTypesStrategy 
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

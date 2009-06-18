@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 
@@ -24,6 +25,7 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	
 	private IElementFilter elementFilter;
 	private ICompletionContext context;
+	private CompletionCompanion companion;
 	
 	public AbstractCompletionStrategy(ICompletionContext context) {
 		this.context = context;
@@ -32,6 +34,14 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	public AbstractCompletionStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		this.context = context;
 		this.elementFilter = elementFilter;
+	}
+	
+	public void init(CompletionCompanion companion) {
+		this.companion = companion;
+	}
+	
+	protected CompletionCompanion getCompanion() {
+		return companion;
 	}
 
 	/**

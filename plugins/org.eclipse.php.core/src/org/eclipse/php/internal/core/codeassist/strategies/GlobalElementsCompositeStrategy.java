@@ -21,11 +21,13 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * This composite contains strategies that complete global elements
  * @author michael
  */
-public class GlobalElementsCompositeStrategy implements ICompletionStrategy {
+public class GlobalElementsCompositeStrategy extends AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 	
 	public GlobalElementsCompositeStrategy(ICompletionContext context, boolean includeKeywords) {
+		super(context);
+		
 		strategies.add(new GlobalTypesStrategy(context));
 		strategies.add(new GlobalFunctionsStrategy(context));
 		strategies.add(new GlobalVariablesStrategy(context));

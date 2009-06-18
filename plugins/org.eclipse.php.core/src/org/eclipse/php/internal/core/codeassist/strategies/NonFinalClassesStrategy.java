@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
@@ -35,9 +36,7 @@ public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 			try {
 				return super.filter(element) || PHPFlags.isFinal(((IType)element).getFlags());
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 			return false;
 		}

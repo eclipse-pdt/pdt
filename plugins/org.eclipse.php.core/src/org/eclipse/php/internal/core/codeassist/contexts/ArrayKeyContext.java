@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
 import org.eclipse.php.internal.core.util.text.TextSequence;
@@ -88,9 +89,7 @@ public class ArrayKeyContext extends AbstractCompletionContext {
 			}
 			
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return true;
 	}

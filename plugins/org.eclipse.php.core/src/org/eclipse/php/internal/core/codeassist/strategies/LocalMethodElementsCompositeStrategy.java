@@ -21,11 +21,12 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * This composite contains strategies that complete elements inside method
  * @author michael
  */
-public class LocalMethodElementsCompositeStrategy implements ICompletionStrategy {
+public class LocalMethodElementsCompositeStrategy extends AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 	
 	public LocalMethodElementsCompositeStrategy(ICompletionContext context) {
+		super(context);
 		strategies.add(new GlobalTypesStrategy(context));
 		strategies.add(new GlobalFunctionsStrategy(context));
 		strategies.add(new LocalMethodVariablesStrategy(context));

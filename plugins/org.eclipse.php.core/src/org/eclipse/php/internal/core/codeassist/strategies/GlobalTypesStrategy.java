@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -55,9 +56,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					reporter.reportType(type, PHPFlags.isNamespace(flags) ? nsSuffix : type instanceof FakeGroupType ? "" : suffix, replacementRange);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
@@ -121,9 +120,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 								"()", replaceRange);
 						}
 					} catch (ModelException e) {
-						if (DLTKCore.DEBUG_COMPLETION) {
-							e.printStackTrace();
-						}
+						PHPCorePlugin.log(e);
 					}
 				}
 			}
@@ -143,9 +140,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return "\\".equals(nextWord) ? "" : "\\"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
@@ -155,9 +150,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

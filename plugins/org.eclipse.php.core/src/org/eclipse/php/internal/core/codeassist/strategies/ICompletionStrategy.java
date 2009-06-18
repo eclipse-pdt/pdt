@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 
 /**
@@ -18,6 +19,11 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
  * @author michael
  */
 public interface ICompletionStrategy {
+	
+	/**
+	 * Initializes this completion strategy
+	 */
+	public void init(CompletionCompanion companion);
 
 	/**
 	 * Applies completion strategy for the given context

@@ -22,11 +22,12 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
  * This composite contains strategies that complete namespace elements
  * @author michael
  */
-public class NamespaceElementsCompositeStrategy implements ICompletionStrategy {
+public class NamespaceElementsCompositeStrategy extends AbstractCompletionStrategy {
 
 	private final Collection<ICompletionStrategy> strategies = new ArrayList<ICompletionStrategy>();
 
 	public NamespaceElementsCompositeStrategy(ICompletionContext context, ICompletionContext[] allContexts, boolean isGlobalNamespace) {
+		super(context);
 
 		boolean hasNewClassContext = false;
 		for (ICompletionContext c : allContexts) {

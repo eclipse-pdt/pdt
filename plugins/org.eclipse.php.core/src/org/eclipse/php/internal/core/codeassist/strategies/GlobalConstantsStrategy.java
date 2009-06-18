@@ -64,9 +64,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 					reporter.reportField((IField) constant, "", replaceRange, false);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 	}

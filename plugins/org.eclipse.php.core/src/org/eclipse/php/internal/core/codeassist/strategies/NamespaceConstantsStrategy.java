@@ -17,6 +17,7 @@ import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -60,9 +61,7 @@ public class NamespaceConstantsStrategy extends NamespaceMembersStrategy {
 					}
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 	}

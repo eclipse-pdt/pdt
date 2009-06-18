@@ -20,6 +20,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
@@ -94,9 +95,7 @@ public abstract class AbstractCompletionContext implements ICompletionContext {
 			}
 
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return false;
 	}

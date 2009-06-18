@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 
 
 /**
@@ -46,9 +47,7 @@ public final class GlobalMethodStatementContext extends AbstractGlobalStatementC
 			enclosingMethod = (IMethod) enclosingElement;
 		
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return true;
 	}

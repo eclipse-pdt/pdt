@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -60,9 +61,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 					reporter.reportMethod(method, suffix, replacementRange);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
@@ -72,9 +71,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

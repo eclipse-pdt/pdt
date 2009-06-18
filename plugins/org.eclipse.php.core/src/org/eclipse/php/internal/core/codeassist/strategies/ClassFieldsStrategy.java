@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
@@ -25,7 +26,7 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trig
  * @author michael
  */
 public class ClassFieldsStrategy extends ClassMembersStrategy {
-	
+
 	public ClassFieldsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
@@ -52,28 +53,25 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
 		for (IType type : concreteContext.getLhsTypes()) {
-			IModelElement[] fields = CodeAssistUtils.getTypeFields(type, prefix, mask);
+			try {
+				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
+				IModelElement[] fields = CodeAssistUtils.getTypeFields(type, hierarchy, prefix, mask);
 
-			for (IModelElement element : fields) {
-				IField field = (IField) element;
-				try {
+				for (IModelElement element : fields) {
+					IField field = (IField) element;
 					if (!isFiltered(field, concreteContext)) {
 						reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
 					}
-				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
 				}
+			} catch (ModelException e) {
+				PHPCorePlugin.log(e);
 			}
 		}
 	}
-	
+
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
 		return super.showNonStaticMembers(context) && !isParentCall(context);
 	}
-
-
 
 	public String getSuffix() {
 		return "";

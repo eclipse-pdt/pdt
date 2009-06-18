@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
@@ -55,9 +56,7 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 				}
 			}
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		
 		SourceRange replaceRange = getReplacementRange(context);
@@ -78,9 +77,7 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 						}
 					}
 				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
+					PHPCorePlugin.log(e);
 				}
 			}
 			
@@ -108,9 +105,7 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 					}
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 		
@@ -122,9 +117,7 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return "(".equals(nextWord) ? "" : "()"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}

@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
 /**
@@ -44,9 +45,7 @@ public class InterfaceDeclarationKeywordContext extends InterfaceDeclarationCont
 				return true;
 			}
 		} catch (BadLocationException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return false;
 	}

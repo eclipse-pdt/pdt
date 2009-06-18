@@ -19,6 +19,7 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -72,9 +73,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 					reporter.reportMethod(superMethod, "()", replaceRange);
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 

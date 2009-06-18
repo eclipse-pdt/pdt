@@ -15,6 +15,7 @@ import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
@@ -31,9 +32,7 @@ public class GlobalInterfacesStrategy extends GlobalTypesStrategy {
 				try {
 					return !PHPFlags.isInterface(((IType)element).getFlags());
 				} catch (ModelException e) {
-					if (DLTKCore.DEBUG_COMPLETION) {
-						e.printStackTrace();
-					}
+					PHPCorePlugin.log(e);
 				}
 				return false;
 			}

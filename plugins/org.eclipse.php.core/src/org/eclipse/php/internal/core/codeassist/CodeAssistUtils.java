@@ -120,18 +120,32 @@ public class CodeAssistUtils {
 
 	/**
 	 * This method finds all ancestor methods that match the given prefix.
-	 * @param type
-	 * @param prefix
-	 * @param mask
+	 * @param type Type to find methods within
+	 * @param prefix Method prefix
+	 * @param mask Search mask
 	 * @return
 	 */
 	public static IMethod[] getSuperClassMethods(IType type, String prefix, int mask) {
+		return getSuperClassMethods(type, null, prefix, mask);
+	}
+	
+	/**
+	 * This method finds all ancestor methods that match the given prefix.
+	 * @param type Type to find methods within
+	 * @param hierarchy Cached type hierarchy
+	 * @param prefix Method prefix
+	 * @param mask Search mask
+	 * @return
+	 */
+	public static IMethod[] getSuperClassMethods(IType type, ITypeHierarchy hierarchy, String prefix, int mask) {
 		boolean exactName = (mask & EXACT_NAME) != 0;
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		try {
 			if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
-				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
-				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
+				if (hierarchy == null) {
+					hierarchy = type.newSupertypeHierarchy(null);
+				}
+				IType[] allSuperclasses = hierarchy.getAllSuperclasses(type);
 				for (IType superClass : allSuperclasses) {
 					for (IMethod method : superClass.getMethods()) {
 						String methodName = method.getElementName();
@@ -147,21 +161,31 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
 	/**
 	 * This method finds all class methods that match the given prefix.
-	 * @param type
-	 * @param prefix
-	 * @param mask
+	 * @param type Type to find methods within
+	 * @param prefix Method prefix
+	 * @param mask Search mask
 	 * @return
 	 */
 	public static IMethod[] getTypeMethods(IType type, String prefix, int mask) {
+		return getTypeMethods(type, null, prefix, mask);
+	}
+	
+	/**
+	 * This method finds all class methods that match the given prefix
+	 * @param type Type to find methods within
+	 * @param hierarchy Cached type hierarchy
+	 * @param prefix Method prefix
+	 * @param mask Search mask
+	 * @return
+	 */
+	public static IMethod[] getTypeMethods(IType type, ITypeHierarchy hierarchy, String prefix, int mask) {
 		final Set<IMethod> methods = new TreeSet<IMethod>(new AlphabeticComparator());
 		final Set<String> methodNames = new HashSet<String>();
 		boolean exactName = (mask & EXACT_NAME) != 0;
@@ -195,21 +219,32 @@ public class CodeAssistUtils {
 			}
 
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return methods.toArray(new IMethod[methods.size()]);
 	}
 
 	/**
 	 * This method finds all class fields that match the given prefix.
-	 * @param type
-	 * @param prefix
-	 * @param mask
+	 * @param type Type to search fields within
+	 * @param prefix Field prefix
+	 * @param mask Search mask
 	 * @return
 	 */
 	public static IField[] getTypeFields(IType type, String prefix, int mask) {
+		return getTypeFields(type, null, prefix, mask);
+	}
+	
+	/**
+	 * This method finds all class fields that match the given prefix
+	 * @param type Type to search fields within
+	 * @param hierarchy Cached type hierarchy
+	 * @param prefix Field prefix
+	 * @param mask Search mask
+	 * @return
+	 */
+	public static IField[] getTypeFields(IType type, ITypeHierarchy hierarchy, String prefix, int mask) {
+		
 		boolean exactName = (mask & EXACT_NAME) != 0;
 		boolean searchConstants = (mask & EXCLUDE_CONSTANTS) == 0;
 
@@ -219,8 +254,10 @@ public class CodeAssistUtils {
 
 			searchTypes.add(type);
 			if (type.getSuperClasses() != null && type.getSuperClasses().length > 0) {
-				ITypeHierarchy superTypeHierarchy = type.newSupertypeHierarchy(null);
-				IType[] allSuperclasses = superTypeHierarchy.getAllSuperclasses(type);
+				if (hierarchy == null) {
+					hierarchy = type.newSupertypeHierarchy(null);
+				}
+				IType[] allSuperclasses = hierarchy.getAllSuperclasses(type);
 				searchTypes.addAll(Arrays.asList(allSuperclasses));
 			}
 			for (IType searchType : searchTypes) {
@@ -258,9 +295,7 @@ public class CodeAssistUtils {
 				}
 			}
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return fields.toArray(new IField[fields.size()]);
 	}
@@ -437,9 +472,7 @@ public class CodeAssistUtils {
 					return type;
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 
@@ -576,9 +609,7 @@ public class CodeAssistUtils {
 					return true;
 				}
 			} catch (CoreException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 		return false;
@@ -611,9 +642,7 @@ public class CodeAssistUtils {
 				}
 				filteredElements.add(type);
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 		return filteredElements.toArray(new IType[filteredElements.size()]);
@@ -681,9 +710,7 @@ public class CodeAssistUtils {
 				}
 			}, null);
 		} catch (CoreException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 
 		// collect global variables
@@ -710,9 +737,7 @@ public class CodeAssistUtils {
 				}
 			});
 		} catch (Exception e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 
 		return elements.toArray(new IModelElement[elements.size()]);
@@ -837,9 +862,7 @@ public class CodeAssistUtils {
 										return;
 									}
 								} catch (ModelException e) {
-									if (DLTKCore.DEBUG_COMPLETION) {
-										e.printStackTrace();
-									}
+									PHPCorePlugin.log(e);
 								}
 
 								IModelElement parent = element.getParent();
@@ -855,9 +878,7 @@ public class CodeAssistUtils {
 					}
 				}
 			} catch (CoreException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		}
 
@@ -886,9 +907,7 @@ public class CodeAssistUtils {
 					}
 				}
 			} catch (ModelException e) {
-				if (DLTKCore.DEBUG_COMPLETION) {
-					e.printStackTrace();
-				}
+				PHPCorePlugin.log(e);
 			}
 		} else {
 			elements.addAll(Arrays.asList(PHPModelUtils.getFunctions(prefix, matchRule, scope)));
@@ -1020,9 +1039,7 @@ public class CodeAssistUtils {
 					break;
 			}
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		return elements.toArray(new IModelElement[elements.size()]);
 	}
@@ -1060,9 +1077,7 @@ public class CodeAssistUtils {
 								return -1;
 							}
 						} catch (Exception e) {
-							if (DLTKCore.DEBUG_COMPLETION) {
-								e.printStackTrace();
-							}
+							PHPCorePlugin.log(e);
 						}
 					}
 				}

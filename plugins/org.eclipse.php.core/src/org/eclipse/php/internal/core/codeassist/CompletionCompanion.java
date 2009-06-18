@@ -14,7 +14,10 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.util.text.PHPTextSequenceUtilities;
@@ -31,7 +34,12 @@ public class CompletionCompanion {
 	/**
 	 * Cache for calculated return types by document position
 	 */
-	private Map<Integer, IType[]> rhTypesCache = new HashMap<Integer, IType[]>(); 
+	private Map<Integer, IType[]> rhTypesCache = new HashMap<Integer, IType[]>();
+	
+	/**
+	 * Cache for calculated super type hierarchy
+	 */
+	private Map<IType, ITypeHierarchy> superHierarchyCache = new HashMap<IType, ITypeHierarchy>();
 	
 	/**
 	 * Caclulates type for the left hand part in expression enclosed by given statement text.
@@ -59,5 +67,16 @@ public class CompletionCompanion {
 			rhTypesCache.put(offset, CodeAssistUtils.getTypesFor(aContext.getSourceModule(), statementText, triggerEnd, offset));
 		}
 		return rhTypesCache.get(offset);
+	}
+	
+	/**
+	 * Calculates super type hierarchy
+	 * @throws ModelException 
+	 */
+	public ITypeHierarchy getSuperTypeHierarchy(IType type, IProgressMonitor monitor) throws ModelException {
+		if (!superHierarchyCache.containsKey(type)) {
+			superHierarchyCache.put(type, type.newSupertypeHierarchy(monitor));
+		}
+		return superHierarchyCache.get(type);
 	}
 }

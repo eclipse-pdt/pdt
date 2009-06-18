@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 
@@ -43,9 +44,7 @@ public final class GlobalStatementContext extends AbstractGlobalStatementContext
 				return false;
 			}
 		} catch (ModelException e) {
-			if (DLTKCore.DEBUG_COMPLETION) {
-				e.printStackTrace();
-			}
+			PHPCorePlugin.log(e);
 		}
 		
 		return true;
