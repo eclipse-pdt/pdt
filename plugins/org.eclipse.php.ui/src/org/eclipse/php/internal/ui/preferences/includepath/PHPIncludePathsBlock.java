@@ -295,7 +295,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 				}
 			}
 			if(newBuildPathEntries.size() > 0){
-				addEntriesToBuildPath(javaProject, newBuildPathEntries);
+				BuildPathUtils.addEntriesToBuildPath(javaProject, newBuildPathEntries);
 			}			
 			IncludePathManager.getInstance().addEntriesToIncludePath(project, newIncludePathEntries);
 
@@ -303,36 +303,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 			monitor.done();
 		}
 	}
-
-	/**
-	 * Recreate the build path based on the current sources in it and the additional projects/libraries
-	 * added in this dialog
-	 * @param scriptProject
-	 * @param entries
-	 * @throws ModelException
-	 */
-	private static void addEntriesToBuildPath(IScriptProject scriptProject, List<IBuildpathEntry> entries) throws ModelException {
-		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
-
-		// get the current buildpath entries, in order to add/remove entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
-
-		// get all of the source folders and the language library from the existing build path 
-		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
-			if (buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_SOURCE || LanguageModelInitializer.CONTAINER_PATH.equals(buildpathEntry.getPath().toString())) {
-				newRawBuildpath.add(buildpathEntry);
-			}
-		}
-		// add all of the non-source entries added in this dialog
-		for (IBuildpathEntry buildpathEntry : entries) {
-			newRawBuildpath.add(buildpathEntry);
-		}
-
-		// set the new updated buildpath for the project		
-		scriptProject.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newRawBuildpath.size()]), null);
-
-	}
-
+	
 	/**
 	 * Initializes the include path for the given project. Multiple calls to init
 	 * are allowed, but all existing settings will be cleared and replace by the
