@@ -89,7 +89,7 @@ public class PreferencesSupport {
 	 * @return
 	 */
 	public String getWorkspacePreferencesValue(String key) {
-		return preferenceStore.getString(key);
+		return preferenceStore == null ? null : preferenceStore.getString(key);
 	}
 
 	/**
