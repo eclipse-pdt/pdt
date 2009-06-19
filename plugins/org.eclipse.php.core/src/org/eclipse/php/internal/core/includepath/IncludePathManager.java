@@ -20,6 +20,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
 public class IncludePathManager {
@@ -226,9 +227,9 @@ public class IncludePathManager {
 	}
 
 	public static boolean isBuildpathAllowed(IBuildpathEntry entry) {
-		return (entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER ||
+		return ((entry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER && !entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH))||
 				entry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || 
-				entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); // && entry.getPath().toString().equals(LanguageModelInitializer.CONTAINER_PATH)
+				entry.getEntryKind() == IBuildpathEntry.BPE_PROJECT); 
 	}
 
 	/**
