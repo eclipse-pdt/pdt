@@ -12,7 +12,9 @@
 package org.eclipse.php.internal.core.buildpath;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.dltk.core.DLTKCore;
@@ -32,7 +34,7 @@ public class BuildPathUtils {
 		IBuildpathEntry[] rawBuildpath = scriptProject.getRawBuildpath();
 
 		// get the current buildpath entries, in order to add/remove entries
-		List<IBuildpathEntry> newRawBuildpath = new ArrayList<IBuildpathEntry>();
+		Set<IBuildpathEntry> newRawBuildpath = new HashSet<IBuildpathEntry>();
 
 		// get all of the source folders and the language library from the existing build path 
 		for (IBuildpathEntry buildpathEntry : rawBuildpath) {
