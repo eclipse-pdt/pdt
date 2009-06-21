@@ -190,8 +190,23 @@ depFilesListExtras=
 			<zipfileset src="${buildDirectory}/${buildLabel}/${SDKZip}"
 			            dirmode="775"
 			            filemode="664"
-			            excludes="**/org.eclipse.*.examples*, **/org.eclipse.*.examples*/**, **/org.eclipse.*.sdk*, **/org.eclipse.*.sdk*/**, **/org.eclipse.*.all*, **/org.eclipse.*.all*/**, **/org.eclipse.*.doc*, **/org.eclipse.*.doc*/**, **/org.eclipse.*.source*, **/org.eclipse.*.source*/**, **/*src.zip"
+			            excludes="**/org.eclipse.*.examples*, **/org.eclipse.*.examples*/**, **/org.eclipse.*.sdk*, **/org.eclipse.*.sdk*/**, **/org.eclipse.*.all*, **/org.eclipse.*.all*/**, **/org.eclipse.*.doc*, **/org.eclipse.*.doc*/**, **/org.eclipse.*.source*, **/org.eclipse.*.source*/**, **/*src.zip, **/*mylyn*, **/*mylyn*/**"
 			            includes="**/org.eclipse.php*, **/org.eclipse.php*/**, **/org.eclipse.pdt*, **/org.eclipse.pdt*/**"
+			/>
+			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}"
+			            dirmode="775"
+			            filemode="664"
+			            id="rootfiles"
+			            includes="**/eclipse/epl-v10.html, **/eclipse/notice.html"
+			/>
+		</zip>
+		<!-- build mylyn from SDK -->
+		<zip destfile="${buildDirectory}/${buildLabel}/${projectName}-mylyn-${buildAlias}.zip" update="true">
+			<zipfileset src="${buildDirectory}/${buildLabel}/${SDKZip}"
+			            dirmode="775"
+			            filemode="664"
+			            excludes="**/org.eclipse.*.examples*, **/org.eclipse.*.examples*/**, **/org.eclipse.*.sdk*, **/org.eclipse.*.sdk*/**, **/org.eclipse.*.all*, **/org.eclipse.*.all*/**, **/org.eclipse.*.doc*, **/org.eclipse.*.doc*/**, **/org.eclipse.*.source*, **/org.eclipse.*.source*/**, **/*src.zip"
+			            includes="**/*mylyn*, **/*mylyn*/**"
 			/>
 			<zipfileset src="${buildDirectory}/${buildLabel}/${allZip}"
 			            dirmode="775"
