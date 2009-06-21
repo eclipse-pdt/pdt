@@ -71,8 +71,7 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 			try {
 				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
 
-				IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, hierarchy, prefix, mask)
-					: CodeAssistUtils.getTypeMethods(type, hierarchy, prefix, mask);
+				IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, hierarchy, prefix, mask) : CodeAssistUtils.getTypeMethods(type, hierarchy, prefix, mask);
 
 				for (IMethod method : methods) {
 					if (!magicMethods.contains(method.getElementName()) && !isFiltered(method, concreteContext)) {

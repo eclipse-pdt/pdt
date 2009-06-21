@@ -122,5 +122,4 @@ public abstract class ClassMemberContext extends StatementContext {
 		}
 		return super.getPrefixEnd();
 	}
-
 }

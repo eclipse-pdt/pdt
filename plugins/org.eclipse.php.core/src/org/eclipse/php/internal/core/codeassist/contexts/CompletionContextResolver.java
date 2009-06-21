@@ -11,13 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.contexts;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.core.CompletionRequestor;
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
