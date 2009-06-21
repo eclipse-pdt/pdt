@@ -267,7 +267,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 					ClassInstanceCreation newNode = (ClassInstanceCreation) node;
 					Expression className = newNode.getClassName();
 					if (className instanceof SimpleReference) {
-						String name = (node instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) node).getFullyQualifiedName() : ((SimpleReference) node).getName();
+						String name = (className instanceof FullyQualifiedReference) ? ((FullyQualifiedReference) className).getFullyQualifiedName() : ((SimpleReference) className).getName();
 						return getConstructorsIfAny(extractClasses(PHPModelUtils.getTypes(name, sourceModule, offset)));
 					}
 				}
