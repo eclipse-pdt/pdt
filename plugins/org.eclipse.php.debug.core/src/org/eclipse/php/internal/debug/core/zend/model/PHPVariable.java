@@ -15,6 +15,7 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.ui.actions.IWatchExpressionFactoryAdapter;
 import org.eclipse.php.internal.debug.core.Logger;
 import org.eclipse.php.internal.debug.core.model.PHPDebugElement;
 import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpression;
@@ -188,5 +189,14 @@ public class PHPVariable extends PHPDebugElement implements IVariable {
 		int valueHash = 0;
 		valueHash = pValue.hashCode();
 		return getDebugTarget().hashCode() + valueHash+ variable.getFullName().hashCode();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object getAdapter(Class adapter) {
+		if (adapter == IWatchExpressionFactoryAdapter.class) {
+			return new WatchExpressionFactoryAdapter();
+		}
+		return super.getAdapter(adapter);
 	}
 }
