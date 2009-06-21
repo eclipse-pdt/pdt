@@ -23,7 +23,7 @@
 				(eg., no examples), and be sure to create an ".all" feature which includes your 
 				SDK feature plus any other plugins/features not included in the SDK 
 			-->
-			<property name="id" value="org.eclipse.php.sdk" />
+			<property name="id" value="org.eclipse.php.all" />
 		</ant>
 	</target>
 
@@ -39,7 +39,7 @@
 		(eg., no examples), and be sure to create an ".all" feature which includes your 
 		SDK feature plus any other plugins/features not included in the SDK 
 	-->
-	<target name="assemble.org.eclipse.php.sdk">
+	<target name="assemble.org.eclipse.php.all">
 		<property name="archiveName" value="pdt-Master-${buildAlias}.zip" />
 		<ant antfile="${assembleScriptName}" />
 		<!-- ADD POST STEPS -->
@@ -145,6 +145,16 @@
 					<property name="url" value="${dltkrseURL}" />
 					<property name="file" value="${dltkrseFile}" />
 					<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.dltk.rse/plugin.xml" />
+				</ant>
+			</then>
+		</if>
+		<if>
+			<isset property="dltkmylynURL" />
+			<then>
+				<ant target="getDependency" antfile="${getDependencies.xml}">
+					<property name="url" value="${dltkmylynURL}" />
+					<property name="file" value="${dltkmylynFile}" />
+					<property name="isUnpackedFile" value="${buildDirectory}/plugins/org.eclipse.dltk.mylyn/plugin.xml" />
 				</ant>
 			</then>
 		</if>
@@ -294,7 +304,7 @@
 
 		<unzip dest="${buildDirectory}/${buildLabel}/compilelogs" overwrite="true">
 			<fileset dir="${buildDirectory}/features">
-				<include name="**/org.eclipse.php.sdk/*.log.zip" />
+				<include name="**/org.eclipse.php.*/*.log.zip" />
 			</fileset>
 		</unzip>
 

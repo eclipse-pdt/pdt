@@ -1,0 +1,7 @@
+!***************  PROJECT CONTRIBUTION  ******************************************************** 
+
+!*** Special entries from eclipse
+
+!*** Project's plugins, features and fragments
+feature@org.eclipse.php.mylyn=v20090613-1236,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/features/org.eclipse.mylyn-feature
+plugin@org.eclipse.php.mylyn.ui=v20090619-2119,:pserver:anonymous@dev.eclipse.org:/cvsroot/tools,,org.eclipse.pdt/plugins/org.eclipse.php.mylyn.ui
