@@ -1,0 +1,16 @@
+--TEST--
+Bug 279980 Autocomplete - need to compare string with upper/lower case of symbols
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+--FILE--
+<?php 
+class Test {
+        private $_sHelperData = 'hello';
+        public function __construct($sContent='') {
+                echo $this->_she|
+
+        }
+}
+?>
+--EXPECT--
+field($_sHelperData)

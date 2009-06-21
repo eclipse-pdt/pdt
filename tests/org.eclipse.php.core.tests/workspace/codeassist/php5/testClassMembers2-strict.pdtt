@@ -1,0 +1,79 @@
+--TEST--
+Show parent class members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+--FILE--
+<?
+class A {
+	//static fields
+	static private $staticPrivateField = "staticPrivateField\n";
+	static protected $staticProtectedField = "staticProtectedField\n";
+	static public $staticPublicField = "staticPublicField\n";
+	static $staticDefaultField = "staticDefaultField\n";
+		
+	//static functions
+	static public function publicStaticFunction() { echo "publicStaticFunction\n";}
+	static protected function protectedStaticFunction() {echo "protectedStaticFunction\n";}
+	static private function privateStaticFunction() {echo "privateStaticFunction\n";}
+	static function defaultStaticFunction() {echo "defaultStaticFunction\n";}
+	
+	//non static fields
+	private $privateField = "privateField\n";
+	protected $protectedField = "protectedField\n";
+	public $publicField = "publicField\n";
+	var $defalutField = "defalutField\n";
+	
+	//non static functions
+	public function publicNonStaticFunction() {echo "publicNonStaticFunction\n";}
+	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction\n";}
+	private function privateNonStaticFunction() {echo "privateNonStaticFunction\n";}
+	function defaultNonStaticFunction() {echo "defaultNonStaticFunction\n";}
+	
+	const CONSTANT_FIELD = "CONSTANT_FIELD";
+}
+class B extends A {
+	function __construct() {
+		parent::|;
+		
+		echo parent::$staticPrivateField;
+		echo parent::$staticProtectedField;
+		echo parent::$staticPublicField;
+		echo parent::$staticDefaultField;
+		
+		//static functions
+		parent::publicStaticFunction();
+		parent::protectedStaticFunction();
+		parent::defaultStaticFunction();
+		
+		//non static functions
+		parent::publicNonStaticFunction();
+		parent::protectedNonStaticFunction();
+		parent::defaultNonStaticFunction();
+		
+		echo parent::CONSTANT_FIELD;
+	}
+}
+//execution results
+//staticProtectedField
+//staticPublicField
+//staticDefaultField
+//publicStaticFunction
+//protectedStaticFunction
+//defaultStaticFunction
+//publicNonStaticFunction
+//protectedNonStaticFunction
+//defaultNonStaticFunction
+//CONSTANT_FIELD
+
+?>
+--EXPECT--
+field($staticProtectedField)
+field($staticPublicField)
+field($staticDefaultField)
+method(publicStaticFunction)
+method(protectedStaticFunction)
+method(defaultStaticFunction)
+method(publicNonStaticFunction)
+method(protectedNonStaticFunction)
+method(defaultNonStaticFunction)
+field(CONSTANT_FIELD)

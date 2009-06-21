@@ -1,0 +1,8 @@
+--TEST--
+Test Inherited Method
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+--FILE--
+<? class A { function foo() } class B extends A {}    $b = new B(); $b->| ?>
+--EXPECT--
+method(foo)

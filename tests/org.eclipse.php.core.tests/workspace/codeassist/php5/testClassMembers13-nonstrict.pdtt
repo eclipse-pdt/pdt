@@ -1,0 +1,14 @@
+--TEST--
+Test hierarchy scope members from external library
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+--FILE--
+<?php
+class MyException extends Exception {
+	public function foo() {
+		$this->mess|;
+	}
+}
+?>
+--EXPECT--
+field($message)
