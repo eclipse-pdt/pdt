@@ -16,6 +16,17 @@ import org.eclipse.dltk.core.Flags;
 public class PHPFlags extends Flags implements IPHPModifiers {
 
 	/**
+	 * Returns whether the given integer includes the <code>default</code> modifier.
+	 * That usually means that the element has no 'public', 'protected' or 'private' modifiers at all.
+	 * 
+	 * @param flags the flags
+	 * @return <code>true</code> if the <code>default</code> modifier is included
+	 */
+	public static boolean isDefault(int flags) {
+		return !isPrivate(flags) && !isProtected(flags) && !isPublic(flags);
+	}
+
+	/**
 	 * Returns whether the given integer includes the <code>internal</code> modifier.
 	 *
 	 * @param flags the flags
@@ -54,7 +65,7 @@ public class PHPFlags extends Flags implements IPHPModifiers {
 	public static boolean isClass(int flags) {
 		return !isNamespace(flags) && !isInterface(flags);
 	}
-	
+
 	public static String toString(int mod) {
 		StringBuffer sb = new StringBuffer();
 

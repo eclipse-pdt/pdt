@@ -25,7 +25,6 @@ import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.context.MethodContext;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
-
 /**
  * This context represents state when staying in an object member completion
  * <br/>Examples:
@@ -38,9 +37,10 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
  * @author michael
  */
 public class ClassObjMemberContext extends ClassMemberContext {
-	
-	private boolean isThisCall;
-	
+
+	private boolean isThis;
+	private boolean isDirectThis;
+
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
@@ -48,25 +48,25 @@ public class ClassObjMemberContext extends ClassMemberContext {
 		if (getTriggerType() != Trigger.OBJECT) {
 			return false;
 		}
-		
+
 		int elementStart = getElementStart();
 		int lhsIndex = elementStart - "$this".length() - getTriggerType().getName().length();
 		if (lhsIndex >= 0) {
 			TextSequence statementText = getStatementText();
 			String parentText = statementText.subSequence(lhsIndex, elementStart - getTriggerType().getName().length()).toString();
 			if (parentText.equals("$this")) { //$NON-NLS-1$
-				isThisCall = true;
+				isThis = isDirectThis = true;
 			}
 		}
 
-		if (!isThisCall) {
+		if (!isThis) {
 			IType[] types = getLhsTypes();
 			if (types != null && types.length > 0) {
 				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
 				if (moduleDeclaration != null) {
 					IContext context = ASTUtils.findContext(sourceModule, moduleDeclaration, offset);
 					if (context instanceof MethodContext) {
-						IEvaluatedType instanceType = ((MethodContext)context).getInstanceType();
+						IEvaluatedType instanceType = ((MethodContext) context).getInstanceType();
 						if (instanceType instanceof PHPClassType) {
 							PHPClassType classType = (PHPClassType) instanceType;
 							String namespace = classType.getNamespace();
@@ -81,11 +81,10 @@ public class ClassObjMemberContext extends ClassMemberContext {
 								}
 								IType currentNamespace = PHPModelUtils.getCurrentNamespace(types[0]);
 								if (currentNamespace != null) {
-									isThisCall = namespace.equals(currentNamespace.getElementName()) 
-										&& typeName.equals(types[0].getElementName());
+									isThis = namespace.equals(currentNamespace.getElementName()) && typeName.equals(types[0].getElementName());
 								}
 							} else {
-								isThisCall = classType.getTypeName().equals(types[0].getElementName());
+								isThis = classType.getTypeName().equals(types[0].getElementName());
 							}
 						}
 					}
@@ -94,11 +93,18 @@ public class ClassObjMemberContext extends ClassMemberContext {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Returns whether the left hand side expression has the type of this class
+	 */
+	public boolean isThis() {
+		return isThis;
+	}
+
 	/**
 	 * Returns whether the left hand side is a variable '$this'
 	 */
-	public boolean isThisCall() {
-		return isThisCall;
+	public boolean isDirectThis() {
+		return isDirectThis;
 	}
 }

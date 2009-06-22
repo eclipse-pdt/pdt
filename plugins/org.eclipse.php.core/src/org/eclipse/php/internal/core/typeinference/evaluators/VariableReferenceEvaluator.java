@@ -175,7 +175,7 @@ public class VariableReferenceEvaluator extends GoalEvaluator {
 		}
 		
 		protected boolean isInteresting(ASTNode node) {
-			return node.sourceStart() < variableOffset;
+			return node.sourceStart() <= variableOffset;
 		}
 	}
 }
