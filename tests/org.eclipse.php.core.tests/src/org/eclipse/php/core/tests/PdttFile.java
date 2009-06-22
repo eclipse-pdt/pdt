@@ -276,7 +276,13 @@ public class PdttFile {
 				this.config.put(key.trim(), value.trim());
 				break;
 			case PREFERENCES:
-				this.preferences += (line + "\n");
+				if(line != null && line.length() > 0) {
+					if(preferences == null ) {
+						this.preferences = (line + "\n");
+					}else{
+						this.preferences += (line + "\n");
+					}
+				}
 				break;
 			default:
 				break;

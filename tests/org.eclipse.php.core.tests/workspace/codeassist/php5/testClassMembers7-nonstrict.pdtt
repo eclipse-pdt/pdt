@@ -1,0 +1,14 @@
+--TEST--
+Test Inherited Interface Methods
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+--FILE--
+<? interface A { function a(); }
+   interface B extends A { function b(); }
+   function check(B $b) {
+       $b->|
+   }
+ ?>
+--EXPECT--
+method(a)
+method(b)

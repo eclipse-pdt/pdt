@@ -1,0 +1,20 @@
+--TEST--
+Test Static Class Var Object Operator
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+--FILE--
+<?
+class Person {
+	public $FirstName;
+	public $LastName;
+}
+class FooBase {}
+class Foo extends FooBase {
+	/**
+	 * @var Person
+	 */
+	public static $Person;
+} Foo::$Person->| ?>
+--EXPECT--
+field($FirstName)
+field($LastName)

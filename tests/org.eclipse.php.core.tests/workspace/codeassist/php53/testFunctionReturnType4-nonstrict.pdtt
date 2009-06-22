@@ -1,0 +1,28 @@
+--TEST--
+Should complete class members from singleton method in other namespace
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+--FILE--
+<?php
+namespace MyNamespace {
+	class Singleton {
+		private static $_instance;
+		private function __construct() {}
+		public static function getInstance() {
+			if (self::$_instance instanceof self === false) {
+				self::$_instance = new self();
+			}
+			return self::$_instance;
+		}
+		public function foo() {
+		}
+	}
+}
+namespace {
+   use MyNamespace as NS;
+   NS\Singleton::getInstance()->|;
+}
+?>
+--EXPECT--
+method(foo)
+method(getInstance)

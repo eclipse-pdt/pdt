@@ -1,6 +1,0 @@
---TEST--
-Test Inherited Method
---FILE--
-<? class A { function foo() } class B extends A {}    $b = new B(); $b->| ?>
---EXPECT--
-method(foo)

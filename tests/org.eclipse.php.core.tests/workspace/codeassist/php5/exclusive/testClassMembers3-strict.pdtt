@@ -1,0 +1,77 @@
+--TEST--
+Show own class members
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+--FILE--
+<?
+class A {
+
+	//static fields
+	static private $staticPrivateField = "staticPrivateField";
+	static protected $staticProtectedField = "staticProtectedField";
+	static public $staticPublicField = "staticPublicField";
+	static $staticDefaultField = "staticDefaultField";
+		
+	//static functions
+	static public function publicStaticFunction() { echo "publicStaticFunction";}
+	static protected function protectedStaticFunction() {echo "protectedStaticFunction";}
+	static private function privateStaticFunction() {echo "privateStaticFunction";}
+	static function defaultStaticFunction() {echo "defaultStaticFunction";}
+	
+	//non static fields
+	private $privateField = "privateField";
+	protected $protectedField = "protectedField";
+	public $publicField = "publicField";
+	var $defalutField = "defalutField";
+	
+	//non static functions
+	public function publicNonStaticFunction() {echo "publicNonStaticFunction";}
+	protected function protectedNonStaticFunction() {echo "protectedNonStaticFunction";}
+	private function privateNonStaticFunction() {echo "privateNonStaticFunction";}
+	function defaultNonStaticFunction() {echo "defaultNonStaticFunction";}
+      
+	const CONSTANT_FIELD = "CONSTANT_FIELD";
+}
+
+
+$a = new A();
+$a->|
+
+$a->defaultNonStaticFunction();
+$a->publicNonStaticFunction();
+
+$a->defaultStaticFunction();
+$a->publicStaticFunction();
+
+echo $a->defalutField;
+echo $a->publicField;
+
+//error for the next two fields
+//Notice: /php1/testClassMember1.php line 44 - Undefined variable: staticDefaultField
+//Debug Error: /php1/testClassMember1.php line 44 - Cannot access empty property
+//echo $a->$staticDefaultField;
+//echo $a->$staticPublicField;
+
+//error on const field 
+//Notice: /php1/testClassMember1.php line 73 - Undefined property: A::$CONSTANT_FIELD
+//echo $a->CONSTANT_FIELD;
+
+//Execution result
+//defaultNonStaticFunction
+//publicNonStaticFunction
+//defaultStaticFunction
+//publicStaticFunction
+//defalutField
+//publicField
+
+
+?>
+--EXPECT--
+method(defaultNonStaticFunction)
+method(publicNonStaticFunction)
+method(defaultStaticFunction)
+method(publicStaticFunction)
+field($defalutField)
+field($publicField)
+field($staticDefaultField)
+field($staticPublicField)

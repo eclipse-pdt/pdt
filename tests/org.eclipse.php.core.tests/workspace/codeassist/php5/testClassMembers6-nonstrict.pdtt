@@ -1,0 +1,13 @@
+--TEST--
+Test Inherited Interface By Class Methods
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+--FILE--
+<? interface A { function fa(); }
+   class B implements A { function fa() {} }
+   function check(B $b) {
+       $b->|
+   }
+ ?>
+--EXPECT--
+method(fa)

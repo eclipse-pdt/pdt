@@ -1,0 +1,34 @@
+--TEST--
+Should complete class members under namespace
+--PREFERENCES--
+org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+--FILE--
+<?
+namespace NS;
+class A {
+	var $simpleField;
+	private $privateField;
+	protected $protectedField;
+	public $publicField;
+	static $staticField;
+	const CONSTANT_FIELD = 5;
+	static public function publicStaticFunction() {}
+	static protected function protectedStaticFunction() {}
+	static private function privateStaticFunction() {}
+	static function defaultStaticFunction() {}
+	public function publicNonStaticFunction() {}
+	protected function protectedNonStaticFunction() {}
+	private function privateNonStaticFunction() {}
+	function defaultNonStaticFunction() {}
+}
+class B extends \NS\A {
+}
+B::|
+?>
+--EXPECT--
+field($staticField)
+field(CONSTANT_FIELD)
+method(defaultStaticFunction)
+method(publicStaticFunction)
+method(defaultNonStaticFunction)
+method(publicNonStaticFunction)
