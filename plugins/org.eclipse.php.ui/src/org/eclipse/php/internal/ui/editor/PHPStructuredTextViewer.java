@@ -588,7 +588,13 @@ public class PHPStructuredTextViewer extends StructuredTextViewer {
 		}
 		
 		public void documentAboutToBeChanged(DocumentEvent event) {
-			fIsModelDirty = true;
+			IDocument document = event.getDocument();
+			if (document instanceof IStructuredDocument) {
+				IStructuredDocumentRegion region = ((IStructuredDocument)document).getRegionAtCharacterOffset(event.getOffset());
+				if (region.getType() == PHPRegionContext.PHP_CONTENT) {
+					fIsModelDirty = true;
+				}
+			}
 		}
 	
 		public void documentChanged(DocumentEvent event) {
