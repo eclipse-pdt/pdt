@@ -52,7 +52,7 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, false);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);

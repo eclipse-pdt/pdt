@@ -194,7 +194,7 @@ public interface PHPCoreConstants {
 	 * <code>false</code> invisible.
 	 * </p>
 	 */
-	public final static String CODEASSIST_SHOW_NON_STRICT_OPTIONS = "contentAssistShowNonStrictOptions"; //$NON-NLS-1$
+	public final static String CODEASSIST_SHOW_STRICT_OPTIONS = "contentAssistShowStrictOptions"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether to group options
