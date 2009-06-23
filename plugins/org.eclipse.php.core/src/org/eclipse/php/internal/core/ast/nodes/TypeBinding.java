@@ -786,6 +786,6 @@ public class TypeBinding implements ITypeBinding {
 	 * @see ITypeBinding#isAmbiguous()
 	 */
 	public boolean isUnknown() {
-		return this.elements == null;
+		return this.elements == null && !(this.type instanceof SimpleType);
 	}
 }
