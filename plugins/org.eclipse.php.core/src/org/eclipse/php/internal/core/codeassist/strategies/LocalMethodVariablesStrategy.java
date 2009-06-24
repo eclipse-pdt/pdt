@@ -15,11 +15,13 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.GlobalMethodStatementContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.language.PHPVariables;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 /**
@@ -51,17 +53,28 @@ public class LocalMethodVariablesStrategy extends GlobalElementStrategy {
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
+		
 		IMethod enclosingMethod = concreteContext.getEnclosingMethod();
-		for (IModelElement element : CodeAssistUtils.getMethodFields(enclosingMethod, prefix, mask)) {
-			reporter.reportField((IField) element, "", replaceRange, false);
-		}
-
+		
 		// complete class variable: $this
 		if (!PHPFlags.isStatic(enclosingMethod.getFlags())) {
 			IType declaringType = enclosingMethod.getDeclaringType();
 			if (declaringType != null) {
 				if ("$this".startsWith(prefix)) { //$NON-NLS-1$
 					reporter.reportField(new FakeField((ModelElement) declaringType, "$this", 0, 0), "->", replaceRange, false); //NON-NLS-1 //$NON-NLS-2$
+				}
+			}
+		}
+		
+		for (IModelElement element : CodeAssistUtils.getMethodFields(enclosingMethod, prefix, mask)) {
+			reporter.reportField((IField) element, "", replaceRange, false);
+		}
+		
+		PHPVersion phpVersion = concreteContext.getPhpVersion();
+		for (String variable : PHPVariables.getVariables(phpVersion)) {
+			if (variable.startsWith(prefix)) {
+				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
+					reporter.reportField(new FakeField((ModelElement) concreteContext.getSourceModule(), variable, 0, 0), "", replaceRange, false); //NON-NLS-1
 				}
 			}
 		}
