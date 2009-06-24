@@ -11,25 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.language;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.environment.EnvironmentManager;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
-import org.eclipse.dltk.core.environment.IEnvironment;
-import org.eclipse.dltk.internal.core.BuildpathEntry;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.preferences.IPreferencesPropagatorListener;
 import org.eclipse.php.internal.core.preferences.PreferencesPropagatorEvent;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.core.project.PhpVersionChangedHandler;
-import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.util.project.observer.IProjectClosedObserver;
 import org.eclipse.php.internal.core.util.project.observer.ProjectRemovedObserversAttacher;
 
@@ -42,32 +35,36 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 	 */
 	public static final String CONTAINER_PATH = PHPCorePlugin.ID + ".LANGUAGE"; //$NON-NLS-1$
 	public static final Path LANGUAGE_CONTAINER_PATH = new Path(LanguageModelInitializer.CONTAINER_PATH);
-	public static final String LANGUAGE_LIBRARY_PATH = "$nl$/Resources/language/php"; //$NON-NLS-1$
 
+	/**
+	 * Listeners for PHP version change map (per project)
+	 */
 	private Map<IProject, IPreferencesPropagatorListener> project2PhpVerListener = new HashMap<IProject, IPreferencesPropagatorListener>();
-	private Map<IProject, PHPVersion> project2PhpVersion = new HashMap<IProject, PHPVersion>();
+	
+	/**
+	 * Language model paths initializers
+	 */
+	private static ILanguageModelProvider[] providers;
 
-	public LanguageModelInitializer() {
-	}
-
+	/**
+	 * Initialize version change listener for the given project
+	 * @param containerPath
+	 * @param scriptProject
+	 */
 	private void initializeListener(final IPath containerPath, final IScriptProject scriptProject) {
-
 		final IProject project = scriptProject.getProject();
 		if (project2PhpVerListener.containsKey(project)) {
 			return;
 		}
-
 		IPreferencesPropagatorListener versionChangeListener = new IPreferencesPropagatorListener() {
 			public void preferencesEventOccured(PreferencesPropagatorEvent event) {
-				project2PhpVersion.put(project, PHPVersion.byAlias((String) event.getNewValue()));
-
 				try {
+					// Re-initialize when PHP version changes
 					initialize(containerPath, scriptProject);
 				} catch (CoreException e) {
 					Logger.logException(e);
 				}
 			}
-
 			public IProject getProject() {
 				return project;
 			}
@@ -87,41 +84,18 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (containerPath.segmentCount() > 0 && containerPath.segment(0).equals(CONTAINER_PATH)) {
 			try {
 				if (isPHPProject(scriptProject)) {
-
-					IProject project = scriptProject.getProject();
-					project2PhpVersion.put(project, ProjectOptions.getPhpVersion(project));
-
-					DLTKCore.setBuildpathContainer(containerPath, new IScriptProject[] { scriptProject }, new IBuildpathContainer[] { new LanguageModelContainer(containerPath) }, null);
-
+					DLTKCore.setBuildpathContainer(
+						containerPath,
+						new IScriptProject[] { scriptProject },
+						new IBuildpathContainer[] { new LanguageModelContainer(containerPath) },
+						null
+					);
 					initializeListener(containerPath, scriptProject);
 				}
 			} catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
-	}
-
-	private static IPath getContainerPath(IScriptProject project, PHPVersion phpVersion) throws IOException {
-		String libraryPath = getLanguageLibraryPath(project, phpVersion);
-
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put("$nl$", Platform.getNL());
-
-		URL url = FileLocator.find(PHPCorePlugin.getDefault().getBundle(), new Path(libraryPath), map);
-		URL resolved = FileLocator.resolve(url);
-		IPath path = Path.fromOSString(resolved.getFile());
-
-		return path;
-	}
-
-	private static String getLanguageLibraryPath(IScriptProject project, PHPVersion phpVersion) {
-		if (phpVersion == PHPVersion.PHP4) {
-			return LANGUAGE_LIBRARY_PATH + "4";
-		}
-		if (phpVersion == PHPVersion.PHP5) {
-			return LANGUAGE_LIBRARY_PATH + "5";
-		}
-		return LANGUAGE_LIBRARY_PATH + "5.3";
 	}
 
 	private static boolean isPHPProject(IScriptProject project) {
@@ -142,12 +116,10 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		if (fragment != null) {
 			IScriptProject project = element.getScriptProject();
 			if (project != null) {
-				PHPVersion phpVersion = ProjectOptions.getPhpVersion(project.getProject());
-				try {
-					IPath containerPath = getContainerPath(project, phpVersion);
-					return EnvironmentPathUtils.getLocalPath(fragment.getPath()).equals(containerPath);
-				} catch (IOException e) {
-					Logger.logException(e);
+				for (IPath path : getContainerPaths(project)) {
+					if (EnvironmentPathUtils.getLocalPath(fragment.getPath()).equals(path)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -182,46 +154,35 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 			project.setRawBuildpath(newRawBuildpath.toArray(new IBuildpathEntry[newSize]), null);
 		}
 	}
-
-	class LanguageModelContainer implements IBuildpathContainer {
-
-		private IPath containerPath;
-		private IBuildpathEntry[] buildPathEntries;
-
-		public LanguageModelContainer(IPath containerPath) {
-			this.containerPath = containerPath;
-		}
-
-		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
-			if (buildPathEntries == null) {
-				IEnvironment environment = EnvironmentManager.getEnvironment(project);
-				try {
-					IPath path = getContainerPath(project, project2PhpVersion.get(project.getProject()));
-					if (environment != null) {
-						path = EnvironmentPathUtils.getFullPath(environment, path);
+	
+	static ILanguageModelProvider[] getContributedProviders() {
+		if (LanguageModelInitializer.providers == null) {
+			List<ILanguageModelProvider> providers = new LinkedList<ILanguageModelProvider>();
+			providers.add(new DefaultLanguageModelProvider()); // add default
+			
+			IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.php.core.languageModelProviders");
+			for (IConfigurationElement element : elements) {
+				if (element.getName().equals("provider")) {
+					try {
+						providers.add((ILanguageModelProvider) element.createExecutableExtension("class"));
+					} catch (CoreException e) {
+						PHPCorePlugin.log(e);
 					}
-					buildPathEntries = new IBuildpathEntry[] { DLTKCore.newLibraryEntry(path, BuildpathEntry.NO_ACCESS_RULES, BuildpathEntry.NO_EXTRA_ATTRIBUTES, BuildpathEntry.INCLUDE_ALL, BuildpathEntry.EXCLUDE_NONE, false, true) };
-				} catch (Exception e) {
-					Logger.logException(e);
 				}
 			}
-			return buildPathEntries;
+			LanguageModelInitializer.providers = (ILanguageModelProvider[]) providers.toArray(new ILanguageModelProvider[providers.size()]);
 		}
-
-		public IBuiltinModuleProvider getBuiltinProvider(IScriptProject project) {
-			return null;
+		return LanguageModelInitializer.providers;
+	}
+	
+	private static IPath[] getContainerPaths(IScriptProject project) {
+		List<IPath> paths = new LinkedList<IPath>();
+		for (ILanguageModelProvider provider : getContributedProviders()) {
+			IPath path = provider.getPath(project);
+			if (path != null) {
+				paths.add(path);
+			}
 		}
-
-		public String getDescription(IScriptProject project) {
-			return PHP_LANGUAGE_LIBRARY;
-		}
-
-		public int getKind() {
-			return K_SYSTEM;
-		}
-
-		public IPath getPath() {
-			return containerPath;
-		}
+		return (IPath[]) paths.toArray(new IPath[paths.size()]);
 	}
 }

@@ -32,6 +32,7 @@
 		id="completionContextResolvers"
 		name="PHP Completion Context Resolver"
 		schema="schema/completionContextResolvers.exsd" />
+ <extension-point id="languageModelProviders" name="PHP Language Model Provider" schema="schema/languageModelProviders.exsd"/>
 
 	<!-- PHP Model Handler -->
 	<extension
