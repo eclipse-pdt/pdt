@@ -195,13 +195,6 @@ public class LanguageModelInitializer extends BuildpathContainerInitializer {
 		public IBuildpathEntry[] getBuildpathEntries(IScriptProject project) {
 			if (buildPathEntries == null) {
 				IEnvironment environment = EnvironmentManager.getEnvironment(project);
-				while (environment == null) {
-					try {
-						Thread.sleep(1000);
-						environment = EnvironmentManager.getEnvironment(project);
-					} catch (InterruptedException e) {
-					}
-				}
 				try {
 					IPath path = getContainerPath(project, project2PhpVersion.get(project.getProject()));
 					if (environment != null) {
