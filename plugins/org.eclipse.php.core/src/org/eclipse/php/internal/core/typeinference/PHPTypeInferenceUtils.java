@@ -100,15 +100,7 @@ public class PHPTypeInferenceUtils {
 	 * @return model elements or <code>null</code> in case no element could be found
 	 */
 	public static IType[] getModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {
-		ISourceModule sourceModule = context.getSourceModule();
-
-		IType[] elements = internalGetModelElements(evaluatedType, context, offset);
-		if (elements == null) {
-			return null;
-		}
-
-		Collection<IType> filterElements = PHPModelUtils.filterElements(sourceModule, Arrays.asList(elements));
-		return filterElements.toArray(new IType[filterElements.size()]);
+		return internalGetModelElements(evaluatedType, context, offset);
 	}
 
 	private static IType[] internalGetModelElements(IEvaluatedType evaluatedType, ISourceModuleContext context, int offset) {

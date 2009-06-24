@@ -11,10 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.typeinference;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -564,7 +561,9 @@ public class PHPModelUtils {
 				result.add(type);
 			}
 		}
-		return (IType[]) result.toArray(new IType[result.size()]);
+		
+		Collection<IType> filteredElements = filterElements(sourceModule, result);
+		return (IType[]) filteredElements.toArray(new IType[filteredElements.size()]);
 	}
 	
 	/**
@@ -602,10 +601,14 @@ public class PHPModelUtils {
 					return new IMethod[] { namespaceMethod };
 				}
 				// For functions and constants, PHP will fall back to global functions or constants if a namespaced function or constant does not exist:
-				return getFunctions(functionName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+				IMethod[] functions = getFunctions(functionName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+				Collection<IMethod> filteredElements = filterElements(sourceModule, Arrays.asList(functions));
+				return (IMethod[]) filteredElements.toArray(new IMethod[filteredElements.size()]);
 			}
 		}
-		return getFunctions(functionName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+		IMethod[] functions = getFunctions(functionName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+		Collection<IMethod> filteredElements = filterElements(sourceModule, Arrays.asList(functions));
+		return (IMethod[]) filteredElements.toArray(new IMethod[filteredElements.size()]);
 	}
 
 	/**
@@ -644,11 +647,15 @@ public class PHPModelUtils {
 						return new IField[] { namespaceField };
 					}
 					// For functions and constants, PHP will fall back to global functions or constants if a namespaced function or constant does not exist:
-					return getFields(fieldName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+					IField[] fields = getFields(fieldName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+					Collection<IField> filteredElements = filterElements(sourceModule, Arrays.asList(fields));
+					return (IField[]) filteredElements.toArray(new IField[filteredElements.size()]);
 				}
 			}
 		}
-		return getFields(fieldName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+		IField[] fields = getFields(fieldName, SearchEngine.createSearchScope(sourceModule.getScriptProject()));
+		Collection<IField> filteredElements = filterElements(sourceModule, Arrays.asList(fields));
+		return (IField[]) filteredElements.toArray(new IField[filteredElements.size()]);
 	}
 
 	/**
