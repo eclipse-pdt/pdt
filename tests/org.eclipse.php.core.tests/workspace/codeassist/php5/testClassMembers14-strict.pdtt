@@ -1,7 +1,7 @@
 --TEST--
 Show self static variables
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?php
 class Abc {

@@ -1,7 +1,7 @@
 --TEST--
 Test Inherited Static Field
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <? class A { const C = 5; static $var2; var $var1; } class B extends A {}    B::| ?>
 --EXPECT--

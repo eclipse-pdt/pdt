@@ -1,7 +1,7 @@
 --TEST--
 Test Singleton Instance
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?php
 class Singleton {

@@ -1,7 +1,7 @@
 --TEST--
 Should complete namespace methods from function return type
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?
 namespace NS;
