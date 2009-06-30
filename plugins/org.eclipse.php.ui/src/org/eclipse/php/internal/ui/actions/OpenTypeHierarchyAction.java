@@ -284,6 +284,7 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	public void update() {
+		setEnabled(fEditor != null);
 	}
 
 	/**
