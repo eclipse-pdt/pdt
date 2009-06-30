@@ -48,6 +48,7 @@ import org.eclipse.php.ui.editor.SharedASTProvider;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.IUpdate;
 
 /**
@@ -283,7 +284,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	public void update() {
-		setEnabled(isEnabled(getCurrentSelection()));
 	}
 
 	/**
