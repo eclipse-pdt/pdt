@@ -52,7 +52,8 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 
 		if (modelElement instanceof FakeGroupType
 				// workaround for: https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
-				|| (modelElement instanceof IScriptProject && getReplacementString().endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR))) {
+				|| (modelElement instanceof IScriptProject && getReplacementString().endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR))
+				/*|| (getReplacementString().endsWith("->") || getReplacementString().endsWith("::"))*/) {
 			AutoActivationTrigger.register(document);
 		}
 
