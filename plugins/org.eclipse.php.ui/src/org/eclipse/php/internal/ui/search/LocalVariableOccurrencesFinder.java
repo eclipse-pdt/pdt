@@ -121,13 +121,16 @@ public class LocalVariableOccurrencesFinder extends AbstractOccurrencesFinder {
 				}
 			}
 		}
-		if (parentType == ASTNode.FOR_EACH_STATEMENT || 
+
+		if ((parentType == ASTNode.FOR_EACH_STATEMENT && node.getLocationInParent() != ForEachStatement.EXPRESSION_PROPERTY) || 
 				parentType == ASTNode.FORMAL_PARAMETER || 
 				parentType == ASTNode.CATCH_CLAUSE || 
-				parentType == ASTNode.PREFIX_EXPRESSION || 
+				parentType == ASTNode.PREFIX_EXPRESSION ||
+				parentType == ASTNode.REFERENCE && parent.getParent().getType() == ASTNode.FORMAL_PARAMETER ||
 				parentType == ASTNode.POSTFIX_EXPRESSION) {
 			return IOccurrencesFinder.F_WRITE_OCCURRENCE;
 		}
+		
 		return IOccurrencesFinder.F_READ_OCCURRENCE;
 	}
 
