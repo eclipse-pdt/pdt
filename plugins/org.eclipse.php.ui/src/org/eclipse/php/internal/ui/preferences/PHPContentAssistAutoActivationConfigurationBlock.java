@@ -32,8 +32,6 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 
 	protected Button autoActivationCheckBox;
 	protected Text autoActivationDelay;
-	protected Text autoActivationTriggersPHP;
-	protected Text autoActivationTriggersPHPDoc;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationSectionLabel"));
@@ -46,15 +44,11 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 			public void widgetSelected(SelectionEvent e) {
 				boolean autoActivateSectionEnabled = ((Button) e.widget).getSelection();
 				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
-				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, autoActivateSectionEnabled);
-				setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 			}
 		});
 		
 		autoActivationDelay = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelay"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 4, 20, new PositiveIntegerStringValidator(PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"),
 			PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayIntValue"), PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationDelayPositive")));
-		autoActivationTriggersPHP = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationTriggersPHP"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, 4, 20);
-		autoActivationTriggersPHPDoc = addLabelledTextField(composite, PHPUIMessages.getString("CodeAssistPreferencePage_autoActivationTriggersPHPDoc"), PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, 4, 20);
 		
 		setControlsEnablement();
 	}
@@ -62,8 +56,6 @@ public class PHPContentAssistAutoActivationConfigurationBlock extends AbstractPH
 	protected void setControlsEnablement() {
 		boolean autoActivateSectionEnabled = getPreferenceStore().getBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION);
 		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, autoActivateSectionEnabled);
-		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, autoActivateSectionEnabled);
-		setControlsEnabled(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, autoActivateSectionEnabled);
 	}
 	
 	protected IPreferenceStore getPreferenceStore() {

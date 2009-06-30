@@ -26,22 +26,15 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPContentAssistPreferencePageBlock {
 
-	protected Button showConstantsAssistCheckBox;
-	protected Button caseSensitiveForConstantsCheckBox;
-	protected Button showClassNamesInGlobalListCheckBox;
+	protected Button caseSensitivityCheckBox;
 	protected Button showStrictOptionsCheckBox;
 	protected Button groupCompletionsCheckBox;
-	protected Button cutCommonPrefixCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
 		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_filtersSectionLabel"));
-		showConstantsAssistCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showConstantsAssist"), PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, 0);
-		caseSensitiveForConstantsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_caseSensitiveForConstants"), PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, 0);
-		showClassNamesInGlobalListCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showClassNamesInGlobal"), PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, 0);
+		caseSensitivityCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_caseSensitiveForConstants"), PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
 		showStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showStrictOptions"), PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); //$NON-NLS-1$
 		groupCompletionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_groupCompletionOptions"), PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, 0); //$NON-NLS-1$
-		// XXX removed temporarily (we're not sure we want it (damn)):
-		// cutCommonPrefixCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_cutCommonPrefix"), PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, 0); //$NON-NLS-1$
 	}
 
 	protected IPreferenceStore getPreferenceStore() {

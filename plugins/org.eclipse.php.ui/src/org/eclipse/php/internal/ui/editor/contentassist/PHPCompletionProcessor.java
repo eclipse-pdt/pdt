@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ui.text.completion.CompletionProposalLabelProvider;
 import org.eclipse.dltk.ui.text.completion.ContentAssistInvocationContext;
 import org.eclipse.dltk.ui.text.completion.ScriptCompletionProcessor;
@@ -19,8 +18,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.php.internal.core.PHPCoreConstants;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.project.PHPNature;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.ui.IEditorPart;
@@ -29,7 +26,7 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 
 	protected PHPContextInformationValidator contextInformationValidator = new PHPContextInformationValidator();
 	protected static final char[] contextInformationActivationChars = { '(', ',' };
-	protected static final char[] completionAutoActivationChars = { '$', ':', '>' };
+	protected static final char[] completionAutoActivationChars = { '>', ':' };
 	private boolean explicit;
 
 	public PHPCompletionProcessor(IEditorPart editor, ContentAssistant assistant, String partition) {
@@ -58,8 +55,7 @@ public class PHPCompletionProcessor extends ScriptCompletionProcessor {
 	}
 	
 	protected static char[] getAutoactivationTriggers() {
-		return Platform.getPreferencesService().getString(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, new String(completionAutoActivationChars), null)
-			.trim().toCharArray();
+		return completionAutoActivationChars;
 	}
 
 	protected ContentAssistInvocationContext createContext(ITextViewer viewer, int offset) {

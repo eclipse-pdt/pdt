@@ -35,6 +35,14 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 	
+	protected boolean isValidPrefix(String prefix) {
+		String word = getDisplayString();
+		if (word.startsWith("$") && !prefix.startsWith("$")) {
+			word = word.substring(1);
+		}
+		return isPrefix(prefix, word);
+	}
+	
 	protected boolean isSmartTrigger(char trigger) {
 		return trigger == '$';
 	}
