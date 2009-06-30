@@ -47,20 +47,13 @@ public class CorePreferenceConstants {
 		node.putBoolean(PHPCoreConstants.CODEASSIST_ADDIMPORT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_FILL_ARGUMENT_NAMES, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS, true);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_PREFIX_COMPLETION, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOINSERT, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_INSERT_COMPLETION, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_VARIABLES_FROM_OTHER_FILES, false);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false);
 		node.putBoolean(PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, false);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_CUT_COMMON_PREFIX, false);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION, true);
-		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, true);
+		node.putBoolean(PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false);
 		node.putInt(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_DELAY, 200);
-		node.put(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP, "$:>"); //$NON-NLS-1$
-		node.put(PHPCoreConstants.CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC, "@"); //$NON-NLS-1$
 	}
 
 	// Don't instantiate

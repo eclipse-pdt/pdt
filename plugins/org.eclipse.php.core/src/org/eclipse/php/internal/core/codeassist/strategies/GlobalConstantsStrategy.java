@@ -11,11 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -39,9 +40,6 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
 		ICompletionContext context = getContext();
-		if (!showConstantAssist()) {
-			return;
-		}
 
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
@@ -50,7 +48,7 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
-		if (constantsCaseSensitive()) {
+		if (isCaseSensitive()) {
 			mask |= CodeAssistUtils.CASE_SENSITIVE;
 		}
 
@@ -67,13 +65,5 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 				PHPCorePlugin.log(e);
 			}
 		}
-	}
-
-	protected boolean constantsCaseSensitive() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_CONSTANTS_CASE_SENSITIVE, false, null);
-	}
-
-	protected boolean showConstantAssist() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_SHOW_CONSTANTS_ASSIST, true, null);
 	}
 }
