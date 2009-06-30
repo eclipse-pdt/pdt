@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import org.eclipse.debug.internal.ui.DebugUIPlugin;
 import org.eclipse.debug.internal.ui.preferences.IDebugPreferenceConstants;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
-import org.eclipse.php.internal.debug.core.PHPDebugPlugin;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -115,13 +114,13 @@ public class ProcessCrashDetector implements Runnable, IConsoleListener {
 					}
 				}
 			} catch (IOException ioe) {
-				PHPDebugPlugin.log(ioe);
+//				PHPDebugPlugin.log(ioe);
 			} finally {
 				if (os != null) {
 					try {
 						os.close();
 					} catch (IOException e) {
-						PHPDebugPlugin.log(e);
+//						PHPDebugPlugin.log(e);
 					}
 				}
 			}
