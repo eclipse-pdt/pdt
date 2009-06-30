@@ -283,7 +283,6 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	}
 
 	public void update() {
-		setEnabled(isEnabled(getCurrentSelection()));
 	}
 
 	/**
