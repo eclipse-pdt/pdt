@@ -67,6 +67,9 @@ public class PHPCompletionProposalComputer extends ScriptCompletionProposalCompu
 		return super.guessContextInformationPosition(context);
 	}
 
+	/*
+	 * The following method is overriden in order to allow running code assist from a non-UI thread.
+	 */
 	protected List computeScriptCompletionProposals(int offset, final ScriptContentAssistInvocationContext context, IProgressMonitor monitor) {
 		
 		// Source module getting
