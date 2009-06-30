@@ -12,9 +12,7 @@
 package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.*;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 
@@ -34,17 +32,6 @@ public final class GlobalStatementContext extends AbstractGlobalStatementContext
 	public boolean isValid(ISourceModule sourceModule, int offset, CompletionRequestor requestor) {
 		if (!super.isValid(sourceModule, offset, requestor)) {
 			return false;
-		}
-		
-		if (requestor instanceof IPHPCompletionRequestor) {
-			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
-			try {
-				String prefix = getPrefix();
-				if (prefix == null || prefix.length() == 0) {
-					return phpCompletionRequestor.isExplicit();
-				}
-			} catch (BadLocationException e) {
-			}
 		}
 		
 		// check whether enclosing element is not a class
