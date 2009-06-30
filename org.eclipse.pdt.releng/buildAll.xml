@@ -103,7 +103,7 @@ depFilesListExtras=
 		<condition property="sign">
 			<or>
 				<!-- want to enable/disable signing for a given build type? add/remove types here -->
-				<equals arg1="${buildType}" arg2="I" />
+				<!--<equals arg1="${buildType}" arg2="I" />-->
 				<equals arg1="${buildType}" arg2="M" />
 				<equals arg1="${buildType}" arg2="S" />
 				<equals arg1="${buildType}" arg2="R" />
