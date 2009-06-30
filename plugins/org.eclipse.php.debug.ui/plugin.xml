@@ -465,5 +465,12 @@
 			id="org.eclipse.php.internal.debug.ui.console.PHPConsoleListener">
 		</listener>
 	</extension>
+ <extension
+       point="org.eclipse.debug.ui.toggleBreakpointsTargetFactories">
+    <toggleTargetFactory
+          class="org.eclipse.php.internal.debug.ui.breakpoint.PHPToggleBreakpointsTargetFactory"
+          id="org.eclipse.php.debug.ui.PHPtoggleTargetFactory">
+    </toggleTargetFactory>
+ </extension>
 
 </plugin>
