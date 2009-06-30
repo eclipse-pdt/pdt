@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.editor.configuration;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -44,6 +47,7 @@ import org.eclipse.php.internal.ui.autoEdit.MainAutoEditStrategy;
 import org.eclipse.php.internal.ui.doubleclick.PHPDoubleClickStrategy;
 import org.eclipse.php.internal.ui.editor.PHPStructuredTextViewer;
 import org.eclipse.php.internal.ui.editor.contentassist.PHPCompletionProcessor;
+import org.eclipse.php.internal.ui.editor.contentassist.PHPContentAssistant;
 import org.eclipse.php.internal.ui.editor.highlighter.LineStyleProviderForPhp;
 import org.eclipse.php.internal.ui.editor.hover.PHPTextHoverProxy;
 import org.eclipse.php.internal.ui.text.PHPElementProvider;
@@ -55,6 +59,7 @@ import org.eclipse.php.internal.ui.util.ElementCreationProxy;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
@@ -67,9 +72,6 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
 
 public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerConfigurationHTML {
 
-	private static final String PHP_CONTENT_ASSISTANT_EXT = "org.eclipse.php.ui.phpContentAssistant"; //$NON-NLS-1$
-	private static final String CONTENT_ASSIST_PROCESSOR_EXT = "org.eclipse.php.ui.phpContentAssistProcessor"; //$NON-NLS-1$
-	private static final String HYPERLINK_DETECTOR_EXT = "org.eclipse.php.ui.phpHyperlinkDetector"; //$NON-NLS-1$
 	private static final String FORMATTER_PROCESSOR_EXT = "org.eclipse.php.ui.phpFormatterProcessor"; //$NON-NLS-1$
 	private static final String SHOW_OUTLINE_PREF_KEY = "org.eclipse.php.ui.edit.text.php.show.outline"; //$NON-NLS-1$
 	private static final String EMPTY = ""; //$NON-NLS-1$
@@ -81,8 +83,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 	private String[] configuredContentTypes;
 	private LineStyleProvider fLineStyleProvider;
 	private StructuredContentAssistant fContentAssistant;
-	private PHPCompletionProcessor fCompletionProcessor;
 	private IQuickAssistAssistant fQuickAssistant;
+	private PHPCompletionProcessor phpCompletionProcessor;
 
 	public PHPStructuredTextViewerConfiguration() {
 	}
@@ -131,52 +133,26 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		IContentAssistProcessor[] processors = null;
 
 		if (sourceViewer instanceof PHPStructuredTextViewer) {
+
+			ITextEditor textEditor = ((PHPStructuredTextViewer)sourceViewer).getTextEditor();
+			if (phpCompletionProcessor == null) {
+				phpCompletionProcessor = new PHPCompletionProcessor(textEditor, (ContentAssistant) getPHPContentAssistant(sourceViewer), PHPPartitionTypes.PHP_DEFAULT);
+			}
+			
 			if (partitionType == PHPPartitionTypes.PHP_DEFAULT) {
-				ArrayList<IContentAssistProcessor> processorsList = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
-				processors = new IContentAssistProcessor[processorsList.size()];
-				processorsList.toArray(processors);
+				processors = new IContentAssistProcessor[] { phpCompletionProcessor };
 			} else {
-				ArrayList<IContentAssistProcessor> phpDocProcessors = getPHPProcessors(partitionType, (PHPStructuredTextViewer) sourceViewer);
 				IContentAssistProcessor[] superProcessors = super.getContentAssistProcessors(sourceViewer, partitionType);
 				if (superProcessors != null) {
-					for (IContentAssistProcessor processor : superProcessors) {
-						phpDocProcessors.add(processor);
-					}
+					processors = new IContentAssistProcessor[superProcessors.length + 1];
+					System.arraycopy(superProcessors, 0, processors, 0, superProcessors.length);
+					processors[superProcessors.length] = phpCompletionProcessor;
+				} else {
+					processors = new IContentAssistProcessor[] { phpCompletionProcessor };
 				}
-				processors = new IContentAssistProcessor[phpDocProcessors.size()];
-				phpDocProcessors.toArray(processors);
 			}
 		} else {
 			processors = new IContentAssistProcessor[0];
-		}
-		return processors;
-	}
-
-	private ArrayList<IContentAssistProcessor> getPHPProcessors(String partitionType, PHPStructuredTextViewer viewer) {
-		ArrayList<IContentAssistProcessor> processors = new ArrayList<IContentAssistProcessor>();
-
-		if (fCompletionProcessor == null) {
-			fCompletionProcessor = new PHPCompletionProcessor(viewer.getTextEditor(), (ContentAssistant) getPHPContentAssistant(viewer), PHPPartitionTypes.PHP_DEFAULT);
-		}
-		processors.add(fCompletionProcessor);
-
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(CONTENT_ASSIST_PROCESSOR_EXT);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("processor")) { //$NON-NLS-1$
-				String partitionTypeAtt = element.getAttribute("partitionType");
-				if (partitionTypeAtt == null) {// backward compatibility when
-					// no "partitionType" attribute
-					partitionTypeAtt = PHPPartitionTypes.PHP_DEFAULT;
-				}
-				if (partitionTypeAtt.equals(partitionType)) {
-					ElementCreationProxy ecProxy = new ElementCreationProxy(element, CONTENT_ASSIST_PROCESSOR_EXT);
-					IContentAssistProcessor processor = (IContentAssistProcessor) ecProxy.getObject();
-					if (processor != null) {
-						processors.add(processor);
-					}
-				}
-			}
 		}
 		return processors;
 	}
@@ -187,11 +163,8 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 
 	public IContentAssistant getPHPContentAssistant(ISourceViewer sourceViewer, boolean reCreate) {
 		if (fContentAssistant == null || reCreate) {
-			fContentAssistant = getPHPContentAssistantExtension();
+			fContentAssistant = new PHPContentAssistant();
 
-			if (fContentAssistant == null) {
-				fContentAssistant = new StructuredContentAssistant();
-			}
 			// content assistant configurations
 			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
@@ -219,22 +192,6 @@ public class PHPStructuredTextViewerConfiguration extends StructuredTextViewerCo
 		}
 
 		return fContentAssistant;
-	}
-
-	private StructuredContentAssistant getPHPContentAssistantExtension() {
-		StructuredContentAssistant rv = null;
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(PHP_CONTENT_ASSISTANT_EXT);
-		for (int i = 0; i < elements.length; i++) {
-			IConfigurationElement element = elements[i];
-			if (element.getName().equals("contentAssistant")) { //$NON-NLS-1$
-				ElementCreationProxy ecProxy = new ElementCreationProxy(element, PHP_CONTENT_ASSISTANT_EXT);
-				StructuredContentAssistant contentAssistant = (StructuredContentAssistant) ecProxy.getObject();
-				if (contentAssistant != null) {
-					rv = contentAssistant;
-				}
-			}
-		}
-		return rv;
 	}
 
 	@Override

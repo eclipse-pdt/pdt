@@ -12,6 +12,7 @@
 package org.eclipse.php.internal.ui.editor.contentassist;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.ui.text.ScriptTextTools;
@@ -35,6 +36,14 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 		super(replacementString, replacementOffset, replacementLength, image, displayString, relevance, indoc);
 	}
 	
+	protected boolean isValidPrefix(String prefix) {
+		String word = getDisplayString();
+		if (word.startsWith("$") && !prefix.startsWith("$")) {
+			word = word.substring(1);
+		}
+		return isPrefix(prefix, word);
+	}
+	
 	protected boolean isSmartTrigger(char trigger) {
 		return trigger == '$';
 	}
@@ -42,9 +51,27 @@ public class PHPCompletionProposal extends ScriptCompletionProposal {
 	public void apply(IDocument document, char trigger, int offset) {
 		IModelElement modelElement = getModelElement();
 
-		if (modelElement instanceof FakeGroupType
-				// workaround for: https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
-				|| (modelElement instanceof IScriptProject && getReplacementString().endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR))) {
+		boolean activateCodeAssist = false;
+		String replacementString = getReplacementString();
+		if (modelElement instanceof FakeGroupType) {
+			activateCodeAssist = true;
+		} else if (modelElement instanceof IScriptProject && replacementString.endsWith(IncludeStatementStrategy.FOLDER_SEPARATOR)) {
+			// workaround for: https://bugs.eclipse.org/bugs/show_bug.cgi?id=269634
+			activateCodeAssist = true;
+		} else {
+			IPreferencesService preferencesService = Platform.getPreferencesService();
+			boolean enableAutoactivation = preferencesService.getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_AUTOACTIVATION, false, null);
+			if (enableAutoactivation) {
+				char lastChar = replacementString.charAt(replacementString.length() - 1);
+				for (char autoActivationChar : PHPCompletionProcessor.completionAutoActivationChars) {
+					if (autoActivationChar == lastChar) {
+						activateCodeAssist = true;
+						break;
+					}
+				}
+			}
+		}
+		if (activateCodeAssist) {
 			AutoActivationTrigger.register(document);
 		}
 
