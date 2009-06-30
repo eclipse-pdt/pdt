@@ -1,7 +1,7 @@
 --TEST--
 Test hierarchy scope members from external library
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?php
 class MyException extends Exception {

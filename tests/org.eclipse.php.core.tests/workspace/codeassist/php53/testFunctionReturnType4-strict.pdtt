@@ -1,7 +1,7 @@
 --TEST--
 Should complete class members from singleton method in other namespace
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?php
 namespace MyNamespace {

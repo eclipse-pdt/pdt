@@ -1,6 +1,6 @@
 --TEST--
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <? namespace NS;
    interface A { function a(); }

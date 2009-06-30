@@ -1,0 +1,10 @@
+--TEST--
+Show HTTP variables in function body 
+--FILE--
+<?php
+function foo(){
+   $_COOK|
+}
+?>
+--EXPECT--
+field($_COOKIE)

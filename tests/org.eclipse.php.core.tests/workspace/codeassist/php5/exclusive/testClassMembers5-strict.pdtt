@@ -1,7 +1,7 @@
 --TEST--
 Test Inherited Field
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?
 class A {

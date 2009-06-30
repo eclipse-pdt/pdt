@@ -1,7 +1,7 @@
 --TEST--
 Show own class static members
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?
 class A {

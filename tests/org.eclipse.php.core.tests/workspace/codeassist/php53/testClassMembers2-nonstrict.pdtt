@@ -1,7 +1,7 @@
 --TEST--
 Should complete class members under namespace using fully qualified name
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=false
+org.eclipse.php.core/contentAssistShowStrictOptions=false
 --FILE--
 <?
 namespace NS;

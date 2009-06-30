@@ -1,7 +1,7 @@
 --TEST--
 Should complete class members under namespace from namespace alias
 --PREFERENCES--
-org.eclipse.php.core/contentAssistShowNonStrictOptions=true
+org.eclipse.php.core/contentAssistShowStrictOptions=true
 --FILE--
 <?
 namespace NS;
