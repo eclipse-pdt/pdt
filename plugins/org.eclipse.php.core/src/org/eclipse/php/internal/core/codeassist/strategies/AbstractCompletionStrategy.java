@@ -11,8 +11,11 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.php.internal.core.PHPCoreConstants;
+import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CompletionCompanion;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
@@ -82,5 +85,13 @@ public abstract class AbstractCompletionStrategy implements ICompletionStrategy 
 	 */
 	public void setElementFilter(IElementFilter elementFilter) {
 		this.elementFilter = elementFilter;
+	}
+	
+	/**
+	 * Whether code assist should respect case sensitivity
+	 * @return
+	 */
+	protected boolean isCaseSensitive() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, false, null);
 	}
 }

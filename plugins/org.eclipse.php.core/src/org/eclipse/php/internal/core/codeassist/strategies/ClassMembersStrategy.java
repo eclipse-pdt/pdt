@@ -72,8 +72,8 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 		return ((context instanceof ClassStaticMemberContext) && ((ClassStaticMemberContext) context).isDirectParent());
 	}
 
-	protected boolean showNonStrictOptions() {
-		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_SHOW_NON_STRICT_OPTIONS, false, null);
+	protected boolean showStrictOptions() {
+		return Platform.getPreferencesService().getBoolean(PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, false, null);
 	}
 
 	/**
@@ -153,13 +153,13 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 								return false;//3:2, 4:2
 							} else if (isStaticAccessFromInsideClass(context)) {
 								return false;//3:3, 4:3
-							} else if (isStaticAccessFromOutsideClass(context) && showNonStrictOptions()) {
+							} else if (isStaticAccessFromOutsideClass(context) && showStrictOptions()) {
 								return false;//3:4, 4:4
 							}
 						}
 					} else if (context.getTriggerType() == Trigger.OBJECT) {
 						if (PHPFlags.isPrivate(flags)) {
-							if (isThisKeyWord(context) && showNonStrictOptions()) {
+							if (isThisKeyWord(context) && showStrictOptions()) {
 								return false; //1:5
 							} else if (isIndirectThis(context)) {
 								return true;//1:6
@@ -167,7 +167,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 								return true;//1:7
 							}
 						} else if (PHPFlags.isProtected(flags)) {
-							if (isThisKeyWord(context) && showNonStrictOptions()) {
+							if (isThisKeyWord(context) && showStrictOptions()) {
 								return false; //2:5
 							} else if (isIndirectThis(context) && isDirectThis(context)) {
 								return true;//2:6
@@ -175,11 +175,11 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 								return true;//2:7
 							}
 						} else if (PHPFlags.isPublic(flags)) {
-							if (isThisKeyWord(context) && showNonStrictOptions()) {
+							if (isThisKeyWord(context) && showStrictOptions()) {
 								return false; //3:5
-							} else if (isIndirectThis(context) && showNonStrictOptions()) {
+							} else if (isIndirectThis(context) && showStrictOptions()) {
 								return false;//3:6
-							} else if (isSimpleArrow(context) && showNonStrictOptions()) {
+							} else if (isSimpleArrow(context) && showStrictOptions()) {
 								return false;//3:7
 							}
 						}
@@ -326,7 +326,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 								return false;//15:2
 							} else if (isStaticAccessFromInsideClass(context)) {
 								return false;//15:3
-							} else if (isStaticAccessFromOutsideClass(context) && showNonStrictOptions()) {
+							} else if (isStaticAccessFromOutsideClass(context) && showStrictOptions()) {
 								return false;//15:4
 							}
 						} else if (PHPFlags.isDefault(flags)) {
@@ -336,7 +336,7 @@ public abstract class ClassMembersStrategy extends AbstractCompletionStrategy {
 								return false;//16:2
 							} else if (isStaticAccessFromInsideClass(context)) {
 								return false;//16:3
-							} else if (isStaticAccessFromOutsideClass(context) && showNonStrictOptions()) {
+							} else if (isStaticAccessFromOutsideClass(context) && showStrictOptions()) {
 								return false;//16:4
 							}
 						}

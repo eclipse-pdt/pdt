@@ -89,23 +89,6 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_AUTOACTIVATION_DELAY = "contentAssistAutoactivationDelay"; //$NON-NLS-1$
 
 	/**
-	 * A name preference that holds the auto activation triggers for PHP code
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHP = "contentAssistAutoactivationTriggersPHP"; //$NON-NLS-1$
-
-	/**
-	 * A name preference that holds the auto activation triggers for PHPDOC
-	 * <p>
-	 * Value is of type <code>String</code>.
-	 * </p>
-	 */
-	public final static String CODEASSIST_AUTOACTIVATION_TRIGGERS_PHPDOC = "contentAssistAutoactivationTriggersPHPDoc"; //$NON-NLS-1$
-
-	
-	/**
 	 * A named preference that controls if the php code assist inserts a
 	 * proposal automatically if only one proposal is available.
 	 * <p>
@@ -121,15 +104,6 @@ public interface PHPCoreConstants {
 	 * </p>
 	 */
 	public final static String CODEASSIST_CASE_SENSITIVITY = "contentAssistCaseSensitivity"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls if code assist for constants should be case sensitive
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> code assist for constants should be case sensitive. If
-	 * <code>false</code> case insensitive.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CONSTANTS_CASE_SENSITIVE = "contentAssistConstantsCaseSensitive"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if argument names are filled in when a method is selected from as list
@@ -159,42 +133,13 @@ public interface PHPCoreConstants {
 	public final static String CODEASSIST_INSERT_COMPLETION = "contentAssistInsertCompletion"; //$NON-NLS-1$
 
 	/**
-	 * A named preference that defines if code assist proposals are sorted in alphabetical order.
-	 * <p>
-	 * Value is of type <code>Boolean</code>. If <code>true</code> that are sorted in alphabetical
-	 * order. If <code>false</code> that are unsorted.
-	 * </p>
-	 */
-	public final static String CODEASSIST_ORDER_PROPOSALS = "contentAssistOrderProposals"; //$NON-NLS-1$
-
-	public final static String CODEASSIST_PREFIX_COMPLETION = "contentAssistPrefixCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show class names in Global Completion list
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> class names in Global Completion list will be shown
-	 * <code>false</code> they will not be shown.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_CLASS_NAMES_IN_GLOBAL_COMPLETION = "contentAssistShowClassNamesInGlobalCompletion"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to show constants assist
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_SHOW_CONSTANTS_ASSIST = "contentAssistShowConstantsAssist"; //$NON-NLS-1$
-
-	/**
 	 * A named preference that controls whether to show options that are restricted by PHP
 	 * <p>
 	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
 	 * <code>false</code> invisible.
 	 * </p>
 	 */
-	public final static String CODEASSIST_SHOW_NON_STRICT_OPTIONS = "contentAssistShowNonStrictOptions"; //$NON-NLS-1$
+	public final static String CODEASSIST_SHOW_STRICT_OPTIONS = "contentAssistShowStrictOptions"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls whether to group options
@@ -204,15 +149,6 @@ public interface PHPCoreConstants {
 	 * </p>
 	 */
 	public final static String CODEASSIST_GROUP_OPTIONS = "contentAssistGroupOptions"; //$NON-NLS-1$
-
-	/**
-	 * A named preference that controls whether to cut common prefix
-	 * <p>
-	 * Value is of type <code>Boolean</code>. if <code>true<code> constant assist will be visible
-	 * <code>false</code> invisible.
-	 * </p>
-	 */
-	public final static String CODEASSIST_CUT_COMMON_PREFIX = "contentAssistCutPrefix"; //$NON-NLS-1$
 
 	/**
 	 * A named preference that controls if code assist also contains proposals from other files

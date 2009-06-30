@@ -13,6 +13,7 @@ package org.eclipse.php.internal.core.codeassist.contexts;
 
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.ISourceModule;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.codeassist.IPHPCompletionRequestor;
 import org.eclipse.php.internal.core.util.text.TextSequence;
 
@@ -32,9 +33,19 @@ public abstract class AbstractGlobalStatementContext extends StatementContext {
 		
 		if (requestor instanceof IPHPCompletionRequestor) {
 			IPHPCompletionRequestor phpCompletionRequestor = (IPHPCompletionRequestor) requestor;
-			TextSequence statementText = getStatementText();
-			if (statementText.length() > 0 && statementText.charAt(statementText.length() - 1) == ':') {
-				return phpCompletionRequestor.isExplicit();
+			boolean isExplicit = phpCompletionRequestor.isExplicit();
+			if (!isExplicit) {
+				try {
+					String prefix = getPrefix();
+					if ((prefix == null || prefix.length() == 0)) {
+						return false;
+					}
+					TextSequence statementText = getStatementText();
+					if (statementText.length() > 0 && statementText.charAt(statementText.length() - 1) == ':') {
+						return false;
+					}
+				} catch (BadLocationException e) {
+				}
 			}
 		}
 		return true;
