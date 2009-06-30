@@ -207,12 +207,20 @@ public class VariableDeclarationSearcher extends ContextFinder {
 		}
 		else if (node instanceof ForEachStatement) {
 			ForEachStatement foreachStatement = (ForEachStatement) node;
-			if (foreachStatement.getValue() instanceof SimpleReference) {
-				String variableName = ((SimpleReference) foreachStatement.getValue()).getName();
-				getScope().addDeclaration(variableName, foreachStatement);
+
+			Expression value = foreachStatement.getValue();
+			if (value instanceof ReferenceExpression) { // foreach ( $array as &$value ) 
+				value = ((ReferenceExpression) value).getVariable();
 			}
-			if (foreachStatement.getKey() instanceof SimpleReference) {
-				String variableName = ((SimpleReference) foreachStatement.getKey()).getName();
+
+			if (value instanceof SimpleReference) {
+				String variableName = ((SimpleReference) value).getName();
+				getScope().addDeclaration(variableName, foreachStatement);
+			} 
+
+			final Expression key = foreachStatement.getKey();			
+			if (key instanceof SimpleReference) {
+				String variableName = ((SimpleReference) key).getName();
 				getScope().addDeclaration(variableName, foreachStatement);
 			}
 		}
