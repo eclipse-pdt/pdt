@@ -41,7 +41,6 @@ import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
-import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.PHPUiPlugin;
 import org.eclipse.swt.SWT;
@@ -81,7 +80,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		@Override
 		public void dispose() {
 			if (fSourceContainerPage instanceof PHPIncludePathSourcePage) {
-				PHPIncludePathSourcePage page = (PHPIncludePathSourcePage) fSourceContainerPage;
+				PHPSourceContainerWorkbookPage page = (PHPSourceContainerWorkbookPage) fSourceContainerPage;
 				page.unregisterAddedElementListener(this);
 			}
 			IncludePathManager.getInstance().unregisterIncludepathListener(this);
@@ -154,7 +153,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		item.setImage(DLTKPluginImages.get(DLTKPluginImages.IMG_OBJS_PACKFRAG_ROOT));
 
 		fSourceContainerPage = new PHPIncludePathSourcePage(fBuildPathList);
-		((PHPIncludePathSourcePage)fSourceContainerPage).registerAddedElementListener((IChangeListener)composite);
+		((PHPSourceContainerWorkbookPage)fSourceContainerPage).registerAddedElementListener((IChangeListener)composite);
 
 		item.setData(fSourceContainerPage);
 		item.setControl(fSourceContainerPage.getControl(folder));
@@ -214,7 +213,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 		// disable checking for nested folders errors
 	}
 	public void configureScriptProject(IProgressMonitor monitor) throws CoreException, OperationCanceledException {
-		adaptBuildPath();
+		updateBuildPath();
 		flush(fBuildPathList.getElements(), getScriptProject(), monitor);
 		initializeTimeStamps();
 		updateUI();
@@ -227,7 +226,7 @@ public class PHPIncludePathsBlock extends AbstractIncludepathsBlock {
 	 * THe user is prompted and asked if he wants to add the relevant sources to the build path as well
 	 * see bug#255930
 	 */
-	private void adaptBuildPath() {
+	private void updateBuildPath() {
 		PHPIncludePathSourcePage includePathSourcePage = (PHPIncludePathSourcePage) fSourceContainerPage;
 
 		boolean shouldAddToBuildPath = includePathSourcePage.shouldAddToBuildPath();
