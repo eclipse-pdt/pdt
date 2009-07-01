@@ -20,6 +20,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
+import org.eclipse.php.internal.core.buildpath.BuildPathUtils;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
 import org.eclipse.php.internal.core.preferences.CorePreferencesSupport;
 
@@ -263,7 +264,12 @@ public class IncludePathManager {
 		}
 		// update the include path for this project
 		setIncludePath(project, newIncludePathEntries.toArray(new IncludePath[newIncludePathEntries.size()]));
-
+		
+		//if it's a library, remove it also from build path
+		IScriptProject scriptProject = DLTKCore.create(project);
+		if ((buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_LIBRARY || buildpathEntry.getEntryKind() == IBuildpathEntry.BPE_CONTAINER)) {
+			BuildPathUtils.removeEntryFromBuildPath(scriptProject, buildpathEntry);
+		}
 	}
 
 	/**
