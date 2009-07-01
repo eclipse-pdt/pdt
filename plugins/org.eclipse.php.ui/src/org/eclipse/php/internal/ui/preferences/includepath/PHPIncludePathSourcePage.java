@@ -51,18 +51,16 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 
 	private List<BPListElement> fAddedElements = new ArrayList<BPListElement>(1);
 
-	private List<IChangeListener> addedElementListeners = new ArrayList<IChangeListener>(1);
-
 	private boolean addToBuildPath = false;
 
 	public boolean shouldAddToBuildPath() {
 		return addToBuildPath;
 	}
-
+	
 	public List<BPListElement> getAddedElements() {
 		return fAddedElements;
 	}
-
+	
 	public PHPIncludePathSourcePage(ListDialogField buildpathList) {
 		super(buildpathList);
 	}
@@ -233,18 +231,6 @@ public class PHPIncludePathSourcePage extends PHPSourceContainerWorkbookPage {
 		fFoldersList.refresh(); // does enforce the order of the entries.
 		if (!insertedElements.isEmpty()) {
 			fFoldersList.postSetSelection(new StructuredSelection(insertedElements));
-		}
-	}
-
-	public void registerAddedElementListener(IChangeListener listener) {
-		if (listener != null) {
-			addedElementListeners.add(listener);
-		}
-	}
-
-	public void unregisterAddedElementListener(IChangeListener listener) {
-		if (listener != null) {
-			addedElementListeners.remove(listener);
 		}
 	}
 }
