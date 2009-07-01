@@ -546,25 +546,29 @@ public class TypeBinding implements ITypeBinding {
 	 * @param type the type to check compatibility against
 	 * @return <code>true</code> if this type is subtype compatible with the
 	 * given type, and <code>false</code> otherwise
+	 * 
+	 * NOTE: if one of the resolved types are not compatible with this type
+	 * <code>false</code> is returned 
 	 */
 	public boolean isSubTypeCompatible(ITypeBinding otherType) {
-		if (otherType == null) {
+		
+		if (otherType == null || elements == null || elements.length == 0) {
 			return false;
 		}
 
-		boolean result = true;
+		int compatible = 0;
 		for (IModelElement element : elements) {
 			IType type = (IType) element;
 			try {
 				if (type.getSuperClasses() == null || type.getSuperClasses().length == 0) {
-					continue;
+					return false;
 				}
 				ITypeHierarchy supertypeHierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
 				IModelElement[] otherElements = ((TypeBinding) otherType).elements;
 				if (otherElements != null) {
 					for (IModelElement modelElement : otherElements) {
-						if (modelElement instanceof IType) {
-							result &= supertypeHierarchy.contains((IType) modelElement);
+						if (modelElement instanceof IType && supertypeHierarchy.contains((IType) modelElement)) {
+							compatible++;
 						}
 					}
 				}
@@ -575,7 +579,8 @@ public class TypeBinding implements ITypeBinding {
 			}
 		}
 
-		return result;
+		// all resolved types were compatible with this type
+		return compatible == elements.length;
 	}
 
 	/**
