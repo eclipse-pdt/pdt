@@ -3,7 +3,7 @@ Test Empty Declare
 --FILE--
 <?php declare(ticks=1);?>
 --EXPECT--
-<ModuleDeclaration start="0" end="25">
+<ModuleDeclaration start="0" end="26">
 	<DeclareStatement start="6" end="23">
 		<Scalar start="20" end="21" type="int" value="1">
 		</Scalar>
@@ -13,4 +13,3 @@ Test Empty Declare
 	<EmptyStatement start="23" end="25">
 	</EmptyStatement>
 </ModuleDeclaration>
-

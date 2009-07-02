@@ -3,7 +3,7 @@ Test Throw
 --FILE--
 <?php  throw new Exception('Division by zero.'); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="51">
+<ModuleDeclaration start="0" end="52">
 	<ThrowStatement start="7" end="48">
 		<ClassInstanceCreation start="13" end="47">
 			<TypeReference start="17" end="26" name="Exception">

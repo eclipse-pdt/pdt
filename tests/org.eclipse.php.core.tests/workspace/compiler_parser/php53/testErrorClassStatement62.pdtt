@@ -3,7 +3,7 @@ Test Error Class Statement62
 --FILE--
 <?php class A {function f($a,) a(); function g(){}}?>
 --EXPECT--
-<ModuleDeclaration start="0" end="53">
+<ModuleDeclaration start="0" end="54">
 	<ClassDeclaration start="6" end="51" modifiers="" name="A">
 		<PHPMethodDeclaration start="15" end="30" modifiers="public" name="f">
 			<FormalParameter start="26" end="28" modifiers="" isMandatory="true">
@@ -27,4 +27,3 @@ Test Error Class Statement62
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>
-

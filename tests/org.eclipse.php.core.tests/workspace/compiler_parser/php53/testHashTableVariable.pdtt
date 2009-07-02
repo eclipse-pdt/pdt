@@ -3,7 +3,7 @@ Test Hash Table Variable
 --FILE--
 <?php $a{'name'}; $a{'name'} = 6;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="35">
+<ModuleDeclaration start="0" end="36">
 	<ExpressionStatement start="6" end="17">
 		<ArrayVariableReference start="6" end="16" type="hashtable" name="$a">
 			<Scalar start="9" end="15" type="string" value="&apos;name&apos;">

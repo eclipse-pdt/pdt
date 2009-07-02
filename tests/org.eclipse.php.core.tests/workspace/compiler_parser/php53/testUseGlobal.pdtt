@@ -3,7 +3,7 @@ Test Use Global
 --FILE--
 <?php use \A; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="16">
+<ModuleDeclaration start="0" end="17">
 	<UseStatement start="6" end="13">
 		<Parts>
 			<UsePart start="0" end="0">
@@ -23,4 +23,3 @@ Test Use Global
 	<EmptyStatement start="14" end="16">
 	</EmptyStatement>
 </ModuleDeclaration>
-

@@ -3,7 +3,7 @@ Test Class Constant
 --FILE--
 <?php $a = MyClass::MY_CONST; class gadi {const A='1',B='2';} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="64">
+<ModuleDeclaration start="0" end="65">
 	<ExpressionStatement start="6" end="29">
 		<Assignment start="6" end="28" operator="=">
 			<VariableReference start="6" end="8" name="$a">

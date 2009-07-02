@@ -3,7 +3,7 @@ Test Error Extends2
 --FILE--
 <?php class A extends B, {} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="30">
+<ModuleDeclaration start="0" end="31">
 	<ClassDeclaration start="6" end="27" modifiers="" name="A">
 		<FullyQualifiedReference start="22" end="23" name="B">
 		</FullyQualifiedReference>

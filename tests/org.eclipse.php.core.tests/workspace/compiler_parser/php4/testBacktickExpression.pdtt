@@ -3,7 +3,7 @@ Test Backtick Expression
 --FILE--
 <?php `ls -l $dirname`; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="26">
+<ModuleDeclaration start="0" end="27">
 	<ExpressionStatement start="6" end="23">
 		<BackTickExpression start="6" end="22">
 			<Scalar start="7" end="9" type="string" value="ls">
@@ -21,4 +21,3 @@ Test Backtick Expression
 	<EmptyStatement start="24" end="26">
 	</EmptyStatement>
 </ModuleDeclaration>
-

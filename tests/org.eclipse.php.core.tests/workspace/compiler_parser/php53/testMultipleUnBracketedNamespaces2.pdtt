@@ -12,7 +12,7 @@ function bar() {}
 }
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="98">
+<ModuleDeclaration start="0" end="99">
 	<NamespaceDeclaration start="6" end="52" modifiers="" name="NS1">
 		<ClassDeclaration start="22" end="32" modifiers="" name="A">
 		</ClassDeclaration>
@@ -28,4 +28,3 @@ function bar() {}
 	<EmptyStatement start="96" end="98">
 	</EmptyStatement>
 </ModuleDeclaration>
-

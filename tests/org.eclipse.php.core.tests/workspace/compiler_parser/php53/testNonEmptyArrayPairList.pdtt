@@ -3,7 +3,7 @@ Test Non Empty Array Pair List
 --FILE--
 <?php $arr = array(&$foo,&$qq); $arr1 = array(1=>&$qq(),3=>&$foo); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="69">
+<ModuleDeclaration start="0" end="70">
 	<ExpressionStatement start="6" end="31">
 		<Assignment start="6" end="30" operator="=">
 			<VariableReference start="6" end="10" name="$arr">

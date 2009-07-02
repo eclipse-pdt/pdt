@@ -3,7 +3,7 @@ Test Cast Of Variable
 --FILE--
 <?php (int) $a; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="18">
+<ModuleDeclaration start="0" end="19">
 	<ExpressionStatement start="6" end="15">
 		<CastExpression start="6" end="14" type="int">
 			<VariableReference start="12" end="14" name="$a">

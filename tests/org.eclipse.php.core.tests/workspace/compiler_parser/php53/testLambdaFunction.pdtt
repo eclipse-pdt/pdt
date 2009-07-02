@@ -3,7 +3,7 @@ Test Lambda Function
 --FILE--
 <?php $lambda = function () { }; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="35">
+<ModuleDeclaration start="0" end="36">
 	<ExpressionStatement start="6" end="32">
 		<Assignment start="6" end="31" operator="=">
 			<VariableReference start="6" end="13" name="$lambda">

@@ -3,7 +3,7 @@ Test Object Dim List
 --FILE--
 <?php $obj = new StdClass(); $obj->foo = "bar"; print $obj->foo{2}; print $obj->foo[2]; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="90">
+<ModuleDeclaration start="0" end="91">
 	<ExpressionStatement start="6" end="28">
 		<Assignment start="6" end="27" operator="=">
 			<VariableReference start="6" end="10" name="$obj">

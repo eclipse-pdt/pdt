@@ -4,7 +4,7 @@ Test For Each Statement With Value
 <?php foreach ($arr as $key => $value) { echo "Key: $key; Value: $value<br />
 "; } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="85">
+<ModuleDeclaration start="0" end="86">
 	<ForEachStatement start="6" end="82">
 		<VariableReference start="15" end="19" name="$arr">
 		</VariableReference>

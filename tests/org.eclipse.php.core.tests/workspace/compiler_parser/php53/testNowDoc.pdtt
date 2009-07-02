@@ -8,7 +8,7 @@ This should not print a capital 'A': \x41
 EOT;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="158">
+<ModuleDeclaration start="0" end="159">
 	<EchoStatement start="6" end="155">
 		<Quote start="11" end="154" type="heredoc">
 			<Scalar start="20" end="153" type="string" value="My name is &quot;$name&quot;.I am printing some $foo-&gt;foo.

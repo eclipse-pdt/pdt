@@ -3,7 +3,7 @@ Test Error Extends5
 --FILE--
 <?php class A extends {} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="27">
+<ModuleDeclaration start="0" end="28">
 	<ClassDeclaration start="6" end="24" modifiers="" name="A">
 	</ClassDeclaration>
 	<EmptyStatement start="25" end="27">

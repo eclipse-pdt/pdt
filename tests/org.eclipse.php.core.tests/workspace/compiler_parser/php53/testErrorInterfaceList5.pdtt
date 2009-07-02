@@ -3,7 +3,7 @@ Test Error Interface List5
 --FILE--
 <?php class A implements B, 3 {} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="35">
+<ModuleDeclaration start="0" end="36">
 	<ClassDeclaration start="6" end="32" modifiers="" name="A">
 		<FullyQualifiedReference start="25" end="26" name="B">
 		</FullyQualifiedReference>

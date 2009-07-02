@@ -3,7 +3,7 @@ Test Func Is Set
 --FILE--
 <?php  isset($a, $b); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="24">
+<ModuleDeclaration start="0" end="25">
 	<ExpressionStatement start="7" end="21">
 		<PHPCallExpression start="7" end="20">
 			<SimpleReference start="7" end="12" name="isset">

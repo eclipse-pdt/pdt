@@ -6,7 +6,7 @@ test{test}test
 EOF;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="43">
+<ModuleDeclaration start="0" end="44">
 	<ExpressionStatement start="6" end="40">
 		<Assignment start="6" end="39" operator="=">
 			<VariableReference start="6" end="11" name="$text">

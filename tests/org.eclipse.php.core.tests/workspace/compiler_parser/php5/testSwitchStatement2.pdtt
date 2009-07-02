@@ -3,7 +3,7 @@ Test Switch Statement2
 --FILE--
 <?php switch ($i){; case $x: default: }; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="43">
+<ModuleDeclaration start="0" end="44">
 	<SwitchStatement start="6" end="39">
 		<VariableReference start="14" end="16" name="$i">
 		</VariableReference>

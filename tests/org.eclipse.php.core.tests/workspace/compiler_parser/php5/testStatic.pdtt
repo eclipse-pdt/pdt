@@ -3,7 +3,7 @@ Test Static
 --FILE--
 <?php static $a; static $a, $b=6;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="35">
+<ModuleDeclaration start="0" end="36">
 	<StaticStatement start="6" end="16">
 		<VariableReference start="13" end="15" name="$a">
 		</VariableReference>

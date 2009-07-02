@@ -3,7 +3,7 @@ Test Array Complex
 --FILE--
 <?php array($a, $b=>foo(), 1=>$myClass->getFirst());?>
 --EXPECT--
-<ModuleDeclaration start="0" end="54">
+<ModuleDeclaration start="0" end="55">
 	<ExpressionStatement start="6" end="52">
 		<ArrayCreation start="6" end="51">
 			<ArrayElement start="12" end="14">

@@ -3,7 +3,7 @@ Test Ternary Operator
 --FILE--
 <?php $a = $newValue ? : $defaultValue; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="42">
+<ModuleDeclaration start="0" end="43">
 	<ExpressionStatement start="6" end="39">
 		<Assignment start="6" end="38" operator="=">
 			<VariableReference start="6" end="8" name="$a">
@@ -23,4 +23,3 @@ Test Ternary Operator
 	<EmptyStatement start="40" end="42">
 	</EmptyStatement>
 </ModuleDeclaration>
-

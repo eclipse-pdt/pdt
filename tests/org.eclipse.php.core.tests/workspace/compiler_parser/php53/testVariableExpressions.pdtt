@@ -3,7 +3,7 @@ Test Variable Expressions
 --FILE--
 <?php $a >>= 5; $a ^= 6 ; $a |= 6 ; $a &= 6 ; $a %= 6 ; $a .= 6 ; $a /= 6 ; $a *= 6 ; $a *= 6 ; $c -= 5;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="106">
+<ModuleDeclaration start="0" end="107">
 	<ExpressionStatement start="6" end="15">
 		<Assignment start="6" end="14" operator="&gt;&gt;=">
 			<VariableReference start="6" end="8" name="$a">

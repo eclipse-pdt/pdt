@@ -5,7 +5,7 @@ Test Empty Heredoc
 Heredoc;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="28">
+<ModuleDeclaration start="0" end="29">
 	<ASTError start="6" end="28">
 	</ASTError>
 	<Errors>

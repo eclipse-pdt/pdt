@@ -3,7 +3,7 @@ Test Require
 --FILE--
 <?php require($myClass->getFileName());?>
 --EXPECT--
-<ModuleDeclaration start="0" end="41">
+<ModuleDeclaration start="0" end="42">
 	<ExpressionStatement start="6" end="39">
 		<Include start="6" end="38" type="require">
 			<PHPCallExpression start="14" end="37">

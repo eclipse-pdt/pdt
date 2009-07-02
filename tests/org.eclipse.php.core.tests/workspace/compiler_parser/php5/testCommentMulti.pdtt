@@ -3,8 +3,7 @@ Test Comment Multi
 --FILE--
 <?php /* this is multiline comment */ ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="40">
+<ModuleDeclaration start="0" end="41">
 	<EmptyStatement start="38" end="40">
 	</EmptyStatement>
 </ModuleDeclaration>
-

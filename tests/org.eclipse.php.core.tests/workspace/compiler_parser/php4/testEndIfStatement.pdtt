@@ -3,7 +3,7 @@ Test End If Statement
 --FILE--
 <?php if ($a):   echo 'a is bigger than b'; elseif ($a == $b): echo 'a is equal to b'; else: echo 'a is equal to b'; endif; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="126">
+<ModuleDeclaration start="0" end="127">
 	<IfStatement start="6" end="116">
 		<Condition>
 			<VariableReference start="10" end="12" name="$a">

@@ -4,8 +4,7 @@ Test Comment Multi2
 <?php /* this is multiline comment 
 and another line */?>
 --EXPECT--
-<ModuleDeclaration start="0" end="57">
+<ModuleDeclaration start="0" end="58">
 	<EmptyStatement start="55" end="57">
 	</EmptyStatement>
 </ModuleDeclaration>
-

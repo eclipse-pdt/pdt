@@ -3,7 +3,7 @@ Test For Each Statement Blocked
 --FILE--
 <?php foreach ($arr as $value): $value = $value * 2;endforeach; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="66">
+<ModuleDeclaration start="0" end="67">
 	<ForEachStatement start="6" end="63">
 		<VariableReference start="15" end="19" name="$arr">
 		</VariableReference>

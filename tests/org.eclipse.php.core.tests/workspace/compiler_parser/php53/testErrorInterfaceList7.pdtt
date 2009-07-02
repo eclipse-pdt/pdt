@@ -3,7 +3,7 @@ Test Error Interface List7
 --FILE--
 <?php interface A extends 3 {} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="33">
+<ModuleDeclaration start="0" end="34">
 	<InterfaceDeclaration start="6" end="30" modifiers="" name="A">
 	</InterfaceDeclaration>
 	<EmptyStatement start="31" end="33">

@@ -3,7 +3,7 @@ Test Single Quote
 --FILE--
 <?php "'single ${$complex->quote()}'";?>
 --EXPECT--
-<ModuleDeclaration start="0" end="40">
+<ModuleDeclaration start="0" end="41">
 	<ExpressionStatement start="6" end="38">
 		<Quote start="6" end="37" type="quote">
 			<Scalar start="7" end="8" type="string" value="&apos;">

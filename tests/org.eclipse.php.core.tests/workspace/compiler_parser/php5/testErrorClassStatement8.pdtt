@@ -3,7 +3,7 @@ Test Error Class Statement8
 --FILE--
 <?php class A { function f(){}?>
 --EXPECT--
-<ModuleDeclaration start="0" end="32">
+<ModuleDeclaration start="0" end="33">
 	<ClassDeclaration start="6" end="32" modifiers="" name="A">
 		<PHPMethodDeclaration start="16" end="30" modifiers="public" name="f">
 		</PHPMethodDeclaration>
@@ -15,4 +15,3 @@ Test Error Class Statement8
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>
-

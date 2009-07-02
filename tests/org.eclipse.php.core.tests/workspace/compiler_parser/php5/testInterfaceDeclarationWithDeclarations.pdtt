@@ -3,7 +3,7 @@ Test Interface Declaration With Declarations
 --FILE--
 <?php interface MyInterface extends Interface1, Interface2 { const MY_CONSTANT = 3; public function myFunction($a); } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="120">
+<ModuleDeclaration start="0" end="121">
 	<InterfaceDeclaration start="6" end="117" modifiers="" name="MyInterface">
 		<TypeReference start="36" end="46" name="Interface1">
 		</TypeReference>
@@ -25,4 +25,3 @@ Test Interface Declaration With Declarations
 	<EmptyStatement start="118" end="120">
 	</EmptyStatement>
 </ModuleDeclaration>
-

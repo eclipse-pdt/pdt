@@ -3,7 +3,7 @@ Test Use Namespace As
 --FILE--
 <?php use A\B\C as Z; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="24">
+<ModuleDeclaration start="0" end="25">
 	<UseStatement start="6" end="21">
 		<Parts>
 			<UsePart start="0" end="0">
@@ -39,4 +39,3 @@ Test Use Namespace As
 	<EmptyStatement start="22" end="24">
 	</EmptyStatement>
 </ModuleDeclaration>
-

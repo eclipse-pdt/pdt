@@ -3,7 +3,7 @@ Test Array Key Value
 --FILE--
 <?php array('Dodo'=>'Golo','Dafna'=>'Dodidu');?>
 --EXPECT--
-<ModuleDeclaration start="0" end="48">
+<ModuleDeclaration start="0" end="49">
 	<ExpressionStatement start="6" end="46">
 		<ArrayCreation start="6" end="45">
 			<ArrayElement start="12" end="26">

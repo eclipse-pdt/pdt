@@ -3,7 +3,7 @@ Test Try Multi Catch Statement
 --FILE--
 <?php try { $error = 'Always throw this error'; } catch (Exception $e) { echo ''; } catch (AnotherException $ea) { echo ''; } catch (AnotherException1 $ea1) {}  ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="163">
+<ModuleDeclaration start="0" end="164">
 	<TryStatement start="6" end="159">
 		<ExpressionStatement start="12" end="47">
 			<Assignment start="12" end="46" operator="=">

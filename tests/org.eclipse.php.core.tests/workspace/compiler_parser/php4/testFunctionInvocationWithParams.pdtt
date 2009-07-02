@@ -3,7 +3,7 @@ Test Function Invocation With Params
 --FILE--
 <?php $foo($a, 's<>&', 12, true, __CLASS__, &$x); $qq(&$y); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="62">
+<ModuleDeclaration start="0" end="63">
 	<ExpressionStatement start="6" end="49">
 		<ReflectionCallExpression start="6" end="48">
 			<VariableReference start="6" end="10" name="$foo">

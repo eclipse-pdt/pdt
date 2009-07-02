@@ -3,10 +3,9 @@ Test Interface Declaration Simple
 --FILE--
 <?php interface MyInterface { } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="34">
+<ModuleDeclaration start="0" end="35">
 	<InterfaceDeclaration start="6" end="31" modifiers="" name="MyInterface">
 	</InterfaceDeclaration>
 	<EmptyStatement start="32" end="34">
 	</EmptyStatement>
 </ModuleDeclaration>
-

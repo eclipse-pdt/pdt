@@ -1,7 +1,7 @@
 --TEST--
 Test Error Class Statement62
 --FILE--
-<?php class A {function f($a,) a(); function g(){}}?> 
+<?php class A {function f($a,) a(); function g(){}}?>
 --EXPECT--
 <ModuleDeclaration start="6" end="51">
 	<ClassDeclaration start="6" end="35" modifiers="" name="A">

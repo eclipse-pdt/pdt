@@ -3,7 +3,7 @@ Test And Operation
 --FILE--
 <?php foo() & $a->bar(); $a & $b; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="36">
+<ModuleDeclaration start="0" end="37">
 	<ExpressionStatement start="6" end="24">
 		<InfixExpression start="6" end="23" operator="&amp;">
 			<PHPCallExpression start="6" end="11">

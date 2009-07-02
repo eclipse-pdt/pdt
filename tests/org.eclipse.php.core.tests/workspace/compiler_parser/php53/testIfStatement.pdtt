@@ -3,7 +3,7 @@ Test If Statement
 --FILE--
 <?php if ($a > $b) {   echo 'a is bigger than b';} elseif ($a == $b) {   echo 'a is equal to b';} else {   echo 'a is smaller than b';} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="138">
+<ModuleDeclaration start="0" end="139">
 	<IfStatement start="6" end="135">
 		<Condition>
 			<InfixExpression start="10" end="17" operator="&gt;">

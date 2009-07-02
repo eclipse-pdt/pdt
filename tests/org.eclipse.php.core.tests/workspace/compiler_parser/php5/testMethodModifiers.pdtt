@@ -3,7 +3,7 @@ Test Method Modifiers
 --FILE--
 <?php class gadi { static function foo1(){} public function foo2(){} final function foo3(){} private function foo4(){} protected function foo5(){} abstract function foo5(){}}?>
 --EXPECT--
-<ModuleDeclaration start="0" end="176">
+<ModuleDeclaration start="0" end="177">
 	<ClassDeclaration start="6" end="174" modifiers="" name="gadi">
 		<PHPMethodDeclaration start="19" end="43" modifiers="static" name="foo1">
 		</PHPMethodDeclaration>
