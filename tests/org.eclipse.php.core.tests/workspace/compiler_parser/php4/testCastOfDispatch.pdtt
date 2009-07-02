@@ -3,7 +3,7 @@ Test Cast Of Dispatch
 --FILE--
 <?php (string) $b->foo(); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="28">
+<ModuleDeclaration start="0" end="29">
 	<ExpressionStatement start="6" end="25">
 		<CastExpression start="6" end="24" type="string">
 			<PHPCallExpression start="15" end="24">

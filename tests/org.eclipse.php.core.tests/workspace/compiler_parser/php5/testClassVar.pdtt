@@ -3,7 +3,7 @@ Test Class Var
 --FILE--
 <?php class gadi { public $a,$b=2 ; } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="40">
+<ModuleDeclaration start="0" end="41">
 	<ClassDeclaration start="6" end="37" modifiers="" name="gadi">
 		<PHPFieldDeclaration start="26" end="28" modifiers="public">
 			<SimpleReference start="26" end="28" name="$a">

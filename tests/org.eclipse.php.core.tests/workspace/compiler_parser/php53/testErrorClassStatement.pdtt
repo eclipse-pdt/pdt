@@ -3,7 +3,7 @@ Test Error Class Statement
 --FILE--
 <?php class A { function function f(){} } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="44">
+<ModuleDeclaration start="0" end="45">
 	<ClassDeclaration start="6" end="41" modifiers="" name="A">
 		<ASTError start="15" end="24">
 		</ASTError>
@@ -17,4 +17,3 @@ Test Error Class Statement
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>
-

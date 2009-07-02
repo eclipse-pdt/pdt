@@ -3,7 +3,7 @@ Test Static Var List
 --FILE--
 <?php function Test(){ static $count = 0, $count1;}?>
 --EXPECT--
-<ModuleDeclaration start="0" end="53">
+<ModuleDeclaration start="0" end="54">
 	<PHPMethodDeclaration start="6" end="51" modifiers="" name="Test">
 		<StaticStatement start="23" end="50">
 			<Assignment start="30" end="40" operator="=">

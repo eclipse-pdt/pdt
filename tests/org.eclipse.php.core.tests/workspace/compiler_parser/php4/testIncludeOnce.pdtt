@@ -3,7 +3,7 @@ Test Include Once
 --FILE--
 <?php include_once($myFile);?>
 --EXPECT--
-<ModuleDeclaration start="0" end="30">
+<ModuleDeclaration start="0" end="31">
 	<ExpressionStatement start="6" end="28">
 		<Include start="6" end="27" type="include_once">
 			<VariableReference start="19" end="26" name="$myFile">

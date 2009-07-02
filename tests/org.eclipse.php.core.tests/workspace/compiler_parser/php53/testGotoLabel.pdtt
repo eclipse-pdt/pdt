@@ -3,10 +3,9 @@ Test Goto Label
 --FILE--
 <?php LABEL: ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="15">
+<ModuleDeclaration start="0" end="16">
 	<GotoLabel start="6" end="12" label="LABEL">
 	</GotoLabel>
 	<EmptyStatement start="13" end="15">
 	</EmptyStatement>
 </ModuleDeclaration>
-

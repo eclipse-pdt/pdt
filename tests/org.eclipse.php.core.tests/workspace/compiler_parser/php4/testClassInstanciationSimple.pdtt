@@ -3,7 +3,7 @@ Test Class Instanciation Simple
 --FILE--
 <?php new MyClass();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="22">
+<ModuleDeclaration start="0" end="23">
 	<ExpressionStatement start="6" end="20">
 		<ClassInstanceCreation start="6" end="19">
 			<TypeReference start="10" end="17" name="MyClass">

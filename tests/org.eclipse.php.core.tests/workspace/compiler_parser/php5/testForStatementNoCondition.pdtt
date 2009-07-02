@@ -3,7 +3,7 @@ Test For Statement No Condition
 --FILE--
 <?php for ($i = 1; ; $i++) { if ($i > 10) {  break;  }  echo $i;} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="68">
+<ModuleDeclaration start="0" end="69">
 	<ForStatement start="0" end="0">
 		<Initializations>
 			<Assignment start="11" end="17" operator="=">

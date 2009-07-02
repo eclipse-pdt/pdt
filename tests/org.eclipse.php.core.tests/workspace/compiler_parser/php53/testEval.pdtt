@@ -3,7 +3,7 @@ Test Eval
 --FILE--
 <?php eval($a); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="18">
+<ModuleDeclaration start="0" end="19">
 	<ExpressionStatement start="6" end="15">
 		<PHPCallExpression start="6" end="14">
 			<SimpleReference start="6" end="10" name="eval">
@@ -17,4 +17,3 @@ Test Eval
 	<EmptyStatement start="16" end="18">
 	</EmptyStatement>
 </ModuleDeclaration>
-

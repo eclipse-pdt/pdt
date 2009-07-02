@@ -3,7 +3,7 @@ Test For Each Statement
 --FILE--
 <?php foreach ($arr as $value) { $value = $value * 2; } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="58">
+<ModuleDeclaration start="0" end="59">
 	<ForEachStatement start="6" end="55">
 		<VariableReference start="15" end="19" name="$arr">
 		</VariableReference>

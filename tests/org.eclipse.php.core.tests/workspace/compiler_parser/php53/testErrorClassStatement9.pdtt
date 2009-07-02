@@ -1,7 +1,7 @@
 --TEST--
 Test Error Class Statement9
 --FILE--
-<?php class A { foo();?> 
+<?php class A { foo();?>
 --EXPECT--
 <ModuleDeclaration start="6" end="19">
 	<ClassDeclaration start="6" end="13" modifiers="" name="A">

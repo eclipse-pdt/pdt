@@ -3,7 +3,7 @@ Test Class Instanciation Function
 --FILE--
 <?php new $a->$b(1, $a); new $a1->$b->$c(1);?>
 --EXPECT--
-<ModuleDeclaration start="0" end="46">
+<ModuleDeclaration start="0" end="47">
 	<ExpressionStatement start="6" end="24">
 		<ClassInstanceCreation start="6" end="23">
 			<FieldAccess start="10" end="16">

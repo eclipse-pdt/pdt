@@ -3,7 +3,7 @@ Test Clone
 --FILE--
 <?php clone $a; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="18">
+<ModuleDeclaration start="0" end="19">
 	<ExpressionStatement start="6" end="15">
 		<CloneExpression start="6" end="14">
 			<VariableReference start="12" end="14" name="$a">

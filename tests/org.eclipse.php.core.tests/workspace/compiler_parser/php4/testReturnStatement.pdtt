@@ -3,7 +3,7 @@ Test Return Statement
 --FILE--
 <?php return; return $a; return 3; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="37">
+<ModuleDeclaration start="0" end="38">
 	<ReturnStatement start="6" end="13">
 	</ReturnStatement>
 	<ReturnStatement start="14" end="24">

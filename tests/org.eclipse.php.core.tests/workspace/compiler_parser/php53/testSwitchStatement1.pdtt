@@ -3,7 +3,7 @@ Test Switch Statement1
 --FILE--
 <?php switch ($i): case 0: case 1:     echo 'i equals 1'; break; default:   echo 'i not equals 0,1'; endswitch; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="114">
+<ModuleDeclaration start="0" end="115">
 	<SwitchStatement start="6" end="111">
 		<VariableReference start="14" end="16" name="$i">
 		</VariableReference>

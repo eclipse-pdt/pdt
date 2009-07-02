@@ -3,7 +3,7 @@ Test Array Variable Without Index
 --FILE--
 <?php $a[]; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="14">
+<ModuleDeclaration start="0" end="15">
 	<ExpressionStatement start="6" end="11">
 		<ArrayVariableReference start="6" end="10" type="array" name="$a">
 		</ArrayVariableReference>

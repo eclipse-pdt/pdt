@@ -5,7 +5,7 @@ Test Empty Heredoc
 Heredoc;
 ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="28">
+<ModuleDeclaration start="0" end="29">
 	<ExpressionStatement start="6" end="25">
 		<Quote start="6" end="24" type="heredoc">
 		</Quote>

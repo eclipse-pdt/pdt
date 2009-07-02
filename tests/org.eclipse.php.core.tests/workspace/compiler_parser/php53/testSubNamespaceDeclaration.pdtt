@@ -3,10 +3,9 @@ Test Sub Namespace Declaration
 --FILE--
 <?php namespace A\B\C; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="25">
+<ModuleDeclaration start="0" end="26">
 	<NamespaceDeclaration start="6" end="25" modifiers="" name="A\B\C">
 		<EmptyStatement start="23" end="25">
 		</EmptyStatement>
 	</NamespaceDeclaration>
 </ModuleDeclaration>
-

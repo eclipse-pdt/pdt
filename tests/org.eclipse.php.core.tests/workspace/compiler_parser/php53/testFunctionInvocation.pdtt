@@ -3,7 +3,7 @@ Test Function Invocation
 --FILE--
 <?php foo();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="14">
+<ModuleDeclaration start="0" end="15">
 	<ExpressionStatement start="6" end="12">
 		<PHPCallExpression start="6" end="11">
 			<FullyQualifiedReference start="6" end="9" name="foo">

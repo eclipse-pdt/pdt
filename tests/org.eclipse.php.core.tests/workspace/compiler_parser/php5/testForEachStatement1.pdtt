@@ -3,7 +3,7 @@ Test For Each Statement1
 --FILE--
 <?php foreach ($arr as $value) ; foreach (array(1, 2, 3, 4, 5) as $value); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="77">
+<ModuleDeclaration start="0" end="78">
 	<ForEachStatement start="6" end="32">
 		<VariableReference start="15" end="19" name="$arr">
 		</VariableReference>

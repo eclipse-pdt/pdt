@@ -3,7 +3,7 @@ Test Continue Empty
 --FILE--
 <?php continue;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="17">
+<ModuleDeclaration start="0" end="18">
 	<ContinueStatement start="6" end="15">
 	</ContinueStatement>
 	<EmptyStatement start="15" end="17">

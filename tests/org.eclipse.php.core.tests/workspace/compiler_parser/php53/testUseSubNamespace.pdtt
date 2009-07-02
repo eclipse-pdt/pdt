@@ -3,7 +3,7 @@ Test Use Sub Namespace
 --FILE--
 <?php use A\B\C; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="19">
+<ModuleDeclaration start="0" end="20">
 	<UseStatement start="6" end="16">
 		<Parts>
 			<UsePart start="0" end="0">
@@ -31,4 +31,3 @@ Test Use Sub Namespace
 	<EmptyStatement start="17" end="19">
 	</EmptyStatement>
 </ModuleDeclaration>
-

@@ -3,7 +3,7 @@ Test Error Class Statement53
 --FILE--
 <?php for(;){ function f(){}} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="32">
+<ModuleDeclaration start="0" end="33">
 	<ASTError start="6" end="11">
 	</ASTError>
 	<PHPMethodDeclaration start="14" end="28" modifiers="" name="f">
@@ -15,4 +15,3 @@ Test Error Class Statement53
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>
-

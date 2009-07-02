@@ -3,7 +3,7 @@ Test Dispatch With Static Call
 --FILE--
 <?php MyClass::$a->foo();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="27">
+<ModuleDeclaration start="0" end="28">
 	<ExpressionStatement start="6" end="25">
 		<PHPCallExpression start="6" end="24">
 			<StaticFieldAccess start="6" end="17">

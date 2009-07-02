@@ -3,7 +3,7 @@ Test Halt
 --FILE--
 <?php exit(); die(); __halt_compiler(); exit; exit(2); {__halt_compiler();} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="78">
+<ModuleDeclaration start="0" end="79">
 	<ExpressionStatement start="6" end="13">
 		<PHPCallExpression start="6" end="12">
 			<SimpleReference start="6" end="10" name="exit">

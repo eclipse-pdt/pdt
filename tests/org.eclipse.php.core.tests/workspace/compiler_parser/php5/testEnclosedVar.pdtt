@@ -3,7 +3,7 @@ Test Enclosed Var
 --FILE--
 <?php  ${a}; ${$a[1]}; $a[$b]; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="33">
+<ModuleDeclaration start="0" end="34">
 	<ExpressionStatement start="7" end="12">
 		<ReflectionVariableReference start="7" end="11">
 			<Scalar start="9" end="10" type="string" value="a">

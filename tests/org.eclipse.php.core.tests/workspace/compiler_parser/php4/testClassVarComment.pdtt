@@ -3,7 +3,7 @@ Test Class Var Comment
 --FILE--
 <?php class gadi {/* @var $a MyClass */} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="43">
+<ModuleDeclaration start="0" end="44">
 	<ClassDeclaration start="6" end="40" modifiers="" name="gadi">
 		<ASTError start="18" end="39">
 		</ASTError>

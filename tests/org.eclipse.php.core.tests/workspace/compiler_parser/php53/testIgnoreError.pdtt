@@ -3,7 +3,7 @@ Test Ignore Error
 --FILE--
 <?php @$a->foo();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="19">
+<ModuleDeclaration start="0" end="20">
 	<ExpressionStatement start="6" end="17">
 		<IgnoreError start="6" end="16">
 			<PHPCallExpression start="7" end="16">

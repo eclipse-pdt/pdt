@@ -3,7 +3,7 @@ Test While Statement
 --FILE--
 <?php while ($i <= 10) echo $i++; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="36">
+<ModuleDeclaration start="0" end="37">
 	<WhileStatement start="6" end="33">
 		<InfixExpression start="13" end="21" operator="&lt;=">
 			<VariableReference start="13" end="15" name="$i">

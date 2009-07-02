@@ -3,7 +3,7 @@ Test Error Class Statement61
 --FILE--
 <?php class A {function f($)  function g(){}}?>
 --EXPECT--
-<ModuleDeclaration start="0" end="47">
+<ModuleDeclaration start="0" end="48">
 	<ClassDeclaration start="6" end="45" modifiers="" name="A">
 		<PHPMethodDeclaration start="15" end="28" modifiers="" name="f">
 		</PHPMethodDeclaration>
@@ -21,4 +21,3 @@ Test Error Class Statement61
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>
-

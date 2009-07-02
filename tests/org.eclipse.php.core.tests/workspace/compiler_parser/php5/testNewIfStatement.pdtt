@@ -3,7 +3,7 @@ Test New If Statement
 --FILE--
 <?php if ($a):   echo 'a is bigger than b'; endif; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="53">
+<ModuleDeclaration start="0" end="54">
 	<IfStatement start="6" end="43">
 		<Condition>
 			<VariableReference start="10" end="12" name="$a">

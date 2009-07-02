@@ -4,8 +4,7 @@ Test Comment Single
 <?php // this is a single line comment 
 # this is a single line comment?>
 --EXPECT--
-<ModuleDeclaration start="0" end="73">
+<ModuleDeclaration start="0" end="74">
 	<EmptyStatement start="71" end="73">
 	</EmptyStatement>
 </ModuleDeclaration>
-

@@ -3,7 +3,7 @@ Test Error Class Statement9
 --FILE--
 <?php class A { foo();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="24">
+<ModuleDeclaration start="0" end="25">
 	<ClassDeclaration start="6" end="22" modifiers="" name="A">
 	</ClassDeclaration>
 	<ExpressionStatement start="16" end="22">
@@ -21,4 +21,3 @@ Test Error Class Statement9
 		</ASTError>
 	</Errors>
 </ModuleDeclaration>
-

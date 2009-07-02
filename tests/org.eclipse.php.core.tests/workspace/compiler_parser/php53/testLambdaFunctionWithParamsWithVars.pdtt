@@ -3,7 +3,7 @@ Test Lambda Function With Params With Vars
 --FILE--
 <?php $lambda = function ($param1, $param2) use ($var1, &$var2) { }; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="71">
+<ModuleDeclaration start="0" end="72">
 	<ExpressionStatement start="6" end="68">
 		<Assignment start="6" end="67" operator="=">
 			<VariableReference start="6" end="13" name="$lambda">

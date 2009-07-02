@@ -3,7 +3,7 @@ Test Refernce Instanciation
 --FILE--
 <?php $b = &new MyClass();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="28">
+<ModuleDeclaration start="0" end="29">
 	<ExpressionStatement start="6" end="26">
 		<Assignment start="6" end="25" operator="=&amp;">
 			<VariableReference start="6" end="8" name="$b">

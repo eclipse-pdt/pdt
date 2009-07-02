@@ -3,7 +3,7 @@ Test Use Filename
 --FILE--
 <?php use("c:\data\info.txt");  use "c:\data\info.txt";?>
 --EXPECT--
-<ModuleDeclaration start="0" end="57">
+<ModuleDeclaration start="0" end="58">
 	<ExpressionStatement start="6" end="30">
 		<PHPCallExpression start="6" end="29">
 			<SimpleReference start="6" end="9" name="use">

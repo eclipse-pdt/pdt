@@ -9,7 +9,7 @@ Test Code With Doc
 */
  $A;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="110">
+<ModuleDeclaration start="0" end="111">
 	<ExpressionStatement start="6" end="9">
 		<VariableReference start="6" end="8" name="$a">
 		</VariableReference>

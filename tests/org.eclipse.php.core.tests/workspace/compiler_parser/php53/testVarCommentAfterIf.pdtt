@@ -4,7 +4,7 @@ Test Var Comment After If
 <?php if (true) /* @var $a MyClass */
  { echo $a; }; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="55">
+<ModuleDeclaration start="0" end="56">
 	<IfStatement start="6" end="51">
 		<Condition>
 			<Scalar start="10" end="14" type="string" value="true">
@@ -22,4 +22,3 @@ Test Var Comment After If
 	<EmptyStatement start="53" end="55">
 	</EmptyStatement>
 </ModuleDeclaration>
-

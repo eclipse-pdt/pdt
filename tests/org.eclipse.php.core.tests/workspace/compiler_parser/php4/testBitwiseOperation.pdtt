@@ -3,7 +3,7 @@ Test Bitwise Operation
 --FILE--
 <?php ~$x;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="12">
+<ModuleDeclaration start="0" end="13">
 	<ExpressionStatement start="6" end="10">
 		<UnaryOperation start="6" end="9" operator="~">
 			<VariableReference start="7" end="9" name="$x">

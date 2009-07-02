@@ -3,10 +3,9 @@ Test Namespace Declaration
 --FILE--
 <?php namespace A; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="21">
+<ModuleDeclaration start="0" end="22">
 	<NamespaceDeclaration start="6" end="21" modifiers="" name="A">
 		<EmptyStatement start="19" end="21">
 		</EmptyStatement>
 	</NamespaceDeclaration>
 </ModuleDeclaration>
-

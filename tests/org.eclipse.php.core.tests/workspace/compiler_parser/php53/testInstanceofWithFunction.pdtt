@@ -3,7 +3,7 @@ Test Instanceof With Function
 --FILE--
 <?php foo() instanceof $myClass;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="34">
+<ModuleDeclaration start="0" end="35">
 	<ExpressionStatement start="6" end="32">
 		<InstanceOfExpression start="6" end="31">
 			<PHPCallExpression start="6" end="11">

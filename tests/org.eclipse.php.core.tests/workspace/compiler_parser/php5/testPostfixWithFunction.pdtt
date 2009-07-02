@@ -3,7 +3,7 @@ Test Postfix With Function
 --FILE--
 <?php foo()--;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="16">
+<ModuleDeclaration start="0" end="17">
 	<ExpressionStatement start="6" end="14">
 		<PostfixExpression start="6" end="13" operator="--">
 			<PHPCallExpression start="6" end="11">

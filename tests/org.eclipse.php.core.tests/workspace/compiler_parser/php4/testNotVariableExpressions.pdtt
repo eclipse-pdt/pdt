@@ -3,7 +3,7 @@ Test Not Variable Expressions
 --FILE--
 <?php 2||5 ; 2&&5; 2 OR 5 ; 2 AND 5; 2 XOR 5 ; 2|5; 2^5 ; 2/5; 2%5 ; 2<<5 ; 2>>5 ; !5 ; (double)6 ; (array)6; (object)7; (unset)5;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="132">
+<ModuleDeclaration start="0" end="133">
 	<ExpressionStatement start="6" end="12">
 		<InfixExpression start="6" end="10" operator="||">
 			<Scalar start="6" end="7" type="int" value="2">

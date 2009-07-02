@@ -3,7 +3,7 @@ Test Empty For Statement
 --FILE--
 <?php for ($i = 1, $j = 0; $i <= 10; $j += $i, print $i, $i++); ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="66">
+<ModuleDeclaration start="0" end="67">
 	<ForStatement start="0" end="0">
 		<Initializations>
 			<Assignment start="11" end="17" operator="=">

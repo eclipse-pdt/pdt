@@ -3,7 +3,7 @@ Test Function Function
 --FILE--
 <?php function f(){function g(){}} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="37">
+<ModuleDeclaration start="0" end="38">
 	<PHPMethodDeclaration start="6" end="34" modifiers="" name="f">
 		<PHPMethodDeclaration start="19" end="33" modifiers="" name="g">
 		</PHPMethodDeclaration>

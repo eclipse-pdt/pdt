@@ -3,7 +3,7 @@ Test Dispatch Simple
 --FILE--
 <?php $a->$b; $myVar->{2}; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="29">
+<ModuleDeclaration start="0" end="30">
 	<ExpressionStatement start="6" end="13">
 		<FieldAccess start="6" end="12">
 			<VariableReference start="6" end="8" name="$a">

@@ -3,7 +3,7 @@ Test Function Declaration With Params
 --FILE--
 <?php function foo($a, const $b, $c = 5) {} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="46">
+<ModuleDeclaration start="0" end="47">
 	<PHPMethodDeclaration start="6" end="43" modifiers="" name="foo">
 		<FormalParameter start="19" end="21" modifiers="" isMandatory="true">
 			<VariableReference start="19" end="21" name="$a">
@@ -23,4 +23,3 @@ Test Function Declaration With Params
 	<EmptyStatement start="44" end="46">
 	</EmptyStatement>
 </ModuleDeclaration>
-

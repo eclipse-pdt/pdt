@@ -3,7 +3,7 @@ Test Global Statement Simple
 --FILE--
 <?php global $a; global $$a; global ${foo()->bar()};?>
 --EXPECT--
-<ModuleDeclaration start="0" end="54">
+<ModuleDeclaration start="0" end="55">
 	<GlobalStatement start="6" end="16">
 		<VariableReference start="13" end="15" name="$a">
 		</VariableReference>

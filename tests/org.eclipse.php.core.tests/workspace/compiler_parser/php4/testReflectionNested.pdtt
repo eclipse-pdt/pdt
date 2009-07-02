@@ -3,7 +3,7 @@ Test Reflection Nested
 --FILE--
 <?php $$$$$foo;?>
 --EXPECT--
-<ModuleDeclaration start="0" end="17">
+<ModuleDeclaration start="0" end="18">
 	<ExpressionStatement start="6" end="15">
 		<ReflectionVariableReference start="6" end="14">
 			<ReflectionVariableReference start="7" end="14">

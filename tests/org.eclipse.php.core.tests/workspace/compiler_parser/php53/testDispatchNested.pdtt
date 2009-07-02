@@ -3,7 +3,7 @@ Test Dispatch Nested
 --FILE--
 <?php $myClass->hisClass->bar();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="34">
+<ModuleDeclaration start="0" end="35">
 	<ExpressionStatement start="6" end="32">
 		<PHPCallExpression start="6" end="31">
 			<FieldAccess start="6" end="24">

@@ -3,7 +3,7 @@ Test Assignment
 --FILE--
 <?php $a = 1; $a = $b + 1; $a += 1; $a <<= 1; ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="48">
+<ModuleDeclaration start="0" end="49">
 	<ExpressionStatement start="6" end="13">
 		<Assignment start="6" end="12" operator="=">
 			<VariableReference start="6" end="8" name="$a">

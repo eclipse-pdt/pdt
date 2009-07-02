@@ -3,7 +3,7 @@ Test Class Declaration With Declarations
 --FILE--
 <?php class MyClass extends SuperClass { var $myVar = 5, $yourVar; var $anotherOne; function myFunction($a, $b = 6) { }  } ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="125">
+<ModuleDeclaration start="0" end="126">
 	<ClassDeclaration start="6" end="122" modifiers="" name="MyClass">
 		<TypeReference start="28" end="38" name="SuperClass">
 		</TypeReference>
@@ -37,4 +37,3 @@ Test Class Declaration With Declarations
 	<EmptyStatement start="123" end="125">
 	</EmptyStatement>
 </ModuleDeclaration>
-

@@ -3,7 +3,7 @@ Test Func Define
 --FILE--
 <?php  function define(){} ?>
 --EXPECT--
-<ModuleDeclaration start="0" end="29">
+<ModuleDeclaration start="0" end="30">
 	<PHPMethodDeclaration start="7" end="26" modifiers="" name="define">
 	</PHPMethodDeclaration>
 	<EmptyStatement start="27" end="29">

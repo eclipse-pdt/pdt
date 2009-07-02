@@ -3,7 +3,7 @@ Test Refernce With Function
 --FILE--
 <?php $g = &$foo();?>
 --EXPECT--
-<ModuleDeclaration start="0" end="21">
+<ModuleDeclaration start="0" end="22">
 	<ExpressionStatement start="6" end="19">
 		<Assignment start="6" end="18" operator="=&amp;">
 			<VariableReference start="6" end="8" name="$g">
