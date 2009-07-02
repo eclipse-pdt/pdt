@@ -127,14 +127,10 @@ public final class PreferencesMessages extends NLS {
 	public static String NewPHPProjectPreferencePage_sourcefolder_folder;
 	public static String NewPHPProjectPreferencePage_folders_src;
 	public static String NewPHPProjectPreferencePage_folders_public;
-	public static String NewPHPProjectPreferencePage_jrelibrary_label;
-	public static String NewPHPProjectPreferencePage_jre_variable_description;
-	public static String NewPHPProjectPreferencePage_jre_container_description;
 	public static String NewPHPProjectPreferencePage_folders_error_namesempty;
 	public static String NewPHPProjectPreferencePage_folders_error_invalidsrcname;
 	public static String NewPHPProjectPreferencePage_folders_error_invalidbinname;
 	public static String NewPHPProjectPreferencePage_folders_error_invalidcp;
-	public static String NewPHPProjectPreferencePage_error_decode;
 	public static String JavaEditorPreferencePage_showQuickFixables;
 	public static String JavaEditorPreferencePage_analyseAnnotationsWhileTyping;
 	public static String JavaEditorPreferencePage_multiLineComment;
