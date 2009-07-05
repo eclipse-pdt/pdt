@@ -82,7 +82,8 @@ public class UseStatementInjector {
 
 	private boolean needsAliasPrepend(IModelElement modelElement) throws ModelException {
 		if (modelElement instanceof IMethod) {
-			return ((IMethod) modelElement).getDeclaringType() == null;
+			IType declaringType = ((IMethod) modelElement).getDeclaringType();
+			return declaringType == null || PHPFlags.isNamespace(declaringType.getFlags());
 		}
 		if (modelElement instanceof IField) {
 			IField field = (IField) modelElement;
