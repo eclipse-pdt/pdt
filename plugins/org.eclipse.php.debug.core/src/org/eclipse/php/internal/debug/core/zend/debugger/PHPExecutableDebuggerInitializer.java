@@ -129,32 +129,7 @@ public class PHPExecutableDebuggerInitializer {
 			}
 
 			// Attach a crash detector
-			new Thread(new ProcessCrashDetector(p) {
-				public void run() {
-					super.run();
-					
-					// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the
-					// launch that was created, we can tell that there is something wrong, and probably there is no debugger
-					// installed (e.g. the debugger dll/so is not properly configured in the php.ini).
-					if (launch != null && launch.getDebugTarget() == null) {
-						String launchName = launch.getLaunchConfiguration().getName();
-						boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
-						String msg = null;
-						if (isRunMode) {
-							msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new Object[] { launchName });
-						} else {
-							msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new Object[] { launchName });
-						}
-						final String message = msg;
-						Display.getDefault().asyncExec(new Runnable() {
-							public void run() {
-								MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Launch_Error, message);
-								DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
-							}
-						});
-					}
-				}
-			}).start();
+			new Thread(new ProcessCrashDetector2(launch, p)).start();
 
 		} catch (final Exception e) {
 			final Display display = Display.getDefault();
@@ -174,6 +149,41 @@ public class PHPExecutableDebuggerInitializer {
 				File phpIniFile = new File(phpIniLocation);
 				phpIniFile.deleteOnExit();
 				phpIniFile.getParentFile().deleteOnExit();
+			}
+		}
+	}
+	
+	class ProcessCrashDetector2 extends ProcessCrashDetector {
+
+		private ILaunch launch;
+
+		public ProcessCrashDetector2(ILaunch launch, Process p) {
+			super(p);
+			this.launch = launch;
+		}
+		
+		public void run() {
+			super.run();
+			
+			// In case this thread ended and we do not have any IDebugTarget (PHPDebugTarget) hooked in the
+			// launch that was created, we can tell that there is something wrong, and probably there is no debugger
+			// installed (e.g. the debugger dll/so is not properly configured in the php.ini).
+			if (launch != null && launch.getDebugTarget() == null) {
+				String launchName = launch.getLaunchConfiguration().getName();
+				boolean isRunMode = ILaunchManager.RUN_MODE.equals(launch.getLaunchMode());
+				String msg = null;
+				if (isRunMode) {
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_3, new Object[] { launchName });
+				} else {
+					msg = MessageFormat.format(PHPDebugCoreMessages.Debugger_Error_Message_2, new Object[] { launchName });
+				}
+				final String message = msg;
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						MessageDialog.openWarning(Display.getDefault().getActiveShell(), PHPDebugCoreMessages.Debugger_Launch_Error, message);
+						DebugPlugin.getDefault().getLaunchManager().removeLaunch(launch);
+					}
+				});
 			}
 		}
 	}
