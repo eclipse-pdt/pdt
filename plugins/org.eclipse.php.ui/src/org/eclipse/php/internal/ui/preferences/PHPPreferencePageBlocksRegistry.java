@@ -102,11 +102,14 @@ public class PHPPreferencePageBlocksRegistry {
 		if (addonFactories == null) {
 			return new IPHPPreferencePageBlock[0];
 		}
-		IPHPPreferencePageBlock[] addons = new IPHPPreferencePageBlock[addonFactories.size()];
-		for (int i = 0; i < addons.length; i++) {
-			addons[i] = ((PHPPreferencePageBlocksFactory) addonFactories.get(i)).createPHPPreferencePageBlock();
+		List<IPHPPreferencePageBlock> addons = new LinkedList<IPHPPreferencePageBlock>();
+		for (Object addonFactory : addonFactories) {
+			IPHPPreferencePageBlock pageBlock = ((PHPPreferencePageBlocksFactory) addonFactory).createPHPPreferencePageBlock();
+			if (pageBlock != null) {
+				addons.add(pageBlock);
+			}
 		}
-		return addons;
+		return (IPHPPreferencePageBlock[]) addons.toArray(new IPHPPreferencePageBlock[addons.size()]);
 	}
 
 	/**
