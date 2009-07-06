@@ -38,6 +38,10 @@ public class PHPMixinParser implements IMixinParser {
 	public void parserSourceModule(boolean signature, ISourceModule module) {
 
 		ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(module);
+		if (moduleDeclaration == null) {
+			return;
+		}
+
 		PHPMixinBuildVisitor visitor = new PHPMixinBuildVisitor(moduleDeclaration, module, signature, requestor);
 		try {
 			moduleDeclaration.traverse(visitor);
