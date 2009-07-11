@@ -11,14 +11,13 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ScriptFolder;
+import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.php.internal.core.Logger;
 import org.eclipse.php.internal.core.PHPToolkitUtil;
@@ -120,9 +119,19 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 					}
 				}
 				break;
+			case IBuildpathEntry.BPE_PROJECT:
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				IProject refProject = (IProject)workspace.getRoot().findMember(((IBuildpathEntry) entry).getPath());
+				try {
+					addInternalEntries(reporter, replaceRange, refProject, prefixPathFolder, lastSegmant);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+				break;
 			default:
 
 		}
+		
 	}
 
 	private void addInternalEntries(ICompletionReporter reporter, SourceRange replaceRange, final Object entry, IPath prefixPathFolder, IPath lastSegmant) throws CoreException {
