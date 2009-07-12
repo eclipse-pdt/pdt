@@ -127,8 +127,12 @@ public class PHPPreferencePageBlocksRegistry {
 		public IPHPPreferencePageBlock createPHPPreferencePageBlock() {
 			SafeRunner.run(new SafeRunnable(PHPUIMessages.getString("PHPPreferencePageBlocksRegistry.0") + PHPUiPlugin.ID + "." + EXTENSION_POINT_NAME) { //$NON-NLS-1$ //$NON-NLS-2$
 				public void run() throws Exception {
-					preferencesPageBlock = (IPHPPreferencePageBlock) element.createExecutableExtension(CLASS_ATTRIBUTE);
-					preferencesPageBlock.setComparableName(element.getAttribute(NAME_ATTRIBUTE));
+					try {
+						preferencesPageBlock = (IPHPPreferencePageBlock) element.createExecutableExtension(CLASS_ATTRIBUTE);
+						preferencesPageBlock.setComparableName(element.getAttribute(NAME_ATTRIBUTE));
+					} catch (Exception e) {
+						// do nothing
+					}
 				}
 			});
 			return preferencesPageBlock;
