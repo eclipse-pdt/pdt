@@ -183,7 +183,7 @@ public class PHPModelPresentation extends LabelProvider implements IDebugModelPr
 			String frameName = frame.getName();
 			if (frameName != null && frameName.length() > 0) {
 				buffer.append(frame.getName());
-				buffer.append("() ");
+				buffer.append("(): ");
 			}
 			buffer.append(frame.getSourceName());
 			buffer.append(PHPDebugUIMessages.MPresentation_ATLine_1 + (frame.getLineNumber()));

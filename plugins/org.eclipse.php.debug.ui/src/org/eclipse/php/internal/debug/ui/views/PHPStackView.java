@@ -64,7 +64,7 @@ public class PHPStackView extends AbstractDebugView implements ISelectionListene
                 } else if (element instanceof PHPThread) {
                     return ((PHPThread) element).getStackVariables();
                 } else if (element instanceof PHPStackFrame) {
-                	return ((PHPThread)((PHPStackFrame) element).getThread()).getStackVariables();
+                	return ((PHPStackFrame) element).getStackVariables();
                 } else if (element instanceof Expression) {
                     Expression eExp = (Expression) element;
                     ExpressionValue value = eExp.getValue();
