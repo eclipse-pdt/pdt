@@ -30,6 +30,7 @@ import org.eclipse.php.internal.debug.core.zend.debugger.StackLayer;
  * function parameters.
  *  
  * @author michael
+ * @deprecated 
  */
 public class GetCallStackLiteResponse extends DebugMessageResponseImpl implements IDebugResponseMessage {
 

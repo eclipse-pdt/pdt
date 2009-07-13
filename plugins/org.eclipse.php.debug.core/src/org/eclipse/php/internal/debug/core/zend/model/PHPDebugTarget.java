@@ -752,7 +752,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 * manager.
 	 * In case {@link #isRunWithDebug()} returns true, nothing will happen.
 	 */
-	public void installDeferredBreakpoints() throws CoreException{
+	public void installDeferredBreakpoints() throws CoreException {
 		/*if (fIsRunAsDebug) {
 			return;
 		}
@@ -775,19 +775,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 *             if unable to perform the request
 	 */
 	protected IStackFrame[] getStackFrames() throws DebugException {
-		return getStackFrames(false);
-	}
-	
-	/**
-	 * Returns the current stack frames in the target.
-	 *
-	 * @param fetchVariables Whether to fetch variables also 
-	 * @return the current stack frames in the target
-	 * @throws DebugException
-	 *             if unable to perform the request
-	 */
-	protected IStackFrame[] getStackFrames(boolean fetchVariables) throws DebugException {
-		return fContextManager.getStackFrames(fetchVariables);
+		return fContextManager.getStackFrames();
 	}
 
 	/**
@@ -874,8 +862,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	 *
 	 * @return the Local Variabales for the target
 	 */
-	public IVariable[] getVariables() {
-		return fContextManager.getVariables();
+	public IVariable[] getVariables(PHPStackFrame stackFrame) {
+		return fContextManager.getVariables(stackFrame);
 	}
 
 	/**
