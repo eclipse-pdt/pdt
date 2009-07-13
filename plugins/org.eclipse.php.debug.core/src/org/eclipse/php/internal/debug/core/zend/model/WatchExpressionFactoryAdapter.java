@@ -17,7 +17,7 @@ public class WatchExpressionFactoryAdapter implements IWatchExpressionFactoryAda
 		if (variable instanceof PHPVariable) {
 			PHPVariable phpVar = (PHPVariable) variable;
 			PHPDebugTarget debugTarget = (PHPDebugTarget) phpVar.getDebugTarget();
-			IVariable[] variables = debugTarget.getVariables();
+			IVariable[] variables = debugTarget.getVariables(null);
 			Stack<IVariable> stack = new Stack<IVariable>();
 			if (findVariable(phpVar, variables, stack)) {
 				return createExpression(stack);

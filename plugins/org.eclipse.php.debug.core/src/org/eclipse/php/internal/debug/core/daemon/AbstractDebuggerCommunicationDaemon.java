@@ -183,6 +183,8 @@ public abstract class AbstractDebuggerCommunicationDaemon implements ICommunicat
 			try {
 				while (isAlive) {
 					Socket socket = serverSocket.accept();
+					socket.setReceiveBufferSize(1024 * 128);
+					socket.setSendBufferSize(1024 * 128);
 					startConnectionThread(socket);
 				}
 			} catch (IOException e) {

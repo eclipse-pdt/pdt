@@ -31,9 +31,9 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
 	private static final Pattern LAMBDA_FUNC_PATTERN = Pattern.compile("(.*)\\((\\d+)\\) : runtime-created function"); //$NON-NLS-1$
 	
     private PHPThread fThread;
-    private String fName;
+    private String fFunctionName;
     private String fFileName;
-    private int fPC;
+    private int fLineNumber;
     private int fId;
     private String fResName;
 
@@ -49,9 +49,9 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
     		lineNumber = Integer.parseInt(matcher.group(2));
     	}
     	
-        fName = funcName;
+        fFunctionName = funcName;
         fFileName = fileName;
-        fPC = lineNumber;
+        fLineNumber = lineNumber;
         fId = id;
         fThread = (PHPThread) thread;
         fResName = rName;
@@ -78,7 +78,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see org.eclipse.debug.core.model.IStackFrame#getVariables()
      */
     public IVariable[] getVariables() throws DebugException {
-        return ((PHPDebugTarget) getDebugTarget()).getVariables();
+        return ((PHPDebugTarget) getDebugTarget()).getVariables(this);
     }
 
     /*
@@ -87,7 +87,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see org.eclipse.debug.core.model.IStackFrame#hasVariables()
      */
     public boolean hasVariables() throws DebugException {
-        return ((PHPDebugTarget) getDebugTarget()).getVariables().length > 0;
+        return ((PHPDebugTarget) getDebugTarget()).getVariables(this).length > 0;
     }
 
     /*
@@ -96,11 +96,11 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see org.eclipse.debug.core.model.IStackFrame#getLineNumber()
      */
     public int getLineNumber() throws DebugException {
-        return fPC;
+        return fLineNumber;
     }
 
     public int checkLineNumber() throws DebugException {
-        return fPC;
+        return fLineNumber;
     }
 
     /*
@@ -127,7 +127,7 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
      * @see org.eclipse.debug.core.model.IStackFrame#getName()
      */
     public String getName() throws DebugException {
-        return fName;
+        return fFunctionName;
     }
 
     /*
@@ -301,34 +301,6 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
         return fFileName;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-    	if (obj == this) {
-    		return true;
-    	}
-        if (obj instanceof PHPStackFrame) {
-            PHPStackFrame sf = (PHPStackFrame) obj;
-            try {
-                return sf.fId == fId && sf.getSourceName().equals(getSourceName()) && sf.getName().equals(getName());
-            } catch (DebugException e) {
-            }
-        }
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-        return getSourceName().hashCode() + fThread.hashCode();
-    }
-
     /**
      * Returns this stack frame's unique identifier within its thread
      *
@@ -346,4 +318,36 @@ public class PHPStackFrame extends PHPDebugElement implements IStackFrame {
     public Expression[] getStackVariables() {
         return ((PHPDebugTarget) getDebugTarget()).getStackVariables(this);
     }
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fFunctionName == null) ? 0 : fFunctionName.hashCode());
+		result = prime * result + fLineNumber;
+		result = prime * result + ((fResName == null) ? 0 : fResName.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PHPStackFrame other = (PHPStackFrame) obj;
+		if (fFunctionName == null) {
+			if (other.fFunctionName != null)
+				return false;
+		} else if (!fFunctionName.equals(other.fFunctionName))
+			return false;
+		if (fLineNumber != other.fLineNumber)
+			return false;
+		if (fResName == null) {
+			if (other.fResName != null)
+				return false;
+		} else if (!fResName.equals(other.fResName))
+			return false;
+		return true;
+	}
 }
