@@ -336,7 +336,7 @@ public class PHPCompletionEngine extends ScriptCompletionEngine implements IComp
 			proposal = createProposal(CompletionProposal.KEYWORD, actualCompletionPosition);
 		}
 
-		proposal.setName(relative.lastSegment().toCharArray());
+		proposal.setName(relative.toString().toCharArray());
 		proposal.setCompletion((relative.toString() + suffix).toCharArray());
 		proposal.setRelevance(nextKeywordRelevance());
 		proposal.setReplaceRange(replaceRange.getOffset(), replaceRange.getOffset() + replaceRange.getLength());
