@@ -140,8 +140,11 @@ public class IncludeStatementStrategy extends AbstractCompletionStrategy {
 			container = container.getFolder(prefixPathFolder);
 		}
 		
-		ICompletionContext context = getContext();
+		if (!container.exists()) {
+			return;
+		}
 
+		ICompletionContext context = getContext();
 		IResource[] members = container.members();
 		for (IResource resource : members) {
 			final IPath relative = resource.getFullPath().makeRelativeTo(container.getFullPath());
