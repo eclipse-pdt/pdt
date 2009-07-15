@@ -32,7 +32,7 @@ public class ContextManager {
 	private StackLayer[] fPreviousLayers;
 	private IStackFrame[] fPreviousFrames;
 	private ILock fFramesInitLock = Job.getJobManager().newLock();
-	private Map<IStackFrame, IVariable[]> fVariables = new HashMap<IStackFrame, IVariable[]>();
+	private Map<String, IVariable[]> fVariables = new HashMap<String, IVariable[]>();
 
 	private int fSuspendCount;
 
@@ -46,11 +46,15 @@ public class ContextManager {
 	}
 
 	public void addToResolveBlacklist(VirtualPath path, Type type) {
-		ResolveBlackList.getInstance().add(fDebugger.getDebugHandler().getDebugTarget().getLaunch(), path, type);
+		ResolveBlackList.getInstance().add(
+				fDebugger.getDebugHandler().getDebugTarget().getLaunch(), path,
+				type);
 	}
 
 	public boolean isResolveBlacklisted(String remoteFile) {
-		return ResolveBlackList.getInstance().containsEntry(fDebugger.getDebugHandler().getDebugTarget().getLaunch(), remoteFile);
+		return ResolveBlackList.getInstance().containsEntry(
+				fDebugger.getDebugHandler().getDebugTarget().getLaunch(),
+				remoteFile);
 	}
 
 	public IStackFrame[] getStackFrames() throws DebugException {
@@ -63,8 +67,10 @@ public class ContextManager {
 		fFramesInitLock.acquire();
 		try {
 			if (fPreviousFrames == null) {
-				fPreviousFrames = applyDebugFilters(createNewFrames(layers, thread));
-				DefaultExpressionsManager expressionsManager = fTarget.getExpressionManager();
+				fPreviousFrames = applyDebugFilters(createNewFrames(layers,
+						thread));
+				DefaultExpressionsManager expressionsManager = fTarget
+						.getExpressionManager();
 				if (expressionsManager != null) {
 					expressionsManager.clear();
 				}
@@ -72,7 +78,8 @@ public class ContextManager {
 				fVariables.clear();
 				IVariable[] variables = createVariables();
 				for (IStackFrame frame : fPreviousFrames) {
-					fVariables.put(frame, variables);
+					fVariables.put(((PHPStackFrame) frame).createUID(),
+							variables);
 				}
 
 				fSuspendCount = fTarget.getSuspendCount();
@@ -96,25 +103,29 @@ public class ContextManager {
 			String fileName = originalFrame.getAbsoluteFileName();
 			String sourceFile = originalFrame.getSourceName();
 
-			fVariables.remove(fPreviousFrames[0]);
-			fPreviousFrames[0] = new PHPStackFrame(
-				thread, fileName, (layers.length == 1) ? "" : fPreviousFrames[1].getName(), fTarget.getLastStop(), topID, sourceFile);
+			fPreviousFrames[0] = new PHPStackFrame(thread, fileName,
+					(layers.length == 1) ? "" : fPreviousFrames[1].getName(),
+					fTarget.getLastStop(), topID, sourceFile);
 
-			fVariables.put(fPreviousFrames[0], createVariables());
+			fVariables.put(((PHPStackFrame) fPreviousFrames[0]).createUID(),
+					createVariables());
 
 		} else {
-			if (layers.length == 1 && layers[0].getCalledFileName().endsWith(DUMMY_PHP_FILE)) {
-				fDebugger.finish();//reached dummy file --> finish debug !
+			if (layers.length == 1
+					&& layers[0].getCalledFileName().endsWith(DUMMY_PHP_FILE)) {
+				fDebugger.finish();// reached dummy file --> finish debug !
 			} else {
-				fPreviousFrames = applyDebugFilters(createNewFrames(layers, thread));
+				fPreviousFrames = applyDebugFilters(createNewFrames(layers,
+						thread));
 
 				IVariable[] variables = null;
 				for (IStackFrame frame : fPreviousFrames) {
-					if (!fVariables.containsKey(frame)) {
+					String frameUID = ((PHPStackFrame) frame).createUID();
+					if (!fVariables.containsKey(frameUID)) {
 						if (variables == null) {
 							variables = createVariables();
 						}
-						fVariables.put(frame, variables);
+						fVariables.put(frameUID, variables);
 					}
 				}
 
@@ -128,9 +139,10 @@ public class ContextManager {
 		ArrayList<IStackFrame> tempStackFrames = new ArrayList<IStackFrame>();
 		for (int i = 0; i < previousFrames.length; i++) {
 			if (i == previousFrames.length - 1) {
-				String stackFrameName = ((PHPStackFrame) previousFrames[i]).getAbsoluteFileName();
+				String stackFrameName = ((PHPStackFrame) previousFrames[i])
+						.getAbsoluteFileName();
 				if (stackFrameName.endsWith(DUMMY_PHP_FILE)) {
-					continue;//do not add it to stack view, filter it out.
+					continue;// do not add it to stack view, filter it out.
 				}
 			}
 			tempStackFrames.add(previousFrames[i]);
@@ -144,7 +156,8 @@ public class ContextManager {
 		if (stackFrame == null) {
 			return createVariables();
 		}
-		IVariable[] variables = fVariables.get(stackFrame);
+		IVariable[] variables = fVariables.get(((PHPStackFrame) stackFrame)
+				.createUID());
 		return variables == null ? new IVariable[0] : variables;
 	}
 
@@ -154,7 +167,7 @@ public class ContextManager {
 			functionName = stack.getName();
 		} catch (DebugException e) {
 			// PHPStack Doesn't throw exception, just log and ignore
-			Logger.logException("PHP Problem getting name from stack", e);
+			Logger.logException("Problem getting name from stack", e);
 		}
 
 		Expression[] variables = new Expression[0];
@@ -163,8 +176,10 @@ public class ContextManager {
 			try {
 				for (int i = fPreviousLayers.length - 1; i >= 0; --i) {
 					StackLayer element = fPreviousLayers[i];
-					if (element.getCalledFileName().equals(stack.getAbsoluteFileName())
-							&& element.getCalledFunctionName().equals(stack.getName())) {
+					if (element.getCalledFileName().equals(
+							stack.getAbsoluteFileName())
+							&& element.getCalledFunctionName().equals(
+									stack.getName())) {
 						stackLayer = element;
 						break;
 					}
@@ -193,14 +208,20 @@ public class ContextManager {
 
 	private boolean compareLayer(StackLayer layer, StackLayer prevLayer) {
 		return layer.getCallerFileName().equals(prevLayer.getCallerFileName())
-			&& layer.getCallerFunctionName().equals(prevLayer.getCallerFunctionName())
-			&& layer.getCallerLineNumber() == prevLayer.getCallerLineNumber()
-			&& layer.getCalledFileName().equals(prevLayer.getCalledFileName())
-			&& layer.getCalledFunctionName().equals(prevLayer.getCalledFunctionName())
-			&& layer.getCalledLineNumber() == prevLayer.getCalledLineNumber();
+				&& layer.getCallerFunctionName().equals(
+						prevLayer.getCallerFunctionName())
+				&& layer.getCallerLineNumber() == prevLayer
+						.getCallerLineNumber()
+				&& layer.getCalledFileName().equals(
+						prevLayer.getCalledFileName())
+				&& layer.getCalledFunctionName().equals(
+						prevLayer.getCalledFunctionName())
+				&& layer.getCalledLineNumber() == prevLayer
+						.getCalledLineNumber();
 	}
 
-	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread) throws DebugException {
+	private IStackFrame[] createNewFrames(StackLayer[] layers, PHPThread thread)
+			throws DebugException {
 		RemoteDebugger remoteDebugger = (RemoteDebugger) fDebugger;
 		String cwd = remoteDebugger.getCurrentWorkingDirectory();
 		String currentScript = null;
@@ -210,13 +231,15 @@ public class ContextManager {
 		for (int i = 1; i < layers.length; i++) {
 
 			String sName = layers[i].getCallerFileName();
-			String rName = remoteDebugger.convertToLocalFilename(
-				sName, cwd, frameCt < frames.length ? ((PHPStackFrame) frames[frameCt]).getSourceName() : null);
+			String rName = remoteDebugger.convertToLocalFilename(sName, cwd,
+					frameCt < frames.length ? ((PHPStackFrame) frames[frameCt])
+							.getSourceName() : null);
 			if (rName == null) {
 				rName = sName;
 			}
-			frames[frameCt - 1] = new PHPStackFrame(
-				thread, sName, layers[i].getCallerFunctionName(), layers[i].getCallerLineNumber() + 1, frameCt, rName);
+			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i]
+					.getCallerFunctionName(),
+					layers[i].getCallerLineNumber() + 1, frameCt, rName);
 			frameCt--;
 
 			sName = layers[i].getCalledFileName();
@@ -224,26 +247,33 @@ public class ContextManager {
 			if (rName == null) {
 				rName = sName;
 			}
-			frames[frameCt - 1] = new PHPStackFrame(
-				thread, sName, layers[i].getCalledFunctionName(), layers[i].getCalledLineNumber() + 1, frameCt, layers[i], rName);
+			frames[frameCt - 1] = new PHPStackFrame(thread, sName, layers[i]
+					.getCalledFunctionName(),
+					layers[i].getCalledLineNumber() + 1, frameCt, layers[i],
+					rName);
 			frameCt--;
 
-			if (!layers[i].getCalledFileName().equals(fTarget.getLastFileName())) {
+			if (!layers[i].getCalledFileName()
+					.equals(fTarget.getLastFileName())) {
 				currentScript = rName;
 			}
 		}
 
-		String resolvedFile = remoteDebugger.convertToLocalFilename(fTarget.getLastFileName(), cwd, currentScript);
+		String resolvedFile = remoteDebugger.convertToLocalFilename(fTarget
+				.getLastFileName(), cwd, currentScript);
 		if (resolvedFile == null) {
 			resolvedFile = fTarget.getLastFileName();
 		}
-		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(), (layers.length == 1) ? "" : frames[1].getName(), fTarget.getLastStop(), frameCt, resolvedFile);
+		frames[0] = new PHPStackFrame(thread, fTarget.getLastFileName(),
+				(layers.length == 1) ? "" : frames[1].getName(), fTarget
+						.getLastStop(), frameCt, resolvedFile);
 		fPreviousLayers = layers;
 		return frames;
 	}
 
 	private IVariable[] createVariables() {
-		DefaultExpressionsManager expressionsManager = fTarget.getExpressionManager();
+		DefaultExpressionsManager expressionsManager = fTarget
+				.getExpressionManager();
 		if (expressionsManager == null) {
 			return new IVariable[0];
 		}
@@ -253,19 +283,22 @@ public class ContextManager {
 			variables[i] = new PHPVariable(fTarget, localVariables[i]);
 		}
 
-		//			variables = new PHPVariable[localVariables.length + 1];
-		//			for (int i = 0; i < localVariables.length; i++) {
-		//				variables[i + 1] = new PHPVariable(fTarget, localVariables[i]);
-		//			}
+		// variables = new PHPVariable[localVariables.length + 1];
+		// for (int i = 0; i < localVariables.length; i++) {
+		// variables[i + 1] = new PHPVariable(fTarget, localVariables[i]);
+		// }
 		//			
-		//			Expression[] GlobalVariables = expressionsManager.getGlobalVariables(1);
-		//			String global = "$GLOBALS";
-		//			DefaultExpression gExp = new DefaultExpression(global);
-		//			String sArray = "Array";
-		//			String sArrayAsString = sArray + " [" + (new Integer(GlobalVariables.length).toString()) + "]";
-		//			ExpressionValue gEValue = new ExpressionValue(5, sArray, sArrayAsString, GlobalVariables);
-		//			gExp.setValue(gEValue);
-		//			variables[0] = new PHPVariable(fTarget, gExp, true);
+		// Expression[] GlobalVariables =
+		// expressionsManager.getGlobalVariables(1);
+		// String global = "$GLOBALS";
+		// DefaultExpression gExp = new DefaultExpression(global);
+		// String sArray = "Array";
+		// String sArrayAsString = sArray + " [" + (new
+		// Integer(GlobalVariables.length).toString()) + "]";
+		// ExpressionValue gEValue = new ExpressionValue(5, sArray,
+		// sArrayAsString, GlobalVariables);
+		// gExp.setValue(gEValue);
+		// variables[0] = new PHPVariable(fTarget, gExp, true);
 
 		return variables;
 	}
