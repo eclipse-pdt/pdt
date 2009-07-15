@@ -189,7 +189,7 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 	public void multipleBindOccured() {
 		super.multipleBindOccured();
 		Logger.log(Logger.WARNING, "ServerDebugHandler: Multiple Bind Occured");
-		
+
 		String errorMessage = PHPDebugCoreMessages.DebuggerDebugPortInUse_1;
 		fRemoteDebugger.closeConnection();
 		fDebugTarget.fireError(errorMessage, null);
@@ -206,11 +206,11 @@ public class ServerDebugHandler extends SimpleDebugHandler {
 		}
 		debugError.setFileName(localFileName);
 
-		fDebugTarget.getDebugErrors().add(debugError);
-
-		Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
-		for (Object element : listeners) {
-			((IPHPConsoleEventListener) element).handleEvent(debugError);
+		if (fDebugTarget.getDebugErrors().add(debugError)) {
+			Object[] listeners = fDebugTarget.getConsoleEventListeners().toArray();
+			for (Object element : listeners) {
+				((IPHPConsoleEventListener) element).handleEvent(debugError);
+			}
 		}
 	}
 
