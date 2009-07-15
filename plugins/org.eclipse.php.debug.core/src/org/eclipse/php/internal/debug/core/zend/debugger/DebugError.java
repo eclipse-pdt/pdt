@@ -199,13 +199,37 @@ public class DebugError implements Cloneable {
 		return (" - " + getErrorText()).length();
 	}
 
-	public boolean equals(Object obj) {
-		boolean result = false;
-		if (obj instanceof DebugError) {
-			DebugError other = (DebugError) obj;
-			result = (code == other.code) && (fileName.equals(other.fileName)) && (lineNumber == other.lineNumber) && (text.equals(other.text));
-		}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result + lineNumber;
+		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		return result;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DebugError other = (DebugError) obj;
+		if (fileName == null) {
+			if (other.fileName != null)
+				return false;
+		} else if (!fileName.equals(other.fileName))
+			return false;
+		if (lineNumber != other.lineNumber)
+			return false;
+		if (text == null) {
+			if (other.text != null)
+				return false;
+		} else if (!text.equals(other.text))
+			return false;
+		return true;
+	}
 }

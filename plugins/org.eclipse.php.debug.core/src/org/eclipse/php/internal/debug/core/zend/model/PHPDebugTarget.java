@@ -12,39 +12,15 @@
 package org.eclipse.php.internal.debug.core.zend.model;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IMarkerDelta;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.DebugEvent;
-import org.eclipse.debug.core.DebugException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IBreakpointManager;
-import org.eclipse.debug.core.IBreakpointManagerListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.model.IBreakpoint;
-import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IMemoryBlock;
-import org.eclipse.debug.core.model.IProcess;
-import org.eclipse.debug.core.model.IStackFrame;
-import org.eclipse.debug.core.model.IStepFilters;
-import org.eclipse.debug.core.model.IThread;
-import org.eclipse.debug.core.model.IVariable;
+import org.eclipse.debug.core.*;
+import org.eclipse.debug.core.model.*;
 import org.eclipse.debug.ui.AbstractDebugView;
 import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.php.debug.core.debugger.IDebugHandler;
@@ -61,15 +37,8 @@ import org.eclipse.php.internal.debug.core.pathmapper.PathMapper;
 import org.eclipse.php.internal.debug.core.pathmapper.PathMapperRegistry;
 import org.eclipse.php.internal.debug.core.pathmapper.PathEntry.Type;
 import org.eclipse.php.internal.debug.core.zend.communication.DebugConnectionThread;
+import org.eclipse.php.internal.debug.core.zend.debugger.*;
 import org.eclipse.php.internal.debug.core.zend.debugger.Breakpoint;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugError;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugHandlersRegistry;
-import org.eclipse.php.internal.debug.core.zend.debugger.DebugParametersInitializersRegistry;
-import org.eclipse.php.internal.debug.core.zend.debugger.DefaultExpressionsManager;
-import org.eclipse.php.internal.debug.core.zend.debugger.Expression;
-import org.eclipse.php.internal.debug.core.zend.debugger.IRemoteDebugger;
-import org.eclipse.php.internal.debug.core.zend.debugger.PHPSessionLaunchMapper;
-import org.eclipse.php.internal.debug.core.zend.debugger.RemoteDebugger;
 import org.eclipse.php.internal.server.core.Server;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -130,7 +99,7 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 	protected IProject fProject;
 	protected int fSuspendCount;
 	protected Vector<IPHPConsoleEventListener> fConsoleEventListeners = new Vector<IPHPConsoleEventListener>();
-	protected Vector<DebugError> fDebugError = new Vector<DebugError>();
+	protected Set<DebugError> fDebugErrors = new HashSet<DebugError>();
 	protected StartLock fStartLock = new StartLock();
 	protected BreakpointSet fBreakpointSet;
 	protected IBreakpointManager fBreakpointManager;
@@ -946,15 +915,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 		if (!fConsoleEventListeners.contains(listener)) {
 			fConsoleEventListeners.add(listener);
 		}
-		if (fDebugError != null) {
-			Enumeration<DebugError> enumObject = fDebugError.elements();
-			boolean empty = fDebugError.isEmpty();
-			if (!empty) {
-				while (enumObject.hasMoreElements()) {
-					DebugError debugError = enumObject.nextElement();
-					listener.handleEvent(debugError);
-				}
-			}
+		for (DebugError debugError : fDebugErrors) {
+			listener.handleEvent(debugError);
 		}
 	}
 
@@ -1051,8 +1013,8 @@ public class PHPDebugTarget extends PHPDebugElement implements IPHPDebugTarget, 
 		fProject = project;
 	}
 
-	public List<DebugError> getDebugErrors() {
-		return fDebugError;
+	public Collection<DebugError> getDebugErrors() {
+		return fDebugErrors;
 	}
 
 	public boolean isServerWindows() {
