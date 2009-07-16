@@ -398,7 +398,7 @@ public class PHPProjectsWorkbookPage extends BuildPathBasePage {
 
 			List elements = fProjectsList.getElements();
 			for (int i = 0; i < elements.size(); i++) {
-				BPListElement curr = (BPListElement) elements.get(0);
+				BPListElement curr = (BPListElement) elements.get(i);
 				IScriptProject proj = (IScriptProject) DLTKCore.create(curr
 						.getResource());
 				selectable.remove(proj);
