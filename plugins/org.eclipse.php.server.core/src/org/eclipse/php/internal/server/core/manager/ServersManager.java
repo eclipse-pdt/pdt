@@ -19,10 +19,7 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -39,7 +36,7 @@ import org.osgi.service.prefs.BackingStoreException;
  *
  * @author shalom
  */
-public class ServersManager implements PropertyChangeListener {
+public class ServersManager implements PropertyChangeListener,IAdaptable {
 
 	/**Servers preferences key*/
 	public static final String SERVERS_PREFERENCES_KEY = "phpServers";
@@ -427,6 +424,10 @@ public class ServersManager implements PropertyChangeListener {
 				}
 			}
 		}
+		return null;
+	}
+
+	public Object getAdapter(Class adapter) {
 		return null;
 	}
 }

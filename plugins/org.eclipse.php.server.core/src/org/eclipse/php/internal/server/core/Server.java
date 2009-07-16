@@ -17,12 +17,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable;
 
 /**
  * A generic server implementation.
  */
-public class Server implements IXMLPreferencesStorable {
+public class Server implements IXMLPreferencesStorable, IAdaptable {
 
 	// Used as a root element name when saving and loading the preferences.
 	public static final String SERVER_ELEMENT = "server";
@@ -50,7 +51,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Constructs a new Server.
-	 *
+	 * 
 	 * @param name
 	 * @param hostName
 	 * @param baseURL
@@ -67,8 +68,9 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Add a property change listener to this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * 
+	 * @param listener
+	 *            java.beans.PropertyChangeListener
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		helper.addPropertyChangeListener(listener);
@@ -76,8 +78,9 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Remove a property change listener from this server.
-	 *
-	 * @param listener java.beans.PropertyChangeListener
+	 * 
+	 * @param listener
+	 *            java.beans.PropertyChangeListener
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		helper.removePropertyChangeListener(listener);
@@ -85,19 +88,24 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Sets an arbitrary attribute to this Server.
-	 *
-	 * @param attributeName The attribute name
-	 * @param value The String value of this attribute.
+	 * 
+	 * @param attributeName
+	 *            The attribute name
+	 * @param value
+	 *            The String value of this attribute.
 	 */
 	public void setAttribute(String attributeName, String value) {
 		helper.setAttribute(attributeName, value);
 	}
 
 	/**
-	 * Returns an arbitrary attribute from this Server according to a given attribute name.
-	 *
-	 * @param attributeName The attribute name
-	 * @param defaultValue A default value to use if the attribute was not found
+	 * Returns an arbitrary attribute from this Server according to a given
+	 * attribute name.
+	 * 
+	 * @param attributeName
+	 *            The attribute name
+	 * @param defaultValue
+	 *            A default value to use if the attribute was not found
 	 * @return The String value of this attribute
 	 */
 	public String getAttribute(String attributeName, String defaultValue) {
@@ -106,8 +114,9 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Removed an attribute.
-	 *
-	 * @param attributeName The attribute name.
+	 * 
+	 * @param attributeName
+	 *            The attribute name.
 	 */
 	public void removeAttribute(String attributeName) {
 		helper.removeAttribute(attributeName);
@@ -147,7 +156,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Return the root URL of this server.
-	 *
+	 * 
 	 * @return java.net.URL
 	 */
 	public URL getRootURL() {
@@ -174,7 +183,8 @@ public class Server implements IXMLPreferencesStorable {
 
 	}
 
-	protected static String renderCommandLine(String[] commandLine, String separator) {
+	protected static String renderCommandLine(String[] commandLine,
+			String separator) {
 		if (commandLine == null || commandLine.length < 1)
 			return "";
 		StringBuffer buf = new StringBuffer(commandLine[0]);
@@ -232,19 +242,24 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Return a string representation of this Server.
+	 * 
 	 * @return java.lang.String
 	 */
 	public String toString() {
-		return "Server [" + getName() + "::"+ getHost() + ']';
+		return "Server [" + getName() + "::" + getHost() + ']';
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#restoreFromMap(java.util.HashMap)
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * #restoreFromMap(java.util.HashMap)
 	 */
 	public void restoreFromMap(HashMap map) {
 		HashMap properties = (HashMap) map.get(SERVER_ELEMENT);
-		// This will cause for property change events to be fired on every attribute set.
+		// This will cause for property change events to be fired on every
+		// attribute set.
 		Iterator keys = properties.keySet().iterator();
 		while (keys.hasNext()) {
 			String key = (String) keys.next();
@@ -254,7 +269,10 @@ public class Server implements IXMLPreferencesStorable {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable#storeToMap()
+	 * 
+	 * @see
+	 * org.eclipse.php.internal.core.util.preferences.IXMLPreferencesStorable
+	 * #storeToMap()
 	 */
 	public HashMap storeToMap() {
 		HashMap properties = new HashMap(helper.map);
@@ -265,6 +283,7 @@ public class Server implements IXMLPreferencesStorable {
 
 	/**
 	 * Checks whether this server is local machine
+	 * 
 	 * @return
 	 */
 	public boolean isLocal() {
@@ -277,5 +296,9 @@ public class Server implements IXMLPreferencesStorable {
 		} catch (Exception e) {
 		}
 		return false;
+	}
+
+	public Object getAdapter(Class adapter) {
+		return null;
 	}
 }
