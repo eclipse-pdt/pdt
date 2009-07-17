@@ -52,6 +52,10 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		String prefix = abstractContext.getPrefix();
 		
+		if (prefix.length() > 0 && !prefix.startsWith("$")) {
+			return;
+		}
+		
 		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
 
 		int mask = CodeAssistUtils.EXCLUDE_CONSTANTS;

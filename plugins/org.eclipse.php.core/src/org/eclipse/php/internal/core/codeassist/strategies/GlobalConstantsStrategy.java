@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  * @author michael
  */
 public class GlobalConstantsStrategy extends GlobalElementStrategy {
-	
+
 	public GlobalConstantsStrategy(ICompletionContext context, IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
@@ -53,12 +53,16 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		}
 
 		String prefix = abstractContext.getPrefix();
+		if (prefix.startsWith("$")) {
+			return;
+		}
+
 		SourceRange replaceRange = getReplacementRange(abstractContext);
 
 		IModelElement[] constants = CodeAssistUtils.getGlobalFields(abstractContext.getSourceModule(), prefix, mask);
 		for (IModelElement constant : constants) {
 			try {
-				if (!constant.getElementName().startsWith("$") && PHPFlags.isConstant(((IField)constant).getFlags())) {
+				if (!constant.getElementName().startsWith("$") && PHPFlags.isConstant(((IField) constant).getFlags())) {
 					reporter.reportField((IField) constant, "", replaceRange, false);
 				}
 			} catch (ModelException e) {
