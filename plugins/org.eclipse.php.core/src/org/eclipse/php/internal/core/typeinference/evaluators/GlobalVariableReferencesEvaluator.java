@@ -14,10 +14,12 @@ package org.eclipse.php.internal.core.typeinference.evaluators;
 import java.util.*;
 
 import org.eclipse.dltk.ast.ASTNode;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.SourceField;
@@ -29,7 +31,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.mixin.PHPMixinModel;
+import org.eclipse.php.internal.core.model.ModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
@@ -37,7 +39,8 @@ import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.D
 import org.eclipse.php.internal.core.typeinference.goals.GlobalVariableReferencesGoal;
 
 /**
- * This evaluator finds all global declarations of the variable and produces {@link VariableDeclarationGoal} as a subgoal.
+ * This evaluator finds all global declarations of the variable and produces
+ * {@link VariableDeclarationGoal} as a subgoal.
  */
 public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
@@ -61,9 +64,13 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		boolean exploreOtherFiles = true;
 
 		// Find all global variables from mixin
-		IScriptProject scriptProject = sourceModuleContext.getSourceModule().getScriptProject();
+		IScriptProject scriptProject = sourceModuleContext.getSourceModule()
+				.getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
-		IModelElement[] elements = PHPMixinModel.getInstance(scriptProject).getVariable(variableName, scope);
+
+		IField[] elements = ModelAccess.getDefault().findFields(variableName,
+				MatchRule.EXACT, ~Modifiers.AccConstant, scope);
+
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 
 		Comparator<ISourceRange> sourceRangeComparator = new Comparator<ISourceRange>() {
@@ -77,7 +84,8 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				SourceField sourceField = (SourceField) element;
 				ISourceModule sourceModule = sourceField.getSourceModule();
 				if (!offsets.containsKey(sourceModule)) {
-					offsets.put(sourceModule, new TreeSet<ISourceRange>(sourceRangeComparator));
+					offsets.put(sourceModule, new TreeSet<ISourceRange>(
+							sourceRangeComparator));
 				}
 				try {
 					offsets.get(sourceModule).add(sourceField.getSourceRange());
@@ -93,20 +101,26 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		Iterator<ISourceModule> sourceModuleIt = offsets.keySet().iterator();
 		while (sourceModuleIt.hasNext()) {
 			ISourceModule sourceModule = sourceModuleIt.next();
-			if (exploreOtherFiles || (sourceModuleContext != null && sourceModuleContext.getSourceModule().equals(sourceModule))) {
+			if (exploreOtherFiles
+					|| (sourceModuleContext != null && sourceModuleContext
+							.getSourceModule().equals(sourceModule))) {
 
-				ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+				ModuleDeclaration moduleDeclaration = SourceParserUtil
+						.getModuleDeclaration(sourceModule);
 				SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 				if (!fileOffsets.isEmpty()) {
-					GlobalReferenceDeclSearcher varSearcher = new GlobalReferenceDeclSearcher(sourceModule, fileOffsets, variableName);
+					GlobalReferenceDeclSearcher varSearcher = new GlobalReferenceDeclSearcher(
+							sourceModule, fileOffsets, variableName);
 					try {
 						moduleDeclaration.traverse(varSearcher);
 
 						DeclarationScope[] scopes = varSearcher.getScopes();
 						for (DeclarationScope s : scopes) {
-							for (Declaration decl : s.getDeclarations(variableName)) {
-								subGoals.add(new ExpressionTypeGoal(s.getContext(), decl.getNode()));
+							for (Declaration decl : s
+									.getDeclarations(variableName)) {
+								subGoals.add(new ExpressionTypeGoal(s
+										.getContext(), decl.getNode()));
 							}
 						}
 					} catch (Exception e) {
@@ -140,13 +154,14 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		private int currentEnd;
 		private boolean stopProcessing;
 
-		public GlobalReferenceDeclSearcher(ISourceModule sourceModule, SortedSet<ISourceRange> offsets, String variableName) {
+		public GlobalReferenceDeclSearcher(ISourceModule sourceModule,
+				SortedSet<ISourceRange> offsets, String variableName) {
 			super(sourceModule);
 			this.variableName = variableName;
 			offsetsIt = offsets.iterator();
 			setNextRange();
 		}
-		
+
 		private void setNextRange() {
 			if (offsetsIt.hasNext()) {
 				ISourceRange range = offsetsIt.next();
@@ -159,7 +174,7 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 		protected void postProcess(Expression node) {
 			if (node instanceof Assignment) {
-				Expression variable = ((Assignment)node).getVariable();
+				Expression variable = ((Assignment) node).getVariable();
 				if (variable instanceof VariableReference) {
 					VariableReference variableReference = (VariableReference) variable;
 					if (variableName.equals(variableReference.getName())) {
@@ -170,7 +185,8 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		}
 
 		protected boolean isInteresting(ASTNode node) {
-			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
+			return !stopProcessing && node.sourceStart() <= currentStart
+					&& node.sourceEnd() >= currentEnd;
 		}
 	}
 }

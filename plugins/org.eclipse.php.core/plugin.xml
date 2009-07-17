@@ -33,6 +33,7 @@
 		name="PHP Completion Context Resolver"
 		schema="schema/completionContextResolvers.exsd" />
  <extension-point id="languageModelProviders" name="PHP Language Model Provider" schema="schema/languageModelProviders.exsd"/>
+ <extension-point id="modelAccess" name="PHP Model Access" schema="schema/modelAccess.exsd"/>
 
 	<!-- PHP Model Handler -->
 	<extension
@@ -196,15 +197,6 @@
 			name="%parserBuildParticipant.name"
 			nature="org.eclipse.php.core.PHPNature">
 		</buildParticipant>
-	</extension>
-
-	<extension
-		point="org.eclipse.dltk.core.mixin">
-		<mixin
-			class="org.eclipse.php.internal.core.mixin.PHPMixinParser"
-			nature="org.eclipse.php.core.PHPNature"
-			priority="0">
-		</mixin>
 	</extension>
 
 	<extension

@@ -15,14 +15,15 @@ import java.util.*;
 
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.ASTVisitor;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.CallExpression;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.dltk.core.search.SearchPattern;
 import org.eclipse.dltk.ti.GoalState;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
@@ -33,7 +34,7 @@ import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.model.ModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
 
@@ -52,16 +53,20 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 
 		IDLTKSearchScope scope = null;
 		IScriptProject scriptProject = null;
-		ISourceModuleContext sourceModuleContext = (ISourceModuleContext) goal.getContext();
+		ISourceModuleContext sourceModuleContext = (ISourceModuleContext) goal
+				.getContext();
 		if (sourceModuleContext != null) {
-			scriptProject = sourceModuleContext.getSourceModule().getScriptProject();
+			scriptProject = sourceModuleContext.getSourceModule()
+					.getScriptProject();
 			scope = SearchEngine.createSearchScope(scriptProject);
 		}
 
 		if (scope == null) {
-			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit.getDefault());
+			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit
+					.getDefault());
 		}
-		IType[] types = PHPModelUtils.getClassesAndInterfaces(typeName, SearchPattern.R_EXACT_MATCH, scope);
+		IType[] types = ModelAccess.getDefault().findTypes(typeName,
+				MatchRule.EXACT, ~Modifiers.AccNameSpace, scope);
 		Set<IModelElement> elements = new HashSet<IModelElement>();
 		for (IType type : types) {
 			try {
@@ -89,7 +94,8 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 				IField field = (IField) element;
 				ISourceModule sourceModule = field.getSourceModule();
 				if (!offsets.containsKey(sourceModule)) {
-					offsets.put(sourceModule, new TreeSet<ISourceRange>(sourceRangeComparator));
+					offsets.put(sourceModule, new TreeSet<ISourceRange>(
+							sourceRangeComparator));
 				}
 				try {
 					offsets.get(sourceModule).add(field.getSourceRange());
@@ -105,15 +111,18 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		Iterator<ISourceModule> sourceModuleIt = offsets.keySet().iterator();
 		while (sourceModuleIt.hasNext()) {
 			ISourceModule sourceModule = sourceModuleIt.next();
-			ModuleDeclaration moduleDeclaration = SourceParserUtil.getModuleDeclaration(sourceModule);
+			ModuleDeclaration moduleDeclaration = SourceParserUtil
+					.getModuleDeclaration(sourceModule);
 			SortedSet<ISourceRange> fileOffsets = offsets.get(sourceModule);
 
 			if (!fileOffsets.isEmpty()) {
-				ConstantDeclarationSearcher searcher = new ConstantDeclarationSearcher(fileOffsets, constantName);
+				ConstantDeclarationSearcher searcher = new ConstantDeclarationSearcher(
+						fileOffsets, constantName);
 				try {
 					moduleDeclaration.traverse(searcher);
 					for (Scalar scalar : searcher.getDeclarations()) {
-						subGoals.add(new ExpressionTypeGoal(goal.getContext(), scalar));
+						subGoals.add(new ExpressionTypeGoal(goal.getContext(),
+								scalar));
 					}
 				} catch (Exception e) {
 					if (DLTKCore.DEBUG) {
@@ -146,7 +155,8 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		private boolean stopProcessing;
 		private List<Scalar> declarations = new LinkedList<Scalar>();
 
-		public ConstantDeclarationSearcher(SortedSet<ISourceRange> offsets, String constantName) {
+		public ConstantDeclarationSearcher(SortedSet<ISourceRange> offsets,
+				String constantName) {
 			this.constantName = constantName;
 			offsetsIt = offsets.iterator();
 			setNextRange();
@@ -167,7 +177,8 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 		}
 
 		private boolean interesting(ASTNode node) {
-			return !stopProcessing && node.sourceStart() <= currentStart && node.sourceEnd() >= currentEnd;
+			return !stopProcessing && node.sourceStart() <= currentStart
+					&& node.sourceEnd() >= currentEnd;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -181,10 +192,12 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 				if (args.size() == 2) {
 					ASTNode firstArg = (ASTNode) args.get(0);
 					ASTNode secondArg = (ASTNode) args.get(0);
-					if (firstArg instanceof Scalar && secondArg instanceof Scalar) {
+					if (firstArg instanceof Scalar
+							&& secondArg instanceof Scalar) {
 						Scalar constantName = (Scalar) firstArg;
 						Scalar constantValue = (Scalar) secondArg;
-						if (this.constantName.equals(stripQuotes(constantName.getValue()))) {
+						if (this.constantName.equals(stripQuotes(constantName
+								.getValue()))) {
 							declarations.add(constantValue);
 						}
 					}
@@ -227,13 +240,19 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 	}
 
 	/**
-	 * Strips single or double quotes from the start and from the end of the given string
-	 * @param name String
+	 * Strips single or double quotes from the start and from the end of the
+	 * given string
+	 * 
+	 * @param name
+	 *            String
 	 * @return
 	 */
 	private static String stripQuotes(String name) {
 		int len = name.length();
-		if (len > 1 && (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name.charAt(0) == '"' && name.charAt(len - 1) == '"')) {
+		if (len > 1
+				&& (name.charAt(0) == '\'' && name.charAt(len - 1) == '\'' || name
+						.charAt(0) == '"'
+						&& name.charAt(len - 1) == '"')) {
 			name = name.substring(1, len - 1);
 		}
 		return name;

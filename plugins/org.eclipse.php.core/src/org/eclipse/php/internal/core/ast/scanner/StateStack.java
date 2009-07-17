@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Zend Technologies
  *******************************************************************************/
-package org.eclipse.php.internal.core.phpModel.parser;
+package org.eclipse.php.internal.core.ast.scanner;
 
 public class StateStack implements Cloneable {
 

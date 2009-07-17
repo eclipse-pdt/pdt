@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IModelElement;
+import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -23,12 +26,14 @@ import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
- * This strategy completes global functions 
+ * This strategy completes global functions
+ * 
  * @author michael
  */
 public class GlobalFunctionsStrategy extends GlobalElementStrategy {
-	
-	public GlobalFunctionsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public GlobalFunctionsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -37,22 +42,30 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		
+
 		ICompletionContext context = getContext();
-		
+
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = abstractContext.getCompletionRequestor();
+		CompletionRequestor requestor = abstractContext
+				.getCompletionRequestor();
 
 		int mask = 0;
 		if (requestor.isContextInformationMode()) {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
-		
+
 		String prefix = abstractContext.getPrefix();
-		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(abstractContext.getSourceModule(), prefix, mask);
+		if (prefix.startsWith("$")) {
+			return;
+		}
+
+		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(
+				abstractContext.getSourceModule(), prefix, mask);
 		SourceRange replacementRange = getReplacementRange(abstractContext);
-		String suffix = functions.length > 0 && functions[0] instanceof FakeGroupMethod ? "": getSuffix(abstractContext);
-		
+		String suffix = functions.length > 0
+				&& functions[0] instanceof FakeGroupMethod ? ""
+				: getSuffix(abstractContext);
+
 		for (IModelElement function : functions) {
 			try {
 				IMethod method = (IMethod) function;
@@ -65,7 +78,7 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			}
 		}
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {
