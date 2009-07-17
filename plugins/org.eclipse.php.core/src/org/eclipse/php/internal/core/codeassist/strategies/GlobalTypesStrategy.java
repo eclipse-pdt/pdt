@@ -15,7 +15,6 @@ import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
@@ -39,7 +38,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		
+
 		ICompletionContext context = getContext();
 		AbstractCompletionContext abstractContext = (AbstractCompletionContext) context;
 		SourceRange replacementRange = getReplacementRange(abstractContext);
@@ -48,7 +47,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		IElementFilter elementFilter = getElementFilter();
 		String suffix = getSuffix(abstractContext);
 		String nsSuffix = getNSSuffix(abstractContext);
-		
+
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
@@ -56,11 +55,13 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 					reporter.reportType(type, PHPFlags.isNamespace(flags) ? nsSuffix : type instanceof FakeGroupType ? "" : suffix, replacementRange);
 				}
 			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
+				if (DLTKCore.DEBUG_COMPLETION) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Runs the query to retrieve all global types
 	 * @param context
@@ -73,9 +74,12 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 			mask |= CodeAssistUtils.EXACT_NAME;
 		}
 		String prefix = context.getPrefix();
+		if (prefix.startsWith("$")) {
+			return new IType[0];
+		}
 		return CodeAssistUtils.getGlobalTypes(context.getSourceModule(), prefix, mask);
 	}
-	
+
 	/**
 	 * Adds the self function with the relevant data to the proposals array
 	 * @param context
@@ -83,15 +87,15 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	 * @throws BadLocationException 
 	 */
 	protected void addSelf(AbstractCompletionContext context, ICompletionReporter reporter) throws BadLocationException {
-		
+
 		String prefix = context.getPrefix();
 		SourceRange replaceRange = getReplacementRange(context);
 
 		if (CodeAssistUtils.startsWithIgnoreCase("self", prefix)) {
 			if (!context.getCompletionRequestor().isContextInformationMode() || prefix.length() == 4) { // "self".length()
-				
+
 				String suffix = getSuffix(context);
-				
+
 				// get the class data for "self". In case of null, the self function will not be added
 				IType selfClassData = CodeAssistUtils.getSelfClassData(context.getSourceModule(), context.getOffset());
 				if (selfClassData != null) {
@@ -105,8 +109,7 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 						}
 						if (ctor != null) {
 							ISourceRange sourceRange = selfClassData.getSourceRange();
-							FakeMethod ctorMethod = new FakeMethod((ModelElement) selfClassData, "self",
-								sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()) {
+							FakeMethod ctorMethod = new FakeMethod((ModelElement) selfClassData, "self", sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()) {
 								public boolean isConstructor() throws ModelException {
 									return true;
 								}
@@ -115,12 +118,12 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 							reporter.reportMethod(ctorMethod, suffix, replaceRange);
 						} else {
 							ISourceRange sourceRange = selfClassData.getSourceRange();
-							reporter.reportMethod(new FakeMethod((ModelElement) selfClassData, "self",
-								sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()),
-								"()", replaceRange);
+							reporter.reportMethod(new FakeMethod((ModelElement) selfClassData, "self", sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()), "()", replaceRange);
 						}
 					} catch (ModelException e) {
-						PHPCorePlugin.log(e);
+						if (DLTKCore.DEBUG_COMPLETION) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -140,17 +143,21 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return "\\".equals(nextWord) ? "" : "\\"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {
 			nextWord = abstractContext.getNextWord();
 		} catch (BadLocationException e) {
-			PHPCorePlugin.log(e);
+			if (DLTKCore.DEBUG_COMPLETION) {
+				e.printStackTrace();
+			}
 		}
 		return "::".equals(nextWord) ? "" : "::"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
