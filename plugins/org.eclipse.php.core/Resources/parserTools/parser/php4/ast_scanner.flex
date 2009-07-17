@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.php.internal.core.ast.nodes.Comment;
 import java_cup.sym;
 import java_cup.runtime.Symbol;
-import org.eclipse.php.internal.core.phpModel.parser.StateStack;
+import org.eclipse.php.internal.core.ast.scanner.StateStack;
 import org.eclipse.php.internal.core.ast.nodes.IDocumentorLexer;
 import org.eclipse.php.internal.core.PHPVersion;
 
