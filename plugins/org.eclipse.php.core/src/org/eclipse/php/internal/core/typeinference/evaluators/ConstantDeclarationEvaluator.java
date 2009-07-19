@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.ConstantDeclaration;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.goals.ConstantDeclarationGoal;
 
@@ -65,7 +65,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 			scope = SearchEngine.createWorkspaceScope(PHPLanguageToolkit
 					.getDefault());
 		}
-		IType[] types = ModelAccess.getDefault().findTypes(typeName,
+		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
 				MatchRule.EXACT, ~Modifiers.AccNameSpace, scope);
 		Set<IModelElement> elements = new HashSet<IModelElement>();
 		for (IType type : types) {

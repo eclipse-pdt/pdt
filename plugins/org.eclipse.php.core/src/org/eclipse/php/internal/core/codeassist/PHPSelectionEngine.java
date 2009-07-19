@@ -42,7 +42,7 @@ import org.eclipse.php.internal.core.documentModel.parser.PHPRegionContext;
 import org.eclipse.php.internal.core.documentModel.parser.regions.IPhpScriptRegion;
 import org.eclipse.php.internal.core.documentModel.parser.regions.PHPRegionTypes;
 import org.eclipse.php.internal.core.documentModel.partitioner.PHPPartitionTypes;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
@@ -321,7 +321,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						IDLTKSearchScope scope = SearchEngine
 								.createSearchScope(sourceModule
 										.getScriptProject());
-						types = ModelAccess.getDefault().findTypes(name,
+						types = PhpModelAccess.getDefault().findTypes(name,
 								MatchRule.EXACT, Modifiers.AccNameSpace, scope);
 						if (types == null || types.length == 0) {
 							return PHPModelUtils.getFields(name, sourceModule,
@@ -568,7 +568,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							IDLTKSearchScope scope = SearchEngine
 									.createSearchScope(sourceModule
 											.getScriptProject());
-							return ModelAccess.getDefault().findTypes(
+							return PhpModelAccess.getDefault().findTypes(
 									elementName, MatchRule.EXACT,
 									Modifiers.AccNameSpace, scope);
 						}

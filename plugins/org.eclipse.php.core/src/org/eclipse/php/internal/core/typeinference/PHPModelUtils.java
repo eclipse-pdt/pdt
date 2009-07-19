@@ -34,7 +34,7 @@ import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.FileNetworkUtility;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree;
 import org.eclipse.php.internal.core.language.LanguageModelInitializer;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.DeclarationSearcher.DeclarationType;
 import org.eclipse.wst.sse.core.internal.Logger;
 
@@ -624,7 +624,7 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] types = ModelAccess.getDefault().findTypes(typeName,
+		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
 				MatchRule.EXACT, 0, scope);
 
 		List<IType> result = new ArrayList<IType>(types.length);
@@ -688,8 +688,9 @@ public class PHPModelUtils {
 				// does not exist:
 				IDLTKSearchScope scope = SearchEngine
 						.createSearchScope(sourceModule.getScriptProject());
-				IMethod[] functions = ModelAccess.getDefault().findFunctions(
-						functionName, MatchRule.EXACT, 0, scope);
+				IMethod[] functions = PhpModelAccess.getDefault().findMethods(
+						functionName, MatchRule.EXACT, Modifiers.AccGlobal,
+						scope);
 
 				Collection<IMethod> filteredElements = filterElements(
 						sourceModule, Arrays.asList(functions));
@@ -700,8 +701,8 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IMethod[] functions = ModelAccess.getDefault().findFunctions(
-				functionName, MatchRule.EXACT, 0, scope);
+		IMethod[] functions = PhpModelAccess.getDefault().findMethods(
+				functionName, MatchRule.EXACT, Modifiers.AccGlobal, scope);
 
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
 				Arrays.asList(functions));
@@ -760,9 +761,9 @@ public class PHPModelUtils {
 					// constant does not exist:
 					IDLTKSearchScope scope = SearchEngine
 							.createSearchScope(sourceModule.getScriptProject());
-					IField[] fields = ModelAccess.getDefault().findFields(
-							fieldName, MatchRule.EXACT, Modifiers.AccConstant,
-							scope);
+					IField[] fields = PhpModelAccess.getDefault().findFields(
+							fieldName, MatchRule.EXACT,
+							Modifiers.AccConstant | Modifiers.AccGlobal, scope);
 
 					Collection<IField> filteredElements = filterElements(
 							sourceModule, Arrays.asList(fields));
@@ -773,8 +774,8 @@ public class PHPModelUtils {
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IField[] fields = ModelAccess.getDefault().findFields(fieldName,
-				MatchRule.EXACT, 0, scope);
+		IField[] fields = PhpModelAccess.getDefault().findFields(fieldName,
+				MatchRule.EXACT, Modifiers.AccGlobal, scope);
 
 		Collection<IField> filteredElements = filterElements(sourceModule,
 				Arrays.asList(fields));
@@ -844,7 +845,7 @@ public class PHPModelUtils {
 		if (namespace != null && namespace.length() > 0) {
 			IDLTKSearchScope scope = SearchEngine
 					.createSearchScope(sourceModule.getScriptProject());
-			return ModelAccess.getDefault().findTypes(namespace,
+			return PhpModelAccess.getDefault().findTypes(namespace,
 					MatchRule.EXACT, Modifiers.AccNameSpace, scope);
 		}
 		return null;
@@ -950,7 +951,7 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = ModelAccess.getDefault().findTypes(namespace,
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
 				MatchRule.EXACT, Modifiers.AccNameSpace, scope);
 
 		for (IType ns : namespaces) {
@@ -981,7 +982,7 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = ModelAccess.getDefault().findTypes(namespace,
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
 				MatchRule.EXACT, Modifiers.AccNameSpace, scope);
 
 		for (IType ns : namespaces) {
@@ -1011,7 +1012,7 @@ public class PHPModelUtils {
 
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IType[] namespaces = ModelAccess.getDefault().findTypes(namespace,
+		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
 				MatchRule.EXACT, Modifiers.AccNameSpace, scope);
 
 		for (IType ns : namespaces) {

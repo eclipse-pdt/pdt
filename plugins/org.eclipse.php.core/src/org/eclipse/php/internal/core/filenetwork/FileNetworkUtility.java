@@ -29,7 +29,7 @@ import org.eclipse.php.internal.core.compiler.ast.nodes.Scalar;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.filenetwork.ReferenceTree.Node;
 import org.eclipse.php.internal.core.model.IncludeField;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.util.PHPSearchEngine;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.IncludedFileResult;
 import org.eclipse.php.internal.core.util.PHPSearchEngine.ResourceResult;
@@ -105,7 +105,7 @@ public class FileNetworkUtility {
 				.getScriptProject());
 
 		// Find all includes to the current source module in mixin:
-		IField[] includes = ModelAccess.getDefault().findIncludes(
+		IField[] includes = PhpModelAccess.getDefault().findIncludes(
 				file.getPath().lastSegment(), scope);
 		for (IField include : includes) {
 

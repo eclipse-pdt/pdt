@@ -41,7 +41,7 @@ import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
@@ -1003,18 +1003,20 @@ public class CodeAssistUtils {
 		// if (pattern != null) {
 		if (elementType == IDLTKSearchConstants.TYPE) {
 
-			elements.addAll(Arrays.asList(ModelAccess.getDefault().findTypes(
-					prefix, MatchRule.PREFIX, 0, scope)));
+			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
+					.findTypes(prefix, MatchRule.PREFIX, 0, scope)));
 
 		} else if (elementType == IDLTKSearchConstants.METHOD) {
 
-			elements.addAll(Arrays.asList(ModelAccess.getDefault()
-					.findFunctions(prefix, MatchRule.PREFIX, 0, scope)));
+			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
+					.findMethods(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
+							scope)));
 
 		} else {
 
-			elements.addAll(Arrays.asList(ModelAccess.getDefault().findFields(
-					prefix, MatchRule.PREFIX, 0, scope)));
+			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
+					.findFields(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
+							scope)));
 		}
 		// }
 
@@ -1036,8 +1038,9 @@ public class CodeAssistUtils {
 
 		// Build the mixin request key:
 		if (elementType == IDLTKSearchConstants.TYPE) {
-			IType[] classesAndInterfaces = ModelAccess.getDefault().findTypes(
-					prefix, MatchRule.PREFIX, ~Modifiers.AccNameSpace, scope);
+			IType[] classesAndInterfaces = PhpModelAccess.getDefault()
+					.findTypes(prefix, MatchRule.PREFIX,
+							~Modifiers.AccNameSpace, scope);
 			try {
 				for (IType type : classesAndInterfaces) {
 					int flags = type.getFlags();
@@ -1054,8 +1057,9 @@ public class CodeAssistUtils {
 				PHPCorePlugin.log(e);
 			}
 		} else {
-			elements.addAll(Arrays.asList(ModelAccess.getDefault()
-					.findFunctions(prefix, MatchRule.PREFIX, 0, scope)));
+			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
+					.findMethods(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
+							scope)));
 		}
 
 		// Calculate minimal namespaces:

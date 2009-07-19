@@ -31,7 +31,7 @@ import org.eclipse.dltk.ti.goals.GoalEvaluator;
 import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.compiler.ast.nodes.Assignment;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher;
 import org.eclipse.php.internal.core.typeinference.VariableDeclarationSearcher.Declaration;
@@ -68,8 +68,9 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 				.getScriptProject();
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
-		IField[] elements = ModelAccess.getDefault().findFields(variableName,
-				MatchRule.EXACT, ~Modifiers.AccConstant, scope);
+		IField[] elements = PhpModelAccess.getDefault().findFields(
+				variableName, MatchRule.EXACT,
+				~Modifiers.AccConstant | Modifiers.AccGlobal, scope);
 
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 
