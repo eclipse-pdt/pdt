@@ -322,7 +322,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.createSearchScope(sourceModule
 										.getScriptProject());
 						types = PhpModelAccess.getDefault().findTypes(name,
-								MatchRule.EXACT, Modifiers.AccNameSpace, scope);
+								MatchRule.EXACT, Modifiers.AccNameSpace, scope,
+								null);
 						if (types == null || types.length == 0) {
 							return PHPModelUtils.getFields(name, sourceModule,
 									offset);
@@ -439,12 +440,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											.getCurrentNamespace(sourceModule,
 													offset);
 								}
-								IType typeType = PHPModelUtils.getTypeType(
-										containerType, elementName);
-								if (typeType != null) {
-									return new IType[] { typeType };
+								if (containerType != null) {
+									IType typeType = PHPModelUtils.getTypeType(
+											containerType, elementName);
+									if (typeType != null) {
+										return new IType[] { typeType };
+									}
+									return EMPTY;
 								}
-								return EMPTY;
 							}
 							return getClass(sourceModule, elementName);
 						}
@@ -570,7 +573,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											.getScriptProject());
 							return PhpModelAccess.getDefault().findTypes(
 									elementName, MatchRule.EXACT,
-									Modifiers.AccNameSpace, scope);
+									Modifiers.AccNameSpace, scope, null);
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(

@@ -1004,19 +1004,19 @@ public class CodeAssistUtils {
 		if (elementType == IDLTKSearchConstants.TYPE) {
 
 			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
-					.findTypes(prefix, MatchRule.PREFIX, 0, scope)));
+					.findTypes(prefix, MatchRule.PREFIX, 0, scope, null)));
 
 		} else if (elementType == IDLTKSearchConstants.METHOD) {
 
 			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
 					.findMethods(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
-							scope)));
+							scope, null)));
 
 		} else {
 
 			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
 					.findFields(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
-							scope)));
+							scope, null)));
 		}
 		// }
 
@@ -1040,7 +1040,7 @@ public class CodeAssistUtils {
 		if (elementType == IDLTKSearchConstants.TYPE) {
 			IType[] classesAndInterfaces = PhpModelAccess.getDefault()
 					.findTypes(prefix, MatchRule.PREFIX,
-							~Modifiers.AccNameSpace, scope);
+							~Modifiers.AccNameSpace, scope, null);
 			try {
 				for (IType type : classesAndInterfaces) {
 					int flags = type.getFlags();
@@ -1059,7 +1059,7 @@ public class CodeAssistUtils {
 		} else {
 			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
 					.findMethods(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
-							scope)));
+							scope, null)));
 		}
 
 		// Calculate minimal namespaces:

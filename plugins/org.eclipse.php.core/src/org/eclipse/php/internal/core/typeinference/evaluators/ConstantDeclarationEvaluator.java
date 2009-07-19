@@ -66,7 +66,7 @@ public class ConstantDeclarationEvaluator extends GoalEvaluator {
 					.getDefault());
 		}
 		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
-				MatchRule.EXACT, ~Modifiers.AccNameSpace, scope);
+				MatchRule.EXACT, ~Modifiers.AccNameSpace, scope, null);
 		Set<IModelElement> elements = new HashSet<IModelElement>();
 		for (IType type : types) {
 			try {

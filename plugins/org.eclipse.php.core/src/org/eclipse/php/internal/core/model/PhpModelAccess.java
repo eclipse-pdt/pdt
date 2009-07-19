@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.php.internal.core.model;
 
 import java.util.LinkedList;
@@ -20,8 +31,10 @@ public class PhpModelAccess extends ModelAccess {
 	public IField[] findIncludes(String name, IDLTKSearchScope scope) {
 
 		List<IField> result = new LinkedList<IField>();
-		findElements(IModelElement.IMPORT_DECLARATION, name, MatchRule.EXACT,
-				0, scope, result);
+		if (!findElements(IModelElement.IMPORT_DECLARATION, name,
+				MatchRule.EXACT, 0, scope, result, null)) {
+			return null;
+		}
 		return (IField[]) result.toArray(new IField[result.size()]);
 	}
 }
