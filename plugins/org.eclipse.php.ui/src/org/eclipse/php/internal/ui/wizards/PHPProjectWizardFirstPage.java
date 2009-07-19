@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.php.internal.ui.wizards;
 
+import java.io.File;
 import java.net.URI;
 import java.util.*;
 import java.util.List;
@@ -664,7 +665,7 @@ public class PHPProjectWizardFirstPage extends WizardPage implements IPHPProject
 		private String[] getDocItems(String[] docRootArray) {
 			String[] items = new String[docRootArray.length];
 			for (int i = 0; i < docRootArray.length; i++) {
-				items[i] = docRootArray[i] + "\\" + fNameGroup.getName(); //$NON-NLS-1$
+				items[i] = docRootArray[i] + File.separator + fNameGroup.getName(); //$NON-NLS-1$
 			}
 			return items;
 		}
