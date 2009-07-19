@@ -178,15 +178,12 @@ public class OpenTypeHierarchyAction extends SelectionDispatchAction implements 
 	 * Method declared on SelectionDispatchAction.
 	 */
 	public void run(ITextSelection selection) {
-		if (lastSelectedElement == null) {
-			getShell().getDisplay().beep();
-			return;
-		}
 		IModelElement input = EditorUtility.getEditorInputModelElement(fEditor, true);
-		if (!ActionUtil.isProcessable(getShell(), input)) {
+		if (input == null || !ActionUtil.isProcessable(getShell(), input) || !(input instanceof ISourceModule)) {
 			return;
 		}
-		run(new IModelElement[] { lastSelectedElement });
+		final IModelElement selectionModelElement = getSelectionModelElement(selection.getOffset(), selection.getLength(), (ISourceModule) input);
+		run(new IModelElement[] { selectionModelElement });
 	}
 
 	/* (non-Javadoc)
