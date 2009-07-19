@@ -20,7 +20,7 @@ import org.eclipse.dltk.core.IModelElement;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.core.search.SearchEngine;
-import org.eclipse.php.internal.core.model.ModelAccess;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.ui.PHPUIMessages;
 import org.eclipse.php.internal.ui.util.PHPPluginImages;
 import org.eclipse.swt.graphics.Image;
@@ -84,26 +84,28 @@ public enum ProjectOutlineGroups {
 					});
 			switch (this) {
 			case GROUP_NAMESPACES:
-				childrenList.addAll(Arrays.asList(ModelAccess.getDefault()
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
 						.findTypes(null, MatchRule.PREFIX,
 								Modifiers.AccNameSpace, scope)));
 				break;
 
 			case GROUP_CLASSES:
-				childrenList.addAll(Arrays.asList(ModelAccess.getDefault()
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
 						.findTypes(null, MatchRule.PREFIX,
 								~Modifiers.AccNameSpace, scope)));
 				break;
 
 			case GROUP_FUNCTIONS:
-				childrenList.addAll(Arrays.asList(ModelAccess.getDefault()
-						.findFunctions(null, MatchRule.PREFIX, 0, scope)));
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+						.findMethods(null, MatchRule.PREFIX,
+								Modifiers.AccGlobal, scope)));
 				break;
 
 			case GROUP_CONSTANTS:
-				childrenList.addAll(Arrays.asList(ModelAccess.getDefault()
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
 						.findFields(null, MatchRule.PREFIX,
-								Modifiers.AccConstant, scope)));
+								Modifiers.AccConstant | Modifiers.AccGlobal,
+								scope)));
 				break;
 			}
 			return childrenList.toArray();
