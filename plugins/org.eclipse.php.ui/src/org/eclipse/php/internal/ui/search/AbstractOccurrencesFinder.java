@@ -14,6 +14,11 @@ package org.eclipse.php.internal.ui.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.compiler.problem.DefaultProblem;
+import org.eclipse.dltk.compiler.problem.ProblemSeverities;
 import org.eclipse.php.internal.core.ast.nodes.ASTNode;
 import org.eclipse.php.internal.core.ast.nodes.Program;
 import org.eclipse.php.internal.core.ast.visitor.AbstractVisitor;
@@ -34,6 +39,25 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	protected List<OccurrenceLocation> fResult;
 	protected String fDescription;
 	protected Program fASTRoot;
+	protected ProblemDesc[] fProblems;
+
+	static class ProblemDesc {
+		int kind;
+		int offset;
+		int end;
+		int severity;
+
+		public ProblemDesc(int kind, int offset, int end, int severity) {
+			this.kind = kind;
+			this.offset = offset;
+			this.end = end;
+			this.severity = severity;
+		}
+
+		public boolean isError() {
+			return (this.severity & ProblemSeverities.Error) != 0;
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -54,6 +78,59 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 			return null;
 
 		return fResult.toArray(new OccurrenceLocation[fResult.size()]);
+	}
+
+	/**
+	 * Returns all problems in this program 
+	 * @param node
+	 * @return
+	 */
+	public static ProblemDesc[] getProblems(Program node) {
+		try {
+			IResource resource = node.getSourceModule().getUnderlyingResource();
+			if (resource != null) {
+				IMarker[] markers = resource.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ONE);
+				ProblemDesc[] problems = new ProblemDesc[markers.length];
+				for (int i = 0; i < markers.length; ++i) {
+					problems[i] = new ProblemDesc(
+						markers[i].getAttribute("id", 0), 
+						markers[i].getAttribute(IMarker.CHAR_START, 0), 
+						markers[i].getAttribute(IMarker.CHAR_END, 0), 
+						markers[i].getAttribute(IMarker.SEVERITY, 0));
+				}
+				return problems;
+			}
+		} catch (CoreException e) {
+		}
+		return null;
+	}
+
+	/**
+	 * Whether the specified source range contains error
+	 * @param offset
+	 * @param end
+	 * @return
+	 */
+	protected boolean hasProblems(int offset, int end) {
+		if (fProblems != null) {
+			// Check that current location doesn't contain errors
+			for (ProblemDesc problemDesc : fProblems) {
+				if (problemDesc.offset <= offset && problemDesc.end >= end) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Adds occurrence to results list in case there's no error in this position
+	 * @param location Occurrence location
+	 */
+	protected void addOccurrence(OccurrenceLocation location) {
+		if (!hasProblems(location.getOffset(), location.getOffset() + location.getLength())) {
+			fResult.add(location);
+		}
 	}
 
 	/**

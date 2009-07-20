@@ -22,6 +22,7 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 
 	public static final String ID = "FunctionOccurrencesFinder"; //$NON-NLS-1$
 	private String functionName;
+	private ASTNode erroneousNode;
 
 	/**
 	 * @param root the AST root
@@ -30,8 +31,14 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
+		fProblems = getProblems(root);
+		
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			functionName = ((Identifier) node).getName();
+			
+			if (hasProblems(node.getStart(), node.getEnd())) {
+				erroneousNode = node;
+			}
 			return null;
 		}
 		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
@@ -44,7 +51,12 @@ public class FunctionOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	protected void findOccurrences() {
 		fDescription = Messages.format(BASE_DESCRIPTION, functionName + BRACKETS);
-		fASTRoot.accept(this);
+		if (erroneousNode != null) {
+			// Add just this node in order to handle re-factoring properly
+			fResult.add(new OccurrenceLocation(erroneousNode.getStart(), erroneousNode.getLength(), getOccurrenceType(erroneousNode), fDescription));
+		} else {
+			fASTRoot.accept(this);
+		}
 	}
 
 	/**
