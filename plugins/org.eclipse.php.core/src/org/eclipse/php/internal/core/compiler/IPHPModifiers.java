@@ -13,10 +13,26 @@ package org.eclipse.php.internal.core.compiler;
 
 import org.eclipse.dltk.ast.Modifiers;
 
+/**
+ * This interface extends DLTK's {@link Modifiers} with PDT-related flags.
+ * 
+ */
 public interface IPHPModifiers extends Modifiers {
 
+	/**
+	 * Represents non-PHP language element
+	 */
 	public static final int NonPhp = 2 << Modifiers.USER_MODIFIER;
+
+	/**
+	 * Element that has "@internal" in its PHPDoc
+	 */
 	public static final int Internal = 2 << (Modifiers.USER_MODIFIER + 1);
-	public static final int UseStatement = 2 << (Modifiers.USER_MODIFIER + 2);
+
+	/**
+	 * Constructor method
+	 */
+	public static final int Constructor = 2 << (Modifiers.USER_MODIFIER + 2);
+
 	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 3;
 }
