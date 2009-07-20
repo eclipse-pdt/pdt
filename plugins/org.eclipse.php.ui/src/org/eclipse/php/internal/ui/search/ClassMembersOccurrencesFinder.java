@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.dltk.core.ISourceModule;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.php.internal.core.ast.nodes.*;
-import org.eclipse.php.internal.ui.Logger;
 
 /**
  * Class members occurrences finder.
@@ -29,7 +28,8 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	private String classMemberName; // The member's name
 	private String typeDeclarationName; // Class or Interface name // TODO - use Binding
 	private boolean isMethod;
-	private IType dispatcherType; // might be null 
+	private IType dispatcherType; // might be null
+	private ASTNode erroneousNode;
 
 	/**
 	 * @param root the AST root
@@ -38,8 +38,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 	 */
 	public String initialize(Program root, ASTNode node) {
 		fASTRoot = root;
+		fProblems = getProblems(root);
 		typeDeclarationName = null;
 		isMethod = false;
+		
 		if (node.getType() == ASTNode.IDENTIFIER) {
 			Identifier identifier = (Identifier) node;
 			dispatcherType = resolveDispatcherType(identifier);
@@ -56,8 +58,12 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 				parent = parent.getParent();
 				type = parent.getType();
 			}
+			if (hasProblems(node.getStart(), node.getEnd())) {
+				erroneousNode = node;
+			}
 			return null;
 		}
+		
 		fDescription = "OccurrencesFinder_occurrence_description"; //$NON-NLS-1$
 		return fDescription;
 	}
@@ -139,7 +145,13 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		} else {
 			fDescription = Messages.format(BASE_DESCRIPTION, classMemberName);
 		}
-		fASTRoot.accept(this);
+		
+		if (erroneousNode != null) {
+			// Add just this node in order to handle re-factoring properly
+			fResult.add(new OccurrenceLocation(erroneousNode.getStart(), erroneousNode.getLength(), getOccurrenceType(erroneousNode), fDescription));
+		} else {
+			fASTRoot.accept(this);
+		}
 	}
 
 	/**
@@ -187,10 +199,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 		if (classMemberName.equals(constant.getName())) {
 			if (dispatcherType != null) {
 				if (dispatcherType.equals(resolveDispatcherType(constant))) {
-					fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
+					addOccurrence(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
 				}
 			} else {
-				fResult.add(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
+				addOccurrence(new OccurrenceLocation(constant.getStart(), constant.getLength(), getOccurrenceType(constant), fDescription));
 			}
 		}
 		return true;
@@ -227,10 +239,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 			if (id.getName().equalsIgnoreCase(classMemberName)) {
 				if (dispatcherType != null) {
 					if (dispatcherType.equals(resolveDispatcherType(id))) {
-						fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
+						addOccurrence(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
 					}
 				} else {
-					fResult.add(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
+					addOccurrence(new OccurrenceLocation(node.getStart(), node.getLength(), getOccurrenceType(node), fDescription));
 				}
 			}
 		}
@@ -255,10 +267,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (classMemberName.equalsIgnoreCase(functionName.getName())) {
 						if (dispatcherType != null) {
 							if (dispatcherType.equals(resolveDispatcherType(functionName))) {
-								fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
+								addOccurrence(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
 							}
 						} else {
-							fResult.add(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
+							addOccurrence(new OccurrenceLocation(functionName.getStart(), functionName.getLength(), getOccurrenceType(functionName), fDescription));
 						}
 					}
 				}
@@ -274,10 +286,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 						if (classMemberName.equals(variable.getName())) {
 							if (dispatcherType != null) {
 								if (dispatcherType.equals(resolveDispatcherType(variable))) {
-									fResult.add(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
+									addOccurrence(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
 								}
 							} else {
-								fResult.add(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
+								addOccurrence(new OccurrenceLocation(variable.getStart() - 1, variable.getLength() + 1, F_WRITE_OCCURRENCE, fDescription));
 							}
 						}
 					}
@@ -289,10 +301,10 @@ public class ClassMembersOccurrencesFinder extends AbstractOccurrencesFinder {
 					if (classMemberName.equals(name.getName())) {
 						if (dispatcherType != null) {
 							if (dispatcherType.equals(resolveDispatcherType(name))) {
-								fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
+								addOccurrence(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
 							}
 						} else {
-							fResult.add(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
+							addOccurrence(new OccurrenceLocation(name.getStart(), name.getLength(), getOccurrenceType(name), fDescription));
 						}
 					}
 				}
