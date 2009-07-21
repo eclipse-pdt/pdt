@@ -87,6 +87,10 @@ public abstract class AbstractOccurrencesFinder extends AbstractVisitor implemen
 	 */
 	public static ProblemDesc[] getProblems(Program node) {
 		try {
+			if (node.getSourceModule() == null) {
+				return null;
+			}
+			
 			IResource resource = node.getSourceModule().getUnderlyingResource();
 			if (resource != null) {
 				IMarker[] markers = resource.findMarkers(DefaultProblem.MARKER_TYPE_PROBLEM, true, IResource.DEPTH_ONE);
