@@ -11,12 +11,12 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
@@ -24,28 +24,28 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 
 /**
- * This strategy completes global classes after 'new' statement 
+ * This strategy completes global classes after 'new' statement
+ * 
  * @author michael
  */
 public class ClassInstantiationStrategy extends GlobalTypesStrategy {
-	
-	public ClassInstantiationStrategy(ICompletionContext context, IElementFilter elementFilter) {
-		super(context, elementFilter);
-	}
 
 	public ClassInstantiationStrategy(ICompletionContext context) {
-		super(context);
+		super(context, ~Modifiers.AccInterface & ~Modifiers.AccNameSpace
+				& ~Modifiers.AccAbstract);
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
-		
+
 		ICompletionContext context = getContext();
 		AbstractCompletionContext concreteContext = (AbstractCompletionContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
-		
+		CompletionRequestor requestor = concreteContext
+				.getCompletionRequestor();
+
 		IType enclosingClass = null;
 		try {
-			IModelElement enclosingElement = concreteContext.getSourceModule().getElementAt(concreteContext.getOffset());
+			IModelElement enclosingElement = concreteContext.getSourceModule()
+					.getElementAt(concreteContext.getOffset());
 			while (enclosingElement instanceof IField) {
 				enclosingElement = enclosingElement.getParent();
 			}
@@ -58,15 +58,13 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		
+
 		SourceRange replaceRange = getReplacementRange(context);
-		String defaultSuffix = getSuffix(concreteContext);
+		String suffix = getSuffix(concreteContext);
 
 		IType[] types = getTypes(concreteContext);
 		for (IType type : types) {
 
-			String suffix = type instanceof FakeGroupType ? "" : defaultSuffix;
-			
 			IMethod ctor = null;
 			if (requestor.isContextInformationMode()) {
 				try {
@@ -80,19 +78,19 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 					PHPCorePlugin.log(e);
 				}
 			}
-			
+
 			try {
-				int flags = type.getFlags();
-				if (PHPFlags.isAbstract(flags)) {
-					continue;
-				}
-				
 				if (ctor != null) {
-					if (!PHPFlags.isPrivate(ctor.getFlags()) || type.equals(enclosingClass)) {
+					if (!PHPFlags.isPrivate(ctor.getFlags())
+							|| type.equals(enclosingClass)) {
 						ISourceRange sourceRange = type.getSourceRange();
-						FakeMethod ctorMethod = new FakeMethod((ModelElement) type, type.getElementName(), 
-							sourceRange.getOffset(), sourceRange.getLength(), sourceRange.getOffset(), sourceRange.getLength()) {
-							public boolean isConstructor() throws ModelException {
+						FakeMethod ctorMethod = new FakeMethod(
+								(ModelElement) type, type.getElementName(),
+								sourceRange.getOffset(), sourceRange
+										.getLength(), sourceRange.getOffset(),
+								sourceRange.getLength()) {
+							public boolean isConstructor()
+									throws ModelException {
 								return true;
 							}
 						};
@@ -100,15 +98,13 @@ public class ClassInstantiationStrategy extends GlobalTypesStrategy {
 						reporter.reportMethod(ctorMethod, suffix, replaceRange);
 					}
 				} else {
-					if (!PHPFlags.isInternal(flags) && PHPFlags.isClass(flags)) {
-						reporter.reportType(type, suffix, replaceRange);
-					}
+					reporter.reportType(type, suffix, replaceRange);
 				}
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
 		}
-		
+
 		addSelf(concreteContext, reporter);
 	}
 

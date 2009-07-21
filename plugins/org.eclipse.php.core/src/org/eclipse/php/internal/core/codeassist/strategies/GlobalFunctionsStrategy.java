@@ -11,19 +11,19 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IMethod;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
-import org.eclipse.php.internal.core.codeassist.FakeGroupMethod;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.compiler.IPHPModifiers;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
  * This strategy completes global functions
@@ -31,11 +31,6 @@ import org.eclipse.php.internal.core.compiler.PHPFlags;
  * @author michael
  */
 public class GlobalFunctionsStrategy extends GlobalElementStrategy {
-
-	public GlobalFunctionsStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
-		super(context, elementFilter);
-	}
 
 	public GlobalFunctionsStrategy(ICompletionContext context) {
 		super(context);
@@ -49,33 +44,25 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
-
 		String prefix = abstractContext.getPrefix();
 		if (prefix.startsWith("$")) {
 			return;
 		}
 
-		IModelElement[] functions = CodeAssistUtils.getGlobalMethods(
-				abstractContext.getSourceModule(), prefix, mask);
-		SourceRange replacementRange = getReplacementRange(abstractContext);
-		String suffix = functions.length > 0
-				&& functions[0] instanceof FakeGroupMethod ? ""
-				: getSuffix(abstractContext);
+		int[] flags = { Modifiers.AccGlobal, ~IPHPModifiers.Internal };
+		MatchRule matchRule = MatchRule.PREFIX;
+		if (requestor.isContextInformationMode()) {
+			matchRule = MatchRule.EXACT;
+		}
+		IDLTKSearchScope scope = createSearchScope();
+		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix,
+				matchRule, flags, scope, null);
 
-		for (IModelElement function : functions) {
-			try {
-				IMethod method = (IMethod) function;
-				int flags = method.getFlags();
-				if (!PHPFlags.isInternal(flags)) {
-					reporter.reportMethod(method, suffix, replacementRange);
-				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
+		SourceRange replacementRange = getReplacementRange(abstractContext);
+		String suffix = getSuffix(abstractContext);
+
+		for (IMethod method : functions) {
+			reporter.reportMethod(method, suffix, replacementRange);
 		}
 	}
 

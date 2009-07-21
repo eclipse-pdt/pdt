@@ -11,32 +11,43 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
+import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPVersion;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ArrayKeyContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.language.PHPVariables;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeField;
 
 /**
  * This strategy completes builtin array keys, like in _SERVER.
+ * 
  * @author michael
  */
 public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 
-	protected final static String[] SERVER_VARS = { "DOCUMENT_ROOT", "GATEWAY_INTERFACE", "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING", "HTTP_ACCEPT_LANGUAGE", "HTTP_CONNECTION", "HTTP_HOST", "HTTP_USER_AGENT", "PATH", "PATH_TRANSLATED", "PHP_SELF", "QUERY_STRING", "REMOTE_ADDR", "REMOTE_PORT",
-		"REQUEST_METHOD", "REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME", "SERVER_ADDR", "SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT", "SERVER_PROTOCOL", "SERVER_SIGNATURE", "SERVER_SOFTWARE", };
+	protected final static String[] SERVER_VARS = { "DOCUMENT_ROOT",
+			"GATEWAY_INTERFACE", "HTTP_ACCEPT", "HTTP_ACCEPT_ENCODING",
+			"HTTP_ACCEPT_LANGUAGE", "HTTP_CONNECTION", "HTTP_HOST",
+			"HTTP_USER_AGENT", "PATH", "PATH_TRANSLATED", "PHP_SELF",
+			"QUERY_STRING", "REMOTE_ADDR", "REMOTE_PORT", "REQUEST_METHOD",
+			"REQUEST_URI", "SCRIPT_FILENAME", "SCRIPT_NAME", "SERVER_ADDR",
+			"SERVER_ADMIN", "SERVER_NAME", "SERVER_PORT", "SERVER_PROTOCOL",
+			"SERVER_SIGNATURE", "SERVER_SOFTWARE", };
 
 	protected final static String[] SESSION_VARS = { "SID" };
-	
-	
-	public BuiltinArrayKeysStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public BuiltinArrayKeysStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -57,42 +68,60 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 		String prefix = arrayContext.getPrefix();
 
 		// report server variables:
-		if (arrayVarName.equals("$_SERVER") || arrayVarName.equals("$HTTP_SERVER_VARS")) { //NON-NLS-1 //NON-NLS-2
+		if (arrayVarName.equals("$_SERVER")
+				|| arrayVarName.equals("$HTTP_SERVER_VARS")) { // NON-NLS-1
+			// //NON-NLS-2
 			reportVariables(reporter, arrayContext, SERVER_VARS, prefix);
 		}
 		// report session variables:
-		else if (arrayVarName.equals("$_SESSION") || arrayVarName.equals("$HTTP_SESSION_VARS")) { //NON-NLS-1 //NON-NLS-2
+		else if (arrayVarName.equals("$_SESSION")
+				|| arrayVarName.equals("$HTTP_SESSION_VARS")) { // NON-NLS-1
+			// //NON-NLS-2
 			reportVariables(reporter, arrayContext, SESSION_VARS, prefix);
 		}
 		// report global variables in special globals array:
-		else if (arrayVarName.equals("$GLOBALS")) { //NON-NLS-1
-			int mask = CodeAssistUtils.EXCLUDE_CONSTANTS;
+		else if (arrayVarName.equals("$GLOBALS")) { // NON-NLS-1
+
+			int[] flags = { Modifiers.AccGlobal, ~Modifiers.AccConstant };
+			MatchRule matchRule = MatchRule.PREFIX;
 			if (requestor.isContextInformationMode()) {
-				mask |= CodeAssistUtils.EXACT_NAME;
+				matchRule = MatchRule.EXACT;
 			}
-			IModelElement[] elements = CodeAssistUtils.getGlobalFields(arrayContext.getSourceModule(), prefix, mask);
+			IDLTKSearchScope scope = SearchEngine
+					.createSearchScope(arrayContext.getSourceModule()
+							.getScriptProject());
+			IField[] elements = PhpModelAccess.getDefault().findFields(prefix,
+					matchRule, flags, scope, null);
+
 			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {
 				IField field = (IField) element;
 				try {
 					ISourceRange sourceRange = field.getSourceRange();
-					FakeField fakeField = new FakeField((ModelElement) field.getParent(), field.getElementName().substring(1), sourceRange.getOffset(), sourceRange.getLength());
-					reporter.reportField(fakeField, "", replaceRange, true); //NON-NLS-1
+					FakeField fakeField = new FakeField((ModelElement) field
+							.getParent(), field.getElementName().substring(1),
+							sourceRange.getOffset(), sourceRange.getLength());
+					reporter.reportField(fakeField, "", replaceRange, true); // NON-NLS-1
 				} catch (ModelException e) {
 					PHPCorePlugin.log(e);
 				}
 			}
 
 			PHPVersion phpVersion = arrayContext.getPhpVersion();
-			reportVariables(reporter, arrayContext, PHPVariables.getVariables(phpVersion), prefix, true);
+			reportVariables(reporter, arrayContext, PHPVariables
+					.getVariables(phpVersion), prefix, true);
 		}
 	}
 
-	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables, String prefix) throws BadLocationException {
+	protected void reportVariables(ICompletionReporter reporter,
+			ArrayKeyContext context, String[] variables, String prefix)
+			throws BadLocationException {
 		reportVariables(reporter, context, variables, prefix, false);
 	}
-	
-	protected void reportVariables(ICompletionReporter reporter, ArrayKeyContext context, String[] variables, String prefix, boolean removeDollar) throws BadLocationException {
+
+	protected void reportVariables(ICompletionReporter reporter,
+			ArrayKeyContext context, String[] variables, String prefix,
+			boolean removeDollar) throws BadLocationException {
 		CompletionRequestor requestor = context.getCompletionRequestor();
 		SourceRange replaceRange = getReplacementRange(context);
 		for (String variable : variables) {
@@ -100,8 +129,11 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 				variable = variable.substring(1);
 			}
 			if (variable.startsWith(prefix)) {
-				if (!requestor.isContextInformationMode() || variable.length() == prefix.length()) {
-					reporter.reportField(new FakeField((ModelElement) context.getSourceModule(), variable, 0, 0), "", replaceRange, false); //NON-NLS-1
+				if (!requestor.isContextInformationMode()
+						|| variable.length() == prefix.length()) {
+					reporter.reportField(new FakeField((ModelElement) context
+							.getSourceModule(), variable, 0, 0), "",
+							replaceRange, false); // NON-NLS-1
 				}
 			}
 		}

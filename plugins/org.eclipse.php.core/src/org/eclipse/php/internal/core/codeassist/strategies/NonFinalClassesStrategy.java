@@ -11,35 +11,20 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
- * This strategy results like {@link GlobalClassesStrategy}, but filters final classes.
+ * This strategy results like {@link GlobalClassesStrategy}, but filters final
+ * classes.
+ * 
  * @author michael
- *
+ * 
  */
 public class NonFinalClassesStrategy extends GlobalClassesStrategy {
 
 	public NonFinalClassesStrategy(ICompletionContext context) {
-		super(context, new NonFinalClassesFilter());
-	}
-
-	static class NonFinalClassesFilter extends ClassesFilter {
-
-		public boolean filter(IModelElement element) {
-			try {
-				return super.filter(element) || PHPFlags.isFinal(((IType)element).getFlags());
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
-			return false;
-		}
-		
+		super(context, ~Modifiers.AccInterface & ~Modifiers.AccNameSpace
+				& ~Modifiers.AccFinal);
 	}
 }

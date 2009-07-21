@@ -16,32 +16,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
 import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
 import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.*;
-import org.eclipse.dltk.internal.core.AbstractSourceModule;
 import org.eclipse.dltk.internal.core.ModelElement;
-import org.eclipse.dltk.internal.core.ScriptProject;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
-import org.eclipse.php.internal.core.PHPCoreConstants;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
-import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.project.ProjectOptions;
 import org.eclipse.php.internal.core.typeinference.*;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
@@ -736,77 +729,6 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * This method searches for all classes in the project scope that match the
-	 * given prefix. If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule
-	 *            Current source module
-	 * @param prefix
-	 *            Field name
-	 * @param mask
-	 */
-	public static IType[] getGlobalTypes(ISourceModule sourceModule,
-			String prefix, int mask) {
-
-		IModelElement[] elements = getGlobalElements(sourceModule, prefix,
-				IDLTKSearchConstants.TYPE, mask);
-		List<IType> filteredElements = new LinkedList<IType>();
-		for (IModelElement c : elements) {
-			IType type = (IType) c;
-			try {
-				int flags = type.getFlags();
-				if ((mask & EXCLUDE_CLASSES) != 0 && PHPFlags.isClass(flags)) {
-					continue;
-				}
-				if ((mask & EXCLUDE_INTERFACES) != 0
-						&& PHPFlags.isInterface(flags)) {
-					continue;
-				}
-				if ((mask & EXCLUDE_NAMESPACES) != 0
-						&& PHPFlags.isNamespace(flags)) {
-					continue;
-				}
-				filteredElements.add(type);
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
-		}
-		return filteredElements.toArray(new IType[filteredElements.size()]);
-	}
-
-	/**
-	 * This method searches for all methods in the project scope that match the
-	 * given prefix. If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule
-	 *            Current source module
-	 * @param prefix
-	 *            Field name
-	 * @param mask
-	 */
-	public static IModelElement[] getGlobalMethods(ISourceModule sourceModule,
-			String prefix, int mask) {
-		return getGlobalElements(sourceModule, prefix,
-				IDLTKSearchConstants.METHOD, mask);
-	}
-
-	/**
-	 * This method searches for all fields in the project scope that match the
-	 * given prefix. By default variables is looked only in current file.
-	 * 
-	 * @param sourceModule
-	 *            Current source module
-	 * @param prefix
-	 *            Field name
-	 * @param mask
-	 */
-	public static IModelElement[] getGlobalFields(ISourceModule sourceModule,
-			String prefix, int mask) {
-		return getGlobalElements(sourceModule, prefix,
-				IDLTKSearchConstants.FIELD, mask);
-	}
-
-	/**
 	 * This method searches for all fields that where declared in the specified
 	 * method
 	 * 
@@ -899,288 +821,6 @@ public class CodeAssistUtils {
 	}
 
 	/**
-	 * This method searches in the project scope for all elements of specified
-	 * type that match the given prefix. If currentFileOnly parameter is
-	 * <code>true</code>, the search scope for variables will contain only the
-	 * source module. If the project doesn't exist, workspace scope is used.
-	 * 
-	 * @param sourceModule
-	 *            Current source module
-	 * @param prefix
-	 *            Element name or prefix
-	 * @param elementType
-	 *            Element type from {@link IDLTKSearchConstants}
-	 * @param mask
-	 * @return
-	 */
-	private static IModelElement[] getGlobalElements(
-			ISourceModule sourceModule, String prefix, int elementType, int mask) {
-
-		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-
-		IScriptProject scriptProject = sourceModule.getScriptProject();
-		if (!ScriptProject.hasScriptNature(scriptProject.getProject())) {
-			return getSourceModuleElements(sourceModule, prefix, elementType,
-					mask);
-		}
-
-		IDLTKSearchScope scope;
-		if ((mask & ONLY_CURRENT_FILE) != 0) {
-			scope = SearchEngine.createSearchScope(sourceModule);
-		} else {
-			if (scriptProject != null) {
-				scope = SearchEngine.createSearchScope(scriptProject);
-			} else {
-				scope = SearchEngine.createWorkspaceScope(toolkit);
-			}
-		}
-
-		return getGlobalElements(sourceModule, scope, prefix, elementType, mask);
-	}
-
-	/**
-	 * This method searches in the project scope for all elements of specified
-	 * type that match the given prefix. If the project doesn't exist, workspace
-	 * scope is used.
-	 * 
-	 * @param sourceModule
-	 *            Current file
-	 * @param scope
-	 *            Search scope
-	 * @param prefix
-	 *            Element name or prefix
-	 * @param elementType
-	 *            Element type from {@link IDLTKSearchConstants}
-	 * @return
-	 */
-	private static IModelElement[] getGlobalElements(
-			final ISourceModule sourceModule, final IDLTKSearchScope scope,
-			String prefix, final int elementType, final int mask) {
-
-		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-
-		boolean exactName = (mask & EXACT_NAME) != 0;
-		boolean caseSensitive = (mask & CASE_SENSITIVE) != 0;
-		boolean currentFileOnly = (mask & ONLY_CURRENT_FILE) != 0;
-
-		int matchRule;
-		if (prefix.length() == 0 && !exactName) {
-			prefix = "";// WILDCARD;
-			matchRule = SearchPattern.R_PATTERN_MATCH;
-			if (caseSensitive) {
-				matchRule |= SearchPattern.R_CASE_SENSITIVE;
-			}
-		} else {
-			if (caseSensitive) {
-				matchRule = exactName ? SearchPattern.R_EXACT_MATCH
-						: SearchPattern.R_PREFIX_MATCH;
-				matchRule |= SearchPattern.R_CASE_SENSITIVE;
-			} else {
-				matchRule = exactName ? SearchPattern.R_EXACT_MATCH
-						: SearchPattern.R_CAMELCASE_MATCH
-								| SearchPattern.R_PREFIX_MATCH;
-			}
-		}
-
-		boolean showGroupOptions = Platform.getPreferencesService().getBoolean(
-				PHPCorePlugin.ID, PHPCoreConstants.CODEASSIST_GROUP_OPTIONS,
-				false, null);
-		if (!exactName
-				&& !currentFileOnly
-				&& showGroupOptions
-				&& !prefix.startsWith("$")
-				&& (elementType == IDLTKSearchConstants.TYPE || elementType == IDLTKSearchConstants.METHOD)) {
-			return getGroupOptions(sourceModule, prefix, elementType, mask,
-					matchRule, scope);
-		}
-
-		// SearchPattern pattern = SearchPattern.createPattern(prefix,
-		// elementType, IDLTKSearchConstants.DECLARATIONS, matchRule,
-		// toolkit);
-
-		final Set<IModelElement> elements = new TreeSet<IModelElement>(
-				new AlphabeticComparator(sourceModule));
-		// if (pattern != null) {
-		if (elementType == IDLTKSearchConstants.TYPE) {
-
-			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
-					.findTypes(prefix, MatchRule.PREFIX, 0, scope, null)));
-
-		} else if (elementType == IDLTKSearchConstants.METHOD) {
-
-			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
-					.findMethods(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
-							scope, null)));
-
-		} else {
-
-			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
-					.findFields(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
-							scope, null)));
-		}
-		// }
-
-		if (!currentFileOnly) {
-			Collection<IModelElement> result = PHPModelUtils.filterElements(
-					sourceModule, elements);
-			return (IModelElement[]) result.toArray(new IModelElement[result
-					.size()]);
-		}
-		return elements.toArray(new IModelElement[elements.size()]);
-	}
-
-	private static IModelElement[] getGroupOptions(ISourceModule sourceModule,
-			String prefix, int elementType, int mask, int matchRule,
-			IDLTKSearchScope scope) {
-		final Set<IModelElement> elements = new TreeSet<IModelElement>(
-				new AlphabeticComparator());
-		Set<String> groups = new HashSet<String>();
-
-		// Build the mixin request key:
-		if (elementType == IDLTKSearchConstants.TYPE) {
-			IType[] classesAndInterfaces = PhpModelAccess.getDefault()
-					.findTypes(prefix, MatchRule.PREFIX,
-							~Modifiers.AccNameSpace, scope, null);
-			try {
-				for (IType type : classesAndInterfaces) {
-					int flags = type.getFlags();
-					if ((mask & EXCLUDE_CLASSES) == 0
-							&& PHPFlags.isClass(flags)) {
-						elements.add(type);
-					}
-					if ((mask & EXCLUDE_INTERFACES) == 0
-							&& PHPFlags.isInterface(flags)) {
-						elements.add(type);
-					}
-				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
-		} else {
-			elements.addAll(Arrays.asList(PhpModelAccess.getDefault()
-					.findMethods(prefix, MatchRule.PREFIX, Modifiers.AccGlobal,
-							scope, null)));
-		}
-
-		// Calculate minimal namespaces:
-		int prefixLength = prefix.length();
-		for (IModelElement element : elements) {
-			String elementName = element.getElementName();
-			int nsIdx = elementName.substring(prefixLength).indexOf('_');
-			if ((nsIdx >= 0 && prefixLength > 0 || prefixLength == 0
-					&& nsIdx > 0)
-					&& nsIdx < elementName.length() - 1) {
-				groups.add(elementName.substring(0, prefixLength + nsIdx));
-			}
-		}
-
-		Set<IModelElement> outOfGroupsElements = new HashSet<IModelElement>();
-		outOfGroupsElements.addAll(elements);
-
-		// Calclulate classes to search:
-		List<String> filteredGroups = new LinkedList<String>();
-		for (String group : groups) {
-			List<String> filteredElements = new LinkedList<String>();
-			for (IModelElement element : elements) {
-				String elementName = element.getElementName();
-				if (elementName.startsWith(group)) {
-					int underscore = elementName.lastIndexOf('_');
-					if (underscore == group.length()) {
-						filteredElements.add(elementName);
-					}
-					outOfGroupsElements.remove(element);
-				}
-			}
-			if (filteredElements.size() == 1) {
-				filteredGroups.add(group);
-			}
-		}
-		for (String filteredGroup : filteredGroups) {
-			groups.remove(filteredGroup);
-		}
-
-		if (groups.size() > 0) {
-			List<IModelElement> groupElements = new LinkedList<IModelElement>();
-			for (String group : groups) {
-				String fakeElementName = new StringBuilder(group).append("_*")
-						.toString();
-				if (elementType == IDLTKSearchConstants.TYPE) {
-					groupElements.add(new FakeGroupType(
-							(ModelElement) sourceModule, fakeElementName));
-				} else if (elementType == IDLTKSearchConstants.METHOD) {
-					groupElements.add(new FakeGroupMethod(
-							(ModelElement) sourceModule, fakeElementName));
-				}
-			}
-
-			// Add all elements that don't fall into any group
-			groupElements.addAll(outOfGroupsElements);
-			return (IModelElement[]) groupElements
-					.toArray(new IModelElement[groupElements.size()]);
-		}
-		return (IModelElement[]) elements.toArray(new IModelElement[elements
-				.size()]);
-	}
-
-	/**
-	 * Returns file global model elements by given prefix
-	 */
-	public static IModelElement[] getSourceModuleElements(
-			ISourceModule sourceModule, String prefix, int elementType, int mask) {
-		List<IModelElement> elements = new LinkedList<IModelElement>();
-		try {
-			switch (elementType) {
-			case IDLTKSearchConstants.TYPE:
-				IType[] types = sourceModule.getTypes();
-				for (IType type : types) {
-					String typeName = type.getElementName();
-					if ((mask & EXACT_NAME) != 0) {
-						if (typeName.equalsIgnoreCase(prefix)) {
-							elements.add(type);
-							break;
-						}
-					} else if (startsWithIgnoreCase(typeName, prefix)) {
-						elements.add(type);
-					}
-				}
-				break;
-			case IDLTKSearchConstants.METHOD:
-				IMethod[] methods = ((AbstractSourceModule) sourceModule)
-						.getMethods();
-				for (IMethod method : methods) {
-					String methodName = method.getElementName();
-					if ((mask & EXACT_NAME) != 0) {
-						if (methodName.equalsIgnoreCase(prefix)) {
-							elements.add(method);
-							break;
-						}
-					} else if (startsWithIgnoreCase(methodName, prefix)) {
-						elements.add(method);
-					}
-				}
-				break;
-			case IDLTKSearchConstants.FIELD:
-				IField[] fields = sourceModule.getFields();
-				for (IField field : fields) {
-					String fieldName = field.getElementName();
-					if ((mask & EXACT_NAME) != 0) {
-						if (fieldName.equals(prefix)) {
-							elements.add(field);
-							break;
-						}
-					} else if (fieldName.startsWith(prefix)) {
-						elements.add(field);
-					}
-				}
-				break;
-			}
-		} catch (ModelException e) {
-			PHPCorePlugin.log(e);
-		}
-		return elements.toArray(new IModelElement[elements.size()]);
-	}
-
-	/**
 	 * This class not only used for sorting elements alphabetically, but it also
 	 * gives priority to the elements declared in current file.
 	 */
@@ -1197,9 +837,6 @@ public class CodeAssistUtils {
 		}
 
 		public int compare(IModelElement o1, IModelElement o2) {
-			if (o1 instanceof FakeGroupType) {
-				return -1;
-			}
 			int r = o1.getElementName().compareTo(o2.getElementName());
 			if (r == 0) {
 				if (currentFile != null && currentFile.equals(o1.getOpenable())) {

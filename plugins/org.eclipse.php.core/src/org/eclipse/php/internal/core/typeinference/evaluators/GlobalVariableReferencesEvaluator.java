@@ -70,7 +70,8 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 
 		IField[] elements = PhpModelAccess.getDefault().findFields(
 				variableName, MatchRule.EXACT,
-				~Modifiers.AccConstant | Modifiers.AccGlobal, scope, null);
+				new int[] { ~Modifiers.AccConstant, Modifiers.AccGlobal },
+				scope, null);
 
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 

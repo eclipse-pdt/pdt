@@ -22,26 +22,34 @@ import org.eclipse.php.internal.core.compiler.ast.visitor.ASTPrintVisitor;
 
 /**
  * Represents a function declaration
- * <pre>e.g.<pre>
+ * 
+ * <pre>e.g.
+ * 
+ * <pre>
  * function foo() {}
- *
- * function &foo() {}
- *
+ * 
+ * function &amp;foo() {}
+ * 
  * function foo($a, int $b, $c = 5, int $d = 6) {}
- *
+ * 
  * function foo(); -abstract function in class declaration
  */
-public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAwareDeclaration {
+public class PHPMethodDeclaration extends MethodDeclaration implements
+		IPHPDocAwareDeclaration {
 
 	private static final List<FormalParameter> EMPTY_PARAMETERS = new LinkedList<FormalParameter>();
 	private final boolean isReference;
 	private PHPDocBlock phpDoc;
 
-	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, int modifiers, List<FormalParameter> formalParameters, Block body, final boolean isReference, PHPDocBlock phpDoc) {
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd,
+			String functionName, int modifiers,
+			List<FormalParameter> formalParameters, Block body,
+			final boolean isReference, PHPDocBlock phpDoc) {
 		super(functionName, nameStart, nameEnd, start, end);
 
 		setModifiers(modifiers);
-		acceptArguments(formalParameters == null ? EMPTY_PARAMETERS : formalParameters);
+		acceptArguments(formalParameters == null ? EMPTY_PARAMETERS
+				: formalParameters);
 		acceptBody(body);
 
 		this.isReference = isReference;
@@ -52,8 +60,11 @@ public class PHPMethodDeclaration extends MethodDeclaration implements IPHPDocAw
 		return phpDoc;
 	}
 
-	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd, String functionName, List<FormalParameter> formalParameters, Block body, final boolean isReference, PHPDocBlock phpDoc) {
-		this(start, end, nameStart, nameEnd, functionName, Modifiers.AccDefault, formalParameters, body, isReference, phpDoc);
+	public PHPMethodDeclaration(int start, int end, int nameStart, int nameEnd,
+			String functionName, List<FormalParameter> formalParameters,
+			Block body, final boolean isReference, PHPDocBlock phpDoc) {
+		this(start, end, nameStart, nameEnd, functionName, Modifiers.AccPublic,
+				formalParameters, body, isReference, phpDoc);
 	}
 
 	public boolean isReference() {

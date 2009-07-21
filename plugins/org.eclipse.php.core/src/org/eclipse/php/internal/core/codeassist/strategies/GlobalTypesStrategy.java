@@ -15,16 +15,19 @@ import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
-import org.eclipse.php.internal.core.codeassist.FakeGroupType;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
+import org.eclipse.php.internal.core.compiler.IPHPModifiers;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
 
 /**
@@ -34,13 +37,17 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
 
-	public GlobalTypesStrategy(ICompletionContext context,
-			IElementFilter elementFilter) {
-		super(context, elementFilter);
+	private final int[] flags;
+	private static final IType[] EMPTY = {};
+
+	public GlobalTypesStrategy(ICompletionContext context, int extraFlags) {
+		super(context, null);
+		this.flags = new int[] { extraFlags, ~IPHPModifiers.Internal };
 	}
 
 	public GlobalTypesStrategy(ICompletionContext context) {
-		super(context);
+		super(context, null);
+		this.flags = new int[] { ~IPHPModifiers.Internal };
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
@@ -50,21 +57,15 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 
 		IType[] types = getTypes(abstractContext);
-		IElementFilter elementFilter = getElementFilter();
 		String suffix = getSuffix(abstractContext);
 		String nsSuffix = getNSSuffix(abstractContext);
 
 		for (IType type : types) {
 			try {
 				int flags = type.getFlags();
-				if (!PHPFlags.isInternal(flags)
-						&& (elementFilter == null || !elementFilter
-								.filter(type))) {
-					reporter.reportType(type,
-							PHPFlags.isNamespace(flags) ? nsSuffix
-									: type instanceof FakeGroupType ? ""
-											: suffix, replacementRange);
-				}
+				reporter.reportType(type,
+						PHPFlags.isNamespace(flags) ? nsSuffix : suffix,
+						replacementRange);
 			} catch (ModelException e) {
 				PHPCorePlugin.log(e);
 			}
@@ -80,16 +81,18 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	 */
 	protected IType[] getTypes(AbstractCompletionContext context)
 			throws BadLocationException {
-		int mask = 0;
+
+		MatchRule matchRule = MatchRule.CAMEL_CASE;
 		if (context.getCompletionRequestor().isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
+			matchRule = MatchRule.EXACT;
 		}
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) {
-			return new IType[0];
+			return EMPTY;
 		}
-		return CodeAssistUtils.getGlobalTypes(context.getSourceModule(),
-				prefix, mask);
+		IDLTKSearchScope scope = createSearchScope();
+		return PhpModelAccess.getDefault().findTypes(prefix, matchRule, flags,
+				scope, null);
 	}
 
 	/**

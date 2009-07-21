@@ -11,34 +11,21 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.DLTKCore;
-import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.IType;
-import org.eclipse.dltk.core.ModelException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
 
 /**
- * This strategy completes namespaces 
+ * This strategy completes namespaces
+ * 
  * @author michael
  */
 public class NamespacesStrategy extends GlobalTypesStrategy {
 
 	public NamespacesStrategy(ICompletionContext context) {
-		super(context, new IElementFilter() {
-			public boolean filter(IModelElement element) {
-				try {
-					return !PHPFlags.isNamespace(((IType)element).getFlags());
-				} catch (ModelException e) {
-					PHPCorePlugin.log(e);
-				}
-				return false;
-			}
-		});
+		super(context, Modifiers.AccNameSpace);
 	}
-	
+
 	public String getNSSuffix(AbstractCompletionContext abstractContext) {
 		return ""; //$NON-NLS-1$
 	}

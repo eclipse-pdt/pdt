@@ -22,17 +22,17 @@ public interface IPHPModifiers extends Modifiers {
 	/**
 	 * Represents non-PHP language element
 	 */
-	public static final int NonPhp = 2 << Modifiers.USER_MODIFIER;
+	public static final int NonPhp = 1 << Modifiers.USER_MODIFIER;
 
 	/**
 	 * Element that has "@internal" in its PHPDoc
 	 */
-	public static final int Internal = 2 << (Modifiers.USER_MODIFIER + 1);
+	public static final int Internal = 1 << (Modifiers.USER_MODIFIER + 1);
 
 	/**
 	 * Constructor method
 	 */
-	public static final int Constructor = 2 << (Modifiers.USER_MODIFIER + 2);
+	public static final int Constructor = 1 << (Modifiers.USER_MODIFIER + 2);
 
 	public static final int USER_MODIFIER = Modifiers.USER_MODIFIER + 3;
 }

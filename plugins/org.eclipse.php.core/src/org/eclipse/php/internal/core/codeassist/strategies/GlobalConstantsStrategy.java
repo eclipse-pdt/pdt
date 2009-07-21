@@ -11,18 +11,18 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IField;
 import org.eclipse.dltk.core.IModelElement;
-import org.eclipse.dltk.core.ModelException;
+import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
+import org.eclipse.dltk.core.search.IDLTKSearchScope;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
-import org.eclipse.php.internal.core.compiler.PHPFlags;
+import org.eclipse.php.internal.core.model.PhpModelAccess;
 
 /**
  * This strategy completes global constants
@@ -47,32 +47,27 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
-		int mask = CodeAssistUtils.EXCLUDE_VARIABLES;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
-		if (isCaseSensitive()) {
-			mask |= CodeAssistUtils.CASE_SENSITIVE;
-		}
-
 		String prefix = abstractContext.getPrefix();
 		if (prefix.startsWith("$")) {
 			return;
 		}
-		SourceRange replaceRange = getReplacementRange(abstractContext);
 
-		IModelElement[] constants = CodeAssistUtils.getGlobalFields(
-				abstractContext.getSourceModule(), prefix, mask);
+		int[] flags = { Modifiers.AccGlobal, Modifiers.AccConstant };
+		MatchRule matchRule = MatchRule.PREFIX;
+		if (requestor.isContextInformationMode()) {
+			matchRule = MatchRule.EXACT;
+		}
+		IDLTKSearchScope scope = createSearchScope();
+		IModelElement[] constants = PhpModelAccess.getDefault().findFields(
+				prefix, matchRule, flags, scope, null);
+
+		if (isCaseSensitive()) {
+			constants = filterByCase(constants, prefix);
+		}
+
+		SourceRange replaceRange = getReplacementRange(abstractContext);
 		for (IModelElement constant : constants) {
-			try {
-				if (!constant.getElementName().startsWith("$")
-						&& PHPFlags.isConstant(((IField) constant).getFlags())) {
-					reporter.reportField((IField) constant, "", replaceRange,
-							false);
-				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
-			}
+			reporter.reportField((IField) constant, "", replaceRange, false);
 		}
 	}
 }

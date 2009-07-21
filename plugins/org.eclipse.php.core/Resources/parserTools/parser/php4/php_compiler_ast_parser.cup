@@ -2,7 +2,7 @@ package org.eclipse.php.internal.core.compiler.ast.parser.php4;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////    $Id: php_compiler_ast_parser.cup,v 1.21 2009/07/02 06:47:41 mspector Exp $
+////    $Id: php_compiler_ast_parser.cup,v 1.21.2.1 2009/07/21 14:56:13 mspector Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -621,7 +621,7 @@ unticked_declaration_statement:statement
 unticked_declaration_statement ::=
 T_FUNCTION:start is_reference:isReference string_st:functionName
 {:
-	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, Modifiers.AccDefault, null, new Block(functionNameright,functionNameright,null), isReference.booleanValue(), start);
+	PHPMethodDeclaration functionDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, 0, null, new Block(functionNameright,functionNameright,null), isReference.booleanValue(), start);
 	parser.addDeclarationStatement(functionDeclaration);
 	parser.declarations.push(functionDeclaration);
 :}
@@ -645,7 +645,7 @@ RESULT = statement;
 unticked_class_declaration_statement ::=
 T_CLASS:modifier T_STRING:className
 {:
-	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, Modifiers.AccDefault, className, null, null, new Block(classNameright,classNameright,null), modifier);
+	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, 0, className, null, null, new Block(classNameright,classNameright,null), modifier);
 	parser.addDeclarationStatement(classDeclaration);
 	parser.declarations.push(classDeclaration);
 :}
@@ -665,7 +665,7 @@ T_CURLY_OPEN:blockStart class_statement_list:statementList class_closure:blockEn
 :}
 | T_CLASS:modifier T_STRING:className
 {:
-	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, Modifiers.AccDefault, className, null, null, new Block(classNameright,classNameright,null), modifier);
+	ClassDeclaration classDeclaration = new ClassDeclaration(modifierleft ,classNameright, classNameleft, classNameright, 0, className, null, null, new Block(classNameright,classNameright,null), modifier);
 	parser.addDeclarationStatement(classDeclaration);
 	parser.declarations.push(classDeclaration);
 :}
@@ -1173,14 +1173,13 @@ T_VAR:modifier class_variable_declaration:decList T_SEMICOLON
         Expression initializer = (Expression)decl[1];
         int start = variable.sourceStart();
         int end = (initializer == null ? variable.sourceEnd() : initializer.sourceEnd());
-		parser.addDeclarationStatement(new PHPFieldDeclaration(variable, initializer, start, end, Modifiers.AccDefault, modifierleft, modifier));		
+		parser.addDeclarationStatement(new PHPFieldDeclaration(variable, initializer, start, end, 0, modifierleft, modifier));		
     }
 :}
 | T_FUNCTION:start is_reference:isReference string_st:functionName
 {:
-	int modifierValue = Modifiers.AccDefault;
 	PHPDocBlock docBlock = start;
-	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, modifierValue, null, new Block(functionNameright, functionNameright, null), isReference.booleanValue(), docBlock);
+	PHPMethodDeclaration methodDeclaration = new PHPMethodDeclaration(startleft, functionNameright, functionNameleft, functionNameright, functionName, 0, null, new Block(functionNameright, functionNameright, null), isReference.booleanValue(), docBlock);
 	parser.addDeclarationStatement(methodDeclaration);
 	parser.declarations.push(methodDeclaration);
 :} 
