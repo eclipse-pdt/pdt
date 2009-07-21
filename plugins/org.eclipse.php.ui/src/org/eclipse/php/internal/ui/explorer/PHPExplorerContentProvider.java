@@ -50,7 +50,6 @@ import org.eclipse.wst.jsdt.ui.project.JsNature;
 
 /**
  * 
- * 
  * @author apeled, ncohen
  * 
  */
@@ -216,7 +215,8 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
 				IDLTKSearchScope.SOURCES);
 		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				MatchRule.PREFIX, Modifiers.AccNameSpace, scope, null);
+				MatchRule.PREFIX, new int[] { Modifiers.AccNameSpace }, scope,
+				null);
 		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
 		for (IType ns : namespaces) {
 			String elementName = ns.getElementName();
