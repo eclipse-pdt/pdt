@@ -32,7 +32,7 @@ public class PhpModelAccess extends ModelAccess {
 
 		List<IField> result = new LinkedList<IField>();
 		if (!findElements(IModelElement.IMPORT_DECLARATION, name,
-				MatchRule.EXACT, null, scope, result, null)) {
+				MatchRule.EXACT, 0, 0, scope, result, null)) {
 			return null;
 		}
 		return (IField[]) result.toArray(new IField[result.size()]);

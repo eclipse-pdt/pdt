@@ -15,7 +15,6 @@ import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.*;
 import org.eclipse.dltk.core.index2.search.ISearchEngine.MatchRule;
 import org.eclipse.dltk.core.search.IDLTKSearchScope;
-import org.eclipse.dltk.core.search.SearchEngine;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -82,16 +81,14 @@ public class BuiltinArrayKeysStrategy extends AbstractCompletionStrategy {
 		// report global variables in special globals array:
 		else if (arrayVarName.equals("$GLOBALS")) { // NON-NLS-1
 
-			int[] flags = { Modifiers.AccGlobal, ~Modifiers.AccConstant };
 			MatchRule matchRule = MatchRule.PREFIX;
 			if (requestor.isContextInformationMode()) {
 				matchRule = MatchRule.EXACT;
 			}
-			IDLTKSearchScope scope = SearchEngine
-					.createSearchScope(arrayContext.getSourceModule()
-							.getScriptProject());
+			IDLTKSearchScope scope = createSearchScope();
 			IField[] elements = PhpModelAccess.getDefault().findFields(prefix,
-					matchRule, flags, scope, null);
+					matchRule, Modifiers.AccGlobal, Modifiers.AccConstant,
+					scope, null);
 
 			SourceRange replaceRange = getReplacementRange(arrayContext);
 			for (IModelElement element : elements) {

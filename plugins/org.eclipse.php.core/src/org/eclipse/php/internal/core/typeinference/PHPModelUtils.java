@@ -625,7 +625,7 @@ public class PHPModelUtils {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
 		IType[] types = PhpModelAccess.getDefault().findTypes(typeName,
-				MatchRule.EXACT, null, scope, null);
+				MatchRule.EXACT, 0, 0, scope, null);
 
 		List<IType> result = new ArrayList<IType>(types.length);
 		for (IType type : types) {
@@ -689,8 +689,8 @@ public class PHPModelUtils {
 				IDLTKSearchScope scope = SearchEngine
 						.createSearchScope(sourceModule.getScriptProject());
 				IMethod[] functions = PhpModelAccess.getDefault().findMethods(
-						functionName, MatchRule.EXACT,
-						new int[] { Modifiers.AccGlobal }, scope, null);
+						functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0,
+						scope, null);
 
 				Collection<IMethod> filteredElements = filterElements(
 						sourceModule, Arrays.asList(functions));
@@ -702,8 +702,8 @@ public class PHPModelUtils {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
 		IMethod[] functions = PhpModelAccess.getDefault().findMethods(
-				functionName, MatchRule.EXACT,
-				new int[] { Modifiers.AccGlobal }, scope, null);
+				functionName, MatchRule.EXACT, Modifiers.AccGlobal, 0, scope,
+				null);
 
 		Collection<IMethod> filteredElements = filterElements(sourceModule,
 				Arrays.asList(functions));
@@ -763,10 +763,9 @@ public class PHPModelUtils {
 					IDLTKSearchScope scope = SearchEngine
 							.createSearchScope(sourceModule.getScriptProject());
 					IField[] fields = PhpModelAccess.getDefault().findFields(
-							fieldName,
-							MatchRule.EXACT,
-							new int[] { Modifiers.AccConstant
-									| Modifiers.AccGlobal }, scope, null);
+							fieldName, MatchRule.EXACT,
+							Modifiers.AccConstant | Modifiers.AccGlobal, 0,
+							scope, null);
 
 					Collection<IField> filteredElements = filterElements(
 							sourceModule, Arrays.asList(fields));
@@ -777,9 +776,8 @@ public class PHPModelUtils {
 		}
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
-		IField[] fields = PhpModelAccess.getDefault()
-				.findFields(fieldName, MatchRule.EXACT,
-						new int[] { Modifiers.AccGlobal }, scope, null);
+		IField[] fields = PhpModelAccess.getDefault().findFields(fieldName,
+				MatchRule.EXACT, Modifiers.AccGlobal, 0, scope, null);
 
 		Collection<IField> filteredElements = filterElements(sourceModule,
 				Arrays.asList(fields));
@@ -850,8 +848,7 @@ public class PHPModelUtils {
 			IDLTKSearchScope scope = SearchEngine
 					.createSearchScope(sourceModule.getScriptProject());
 			return PhpModelAccess.getDefault().findTypes(namespace,
-					MatchRule.EXACT, new int[] { Modifiers.AccNameSpace },
-					scope, null);
+					MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 		}
 		return null;
 	}
@@ -957,8 +954,7 @@ public class PHPModelUtils {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
 		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
-				MatchRule.EXACT, new int[] { Modifiers.AccNameSpace }, scope,
-				null);
+				MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 
 		for (IType ns : namespaces) {
 			IType type = PHPModelUtils.getTypeType(ns, typeName);
@@ -989,8 +985,7 @@ public class PHPModelUtils {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
 		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
-				MatchRule.EXACT, new int[] { Modifiers.AccNameSpace }, scope,
-				null);
+				MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 
 		for (IType ns : namespaces) {
 			IMethod function = PHPModelUtils.getTypeMethod(ns, functionName);
@@ -1020,8 +1015,7 @@ public class PHPModelUtils {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(sourceModule
 				.getScriptProject());
 		IType[] namespaces = PhpModelAccess.getDefault().findTypes(namespace,
-				MatchRule.EXACT, new int[] { Modifiers.AccNameSpace }, scope,
-				null);
+				MatchRule.EXACT, Modifiers.AccNameSpace, 0, scope, null);
 
 		for (IType ns : namespaces) {
 			IField field = PHPModelUtils.getTypeField(ns, fieldName);

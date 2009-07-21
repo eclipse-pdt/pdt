@@ -52,14 +52,14 @@ public class GlobalConstantsStrategy extends GlobalElementStrategy {
 			return;
 		}
 
-		int[] flags = { Modifiers.AccGlobal, Modifiers.AccConstant };
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
 		IModelElement[] constants = PhpModelAccess.getDefault().findFields(
-				prefix, matchRule, flags, scope, null);
+				prefix, matchRule, Modifiers.AccGlobal | Modifiers.AccConstant,
+				0, scope, null);
 
 		if (isCaseSensitive()) {
 			constants = filterByCase(constants, prefix);

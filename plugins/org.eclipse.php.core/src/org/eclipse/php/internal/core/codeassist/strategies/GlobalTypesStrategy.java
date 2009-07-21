@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.eclipse.dltk.core.IMethod;
 import org.eclipse.dltk.core.ISourceRange;
 import org.eclipse.dltk.core.IType;
@@ -23,6 +27,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.CodeAssistUtils;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils.AlphabeticComparator;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.IPHPModifiers;
@@ -37,17 +42,16 @@ import org.eclipse.php.internal.core.typeinference.FakeMethod;
  */
 public class GlobalTypesStrategy extends GlobalElementStrategy {
 
-	private final int[] flags;
+	private final int typeFlag;
 	private static final IType[] EMPTY = {};
 
-	public GlobalTypesStrategy(ICompletionContext context, int extraFlags) {
+	public GlobalTypesStrategy(ICompletionContext context, int typeFlag) {
 		super(context, null);
-		this.flags = new int[] { extraFlags, ~IPHPModifiers.Internal };
+		this.typeFlag = typeFlag;
 	}
 
 	public GlobalTypesStrategy(ICompletionContext context) {
-		super(context, null);
-		this.flags = new int[] { ~IPHPModifiers.Internal };
+		this(context, 0);
 	}
 
 	public void apply(ICompletionReporter reporter) throws BadLocationException {
@@ -82,17 +86,32 @@ public class GlobalTypesStrategy extends GlobalElementStrategy {
 	protected IType[] getTypes(AbstractCompletionContext context)
 			throws BadLocationException {
 
-		MatchRule matchRule = MatchRule.CAMEL_CASE;
-		if (context.getCompletionRequestor().isContextInformationMode()) {
-			matchRule = MatchRule.EXACT;
-		}
 		String prefix = context.getPrefix();
 		if (prefix.startsWith("$")) {
 			return EMPTY;
 		}
+
 		IDLTKSearchScope scope = createSearchScope();
-		return PhpModelAccess.getDefault().findTypes(prefix, matchRule, flags,
-				scope, null);
+		if (context.getCompletionRequestor().isContextInformationMode()) {
+			return PhpModelAccess.getDefault().findTypes(prefix,
+					MatchRule.EXACT, typeFlag, IPHPModifiers.Internal, scope,
+					null);
+		}
+
+		Set<IType> result = new TreeSet<IType>(new AlphabeticComparator());
+		if (prefix.length() > 1 && prefix.toUpperCase().equals(prefix)) {
+			// Search by camel-case
+			IType[] types = PhpModelAccess.getDefault().findTypes(prefix,
+					MatchRule.CAMEL_CASE, typeFlag, IPHPModifiers.Internal,
+					scope, null);
+			result.addAll(Arrays.asList(types));
+		}
+		IType[] types = PhpModelAccess.getDefault()
+				.findTypes(prefix, MatchRule.PREFIX, typeFlag,
+						IPHPModifiers.Internal, scope, null);
+		result.addAll(Arrays.asList(types));
+
+		return (IType[]) result.toArray(new IType[result.size()]);
 	}
 
 	/**

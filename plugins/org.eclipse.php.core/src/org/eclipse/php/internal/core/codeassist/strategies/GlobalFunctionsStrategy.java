@@ -11,6 +11,10 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.core.CompletionRequestor;
 import org.eclipse.dltk.core.IMethod;
@@ -20,6 +24,7 @@ import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
 import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
+import org.eclipse.php.internal.core.codeassist.CodeAssistUtils.AlphabeticComparator;
 import org.eclipse.php.internal.core.codeassist.contexts.AbstractCompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.compiler.IPHPModifiers;
@@ -49,14 +54,17 @@ public class GlobalFunctionsStrategy extends GlobalElementStrategy {
 			return;
 		}
 
-		int[] flags = { Modifiers.AccGlobal, ~IPHPModifiers.Internal };
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
 			matchRule = MatchRule.EXACT;
 		}
 		IDLTKSearchScope scope = createSearchScope();
-		IMethod[] functions = PhpModelAccess.getDefault().findMethods(prefix,
-				matchRule, flags, scope, null);
+
+		Set<IMethod> functions = new TreeSet<IMethod>(
+				new AlphabeticComparator());
+		functions.addAll(Arrays.asList(PhpModelAccess.getDefault().findMethods(
+				prefix, matchRule, Modifiers.AccGlobal, IPHPModifiers.Internal,
+				scope, null)));
 
 		SourceRange replacementRange = getReplacementRange(abstractContext);
 		String suffix = getSuffix(abstractContext);

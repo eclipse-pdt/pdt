@@ -69,9 +69,8 @@ public class GlobalVariableReferencesEvaluator extends GoalEvaluator {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(scriptProject);
 
 		IField[] elements = PhpModelAccess.getDefault().findFields(
-				variableName, MatchRule.EXACT,
-				new int[] { ~Modifiers.AccConstant, Modifiers.AccGlobal },
-				scope, null);
+				variableName, MatchRule.EXACT, Modifiers.AccGlobal,
+				Modifiers.AccConstant, scope, null);
 
 		Map<ISourceModule, SortedSet<ISourceRange>> offsets = new HashMap<ISourceModule, SortedSet<ISourceRange>>();
 

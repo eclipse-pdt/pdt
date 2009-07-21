@@ -65,7 +65,6 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 		CompletionRequestor requestor = abstractContext
 				.getCompletionRequestor();
 
-		int[] flags = { Modifiers.AccGlobal, ~Modifiers.AccConstant };
 		MatchRule matchRule = MatchRule.PREFIX;
 		if (requestor.isContextInformationMode()) {
 			matchRule = MatchRule.EXACT;
@@ -73,7 +72,8 @@ public class GlobalVariablesStrategy extends GlobalElementStrategy {
 
 		IDLTKSearchScope scope = createSearchScope();
 		IField[] fields = PhpModelAccess.getDefault().findFields(prefix,
-				matchRule, flags, scope, null);
+				matchRule, Modifiers.AccGlobal, Modifiers.AccConstant, scope,
+				null);
 		Arrays.sort(fields, new CodeAssistUtils.AlphabeticComparator());
 
 		SourceRange replaceRange = getReplacementRange(context);

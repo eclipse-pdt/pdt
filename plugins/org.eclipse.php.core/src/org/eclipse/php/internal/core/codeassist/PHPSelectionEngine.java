@@ -322,9 +322,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.createSearchScope(sourceModule
 										.getScriptProject());
 						types = PhpModelAccess.getDefault().findTypes(name,
-								MatchRule.EXACT,
-								new int[] { Modifiers.AccNameSpace }, scope,
-								null);
+								MatchRule.EXACT, Modifiers.AccNameSpace, 0,
+								scope, null);
 						if (types == null || types.length == 0) {
 							return PHPModelUtils.getFields(name, sourceModule,
 									offset);
@@ -574,8 +573,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 											.getScriptProject());
 							return PhpModelAccess.getDefault().findTypes(
 									elementName, MatchRule.EXACT,
-									new int[] { Modifiers.AccNameSpace },
-									scope, null);
+									Modifiers.AccNameSpace, 0, scope, null);
 						}
 
 						IType[] types = CodeAssistUtils.getTypesFor(

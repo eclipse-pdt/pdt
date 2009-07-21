@@ -60,46 +60,6 @@ public class CodeAssistUtils {
 	public static final int EXACT_NAME = 1 << 0;
 
 	/**
-	 * Whether the match will be case-sensitive
-	 */
-	public static final int CASE_SENSITIVE = 1 << 1;
-
-	/**
-	 * Whether to retrieve only current file elements
-	 */
-	public static final int ONLY_CURRENT_FILE = 1 << 2;
-
-	/**
-	 * Exclude classes when looking for types in
-	 * {@link #getGlobalTypes(ISourceModule, String, int)}
-	 */
-	public static final int EXCLUDE_CLASSES = 1 << 3;
-
-	/**
-	 * Exclude interfaces when looking for types in
-	 * {@link #getGlobalTypes(ISourceModule, String, int)}
-	 */
-	public static final int EXCLUDE_INTERFACES = 1 << 4;
-
-	/**
-	 * Exclude namespaces when looking for types in
-	 * {@link #getGlobalTypes(ISourceModule, String, int)}
-	 */
-	public static final int EXCLUDE_NAMESPACES = 1 << 5;
-
-	/**
-	 * Exclude constants when looking for fields in
-	 * {@link #getGlobalFields(ISourceModule, String, int)}
-	 */
-	public static final int EXCLUDE_CONSTANTS = 1 << 6;
-
-	/**
-	 * Exclude variables (retreive only constants) when looking for fields in
-	 * {@link #getGlobalFields(ISourceModule, String, int)}
-	 */
-	public static final int EXCLUDE_VARIABLES = 1 << 7;
-
-	/**
 	 * Whether to use PHPDoc in type inference
 	 */
 	public static final int USE_PHPDOC = 1 << 5;
@@ -281,7 +241,6 @@ public class CodeAssistUtils {
 			String prefix, int mask) {
 
 		boolean exactName = (mask & EXACT_NAME) != 0;
-		boolean searchConstants = (mask & EXCLUDE_CONSTANTS) == 0;
 
 		final Set<IField> fields = new TreeSet<IField>(
 				new AlphabeticComparator());
@@ -304,9 +263,6 @@ public class CodeAssistUtils {
 					String elementName = typeField.getElementName();
 					int flags = typeField.getFlags();
 					if (PHPFlags.isConstant(flags)) {
-						if (!searchConstants) {
-							continue;
-						}
 						if (exactName) {
 							if (elementName.equals(prefix)) {
 								fields.add(typeField);
