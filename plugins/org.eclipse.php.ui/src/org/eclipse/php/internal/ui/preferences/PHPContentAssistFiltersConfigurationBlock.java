@@ -20,25 +20,33 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- *
+ * 
  * @author guy.g
- *
+ * 
  */
-public class PHPContentAssistFiltersConfigurationBlock extends AbstractPHPContentAssistPreferencePageBlock {
+public class PHPContentAssistFiltersConfigurationBlock extends
+		AbstractPHPContentAssistPreferencePageBlock {
 
 	protected Button caseSensitivityCheckBox;
 	protected Button showStrictOptionsCheckBox;
-	protected Button groupCompletionsCheckBox;
 
 	public void setCompositeAddon(Composite parent) {
-		Composite composite = createSubsection(parent, PHPUIMessages.getString("CodeAssistPreferencePage_filtersSectionLabel"));
-		caseSensitivityCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_caseSensitiveForConstants"), PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
-		showStrictOptionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_showStrictOptions"), PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); //$NON-NLS-1$
-		groupCompletionsCheckBox = addCheckBox(composite, PHPUIMessages.getString("CodeAssistPreferencePage_groupCompletionOptions"), PHPCoreConstants.CODEASSIST_GROUP_OPTIONS, 0); //$NON-NLS-1$
+		Composite composite = createSubsection(parent, PHPUIMessages
+				.getString("CodeAssistPreferencePage_filtersSectionLabel"));
+		caseSensitivityCheckBox = addCheckBox(
+				composite,
+				PHPUIMessages
+						.getString("CodeAssistPreferencePage_caseSensitiveForConstants"),
+				PHPCoreConstants.CODEASSIST_CASE_SENSITIVITY, 0);
+		showStrictOptionsCheckBox = addCheckBox(
+				composite,
+				PHPUIMessages
+						.getString("CodeAssistPreferencePage_showStrictOptions"), PHPCoreConstants.CODEASSIST_SHOW_STRICT_OPTIONS, 0); //$NON-NLS-1$
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		return new PreferencesAdapter(PHPCorePlugin.getDefault().getPluginPreferences());
+		return new PreferencesAdapter(PHPCorePlugin.getDefault()
+				.getPluginPreferences());
 	}
 
 	protected void storeValues() {

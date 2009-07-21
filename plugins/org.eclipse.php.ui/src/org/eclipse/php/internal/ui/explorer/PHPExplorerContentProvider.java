@@ -215,8 +215,7 @@ public class PHPExplorerContentProvider extends ScriptExplorerContentProvider
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(project,
 				IDLTKSearchScope.SOURCES);
 		IType[] namespaces = PhpModelAccess.getDefault().findTypes(null,
-				MatchRule.PREFIX, new int[] { Modifiers.AccNameSpace }, scope,
-				null);
+				MatchRule.PREFIX, Modifiers.AccNameSpace, 0, scope, null);
 		Map<String, List<IType>> aggregated = new HashMap<String, List<IType>>();
 		for (IType ns : namespaces) {
 			String elementName = ns.getElementName();

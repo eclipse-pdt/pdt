@@ -86,32 +86,26 @@ public enum ProjectOutlineGroups {
 			case GROUP_NAMESPACES:
 				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
 						.findTypes(null, MatchRule.PREFIX,
-								new int[] { Modifiers.AccNameSpace }, scope,
-								null)));
+								Modifiers.AccNameSpace, 0, scope, null)));
 				break;
 
 			case GROUP_CLASSES:
 				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
-						.findTypes(null, MatchRule.PREFIX,
-								new int[] { ~Modifiers.AccNameSpace }, scope,
-								null)));
+						.findTypes(null, MatchRule.PREFIX, 0,
+								Modifiers.AccNameSpace, scope, null)));
 				break;
 
 			case GROUP_FUNCTIONS:
-				childrenList
-						.addAll(Arrays.asList(PhpModelAccess.getDefault()
-								.findMethods(null, MatchRule.PREFIX,
-										new int[] { Modifiers.AccGlobal },
-										scope, null)));
+				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
+						.findMethods(null, MatchRule.PREFIX,
+								Modifiers.AccGlobal, 0, scope, null)));
 				break;
 
 			case GROUP_CONSTANTS:
 				childrenList.addAll(Arrays.asList(PhpModelAccess.getDefault()
-						.findFields(
-								null,
-								MatchRule.PREFIX,
-								new int[] { Modifiers.AccConstant,
-										Modifiers.AccGlobal }, scope, null)));
+						.findFields(null, MatchRule.PREFIX,
+								Modifiers.AccConstant | Modifiers.AccGlobal, 0,
+								scope, null)));
 				break;
 			}
 			return childrenList.toArray();
