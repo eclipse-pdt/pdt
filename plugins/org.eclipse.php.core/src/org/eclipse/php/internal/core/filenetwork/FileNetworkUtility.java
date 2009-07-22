@@ -107,6 +107,12 @@ public class FileNetworkUtility {
 		// Find all includes to the current source module in mixin:
 		IField[] includes = PhpModelAccess.getDefault().findIncludes(
 				file.getPath().lastSegment(), scope);
+		Arrays.sort(includes, new Comparator<IField>() {
+			public int compare(IField o1, IField o2) {
+				return o1.getElementName().compareTo(o2.getElementName());
+			}
+		});
+
 		for (IField include : includes) {
 
 			// Candidate that includes the original source module:

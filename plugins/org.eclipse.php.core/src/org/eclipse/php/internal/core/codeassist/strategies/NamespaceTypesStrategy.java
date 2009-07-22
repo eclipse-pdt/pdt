@@ -14,7 +14,6 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.dltk.core.DLTKCore;
 import org.eclipse.dltk.core.IType;
 import org.eclipse.dltk.core.ModelException;
 import org.eclipse.dltk.internal.core.SourceRange;
@@ -28,11 +27,13 @@ import org.eclipse.php.internal.core.codeassist.contexts.NamespaceMemberContext;
 
 /**
  * This strategy completes namespace classes and interfaces
+ * 
  * @author michael
  */
 public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
-	
-	public NamespaceTypesStrategy(ICompletionContext context, IElementFilter elementFilter) {
+
+	public NamespaceTypesStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -54,15 +55,17 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 			reporter.reportType(type, suffix, replaceRange);
 		}
 	}
-	
-	public IType[] getTypes(NamespaceMemberContext context) throws BadLocationException {
+
+	public IType[] getTypes(NamespaceMemberContext context)
+			throws BadLocationException {
 		String prefix = context.getPrefix();
 
 		List<IType> result = new LinkedList<IType>();
 		for (IType ns : context.getNamespaces()) {
 			try {
 				for (IType type : ns.getTypes()) {
-					if (CodeAssistUtils.startsWithIgnoreCase(type.getElementName(), prefix)) {
+					if (CodeAssistUtils.startsWithIgnoreCase(type
+							.getElementName(), prefix)) {
 						result.add(type);
 					}
 				}
@@ -72,15 +75,17 @@ public class NamespaceTypesStrategy extends NamespaceMembersStrategy {
 		}
 		return (IType[]) result.toArray(new IType[result.size()]);
 	}
-	
-	public SourceRange getReplacementRange(ICompletionContext context) throws BadLocationException {
+
+	public SourceRange getReplacementRange(ICompletionContext context)
+			throws BadLocationException {
 		SourceRange replacementRange = super.getReplacementRange(context);
 		if (replacementRange.getLength() > 0) {
-			return new SourceRange(replacementRange.getOffset(), replacementRange.getLength() - 1);
+			return new SourceRange(replacementRange.getOffset(),
+					replacementRange.getLength() - 1);
 		}
 		return replacementRange;
 	}
-	
+
 	public String getSuffix(AbstractCompletionContext abstractContext) {
 		String nextWord = null;
 		try {
