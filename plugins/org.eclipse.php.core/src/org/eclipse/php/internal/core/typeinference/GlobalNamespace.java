@@ -55,7 +55,7 @@ public class GlobalNamespace extends SourceType {
 		IDLTKSearchScope scope = SearchEngine.createSearchScope(getParent(),
 				IDLTKSearchScope.SOURCES);
 		return PhpModelAccess.getDefault().findTypes(null, MatchRule.PREFIX,
-				Modifiers.AccGlobal, 0, scope, null);
+				Modifiers.AccGlobal, Modifiers.AccNameSpace, scope, null);
 	}
 
 	public IModelElement[] getChildren() throws ModelException {
