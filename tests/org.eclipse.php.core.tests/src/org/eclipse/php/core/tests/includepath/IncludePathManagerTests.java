@@ -27,6 +27,7 @@ import org.eclipse.dltk.core.IScriptProject;
 import org.eclipse.dltk.core.environment.EnvironmentPathUtils;
 import org.eclipse.dltk.core.internal.environment.LocalEnvironment;
 import org.eclipse.dltk.core.tests.model.SuiteOfTestCases;
+import org.eclipse.php.internal.core.includepath.IIncludepathListener;
 import org.eclipse.php.internal.core.includepath.IncludePath;
 import org.eclipse.php.internal.core.includepath.IncludePathManager;
 import org.eclipse.php.internal.core.project.PHPNature;
@@ -38,7 +39,7 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 	public IncludePathManagerTests(String name) {
 		super(name);
 	}
-	
+
 	public static TestSuite suite() {
 		return new Suite(IncludePathManagerTests.class);
 	}
@@ -47,7 +48,8 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 		// Initialize include path manager:
 		IncludePathManager.getInstance();
 
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("IncludePathManagerTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"IncludePathManagerTests");
 		if (project.exists()) {
 			return;
 		}
@@ -59,7 +61,7 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 		IProjectDescription desc = project.getDescription();
 		desc.setNatureIds(new String[] { PHPNature.ID });
 		project.setDescription(desc, null);
-		
+
 		super.setUpSuite();
 	}
 
@@ -67,61 +69,100 @@ public class IncludePathManagerTests extends SuiteOfTestCases {
 		project.delete(true, null);
 		super.tearDownSuite();
 	}
-	
+
 	public void testIncludePathGet() throws Exception {
 		IScriptProject scriptProject = DLTKCore.create(project);
 		scriptProject.setRawBuildpath(new IBuildpathEntry[0], null);
 
-		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
+		IncludePath[] includePath = IncludePathManager.getInstance()
+				.getIncludePaths(project);
 		Assert.assertTrue(includePath.length == 0);
 	}
 
-	// This test checks how buildpath changes are not propogated to the include path:
+	// This test checks how buildpath changes are not propogated to the include
+	// path:
 	public void testIncludePathGetAfterBPChange1() throws Exception {
 		IFolder folder = project.getFolder("a");
 		folder.create(true, true, null);
-		
+
 		IScriptProject scriptProject = DLTKCore.create(project);
-		scriptProject.setRawBuildpath(new IBuildpathEntry[] {
-			DLTKCore.newSourceEntry(folder.getFullPath()) 
-		}, null);
-		
-		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
+		scriptProject.setRawBuildpath(new IBuildpathEntry[] { DLTKCore
+				.newSourceEntry(folder.getFullPath()) }, null);
+
+		IncludePath[] includePath = IncludePathManager.getInstance()
+				.getIncludePaths(project);
 		Assert.assertTrue(includePath.length == 0);
 	}
-	
-	// This test checks how buildpath changes are propogated to the include path:
+
+	// This test checks how buildpath changes are propogated to the include
+	// path:
 	public void testIncludePathGetAfterBPChange2() throws Exception {
-		String libraryPath = Platform.OS_WIN32.equals(Platform.getOS()) ? "C:\\Projects\\MyLibrary" : "/var/www/MyLibrary";
-		
+		String libraryPath = Platform.OS_WIN32.equals(Platform.getOS()) ? "C:\\Projects\\MyLibrary"
+				: "/var/www/MyLibrary";
+
 		IScriptProject scriptProject = DLTKCore.create(project);
-		scriptProject.setRawBuildpath(new IBuildpathEntry[] {
-			DLTKCore.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(LocalEnvironment.getInstance(), new Path(libraryPath))) 
-		}, null);
-		
-		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
-		
+		scriptProject.setRawBuildpath(
+				new IBuildpathEntry[] { DLTKCore
+						.newExtLibraryEntry(EnvironmentPathUtils.getFullPath(
+								LocalEnvironment.getInstance(), new Path(
+										libraryPath))) }, null);
+
+		IncludePath[] includePath = IncludePathManager.getInstance()
+				.getIncludePaths(project);
+
 		Assert.assertTrue(includePath.length == 1);
 		Assert.assertTrue(includePath[0].isBuildpath());
-		Assert.assertEquals(EnvironmentPathUtils.getLocalPath(((IBuildpathEntry)includePath[0].getEntry()).getPath()).toOSString(), libraryPath);
+		Assert.assertEquals(EnvironmentPathUtils.getLocalPath(
+				((IBuildpathEntry) includePath[0].getEntry()).getPath())
+				.toOSString(), libraryPath);
 	}
 
 	// This test checks how include path changes are saved:
 	public void testIncludePathSet() throws Exception {
 		IFolder folder = project.getFolder("a").getFolder("b");
 		folder.create(true, true, null);
-		
+
 		// Add new resource to the include path:
-		IncludePath[] includePath = IncludePathManager.getInstance().getIncludePaths(project);
+		IncludePathManager manager = IncludePathManager.getInstance();
+		IncludePath[] includePath = manager.getIncludePaths(project);
 		int count = includePath.length;
-		System.arraycopy(includePath, 0, includePath = new IncludePath[count + 1], 0, count);
+		System.arraycopy(includePath, 0,
+				includePath = new IncludePath[count + 1], 0, count);
 		includePath[count] = new IncludePath(folder, project);
-		IncludePathManager.getInstance().setIncludePath(project, includePath);
-		
-		includePath = IncludePathManager.getInstance().getIncludePaths(project);
-		
-		Assert.assertTrue(includePath.length == 1);
-		Assert.assertFalse(includePath[0].isBuildpath());
-		Assert.assertEquals(((IResource)includePath[0].getEntry()), folder);
+
+		setIncludePath(manager, includePath);
+		includePath = manager.getIncludePaths(project);
+
+		Assert.assertTrue(includePath.length == 2);
+		Assert.assertFalse(includePath[1].isBuildpath());
+		Assert.assertEquals(((IResource) includePath[1].getEntry()), folder);
+	}
+
+	private void setIncludePath(IncludePathManager manager,
+			IncludePath[] includePath) {
+		IncludePathWaiter waiter = new IncludePathWaiter();
+		manager.registerIncludepathListener(waiter);
+		manager.setIncludePath(project, includePath);
+		waiter.run();
+
+		manager.unregisterIncludepathListener(waiter);
+	}
+
+	class IncludePathWaiter implements IIncludepathListener, Runnable {
+
+		private boolean refreshed;
+
+		public void refresh(IProject project) {
+			this.refreshed = true;
+		}
+
+		public void run() {
+			while (!refreshed) {
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
 	}
 }

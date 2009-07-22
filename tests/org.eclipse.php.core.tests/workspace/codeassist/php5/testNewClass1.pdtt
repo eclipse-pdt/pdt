@@ -4,7 +4,7 @@ Test New Class
 <?
 class MyClass1 {}
 class MyClass2 {}
-class MyClass3 { private function __construct() {} }
+//class MyClass3 { private function __construct() {} }
 $a = new MyClass|
 ?>
 --EXPECT--
