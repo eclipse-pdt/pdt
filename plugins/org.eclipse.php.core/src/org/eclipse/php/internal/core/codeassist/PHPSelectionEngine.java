@@ -14,6 +14,7 @@ package org.eclipse.php.internal.core.codeassist;
 import java.util.*;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.dltk.ast.ASTNode;
 import org.eclipse.dltk.ast.Modifiers;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
@@ -188,14 +189,19 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								for (IModelElement element : elements) {
 									if (element instanceof IType) {
 										IType type = (IType) element;
-										methods
-												.addAll(Arrays
-														.asList(CodeAssistUtils
-																.getTypeMethods(
-																		type,
-																		callExpression
-																				.getName(),
-																		CodeAssistUtils.EXACT_NAME)));
+										try {
+											methods
+													.addAll(Arrays
+															.asList(PHPModelUtils
+																	.getTypeHierarchyMethod(
+																			type,
+																			callExpression
+																					.getName(),
+																			true,
+																			null)));
+										} catch (CoreException e) {
+											PHPCorePlugin.log(e);
+										}
 									}
 								}
 							}
@@ -208,7 +214,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.getFullyQualifiedName()
 								: callName.getName();
 						return PHPModelUtils.getFunctions(methodName,
-								sourceModule, offset);
+								sourceModule, offset, null);
 					}
 				}
 				// Static field or constant access:
@@ -240,12 +246,11 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									if (element instanceof IType) {
 										IType type = (IType) element;
 										try {
-											IField typeField = PHPModelUtils
-													.getTypeField(type,
-															fieldName);
-											if (typeField != null) {
-												fields.add(typeField);
-											}
+											fields.addAll(Arrays
+													.asList(PHPModelUtils
+															.getTypeField(type,
+																	fieldName,
+																	true)));
 										} catch (ModelException e) {
 											PHPCorePlugin.log(e);
 										}
@@ -281,18 +286,19 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 									if (element instanceof IType) {
 										IType type = (IType) element;
 										try {
-											IField typeField = PHPModelUtils
-													.getTypeField(type,
-															fieldName);
-											if (typeField != null) {
-												fields.add(typeField);
-											}
-											typeField = PHPModelUtils
-													.getTypeField(type,
-															'$' + fieldName);
-											if (typeField != null) {
-												fields.add(typeField);
-											}
+											fields.addAll(Arrays
+													.asList(PHPModelUtils
+															.getTypeField(type,
+																	fieldName,
+																	true)));
+
+											fields
+													.addAll(Arrays
+															.asList(PHPModelUtils
+																	.getTypeField(
+																			type,
+																			'$' + fieldName,
+																			true)));
 										} catch (ModelException e) {
 											PHPCorePlugin.log(e);
 										}
@@ -315,7 +321,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							.getFullyQualifiedName()
 							: ((TypeReference) node).getName();
 					IType[] types = PHPModelUtils.getTypes(name, sourceModule,
-							offset);
+							offset, null);
 					if (types == null || types.length == 0) {
 						// This can be a constant or namespace in PHP 5.3:
 						IDLTKSearchScope scope = SearchEngine
@@ -326,7 +332,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								scope, null);
 						if (types == null || types.length == 0) {
 							return PHPModelUtils.getFields(name, sourceModule,
-									offset);
+									offset, null);
 						}
 					}
 					return types;
@@ -338,7 +344,7 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 								.getFullyQualifiedName()
 								: ((SimpleReference) className).getName();
 						return getConstructorsIfAny(extractClasses(PHPModelUtils
-								.getTypes(name, sourceModule, offset)));
+								.getTypes(name, sourceModule, offset, null)));
 					}
 				}
 			}
@@ -419,13 +425,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// If we are in function declaration:
 						if (FUNCTION.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							if (containerType != null) {
-								IMethod typeMethod = PHPModelUtils
-										.getTypeMethod(containerType,
-												elementName);
-								if (typeMethod != null) {
-									return new IMethod[] { typeMethod };
-								}
-								return EMPTY;
+								return PHPModelUtils.getTypeMethod(
+										containerType, elementName, true);
 							}
 							return getFunction(sourceModule, elementName);
 						}
@@ -441,12 +442,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 													offset);
 								}
 								if (containerType != null) {
-									IType typeType = PHPModelUtils.getTypeType(
-											containerType, elementName);
-									if (typeType != null) {
-										return new IType[] { typeType };
-									}
-									return EMPTY;
+									return PHPModelUtils.getTypeType(
+											containerType, elementName, true);
 								}
 							}
 							return getClass(sourceModule, elementName);
@@ -455,7 +452,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// Class instantiation:
 						if (NEW.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
 							return getConstructorsIfAny(extractClasses(PHPModelUtils
-									.getTypes(elementName, sourceModule, offset)));
+									.getTypes(elementName, sourceModule,
+											offset, null)));
 						}
 
 						// Handle extends and implements:
@@ -532,14 +530,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										|| PRIVATE.equalsIgnoreCase(prevWord)
 										|| STATIC.equalsIgnoreCase(prevWord)
 										|| PUBLIC.equalsIgnoreCase(prevWord)
-										|| PROTECTED.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-									IField typeField = PHPModelUtils
-											.getTypeField(containerType,
-													elementName);
-									if (typeField != null) {
-										return new IField[] { typeField };
-									}
-									return EMPTY;
+										|| PROTECTED.equalsIgnoreCase(prevWord)) {
+									return PHPModelUtils.getTypeField(
+											containerType, elementName, true);
 								}
 								if (THIS.equalsIgnoreCase(elementName)) { //$NON-NLS-1$
 									return new IModelElement[] { containerType };
@@ -553,19 +546,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// If we are at class constant definition:
 						if (containerType != null) {
 							if (CONST.equalsIgnoreCase(prevWord)) { //$NON-NLS-1$
-								IField typeField = PHPModelUtils.getTypeField(
-										containerType, elementName);
-								if (typeField != null) {
-									return new IField[] { typeField };
-								}
-								return EMPTY;
+								return PHPModelUtils.getTypeField(
+										containerType, elementName, true);
 							}
 						}
 
 						// We are at class trigger:
 						if (PAAMAYIM_NEKUDOTAIM.equals(nextWord)) { //$NON-NLS-1$
 							return PHPModelUtils.getTypes(elementName,
-									sourceModule, offset);
+									sourceModule, offset, null);
 						}
 						if (NS_SEPARATOR.equals(nextWord)) { //$NON-NLS-1$
 							IDLTKSearchScope scope = SearchEngine
@@ -586,19 +575,15 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 							if (types != null && types.length > 0) {
 								List<IMethod> methods = new LinkedList<IMethod>();
 								for (IType t : types) {
-									methods
-											.addAll(Arrays
-													.asList(CodeAssistUtils
-															.getTypeMethods(
-																	t,
-																	elementName,
-																	CodeAssistUtils.EXACT_NAME)));
+									methods.addAll(Arrays.asList(PHPModelUtils
+											.getTypeHierarchyMethod(t,
+													elementName, true, null)));
 								}
 								return methods.toArray(new IMethod[methods
 										.size()]);
 							}
 							return PHPModelUtils.getFunctions(elementName,
-									sourceModule, offset);
+									sourceModule, offset, null);
 						}
 
 						if (types != null && types.length > 0) {
@@ -608,11 +593,8 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										&& elementName.charAt(0) != '$') { //$NON-NLS-1$
 									List<IModelElement> fields = new LinkedList<IModelElement>();
 									for (IType t : types) {
-										IField typeField = PHPModelUtils
-												.getTypeField(t, elementName);
-										if (typeField != null) {
-											fields.add(typeField);
-										}
+										return PHPModelUtils.getTypeField(t,
+												elementName, true);
 									}
 									return fields
 											.toArray(new IModelElement[fields
@@ -640,9 +622,9 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 										}
 									});
 							for (IType t : types) {
-								fields.addAll(Arrays.asList(CodeAssistUtils
-										.getTypeFields(t, elementName,
-												CodeAssistUtils.EXACT_NAME)));
+								fields.addAll(Arrays.asList(PHPModelUtils
+										.getTypeHierarchyField(t, elementName,
+												true, null)));
 							}
 							return fields.toArray(new IModelElement[fields
 									.size()]);
@@ -651,14 +633,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 						// This can be only global constant, if we've reached
 						// here:
 						IField[] fields = PHPModelUtils.getFields(elementName,
-								sourceModule, offset);
+								sourceModule, offset, null);
 						if (fields != null && fields.length > 0) {
 							return fields;
 						}
 
 						// Return class if nothing else found.
 						return PHPModelUtils.getTypes(elementName,
-								sourceModule, offset);
+								sourceModule, offset, null);
 					}
 				}
 			}
@@ -675,14 +657,14 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 		if (EXTENDS.equalsIgnoreCase(generalization)) {
 			if (isClassDeclaration) {
 				return extractClasses(PHPModelUtils.getTypes(elementName,
-						sourceModule, offset));
+						sourceModule, offset, null));
 			}
 			return extractInterfaces(PHPModelUtils.getTypes(elementName,
-					sourceModule, offset));
+					sourceModule, offset, null));
 		}
 		if (IMPLEMENTS.equalsIgnoreCase(generalization)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return extractInterfaces(PHPModelUtils.getTypes(elementName,
-					sourceModule, offset));
+					sourceModule, offset, null));
 		}
 		return null;
 	}
@@ -778,12 +760,12 @@ public class PHPSelectionEngine extends ScriptSelectionEngine {
 			}
 			if (enclosingElement instanceof IMethod) {
 				IMethod method = (IMethod) enclosingElement;
-				return CodeAssistUtils.getMethodFields(method, prefix,
-						CodeAssistUtils.EXACT_NAME);
+				return PHPModelUtils
+						.getMethodFields(method, prefix, true, null);
 			}
 		} catch (ModelException e) {
 			PHPCorePlugin.log(e);
 		}
-		return PHPModelUtils.getFields(prefix, sourceModule, offset);
+		return PHPModelUtils.getFields(prefix, sourceModule, offset, null);
 	}
 }

@@ -15,7 +15,11 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.dltk.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
@@ -28,14 +32,17 @@ import org.eclipse.php.internal.core.codeassist.contexts.MethodNameContext;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
 import org.eclipse.php.internal.core.language.PHPMagicMethods;
 import org.eclipse.php.internal.core.typeinference.FakeMethod;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes variable names taken from function parameters list.
+ * 
  * @author michael
  */
 public class MethodNameStrategy extends AbstractCompletionStrategy {
 
-	public MethodNameStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public MethodNameStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -48,33 +55,36 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		if (!(context instanceof MethodNameContext)) {
 			return;
 		}
-		
+
 		MethodNameContext concreteContext = (MethodNameContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
+		CompletionRequestor requestor = concreteContext
+				.getCompletionRequestor();
 
 		String prefix = concreteContext.getPrefix();
-
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
-		
+		boolean exactName = requestor.isContextInformationMode();
 		IType declaringClass = concreteContext.getDeclaringClass();
 		SourceRange replaceRange = getReplacementRange(concreteContext);
-		
-		IMethod[] superClassMethods = CodeAssistUtils.getSuperClassMethods(declaringClass, prefix, mask);
-		for (IMethod superMethod : superClassMethods) {
-			if (declaringClass.getMethod(superMethod.getElementName()).exists()) {
-				continue;
-			}
-			try {
+
+		try {
+			ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(
+					declaringClass, null);
+			IMethod[] superClassMethods = PHPModelUtils
+					.getSuperTypeHierarchyMethod(declaringClass, hierarchy,
+							prefix, exactName, null);
+			for (IMethod superMethod : superClassMethods) {
+				if (declaringClass.getMethod(superMethod.getElementName())
+						.exists()) {
+					continue;
+				}
 				int flags = superMethod.getFlags();
-				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags) && !PHPFlags.isStatic(flags) && !PHPFlags.isInternal(flags)) {
+				if (!PHPFlags.isFinal(flags) && !PHPFlags.isPrivate(flags)
+						&& !PHPFlags.isStatic(flags)
+						&& !PHPFlags.isInternal(flags)) {
 					reporter.reportMethod(superMethod, "()", replaceRange);
 				}
-			} catch (ModelException e) {
-				PHPCorePlugin.log(e);
 			}
+		} catch (CoreException e) {
+			PHPCorePlugin.log(e);
 		}
 
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
@@ -82,7 +92,7 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 		// Add magic methods:
 		Set<String> functions = new TreeSet<String>();
 		functions.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
-		
+
 		// Add constructors:
 		functions.add(declaringClass.getElementName());
 		if (phpVersion.isGreaterThan(PHPVersion.PHP4)) {
@@ -92,12 +102,13 @@ public class MethodNameStrategy extends AbstractCompletionStrategy {
 
 		for (String function : functions) {
 			if (CodeAssistUtils.startsWithIgnoreCase(function, prefix)) {
-				if (!requestor.isContextInformationMode() || function.length() == prefix.length()) {
-					FakeMethod fakeMethod = new FakeMethod((ModelElement) declaringClass, function);
+				if (!requestor.isContextInformationMode()
+						|| function.length() == prefix.length()) {
+					FakeMethod fakeMethod = new FakeMethod(
+							(ModelElement) declaringClass, function);
 					reporter.reportMethod(fakeMethod, "()", replaceRange);
 				}
 			}
 		}
 	}
-
 }

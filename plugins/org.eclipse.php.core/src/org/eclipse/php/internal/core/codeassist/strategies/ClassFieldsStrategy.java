@@ -11,7 +11,15 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist.strategies;
 
-import org.eclipse.dltk.core.*;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IField;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -20,14 +28,17 @@ import org.eclipse.php.internal.core.codeassist.ICompletionReporter;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes class constants and variables.
+ * 
  * @author michael
  */
 public class ClassFieldsStrategy extends ClassMembersStrategy {
 
-	public ClassFieldsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public ClassFieldsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -42,30 +53,36 @@ public class ClassFieldsStrategy extends ClassMembersStrategy {
 		}
 
 		ClassMemberContext concreteContext = (ClassMemberContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
-
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
+		CompletionRequestor requestor = concreteContext
+				.getCompletionRequestor();
 
 		String prefix = concreteContext.getPrefix();
 		SourceRange replaceRange = getReplacementRange(concreteContext);
 
+		Set<IField> result = new TreeSet<IField>(
+				new CodeAssistUtils.AlphabeticComparator());
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
-				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
-				IModelElement[] fields = CodeAssistUtils.getTypeFields(type, hierarchy, prefix, mask);
+				ITypeHierarchy hierarchy = getCompanion()
+						.getSuperTypeHierarchy(type, null);
 
-				for (IModelElement element : fields) {
-					IField field = (IField) element;
+				IField[] fields = PHPModelUtils.getTypeHierarchyField(type,
+						hierarchy, prefix,
+						requestor.isContextInformationMode(), null);
+
+				for (IField field : removeOverriddenElements(Arrays
+						.asList(fields))) {
 					if (!isFiltered(field, concreteContext)) {
-						reporter.reportField(field, getSuffix(), replaceRange, concreteContext.getTriggerType() == Trigger.OBJECT);
+						result.add(field);
 					}
 				}
-			} catch (ModelException e) {
+			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 			}
+		}
+		for (IField field : result) {
+			reporter.reportField(field, getSuffix(), replaceRange,
+					concreteContext.getTriggerType() == Trigger.OBJECT);
 		}
 	}
 

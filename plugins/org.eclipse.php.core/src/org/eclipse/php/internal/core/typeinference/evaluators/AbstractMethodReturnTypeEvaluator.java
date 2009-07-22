@@ -22,7 +22,8 @@ import org.eclipse.dltk.ti.goals.IGoal;
 import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 import org.eclipse.php.internal.core.typeinference.goals.AbstractMethodReturnTypeGoal;
 
-public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalEvaluator {
+public abstract class AbstractMethodReturnTypeEvaluator extends
+		AbstractPHPGoalEvaluator {
 
 	public AbstractMethodReturnTypeEvaluator(IGoal goal) {
 		super(goal);
@@ -30,14 +31,16 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 
 	protected IMethod[] getMethods() {
 		AbstractMethodReturnTypeGoal typedGoal = (AbstractMethodReturnTypeGoal) goal;
-		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext()).getSourceModule();
+		ISourceModule sourceModule = ((ISourceModuleContext) goal.getContext())
+				.getSourceModule();
 		IType[] types = typedGoal.getTypes();
 		String methodName = typedGoal.getMethodName();
 
 		List<IMethod> methods = new LinkedList<IMethod>();
 		if (types == null) {
 			try {
-				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(methodName, sourceModule, 0)));
+				methods.addAll(Arrays.asList(PHPModelUtils.getFunctions(
+						methodName, sourceModule, 0, null)));
 			} catch (ModelException e) {
 				if (DLTKCore.DEBUG) {
 					e.printStackTrace();
@@ -46,15 +49,15 @@ public abstract class AbstractMethodReturnTypeEvaluator extends AbstractPHPGoalE
 		} else {
 			try {
 				for (IType type : types) {
-					IMethod method = PHPModelUtils.getTypeMethod(type, methodName);
-					if (method == null) {
-						IMethod[] hierarchyMethods = PHPModelUtils.getTypeHierarchyMethod(type, methodName, null);
-						if (hierarchyMethods.length > 0) {
-							method = hierarchyMethods[0];
-						}
+					IMethod[] typeMethods = PHPModelUtils.getTypeMethod(type,
+							methodName, true);
+					if (typeMethods.length == 0) {
+						typeMethods = PHPModelUtils
+								.getSuperTypeHierarchyMethod(type, methodName,
+										true, null);
 					}
-					if (method != null) {
-						methods.add(method);
+					if (typeMethods.length > 0) {
+						methods.add(typeMethods[0]);
 					}
 				}
 			} catch (CoreException e) {

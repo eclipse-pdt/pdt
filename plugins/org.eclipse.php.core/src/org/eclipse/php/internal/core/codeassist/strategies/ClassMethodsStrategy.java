@@ -14,8 +14,13 @@ package org.eclipse.php.internal.core.codeassist.strategies;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
-import org.eclipse.dltk.core.*;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.dltk.core.CompletionRequestor;
+import org.eclipse.dltk.core.IMethod;
+import org.eclipse.dltk.core.IType;
+import org.eclipse.dltk.core.ITypeHierarchy;
 import org.eclipse.dltk.internal.core.SourceRange;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.php.internal.core.PHPCorePlugin;
@@ -27,14 +32,17 @@ import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ICompletionContext;
 import org.eclipse.php.internal.core.codeassist.contexts.ClassMemberContext.Trigger;
 import org.eclipse.php.internal.core.language.PHPMagicMethods;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
 
 /**
  * This strategy completes class methods
+ * 
  * @author michael
  */
 public class ClassMethodsStrategy extends ClassMembersStrategy {
 
-	public ClassMethodsStrategy(ICompletionContext context, IElementFilter elementFilter) {
+	public ClassMethodsStrategy(ICompletionContext context,
+			IElementFilter elementFilter) {
 		super(context, elementFilter);
 	}
 
@@ -49,43 +57,54 @@ public class ClassMethodsStrategy extends ClassMembersStrategy {
 		}
 
 		ClassMemberContext concreteContext = (ClassMemberContext) context;
-		CompletionRequestor requestor = concreteContext.getCompletionRequestor();
-
-		int mask = 0;
-		if (requestor.isContextInformationMode()) {
-			mask |= CodeAssistUtils.EXACT_NAME;
-		}
+		CompletionRequestor requestor = concreteContext
+				.getCompletionRequestor();
 
 		String prefix = concreteContext.getPrefix();
 		SourceRange replaceRange = getReplacementRange(concreteContext);
-
 		boolean isParentCall = isParentCall(concreteContext);
-
 		String suffix = getSuffix(concreteContext);
 
 		PHPVersion phpVersion = concreteContext.getPhpVersion();
 		Set<String> magicMethods = new HashSet<String>();
-		magicMethods.addAll(Arrays.asList(PHPMagicMethods.getMethods(phpVersion)));
+		magicMethods.addAll(Arrays.asList(PHPMagicMethods
+				.getMethods(phpVersion)));
 
+		boolean exactName = requestor.isContextInformationMode();
+
+		Set<IMethod> result = new TreeSet<IMethod>(
+				new CodeAssistUtils.AlphabeticComparator());
 		for (IType type : concreteContext.getLhsTypes()) {
 			try {
-				ITypeHierarchy hierarchy = getCompanion().getSuperTypeHierarchy(type, null);
+				ITypeHierarchy hierarchy = getCompanion()
+						.getSuperTypeHierarchy(type, null);
 
-				IMethod[] methods = isParentCall ? CodeAssistUtils.getSuperClassMethods(type, hierarchy, prefix, mask) : CodeAssistUtils.getTypeMethods(type, hierarchy, prefix, mask);
+				IMethod[] methods = isParentCall ? PHPModelUtils
+						.getSuperTypeHierarchyMethod(type, hierarchy, prefix,
+								exactName, null) : PHPModelUtils
+						.getTypeHierarchyMethod(type, hierarchy, prefix,
+								exactName, null);
 
-				for (IMethod method : methods) {
-					if (!magicMethods.contains(method.getElementName()) && !isFiltered(method, concreteContext)) {
-						reporter.reportMethod((IMethod) method, suffix, replaceRange);
+				for (IMethod method : removeOverriddenElements(Arrays
+						.asList(methods))) {
+
+					if (!magicMethods.contains(method.getElementName())
+							&& !isFiltered(method, concreteContext)) {
+						result.add(method);
 					}
 				}
-			} catch (ModelException e) {
+			} catch (CoreException e) {
 				PHPCorePlugin.log(e);
 			}
+		}
+		for (IMethod method : result) {
+			reporter.reportMethod((IMethod) method, suffix, replaceRange);
 		}
 	}
 
 	protected boolean showNonStaticMembers(ClassMemberContext context) {
-		return super.showNonStaticMembers(context) || context.getTriggerType() == Trigger.CLASS;
+		return super.showNonStaticMembers(context)
+				|| context.getTriggerType() == Trigger.CLASS;
 	}
 
 	public String getSuffix(AbstractCompletionContext abstractContext) {

@@ -11,32 +11,30 @@
  *******************************************************************************/
 package org.eclipse.php.internal.core.codeassist;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.dltk.ast.ASTVisitor;
-import org.eclipse.dltk.ast.declarations.MethodDeclaration;
 import org.eclipse.dltk.ast.declarations.ModuleDeclaration;
-import org.eclipse.dltk.ast.expressions.Expression;
 import org.eclipse.dltk.ast.references.VariableReference;
-import org.eclipse.dltk.ast.statements.Statement;
 import org.eclipse.dltk.core.*;
-import org.eclipse.dltk.core.search.*;
-import org.eclipse.dltk.internal.core.ModelElement;
 import org.eclipse.dltk.ti.IContext;
 import org.eclipse.dltk.ti.ISourceModuleContext;
 import org.eclipse.dltk.ti.goals.ExpressionTypeGoal;
 import org.eclipse.dltk.ti.types.IEvaluatedType;
 import org.eclipse.php.internal.core.PHPCorePlugin;
-import org.eclipse.php.internal.core.PHPLanguageToolkit;
 import org.eclipse.php.internal.core.PHPVersion;
 import org.eclipse.php.internal.core.compiler.PHPFlags;
-import org.eclipse.php.internal.core.compiler.ast.nodes.GlobalStatement;
 import org.eclipse.php.internal.core.compiler.ast.parser.ASTUtils;
 import org.eclipse.php.internal.core.project.ProjectOptions;
-import org.eclipse.php.internal.core.typeinference.*;
+import org.eclipse.php.internal.core.typeinference.PHPClassType;
+import org.eclipse.php.internal.core.typeinference.PHPModelUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferenceUtils;
+import org.eclipse.php.internal.core.typeinference.PHPTypeInferencer;
 import org.eclipse.php.internal.core.typeinference.context.FileContext;
 import org.eclipse.php.internal.core.typeinference.context.TypeContext;
 import org.eclipse.php.internal.core.typeinference.goals.ClassVariableDeclarationGoal;
@@ -55,17 +53,11 @@ import org.eclipse.php.internal.core.util.text.TextSequence;
 public class CodeAssistUtils {
 
 	/**
-	 * Whether to look for exact name or for the prefix
-	 */
-	public static final int EXACT_NAME = 1 << 0;
-
-	/**
 	 * Whether to use PHPDoc in type inference
 	 */
 	public static final int USE_PHPDOC = 1 << 5;
 
 	private static final String DOLLAR = "$"; //$NON-NLS-1$
-	private static final String WILDCARD = "*"; //$NON-NLS-1$
 	private static final String PAAMAYIM_NEKUDOTAIM = "::"; //$NON-NLS-1$
 	protected static final String OBJECT_FUNCTIONS_TRIGGER = "->"; //$NON-NLS-1$
 	private static final Pattern globalPattern = Pattern
@@ -75,222 +67,6 @@ public class CodeAssistUtils {
 
 	public static boolean startsWithIgnoreCase(String word, String prefix) {
 		return word.toLowerCase().startsWith(prefix.toLowerCase());
-	}
-
-	/**
-	 * This method finds all ancestor methods that match the given prefix.
-	 * 
-	 * @param type
-	 *            Type to find methods within
-	 * @param prefix
-	 *            Method prefix
-	 * @param mask
-	 *            Search mask
-	 * @return
-	 */
-	public static IMethod[] getSuperClassMethods(IType type, String prefix,
-			int mask) {
-		return getSuperClassMethods(type, null, prefix, mask);
-	}
-
-	/**
-	 * This method finds all ancestor methods that match the given prefix.
-	 * 
-	 * @param type
-	 *            Type to find methods within
-	 * @param hierarchy
-	 *            Cached type hierarchy
-	 * @param prefix
-	 *            Method prefix
-	 * @param mask
-	 *            Search mask
-	 * @return
-	 */
-	public static IMethod[] getSuperClassMethods(IType type,
-			ITypeHierarchy hierarchy, String prefix, int mask) {
-		boolean exactName = (mask & EXACT_NAME) != 0;
-		final Set<IMethod> methods = new TreeSet<IMethod>(
-				new AlphabeticComparator());
-		try {
-			if (type.getSuperClasses() != null
-					&& type.getSuperClasses().length > 0) {
-				if (hierarchy == null) {
-					hierarchy = type.newSupertypeHierarchy(null);
-				}
-				IType[] allSuperclasses = hierarchy.getAllSuperclasses(type);
-				for (IType superClass : allSuperclasses) {
-					for (IMethod method : superClass.getMethods()) {
-						String methodName = method.getElementName();
-						if (exactName) {
-							if (methodName.equalsIgnoreCase(prefix)) {
-								methods.add(method);
-								break;
-							}
-						} else if (startsWithIgnoreCase(methodName, prefix)) {
-							methods.add(method);
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			PHPCorePlugin.log(e);
-		}
-		return methods.toArray(new IMethod[methods.size()]);
-	}
-
-	/**
-	 * This method finds all class methods that match the given prefix.
-	 * 
-	 * @param type
-	 *            Type to find methods within
-	 * @param prefix
-	 *            Method prefix
-	 * @param mask
-	 *            Search mask
-	 * @return
-	 */
-	public static IMethod[] getTypeMethods(IType type, String prefix, int mask) {
-		return getTypeMethods(type, null, prefix, mask);
-	}
-
-	/**
-	 * This method finds all class methods that match the given prefix
-	 * 
-	 * @param type
-	 *            Type to find methods within
-	 * @param hierarchy
-	 *            Cached type hierarchy
-	 * @param prefix
-	 *            Method prefix
-	 * @param mask
-	 *            Search mask
-	 * @return
-	 */
-	public static IMethod[] getTypeMethods(IType type,
-			ITypeHierarchy hierarchy, String prefix, int mask) {
-		final Set<IMethod> methods = new TreeSet<IMethod>(
-				new AlphabeticComparator());
-		final Set<String> methodNames = new HashSet<String>();
-		boolean exactName = (mask & EXACT_NAME) != 0;
-		try {
-			IMethod[] typeMethods = type.getMethods();
-			for (IMethod typeMethod : typeMethods) {
-				String methodName = typeMethod.getElementName().toLowerCase();
-				if (exactName) {
-					if (methodName.equalsIgnoreCase(prefix)) {
-						methods.add(typeMethod);
-						methodNames.add(methodName);
-						break;
-					}
-				} else if (startsWithIgnoreCase(methodName, prefix)) {
-					methods.add(typeMethod);
-					methodNames.add(methodName);
-				}
-			}
-
-			IMethod[] superClassMethods = getSuperClassMethods(type, prefix,
-					mask);
-			// Filter overriden methods:
-			for (IMethod superClassMethod : superClassMethods) {
-				if (type.equals(superClassMethod.getDeclaringType())) {
-					continue;
-				}
-				String methodName = superClassMethod.getElementName()
-						.toLowerCase();
-				if (!methodNames.contains(methodName)) {
-					methods.add(superClassMethod);
-					methodNames.add(methodName);
-				}
-			}
-
-		} catch (Exception e) {
-			PHPCorePlugin.log(e);
-		}
-		return methods.toArray(new IMethod[methods.size()]);
-	}
-
-	/**
-	 * This method finds all class fields that match the given prefix.
-	 * 
-	 * @param type
-	 *            Type to search fields within
-	 * @param prefix
-	 *            Field prefix
-	 * @param mask
-	 *            Search mask
-	 * @return
-	 */
-	public static IField[] getTypeFields(IType type, String prefix, int mask) {
-		return getTypeFields(type, null, prefix, mask);
-	}
-
-	/**
-	 * This method finds all class fields that match the given prefix
-	 * 
-	 * @param type
-	 *            Type to search fields within
-	 * @param hierarchy
-	 *            Cached type hierarchy
-	 * @param prefix
-	 *            Field prefix
-	 * @param mask
-	 *            Search mask
-	 * @return
-	 */
-	public static IField[] getTypeFields(IType type, ITypeHierarchy hierarchy,
-			String prefix, int mask) {
-
-		boolean exactName = (mask & EXACT_NAME) != 0;
-
-		final Set<IField> fields = new TreeSet<IField>(
-				new AlphabeticComparator());
-		try {
-			List<IType> searchTypes = new LinkedList<IType>();
-
-			searchTypes.add(type);
-			if (type.getSuperClasses() != null
-					&& type.getSuperClasses().length > 0) {
-				if (hierarchy == null) {
-					hierarchy = type.newSupertypeHierarchy(null);
-				}
-				IType[] allSuperclasses = hierarchy.getAllSuperclasses(type);
-				searchTypes.addAll(Arrays.asList(allSuperclasses));
-			}
-			for (IType searchType : searchTypes) {
-				IField[] typeFields = searchType.getFields();
-
-				for (IField typeField : typeFields) {
-					String elementName = typeField.getElementName();
-					int flags = typeField.getFlags();
-					if (PHPFlags.isConstant(flags)) {
-						if (exactName) {
-							if (elementName.equals(prefix)) {
-								fields.add(typeField);
-								break;
-							}
-						} else if (elementName.startsWith(prefix)) {
-							fields.add(typeField);
-						}
-					} else { // variable
-						String tmp = prefix;
-						if (!tmp.startsWith(DOLLAR)) {
-							tmp = DOLLAR + tmp;
-						}
-						if (exactName) {
-							if (elementName.equals(tmp)) {
-								fields.add(typeField);
-								break;
-							}
-						} else if (startsWithIgnoreCase(elementName, tmp)) {
-							fields.add(typeField);
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			PHPCorePlugin.log(e);
-		}
-		return fields.toArray(new IField[fields.size()]);
 	}
 
 	/**
@@ -306,8 +82,6 @@ public class CodeAssistUtils {
 		if (types != null) {
 			for (IType type : types) {
 				PHPClassType classType = PHPClassType.fromIType(type);
-				// IField[] fields = getTypeFields(type, propertyName,
-				// CASE_SENSITIVE | EXCLUDE_CONSTANTS);
 
 				ModuleDeclaration moduleDeclaration = SourceParserUtil
 						.getModuleDeclaration(type.getSourceModule(), null);
@@ -316,15 +90,6 @@ public class CodeAssistUtils {
 				TypeContext typeContext = new TypeContext(fileContext,
 						classType);
 				PHPTypeInferencer typeInferencer = new PHPTypeInferencer();
-
-				// Set<String> processedFields = new HashSet<String>();
-				// for (IField field : fields) {
-
-				// String variableName = field.getElementName();
-				// if (processedFields.contains(propertyName)) {
-				// continue;
-				// }
-				// processedFields.add(propertyName);
 
 				if (!propertyName.startsWith(DOLLAR)) {
 					propertyName = DOLLAR + propertyName;
@@ -349,7 +114,6 @@ public class CodeAssistUtils {
 				if (modelElements != null) {
 					return modelElements;
 				}
-				// }
 			}
 		}
 		return EMPTY_TYPES;
@@ -673,7 +437,7 @@ public class CodeAssistUtils {
 			IMethod[] classMethod;
 			try {
 				classMethod = PHPModelUtils.getTypeHierarchyMethod(type,
-						functionName, null);
+						functionName, true, null);
 				if (classMethod != null) {
 					return true;
 				}
@@ -682,98 +446,6 @@ public class CodeAssistUtils {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * This method searches for all fields that where declared in the specified
-	 * method
-	 * 
-	 * @param method
-	 *            Method to look at
-	 * @param prefix
-	 *            Field name
-	 * @param mask
-	 */
-	public static IModelElement[] getMethodFields(final IMethod method,
-			String prefix, int mask) {
-
-		SearchEngine searchEngine = new SearchEngine();
-		IDLTKLanguageToolkit toolkit = PHPLanguageToolkit.getDefault();
-		IDLTKSearchScope scope = SearchEngine.createSearchScope(
-				new IModelElement[] { method }, toolkit);
-
-		int matchRule;
-		boolean exactName = (mask & EXACT_NAME) != 0;
-		if (prefix.length() == 0 && !exactName) {
-			prefix = WILDCARD;
-			matchRule = SearchPattern.R_PATTERN_MATCH;
-		} else {
-			matchRule = exactName ? SearchPattern.R_EXACT_MATCH
-					: SearchPattern.R_CAMELCASE_MATCH
-							| SearchPattern.R_PREFIX_MATCH;
-		}
-
-		final Set<String> processedVars = new HashSet<String>();
-
-		SearchPattern pattern = SearchPattern.createPattern(prefix,
-				IDLTKSearchConstants.FIELD, IDLTKSearchConstants.DECLARATIONS,
-				matchRule, toolkit);
-		final Set<IModelElement> elements = new TreeSet<IModelElement>(
-				new AlphabeticComparator());
-		try {
-			searchEngine.search(pattern, new SearchParticipant[] { SearchEngine
-					.getDefaultSearchParticipant() }, scope,
-					new SearchRequestor() {
-						public void acceptSearchMatch(SearchMatch match)
-								throws CoreException {
-							IModelElement element = (IModelElement) match
-									.getElement();
-							String elementName = element.getElementName();
-							if (!processedVars.contains(elementName)) {
-								processedVars.add(elementName);
-								elements.add(element);
-							}
-						}
-					}, null);
-		} catch (CoreException e) {
-			PHPCorePlugin.log(e);
-		}
-
-		// collect global variables
-		ModuleDeclaration rootNode = SourceParserUtil
-				.getModuleDeclaration(method.getSourceModule());
-		try {
-			MethodDeclaration methodDeclaration = PHPModelUtils
-					.getNodeByMethod(rootNode, method);
-			final String varPrefix = prefix;
-			methodDeclaration.traverse(new ASTVisitor() {
-				public boolean visit(Statement s) throws Exception {
-					if (s instanceof GlobalStatement) {
-						GlobalStatement globalStatement = (GlobalStatement) s;
-						for (Expression e : globalStatement.getVariables()) {
-							if (e instanceof VariableReference) {
-								VariableReference varReference = (VariableReference) e;
-								String varName = varReference.getName();
-								if (varName.startsWith(varPrefix)
-										&& !processedVars.contains(varName)) {
-									elements.add(new FakeField(
-											(ModelElement) method, varName, e
-													.sourceStart(), e
-													.sourceEnd()
-													- e.sourceStart()));
-									processedVars.add(varName);
-								}
-							}
-						}
-					}
-					return super.visit(s);
-				}
-			});
-		} catch (Exception e) {
-			PHPCorePlugin.log(e);
-		}
-
-		return elements.toArray(new IModelElement[elements.size()]);
 	}
 
 	/**
