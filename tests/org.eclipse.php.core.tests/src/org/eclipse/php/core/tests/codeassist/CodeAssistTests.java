@@ -45,15 +45,19 @@ public class CodeAssistTests extends AbstractPDTTTest {
 	protected static final char OFFSET_CHAR = '|';
 	protected static final Map<PHPVersion, String[]> TESTS = new LinkedHashMap<PHPVersion, String[]>();
 	static {
-		TESTS.put(PHPVersion.PHP5, new String[] { "/workspace/codeassist/php5/exclusive", "/workspace/codeassist/php5" });
-		TESTS.put(PHPVersion.PHP5_3, new String[] { "/workspace/codeassist/php5", "/workspace/codeassist/php53" });
+		TESTS.put(PHPVersion.PHP5, new String[] {
+				"/workspace/codeassist/php5/exclusive",
+				"/workspace/codeassist/php5" });
+		TESTS.put(PHPVersion.PHP5_3, new String[] {
+				"/workspace/codeassist/php5", "/workspace/codeassist/php53" });
 	};
 
 	protected static IProject project;
 	protected static IFile testFile;
 
 	public static void setUpSuite() throws Exception {
-		project = ResourcesPlugin.getWorkspace().getRoot().getProject("CodeAssistTests");
+		project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				"CodeAssistTests");
 		if (project.exists()) {
 			return;
 		}
@@ -83,16 +87,20 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 		for (final PHPVersion phpVersion : TESTS.keySet()) {
 			TestSuite phpVerSuite = new TestSuite(phpVersion.getAlias());
-			
+
 			for (String testsDirectory : TESTS.get(phpVersion)) {
 
 				for (final String fileName : getPDTTFiles(testsDirectory)) {
 					try {
-						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(fileName);
-						phpVerSuite.addTest(new CodeAssistTests(phpVersion.getAlias() + " - /" + fileName) {
+						final CodeAssistPdttFile pdttFile = new CodeAssistPdttFile(
+								fileName);
+						phpVerSuite.addTest(new CodeAssistTests(phpVersion
+								.getAlias()
+								+ " - /" + fileName) {
 
 							protected void setUp() throws Exception {
-								PHPCoreTests.setProjectPhpVersion(project, phpVersion);
+								PHPCoreTests.setProjectPhpVersion(project,
+										phpVersion);
 								pdttFile.applyPreferences();
 							}
 
@@ -104,16 +112,23 @@ public class CodeAssistTests extends AbstractPDTTTest {
 							}
 
 							protected void runTest() throws Throwable {
-								CompletionProposal[] proposals = getProposals(pdttFile.getFile());
+								CompletionProposal[] proposals = getProposals(pdttFile
+										.getFile());
 								compareProposals(proposals, pdttFile);
 							}
 						});
 					} catch (final Exception e) {
-						phpVerSuite.addTest(new TestCase(fileName) { // dummy test indicating PDTT file parsing failure
-								protected void runTest() throws Throwable {
-									throw e;
-								}
-							});
+						phpVerSuite.addTest(new TestCase(fileName) { // dummy
+																		// test
+																		// indicating
+																		// PDTT
+																		// file
+																		// parsing
+																		// failure
+									protected void runTest() throws Throwable {
+										throw e;
+									}
+								});
 					}
 				}
 			}
@@ -134,11 +149,12 @@ public class CodeAssistTests extends AbstractPDTTTest {
 	}
 
 	/**
-	 * Creates test file with the specified content and calculates the offset at 
+	 * Creates test file with the specified content and calculates the offset at
 	 * OFFSET_CHAR. Offset character itself is stripped off.
 	 * 
-	 * @param data File data
-	 * @return offset where's the offset character set. 
+	 * @param data
+	 *            File data
+	 * @return offset where's the offset character set.
 	 * @throws Exception
 	 */
 	protected static int createFile(String data) throws Exception {
@@ -156,7 +172,7 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		PHPCoreTests.waitForIndexer();
-		PHPCoreTests.waitForAutoBuild();
+		// PHPCoreTests.waitForAutoBuild();
 
 		return offset;
 	}
@@ -165,40 +181,49 @@ public class CodeAssistTests extends AbstractPDTTTest {
 		return DLTKCore.createSourceModuleFrom(testFile);
 	}
 
-	public static CompletionProposal[] getProposals(String data) throws Exception {
+	public static CompletionProposal[] getProposals(String data)
+			throws Exception {
 		int offset = createFile(data);
 		return getProposals(offset);
 	}
-	
-	public static CompletionProposal[] getProposals(int offset) throws ModelException {
+
+	public static CompletionProposal[] getProposals(int offset)
+			throws ModelException {
 		return getProposals(getSourceModule(), offset);
 	}
-	
-	public static CompletionProposal[] getProposals(ISourceModule sourceModule, int offset) throws ModelException {
+
+	public static CompletionProposal[] getProposals(ISourceModule sourceModule,
+			int offset) throws ModelException {
 		final List<CompletionProposal> proposals = new LinkedList<CompletionProposal>();
 		sourceModule.codeComplete(offset, new CompletionRequestor() {
 			public void accept(CompletionProposal proposal) {
 				proposals.add(proposal);
 			}
 		});
-		return (CompletionProposal[]) proposals.toArray(new CompletionProposal[proposals.size()]);
+		return (CompletionProposal[]) proposals
+				.toArray(new CompletionProposal[proposals.size()]);
 	}
-	
-	public static void compareProposals(CompletionProposal[] proposals, CodeAssistPdttFile pdttFile) throws Exception {
+
+	public static void compareProposals(CompletionProposal[] proposals,
+			CodeAssistPdttFile pdttFile) throws Exception {
 		ExpectedProposal[] expectedProposals = pdttFile.getExpectedProposals();
 
 		boolean proposalsEqual = true;
 		if (proposals.length == expectedProposals.length) {
-			for (ExpectedProposal expectedProposal : pdttFile.getExpectedProposals()) {
+			for (ExpectedProposal expectedProposal : pdttFile
+					.getExpectedProposals()) {
 				boolean found = false;
 				for (CompletionProposal proposal : proposals) {
 					IModelElement modelElement = proposal.getModelElement();
 					if (modelElement == null) {
-						if (new String(proposal.getName()).equalsIgnoreCase(expectedProposal.name)) { // keyword
+						if (new String(proposal.getName())
+								.equalsIgnoreCase(expectedProposal.name)) { // keyword
 							found = true;
 							break;
 						}
-					} else if (modelElement.getElementType() == expectedProposal.type && modelElement.getElementName().equalsIgnoreCase(expectedProposal.name)) {
+					} else if (modelElement.getElementType() == expectedProposal.type
+							&& modelElement.getElementName().equalsIgnoreCase(
+									expectedProposal.name)) {
 						found = true;
 						break;
 					}
@@ -214,26 +239,31 @@ public class CodeAssistTests extends AbstractPDTTTest {
 
 		if (!proposalsEqual) {
 			StringBuilder errorBuf = new StringBuilder();
-			errorBuf.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf
+					.append("\nEXPECTED COMPLETIONS LIST:\n-----------------------------\n");
 			errorBuf.append(pdttFile.getExpected());
-			errorBuf.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
+			errorBuf
+					.append("\nACTUAL COMPLETIONS LIST:\n-----------------------------\n");
 			for (CompletionProposal p : proposals) {
 				IModelElement modelElement = p.getModelElement();
-				if (modelElement == null || modelElement.getElementName() == null) {
-					errorBuf.append("keyword(").append(p.getName()).append(")\n");
+				if (modelElement == null
+						|| modelElement.getElementName() == null) {
+					errorBuf.append("keyword(").append(p.getName()).append(
+							")\n");
 				} else {
 					switch (modelElement.getElementType()) {
-						case IModelElement.FIELD:
-							errorBuf.append("field");
-							break;
-						case IModelElement.METHOD:
-							errorBuf.append("method");
-							break;
-						case IModelElement.TYPE:
-							errorBuf.append("type");
-							break;
+					case IModelElement.FIELD:
+						errorBuf.append("field");
+						break;
+					case IModelElement.METHOD:
+						errorBuf.append("method");
+						break;
+					case IModelElement.TYPE:
+						errorBuf.append("type");
+						break;
 					}
-					errorBuf.append('(').append(modelElement.getElementName()).append(")\n");
+					errorBuf.append('(').append(modelElement.getElementName())
+							.append(")\n");
 				}
 			}
 			fail(errorBuf.toString());

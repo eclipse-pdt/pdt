@@ -31,7 +31,6 @@ import org.eclipse.php.core.tests.filenetwork.FileNetworkTests;
 import org.eclipse.php.core.tests.formatter.FormatterTests;
 import org.eclipse.php.core.tests.includepath.IncludePathManagerTests;
 import org.eclipse.php.core.tests.model_structure.ModelStructureTests;
-import org.eclipse.php.core.tests.search.SearchTests;
 import org.eclipse.php.core.tests.selection.SelectionEngineTests;
 import org.eclipse.php.core.tests.typeinference.TypeInferenceTests;
 
@@ -55,7 +54,6 @@ public class AllTests {
 		suite.addTest(SelectionEngineTests.suite());
 
 		suite.addTest(ModelStructureTests.suite());
-		suite.addTest(SearchTests.suite());
 
 		suite.addTest(FileNetworkTests.suite());
 		suite.addTest(TypeInferenceTests.suite());
